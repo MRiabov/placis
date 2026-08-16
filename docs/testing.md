@@ -1,5 +1,19 @@
 # Testing
 
+## Test types
+
+Three tiers, and they are not interchangeable:
+
+- **Unit** — one function/service in isolation; internal collaborators are faked. No DB, no network.
+- **Integration** — one side real, asserting the API contract: either **backend-only** (real handler
+  + real Postgres, no frontend) or **frontend-only** (the frontend asserting against the API). It
+  crosses a real boundary — DB or HTTP — on one side.
+- **E2E** — **both sides real**: Playwright drives `frontend-2` against the real Go API + real
+  Postgres. A full user journey.
+
+Agents must not substitute a unit test where an integration or E2E test is required — stubbing an
+E2E with unit tests is a failure, not a pass.
+
 ## The rule
 
 At least **one E2E test per feature** — a "feature" is a directory under `docs/features/`. E2E is
