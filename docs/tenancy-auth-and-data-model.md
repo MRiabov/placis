@@ -62,6 +62,11 @@ props, slot values, research raw payloads, manifests); structural data is real c
 named `source_refs` record where each value came from; `provenance` records where an asset came
 from and how it was edited.
 
+Own ids and foreign keys are `uuid` in Postgres and `uuid.UUID` (`github.com/google/uuid`) in Go —
+never strings; they serialize as strings only at the HTTP boundary. Clerk's own ids (`clerk_org_id`,
+`clerk_user_id`, `clerk_subject`) are `text`/`string` — Clerk's opaque ids (`org_…`, `user_…`), not
+UUIDs.
+
 ### Identity & tenancy
 
 - `tenants` — `id` uuid pk, `clerk_org_id` unique, `slug` unique, `name`, `status`
