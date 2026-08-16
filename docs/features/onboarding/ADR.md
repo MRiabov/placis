@@ -8,9 +8,9 @@ decision + date) instead of silently rewriting history.
 1. **Terminology is "onboarding", not "setup"** — the domain is research + business-profile
    building. Tables/packages/routes use `onboarding_*` / `business_profile*`, never `setup_*`.
 
-2. **Onboarding starts from a source** — the entry is always the contractor's Google Maps listing
-   or company-registry record (Companies House / CRO). A short interview then fills the gaps;
-   voice is a later way to answer those questions.
+2. **Onboarding starts from their listing or registry record** — the entry is always the
+   contractor's Google Maps listing or company-registry record (Companies House / CRO). A short
+   interview then fills the gaps; voice is a later way to answer those questions.
 
 3. **Consent is a simple ask, not a system** — a single acknowledgement before research (we'll look
    the business up and use the public information). No per-purpose consent records, versioning, or
