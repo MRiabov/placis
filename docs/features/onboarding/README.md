@@ -7,6 +7,7 @@ that drives website and ad generation. It replaces the old "setup" concept.
 - [ADR](ADR.md) — decision record
 - [technical-implementation.md](technical-implementation.md) — the technical plan (data model, flow, API, pipeline)
 - [frontend.md](frontend.md) — the onboarding screens and fields
+- [testing.md](testing.md) — the onboarding E2E test
 
 Auth is interleaved with onboarding (the claim/activation step), but auth and tenancy are owned by
 the flat [tenancy, auth, and data model](../../tenancy-auth-and-data-model.md) doc.
