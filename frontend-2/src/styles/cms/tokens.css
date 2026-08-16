@@ -1,0 +1,106 @@
+@layer base {
+  /* CMS owns the neutral palette; the private shells (login, org provision,
+     onboarding) render outside .cms-app, so the tokens live on :root and are
+     inherited by .cms-app too. */
+  :root,
+  .cms-app {
+    --cms-canvas: var(--private-canvas);
+    --cms-surface: var(--private-surface);
+    --cms-surface-raised: var(--private-surface-raised);
+    --cms-surface-active: var(--private-surface-active);
+    --cms-surface-sunken: var(--private-surface-sunken);
+    --cms-surface-overlay: #ffffff;
+    --cms-surface-overlay-muted: #f4f4f5;
+    --cms-surface-overlay-subtle: #fafafa;
+    /* Keep the editor stage on the same white canvas as the dashboard; the
+       grid remains the editor-only visual distinction. */
+    --cms-preview-stage: var(--cms-canvas);
+    --cms-preview-stage-grid: rgba(39, 39, 42, 0.045);
+
+    /* Text */
+    --cms-text: var(--private-text);
+    --cms-text-secondary: var(--private-text-secondary);
+    --cms-text-muted: var(--private-text-muted);
+    --cms-text-subtle: var(--private-text-subtle);
+    --cms-muted: #71717a;
+    --cms-focus: var(--private-focus);
+    --cms-text-on-accent: #ffffff;
+    --cms-overlay-text: #27272a;
+    --cms-overlay-text-muted: #71717a;
+    --cms-overlay-text-subtle: #a1a1aa;
+
+    /* Borders */
+    --cms-border: var(--private-border);
+    --cms-border-strong: var(--private-border-strong);
+    --cms-border-subtle: var(--private-surface-raised);
+    --cms-overlay-border: #e4e4e7;
+    --cms-overlay-border-subtle: #d4d4d8;
+
+    /* Accent */
+    --cms-accent: var(--private-accent);
+    --cms-accent-hover: var(--private-accent-hover);
+    --cms-accent-tint: var(--private-accent);
+    --cms-accent-subtle: var(--private-accent-subtle);
+    --cms-accent-on-light: var(--private-accent);
+    --cms-accent-wash: var(--private-accent-wash);
+    --cms-accent-wash-strong: rgba(19, 18, 10, 0.22);
+    --cms-accent-outline: rgba(19, 18, 10, 0.32);
+    --cms-accent-ring-color: rgba(19, 18, 10, 0.18);
+    --cms-accent-ring-inset: rgba(19, 18, 10, 0.12);
+    --cms-accent-stripe: rgba(19, 18, 10, 0.035);
+    --cms-accent-stripe-strong: rgba(19, 18, 10, 0.07);
+
+    /* Status */
+    --cms-error: #b42318;
+    --cms-error-strong: #b42318;
+    --cms-error-surface: #fff1f0;
+    --cms-error-soft: #b42318;
+    --cms-success: #166534;
+    --cms-success-strong: #166534;
+    --cms-success-border: rgba(22, 101, 52, 0.35);
+    --cms-success-border-muted: rgba(22, 101, 52, 0.22);
+    --cms-success-surface: #f0fdf4;
+    --cms-warning: #a16207;
+    --cms-warning-strong: #a16207;
+    --cms-warning-surface: #fffbeb;
+    --cms-warning-text: #a16207;
+    --cms-info: #1d4ed8;
+    --cms-info-strong: #1d4ed8;
+    --cms-info-border: rgba(29, 78, 216, 0.3);
+    --cms-destructive: #b91c1c;
+    --cms-destructive-border: rgba(185, 28, 28, 0.3);
+    --cms-avatar-fallback: #52525b;
+
+    /* Shape: a generous, consistently rounded scale reads as more crafted
+       than the earlier near-square controls (4/8/12px) and matches the
+       redesign proposal's softer editor chrome. */
+    --cms-radius-sharp: 0;
+    --cms-radius-control: var(--private-radius-control);
+    --cms-radius-card: var(--private-radius-card);
+    --cms-radius-panel: var(--private-radius-panel);
+    --cms-radius-pill: var(--private-radius-pill);
+
+    /* Effects */
+    --cms-ring: var(--private-ring);
+    --cms-ring-strong: 0 0 0 3px var(--cms-accent);
+    --cms-auth-scrim: rgba(39, 39, 42, 0.24);
+    --cms-shadow-color-sm: rgba(39, 39, 42, 0.08);
+    --cms-shadow-color-md: rgba(39, 39, 42, 0.12);
+    --cms-shadow-sm: var(--private-shadow-sm);
+    --cms-shadow-md: var(--private-shadow-md);
+    --cms-shadow-lg: 0 30px 72px rgba(39, 39, 42, 0.14);
+
+    /* Motion and state */
+    --cms-ease: var(--private-ease);
+    --cms-duration-fast: var(--private-duration-fast);
+    --cms-duration: var(--private-duration);
+    --cms-disabled-opacity: 0.5;
+
+    min-height: 100%;
+    background: var(--cms-canvas);
+    color: var(--cms-text);
+    font-family: "Satoshi", "Helvetica Neue", Arial, sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+}

@@ -1,0 +1,38 @@
+/* Shared private-app visual contract. CMS owns the values; onboarding and
+   future private flows consume the same neutral palette and interaction scale. */
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Variable.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --private-canvas: #ffffff;
+  --private-surface: #f7f7f7;
+  --private-surface-raised: #f4f4f5;
+  --private-surface-active: #e4e4e7;
+  --private-surface-sunken: #fafafa;
+  --private-text: #27272a;
+  --private-text-secondary: #52525b;
+  --private-text-muted: #71717a;
+  --private-text-subtle: #a1a1aa;
+  --private-border: #e4e4e7;
+  --private-border-strong: #d4d4d8;
+  --private-accent: #13120a;
+  --private-accent-hover: #27272a;
+  --private-focus: #13120a;
+  --private-accent-subtle: rgb(19 18 10 / 6%);
+  --private-accent-wash: rgb(19 18 10 / 6%);
+  --private-radius-control: 8px;
+  --private-radius-card: 12px;
+  --private-radius-panel: 16px;
+  --private-radius-pill: 999px;
+  --private-ring: 0 0 0 2px rgb(19 18 10 / 18%);
+  --private-shadow-sm: 0 4px 16px rgb(39 39 42 / 6%);
+  --private-shadow-md: 0 18px 48px rgb(39 39 42 / 10%);
+  --private-ease: cubic-bezier(0.2, 0, 0, 1);
+  --private-duration-fast: 120ms;
+  --private-duration: 160ms;
+}
