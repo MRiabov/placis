@@ -67,6 +67,8 @@ auditability, and voice agents as a **separate, optional** channel.
   unshipped `schemas_registry_public.py` API, hard-coded template imagery as tenant variables.
 - **Blog posts and careers** — deferred; `page_type` enum omits `blog_post`; no `website_career_*`
   tables for now.
+- **Frontend (`frontend-2`)** — reused mostly, not rebuilt. It is adapted only where the
+  huma-derived OpenAPI improves the contract (regenerated `openapi-typescript` types).
 
 ### Deferred (later)
 

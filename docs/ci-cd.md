@@ -9,9 +9,10 @@ deploy. Both run only non-mutating checks — CI never rewrites files.
 1. **File-size guard** — files must stay < 800 lines (warning) and < 1200 (hard error). Enforced
    by a `just check-files` recipe over `internal/`, `cmd/`, `migrations/`, `catalog/`, `docs/`.
    Prefer splitting a feature into its own package over allowing a file to creep past 800.
-2. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`, `golangci-lint` (non-mutating).
-3. **Build + test** — `go build ./...` and `go test ./...`. Backend tests use Testcontainers for
-   Postgres (machine executor on CircleCI).
+2. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`, `golangci-lint` (non-mutating);
+   `frontend-2` TypeScript check + Biome (non-mutating).
+3. **Build + test** — `go build ./...` and `go test ./...` (Testcontainers Postgres on CircleCI's
+   machine executor); `frontend-2` typecheck + Vitest + Playwright e2e.
 4. **Generated-code freshness** — `sqlc generate` must produce no diff; `goose` migrations apply
    cleanly to a fresh DB; the `huma` OpenAPI spec + frontend typegen stay in sync with the API
    structs (a contract check), so generated types are evidence and never drift.

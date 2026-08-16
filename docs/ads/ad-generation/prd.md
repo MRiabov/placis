@@ -7,8 +7,8 @@ Related docs:
 1. [CMS ad generation technical implementation](technical-implementation.md)
 2. [Ad generation decision record](ADR.md)
 3. [Ad generation frontend specification](frontend.md)
-4. [Website CMS](../../website-cms.md)
-5. [Onboarding](../../onboarding.md)
+4. [Website CMS](../../website/README.md)
+5. [Onboarding](../../onboarding/README.md)
 
 ## Problem
 
