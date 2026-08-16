@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR-Driven Workflow"
+  short_description: "Branch, PR, docs, contracts, eval, and migration rules for Placis work"
+  default_prompt: "Use $pr-driven-workflow to prepare branch, documentation, migration, contract, eval, and PR-safe changes for an Placis feature."
