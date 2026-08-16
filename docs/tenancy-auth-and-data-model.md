@@ -56,7 +56,9 @@ membership checks via an explicit impersonation/audit flow.
 ## Schema
 
 Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic content (component
-props, slot values, research raw payloads, manifests); structural data is real columns.
+props, slot values, research raw payloads, manifests); structural data is real columns. Columns
+named `source_refs` record where each value came from; `provenance` records where an asset came
+from and how it was edited.
 
 ### Identity & tenancy
 
@@ -162,7 +164,7 @@ props, slot values, research raw payloads, manifests); structural data is real c
 - `preview_events` — `id`, `preview_package_id` fk, `event_type`, `payload` jsonb, `created_at`
 - `preview_claims` — `id`, `preview_package_id` fk, `clerk_subject`, `checkout_session_id`,
   `payment_state` (`pending`/`paid`/`failed`/`refunded`), `tenant_id` nullable fk, `activated_at`,
-  `created_at`; unique idempotency key
+  `created_at`; unique webhook key (safe to replay)
 
 ### Leads
 
