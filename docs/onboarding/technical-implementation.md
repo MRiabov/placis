@@ -42,7 +42,7 @@ runs in the background alongside the interview; generation reads the live profil
 
 ## Profile building
 
-1. Merge interview answers + research into a `business_profile_versions` snapshot (details + where
+1. Merge interview answers + research into a `business_profile_versions` row (details + where
    each came from + who changed it).
 2. Surface conflicting answers for owner/operator review.
 3. On approval, the profile advances to the current version; generation reads it.

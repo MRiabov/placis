@@ -93,15 +93,13 @@ the public information to build their profile. It's part of the interview, not a
    - Differences appear during review; I confirm or edit before anything is generated.
 4. **As the team**, I want the profile to keep its history, so we can see how it changed and where
    each detail came from.
-   - Each change is kept; the profile always points at the current version.
+   - Each change is kept, so nothing is lost.
 
 ## Acceptance criteria
 
-1. Onboarding starts from a Google Maps listing or company-registry record and pre-fills known
-   details.
-2. Research sources are behind one interface with fakes for testing; results are stored with where
-   they came from and how confident we are.
-3. The business profile keeps its history and always points at the current version.
-4. Conflicting answers are shown for review, never silently resolved.
-5. One end-to-end test covers start → interview → research → profile → generate, with outside
-   services mocked but the core logic real.
+1. Onboarding starts from a Google Maps listing or company-registry record and pre-fills what's
+   already known.
+2. The researched information is kept with where it came from and how confident we are.
+3. The business profile keeps its history, so we can see how it changed.
+4. When the contractor's answer disagrees with what we found, both are shown side by side so the
+   contractor picks the right one.

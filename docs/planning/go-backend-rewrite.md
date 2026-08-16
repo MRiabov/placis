@@ -208,9 +208,9 @@ Full DDL lands in `migrations/`.
   `company_number`, `vat_number`, `registered_office`, `contact_name`, `phone`, `email`, `website`,
   `google_profile_url`, `facebook_profile_url`, `founder_profile` jsonb, `brand` jsonb
   (colors/logo_asset_id/tone/typography), `current_version_id` nullable, `created_at`, `updated_at`
-- `business_profile_versions` — `id`, `business_profile_id` fk, `version_number`, `facts` jsonb
-  (full snapshot), `source_refs` jsonb, `created_by` (`research`/`voice`/`text`/`human`/`llm`),
-  `created_at`; unique `(business_profile_id, version_number)`
+- `business_profile_versions` — `id`, `business_profile_id` fk, `version_number`, `details` jsonb
+  (a copy of the details at this version), `source_refs` jsonb, `created_by`
+  (`research`/`voice`/`text`/`human`/`llm`), `created_at`; unique `(business_profile_id, version_number)`
 - `business_profile_services` — `id`, `business_profile_id` fk, `name`, `description`, `slug`,
   `created_at`
 - `business_profile_service_areas` — `id`, `business_profile_id` fk, `locality`, `created_at`
@@ -224,7 +224,7 @@ Full DDL lands in `migrations/`.
   `current_version_id` nullable, `published_version_id` nullable, `seo` jsonb, timestamps;
   unique `(tenant_id, path)`
 - `website_page_versions` — `id`, `tenant_id` fk, `page_id` fk, `version_number`, `status`
-  (`draft`/`approved`/`published`/`rejected`), `content_snapshot` jsonb, `validation_errors` jsonb,
+  (`draft`/`approved`/`published`/`rejected`), `content` jsonb, `validation_errors` jsonb,
   `source_refs` jsonb, `created_by`, `created_at`; unique `(page_id, version_number)`
 - `website_sections` — `id`, `tenant_id` fk, `page_id` fk, `component_id`, `component_version`,
   `position`, `status` (`visible`/`hidden`), `props` jsonb, `design` jsonb, `source_refs` jsonb;
@@ -315,14 +315,14 @@ before production use.
 1. **Onboarding session** — `created → interviewing → profile_draft → generating → previewing →
    claimed/expired`. Research runs in the background alongside the interview.
 2. **Business profile** — immutable versions; `current_version_id` points at the live version;
-   facts carry `source_refs` and `created_by`.
-3. **Website page** — `draft → approved → published`; versions are immutable; publish materializes
-   a new `website_publications` row (no mutation of history).
-4. **Publication** — `published → rolled_back/archived`; rollback reactivates an earlier snapshot.
+   details carry `source_refs` and `created_by`.
+3. **Website page** — `draft → approved → published`; versions are immutable; publish creates a new
+   `website_publications` row (history untouched).
+4. **Publication** — `published → rolled_back/archived`; rollback reactivates an earlier version.
 5. **Claim/activation** — `checkout.session.completed` accepted only after Stripe signature
    verification + metadata matching; activation is idempotent and never driven by a browser success
    URL alone. It links the onboarding session, ensures the owner membership, rebuilds CMS records
-   from the selected blueprint, validates + publishes a snapshot, activates the tenant + generated
+   from the selected blueprint, validates + publishes, activates the tenant + generated
    domain, and marks the session claimed.
 6. **Ad creative** — creation flow `draft → needs_review → ready_to_post → archived`; existing-ad
    statuses `Draft / Creative ready / Published / Archived`. AI is propose-only (drafts copy,
