@@ -1,30 +1,31 @@
 # Onboarding — pipeline
 
-The pipeline is **async and parallel** so the contractor never waits: the moment they give us their
-Google Maps listing or company-registry record and confirm, research kicks off in the background. By
-the time they finish the interview, the profile and the website draft are already ready.
+The pipeline runs async and in parallel so the contractor never waits: research kicks off the moment
+they give us their listing/registry record and confirm, so by the time they finish the interview the
+website draft is ready.
 
 ```text
 01a. find the business (Google Maps / registry) ─┐
-01b. confirm (consent)                            ├─► 02. interview (only the gaps)
-02. research  (async, parallel) ──────────────────┘        │
-    Google Places · registry · Facebook · crawl · photos   │
-03. build the profile  ◄── research results + interview answers
-04. generate the website (deterministic)  ◄── profile + blueprint
-05. refine (LLM edits the draft)           ◄── draft
-06. preview (SSE progress, 2–10s events)
-07. claim (pay) → draft, not published
+     confirm (consent)                            ├─► 02b. interview — "review what we have" → fill gaps
+02a. research (async, parallel) ──────────────────┘
+03. build the profile
+04. generate the website (deterministic)
+05. refine (LLM edits the draft)
+06. preview (SSE progress)
+07. claim → draft, not published
 ```
 
 ## Steps
 
-- **01a/01b — start** — the contractor picks their Google Maps listing or registry record and
-  confirms. Research starts **immediately**, in the background.
-- **02 — interview** — while research runs, the contractor answers only what the sources didn't
-  provide.
-- **03 — build the profile** — research results + interview answers merge into the business profile.
-- **04 — generate** — the website draft is generated deterministically from the profile + blueprint
-  (no LLM).
-- **05 — refine** — the LLM (the editor) drafts copy and picks images on top of the draft.
-- **06 — preview** — the contractor reviews; progress is streamed over SSE every 2–10s.
-- **07 — claim** — the contractor pays; the site stays a draft until they publish.
+- [01a-find-business.md](01a-find-business.md) — find the business + confirm
+- [02a-research.md](02a-research.md) — research (async, parallel)
+- [02b-interview.md](02b-interview.md) — interview (review + gaps)
+- [03-build-profile.md](03-build-profile.md)
+- [04-generate.md](04-generate.md)
+- [05-refine.md](05-refine.md)
+- [06-preview.md](06-preview.md)
+- [07-claim.md](07-claim.md)
+
+## Tests
+
+Each step has a matching integration test in [testing/](testing/01a-find-business.md).
