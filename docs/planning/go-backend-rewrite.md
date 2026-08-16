@@ -43,7 +43,7 @@ auditability, and voice agents as a **separate, optional** channel.
 5. **Public website + lead capture** — resolve active publication manifests by host/path; public
    forms persist into a minimal `leads` table.
 6. **Preview + claim/activation** — signed preview packages; self-serve Stripe claim/checkout;
-   idempotent webhook-driven activation.
+   webhook-driven activation (safe to replay).
 7. **Ad generation (#403)** — creative sets (the "ad") with per-format variants, copy, and image
    placements built from the profile + approved media; propose-only AI; terminal state is a
    deterministic "ready to post" export (no posting, no campaign ops — those are future work on
@@ -134,12 +134,12 @@ when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard err
 | API contract | **Go-first**: `huma` v2 (locked) | structs + tags derive OpenAPI 3.1 + runtime validation; frontend regenerates via `openapi-typescript` |
 | Data access | `sqlc` + `pgx/v5` | `jsonb` -> typed Go structs via custom mapping at the boundary only |
 | Migrations | `goose` | plain SQL, embedded |
-| Jobs | `River` | Postgres-backed, typed args, explicit idempotency keys |
+| Jobs | `River` | Postgres-backed, typed args, safe retries |
 | Config | env -> typed struct, validated at startup | |
 | Logging | `log/slog` | structured, request IDs |
 | Storage | `aws-sdk-go-v2/service/s3` | R2 in prod, MinIO/local FS in dev |
 | LLM | OpenRouter behind an interface | mandatory recording of reasoning + output + tool calls |
-| Payments | Stripe | activation checkout only |
+| Payments | Stripe via `stripe-go` SDK | activation checkout only |
 | IDs | UUID PKs | `timestamptz` defaults |
 
 `huma` handles JSON request/response endpoints and derives the OpenAPI spec served at
@@ -280,7 +280,7 @@ Full DDL lands in `migrations/`.
 - `preview_events` — `id`, `preview_package_id` fk, `event_type`, `payload` jsonb, `created_at`
 - `preview_claims` — `id`, `preview_package_id` fk, `clerk_subject`, `checkout_session_id`,
   `payment_state` (`pending`/`paid`/`failed`/`refunded`), `tenant_id` nullable fk, `activated_at`,
-  `created_at`; unique idempotency key
+  `created_at`; unique replay key
 
 ### Leads
 
@@ -298,14 +298,14 @@ Full DDL lands in `migrations/`.
 - `audit_events` — `id`, `tenant_id` nullable fk, `actor`, `action`, `entity_type`, `entity_id`,
   `before` jsonb, `after` jsonb, `request_id`, `created_at`
 - `stripe_events` — `id`, `event_id` unique, `type`, `payload` jsonb, `processed`, `created_at`
-  (webhook idempotency)
+  (webhook replay safety)
 - River-managed tables for the job queue.
 
 ### Required indexes & constraints (add before production data)
 
 Unique: `tenants.clerk_org_id`, `tenants.slug`, `(tenant_id, website_pages.path)`,
 `(tenant_id, website_forms.form_key)`, `(tenant_id, website_publications.version_number)`,
-webhook idempotency (`stripe_events.event_id`). Lookup: `(tenant_id, status, created_at)` on
+webhook replay safety (`stripe_events.event_id`). Lookup: `(tenant_id, status, created_at)` on
 sessions/pages/leads; `(tenant_id, owner_type, owner_id)` on files; `(tenant_id, entity_type,
 entity_id, created_at)` on audit. Use DB check constraints for stable enums; state-transition tests
 before production use.
@@ -319,11 +319,11 @@ before production use.
 3. **Website page** — `draft → approved → published`; versions are immutable; publish creates a new
    `website_publications` row (history untouched).
 4. **Publication** — `published → rolled_back/archived`; rollback reactivates an earlier version.
-5. **Claim/activation** — `checkout.session.completed` accepted only after Stripe signature
-   verification + metadata matching; activation is idempotent and never driven by a browser success
-   URL alone. It links the onboarding session, ensures the owner membership, rebuilds CMS records
-   from the selected blueprint, validates + publishes, activates the tenant + generated
-   domain, and marks the session claimed.
+5. **Claim/activation** — `checkout.session.completed` accepted only after Stripe SDK signature
+   verification (`webhook.ConstructEvent`) + metadata matching; activation is safe to replay and
+   never driven by a browser success URL alone. It links the onboarding session, ensures the owner
+   membership, rebuilds CMS records from the selected blueprint, validates + publishes, activates
+   the tenant + generated domain, and marks the session claimed.
 6. **Ad creative** — creation flow `draft → needs_review → ready_to_post → archived`; existing-ad
    statuses `Draft / Creative ready / Published / Archived`. AI is propose-only (drafts copy,
    proposes image galleries from approved media, light cleanup); the owner reviews/edits/approves;
@@ -393,6 +393,8 @@ first pass.
 - **Clerk** — official `github.com/clerk/clerk-sdk-go/v2` for session/JWT verification (JWKS,
   clock skew, audience, org claim → `ActiveOrganizationID`) and org provisioning
   (`Organizations().Create`). No hand-rolled JWT/JWKS logic or Clerk data types.
+- **Stripe** — official `github.com/stripe/stripe-go` SDK for checkout-session creation and webhook
+  signature verification (`webhook.ConstructEvent`). No hand-rolled HMAC/signature code.
 - **CI/CD** — CircleCI primary (PR-only, path-filtered, non-mutating); GitHub Actions for emergency
   + Cloudflare deploy; file-size guard (< 800 warn / > 1200 hard error); backend tests
   provider-isolated; evals local-only. See `docs/ci-cd.md`.

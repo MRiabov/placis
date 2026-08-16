@@ -22,7 +22,8 @@ refunds, and data export/deletion — with who did it, what changed, on what, an
 
 Slow work runs off-request in `River` (Postgres-backed): AI generation, business research, file
 processing, notifications, and export generation. Every job can be retried safely (an explicit
-key). Webhooks (Stripe) verify the signature, save the raw payload, enqueue the work, and return.
+key). Stripe webhooks are verified with the Stripe Go SDK, the raw payload saved, the work enqueued,
+and the request returned.
 
 ## Files
 
@@ -32,9 +33,9 @@ visibility check. Public delivery URLs are not expiring signed URLs.
 
 ## Payments
 
-Stripe handles the claim/activation checkout only. `checkout.session.completed` is accepted only
-after the signature and metadata are verified; activation can be replayed safely and is never
-triggered by a browser success URL alone.
+Stripe (via `stripe-go`) handles the claim/activation checkout only. `checkout.session.completed`
+is accepted only after the SDK verifies the signature (`webhook.ConstructEvent`) and the metadata
+matches; activation can be replayed safely and is never triggered by a browser success URL alone.
 
 ## Observability
 
