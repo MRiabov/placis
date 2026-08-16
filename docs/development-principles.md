@@ -38,7 +38,8 @@ Each slice is **one PR**, complete and green before the next starts. A slice is:
 2. `sqlc` queries
 3. `huma` DTOs — this *is* that feature's slice of the OpenAPI (`huma` derives it)
 4. service + handlers
-5. unit + integration tests, plus **one E2E test**
+5. unit + integration tests, plus **one E2E test** (see [testing.md](testing.md) for the
+   per-feature E2E definition)
 6. regenerate the frontend types
 7. CI green -> merge
 
