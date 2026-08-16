@@ -59,7 +59,7 @@ Never in product/user-facing text or PRD prose — these live only in technical 
 | artifact | what we built (or the specific deliverable) |
 | idempotent | safe to retry (tech only) |
 | source-first | start from an existing listing |
-| propose-only | AI suggests, you decide |
+| propose-only | the LLM drafts; the user edits and publishes |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |
 
 ## Code naming rules

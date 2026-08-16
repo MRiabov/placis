@@ -38,3 +38,15 @@ decision + date) instead of silently rewriting history.
 
 9. **No ad preferences in onboarding** — onboarding never collects `marketing.ads`; ads are created
    on demand in the CMS (see the ads ADR).
+
+10. **Generation is deterministic; the LLM is the editor** — the draft comes from the profile +
+    trade blueprint with no LLM in the loop (same input → same draft). The LLM then edits that
+    draft (copy, images) as a proposal; it never publishes.
+
+11. **Progressive progress over SSE** — during onboarding the backend pushes a progress event every
+    2–10 seconds (or on each change) over SSE; the frontend re-renders progressively so the site
+    builds up visually. The stream mirrors the DB; it is not the source of truth.
+
+12. **Claim does not publish** — paying at the end of onboarding activates the tenant and produces
+    the site as a **draft**. The user edits if they want and publishes later; nothing goes live
+    without an explicit publish.
