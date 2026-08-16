@@ -4,8 +4,9 @@ The pipeline: learn about the business, build its profile, then generate and ref
 
 ## The pipeline
 
-source (Google Maps / registry) → consent → interview → research (in parallel) → business profile →
-generate the website (deterministic) → refine (AI) → preview → claim.
+start from their Google Maps listing or company-registry record → consent → interview → research
+(in parallel) → business profile → generate the website (deterministic) → refine (AI) → preview →
+claim.
 
 ## Generation is deterministic, then the LLM edits
 

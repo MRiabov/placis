@@ -184,7 +184,7 @@ Full DDL lands in `migrations/`.
 
 ### Onboarding (research → profile)
 
-- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `source` (`google_places`/
+- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `started_from` (`google_places`/
   `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`interviewing`/
   `profile_draft`/`generating`/`previewing`/`claimed`/`expired`), `token` unique, `clerk_user_id`
   nullable, `consent_given_at` nullable, timestamps

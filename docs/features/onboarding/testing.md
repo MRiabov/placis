@@ -6,9 +6,9 @@ faked. DB asserts name the tables from the data model.
 
 1. **Start** — the user picks a country, finds their business (registry + optional Google Maps),
    checks the consent box.
-   - UI: source panel → "Confirm and review".
-   - DB: `onboarding_sessions` (source, channel=`text`, status=`created`, token, `consent_given_at`
-     set).
+   - UI: the "find your business" panel → "Confirm and review".
+   - DB: `onboarding_sessions` (`started_from`, channel=`text`, status=`created`, token,
+     `consent_given_at` set).
 
 2. **Interview** — the user answers the questions; answers autosave.
    - DB: `text_interview_submissions` (version, `payload` jsonb).

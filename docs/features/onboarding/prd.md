@@ -45,7 +45,8 @@ They can select either, or both when they describe the same business. Then a sin
 "I agree that Placis can collect public information about this business to prepare the website
 preview."
 
-A short interview then fills in what the sources don't cover. Voice is a later way to answer it.
+A short interview then fills in what the listing and registry record don't cover. Voice is a later
+way to answer it.
 
 ## What we know about the business
 

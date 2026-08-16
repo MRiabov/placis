@@ -8,8 +8,8 @@ Related: [PRD](prd.md), [ADR](ADR.md), [technical-implementation.md](technical-i
 ## Purpose
 
 The contractor-facing onboarding surface in `frontend-2` (`src/features/setup/`), reused mostly and
-adapted to the huma OpenAPI. Onboarding is: find the business from a source, answer a few questions,
-review.
+adapted to the huma OpenAPI. Onboarding is: find the business (their Google Maps listing or
+company-registry record), answer a few questions, review.
 
 ## Screens
 
@@ -20,7 +20,7 @@ review.
   company number, status, registered office). Companies House for GB, CRO for IE, state registry
   for US.
 - **Google Maps** (optional) — search and pick the place; pre-fills name, category, phone, photos,
-  and reviews. Either source, or both when they describe the same business.
+  and reviews. Either one, or both when they describe the same business.
 - **Consent** — a single checkbox: "I agree that Placis can collect public information about this
   business to prepare the website preview."
 - **Confirm and review** — the primary action.
@@ -28,12 +28,12 @@ review.
 ### 2. Interview — a few questions
 
 The interview never re-asks what we already know. In the **text interview** the known fields are
-prefilled from the source and the contractor fills in the gaps; in the **voice interview** the agent
-is told what's known and what's left, so it asks only the missing questions.
+prefilled from what they gave us and the contractor fills in the gaps; in the **voice interview**
+the agent is told what's known and what's left, so it asks only the missing questions.
 
-Fields the source already gave — the Google Maps place and the company-registry record — are shown
-as **prefilled and locked** (grayed out, not editable). The contractor is only asked for what the
-source didn't provide.
+Fields they already gave us — the Google Maps place and the company-registry record — are shown
+as **prefilled and locked** (grayed out, not editable). The contractor is only asked for what they
+didn't provide.
 
 Missing fields, autosaved as the contractor answers:
 
@@ -59,7 +59,7 @@ Missing fields, autosaved as the contractor answers:
 
 ## Components (`frontend-2`)
 
-- `BusinessSourcePanel` — country, registry search, optional Maps match, consent checkbox.
+- `FindBusinessPanel` — country, registry search, optional Maps match, consent checkbox.
 - `TextInterviewForm` — the interview fields, with autosave.
 - `CompanyChecklistPanels` / `CompanyChecklistValues` — the found-vs-missing review.
 - `AvailabilityPicker` — opening hours.

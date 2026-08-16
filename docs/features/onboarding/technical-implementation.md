@@ -6,7 +6,7 @@ Related: [PRD](prd.md), [ADR](ADR.md), [tenancy/auth/data model](../../tenancy-a
 
 ## Domain objects
 
-- `onboarding_sessions` — the source the contractor started from (Google Maps listing or
+- `onboarding_sessions` — where the contractor started from (their Google Maps listing or
   company-registry record), the interview channel (`text`/`voice`), `status`, `token` unique,
   `clerk_user_id` nullable, `consent_given_at` nullable.
 - `text_interview_submissions` — the interview answers, saved as the contractor goes.
@@ -56,6 +56,6 @@ runs in the background alongside the interview; generation reads the live profil
 
 ## Frontend
 
-- `frontend-2/src/features/setup/**` is the existing onboarding surface (sources, interview,
-  research progress, preview). It is refactored against the regenerated types; the `/setup-*`
-  route naming it consumes maps to `/onboarding-*` on the Go side.
+- `frontend-2/src/features/setup/**` is the existing onboarding surface (find-the-business,
+  interview, research progress, preview). It is refactored against the regenerated types; the
+  `/setup-*` route naming it consumes maps to `/onboarding-*` on the Go side.
