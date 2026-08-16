@@ -1,8 +1,12 @@
-# 03 — Build the profile
+# 03 — Build the profile (source ingestion + merge)
 
-Research results + interview answers merge into the business profile. Conflicting answers are shown
-side by side; the contractor picks.
+Every source — registry, Maps, crawl, research, interview — normalizes into one typed profile
+through the source-ingestion step: each field carries its value, status, source refs, and
+confidence.
 
-- **Persists** `business_profiles` (identity, contact, legal, brand), `business_profile_versions`
-  (`details` + `source_refs` + `created_by`), `business_profile_services`,
-  `business_profile_service_areas`, `business_profile_opening_hours`.
+- **Merge rules**: contractor answers win over research (unless marked uncertain); official registry
+  wins for legal identity; trade registry wins for accreditations; conflicts become targeted
+  questions, never silent overwrites.
+
+- **Persists** `business_profiles` + `business_profile_versions` (append-only: `details`,
+  `source_refs`, `created_by`) + `business_profile_services` / `_service_areas` / `_opening_hours`.
