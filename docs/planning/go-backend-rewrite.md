@@ -138,7 +138,7 @@ when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard err
 | Config | env -> typed struct, validated at startup | |
 | Logging | `log/slog` | structured, request IDs |
 | Storage | `aws-sdk-go-v2/service/s3` | R2 in prod, MinIO/local FS in dev |
-| LLM | OpenRouter behind an interface | mandatory recording of reasoning + output + tool calls |
+| LLM | provider interface; Vercel AI SDK primary, OpenRouter alternative | mandatory recording of reasoning + output + tool calls |
 | Payments | Stripe via `stripe-go` SDK | activation checkout only |
 | IDs | UUID PKs | `timestamptz` defaults |
 
@@ -395,6 +395,9 @@ first pass.
   (`Organizations().Create`). No hand-rolled JWT/JWKS logic or Clerk data types.
 - **Stripe** — official `github.com/stripe/stripe-go` SDK for checkout-session creation and webhook
   signature verification (`webhook.ConstructEvent`). No hand-rolled HMAC/signature code.
+- **LLM provider** — behind an internal provider interface. Vercel AI SDK is the primary candidate
+  (OpenRouter is the alternative — it now adds up to ~15% per transaction). The interface keeps the
+  concrete provider swappable; the Go client choice is an implementation detail behind it.
 - **CI/CD** — CircleCI primary (PR-only, path-filtered, non-mutating); GitHub Actions for emergency
   + Cloudflare deploy; file-size guard (< 800 warn / > 1200 hard error); backend tests
   provider-isolated; evals local-only. See `docs/ci-cd.md`.

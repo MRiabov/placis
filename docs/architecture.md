@@ -14,7 +14,7 @@
 | Config | env → typed struct, validated once at startup |
 | Logging | `log/slog` (structured) + request ids |
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
-| LLM | OpenRouter behind an internal provider interface |
+| LLM | provider interface; Vercel AI SDK primary, OpenRouter as an alternative |
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (private app) | `frontend-2` — Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; reused mostly, adapted to the huma OpenAPI |
 | Public site | one shared runtime — Astro with React islands (Cloudflare Workers) — that renders every tenant's published site; not yet imported from `OnCall` |
