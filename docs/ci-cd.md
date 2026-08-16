@@ -18,7 +18,7 @@ deploy. Both run only non-mutating checks — CI never rewrites files.
    structs (a contract check), so generated types are evidence and never drift.
 5. **Provider isolation** — the backend test job strips provider credentials and forces fake
    storage/domain/LLM/research/voice providers, then fails if any credential-shaped env var
-   remains. Tests must not spend OpenRouter, Google, registry, or research quota. Eval suites are
+   remains. Tests must not spend LLM-provider, Google, registry, or research quota. Eval suites are
    **local-only** and never run in ordinary CI.
 
 ## Runner policy

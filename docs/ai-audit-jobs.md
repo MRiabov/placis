@@ -5,8 +5,9 @@ what happened, how slow work runs in the background, and how files, payments, an
 
 ## AI / LLM layer
 
-- OpenRouter sits behind an internal provider interface, so prompts, model names, response shapes,
-  and cost logging never leak into domain logic.
+- The LLM provider (Vercel AI SDK, with OpenRouter as an alternative) sits behind an internal
+  provider interface, so prompts, model names, response shapes, and cost logging never leak into
+  domain logic.
 - Prompts are a catalog keyed by id and version — not hardcoded strings.
 - Output is parsed against a schema, repaired if it doesn't fit, and validated before it enters the
   app.
