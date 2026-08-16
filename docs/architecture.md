@@ -73,6 +73,10 @@ Rules:
 - Route handlers validate input (huma) and call service functions; services own business rules and
   transactions; models are persistence only.
 - Service functions accept `tenantID` explicitly; they never infer it from global state.
+- **Two type layers by default**: sqlc rows (persistence) and huma DTOs (API). A third "domain
+  value" exists only to name a composite of several rows (e.g. the business profile, the site
+  manifest) — never to mirror a single table. Reuse one `*Read` per entity and one `*Create`/
+  `*Update` per write; don't add a new type per endpoint.
 - See [ci-cd.md](ci-cd.md) for the delivery gates (file-size guard, provider isolation, generated-code freshness).
 
 ## Frontend (`frontend-2`)
