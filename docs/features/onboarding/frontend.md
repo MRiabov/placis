@@ -27,15 +27,18 @@ review.
 
 ### 2. Interview — a few questions
 
-Fields, autosaved as the contractor goes:
+The interview never re-asks what we already know. In the **text interview** the known fields are
+prefilled from the source and the contractor fills in the gaps; in the **voice interview** the agent
+is told what's known and what's left, so it asks only the missing questions.
+
+Missing fields, autosaved as the contractor answers:
 
 - **Who they are** — display name, trade, established year, a short description.
 - **Contact** — contact name, phone, email, website.
 - **What they do** — main services, and the areas they cover.
 - **Opening hours** — per day: open time, close time, and a note.
 - **Photos** — use the found ones, take them from Google, upload later, or use neutral ones.
-- **Proof** — accreditations/certifications (pick from known options or type your own), reviews
-  (found, or mark unavailable), and any extra notes.
+- **Proof** — accreditations/certifications, reviews, and any extra notes.
 
 ### 3. Review — what we found vs. what's missing
 
