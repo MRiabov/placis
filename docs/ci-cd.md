@@ -40,3 +40,18 @@ just check-files    # file-size guard
 just sqlc           # regenerate queries
 just test           # go test ./...
 ```
+
+## Pre-commit & static analysis
+
+Pre-commit runs the fast subset (format + a few linters); CI runs the full set. Go's compiler and
+standard linters already enforce most of what the previous repo's hand-rolled Python AST ratchets
+did (Python had no compiler backing; Go does). We do **not** hand-roll AST scripts up front:
+
+- `gofmt`/`goimports`, `go vet`, `golangci-lint` (`staticcheck`, `govet`, `errcheck`, `ineffassign`,
+  `unused`, `misspell`, `revive`).
+- Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen).
+
+A custom `go/analysis` analyzer is added only when a concrete mistake keeps recurring — the one
+candidate is the Go analog of the old "freeform-JSON" ratchet ("no `map[string]any` /
+`json.RawMessage` in domain code, only at the persistence/API boundary"). Defer it until it
+actually bites.
