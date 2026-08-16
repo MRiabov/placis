@@ -9,20 +9,22 @@ themselves through the CMS.
 
 ## Reading order
 
-1. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
-2. [Architecture](architecture.md) — stack, module layout, runtime, boundaries
-3. [Tenancy, auth, and data model](tenancy-auth-and-data-model.md) — Clerk auth, tenant isolation, full schema
-4. [Onboarding](features/onboarding/README.md) — research and business-profile building
-5. [Website CMS](features/website/README.md) — blueprints, generation, editing, publication
-6. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md)
-7. [AI, audit, and jobs](ai-audit-jobs.md) — LLM traceability, audit events, background jobs, files, payments
-8. [CI and delivery](ci-cd.md) — file-size guard, provider isolation, generated-code freshness
+1. [Development principles](development-principles.md) — how work is sliced and reviewed (read before writing code)
+2. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
+3. [Architecture](architecture.md) — stack, module layout, runtime, boundaries
+4. [Tenancy, auth, and data model](tenancy-auth-and-data-model.md) — Clerk auth, tenant isolation, full schema
+5. [Onboarding](features/onboarding/README.md) — research and business-profile building
+6. [Website CMS](features/website/README.md) — blueprints, generation, editing, publication
+7. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md)
+8. [AI, audit, and jobs](ai-audit-jobs.md) — LLM traceability, audit events, background jobs, files, payments
+9. [CI and delivery](ci-cd.md) — file-size guard, provider isolation, generated-code freshness
 
 ## Canonical references
 
 | Topic | Doc |
 | --- | --- |
 | Stack, module layout, runtime | [architecture.md](architecture.md) |
+| How work is sliced and reviewed | [development-principles.md](development-principles.md) |
 | Naming / vocabulary | [glossary.md](glossary.md) |
 | Auth, tenancy, schema | [tenancy-auth-and-data-model.md](tenancy-auth-and-data-model.md) |
 | Onboarding loop (research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
