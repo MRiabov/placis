@@ -37,6 +37,7 @@ everywhere — docs, code, API, UI — with no synonyms drifting in.
 | publish / go live | the site is on the internet | `website_publications` |
 | claim / sign up | pay and activate | `preview_claims`, `internal/billing/` (checkout), `internal/onboarding/claim.go` |
 | lead | a visitor who got in touch | `leads` |
+| web address / page path | the URL-safe name of a business or a service | `slug` (internal only, never shown to users) |
 | owner / contractor | the customer (a construction business owner) | `clerk_user_id`, `tenant_memberships.role` |
 | the team / us | Placis's managed team | platform role + Clerk native impersonation |
 | the CMS | the app where the owner edits website + ads (the umbrella) | `internal/website/` + `internal/ads/` |
