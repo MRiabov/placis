@@ -14,6 +14,7 @@ themselves through the CMS.
 4. [Website CMS](website-cms.md) — blueprints, generation, editing, publication
 5. [Ads](ads.md) — ad generation (#403); the authoritative spec is in [ads/ad-generation/](ads/ad-generation/ADR.md)
 6. [AI, audit, and jobs](ai-audit-jobs.md) — LLM traceability, audit events, background jobs, files, payments
+7. [CI and delivery](ci-cd.md) — file-size guard, provider isolation, generated-code freshness
 
 ## Canonical references
 
@@ -25,6 +26,7 @@ themselves through the CMS.
 | Website building + editing | [website-cms.md](website-cms.md) |
 | Ad generation | [ads.md](ads.md) |
 | AI trace, audit, jobs, files, payments | [ai-audit-jobs.md](ai-audit-jobs.md) |
+| CI and delivery | [ci-cd.md](ci-cd.md) |
 | Exhaustive rewrite plan | [planning/go-backend-rewrite.md](planning/go-backend-rewrite.md) |
 
 ## Product boundary
