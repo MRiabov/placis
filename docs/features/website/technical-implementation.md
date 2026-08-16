@@ -21,7 +21,7 @@ Related: [PRD](prd.md), [ADR](ADR.md), [component contract](../../architecture.m
 
 1. Load the selected blueprint + component contracts from `catalog/`.
 2. Validate component ids, props, design controls, page paths, forms, and navigation against the
-   JSON Schemas.
+   component contract structs.
 3. Resolve template placeholders from the live business profile (placeholders kept in drafts).
 4. Create tenant-owned `website_*` records as a draft; never write published state from generation.
 
@@ -53,7 +53,7 @@ Related: [PRD](prd.md), [ADR](ADR.md), [component contract](../../architecture.m
 
 ## Validation & testing
 
-- Component props validated against JSON Schema on save and publish.
+- Component props validated against the component's contract struct on save and publish.
 - Cross-tenant isolation for pages/sections/slots/assets/forms/publications.
 - Immutability: versions/publications are never mutated; rollback reactivates.
 - Blueprint application rejects unknown component ids / invalid props before writing.

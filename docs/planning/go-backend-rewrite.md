@@ -116,7 +116,7 @@ placis/
     billing/             # checkout.go, webhooks.go (Stripe only)
     leads/               # leads.go
   migrations/            # goose SQL migrations (greenfield)
-  catalog/               # blueprints + component JSON Schemas (static, versioned)
+  catalog/               # blueprints + component contracts (typed structs, versioned)
   docs/                  # rescoped canonical docs
   go.mod
 ```
@@ -148,12 +148,12 @@ handlers outside huma.
 
 ### Component contract (single source of truth)
 
-Component schemas (what a `public.hero.image` section accepts) currently exist twice — TS types in
-`packages/public-site-components/` and Python `typed_values.py`. The rewrite uses **one JSON Schema
-per component** under `catalog/`, consumed by both the TS renderer (validation) and the Go backend
-(save/publish validation). Blueprints and component contracts are static, versioned catalog data,
-**not** database rows; the Go backend loads and validates them and must not hand-duplicate their
-schemas.
+Component contracts (what a `public.hero.image` section accepts) currently exist twice — TS types
+in `packages/public-site-components/` and Python `typed_values.py`. The rewrite uses **one typed
+struct per component, dumped to JSON**, under `catalog/`, consumed by both the TS renderer
+(validation) and the Go backend (save/publish validation). Blueprints and component contracts are
+static, versioned catalog data, **not** database rows; the Go backend loads and validates them and
+must not hand-duplicate the struct shapes.
 
 ### Tenancy and auth rules
 
@@ -375,7 +375,7 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
 2. **Onboarding & research & profile** — sessions, interview, research providers
    (Google Places, company registry, Facebook, website crawl, photo classification), business
    profile with history.
-3. **Blueprints & website** — component/blueprint catalog loaders + JSON Schemas, blueprint
+3. **Blueprints & website** — component/blueprint catalog loaders + component contracts, blueprint
    application, LLM refinement (propose-only), CMS CRUD, publications.
 4. **Preview, claim, public site, leads** — preview packages, Stripe checkout + webhooks +
    activation, public resolve/manifest runtime, lead capture.

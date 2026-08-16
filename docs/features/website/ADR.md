@@ -11,9 +11,10 @@ Status: decided (2026-08-16, product owner + engineering).
 2. **CMS records are the source of truth; the manifest is the read model** — `site_manifest` is
    built at publish time only; it is never the editable source.
 
-3. **Component contracts are one JSON Schema each** — under `catalog/`, consumed by both the TS
-   public-site renderer (validation) and the Go backend (save/publish validation). No forked
-   duplicate of component schemas (kills the old TS-types + Python-`typed_values` duplication).
+3. **Component contracts are one typed struct each, dumped to JSON** — under `catalog/`, consumed
+   by both the TS public-site renderer (validation) and the Go backend (save/publish validation).
+   No forked duplicate of component schemas (kills the old TS-types + Python-`typed_values`
+   duplication).
 
 4. **Blueprints are static catalog data, not DB rows** — trade blueprints + component contracts are
    versioned JSON + sidecars under `catalog/`; the backend loads and validates them, never

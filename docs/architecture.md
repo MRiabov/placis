@@ -65,7 +65,7 @@ internal/
   billing/        # checkout.go, webhooks.go (Stripe only)
   leads/          # leads.go
 migrations/       # goose SQL migrations (greenfield)
-catalog/          # blueprints + component JSON Schemas (static, kept as versions)
+catalog/          # blueprints + component contracts (typed structs, kept as versions)
 docs/
 go.mod
 ```
@@ -126,10 +126,11 @@ background job can be retried safely (an explicit key).
 
 ## Component contract (single source of truth)
 
-Each component (what a `public.hero.image` section accepts) is **one JSON Schema** under `catalog/`,
-read by both the TypeScript public-site renderer and the Go backend for save/publish validation.
+Each component (what a `public.hero.image` section accepts) is **one typed struct, dumped to JSON**,
+under `catalog/`. That JSON is the contract: the TypeScript public-site renderer consumes it to
+validate and render, and the Go backend loads the same structs for save/publish validation.
 Blueprints and component contracts are static catalog data, kept as versions — not database rows.
-The Go backend loads and validates them; it must not hand-duplicate their schemas.
+The Go backend loads and validates them; it must not hand-duplicate the struct shapes.
 
 ## Boundaries
 
