@@ -121,7 +121,7 @@ database rows. The Go backend loads and validates them and must not hand-duplica
 3. `blueprint` applies templates into tenant-owned `website_*` rows; it validates component IDs,
    props, design controls, page paths, forms, and navigation before writing.
 4. `website` owns the editable content model and publication; a `site_manifest` is only the
-   validated read model materialized at publish time.
+   validated read model built at publish time.
 5. `ads` is a standalone service (the `/cms/ads` workspace is one user). It reads the profile +
    approved media, proposes copy + image galleries, and exports `ready to post` packages — never
    posts.

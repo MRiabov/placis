@@ -22,7 +22,7 @@ Related: [PRD](prd.md), [ADR](ADR.md), [component contract](../architecture.md),
 1. Load the selected blueprint + component contracts from `catalog/`.
 2. Validate component ids, props, design controls, page paths, forms, and navigation against the
    JSON Schemas.
-3. Resolve fact variables from the live business profile (tokens preserved in drafts).
+3. Resolve template placeholders from the live business profile (placeholders kept in drafts).
 4. Create tenant-owned `website_*` records as a draft; never write published state from generation.
 
 ## LLM refinement (propose-only)
@@ -34,9 +34,9 @@ Related: [PRD](prd.md), [ADR](ADR.md), [component contract](../architecture.md),
 ## Publish / renderer rules
 
 1. Only registered components render; props validated before save and before publish.
-2. Publish materializes an immutable `website_publications` row (active flag, rollback chain).
+2. Publish creates a `website_publications` row (kept, not edited; active flag + rollback chain).
 3. Public pages render only the active publication; authenticated preview renders draft versions.
-4. Rollback reactivates an earlier snapshot; history is never mutated.
+4. Rollback reactivates an earlier version; history is never touched.
 5. Publish emits an audit event.
 
 ## State machines

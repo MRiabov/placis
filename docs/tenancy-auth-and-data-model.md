@@ -94,9 +94,9 @@ props, slot values, research raw payloads, manifests); structural data is real c
   `registered_office`, `contact_name`, `phone`, `email`, `website`, `google_profile_url`,
   `facebook_profile_url`, `founder_profile` jsonb, `brand` jsonb (colors/logo_asset_id/tone/
   typography), `current_version_id` nullable, timestamps
-- `business_profile_versions` — `id`, `business_profile_id` fk, `version_number`, `facts` jsonb
-  (snapshot), `source_refs` jsonb, `created_by` (`research`/`voice`/`text`/`human`/`llm`),
-  `created_at`; unique `(business_profile_id, version_number)`
+- `business_profile_versions` — `id`, `business_profile_id` fk, `version_number`, `details` jsonb
+  (a copy of the details at this version), `source_refs` jsonb, `created_by`
+  (`research`/`voice`/`text`/`human`/`llm`), `created_at`; unique `(business_profile_id, version_number)`
 - `business_profile_services` — `id`, `business_profile_id` fk, `name`, `description`, `slug`
 - `business_profile_service_areas` — `id`, `business_profile_id` fk, `locality`
 - `business_profile_opening_hours` — `id`, `business_profile_id` fk, `day_of_week`, `opens_at`,
@@ -108,7 +108,7 @@ props, slot values, research raw payloads, manifests); structural data is real c
   `landing`/`legal`), `status` (`draft`/`published`/`archived`), `current_version_id` nullable,
   `published_version_id` nullable, `seo` jsonb, timestamps; unique `(tenant_id, path)`
 - `website_page_versions` — `id`, `tenant_id` fk, `page_id` fk, `version_number`, `status`
-  (`draft`/`approved`/`published`/`rejected`), `content_snapshot` jsonb, `validation_errors` jsonb,
+  (`draft`/`approved`/`published`/`rejected`), `content` jsonb, `validation_errors` jsonb,
   `source_refs` jsonb, `created_by`, `created_at`; unique `(page_id, version_number)`
 - `website_sections` — `id`, `tenant_id` fk, `page_id` fk, `component_id`, `component_version`,
   `position`, `status` (`visible`/`hidden`), `props` jsonb, `design` jsonb, `source_refs` jsonb;
