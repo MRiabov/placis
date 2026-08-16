@@ -38,7 +38,7 @@ everywhere — docs, code, API, UI — with no synonyms drifting in.
 | claim / sign up | pay and activate | `preview_claims`, `internal/billing/` (checkout), `internal/onboarding/claim.go` |
 | lead | a visitor who got in touch | `leads` |
 | owner / contractor | the customer (a construction business owner) | `clerk_user_id`, `tenant_memberships.role` |
-| the team / us | Placis's managed team | platform role + impersonation |
+| the team / us | Placis's managed team | platform role + Clerk native impersonation |
 | the CMS | the app where the owner edits website + ads (the umbrella) | `internal/website/` + `internal/ads/` |
 
 ## Implementation-only words
