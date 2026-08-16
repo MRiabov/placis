@@ -69,12 +69,10 @@ props, slot values, research raw payloads, manifests); structural data is real c
 
 ### Onboarding
 
-- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `channel` (`voice`/`text`/`web`), `status`
-  (`created`/`consenting`/`interviewing`/`researching`/`generating`/`previewing`/`claimed`/
-  `expired`), `token` unique, `clerk_user_id` nullable, timestamps
-- `consent_records` — `id`, `onboarding_session_id` fk, `purpose` (`recording`/`transcription`/
-  `ai_enrichment`/`research`), `status` (`granted`/`withdrawn`), `version`, `granted_at`,
-  `withdrawn_at`; unique `(session_id, purpose, version)`
+- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `source` (`google_places`/
+  `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`interviewing`/
+  `profile_draft`/`generating`/`previewing`/`claimed`/`expired`), `token` unique, `clerk_user_id`
+  nullable, `consent_given_at` nullable, timestamps
 - `text_interview_submissions` — `id`, `onboarding_session_id` fk, `version`, `payload` jsonb,
   `created_at`
 - `voice_observability_events` — `id`, `onboarding_session_id` fk, `event_type`, `payload` jsonb

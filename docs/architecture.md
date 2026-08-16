@@ -40,7 +40,7 @@ internal/
   # product domains — feature-nested: one package per feature, split a package
   # only when it grows past ~800 lines (never flat file dumps).
   tenancy/        # tenants.go, memberships.go, domains.go
-  onboarding/     # session.go, consent.go, interview.go, orchestrate.go, claim.go
+  onboarding/     # session.go, interview.go, orchestrate.go, claim.go
     preview/      #   package.go, events.go (signed preview of the generated site during onboarding)
   research/       # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
   profile/        # profile.go, versions.go, services.go, areas.go, hours.go
@@ -82,7 +82,7 @@ adapted only where the huma-derived OpenAPI improves the contract.
 
 - `src/generated/api-types.ts` — regenerated from the served `/openapi.json` via
   `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` client + Clerk token provider.
-- `src/features/setup/` — onboarding (text interview, sources, research progress, preview).
+- `src/features/setup/` — onboarding (sources, interview, research progress, preview).
 - `src/features/cms/` — the website + ads parts of the CMS (editor, media, inspector, ads workspace).
 - `src/features/preview/` — the signed onboarding preview + public-site module preview.
 

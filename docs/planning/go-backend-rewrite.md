@@ -14,15 +14,15 @@ edit it (or we do it), and produces — and runs — ads from the profile and ap
 One loop:
 
 ```text
-onboard (voice / text / web)
-  -> consent
+onboard (from their Google Maps listing or company-registry record)
+  -> a few questions to fill the gaps
   -> research the business (Google Places, company registry, Facebook, website crawl, photo classification)
-  -> build a versioned business profile
-  -> generate a website from a trade blueprint (facts resolve into templates)
-  -> LLM refinement (propose-only, governed edits)
+  -> one clear business profile
+  -> generate a website from a trade template (their details fill the blanks)
+  -> LLM refinement (AI suggests, owner decides)
   -> edit in the CMS (pages / sections / slots / assets / forms / navigation)
-  -> publish (materialized site manifest)
-  -> generate ad creatives from the profile + approved media (#403)
+  -> publish (a frozen copy goes live)
+  -> generate ads from the profile + approved media (#403)
 ```
 
 Cross-cutting: Clerk auth, tenant == Clerk org (1-1), Postgres multitenancy, LLM + system
@@ -34,8 +34,8 @@ auditability, and voice agents as a **separate, optional** channel.
 
 1. **Identity, auth, tenancy** — Clerk identity + organizations; tenant == Clerk org 1-1;
    memberships with roles; domains (generated subdomain + custom).
-2. **Onboarding (research → profile)** — onboarding sessions (voice/text/web), per-purpose consent,
-   text interview, voice observability, research providers, versioned business profile.
+2. **Onboarding (research → profile)** — onboarding sessions (start from a Google Maps listing or
+   company-registry record), interview, voice observability, research providers, business profile.
 3. **Website building from blueprints** — trade blueprints + component contracts as static catalog
    data; blueprint application; LLM refinement as governed, propose-only edits.
 4. **Website editing (CMS)** — pages (+ immutable versions), sections, content slots, assets/media
@@ -97,7 +97,7 @@ placis/
 
     # product domains — feature-nested (one package per feature)
     tenancy/             # tenants.go, memberships.go, domains.go
-    onboarding/          # session.go, consent.go, interview.go, orchestrate.go, claim.go
+    onboarding/          # session.go, interview.go, orchestrate.go, claim.go
       preview/           #   package.go, events.go (signed preview of the generated site)
     research/            # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
     profile/             # profile.go, versions.go, services.go, areas.go, hours.go
@@ -184,12 +184,10 @@ Full DDL lands in `migrations/`.
 
 ### Onboarding (research → profile)
 
-- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `channel` (`voice`/`text`/`web`),
-  `status` (`created`/`consenting`/`interviewing`/`researching`/`generating`/`previewing`/
-  `claimed`/`expired`), `token` unique, `clerk_user_id` nullable, timestamps
-- `consent_records` — `id`, `onboarding_session_id` fk, `purpose`
-  (`recording`/`transcription`/`ai_enrichment`/`research`), `status` (`granted`/`withdrawn`),
-  `version`, `granted_at`, `withdrawn_at`; unique `(session_id, purpose, version)`
+- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `source` (`google_places`/
+  `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`interviewing`/
+  `profile_draft`/`generating`/`previewing`/`claimed`/`expired`), `token` unique, `clerk_user_id`
+  nullable, `consent_given_at` nullable, timestamps
 - `text_interview_submissions` — `id`, `onboarding_session_id` fk, `version`, `payload` jsonb,
   `created_at`
 - `voice_observability_events` — `id`, `onboarding_session_id` fk, `event_type`, `payload` jsonb
@@ -312,9 +310,8 @@ before production use.
 
 ## 5. Workflows and state machines
 
-1. **Onboarding session** — `created → consenting → interviewing → researching → profile_draft →
-   generating → previewing → claimed/expired`. Research and generation run in parallel where
-   possible.
+1. **Onboarding session** — `created → interviewing → profile_draft → generating → previewing →
+   claimed/expired`. Research runs in the background alongside the interview.
 2. **Business profile** — immutable versions; `current_version_id` points at the live version;
    facts carry `source_refs` and `created_by`.
 3. **Website page** — `draft → approved → published`; versions are immutable; publish materializes
@@ -337,8 +334,8 @@ Route groups (full struct definitions come with the `huma` types):
 - `/api/v1/health`
 - `/api/v1/me`, `/api/v1/me/organization` (Clerk org provisioning)
 - `/api/v1/onboarding-sessions` + nested: company-registry search, google-places
-  autocomplete/from-google-place, profile (+ checklist/confirmations/facts), consents, text
-  interview, research runs, generation runs, artifacts, preview packages, voice/progress events
+  autocomplete/from-google-place, profile (+ checklist/confirmations), interview, research runs,
+  generation runs, artifacts, preview packages, voice/progress events
 - `/api/v1/tenants/{slug}` + business-profile, domains, website (blueprints, pages, forms,
   publications, certifications), memberships
 - `/api/v1/website/editor` + pages/sections/slots/assets/projects/publications/business-profile
@@ -373,9 +370,9 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
    (sqlc/huma/frontend-typegen), provider isolation, evals local-only.
 1. **Auth & tenancy** — Clerk verification → `Principal`, tenant resolution, memberships, domains,
    roles, impersonation/audit, cross-tenant isolation tests.
-2. **Onboarding & research & profile** — sessions, consent, text interview, research providers
+2. **Onboarding & research & profile** — sessions, interview, research providers
    (Google Places, company registry, Facebook, website crawl, photo classification), business
-   profile with versioned facts.
+   profile with history.
 3. **Blueprints & website** — component/blueprint catalog loaders + JSON Schemas, blueprint
    application, LLM refinement (propose-only), CMS CRUD, publications.
 4. **Preview, claim, public site, leads** — preview packages, Stripe checkout + webhooks +
