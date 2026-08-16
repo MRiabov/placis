@@ -77,6 +77,9 @@ Rules:
   value" exists only to name a composite of several rows (e.g. the business profile, the site
   manifest) — never to mirror a single table. Reuse one `*Read` per entity and one `*Create`/
   `*Update` per write; don't add a new type per endpoint.
+- **Every DTO field is constrained**: strings carry `minLength`/`maxLength`, numbers carry
+  `minimum`/`maximum`, fixed sets use `enum` (huma tags). CI checks the generated OpenAPI and fails
+  on an unconstrained field — the Go form of the old "strict schema contract" check.
 - See [ci-cd.md](ci-cd.md) for the delivery gates (file-size guard, provider isolation, generated-code freshness).
 
 ## Frontend (`frontend-2`)
