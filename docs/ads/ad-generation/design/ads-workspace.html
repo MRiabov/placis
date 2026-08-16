@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ads workspace — design mock v6 (accordion wrapper, two forms)</title>
+<style>
+  :root {
+    /* Verbatim CMS + private tokens (frontend-2/src/styles/cms/tokens.css,
+       frontend-2/src/styles/private-app-tokens.css). The real implementation
+       imports these globals; the mock mirrors the values so the visual matches
+       the app schema exactly (white canvas, CMS status colors, 8/12/16 radii). */
+    --private-canvas: #ffffff;
+    --private-surface: #f7f7f7;
+    --private-surface-raised: #f4f4f5;
+    --private-surface-active: #e4e4e7;
+    --private-surface-sunken: #fafafa;
+    --private-text: #27272a;
+    --private-text-secondary: #52525b;
+    --private-text-muted: #71717a;
+    --private-text-subtle: #a1a1aa;
+    --private-border: #e4e4e7;
+    --private-border-strong: #d4d4d8;
+    --private-accent: #13120a;
+    --private-accent-hover: #27272a;
+    --private-focus: #13120a;
+    --private-accent-subtle: rgb(19 18 10 / 6%);
+    --private-accent-wash: rgb(19 18 10 / 6%);
+    --private-radius-control: 8px;
+    --private-radius-card: 12px;
+    --private-radius-panel: 16px;
+    --private-radius-pill: 999px;
+    --private-ring: 0 0 0 2px rgb(19 18 10 / 18%);
+    --private-shadow-sm: 0 4px 16px rgb(39 39 42 / 6%);
+    --private-shadow-md: 0 18px 48px rgb(39 39 42 / 10%);
+    --private-ease: cubic-bezier(0.2, 0, 0, 1);
+    --private-duration-fast: 120ms;
+    --private-duration: 160ms;
+    /* CMS tokens (cms/tokens.css, .cms-app) */
+    --cms-canvas: var(--private-canvas);
+    --cms-surface: var(--private-surface);
+    --cms-surface-raised: var(--private-surface-raised);
+    --cms-surface-overlay: #ffffff;
+    --cms-surface-overlay-muted: #f4f4f5;
+    --cms-text: var(--private-text);
+    --cms-text-muted: var(--private-text-muted);
+    --cms-text-subtle: var(--private-text-subtle);
+    --cms-border: var(--private-border);
+    --cms-border-strong: var(--private-border-strong);
+    --cms-border-subtle: var(--private-surface-raised);
+    --cms-accent: var(--private-accent);
+    --cms-accent-hover: var(--private-accent-hover);
+    --cms-accent-subtle: var(--private-accent-subtle);
+    --cms-error: #b42318;
+    --cms-error-strong: #b42318;
+    --cms-error-surface: #fff1f0;
+    --cms-success: #166534;
+    --cms-success-strong: #166534;
+    --cms-success-surface: #f0fdf4;
+    --cms-warning: #a16207;
+    --cms-warning-strong: #a16207;
+    --cms-warning-surface: #fffbeb;
+    --cms-info: #1d4ed8;
+    --cms-info-strong: #1d4ed8;
+    --cms-destructive: #b91c1c;
+    --cms-radius-control: var(--private-radius-control);
+    --cms-radius-card: var(--private-radius-card);
+    --cms-radius-panel: var(--private-radius-panel);
+    --cms-radius-pill: var(--private-radius-pill);
+    --cms-shadow-sm: var(--private-shadow-sm);
+    --cms-shadow-md: var(--private-shadow-md);
+    --cms-ease: var(--private-ease);
+    --cms-duration: var(--private-duration);
+    /* mock aliases → CMS tokens (white canvas, like the app) */
+    --bg: var(--cms-canvas);
+    --panel: var(--cms-canvas);
+    --line: var(--cms-border);
+    --line-strong: var(--cms-border-strong);
+    --ink: var(--cms-text);
+    --muted: var(--cms-text-muted);
+    --subtle: var(--cms-text-subtle);
+    --accent: var(--cms-accent);
+    --accent-hover: var(--cms-accent-hover);
+    --accent-soft: var(--cms-accent-subtle);
+    --hover: var(--cms-surface-raised);
+    --disabled: var(--cms-text-subtle);
+    --ok: var(--cms-success); --ok-soft: var(--cms-success-surface);
+    --warn: var(--cms-warning); --warn-soft: var(--cms-warning-surface);
+    --bad: var(--cms-error); --bad-soft: var(--cms-error-surface);
+    --radius-control: var(--cms-radius-control);
+    --radius-card: var(--cms-radius-card);
+    --radius-panel: var(--cms-radius-panel);
+    --shadow-md: var(--cms-shadow-md);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Satoshi", "Switzer", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); }
+  button, input, select, textarea { font: inherit; }
+  .topbar { background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 16px; padding: 10px 24px; position: sticky; top: 0; z-index: 20; }
+  .brand { font-weight: 700; }
+  .crumb { color: var(--muted); font-size: 14px; }
+  .crumb b { color: var(--ink); }
+  .spacer { flex: 1; }
+  .avatar { width: 30px; height: 30px; border-radius: var(--radius-pill); background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 24px; }
+  /* CMS shell: existing sidebar frames the ads content */
+  .shell { display: flex; }
+  .sidebar { width: 220px; flex: none; border-right: 1px solid var(--line); background: var(--panel); padding: 12px 8px; }
+  .snav { margin-bottom: 2px; }
+  .sitem { display: block; padding: 8px 12px; border-radius: var(--radius-control); font-size: 14px; color: var(--muted); cursor: pointer; }
+  .sitem:hover { background: var(--hover); }
+  .sitem.on { background: var(--private-accent-subtle); color: var(--ink); font-weight: 600; }
+  .content { flex: 1; min-width: 0; }
+  h1 { font-size: 18px; margin: 0; }
+  .hint { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .field .sub { color: var(--muted); font-size: 12px; font-weight: 400; }
+  input[type=text], textarea, select { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: var(--radius-control); font-size: 14px; background: #fff; font-family: inherit; resize: vertical; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .row2 { grid-template-columns: 1fr; } }
+  input:disabled, textarea:disabled { opacity: .6; background: var(--private-surface-raised); cursor: not-allowed; }
+  .btn { border: 1px solid var(--line); background: #fff; padding: 9px 16px; border-radius: var(--radius-control); font-size: 14px; font-weight: 600; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn[disabled] { background: #f2f4f7; border-color: var(--line); color: var(--disabled); cursor: not-allowed; }
+  .note { font-size: 12px; color: var(--muted); }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600; }
+  .badge.review { background: var(--warn-soft); color: var(--warn); }
+  .badge.ready { background: var(--ok-soft); color: var(--ok); }
+  .badge.draft { background: var(--private-surface-raised); color: var(--muted); }
+  .viewtabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .viewtab { border: 1px solid var(--line); background: #fff; padding: 8px 14px; border-radius: var(--radius-control); font-size: 14px; color: var(--muted); cursor: pointer; }
+  .viewtab.on { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 20px; }
+  .adcards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 640px) { .adcards { grid-template-columns: 1fr; } }
+  .adcard { display: block; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-card); padding: 10px; cursor: pointer; }
+  .adcard:hover { background: var(--hover); }
+  .adcard img { width: 100%; height: 170px; object-fit: cover; object-position: 50% 32%; border-radius: var(--radius-control); }
+  .adinfo { padding: 6px 2px 2px; }
+  .adinfo b { display: block; font-size: 15px; }
+  .admeta2 { display: flex; align-items: center; gap: 8px; margin: 6px 0 2px; }
+  .adinfo .adsub { font-size: 12px; color: var(--muted); }
+  .perf { margin-top: 10px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; opacity: .5; filter: grayscale(1); }
+  .pstat { font-size: 12px; color: var(--muted); }
+  .pstat b { font-weight: 600; color: var(--ink); }
+  .pnote { font-size: 11px; color: var(--subtle); width: 100%; }
+  .dmetrics { display: flex; gap: 24px; flex-wrap: wrap; opacity: .5; filter: grayscale(1); }
+  .dmetric span { display: block; font-size: 12px; color: var(--muted); }
+  .dmetric b { font-size: 18px; }
+  input.inplace { width: auto; min-width: 14ch; margin: 0; border: 0; background: transparent; box-shadow: none; appearance: none; font-size: 17px; font-weight: 700; padding: 2px 4px; color: inherit; }
+  input.inplace:focus { border-bottom: 1px solid var(--accent); outline: none; }
+  .leadrow { display: flex; align-items: center; gap: 12px; padding: 10px 2px; border-top: 1px solid var(--line); }
+  .leadrow:first-of-type { border-top: 0; }
+  .leadwho { flex: 1; min-width: 0; }
+  .leadwho b { display: block; font-size: 14px; }
+  .leadwho span { font-size: 12px; color: var(--muted); }
+  .badge.uncontacted { background: var(--bad-soft); color: var(--bad); font-weight: 700; }
+  .badge.contacted { background: var(--private-surface-raised); color: var(--muted); }
+  .detailgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .dsec { border-top: 1px solid var(--line); padding: 16px; }
+  @media (max-width: 800px) { .detailgrid { grid-template-columns: 1fr; } }
+  .gal-main { width: 100%; height: 280px; background-size: cover; background-position: 50% 32%; border-radius: var(--radius-control); border: 1px solid var(--line); }
+  .gal-thumbs { display: flex; gap: 8px; margin-top: 10px; }
+  .gal-thumb { width: 72px; height: 72px; border-radius: var(--radius-control); border: 2px solid transparent; background-size: cover; background-position: 50% 32%; cursor: pointer; padding: 0; }
+  .gal-thumb.on { border-color: var(--accent); }
+  /* compact mode: >6 ads compress back to dense rows */
+  .adcards.compact .adcard { display: flex; align-items: center; gap: 12px; padding: 10px; }
+  .adcards.compact .adcard img { width: 84px; height: 84px; }
+  .adcards.compact .adinfo b { font-size: 13px; }
+  .adcards.compact .perf { display: none; }
+  /* platform connection affordances */
+  .pmark { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 4px; font-size: 10px; font-weight: 700; color: #fff; margin-right: 6px; }
+  .pmark.f { background: #1877f2; }
+  .pmark.g { background: #4285f4; }
+  .connbtn { display: inline-flex; align-items: center; }
+  .placeholder { display: none; }
+  .q { font-size: 14px; font-weight: 600; margin: 18px 0 8px; }
+  .q:first-child { margin-top: 0; }
+  .q .sub { color: var(--muted); font-size: 12px; font-weight: 400; }
+
+  /* segmented toggle */
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius-card); overflow: hidden; margin-bottom: 14px; }
+  .segbtn { border: 0; background: #fff; padding: 9px 16px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; }
+  .segbtn + .segbtn { border-left: 1px solid var(--line); }
+  .segbtn:not(.on):hover { background: var(--hover); }
+  .segbtn.on { background: var(--accent); color: #fff; }
+  .qlist { border: 1px solid var(--line); border-radius: var(--radius-control); overflow: hidden; margin-bottom: 8px; }
+  .qrow { display: flex; align-items: center; gap: 8px; padding: 9px 12px; font-size: 13px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .qrow:last-child { border-bottom: 0; }
+  .qrow .qtype { flex: 1; }
+  .qrow input { accent-color: var(--accent); }
+
+  /* accordion wrapper: both forms visible, independent expand/collapse */
+  .accwrap { border: 1px solid var(--line); border-radius: var(--radius-panel); background: var(--panel); overflow: hidden; }
+  .form + .form { border-top: 1px solid var(--line); }
+  .sech { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 15px 16px; background: #eef1f5; border: 0; border-bottom: 1px solid var(--line); font-size: 15px; font-weight: 600; }
+  .sech:hover { background: #e6eaf0; }
+  .accwrap > .form:first-child .sech { cursor: default; }
+  .accwrap > .form:first-child .sech:hover { background: #eef1f5; }
+  .form:last-child .sech { border-bottom: 0; }
+  .form.open > .sech { border-bottom: 1px solid var(--line); }
+  .sech .num { width: 24px; height: 24px; border-radius: var(--radius-pill); background: var(--private-surface-raised); color: var(--muted); border: 1px solid var(--line); font-size: 13px; display: grid; place-items: center; flex: none; }
+  .sech .ttl { flex: 1; }
+  .sech .state { font-size: 12px; color: var(--muted); font-weight: 400; }
+  .sech .chev { color: var(--muted); transition: transform .15s; }
+  .form.open .chev { transform: rotate(180deg); }
+  .formbody { display: none; padding: 4px 16px 18px; }
+  .form.open .formbody { display: block; }
+  .form.locked .sech { cursor: not-allowed; }
+  .form.locked .sech .num { background: var(--private-surface-raised); color: var(--subtle); }
+  .form.locked .sech .state { color: var(--disabled); }
+  .form.locked .sech .chev { color: var(--disabled); }
+
+  /* combobox: closed by default, conditional create-new */
+  .combo { position: relative; }
+  .combo input { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: var(--radius-control); font-size: 14px; background: #fff; font-family: inherit; }
+  .pop { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-card); box-shadow: 0 12px 32px rgba(16,24,40,.12); z-index: 20; overflow: hidden; }
+  .combo.open .pop { display: block; }
+  .pop .create { padding: 6px; }
+  .pop .crow { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+  .pop .crow .plus { color: var(--accent); font-weight: 700; }
+  .pop .crow .hintic { color: var(--muted); }
+  .pop .crow.sel { background: var(--hover); }
+  .pop .crow.hint { color: var(--muted); }
+  .pop .divider { height: 1px; background: var(--line); margin: 2px 8px; display: none; }
+  .pop .divider.show { display: block; }
+  .pop .group { padding: 6px 10px 4px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .pop .row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; font-size: 13px; cursor: pointer; }
+  .pop .row:hover { background: var(--hover); }
+  .pop .row .ic { width: 16px; color: var(--muted); text-align: center; }
+  .pop .row .ic.cur { color: var(--accent); font-weight: 700; }
+  .pop .row .txt b { display: block; font-size: 13px; }
+  .pop .row .txt span { display: block; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pop .scroll { max-height: 180px; overflow: auto; }
+  .pop .empty { padding: 10px; font-size: 13px; color: var(--muted); display: none; }
+
+  /* loading */
+  .loading { display: none; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--panel); margin-top: 16px; font-size: 13px; }
+  .loading.show { display: flex; }
+  .spin { width: 18px; height: 18px; border-radius: var(--radius-pill); border: 2px solid var(--line); border-top-color: var(--accent); animation: rot 1s linear infinite; flex: none; }
+  @keyframes rot { to { transform: rotate(360deg); } }
+
+  /* review content */
+  .thumbs { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
+  .thumb { position: relative; width: 88px; height: 88px; border-radius: var(--radius-control); border: 1px solid var(--line); overflow: hidden; padding: 0; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; display: block; }
+  .thumb .cap { position: absolute; bottom: 0; left: 0; right: 0; background: rgb(255 255 255 / 88%); font-size: 10px; color: var(--muted); padding: 2px 4px; text-align: center; }
+  .thumb.add { border-style: dashed; background: #fff; color: var(--accent); font-weight: 600; cursor: pointer; display: grid; place-items: center; }
+  .dropnote { font-size: 12px; color: var(--subtle); margin: 4px 0 10px; }
+  .cleanup { margin-top: 12px; }
+  .cleanup-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  /* before/after sweep viewer */
+  .sweep { position: relative; width: 100%; height: 280px; border: 1px solid var(--line); border-radius: var(--radius-control); overflow: hidden; cursor: ew-resize; user-select: none; touch-action: none; }
+  .sweep-after { position: absolute; inset: 0; background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; }
+  .sweep-before { position: absolute; top: 0; bottom: 0; left: 0; width: 50%; background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; filter: grayscale(.75) brightness(.92) saturate(.55); }
+  .sweep-divider { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: #fff; box-shadow: 0 0 0 1px rgb(39 39 42 / 15%); cursor: ew-resize; }
+  .sweep-divider::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; border-radius: var(--radius-pill); background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+  .sweep-label { position: absolute; top: 8px; font-size: 11px; background: rgb(255 255 255 / 88%); color: var(--muted); padding: 2px 8px; border-radius: var(--radius-pill); }
+  .sweep-label.l { left: 8px; }
+  .sweep-label.r { right: 8px; }
+  .ba { display: flex; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: var(--radius-control); padding: 10px 12px; }
+  .ba .img { width: 52px; height: 52px; border-radius: 6px; background: var(--private-surface-raised); display: grid; place-items: center; color: var(--muted); font-size: 10px; flex: none; }
+  .arrow { color: var(--subtle); flex: none; }
+  .chip { padding: 4px 10px; border-radius: var(--radius-pill); font-size: 12px; border: 1px solid var(--line); background: #fff; flex: none; }
+  /* drop overlay */
+  .dropper { display: none; position: fixed; inset: 12px; z-index: 50; background: rgb(19 18 10 / 4%); border: 2px dashed var(--private-accent); border-radius: var(--radius-panel); align-items: center; justify-content: center; pointer-events: none; }
+  .dropper.show { display: flex; }
+  .dropper span { background: var(--panel); padding: 10px 18px; border-radius: var(--radius-control); font-weight: 600; box-shadow: var(--shadow-md); }
+  .copyfield { margin-bottom: 12px; }
+  .copyfield .lbl { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .copyfield .lbl .count { color: var(--muted); font-weight: 400; }
+  .previews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+  .preview { border: 1px solid var(--line); border-radius: var(--radius-card); background: #fff; overflow: hidden; min-width: 0; }
+  .preview .cap { padding: 8px 10px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); }
+  .feedmock .img { height: 150px; background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; }
+  .feedmock .txt { padding: 10px; font-size: 12px; color: var(--muted); }
+  .feedmock .btn { width: calc(100% - 20px); margin: 0 10px 10px; }
+  .storymock .img { height: 240px; background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image2.jpeg"); background-size: cover; background-position: 50% 32%; display: grid; place-items: center; color: #fff; font-weight: 700; text-shadow: 0 1px 6px rgb(0 0 0 / 40%); }
+  .carmock .imgs { display: flex; gap: 6px; padding: 10px 10px 0; }
+  .carmock .imgs div { flex: 1; aspect-ratio: 1; border-radius: 6px; background-size: cover; background-position: 50% 32%; }
+  .carmock .imgs div:nth-child(1) { background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image0.jpeg"); }
+  .carmock .imgs div:nth-child(2) { background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg"); }
+  .carmock .imgs div:nth-child(3) { background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image2.jpeg"); }
+  .carmock .txt { padding: 8px 10px; font-size: 12px; color: var(--muted); }
+
+  .blocker { display: flex; gap: 10px; align-items: center; padding: 8px 12px; border-radius: var(--radius-control); background: var(--bad-soft); color: var(--bad); font-size: 13px; margin-bottom: 8px; }
+  .blocker.ok { background: var(--ok-soft); color: var(--ok); }
+  .ferr { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--bad); margin: 6px 0; }
+  .ferr::before { content: "⚠"; }
+  .actionbar { display: flex; gap: 10px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+  .actionbar.right { justify-content: flex-end; }
+  .tipwrap { position: relative; display: inline-flex; }
+  .tipwrap::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--panel); font-size: 12px; padding: 5px 9px; border-radius: var(--radius-control); white-space: nowrap; box-shadow: var(--shadow-md); opacity: 0; pointer-events: none; transition: opacity var(--private-duration); z-index: 10; }
+  .tipwrap:hover::after { opacity: 1; }
+  @media (max-width: 640px) {
+    .previews { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">Placis</span>
+  <span class="crumb">CMS &nbsp;·&nbsp; <b>Ads</b></span>
+  <span class="spacer"></span>
+  <span class="avatar">MK</span>
+</div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="snav"><span class="sitem">Website</span></div>
+    <div class="snav"><span class="sitem">Posts</span></div>
+    <div class="snav"><span class="sitem">Careers</span></div>
+    <div class="snav"><span class="sitem">Media</span></div>
+    <div class="snav"><span class="sitem">Proof</span></div>
+    <div class="snav"><span class="sitem on">Ads</span></div>
+    <div class="snav"><span class="sitem">Settings</span></div>
+  </aside>
+  <div class="content">
+    <div class="wrap">
+  <!-- view switcher: list of existing ads vs the new/edit ad flow -->
+  <div class="viewtabs">
+    <button class="viewtab on" data-v="list">My ads</button>
+    <button class="viewtab" data-v="flow">New ad</button>
+  </div>
+
+  <!-- ===== list of existing ads ===== -->
+  <div id="viewList">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap">
+      <b style="font-size:16px">Your ads</b>
+      <span class="spacer"></span>
+      <button class="btn" id="compactBtn">Show compact</button>
+      <button class="btn primary" id="newAdBtn">+ New ad</button>
+    </div>
+    <p class="note" style="margin:-6px 0 14px">Ads usually run 6 at a time, so cards are large; more than 6 compress automatically. Sorted: active first, then newest.</p>
+    <div class="adcards">
+      <div class="adcard">
+        <img src="../../../../../apps/public-site/public/fixtures/bellfield/image0.jpeg" alt="" />
+        <div class="adinfo">
+          <b>Gutter cleaning — summer</b>
+          <div class="admeta2"><span class="badge ready">Creative ready</span><span class="adsub">Updated yesterday · Guttering</span></div>
+          <div class="perf">
+            <span class="pstat">Impressions <b>—</b></span>
+            <span class="pstat">Clicks <b>—</b></span>
+            <span class="pstat">Spend <b>—</b></span>
+            <span class="pnote">Performance appears once posting is connected</span>
+          </div>
+        </div>
+      </div>
+      <div class="adcard">
+        <img src="../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg" alt="" />
+        <div class="adinfo">
+          <b>Roofing replacement — spring push</b>
+          <div class="admeta2"><span class="badge ready">Creative ready</span><span class="adsub">Updated today · Roofing</span></div>
+          <div class="perf">
+            <span class="pstat">Impressions <b>—</b></span>
+            <span class="pstat">Clicks <b>—</b></span>
+            <span class="pstat">Spend <b>—</b></span>
+            <span class="pnote">Performance appears once posting is connected</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="adcard">
+        <img src="../../../../../apps/public-site/public/fixtures/bellfield/image2.jpeg" alt="" />
+        <div class="adinfo">
+          <b>Roof repair — winter</b>
+          <div class="admeta2"><span class="badge draft">Draft</span><span class="adsub">Updated 3 days ago · Roofing</span></div>
+          <div class="perf">
+            <span class="pstat">Impressions <b>—</b></span>
+            <span class="pstat">Clicks <b>—</b></span>
+            <span class="pstat">Spend <b>—</b></span>
+            <span class="pnote">Performance appears once posting is connected</span>
+          </div>
+        </div>
+      </div>
+      <div class="adcard">
+        <img src="../../../../../apps/public-site/public/fixtures/bellfield/new-house.jpg" alt="" />
+        <div class="adinfo">
+          <b>Garage conversions</b>
+          <div class="admeta2"><span class="badge draft">Draft</span><span class="adsub">Updated last week · Conversions</span></div>
+          <div class="perf">
+            <span class="pstat">Impressions <b>—</b></span>
+            <span class="pstat">Clicks <b>—</b></span>
+            <span class="pstat">Spend <b>—</b></span>
+            <span class="pnote">Performance appears once posting is connected</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== new/edit ad flow ===== -->
+  <div id="viewFlow" class="placeholder">
+
+  <!-- one accordion wrapper, two expandable forms, both visible -->
+  <div class="accwrap">
+
+    <!-- form 1: about the ad (not collapsible) -->
+    <div class="form open" id="f1">
+      <button class="sech"><span class="num">1</span><span class="ttl">About the ad</span><span class="state"></span></button>
+      <div class="formbody">
+        <div class="q">What are you promoting?</div>
+        <div class="field">
+          <div class="combo">
+            <input type="text" value="" placeholder="Select or type to create a new service…" />
+            <div class="pop">
+              <div class="create">
+                <div class="crow hint"><span class="hintic">✎</span> Type to create a new service…</div>
+              </div>
+              <div class="divider"></div>
+              <div class="group">Your services</div>
+              <div class="scroll">
+                <div class="row"><span class="ic cur">✓</span><span class="txt"><b>Roofing replacement</b><span>roofing • Kildare</span></span></div>
+                <div class="row"><span class="ic">◫</span><span class="txt"><b>Roof repair</b><span>roofing • Kildare</span></span></div>
+                <div class="row"><span class="ic">◫</span><span class="txt"><b>Gutter cleaning</b><span>guttering • Kildare</span></span></div>
+              </div>
+              <div class="empty">No matches — type to create a new service.</div>
+            </div>
+          </div>
+          <div class="ferr" id="svcErr" style="display:none; margin-top:8px">Choose the service you're promoting</div>
+        </div>
+
+        <div class="q">Who it's for</div>
+        <div class="row2">
+          <div class="field" style="margin-bottom:0">
+            <label>Ideal customer</label>
+            <div class="combo" data-create="profile">
+              <input type="text" value="" placeholder="Select or type to create a new profile…" />
+              <div class="pop">
+                <div class="create">
+                  <div class="crow hint"><span class="hintic">✎</span> Type to create a new profile…</div>
+                </div>
+                <div class="divider"></div>
+                <div class="group">Common profiles</div>
+                <div class="scroll">
+                  <div class="row"><span class="ic cur">✓</span><span class="txt"><b>Married couples, 30–40</b><span>most contractors</span></span></div>
+                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Homeowners, 40–55</b><span>repairs and upgrades</span></span></div>
+                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Newlyweds, 25–35</b><span>first home</span></span></div>
+                </div>
+                <div class="empty">No matches — type to create a new profile.</div>
+              </div>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Where they are</label>
+            <div class="combo" data-create="area">
+              <input type="text" value="" placeholder="Select or type to create a new area…" />
+              <div class="pop">
+                <div class="create">
+                  <div class="crow hint"><span class="hintic">✎</span> Type to create a new area…</div>
+                </div>
+                <div class="divider"></div>
+                <div class="group">Your service area</div>
+                <div class="scroll">
+                  <div class="row"><span class="ic cur">✓</span><span class="txt"><b>Kildare area</b><span>your service area</span></span></div>
+                  <div class="row"><span class="ic">◫</span><span class="txt"><b>West Dublin</b><span>nearby</span></span></div>
+                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Newbridge &amp; Naas</b><span>nearby</span></span></div>
+                </div>
+                <div class="empty">No matches — type to create a new area.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="q">How people get in touch</div>
+        <div class="seg">
+          <button class="segbtn on" data-lead="form">Meta form</button>
+          <button class="segbtn" data-lead="page">Website page</button>
+        </div>
+        <div id="leadForm">
+          <div class="field"><label>Form title</label><input type="text" value="Get a free roof quote" /></div>
+          <div class="field">
+            <label>Questions</label>
+            <div class="qlist">
+              <label class="qrow"><input type="checkbox" checked /> <span class="qtype">Phone</span></label>
+              <label class="qrow"><input type="checkbox" checked /> <span class="qtype">Full name</span></label>
+              <label class="qrow"><input type="checkbox" checked /> <span class="qtype">Postcode</span></label>
+              <label class="qrow"><input type="checkbox" /> <span class="qtype">Email</span></label>
+            </div>
+            <p class="note" style="margin-top:8px">People answer right in Facebook — no website page needed.</p>
+          </div>
+        </div>
+        <div id="leadPage" style="display:none">
+          <div class="field" style="margin-bottom:0">
+            <label>Destination page</label>
+            <div class="combo nocr">
+              <input type="text" value="" placeholder="Choose where the ad sends people…" />
+              <div class="pop">
+                <div class="group">Your pages</div>
+                <div class="scroll">
+                  <div class="row"><span class="ic cur">✓</span><span class="txt"><b>Contact us</b><span>/contact</span></span></div>
+                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Roofing replacement</b><span>/services/roofing-replacement</span></span></div>
+                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Free quote</b><span>/quote</span></span></div>
+                </div>
+                <div class="empty">No matching page.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ferr" style="margin-top:8px">Choose where the ad sends people</div>
+        </div>
+
+        <div style="margin-top:18px; display:flex; justify-content:flex-end">
+          <button class="btn primary" id="generate">Create ad and generate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- form 2: review (visible but locked until form 1 is complete) -->
+    <div class="form locked" id="f2">
+      <button class="sech"><span class="num">2</span><span class="ttl">Review</span><span class="state">Complete step 1 to unlock</span><span class="chev">▾</span></button>
+      <div class="formbody">
+        <div class="q">Photos</div>
+        <div class="thumbs">
+          <div class="thumb"><img src="../../../../../apps/public-site/public/fixtures/bellfield/new-house.jpg" alt="New roof" /><span class="cap">New roof</span></div>
+          <div class="thumb"><img src="../../../../../apps/public-site/public/fixtures/bellfield/image2.jpeg" alt="Crew at work" /><span class="cap">Crew at work</span></div>
+          <button class="thumb add" id="addBtn">+ Add</button>
+        </div>
+        <input type="file" id="fileAdd" accept="image/*" style="display:none" />
+        <div class="dropnote">Tip: drag a photo anywhere on this page to add it.</div>
+        <div class="ferr">Photo "Crew at work" is still in review</div>
+        <div class="ferr">Photo "New roof" has no alt text</div>
+        <div class="cleanup">
+          <div class="cleanup-head"><b>Cleanup edit</b><span class="note">AI removes clutter — drag the divider to compare</span></div>
+          <div class="sweep" id="sweep">
+            <div class="sweep-after"></div>
+            <div class="sweep-before" id="sweepBefore"></div>
+            <div class="sweep-divider" id="sweepDivider"></div>
+            <span class="sweep-label l">before</span>
+            <span class="sweep-label r">after</span>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px">
+            <button class="chip">Reject</button>
+            <button class="chip" style="background:var(--accent-soft);border-color:var(--accent);color:var(--accent)">Accept</button>
+          </div>
+        </div>
+
+        <div class="q">Text <span class="sub">— drafted by AI, edit freely</span></div>
+        <div class="copyfield">
+          <div class="lbl"><span>Headline</span><span class="count">21 / 40</span></div>
+          <input type="text" value="New roof, done right" data-limit="40" />
+        </div>
+        <div class="copyfield">
+          <div class="lbl"><span>Text</span><span class="count">96 / 5000</span></div>
+          <textarea rows="3" data-limit="5000">We replace and repair roofs across Kildare. Free quotes, 10+ years experience. Get yours this week.</textarea>
+        </div>
+        <div class="row2">
+          <div class="copyfield" style="margin-bottom:0"><label>Button</label>
+            <select><option>Get Quote</option><option>Learn More</option><option>Call Now</option></select>
+          </div>
+          <div class="copyfield" style="margin-bottom:0"><label>Short label <span class="sub">— optional</span></label><input type="text" value="Free quotes" /></div>
+        </div>
+
+        <div class="q">Preview</div>
+        <div class="previews" id="previews">
+          <div class="preview feedmock">
+            <div class="img"></div>
+            <div class="txt"><b>New roof, done right</b><br />We replace and repair roofs across Kildare. Free quotes.</div>
+            <button class="btn primary">Get Quote</button>
+            <div class="cap">Feed</div>
+          </div>
+          <div class="preview carmock">
+            <div class="imgs"><div></div><div></div><div></div></div>
+            <div class="cap">Carousel</div>
+          </div>
+          <div class="preview storymock">
+            <div class="img">New roof, done right</div>
+            <div class="cap">Story</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- loading -->
+  <div class="loading" id="loading">
+    <span class="spin"></span>
+    <span>Drafting your ad… AI is picking photos and writing your text. This takes a moment — you can leave and come back.</span>
+  </div>
+
+  <!-- publish: shown when ready -->
+  <div class="accwrap" id="pub" style="margin-top:16px">
+    <div style="padding:16px">
+      <b style="font-size:14px">Ready?</b>
+      <p class="note" style="margin:6px 0 12px">Fix the errors shown inside the forms above, then approve.</p>
+      <div class="actionbar right">
+        <span class="tipwrap" data-tip="Publish is not available yet — posting to Meta is coming"><button class="btn" disabled>Publish</button></span>
+        <span class="tipwrap" data-tip="Approve the ad first" id="dlWrap"><button class="btn" disabled id="dlBtn">Download</button></span>
+        <button class="btn primary" id="apprBtn">Approve</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ===== existing ad detail view (one single card) ===== -->
+  <div id="viewDetail" class="placeholder">
+    <button class="btn" id="backBtn" style="margin-bottom:16px">← My ads</button>
+    <div class="card" style="padding:0">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:16px">
+        <input type="text" class="inplace" value="Roofing replacement — spring push" aria-label="Ad name" />
+        <span class="spacer"></span>
+        <span class="badge ready">Creative ready</span>
+        <span class="tipwrap" data-tip="Publish is not available yet — posting to Meta is coming"><button class="btn" disabled>Publish</button></span>
+        <button class="btn">Download</button>
+        <button class="btn primary" id="editBtn">Edit</button>
+      </div>
+
+      <div class="dsec">
+        <div class="detailgrid">
+          <div>
+            <b style="font-size:14px">Creative</b>
+            <p class="hint">Click a thumbnail to view that image.</p>
+            <div class="gal-main" id="galMain"></div>
+            <div class="gal-thumbs">
+              <button class="gal-thumb on" data-img="image1.jpeg" aria-label="Image 1"></button>
+              <button class="gal-thumb" data-img="image0.jpeg" aria-label="Image 2"></button>
+              <button class="gal-thumb" data-img="image2.jpeg" aria-label="Image 3"></button>
+            </div>
+
+            <div style="border-top:1px solid var(--line); margin-top:16px; padding-top:16px">
+              <b style="font-size:14px">Budget</b>
+              <p class="hint">Disabled until posting is connected.</p>
+              <div class="row2">
+                <div class="field" style="margin-bottom:0"><label>Daily budget</label><input type="text" value="€15" disabled /></div>
+                <div class="field" style="margin-bottom:0"><label>Duration</label><input type="text" value="2 weeks" disabled /></div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--line); margin-top:16px; padding-top:16px">
+              <b style="font-size:14px">Audience</b>
+              <p class="hint">Not editable yet.</p>
+              <p style="margin:0">Married couples, 30–40</p>
+            </div>
+
+            <div style="border-top:1px solid var(--line); margin-top:16px; padding-top:16px">
+              <b style="font-size:14px">Area</b>
+              <p class="hint">Not editable yet.</p>
+              <p style="margin:0">Kildare area</p>
+            </div>
+          </div>
+
+          <div>
+            <b style="font-size:14px">Performance</b>
+            <p class="hint">Appears once posting is connected.</p>
+            <div class="dmetrics">
+              <div class="dmetric"><span>Impressions</span><b>—</b></div>
+              <div class="dmetric"><span>Clicks</span><b>—</b></div>
+              <div class="dmetric"><span>Spend</span><b>—</b></div>
+              <div class="dmetric"><span>Results</span><b>—</b></div>
+              <div class="dmetric"><span>Cost per lead</span><b>—</b></div>
+            </div>
+            <p class="note" style="margin-top:10px">At this spend, we expect <b>—</b> more leads in the next 30 days.</p>
+
+            <div style="border-top:1px solid var(--line); margin-top:16px; padding-top:16px">
+              <b style="font-size:14px">Leads</b>
+              <p class="hint">Leads from this ad — uncontacted ones are marked.</p>
+              <div class="leadrow"><span class="leadwho"><b>John Murphy</b><span>087 123 4567 · Roofing replacement</span></span><span class="badge uncontacted">Uncontacted</span></div>
+              <div class="leadrow"><span class="leadwho"><b>Anne Doyle</b><span>086 222 3344 · Roof repair</span></span><span class="badge contacted">Contacted</span></div>
+              <div class="leadrow"><span class="leadwho"><b>Declan Byrne</b><span>085 999 8877 · Gutter cleaning</span></span><span class="badge uncontacted">Uncontacted</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+          </div>
+  </div>
+
+  <!-- drop overlay: drag a photo anywhere to add it -->
+  <div class="dropper" id="dropper"><span>Drop to add photos</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // view switcher: list of existing ads vs the new/edit ad flow vs ad detail
+  const viewList = document.getElementById("viewList");
+  const viewFlow = document.getElementById("viewFlow");
+  const viewDetail = document.getElementById("viewDetail");
+  const vtabs = [...document.querySelectorAll(".viewtab")];
+  const show = v => {
+    vtabs.forEach(t => t.classList.toggle("on", t.dataset.v === v || (v === "detail" && t.dataset.v === "list")));
+    viewList.classList.toggle("placeholder", v !== "list");
+    viewFlow.classList.toggle("placeholder", v !== "flow");
+    viewDetail.classList.toggle("placeholder", v !== "detail");
+    window.scrollTo({ top: 0 });
+  };
+  vtabs.forEach(t => t.addEventListener("click", () => show(t.dataset.v)));
+  const adcards = document.querySelector(".adcards");
+  const compactBtn = document.getElementById("compactBtn");
+  compactBtn.addEventListener("click", () => {
+    const compact = adcards.classList.toggle("compact");
+    compactBtn.textContent = compact ? "Show large" : "Show compact";
+  });
+
+  // connect buttons are never rendered by default: they appear only once the
+  // connection-status check confirms a platform is unconnected, so users never
+  // see a button flash that then disappears (connected platforms show nothing).
+  setTimeout(() => {
+    // mirrors the real connection-status fetch (the server knows what is connected)
+    const btn = document.createElement("button");
+    btn.className = "btn connbtn";
+    btn.innerHTML = '<span class="pmark g">G</span> Connect Google';
+    btn.style.opacity = "0";
+    btn.style.transition = "opacity var(--private-duration)";
+    document.getElementById("newAdBtn").insertAdjacentElement("beforebegin", btn);
+    requestAnimationFrame(() => { btn.style.opacity = "1"; });
+  }, 400);
+  document.getElementById("newAdBtn").addEventListener("click", () => show("flow"));
+  document.querySelectorAll(".adcard").forEach(r => r.addEventListener("click", () => show("detail")));
+  document.getElementById("backBtn").addEventListener("click", () => show("list"));
+  document.getElementById("editBtn").addEventListener("click", () => show("flow"));
+
+  // silent edit: the name field is an invisible form that adaptively wraps the text
+  const nameInput = document.querySelector(".inplace");
+  const fitName = () => { nameInput.style.width = Math.max(nameInput.value.length + 1, 14) + "ch"; };
+  nameInput.addEventListener("input", fitName);
+  fitName();
+
+  // gallery: main image top left, clickable thumbnails underneath
+  const galMain = document.getElementById("galMain");
+  const galBase = "../../../../../apps/public-site/public/fixtures/bellfield/";
+  const galThumbs = [...document.querySelectorAll(".gal-thumb")];
+  galThumbs.forEach(t => {
+    t.style.backgroundImage = 'url("' + galBase + t.dataset.img + '")';
+    t.addEventListener("click", () => {
+      galThumbs.forEach(x => x.classList.toggle("on", x === t));
+      galMain.style.backgroundImage = 'url("' + galBase + t.dataset.img + '")';
+    });
+  });
+  galMain.style.backgroundImage = 'url("' + galBase + 'image1.jpeg")';
+
+  // drop-to-add anywhere on the page
+  const dropper = document.getElementById("dropper");
+  let dragDepth = 0;
+  ["dragenter", "dragover"].forEach(ev => window.addEventListener(ev, e => {
+    e.preventDefault();
+    if (e.dataTransfer && [...e.dataTransfer.types].includes("Files")) { dragDepth++; dropper.classList.add("show"); }
+  }));
+  ["dragleave", "drop"].forEach(ev => window.addEventListener(ev, e => {
+    e.preventDefault();
+    if (ev === "dragleave") dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) dropper.classList.remove("show");
+  }));
+  window.addEventListener("drop", e => { e.preventDefault(); dragDepth = 0; dropper.classList.remove("show"); });
+  const f1 = document.getElementById("f1");
+  const f2 = document.getElementById("f2");
+
+  // combobox: closed by default, opens on focus; create-new is conditional
+  document.querySelectorAll(".combo").forEach(combo => {
+    const input = combo.querySelector("input");
+    const pop = combo.querySelector(".pop");
+    const create = pop.querySelector(".create");
+    const divider = pop.querySelector(".divider");
+    const empty = pop.querySelector(".empty");
+    const rows = [...pop.querySelectorAll(".row")];
+    const label = combo.dataset.create || "item";
+    const esc = s => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    input.addEventListener("focus", () => combo.classList.add("open"));
+    input.addEventListener("blur", () => setTimeout(() => combo.classList.remove("open"), 120));
+    input.addEventListener("input", () => {
+      const q = input.value.trim().toLowerCase();
+      let any = false;
+      rows.forEach(r => {
+        const hit = r.textContent.toLowerCase().includes(q);
+        r.style.display = hit ? "" : "none";
+        if (hit) any = true;
+      });
+      // no-create combos (e.g. destination page): just filter the list
+      if (combo.classList.contains("nocr")) {
+        empty.style.display = (q && !any) ? "block" : "none";
+        return;
+      }
+      const row = create.querySelector(".crow");
+      if (q && !any) {
+        // no match: the prompt becomes the actionable create row
+        row.classList.remove("hint");
+        row.classList.add("sel");
+        row.innerHTML = '<span class="plus">+</span> Create new ' + esc(label) + ' "' + esc(input.value.trim()) + '"';
+        divider.classList.add("show");
+      } else {
+        row.classList.add("hint");
+        row.classList.remove("sel");
+        row.innerHTML = '<span class="hintic">✎</span> Type to create a new ' + label + '…';
+        divider.classList.remove("show");
+      }
+      empty.style.display = (q && !any) ? "block" : "none";
+    });
+    // selecting a row picks it (checkmark moves), fills the input, closes the dropdown
+    rows.forEach(r => r.addEventListener("click", () => {
+      rows.forEach(x => {
+        const ic = x.querySelector(".ic");
+        if (!ic) return;
+        const active = x === r;
+        ic.textContent = active ? "✓" : "◫";
+        ic.classList.toggle("cur", active);
+      });
+      const name = r.querySelector(".txt b");
+      if (name) input.value = name.textContent;
+      combo.classList.remove("open");
+    }));
+  });
+
+  // '+ Add' opens the file picker (upload through the media flow)
+  const addBtn = document.getElementById("addBtn");
+  const fileAdd = document.getElementById("fileAdd");
+  addBtn.addEventListener("click", () => fileAdd.click());
+  fileAdd.addEventListener("change", () => {
+    if (fileAdd.files.length) {
+      const t = document.createElement("div");
+      t.className = "thumb";
+      t.textContent = "New photo (uploaded)";
+      addBtn.insertAdjacentElement("beforebegin", t);
+    }
+    fileAdd.value = "";
+  });
+
+  // before/after sweep: drag the divider to compare cleanup
+  const sweep = document.getElementById("sweep");
+  const sweepBefore = document.getElementById("sweepBefore");
+  const sweepDivider = document.getElementById("sweepDivider");
+  const setSplit = x => {
+    const r = sweep.getBoundingClientRect();
+    const pct = Math.max(4, Math.min(96, ((x - r.left) / r.width) * 100));
+    sweepBefore.style.width = pct + "%";
+    sweepDivider.style.left = pct + "%";
+  };
+  let sweeping = false;
+  sweep.addEventListener("pointerdown", e => { sweeping = true; sweep.setPointerCapture(e.pointerId); setSplit(e.clientX); });
+  sweep.addEventListener("pointermove", e => { if (sweeping) setSplit(e.clientX); });
+  sweep.addEventListener("pointerup", () => { sweeping = false; });
+
+  // lead capture toggle: Meta form (default) or website page
+  const segBtns = [...document.querySelectorAll(".segbtn")];
+  const leadForm = document.getElementById("leadForm");
+  const leadPage = document.getElementById("leadPage");
+  segBtns.forEach(b => b.addEventListener("click", () => {
+    segBtns.forEach(x => x.classList.toggle("on", x === b));
+    leadForm.style.display = b.dataset.lead === "form" ? "" : "none";
+    leadPage.style.display = b.dataset.lead === "page" ? "" : "none";
+  }));
+
+  // live character counters
+  document.querySelectorAll("[data-limit]").forEach(field => {
+    const counter = field.closest(".copyfield").querySelector(".count");
+    const update = () => { counter.textContent = field.value.length + " / " + field.dataset.limit; };
+    field.addEventListener("input", update);
+  });
+
+  // approve first, then download becomes available (temporary manual-posting bridge)
+  const apprBtn = document.getElementById("apprBtn");
+  const dlBtn = document.getElementById("dlBtn");
+  const dlWrap = document.getElementById("dlWrap");
+  apprBtn.addEventListener("click", () => {
+    dlBtn.disabled = false;
+    dlWrap.dataset.tip = "Download the package (temporary, until posting ships)";
+    apprBtn.disabled = true;
+    apprBtn.textContent = "Approved";
+  });
+
+  // generate: loading, then form 1 done, form 2 unlocks and expands
+  document.getElementById("generate").addEventListener("click", () => {
+    const svc = document.querySelector("#f1 .combo input");
+    const svcErr = document.getElementById("svcErr");
+    if (!svc.value.trim()) { svcErr.style.display = "flex"; svc.focus(); return; }
+    svcErr.style.display = "none";
+    const ld = document.getElementById("loading");
+    ld.classList.add("show");
+    setTimeout(() => {
+      ld.classList.remove("show");
+      f1.querySelector(".state").textContent = "done";
+      f2.classList.remove("locked");
+      f2.classList.add("open");
+      f2.querySelector(".state").textContent = "ready";
+      window.scrollTo({ top: f2.offsetTop - 100, behavior: "smooth" });
+    }, 2500);
+  });
+  // once unlocked, form 2 can be collapsed/expanded and form 1 reopened
+  f2.querySelector(".sech").addEventListener("click", () => {
+    if (f2.classList.contains("locked")) return;
+    f2.classList.toggle("open");
+  });
+</script>
+</body>
+</html>
