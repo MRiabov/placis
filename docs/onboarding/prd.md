@@ -33,15 +33,33 @@ a few questions to fill the gaps, and research the rest from public sources.
 
 ## How it starts
 
-Onboarding always starts from a **source** the contractor already has:
+The contractor picks a **country** (Ireland, UK, or US), then finds their business:
 
-1. **Google Maps listing** — search and pick their place; it pre-fills the name, category, phone,
-   photos, and reviews.
-2. **Company-registry record** — their Companies House (UK) or CRO (Ireland) name or number; it
-   pre-fills the legal name and registered details.
+1. **Company registry** — Companies House (UK), CRO (Ireland), or the US state registry. They type
+   the corporate name and pick the right record; it pre-fills the legal name, company number,
+   status, and registered office.
+2. **Google Maps (optional)** — they can also match their Google Maps place; it pre-fills the name,
+   category, phone, photos, and reviews.
 
-Then a short interview fills in what the sources don't cover (services, areas, hours, and anything
-the contractor wants to correct). Voice is a later way to answer those questions.
+They can select either, or both when they describe the same business. Then a single checkbox:
+"I agree that Placis can collect public information about this business to prepare the website
+preview."
+
+A short interview then fills in what the sources don't cover. Voice is a later way to answer it.
+
+## What we know about the business
+
+By the end, the business profile holds:
+
+- **Who they are** — display name, legal name, trade, established year, and a short description.
+- **Legal details** — company number, VAT number, registered office.
+- **Contact** — contact name, phone, email, website, opening hours, and their Google and Facebook
+  profiles.
+- **What they do** — their main trade and the services they offer, plus the areas they cover.
+- **Proof** — accreditations and certifications, the founder, and reviews.
+- **Photos** — their work, logo, and project photos.
+
+Each detail notes where it came from (the registry, Maps, the interview, or research).
 
 ## Happy path
 

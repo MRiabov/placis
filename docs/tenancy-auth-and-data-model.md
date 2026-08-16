@@ -90,8 +90,10 @@ props, slot values, research raw payloads, manifests); structural data is real c
 
 - `business_profiles` — `id`, `tenant_id` fk unique, `trade` (`roofing`/`landscaping_paving`/
   `bathroom_renovation`/`kitchen_installation`/`general_builder`/`property_maintenance`),
-  `legal_name`, `display_name`, `phone`, `email`, `website`, `brand` jsonb
-  (colors/logo_asset_id/tone/typography), `current_version_id` nullable, timestamps
+  `display_name`, `legal_name`, `description`, `established_year`, `company_number`, `vat_number`,
+  `registered_office`, `contact_name`, `phone`, `email`, `website`, `google_profile_url`,
+  `facebook_profile_url`, `founder_profile` jsonb, `brand` jsonb (colors/logo_asset_id/tone/
+  typography), `current_version_id` nullable, timestamps
 - `business_profile_versions` — `id`, `business_profile_id` fk, `version_number`, `facts` jsonb
   (snapshot), `source_refs` jsonb, `created_by` (`research`/`voice`/`text`/`human`/`llm`),
   `created_at`; unique `(business_profile_id, version_number)`
