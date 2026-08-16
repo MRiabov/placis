@@ -30,7 +30,6 @@ everywhere — docs, code, API, UI — with no synonyms drifting in.
 | onboarding | learning about the business and building its profile (was "setup") | `onboarding_sessions`, `internal/onboarding/` |
 | research | finding out about the business from public sources | `research_sessions`/`research_runs`/`research_events`/`research_sources`, `internal/research/` |
 | interview | the questions we ask | `text_interview_submissions` |
-| consent | permission, asked per thing | `consent_records` |
 | template | the starting point for a website | `blueprint` (a full-site template), `catalog/`, `internal/website/blueprints/` |
 | website | the contractor's site | `website_pages`, `website_sections`, `content_slots`, `website_assets`, `website_forms`, `navigation_items`, `website_publications`, `internal/website/` |
 | ads | the contractor's ads | `ad_creative_sets`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `internal/ads/` |

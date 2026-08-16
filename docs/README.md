@@ -37,8 +37,9 @@ themselves through the CMS.
 One product, one loop:
 
 ```text
-onboard (voice / text / web) -> consent -> research -> business profile
-  -> website (blueprint + LLM refinement) -> edit (CMS) -> publish
+onboard (from their Google Maps listing or company-registry record)
+  -> a few questions -> research -> business profile
+  -> website (template + LLM refinement) -> edit (CMS) -> publish
   -> ads from the profile + approved media
 ```
 
