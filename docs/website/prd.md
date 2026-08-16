@@ -29,14 +29,22 @@ pages, text, images, forms, the menu — and go live.
 
 ## The site is made of
 
-- **pages** — home, services, contact, and more
-- **sections** — the building blocks on each page (hero, services, reviews, …)
-- **text and images** inside those sections
-- **a photo library** — their work, logos, and documents
-- **forms** — how a visitor gets in touch
-- **the menu** — navigation
-- **their portfolio** and **certifications**
-- **publications** — a frozen copy of the site each time it goes live
+The editor is one workspace with a left sidebar and a canvas:
+
+- **Pages** — the pages (home, services, contact, and utility pages), reorderable.
+- **Media** — the photo library: their work, logos, and documents, each with a caption.
+- **Styles** — the look (colors and fonts) via design controls.
+- **Menu** — the site navigation (header and footer).
+
+A **Details** view edits the business details shown on the site: business name, legal name, trade,
+established year, description, marketing phone and email, website, location, service areas,
+featured services, company/VAT number, registered office, and opening hours.
+
+Each **page** is built from **sections** (hero, services, reviews, …), and each section is edited
+through its **slots** — text, rich text, images, lists, links, reviews, or a project gallery.
+
+Their **portfolio** and **certifications** are edited separately. Publishing makes a **frozen
+copy** of the site each time it goes live.
 
 ## User stories
 

@@ -204,7 +204,9 @@ Full DDL lands in `migrations/`.
 
 - `business_profiles` — `id`, `tenant_id` fk unique, `trade`
   (`roofing`/`landscaping_paving`/`bathroom_renovation`/`kitchen_installation`/`general_builder`/
-  `property_maintenance`), `legal_name`, `display_name`, `phone`, `email`, `website`, `brand` jsonb
+  `property_maintenance`), `display_name`, `legal_name`, `description`, `established_year`,
+  `company_number`, `vat_number`, `registered_office`, `contact_name`, `phone`, `email`, `website`,
+  `google_profile_url`, `facebook_profile_url`, `founder_profile` jsonb, `brand` jsonb
   (colors/logo_asset_id/tone/typography), `current_version_id` nullable, `created_at`, `updated_at`
 - `business_profile_versions` — `id`, `business_profile_id` fk, `version_number`, `facts` jsonb
   (full snapshot), `source_refs` jsonb, `created_by` (`research`/`voice`/`text`/`human`/`llm`),
