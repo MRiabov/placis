@@ -18,6 +18,7 @@ themselves through the CMS.
 7. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md)
 8. [AI, audit, and jobs](ai-audit-jobs.md) — LLM traceability, audit events, background jobs, files, payments
 9. [CI and delivery](ci-cd.md) — file-size guard, provider isolation, generated-code freshness
+10. [Testing](testing.md) — the per-feature E2E tests
 
 ## Canonical references
 
@@ -32,6 +33,7 @@ themselves through the CMS.
 | Ad generation | [features/ads/README.md](features/ads/README.md) |
 | AI trace, audit, jobs, files, payments | [ai-audit-jobs.md](ai-audit-jobs.md) |
 | CI and delivery | [ci-cd.md](ci-cd.md) |
+| Testing / per-feature E2E | [testing.md](testing.md) |
 | Exhaustive rewrite plan | [planning/go-backend-rewrite.md](planning/go-backend-rewrite.md) |
 
 ## Product boundary
