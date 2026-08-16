@@ -12,11 +12,11 @@ themselves through the CMS.
 1. [Development principles](development-principles.md) — how work is sliced and reviewed (read before writing code)
 2. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
 3. [Architecture](architecture.md) — stack, module layout, runtime, boundaries
-4. [Tenancy, auth, and data model](tenancy-auth-and-data-model.md) — Clerk auth, tenant isolation, full schema
-5. [Onboarding](features/onboarding/README.md) — research and business-profile building
-6. [Website CMS](features/website/README.md) — blueprints, generation, editing, publication
-7. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md)
-8. [AI, audit, and jobs](ai-audit-jobs.md) — LLM traceability, audit events, background jobs, files, payments
+4. [General architecture](general-architecture/README.md) — LLM layer, platform services, data model
+5. [Auth](features/other/auth/README.md) — Clerk, tenant == org, roles
+6. [Onboarding](features/onboarding/README.md) — research and business-profile building
+7. [Website CMS](features/website/README.md) — blueprints, generation, editing, publication
+8. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md)
 9. [CI and delivery](ci-cd.md) — file-size guard, provider isolation, generated-code freshness
 10. [Testing](testing.md) — the per-feature E2E tests
 
@@ -27,11 +27,12 @@ themselves through the CMS.
 | Stack, module layout, runtime | [architecture.md](architecture.md) |
 | How work is sliced and reviewed | [development-principles.md](development-principles.md) |
 | Naming / vocabulary | [glossary.md](glossary.md) |
-| Auth, tenancy, schema | [tenancy-auth-and-data-model.md](tenancy-auth-and-data-model.md) |
+| Auth | [features/other/auth/README.md](features/other/auth/README.md) |
+| Data model / schema | [general-architecture/data-model.md](general-architecture/data-model.md) |
+| LLM layer, audit, jobs, files, payments | [general-architecture/](general-architecture/README.md) |
 | Onboarding loop (research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
 | Website building + editing | [features/website/README.md](features/website/README.md) |
 | Ad generation | [features/ads/README.md](features/ads/README.md) |
-| AI trace, audit, jobs, files, payments | [ai-audit-jobs.md](ai-audit-jobs.md) |
 | CI and delivery | [ci-cd.md](ci-cd.md) |
 | Testing / per-feature E2E | [testing.md](testing.md) |
 | Exhaustive rewrite plan | [planning/go-backend-rewrite.md](planning/go-backend-rewrite.md) |

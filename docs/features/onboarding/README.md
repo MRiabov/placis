@@ -11,4 +11,5 @@ that drives website and ad generation. It replaces the old "setup" concept.
 - [testing.md](testing.md) — the onboarding E2E test
 
 Auth is interleaved with onboarding (the claim/activation step), but auth and tenancy are owned by
-the flat [tenancy, auth, and data model](../../tenancy-auth-and-data-model.md) doc.
+the [auth feature](../../other/auth/README.md); the schema lives in the
+[data model](../../general-architecture/data-model.md).

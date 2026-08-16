@@ -3,7 +3,7 @@
 Status: proposed implementation plan.
 
 Related: [PRD](prd.md), [ADR](ADR.md), [component contract](../../architecture.md),
-[tenancy/auth/data model](../../tenancy-auth-and-data-model.md).
+[data model](../../general-architecture/data-model.md).
 
 ## Domain objects
 

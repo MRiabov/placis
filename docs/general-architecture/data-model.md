@@ -1,61 +1,7 @@
-# Tenancy, Auth, and Data Model
+# Data model
 
 Every tenant-owned row carries `tenant_id`; all primary queries include it. Cross-tenant isolation
 is proven by integration tests (two tenants, assert reads/writes/files are blocked).
-
-## Auth (Clerk)
-
-Clerk owns user identity, sessions, and organizations. Placis never builds password auth.
-
-> Clerk proves who the user is and which organization they belong to. Placis decides what tenants
-> they can access and what actions they can perform.
-
-### Tenant == Clerk org (1-1)
-
-- `tenants.clerk_org_id` (unique) is the only tenant entry point. No org chooser, no selected-org
-  cookie, no client-controlled tenant selector.
-- The API verifies the Clerk session/JWT, builds `Principal{userID, orgID, platformRole}`, and
-  resolves the tenant from `orgID`.
-- `/me` returns `{user, platform_role, tenant}` — a single `TenantRead` or `null` (the
-  "not onboarded/paid" signal).
-- Signed-in with no Clerk org → provision one via `POST /api/v1/me/organization` (Clerk
-  `createOrganization`); the frontend then calls `clerk.setActive({ organization })` so session
-  tokens carry the org claim.
-- Deleted surfaces (do not resurrect): `/me/orgs`, `/me/tenants`, `/me/selected-org`,
-  `placis_selected_org` cookie, `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{slug}`,
-  `.../memberships/*` CRUD.
-
-### Clerk SDK
-
-Use the official **`github.com/clerk/clerk-sdk-go/v2`** for everything Clerk-side; do not hand-roll
-JWT/JWKS verification or Clerk data types.
-
-- **Session verification** — `client.Sessions().Verify(ctx, token)` fetches/caches JWKS, checks
-  clock skew + audience, and maps the session's org claim to `ActiveOrganizationID`. App code only
-  maps that result into `Principal`; it does not decode or validate tokens itself.
-- **Org provisioning** — `client.Organizations().Create(...)` (with `CreatedBy`) for
-  `POST /api/v1/me/organization`; the creator becomes `org:admin` automatically.
-- No other Clerk Backend API surface is used; tenant/membership/role state stays in Postgres.
-
-### Tenant context resolution
-
-Resolved once per request from one of:
-
-1. authenticated Clerk org,
-2. public site hostname,
-3. signed preview token,
-4. onboarding session token.
-
-Services take `tenantID` explicitly.
-
-### Roles
-
-`tenant_memberships.role`: `owner`, `admin`, `office`, `crew`, `read_only`. Platform admins work
-across tenants through Clerk's **native impersonation** (sign in as a user from the Clerk Dashboard
-or Backend API, which records an `actor` on the session for the audit trail); Placis does not build
-its own impersonation mechanism.
-
-## Schema
 
 Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic content (component
 props, slot values, research raw payloads, manifests); structural data is real columns. Columns
@@ -67,7 +13,7 @@ never strings; they serialize as strings only at the HTTP boundary. Clerk's own 
 `clerk_user_id`, `clerk_subject`) are `text`/`string` — Clerk's opaque ids (`org_…`, `user_…`), not
 UUIDs.
 
-### Identity & tenancy
+## Identity & tenancy
 
 - `tenants` — `id` uuid pk, `clerk_org_id` unique, `slug` unique, `name`, `status`
   (`draft`/`active`/`suspended`), `created_at`, `updated_at`
@@ -76,7 +22,7 @@ UUIDs.
 - `tenant_domains` — `id`, `tenant_id` fk, `hostname` unique, `type` (`subdomain`/`custom`),
   `status` (`reserved`/`pending`/`active`/`failed`), `dns_verified_at`, `activated_at`, `created_at`
 
-### Onboarding
+## Onboarding
 
 - `onboarding_sessions` — `id`, `tenant_id` nullable fk, `started_from` (`google_places`/
   `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`interviewing`/
@@ -95,7 +41,7 @@ UUIDs.
   `confidence`, `created_at`
 - `google_places_cache` — `id`, `place_id` unique, `payload` jsonb, `cached_at`
 
-### Business profile
+## Business profile
 
 - `business_profiles` — `id`, `tenant_id` fk unique, `trade` (`roofing`/`landscaping_paving`/
   `bathroom_renovation`/`kitchen_installation`/`general_builder`/`property_maintenance`),
@@ -111,7 +57,7 @@ UUIDs.
 - `business_profile_opening_hours` — `id`, `business_profile_id` fk, `day_of_week`, `opens_at`,
   `closes_at`, `closed`
 
-### Website CMS
+## Website CMS
 
 - `website_pages` — `id`, `tenant_id` fk, `path`, `title`, `page_type` (`standard`/`service`/
   `landing`/`legal`), `status` (`draft`/`published`/`archived`), `current_version_id` nullable,
@@ -143,7 +89,7 @@ UUIDs.
 - `website_certification_selections` — `id`, `tenant_id` fk, `certification_id`, `status`
   (`selected`/`removed`), `created_at`
 
-### Ads
+## Ads
 
 - `ad_creative_sets` — `id`, `tenant_id` fk, `name`, `status` (`draft`/`needs_review`/
   `ready_to_post`/`archived`), `offer`, `ad_goal` (`more_calls`/`more_quotes`/`promote_service`),
@@ -164,7 +110,7 @@ UUIDs.
 - `ad_reviews` — review/approval trail (actor, transition, note); sensitive mutations also write
   `audit_events`
 
-### Preview & claim
+## Preview & claim
 
 - `preview_packages` — `id`, `onboarding_session_id` fk, `token` unique, `status` (`draft`/
   `claimed`/`expired`), `personas` jsonb, `unresolved_fields` jsonb, `created_at`
@@ -173,12 +119,12 @@ UUIDs.
   `payment_state` (`pending`/`paid`/`failed`/`refunded`), `tenant_id` nullable fk, `activated_at`,
   `created_at`; unique webhook key (safe to replay)
 
-### Leads
+## Leads
 
 - `leads` — `id`, `tenant_id` fk, `source` (`public_form`), `form_id` nullable fk, `contact` jsonb,
   `message`, `status` (`new`/`contacted`/`closed`), `created_at`
 
-### Cross-cutting
+## Cross-cutting
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `generation_type`, `model`, `prompt_id`,
   `prompt_version`, `input` jsonb, `internal_reasoning` jsonb, `output` jsonb, `tool_calls` jsonb,
@@ -191,7 +137,7 @@ UUIDs.
 - `stripe_events` — `id`, `event_id` unique, `type`, `payload` jsonb, `processed`, `created_at`
 - River-managed tables for the job queue.
 
-### Indexes & constraints
+## Indexes & constraints
 
 Unique: `tenants.clerk_org_id`, `tenants.slug`, `(tenant_id, website_pages.path)`,
 `(tenant_id, website_forms.form_key)`, `(tenant_id, website_publications.version_number)`,

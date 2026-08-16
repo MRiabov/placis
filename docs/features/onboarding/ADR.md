@@ -33,8 +33,8 @@ decision + date) instead of silently rewriting history.
    are shown side by side; the system never picks one silently.
 
 8. **Auth is interleaved but owned elsewhere** — the claim/activation step ends onboarding, but
-   identity/tenancy rules live in the flat `tenancy-auth-and-data-model.md` (Clerk SDK, tenant ==
-   Clerk org 1-1).
+   identity/tenancy rules live in the [auth feature](../../other/auth/README.md) (Clerk SDK, tenant
+   == Clerk org 1-1).
 
 9. **No ad preferences in onboarding** — onboarding never collects `marketing.ads`; ads are created
    on demand in the CMS (see the ads ADR).
