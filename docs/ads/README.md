@@ -2,7 +2,7 @@
 
 Ad generation turns approved contractor content (business profile, media library, projects,
 services) into a reviewable, exportable ad creative package. This doc is the overview; the
-**single authority** for the feature is [`docs/ads/ad-generation/`](ad-generation/ADR.md):
+**single authority** for the feature is [`ad-generation/`](ad-generation/ADR.md):
 
 - [ADR](ad-generation/ADR.md) — the decision record (why each choice was made)
 - [PRD](ad-generation/prd.md) — product spec, user stories, acceptance criteria
@@ -51,4 +51,4 @@ approved media only (gated twice); every AI call records reasoning + output + to
 - Existing-ad statuses (detail view): `Draft / Creative ready / Published / Archived`
   ("Creative ready" = creative done; "Published" is the next state once posting exists).
 
-See the full spec in `docs/ads/ad-generation/`.
+See the full spec in `ad-generation/`.

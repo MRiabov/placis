@@ -5,7 +5,7 @@ Status: proposed implementation plan.
 Related docs:
 
 1. [CMS ad generation PRD](prd.md)
-2. [Website CMS](../../website-cms.md)
+2. [Website CMS](../../website/README.md)
 3. [Architecture and JSON standards](../../architecture.md)
 4. [Backend API surface](../../planning/go-backend-rewrite.md)
 

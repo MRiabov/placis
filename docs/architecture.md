@@ -16,6 +16,8 @@
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
 | LLM | OpenRouter behind an internal provider interface |
 | Payments | Stripe (activation checkout only) |
+| Frontend (private app) | `frontend-2` — Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; reused mostly, adapted to the huma OpenAPI |
+| Public site | shared Astro + React runtime (Cloudflare Workers) rendering published manifests |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 ## Module layout
@@ -73,13 +75,30 @@ Rules:
 - Service functions accept `tenantID` explicitly; they never infer it from global state.
 - See [ci-cd.md](ci-cd.md) for the delivery gates (file-size guard, provider isolation, generated-code freshness).
 
+## Frontend (`frontend-2`)
+
+`frontend-2` is the private client and is **reused mostly** — the rewrite does not rebuild it. It is
+adapted only where the huma-derived OpenAPI improves the contract.
+
+- `src/generated/api-types.ts` — regenerated from the served `/openapi.json` via
+  `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` client + Clerk token provider.
+- `src/features/setup/` — onboarding (text interview, sources, research progress, preview).
+- `src/features/cms/` — the website + ads parts of the CMS (editor, media, inspector, ads workspace).
+- `src/features/preview/` — the signed onboarding preview + public-site module preview.
+
+The client keeps its own feature-local structure and is not folded into `internal/`; the file-size
+guard applies to it too (see `ci-cd.md`).
+
 ## Runtime
 
-Two processes share one module and one database:
+Three runtimes share the API contract:
 
-1. `cmd/api` — the HTTP API. Completes requests quickly and persists intent.
+1. `cmd/api` — the Go HTTP API. Completes requests quickly and persists intent.
 2. `cmd/worker` — runs `River` jobs: AI generation, business research, file processing,
    notification delivery, PDF/export generation.
+3. `frontend-2` — the private Vite client (CMS, onboarding, preview) built as static assets,
+   speaking to the API through the generated `openapi-fetch` client. The public site is a shared
+   Cloudflare Worker rendering published manifests.
 
 Webhooks (Stripe) verify signatures, persist raw payloads, enqueue processing, and return quickly.
 Every background job is idempotent via an explicit key.
@@ -113,6 +132,6 @@ database rows. The Go backend loads and validates them and must not hand-duplica
 
 ## Deployment
 
-Railway containers for `cmd/api` and `cmd/worker`. Cloudflare only for the public-site edge/CDN and
-R2 object storage. Local infra (Postgres, MinIO) via Docker Compose; the API and worker run directly
-for fast iteration.
+Railway containers for `cmd/api` and `cmd/worker`; `frontend-2` builds to static assets. Cloudflare
+for the public-site edge/CDN and R2 object storage. Local infra (Postgres, MinIO) via Docker
+Compose; the API, worker, and `frontend-2` run directly for fast iteration.
