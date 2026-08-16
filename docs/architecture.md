@@ -15,7 +15,7 @@
 | Logging | `log/slog` (structured) + request ids |
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
 | LLM | OpenRouter behind an internal provider interface |
-| Payments | Stripe (activation checkout only) |
+| Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (private app) | `frontend-2` — Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; reused mostly, adapted to the huma OpenAPI |
 | Public site | one shared runtime — Astro with React islands (Cloudflare Workers) — that renders every tenant's published site; not yet imported from `OnCall` |
 | IDs | UUID PKs, `timestamptz` defaults |
@@ -103,7 +103,8 @@ Two backend processes share one database, and two frontend apps talk to the API:
    per-tenant build). This runtime still lives in `OnCall` and has not been imported into this repo
    yet.
 
-Webhooks (Stripe) verify the signature, save the raw payload, enqueue the work, and return. Every
+Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
+work enqueued, and the request returned. Every
 background job can be retried safely (an explicit key).
 
 `huma` handles JSON request/response endpoints and serves the derived OpenAPI spec at
