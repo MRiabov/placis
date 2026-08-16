@@ -17,7 +17,7 @@
 | LLM | OpenRouter behind an internal provider interface |
 | Payments | Stripe (activation checkout only) |
 | Frontend (private app) | `frontend-2` — Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; reused mostly, adapted to the huma OpenAPI |
-| Public site | shared Astro + React runtime (Cloudflare Workers) rendering published manifests |
+| Public site | one shared runtime — Astro with React islands (Cloudflare Workers) — that renders every tenant's published site; not yet imported from `OnCall` |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 ## Module layout
@@ -91,14 +91,17 @@ guard applies to it too (see `ci-cd.md`).
 
 ## Runtime
 
-Three runtimes share one API contract:
+Two backend processes share one database, and two frontend apps talk to the API:
 
 1. `cmd/api` — the Go HTTP API. Completes requests quickly and persists intent.
 2. `cmd/worker` — runs `River` jobs: AI generation, business research, file processing,
    notifications, and export generation.
 3. `frontend-2` — the private Vite client (CMS, onboarding, preview) built as static assets, talking
-   to the API through the generated `openapi-fetch` client. The public site is a shared Cloudflare
-   Worker rendering published manifests.
+   to the API through the generated `openapi-fetch` client.
+4. **public site** — one shared runtime, Astro with React islands, on Cloudflare Workers. It renders
+   every tenant's published site from its manifest; a single deploy serves all tenants (no
+   per-tenant build). This runtime still lives in `OnCall` and has not been imported into this repo
+   yet.
 
 Webhooks (Stripe) verify the signature, save the raw payload, enqueue the work, and return. Every
 background job can be retried safely (an explicit key).
