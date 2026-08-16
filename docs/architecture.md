@@ -10,9 +10,9 @@
 | Data access | `sqlc` + `pgx/v5` |
 | Migrations | `goose` (plain SQL) |
 | Database | PostgreSQL |
-| Background jobs | `River` (Postgres-backed, typed args, idempotency keys) |
+| Background jobs | `River` (Postgres-backed, typed args, safe retries) |
 | Config | env → typed struct, validated once at startup |
-| Logging | `log/slog` (structured) + request IDs + Sentry |
+| Logging | `log/slog` (structured) + request ids + Sentry |
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
 | LLM | OpenRouter behind an internal provider interface |
 | Payments | Stripe (activation checkout only) |
@@ -59,7 +59,7 @@ internal/
   billing/        # checkout.go, webhooks.go (Stripe only)
   leads/          # leads.go
 migrations/       # goose SQL migrations (greenfield)
-catalog/          # blueprints + component JSON Schemas (static, versioned)
+catalog/          # blueprints + component JSON Schemas (static, kept as versions)
 docs/
 go.mod
 ```
@@ -91,17 +91,17 @@ guard applies to it too (see `ci-cd.md`).
 
 ## Runtime
 
-Three runtimes share the API contract:
+Three runtimes share one API contract:
 
 1. `cmd/api` — the Go HTTP API. Completes requests quickly and persists intent.
 2. `cmd/worker` — runs `River` jobs: AI generation, business research, file processing,
-   notification delivery, PDF/export generation.
-3. `frontend-2` — the private Vite client (CMS, onboarding, preview) built as static assets,
-   speaking to the API through the generated `openapi-fetch` client. The public site is a shared
-   Cloudflare Worker rendering published manifests.
+   notifications, and export generation.
+3. `frontend-2` — the private Vite client (CMS, onboarding, preview) built as static assets, talking
+   to the API through the generated `openapi-fetch` client. The public site is a shared Cloudflare
+   Worker rendering published manifests.
 
-Webhooks (Stripe) verify signatures, persist raw payloads, enqueue processing, and return quickly.
-Every background job is idempotent via an explicit key.
+Webhooks (Stripe) verify the signature, save the raw payload, enqueue the work, and return. Every
+background job can be retried safely (an explicit key).
 
 `huma` handles JSON request/response endpoints and serves the derived OpenAPI spec at
 `/openapi.json`. The preview **SSE** stream and the voice **WebSocket** (later milestone) are raw
@@ -109,24 +109,24 @@ Every background job is idempotent via an explicit key.
 
 ## Component contract (single source of truth)
 
-Component schemas (what a `public.hero.image` section accepts) are **one JSON Schema per component**
-under `catalog/`, consumed by both the TypeScript public-site renderer and the Go backend for
-save/publish validation. Blueprints and component contracts are static, versioned catalog data, not
-database rows. The Go backend loads and validates them and must not hand-duplicate their schemas.
+Each component (what a `public.hero.image` section accepts) is **one JSON Schema** under `catalog/`,
+read by both the TypeScript public-site renderer and the Go backend for save/publish validation.
+Blueprints and component contracts are static catalog data, kept as versions — not database rows.
+The Go backend loads and validates them; it must not hand-duplicate their schemas.
 
 ## Boundaries
 
 1. `auth` proves identity via the Clerk Go SDK; `tenancy` decides tenant access and permissions.
 2. `onboarding` owns research and profile building; it does not write CMS records directly.
-3. `blueprint` applies templates into tenant-owned `website_*` rows; it validates component IDs,
+3. `blueprint` applies templates into tenant-owned `website_*` rows; it validates component ids,
    props, design controls, page paths, forms, and navigation before writing.
 4. `website` owns the editable content model and publication; a `site_manifest` is only the
-   validated read model built at publish time.
+   validated read model, built at publish time.
 5. `ads` is a standalone service (the `/cms/ads` workspace is one user). It reads the profile +
    approved media, proposes copy + image galleries, and exports `ready to post` packages — never
    posts.
-6. `ai` is propose-only against every domain: it produces reviewable diffs and never writes
-   unvalidated state.
+6. `ai` suggests but never writes: it proposes edits for a human to approve, and never changes
+   anything without validation.
 7. Integrations (research, LLM, storage, Stripe, email/SMS) are behind interfaces so tests run
    without network calls.
 
