@@ -3,7 +3,7 @@
 Status: proposed product scope for onboarding — learning about a business and building its profile.
 
 Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.md),
-[tenancy/auth/data model](../tenancy-auth-and-data-model.md).
+[tenancy/auth/data model](../../tenancy-auth-and-data-model.md).
 
 ## Problem
 

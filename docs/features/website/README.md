@@ -7,8 +7,8 @@ ads part lives in [../ads/](../ads/README.md).)
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
 - [technical-implementation.md](technical-implementation.md) — the technical plan (data model, template application, publish, pipeline)
-- [details/](details/README.md) — the business-details view (shared with ads)
+- [details](../other/details/README.md) — the business-details view (shared with ads)
+- [media](../other/media/README.md) — the photo library + image editing
 
-Standalone parts of the CMS, beside the page editor: **Details** (the business profile, above),
-**Media** (the photo library + AI image edits), and later a **Leads** page. These are edited in the
-same CMS but are their own views, not page content.
+Standalone parts of the CMS, beside the page editor: **Details** and **Media** (above), and later a
+**Leads** page. These are edited in the same CMS but are their own views, not page content.

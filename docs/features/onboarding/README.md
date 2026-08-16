@@ -9,4 +9,4 @@ that drives website and ad generation. It replaces the old "setup" concept.
 - [frontend.md](frontend.md) — the onboarding screens and fields
 
 Auth is interleaved with onboarding (the claim/activation step), but auth and tenancy are owned by
-the flat [tenancy, auth, and data model](../tenancy-auth-and-data-model.md) doc.
+the flat [tenancy, auth, and data model](../../tenancy-auth-and-data-model.md) doc.

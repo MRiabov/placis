@@ -5,7 +5,7 @@ Status: decided (2026-08-16, product owner + engineering).
 ## Decisions
 
 1. **The CMS is the umbrella** — marketing management has a website part and an ads part. This
-   directory owns the website part; the ads part lives in `docs/ads/`. There is no separate
+   directory owns the website part; the ads part lives in `docs/features/ads/`. There is no separate
    "operations dashboard" or CRM surface.
 
 2. **CMS records are the source of truth; the manifest is the read model** — `site_manifest` is

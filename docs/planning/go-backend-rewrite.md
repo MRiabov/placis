@@ -47,7 +47,7 @@ auditability, and voice agents as a **separate, optional** channel.
 7. **Ad generation (#403)** — creative sets (the "ad") with per-format variants, copy, and image
    placements built from the profile + approved media; propose-only AI; terminal state is a
    deterministic "ready to post" export (no posting, no campaign ops — those are future work on
-   the same creative service). Spec: `docs/ads/ad-generation/`.
+   the same creative service). Spec: `docs/features/ads/ad-generation/`.
 8. **Cross-cutting** — AI/LLM layer with mandatory recording of reasoning + output + tool calls;
    files (S3/R2); Stripe payments (activation only); Postgres-backed jobs (River); structured
    logging; audit events.

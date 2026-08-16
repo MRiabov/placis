@@ -2,7 +2,7 @@
 
 Status: proposed implementation plan.
 
-Related: [PRD](prd.md), [ADR](ADR.md), [tenancy/auth/data model](../tenancy-auth-and-data-model.md).
+Related: [PRD](prd.md), [ADR](ADR.md), [tenancy/auth/data model](../../tenancy-auth-and-data-model.md).
 
 ## Domain objects
 
