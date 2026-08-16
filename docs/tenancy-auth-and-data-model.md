@@ -50,8 +50,10 @@ Services take `tenantID` explicitly.
 
 ### Roles
 
-`tenant_memberships.role`: `owner`, `admin`, `office`, `crew`, `read_only`. Platform admins bypass
-membership checks via an explicit impersonation/audit flow.
+`tenant_memberships.role`: `owner`, `admin`, `office`, `crew`, `read_only`. Platform admins work
+across tenants through Clerk's **native impersonation** (sign in as a user from the Clerk Dashboard
+or Backend API, which records an `actor` on the session for the audit trail); Placis does not build
+its own impersonation mechanism.
 
 ## Schema
 

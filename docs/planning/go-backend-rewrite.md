@@ -165,7 +165,7 @@ schemas.
 - Every tenant-owned row carries `tenant_id`; all primary queries include it; cross-tenant
   isolation is proven by integration tests (create two tenants, assert reads/writes/files blocked).
 - Roles (`tenant_memberships.role`): `owner`, `admin`, `office`, `crew`, `read_only`. Platform
-  admins bypass via an explicit impersonation/audit flow.
+  admins work across tenants via Clerk native impersonation (no custom impersonation).
 
 ## 4. Schema (greenfield)
 
@@ -371,7 +371,7 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
    file-size guard, gofmt/vet/lint, build+test (Testcontainers), generated-code freshness
    (sqlc/huma/frontend-typegen), provider isolation, evals local-only.
 1. **Auth & tenancy** — Clerk verification → `Principal`, tenant resolution, memberships, domains,
-   roles, impersonation/audit, cross-tenant isolation tests.
+   roles, cross-tenant isolation tests.
 2. **Onboarding & research & profile** — sessions, interview, research providers
    (Google Places, company registry, Facebook, website crawl, photo classification), business
    profile with history.
