@@ -12,7 +12,7 @@
 | Database | PostgreSQL |
 | Background jobs | `River` (Postgres-backed, typed args, safe retries) |
 | Config | env → typed struct, validated once at startup |
-| Logging | `log/slog` (structured) + request ids + Sentry |
+| Logging | `log/slog` (structured) + request ids |
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
 | LLM | OpenRouter behind an internal provider interface |
 | Payments | Stripe (activation checkout only) |

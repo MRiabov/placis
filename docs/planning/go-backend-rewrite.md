@@ -136,7 +136,7 @@ when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard err
 | Migrations | `goose` | plain SQL, embedded |
 | Jobs | `River` | Postgres-backed, typed args, explicit idempotency keys |
 | Config | env -> typed struct, validated at startup | |
-| Logging | `log/slog` | structured, request IDs, Sentry |
+| Logging | `log/slog` | structured, request IDs |
 | Storage | `aws-sdk-go-v2/service/s3` | R2 in prod, MinIO/local FS in dev |
 | LLM | OpenRouter behind an interface | mandatory recording of reasoning + output + tool calls |
 | Payments | Stripe | activation checkout only |
