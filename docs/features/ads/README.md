@@ -9,6 +9,7 @@ services) into a reviewable, exportable ad creative package. This doc is the ove
 - [technical-implementation.md](ad-generation/technical-implementation.md) — domain objects, API,
   generation pipeline, validation, export
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
+- [testing.md](ad-generation/testing.md) — the ads E2E test
 - [design/ads-workspace.html](ad-generation/design/ads-workspace.html) — static design mock
 
 ## Positioning (done-for-you + DIY)
