@@ -1,0 +1,140 @@
+  .cms-nav-link-handle:active {
+    cursor: grabbing;
+  }
+
+  .cms-nav-link-fields {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+    gap: 4px;
+  }
+
+  .cms-nav-link-fields input {
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 2px 4px;
+    border-radius: var(--cms-radius-control);
+    color: var(--cms-text);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .cms-nav-link-fields input:hover,
+  .cms-nav-link-fields input:focus {
+    border-color: var(--cms-border-strong);
+    background: var(--cms-surface-raised);
+    outline: none;
+  }
+
+  .cms-nav-link-fields .cms-nav-link-href {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--cms-text-subtle);
+  }
+
+  .cms-nav-link-delete {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: var(--cms-radius-control);
+    color: var(--cms-text-subtle);
+  }
+
+  .cms-nav-link-delete:hover {
+    color: var(--cms-error);
+    background: var(--cms-error-surface);
+  }
+
+  .cms-nav-link-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    border: 1.5px dashed var(--cms-border-strong);
+    border-radius: var(--cms-radius-card);
+    padding: 9px;
+    color: var(--cms-text-muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    transition:
+      border-color var(--cms-duration-fast) var(--cms-ease),
+      color var(--cms-duration-fast) var(--cms-ease);
+  }
+
+  .cms-nav-link-add:hover {
+    border-color: var(--cms-accent);
+    color: var(--cms-accent);
+  }
+
+  /* Image slot control: a live thumbnail that doubles as a drop target for
+     media library assets, with a matching empty state before any image is
+     set. Dragging the filled thumbnail back onto the media library removes
+     it, the natural inverse of dragging an asset onto it. */
+  .cms-image-slot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1.5px dashed var(--cms-border-strong);
+    border-radius: var(--cms-radius-card);
+    background: var(--cms-surface-sunken);
+    color: var(--cms-text-subtle);
+    transition:
+      border-color var(--cms-duration-fast) var(--cms-ease),
+      background var(--cms-duration-fast) var(--cms-ease);
+  }
+
+  .cms-image-slot.has-image {
+    border-style: solid;
+    cursor: grab;
+  }
+
+  .cms-image-slot.has-image:active {
+    cursor: grabbing;
+  }
+
+  .cms-image-slot.is-drop-active {
+    border-color: var(--cms-accent);
+    background: var(--cms-accent-subtle);
+  }
+
+  .cms-image-slot img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .cms-image-slot-empty {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    padding: 12px;
+    text-align: center;
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+
+  .cms-image-slot-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: var(--cms-radius-pill);
+    border: 1px solid var(--cms-overlay-border);
+    background: rgba(12, 13, 18, 0.65);
+    color: #fff;
+    opacity: 0;
+    transition: opacity var(--cms-duration-fast) var(--cms-ease);
+  }
+
+  .cms-image-slot:hover .cms-image-slot-remove,
+  .cms-image-slot-remove:focus-visible {
+    opacity: 1;
+  }

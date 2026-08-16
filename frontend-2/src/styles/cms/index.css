@@ -1,0 +1,12 @@
+/* Copied from the frozen old app (frontend/src/cms/styles.css import list) so
+ * the ported CMS markup renders identically. Tokens and the public-site
+ * component styles are already imported by globals.css. */
+@import "./tokens.css";
+@import "./base.css";
+@import "./components-01.css";
+@import "./components-02.css";
+@import "./components-03.css";
+@import "./components-04.css";
+@import "./components-05.css";
+@import "./details.css";
+@import "./dashboard.css";

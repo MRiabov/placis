@@ -1,0 +1,25 @@
+@layer base {
+  .cms-app,
+  .cms-app * {
+    box-sizing: border-box;
+  }
+
+  .cms-app {
+    min-height: 100%;
+  }
+
+  .cms-app {
+    min-width: 320px;
+  }
+
+  .cms-app button,
+  .cms-app input,
+  .cms-app textarea,
+  .cms-app select {
+    font: inherit;
+  }
+
+  .cms-app button {
+    cursor: pointer;
+  }
+}
