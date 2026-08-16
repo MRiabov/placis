@@ -20,6 +20,9 @@ deploy. Both run only non-mutating checks — CI never rewrites files.
    storage/domain/LLM/research/voice providers, then fails if any credential-shaped env var
    remains. Tests must not spend LLM-provider, Google, registry, or research quota. Eval suites are
    **local-only** and never run in ordinary CI.
+6. **OpenAPI constraints** — the generated spec must constrain every field: strings carry
+   `minLength` (and `maxLength`), numbers carry `minimum`/`maximum`, fixed sets are `enum`. A field
+   missing its constraints fails CI (the Go form of the old "strict schema contract" check).
 
 ## Runner policy
 
