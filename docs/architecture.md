@@ -1,5 +1,11 @@
 # Architecture
 
+The system is two halves around one contract: the `frontend-2` React client and the Go backend,
+joined by the `huma`-derived OpenAPI. That contract is the full-stack spine — the frontend's types
+are generated from it, the backend's DTOs define it, and the schema and packages below it are
+backend implementation. Go-specific sections (module layout, schema) are the backend half, not the
+whole system.
+
 ## Stack
 
 | Layer | Choice |
