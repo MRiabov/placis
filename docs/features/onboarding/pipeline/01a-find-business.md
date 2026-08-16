@@ -1,10 +1,14 @@
 # 01a — Find the business
 
-The contractor picks a country and finds their business: a company-registry record (Companies
-House / CRO / US state registry) and/or a Google Maps place. Then a single consent checkbox.
+The contractor picks a country and finds their business. Two debounced lookups, one consent
+checkbox.
 
-- **Persists** `onboarding_sessions`: `started_from` (`google_places`/`company_registry`), `channel`
-  (`text`/`voice`), `status=created`, `token`, `clerk_user_id`, `consent_given_at`.
-- **Data in**: registry search against the **offline parquet copy** of the registry (Companies
-  House / CRO; queried at runtime — Go reads parquet, the `polars` equivalent); Google Places
-  autocomplete. Both lookups are **debounced** (backoff) so a keystroke doesn't hit the backend.
+- **Registry search** — search the **offline parquet copy** of the registry (Companies House / CRO /
+  US state registry), selectable legal records; queried at runtime (Go reads parquet — the `polars`
+  equivalent). **Debounced** so a keystroke doesn't hit the backend.
+- **Google Maps** — autocomplete + place picker; **debounced** the same way.
+- **Consent** — a single checkbox: "I agree that Placis can collect public information about this
+  business to prepare the website preview."
+
+- **Persists** `onboarding_sessions` (`started_from`, `channel`, `status=created`, `token`,
+  `consent_given_at`), plus the initialized `business_profiles` shell.
