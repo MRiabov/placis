@@ -25,6 +25,18 @@ Clerk owns user identity, sessions, and organizations. Placis never builds passw
   `placis_selected_org` cookie, `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{slug}`,
   `.../memberships/*` CRUD.
 
+### Clerk SDK
+
+Use the official **`github.com/clerk/clerk-sdk-go/v2`** for everything Clerk-side; do not hand-roll
+JWT/JWKS verification or Clerk data types.
+
+- **Session verification** — `client.Sessions().Verify(ctx, token)` fetches/caches JWKS, checks
+  clock skew + audience, and maps the session's org claim to `ActiveOrganizationID`. App code only
+  maps that result into `Principal`; it does not decode or validate tokens itself.
+- **Org provisioning** — `client.Organizations().Create(...)` (with `CreatedBy`) for
+  `POST /api/v1/me/organization`; the creator becomes `org:admin` automatically.
+- No other Clerk Backend API surface is used; tenant/membership/role state stays in Postgres.
+
 ### Tenant context resolution
 
 Resolved once per request from one of:

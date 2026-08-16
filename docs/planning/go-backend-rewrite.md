@@ -83,32 +83,45 @@ placis/
     api/                 # HTTP API server (wiring, middleware, handlers)
     worker/              # background job worker (River)
   internal/
+    # shared / cross-cutting
     config/              # env -> typed config, validated once at startup
     httpapi/             # router, middleware, error/response mapping, huma API registration
-    auth/                # Clerk token verification -> Principal{userID, orgID, platformRole}
-    tenancy/             # tenant resolution, memberships, roles, domains
-    onboarding/          # onboarding sessions, consent, interview, orchestration
-    research/            # provider interface + service (places/registry/facebook/crawl/photos)
-    profile/             # business profile (facts + immutable versions)
-    website/             # CMS (pages/sections/slots/assets/forms/nav/publications/projects/certifications)
-    blueprint/           # trade blueprint + component catalog: load/validate/apply
-    ads/                 # ad creative sets + variants (#403)
-    preview/             # preview packages + events
-    billing/             # Stripe checkout + webhooks + activation
-    leads/               # lead capture + attribution
+    auth/                # Clerk Go SDK (clerk-sdk-go) verification -> Principal{userID, orgID, platformRole}
+    store/               # pgx pool + sqlc-generated queries (queries/*.sql split by domain)
     ai/                  # LLM client, prompt catalog, schema-shaped output, traceability
     files/               # object storage, signed URLs, scan status
     jobs/                # River job args + workers
     audit/               # audit events
-    store/               # sqlc-generated queries + pgx pool (shared persistence)
+
+    # product domains — feature-nested (one package per feature)
+    tenancy/             # tenants.go, memberships.go, domains.go
+    onboarding/          # session.go, consent.go, interview.go, orchestrate.go, claim.go
+      preview/           #   package.go, events.go (signed preview of the generated site)
+    research/            # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
+    profile/             # profile.go, versions.go, services.go, areas.go, hours.go
+    website/             # root types.go, service.go + feature packages
+      pages/             #   handler.go, service.go, model.go
+      sections/
+      slots/
+      assets/
+      forms/
+      navigation/
+      publications/
+      projects/
+      certifications/
+      blueprints/
+    ads/                 # creativeset.go, variant.go, generate.go, export.go
+    billing/             # checkout.go, webhooks.go (Stripe only)
+    leads/               # leads.go
   migrations/            # goose SQL migrations (greenfield)
   catalog/               # blueprints + component JSON Schemas (static, versioned)
   docs/                  # rescoped canonical docs
   go.mod
 ```
 
-Package boundaries follow one package per bounded context; split a package into files as it grows
-(keep files < 800 lines). Shared types live in exactly one package — no forked duplicates.
+Packages are feature-nested, never flat: a leaf package starts as a single file and splits only
+when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard error) in CI — see
+`docs/ci-cd.md`. Shared types live in exactly one package — no forked duplicates.
 
 ### Stack
 
@@ -353,7 +366,9 @@ Each phase ends with: typed models, migrations applied, integration tests (incl.
 isolation), regenerated frontend types, and an E2E test for each major feature.
 
 0. **Foundation** — repo scaffold, `cmd/api` + `cmd/worker`, config, `slog`, Postgres + `goose` +
-   `sqlc`, `River`, `huma` skeleton + `/health`, Railway deploy, CI.
+   `sqlc`, `River`, `huma` skeleton + `/health`, Railway deploy, and CI (CircleCI + GitHub Actions):
+   file-size guard, gofmt/vet/lint, build+test (Testcontainers), generated-code freshness
+   (sqlc/huma/frontend-typegen), provider isolation, evals local-only.
 1. **Auth & tenancy** — Clerk verification → `Principal`, tenant resolution, memberships, domains,
    roles, impersonation/audit, cross-tenant isolation tests.
 2. **Onboarding & research & profile** — sessions, consent, text interview, research providers
@@ -374,6 +389,12 @@ first pass.
 
 - **Module path** — `github.com/MRiabov/placis`.
 - **API tooling** — `huma` v2 (Go-first: structs derive OpenAPI 3.1 + runtime validation).
+- **Clerk** — official `github.com/clerk/clerk-sdk-go/v2` for session/JWT verification (JWKS,
+  clock skew, audience, org claim → `ActiveOrganizationID`) and org provisioning
+  (`Organizations().Create`). No hand-rolled JWT/JWKS logic or Clerk data types.
+- **CI/CD** — CircleCI primary (PR-only, path-filtered, non-mutating); GitHub Actions for emergency
+  + Cloudflare deploy; file-size guard (< 800 warn / > 1200 hard error); backend tests
+  provider-isolated; evals local-only. See `docs/ci-cd.md`.
 - **Voice** — later milestone; provider-agnostic boundary + `voice_observability_events` table are
   kept in the schema, but the onboarding voice agent + operator console are deferred.
 
