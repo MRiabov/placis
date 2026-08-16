@@ -34,15 +34,18 @@ deploy. Both run only non-mutating checks — CI never rewrites files.
   `deploy public site cloudflare` entry point (separate from validation CI).
 - Railway deploys `cmd/api` and `cmd/worker` from the integration branch — release, not CI.
 
-## Local fix commands
+## Dev tooling (`justfile`)
 
-```text
-just fmt            # gofmt + goimports (mutating, local only)
-just lint           # golangci-lint
-just check-files    # file-size guard
-just sqlc           # regenerate queries
-just test           # go test ./...
-```
+The `justfile` is the **developer entry point**, and nothing more — only the high-frequency dev loop:
+
+- `just servers-up` / `just servers-down` — start/stop the dev environment (Postgres via Docker,
+  migrations, `cmd/api`, `cmd/worker`, `frontend-2`, with env-var + port resolution).
+- `just test`, `just lint`, `just fmt`, `just sqlc`, `just typegen`, `just check-files` — the
+  fix-it-locally feedback loop.
+
+**Not** in the `justfile`: dependency installs / one-off setup, and anything CI runs. CI invokes the
+underlying tools directly (`go test ./...`, `golangci-lint`, `sqlc generate`) — never `just`
+recipes. A recipe that is only ever executed by CI is dead weight.
 
 ## Pre-commit & static analysis
 
