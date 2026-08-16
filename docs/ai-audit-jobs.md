@@ -38,7 +38,7 @@ triggered by a browser success URL alone.
 
 ## Observability
 
-Structured logging with `log/slog` and request ids; Sentry for errors. Observability events (voice,
+Structured logging with `log/slog` and request ids. Observability events (voice,
 preview) are stored sanitized — no raw audio, secrets, or WebSocket headers.
 
 ## Leads
