@@ -31,6 +31,10 @@ The interview never re-asks what we already know. In the **text interview** the 
 prefilled from the source and the contractor fills in the gaps; in the **voice interview** the agent
 is told what's known and what's left, so it asks only the missing questions.
 
+Fields the source already gave — the Google Maps place and the company-registry record — are shown
+as **prefilled and locked** (grayed out, not editable). The contractor is only asked for what the
+source didn't provide.
+
 Missing fields, autosaved as the contractor answers:
 
 - **Who they are** — display name, trade, established year, a short description.
