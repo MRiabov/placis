@@ -72,7 +72,7 @@ area, and the date.
     gate), so an asset that went into review after selection, a pending cleanup edit, or missing
     alt text blocks `ready to post` with an owner-readable message.
 
-14. **The spec directory is the single authority** — `docs/ads/ad-generation/` holds
+14. **The spec directory is the single authority** — `docs/features/ads/ad-generation/` holds
     the PRD (with user stories and acceptance criteria) and the implementation plan. No epic
     file for this feature, no duplicated ad content elsewhere; older ad docs were cleaned out or
     reduced to pointers to this directory.
