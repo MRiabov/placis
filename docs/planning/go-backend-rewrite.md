@@ -322,8 +322,9 @@ before production use.
 5. **Claim/activation** — `checkout.session.completed` accepted only after Stripe SDK signature
    verification (`webhook.ConstructEvent`) + metadata matching; activation is safe to replay and
    never driven by a browser success URL alone. It links the onboarding session, ensures the owner
-   membership, rebuilds CMS records from the selected blueprint, validates + publishes, activates
-   the tenant + generated domain, and marks the session claimed.
+   membership, rebuilds CMS records as a **draft** from the selected blueprint (it does **not**
+   publish), activates the tenant + generated domain, and marks the session claimed. Publishing is
+   a separate, later user action.
 6. **Ad creative** — creation flow `draft → needs_review → ready_to_post → archived`; existing-ad
    statuses `Draft / Creative ready / Published / Archived`. AI is propose-only (drafts copy,
    proposes image galleries from approved media, light cleanup); the owner reviews/edits/approves;
