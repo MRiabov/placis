@@ -32,6 +32,50 @@ There are two layers, not one:
 
 Publish is always a separate, explicit action.
 
+## Models
+
+The editor is one typed **projection** (read) and one **patch** (write).
+
+### Read — the editor projection
+
+`GET /api/v1/website/editor/pages/{page_id}` returns:
+
+- `tenant` (id, slug, name); `page` (id, path, title, page_type, status, current/published version
+  ids + numbers, validation status, publish-blocker count).
+- `seo`; `theme` (preset + overrides).
+- `sections[]` — each: `id`, `page_id`, `component_id` (+ `component_version`, `schema_version`,
+  `family`, `variant`), `position`, `status`, `visible`, `props`, `design`, `slots[]`,
+  `design_controls[]`, `source_refs`, `unsupported_component`.
+- `assets[]`, `forms[]`, `navigation[]`.
+- `versions[]`, `publication` (active publication + `has_unpublished_changes`), `validation`.
+- `preview_url`, `public_url`.
+
+A **slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`, `required`, `max_length`, `value`
+(typed), `status`, `source_refs`, `validation_errors`.
+
+A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`, `values[]`, `default`,
+`value`.
+
+### Write — the patch
+
+`PATCH /api/v1/website/editor/pages/{page_id}` takes a page patch whose `sections[]` carry the
+edits. To update a slot you send:
+
+```json
+{ "sections": [ { "id": "<section id>", "slots": [
+    { "key": "headline", "type": "text", "value": "Roof repairs across Dublin", "status": "draft" }
+] } ] }
+```
+
+- **slot patch** — `key`, `type`, `value`, `status` (`label` optional).
+- **section patch** — `id`, `component_id` (optional swap), `component_version`, `visible`, `design`,
+  `slots[]`.
+- **section create** — `component_id`, `component_version`, `position`, `props`, `design`,
+  `source_refs`.
+- **section order** — `ordered_section_ids[]`.
+- **page create** — `path`, `title`, `page_type`, `seo`, `draft_content`.
+- **form patch** — `form_id`, `title`, `submit_action`, `fields[]`, `privacy_notice`.
+
 ## What each action does
 
 All editor actions are CRUD on the live CMS records; save snapshots them into a version.
