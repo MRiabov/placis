@@ -36,3 +36,11 @@ the frontend what changed so it can re-render or re-fetch.
 
 `created → interviewing → profile_draft → generating → previewing → claimed/expired`. Research runs
 in the background alongside the interview; generation reads the live profile.
+
+## Voice (later)
+
+Voice is a later milestone. When it lands, the same checklist and tool calls
+(`obtained_information`, `mark_information_status`, `request_lookup`, `confirm_conflict`) drive a
+realtime agent; the backend mints an ephemeral provider secret and the frontend connects directly to
+the provider (audio never flows through the backend). Voice is an accelerator, not a blocker — the
+user can always switch to the text interview.
