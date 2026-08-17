@@ -64,10 +64,11 @@ continuous mode. See [assistant.md](assistant.md).
 
 ## Publish
 
-Publish walks the draft, validates every section against its component contract, resolves
-placeholders from the business profile, and writes one `website_publications` row holding the frozen
-`site_manifest` (a `site.v1` manifest: pages → sections → props). The manifest is the read model —
-the renderer only ever reads the active publication. Rollback reactivates an earlier publication.
+Publish walks the draft, validates every section against its component contract, resolves the
+`{{var}}` placeholders from the business profile (see [variables.md](variables.md)), and writes one
+`website_publications` row holding the frozen `site_manifest` (a `site.v1` manifest: pages →
+sections → props). The manifest is the read model — the renderer only ever reads the active
+publication. Rollback reactivates an earlier publication.
 
 ## Public runtime (separate Astro app)
 
