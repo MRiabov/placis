@@ -18,9 +18,10 @@ A site is a list of **pages**; a page is an ordered list of **sections**; a sect
 ## The component model
 
 A component is a named building block (`public.hero.image`, `public.services.grid`, …). Each has a
-**contract**: the props it accepts and the slots it exposes. The contract is one typed struct dumped
-to JSON under `catalog/` — the editor and the renderer read the same structs. Only registered
-components render.
+**contract**: the props it accepts, the slots it exposes, and its **design controls** — small
+enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values. The
+contract is one typed struct dumped to JSON under `catalog/` — the editor and the renderer read the
+same structs. Only registered components render.
 
 ## Generation
 
