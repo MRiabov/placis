@@ -49,11 +49,11 @@ Every edit writes a new page version; nothing is edited in place. AI edits arriv
 diff), never a direct write. The **Details** view (business profile) and **Media** (image editing)
 are their own standalone parts, not page content.
 
-## Refinement (AI)
+## Refinement (the assistant)
 
-AI proposes edits through governed tool calls — `update_slot` for copy, `generate_image` only when
-no approved source fits. Each proposal is validated against the component contract and lands as a
-reviewable change the owner accepts or rejects.
+The LLM edits the draft through the **CMS assistant** — hard-typed, validated, parallel tool calls
+(`update_slot`, `generate_image`, section/theme/SEO/form/page actions), in plan mode (default) or
+continuous mode. See [assistant.md](assistant.md).
 
 ## Publish
 
