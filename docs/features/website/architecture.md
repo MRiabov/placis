@@ -25,13 +25,17 @@ components render.
 ## Generation
 
 A **blueprint** (a full-site template for a trade) lists the pages and sections a typical site of
-that trade needs. Generation applies the blueprint to the business profile:
+that trade needs. Generation applies the blueprint to the business profile — **population**:
 
-1. pick the trade blueprint;
-2. for each page and section in it, create draft `website_pages` / `website_sections` /
-   `content_slots` rows;
-3. placeholders (`{{business_name}}`, `{{phone}}`, …) stay in the draft — they resolve at publish;
-4. the result is a draft, never published.
+1. assemble the stable facts (services, areas, proof assets, contact, details);
+2. pick the trade blueprint and propose page structure, section composition, copy, CTA hierarchy,
+   style tokens, image-slot intent, SEO;
+3. create draft `website_pages` / `website_sections` / `content_slots` rows — placeholders
+   (`{{business_name}}`, `{{phone}}`, …) stay in the draft, resolving at publish;
+4. pick or generate image assets (prefer real proof media; generate only when approved);
+5. validate against component contracts, the registry, claims, links, forms, SEO.
+
+The result is a draft, never published.
 
 ## Editing (the editor)
 
@@ -58,11 +62,19 @@ placeholders from the business profile, and writes one `website_publications` ro
 `site_manifest` (a `site.v1` manifest: pages → sections → props). The manifest is the read model —
 the renderer only ever reads the active publication. Rollback reactivates an earlier publication.
 
-## Render
+## Public runtime (separate Astro app)
 
-The public site resolves the active publication by host + path, reads the `site_manifest`, and
-renders each section by its `component_id` (Astro shell, React islands). One shared runtime serves
-every tenant — no per-tenant build.
+Published sites and previews are served by a **separate Astro + React app** (`apps/public-site`),
+not the private editor. It calls `/api/v1/public/site/resolve` with the incoming host + path, reads
+the active `site_manifest`, and renders each section by its `component_id` through the shared
+`public-site-components` package — Astro owns routing, page shell, static/prerender, and metadata;
+React owns interactive islands.
+
+One shared runtime serves every tenant — no per-tenant build — and imports only the public component
+package (a bundle-boundary check blocks private-app imports).
+
+Previews use the same runtime: the onboarding preview renders the draft `site_manifest` behind a
+signed preview token, so the contractor sees the real components before publish.
 
 ## Voice (later)
 
