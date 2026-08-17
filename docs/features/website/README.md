@@ -7,6 +7,7 @@ ads part lives in [../ads/](../ads/README.md).)
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
 - [architecture.md](architecture.md) — content/component model, generation, editor, publish, render
+- [editing.md](editing.md) — how edits reach the backend and re-render in the editor
 - [assistant.md](assistant.md) — the CMS assistant (refinement): tools, plan/continuous mode, undo
 - [styles.md](styles.md) — the style presets (themes): colors, typography, radius, density, motion
 - [technical-implementation.md](technical-implementation.md) — the technical plan (data model, template application, publish, pipeline)

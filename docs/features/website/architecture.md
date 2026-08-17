@@ -53,7 +53,8 @@ The editor is one workspace with three surfaces:
 
 Every edit writes a new page version; nothing is edited in place. AI edits arrive as proposals (a
 diff), never a direct write. The **Details** view (business profile) and **Media** (image editing)
-are their own standalone parts, not page content.
+are their own standalone parts, not page content. The full edit → backend → re-render loop is in
+[editing.md](editing.md).
 
 ## Refinement (the assistant)
 
