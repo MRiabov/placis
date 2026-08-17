@@ -19,7 +19,8 @@ density, spacing, and motion across every section. The `site_manifest` carries a
 ## Presets
 
 `navy_cream`, `dark_serif`, `red_charcoal`, `institutional_mono`, `green_gold`, `navy_grid`,
-`timbermill_classic`.
+`timbermill_classic`. Presets are **remixed colors** taken from decomposed reference sites, not
+hand-picked palettes.
 
 ## How it flows
 

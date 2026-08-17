@@ -38,6 +38,11 @@ that trade needs. Generation applies the blueprint to the business profile — *
 
 The result is a draft, never published.
 
+**Where blueprints come from**: mostly by taking inspiration from existing websites — decomposing
+them into patterns (page structure + section composition), then **switching the content** (profile
+facts fill the placeholders) and **remixing the colors** (a style preset) for a new business. They
+are not hand-authored from scratch.
+
 ## Editing (the editor)
 
 The editor is one workspace with three surfaces:
