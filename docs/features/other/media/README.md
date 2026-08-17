@@ -18,3 +18,6 @@ The photo library and image editing — a standalone part of the CMS.
 ## Review
 
 Only approved assets (with a caption) can be used by the website or by ads.
+
+Bytes live in [files](../../../general-architecture/files.md) (`website_assets.file_id`).
+Tables: [data-model.md](data-model.md).

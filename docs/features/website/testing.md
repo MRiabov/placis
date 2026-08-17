@@ -2,7 +2,7 @@
 
 One full-stack E2E test: edit → publish → resolve → rollback → public form. Drives `frontend-2`
 (Playwright) against the real API + real Postgres; the LLM is faked. DB asserts name the tables
-from the data model.
+from [data-model.md](data-model.md) (and [leads](../other/leads/data-model.md) for the public form).
 
 1. **Open the editor** — the user opens the CMS.
    - UI: the page list renders.

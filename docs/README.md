@@ -13,13 +13,14 @@ themselves through the CMS.
 2. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
 3. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
 4. [Architecture](architecture.md) — stack, module layout, runtime, boundaries
-5. [General architecture](general-architecture/README.md) — LLM layer, platform services, data model
+5. [General architecture](general-architecture/README.md) — LLM layer, audit, jobs, files, data model
 6. [Auth](features/other/auth/README.md) — Clerk, tenant == org, roles
-7. [Onboarding](features/onboarding/README.md) — research and business-profile building
+7. [Onboarding](features/onboarding/README.md) — research and business-profile building; [claim](features/onboarding/pipeline/07-claim.md) is pay-and-activate
 8. [Website CMS](features/website/README.md) — blueprints, generation, editing, publication
 9. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md)
-10. [CI and delivery](ci-cd.md) — file-size guard, provider isolation, generated-code freshness
-11. [Testing](testing.md) — the per-feature E2E tests
+10. [Leads](features/other/leads/README.md) — public-form contacts for attribution and follow-up
+11. [CI and delivery](ci-cd.md) — file-size guard, provider isolation, generated-code freshness
+12. [Testing](testing.md) — the per-feature E2E tests
 
 ## Canonical references
 
@@ -30,11 +31,13 @@ themselves through the CMS.
 | How docs are structured and written | [docs-conventions.md](docs-conventions.md) |
 | Naming / vocabulary | [glossary.md](glossary.md) |
 | Auth | [features/other/auth/README.md](features/other/auth/README.md) |
-| Data model / schema | [general-architecture/data-model.md](general-architecture/data-model.md) |
-| LLM layer, audit, jobs, files, payments | [general-architecture/](general-architecture/README.md) |
+| Data model conventions + index | [general-architecture/data-model.md](general-architecture/data-model.md) |
+| LLM layer, audit, jobs, files | [general-architecture/](general-architecture/README.md) |
 | Onboarding loop (research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
+| Claim / payments | [features/onboarding/pipeline/07-claim.md](features/onboarding/pipeline/07-claim.md) |
 | Website building + editing | [features/website/README.md](features/website/README.md) |
 | Ad generation | [features/ads/README.md](features/ads/README.md) |
+| Leads | [features/other/leads/README.md](features/other/leads/README.md) |
 | CI and delivery | [ci-cd.md](ci-cd.md) |
 | Testing / per-feature E2E | [testing.md](testing.md) |
 | Exhaustive rewrite plan | [planning/go-backend-rewrite.md](planning/go-backend-rewrite.md) |

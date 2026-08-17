@@ -5,9 +5,10 @@ Status: proposed implementation plan.
 Related docs:
 
 1. [CMS ad generation PRD](prd.md)
-2. [Website CMS](../../website/README.md)
-3. [Architecture and JSON standards](../../../architecture.md)
-4. [Backend API surface](../../../planning/go-backend-rewrite.md)
+2. [Ads data model](../data-model.md)
+3. [Website CMS](../../website/README.md)
+4. [Architecture and JSON standards](../../../architecture.md)
+5. [Backend API surface](../../../planning/go-backend-rewrite.md)
 
 ## Technical Thesis
 
@@ -72,7 +73,7 @@ pages stay where they are, and the ad records reference them by id (for example
 `ad_image_placements.media_asset_id`).
 
 The record names below are the domain record names. Their Go/persistence forms are snake_case
-tables with a `*_id` primary key, per `docs/general-architecture/data-model.md`: `AdCreativeSet` →
+tables with a `*_id` primary key, per [data-model.md](../data-model.md): `AdCreativeSet` →
 `ad_creative_sets`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
 `AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no separate
 destination record in Go — the destination is `destination_page_id` + `destination_path` columns on

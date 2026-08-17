@@ -6,10 +6,13 @@ that drives website and ad generation. It replaces the old "setup" concept.
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
 - [architecture.md](architecture.md) — pipeline, deterministic generation + refinement, SSE progress
-- [technical-implementation.md](technical-implementation.md) — the technical plan (data model, flow, API, pipeline)
+- [data-model.md](data-model.md) — sessions, research, preview, claim
+- [technical-implementation.md](technical-implementation.md) — the technical plan (flow, API, pipeline)
 - [frontend.md](frontend.md) — the onboarding screens and fields
 - [testing.md](testing.md) — the onboarding E2E test
 
 Auth is interleaved with onboarding (the claim/activation step), but auth and tenancy are owned by
-the [auth feature](../../other/auth/README.md); the schema lives in the
-[data model](../../general-architecture/data-model.md).
+the [auth feature](../../other/auth/README.md). Stripe checkout lives in
+[claim](pipeline/07-claim.md). The schema lives in
+[data-model.md](data-model.md) (sessions) and
+[details](../other/details/data-model.md) (business profile).

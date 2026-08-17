@@ -1,0 +1,29 @@
+# Ads — data model
+
+Ad creative tables. They reference CMS content by id — they do not copy it. Conventions:
+[data-model conventions](../../general-architecture/data-model.md).
+
+Referenced, not owned here: [details](../other/details/data-model.md) (profile, services),
+[media](../other/media/data-model.md) (`ad_image_placements.media_asset_id`),
+[website](../website/data-model.md) (`destination_page_id`),
+[leads](../other/leads/data-model.md) (attribution). LLM traces:
+[LLM layer](../../general-architecture/llm-layer.md). Sensitive mutations also write
+[audit](../../general-architecture/audit.md).
+
+- `ad_creative_sets` — `id`, `tenant_id` fk, `name`, `status` (`draft`/`needs_review`/
+  `ready_to_post`/`archived`), `offer`, `ad_goal` (`more_calls`/`more_quotes`/`promote_service`),
+  `service_focus_id` nullable fk, `destination_page_id` nullable fk, `destination_path`, `icp`
+  jsonb (typed ideal-customer profile), `review_status`, `source_refs` jsonb, `created_by`,
+  `updated_by`, `platform_refs` jsonb, `platform_status` (`not_connected`/`synced`/`needs_sync`/
+  `error`), timestamps
+- `ad_variants` — `id`, `tenant_id` fk, `creative_set_id` fk, `format` (`feed_square`/
+  `feed_portrait`/`carousel`/`story`), `status` (`draft`/`needs_review`/`approved`/`hidden`/
+  `archived`), `copy_variant_id` fk, `position`, `review_status`, `platform_refs` jsonb, timestamps
+- `ad_copy_variants` — `id`, `tenant_id` fk, `headline`, `primary_text`, `description`, `cta_label`
+  (`learn_more`/`get_quote`/`call_now`/`message`), `source` (`ai_proposal`/`owner_edit`/
+  `operator_edit`/`manual`), `ai_generation_ref`, timestamps
+- `ad_image_placements` — `id`, `tenant_id` fk, `variant_id` fk, `media_asset_id` fk, `format`,
+  `crop` jsonb, `focal_point` jsonb, `position`, `alt_text`
+- `ad_lead_forms` — `id`, `tenant_id` fk, `creative_set_id` fk, `title`, `questions` jsonb,
+  timestamps
+- `ad_reviews` — review/approval trail (actor, transition, note)

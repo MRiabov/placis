@@ -21,13 +21,3 @@ assistant. Dictation / manual ASR / TTS is **not kept**: it's legacy, dropped fo
 Voice is transport, not authority. The agent calls the same governed, typed, validated tools as the
 text assistant (plan mode or continuous mode); it cannot publish or bypass validation.
 
-## Observability
-
-Sanitized events are persisted — transcript turns, tool calls/results, provider errors, interruption
-markers, connection lifecycle — never raw audio, client secrets, authorization headers, or WebSocket
-headers.
-
-## Operator console
-
-Operators can list/listen/join a conversation, send an instruction, request/confirm takeover, hand
-back to the AI, and end the call.

@@ -3,19 +3,12 @@
 Status: proposed implementation plan.
 
 Related: [PRD](prd.md), [ADR](ADR.md), [component contract](../../architecture.md),
-[data model](../../general-architecture/data-model.md).
+[data model](data-model.md).
 
 ## Domain objects
 
-- `website_pages` + `website_page_versions` (immutable, `current_version_id` /
-  `published_version_id` pointers).
-- `website_sections` (`component_id`, `component_version`, `position`, `props` jsonb, `design` jsonb).
-- `content_slots` (`slot_key`, `slot_type`, `value` jsonb, review status).
-- `website_assets` (media library: provenance, focal point, crop, review status).
-- `website_forms` (`submit_action=create_lead`).
-- `navigation_items` (`primary`/`footer`/`campaign`).
-- `website_publications` (immutable `site_manifest`, active flag, rollback chain, validation report).
-- `website_projects`, `website_certification_selections`.
+See [data-model.md](data-model.md). Media assets are
+[media/data-model.md](../other/media/data-model.md).
 
 ## Blueprint application
 

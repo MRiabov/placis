@@ -2,7 +2,7 @@
 
 Identity, sessions, organizations, and tenant resolution — a mostly-internal feature with a small
 user-facing surface (`/me`, `/me/organization`). The schema lives in
-[data-model.md](../../general-architecture/data-model.md).
+[data-model.md](data-model.md).
 
 Clerk owns user identity, sessions, and organizations. Placis never builds password auth.
 

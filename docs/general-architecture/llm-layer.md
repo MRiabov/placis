@@ -12,6 +12,17 @@ logic.
 - **Every LLM call is recorded so it can be reconstructed later**: the reasoning, the visible
   answer, and the tool calls — plus the model, the prompt id/version, and the usage and cost.
 
+## `ai_generations`
+
+Shared by onboarding refinement, the website assistant, and ads. One table, not copied into
+feature data-models.
+
+- `ai_generations` — `id`, `tenant_id` nullable fk, `trace_type` (`prod`/`eval`), `generation_type`,
+  `model`, `prompt_id`, `prompt_version`, `tool_versions` jsonb, `skill_versions` jsonb, `input`
+  jsonb, `internal_reasoning` jsonb, `output` jsonb, `tool_calls` jsonb, `usage` jsonb, `cost` jsonb,
+  `latency_ms`, `approval_status` (`pending_review`/`approved`/`applied`/`rejected`/`failed`),
+  `applied_changes` jsonb, `status` (`running`/`succeeded`/`failed`), `error` nullable, `created_at`
+
 ## AI tools
 
 The LLM acts through **tools** — named, typed functions it may call. Each tool is deliberately
