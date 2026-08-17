@@ -1,16 +1,11 @@
 # Voice agent
 
 Voice is a **later milestone**, but its architecture is recorded now so it isn't reconstructed from
-scratch. Everything sits behind a provider-neutral interface (realtime agent + ASR + TTS); the
-concrete provider is swappable.
+scratch. Everything sits behind a provider-neutral interface; the concrete provider is swappable.
 
-## Two modes
-
-- **Dictation / ASR** — a mic transcribes speech into editable text. Not an agent: it never plans or
-  mutates. A fast LLM cleanup pass (punctuation, filler removal; preserve names/numbers; never add
-  facts) runs with a ~1–2s timeout; on timeout, keep the raw transcript.
-- **Voice agent** — a realtime duplex session. The assistant asks clarifying questions and hands off
-  a structured instruction to the same governed tool surface as the text assistant.
+Only the realtime **voice agent** is kept — a duplex session where the assistant asks clarifying
+questions and hands off a structured instruction to the same governed tool surface as the text
+assistant. Dictation / manual ASR / TTS is **not kept**: it's legacy, dropped for latency.
 
 ## Session — minted secret, audio bypasses the backend
 
