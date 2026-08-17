@@ -11,11 +11,24 @@ The planner uses hard-typed CMS action tools — never one generic plan tool wit
 call is validated on input; the backend normalizes it into a planned / applied / skipped / failed
 event.
 
-- `update_slot` — edit copy or image in a section slot.
-- `generate_image` — the model supplies a prompt + alt text; the backend creates a generated asset
-  (provenance + review state) and attaches it to a slot through the draft page-version path.
-- section add / remove / reorder and component swap; theme and style changes; SEO and form updates;
-  page creation; publish-readiness checks.
+| Tool | What it does |
+| --- | --- |
+| `update_slot` | update one typed content slot on an existing section (copy or image) |
+| `update_seo` | update bounded draft SEO metadata for the current page |
+| `update_theme` | update bounded theme tokens for the current draft page |
+| `set_section_visibility` | show or hide one existing section |
+| `update_section_design` | update bounded design controls for one section |
+| `reorder_sections` | set the full ordered list of section ids for the page |
+| `create_section` | propose a new section using an approved public component |
+| `create_page` | propose a new draft CMS page |
+| `generate_image` | generate a media asset from a prompt, optionally attach it to an image slot |
+
+`generate_image`: the model supplies a prompt + alt text; the backend creates a generated asset
+(provenance + review state) and attaches it to a slot through the draft page-version path.
+
+Two plan tools carry the owner-facing reply, markdown plan, assumptions, open questions, and
+activity: `refinement_plan` (plan mode, no mutation) and `assistant_plan` (summarize alongside the
+edit tools).
 
 ## Plan mode vs continuous mode
 
