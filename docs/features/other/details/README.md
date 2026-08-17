@@ -22,3 +22,5 @@ application draws from. Onboarding builds it; the website shows it; ads reuse it
   and the ideal-customer profile starts from the same details.
 
 One source of truth: the business profile. Editing it here changes the site and the next ad draft.
+
+Tables: [data-model.md](data-model.md).

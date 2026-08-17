@@ -3,7 +3,7 @@
 Status: proposed product scope for the website part of the CMS.
 
 Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.md),
-[data model](../../general-architecture/data-model.md).
+[data model](data-model.md).
 
 ## Problem
 

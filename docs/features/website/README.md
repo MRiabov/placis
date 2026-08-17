@@ -7,13 +7,15 @@ ads part lives in [../ads/](../ads/README.md).)
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
 - [architecture.md](architecture.md) — content/component model, generation, editor, publish, render
+- [data-model.md](data-model.md) — pages, sections, slots, forms, navigation, publications
 - [editing.md](editing.md) — how edits reach the backend and re-render in the editor
 - [variables.md](variables.md) — the `{{var}}` template placeholders and how they resolve
 - [assistant.md](assistant.md) — the CMS assistant (refinement): tools, plan/continuous mode, undo
 - [styles.md](styles.md) — the style presets (themes): colors, typography, radius, density, motion
-- [technical-implementation.md](technical-implementation.md) — the technical plan (data model, template application, publish, pipeline)
+- [technical-implementation.md](technical-implementation.md) — the technical plan (template application, publish, pipeline)
 - [details](../other/details/README.md) — the business-details view (shared with ads)
 - [media](../other/media/README.md) — the photo library + image editing
+- [leads](../other/leads/README.md) — public-form contacts (attribution and follow-up)
 - [testing.md](testing.md) — the website E2E test
 
 Standalone parts of the CMS, beside the page editor: **Details** and **Media** (above), and later a

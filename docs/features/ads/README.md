@@ -4,6 +4,7 @@ Ad generation turns approved contractor content (business profile, media library
 services) into a reviewable, exportable ad creative package. This doc is the overview; the
 **single authority** for the feature is [`ad-generation/`](ad-generation/ADR.md):
 
+- [data-model.md](data-model.md) — `ad_*` tables
 - [ADR](ad-generation/ADR.md) — the decision record (why each choice was made)
 - [PRD](ad-generation/prd.md) — product spec, user stories, acceptance criteria
 - [technical-implementation.md](ad-generation/technical-implementation.md) — domain objects, API,
@@ -51,5 +52,8 @@ approved media only (gated twice); every AI call records reasoning + output + to
 - Creation flow: `draft → needs_review → ready_to_post → archived`.
 - Existing-ad statuses (detail view): `Draft / Creative ready / Published / Archived`
   ("Creative ready" = creative done; "Published" is the next state once posting exists).
+
+Leads from public forms (and later ad forms) are a separate surface:
+[leads](../other/leads/README.md).
 
 See the full spec in `ad-generation/`.

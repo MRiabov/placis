@@ -117,8 +117,12 @@ Two backend processes share one database, and two frontend apps talk to the API:
    yet.
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
-work enqueued, and the request returned. Every
-background job can be retried safely (an explicit key).
+work enqueued, and the request returned — see
+[claim](features/onboarding/pipeline/07-claim.md). Every background job can be retried safely (an
+explicit key) — see [jobs](general-architecture/jobs.md).
+
+Preview progress events stream over SSE — see
+[06-preview.md](features/onboarding/pipeline/06-preview.md).
 
 `huma` handles JSON request/response endpoints and serves the derived OpenAPI spec at
 `/openapi.json`. The preview **SSE** stream and the voice **WebSocket** (later milestone) are raw

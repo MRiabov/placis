@@ -14,7 +14,8 @@ work in small vertical slices, and let the gates + glossary catch drift.
 
 1. **The ubiquitous language + schema + per-feature specs are already written:**
    - [glossary.md](glossary.md) — the only place names come from
-   - [data-model.md](general-architecture/data-model.md) — the schema
+   - [data-model.md](general-architecture/data-model.md) — conventions + index; each feature's
+     tables are in `features/<feature>/data-model.md`
    - [architecture.md](architecture.md) — module layout, stack, type layers
    - [features/](features/) — per-feature PRD / ADR / technical-implementation / frontend
    - [ci-cd.md](ci-cd.md) — the gates

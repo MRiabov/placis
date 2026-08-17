@@ -69,5 +69,4 @@ Missing fields, autosaved as the contractor answers:
 
 ## Voice (later)
 
-Voice is a later way to answer the interview; the frontend reserves the realtime/observability
-wiring but no phone UI ships in the first pass.
+Voice is a later way to answer the interview; the frontend reserves the realtime wiring but no phone UI ships in the first pass.
