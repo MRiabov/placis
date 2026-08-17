@@ -61,28 +61,33 @@ the future ads manager is expected to grow on top of this service rather than in
 
 ## Proposed Domain Objects
 
-Add ad domain records under `backend/app/ads/` (or `backend/app/cms/ads/` if it must stay inside
-the CMS package for now). Persistence follows the existing CMS pattern: SQLAlchemy tables plus a
-typed service layer. The records are the service's per-tenant state, not CMS page content, and
-the service's inputs and outputs are clearly defined from the start so other callers can
-integrate without the CMS UI.
+Add ad domain records under `internal/ads/`. Persistence follows the app's standard pattern:
+goose migrations + sqlc queries over pgx — a typed service layer, no SQLAlchemy. The records are
+the service's per-tenant state, not CMS page content, and the service's inputs and outputs are
+clearly defined from the start so other callers can integrate without the CMS UI.
 
 These are new tables — the ad creative set, its variants, copy, image placements, lead form, and
 review trail. They do not duplicate CMS content: media assets, projects, proof, and destination
 pages stay where they are, and the ad records reference them by id (for example
-`CmsAdImagePlacement.media_asset_id`).
+`ad_image_placements.media_asset_id`).
+
+The record names below are the domain record names. Their Go/persistence forms are snake_case
+tables with a `*_id` primary key, per `docs/general-architecture/data-model.md`: `AdCreativeSet` →
+`ad_creative_sets`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
+`AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no separate
+destination record in Go — the destination is `destination_page_id` + `destination_path` columns on
+`ad_creative_sets`.
 
 Recommended top-level records:
 
-1. `CmsAdCreativeSet`
-2. `CmsAdVariant`
-3. `CmsAdCopyVariant`
-4. `CmsAdImagePlacement`
-5. `CmsAdDestinationRef`
-6. `CmsAdLeadForm`
-7. `CmsAdReview` (review/approval trail, or reuse the existing CMS review record pattern)
+1. `AdCreativeSet`
+2. `AdVariant`
+3. `AdCopyVariant`
+4. `AdImagePlacement`
+5. `AdLeadForm`
+6. `AdReview` (review/approval trail, or reuse the existing CMS review record pattern)
 
-### CmsAdCreativeSet
+### AdCreativeSet
 
 Hard-typed fields:
 
@@ -92,8 +97,8 @@ Hard-typed fields:
 04. `status`: `draft`, `needs_review`, `ready_to_post`, `archived`
 05. `offer` (owner-visible goal, e.g. "promote garage conversions")
 06. `ad_goal`: `more_calls`, `more_quotes`, `promote_service`
-07. `service_focus` (optional reference to a tenant service)
-08. `destination`: `CmsAdDestinationRef` (page id or resolved public path)
+07. `service_focus_id` (optional reference to a tenant service)
+08. `destination`: `destination_page_id` + `destination_path` (page id or resolved public path)
 09. `review_status`
 10. `source_refs`
 11. `created_by`
@@ -113,7 +118,7 @@ Flexible JSON is allowed only for AI provenance and platform-specific payload ex
 `platform_refs`. Status, tenant ownership, offer, goal, destination, and review state are hard
 typed.
 
-### CmsAdVariant
+### AdVariant
 
 One row per format within a creative set.
 
@@ -125,7 +130,7 @@ Hard-typed fields:
 04. `format`: `feed_square`, `feed_portrait`, `carousel`, `story`
 05. `status`: `draft`, `needs_review`, `approved`, `hidden`, `archived`
 06. `copy_variant_id`
-07. `image_placements` (ordered list of `CmsAdImagePlacement`)
+07. `image_placements` (ordered list of `AdImagePlacement`)
 08. `position`
 09. `review_status`
 10. `created_at`
@@ -137,7 +142,7 @@ Format-specific rules: `feed_square` and `feed_portrait` hold exactly one image 
 `carousel` holds 2-10 square placements in order; `story` holds one or more 9:16 placements
 (gallery-style stories).
 
-### CmsAdCopyVariant
+### AdCopyVariant
 
 Hard-typed fields:
 
@@ -159,7 +164,7 @@ Limits live in one constants module shared by the editor UI and backend validati
 3. description: max 30 characters (optional)
 4. `cta_label` from the allowed enum set
 
-### CmsAdImagePlacement
+### AdImagePlacement
 
 A reference to a CMS media asset with format-specific framing. No raw URLs.
 
@@ -184,7 +189,7 @@ background) that produces a derived image variant of the approved source asset. 
 variant keeps parent-asset provenance and `pending_review` status, and only an approved derived
 variant can appear in a package.
 
-### CmsAdLeadForm
+### AdLeadForm
 
 Suggested fields for the Meta lead form created at posting time. One set of suggestions per
 creative set.
@@ -237,18 +242,18 @@ Service-level rules:
 
 Recommended private editor routes (the CMS client):
 
-1. `GET /api/v1/website/editor/ads`
-2. `POST /api/v1/website/editor/ads`
-3. `GET /api/v1/website/editor/ads/{creative_set_id}`
-4. `PATCH /api/v1/website/editor/ads/{creative_set_id}`
-5. `DELETE /api/v1/website/editor/ads/{creative_set_id}` for draft-only removal
-6. `GET /api/v1/website/editor/ads/{creative_set_id}/variants`
-7. `PATCH /api/v1/website/editor/ads/{creative_set_id}/variants/{variant_id}`
-8. `POST /api/v1/website/editor/ads/{creative_set_id}/variants/{variant_id}/regenerate` (AI
+1. `GET /api/v1/ads`
+2. `POST /api/v1/ads`
+3. `GET /api/v1/ads/{creative_set_id}`
+4. `PATCH /api/v1/ads/{creative_set_id}`
+5. `DELETE /api/v1/ads/{creative_set_id}` for draft-only removal
+6. `GET /api/v1/ads/{creative_set_id}/variants`
+7. `PATCH /api/v1/ads/{creative_set_id}/variants/{variant_id}`
+8. `POST /api/v1/ads/{creative_set_id}/variants/{variant_id}/regenerate` (AI
    propose for copy and/or image gallery on one variant)
-9. `POST /api/v1/website/editor/ads/{creative_set_id}/approve`
-10. `POST /api/v1/website/editor/ads/{creative_set_id}/package` (returns the package)
-11. `POST /api/v1/website/editor/ads/{creative_set_id}/download` (renders and returns a signed
+9. `POST /api/v1/ads/{creative_set_id}/approve`
+10. `POST /api/v1/ads/{creative_set_id}/package` (returns the package)
+11. `POST /api/v1/ads/{creative_set_id}/download` (renders and returns a signed
     package download for the human path)
 
 Mutating routes that can be retried accept `Idempotency-Key`. Approve/package/download/archive
@@ -311,7 +316,7 @@ The "generate ad ideas" step is one endpoint that writes reviewable drafts, neve
    portfolio projects, services, service area, proof, business name and details, the confirmed
    ICP, and the destination page's public copy
 2. call the existing structured AI assistant tooling (provider-backed with the deterministic
-   no-key fallback used by careers/posts) with a clearly defined ad-copy response schema
+   no-key fallback used by projects) with a clearly defined ad-copy response schema
 3. record the call through `ai_generations` tracing: reasoning, user-visible copy output, tool
    calls, provider usage, and cost, with tenant scope and actor context
 4. create `draft`/`needs_review` copy variants, proposed image galleries referencing approved
@@ -451,14 +456,14 @@ Frontend tests:
 
 Contract checks:
 
-1. run `rtk just openapi-export` after API schema changes
-2. run `rtk just frontend-typegen`
-3. run `rtk just api-contract-check`
+1. run `go generate ./...` (sqlc + huma OpenAPI export) after API schema changes
+2. regenerate the frontend client types from the served `/openapi.json`
+3. run `go test ./internal/ads/...`
 
 Relevant broader checks:
 
-1. `rtk just backend-typecheck`
+1. `go build ./...` and `go vet ./...`
 2. targeted backend tests for the ads service/routes
-3. `rtk pnpm --dir frontend check`
+3. `pnpm --dir frontend-2 check`
 4. one E2E test: create → generate → review/edit → approve → use the package (via the service
    and the human download), with external/paid integrations mocked but core domain logic unmocked

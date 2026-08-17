@@ -19,7 +19,9 @@ Clerk owns user identity, sessions, and organizations. Placis never builds passw
   "not onboarded/paid" signal).
 - Signed-in with no Clerk org → provision one via `POST /api/v1/me/organization` (Clerk
   `createOrganization`); the frontend then calls `clerk.setActive({ organization })` so session
-  tokens carry the org claim.
+  tokens carry the org claim. The Clerk org is named after the **person** (the account owner), and
+  this intentionally differs from the **tenant** name, which is the business — the two are distinct
+  concepts and never share a name field.
 - Deleted surfaces (do not resurrect): `/me/orgs`, `/me/tenants`, `/me/selected-org`,
   `placis_selected_org` cookie, `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{slug}`,
   `.../memberships/*` CRUD.

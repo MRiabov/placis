@@ -122,7 +122,9 @@ background job can be retried safely (an explicit key).
 
 `huma` handles JSON request/response endpoints and serves the derived OpenAPI spec at
 `/openapi.json`. The preview **SSE** stream and the voice **WebSocket** (later milestone) are raw
-`net/http` handlers outside huma.
+`net/http` handlers outside huma. Mutating routes that can be safely retried accept an
+`Idempotency-Key` header (checked per tenant) — the Go form of the old API's idempotency
+convention.
 
 ## Component contract (single source of truth)
 

@@ -16,13 +16,13 @@ proposals, edit, approve, and download. It is one user of the service; it is not
 editor, not the media library, and not campaign management (which is future work).
 
 `/cms/ads` is a **view inside the existing CMS shell, not a standalone page**: the CMS left
-sidebar (website, posts, careers, media, proof, ads, settings) stays around it, and the ads
+sidebar (website, projects, media, proof, ads, settings) stays around it, and the ads
 workspace is dashboard-ish content in the main area — My ads list, the ad page, and the ad
 detail all render inside that frame. The mock shows the sidebar for context.
 
 Stack: Vite + React + TanStack Router (the `/cms/*` island), generated API client, Tailwind +
 Radix, Kibo/shadcn components where they fit. The workspace follows the existing CMS workspace
-patterns (careers/posts-style: list, editor, media picker modal, blocker panel).
+patterns (projects-style: list, editor, media picker modal, blocker panel).
 
 ## Principles
 
@@ -125,7 +125,7 @@ The questions and review content:
    field when posting — no custom questions. Choosing Website page reveals a destination page
    picker (combobox over published/scheduled tenant pages, no create-new).
 4. **Photos** — approved photos from the **existing CMS media gallery** (the same gallery
-   component as the rest of the CMS, e.g. the careers/posts media picker — no duplicated
+   component as the rest of the CMS, e.g. the projects media picker — no duplicated
    gallery or tokens), with framing adjustments and light cleanup proposals (reviewable
    **before/after sweep viewer** — drag the divider to compare — with Accept/Reject). Formats
    are not exposed: photos are fitted to the ad sizes automatically ("we fit them to the ad
@@ -248,7 +248,7 @@ Used for offers, services, the ICP, and location. Behavior:
 
 ## Data And API
 
-- Consumes the typed generated client for `/api/v1/website/editor/ads/*` (list, create, get,
+- Consumes the typed generated client for `/api/v1/ads/*` (list, create, get,
   patch, variant patch, regenerate, approve, package, download).
 - **Prefetch early + cache**: the ads list and platform connection status are fetched as soon
   as the app/CMS loads and **cached in the browser** (query cache), so `/ads` renders

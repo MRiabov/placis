@@ -5,8 +5,10 @@ alternative), so prompts, model names, response shapes, and cost logging never l
 logic.
 
 - Prompts are a catalog keyed by id and version — not hardcoded strings.
-- Output is parsed against a schema, repaired if it doesn't fit, and validated before it enters the
-  app.
+- Output is parsed against a schema before it enters the app. A mismatch is **repaired under a
+  bounded contract**: repair only the smallest subtree that fails (never regenerate the whole
+  answer), discard or reject unknown fields per the schema, and never accept a partial result — the
+  output is whole-and-valid or it is a failed generation, nothing in between.
 - **Every LLM call is recorded so it can be reconstructed later**: the reasoning, the visible
   answer, and the tool calls — plus the model, the prompt id/version, and the usage and cost.
 
