@@ -33,3 +33,8 @@ Status: decided (2026-08-16, product owner + engineering).
 
 8. **Deferred: blog posts + careers** — no `blog_post` page type or `website_career_*` tables in the
    first pass; re-add only when needed.
+
+9. **Blueprints come from decomposed reference sites** — templates and patterns are acquired by
+   taking inspiration from existing websites, decomposing them into page/section patterns, then
+   switching the content and remixing the colors for a new business. They are not hand-authored from
+   scratch.
