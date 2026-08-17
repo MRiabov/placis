@@ -39,8 +39,9 @@ in the background alongside the interview; generation reads the live profile.
 
 ## Voice (later)
 
-Voice is a later milestone. When it lands, the same checklist and tool calls
-(`obtained_information`, `mark_information_status`, `request_lookup`, `confirm_conflict`) drive a
-realtime agent; the backend mints an ephemeral provider secret and the frontend connects directly to
-the provider (audio never flows through the backend). Voice is an accelerator, not a blocker — the
-user can always switch to the text interview.
+Voice is a later milestone; the shared architecture is [voice-agent.md](../../general-architecture/voice-agent.md).
+The setup voice agent interviews over the checklist with the tools `obtained_information`,
+`mark_information_status`, `request_lookup`, `confirm_conflict`, `update_interview_plan`. Each tool
+call is validated and writes a profile version; the checklist updates row by row as the agent
+learns. Generation consumes the accepted profile, never the raw transcript. Voice is an accelerator,
+not a blocker — the user can always switch to the text interview.
