@@ -17,7 +17,7 @@ event.
 | `update_seo` | update bounded draft SEO metadata for the current page |
 | `update_theme` | update bounded theme tokens for the current draft page |
 | `set_section_visibility` | show or hide one existing section |
-| `update_section_design` | update bounded design controls for one section |
+| `update_section_design` | update one section's **design controls** — the per-component enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values from the component contract |
 | `reorder_sections` | set the full ordered list of section ids for the page |
 | `create_section` | propose a new section using an approved public component |
 | `create_page` | propose a new draft CMS page |
