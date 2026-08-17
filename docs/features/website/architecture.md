@@ -64,6 +64,15 @@ The public site resolves the active publication by host + path, reads the `site_
 renders each section by its `component_id` (Astro shell, React islands). One shared runtime serves
 every tenant — no per-tenant build.
 
+## Voice (later)
+
+The CMS assistant can be driven by voice (see [voice-agent.md](../../general-architecture/voice-agent.md)):
+the agent clarifies what to change — which page/section, new page vs. copy edit, generate vs. select
+an image — then emits one structured instruction resolved through the same governed CMS tools
+(`update_slot`, theme/style changes, section reorder, SEO/form updates, page creation,
+publish-readiness). Two modes — plan (approve a concrete plan first) and continuous (bounded direct
+edits) — share the same tool surface. Voice grants no extra authority.
+
 ## State
 
 - page: `draft → approved → published`
