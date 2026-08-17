@@ -37,7 +37,8 @@ UUIDs.
   `finished_at`
 - `research_events` — `id`, `research_run_id` fk, `event_type`, `payload` jsonb, `created_at`
 - `research_sources` — `id`, `research_run_id` fk, `kind` (`google_places`/`company_registry`/
-  `facebook`/`website_crawl`/`photo`), `external_id`, `source_ref`, `raw` jsonb, `normalized` jsonb,
+  `trade_registry`/`facebook`/`social_profile`/`website_crawl`/`review`/`directory`/`photo`),
+  `external_id`, `source_ref`, `raw` jsonb, `normalized` jsonb,
   `confidence`, `created_at`
 - `google_places_cache` — `id`, `place_id` unique, `payload` jsonb, `cached_at`
 
@@ -45,10 +46,12 @@ UUIDs.
 
 - `business_profiles` — `id`, `tenant_id` fk unique, `trade` (`roofing`/`landscaping_paving`/
   `bathroom_renovation`/`kitchen_installation`/`general_builder`/`property_maintenance`),
-  `display_name`, `legal_name`, `description`, `established_year`, `company_number`, `vat_number`,
-  `registered_office`, `contact_name`, `phone`, `email`, `website`, `google_profile_url`,
-  `facebook_profile_url`, `founder_profile` jsonb, `brand` jsonb (colors/logo_asset_id/tone/
-  typography), `current_version_id` nullable, timestamps
+  `display_name`, `trading_name`, `legal_name`, `legal_form`, `company_status`, `description`,
+  `established_year`, `company_number`, `vat_number`, `vat_registration_status`,
+  `incorporation_date`, `registered_office`, `contact_name`, `phone`, `emergency_phone`, `email`,
+  `public_contact_email`, `website`, `google_profile_url`, `facebook_profile_url`,
+  `founder_profile` jsonb, `brand` jsonb (colors/logo_asset_id/tone/typography),
+  `current_version_id` nullable, timestamps
 - `business_profile_versions` — `id`, `business_profile_id` fk, `version_number`, `details` jsonb
   (a copy of the details at this version), `source_refs` jsonb, `created_by`
   (`research`/`voice`/`text`/`human`/`llm`), `created_at`; unique `(business_profile_id, version_number)`
@@ -112,12 +115,12 @@ UUIDs.
 
 ## Preview & claim
 
-- `preview_packages` — `id`, `onboarding_session_id` fk, `token` unique, `status` (`draft`/
+- `preview_packages` — `id`, `onboarding_session_id` fk, `token_hash` unique, `status` (`draft`/
   `claimed`/`expired`), `personas` jsonb, `unresolved_fields` jsonb, `created_at`
 - `preview_events` — `id`, `preview_package_id` fk, `event_type`, `payload` jsonb, `created_at`
 - `preview_claims` — `id`, `preview_package_id` fk, `clerk_subject`, `checkout_session_id`,
-  `payment_state` (`pending`/`paid`/`failed`/`refunded`), `tenant_id` nullable fk, `activated_at`,
-  `created_at`; unique webhook key (safe to replay)
+  `payment_state` (`pending`/`paid`/`failed`/`refunded`), `amount`, `currency`, `failure_reason`,
+  `tenant_id` nullable fk, `activated_at`, `created_at`; unique webhook key (safe to replay)
 
 ## Leads
 
@@ -126,9 +129,11 @@ UUIDs.
 
 ## Cross-cutting
 
-- `ai_generations` — `id`, `tenant_id` nullable fk, `generation_type`, `model`, `prompt_id`,
-  `prompt_version`, `input` jsonb, `internal_reasoning` jsonb, `output` jsonb, `tool_calls` jsonb,
-  `usage` jsonb, `status` (`running`/`succeeded`/`failed`), `error` nullable, `created_at`
+- `ai_generations` — `id`, `tenant_id` nullable fk, `trace_type` (`prod`/`eval`), `generation_type`,
+  `model`, `prompt_id`, `prompt_version`, `tool_versions` jsonb, `skill_versions` jsonb, `input`
+  jsonb, `internal_reasoning` jsonb, `output` jsonb, `tool_calls` jsonb, `usage` jsonb, `cost` jsonb,
+  `latency_ms`, `approval_status` (`pending_review`/`approved`/`applied`/`rejected`/`failed`),
+  `applied_changes` jsonb, `status` (`running`/`succeeded`/`failed`), `error` nullable, `created_at`
 - `files` — `id`, `tenant_id` fk, `owner_type`, `owner_id`, `storage_key`, `original_filename`,
   `content_type`, `byte_size`, `checksum`, `visibility` (`private`/`customer_visible`/`public`),
   `scan_status` (`pending`/`clean`/`failed`/`skipped`), `created_at`

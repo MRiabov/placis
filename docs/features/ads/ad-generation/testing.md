@@ -5,7 +5,7 @@ against the real API + real Postgres; the LLM is faked. DB asserts name the tabl
 model.
 
 1. **Create** — the user clicks "create an ad".
-   - UI: routed to `/ads/new`.
+   - UI: routed to `/cms/ads/new`.
 
 2. **Enter details** — offer, goal, service focus, ICP, destination page.
    - DB: `ad_creative_sets` written (status=`draft`, `ad_goal`, `icp` jsonb, `destination_page_id`,
