@@ -48,6 +48,7 @@ Not every file is needed — a feature uses only the ones it has content for. A 
 - **Domain language in product docs** (PRD, README, user stories); implementation terms stay in the
   technical docs (`technical-implementation.md`, per-feature `data-model.md`, ADR) and code. See
   `glossary.md`.
-- **New names come from the glossary** — coin a word there first, never in a PRD.
+- **New names come from the glossary** — coin a word there first, never in a PRD. The glossary
+  defines terms; it never prescribes.
 - **Logic before structs**: architecture/pipeline docs describe flows and models; structs/DTOs fall
   out at implementation time and are not pre-written.
