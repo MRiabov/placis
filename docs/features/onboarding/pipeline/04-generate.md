@@ -1,15 +1,27 @@
-# 04 — Generate (deterministic)
+# 04 — Generate (after interview complete)
 
-After the interview completes, generation starts from the final accepted profile version.
+`POST .../interview/complete` (text submit or voice `end_interview`) sets the session to
+`generating` and enqueues this step. It does **not** run at find-confirm.
 
-**Population** — the profile + trade blueprint become draft CMS records, not raw code:
+Onboarding **owns** kicking this off and waiting until a draft exists. The records it writes are
+[website](../../website/data-model.md) + [media](../../other/media/data-model.md) drafts — the
+same tables the CMS edits later.
 
-1. assemble the stable facts: services, service areas, proof assets, contact, business details;
-2. deterministic rules (or an AI proposal) choose page structure, section composition, copy
-   direction, CTA hierarchy, style tokens, image-slot intent, SEO, review flags;
-3. create draft `website_pages` / `website_page_versions` / `website_sections` / `content_slots`
-   (placeholders kept);
-4. pick or generate image assets — prefer real proof/customer media, generate only when approved;
-5. validate against component contracts, the registry, claims, links, forms, SEO.
+## What runs
 
-- **Persists** the draft CMS records above — nothing published.
+1. Freeze the accepted profile version (`current_version_id`).
+2. **One bounded LLM call** picks a trade blueprint + style preset from the catalog, with a
+   heuristic fallback (trade → blueprint, else a default). This is not page-by-page generation
+   and not copy generation.
+3. **Deterministic instantiate** — profile + chosen blueprint → draft `website_pages` /
+   `website_page_versions` / `website_sections` / `content_slots`. Placeholders (`{{business_name}}`,
+   `{{phone}}`, …) stay in the draft. Same profile + same blueprint → same pages.
+4. Prefer real proof / Maps photos for image slots ([media](../../other/media/data-model.md));
+   do not invent work photos.
+5. Validate against component contracts before the draft is kept.
+
+Copy (headlines, body, CTAs, SEO) is **not** this step — see [05](05-refine.md). 04 leaves
+placeholders in the slots; 05 fills them asynchronously after the preview exists.
+
+- **Persists** the draft website + media rows above; `ai_generations` for the blueprint/style
+  pick only. Session → `previewing` once 06 writes the package. Enqueues 05. Nothing published.

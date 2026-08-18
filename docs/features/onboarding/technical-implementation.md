@@ -2,25 +2,18 @@
 
 Status: proposed implementation plan.
 
-Related: [PRD](prd.md), [ADR](ADR.md), [data model](../../general-architecture/data-model.md).
+Related: [PRD](prd.md), [ADR](ADR.md), [data model](data-model.md).
 
 ## Domain objects
 
-- `onboarding_sessions` — where the contractor started from (their Google Maps listing or
-  company-registry record), the interview channel (`text`/`voice`), `status`, `token` unique,
-  `clerk_user_id` nullable, `consent_given_at` nullable.
-- `text_interview_submissions` — the interview answers, saved as the contractor goes.
-- `voice_observability_events` — sanitized events (no raw audio/secrets/WS headers).
-- `research_sessions` → `research_runs` → `research_events` → `research_sources` (findings with
-  `kind`, `external_id`, where it came from, `raw`, `normalized`, `confidence`).
-- `google_places_cache` — `place_id` → payload.
-- `business_profiles` + `business_profile_versions` + `business_profile_services` +
-  `business_profile_service_areas` + `business_profile_opening_hours`.
+See [data-model.md](data-model.md). The business profile is
+[details/data-model.md](../other/details/data-model.md).
 
 ## Flow
 
-`created → interviewing → profile_draft → generating → previewing → claimed/expired`. Research
-runs in the background alongside the interview; generation reads the live profile.
+`created → interviewing → generating → previewing → claimed` (`generation_failed` if generate
+throws). Research runs in the background alongside review/interview; generation starts at
+interview complete; copy generation runs after instantiate and does not block preview or claim.
 
 ## API surface
 
@@ -51,8 +44,8 @@ runs in the background alongside the interview; generation reads the live profil
 
 - Tenant isolation for sessions, research, and profile rows.
 - Provider fakes force deterministic tests; CI never spends provider quota (see `ci-cd.md`).
-- One E2E: start → interview → research → profile → generate (providers mocked, core logic
-  unmocked).
+- One E2E: find → review → interview → generate → preview → claim (providers mocked, core logic
+  unmocked). Preview is claimable before copy generation finishes.
 
 ## Frontend
 

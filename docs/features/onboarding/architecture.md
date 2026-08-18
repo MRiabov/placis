@@ -1,47 +1,56 @@
 # Onboarding — Architecture
 
-The pipeline: learn about the business, build its profile, then generate and refine the website.
+The pipeline: find the business, research in the background, fill the gaps, generate a draft,
+write copy in the background, preview, pay. Implemented in OnCall and `frontend-2`; this is that
+loop under Placis names.
 
 ## The pipeline
 
-start from their Google Maps listing or company-registry record → consent → interview → research
-(in parallel) → business profile → generate the website (deterministic) → refine (AI) → preview →
-claim.
+```text
+find (registry and/or Google Maps) + consent
+  → research starts immediately (async)
+  → review checklist → interview (text and/or voice)
+  → profile versions accumulate as sources and answers arrive
+  → interview complete → generate draft (LLM picks blueprint/style; instantiate is deterministic)
+  → copy generation starts (async; does not block preview)
+  → signed preview on the skeleton → claim (activate; do not publish)
+```
 
-## Generation is deterministic, then the LLM edits
+Step docs: [pipeline/](pipeline/README.md).
 
-The website draft is generated **deterministically**: profile + trade blueprint → the same draft
-every time, with no LLM in the loop. Placeholders (`{{business_name}}`, `{{phone}}`, …) resolve from
-the profile.
+## Generation
 
-Then the **LLM is the editor**: it writes the copy and picks the images on top of that draft. The
-result is still a proposal — the user can review and edit it. The LLM never publishes.
+Interview-complete enqueues generate. **Instantiate is deterministic**: accepted profile + chosen
+blueprint → the same draft, placeholders kept. **Choosing** the blueprint and style is one bounded
+LLM call with a heuristic fallback — not page-by-page generation.
+
+**Copy generation** is a separate River job after instantiate: the same CMS tools as the editor
+(`update_slot`, `update_seo`, …), no chat UI, writing into the existing draft. Preview is issued
+on the skeleton; copy fills in over SSE. If copy fails, the skeleton stays. The editor assistant
+([website/assistant.md](../website/assistant.md)) is still the CMS **after** claim. The LLM never
+publishes.
 
 ## End of onboarding: paid, not published
 
-At the end of onboarding the user pays (claim), but the site is **not published** — it is a draft.
-The user can edit it in the CMS, and only when they choose to does it go live.
+Claim activates the tenant (Clerk org, owner membership, generated subdomain). The site stays a
+**draft**. Publish is a later, explicit CMS action.
 
 ## Progressive progress (SSE)
 
-Onboarding is self-serve and visual, so the site must appear to build up in real time. The backend
-pushes a **progress event** over SSE every 2–10 seconds (or on each change) describing what just
-changed: research found, a profile detail set, a page generated, a section added, an image picked.
-The frontend applies each event so the preview re-renders progressively.
-
-The stream is a **mirror, not the source of truth** — Postgres is authoritative; an event only tells
-the frontend what changed so it can re-render or re-fetch.
+From confirm through generate and copy, the backend pushes session events over SSE (on change, not
+faster than ~2s). The frontend refreshes the checklist and the generating timeline. The stream is
+a **mirror** — Postgres is authoritative.
 
 ## States
 
-`created → interviewing → profile_draft → generating → previewing → claimed/expired`. Research runs
-in the background alongside the interview; generation reads the live profile.
+`created → interviewing → generating → previewing → claimed` (`generation_failed` if generate
+throws). Copy generation may still be running while `previewing`. Preview packages expire on
+`expires_at`; the session does not.
 
-## Voice (later)
+## Voice
 
-Voice is a later milestone; the shared architecture is [voice-agent.md](../../general-architecture/voice-agent.md).
-The setup voice agent interviews over the checklist with the tools `obtained_information`,
-`mark_information_status`, `request_lookup`, `confirm_conflict`, `update_interview_plan`. Each tool
-call is validated and writes a profile version; the checklist updates row by row as the agent
-learns. Generation consumes the accepted profile, never the raw transcript. Voice is an accelerator,
-not a blocker — the user can always switch to the text interview.
+Voice is an interview **channel** into the same profile as text. Transport:
+[voice-agent.md](../../general-architecture/voice-agent.md). Tools:
+`obtained_information`, `mark_information_status`, `request_lookup`, `confirm_conflict`,
+`update_interview_plan`. `end_interview` calls the same complete path as the text form.
+Generation consumes the accepted profile, never the raw transcript.

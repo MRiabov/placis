@@ -3,7 +3,7 @@
 Status: proposed product scope for onboarding — learning about a business and building its profile.
 
 Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.md),
-[data model](../../general-architecture/data-model.md).
+[data model](data-model.md).
 
 ## Problem
 
@@ -45,8 +45,8 @@ They can select either, or both when they describe the same business. Then a sin
 "I agree that Placis can collect public information about this business to prepare the website
 preview."
 
-A short interview then fills in what the listing and registry record don't cover. Voice is a later
-way to answer it.
+A short interview then fills in what the listing and registry record don't cover. Text and voice
+write the same profile.
 
 ## What we know about the business
 
@@ -65,14 +65,13 @@ Each detail notes where it came from (the registry, Maps, the interview, or rese
 ## Happy path
 
 ```text
-start from their Google Maps listing or company-registry record
--> a few questions to fill the gaps
--> research the business (in the background)
+find the business (registry and/or Google Maps) + consent
+-> research starts in the background
+-> review what we found → interview to fill the gaps
 -> one clear business profile (their answers + what we found, side by side)
--> generate a website draft
--> reserve their web address and share a preview
--> apply their approved content
--> claim (pay) -> go live -> publish
+-> generate a website draft → copy fills in in the background
+-> signed preview (available as soon as the draft exists)
+-> claim (pay) → activate; publish later in the CMS
 ```
 
 ## Consent
@@ -95,6 +94,10 @@ the public information to build their profile. It's part of the interview, not a
 4. **As the team**, I want the profile to keep its history, so we can see how it changed and where
    each detail came from.
    - Each change is kept, so nothing is lost.
+5. **As a contractor**, I want to see the preview as soon as the site exists, so I don't wait on
+   the words being written.
+   - The preview opens on the draft; copy fills in in the background. If copy fails, I can still
+     preview and claim.
 
 ## Acceptance criteria
 
@@ -104,3 +107,5 @@ the public information to build their profile. It's part of the interview, not a
 3. The business profile keeps its history, so we can see how it changed.
 4. When the contractor's answer disagrees with what we found, both are shown side by side so the
    contractor picks the right one.
+5. After the interview they can open the preview as soon as the draft exists; copy fills in in
+   the background. If copy fails, they can still preview and claim.

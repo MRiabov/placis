@@ -50,3 +50,4 @@ types), projects (featured, recent, home gallery, projects page, categories), an
    substring → substituted — and materializes the resolved `site_manifest`.
 4. A missing variable stays as a `{{var}}` token in the draft; a *required* slot whose variable
    can't resolve becomes a **publish blocker**.
+

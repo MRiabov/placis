@@ -1,33 +1,38 @@
 # Onboarding — E2E test
 
-One full-stack E2E test: start → consent → interview → research → profile → website draft. Drives
-`frontend-2` (Playwright) against the real API + real Postgres; research providers and the LLM are
-faked. DB asserts name the tables from the data model.
+One full-stack E2E: find → review → interview → generate → preview → claim. Drives `frontend-2`
+(Playwright) against the real API + real Postgres; research providers and the LLM are faked. DB
+asserts use [data-model.md](data-model.md) and [details](../other/details/data-model.md).
 
-1. **Start** — the user picks a country, finds their business (registry + optional Google Maps),
-   checks the consent box.
-   - UI: the "find your business" panel → "Confirm and review".
-   - DB: `onboarding_sessions` (`started_from`, channel=`text`, status=`created`, token,
-     `consent_given_at` set).
+1. **Find** — country, registry and/or Google Maps, consent, Confirm.
+   - UI: `/onboarding/find` → Review.
+   - DB: `onboarding_sessions` (`status=interviewing`, token, `consent_given_at`, no tenant yet).
 
-2. **Interview** — the user answers the questions; answers autosave.
-   - DB: `text_interview_submissions` (version, `payload` jsonb).
+2. **Review** — found vs missing; Continue to interview.
+   - UI: `/onboarding/review`.
+   - DB: checklist rows from 01a/02a (`filled_by_source` appearing as research fakes complete).
 
-3. **Research** (faked) — runs in the background; the UI shows progress.
-   - DB: `research_sessions` → `research_runs` → `research_events` → `research_sources` (kind,
-     `external_id`, `source_ref`, `raw` + `normalized` jsonb, `confidence`) + `google_places_cache`.
+3. **Interview** — fill the gaps (text path in this E2E so it does not depend on a live voice
+   provider); submit.
+   - DB: `text_interview_submissions`; profile version `created_by=text`.
 
-4. **Review** — the user sees found-vs-missing; disagreements are shown side by side and they pick.
-   - DB: `business_profiles` (trade, display_name, legal_name, contact, `company_number`,
-     `vat_number`, `registered_office`), `business_profile_versions` (`details` + `source_refs` +
-     `created_by`), `business_profile_services`, `business_profile_service_areas`,
-     `business_profile_opening_hours`.
-   - UI: the accepted profile is reflected (`current_version_id` points at the version).
+4. **Research** (faked, overlapping 2–3) — SSE progress.
+   - DB: `research_runs` → `research_sources` + `google_places_cache` when a place was selected.
 
-5. **Generate website draft** — the UI shows a preview.
-   - DB: `website_pages` (status=`draft`), `website_page_versions`, `website_sections`,
-     `content_slots`.
-   - UI: the draft preview renders from those rows.
+5. **Generate + preview** — `/onboarding/preview`, then View website as soon as the package
+   exists (do not wait for copy).
+   - DB: draft `website_pages` / sections / slots; `preview_packages` (`token_hash`, `status=active`);
+     session `previewing`. Copy-generation job may still be running.
+   - UI: public preview renders the current draft.
 
-6. **Isolation** — a second tenant's session.
+6. **Copy generation** (faked LLM tools, overlapping 5–7) — slots/SEO update; tokens preserved.
+   - DB: `ai_generations` for the tool batches; no `create_page`; no `website_publications`.
+   - Failure: instantiated draft still previewable and claimable.
+
+7. **Claim** — pay on the preview page (Clerk testing token + Stripe test webhook).
+   - DB: `preview_claims`, `stripe_events`, `tenants.status=active`, `tenant_memberships.owner`,
+     `tenant_domains`; session `claimed`; **no** `website_publications`.
+   - UI: lands in `/cms/website`.
+
+8. **Isolation** — a second session.
    - Assert: the first tenant's profile and pages are not readable under the second tenant.

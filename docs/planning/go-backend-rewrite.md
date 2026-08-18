@@ -174,8 +174,10 @@ Canonical table definitions live with the feature that owns them — see
 
 ## 5. Workflows and state machines
 
-1. **Onboarding session** — `created → interviewing → profile_draft → generating → previewing →
-   claimed/expired`. Research runs in the background alongside the interview.
+1. **Onboarding session** — `created → interviewing → generating → previewing → claimed`
+   (`generation_failed` if generate throws). Research runs in the background alongside
+   review/interview; generate starts at interview complete; copy generation runs after
+   instantiate and does not block preview or claim. Preview packages expire; the session does not.
 2. **Business profile** — immutable versions; `current_version_id` points at the live version;
    details carry `source_refs` and `created_by`.
 3. **Website page** — `draft → approved → published`; versions are immutable; publish creates a new

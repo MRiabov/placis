@@ -61,10 +61,10 @@ persist a minimal `leads` table for ad attribution and done-for-you follow-up on
 
 ## Naming
 
-The authoritative **ubiquitous language** is the [Glossary](glossary.md). One rule: product docs
-and user-facing text use the business's own words ("business profile", "their website", "publish");
-implementation words ("versioned", "normalize", "state machine", `source_refs`) stay in technical
-docs and code only.
+The authoritative **ubiquitous language** is the [Glossary](glossary.md) — each term is defined
+once as a heading there. Product docs and user-facing text use the business's own words
+("business profile", "their website", "publish"); implementation words ("versioned", "normalize",
+"state machine", `source_refs`) stay in technical docs and code only.
 
 ## Documentation rules
 

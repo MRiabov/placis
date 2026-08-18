@@ -141,7 +141,9 @@ The Go backend loads and validates them; it must not hand-duplicate the struct s
 ## Boundaries
 
 1. `auth` proves identity via the Clerk Go SDK; `tenancy` decides tenant access and permissions.
-2. `onboarding` owns research and profile building; it does not write CMS records directly.
+2. `onboarding` owns research, profile building, the first website **draft** (04), async copy
+   generation (05), and preview/claim; it does not publish. The CMS assistant (editor) and publish
+   live in `website`.
 3. `blueprint` applies templates into tenant-owned `website_*` rows; it validates component ids,
    props, design controls, page paths, forms, and navigation before writing.
 4. `website` owns the editable content model and publication; a `site_manifest` is only the

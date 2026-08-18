@@ -1,7 +1,12 @@
-# 05 — Refine (integration test)
+# 05 — Copy generation (integration test)
 
-- **Setup**: a generated website draft.
-- **Invoke**: run refinement (LLM faked; tool calls typed + validated).
-- **Assert**: `ai_generations` (reasoning + output + tool calls) written; slots/sections updated as
-  drafts; an invalid tool call is rejected, never executed; nothing published.
-- **Mocked**: the LLM (returns fixed tool-call proposals).
+- **Setup**: 04 has instantiated a draft; 06 has an `active` preview package; session
+  `previewing`.
+- **Invoke**: enqueue copy generation (CMS-tool LLM faked to a small `update_slot` / `update_seo`
+  batch).
+- **Assert**: session already `previewing` before the job finishes; preview token unchanged;
+  targeted slots/SEO updated and still valid; `{{…}}` fact tokens preserved; `ai_generations`
+  records reasoning + visible output + tool calls; no `create_page`; no `website_publications`.
+- **Failure path**: fake the LLM to throw — instantiated draft unchanged, session still
+  `previewing`, claim still allowed.
+- **Mocked**: the copy-generation LLM only.
