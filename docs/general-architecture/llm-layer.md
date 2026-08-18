@@ -14,7 +14,7 @@ logic.
 
 ## `ai_generations`
 
-Shared by onboarding refinement, the website assistant, and ads. One table, not copied into
+Shared by onboarding copy generation, the website assistant, and ads. One table, not copied into
 feature data-models.
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `trace_type` (`prod`/`eval`), `generation_type`,

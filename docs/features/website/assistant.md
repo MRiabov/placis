@@ -5,6 +5,9 @@ selected page, sections, slots, assets, forms, SEO, validation blockers, publish
 and turns requests into governed, reviewable CMS edits. Text chat, voice handoffs, and editor
 assistance all share the same tool surface.
 
+Onboarding [copy generation](../onboarding/pipeline/05-refine.md) reuses these tools headless
+(continuous mode, no chat UI, no `create_page`) after instantiate. That job is not this editor.
+
 ## Tools (hard-typed, validated, parallel)
 
 The planner uses hard-typed CMS action tools — never one generic plan tool with freeform JSON. Each
