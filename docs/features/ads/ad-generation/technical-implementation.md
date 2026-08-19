@@ -321,10 +321,10 @@ status:
 1. gather inputs: approved media assets (review approved, tenant-owned, media caption present),
    projects, services, service area, certifications, reviews, business name and details, the
    confirmed ideal customer profile, and the ad destination's public copy
-2. call the existing structured AI assistant tooling (provider-backed with the deterministic
+2. call the existing structured AI assistant tooling (LLM, with the deterministic
    no-key fallback used by projects) with a clearly defined ad-copy response schema
 3. record the call through `ai_generations` tracing: reasoning, user-visible copy output, tool
-   calls, provider usage, and cost, with tenant scope and actor context
+   calls, usage, and cost, with tenant scope and actor context
 4. create `draft`/`ad_needs_review` copy variants, proposed image galleries referencing approved
    media assets, and proposed light cleanup edits as derived image variants; never write
    approved status

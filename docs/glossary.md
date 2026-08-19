@@ -35,7 +35,9 @@ A website term always includes **website**. Never say page, section, slot, style
 template, draft, preview, or publish as if they were generic. Header and footer are named
 separately; there is no umbrella “menu”.
 
-Do not say **user**, **frozen**, or bare **session**. Say contractor, owner, or website visitor.
+Do not say **user**, **frozen**, bare **session**, **provider**, **instantiate**, or **population**.
+Say contractor, owner, or website visitor; name Google Maps, the LLM, or Stripe; say apply the
+website template.
 
 ---
 
@@ -243,12 +245,32 @@ Distinct from: Website activation.
 
 ### Unpublished website
 
-The unpublished website stays
-it unpublished; website visitors do not see it.
+The website after applying the website template, before website publication. Website visitors do
+not see it.
 
 Do not say bare “draft”. An ad in draft is an Ad states value; say “ad draft” if you must.
 
 Distinct from: Website preview (the sales stage where they choose to buy), Live website.
+
+---
+
+### Website preview
+
+A stage in our sales process where they choose to buy the website or not. Never say bare
+“preview”. Do not use this word for the website editor canvas or for ad format mocks.
+
+Distinct from: Unpublished website, Website activation, Website preview link.
+
+In code: `website_previews`, `internal/onboarding/websitepreview/`.
+
+---
+
+### Website preview link
+
+The shareable URL for a website preview. Anyone who has the link can open the unpublished
+website until the link expires. Never say “signed website preview”.
+
+Distinct from: Website preview (the sales stage), Preview token, Signed URL.
 
 ---
 
@@ -305,16 +327,19 @@ an ad.
 ### Website copy generation
 
 Writing website copy into the unpublished website from the business profile. Do not call this
-“refinement” in onboarding.
+“refinement” in onboarding. Never say generate without “website copy”.
 
-Distinct from: Website assistant, Apply the website template.
+Distinct from: Website assistant, Apply the website template (the unpublished website structure).
 
 ---
 
 ### Apply the website template
 
 Write unpublished website pages, website sections, and website slots from a website template and
-the business profile. Website placeholders stay. Distinct from: Website copy generation.
+the business profile. Website placeholders stay. Never say instantiate, population, or generate
+for this.
+
+Distinct from: Website copy generation (the words), Website template (the starting point).
 
 ---
 
@@ -369,7 +394,20 @@ Media library, and Ads are their own screens beside it, not website page content
 
 The chat (and later voice) that proposes website edits. It drafts; the owner decides.
 
-Distinct from: Website copy generation.
+Distinct from: Website copy generation, Website assistant plan.
+
+---
+
+### Website assistant plan
+
+What the website assistant shows the owner before it edits: which website pages and website
+sections, the proposed edits, assumptions, and open questions. Nothing is changed until the
+owner approves the plan. After they approve, the assistant applies the edits.
+
+Never say “live markdown plan” or “handoff boundary”.
+
+Distinct from: Website assistant (the chat), Website copy generation (no plan; it writes into
+the unpublished website on its own).
 
 ---
 
@@ -569,14 +607,22 @@ channel, not a separate product and not a separate profile.
 
 ---
 
-### Website preview
+### Preview token
 
-A stage in our sales process where they choose to buy the website or not. Never say bare
-“preview”. Do not use this word for the website editor canvas or for ad format mocks.
+The secret in a website preview link. Technical docs only. Never say “signed” for this.
 
-Distinct from: Unpublished website, Website activation.
+Distinct from: Website preview link, Signed URL.
 
-In code: `website_previews`, preview token, `internal/onboarding/websitepreview/`.
+In code: `website_previews.token_hash`.
+
+---
+
+### Signed URL
+
+A time-limited file download URL. Distinct from: Website preview link. Never call a website
+preview signed.
+
+In code: object-storage signed URLs.
 
 ---
 
@@ -670,6 +716,15 @@ In code: `source_refs`.
 
 ---
 
+### Provider
+
+Not a term. Name Google Maps, the LLM, Stripe, or fakes in tests. Never use this word for a
+dependency.
+
+In code: leftover `research_runs.provider` and `research/providers/` — not the word we use.
+
+---
+
 ### Published website copy
 
 The content of the website: text, images, and arrangement — the website manifest produced to convert
@@ -717,7 +772,7 @@ Never in product/user-facing text or PRD prose.
 | generate (for the unpublished website structure) | apply the website template |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (website preview) | website preview link (product); preview token (technical) |
-| live markdown plan | plan |
+| live markdown plan | website assistant plan |
 | handoff boundary | the owner approves the plan, then the assistant applies it |
 | fact / structured facts | detail / information |
 | proof | certifications, reviews, or projects as appropriate |

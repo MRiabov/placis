@@ -2,9 +2,9 @@
 
 Implemented in the predecessor (`OnCall`) and `frontend-2`. The contractor never waits on
 business research or on copy: confirm returns immediately, business research fills the checklist
-in the background, generation starts only after the client interview completes, and website copy
-generation fills the unpublished website after instantiate without blocking the website preview
-URL.
+in the background, applying the website template starts only after the client interview
+completes, and website copy generation fills the unpublished website after that without blocking
+the website preview link.
 
 **Screens** (`/onboarding/find` → `/review` → `/interview` → `/preview`, then the public website
 preview URL, then pay):
@@ -15,20 +15,22 @@ preview URL, then pay):
 02a. business research (async, parallel slots, SSE progress) — overlaps review + client interview
 02b. review the checklist, then client interview (fill gaps) — text and/or voice, same profile
 03.  build the profile (continuous merge as sources and answers arrive — not a wait step)
-04.  generate (after client interview complete): one LLM website template/website styles pick, then deterministic unpublished website
+04.  apply the website template (after client interview complete): one LLM website template/website styles pick, then unpublished website with placeholders
 05.  website copy generation (async): write headlines/body/CTAs/SEO into the unpublished website; does not block the website preview
-06.  website preview (signed token, public website preview URL) — issued as soon as 04 finishes
+06.  website preview (website preview link) — issued as soon as 04 finishes
 07.  website activation (pay → activate tenant; site stays an unpublished website until website publication)
 ```
 
 SSE (`GET /api/v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from confirm through
-generate and copy — not only step 06. Postgres is authoritative.
+applying the website template and copy — not only step 06. Postgres is authoritative.
 
 ## Onboarding session status
 
 `created` (onboarding session exists) → `interviewing` (confirmed; business research + review +
-client interview) → `generating` (client interview complete; 04 running) → `previewing` (website
-preview ready; 05 may still be writing copy) → `activated`. `generation_failed` if 04 throws. 05
+client interview) → `generating` (client interview complete; 04 running;
+TODO: rename this status off `generating`) → `previewing` (website
+preview ready; 05 may still be writing copy) → `activated`. `generation_failed` if 04 throws
+(TODO: rename this status). 05
 failing does not change onboarding session status. Website previews expire (`expires_at`); the
 onboarding session has no `expired` status.
 
@@ -44,7 +46,7 @@ server-side resume token.
 - [02a-business-research.md](02a-business-research.md)
 - [02b-client-interview.md](02b-client-interview.md)
 - [03-build-profile.md](03-build-profile.md)
-- [04-generate.md](04-generate.md)
+- [04-generate.md](04-generate.md) <!-- TODO: rename this file off 04-generate.md -->
 - [05-website-copy-generation.md](05-website-copy-generation.md)
 - [06-website-preview.md](06-website-preview.md)
 - [07-website-activation.md](07-website-activation.md)

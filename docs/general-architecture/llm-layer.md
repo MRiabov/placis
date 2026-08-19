@@ -1,6 +1,6 @@
 # LLM layer
 
-The LLM provider sits behind an internal provider interface (Vercel AI SDK primary, OpenRouter
+The LLM sits behind an internal interface (Vercel AI SDK primary, OpenRouter
 alternative), so prompts, model names, response shapes, and cost logging never leak into domain
 logic.
 

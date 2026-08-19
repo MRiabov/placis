@@ -36,14 +36,15 @@ auditability, and voice agents as a **separate, optional** channel.
 1. **Identity, auth, tenancy** — Clerk identity + Clerk organizations; tenant == Clerk organization 1-1;
    memberships with roles; domains (generated subdomain + custom website domain).
 2. **Onboarding (business research → profile)** — onboarding sessions (start from a Google Maps listing or
-   company registry record), client interview, research providers, business profile.
+   company registry record), client interview, Google Maps / company registry / Facebook / crawl /
+   photos, business profile.
 3. **Website building from website templates** — trade website templates + website component contracts as static catalog
    data; website template application; website copy generation as governed, propose-only edits.
 4. **Website editing (The CMS)** — website pages (kept, never overwritten), website sections, website slots, media
    library, website forms, header/footer, projects, certification selections, website publications.
 5. **Public website + website lead capture** — resolve active website publication website manifests by host/path; website
    forms persist into a minimal `leads` table.
-6. **Website preview + website activation** — signed website previews; self-serve Stripe website activation/checkout;
+6. **Website preview + website activation** — website preview links; self-serve Stripe website activation/checkout;
    webhook-driven website activation (safe to replay).
 7. **Ad generation (#403)** — ads with per-format variants, copy, and image
    placements built from the profile + approved media; propose-only AI; terminal state is a
@@ -52,7 +53,7 @@ auditability, and voice agents as a **separate, optional** channel.
 8. **Cross-cutting** — AI/LLM layer with mandatory recording of reasoning + output + tool calls;
    files (S3/R2); Stripe payments (activation only); Postgres-backed jobs (River); structured
    logging; audit events.
-9. **Voice agents** — separate, optional; provider-agnostic interface; onboarding voice agent.
+9. **Voice agents** — separate, optional; swappable voice service; onboarding voice agent.
    Kept only as a communication channel into the system.
 
 ### Out of scope (do not rebuild)
@@ -99,8 +100,9 @@ placis/
     # product domains — feature-nested (one package per feature)
     tenancy/             # tenants.go, memberships.go, domains.go
     onboarding/          # session.go, interview.go, orchestrate.go, activation.go
-      websitepreview/    #   package.go, events.go (signed website preview of the generated website)
+      websitepreview/    #   package.go, events.go (website preview of the unpublished website)
     research/            # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
+                         # TODO: rename — do not say provider in prose; this folder still does.
     profile/             # profile.go, versions.go, services.go, areas.go, hours.go
     website/             # root types.go, service.go + feature packages
       pages/             #   handler.go, service.go, model.go
@@ -139,7 +141,7 @@ when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard err
 | Config | env -> typed struct, validated at startup | |
 | Logging | `log/slog` | structured, request IDs |
 | Storage | `aws-sdk-go-v2/service/s3` | R2 in prod, MinIO/local FS in dev |
-| LLM | provider interface; Vercel AI SDK primary, OpenRouter alternative | mandatory recording of reasoning + output + tool calls |
+| LLM | internal interface; Vercel AI SDK primary, OpenRouter alternative | mandatory recording of reasoning + output + tool calls |
 | Payments | Stripe via `stripe-go` SDK | activation checkout only |
 | IDs | UUID PKs | `timestamptz` defaults |
 
@@ -162,7 +164,7 @@ must not hand-duplicate the struct shapes.
 - `tenants.clerk_org_id` (unique) is the only tenant entry point. No org chooser, no selected-org
   cookie, no client-controlled tenant selector.
 - Tenant context is resolved once per request from: authenticated Clerk organization, public site hostname,
-  signed website preview token, or onboarding session token. Services take `tenantID` explicitly.
+  preview token, or onboarding session token. Services take `tenantID` explicitly.
 - Every tenant-owned row carries `tenant_id`; all primary queries include it; cross-tenant
   isolation is proven by integration tests (create two tenants, assert reads/writes/files blocked).
 - Roles (`tenant_memberships.role`): `owner`. Platform admins work across tenants via Clerk native
@@ -176,9 +178,11 @@ Canonical table definitions live with the feature that owns them — see
 ## 5. Workflows and state machines
 
 1. **Onboarding session** — `created → interviewing → generating → previewing → activated`
-   (`generation_failed` if generate throws). Business research runs in the background alongside
-   review/client interview; generate starts at client interview complete; website copy generation runs after
-   instantiate and does not block website preview or website activation. Website previews expire; the onboarding session does not.
+   (`generation_failed` if applying the website template throws; TODO: rename these statuses).
+   Business research runs in the background alongside review/client interview; applying the website
+   template starts at client interview complete; website copy generation runs after that and does
+   not block website preview or website activation. Website previews expire; the onboarding session
+   does not.
 2. **Business profile** — profile history; `current_version_id` points at the current row;
    details carry `source_refs` and `created_by`.
 3. **Website page** — `unpublished → approved → published`; kept copies are never overwritten; website publication creates a new
@@ -234,10 +238,11 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
 0. **Foundation** — repo scaffold, `cmd/api` + `cmd/worker`, config, `slog`, Postgres + `goose` +
    `sqlc`, `River`, `huma` skeleton + `/health`, Railway deploy, and CI (CircleCI + GitHub Actions):
    file-size guard, gofmt/vet/lint, build+test (Testcontainers), generated-code freshness
-   (sqlc/huma/frontend-typegen), provider isolation, evals local-only.
+   (sqlc/huma/frontend-typegen), external API isolation, evals local-only.
 1. **Auth & tenancy** — Clerk verification → `Principal`, tenant resolution, memberships, domains,
    roles, cross-tenant isolation tests.
-2. **Onboarding & business research & profile** — onboarding sessions, client interview, research providers
+2. **Onboarding & business research & profile** — onboarding sessions, client interview, Google Maps /
+   company registry / Facebook / crawl / photos
    (Google Places, company registry, Facebook, website crawl, photo classification), business
    profile with profile history.
 3. **Website templates & website** — website component/website template catalog loaders + website component contracts, website template
@@ -247,7 +252,7 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
 5. **Ads (#403)** — ads + variants, propose-only AI, export ad set, ad lead attribution.
 6. **Auditability hardening** — audit completeness, AI trace completeness, observability.
 
-Voice is a **later milestone**: the provider-agnostic boundary stays, but the onboarding voice
+Voice is a **later milestone**: the voice service stays swappable, but the onboarding voice
 agent is not built in the first pass.
 
 ## 9. Locked decisions
@@ -259,13 +264,13 @@ agent is not built in the first pass.
   (`Organizations().Create`). No hand-rolled JWT/JWKS logic or Clerk data types.
 - **Stripe** — official `github.com/stripe/stripe-go` SDK for checkout-session creation and webhook
   signature verification (`webhook.ConstructEvent`). No hand-rolled HMAC/signature code.
-- **LLM provider** — behind an internal provider interface. Vercel AI SDK is the primary candidate
+- **LLM** — behind an internal interface. Vercel AI SDK is the primary candidate
   (OpenRouter is the alternative — it now adds up to ~15% per transaction). The interface keeps the
-  concrete provider swappable; the Go client choice is an implementation detail behind it.
+  concrete LLM swappable; the Go client choice is an implementation detail behind it.
 - **CI/CD** — CircleCI primary (PR-only, path-filtered, non-mutating); GitHub Actions for emergency
   + Cloudflare deploy; file-size guard (< 800 warn / > 1200 hard error); backend tests
-  provider-isolated; evals local-only. See `docs/ci-cd.md`.
-- **Voice** — later milestone; provider-agnostic boundary is kept, but the onboarding voice agent
+  isolated from Google, the LLM, Stripe, and voice; evals local-only. See `docs/ci-cd.md`.
+- **Voice** — later milestone; the voice service stays swappable, but the onboarding voice agent
   is deferred.
 
 ## 10. Remaining open items

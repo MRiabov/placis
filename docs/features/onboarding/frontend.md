@@ -17,7 +17,7 @@ Onboarding is reachable **without** signing in. `/cms` with no active tenant red
 - **Google Maps** (optional) — search and pick the place. Confirm with registry, Maps, or both.
 - **Online research consent** — checkbox required to enable Confirm.
 - **Confirm and review** — creates the onboarding session, starts business research, goes to
-  Review. Does not generate or create a website preview yet.
+  Review. Does not apply the website template or create a website preview yet.
 
 ### 2. Review — `/onboarding/review`
 
@@ -32,7 +32,7 @@ website preview; text submit completes the client interview the same way.
 
 ### 4. Website preview (progress) — `/onboarding/preview`
 
-Generation timeline from the onboarding session SSE (04 instantiate, then 05 copy filling in). In-page
+Timeline from the onboarding session SSE (04 apply the website template, then 05 copy filling in). In-page
 website section renders while it runs. **View website** appears as soon as the website preview exists —
 do not wait for website copy generation to finish.
 
@@ -53,5 +53,6 @@ preview resumes on the website preview screen.
 - `FoundInformationReview` — found vs missing.
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist` — text client interview.
 - Voice panel — `useSetupVoiceInterview`.
-- `GenerationPanel` / `PreviewProgressPanels` — generating timeline.
+- `GenerationPanel` / `PreviewProgressPanels` — timeline (TODO: rename `GenerationPanel`; this
+  is apply-the-website-template + copy progress).
 - `TargetedPreviewView` / `PayToClaimStrip` — public website preview + website activation (`src/features/preview/`).

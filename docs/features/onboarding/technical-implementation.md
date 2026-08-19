@@ -11,9 +11,11 @@ See [data-model.md](data-model.md). The business profile is
 
 ## Flow
 
-`created → interviewing → generating → previewing → activated` (`generation_failed` if generate
-throws). Business research runs in the background alongside review/client interview; generation starts at
-client interview complete; website copy generation runs after instantiate and does not block website preview or website activation.
+`created → interviewing → generating → previewing → activated` (`generation_failed` if applying
+the website template throws; TODO: rename these statuses off `generating` / `generation_failed`).
+Business research runs in the background alongside review/client interview; applying the website
+template starts at client interview complete; website copy generation runs after that and does not
+block website preview or website activation.
 
 ## API surface
 
@@ -39,14 +41,16 @@ client interview complete; website copy generation runs after instantiate and do
 1. Merge client interview answers + business research into a `business_profile_versions` row (details + where
    each came from + who changed it).
 2. Surface research conflicts for the owner to review.
-3. On approval, the profile advances to the current `business_profile_versions` row; generation reads it.
+3. On approval, the profile advances to the current `business_profile_versions` row; applying the
+   website template reads it.
 
 ## Validation & testing
 
 - Tenant isolation for onboarding sessions, business research, and profile rows.
-- Provider fakes force deterministic tests; CI never spends provider quota (see `ci-cd.md`).
-- One E2E: find → review → client interview → generate → website preview → website activation (providers mocked, core logic
-  unmocked). The website preview can be activated before website copy generation finishes.
+- Fakes force deterministic tests; CI never spends Google / LLM / Stripe quota (see `ci-cd.md`).
+- One E2E: find → review → client interview → apply the website template → website preview →
+  website activation (Google / LLM / Stripe faked, core logic unmocked). The website preview can
+  be activated before website copy generation finishes.
 
 ## Frontend
 

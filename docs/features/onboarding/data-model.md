@@ -11,7 +11,8 @@ The business profile these onboarding sessions write is owned by
 
 - `onboarding_sessions` — `id`, `tenant_id` nullable fk, `started_from` (`google_places`/
   `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`interviewing`/
-  `generating`/`previewing`/`activated`/`generation_failed`), `token` unique, `clerk_user_id`
+  `generating`/`previewing`/`activated`/`generation_failed`; TODO: rename `generating` /
+  `generation_failed`), `token` unique, `clerk_user_id`
   nullable, `consent_given_at` nullable, timestamps
 - `text_interview_submissions` — `id`, `onboarding_session_id` fk, `version`, `payload` jsonb,
   `created_at`
@@ -19,7 +20,8 @@ The business profile these onboarding sessions write is owned by
 ## Business research
 
 - `research_sessions` — `id`, `onboarding_session_id` fk, `status`, `created_at`
-- `research_runs` — `id`, `research_session_id` fk, `provider`, `status`, `started_at`,
+- `research_runs` — `id`, `research_session_id` fk, `provider` (TODO: rename — do not say
+  provider in prose; this column still does), `status`, `started_at`,
   `finished_at`
 - `research_events` — `id`, `research_run_id` fk, `event_type`, `payload` jsonb, `created_at`
 - `research_sources` — `id`, `research_run_id` fk, `kind` (`google_places`/`company_registry`/

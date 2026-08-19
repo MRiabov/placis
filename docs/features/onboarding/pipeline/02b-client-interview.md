@@ -39,7 +39,7 @@ Fill only the gaps. Two writers, same path that writes details; generation never
 Leave-and-come-back restores the onboarding session from `localStorage` + `GET .../profile`; text
 autosave rows rehydrate the client interview.
 
-Status stays `interviewing` until complete, then `generating` (04).
+Status stays `interviewing` until complete, then `generating` (04; TODO: rename this status).
 
 - **Persists** `text_interview_submissions` (autosave + final) and profile-history deltas (03).
   `onboarding_sessions.channel` = `text` or `voice`.

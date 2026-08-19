@@ -1,7 +1,7 @@
 # Onboarding (business research → business profile)
 
 Onboarding turns a spoken or typed description of a business into a clear **business profile**
-that drives website and ad generation.
+that drives a website and ads.
 
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record

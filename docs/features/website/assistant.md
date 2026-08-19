@@ -7,8 +7,8 @@ turns requests into governed, reviewable website editor edits. Text chat, voice 
 website editor assistance all share the same tool surface.
 
 Onboarding [website copy generation](../onboarding/pipeline/05-website-copy-generation.md) reuses
-these tools headless (continuous mode, no chat UI, no `create_page`) after instantiate. That job is
-website copy generation, not this website assistant.
+these tools headless (continuous mode, no chat UI, no `create_page`) after the website template
+is applied. That job is website copy generation, not this website assistant.
 
 ## Tools (hard-typed, validated, parallel)
 
@@ -32,18 +32,18 @@ failed event.
 media asset (provenance + review status) and attaches it to a website slot through the unpublished
 website page-version path.
 
-Two plan tools carry the owner-facing reply, markdown plan, assumptions, open questions, and
+Two plan tools carry the owner-facing reply, the plan, assumptions, open questions, and
 activity: `refinement_plan` (plan mode, no mutation) and `assistant_plan` (summarize alongside the
 edit tools).
 
 ## Plan mode vs continuous mode
 
 - **Plan mode (default)** — for new website pages, multi-website-section redesigns, ambiguous
-  copy/website styles, structural changes. The website assistant keeps a live markdown plan
-  (affected website pages/website sections, proposed edits, assumptions, open questions, validation
-  risks, acceptance criteria). **Approval is the handoff boundary**: after approval the plan
-  converts into governed tool calls and may run several bounded batches — apply, report failures,
-  retry repaired calls, continue until done or capped.
+  copy/website styles, structural changes. The website assistant keeps a plan (affected website
+  pages/website sections, proposed edits, assumptions, open questions, validation risks,
+  acceptance criteria). Nothing is changed until the owner approves the plan. After they approve,
+  the assistant applies the edits in bounded batches — apply, report failures, retry repaired
+  calls, continue until done or capped.
 - **Continuous mode** — bounded, low-risk edits applied directly, still as unpublished website page
   versions with validation.
 

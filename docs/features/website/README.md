@@ -5,7 +5,7 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under Th
 
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
-- [architecture.md](architecture.md) — content model, generation, website editor, website publication, render
+- [architecture.md](architecture.md) — content model, applying the website template, website editor, website publication, render
 - [data-model.md](data-model.md) — website pages, website sections, website slots, website forms, header/footer, website publications
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
 - [variables.md](variables.md) — the `{{var}}` website placeholders and how they resolve

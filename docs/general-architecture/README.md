@@ -2,7 +2,7 @@
 
 Cross-cutting architecture that doesn't belong to one feature.
 
-- [llm-layer.md](llm-layer.md) — LLM provider, AI tools, traceability
+- [llm-layer.md](llm-layer.md) — LLM, AI tools, traceability
 - [voice-agent.md](voice-agent.md) — voice architecture (minted secret, tools)
 - [audit.md](audit.md) — `audit_events`
 - [jobs.md](jobs.md) — River background jobs
