@@ -12,6 +12,7 @@ services) into a reviewable, exportable ad set. This doc is the overview; the
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
 - [testing.md](ad-generation/testing.md) — the ads E2E test
 - [design/ads-workspace.html](ad-generation/design/ads-workspace.html) — static design mock
+- [ad-application/meta](ad-application/meta/00-index-research.md) — research for future ad posting to Meta (not the spec)
 
 ## Positioning (done-for-you + DIY)
 
@@ -27,6 +28,10 @@ Ad posting, campaign operations (budget, bidding, targeting, scheduling, reporti
 work** built on top of the ads service — the model reserves stable ids, `platform_refs`, and
 `platform_status` for it. The MVP terminal Ad status is **ad ready to post** (a deterministic export
 ad set), never actual ad posting.
+
+How we would post to Meta (Facebook / Instagram) is researched in
+[`ad-application/meta/`](ad-application/meta/00-index-research.md). That directory is not the
+product spec; `ad-generation/` still is.
 
 ## Domain model
 
