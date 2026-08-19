@@ -25,4 +25,4 @@ Each field carries its value, status, where it came from, and confidence.
   the whole profile, merge in memory, and write it back.
 
 - **Persists** `business_profiles` (the fold) + `business_profile_edits` + `business_profile_services`
-  / `_service_areas` / `_opening_hours`. `last_edit_id` is the latest applied edit.
+  / `_service_areas` / `_opening_hours` / `_reviews`. `last_edit_id` is the latest applied edit.

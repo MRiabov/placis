@@ -3,7 +3,7 @@
 Ad tables. They reference the CMS content by id — they do not copy it. Conventions:
 [data-model conventions](../../general-architecture/data-model.md).
 
-Referenced, not owned here: [details](../other/details/data-model.md) (profile, services),
+Referenced, not owned here: [details](../other/details/data-model.md) (profile, services, reviews),
 [media library](../other/media/data-model.md) (`ad_image_placements.media_asset_id`),
 [leads](../other/leads/data-model.md) (attribution). LLM traces:
 [LLM layer](../../general-architecture/llm-layer.md). Sensitive mutations also write

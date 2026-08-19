@@ -29,10 +29,13 @@ research job writes a `social_profile` row.
 
 Each research job is its own River job (retryable). When it finishes it writes
 `business_research_events` + `business_research_sources` (`kind`, `external_id`, `source_ref`,
-lookup `status`, `confidence`; `raw` only when there is no listing table) and clears in-progress
-on the checklist. The Google listing job also upserts `google_maps_listings` (columns + `raw`
-ETL cache). Lookup outcomes (`matched` / `ambiguous` / `not_found` / `not_attempted` /
-`blocked` / `error`) live on the source row’s `status` — not as extra tables.
+lookup `status`, `confidence`; `raw` only when there is no listing or reviews table) and clears
+in-progress on the checklist. The Google listing job also upserts `google_maps_listings` (columns
++ `raw` ETL cache), `google_maps_listing_opening_hours`, and `google_maps_listing_reviews`. The
+reviews job writes further review rows when Google Maps Details did not already return them. Lookup outcomes
+(`matched` / `ambiguous` / `not_found` / `not_attempted` / `blocked` / `error`) live on the
+source row’s `status` — not as extra tables.
 
 - **Persists** `business_research_runs` (`place_id` on the Maps path), `business_research_events`,
-  `business_research_sources`, `google_maps_listings`. Profile deltas go through 03.
+  `business_research_sources`, `google_maps_listings` (plus hours and reviews). Profile deltas go
+  through 03.

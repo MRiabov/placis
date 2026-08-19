@@ -32,7 +32,7 @@ live here.
   `created_at`
 - `business_research_sources` — `id`, `business_research_run_id` fk, `kind` (same closed set as
   runs), `external_id`, `source_ref`, `raw` jsonb (ETL dump for kinds with no listing table;
-  null when `kind=google_maps_listing`), `status` (`matched`/`ambiguous`/`not_found`/
+  null when `kind` is `google_maps_listing` or `review`), `status` (`matched`/`ambiguous`/`not_found`/
   `not_attempted`/`blocked`/`error`), `confidence`, `created_at`
 - `google_maps_listings` — `id`, `place_id` unique (Google’s id),
   `fetched_from` (`google_maps_details`/`scrape`), `display_name`, `primary_type`,
@@ -41,10 +41,14 @@ live here.
   refetch), `fetched_at`
 - `google_maps_listing_opening_hours` — `id`, `listing_id` fk, `day_of_week`, `opens_at`,
   `closes_at`, `closed`
+- `google_maps_listing_reviews` — `id`, `listing_id` fk, `external_id` (Google’s review id,
+  unique per listing when present), `author_name`, `rating` (1–5), `body`, `published_at`
+  nullable, `language` nullable
 
 The Google Maps listing is this row, not a blob and not a second copy on
-`business_research_sources`. Photos from the listing become media library items. Profile
-increments (03) copy selected fields onto `business_profiles`; the listing address stays here.
+`business_research_sources`. `raw` is the ETL fetch body only. Hours and reviews are child
+rows. Photos from the listing become media library items. Profile increments (03) copy selected
+fields and review rows onto the business profile; the listing address stays here.
 
 ## Website preview and website activation
 

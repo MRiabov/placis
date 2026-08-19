@@ -27,7 +27,7 @@ never copied into a second `data-model.md`.
 | --- | --- |
 | [auth](../features/other/auth/data-model.md) | `tenants`, `tenant_memberships`, `website_addresses` |
 | [onboarding](../features/onboarding/data-model.md) | onboarding sessions, business research, `google_maps_listings`, website previews, website activations, `stripe_events` |
-| [details](../features/other/details/data-model.md) | `business_profiles` and related |
+| [details](../features/other/details/data-model.md) | `business_profiles` and related (services, areas, hours, reviews) |
 | [website](../features/website/data-model.md) | website pages, website sections, website slots, website forms, website form fields, top menu, footer, website publications (website versions), projects, certifications |
 | [media library](../features/other/media/data-model.md) | `media_assets` |
 | [ads](../features/ads/data-model.md) | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
