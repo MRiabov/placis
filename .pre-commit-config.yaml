@@ -1,0 +1,8 @@
+# Local hooks. language: golang builds cmd/ci/check-dont-say once and caches the binary.
+# repo: . is required so pre-commit `go install ./...` the checker (repo: local cannot).
+# frontend-2 is in scope but excluded until frontend work starts from the Go backend.
+repos:
+  - repo: .
+    rev: HEAD
+    hooks:
+      - id: check-dont-say
