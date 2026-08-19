@@ -29,8 +29,8 @@ work in small vertical slices, and let the gates + glossary catch drift.
 Build one feature at a time, bottom-up, in dependency order:
 
 ```text
-tenancy/auth -> onboarding (source -> interview -> profile) -> website
-  -> preview/claim/billing -> ads -> leads
+tenancy/auth -> onboarding (source -> client interview -> profile) -> website
+  -> website preview/website activation/billing -> ads -> leads
 ```
 
 Each slice is **one PR**, complete and green before the next starts. A slice is:

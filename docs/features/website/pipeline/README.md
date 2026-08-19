@@ -1,18 +1,21 @@
 # Website — pipeline
 
 ```text
-01. blueprint apply (deterministic) → draft pages / sections / slots
-02. refine (LLM edits: update_slot, generate_image) → proposed changes
-03. user edits (canvas / workspace / inspector)
-04. validate (component contracts)
-05. publish → manifest → publication
-06. render (public site)
+01. website template apply (deterministic) → unpublished website pages / website sections / website slots
+02. website copy generation (LLM edits: update_slot, generate_image) → proposed changes
+03. owner edits (canvas / workspace / inspector)
+04. validate (website component contracts)
+05. website publication → website manifest → website publication row
+06. render (live website)
 ```
 
-- **01** — the trade blueprint is applied to the profile: draft `website_pages` / `website_sections`
-  / `content_slots`, placeholders kept.
-- **02** — the LLM (the editor) proposes edits through typed, validated, parallel tool calls.
-- **03** — the user reviews and edits; every edit is a new page version.
-- **04** — sections are validated against their component contracts before save and publish.
-- **05** — publish resolves placeholders, freezes the `site_manifest` into a publication.
-- **06** — the public site renders the active publication (Astro shell, React islands).
+- **01** — the website template is applied to the profile: unpublished `website_pages` /
+  `website_sections` / `website_slots`, website placeholders kept.
+- **02** — website copy generation writes copy into the unpublished website through typed,
+  validated, parallel tool calls (not the website assistant).
+- **03** — the owner reviews and edits; every edit is a new website page version.
+- **04** — website sections are validated against their website component contracts before save
+  and website publication.
+- **05** — website publication resolves website placeholders, writes the `website_manifest` into a
+  website publication.
+- **06** — the live website renders the active website publication (Astro shell, React islands).

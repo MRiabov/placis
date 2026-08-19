@@ -23,7 +23,7 @@ whole system.
 | LLM | provider interface; Vercel AI SDK primary, OpenRouter as an alternative |
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (private app) | `frontend-2` — Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; reused mostly, adapted to the huma OpenAPI |
-| Public site | one shared runtime — Astro with React islands (Cloudflare Workers) — that renders every tenant's published site; not yet imported from `OnCall` |
+| Public site | one shared runtime — Astro with React islands (Cloudflare Workers) — that renders every tenant's live website; not yet imported from `OnCall` |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 ## Module layout
@@ -46,26 +46,26 @@ internal/
   # product domains — feature-nested: one package per feature, split a package
   # only when it grows past ~800 lines (never flat file dumps).
   tenancy/        # tenants.go, memberships.go, domains.go
-  onboarding/     # session.go, interview.go, orchestrate.go, claim.go
-    preview/      #   package.go, events.go (signed preview of the generated site during onboarding)
+  onboarding/     # session.go, interview.go, orchestrate.go, activation.go
+    websitepreview/ #   package.go, events.go (signed website preview of the generated website during onboarding)
   research/       # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
   profile/        # profile.go, versions.go, services.go, areas.go, hours.go
   website/        # root: types.go, service.go
     pages/        #   handler.go, service.go, model.go
     sections/
     slots/
-    assets/
     forms/
     navigation/
     publications/
     projects/
     certifications/
-    blueprints/
-  ads/            # creativeset.go, variant.go, generate.go, export.go
+    templates/
+  ads/            # ad.go, variant.go, generate.go, export.go
+  media/          # media_assets
   billing/        # checkout.go, webhooks.go (Stripe only)
   leads/          # leads.go
 migrations/       # goose SQL migrations (greenfield)
-catalog/          # blueprints + component contracts (typed structs, kept as versions)
+catalog/          # website templates + website component contracts (typed structs, kept as catalog versions)
 docs/
 go.mod
 ```
@@ -80,7 +80,7 @@ Rules:
   transactions; models are persistence only.
 - Service functions accept `tenantID` explicitly; they never infer it from global state.
 - **Two type layers by default**: sqlc rows (persistence) and huma DTOs (API). A third "domain
-  value" exists only to name a composite of several rows (e.g. the business profile, the site
+  value" exists only to name a composite of several rows (e.g. the business profile, the website
   manifest) — never to mirror a single table. Reuse one `*Read` per entity and one `*Create`/
   `*Update` per write; don't add a new type per endpoint.
 - **Every DTO field is constrained**: strings carry `minLength`/`maxLength`, numbers carry
@@ -95,9 +95,9 @@ adapted only where the huma-derived OpenAPI improves the contract.
 
 - `src/generated/api-types.ts` — regenerated from the served `/openapi.json` via
   `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` client + Clerk token provider.
-- `src/features/setup/` — onboarding (sources, interview, research progress, preview).
-- `src/features/cms/` — the website + ads parts of the CMS (editor, media, inspector, ads workspace).
-- `src/features/preview/` — the signed onboarding preview + public-site module preview.
+- `src/features/onboarding/` — onboarding (sources, client interview, business research progress, website preview).
+- `src/features/cms/` — the website + ads parts of The CMS (website editor, media library, inspector, ads workspace).
+- `src/features/preview/` — the signed onboarding website preview + public-site module website preview.
 
 The client keeps its own feature-local structure and is not folded into `internal/`; the file-size
 guard applies to it too (see `ci-cd.md`).
@@ -109,51 +109,51 @@ Two backend processes share one database, and two frontend apps talk to the API:
 1. `cmd/api` — the Go HTTP API. Completes requests quickly and persists intent.
 2. `cmd/worker` — runs `River` jobs: AI generation, business research, file processing,
    notifications, and export generation.
-3. `frontend-2` — the private Vite client (CMS, onboarding, preview) built as static assets, talking
+3. `frontend-2` — the private Vite client (The CMS, onboarding, website preview) built as static assets, talking
    to the API through the generated `openapi-fetch` client.
 4. **public site** — one shared runtime, Astro with React islands, on Cloudflare Workers. It renders
-   every tenant's published site from its manifest; a single deploy serves all tenants (no
+   every tenant's live website from its website manifest; a single deploy serves all tenants (no
    per-tenant build). This runtime still lives in `OnCall` and has not been imported into this repo
    yet.
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
 work enqueued, and the request returned — see
-[claim](features/onboarding/pipeline/07-claim.md). Every background job can be retried safely (an
+[website activation](features/onboarding/pipeline/07-website-activation.md). Every background job can be retried safely (an
 explicit key) — see [jobs](general-architecture/jobs.md).
 
-Preview progress events stream over SSE — see
-[06-preview.md](features/onboarding/pipeline/06-preview.md).
+Website preview progress events stream over SSE — see
+[06-website-preview.md](features/onboarding/pipeline/06-website-preview.md).
 
 `huma` handles JSON request/response endpoints and serves the derived OpenAPI spec at
-`/openapi.json`. The preview **SSE** stream and the voice **WebSocket** (later milestone) are raw
+`/openapi.json`. The website preview **SSE** stream and the voice **WebSocket** (later milestone) are raw
 `net/http` handlers outside huma. Mutating routes that can be safely retried accept an
 `Idempotency-Key` header (checked per tenant) — the Go form of the old API's idempotency
 convention.
 
 ## Component contract (single source of truth)
 
-Each component (what a `public.hero.image` section accepts) is **one typed struct, dumped to JSON**,
+Each website component (what a `public.hero.image` website section accepts) is **one typed struct, dumped to JSON**,
 under `catalog/`. That JSON is the contract: the TypeScript public-site renderer consumes it to
-validate and render, and the Go backend loads the same structs for save/publish validation.
-Blueprints and component contracts are static catalog data, kept as versions — not database rows.
+validate and render, and the Go backend loads the same structs for save and website publication validation.
+Website templates and website component contracts are static catalog data, kept as catalog versions — not database rows.
 The Go backend loads and validates them; it must not hand-duplicate the struct shapes.
 
 ## Boundaries
 
 1. `auth` proves identity via the Clerk Go SDK; `tenancy` decides tenant access and permissions.
-2. `onboarding` owns research, profile building, the first website **draft** (04), async copy
-   generation (05), and preview/claim; it does not publish. The CMS assistant (editor) and publish
-   live in `website`.
-3. `blueprint` applies templates into tenant-owned `website_*` rows; it validates component ids,
-   props, design controls, page paths, forms, and navigation before writing.
-4. `website` owns the editable content model and publication; a `site_manifest` is only the
-   validated read model, built at publish time.
-5. `ads` is a standalone service (the `/cms/ads` workspace is one user). It reads the profile +
-   approved media, proposes copy + image galleries, and exports `ready to post` packages — never
-   posts.
-6. `ai` suggests but never writes: it proposes edits for a human to approve, and never changes
+2. `onboarding` owns business research, profile building, the first unpublished website (04), async website copy
+   generation (05), and website preview/website activation; it does not do website publication. The website
+   assistant (website editor) and website publication live in `website`.
+3. `templates` applies website templates into tenant-owned `website_*` rows; it validates website component ids,
+   props, design controls, website page paths, website forms, and header/footer before writing.
+4. `website` owns the editable content model and website publication; a `website_manifest` is only the
+   validated read model, built at website publication time.
+5. `ads` is a standalone service (the `/cms/ads` workspace is one owner). It reads the profile +
+   approved media, proposes copy + image galleries, and exports `ad ready to post` ad sets — never
+   does ad posting.
+6. `ai` suggests but never writes: it proposes edits for an owner to approve, and never changes
    anything without validation.
-7. Integrations (research, LLM, storage, Stripe, email/SMS) are behind interfaces so tests run
+7. Integrations (business research, LLM, storage, Stripe, email/SMS) are behind interfaces so tests run
    without network calls.
 
 ## Deployment

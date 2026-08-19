@@ -10,7 +10,7 @@ Three tiers, and they are not interchangeable:
   frontend asserting against the API). Only external/paid providers (LLM, research, voice, Stripe)
   are faked.
 - **E2E** — **both sides real**: Playwright drives `frontend-2` against the real Go API + real
-  Postgres. A full user journey.
+  Postgres. A full contractor/owner/website-visitor journey.
 
 Agents must not substitute a unit test where an integration or E2E test is required — stubbing an
 E2E with unit tests is a failure, not a pass.

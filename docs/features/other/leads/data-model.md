@@ -1,5 +1,6 @@
 # Leads — data model
 
+Website leads (and later ad leads) persist here.
 Conventions: [data-model conventions](../../../general-architecture/data-model.md).
 `form_id` points at [website forms](../../website/data-model.md).
 

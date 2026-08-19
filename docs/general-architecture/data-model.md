@@ -3,9 +3,9 @@
 Every tenant-owned row carries `tenant_id`; all primary queries include it. Cross-tenant isolation
 is proven by integration tests (two tenants, assert reads/writes/files are blocked).
 
-Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic content (component
-props, slot values, research raw payloads, manifests); structural data is real columns. Columns
-named `source_refs` record where each value came from; `provenance` records where an asset came
+Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic content (website component
+props, website slot values, business research raw payloads, website manifests); structural data is real columns. Columns
+named `source_refs` record where each value came from; `provenance` records where a media asset came
 from and how it was edited.
 
 Own ids and foreign keys are `uuid` in Postgres and `uuid.UUID` (`github.com/google/uuid`) in Go —
@@ -21,11 +21,11 @@ never copied into a second `data-model.md`.
 | Owner | Tables |
 | --- | --- |
 | [auth](../features/other/auth/data-model.md) | `tenants`, `tenant_memberships`, `tenant_domains` |
-| [onboarding](../features/onboarding/data-model.md) | sessions, research, preview, claim, `stripe_events` |
+| [onboarding](../features/onboarding/data-model.md) | onboarding sessions, business research, website previews, website activations, `stripe_events` |
 | [details](../features/other/details/data-model.md) | `business_profiles` and related |
-| [website](../features/website/data-model.md) | pages, sections, slots, forms, navigation, publications, projects, certifications |
-| [media](../features/other/media/data-model.md) | `website_assets` |
-| [ads](../features/ads/data-model.md) | `ad_*` |
+| [website](../features/website/data-model.md) | website pages, website sections, website slots, website forms, header/footer, website publications, projects, certifications |
+| [media](../features/other/media/data-model.md) | `media_assets` |
+| [ads](../features/ads/data-model.md) | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
 | [leads](../features/other/leads/data-model.md) | `leads` |
 | [files](files.md) | `files` |
 | [audit](audit.md) | `audit_events` |

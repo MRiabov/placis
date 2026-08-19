@@ -28,6 +28,9 @@ A website term always includes **website**. Never say page, section, slot, style
 template, draft, preview, or publish as if they were generic. Header and footer are named
 separately; there is no umbrella “menu”.
 
+Closed sets of user-facing labels are **enums**. They live together under Enums, not as their own
+terms.
+
 Do not say **user**, **frozen**, or bare **session**. Say contractor, owner, or website visitor.
 
 ---
@@ -220,6 +223,8 @@ unpublished.
 
 Distinct from: Sign up, Website publication. Never say “claim” or “website claim”.
 
+In code: `website_activations`.
+
 ---
 
 ### Sign up
@@ -236,7 +241,7 @@ Distinct from: Website activation.
 The website the owner edits before it is published. Onboarding generates it; website activation leaves
 it unpublished; website visitors do not see it.
 
-Do not say bare “draft”. An ad in draft is an ad status; say “ad draft” if you must.
+Do not say bare “draft”. An ad in draft is an Ad states value; say “ad draft” if you must.
 
 ---
 
@@ -253,7 +258,7 @@ website editor, shown to website visitors only after website publication.
 The starting point for a website: the website pages and website sections a typical site of that
 trade needs. Never say bare “template” or “blueprint”.
 
-In code: `blueprint`, website template catalog.
+In code: `website_template`, website template catalog.
 
 ---
 
@@ -278,6 +283,8 @@ instance of).
 
 A named editable value inside a website section: text, rich text, image, list, link, reviews, or
 a project gallery. Never say bare “slot”.
+
+In code: `website_slots`.
 
 ---
 
@@ -358,7 +365,7 @@ Putting the website on the internet: a published website copy website visitors w
 
 Never say bare “publish” or “go live”.
 
-Distinct from: Unpublished website, Ad ready to post.
+Distinct from: Unpublished website, Ad states.
 
 In code: `website_publications`.
 
@@ -407,12 +414,6 @@ Internal: Creative set. Do not say “creative set” in product docs or UI.
 
 ---
 
-### Ad format
-
-A standard size an ad is produced in: square feed, portrait feed, carousel, or story.
-
----
-
 ### Ad destination
 
 An existing published website page owned by that contractor, that the ad can send people to.
@@ -434,23 +435,6 @@ form.
 
 ---
 
-### Ad needs review
-
-Ad step: AI-generated or compliance-sensitive content waiting for the owner.
-
-Distinct from: Website publication. Never say bare “needs review”.
-
----
-
-### Ad ready to post
-
-The approved ad set: validation passed, the owner accepted it, and it can be handed to an ad
-platform or downloaded.
-
-Distinct from: Website publication, Ad posting. Never say bare “ready to post”.
-
----
-
 ### Ad set
 
 The deliverable of an approved ad: images at each ad format, copy, ad destination, and the
@@ -464,13 +448,55 @@ Distinct from: Website preview. Internal sibling: Creative set (the persisted re
 
 Sending an ad to an ad platform (Facebook / Meta first).
 
-Distinct from: Ad ready to post, Website publication. Never say bare “posting”.
+Distinct from: Ad states (ad ready to post), Website publication. Never say bare “posting”.
 
 ---
 
 ### Ad platform
 
 Facebook / Meta, where an ad is posted. Do not say “platform” for Placis.
+
+---
+
+## Enums
+
+Closed sets of user-facing labels. Name the set; the values live only here — never as their own
+terms.
+
+### Ad states
+
+Where an ad stands. Two closed sets of labels:
+
+While creating the ad:
+
+- **Ad draft** — being created or edited.
+- **Ad needs review** — AI-generated or compliance-sensitive content waiting for the owner.
+- **Ad ready to post** — the owner accepted it; it can be handed to an ad platform or downloaded.
+- **Archived** — no longer offered, kept as a past ad.
+
+On an existing ad:
+
+- **Draft**
+- **Creative ready** — the ad is done.
+- **Published** — used once ad posting exists. Distinct from Website publication.
+- **Archived**
+
+Never say bare “draft”, “needs review”, or “ready to post”.
+
+In code: `ads.status` (`draft` / `ad_needs_review` / `ad_ready_to_post` / `archived`).
+
+---
+
+### Ad format
+
+A standard size an ad is produced in.
+
+- **Square feed**
+- **Portrait feed**
+- **Carousel**
+- **Story**
+
+In code: `feed_square` / `feed_portrait` / `carousel` / `story`.
 
 ---
 
@@ -537,7 +563,7 @@ The unpaid public look at the unpublished website, before website activation. Ne
 
 Domain: (internal).
 
-In code: `preview_packages`, signed preview token, `internal/onboarding/preview/`.
+In code: `website_previews`, signed preview token, `internal/onboarding/websitepreview/`.
 
 ---
 
@@ -612,7 +638,7 @@ A row in the media library. Never say bare “asset” (a website is not this).
 
 Domain: Media library / photo.
 
-In code: `website_assets`.
+In code: `media_assets`.
 
 ---
 
@@ -622,7 +648,7 @@ Stored bytes (a photo, a document).
 
 Domain: Media library / photo.
 
-In code: `files`; `website_assets.file_id`.
+In code: `files`; `media_assets.file_id`.
 
 ---
 
@@ -664,7 +690,7 @@ website publication by website rollback.
 
 Never say “frozen”, “materialize”, “snapshot”, or bare “published copy”.
 
-In code: one `website_publications` row holding `site_manifest`.
+In code: one `website_publications` row holding `website_manifest`.
 
 ---
 
@@ -675,7 +701,7 @@ The read model inside a website publication: website pages → website sections 
 
 Domain: Published website copy.
 
-In code: `site_manifest`.
+In code: `website_manifest`.
 
 ---
 
@@ -686,7 +712,7 @@ The persisted ad record.
 Domain: Ad. Distinct from: Ad set (the owner-facing deliverable). Never say “creative set” in
 product docs or UI.
 
-In code: `ad_creative_sets` plus `ad_variants`, `ad_copy_variants`, `ad_image_placements`,
+In code: `ads` plus `ad_variants`, `ad_copy_variants`, `ad_image_placements`,
 `ad_lead_forms`.
 
 ---
@@ -710,7 +736,7 @@ Never in product/user-facing text or PRD prose.
 | preview (bare) | website preview |
 | preview package | website preview |
 | claim / website claim | website activation |
-| draft (bare) | unpublished website |
+| draft (bare) | unpublished website, or ad draft (Ad states) |
 | template (bare) | website template |
 | page / section / slot / styles (bare) | website page / website section / website slot / website styles |
 | menu (as header+footer) | header or footer |
@@ -726,11 +752,11 @@ Never in product/user-facing text or PRD prose.
 | custom domain | custom website domain |
 | published copy (bare) | published website copy |
 | site manifest | website manifest |
-| ready to post (bare) | ad ready to post |
+| ready to post (bare) | ad ready to post (Ad states) |
 | posting (bare) | ad posting |
 | ad package | ad set |
 | organization (Clerk) | Clerk organization |
-| needs review (bare) | ad needs review |
+| needs review (bare) | ad needs review (Ad states) |
 | source reference / `source_refs` | where a detail came from |
 | version / versioned / snapshot | profile history / a published website copy |
 | state / state machine | steps / where things stand |

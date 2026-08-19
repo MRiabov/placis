@@ -8,46 +8,47 @@
 
 Placis helps construction companies **not make mistakes with advertisement and marketing**, in a
 **done-for-you — delivered into your inbox, so you can DIY too** way. The system researches a
-business, builds a versioned profile, generates a website from a trade blueprint, lets the owner
-edit it (or we do it), and produces — and runs — ads from the profile and approved media.
+business, builds a business profile, generates a website from a trade website template, lets the owner
+edit it (or we do it), and produces ads from the profile and approved media (ad ready to post;
+never ad posting).
 
 One loop:
 
 ```text
-onboard (from their Google Maps listing or company-registry record)
+onboard (from their Google Maps listing or company registry record)
   -> a few questions to fill the gaps
-  -> research the business (Google Places, company registry, Facebook, website crawl, photo classification)
+  -> business research (Google Places, company registry, Facebook, website crawl, photo classification)
   -> one clear business profile
-  -> generate a website from a trade template (their details fill the blanks)
-  -> LLM refinement (AI suggests, owner decides)
-  -> edit in the CMS (pages / sections / slots / assets / forms / navigation)
-  -> publish (a frozen copy goes live)
+  -> generate a website from a trade website template (their details fill the blanks)
+  -> website copy generation (AI suggests, owner decides)
+  -> edit in The CMS (website pages / website sections / website slots / media library / website forms / header/footer)
+  -> website publication (a published website copy goes live)
   -> generate ads from the profile + approved media (#403)
 ```
 
-Cross-cutting: Clerk auth, tenant == Clerk org (1-1), Postgres multitenancy, LLM + system
+Cross-cutting: Clerk auth, tenant == Clerk organization (1-1), Postgres multitenancy, LLM + system
 auditability, and voice agents as a **separate, optional** channel.
 
 ## 2. Scope
 
 ### In scope
 
-1. **Identity, auth, tenancy** — Clerk identity + organizations; tenant == Clerk org 1-1;
-   memberships with roles; domains (generated subdomain + custom).
-2. **Onboarding (research → profile)** — onboarding sessions (start from a Google Maps listing or
-   company-registry record), interview, research providers, business profile.
-3. **Website building from blueprints** — trade blueprints + component contracts as static catalog
-   data; blueprint application; LLM refinement as governed, propose-only edits.
-4. **Website editing (CMS)** — pages (+ immutable versions), sections, content slots, assets/media
-   library, forms, navigation, projects, certification selections, publications.
-5. **Public website + lead capture** — resolve active publication manifests by host/path; public
+1. **Identity, auth, tenancy** — Clerk identity + Clerk organizations; tenant == Clerk organization 1-1;
+   memberships with roles; domains (generated subdomain + custom website domain).
+2. **Onboarding (business research → profile)** — onboarding sessions (start from a Google Maps listing or
+   company registry record), client interview, research providers, business profile.
+3. **Website building from website templates** — trade website templates + website component contracts as static catalog
+   data; website template application; website copy generation as governed, propose-only edits.
+4. **Website editing (The CMS)** — website pages (kept, never overwritten), website sections, website slots, media
+   library, website forms, header/footer, projects, certification selections, website publications.
+5. **Public website + website lead capture** — resolve active website publication website manifests by host/path; website
    forms persist into a minimal `leads` table.
-6. **Preview + claim/activation** — signed preview packages; self-serve Stripe claim/checkout;
-   webhook-driven activation (safe to replay).
-7. **Ad generation (#403)** — creative sets (the "ad") with per-format variants, copy, and image
+6. **Website preview + website activation** — signed website previews; self-serve Stripe website activation/checkout;
+   webhook-driven website activation (safe to replay).
+7. **Ad generation (#403)** — ads with per-format variants, copy, and image
    placements built from the profile + approved media; propose-only AI; terminal state is a
-   deterministic "ready to post" export (no posting, no campaign ops — those are future work on
-   the same creative service). Spec: `docs/features/ads/ad-generation/`.
+   deterministic "ad ready to post" export (no ad posting, no campaign ops — those are future work on
+   the same ad service). Spec: `docs/features/ads/ad-generation/`.
 8. **Cross-cutting** — AI/LLM layer with mandatory recording of reasoning + output + tool calls;
    files (S3/R2); Stripe payments (activation only); Postgres-backed jobs (River); structured
    logging; audit events.
@@ -64,7 +65,7 @@ auditability, and voice agents as a **separate, optional** channel.
 - **Deprecated tenant/org management** — org chooser, selected-org cookie, `/me/orgs`,
   `/me/tenants`, `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{slug}`, `.../memberships/*` CRUD.
 - **Freeform-JSON islands** — opaque `JsonRecord`/`JsonObjectPayload` wrappers, the planned-but-
-  unshipped `schemas_registry_public.py` API, hard-coded template imagery as tenant variables.
+  unshipped `schemas_registry_public.py` API, hard-coded website template imagery as tenant variables.
 - **Blog posts and careers** — deferred; `page_type` enum omits `blog_post`; no `website_career_*`
   tables for now.
 - **Frontend (`frontend-2`)** — reused mostly, not rebuilt. It is adapted only where the
@@ -72,7 +73,7 @@ auditability, and voice agents as a **separate, optional** channel.
 
 ### Deferred (later)
 
-Custom-capability coding agents (H7), component marketplace (L2), QS/tendering (L3), accounting
+Custom-capability coding agents (H7), website component marketplace (L2), QS/tendering (L3), accounting
 integrations (L4), native mobile app (L1).
 
 ## 3. Architecture
@@ -97,26 +98,26 @@ placis/
 
     # product domains — feature-nested (one package per feature)
     tenancy/             # tenants.go, memberships.go, domains.go
-    onboarding/          # session.go, interview.go, orchestrate.go, claim.go
-      preview/           #   package.go, events.go (signed preview of the generated site)
+    onboarding/          # session.go, interview.go, orchestrate.go, activation.go
+      websitepreview/    #   package.go, events.go (signed website preview of the generated website)
     research/            # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
     profile/             # profile.go, versions.go, services.go, areas.go, hours.go
     website/             # root types.go, service.go + feature packages
       pages/             #   handler.go, service.go, model.go
       sections/
       slots/
-      assets/
       forms/
       navigation/
       publications/
       projects/
       certifications/
-      blueprints/
-    ads/                 # creativeset.go, variant.go, generate.go, export.go
+      templates/
+    ads/                 # ad.go, variant.go, generate.go, export.go
+    media/               # media_assets
     billing/             # checkout.go, webhooks.go (Stripe only)
     leads/               # leads.go
   migrations/            # goose SQL migrations (greenfield)
-  catalog/               # blueprints + component contracts (typed structs, versioned)
+  catalog/               # website templates + website component contracts (typed structs, kept as catalog versions)
   docs/                  # rescoped canonical docs
   go.mod
 ```
@@ -143,29 +144,29 @@ when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard err
 | IDs | UUID PKs | `timestamptz` defaults |
 
 `huma` handles JSON request/response endpoints and derives the OpenAPI spec served at
-`/openapi.json`. The preview **SSE** stream and the **voice WebSocket** are raw `net/http`
+`/openapi.json`. The website preview **SSE** stream and the **voice WebSocket** are raw `net/http`
 handlers outside huma.
 
 ### Component contract (single source of truth)
 
-Component contracts (what a `public.hero.image` section accepts) currently exist twice — TS types
+Website component contracts (what a `public.hero.image` website section accepts) currently exist twice — TS types
 in `packages/public-site-components/` and Python `typed_values.py`. The rewrite uses **one typed
-struct per component, dumped to JSON**, under `catalog/`, consumed by both the TS renderer
-(validation) and the Go backend (save/publish validation). Blueprints and component contracts are
+struct per website component, dumped to JSON**, under `catalog/`, consumed by both the TS renderer
+(validation) and the Go backend (save and website publication validation). Website templates and website component contracts are
 static, versioned catalog data, **not** database rows; the Go backend loads and validates them and
 must not hand-duplicate the struct shapes.
 
 ### Tenancy and auth rules
 
-- Clerk proves identity + organization; Placis decides tenant access and permissions.
+- Clerk proves identity + Clerk organization; Placis decides tenant access and permissions.
 - `tenants.clerk_org_id` (unique) is the only tenant entry point. No org chooser, no selected-org
   cookie, no client-controlled tenant selector.
-- Tenant context is resolved once per request from: authenticated Clerk org, public site hostname,
-  signed preview token, or onboarding session token. Services take `tenantID` explicitly.
+- Tenant context is resolved once per request from: authenticated Clerk organization, public site hostname,
+  signed website preview token, or onboarding session token. Services take `tenantID` explicitly.
 - Every tenant-owned row carries `tenant_id`; all primary queries include it; cross-tenant
   isolation is proven by integration tests (create two tenants, assert reads/writes/files blocked).
-- Roles (`tenant_memberships.role`): `owner`, `admin`, `office`, `crew`, `read_only`. Platform
-  admins work across tenants via Clerk native impersonation (no custom impersonation).
+- Roles (`tenant_memberships.role`): `owner`. Platform admins work across tenants via Clerk native
+  impersonation (no custom impersonation).
 
 ## 4. Schema (greenfield)
 
@@ -174,43 +175,43 @@ Canonical table definitions live with the feature that owns them — see
 
 ## 5. Workflows and state machines
 
-1. **Onboarding session** — `created → interviewing → generating → previewing → claimed`
-   (`generation_failed` if generate throws). Research runs in the background alongside
-   review/interview; generate starts at interview complete; copy generation runs after
-   instantiate and does not block preview or claim. Preview packages expire; the session does not.
-2. **Business profile** — immutable versions; `current_version_id` points at the live version;
+1. **Onboarding session** — `created → interviewing → generating → previewing → activated`
+   (`generation_failed` if generate throws). Business research runs in the background alongside
+   review/client interview; generate starts at client interview complete; website copy generation runs after
+   instantiate and does not block website preview or website activation. Website previews expire; the onboarding session does not.
+2. **Business profile** — profile history; `current_version_id` points at the current row;
    details carry `source_refs` and `created_by`.
-3. **Website page** — `draft → approved → published`; versions are immutable; publish creates a new
-   `website_publications` row (history untouched).
-4. **Publication** — `published → rolled_back/archived`; rollback reactivates an earlier version.
-5. **Claim/activation** — `checkout.session.completed` accepted only after Stripe SDK signature
-   verification (`webhook.ConstructEvent`) + metadata matching; activation is safe to replay and
+3. **Website page** — `unpublished → approved → published`; kept copies are never overwritten; website publication creates a new
+   `website_publications` row (profile history untouched).
+4. **Website publication** — `published → rolled_back/archived`; website rollback reactivates an earlier published website copy.
+5. **Website activation** — `checkout.session.completed` accepted only after Stripe SDK signature
+   verification (`webhook.ConstructEvent`) + metadata matching; website activation is safe to replay and
    never driven by a browser success URL alone. It links the onboarding session, ensures the owner
-   membership, rebuilds CMS records as a **draft** from the selected blueprint (it does **not**
-   publish), activates the tenant + generated domain, and marks the session claimed. Publishing is
-   a separate, later user action.
-6. **Ad creative** — creation flow `draft → needs_review → ready_to_post → archived`; existing-ad
+   membership, rebuilds website records as an **unpublished website** from the selected website template (it does **not**
+   do website publication), activates the tenant + generated domain, and marks the onboarding session activated. Website publication is
+   a separate, later owner action.
+6. **Ad** — creation flow `draft → ad_needs_review → ad_ready_to_post → archived`; existing-ad
    statuses `Draft / Creative ready / Published / Archived`. AI is propose-only (drafts copy,
    proposes image galleries from approved media, light cleanup); the owner reviews/edits/approves;
-   terminal state is a deterministic export package — never actual posting.
+   terminal state is a deterministic export ad set — never actual ad posting.
 
 ## 6. API surface (condensed)
 
 Route groups (full struct definitions come with the `huma` types):
 
 - `/api/v1/health`
-- `/api/v1/me`, `/api/v1/me/organization` (Clerk org provisioning)
+- `/api/v1/me`, `/api/v1/me/organization` (Clerk organization provisioning)
 - `/api/v1/onboarding-sessions` + nested: company-registry search, google-places
-  autocomplete/from-google-place, profile (+ checklist/confirmations), interview, research runs,
-  generation runs, artifacts, preview packages, voice/progress events
-- `/api/v1/tenants/{slug}` + business-profile, domains, website (blueprints, pages, forms,
-  publications, certifications), memberships
-- `/api/v1/website/editor` + pages/sections/slots/assets/projects/publications/business-profile
-- `/api/v1/ads` + packages/creatives/export (new)
+  autocomplete/from-google-place, profile (+ checklist/confirmations), client interview, business research runs,
+  generation runs, website previews, voice/progress events
+- `/api/v1/tenants/{slug}` + business-profile, domains, website (website templates, website pages, website forms,
+  website publications, certifications), memberships
+- `/api/v1/website/editor` + website pages/website sections/website slots/media assets/projects/website publications/business-profile
+- `/api/v1/ads` + ads/export (new)
 - `/api/v1/public/site` (resolve/meta/sitemap/assets), `/api/v1/public/forms/{id}/submit`,
   `/api/v1/public/forms/{id}/uploads`
-- `/api/v1/preview/{token}` + activate/approve-publish/claim/claim-checkout/claim-status/module/
-  package/events/persona/request-changes
+- `/api/v1/preview/{token}` + activate/activation/activation-checkout/activation-status/module/
+  website-preview/events/persona/request-changes
 - `/api/v1/webhooks/stripe`
 - Voice integration boundary (separate service)
 
@@ -219,10 +220,10 @@ Route groups (full struct definitions come with the `huma` types):
 | Old (kill) | New |
 | --- | --- |
 | `setup`, `setup_session`, `setup_profile` | `onboarding`, `onboarding_session`, `business_profile` |
-| loose `fact` | `profile fact` / `business_profile.*` |
+| loose `fact` | `detail` / `business_profile.*` |
 | `cms_projects`, `cms_career_*` | `website_projects`, `website_career_*` |
 | `Demo`-prefixed ops; `save` vs `update` | `Create`/`Update`/`Get`/`List`/`Delete`, one `*Read` suffix |
-| "OnCall" anywhere | "Placis" only |
+| "OnCall" as the product | "Placis" (keep "OnCall" when naming the predecessor repo) |
 | opaque `JsonRecord`/`JsonObjectPayload` wrappers | typed structs; `jsonb` only at persistence/API boundary |
 
 ## 8. Rollout phases
@@ -236,14 +237,14 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
    (sqlc/huma/frontend-typegen), provider isolation, evals local-only.
 1. **Auth & tenancy** — Clerk verification → `Principal`, tenant resolution, memberships, domains,
    roles, cross-tenant isolation tests.
-2. **Onboarding & research & profile** — sessions, interview, research providers
+2. **Onboarding & business research & profile** — onboarding sessions, client interview, research providers
    (Google Places, company registry, Facebook, website crawl, photo classification), business
-   profile with history.
-3. **Blueprints & website** — component/blueprint catalog loaders + component contracts, blueprint
-   application, LLM refinement (propose-only), CMS CRUD, publications.
-4. **Preview, claim, public site, leads** — preview packages, Stripe checkout + webhooks +
-   activation, public resolve/manifest runtime, lead capture.
-5. **Ads (#403)** — ad creative sets + variants, propose-only AI, export package, lead attribution.
+   profile with profile history.
+3. **Website templates & website** — website component/website template catalog loaders + website component contracts, website template
+   application, website copy generation (propose-only), CMS CRUD, website publications.
+4. **Website preview, website activation, public site, website leads** — website previews, Stripe checkout + webhooks +
+   website activation, public resolve/website manifest runtime, website lead capture.
+5. **Ads (#403)** — ads + variants, propose-only AI, export ad set, ad lead attribution.
 6. **Auditability hardening** — audit completeness, AI trace completeness, observability.
 
 Voice is a **later milestone**: the provider-agnostic boundary stays, but the onboarding voice

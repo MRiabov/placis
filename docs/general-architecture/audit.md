@@ -1,8 +1,8 @@
 # Audit
 
-`audit_events` records the changes that matter — publishing, claiming/activating, impersonating,
+`audit_events` records the changes that matter — website publication, website activation, impersonating,
 refunds, and data export/deletion — with who did it, what changed, on what, and the request id.
-Publish writes an audit event; claim and impersonation do too. Sensitive ad mutations also write
+Website publication writes an audit event; website activation and impersonation do too. Sensitive ad mutations also write
 `audit_events`.
 
 - `audit_events` — `id`, `tenant_id` nullable fk, `actor`, `action`, `entity_type`, `entity_id`,
