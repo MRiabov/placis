@@ -22,9 +22,9 @@ decision + date) instead of silently replacing the old entry.
 4. **Business research is an interface + typed output** — Google Maps, company registry, Facebook,
    website crawl, and photo classification sit behind one interface with fakes. Output lands in
    typed `business_research_sources` rows with where it came from + confidence; a Google Maps listing
-   also upserts `google_maps_listings` (columns). Raw fetch bodies stay on the ETL cache
-   (`google_maps_listings.raw`, or `business_research_sources.raw` for kinds with no listing table)
-   and never leak past that boundary into the profile.
+   also upserts `google_maps_listings` (columns, hours, reviews). Raw fetch bodies stay on the ETL
+   cache (`google_maps_listings.raw`, or `business_research_sources.raw` for kinds with no listing
+   or reviews table) and never leak past that boundary into the profile.
 
 5. **Google Maps is cached** — `google_maps_listings` keyed by `place_id` is the listing: typed
    columns plus `raw` as the ETL cache of the last Google Maps Details or scrape fetch. A repeat
@@ -46,7 +46,7 @@ decision + date) instead of silently replacing the old entry.
    [details ADR](../other/details/ADR.md).
    Same day: founder and brand are columns on `business_profiles`, not jsonb. Contact was already
    columns. Remaining onboarding jsonb is raw dumps — research `raw` for kinds with no listing
-   table, `google_maps_listings.raw` (ETL cache), Stripe and event payloads.)
+   or reviews table, `google_maps_listings.raw` (ETL cache), Stripe and event payloads.)
 
 7. **Conflicting answers are surfaced, not resolved** — what the contractor said vs. what we found
    are shown side by side; the system never picks one silently.

@@ -5,8 +5,8 @@ publications (each row is a website version), projects, and certifications.
 Conventions: [data-model conventions](../../general-architecture/data-model.md).
 
 Media assets are owned by [media library](../other/media/data-model.md). The business profile the
-website templates fill is [details](../other/details/data-model.md). Website forms write
-[leads](../other/leads/data-model.md).
+website templates fill is [details](../other/details/data-model.md) (including reviews). Website
+forms write [leads](../other/leads/data-model.md).
 
 - `website_pages` — `id`, `tenant_id` fk, `path`, `title`, `page_type` (`standard`/`service`/
   `landing`/`legal`), `status` (`unpublished`/`published`/`archived`), `seo_title`,
@@ -41,6 +41,11 @@ website templates fill is [details](../other/details/data-model.md). Website for
   `status` (`unpublished`/`published`), timestamps
 - `website_certification_selections` — `id`, `tenant_id` fk, `certification_id`, `status`
   (`selected`/`removed`), `created_at`
+- `website_slot_reviews` — `id`, `tenant_id` fk, `slot_id` fk, `business_profile_review_id` fk,
+  `position`; unique `(slot_id, business_profile_review_id)`
+
+Reviews on the website are these rows, not a jsonb dump in `website_slots.value`. The text
+lives on [business_profile_reviews](../other/details/data-model.md).
 
 `props`, `design`, `value`, and `website_manifest` stay jsonb: each website component / slot /
 published website copy has its own catalog-shaped dump.

@@ -186,6 +186,17 @@ Use “projects” in product docs and UI. Do not say “portfolio”.
 
 ---
 
+### Reviews
+
+What people wrote about the business on the Google Maps listing: who wrote it, the rating, and
+the text. Filled during onboarding. Shown on the website; ads read the same rows.
+
+Distinct from: Ad needs review (an Ad state), Website preview.
+
+In code: `business_profile_reviews`, `google_maps_listing_reviews`, `website_slot_reviews`.
+
+---
+
 ### Profile
 
 The left-nav group in The CMS that holds Details and Projects. It is not a page and not a

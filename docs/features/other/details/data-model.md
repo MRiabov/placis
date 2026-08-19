@@ -43,7 +43,7 @@ ads, Details, and apply-the-website-template (when the fold has not moved past
   `founder_role`, `founder_occupation`, `founder_nationality`, `founder_country_of_residence`,
   `founder_appointed_on`, `founder_media_asset_id`, `logo_media_asset_id`, `brand_tone`,
   `brand_typography`, `brand_primary_color`, `brand_accent_color`),
-  `list` nullable (`services`/`service_areas`/`opening_hours` when the op is a list change),
+  `list` nullable (`services`/`service_areas`/`opening_hours`/`reviews` when the op is a list change),
   `list_item_id` nullable,
   `text_value`, `int_value`, `date_value`, `bool_value` (check: the column that matches `field` is
   set; the others are null — not a json `value`),
@@ -71,3 +71,8 @@ the profile as of `accepted_edit_id` (client interview complete).
 - `business_profile_service_areas` — `id`, `tenant_id` fk, `business_profile_id` fk, `locality`
 - `business_profile_opening_hours` — `id`, `tenant_id` fk, `business_profile_id` fk, `day_of_week`,
   `opens_at`, `closes_at`, `closed`
+- `business_profile_reviews` — `id`, `tenant_id` fk, `business_profile_id` fk,
+  `google_maps_listing_review_id` nullable fk, `author_name`, `rating` (1–5), `body`,
+  `published_at` nullable, `language` nullable, `position`
+
+Website sections and ads reference `business_profile_reviews` by id. They do not copy the text.
