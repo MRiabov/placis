@@ -28,9 +28,9 @@ patterns (projects-style: list, copy fields, media picker modal, blocker panel).
 
 These principles shape every screen in this workspace:
 
-1. **Who first, how second** — the workflow decides who the ad is for (ideal customer profile,
-   how people get in touch) before any ad mechanics. The owner picks the target and the ad-lead
-   path; ad formats, crops, and sizes follow automatically.
+1. **Who first, how second** — the workflow decides who the ad is for (ideal customer profile)
+   before any ad mechanics. How people get in touch is always a Meta ad lead form. Ad formats,
+   crops, and sizes follow automatically.
 2. **Business details, not ad jargon** — the UI talks about the business: what you promote, who
    it's for, how people get in touch, photos, text. Internal jargon and ratios like 1:1 or 9:16
    never appear in the UI.
@@ -107,8 +107,7 @@ One accordion wrapper with two expandable steps; both are visible immediately:
   carry tooltips explaining why ("Ad posting is not available yet — ad posting to Meta is coming",
   "Approve the ad first"). Validation lives inline in the steps, not in a separate list here:
   errors appear next to the field they belong to (e.g. under Photos: "Photo 'Crew at work' is
-  still in review", "Photo 'New roof' has no media caption"; under the ad destination picker:
-  "Choose where the ad sends people").
+  still in review", "Photo 'New roof' has no media caption").
 
 The questions and review content:
 
@@ -120,12 +119,10 @@ The questions and review content:
    "area"). First we decide who the ad speaks to. The ideal customer profile is loose: it steers
    tone and imagery — not precise targeting (that comes with ad posting) — and it never appears
    in the copy itself.
-3. **How people get in touch** — a toggle: **Ad lead form** (default) or **Website page**. The
-   ad lead form shows the suggested title and a **fixed set of standard fields** (phone number, full
-   name, postcode, email) with include/exclude toggles; each field maps to a Meta ad lead form
-   field at ad posting — no custom questions. Choosing Website page reveals an ad destination
-   picker (combobox over published/scheduled website pages owned by that contractor, no
-   create-new).
+3. **How people get in touch** — the **ad lead form**: suggested title and a **fixed set of
+   standard fields** (phone number, full name, postcode, email) with include/exclude toggles; each
+   field maps to a Meta ad lead form field at ad posting — no custom questions. People answer
+   in Facebook; ads do not send them to a website page.
 4. **Photos** — approved photos from the **media library** (the same gallery
    picker as the rest of the app, e.g. the projects media picker — no duplicated
    gallery or tokens), with framing adjustments and light cleanup drafts (reviewable
@@ -189,8 +186,7 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace 
   and come back
 - LLM copy review: accept / edit / reject per text field and per image; rejected drafts
   are dropped, accepted ones become the ad draft content
-- empty states: no ads yet, no approved photos (link to the media library), no ad destination
-  published yet
+- empty states: no ads yet, no approved photos (link to the media library)
 - error states: load failure, generation failure, download failure — with a retry action
 
 ## Components
@@ -205,8 +201,7 @@ Reusable pieces (Kibo/shadcn where possible, custom only when the workspace need
 - InlineError (validation shown next to the field it belongs to)
 - ApproveBlock (actions only: approve/download, closing the screen)
 - **SearchableCombobox** — the picker for offers, services, the ideal customer profile, and
-  location (create-new per kind). The ad destination picker is the same combobox without
-  create-new. Full control spec below.
+  location (create-new per kind). Full control spec below.
 - IdealCustomerProfileEditor (default + free text + async suggestion display; steers
   generation, not targeting)
 - AdLeadFormEditor (title + a fixed set of standard fields: phone number, full name, postcode, email,
@@ -236,8 +231,6 @@ Used for offers, services, the ideal customer profile, and location. Behavior:
     existing item, the prompt becomes the actionable create row: a "+" icon echoing the typed
     text (`+ Create new service "gutter guards"`), pre-highlighted so pressing Enter creates
     it. A thin divider separates this block from the list when the create row is shown.
-    Comboboxes without create-new (e.g. the ad destination picker) skip this block and
-    just filter.
   - *List block*: a small uppercase gray group label (e.g. "Your services" / "Recent"), then
     a scrollable list of existing items. Each row has a leading icon (a checkmark on the
     currently active item), a bold primary line (item name), and a muted secondary line with

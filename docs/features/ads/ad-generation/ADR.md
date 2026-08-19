@@ -1,6 +1,6 @@
 # Ad Generation Decision Record
 
-Status: all entries decided as of 2026-08-14 (product owner + engineering). The spec docs in
+Status: all entries decided as of 2026-08-19 (product owner + engineering). The spec docs in
 this directory say *what* we build; this record says *why* we chose what we did, so decisions do
 not get lost or re-litigated.
 
@@ -10,11 +10,14 @@ area, and the date.
 
 ## Decisions
 
-1. **Ad set is the deliverable, not a website page** — Ads produce a reviewable
-   ad set (images, copy, placements, ad lead form suggestions, ad destination, ideal customer
-   profile). Campaign website pages are not planned for the contractor segment; ads link to
-   existing published website pages. This matches how contractors actually buy: they have no
-   custom landings, and an ad lead form captures ad leads without one.
+1. **Ad set is the deliverable, not a website page** (updated 2026-08-19) — Ads produce a
+   reviewable ad set (images, copy, placements, ad lead form suggestions, ideal customer
+   profile). Campaign landing website pages are not planned for the contractor segment. Ads
+   capture ad leads through a Meta ad lead form; they do not send people to a website page in
+   the first version. This matches how contractors actually buy: they have no custom campaign
+   website pages, and an ad lead form captures ad leads without one.
+   Previous decision (2026-08-14): ads linked to existing published website pages as the ad
+   destination. Website-page click-through is deferred (see decision 30).
 
 2. **Ad formats from the start** — Square feed (1:1), portrait feed (4:5), carousel (1:1 cards),
    and Story (9:16). These are the standard Facebook ad formats; starting with all four
@@ -105,10 +108,13 @@ area, and the date.
     Instagram): ad formats, ad lead forms, and ideal-customer-profile targeting are Meta-shaped
     on purpose. Google Ads is too early to plan for yet.
 
-20. **Who first, how second** — The workflow decides who the ad is for (ideal customer profile,
-    ad-lead capture) before any ad mechanics. The owner picks the target and the ad-lead path;
-    ad formats, crops, and sizes follow automatically and are not exposed as ad jargon. Approval
-    is the last step of the flow; LLM generation is async and never blocks.
+20. **Who first, how second** (updated 2026-08-19) — The workflow decides who the ad is for
+    (ideal customer profile) before any ad mechanics. Ad-lead capture is always a Meta ad lead
+    form; the owner does not pick a website-page path. Ad formats, crops, and sizes follow
+    automatically and are not exposed as ad jargon. Approval is the last step of the flow; LLM
+    generation is async and never blocks.
+    Previous decision (2026-08-14): the owner picked the target and the ad-lead path (ad lead
+    form or website page).
 
 21. **One accordion wrapper, two expandable steps** — The flow and the Ads screen are the same
     screen: an accordion wrapper shows both steps immediately — step 1 "About the ad" (open by
@@ -161,3 +167,10 @@ area, and the date.
     ad posting is connected), then **Audience** and **Area** — read-only, not editable yet,
     placed below the images. **Right (outputs)**: Performance with Ad leads under it.
     Audience and area are shown as settled details of the ad, not as controls.
+
+30. **Meta ad lead form only; website-page click-through is deferred** (2026-08-19) — The first
+    version does not let the owner send people to a website page. Every ad carries a suggested
+    Meta ad lead form. Website-page click-through (and a thank-you redirect onto a website page)
+    may return later; it is deferred, not cancelled. Shipped-initially design, frontend spec,
+    data model, and tests do not include an ad destination picker, a Website page toggle, or
+    destination columns. Mention of the later option belongs only here and in PRD Post-MVP.

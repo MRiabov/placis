@@ -179,11 +179,6 @@
   .q .sub { color: var(--muted); font-size: 12px; font-weight: 400; }
 
   /* segmented toggle */
-  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius-card); overflow: hidden; margin-bottom: 14px; }
-  .segbtn { border: 0; background: #fff; padding: 9px 16px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; }
-  .segbtn + .segbtn { border-left: 1px solid var(--line); }
-  .segbtn:not(.on):hover { background: var(--hover); }
-  .segbtn.on { background: var(--accent); color: #fff; }
   .qlist { border: 1px solid var(--line); border-radius: var(--radius-control); overflow: hidden; margin-bottom: 8px; }
   .qrow { display: flex; align-items: center; gap: 8px; padding: 9px 12px; font-size: 13px; border-bottom: 1px solid var(--line); cursor: pointer; }
   .qrow:last-child { border-bottom: 0; }
@@ -464,10 +459,6 @@
         </div>
 
         <div class="q">How people get in touch</div>
-        <div class="seg">
-          <button class="segbtn on" data-lead="form">Ad lead form</button>
-          <button class="segbtn" data-lead="page">Website page</button>
-        </div>
         <div id="leadForm">
           <div class="field"><label>Ad lead form title</label><input type="text" value="Get a free roof quote" /></div>
           <div class="field">
@@ -480,24 +471,6 @@
             </div>
             <p class="note" style="margin-top:8px">People answer right in Facebook — no website page needed.</p>
           </div>
-        </div>
-        <div id="leadPage" style="display:none">
-          <div class="field" style="margin-bottom:0">
-            <label>Ad destination</label>
-            <div class="combo nocr">
-              <input type="text" value="" placeholder="Choose where the ad sends people…" />
-              <div class="pop">
-                <div class="group">Your website pages</div>
-                <div class="scroll">
-                  <div class="row"><span class="ic cur">✓</span><span class="txt"><b>Contact us</b><span>/contact</span></span></div>
-                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Roofing replacement</b><span>/services/roofing-replacement</span></span></div>
-                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Free quote</b><span>/quote</span></span></div>
-                </div>
-                <div class="empty">No matching page.</div>
-              </div>
-            </div>
-          </div>
-          <div class="ferr" style="margin-top:8px">Choose where the ad sends people</div>
         </div>
 
         <div style="margin-top:18px; display:flex; justify-content:flex-end">
@@ -766,7 +739,7 @@
         r.style.display = hit ? "" : "none";
         if (hit) any = true;
       });
-      // no-create combos (e.g. ad destination): just filter the list
+      // no-create combos: just filter the list
       if (combo.classList.contains("nocr")) {
         empty.style.display = (q && !any) ? "block" : "none";
         return;
@@ -829,16 +802,6 @@
   sweep.addEventListener("pointerdown", e => { sweeping = true; sweep.setPointerCapture(e.pointerId); setSplit(e.clientX); });
   sweep.addEventListener("pointermove", e => { if (sweeping) setSplit(e.clientX); });
   sweep.addEventListener("pointerup", () => { sweeping = false; });
-
-  // lead capture toggle: ad lead form (default) or website page
-  const segBtns = [...document.querySelectorAll(".segbtn")];
-  const leadForm = document.getElementById("leadForm");
-  const leadPage = document.getElementById("leadPage");
-  segBtns.forEach(b => b.addEventListener("click", () => {
-    segBtns.forEach(x => x.classList.toggle("on", x === b));
-    leadForm.style.display = b.dataset.lead === "form" ? "" : "none";
-    leadPage.style.display = b.dataset.lead === "page" ? "" : "none";
-  }));
 
   // live character counters
   document.querySelectorAll("[data-limit]").forEach(field => {

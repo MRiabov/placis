@@ -8,7 +8,7 @@
 ```
 
 - **01** — the owner creates the ad (offer, goal, service focus, ideal customer profile, ad
-  destination).
+  lead form).
 - **02** — the LLM drafts copy and an image gallery from approved media items, with **light cleanup**
   (subtle enhancement, e.g. minor retouch/denoise — no generative fills or new subjects; the
   result stays a reviewable before/after, never silently replaced), queued; the owner can leave
