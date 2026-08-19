@@ -41,10 +41,11 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 - `tenant` (id, website address, name); `page` (id, path / website page path, title,
   page_type, status, validation status,
   website-publication-blocker count).
-- `seo`; `theme` (website style catalog preset + overrides).
+- `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`,
+  `seo_noindex`, `seo_primary_keyword`; `theme` (website style catalog preset + overrides).
 - `sections[]` — each: `id`, `page_id`, `component_id` (+ `component_version`, `schema_version`,
   `family`, `variant`), `position`, `status`, `visible`, `props`, `design`, `slots[]`,
-  `design_controls[]`, `source_refs`, `unsupported_component`.
+  `design_controls[]`, `origin`, `unsupported_component`.
 - `media_assets[]`, `forms[]` (website forms), top menu and footer
   (`top_menu_items`, `footer_items`).
 - `publication` (active website version + `has_unpublished_changes`),
@@ -52,7 +53,7 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 - `preview_url`, live website URL. The website editor canvas is not a website preview.
 
 A **website slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`, `required`, `max_length`,
-`value` (typed), `status`, `source_refs`, `validation_errors`.
+`value` (typed), `status`, `origin`, `validation_errors`.
 
 A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`, `values[]`, `default`,
 `value`.
@@ -72,10 +73,11 @@ the edits. To update a website slot you send:
 - **website section patch** — `id`, `component_id` (optional swap), `component_version`, `visible`,
   `design`, `slots[]`.
 - **website section create** — `component_id`, `component_version`, `position`, `props`, `design`,
-  `source_refs`.
+  `origin`.
 - **website section order** — `ordered_section_ids[]`.
-- **website page create** — `path`, `title`, `page_type`, `seo`, unpublished content.
-- **website form patch** — `website_form_id`, `title`, `submit_action`, `fields[]`, `privacy_notice`.
+- **website page create** — `path`, `title`, `page_type`, SEO columns, unpublished content.
+- **website form patch** — `website_form_id`, `title`, `submit_action`, `fields[]` (typed form
+  field rows), `privacy_notice`.
 
 ## What each action does
 

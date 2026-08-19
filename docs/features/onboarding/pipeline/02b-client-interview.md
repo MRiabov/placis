@@ -19,9 +19,9 @@ and is **not** on the text client interview.
 
 Fill only the gaps. Two writers, same path that writes details; applying the website template never reads a transcript.
 
-**Text** — fields, autosaved (`PUT .../text-interview/draft` →
-`client_interview_submissions`), submitted as final
-(`POST .../text-interview/submissions`) then `POST .../interview/complete`:
+**Text** — fields, autosaved (`PUT .../text-interview/autosave` writes `business_profile_edits` for
+the fields the save set, plus a `client_interview_submissions` row with `kind=autosave`), submitted
+as final (`POST .../text-interview/submissions` → `kind=final`) then `POST .../interview/complete`:
 
 - Who they are — display name, trade.
 - Contact — contact name, marketing phone, marketing email, existing site URL; emergency phone number
@@ -37,10 +37,10 @@ Fill only the gaps. Two writers, same path that writes details; applying the web
 `update_interview_plan`. `end_interview` is allowed only when required checklist rows are filled
 (no open conflicts) and then calls the same `interview/complete` as text.
 
-Leave-and-come-back restores the onboarding session from `localStorage` + `GET .../profile`; text
-autosave rows rehydrate the client interview.
+Leave-and-come-back restores the onboarding session from `localStorage` + `GET .../profile`.
 
 Status stays `client_interviewing` until complete, then `applying_website_template` (04).
 
-- **Persists** `client_interview_submissions` (autosave + final) and `business_profile_edits` (03).
+- **Persists** `client_interview_submissions` (`kind=autosave` / `kind=final`, plus interview-only
+  choices) and `business_profile_edits` (03) for the profile answers.
   `onboarding_sessions.channel` = `text` or `voice`.

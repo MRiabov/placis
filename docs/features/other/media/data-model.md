@@ -11,7 +11,9 @@ a new row; uses keep pointing at the old item until they are retargeted to the c
   `generated_image`), `source` (`upload`/`generated`/`imported`/`external`), `supplied_by`
   (`owner`/`business_research`/`ai`), `parent_media_asset_id` nullable fk, `created_by`
   (`owner`/`ai`/`done_for_you`), `status` (`active`/`archived`), `file_id` nullable (never
-  replaced after insert), `source_url`, `media_caption`, `focal_point` jsonb, `crop` jsonb,
+  replaced after insert), `source_url`, `media_caption`,
+  `crop_mode` (`full`/`rect`), `crop_x`, `crop_y`, `crop_width`, `crop_height` (0–1, null when
+  `full`), `focal_x`, `focal_y` (0–1),
   `review_status` (`pending_review`/`approved`/`rejected`), `created_at`
 
 A cleanup copy inherits `supplied_by` from the parent. A generated image is `supplied_by=ai`.

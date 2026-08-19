@@ -8,14 +8,17 @@ against the real API + real Postgres; the LLM is faked. DB asserts name the tabl
    - UI: routed to `/cms/ads/new`.
 
 2. **Enter details** — offer, goal, service focus, ideal customer profile, ad lead form.
-   - DB: `ads` written (status=`draft`, `ad_goal`, `ideal_customer_profile` jsonb,
-     `platform_status=not_connected`, `platform_refs` empty), `ad_lead_forms` (title, questions).
+   - DB: `ads` written (status=`draft`, `ad_goal`, `icp_age_min` / `icp_age_max` /
+     `icp_household` / `icp_location_focus` / `icp_notes` / `icp_source` / `icp_review_status`,
+     `origin`, `platform_status=not_connected`, `platform_refs` empty), `ad_lead_forms` (title,
+     include_marketing_phone / include_full_name / include_postcode / include_email).
 
 3. **Generate** — "Generate ad ideas" queues the background job (faked LLM); the UI shows a
    progressive "drafting…" step and lets the owner leave and return.
    - DB: `ai_generations` (reasoning + output + tool calls + usage), `ad_copy_variants`
      (source=`ai_proposal`), `ad_variants` (format, status=`ad_needs_review`), `ad_image_placements`
-     (`media_asset_id`, crop, focal_point, media_caption), `ad_lead_forms` (title, questions).
+     (`media_asset_id`, crop_mode / crop_x / crop_y / crop_width / crop_height, focal_x / focal_y,
+     media_caption), `ad_lead_forms` (title, include flags).
    - UI: the ad returns for review — never `ad_ready_to_post` without approval.
 
 4. **Approve** — the owner reviews, edits copy, approves.

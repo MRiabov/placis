@@ -30,5 +30,5 @@ asserts name the tables from [data-model.md](data-model.md) (and
    - UI: the live website shows the earlier published website copy.
 
 7. **Website form → website lead** — a website visitor submits a website form.
-   - DB: `leads` (source=`website_form`, `website_form_id`, `contact` jsonb, message, status=`new`) under the
-     tenant.
+   - DB: `leads` (source=`website_form`, `website_form_id`, `contact_name`, `marketing_phone`,
+     `marketing_email`, message, status=`new`) under the tenant.

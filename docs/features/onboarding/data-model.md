@@ -13,8 +13,14 @@ The business profile these onboarding sessions write is owned by
   `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`client_interviewing`/
   `applying_website_template`/`previewing`/`activated`/`apply_website_template_failed`),
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at` nullable, timestamps
-- `client_interview_submissions` — `id`, `onboarding_session_id` fk, `payload` jsonb,
-  `created_at`
+- `client_interview_submissions` — `id`, `onboarding_session_id` fk, `kind` (`autosave`/`final`),
+  `photos_choice` (`use_found`/`source_from_google`/`upload_later`/`use_neutral`),
+  `google_maps_listing_choice` (`use_found`/`lookup`/`no_profile`/`add_later`),
+  `reviews_unavailable`, `additional_notes`, `created_at`
+
+Profile answers from the client interview are `business_profile_edits`, not a payload dump on
+this row. Interview-only choices (photos, Google Maps listing, reviews unavailable, extra notes)
+live here.
 
 ## Business research
 
@@ -27,8 +33,12 @@ The business profile these onboarding sessions write is owned by
 - `business_research_sources` — `id`, `business_research_run_id` fk, `kind` (same closed set as
   runs), `external_id`, `source_ref`, `raw` jsonb, `status` (`matched`/`ambiguous`/`not_found`/
   `not_attempted`/`blocked`/`error`), `confidence`, `created_at`
-- `google_maps_listing_cache` — `id`, `place_id` unique (Google’s id), `payload` jsonb,
-  `cached_at`
+- `google_maps_listing_cache` — `id`, `place_id` unique (Google’s id),
+  `fetched_from` (`google_maps_details`/`scrape`), `payload` jsonb, `cached_at`
+
+`payload` is the raw listing from Google Maps Details (the free API) or the scrape fallback. The
+cache avoids a repeat fetch; it is not a source of truth. Typed output is
+`business_research_sources`.
 
 ## Website preview and website activation
 
