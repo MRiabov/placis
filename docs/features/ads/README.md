@@ -30,7 +30,7 @@ ad set), never actual ad posting.
 
 ## Domain model
 
-- **ad** — name, offer/goal, service focus, ad destination, ideal customer profile, review status,
+- **ad** — name, offer/goal, service focus, ad lead form, ideal customer profile, review status,
   `platform_refs`/`platform_status`.
 - **ad variants** — one per ad format (`feed_square` 1:1, `feed_portrait` 4:5, `carousel` 1:1
   cards, `story` 9:16); each pairs an image selection with copy. Ad formats without suitable
@@ -40,7 +40,7 @@ ad set), never actual ad posting.
 - **ad image placements** — references to approved media assets with per-ad-format crop/focal
   metadata (non-destructive).
 - **ad lead form** — suggested Meta lead-form fields (suggestions only; never block approval).
-- **ad destination** — a tenant-owned published (or scheduled) website page.
+  Every ad has one. Ads do not send people to a website page.
 
 Rules to preserve: AI **proposes** (copy + image gallery + light cleanup), the owner decides;
 approved media items only (gated twice); every AI call records reasoning + output + tool calls via

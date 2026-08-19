@@ -28,8 +28,8 @@ The key rules:
    the LLM never overwrites an approved variant silently.
 3. **Empty ad formats are left out**: an ad format with no suitable approved images is omitted
    from the ad set, never rendered empty.
-4. **Validation before approval**: ad destination, images, copy limits, and marketing statements are validated
-   before an ad can reach `ad_ready_to_post`.
+4. **Validation before approval**: images, copy limits, and marketing statements are validated
+   before an ad can reach `ad_ready_to_post`. Every ad carries a suggested ad lead form.
 5. **LLM outputs are recorded**: every AI generation call records its reasoning, user-visible
    output, and tool calls through the existing `ai_generations` trace path, with tenant scope and
    actor context.
@@ -47,7 +47,7 @@ Build the smallest real feature that produces a usable ad set as a service:
 1. persisted ad and variant records with `draft` as the default status
 2. copy stored as structured fields with ad-platform-aware limits and an allowed button-label set
 3. image placements referencing approved media assets with per-ad-format crop metadata
-4. ad destination references to tenant-owned published website pages
+4. an ad lead form on every ad (suggested title and standard fields)
 5. an LLM draft step (copy + image gallery + light cleanup edits) that writes reviewable
    draft records and traces
 6. format-accurate previews for square, portrait, carousel, and story
@@ -55,9 +55,9 @@ Build the smallest real feature that produces a usable ad set as a service:
    human path
 8. Ads under `/cms/ads` as one caller of the service
 
-Do not build: ad posting, campaign objects, budgets, audience targeting, website page
-generation, or AI image generation and substantive editing (beyond light cleanup). Those are
-follow-up features documented in the PRD;
+Do not build: ad posting, campaign objects, budgets, audience targeting, sending people to a
+website page, campaign landing website page generation, or AI image generation and substantive
+editing (beyond light cleanup). Those are follow-up features documented in the PRD;
 the future ads manager is expected to grow on top of this service rather than in the website editor.
 
 ## Proposed Domain Objects
@@ -69,16 +69,15 @@ clearly defined from the start so other callers can integrate without the Ads UI
 
 These are new tables — the ad, its variants, copy, image placements, ad lead form, and
 review trail. They do not duplicate website, media library, or Details content: media assets,
-projects, certifications, reviews, and website pages stay where they are, and the ad records
+projects, certifications, and reviews stay where they are, and the ad records
 reference them by id (for example `ad_image_placements.media_asset_id`).
 
 In code: the marketing set is images + text, stored today as `ads` plus variants.
 Distinct from Ad. Go/persistence forms are
 snake_case tables with a `*_id` primary key, per [data-model.md](../data-model.md): Ad →
 `ads`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
-`AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no separate
-ad-destination record in Go — the ad destination is `destination_website_page_id` +
-`destination_website_page_path` columns on `ads`.
+`AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no ad
+destination on `ads` in the first version.
 
 Recommended top-level records:
 
@@ -100,25 +99,23 @@ Hard-typed fields:
 05. `offer` (owner-visible goal, e.g. "promote garage conversions")
 06. `ad_goal`: `more_calls`, `more_quotes`, `promote_service`
 07. `service_focus_id` (optional reference to a tenant service)
-08. ad destination: `destination_website_page_id` + `destination_website_page_path` (website page id or
-    resolved website page path)
-09. `review_status`
-10. `source_refs`
-11. `created_by`
-12. `updated_by`
-13. `created_at`
-14. `updated_at`
-15. `platform_refs` (flexible JSON: ad-platform object ids such as
+08. `review_status`
+09. `source_refs`
+10. `created_by`
+11. `updated_by`
+12. `created_at`
+13. `updated_at`
+14. `platform_refs` (flexible JSON: ad-platform object ids such as
     `{"facebook": {"ad_account_id": ..., "campaign_id": ..., "ad_id": ...}}`; empty until an
     ad-platform integration exists)
-16. `platform_status`: `not_connected`, `synced`, `needs_sync`, `error`
-17. `ideal_customer_profile` (typed: `age_min`, `age_max`, `household` such as
+15. `platform_status`: `not_connected`, `synced`, `needs_sync`, `error`
+16. `ideal_customer_profile` (typed: `age_min`, `age_max`, `household` such as
     `married_couples` or `any`, `location_focus`, `notes`, `source` (`default`, `llm_suggested`,
     `owner`), `review_status`; default is married couples aged 30-40; loose by design — steers
     generation now, precise targeting comes with ad posting)
 
 Flexible JSON is allowed only for `ai_generations` traces and ad-platform-specific payload extras such as
-`platform_refs`. Status, tenant ownership, offer, goal, ad destination, and review status are
+`platform_refs`. Status, tenant ownership, offer, goal, and review status are
 hard typed.
 
 ### AdVariant
@@ -210,7 +207,8 @@ Hard-typed fields:
 07. `updated_at`
 
 These are suggestions only. They never block approval, and the real ad lead form (including the
-privacy notice Meta requires) is finalized at ad posting.
+privacy notice Meta requires) is finalized at ad posting. Every ad persists an `ad_lead_forms`
+row.
 
 ## Format And Crop Model
 
@@ -235,9 +233,9 @@ future public API would expose. All routes use `/api/v1` and stable `operation_i
 Service-level rules:
 
 1. inputs are per tenant and clearly defined: details from the business profile, approved media asset
-   ids, service focus, ad goal, ideal customer profile, and ad-destination website page id
+   ids, service focus, ad goal, and ideal customer profile
 2. the output is the ad set (ad, variants, copy, image placements, ad lead form,
-   ad destination, `ideal_customer_profile`) with an ad set format number and the stable ad/variant ids
+   `ideal_customer_profile`) with an ad set format number and the stable ad/variant ids
    in the response, so an ad-platform integration can map its own objects back to the ad
 3. generation is safe to retry: running the same request twice gives the same result
 4. for now only internal callers (the app's own sign-in/actor context) can use it; external
@@ -318,8 +316,8 @@ The "generate ad ideas" step is one endpoint that writes reviewable drafts, neve
 status:
 
 1. gather inputs: approved media assets (review approved, tenant-owned, media caption present),
-   projects, services, service area, certifications, reviews, business name and details, the
-   confirmed ideal customer profile, and the ad destination's public copy
+   projects, services, service area, certifications, reviews, business name and details, and the
+   confirmed ideal customer profile
 2. call the existing structured AI assistant tooling (LLM, with the deterministic
    no-key fallback used by projects) with a clearly defined ad-copy response schema
 3. record the call through `ai_generations` tracing: reasoning, user-visible copy output, tool
@@ -338,17 +336,16 @@ useful. Drafts never include unreviewed, non-tenant, or media-caption-free media
 
 An ad can reach `ad_ready_to_post` only when:
 
-1. the tenant owns every referenced media asset and ad-destination website page
+1. the tenant owns every referenced media asset
 2. every image placement resolves to an approved tenant-owned media asset with a media caption
    and a valid crop for its ad format; a cleanup copy counts only once it has
    passed review
-3. the ad destination, if set, is a tenant-owned published (or scheduled for website publication)
-   website page; unpublished or hidden website pages are invalid ad destinations
-4. copy satisfies character limits and `cta_label` is in the allowed set
-5. sensitive marketing statements (reviews, ratings, guarantees, certifications, insurance, pricing, results)
+3. copy satisfies character limits and `cta_label` is in the allowed set
+4. sensitive marketing statements (reviews, ratings, guarantees, certifications, insurance, pricing, results)
    are source-backed or explicitly owner or done-for-you approved. Anything
    LLM-drafted resembling such a marketing statement sets `ad_needs_review`
-6. at least one ad format has a complete variant; empty ad formats are left out of the ad set
+5. at least one ad format has a complete variant; empty ad formats are left out of the ad set
+6. the ad has a suggested ad lead form (suggestions never block approval)
 
 Approval is explicit, audited, and final within Ads: `ad_ready_to_post` means "can be consumed
 and handed to an ad platform", not "ad posting done".
@@ -362,7 +359,7 @@ Rendering is deterministic and offline:
 
 1. cut each approved source media asset to its crop and produce the per-ad-format image output
 2. write a copy sheet (markdown or plain text) with headline, primary text, description, button
-   label, ad destination URL, and per-ad-format notes
+   label, and per-ad-format notes
 3. write the suggested ad lead form fields (title, questions) as the starting point for the ad
    lead form created on Meta
 4. write a mapping of each output image to its source media asset, crop, and ad format
@@ -377,8 +374,8 @@ Add Ads under `/cms/ads` in the CMS (`frontend-2`):
 
 1. ad list with status badges and last-updated
 2. create-an-ad flow (name, offer/goal and service focus pickers pre-filled from the business
-   profile, ideal customer profile, ad lead form by default, optional ad destination,
-   budget/schedule shown but disabled) then generation
+   profile, ideal customer profile, ad lead form, budget/schedule shown but disabled) then
+   generation
 3. variant tabs for square, portrait, carousel, and story
 4. the media library, scoped to approved tenant media assets, with framing controls
 5. copy fields with live character counts and button-label select
@@ -389,15 +386,11 @@ Add Ads under `/cms/ads` in the CMS (`frontend-2`):
 8. approve and download actions
 9. mobile-safe view of the story variant (9:16) without horizontal overflow
 
-The ad destination picker lists tenant website pages that are published or scheduled, defaulting
-to the contact/quote website page or the matching service website page.
-
 ## AI And Voice Behavior
 
 Allowed AI behavior:
 
-1. draft headline/primary text/description from approved business-profile details and ad
-   destination copy
+1. draft headline/primary text/description from approved business-profile details
 2. propose an image gallery from approved media items with relevance/quality ranking
 3. apply light cleanup edits to selected images (remove clutter/trash, tidy backgrounds) as
    reviewable copies
@@ -428,29 +421,28 @@ Backend tests:
 01. ads default to `draft` for new tenants
 02. ad records are never created by onboarding or voice flows
 03. image placements reject unreviewed, cross-tenant, and media-caption-free media assets
-04. ad-destination validation rejects unpublished, hidden, and cross-tenant website pages
-05. copy validation enforces character limits and the allowed button-label set
-06. sensitive LLM-drafted marketing statements set `ad_needs_review` and block `ad_ready_to_post`
-07. approval requires a valid ad destination, images, and copy on at least one ad format
-08. empty ad formats are left out of the ad set and the rendered download
-09. the ad set is stable across repeated generation calls (safe to retry)
-10. tenant isolation for ads, variants, placements, and ad destinations
-11. LLM draft calls record `ai_generations` traces with tenant scope and actor context
-12. manual edits are preserved when a variant is regenerated
-13. an internal caller gets the ad set through the service without the Ads UI, and the ad set
+04. copy validation enforces character limits and the allowed button-label set
+05. sensitive LLM-drafted marketing statements set `ad_needs_review` and block `ad_ready_to_post`
+06. approval requires images and copy on at least one ad format
+07. empty ad formats are left out of the ad set and the rendered download
+08. the ad set is stable across repeated generation calls (safe to retry)
+09. tenant isolation for ads, variants, and placements
+10. LLM draft calls record `ai_generations` traces with tenant scope and actor context
+11. manual edits are preserved when a variant is regenerated
+12. an internal caller gets the ad set through the service without the Ads UI, and the ad set
     shape is asserted by a focused service test
-14. light cleanup edits produce a new media library item (a copy) that inherits `supplied_by`,
+13. light cleanup edits produce a new media library item (a copy) that inherits `supplied_by`,
     stays `pending_review`, cannot enter an ad set until reviewed, and never modify the source media asset
-15. `platform_refs` and `platform_status` default safely (empty / `not_connected`) and never
+14. `platform_refs` and `platform_status` default safely (empty / `not_connected`) and never
     affect approval or the ad set format
-16. the ideal customer profile defaults to married couples aged 30-40, and an LLM suggestion is
+15. the ideal customer profile defaults to married couples aged 30-40, and an LLM suggestion is
     recorded, reviewable, and never auto-publishes
-17. the ad set always carries suggested ad lead form fields, and they never block approval
+16. the ad set always carries suggested ad lead form fields, and they never block approval
 
 Frontend tests:
 
 1. Ads shows Ad states: ad draft / ad needs review / ad ready to post
-2. create flow requires an ad destination before approval
+2. create flow requires an ad lead form and does not offer a website page
 3. media picker only offers approved tenant media assets
 4. copy fields show live character counts and blocks over-limit approval
 5. square, portrait, carousel, and story previews render without overflow, including mobile story

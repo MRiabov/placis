@@ -618,7 +618,7 @@ form.
 
 #### Ad set
 
-The deliverable of an approved ad: images at each ad format, copy, ad destination, and the
+The deliverable of an approved ad: images at each ad format, copy, and the
 suggested ad lead form. Never say “ad package”.
 
 Distinct from: Creative set (images + text), Website preview.
