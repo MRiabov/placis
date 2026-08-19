@@ -16,7 +16,7 @@ drafts, edit, approve, and download. It is one caller of the service; it is not 
 not the media library, and not campaign management (which is future work).
 
 `/cms/ads` is a **view in the CMS, not a standalone website page**: the left
-sidebar (website editor, projects, media library, certifications, Ads, settings) stays around
+sidebar (New chat, Sites, Profile with Business details and Projects, AI tools) stays around
 it, and Ads is dashboard-ish content in the main area — My ads list, the ad workspace, and the ad
 detail all render inside that frame. The mock shows the sidebar for context.
 

@@ -12,10 +12,11 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [assistant.md](assistant.md) — the website assistant: tools, plan/continuous mode, undo
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density, motion
 - [technical-implementation.md](technical-implementation.md) — website template application, website publication, pipeline
-- [details](../other/details/README.md) — the Details view (shared with ads)
+- [details](../other/details/README.md) — the Details view (shared with ads); reached from Profile
 - [media library](../other/media/README.md) — the media library + image editing
 - [leads](../other/leads/README.md) — website form contacts (attribution and follow-up)
 - [testing.md](testing.md) — the website E2E test
 
-Standalone screens beside the website editor: **Details** and **Media library** (above), and later
-a **Leads** screen. These are their own views, not website page content.
+Standalone screens beside the website editor: **Profile** (Details and Projects), **Media
+library** (above), and later a **Leads** screen. These are their own views, not website page
+content.
