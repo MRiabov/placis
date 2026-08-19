@@ -240,6 +240,20 @@ A media item the owner has accepted for use.
 The words we write for the contractor — headlines, body, calls to action — on the website or in
 an ad.
 
+Distinct from: Marketing statement (an assertion in those words that must be backed by a detail).
+
+---
+
+### Marketing statement
+
+An assertion we make in marketing (on the website or in an ad) that must be backed by a detail —
+reviews, ratings, guarantees, prices, years in business, and the like.
+
+Distinct from: Copy (the words), Website activation (never “website claim”), Clerk JWT claims
+(auth only).
+
+Never say “marketing claim”, “advertising claim”, or bare “claim” for this.
+
 ---
 
 ### Placis website
@@ -293,7 +307,7 @@ Distinct from: Website activation.
 Pay and activate: sign-in if needed, pay, the website address is reserved. The website stays
 unpublished.
 
-Distinct from: Sign up, Website publication. Never say “claim” or “website claim”.
+Distinct from: Sign up, Website publication. Never say “website claim”.
 
 In code: `website_activations`.
 
@@ -903,7 +917,8 @@ Never in product/user-facing text or PRD prose.
 | research (bare) | business research |
 | preview (bare) | website preview |
 | preview package | website preview |
-| claim / website claim | website activation |
+| claim / website claim (activation) | website activation |
+| marketing claim / advertising claim / unsupported claim | marketing statement / unsupported marketing statement |
 | draft (bare) | unpublished website, or ad draft (Ad states) |
 | template (bare) | website template |
 | page / section / slot / styles (bare) | website page / website section / website slot / website styles (PRDs and UI; short form OK in website technical docs and code) |
