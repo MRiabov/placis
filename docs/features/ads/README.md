@@ -44,7 +44,7 @@ ad set), never actual ad posting.
 
 Rules to preserve: AI **proposes** (copy + image gallery + light cleanup), the owner decides;
 approved media only (gated twice); every AI call records reasoning + output + tool calls via
-`ai_generations`; conservative, source-backed marketing claims; validation before approval.
+`ai_generations`; conservative, source-backed marketing statements; validation before approval.
 
 ## Where things stand
 

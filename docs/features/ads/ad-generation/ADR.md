@@ -55,9 +55,9 @@ area, and the date.
    (no `marketing.ads` profile group). Ads are created on demand in Ads; onboarding stays
    simple.
 
-10. **Before/after claims need a real image pair** — A before/after result is allowed only when
+10. **Before/after marketing statements need a real image pair** — A before/after result is allowed only when
     backed by a real before/after image pair from the same project; the image pair is the
-    evidence. No pair, no claim.
+    evidence. No pair, no marketing statement.
 
 11. **There is no ad 'dashboard'** — Website editor, Ads, Details, and Media library sit
     alongside each other. The deprecated operations dashboard is not a concept here: campaign
@@ -91,7 +91,7 @@ area, and the date.
     approved photos and clips (assembly, not generation), with optional AI transitions, rendered
     per ad format through a separate pipeline. Noted now so the image ad set does not block them.
 
-18. **Conservative claims** — No fabricated reviews, ratings, years, guarantees, certifications,
+18. **Conservative marketing statements** — No fabricated reviews, ratings, years, guarantees, certifications,
     insurance, or pricing; no stock imagery passed off as the contractor's work; photos of
     identifiable people or third-party properties are usable once approved in the media library
     (that approval is the consent); no personal data in copy.
@@ -115,7 +115,7 @@ area, and the date.
     loose profile, not precise targeting data. Today it tailors the ad's tone and imagery;
     precise targeting on the ideal customer profile (age, household, location) arrives with ad
     posting; internal ad logic outside Meta is future work and out of scope for now. The ideal
-    customer profile never appears in the copy itself — no "ideal for homeowners 40-55" claims.
+    customer profile never appears in the copy itself — no "ideal for homeowners 40-55" marketing statements.
 
 23. **Drop to add photos anywhere** — Dragging a photo onto the page adds it to the ad (drop
     overlay, upload through the media library flow). The pattern is meant to extend across the

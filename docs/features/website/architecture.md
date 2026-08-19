@@ -35,7 +35,7 @@ needs. Applying the website template writes those onto the business profile:
    placeholders (`{{business_name}}`, `{{marketing_phone}}`, …) stay in the unpublished website, resolving
    at website publication;
 4. pick or generate media assets (prefer real project photos; generate only when approved);
-5. validate against website component contracts, the company registry, marketing claims, links,
+5. validate against website component contracts, the company registry, marketing statements, links,
    website forms, SEO.
 
 The result is an unpublished website, never a live website. Website copy generation is a later

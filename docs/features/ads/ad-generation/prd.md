@@ -61,7 +61,7 @@ delivered as an ad set a contractor or done-for-you can hand to an ad platform.
 2. Do not build an ads manager in the first implementation: no budgets, bidding, targeting
    audiences, scheduling, A/B testing, retargeting, or campaign performance dashboards. This is
    expected future growth on top of the same ads service, not a website editor feature.
-3. Do not invent advertising claims. No fabricated review counts, ratings, years in business,
+3. Do not invent marketing statements. No fabricated review counts, ratings, years in business,
    guarantees, certifications, insurance, or pricing. Before/after results are allowed only when
    a real before/after image pair of the contractor's own work exists; they may not be invented
    without such imagery.
@@ -199,7 +199,7 @@ Ads under `/cms/ads` should expose:
    character counts against ad-platform limits
 6. format-accurate mocks: Square feed, Portrait feed, Carousel, and Story
 7. validation errors shown inline next to the field they belong to (missing ad destination,
-   unreviewed media, missing media caption, unsupported claims)
+   unreviewed media, missing media caption, unsupported marketing statements)
 8. approve and download actions that produce the final ad set
 
 The owner should be able to regenerate copy or image suggestions for a single variant without
@@ -286,7 +286,7 @@ and business research; the suggestion is reviewable and the owner confirms or ed
 ideal customer profile is a loose profile, not precise targeting data. Today its job is steering
 generation: tone, imagery, and the offer are tailored to the confirmed ideal customer profile —
 but the ideal customer profile never appears in the copy itself, so no "ideal for homeowners
-40-55" style claims. Precise targeting on the ideal customer profile (age range, household,
+40-55" style marketing statements. Precise targeting on the ideal customer profile (age range, household,
 location) happens at ad posting (future work); the ad set carries the ideal customer profile so
 targeting needs no extra data entry later. Internal ad logic outside Meta (custom rules deciding
 when or how an ad runs) is out of scope for now.
@@ -353,8 +353,8 @@ and do no ad posting.
 
 ## Compliance And Content Safety
 
-Ads are public marketing claims with ad-platform review policies. The first implementation keeps
-claims conservative and source-backed:
+Ads are public marketing statements with ad-platform review policies. The first implementation keeps
+marketing statements conservative and source-backed:
 
 1. no fabricated review counts, ratings, years in business, guarantees, certifications,
    insurance, licensing, or pricing
@@ -370,9 +370,9 @@ claims conservative and source-backed:
 6. no personal data in ad copy
 7. ad destination website pages must exist and be owned by that contractor
 8. copy must not promise specific outcomes, results, or turnaround times unless the owner
-   explicitly supplies and approves the claim
+   explicitly supplies and approves the marketing statement
 
-Anything the LLM drafts that resembles a sensitive claim (reviews, ratings, guarantees, prices,
+Anything the LLM drafts that resembles a sensitive marketing statement (reviews, ratings, guarantees, prices,
 results) must be flagged **ad needs review** and blocked from **ad ready to post** until an owner
 or done-for-you approves it.
 
@@ -404,7 +404,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria) section.
      before it can become ad ready to post.
    - Approval validates the ad destination, approved contractor-owned imagery with a media
      caption, per-ad-format crops, copy limits, and allowed button labels.
-   - Unsupported claims (reviews, ratings, guarantees, pricing, results) block approval until
+   - Unsupported marketing statements (reviews, ratings, guarantees, pricing, results) block approval until
      owner or done-for-you review.
 4. **As done-for-you**, I want ads stored as their own records, so that ads can be produced
    from approved contractor content and campaign operations can build on them later.
@@ -426,7 +426,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria) section.
 1. Contractors with at least one approved ad set.
 2. Time from "create ad" to "ad ready to post" for a typical contractor.
 3. Percentage of LLM-drafted copy and image selections accepted without edits.
-4. Compliance blockers caught before approval (unsupported claims, unreviewed imagery).
+4. Compliance blockers caught before approval (unsupported marketing statements, unreviewed imagery).
 5. Ad sets consumed as-is — via download or via the service — when used for ad posting by the
    contractor or done-for-you.
 6. No ad feature depends on ad-platform accounts or credentials in the first implementation.
@@ -449,7 +449,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria) section.
 8. The service returns a stable ad set with a version number, and a person can download a
    deterministic rendering (cropped images per ad format plus a copy sheet and ad destination
    URL) with no ad-platform credentials required.
-9. Compliance gates block unsupported claims and unreviewed imagery before approval.
+9. Compliance gates block unsupported marketing statements and unreviewed imagery before approval.
 10. An E2E test covers create → generate → review/edit → approve → use the ad set without
     mocking the core domain logic.
 11. Ad generation is a service of its own with clearly defined inputs and outputs. Ads is one

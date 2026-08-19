@@ -28,7 +28,7 @@ The key rules:
    the LLM never overwrites an approved variant silently.
 3. **Empty ad formats are left out**: an ad format with no suitable approved images is omitted
    from the ad set, never rendered as an empty placeholder.
-4. **Validation before approval**: ad destination, images, copy limits, and claims are validated
+4. **Validation before approval**: ad destination, images, copy limits, and marketing statements are validated
    before an ad can reach `ad_ready_to_post`.
 5. **LLM outputs are recorded**: every AI generation call records its reasoning, user-visible
    output, and tool calls through the existing `ai_generations` trace path, with tenant scope and
@@ -346,10 +346,10 @@ An ad can reach `ad_ready_to_post` only when:
 3. the ad destination, if set, is a tenant-owned published (or scheduled-to-publish) website
    page; unpublished or hidden website pages are invalid ad destinations
 4. copy satisfies character limits and `cta_label` is in the allowed set
-5. sensitive claims (reviews, ratings, guarantees, certifications, insurance, pricing, results,
+5. sensitive marketing statements (reviews, ratings, guarantees, certifications, insurance, pricing, results,
    before/after outcomes) are source-backed or explicitly owner or done-for-you approved; for
    before/after, source-backed means a real image pair from the same project. Anything
-   LLM-drafted resembling such a claim sets `ad_needs_review`
+   LLM-drafted resembling such a marketing statement sets `ad_needs_review`
 6. at least one ad format has a complete variant; empty ad formats are left out of the ad set
 
 Approval is explicit, audited, and final within Ads: `ad_ready_to_post` means "can be consumed
@@ -405,7 +405,7 @@ Allowed AI behavior:
    reviewable derived variants
 4. suggest an ideal customer profile from the business profile and business research,
    asynchronously and reviewable
-5. flag sensitive claims in generated copy for review
+5. flag sensitive marketing statements in generated copy for review
 6. summarize the ad set into an owner-readable explanation
 
 Blocked AI behavior:
@@ -433,7 +433,7 @@ Backend tests:
 03. image placements reject unreviewed, cross-tenant, and media-caption-free media assets
 04. ad-destination validation rejects unpublished, hidden, and cross-tenant website pages
 05. copy validation enforces character limits and the allowed button-label set
-06. sensitive LLM-drafted claims set `ad_needs_review` and block `ad_ready_to_post`
+06. sensitive LLM-drafted marketing statements set `ad_needs_review` and block `ad_ready_to_post`
 07. approval requires a valid ad destination, images, and copy on at least one ad format
 08. empty ad formats are left out of the ad set and the rendered download
 09. the ad set is stable across repeated generation calls (safe to retry)
