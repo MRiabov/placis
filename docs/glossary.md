@@ -17,9 +17,16 @@ it's wrong — the word should already be in this file (or be added here first).
 
 ## The rule
 
-**Domain** terms are the business's own words. Use them in PRDs, user stories, and UI.
+**Domain** terms are the business's own words. Use them in PRDs, user stories, UI, and in code
+when they name that concept.
 
-**Internal** terms are identifiers and technical names. Use them in technical docs and code only.
+**Enums** are closed sets of user-facing labels. They live together under Enums, not as their own
+terms.
+
+**Internal** terms are technical names for a *different* concept — not an alias, synonym, or
+“In code” stand-in for a Domain term. Use them in technical docs and code only. If Internal and
+Domain would name the same concept, drop Internal; code snake_cases the Domain term. If they are
+different concepts, keep both, with Distinct from.
 
 The glossary defines what terms mean. It never prescribes — no scope, pipeline, validation rules,
 or how something is implemented. Those belong in PRDs and technical docs.
@@ -28,16 +35,14 @@ A website term always includes **website**. Never say page, section, slot, style
 template, draft, preview, or publish as if they were generic. Header and footer are named
 separately; there is no umbrella “menu”.
 
-Closed sets of user-facing labels are **enums**. They live together under Enums, not as their own
-terms.
-
 Do not say **user**, **frozen**, or bare **session**. Say contractor, owner, or website visitor.
 
 ---
 
 ## Domain
 
-Product and user-facing language. PRDs and UI use these words.
+Product and user-facing language. Use these words in PRDs, UI, and in code when they name that
+concept.
 
 ### Contractor
 
@@ -185,7 +190,7 @@ company registry record, online research consent, client interview, business res
 business profile, then an unpublished website and a website preview. It ends at website activation
 (paid, not published). Never call this “setup”.
 
-Internal: Onboarding session.
+Distinct from: Onboarding session (the persisted run).
 
 ---
 
@@ -238,10 +243,12 @@ Distinct from: Website activation.
 
 ### Unpublished website
 
-The website the owner edits before it is published. Onboarding generates it; website activation leaves
+The unpublished website stays
 it unpublished; website visitors do not see it.
 
 Do not say bare “draft”. An ad in draft is an Ad states value; say “ad draft” if you must.
+
+Distinct from: Website preview (the sales stage where they choose to buy), Live website.
 
 ---
 
@@ -300,7 +307,14 @@ an ad.
 Writing website copy into the unpublished website from the business profile. Do not call this
 “refinement” in onboarding.
 
-Distinct from: Website assistant.
+Distinct from: Website assistant, Apply the website template.
+
+---
+
+### Apply the website template
+
+Write unpublished website pages, website sections, and website slots from a website template and
+the business profile. Website placeholders stay. Distinct from: Website copy generation.
 
 ---
 
@@ -361,11 +375,10 @@ Distinct from: Website copy generation.
 
 ### Website publication
 
-Putting the website on the internet: a published website copy website visitors will see.
+Putting the website on the internet. Distinct from: Unpublished website, Published website copy
+(the content), Live website (what visitors see), Ad states.
 
 Never say bare “publish” or “go live”.
-
-Distinct from: Unpublished website, Ad states.
 
 In code: `website_publications`.
 
@@ -379,18 +392,19 @@ Make an earlier published website copy the live website again, without deleting 
 
 ### Live website
 
-What website visitors see: the currently published website. Distinct from the unpublished website.
+What website visitors see: the currently published website. Distinct from the unpublished website
+and from Published website copy (the content).
 
 ---
 
 ### Website address
 
-The URL-safe name of the business’s site (the host people type). Reserved at website activation as the
-generated subdomain. Never say `slug`.
+The default host of the business’s site: they may be deployed under **our subdomain**. Reserved
+at website activation. Never say `slug`.
 
-Distinct from: Website page path.
+Distinct from: Custom website address (the address they supply), Website page path.
 
-Internal: Slug (for this host), Tenant domain.
+In code: generated subdomain host — not a rival concept named slug.
 
 ---
 
@@ -401,16 +415,14 @@ path”.
 
 Distinct from: Website address.
 
-Internal: Slug (for this path).
-
 ---
 
 ### Ad
 
-What the owner calls one offer or marketing goal — images cropped for each ad format, plus short
-copy, an ad destination, and a suggested ad lead form.
+What the owner calls one offer or marketing goal.
 
-Internal: Creative set. Do not say “creative set” in product docs or UI.
+Distinct from: Creative set (images + text), Ad posting (running a paid ad), Ad set (the
+deliverable). Never say “creative set” in product docs or UI.
 
 ---
 
@@ -440,15 +452,16 @@ form.
 The deliverable of an approved ad: images at each ad format, copy, ad destination, and the
 suggested ad lead form. Never say “ad package”.
 
-Distinct from: Website preview. Internal sibling: Creative set (the persisted record).
+Distinct from: Creative set (images + text), Website preview.
 
 ---
 
 ### Ad posting
 
-Sending an ad to an ad platform (Facebook / Meta first).
+Sending an ad to an ad platform (Facebook / Meta first) — a running paid ad.
 
-Distinct from: Ad states (ad ready to post), Website publication. Never say bare “posting”.
+Distinct from: Creative set, Ad states (ad ready to post), Website publication. Never say bare
+“posting”.
 
 ---
 
@@ -502,7 +515,8 @@ In code: `feed_square` / `feed_portrait` / `carousel` / `story`.
 
 ## Internal
 
-Technical names and identifiers. Never in product docs or UI. Domain term in parentheses.
+Technical names for concepts that are **not** a Domain term. Never in product docs or UI. If Internal
+and Domain would name the same concept, drop Internal; code snake_cases the Domain term.
 
 ### Tenant
 
@@ -528,9 +542,8 @@ In code: `tenants.clerk_org_id`.
 
 ### Onboarding session
 
-The persisted onboarding run.
-
-Domain: Onboarding. Do not say “session” in product docs.
+The persisted onboarding run. Distinct from: Onboarding (the process). Do not say “session” in
+product docs.
 
 In code: `onboarding_sessions`, `internal/onboarding/`.
 
@@ -558,12 +571,12 @@ channel, not a separate product and not a separate profile.
 
 ### Website preview
 
-The unpaid public look at the unpublished website, before website activation. Never say bare
+A stage in our sales process where they choose to buy the website or not. Never say bare
 “preview”. Do not use this word for the website editor canvas or for ad format mocks.
 
-Domain: (internal).
+Distinct from: Unpublished website, Website activation.
 
-In code: `website_previews`, signed preview token, `internal/onboarding/websitepreview/`.
+In code: `website_previews`, preview token, `internal/onboarding/websitepreview/`.
 
 ---
 
@@ -585,14 +598,12 @@ Positioning, not a domain object.
 
 ---
 
-### Custom website domain
+### Custom website address
 
-The contractor’s own hostname, on top of the generated website address. Never say bare
-“custom domain”.
+The website address **they supply**, which we publish under. Distinct from: Website address (the
+default: they may be deployed under our subdomain). Never say bare “custom domain”.
 
-Domain: (none — never in PRDs as a standalone). Sibling: Website address.
-
-In code: `tenant_domains` with `type=custom`.
+In code: `type=custom` on the website-address host row.
 
 ---
 
@@ -611,6 +622,7 @@ website slots, and design controls. Never say bare “component”.
 Domain: Website section (a website section is an instance of a website component).
 
 In code: website component catalog structs under `catalog/`.
+
 ---
 
 ### Website template catalog
@@ -634,9 +646,8 @@ Where website style presets live. Never say bare “catalog”. In code: `catalo
 
 ### Media asset
 
-A row in the media library. Never say bare “asset” (a website is not this).
-
-Domain: Media library / photo.
+A row in the media library. Never say bare “asset” (a website is not this). Distinct from: Media
+library (the library), File (bytes).
 
 In code: `media_assets`.
 
@@ -644,39 +655,16 @@ In code: `media_assets`.
 
 ### File
 
-Stored bytes (a photo, a document).
-
-Domain: Media library / photo.
+Stored bytes (a photo, a document). Distinct from: Media asset (the media library row).
 
 In code: `files`; `media_assets.file_id`.
 
 ---
 
-### Slug
-
-The URL-safe identifier. Never shown to users as “slug”.
-
-Domain: Website address (host) or Website page path.
-
-In code: `tenants.slug`, path on `website_pages`.
-
----
-
-### Tenant domain
-
-A hostname attached to a tenant (generated subdomain, or later a custom website domain).
-
-Domain: Website address.
-
-In code: `tenant_domains`.
-
----
-
 ### Source refs
 
-Where a detail came from.
-
-Domain: “where a detail came from”. Never say `source_refs` in product docs.
+During business research, the provenance of a detail (for example marked as their Google Maps
+listing). Distinct from: Detail (the information itself). Never say `source_refs` in product docs.
 
 In code: `source_refs`.
 
@@ -684,9 +672,10 @@ In code: `source_refs`.
 
 ### Published website copy
 
-What website publication writes: a kept copy website visitors will see. The unpublished
-website stays the source of truth; a published website copy is never overwritten. Undo a bad
-website publication by website rollback.
+The content of the website: text, images, and arrangement — the website manifest produced to convert
+a website visitor to purchase or call.
+
+Distinct from: Website publication (the act / kept row), Live website (what they see).
 
 Never say “frozen”, “materialize”, “snapshot”, or bare “published copy”.
 
@@ -696,10 +685,8 @@ In code: one `website_publications` row holding `website_manifest`.
 
 ### Website manifest
 
-The read model inside a website publication: website pages → website sections → props. Never say
-“site manifest”.
-
-Domain: Published website copy.
+The concise technical JSON read model: website pages → website sections → props. Distinct from:
+Website publication, Published website copy. Never say “site manifest”.
 
 In code: `website_manifest`.
 
@@ -707,10 +694,9 @@ In code: `website_manifest`.
 
 ### Creative set
 
-The persisted ad record.
-
-Domain: Ad. Distinct from: Ad set (the owner-facing deliverable). Never say “creative set” in
-product docs or UI.
+A marketing set: images + text. Distinct from: Ad (an offer or marketing goal), Ad set (the
+owner-facing deliverable), Ad posting (running a paid ad). Never say “creative set” in product docs
+or UI.
 
 In code: `ads` plus `ad_variants`, `ad_copy_variants`, `ad_image_placements`,
 `ad_lead_forms`.
@@ -727,6 +713,12 @@ Never in product/user-facing text or PRD prose.
 | OnCall | Placis |
 | frozen / frozen copy | published website copy |
 | refine / refinement (onboarding) | website copy generation |
+| instantiate / population | apply the website template |
+| generate (for the unpublished website structure) | apply the website template |
+| provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
+| signed (website preview) | website preview link (product); preview token (technical) |
+| live markdown plan | plan |
+| handoff boundary | the owner approves the plan, then the assistant applies it |
 | fact / structured facts | detail / information |
 | proof | certifications, reviews, or projects as appropriate |
 | history (bare) | profile history |
@@ -749,7 +741,7 @@ Never in product/user-facing text or PRD prose.
 | placeholder (bare) | website placeholder |
 | catalog (bare) | website template catalog, website component catalog, or website style catalog |
 | component (bare) | website component |
-| custom domain | custom website domain |
+| custom domain | custom website address |
 | published copy (bare) | published website copy |
 | site manifest | website manifest |
 | ready to post (bare) | ad ready to post (Ad states) |
@@ -769,9 +761,9 @@ Never in product/user-facing text or PRD prose.
 | propose-only | the LLM drafts; the contractor edits and does a website publication |
 | blueprint | website template |
 | skeleton | unpublished website |
-| creative set | ad |
+| creative set | never in product (Internal: Creative set — images + text; not Ad) |
 | asset (bare) | media asset (internal) or photo / item in the media library (product) |
-| slug | website address or website page path |
+| slug | website address |
 | user | contractor, owner, or website visitor |
 | visitor (bare) | website visitor |
 | lead (bare) | website lead or ad lead |
@@ -784,7 +776,8 @@ Never in product/user-facing text or PRD prose.
 
 ## Code naming rules
 
-- Domain words in product surfaces; internal names in technical docs and code.
+- Domain words in product surfaces **and in code** when they name that concept. Internal names only
+  for a different concept (technical docs and code).
 - Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned row, `*_id`
   foreign keys, `snake_case` enum values.
 - Go: feature-nested packages (`internal/<domain>/<feature>/`), no package stutter
