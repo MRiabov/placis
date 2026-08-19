@@ -18,7 +18,7 @@ replayed safely and is never triggered by a browser success URL alone.
    **person**.
 2. `tenant_memberships` (`owner`) for the paying owner.
 3. Attach `onboarding_sessions.tenant_id` and `business_profiles.tenant_id`.
-4. Provision the generated subdomain → `tenant_domains` (`type=subdomain`).
+4. Provision the website address → `website_addresses` (`type=subdomain`).
 5. `tenants.status=active`. Onboarding session → `activated`. Website preview → `activated`.
 6. Does **not** write `website_publications`. The unpublished website from 04 (plus whatever 05
    has already written) is what they edit. Website activation does **not** wait for website copy
@@ -27,6 +27,6 @@ replayed safely and is never triggered by a browser success URL alone.
 Expired website preview (`expires_at` passed) cannot be activated. Replaying the webhook does not
 activate twice.
 
-- **Persists** `website_activations` (`clerk_subject`, `checkout_session_id`, `payment_state`,
+- **Persists** `website_activations` (`clerk_subject`, `checkout_session_id`, `payment_status`,
   `amount`, `currency`, `activated_at`), `stripe_events`, `tenants`, `tenant_memberships`,
-  `tenant_domains`.
+  `website_addresses`.

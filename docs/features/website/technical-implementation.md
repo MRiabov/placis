@@ -14,7 +14,7 @@ See [data-model.md](data-model.md). Media assets are
 
 1. Load the selected website template + website component contracts from `catalog/`.
 2. Validate website component ids, props, design controls, website page paths, website forms, and
-   header/footer against the website component contract structs.
+   top menu / footer against the website component contract structs.
 3. Resolve website placeholders from the live business profile (website placeholders kept in the
    unpublished website).
 4. Create tenant-owned `website_*` records as an unpublished website; never write a live website
@@ -47,8 +47,8 @@ See [data-model.md](data-model.md). Media assets are
 
 - `/api/v1/website/editor/...` — website pages, website sections, website slots, media assets,
   projects, website publications, business-profile, certifications.
-- `/api/v1/tenants/{slug}/website/...` — website templates, website pages, website forms, website
-  publications, certifications. `{slug}` is the website address.
+- `/api/v1/tenants/{website_address}/website/...` — website templates, website pages, website forms, website
+  publications, certifications. `{website_address}` is the reserved subdomain label.
 - `/api/v1/public/site/...` — resolve, meta, sitemap, media assets (the public read model).
 
 ## Validation & testing
@@ -57,10 +57,10 @@ See [data-model.md](data-model.md). Media assets are
   website publication.
 - Cross-tenant isolation for website pages / website sections / website slots / media assets /
   website forms / website publications.
-- Website page versions and website publications are never overwritten; website rollback
-  reactivates.
+- Website versions (`website_publications`) are never overwritten; website rollback
+  reactivates an earlier website version.
 - Website template application rejects unknown website component ids / invalid props before writing.
-- One E2E: generate → edit → website assistant → website publication → resolve website manifest
+- One E2E: apply the website template → edit → website assistant → website publication → resolve website manifest
   (LLM faked, core logic unmocked).
 
 ## Frontend

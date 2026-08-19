@@ -11,8 +11,8 @@ decision + date) instead of silently rewriting history.
 2. **Onboarding starts from their listing or company registry record** — the entry is always the
    contractor's Google Maps listing or company registry record (Companies House / CRO), either
    or both. A short client interview then fills the gaps. Text and voice are two writers into the same
-   profile; `frontend-2` defaults to voice. (2026-08-17: voice is a client interview channel, not a
-   later add-on to the pipeline.)
+   profile; `frontend-2` defaults to voice. Voice is also the voice agent in The CMS after website
+   activation. (2026-08-17: voice is a channel, not a later add-on to the pipeline.)
 
 3. **Online research consent is a simple ask, not a system** — a single acknowledgement before
    business research (we'll look the business up and use the public information). No per-purpose
@@ -21,15 +21,15 @@ decision + date) instead of silently rewriting history.
 
 4. **Business research is an interface + typed output** — Google Maps, company registry, Facebook,
    website crawl, and photo classification sit behind one interface with fakes. Output lands in
-   typed `research_sources` rows with where it came from + confidence; raw freeform dicts never leak
+   typed `business_research_sources` rows with where it came from + confidence; raw freeform dicts never leak
    past the boundary.
 
-5. **Google Maps is cached** — `google_places_cache` keyed by `place_id` avoids repeat paid
+5. **Google Maps is cached** — `google_maps_listing_cache` keyed by `place_id` avoids repeat paid
    lookups; it is a cache, not a source of truth.
 
 6. **The business profile keeps profile history and every detail is attributable** — each change is a new
-   `business_profile_versions` row with where each detail came from and who changed it; the profile
-   points at the current `business_profile_versions` row. Structured identity lives in real columns; only genuinely
+   `business_profile_history` row with where each detail came from and who changed it; the profile
+   points at the current `business_profile_history` row. Structured identity lives in real columns; only genuinely
    polymorphic brand/contact payloads use `jsonb`.
 
 7. **Conflicting answers are surfaced, not resolved** — what the contractor said vs. what we found

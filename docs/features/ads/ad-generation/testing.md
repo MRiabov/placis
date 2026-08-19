@@ -15,7 +15,7 @@ against the real API + real Postgres; the LLM is faked. DB asserts name the tabl
    progressive "drafting…" state and lets the owner leave and return.
    - DB: `ai_generations` (reasoning + output + tool calls + usage), `ad_copy_variants`
      (source=`ai_proposal`), `ad_variants` (format, status=`ad_needs_review`), `ad_image_placements`
-     (`media_asset_id`, crop, focal_point, alt_text), `ad_lead_forms` (title, questions).
+     (`media_asset_id`, crop, focal_point, media_caption), `ad_lead_forms` (title, questions).
    - UI: the ad returns for review — never `ad_ready_to_post` without approval.
 
 4. **Approve** — the owner reviews, edits copy, approves.

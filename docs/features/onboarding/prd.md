@@ -41,7 +41,7 @@ The contractor picks a **country** (Ireland, UK, or US), then finds their busine
    the corporate name and pick the right company registry record; it pre-fills the legal name,
    company number, status, and registered office.
 2. **Google Maps (optional)** — they can also match their Google Maps listing; it pre-fills the
-   name, category, phone, photos, and reviews.
+   name, category, marketing phone, photos, and reviews.
 
 They can select either, or both when they describe the same business. Then a single checkbox for
 **online research consent**:
@@ -57,8 +57,9 @@ By the end, the business profile holds:
 
 - **Who they are** — display name, legal name, trade, established year, and a short description.
 - **Legal details** — company number, VAT number, registered office.
-- **Contact** — contact name, phone, email, website, opening hours, and their Google and Facebook
-  profiles.
+- **Contact** — contact name, marketing phone, marketing email, existing site URL, opening hours,
+  and their Google Maps listing and Facebook profiles. Emergency phone is how we reach the owner
+  (draft; may be the personal number).
 - **What they do** — their main trade and the services they offer, plus the service areas they
   cover.
 - **Certifications and reviews** — accreditations and certifications, the founder, and reviews.

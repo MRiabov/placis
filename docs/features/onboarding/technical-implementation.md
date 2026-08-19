@@ -11,37 +11,37 @@ See [data-model.md](data-model.md). The business profile is
 
 ## Flow
 
-`created → interviewing → generating → previewing → activated` (`generation_failed` if applying
-the website template throws; TODO: rename these statuses off `generating` / `generation_failed`).
+`created → client_interviewing → applying_website_template → previewing → activated`
+(`apply_website_template_failed` if applying the website template throws).
 Business research runs in the background alongside review/client interview; applying the website
 template starts at client interview complete; website copy generation runs after that and does not
 block website preview or website activation.
 
 ## API surface
 
-- `POST /api/v1/onboarding-sessions` (+ `.../from-google-place`)
-- company-registry search, google-places autocomplete
+- `POST /api/v1/onboarding-sessions` (+ `.../from-google-maps-listing`)
+- company-registry search, Google Maps autocomplete
 - profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/details`)
 - client interview (autosave + submissions)
-- business research runs (list/get), generation runs (list/get/cancel)
+- business research runs (list/get), apply-the-website-template runs (list/get/cancel)
 - website publications (list/get/apply/approve/reject/profile history/website rollback)
 - website previews (under onboarding — see the website activation note)
 
 ## Business research pipeline
 
-1. Provider call (behind interface) returns raw payload.
-2. Turn it into a typed `research_sources` row: kind, external id, where it came from, raw +
-   normalized payload, confidence.
+1. Google Maps, the company registry, Facebook, the LLM, or a fake returns raw payload.
+2. Turn it into a typed `business_research_sources` row: kind, external id, where it came from,
+   `raw`, lookup `status`, confidence.
 3. Photo classification tags media assets (hero/project/service/founder/logo) for the media
    library / website slot mapping.
 4. Every run is safe to retry (explicit key).
 
 ## Profile building
 
-1. Merge client interview answers + business research into a `business_profile_versions` row (details + where
+1. Merge client interview answers + business research into a `business_profile_history` row (details + where
    each came from + who changed it).
 2. Surface research conflicts for the owner to review.
-3. On approval, the profile advances to the current `business_profile_versions` row; applying the
+3. On approval, the profile advances to the current `business_profile_history` row; applying the
    website template reads it.
 
 ## Validation & testing

@@ -32,7 +32,7 @@ needs. Applying the website template writes those onto the business profile:
 1. take the details from the business profile (services, service areas, certifications, projects, contact);
 2. pick the website template and website styles (one bounded LLM call, heuristic fallback);
 3. create unpublished `website_pages` / `website_sections` / `website_slots` rows — website
-   placeholders (`{{business_name}}`, `{{phone}}`, …) stay in the unpublished website, resolving
+   placeholders (`{{business_name}}`, `{{marketing_phone}}`, …) stay in the unpublished website, resolving
    at website publication;
 4. pick or generate media assets (prefer real project photos; generate only when approved);
 5. validate against website component contracts, the company registry, marketing claims, links,
@@ -52,14 +52,14 @@ scratch. Trade does not pick the website template 1:1.
 The website editor is one workspace with three surfaces:
 
 - **Canvas** — renders the selected website page live from its website sections.
-- **Workspace** — Website pages / Media library / Website styles / Header and footer: what is on
+- **Workspace** — Website pages / Media library / Website styles / Top menu and footer: what is on
   the site.
 - **Inspector** — edits the selected website section: its props, its website slots, its design.
 
-Every edit writes a new website page version; nothing is edited in place. Website assistant edits
-arrive as proposals (a diff), never a direct write. The **Details** view (business profile) and
-**Media library** (image editing) are their own standalone parts, not website page content. The
-full edit → backend → re-render loop is in [editing.md](editing.md).
+Edits upsert unpublished website rows in place. Website assistant edits arrive as proposals
+(a diff), never a direct write. Website publication writes a website version. The **Details** view
+(the business profile) and **Media library** (image editing) are their own standalone parts, not
+website page content. The full edit → backend → re-render loop is in [editing.md](editing.md).
 
 ## Website assistant
 
@@ -73,8 +73,9 @@ Website publication walks the unpublished website, validates every website secti
 website component contract, resolves the `{{var}}` website placeholders from the business profile
 (see [variables.md](variables.md)), and writes one `website_publications` row holding the
 published website copy as `website_manifest` (a `website.v1` website manifest: website pages →
-website sections → props). The website manifest is the read model — the renderer only ever reads
-the active website publication. Website rollback reactivates an earlier website publication.
+website sections → props). That row is a website version. The website manifest is the read model —
+the renderer only ever reads the active website version. Website rollback reactivates an earlier
+website version.
 
 ## Contractor website (separate Astro app)
 

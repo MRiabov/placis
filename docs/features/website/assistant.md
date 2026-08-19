@@ -2,7 +2,7 @@
 
 The website assistant is a chat-like command surface in the website editor — not a separate
 generator. It reads the selected website page, website sections, website slots, media assets,
-website forms, SEO, validation blockers, website publication status, and website page versions, and
+website forms, SEO, validation blockers, website publication status, and website versions, and
 turns requests into governed, reviewable website editor edits. Text chat, voice handoffs, and
 website editor assistance all share the same tool surface.
 

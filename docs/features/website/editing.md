@@ -1,7 +1,7 @@
 # Website editing
 
 How an owner's edits reach the backend and appear in the frontend. "Think Wix": select, edit, see
-it update, then save / website publication.
+it update, then website publication.
 
 ## The loop
 
@@ -15,26 +15,20 @@ it update, then save / website publication.
 5. The canvas re-renders from the updated website editor projection.
 
 The backend serves a typed **website editor projection** — website pages, website sections, current
-website slot values, validation status, website publication blockers, allowed controls, website
-page version metadata — and the frontend consumes that, never raw records. Tokenized values
+website slot values, validation status, website publication blockers, allowed controls — and the
+frontend consumes that, never raw records. Tokenized values
 (`{{business_name}}`) stay as tokens in the unpublished website and show as small inline variable
 chips in the website editor.
 
-## Edits mutate; saves write a website page version
-
-There are two layers, not one:
+## Edits mutate unpublished rows; website publication writes a website version
 
 - **Edit = mutation** — an edit upserts the unpublished website rows in place: text/image →
   `website_slots.value`, design/visibility → `website_sections.design` / `status`, position →
   `website_sections.position`, add/remove a website section → `website_sections` + `website_slots`.
-- **Save = website page version** — saving writes the unpublished website content into a kept
-  `website_page_versions` row (append-only, never overwritten), validates it, and advances
-  `website_pages.current_version_id`. Website page versions are created at explicit save / approve /
-  website publication checkpoints — not on every keystroke.
-- **Website publication** — writes `website_publications` + `website_manifest` (a published website
-  copy) from the current website page version.
+- **Website publication** — writes a website version: `website_publications` + `website_manifest`
+  (a published website copy) from the current unpublished website.
 
-Website publication is always a separate, explicit action.
+Website publication is always a separate, explicit action. Do not write a per-page version table.
 
 ## Models
 
@@ -44,18 +38,18 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 
 `GET /api/v1/website/editor/pages/{page_id}` returns:
 
-- `tenant` (id, slug / website address, name); `page` (id, path / website page path, title,
-  page_type, status, current/published website page version ids + numbers, validation status,
+- `tenant` (id, website address, name); `page` (id, path / website page path, title,
+  page_type, status, validation status,
   website-publication-blocker count).
 - `seo`; `theme` (website style catalog preset + overrides).
 - `sections[]` — each: `id`, `page_id`, `component_id` (+ `component_version`, `schema_version`,
   `family`, `variant`), `position`, `status`, `visible`, `props`, `design`, `slots[]`,
   `design_controls[]`, `source_refs`, `unsupported_component`.
-- `media_assets[]`, `forms[]` (website forms), `navigation[]` (header and footer;
-  `navigation_items` internally).
-- `versions[]`, `publication` (active website publication + `has_unpublished_changes`),
+- `media_assets[]`, `forms[]` (website forms), top menu and footer
+  (`top_menu_items`, `footer_items`).
+- `publication` (active website version + `has_unpublished_changes`),
   `validation`.
-- `preview_url`, `public_url` (live website). The website editor canvas is not a website preview.
+- `preview_url`, live website URL. The website editor canvas is not a website preview.
 
 A **website slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`, `required`, `max_length`,
 `value` (typed), `status`, `source_refs`, `validation_errors`.
@@ -81,12 +75,12 @@ the edits. To update a website slot you send:
   `source_refs`.
 - **website section order** — `ordered_section_ids[]`.
 - **website page create** — `path`, `title`, `page_type`, `seo`, unpublished content.
-- **website form patch** — `form_id`, `title`, `submit_action`, `fields[]`, `privacy_notice`.
+- **website form patch** — `website_form_id`, `title`, `submit_action`, `fields[]`, `privacy_notice`.
 
 ## What each action does
 
-All website editor actions are CRUD on the unpublished website records; save writes them into a
-kept website page version.
+All website editor actions are CRUD on the unpublished website records. Website publication writes
+a website version.
 
 | Action | Mutation (unpublished website rows) |
 | --- | --- |
@@ -98,8 +92,7 @@ kept website page version.
 | swap a website component | `website_sections.component_id` (preserving compatible website slots) |
 | change the website style catalog preset | the website page's theme (applied only on explicit apply) |
 
-Saving any of the above appends a `website_page_versions` row. Website publication writes
-`website_publications` + `website_manifest`.
+Website publication writes `website_publications` + `website_manifest` (a website version).
 
 The Astro contractor website application (`apps/public-site`) does **no per-edit work** — it is
 stateless and resolves the *published website copy* (`website_manifest`) on request. Editing only

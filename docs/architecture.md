@@ -45,18 +45,18 @@ internal/
 
   # product domains — feature-nested: one package per feature, split a package
   # only when it grows past ~800 lines (never flat file dumps).
-  tenancy/        # tenants.go, memberships.go, domains.go
+  tenancy/        # tenants.go, memberships.go, website_addresses.go
   onboarding/     # session.go, interview.go, orchestrate.go, activation.go
     websitepreview/ #   package.go, events.go (website preview of the unpublished website during onboarding)
-  research/       # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
-                  # TODO: rename — do not say provider in prose; this folder still does.
-  profile/        # profile.go, versions.go, services.go, areas.go, hours.go
+  research/       # service.go + googlemaps/, companyregistry/, facebook/, crawl/, photo/ with fakes
+  profile/        # profile.go, history.go, services.go, areas.go, hours.go
   website/        # root: types.go, service.go
     pages/        #   handler.go, service.go, model.go
     sections/
     slots/
     forms/
-    navigation/
+    topmenu/
+    footer/
     publications/
     projects/
     certifications/
@@ -147,7 +147,7 @@ The Go backend loads and validates them; it must not hand-duplicate the struct s
    generation (05), and website preview/website activation; it does not do website publication. The website
    assistant (website editor) and website publication live in `website`.
 3. `templates` applies website templates into tenant-owned `website_*` rows; it validates website component ids,
-   props, design controls, website page paths, website forms, and header/footer before writing.
+   props, design controls, website page paths, website forms, and top menu / footer before writing.
 4. `website` owns the editable content model and website publication; a `website_manifest` is only the
    validated read model, built at website publication time.
 5. `ads` is a standalone service (the `/cms/ads` workspace is one owner). It reads the profile +

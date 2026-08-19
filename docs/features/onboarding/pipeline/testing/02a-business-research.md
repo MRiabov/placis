@@ -2,9 +2,9 @@
 
 - **Setup**: an onboarding session + selected company (from 01a), online research consent given.
 - **Invoke**: confirm returns; business research slots run as background jobs.
-- **Assert**: review/checklist reads succeed before slots finish; one `research_run` per slot;
-  `research_sources` (`kind`, `source_ref`, `raw`+`normalized`, `confidence`);
-  `google_places_cache` written when a place was selected; `research_sessions` written only on
-  the Maps path; each slot clears in-progress on the checklist; SSE emits progress as rows load.
-- **Mocked**: Places, scrape, OpenRouter extract, Facebook, photo classification, trade-registry
+- **Assert**: review/checklist reads succeed before slots finish; one `business_research_run` per
+  slot; `business_research_sources` (`kind`, `source_ref`, `raw`, lookup `status`, `confidence`);
+  `google_maps_listing_cache` written when a place was selected; `place_id` on the run on the Maps
+  path; each slot clears in-progress on the checklist; SSE emits progress as rows load.
+- **Mocked**: Maps, scrape, OpenRouter extract, Facebook, photo classification, trade-registry
   lookup (all fakes returning fixtures).

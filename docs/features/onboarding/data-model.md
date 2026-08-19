@@ -9,7 +9,7 @@ The business profile these onboarding sessions write is owned by
 
 ## Onboarding sessions and client interview
 
-- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `started_from` (`google_maps`/
+- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `started_from` (`google_maps_listing`/
   `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`client_interviewing`/
   `applying_website_template`/`previewing`/`activated`/`apply_website_template_failed`),
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at` nullable, timestamps
@@ -19,7 +19,7 @@ The business profile these onboarding sessions write is owned by
 ## Business research
 
 - `business_research_runs` — `id`, `onboarding_session_id` fk, `place_id` nullable (Google’s
-  id on the Maps path), `kind` (`google_maps`/`company_registry`/`trade_registry`/`facebook`/
+  id on the Maps path), `kind` (`google_maps_listing`/`company_registry`/`trade_registry`/`facebook`/
   `social_profile`/`website_crawl`/`review`/`directory`/`photo`), `status`, `started_at`,
   `finished_at`
 - `business_research_events` — `id`, `business_research_run_id` fk, `event_type`, `payload` jsonb,

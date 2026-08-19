@@ -32,7 +32,7 @@ page, categories), and certifications (accreditations).
 | `{{business_name}}` | display name |
 | `{{trade}}` | primary trade |
 | `{{description}}` | business description |
-| `{{phone}}`, `{{email}}`, `{{address}}`, `{{website_url}}` | contact |
+| `{{marketing_phone}}`, `{{marketing_email}}`, `{{address}}`, `{{existing_site_url}}` | marketing contact |
 | `{{service_area}}`, `{{service_region}}` | where they work |
 | `{{opening_hours}}` | opening hours |
 | `{{legal_name}}`, `{{company_registration_number}}`, `{{vat_number}}`, `{{registered_office}}` | legal |

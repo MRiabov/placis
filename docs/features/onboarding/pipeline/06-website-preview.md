@@ -13,12 +13,12 @@ The API issues a preview token (HMAC, default **14 days**). Only `token_hash` is
 
 ## What it holds
 
-- `personas` — who the website preview is for (default the contractor). Not a permission system.
-- `unresolved_fields` — checklist/profile gaps still empty when the website preview is created
-  (it can still be shown).
 - `expires_at`
 - `status` — `active` while it is the current website preview; applying the website template again
   **supersedes** the old one.
+
+Empty details show as website placeholders on the unpublished website. The website preview link
+is enough.
 
 ## How the contractor gets here
 
@@ -35,5 +35,5 @@ SSE is the onboarding session stream (business research + apply-the-website-temp
 events). The website preview itself is not an SSE endpoint. The preview **token** stays;
 05 does not supersede the website preview.
 
-- **Persists** `website_previews` (`token_hash`, `personas`, `unresolved_fields`, `expires_at`,
+- **Persists** `website_previews` (`token_hash`, `expires_at`,
   `status=active`) and `website_preview_events`.

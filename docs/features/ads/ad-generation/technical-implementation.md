@@ -79,7 +79,7 @@ snake_case tables with a `*_id` primary key, per [data-model.md](../data-model.m
 `ads`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
 `AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no separate
 ad-destination record in Go — the ad destination is `destination_website_page_id` +
-`destination_path` columns on `ads`.
+`destination_website_page_path` columns on `ads`.
 
 Recommended top-level records:
 
@@ -101,7 +101,7 @@ Hard-typed fields:
 05. `offer` (owner-visible goal, e.g. "promote garage conversions")
 06. `ad_goal`: `more_calls`, `more_quotes`, `promote_service`
 07. `service_focus_id` (optional reference to a tenant service)
-08. ad destination: `destination_website_page_id` + `destination_path` (website page id or
+08. ad destination: `destination_website_page_id` + `destination_website_page_path` (website page id or
     resolved website page path)
 09. `review_status`
 10. `source_refs`
@@ -182,7 +182,7 @@ Hard-typed fields:
 06. `crop` (typed: `x`, `y`, `width`, `height` normalized, or `full`)
 07. `focal_point` (`x`, `y` normalized, inherited from the source media asset by default)
 08. `position`
-09. `alt_text` (inherited from the media asset unless overridden here; the media caption)
+09. `media_caption` (inherited from the media asset unless overridden here)
 
 Crops are non-destructive. The source media asset is never modified; either store crop/focal
 metadata on the placement or create a derived crop media asset through the existing media

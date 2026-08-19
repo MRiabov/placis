@@ -230,7 +230,7 @@ Ad copy is short and structured. Each variant stores:
 4. button label from a fixed allowed set (e.g. Learn More, Get Quote, Call Now, Message)
 
 Limits live in one constants module so the UI and validation read the same values. Copy is
-generated from the business profile: services, service area, phone, certifications and reviews,
+generated from the business profile: services, service area, marketing phone, certifications and reviews,
 and the owner's own copy on the ad destination. LLM-drafted copy is recorded as a reviewable
 draft with where it came from; it never writes directly into an approved variant.
 

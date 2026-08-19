@@ -108,6 +108,36 @@ Internal: Source refs.
 
 ---
 
+### Marketing phone
+
+The phone on the website and in ads — where website leads and ad leads call.
+
+Distinct from: Emergency phone (how we reach the owner).
+
+In code: `business_profiles.marketing_phone`.
+
+---
+
+### Marketing email
+
+The email on the website and in ads. Never say “website email”. Not the Clerk account email
+(identity; not a profile detail).
+
+In code: `business_profiles.marketing_email`.
+
+---
+
+### Emergency phone
+
+How we contact the owner. Draft: this is the personal/owner number; it may be the same number.
+TBD further.
+
+Distinct from: Marketing phone.
+
+In code: `business_profiles.emergency_phone`.
+
+---
+
 ### Details
 
 The screen where the contractor edits the business profile. Editing Details changes the website
@@ -173,7 +203,7 @@ the contractor decides. A research conflict is not an error.
 
 The contractor’s Google Maps place, used to start onboarding and pre-fill what we already know.
 
-In code: `google_maps`, `google_maps_listing_cache` (Google’s `place_id` as the external id).
+In code: `google_maps_listing`, `google_maps_listing_cache` (Google’s `place_id` as the external id).
 
 ---
 
@@ -412,7 +442,7 @@ In code: `footer_items`.
 
 #### Website assistant
 
-The chat (and later voice) that proposes website edits. It drafts; the owner decides.
+The chat (and the voice agent) that proposes website edits. It drafts; the owner decides.
 
 Distinct from: Website copy generation, Website assistant plan.
 
@@ -493,7 +523,7 @@ at website activation. Never say `slug`.
 
 Distinct from: Custom website address (the address they supply), Website page path.
 
-In code: generated subdomain host — not a rival concept named slug.
+In code: `website_addresses` with `type=subdomain`.
 
 ---
 
@@ -632,7 +662,8 @@ organization. The tenant name is the business.
 
 Domain: (none — never in PRDs). Distinct from: Business profile, Clerk organization.
 
-In code: `tenants`, `tenant_id` on every tenant-owned row.
+In code: `tenants`, `tenant_id` on every tenant-owned row;
+`tenants.status` (`active` / `suspended`). A tenant row exists only after website activation.
 
 ---
 
@@ -705,8 +736,6 @@ In code: `source_refs`.
 Not a term. Name Google Maps, the LLM, Stripe, or fakes in tests. Never use this word for a
 dependency.
 
-In code: leftover `research_runs.provider` and `research/providers/` — not the word we use.
-
 ---
 
 ### Onboarding
@@ -729,14 +758,26 @@ bare “interview”.
 Domain: (internal — use this name in technical docs; onboarding copy may describe the
 questions).
 
-In code: `text_interview_submissions`; voice tools write the same profile.
+In code: `client_interview_submissions`; voice tools write the same profile. Onboarding session
+status `client_interviewing`.
 
 ---
 
 #### Voice
 
-A way to answer the client interview (and later to drive the website assistant). Voice is a
-channel, not a separate product and not a separate profile.
+A channel: answer the client interview, drive the website assistant, and use the voice agent in
+The CMS. Not a separate product and not a separate profile.
+
+Distinct from: Voice agent.
+
+---
+
+#### Voice agent
+
+The realtime agent the owner can turn on in the application. Same governed tools as text.
+
+Distinct from: Voice (the channel), Website activation (never say “activate” for the voice
+agent).
 
 ---
 
@@ -757,14 +798,14 @@ In code: `website_previews.token_hash`.
 The website address **they supply**, which we publish under. Distinct from: Website address (the
 default: they may be deployed under our subdomain). Never say bare “custom domain”.
 
-In code: `type=custom` on the website-address host row.
+In code: `website_addresses.type=custom`.
 
 ---
 
 #### Website placeholder
 
 A blank in the unpublished website that stands for a business detail (`{{business_name}}`,
-`{{phone}}`, …). Never say bare “placeholder”.
+`{{marketing_phone}}`, …). Never say bare “placeholder”.
 
 ---
 
@@ -803,7 +844,8 @@ Where website style presets live. Never say bare “catalog”. In code: `catalo
 The content of the website: text, images, and arrangement — the website manifest produced to convert
 a website visitor to purchase or call.
 
-Distinct from: Website publication (the act / kept row), Live website (what they see).
+Distinct from: Website publication (the act), Website version (the kept checkpoint), Live website
+(what they see).
 
 Never say “frozen”, “materialize”, “snapshot”, or bare “published copy”.
 
@@ -849,9 +891,13 @@ Never in product/user-facing text or PRD prose.
 | signed (website preview) | website preview link (product); preview token (technical) |
 | live markdown plan | website assistant plan |
 | handoff boundary | the owner approves the plan, then the assistant applies it |
+| website email | marketing email |
+| phone (on the website or an ad, bare) | marketing phone |
 | fact / structured facts | detail / information |
 | proof | certifications, reviews, or projects as appropriate |
-| history (bare) | profile history |
+| history (bare) | profile history or website versions |
+| menu (bare) / header / navigation | top menu or footer |
+| version / versioned / snapshot | website version or profile history |
 | consent (bare) | online research consent |
 | interview (bare) | client interview |
 | research (bare) | business research |
@@ -861,7 +907,6 @@ Never in product/user-facing text or PRD prose.
 | draft (bare) | unpublished website, or ad draft (Ad states) |
 | template (bare) | website template |
 | page / section / slot / styles (bare) | website page / website section / website slot / website styles (PRDs and UI; short form OK in website technical docs and code) |
-| menu (as header+footer) | header or footer |
 | form (bare) | website form or ad lead form |
 | caption (bare) | media caption |
 | media (the library) | media library |
@@ -884,7 +929,6 @@ Never in product/user-facing text or PRD prose.
 | organization (Clerk) | Clerk organization |
 | needs review (bare) | ad needs review (Ad states) |
 | source reference / `source_refs` | where a detail came from |
-| version / versioned / snapshot | profile history / a published website copy |
 | state / state machine | steps / where things stand |
 | normalize(d) | combine / turn into |
 | materialize(d) | make a published website copy |

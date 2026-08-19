@@ -26,11 +26,11 @@ applying the website template and copy — not only step 06. Postgres is authori
 
 ## Onboarding session status
 
-`created` (onboarding session exists) → `interviewing` (confirmed; business research + review +
-client interview) → `generating` (client interview complete; 04 running;
-TODO: rename this status off `generating`) → `previewing` (website
-preview ready; 05 may still be writing copy) → `activated`. `generation_failed` if 04 throws
-(TODO: rename this status). 05
+`created` (onboarding session exists) → `client_interviewing` (confirmed; business research + review +
+client interview) → `applying_website_template` (client interview complete; 04 running)
+→ `previewing` (website
+preview ready; 05 may still be writing copy) → `activated`. `apply_website_template_failed` if 04 throws.
+05
 failing does not change onboarding session status. Website previews expire (`expires_at`); the
 onboarding session has no `expired` status.
 
@@ -46,7 +46,7 @@ server-side resume token.
 - [02a-business-research.md](02a-business-research.md)
 - [02b-client-interview.md](02b-client-interview.md)
 - [03-build-profile.md](03-build-profile.md)
-- [04-generate.md](04-generate.md) <!-- TODO: rename this file off 04-generate.md -->
+- [04-apply-website-template.md](04-apply-website-template.md)
 - [05-website-copy-generation.md](05-website-copy-generation.md)
 - [06-website-preview.md](06-website-preview.md)
 - [07-website-activation.md](07-website-activation.md)
