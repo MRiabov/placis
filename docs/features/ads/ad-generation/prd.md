@@ -62,9 +62,7 @@ delivered as an ad set a contractor or done-for-you can hand to an ad platform.
    audiences, scheduling, A/B testing, retargeting, or campaign performance dashboards. This is
    expected future growth on top of the same ads service, not a website editor feature.
 3. Do not invent marketing statements. No fabricated review counts, ratings, years in business,
-   guarantees, certifications, insurance, or pricing. Before/after results are allowed only when
-   a real before/after image pair of the contractor's own work exists; they may not be invented
-   without such imagery.
+   guarantees, certifications, insurance, pricing, or results.
 4. Do not generate new images, and do not make substantive edits to photos as part of ad
    generation. The LLM may apply light cleanup only (remove clutter/trash, tidy backgrounds)
    through the same non-destructive image-variant system as the media library (epic D12); heavier
@@ -98,6 +96,9 @@ Useful follow-on features that should remain outside the first implementation:
 8. ad performance display once an ad platform is connected: impressions, clicks, spend, and
    results shown next to each approved ad; the ads are ready for this today (stable ids plus ad
    platform object references), so connecting the ad platform stays additive
+9. before/after ads — currently low-priority. A project does not need before/after photos. When
+   this work is picked up it will need a defined pair and an owner control; do not invent those
+   now. Until then the LLM must not invent results.
 
 ## Who It Is For
 
@@ -363,13 +364,11 @@ marketing statements conservative and source-backed:
 3. light cleanup edits are cosmetic and non-deceptive: they may remove clutter or tidy
    backgrounds, but must not conceal damage or defects, add or remove objects, or change the
    work shown
-4. before/after results only when they are backed by a real before/after image pair from the
-   same project — the image pair is the evidence — and the pair is owner-approved
-5. photos showing identifiable people or third-party properties are usable once their
+4. photos showing identifiable people or third-party properties are usable once their
    media-library review is approved; otherwise they need owner approval first
-6. no personal data in ad copy
-7. ad destination website pages must exist and be owned by that contractor
-8. copy must not promise specific outcomes, results, or turnaround times unless the owner
+5. no personal data in ad copy
+6. ad destination website pages must exist and be owned by that contractor
+7. copy must not promise specific outcomes, results, or turnaround times unless the owner
    explicitly supplies and approves the marketing statement
 
 Anything the LLM drafts that resembles a sensitive marketing statement (reviews, ratings, guarantees, prices,

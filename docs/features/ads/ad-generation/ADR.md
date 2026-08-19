@@ -56,9 +56,13 @@ area, and the date.
    (no `marketing.ads` profile group). Ads are created on demand in Ads; onboarding stays
    simple.
 
-10. **Before/after marketing statements need a real image pair** — A before/after result is allowed only when
-    backed by a real before/after image pair from the same project; the image pair is the
-    evidence. No pair, no marketing statement.
+10. **Before/after ads are future, currently low-priority** (updated 2026-08-19) — Not current
+    product. A project does not need before/after photos. Current ads: the LLM must not invent
+    results. When this work is picked up it will need a defined pair and an owner control; do
+    not design those now.
+    Previous decision (2026-08-14): before/after marketing statements need a real image pair
+    from the same project. That pair and an owner request were never defined, so the rule is
+    deferred rather than treated as a current gate.
 
 11. **There is no ad 'dashboard'** — Website editor, Ads, Details, and Media library sit
     alongside each other. The deprecated operations dashboard is not a concept here: campaign

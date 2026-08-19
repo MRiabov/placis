@@ -346,9 +346,8 @@ An ad can reach `ad_ready_to_post` only when:
 3. the ad destination, if set, is a tenant-owned published (or scheduled-to-publish) website
    page; unpublished or hidden website pages are invalid ad destinations
 4. copy satisfies character limits and `cta_label` is in the allowed set
-5. sensitive marketing statements (reviews, ratings, guarantees, certifications, insurance, pricing, results,
-   before/after outcomes) are source-backed or explicitly owner or done-for-you approved; for
-   before/after, source-backed means a real image pair from the same project. Anything
+5. sensitive marketing statements (reviews, ratings, guarantees, certifications, insurance, pricing, results)
+   are source-backed or explicitly owner or done-for-you approved. Anything
    LLM-drafted resembling such a marketing statement sets `ad_needs_review`
 6. at least one ad format has a complete variant; empty ad formats are left out of the ad set
 
@@ -411,7 +410,6 @@ Allowed AI behavior:
 Blocked AI behavior:
 
 1. inventing reviews, ratings, years, guarantees, certifications, insurance, pricing, or results
-   — including before/after results without a real before/after image pair
 2. selecting unreviewed, non-tenant, or media-caption-free media assets
 3. generating new images or making substantive edits — adding/removing objects, changing the
    work shown, concealing damage or defects (heavy editing stays in the media library)

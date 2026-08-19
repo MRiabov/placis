@@ -154,11 +154,11 @@ function ClaimStripContent({
           </span>
           <div className="min-w-0">
             <div className="truncate font-semibold text-[13px] leading-5 sm:text-sm">
-              Pay to claim this workspace
+              Pay to activate this website
             </div>
             <div className="hidden truncate text-claim-muted text-xs leading-5 md:block">
-              Keep the website, dashboard, routing, and CRM records connected
-              after activation.
+              Pay, the website address is reserved. The website stays
+              unpublished.
             </div>
           </div>
         </div>
@@ -203,8 +203,8 @@ function ClaimDialogBody({
       <DialogHeader>
         <DialogTitle>Claim Dublin Roof Repairs</DialogTitle>
         <DialogDescription>
-          Sign in or create an account first, then pay to activate the website,
-          dashboard, routing, and CRM workspace.
+          Sign in or create an account first, then pay. The website address is
+          reserved. The website stays unpublished.
         </DialogDescription>
       </DialogHeader>
       <div className="grid gap-3">
@@ -249,7 +249,7 @@ function ClaimAccountStatusCard({
             {authState.configured
               ? authState.isLoaded
                 ? authState.isSignedIn
-                  ? "Signed in. Checkout can now be created for this workspace."
+                  ? "Signed in. Checkout can now be created for this website."
                   : "Sign in or create an account so the payment can be tied to the owner."
                 : "Checking sign-in state..."
               : "Sign in with the owner account before checkout."}
@@ -265,7 +265,7 @@ function ClaimPriceCard(): ReactNode {
     <div className="rounded-lg border bg-zinc-50 p-3">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="font-semibold">Website + dashboard activation</div>
+          <div className="font-semibold">Website activation</div>
           <div className="mt-1 text-muted-foreground text-sm">
             Secure checkout, preview links, and owner handoff.
           </div>
@@ -288,7 +288,7 @@ function ClaimCheckoutReadyCard(): ReactNode {
       <div>
         <div className="font-semibold text-emerald-950">Checkout ready</div>
         <div className="mt-1 text-emerald-800">
-          Continue to secure Stripe checkout to activate this workspace.
+          Continue to secure Stripe checkout to activate this website.
         </div>
       </div>
     </div>

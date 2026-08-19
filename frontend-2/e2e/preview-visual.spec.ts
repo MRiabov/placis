@@ -28,7 +28,7 @@ test.describe("preview parity (frontend-2 vs golden)", () => {
       ).toBeVisible();
       if (state.name === "claim") {
         await expect(
-          page.getByText("Pay to claim this workspace"),
+          page.getByText("Pay to activate this website"),
         ).toBeVisible();
       }
       await expect(page).toHaveScreenshot(`preview-${state.name}.png`, {
@@ -51,7 +51,7 @@ test.describe("preview golden capture (frozen reference)", () => {
       ).toBeVisible();
       if (state.name === "claim") {
         await expect(
-          page.getByText("Pay to claim this workspace"),
+          page.getByText("Pay to activate this website"),
         ).toBeVisible();
       }
       await expect(page).toHaveScreenshot(`preview-${state.name}.png`, {

@@ -15,7 +15,7 @@ async function stubSetupApi(page: import("@playwright/test").Page): Promise<void
       json: {
         id: "setup-session-parity-1",
         locale: "en-IE",
-        requested_modules: ["website", "dashboard"],
+        requested_modules: ["website"],
         source: "guided_onboarding",
         status: "in_progress",
       },
@@ -36,7 +36,7 @@ async function stubSetupApi(page: import("@playwright/test").Page): Promise<void
         setup_profile_facts: [],
         setup_session: {
           id: "setup-session-parity-1",
-          requested_modules: ["website", "dashboard"],
+          requested_modules: ["website"],
           source: "guided_onboarding",
           status: "in_progress",
         },
