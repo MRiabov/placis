@@ -1,7 +1,7 @@
 # Onboarding Frontend
 
-The contractor-facing onboarding in `frontend-2` (`src/features/setup/`). Screens and
-fields match the implemented app (copied from OnCall).
+The contractor-facing onboarding in `frontend-2`. Screens and
+fields match the implemented app (copied from the predecessor).
 
 Related: [PRD](prd.md), [ADR](ADR.md), [pipeline](pipeline/README.md).
 
@@ -32,7 +32,7 @@ website preview; text submit completes the client interview the same way.
 
 ### 4. Website preview (progress) — `/onboarding/preview`
 
-Timeline from the onboarding session SSE (04 apply the website template, then 05 copy filling in). In-page
+Timeline from the onboarding session SSE (04 apply the website template, then 05 copy filling in). On-screen
 website section renders while it runs. **View website** appears as soon as the website preview exists —
 do not wait for website copy generation to finish.
 
@@ -44,8 +44,8 @@ is not a blocker. Success → `/cms/website`.
 
 ## Resume
 
-`localStorage` holds the onboarding session id and step. Reload calls `GET .../profile`. An active website
-preview resumes on the website preview screen.
+`localStorage` holds the onboarding session id and step. Reload calls `GET .../profile`. An active website preview
+resumes on the website preview screen.
 
 ## Components (`frontend-2`)
 

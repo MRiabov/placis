@@ -1,13 +1,13 @@
 # 06 — Website preview
 
 A **website preview** is a shareable **website preview link** onto the **unpublished website**,
-tied to the onboarding session. It is not the website editor. The preview token stays; the
+tied to the onboarding session. It is not the website editor. The website preview token stays; the
 rendered website pages are the current unpublished rows (copy from 05 shows up as those rows
 update).
 
 ## Token
 
-The API issues a preview token (HMAC, default **14 days**). Only `token_hash` is stored
+The API issues a website preview token (HMAC, default **14 days**). Only `token_hash` is stored
 (`website_previews.token_hash`). Anyone with the unexpired website preview link can open
 `/preview/{token}/` on the contractor website application (`apps/public-site`). Expired or superseded → 410.
 
@@ -32,7 +32,7 @@ is enough.
    website preview (07) and does not wait for 05.
 
 SSE is the onboarding session stream (business research + apply-the-website-template + copy
-events). The website preview itself is not an SSE endpoint. The preview **token** stays;
+events). The website preview itself is not an SSE endpoint. The website preview **token** stays;
 05 does not supersede the website preview.
 
 - **Persists** `website_previews` (`token_hash`, `expires_at`,

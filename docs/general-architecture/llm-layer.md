@@ -4,13 +4,13 @@ The LLM sits behind an internal interface (Vercel AI SDK primary, OpenRouter
 alternative), so prompts, model names, response shapes, and cost logging never leak into domain
 logic.
 
-- Prompts are a catalog keyed by id and version — not hardcoded strings.
+- Prompts are a prompt catalog keyed by id and format revision — not hardcoded strings.
 - Output is parsed against a schema before it enters the app. A mismatch is **repaired under a
   bounded contract**: repair only the smallest subtree that fails (never regenerate the whole
   answer), discard or reject unknown fields per the schema, and never accept a partial result — the
   output is whole-and-valid or it is a failed generation, nothing in between.
 - **Every LLM call is recorded so it can be reconstructed later**: the reasoning, the visible
-  answer, and the tool calls — plus the model, the prompt id/version, and the usage and cost.
+  answer, and the tool calls — plus the model, the prompt id and format revision, and the usage and cost.
 
 ## `ai_generations`
 
@@ -34,7 +34,7 @@ result).
 - **Validated on input** — a call that doesn't fit the struct, or fails its constraints, is rejected
   (or repaired and re-validated) — never executed blindly.
 - **Parallel** — independent tool calls run concurrently; only declared dependencies serialize.
-- **Propose-only** — tools write unpublished website edits and reviewable changes, never a published website copy. The owner
+- **The LLM drafts; the contractor edits** — tools write unpublished website edits and reviewable changes, never a published website copy. The owner
   decides and does a website publication.
 
 Each domain owns a small tool registry — the set of tools its agent may call (e.g. `update_slot`

@@ -15,7 +15,7 @@ editing a doc.
 - `general-architecture/` — cross-cutting architecture no single feature owns:
   `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`, `files.md`, `data-model.md`
   (conventions + index of per-feature schemas). Feature-owned capabilities (website
-  activation/payments, leads, media) live under `features/`, not here.
+  activation/payments, leads, media library) live under `features/`, not here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that feature's docs in one
   place).
 - `planning/` — proposed, unshipped work; never the canonical source.

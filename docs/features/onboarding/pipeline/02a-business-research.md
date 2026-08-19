@@ -1,8 +1,8 @@
 # 02a — Business research (async, parallel)
 
 Starts the moment 01a confirm returns, **before** and **during** review + client interview. The review
-screen paints immediately; checklist rows fill as research jobs finish. Progress goes over the onboarding
-session SSE stream.
+screen paints immediately; checklist rows fill as research jobs finish. Progress goes over the
+onboarding session SSE stream.
 
 ## Research jobs (parallel)
 
@@ -11,7 +11,7 @@ Maps listing was selected. Registry-only onboarding sessions still get `business
 
 | Research job | Writes into the profile / checklist | `business_research_sources.kind` |
 | --- | --- | --- |
-| Google listing | Maps profile, phone, website, opening hours, reviews, photos | `google_maps_listing` |
+| Google listing | Maps profile, marketing phone, website, opening hours, reviews, photos | `google_maps_listing` |
 | Facebook | Facebook profile / URL | `facebook` / `social_profile` |
 | Services and area | trade, services, service area | `website_crawl` / `directory` |
 | Founder | founder | `directory` |

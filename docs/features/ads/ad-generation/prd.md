@@ -25,22 +25,22 @@ business name and contact details, and a published website the ad can send peopl
 generation should turn these into a reviewable ad — images cropped for each ad format plus short
 copy — without building an ads manager.
 
-Ad posting to Facebook (or any ad platform) is out of scope for the first implementation. Ad
-posting needs ad accounts, billing, campaign objects, review policy, and performance reporting.
+Ad posting to Facebook (or any ad platform) is out of scope for the first implementation. Ad posting
+needs ad accounts, billing, campaign objects, review policy, and performance reporting.
 Those belong to a managed-ads service, not to Ads or the website editor. The first product stops
 at **ad ready to post**: approved images and copy in the ad platform's standard ad formats,
 delivered as an ad set a contractor or done-for-you can hand to an ad platform.
 
 ## Goals
 
-1. Let a contractor generate a simple ad set from content Placis already owns: approved
-   media, projects, services, service area, and details from the business profile.
-2. Generate the two things an ad is made of: a gallery of appropriate images showing the
+1. Let a contractor create a simple ad set from content Placis already owns: approved
+   photos, projects, services, service area, and details from the business profile.
+2. Produce the two things an ad is made of: a gallery of appropriate images showing the
    contractor's work, and short copy (headline, primary text, description, button label).
 3. Produce standard ad formats from the start: square and portrait feed images,
    multi-image carousel, and Story.
 4. The LLM drafts; the owner edits: the LLM drafts copy, proposes image selections from
-   approved media, and may apply light cleanup to selected images (remove clutter or trash, tidy
+   approved photos, and may apply light cleanup to selected images (remove clutter or trash, tidy
    backgrounds). The owner or done-for-you reviews and edits everything before approval.
 5. Make approval and output deterministic: the same approved ad always produces the same
    ad set. The ad set is the deliverable; the zip download is a temporary step for someone
@@ -50,7 +50,7 @@ delivered as an ad set a contractor or done-for-you can hand to an ad platform.
    existing content by reference instead of copying it into a parallel ad store.
 7. Keep ads separate from website page editing: ads are their own records and their own
    workspace in Ads — alongside the website editor — not website page content.
-8. Capture ad leads without a landing page: each ad carries a suggested ad lead form (title and
+8. Capture ad leads without a campaign landing website page: each ad carries a suggested ad lead form (title and
    questions) that the ad platform turns into a real ad lead form at ad posting time, and the ad
    targets the owner's ideal customer profile.
 
@@ -63,12 +63,12 @@ delivered as an ad set a contractor or done-for-you can hand to an ad platform.
    expected future growth on top of the same ads service, not a website editor feature.
 3. Do not invent marketing statements. No fabricated review counts, ratings, years in business,
    guarantees, certifications, insurance, pricing, or results.
-4. Do not generate new images, and do not make substantive edits to photos as part of ad
+4. Do not create new images, and do not make substantive edits to photos as part of ad
    generation. The LLM may apply light cleanup only (remove clutter/trash, tidy backgrounds)
    through the same non-destructive image-variant system as the media library (epic D12); heavier
    editing stays in the media library.
-5. Do not create campaign landing pages. Ads always link to existing published website pages;
-   landing page generation is not part of the ad product for the contractor segment.
+5. Do not create campaign campaign landing website pages. Ads always link to existing published website pages;
+   campaign landing website page generation is not part of the ad product for the contractor segment.
 6. Do not store ad copy as freeform HTML or unvalidated text. Copy is stored as structured
    fields with ad-platform-aware length limits and allowed button labels.
 7. Do not collect ad preferences during onboarding. Ads are created on demand
@@ -82,15 +82,15 @@ Useful follow-on features that should remain outside the first implementation:
    creating the ad lead form from the ad set, targeting by the confirmed ideal customer profile,
    ad upload, review policy handling, scheduling) — Meta first; Google Ads is too early to
    plan for yet
-2. external destinations beyond the contractor's website pages, such as phone links, booking
+2. external destinations beyond the contractor's website pages, such as click-to-call links, booking
    links, or direct contact URLs
 3. fuller AI image editing and generation for ad-specific enhancements beyond light cleanup,
-   reusing epic D12 media copies (parent file never replaced)
+   reusing epic D12 photo copies (parent file never replaced)
 4. audience and offer suggestions from public business research and existing details from the
    business profile
 5. A/B copy variants and simple ad performance input
 6. ad-lead attribution so Placis can report which approved ad set produced which ad leads
-7. video ads assembled from approved media: short cinematic-style videos cut from the
+7. video ads assembled from approved photos: short cinematic-style videos cut from the
    contractor's photos and clips, with optional AI-generated transitions; deferred because video
    rendering is a separate pipeline from image ad sets
 8. ad performance display once an ad platform is connected: impressions, clicks, spend, and
@@ -134,7 +134,7 @@ Structure:
 1. **Ad**: name, offer/goal, ad destination, and review status.
 2. **Ad variants**: one per supported ad format — Square feed, Portrait feed,
    carousel, and Story. Each variant pairs an image selection with copy.
-3. **Image selection**: one or more approved media-library items with per-ad-format crop and
+3. **Image selection**: one or more approved photos-library items with per-ad-format crop and
    focal point metadata. For carousel and story variants the selection is a gallery of images;
    for single-image variants it is exactly one image.
 4. **Copy**: headline, primary text, description, and button label, with ad-platform-aware
@@ -161,9 +161,9 @@ Avoid internal language such as variant payload, crop metadata, or review enum.
 
 The first implementation should be deliberately small:
 
-1. create an ad from a short owner-facing form: offer/goal and service focus picked from the
+1. create an ad from a short owner-facing questionnaire: offer/goal and service focus picked from the
    contractor's known data, ideal customer profile, and an ad lead form by default
-2. the LLM drafts an image gallery from approved media, applies light cleanup where needed,
+2. the LLM drafts an image gallery from approved photos, applies light cleanup where needed,
    and drafts copy from details in the business profile
 3. the owner reviews format-accurate previews (square, portrait, carousel, story), edits copy,
    swaps images, and adjusts crops
@@ -173,14 +173,14 @@ The first implementation should be deliberately small:
    plus copy, with a download for people who do ad posting manually
 6. drafts and ads that need review are preserved so work can be resumed later
 
-The generation step is one action ("Generate ad ideas"), not a long wizard. If the owner only has
+The generation step is one action ("Create ad ideas"), not a long wizard. If the owner only has
 a few approved photos, the system still produces one clean feed variant rather than empty
 carousel or story variants. Ad formats with no suitable approved images are left out of the ad
 set instead of blocking it.
 
 ## Creating Ads
 
-Ads are created on demand in Ads, from approved media and published website pages.
+Ads are created on demand in Ads, from approved photos and published website pages.
 There is no onboarding step for ads: we do not ask about ads during onboarding,
 so adding ads later costs nothing extra.
 
@@ -188,23 +188,23 @@ so adding ads later costs nothing extra.
 
 Ads under `/cms/ads` should expose:
 
-1. ad list with status badges (Draft / Creative ready / Published / Archived) and last updated timestamp
-2. create-an-ad flow: offer/goal and service focus picked from the contractor's known data, ideal
-   customer profile (default married couples aged 30-40), ad lead form by default with an
+1. ad list with status badges (Ad draft / Creative ready / Published / Archived) and last updated timestamp
+2. create-an-ad flow: offer/goal and service focus picked from the contractor's known data, ideal customer profile
+   (default married couples aged 30-40), ad lead form by default with an
    optional ad destination, and budget/schedule shown but disabled until ad posting; then
    generation runs and the ad opens for review
 3. variant tabs for square, portrait, carousel, and story ad formats
 4. image selection from the media library and projects, with per-ad-format crop
    and focal point controls
-5. copy editor with headline, primary text, description, and button label, each with live
+5. copy fields with headline, primary text, description, and button label, each with live
    character counts against ad-platform limits
 6. format-accurate mocks: Square feed, Portrait feed, Carousel, and Story
 7. validation errors shown inline next to the field they belong to (missing ad destination,
-   unreviewed media, missing media caption, unsupported marketing statements)
+   unreviewed photos, missing media caption, unsupported marketing statements)
 8. approve and download actions that produce the final ad set
 
 The owner should be able to regenerate copy or image suggestions for a single variant without
-losing their manual edits. Manual edits are always preserved as a new draft; the LLM never
+losing their manual edits. Manual edits are always preserved as a new ad draft; the LLM never
 overwrites an approved variant silently.
 
 ## Ad Formats
@@ -218,7 +218,7 @@ The first implementation produces these ad formats, matching common Facebook siz
 
 All crops are non-destructive: the source item in the media library is never modified, and each
 variant stores its own crop/focal metadata or references a derived crop variant. Ad formats with
-no suitable approved images are left out of the ad set rather than producing empty placeholders.
+no suitable approved images are left out of the ad set rather than producing empty slots.
 
 ## Copy
 
@@ -233,7 +233,7 @@ Ad copy is short and structured. Each variant stores:
 Limits live in one constants module so the UI and validation read the same values. Copy is
 generated from the business profile: services, service area, marketing phone, certifications and reviews,
 and the owner's own copy on the ad destination. LLM-drafted copy is recorded as a reviewable
-draft with where it came from; it never writes directly into an approved variant.
+ad draft with where it came from; it never writes directly into an approved variant.
 
 The owner can accept, edit, or reject each generated copy field. Character counts update live and
 validation blocks approval when a limit is exceeded.
@@ -250,26 +250,26 @@ selectable for an ad only when it is:
 3. not an AI-edited variant still in review
 4. accompanied by a media caption
 
-Selection is the first filter: the picker only offers approved media, so unreviewed media
+Selection is the first filter: the picker only offers approved photos, so unreviewed photos
 cannot normally be chosen. Approval is the second check: before an ad becomes **ad ready to
-post**, every image is re-validated against its current review. If a media item went into review
+post**, every image is re-validated against its current review. If a photo went into review
 after being selected, or a cleanup edit is still pending review, or a media caption is missing,
 the ad is blocked with an owner-readable message until the image is approved or replaced.
 
-The LLM drafts a gallery from this approved media using project/service relevance and quality
+The LLM drafts a gallery from these approved photos using project/service relevance and quality
 signals; the owner can swap, add, or remove images. No image is used without a per-ad-format crop
 that is valid for that ad format, and every selected image keeps supplied by so the owner
 can see its origin.
 
-The LLM may also draft light cleanup edits — removing clutter or trash, tidying backgrounds —
+The LLM may also propose light cleanup edits — removing clutter or trash, tidying backgrounds —
 when an image needs it. Cleanup is cosmetic: it must not add or remove objects in a way that
 changes what the photo shows, must not conceal damage or defects, and must not change the work
-being displayed. Cleanup creates a new media library item (a copy); the source media is never
+being displayed. Cleanup creates a new media library item (a copy); the source photo is never
 modified, the copy inherits supplied by from the parent, and the copy needs normal review
 before it can appear in an **ad ready to post** ad set.
 
 Photos showing third-party properties or identifiable people are fine to use when their
-media-library review is already approved — that approval is the owner's consent.
+media-library review is already approved — that approval is the owner's.
 Photos not yet approved need the same owner approval as website certifications, reviews, or
 projects before they can be used. Ads must not present stock or unrelated imagery as the
 contractor's work.
@@ -296,7 +296,7 @@ when or how an ad runs) is out of scope for now.
 
 Ads capture ad leads with an ad lead form created at ad posting time. For this implementation
 the ad lead form is just suggested fields: the ad set carries a suggested title and suggested
-questions, and the final ad lead form is set up at ad posting (future work). A landing page is
+questions, and the final ad lead form is set up at ad posting (future work). A campaign landing website page is
 not needed for ad-lead capture.
 
 The ad can also link to an existing published website page owned by that contractor (the ad
@@ -307,8 +307,7 @@ destination — for example as the ad lead form's thank-you website page or the 
 2. the website page is public-safe (no unpublished-only content as the primary ad destination)
 3. the ad destination belongs to that contractor
 
-External destinations beyond the contractor's website pages are future work. Campaign landing
-page generation is not planned. The ad destination picker should default to the contact/quote
+External destinations beyond the contractor's website pages are future work. Campaign landing website page generation is not planned. The ad destination picker should default to the contact/quote
 website page or a service website page matching the ad's offer.
 
 ## Review And Approval
@@ -324,7 +323,7 @@ Approval is explicit and audited. Ad posting is out of scope, so **ad ready to p
 the final step; it means the ad set passed validation and can be downloaded or read through the
 service and handed to an ad platform.
 
-These are creation-flow steps. Existing ads display their own statuses — **Draft / Creative
+These are creation-flow steps. Existing ads display their own statuses — **Ad draft / Creative
 ready / Published / Archived** — where "Creative ready" means the ad is done and
 "Published" is the next status once ad posting exists. "Ad needs review" and "Ad ready to post"
 are not used as existing-ad labels.
@@ -345,9 +344,8 @@ transmission to Meta (future work) replaces it:
 2. images at the correct crop for each ad format (square, portrait, carousel cards, story)
 3. a copy sheet (plain text/markdown) with headline, primary text, description, and button label
    per ad format, plus the ad destination URL
-4. the suggested ad lead form fields (title and questions) as the starting point for the ad lead
-   form created on Meta
-5. a note of which source media and crops each image came from
+4. the suggested ad lead form fields (title and questions) as the starting point for the ad lead form created on Meta
+5. a note of which source photo and crops each image came from
 
 The same approved ad always produces the same output. Downloads need no ad-platform credentials
 and do no ad posting.
@@ -377,38 +375,38 @@ or done-for-you approves it.
 
 ## User Stories
 
-These stories are the source catalog for the feature. Each story has its own acceptance criteria;
-the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria) section.
+These stories are the source list for the feature. Each story has its own acceptance criteria;
+the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria).
 
 1. **As a contractor owner**, I want to create an ad from my approved photos and business
    profile, so that I get advertising that is ad ready to post without writing marketing copy.
-   - "Generate ad ideas" drafts copy and an image gallery from approved media, with light
+   - "Create ad ideas" drafts copy and an image gallery from approved photos, with light
      cleanup edits where needed, based on projects, services, service area, certifications, and
      reviews.
    - Drafts are reviewable with where they came from; manual edits are preserved and the LLM
      never overwrites an approved variant silently.
-   - LLM draft calls are recorded through `ai_generations` tracing with contractor scope and
+   - LLM tracing calls are recorded through `ai_generations` tracing with contractor scope and
      actor context.
 2. **As a contractor owner**, I want my ad in standard ad formats, so that it looks right
    on Facebook feed, carousel, and stories.
    - Square feed (1:1), Portrait feed (4:5), Carousel cards (1:1), and Story (9:16) variants use
      non-destructive crops with focal-point metadata.
    - Ad formats without suitable approved images are left out of the ad set instead of rendering
-     empty placeholders.
+     empty slots.
    - The ad set carries per-ad-format image placements; the download renders them deterministically
      (cropped images, copy sheet, ad destination URL) with no ad-platform credentials required.
 3. **As a contractor owner**, I want my ad to send people to a website page that exists, so that
    clicks land on real content.
    - Every ad requires a published website page owned by that contractor (the ad destination)
      before it can become ad ready to post.
-   - Approval validates the ad destination, approved contractor-owned imagery with a media
-     caption, per-ad-format crops, copy limits, and allowed button labels.
+   - Approval validates the ad destination, approved contractor-owned imagery with a media caption,
+     per-ad-format crops, copy limits, and allowed button labels.
    - Unsupported marketing statements (reviews, ratings, guarantees, pricing, results) block approval until
      owner or done-for-you review.
 4. **As done-for-you**, I want ads stored as their own records, so that ads can be produced
    from approved contractor content and campaign operations can build on them later.
-   - Ads and variants belong to the contractor, referencing approved media and published
-     website pages (ad destinations); no parallel media store.
+   - Ads and variants belong to the contractor, referencing approved photos and published
+     website pages (ad destinations); no parallel photo library.
    - Ad states track ad draft, ad needs review, ad ready to post, and archived.
    - Campaign status, spend, ad-lead attribution, cost per ad lead, and billing are future work
      on top of these records; Ads never does ad posting.
@@ -416,7 +414,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria) section.
    a future managed-ads service, or an external system can use it without rebuilding
    generation.
    - The service returns a clearly defined ad set (ad, variants, copy, image
-     placements, ad destination) with a version number.
+     placements, ad destination) with a revision number.
    - The same approved ad always yields the same ad set; a downloadable images-plus-copy-sheet
      rendering is available for the human path; approval is explicit and audited.
 
@@ -433,8 +431,8 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria) section.
 ## Acceptance Criteria
 
 1. Ads under `/cms/ads` exposes an ad list, create flow, and status badges.
-2. Ad generation consumes approved media, projects, services, and details from the business
-   profile; it never requires new media to be uploaded.
+2. Ad generation consumes approved photos, projects, services, and details from the business
+   profile; it never requires new photos to be uploaded.
 3. LLM drafts — copy, image gallery, and light cleanup edits — are reviewable with where they
    came from; manual edits are preserved and never silently overwritten by the LLM.
 4. Square, portrait, carousel, and story variants produce valid non-destructive crops with focal
@@ -443,13 +441,12 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria) section.
    validation.
 6. Every ad requires a published website page owned by that contractor (the ad destination)
    before it can become ad ready to post.
-7. Approval is explicit and audited; **ad ready to post** is the final step and does no ad
-   posting.
-8. The service returns a stable ad set with a version number, and a person can download a
+7. Approval is explicit and audited; **ad ready to post** is the final step and does no ad posting.
+8. The service returns a stable ad set with a revision number, and a person can download a
    deterministic rendering (cropped images per ad format plus a copy sheet and ad destination
    URL) with no ad-platform credentials required.
 9. Compliance gates block unsupported marketing statements and unreviewed imagery before approval.
-10. An E2E test covers create → generate → review/edit → approve → use the ad set without
+10. An E2E test covers create → review/edit → approve → use the ad set without
     mocking the core domain logic.
 11. Ad generation is a service of its own with clearly defined inputs and outputs. Ads is one
     caller; another internal part of Placis can also get the ad set without going through Ads,

@@ -5,7 +5,7 @@ scratch. Everything sits behind a voice-service-neutral interface; the concrete 
 swappable.
 
 The realtime **voice agent** is the thing the owner turns on in the application: client interview
-during onboarding, the website assistant, and The CMS after website activation. It asks clarifying
+during onboarding, the website assistant, and the CMS after website activation. It asks clarifying
 questions and hands off a structured instruction to the same governed tool surface as text.
 Dictation / manual ASR / TTS is **not kept**: it's legacy, dropped for latency.
 
@@ -13,7 +13,7 @@ Never say “activate” for the voice agent — that word is website activation
 
 ## Realtime connection — minted secret, audio bypasses the backend
 
-1. The frontend asks the backend for a short-lived **realtime client secret**.
+1. The frontend asks the backend for a short-lived **realtime connection secret**.
 2. The backend mints it through the voice adapter and returns only browser-safe connection
    fields.
 3. The frontend connects **directly to the voice service** (e.g. `wss://…/realtime`); live audio

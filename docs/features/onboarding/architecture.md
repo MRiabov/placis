@@ -29,14 +29,14 @@ heuristic fallback — not website-page-by-website-page website copy generation.
 website editor (`update_slot`, `update_seo`, …), no chat UI, writing into the existing unpublished
 website. The website preview is issued on the unpublished website; copy fills in over SSE. If copy
 fails, the unpublished website stays. The website assistant
-([website/assistant.md](../website/assistant.md)) is still in The CMS **after** website
+([website/assistant.md](../website/assistant.md)) is still in the CMS **after** website
 activation. The LLM never does website publication.
 
 ## End of onboarding: paid, not published
 
 Website activation activates the tenant (Clerk organization, owner membership, generated
 subdomain). The site stays an **unpublished website**. Website publication is a later, explicit
-action in The CMS.
+action in the CMS.
 
 ## Progressive progress (SSE)
 
@@ -53,8 +53,8 @@ on `expires_at`; the onboarding session does not.
 
 ## Voice
 
-Voice is a **channel** (client interview, website assistant, and the voice agent in The CMS).
+Voice is a **channel** (client interview, website assistant, and the voice agent in the CMS).
 Transport: [voice-agent.md](../../general-architecture/voice-agent.md). Tools:
 `obtained_information`, `mark_information_status`, `request_lookup`, `confirm_conflict`,
-`update_interview_plan`. `end_interview` calls the same complete path as the text client
-interview. Applying the website template consumes the accepted profile, never the raw transcript.
+`update_interview_plan`. `end_interview` calls the same complete path as the text client interview.
+Applying the website template consumes the accepted profile, never the raw transcript.
