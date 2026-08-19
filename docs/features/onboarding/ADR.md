@@ -31,6 +31,12 @@ decision + date) instead of silently rewriting history.
    `business_profile_history` row with where each detail came from and who changed it; the profile
    points at the current `business_profile_history` row. Structured identity lives in real columns; only genuinely
    polymorphic brand/contact payloads use `jsonb`.
+   (2026-08-19: writers apply only field/list increments in `business_profile_edits` — not a
+   `details` jsonb dump and not a full-row snapshot. The live profile is the fold. Client
+   interview and business research run at the same time; each `SELECT … FOR UPDATE`, inserts only
+   what it set, and updates only those columns. OnCall dropped populated fields in the UI under a
+   snapshot race. Same field with disagreeing values is a research conflict. See
+   [details ADR](../other/details/ADR.md).)
 
 7. **Conflicting answers are surfaced, not resolved** — what the contractor said vs. what we found
    are shown side by side; the system never picks one silently.

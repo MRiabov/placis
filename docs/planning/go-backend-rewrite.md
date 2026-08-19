@@ -183,8 +183,9 @@ Canonical table definitions live with the feature that owns them — see
    template starts at client interview complete; website copy generation runs after that and does
    not block website preview or website activation. Website previews expire; the onboarding session
    does not.
-2. **Business profile** — profile history; `current_history_id` points at the current row;
-   details carry `source_refs` and `created_by`.
+2. **Business profile** — profile history is `business_profile_edits` (typed increments); the live
+   `business_profiles` row is the fold (`last_edit_id`, `accepted_edit_id` at client interview
+   complete). No `details` jsonb dump.
 3. **Website page** — unpublished website rows mutated in place; website publication creates a new
    website version (`website_publications` row; profile history untouched).
 4. **Website publication** — `published → rolled_back/archived`; website rollback reactivates an earlier website version.

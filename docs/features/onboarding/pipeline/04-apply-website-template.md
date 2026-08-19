@@ -9,7 +9,8 @@ unpublished rows — the same tables The CMS edits later.
 
 ## What runs
 
-1. Keep the accepted profile history (`current_history_id`).
+1. Set `accepted_edit_id` to the current `last_edit_id` (accepted profile at client interview
+   complete). Apply the website template from the fold as of that edit.
 2. **One bounded LLM call** picks a website template + website styles from the website template
    catalog and website style catalog, with a heuristic fallback (trade → website template, else a
    default). This is not website-page-by-website-page website copy generation.

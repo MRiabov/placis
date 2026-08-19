@@ -38,11 +38,12 @@ block website preview or website activation.
 
 ## Profile building
 
-1. Merge client interview answers + business research into a `business_profile_history` row (details + where
-   each came from + who changed it).
+1. Each client interview answer and each business research slot becomes one or more
+   `business_profile_edits` rows (only the fields/list items that writer set) applied to the live
+   fold in the same transaction (`SELECT … FOR UPDATE`, then those columns only).
 2. Surface research conflicts for the owner to review.
-3. On approval, the profile advances to the current `business_profile_history` row; applying the
-   website template reads it.
+3. At client interview complete, set `accepted_edit_id`; applying the website template uses the
+   profile as of that edit.
 
 ## Validation & testing
 

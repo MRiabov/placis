@@ -188,7 +188,8 @@ The kept record of how the business profile changed.
 Do not say “version”, “versioned”, or “snapshot” for this. Distinct from: Website version
 (the history of the website).
 
-In code: `business_profile_history`, `business_profiles.current_history_id`.
+In code: `business_profile_edits`, `business_profiles.last_edit_id`,
+`business_profiles.accepted_edit_id`.
 
 ---
 

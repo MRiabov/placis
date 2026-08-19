@@ -26,8 +26,8 @@ preview." Without it, business research does not start.
 3. Registry selected → persist the company registry record. Maps selected → attach the place (same
    onboarding session if registry already ran).
 4. Initialize a [business profile](../../other/details/data-model.md) **shell**: a
-   `business_profiles` row with `tenant_id` null, empty/unknown details, `current_history_id`
-   null. Registry confirm fills legal identity (legal name, company number, registered office,
+   `business_profiles` row with `tenant_id` null, empty/unknown details, `last_edit_id` and
+   `accepted_edit_id` null. Registry confirm fills legal identity (legal name, company number, registered office,
    company status) into that shell; Maps confirm fills contact/listing fields. Both: registry
    wins for legal identity (03).
 5. Kick off 02a. Move the UI to **Review** (`/onboarding/review`). Status → `client_interviewing`.
