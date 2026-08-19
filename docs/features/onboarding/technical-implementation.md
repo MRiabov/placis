@@ -29,9 +29,10 @@ block website preview or website activation.
 
 ## Business research pipeline
 
-1. Google Maps, the company registry, Facebook, the LLM, or a fake returns raw payload.
-2. Turn it into a typed `business_research_sources` row: kind, external id, where it came from,
-   `raw`, lookup `status`, confidence.
+1. Google Maps, the company registry, Facebook, the LLM, or a fake returns a raw fetch body.
+2. Upsert typed output: a `business_research_sources` row (kind, external id, where it came from,
+   lookup `status`, confidence). A Google Maps listing also upserts `google_maps_listings`
+   (columns + `raw` ETL cache). Other kinds keep `raw` on the source row.
 3. Photo classification tags media assets (hero/project/service/founder/logo) for the media library
    / website slot mapping.
 4. Every run is safe to retry (explicit key).

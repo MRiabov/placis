@@ -19,7 +19,7 @@ Maps listing was selected. Registry-only onboarding sessions still get `business
 | Reviews and photos | reviews, rating, photos | `review` / `photo` |
 
 Google Maps, the company registry, Facebook, the LLM, and fakes sit behind one interface: Google
-Maps Details (cached in `google_maps_listing_cache`; scrape when Maps is not configured),
+Maps Details (upsert `google_maps_listings`; scrape when Maps is not configured),
 an OpenRouter fast extract, Facebook lookup, photo classification, trade-registry lookups (Safe
 Electric, RGI, … for IE; Gas Safe, NICEIC, … for GB). A miss is "ask", never "this business has
 no profile".
@@ -29,9 +29,10 @@ research job writes a `social_profile` row.
 
 Each research job is its own River job (retryable). When it finishes it writes
 `business_research_events` + `business_research_sources` (`kind`, `external_id`, `source_ref`,
-`raw`, `status`, `confidence`) and clears in-progress on the checklist. Lookup outcomes
-(`matched` / `ambiguous` / `not_found` / `not_attempted` / `blocked` / `error`) live on the
-source row’s `status` — not as extra tables.
+lookup `status`, `confidence`; `raw` only when there is no listing table) and clears in-progress
+on the checklist. The Google listing job also upserts `google_maps_listings` (columns + `raw`
+ETL cache). Lookup outcomes (`matched` / `ambiguous` / `not_found` / `not_attempted` /
+`blocked` / `error`) live on the source row’s `status` — not as extra tables.
 
 - **Persists** `business_research_runs` (`place_id` on the Maps path), `business_research_events`,
-  `business_research_sources`, `google_maps_listing_cache`. Profile deltas go through 03.
+  `business_research_sources`, `google_maps_listings`. Profile deltas go through 03.
