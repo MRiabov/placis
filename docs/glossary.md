@@ -219,7 +219,7 @@ the contractor decides. A research conflict is not an error.
 
 The contractor’s Google Maps place, used to start onboarding and pre-fill what we already know.
 
-In code: `google_maps_listing`, `google_maps_listing_cache` (Google’s `place_id` as the external id).
+In code: `google_maps_listings` (Google’s `place_id` as the external id).
 
 ---
 

@@ -31,14 +31,20 @@ live here.
 - `business_research_events` — `id`, `business_research_run_id` fk, `event_type`, `payload` jsonb,
   `created_at`
 - `business_research_sources` — `id`, `business_research_run_id` fk, `kind` (same closed set as
-  runs), `external_id`, `source_ref`, `raw` jsonb, `status` (`matched`/`ambiguous`/`not_found`/
+  runs), `external_id`, `source_ref`, `raw` jsonb (ETL dump for kinds with no listing table;
+  null when `kind=google_maps_listing`), `status` (`matched`/`ambiguous`/`not_found`/
   `not_attempted`/`blocked`/`error`), `confidence`, `created_at`
-- `google_maps_listing_cache` — `id`, `place_id` unique (Google’s id),
-  `fetched_from` (`google_maps_details`/`scrape`), `payload` jsonb, `cached_at`
+- `google_maps_listings` — `id`, `place_id` unique (Google’s id),
+  `fetched_from` (`google_maps_details`/`scrape`), `display_name`, `primary_type`,
+  `marketing_phone`, `website_url`, `google_maps_listing_url`, `listing_address`, `locality`,
+  `rating`, `review_count`, `raw` jsonb (last Details or scrape body; ETL cache so we do not
+  refetch), `fetched_at`
+- `google_maps_listing_opening_hours` — `id`, `listing_id` fk, `day_of_week`, `opens_at`,
+  `closes_at`, `closed`
 
-`payload` is the raw listing from Google Maps Details (the free API) or the scrape fallback. The
-cache avoids a repeat fetch; it is not a source of truth. Typed output is
-`business_research_sources`.
+The Google Maps listing is this row, not a blob and not a second copy on
+`business_research_sources`. Photos from the listing become media library items. Profile
+increments (03) copy selected fields onto `business_profiles`; the listing address stays here.
 
 ## Website preview and website activation
 

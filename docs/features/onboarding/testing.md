@@ -18,7 +18,7 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
    - DB: `client_interview_submissions`; `business_profile_edits` with `created_by=text`.
 
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
-   - DB: `business_research_runs` → `business_research_sources` + `google_maps_listing_cache` when a place was selected.
+   - DB: `business_research_runs` → `business_research_sources` + `google_maps_listings` when a place was selected.
 
 5. **Apply the website template + website preview** — `/onboarding/preview`, then View website as soon as the website preview
    exists (do not wait for copy).

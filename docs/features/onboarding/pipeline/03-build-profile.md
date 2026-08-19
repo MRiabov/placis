@@ -17,7 +17,7 @@ Each field carries its value, status, where it came from, and confidence.
   A registry "not found" is recorded, not papered over.
 - **Legal identity vs where they work**: `registered_office` is the legal address.
   `business_profile_service_areas` is operating geography. Business research never writes one into the
-  other. The Maps listing address stays on the Google Maps listing, not as a second legal address.
+  other. The Maps listing address stays on `google_maps_listings`, not as a second legal address.
 - **VAT conditional**: `vat_registration_status` marks whether they are VAT-registered; the VAT
   number is required (and later website publication may block) only when that status is set.
 - **Concurrency**: interview and research run at the same time. Each writer `SELECT … FOR UPDATE`

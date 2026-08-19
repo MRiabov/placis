@@ -21,14 +21,18 @@ decision + date) instead of silently replacing the old entry.
 
 4. **Business research is an interface + typed output** — Google Maps, company registry, Facebook,
    website crawl, and photo classification sit behind one interface with fakes. Output lands in
-   typed `business_research_sources` rows with where it came from + confidence; raw freeform dicts never leak
-   past the boundary.
+   typed `business_research_sources` rows with where it came from + confidence; a Google Maps listing
+   also upserts `google_maps_listings` (columns). Raw fetch bodies stay on the ETL cache
+   (`google_maps_listings.raw`, or `business_research_sources.raw` for kinds with no listing table)
+   and never leak past that boundary into the profile.
 
-5. **Google Maps is cached** — `google_maps_listing_cache` keyed by `place_id` avoids a repeat
-   Google Maps Details or scrape fetch; it is a cache, not a source of truth.
-   (2026-08-16: said “repeat paid lookups”. 2026-08-19: Google Maps Details is the free API;
-   scrape is the fallback when Maps is not configured. The cache is so we do not refetch, not
-   because Places is paid.)
+5. **Google Maps is cached** — `google_maps_listings` keyed by `place_id` is the listing: typed
+   columns plus `raw` as the ETL cache of the last Google Maps Details or scrape fetch. A repeat
+   attach reuses that row instead of refetching. It is not the business profile.
+   (2026-08-16: a `google_maps_listing_cache` jsonb-only payload, described as “repeat paid
+   lookups”. 2026-08-19: Google Maps Details is the free API; scrape is the fallback. Same day,
+   later: that table is `google_maps_listings` (typed columns + `raw` ETL body); do not also dump
+   the body onto `business_research_sources.raw`.)
 
 6. **The business profile keeps profile history and every detail is attributable** — each change is a new
    `business_profile_history` row with where each detail came from and who changed it; the profile
@@ -41,8 +45,8 @@ decision + date) instead of silently replacing the old entry.
    write race. Same field with disagreeing values is a research conflict. See
    [details ADR](../other/details/ADR.md).
    Same day: founder and brand are columns on `business_profiles`, not jsonb. Contact was already
-   columns. Remaining onboarding jsonb is raw dumps — research `raw`, Maps cache `payload`,
-   Stripe and event payloads.)
+   columns. Remaining onboarding jsonb is raw dumps — research `raw` for kinds with no listing
+   table, `google_maps_listings.raw` (ETL cache), Stripe and event payloads.)
 
 7. **Conflicting answers are surfaced, not resolved** — what the contractor said vs. what we found
    are shown side by side; the system never picks one silently.
