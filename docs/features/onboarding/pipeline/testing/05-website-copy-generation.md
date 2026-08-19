@@ -1,12 +1,13 @@
 # 05 — Copy generation (integration test)
 
-- **Setup**: 04 has instantiated a draft; 06 has an `active` preview package; session
-  `previewing`.
-- **Invoke**: enqueue copy generation (CMS-tool LLM faked to a small `update_slot` / `update_seo`
-  batch).
-- **Assert**: session already `previewing` before the job finishes; preview token unchanged;
-  targeted slots/SEO updated and still valid; `{{…}}` fact tokens preserved; `ai_generations`
-  records reasoning + visible output + tool calls; no `create_page`; no `website_publications`.
-- **Failure path**: fake the LLM to throw — instantiated draft unchanged, session still
-  `previewing`, claim still allowed.
-- **Mocked**: the copy-generation LLM only.
+- **Setup**: 04 has instantiated an unpublished website; 06 has an `active` website preview;
+  onboarding session `previewing`.
+- **Invoke**: enqueue website copy generation (website assistant-tool LLM faked to a small
+  `update_slot` / `update_seo` batch).
+- **Assert**: onboarding session already `previewing` before the job finishes; website preview
+  token unchanged; targeted website slots/SEO updated and still valid; `{{…}}` website placeholder
+  tokens preserved; `ai_generations` records reasoning + visible output + tool calls; no
+  `create_page`; no `website_publications`.
+- **Failure path**: fake the LLM to throw — instantiated unpublished website unchanged, onboarding
+  session still `previewing`, website activation still allowed.
+- **Mocked**: the website copy generation LLM only.

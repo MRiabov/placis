@@ -1,56 +1,59 @@
-# 05 — Copy generation (async)
+# 05 — Website copy generation (async)
 
-After [04](04-generate.md) instantiates the draft, this step **writes the words** — headlines,
-body, calls to action, SEO titles — into the existing slots. It is not the CMS editor and not a
-human approval loop. OnCall called this "refinement"; the work is copy generation (and the same
-tool pass for SEO / image prompts).
+After [04](04-generate.md) instantiates the unpublished website, this step **writes the words** —
+headlines, body, calls to action, SEO titles — into the existing website slots. It is not the
+website editor and not a human approval loop. The predecessor called this "refinement"; the work
+is website copy generation (and the same tool pass for SEO / image prompts).
 
-Onboarding **enqueues** it. The writes go through the website CMS tools
-([assistant.md](../../website/assistant.md)) onto the same draft rows 04 created.
+Onboarding **enqueues** it. The writes go through the website assistant tools
+([assistant.md](../../website/assistant.md)) onto the same unpublished website rows 04 created.
 
 ## Why it is async
 
-Instantiate is fast and deterministic. Copy generation is slow (LLM, per page, several bounded
-batches). The contractor already waited through the interview; they should not wait again the way
-they no longer wait on research.
+Instantiate is fast and deterministic. Website copy generation is slow (LLM, per website page,
+several bounded batches). The contractor already waited through the client interview; they should
+not wait again the way they no longer wait on business research.
 
-04 finishes → [06](06-preview.md) issues the preview on the **skeleton** (structure + fact
-tokens). This job fills copy in the background. SSE reports slot updates; the public preview
-re-renders the current draft. Claim does **not** wait for this job.
+04 finishes → [06](06-website-preview.md) issues the website preview on the **unpublished
+website** (structure + detail tokens). This job fills copy in the background. SSE reports website
+slot updates; the public website preview re-renders the current unpublished website. Website
+activation does **not** wait for this job.
 
 ## When it runs
 
-Once, when 04 succeeds (interview complete). Not at find-confirm. Not on every later research
-event — research has been running since confirm and should mostly be in by interview complete.
-The job reads the current profile version at start.
+Once, when 04 succeeds (client interview complete). Not at find-confirm. Not on every later
+business research event — business research has been running since confirm and should mostly be
+in by client interview complete. The job reads the current profile history at start.
 
-The editor assistant (plan mode, activity cards, revert) is still **after claim**. Same tools,
-human-driven, different entry.
+The website assistant (plan mode, activity cards, revert) is still **after website activation**.
+Same tools, owner-driven, different entry.
 
 ## What it does
 
-Continuous-mode CMS tools on the instantiated draft. No chat UI.
+Continuous-mode website assistant tools on the instantiated unpublished website. No chat UI.
 
-1. Per page, in parallel (bounded concurrency): `update_slot` for copy, `update_seo`, and the
-   rest of the assistant tools that make sense on an already-built page (`generate_image` if a
-   slot still has no photo). **Do not** `create_page` — 04 already instantiated the page set.
-2. Keep `{{business_name}}`, `{{phone}}`, … tokens for reusable facts. Do not bake raw fact
-   values into copy that should stay a token.
-3. Validate every tool result against component contracts before keeping it.
-4. Cap steps and total tool calls (OnCall: 3 steps / 12 calls / 4 pages at a time). Whole-and-valid
-   or the batch fails; do not accept a partial invalid slot.
+1. Per website page, in parallel (bounded concurrency): `update_slot` for copy, `update_seo`, and
+   the rest of the website assistant tools that make sense on an already-built website page
+   (`generate_image` if a website slot still has no photo). **Do not** `create_page` — 04 already
+   instantiated the website page set.
+2. Keep `{{business_name}}`, `{{phone}}`, … tokens for reusable details. Do not bake raw detail
+   values into copy that should stay a website placeholder.
+3. Validate every tool result against website component contracts before keeping it.
+4. Cap steps and total tool calls (predecessor: 3 steps / 12 calls / 4 website pages at a time).
+   Whole-and-valid or the batch fails; do not accept a partial invalid website slot.
 
 ## Failure
 
-If the job throws, keep the instantiated draft. Session stays `previewing`. The skeleton is the
-fallback (OnCall already did this). Retry is safe (explicit River key). Copy generation failing
-must not fail generate or block claim.
+If the job throws, keep the instantiated unpublished website. Onboarding session stays
+`previewing`. The unpublished website is the fallback (the predecessor already did this). Retry is
+safe (explicit River key). Website copy generation failing must not fail generate or block
+website activation.
 
 ## Status
 
-Session is already `previewing` (04 + 06). This job does not get its own session status. Progress
-events on the session stream (`copy_generation_started` / `copy_generation_completed` /
-`copy_generation_failed`, plus per-page/slot updates).
+Onboarding session is already `previewing` (04 + 06). This job does not get its own onboarding
+session status. Progress events on the onboarding session stream (`copy_generation_started` /
+`copy_generation_completed` / `copy_generation_failed`, plus per-website-page/slot updates).
 
-- **Persists** updates to existing `content_slots` / page SEO (draft versions); `ai_generations`
-  for the tool batches. Nothing published.
+- **Persists** updates to existing `website_slots` / website page SEO (unpublished versions);
+  `ai_generations` for the tool batches. No website publication.

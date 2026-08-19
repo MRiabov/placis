@@ -1,30 +1,32 @@
-# 07 — Claim
+# 07 — Website activation
 
-The contractor pays on the **public preview** page. Clerk sign-in/up if needed, then Stripe
-checkout. The tenant activates; the site stays a **draft** until they publish in the CMS
-([ADR 12](../ADR.md)).
+The contractor pays on the **public website preview**. Clerk sign-in/sign up if needed, then Stripe
+checkout. The tenant activates; the site stays an **unpublished website** until website publication
+in The CMS ([ADR 12](../ADR.md)).
 
-Stripe (via `stripe-go`) handles this checkout only. Amount is the activation price (OnCall:
+Stripe (via `stripe-go`) handles this checkout only. Amount is the activation price (predecessor:
 EUR 4900). `checkout.session.completed` is accepted only after the SDK verifies the signature
-(`webhook.ConstructEvent`) and the metadata matches (`preview_package_id`, authenticated user).
+(`webhook.ConstructEvent`) and the metadata matches (`website_preview_id`, authenticated owner).
 The raw payload is saved on `stripe_events`, the work is enqueued on
 [River](../../../general-architecture/jobs.md), and the request returns. Activation can be
 replayed safely and is never triggered by a browser success URL alone.
 
-## What activation writes
+## What website activation writes
 
-1. Resolve or create the Clerk org → [tenant](../../other/auth/data-model.md)
-   (`tenants.clerk_org_id`). Tenant name is the **business**; org name is the **person**.
-2. `tenant_memberships` (`owner`) for the paying user.
+1. Resolve or create the Clerk organization → [tenant](../../other/auth/data-model.md)
+   (`tenants.clerk_org_id`). Tenant name is the **business**; Clerk organization name is the
+   **person**.
+2. `tenant_memberships` (`owner`) for the paying owner.
 3. Attach `onboarding_sessions.tenant_id` and `business_profiles.tenant_id`.
 4. Provision the generated subdomain → `tenant_domains` (`type=subdomain`).
-5. `tenants.status=active`. Session → `claimed`. Preview package → `claimed`.
-6. Does **not** write `website_publications`. The draft from 04 (plus whatever 05 has already
-   written) is what they edit. Claim does **not** wait for copy generation.
+5. `tenants.status=active`. Onboarding session → `activated`. Website preview → `activated`.
+6. Does **not** write `website_publications`. The unpublished website from 04 (plus whatever 05
+   has already written) is what they edit. Website activation does **not** wait for website copy
+   generation.
 
-Expired preview (`expires_at` passed) cannot be claimed. Replaying the webhook does not activate
-twice.
+Expired website preview (`expires_at` passed) cannot be activated. Replaying the webhook does not
+activate twice.
 
-- **Persists** `preview_claims` (`clerk_subject`, `checkout_session_id`, `payment_state`,
+- **Persists** `website_activations` (`clerk_subject`, `checkout_session_id`, `payment_state`,
   `amount`, `currency`, `activated_at`), `stripe_events`, `tenants`, `tenant_memberships`,
   `tenant_domains`.
