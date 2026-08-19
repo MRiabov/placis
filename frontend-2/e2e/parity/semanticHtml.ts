@@ -10,7 +10,7 @@ export type SemanticNode = {
 /** Extracts the semantic DOM from the live page: tag hierarchy + text +
  *  structural attributes, dropping cosmetics and React internals. Pass a
  *  CSS selector to scope the extraction to a subtree (e.g. the ported
- *  content region of a view that gained new chrome). */
+ *  content region of a view that gained a new wrapper). */
 export async function extractSemanticHtml(
   page: Page,
   selector?: string,
