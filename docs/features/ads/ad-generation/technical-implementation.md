@@ -77,7 +77,7 @@ Distinct from Ad. Go/persistence forms are
 snake_case tables with a `*_id` primary key, per [data-model.md](../data-model.md): Ad →
 `ads`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
 `AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no ad
-destination on `ads` in the first version.
+destination on `ads` for now.
 
 Recommended top-level records:
 
@@ -100,7 +100,7 @@ Hard-typed fields:
 06. `ad_goal`: `more_calls`, `more_quotes`, `promote_service`
 07. `service_focus_id` (optional reference to a tenant service)
 08. `review_status`
-09. `source_refs`
+09. `origin` (`owner`, `llm`, `done_for_you`, `business_profile`)
 10. `created_by`
 11. `updated_by`
 12. `created_at`
@@ -109,14 +109,15 @@ Hard-typed fields:
     `{"facebook": {"ad_account_id": ..., "campaign_id": ..., "ad_id": ...}}`; empty until an
     ad-platform integration exists)
 15. `platform_status`: `not_connected`, `synced`, `needs_sync`, `error`
-16. `ideal_customer_profile` (typed: `age_min`, `age_max`, `household` such as
-    `married_couples` or `any`, `location_focus`, `notes`, `source` (`default`, `llm_suggested`,
-    `owner`), `review_status`; default is married couples aged 30-40; loose by design — steers
-    generation now, precise targeting comes with ad posting)
+16. `icp_age_min`, `icp_age_max`, `icp_household` (`married_couples` or `any`),
+    `icp_location_focus`, `icp_notes`, `icp_source` (`default`, `llm_suggested`, `owner`),
+    `icp_review_status`; default is married couples aged 30-40; loose by design — steers
+    generation now, precise targeting comes with ad posting
 
-Flexible JSON is allowed only for `ai_generations` traces and ad-platform-specific payload extras such as
-`platform_refs`. Status, tenant ownership, offer, goal, and review status are
-hard typed.
+Flexible JSON is allowed only for `ai_generations` traces (`input` / `internal_reasoning` /
+`output` / `tool_calls` / `applied_changes`) and ad-platform-specific payload extras such as
+`platform_refs`. Status, tenant ownership, offer, goal, review status, and the ideal customer
+profile are hard typed.
 
 ### AdVariant
 
@@ -175,8 +176,8 @@ Hard-typed fields:
 03. `variant_id`
 04. `media_asset_id` (must resolve to a tenant-owned approved media asset)
 05. `format`
-06. `crop` (typed: `x`, `y`, `width`, `height` as 0–1 coordinates, or `full`)
-07. `focal_point` (`x`, `y` as 0–1 coordinates, inherited from the source media asset by default)
+06. `crop_mode` (`full` or `rect`), `crop_x`, `crop_y`, `crop_width`, `crop_height` (0–1, null when `full`)
+07. `focal_x`, `focal_y` (0–1, inherited from the source media asset by default)
 08. `position`
 09. `media_caption` (inherited from the media asset unless overridden here)
 
@@ -200,9 +201,9 @@ Hard-typed fields:
 02. `tenant_id`
 03. `ad_id`
 04. `title` (suggested)
-05. `questions` (ordered structured list of a fixed set of standard fields — marketing phone, full
-    name, postcode, email — each mapped to a Meta ad-lead-form field type; marketing phone is the
-    essential default; no custom questions)
+05. `include_marketing_phone` (default true), `include_full_name`, `include_postcode`,
+    `include_email` — include/exclude toggles for the fixed set of standard fields; marketing phone
+    is the essential default; no custom questions
 06. `created_at`
 07. `updated_at`
 
@@ -219,8 +220,9 @@ Supported ad formats and target ratios:
 3. `carousel`: `1:1` cards, 2-10 images
 4. `story`: `9:16`
 
-The crop model stores 0–1 coordinate crop and focal point so the framing UI and the ad-set renderer use
-the same framing. Rendering cuts the source media asset to the crop (sharpening/format conversion
+The crop model stores `crop_mode` plus 0–1 `crop_x` / `crop_y` / `crop_width` / `crop_height` and
+`focal_x` / `focal_y` so the framing UI and the ad-set renderer use the same framing. Rendering cuts
+the source media asset to the crop (sharpening/format conversion
 via the existing image pipeline) into a per-ad-format output file. Output naming is
 deterministic, e.g. `{ad_id}/{variant_format}/{position}.{ext}`.
 
@@ -234,8 +236,8 @@ Service-level rules:
 
 1. inputs are per tenant and clearly defined: details from the business profile, approved media asset
    ids, service focus, ad goal, and ideal customer profile
-2. the output is the ad set (ad, variants, copy, image placements, ad lead form,
-   `ideal_customer_profile`) with an ad set format number and the stable ad/variant ids
+2. the output is the ad set (ad, variants, copy, image placements, ad lead form, and the
+   ideal customer profile columns) with an ad set format number and the stable ad/variant ids
    in the response, so an ad-platform integration can map its own objects back to the ad
 3. generation is safe to retry: running the same request twice gives the same result
 4. for now only internal callers (the app's own sign-in/actor context) can use it; external
@@ -360,7 +362,7 @@ Rendering is deterministic and offline:
 1. cut each approved source media asset to its crop and produce the per-ad-format image output
 2. write a copy sheet (markdown or plain text) with headline, primary text, description, button
    label, and per-ad-format notes
-3. write the suggested ad lead form fields (title, questions) as the starting point for the ad
+3. write the suggested ad lead form fields (title and include flags) as the starting point for the ad
    lead form created on Meta
 4. write a mapping of each output image to its source media asset, crop, and ad format
 5. pack as a zip; the download is a short-lived signed URL, not a public URL

@@ -9,28 +9,41 @@ website templates fill is [details](../other/details/data-model.md). Website for
 [leads](../other/leads/data-model.md).
 
 - `website_pages` — `id`, `tenant_id` fk, `path`, `title`, `page_type` (`standard`/`service`/
-  `landing`/`legal`), `status` (`unpublished`/`published`/`archived`), `seo` jsonb, timestamps;
-  unique `(tenant_id, path)`
+  `landing`/`legal`), `status` (`unpublished`/`published`/`archived`), `seo_title`,
+  `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`, `seo_noindex`,
+  `seo_primary_keyword`, timestamps; unique `(tenant_id, path)`
 - `website_sections` — `id`, `tenant_id` fk, `page_id` fk, `component_id`, `component_version`,
-  `position`, `status` (`visible`/`hidden`), `props` jsonb, `design` jsonb, `source_refs` jsonb;
+  `position`, `status` (`visible`/`hidden`), `props` jsonb, `design` jsonb,
+  `origin` (`website_template`/`website_copy_generation`/`owner`/`business_research`),
   unique `(page_id, position)`
 - `website_slots` — `id`, `tenant_id` fk, `section_id` fk, `slot_key`, `slot_type` (`text`/
   `rich_text`/`image`/`link`/`list`/`json`), `value` jsonb, `status` (`unpublished`/`reviewed`/
-  `approved`/`rejected`), `source_refs` jsonb, `validation_errors` jsonb; unique `(section_id, slot_key)`
+  `approved`/`rejected`),
+  `origin` (`website_template`/`website_copy_generation`/`owner`/`business_research`),
+  `validation_errors` `text[]`; unique `(section_id, slot_key)`
 - `website_forms` — `id`, `tenant_id` fk, `form_key`, `title`, `status` (`active`/`disabled`),
-  `submit_action` (`create_website_lead`), `fields` jsonb, `privacy_notice`; unique `(tenant_id, form_key)`
+  `submit_action` (`create_website_lead`), `privacy_notice`; unique `(tenant_id, form_key)`
+- `website_form_fields` — `id`, `tenant_id` fk, `form_id` fk, `position`, `field_key`,
+  `field_type` (`text`/`textarea`/`email`/`marketing_phone`/`address`/`select`/`date`/`checkbox`),
+  `label`, `required`, `placeholder`; unique `(form_id, field_key)`
+- `website_form_field_options` — `id`, `field_id` fk, `position`, `label`, `value`
 - `top_menu_items` — `id`, `tenant_id` fk, `parent_id` nullable fk, `page_id` nullable fk,
   `label`, `path`, `url`, `position`, `status` (`visible`/`hidden`)
 - `footer_items` — `id`, `tenant_id` fk, `parent_id` nullable fk, `page_id` nullable fk,
   `label`, `path`, `url`, `position`, `status` (`visible`/`hidden`)
 - `website_publications` — one row is a website version: `id`, `tenant_id` fk, `version_number`,
   `status` (`published`/`archived`/`rolled_back`), `active`, `manifest_version`,
-  `website_manifest` jsonb, `validation_report` jsonb, `published_by`,
+  `website_manifest` jsonb, `published_by`,
   `rollback_of_publication_id` nullable, `published_at`; unique `(tenant_id, version_number)`
+- `website_publication_issues` — `id`, `publication_id` fk, `code`, `message`, `entity_type`
+  nullable, `entity_id` nullable
 - `projects` — `id`, `tenant_id` fk, `title`, `description`, `cover_media_asset_id` nullable fk,
   `status` (`unpublished`/`published`), timestamps
 - `website_certification_selections` — `id`, `tenant_id` fk, `certification_id`, `status`
   (`selected`/`removed`), `created_at`
+
+`props`, `design`, `value`, and `website_manifest` stay jsonb: each website component / slot /
+published website copy has its own catalog-shaped dump.
 
 ## Indexes
 

@@ -139,7 +139,7 @@ when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard err
 | Language | Go (latest stable toolchain) | |
 | HTTP | `chi` + `net/http` | stdlib `http.ServeMux` is the zero-dep alternative |
 | API contract | **Go-first**: `huma` v2 (locked) | structs + tags derive OpenAPI 3.1 + validation when the request is handled; frontend regenerates via `openapi-typescript` |
-| Data access | `sqlc` + `pgx/v5` | `jsonb` -> typed Go structs via custom mapping at the boundary only |
+| Data access | `sqlc` + `pgx/v5` | remaining polymorphic dumps: `jsonb` -> typed Go structs at the boundary; structural data is columns |
 | Migrations | `goose` | plain SQL, embedded |
 | Jobs | `River` | Postgres-backed, typed args, safe retries |
 | Config | env -> typed struct, validated at startup | |

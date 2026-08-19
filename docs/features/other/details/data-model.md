@@ -24,10 +24,11 @@ ads, Details, and apply-the-website-template (when the fold has not moved past
   `incorporation_date`, `registered_office`, `contact_name`, `marketing_phone`, `emergency_phone`,
   `marketing_email`, `existing_site_url`, `google_maps_listing_url`,
   `facebook_profile_url`,
-  `founder_profile` jsonb, `brand` jsonb (colors/logo_media_asset_id/tone/typography),
+  `founder_name`, `founder_role`, `founder_occupation`, `founder_nationality`,
+  `founder_country_of_residence`, `founder_appointed_on`, `founder_media_asset_id` nullable fk,
+  `logo_media_asset_id` nullable fk, `brand_tone`, `brand_typography`, `brand_primary_color`,
+  `brand_accent_color`,
   `last_edit_id` nullable fk, `accepted_edit_id` nullable fk, timestamps
-
-`founder_profile` / `brand` jsonb stay the existing onboarding ADR exception.
 
 - `business_profile_edits` — Profile history. Append-only typed increments. Never `details` jsonb
   and never a full-row dump of the profile. Each row is one field or one list-item change.
@@ -38,7 +39,10 @@ ads, Details, and apply-the-website-template (when the fold has not moved past
   `trading_name`, `legal_name`, `legal_form`, `company_status`, `description`, `established_year`,
   `company_number`, `vat_number`, `vat_registration_status`, `incorporation_date`,
   `registered_office`, `contact_name`, `marketing_phone`, `emergency_phone`, `marketing_email`,
-  `existing_site_url`, `google_maps_listing_url`, `facebook_profile_url`),
+  `existing_site_url`, `google_maps_listing_url`, `facebook_profile_url`, `founder_name`,
+  `founder_role`, `founder_occupation`, `founder_nationality`, `founder_country_of_residence`,
+  `founder_appointed_on`, `founder_media_asset_id`, `logo_media_asset_id`, `brand_tone`,
+  `brand_typography`, `brand_primary_color`, `brand_accent_color`),
   `list` nullable (`services`/`service_areas`/`opening_hours` when the op is a list change),
   `list_item_id` nullable,
   `text_value`, `int_value`, `date_value`, `bool_value` (check: the column that matches `field` is

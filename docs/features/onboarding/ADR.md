@@ -24,8 +24,11 @@ decision + date) instead of silently replacing the old entry.
    typed `business_research_sources` rows with where it came from + confidence; raw freeform dicts never leak
    past the boundary.
 
-5. **Google Maps is cached** — `google_maps_listing_cache` keyed by `place_id` avoids repeat paid
-   lookups; it is a cache, not a source of truth.
+5. **Google Maps is cached** — `google_maps_listing_cache` keyed by `place_id` avoids a repeat
+   Google Maps Details or scrape fetch; it is a cache, not a source of truth.
+   (2026-08-16: said “repeat paid lookups”. 2026-08-19: Google Maps Details is the free API;
+   scrape is the fallback when Maps is not configured. The cache is so we do not refetch, not
+   because Places is paid.)
 
 6. **The business profile keeps profile history and every detail is attributable** — each change is a new
    `business_profile_history` row with where each detail came from and who changed it; the profile
@@ -36,7 +39,10 @@ decision + date) instead of silently replacing the old entry.
    and business research run at the same time; each `SELECT … FOR UPDATE`, inserts only
    what it set, and updates only those columns. The predecessor dropped populated fields in the UI under a
    write race. Same field with disagreeing values is a research conflict. See
-   [details ADR](../other/details/ADR.md).)
+   [details ADR](../other/details/ADR.md).
+   Same day: founder and brand are columns on `business_profiles`, not jsonb. Contact was already
+   columns. Remaining onboarding jsonb is raw dumps — research `raw`, Maps cache `payload`,
+   Stripe and event payloads.)
 
 7. **Conflicting answers are surfaced, not resolved** — what the contractor said vs. what we found
    are shown side by side; the system never picks one silently.

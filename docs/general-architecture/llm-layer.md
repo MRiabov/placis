@@ -18,10 +18,16 @@ Shared by website copy generation, the website assistant, and ads. One table, no
 feature data-models.
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `trace_type` (`prod`/`eval`), `generation_type`,
-  `model`, `prompt_id`, `prompt_version`, `tool_versions` jsonb, `skill_versions` jsonb, `input`
-  jsonb, `internal_reasoning` jsonb, `output` jsonb, `tool_calls` jsonb, `usage` jsonb, `cost` jsonb,
+  `model`, `prompt_id`, `prompt_version`, `input` jsonb, `internal_reasoning` jsonb, `output` jsonb,
+  `tool_calls` jsonb, `input_tokens`, `output_tokens`, `cost_amount`, `cost_currency`,
   `latency_ms`, `approval_status` (`pending_review`/`approved`/`applied`/`rejected`/`failed`),
   `applied_changes` jsonb, `status` (`running`/`succeeded`/`failed`), `error` nullable, `created_at`
+- `ai_generation_tool_revisions` — `id`, `ai_generation_id` fk, `kind` (`tool`/`skill`), `name`,
+  `format_revision`
+
+`input`, `internal_reasoning`, `output`, `tool_calls`, and `applied_changes` stay jsonb so a call
+can be reconstructed. Usage and cost are columns. Tool and skill format revisions are rows, not a
+map dump.
 
 ## AI tools
 

@@ -19,7 +19,7 @@ Maps listing was selected. Registry-only onboarding sessions still get `business
 | Reviews and photos | reviews, rating, photos | `review` / `photo` |
 
 Google Maps, the company registry, Facebook, the LLM, and fakes sit behind one interface: Google
-Maps Details (cached in `google_maps_listing_cache`), optional scrape when Maps is not configured,
+Maps Details (cached in `google_maps_listing_cache`; scrape when Maps is not configured),
 an OpenRouter fast extract, Facebook lookup, photo classification, trade-registry lookups (Safe
 Electric, RGI, … for IE; Gas Safe, NICEIC, … for GB). A miss is "ask", never "this business has
 no profile".

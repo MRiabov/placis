@@ -775,7 +775,7 @@ Where a detail came from (for example marked as their Google Maps listing). Dist
 (the information itself), Supplied by (who originated a picture). Never say `source_refs` in
 product docs.
 
-In code: `source_refs`.
+In code: `origin`.
 
 ---
 

@@ -55,5 +55,5 @@ Onboarding session is already `previewing` (04 + 06). This job does not get its 
 onboarding session status. Progress events on the onboarding session stream (`copy_generation_started` /
 `copy_generation_completed` / `copy_generation_failed`, plus per-website-page/slot updates).
 
-- **Persists** updates to existing `website_slots` / website page SEO (unpublished versions);
-  `ai_generations` for the tool batches. No website publication.
+- **Persists** updates to existing `website_slots` and `website_pages` SEO columns (`seo_title`,
+  `seo_description`, …); `ai_generations` for the tool batches. No website publication.
