@@ -1,8 +1,8 @@
 # 01a — Find the business
 
 Unauthenticated. The contractor picks a **country** (Ireland / United Kingdom / United States;
-default Ireland), finds the business, and consents. Confirm creates the session and returns
-immediately — research (02a) runs in the background.
+default Ireland), finds the business, and gives online research consent. Confirm creates the
+onboarding session and returns immediately — business research (02a) runs in the background.
 
 ## Sources
 
@@ -10,20 +10,21 @@ Either, or both when they describe the same business:
 
 - **Company registry** (optional if Maps is selected) — debounced search of the offline parquet
   copy (CRO / CORE for IE, Companies House for GB, US state registry). Shows legal name, company
-  number, status, registered office. Country is a **search parameter**, not a session column.
+  number, status, registered office. Country is a **search parameter**, not an onboarding session
+  column.
 - **Google Maps** (optional if registry is selected) — debounced autocomplete + place picker.
   Pre-fills trading name, category, phone, photos, reviews.
 
 Confirm is allowed with registry only, Maps only, or both. A single checkbox:
 "I agree that Placis can collect public information about this business to prepare the website
-preview." Without it, research does not start.
+preview." Without it, business research does not start.
 
 ## What confirm does
 
 1. `POST /api/v1/onboarding-sessions` — no Clerk required. Status `created`. Token unique.
-2. Record consent (`consent_given_at`).
-3. Registry selected → persist the registry record. Maps selected → attach the place (same
-   session if registry already ran).
+2. Record online research consent (`consent_given_at`).
+3. Registry selected → persist the company registry record. Maps selected → attach the place (same
+   onboarding session if registry already ran).
 4. Initialize a [business profile](../../other/details/data-model.md) **shell**: a
    `business_profiles` row with `tenant_id` null, empty/unknown details, `current_version_id`
    null. Registry confirm fills legal identity (legal name, company number, registered office,
@@ -31,8 +32,8 @@ preview." Without it, research does not start.
    wins for legal identity (03).
 5. Kick off 02a. Move the UI to **Review** (`/onboarding/review`). Status → `interviewing`.
 
-Do **not** start website generation or create a preview here (`run_generation` / `create_preview`
-stay false).
+Do **not** start website generation or create a website preview here (`run_generation` /
+`create_website_preview` stay false).
 
 - **Persists** `onboarding_sessions` (`started_from` = `google_places` / `company_registry` /
   both via sources, `channel` still unset, `status=interviewing`, `token`, `consent_given_at`,

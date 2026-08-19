@@ -15,42 +15,43 @@ Onboarding is reachable **without** signing in. `/cms` with no active tenant red
 - **Company registry** — type the corporate name and pick the record (legal name, company number,
   status, registered office).
 - **Google Maps** (optional) — search and pick the place. Confirm with registry, Maps, or both.
-- **Consent** — checkbox required to enable Confirm.
-- **Confirm and review** — creates the session, starts research, goes to Review. Does not
-  generate or preview yet.
+- **Online research consent** — checkbox required to enable Confirm.
+- **Confirm and review** — creates the onboarding session, starts business research, goes to
+  Review. Does not generate or create a website preview yet.
 
 ### 2. Review — `/onboarding/review`
 
-Found vs missing checklist (who they are, legal, contact, services, area, proof, photos). Research
-may still be filling rows (SSE). **Continue to interview**.
+Found vs missing checklist (who they are, legal, contact, services, service area, certifications and
+reviews, photos). Business research may still be filling rows (SSE). **Continue**.
 
-### 3. Interview — `/onboarding/interview`
+### 3. Client interview — `/onboarding/interview`
 
-Default surface is **voice** (mic → realtime agent). Text form is the other writer (same fields
-as [02b](pipeline/02b-interview.md)). Voice `end_interview` goes to Preview; text submit completes
-the interview the same way.
+Default surface is **voice** (mic → realtime agent). Text client interview is the other writer
+(same fields as [02b](pipeline/02b-client-interview.md)). Voice `end_interview` goes to the
+website preview; text submit completes the client interview the same way.
 
-### 4. Preview (progress) — `/onboarding/preview`
+### 4. Website preview (progress) — `/onboarding/preview`
 
-Generation timeline from the session SSE (04 instantiate, then 05 copy filling in). In-page
-section previews while it runs. **View website** appears as soon as the preview package exists —
-do not wait for copy generation to finish.
+Generation timeline from the onboarding session SSE (04 instantiate, then 05 copy filling in). In-page
+website section renders while it runs. **View website** appears as soon as the website preview exists —
+do not wait for website copy generation to finish.
 
-### 5. Public preview + claim — `/preview/{token}/…`
+### 5. Public website preview + website activation — `/preview/{token}/…`
 
-Rendered site (current draft; copy appears as 05 writes slots). **Claim** starts Clerk if needed,
-then Stripe checkout (07). Copy still running is not a blocker. Success → `/cms/website`.
+Rendered site (current unpublished website; copy appears as 05 writes website slots).
+**Website activation** starts Clerk if needed, then Stripe checkout (07). Copy still running
+is not a blocker. Success → `/cms/website`.
 
 ## Resume
 
-`localStorage` holds the session id and step. Reload calls `GET .../profile`. An active preview
-package resumes on Preview.
+`localStorage` holds the onboarding session id and step. Reload calls `GET .../profile`. An active website
+preview resumes on the website preview screen.
 
 ## Components (`frontend-2`)
 
-- `BusinessSourcePanel` — country, registry, optional Maps, consent.
+- `BusinessSourcePanel` — country, registry, optional Maps, online research consent.
 - `FoundInformationReview` — found vs missing.
-- `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist` — text interview.
+- `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist` — text client interview.
 - Voice panel — `useSetupVoiceInterview`.
 - `GenerationPanel` / `PreviewProgressPanels` — generating timeline.
-- `TargetedPreviewView` / `PayToClaimStrip` — public preview + claim (`src/features/preview/`).
+- `TargetedPreviewView` / `PayToClaimStrip` — public website preview + website activation (`src/features/preview/`).

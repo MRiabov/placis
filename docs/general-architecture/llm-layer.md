@@ -14,7 +14,7 @@ logic.
 
 ## `ai_generations`
 
-Shared by onboarding copy generation, the website assistant, and ads. One table, not copied into
+Shared by website copy generation, the website assistant, and ads. One table, not copied into
 feature data-models.
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `trace_type` (`prod`/`eval`), `generation_type`,
@@ -34,8 +34,8 @@ result).
 - **Validated on input** — a call that doesn't fit the struct, or fails its constraints, is rejected
   (or repaired and re-validated) — never executed blindly.
 - **Parallel** — independent tool calls run concurrently; only declared dependencies serialize.
-- **Propose-only** — tools write drafts and reviewable changes, never published state. The user
-  decides and publishes.
+- **Propose-only** — tools write unpublished website edits and reviewable changes, never a published website copy. The owner
+  decides and does a website publication.
 
 Each domain owns a small tool registry — the set of tools its agent may call (e.g. `update_slot`
 and `generate_image` for the website editor; copy + image-gallery proposals for ads).

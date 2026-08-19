@@ -1,8 +1,9 @@
-# Styles (theme presets)
+# Website styles (theme presets)
 
-A **style preset** is the site's visual skin — one choice that sets colors, typography, radius,
-density, spacing, and motion across every section. The `site_manifest` carries a `theme` field
-(preset id + bounded overrides), and the public renderer applies it to all components.
+A **website style catalog preset** is the website's visual skin — one choice that sets colors,
+typography, radius, density, spacing, and motion across every website section. The
+`website_manifest` carries a `theme` field (preset id + bounded overrides), and the public renderer
+applies it to all website components.
 
 ## What a preset controls
 
@@ -13,7 +14,7 @@ density, spacing, and motion across every section. The `site_manifest` carries a
   display/h1/h2/body/label scale.
 - **Radius** — `none`/`xs`/`sm`/`md`/`lg`/`pill` (0/2/4/8/12/9999px).
 - **Density** — `compact`/`comfortable`/`spacious`.
-- **Spacing** — `xs`–`2xl` (8–48px) plus section block and container inline.
+- **Spacing** — `xs`–`2xl` (8–48px) plus website section block and container inline.
 - **Motion** — easing, reveal duration, hover duration.
 
 ## Presets
@@ -24,10 +25,10 @@ hand-picked palettes.
 
 ## How it flows
 
-1. The preset is selected during generation (or changed in the Styles workspace).
-2. `site_manifest.theme` carries the preset id + bounded overrides (`primary`, `neutral`, `accent`,
+1. The preset is selected during generation (or changed in the Website styles workspace).
+2. `website_manifest.theme` carries the preset id + bounded overrides (`primary`, `neutral`, `accent`,
    `radius`, `density`).
-3. The renderer maps the preset tokens to CSS variables; every component reads those tokens, so
-   switching the preset restyles the whole site without touching section logic.
+3. The renderer maps the preset tokens to CSS variables; every website component reads those tokens,
+   so switching the preset restyles the whole website without touching website section logic.
 
 Layout stays bounded to **layout presets**, not free-form CSS.

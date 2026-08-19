@@ -1,27 +1,29 @@
 # Variables (`{{var}}`)
 
-Template placeholders in website content that resolve from the business profile at publish time.
-Drafts keep the tokens; publication substitutes the real values.
+Website placeholders in website content that resolve from the business profile at website
+publication. The unpublished website keeps the tokens; website publication substitutes the real
+values.
 
 ## Syntax
 
 - `{{business_name}}` — a simple variable.
-- `{{services.featured}}` / `{{images.logo}}` — a dotted path into a nested fact.
-- `{{about.intro_paragraphs}}` — a list fact.
+- `{{services.featured}}` / `{{images.logo}}` — a dotted path into a nested detail.
+- `{{about.intro_paragraphs}}` — a list detail.
 
 Two forms:
 
-- **Exact** — the whole value is `{{var}}`: resolved to the typed fact value (string, list, object).
+- **Exact** — the whole value is `{{var}}`: resolved to the typed detail value (string, list,
+  object).
 - **Substring** — `{{var}}` inside a larger string ("Welcome to {{business_name}}"): string
   substitution.
 
-## The facts
+## The details
 
-Variables resolve from **tenant default facts** built from the business profile, research, and
-assets: branding (address, logo, legal name, established year, incorporation, service region, legal
-disclosure), images (per-slot image facts), services (featured, marquee, footer links, project
-types), projects (featured, recent, home gallery, projects page, categories), and proof
-(accreditations).
+Variables resolve from **tenant default details** built from the business profile, business
+research, and media assets: branding (address, logo, legal name, established year, incorporation,
+service region, legal disclosure), images (per website slot image details), services (featured,
+marquee, footer links, project types), projects (featured, recent, home gallery, projects website
+page, categories), and certifications (accreditations).
 
 ## Common variables
 
@@ -38,16 +40,17 @@ types), projects (featured, recent, home gallery, projects page, categories), an
 | `{{logo_url}}` | logo |
 | `{{services.featured}}`, `{{services.marquee}}`, `{{services.footer_links}}`, `{{services.project_types}}` | services |
 | `{{projects.featured}}`, `{{projects.recent}}`, `{{projects.home_gallery}}`, `{{projects.categories}}` | projects |
-| `{{proof.accreditations}}` | accreditations |
+| `{{certifications}}` | certifications |
 | `{{images.*}}`, `{{about.intro_paragraphs}}`, `{{about.feature_paragraphs}}` | images / about copy |
 
 ## Flow
 
-1. A blueprint / section writes **tokenized** values (`{{business_name}}`) into draft records.
-2. The editor projection keeps the tokens and shows them as **inline variable chips** (with the
-   variable's label), still editable.
-3. **Publish** resolves every variable against the tenant facts — exact match → typed value,
-   substring → substituted — and materializes the resolved `site_manifest`.
-4. A missing variable stays as a `{{var}}` token in the draft; a *required* slot whose variable
-   can't resolve becomes a **publish blocker**.
-
+1. A website template / website section writes **tokenized** values (`{{business_name}}`) into
+   unpublished website records.
+2. The website editor projection keeps the tokens and shows them as **inline variable chips** (with
+   the variable's label), still editable.
+3. **Website publication** resolves every variable against the tenant details — exact match → typed
+   value, substring → substituted — and writes the resolved `website_manifest` (a published website
+   copy).
+4. A missing variable stays as a `{{var}}` token in the unpublished website; a *required* website
+   slot whose variable can't resolve becomes a **website publication blocker**.

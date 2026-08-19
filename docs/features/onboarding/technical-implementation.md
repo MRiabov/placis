@@ -11,44 +11,45 @@ See [data-model.md](data-model.md). The business profile is
 
 ## Flow
 
-`created → interviewing → generating → previewing → claimed` (`generation_failed` if generate
-throws). Research runs in the background alongside review/interview; generation starts at
-interview complete; copy generation runs after instantiate and does not block preview or claim.
+`created → interviewing → generating → previewing → activated` (`generation_failed` if generate
+throws). Business research runs in the background alongside review/client interview; generation starts at
+client interview complete; website copy generation runs after instantiate and does not block website preview or website activation.
 
 ## API surface
 
 - `POST /api/v1/onboarding-sessions` (+ `.../from-google-place`)
 - company-registry search, google-places autocomplete
-- profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/facts`)
-- interview (draft + submissions)
-- research runs (list/get), generation runs (list/get/cancel)
-- artifacts (list/get/apply/approve/reject/versions/rollback)
-- preview packages (under onboarding — see the claim/activation note)
+- profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/details`)
+- client interview (autosave + submissions)
+- business research runs (list/get), generation runs (list/get/cancel)
+- website publications (list/get/apply/approve/reject/profile history/website rollback)
+- website previews (under onboarding — see the website activation note)
 
-## Research pipeline
+## Business research pipeline
 
 1. Provider call (behind interface) returns raw payload.
 2. Turn it into a typed `research_sources` row: kind, external id, where it came from, raw +
    normalized payload, confidence.
-3. Photo classification tags assets (hero/project/service/founder/logo) for the media/slot mapping.
-4. Every run is idempotent (explicit key).
+3. Photo classification tags media assets (hero/project/service/founder/logo) for the media
+   library / website slot mapping.
+4. Every run is safe to retry (explicit key).
 
 ## Profile building
 
-1. Merge interview answers + research into a `business_profile_versions` row (details + where
+1. Merge client interview answers + business research into a `business_profile_versions` row (details + where
    each came from + who changed it).
-2. Surface conflicting answers for owner/operator review.
-3. On approval, the profile advances to the current version; generation reads it.
+2. Surface research conflicts for the owner to review.
+3. On approval, the profile advances to the current `business_profile_versions` row; generation reads it.
 
 ## Validation & testing
 
-- Tenant isolation for sessions, research, and profile rows.
+- Tenant isolation for onboarding sessions, business research, and profile rows.
 - Provider fakes force deterministic tests; CI never spends provider quota (see `ci-cd.md`).
-- One E2E: find → review → interview → generate → preview → claim (providers mocked, core logic
-  unmocked). Preview is claimable before copy generation finishes.
+- One E2E: find → review → client interview → generate → website preview → website activation (providers mocked, core logic
+  unmocked). The website preview can be activated before website copy generation finishes.
 
 ## Frontend
 
 - `frontend-2/src/features/setup/**` is the existing onboarding surface (find-the-business,
-  interview, research progress, preview). It is refactored against the regenerated types; the
+  client interview, business research progress, website preview). It is refactored against the regenerated types; the
   `/setup-*` route naming it consumes maps to `/onboarding-*` on the Go side.

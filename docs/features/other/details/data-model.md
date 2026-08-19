@@ -11,7 +11,7 @@ Conventions: [data-model conventions](../../../general-architecture/data-model.m
   `established_year`, `company_number`, `vat_number`, `vat_registration_status`,
   `incorporation_date`, `registered_office`, `contact_name`, `phone`, `emergency_phone`, `email`,
   `public_contact_email`, `website`, `google_profile_url`, `facebook_profile_url`,
-  `founder_profile` jsonb, `brand` jsonb (colors/logo_asset_id/tone/typography),
+  `founder_profile` jsonb, `brand` jsonb (colors/logo_media_asset_id/tone/typography),
   `current_version_id` nullable, timestamps
 - `business_profile_versions` — `id`, `business_profile_id` fk, `version_number`, `details` jsonb
   (a copy of the details at this version), `source_refs` jsonb, `created_by`

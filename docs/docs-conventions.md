@@ -6,15 +6,15 @@ editing a doc.
 ## Layout
 
 - `README.md` — the router (reading order + canonical references).
-- `glossary.md` — the ubiquitous language (`## Domain` / `## Internal`, terms as `###`); the only
-  place names are coined.
+- `glossary.md` — the ubiquitous language (`## Domain` / `## Enums` / `## Internal`; terms as
+  `###`; closed label sets live under Enums); the only place names are coined.
 - `development-principles.md` — how work is sliced and reviewed.
 - `architecture.md` — full-stack architecture, centered on the API contract.
 - `ci-cd.md` / `testing.md` — delivery gates and the per-feature E2E rule.
 - `general-architecture/` — cross-cutting architecture no single feature owns:
   `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`, `files.md`, `data-model.md`
-  (conventions + index of per-feature schemas). Feature-owned capabilities (claim/payments,
-  leads, media) live under `features/`, not here.
+  (conventions + index of per-feature schemas). Feature-owned capabilities (website
+  activation/payments, leads, media) live under `features/`, not here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that feature's docs in one
   place).
 - `planning/` — proposed, unshipped work; never the canonical source.

@@ -1,51 +1,53 @@
 # Onboarding — pipeline
 
-Implemented in OnCall and `frontend-2`. The contractor never waits on research or on copy:
-confirm returns immediately, research fills the checklist in the background, generation starts
-only after the interview completes, and copy generation fills the draft after instantiate
-without blocking the preview URL.
+Implemented in the predecessor (`OnCall`) and `frontend-2`. The contractor never waits on
+business research or on copy: confirm returns immediately, business research fills the checklist
+in the background, generation starts only after the client interview completes, and website copy
+generation fills the unpublished website after instantiate without blocking the website preview
+URL.
 
-**Screens** (`/onboarding/find` → `/review` → `/interview` → `/preview`, then the public preview
-URL, then pay):
+**Screens** (`/onboarding/find` → `/review` → `/interview` → `/preview`, then the public website
+preview URL, then pay):
 
 ```text
-01a. find the business (country + registry and/or Google Maps, unauthenticated) + consent
-     → session created; research starts in the background
-02a. research (async, parallel slots, SSE progress) — overlaps review + interview
-02b. review the checklist, then interview (fill gaps) — text and/or voice, same profile
+01a. find the business (country + company registry and/or Google Maps, unauthenticated) + online research consent
+     → onboarding session created; business research starts in the background
+02a. business research (async, parallel slots, SSE progress) — overlaps review + client interview
+02b. review the checklist, then client interview (fill gaps) — text and/or voice, same profile
 03.  build the profile (continuous merge as sources and answers arrive — not a wait step)
-04.  generate (after interview complete): one LLM blueprint/style pick, then deterministic draft
-05.  copy generation (async): write headlines/body/CTAs/SEO into the draft; does not block preview
-06.  preview (signed token, public preview URL) — issued as soon as 04 finishes
-07.  claim (pay → activate tenant; site stays a draft until they publish)
+04.  generate (after client interview complete): one LLM website template/website styles pick, then deterministic unpublished website
+05.  website copy generation (async): write headlines/body/CTAs/SEO into the unpublished website; does not block the website preview
+06.  website preview (signed token, public website preview URL) — issued as soon as 04 finishes
+07.  website activation (pay → activate tenant; site stays an unpublished website until website publication)
 ```
 
 SSE (`GET /api/v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from confirm through
 generate and copy — not only step 06. Postgres is authoritative.
 
-## Session status
+## Onboarding session status
 
-`created` (session exists) → `interviewing` (confirmed; research + review + interview) →
-`generating` (interview complete; 04 running) → `previewing` (package ready; 05 may still be
-writing copy) → `claimed`. `generation_failed` if 04 throws. 05 failing does not change session
-status. Preview **packages** expire (`expires_at`); the session has no `expired` status.
+`created` (onboarding session exists) → `interviewing` (confirmed; business research + review +
+client interview) → `generating` (client interview complete; 04 running) → `previewing` (website
+preview ready; 05 may still be writing copy) → `activated`. `generation_failed` if 04 throws. 05
+failing does not change onboarding session status. Website previews expire (`expires_at`); the
+onboarding session has no `expired` status.
 
 ## Resume
 
-The frontend stores the session id and step in `localStorage` and restores with
-`GET .../profile`. If `active_preview_package` exists, resume on preview. There is no server-side
-resume token.
+The frontend stores the onboarding session id and step in `localStorage` and restores with
+`GET .../profile`. If `active_website_preview` exists, resume on the website preview. There is no
+server-side resume token.
 
 ## Steps
 
 - [01a-find-business.md](01a-find-business.md)
-- [02a-research.md](02a-research.md)
-- [02b-interview.md](02b-interview.md)
+- [02a-business-research.md](02a-business-research.md)
+- [02b-client-interview.md](02b-client-interview.md)
 - [03-build-profile.md](03-build-profile.md)
 - [04-generate.md](04-generate.md)
-- [05-refine.md](05-refine.md)
-- [06-preview.md](06-preview.md)
-- [07-claim.md](07-claim.md)
+- [05-website-copy-generation.md](05-website-copy-generation.md)
+- [06-website-preview.md](06-website-preview.md)
+- [07-website-activation.md](07-website-activation.md)
 
 ## Tests
 
