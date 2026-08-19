@@ -243,6 +243,10 @@ var extraAllowed = []string{
 	"prompt catalog",
 	"checkout.session",
 	"openapi-fetch client",
+	"google chrome",
+	"desktop chrome",
+	"chrome devtools",
+	"headless chrome",
 }
 
 func allowedOnLine(tok compiledToken, line string) bool {
@@ -256,6 +260,9 @@ func allowedOnLine(tok compiledToken, line string) bool {
 		}
 	}
 	if tok.phrase == "shell" && (strings.Contains(lower, "unix") || strings.Contains(lower, "railway") || strings.Contains(lower, "database")) {
+		return true
+	}
+	if tok.phrase == "chrome" && (strings.Contains(lower, "google") || strings.Contains(lower, "devtools") || strings.Contains(lower, "playwright") || strings.Contains(lower, "desktop chrome")) {
 		return true
 	}
 	if strings.EqualFold(tok.phrase, "OnCall") && (strings.Contains(lower, "predecessor") || strings.Contains(lower, "repo")) {
