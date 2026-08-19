@@ -28,7 +28,8 @@ area, and the date.
 
 4. **Light cleanup is cosmetic only** — Cleanup may not add/remove objects in a way that changes
    what the photo shows, must not conceal damage or defects, and must not change the work
-   displayed. It creates non-destructive derived variants; the source media is never modified.
+   displayed. It creates a new media library item (a copy) that inherits supplied by; the source
+   media is never modified.
 
 5. **The zip download is a temporary step** — The ad set is machine-readable and has a version number;
    the download exists only so a human can do ad posting manually until direct transmission to
