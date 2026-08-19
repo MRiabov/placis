@@ -24,7 +24,7 @@ failed event.
 | `set_section_visibility` | show or hide one existing website section |
 | `update_section_design` | update one website section's **design controls** — the per-website-component enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values from the website component contract |
 | `reorder_sections` | set the full ordered list of website section ids for the website page |
-| `create_section` | propose a new website section using an approved public website component |
+| `create_section` | propose a new website section using an approved website component |
 | `create_page` | propose a new unpublished website page |
 | `generate_image` | generate a media asset from a prompt, optionally attach it to an image website slot |
 

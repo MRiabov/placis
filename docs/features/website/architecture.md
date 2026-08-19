@@ -76,18 +76,18 @@ published website copy as `website_manifest` (a `website.v1` website manifest: w
 website sections → props). The website manifest is the read model — the renderer only ever reads
 the active website publication. Website rollback reactivates an earlier website publication.
 
-## Public runtime (separate Astro app)
+## Contractor website (separate Astro app)
 
 Live websites and website previews are served by a **separate Astro + React app**
-(`apps/public-site`), not the private website editor. It calls `/api/v1/public/site/resolve` with
+(`apps/public-site`), not the website editor. It calls `/api/v1/public/site/resolve` with
 the incoming host + website page path, reads the active `website_manifest`, and renders each
 website section by its `component_id` through the shared `public-site-components` package — Astro
 owns routing, page shell, static/prerender, and metadata; React owns interactive islands.
 
-One shared runtime serves every tenant — no per-tenant build — and imports only the public website
-component package (a bundle-boundary check blocks private-app imports).
+One application serves every contractor website — no per-tenant build — and imports only the
+website component package (a bundle-boundary check blocks imports from `frontend-2`).
 
-Website previews use the same runtime: the onboarding website preview renders the unpublished
+Website previews use the same application: the onboarding website preview renders the unpublished
 website behind a preview token, so the contractor sees the real website
 components before website activation.
 

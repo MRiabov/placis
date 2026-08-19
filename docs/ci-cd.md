@@ -1,12 +1,13 @@
 # CI and Delivery
 
 Adapted from the previous repo's CI policy. Two-layer CI: **CircleCI** is the primary validation
-runner; **GitHub Actions** is reserved for emergency comparison and the Cloudflare public-site
+runner; **GitHub Actions** is reserved for emergency comparison and the Cloudflare contractor-website
 deploy. Both run only non-mutating checks — CI never rewrites files.
 
 ## Gates
 
-1. **File-size guard** — files must stay < 800 lines (warning) and < 1200 (hard error). Enforced
+1. **File-size guard** — files must stay < 800 lines (warning) and < 1200 (hard error), except
+   `docs/glossary.md` (one ubiquitous-language file; do not split it). Enforced
    by a `just check-files` recipe over `internal/`, `cmd/`, `migrations/`, `catalog/`, `docs/`.
    Prefer splitting a feature into its own package over allowing a file to creep past 800.
 2. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`, `golangci-lint` (non-mutating);
@@ -31,7 +32,7 @@ deploy. Both run only non-mutating checks — CI never rewrites files.
 - Diagnostics (per-gate stdout/stderr, JUnit XML) are published as artifacts so failures are
   API-retrievable.
 - GitHub Actions: manual `workflow_dispatch` for emergency comparison; plus the manual
-  `deploy public site cloudflare` entry point (separate from validation CI).
+  `deploy contractor website cloudflare` entry point (separate from validation CI).
 - Railway deploys `cmd/api` and `cmd/worker` from the integration branch — release, not CI.
 
 ## Dev tooling (`justfile`)

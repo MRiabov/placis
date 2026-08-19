@@ -1,6 +1,6 @@
 # 07 — Website activation
 
-The contractor pays on the **public website preview**. Clerk sign-in/sign up if needed, then Stripe
+The contractor pays on the **website preview**. Clerk sign-in/sign up if needed, then Stripe
 checkout. The tenant activates; the site stays an **unpublished website** until website publication
 in The CMS ([ADR 12](../ADR.md)).
 

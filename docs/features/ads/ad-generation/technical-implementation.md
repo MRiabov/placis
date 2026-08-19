@@ -102,7 +102,7 @@ Hard-typed fields:
 06. `ad_goal`: `more_calls`, `more_quotes`, `promote_service`
 07. `service_focus_id` (optional reference to a tenant service)
 08. ad destination: `destination_website_page_id` + `destination_path` (website page id or
-    resolved public website page path)
+    resolved website page path)
 09. `review_status`
 10. `source_refs`
 11. `created_by`
@@ -261,7 +261,7 @@ Recommended private editor routes (the Ads client):
     ad-set download for the human path)
 
 Mutating routes that can be retried accept `Idempotency-Key`. Approve/ad-set/download/archive
-mutations audit. Public runtime never calls these routes; ad sets are not live-website content.
+mutations audit. The contractor website application never calls these routes; ad sets are not live-website content.
 
 ## Future Callers Of The Service
 
@@ -375,7 +375,7 @@ source media assets. Rendering requires no ad-platform credentials and does no a
 
 ## Frontend Ads Work
 
-Add Ads under `/cms/ads` in the private Vite app:
+Add Ads under `/cms/ads` in The CMS (`frontend-2`):
 
 1. ad list with status badges and last-updated
 2. create-an-ad flow (name, offer/goal and service focus pickers pre-filled from the business

@@ -10,7 +10,7 @@ Related docs:
 
 ## Purpose
 
-This spec covers **Ads** in the private Vite app (`frontend-2/`), under `/cms/ads`.
+This spec covers **Ads** in The CMS (`frontend-2/`), under `/cms/ads`.
 It is the contractor-facing UI for the ad generation service: create an ad, review LLM
 drafts, edit, approve, and download. It is one caller of the service; it is not the website
 editor, not the media library, and not campaign management (which is future work).

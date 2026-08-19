@@ -42,7 +42,7 @@ auditability, and voice agents as a **separate, optional** channel.
    data; website template application; website copy generation as governed, propose-only edits.
 4. **Website editing (The CMS)** — website pages (kept, never overwritten), website sections, website slots, media
    library, website forms, header/footer, projects, certification selections, website publications.
-5. **Public website + website lead capture** — resolve active website publication website manifests by host/path; website
+5. **Contractor website + website lead capture** — resolve active website publication website manifests by host/path; website
    forms persist into a minimal `leads` table.
 6. **Website preview + website activation** — website preview links; self-serve Stripe website activation/checkout;
    webhook-driven website activation (safe to replay).
@@ -163,7 +163,7 @@ must not hand-duplicate the struct shapes.
 - Clerk proves identity + Clerk organization; Placis decides tenant access and permissions.
 - `tenants.clerk_org_id` (unique) is the only tenant entry point. No org chooser, no selected-org
   cookie, no client-controlled tenant selector.
-- Tenant context is resolved once per request from: authenticated Clerk organization, public site hostname,
+- Tenant context is resolved once per request from: authenticated Clerk organization, contractor website hostname,
   preview token, or onboarding session token. Services take `tenantID` explicitly.
 - Every tenant-owned row carries `tenant_id`; all primary queries include it; cross-tenant
   isolation is proven by integration tests (create two tenants, assert reads/writes/files blocked).
@@ -247,8 +247,8 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
    profile with profile history.
 3. **Website templates & website** — website component/website template catalog loaders + website component contracts, website template
    application, website copy generation (propose-only), CMS CRUD, website publications.
-4. **Website preview, website activation, public site, website leads** — website previews, Stripe checkout + webhooks +
-   website activation, public resolve/website manifest runtime, website lead capture.
+4. **Website preview, website activation, contractor website, website leads** — website previews, Stripe checkout + webhooks +
+   website activation, contractor website resolve/website manifest, website lead capture.
 5. **Ads (#403)** — ads + variants, propose-only AI, export ad set, ad lead attribution.
 6. **Auditability hardening** — audit completeness, AI trace completeness, observability.
 

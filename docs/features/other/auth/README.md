@@ -43,7 +43,7 @@ JWT/JWKS verification or Clerk data types.
 Resolved once per request from one of:
 
 1. authenticated Clerk organization,
-2. public site hostname,
+2. contractor website hostname,
 3. website preview token,
 4. onboarding session token.
 

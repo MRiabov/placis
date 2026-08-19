@@ -5,8 +5,8 @@ it update, then save / website publication.
 
 ## The loop
 
-1. The website editor canvas (the private Vite app) renders the **unpublished website** through the
-   shared public-site components — the same ones the live website (Astro) uses.
+1. The website editor canvas (`frontend-2`) renders the **unpublished website** through the
+   shared `public-site-components` package — the same ones the live website (Astro) uses.
 2. The owner edits inline: click-to-edit visible text, swap an image, reorder / add / remove a
    website section, change a design control, SEO, or the website style catalog preset.
 3. The frontend calls a schema-validated **patch API** (`/api/v1/website/editor/...`).
@@ -101,8 +101,8 @@ kept website page version.
 Saving any of the above appends a `website_page_versions` row. Website publication writes
 `website_publications` + `website_manifest`.
 
-The Astro public runtime does **no per-edit work** — it is stateless and resolves the *published
-website copy* (`website_manifest`) on request. Editing only mutates unpublished website records;
-the live website changes only on website publication. The website editor canvas renders the
-unpublished website (React + public-site-components), not through Astro. That canvas is not a
-website preview.
+The Astro contractor website application (`apps/public-site`) does **no per-edit work** — it is
+stateless and resolves the *published website copy* (`website_manifest`) on request. Editing only
+mutates unpublished website records; the live website changes only on website publication. The
+website editor canvas renders the unpublished website (React + `public-site-components`), not
+through Astro. That canvas is not a website preview.

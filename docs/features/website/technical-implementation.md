@@ -32,7 +32,7 @@ See [data-model.md](data-model.md). Media assets are
    publication.
 2. Website publication creates a `website_publications` row (kept, not edited; active flag +
    website rollback chain).
-3. Public website pages render only the active website publication; a website preview renders the
+3. Contractor website pages render only the active website publication; a website preview renders the
    unpublished website.
 4. Website rollback reactivates an earlier website publication; earlier published website copies are
    never overwritten.

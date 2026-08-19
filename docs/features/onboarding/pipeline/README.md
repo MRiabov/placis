@@ -6,7 +6,7 @@ in the background, applying the website template starts only after the client in
 completes, and website copy generation fills the unpublished website after that without blocking
 the website preview link.
 
-**Screens** (`/onboarding/find` → `/review` → `/interview` → `/preview`, then the public website
+**Screens** (`/onboarding/find` → `/review` → `/interview` → `/preview`, then the website
 preview URL, then pay):
 
 ```text
