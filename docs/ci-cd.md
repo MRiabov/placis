@@ -16,9 +16,9 @@ deploy. Both run only non-mutating checks — CI never rewrites files.
 4. **Generated-code freshness** — `sqlc generate` must produce no diff; `goose` migrations apply
    cleanly to a fresh DB; the `huma` OpenAPI spec + frontend typegen stay in sync with the API
    structs (a contract check), so generated types are evidence and never drift.
-5. **Provider isolation** — the backend test job strips provider credentials and forces fake
-   storage/domain/LLM/research/voice providers, then fails if any credential-shaped env var
-   remains. Tests must not spend LLM-provider, Google, registry, or research quota. Eval suites are
+5. **External API isolation** — the backend test job strips Google / LLM / Stripe / voice
+   credentials and forces fakes, then fails if any credential-shaped env var remains. Tests must
+   not spend LLM, Google, registry, or research quota. Eval suites are
    **local-only** and never run in ordinary CI.
 6. **OpenAPI constraints** — the generated spec must constrain every field: strings carry
    `minLength` (and `maxLength`), numbers carry `minimum`/`maximum`, fixed sets are `enum`. A field

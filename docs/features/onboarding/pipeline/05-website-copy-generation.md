@@ -1,6 +1,6 @@
 # 05 — Website copy generation (async)
 
-After [04](04-generate.md) instantiates the unpublished website, this step **writes the words** —
+After [04](04-generate.md) applies the website template, this step **writes the words** —
 headlines, body, calls to action, SEO titles — into the existing website slots. It is not the
 website editor and not a human approval loop. The predecessor called this "refinement"; the work
 is website copy generation (and the same tool pass for SEO / image prompts).
@@ -10,9 +10,9 @@ Onboarding **enqueues** it. The writes go through the website assistant tools
 
 ## Why it is async
 
-Instantiate is fast and deterministic. Website copy generation is slow (LLM, per website page,
-several bounded batches). The contractor already waited through the client interview; they should
-not wait again the way they no longer wait on business research.
+Applying the website template is fast and deterministic. Website copy generation is slow (LLM, per
+website page, several bounded batches). The contractor already waited through the client interview;
+they should not wait again the way they no longer wait on business research.
 
 04 finishes → [06](06-website-preview.md) issues the website preview on the **unpublished
 website** (structure + detail tokens). This job fills copy in the background. SSE reports website
@@ -30,12 +30,12 @@ Same tools, owner-driven, different entry.
 
 ## What it does
 
-Continuous-mode website assistant tools on the instantiated unpublished website. No chat UI.
+Continuous-mode website assistant tools on the unpublished website 04 wrote. No chat UI.
 
 1. Per website page, in parallel (bounded concurrency): `update_slot` for copy, `update_seo`, and
    the rest of the website assistant tools that make sense on an already-built website page
    (`generate_image` if a website slot still has no photo). **Do not** `create_page` — 04 already
-   instantiated the website page set.
+   applied the website template's website page set.
 2. Keep `{{business_name}}`, `{{phone}}`, … tokens for reusable details. Do not bake raw detail
    values into copy that should stay a website placeholder.
 3. Validate every tool result against website component contracts before keeping it.
@@ -44,10 +44,10 @@ Continuous-mode website assistant tools on the instantiated unpublished website.
 
 ## Failure
 
-If the job throws, keep the instantiated unpublished website. Onboarding session stays
+If the job throws, keep the unpublished website from 04. Onboarding session stays
 `previewing`. The unpublished website is the fallback (the predecessor already did this). Retry is
-safe (explicit River key). Website copy generation failing must not fail generate or block
-website activation.
+safe (explicit River key). Website copy generation failing must not fail applying the website
+template or block website activation.
 
 ## Status
 

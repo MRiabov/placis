@@ -22,7 +22,8 @@ work in small vertical slices, and let the gates + glossary catch drift.
 
    Read the relevant ones before touching a feature.
 2. **The gates** (CI-enforced) catch drift mechanically: file-size guard, `golangci-lint`,
-   generated-code freshness, two-layer types, provider-isolated tests, one E2E per feature.
+   generated-code freshness, two-layer types, tests isolated from Google / the LLM / Stripe / voice,
+   one E2E per feature.
 
 ## Workflow: vertical slices
 

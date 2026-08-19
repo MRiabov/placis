@@ -1,8 +1,10 @@
-# 04 — Generate (integration test)
+# 04 — Apply the website template (integration test)
+
+<!-- TODO: rename this file off 04-generate.md -->
 
 - **Setup**: a business profile after `interview/complete`.
-- **Invoke**: run generation (website template/website styles picker LLM faked to a fixed website
-  template catalog id; instantiate real).
+- **Invoke**: apply the website template (website template/website styles picker LLM faked to a
+  fixed website template catalog id; the write is real).
 - **Assert**: `website_pages` / `website_page_versions` / `website_sections` / `website_slots`
   written as an unpublished website; website placeholders unresolved; same profile + same website
   template → same website pages; one `ai_generations` row for the picker; no copy-generation

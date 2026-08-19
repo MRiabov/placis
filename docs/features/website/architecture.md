@@ -1,6 +1,6 @@
 # Website — Architecture
 
-How a website is generated, edited, given website publication, and rendered. Logic first; the structs and DTOs fall
+How a website is built, edited, given website publication, and rendered. Logic first; the structs and DTOs fall
 out of this.
 
 ## The content model
@@ -24,14 +24,13 @@ controls** — small enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`s
 allowed values. The contract is one typed struct dumped to JSON under `catalog/` — the website
 editor and the renderer read the same structs. Only registered website components render.
 
-## Generation
+## Apply the website template
 
 A **website template** lists the website pages and website sections a typical site of that trade
-needs. Generation applies the website template to the business profile — **population**:
+needs. Applying the website template writes those onto the business profile:
 
-1. assemble the stable details (services, service areas, certifications, projects, contact);
-2. pick the website template and propose website page structure, website section composition,
-   copy, CTA hierarchy, website styles, image website slot intent, SEO;
+1. take the details from the business profile (services, service areas, certifications, projects, contact);
+2. pick the website template and website styles (one bounded LLM call, heuristic fallback);
 3. create unpublished `website_pages` / `website_sections` / `website_slots` rows — website
    placeholders (`{{business_name}}`, `{{phone}}`, …) stay in the unpublished website, resolving
    at website publication;
@@ -39,7 +38,8 @@ needs. Generation applies the website template to the business profile — **pop
 5. validate against website component contracts, the company registry, marketing claims, links,
    website forms, SEO.
 
-The result is an unpublished website, never a live website.
+The result is an unpublished website, never a live website. Website copy generation is a later
+step.
 
 **Where website templates come from**: mostly by taking inspiration from existing websites —
 decomposing them into patterns (website page structure + website section composition), then
@@ -88,7 +88,7 @@ One shared runtime serves every tenant — no per-tenant build — and imports o
 component package (a bundle-boundary check blocks private-app imports).
 
 Website previews use the same runtime: the onboarding website preview renders the unpublished
-website behind a signed website preview token, so the contractor sees the real website
+website behind a preview token, so the contractor sees the real website
 components before website activation.
 
 ## Voice (later)

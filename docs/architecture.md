@@ -20,7 +20,7 @@ whole system.
 | Config | env → typed struct, validated once at startup |
 | Logging | `log/slog` (structured) + request ids |
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
-| LLM | provider interface; Vercel AI SDK primary, OpenRouter as an alternative |
+| LLM | internal interface; Vercel AI SDK primary, OpenRouter as an alternative |
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (private app) | `frontend-2` — Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; reused mostly, adapted to the huma OpenAPI |
 | Public site | one shared runtime — Astro with React islands (Cloudflare Workers) — that renders every tenant's live website; not yet imported from `OnCall` |
@@ -47,8 +47,9 @@ internal/
   # only when it grows past ~800 lines (never flat file dumps).
   tenancy/        # tenants.go, memberships.go, domains.go
   onboarding/     # session.go, interview.go, orchestrate.go, activation.go
-    websitepreview/ #   package.go, events.go (signed website preview of the generated website during onboarding)
+    websitepreview/ #   package.go, events.go (website preview of the unpublished website during onboarding)
   research/       # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
+                  # TODO: rename — do not say provider in prose; this folder still does.
   profile/        # profile.go, versions.go, services.go, areas.go, hours.go
   website/        # root: types.go, service.go
     pages/        #   handler.go, service.go, model.go
@@ -86,7 +87,7 @@ Rules:
 - **Every DTO field is constrained**: strings carry `minLength`/`maxLength`, numbers carry
   `minimum`/`maximum`, fixed sets use `enum` (huma tags). CI checks the generated OpenAPI and fails
   on an unconstrained field — the Go form of the old "strict schema contract" check.
-- See [ci-cd.md](ci-cd.md) for the delivery gates (file-size guard, provider isolation, generated-code freshness).
+- See [ci-cd.md](ci-cd.md) for the delivery gates (file-size guard, external API isolation, generated-code freshness).
 
 ## Frontend (`frontend-2`)
 
@@ -94,10 +95,10 @@ Rules:
 adapted only where the huma-derived OpenAPI improves the contract.
 
 - `src/generated/api-types.ts` — regenerated from the served `/openapi.json` via
-  `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` client + Clerk token provider.
+  `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` client + Clerk token.
 - `src/features/onboarding/` — onboarding (sources, client interview, business research progress, website preview).
 - `src/features/cms/` — the website + ads parts of The CMS (website editor, media library, inspector, ads workspace).
-- `src/features/preview/` — the signed onboarding website preview + public-site module website preview.
+- `src/features/preview/` — the onboarding website preview + public-site module website preview.
 
 The client keeps its own feature-local structure and is not folded into `internal/`; the file-size
 guard applies to it too (see `ci-cd.md`).

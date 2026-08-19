@@ -74,8 +74,8 @@ find the business (company registry and/or Google Maps) + online research consen
 -> business research starts in the background
 -> review what we found → questions to fill the gaps
 -> one clear business profile (their answers + what we found, side by side)
--> generate an unpublished website → website copy generation fills in in the background
--> signed website preview (available as soon as the unpublished website exists)
+-> apply the website template → website copy generation fills in in the background
+-> website preview link (available as soon as the unpublished website exists)
 -> website activation (pay) → activate; website publication later in the website editor
 ```
 

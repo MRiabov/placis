@@ -44,7 +44,7 @@ Resolved once per request from one of:
 
 1. authenticated Clerk organization,
 2. public site hostname,
-3. signed website preview token,
+3. website preview token,
 4. onboarding session token.
 
 Services take `tenantID` explicitly.

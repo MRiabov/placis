@@ -19,7 +19,7 @@ decision + date) instead of silently rewriting history.
    consent records, versioning, or withdrawal machinery — that was over-engineering, not a real
    requirement.
 
-4. **Business research is provider-interface + typed output** — Google Maps, company registry, Facebook,
+4. **Business research is an interface + typed output** — Google Maps, company registry, Facebook,
    website crawl, and photo classification sit behind one interface with fakes. Output lands in
    typed `research_sources` rows with where it came from + confidence; raw freeform dicts never leak
    past the boundary.
@@ -42,17 +42,19 @@ decision + date) instead of silently rewriting history.
 9. **No ad preferences in onboarding** — onboarding never collects `marketing.ads`; ads are created
    on demand in The CMS (see the ads ADR).
 
-10. **Instantiate is deterministic; one LLM call picks website template/website styles** — the unpublished website
-    structure comes from the accepted profile + a website template from the website template catalog.
-    Same profile + same website template → same website pages, no LLM in instantiate. Choosing the
-    website template and website styles is one bounded LLM call with a heuristic fallback. Copy
-    (headlines, body, CTAs, SEO) is a separate async job ([05](pipeline/05-website-copy-generation.md))
-    that uses the website assistant tools on that unpublished website. The website assistant is in
-    The CMS after website activation. The LLM never does website publication.
+10. **Applying the website template is deterministic; one LLM call picks website template/website
+    styles** — the unpublished website structure comes from the accepted profile + a website
+    template from the website template catalog. Same profile + same website template → same website
+    pages, no LLM in that write. Choosing the website template and website styles is one bounded
+    LLM call with a heuristic fallback. Copy (headlines, body, CTAs, SEO) is a separate async job
+    ([05](pipeline/05-website-copy-generation.md)) that uses the website assistant tools on that
+    unpublished website. The website assistant is in The CMS after website activation. The LLM
+    never does website publication.
     (2026-08-17: replaced "no LLM in the loop" — OnCall/frontend-2 pick website
-    template/website styles with one LLM call, then instantiate deterministically. Same day:
-    website copy generation is an onboarding job, not "the website assistant after website
-    activation".)
+    template/website styles with one LLM call, then apply the website template deterministically.
+    Same day: website copy generation is an onboarding job, not "the website assistant after
+    website activation". 2026-08-19: do not say instantiate / generate / population for this
+    step.)
 
 11. **Progressive progress over SSE** — during onboarding the backend pushes a progress event every
     2–10 seconds (or on each change) over SSE; the frontend re-renders progressively so the website
@@ -62,6 +64,7 @@ decision + date) instead of silently rewriting history.
     the tenant and leaves the site as an **unpublished website**. The owner edits if they want and
     does website publication later; website visitors do not see it without an explicit website publication.
 
-13. **Website copy generation is async and does not block website preview or website activation** — after instantiate, a River
-    job writes copy into existing website slots. The website preview is issued on the unpublished website; if copy fails, the
-    unpublished website stays. Same website assistant tools as the website editor, no chat UI, no `create_page`.
+13. **Website copy generation is async and does not block website preview or website activation** —
+    after applying the website template, a River job writes copy into existing website slots. The
+    website preview is issued on the unpublished website; if copy fails, the unpublished website
+    stays. Same website assistant tools as the website editor, no chat UI, no `create_page`.

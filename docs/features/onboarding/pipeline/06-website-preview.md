@@ -1,14 +1,15 @@
 # 06 — Website preview
 
-A **website preview** is a signed, shareable URL onto the generated **unpublished website**, tied
-to the onboarding session. It is not the website editor. The token stays; the rendered website
-pages are the current unpublished rows (copy from 05 shows up as those rows update).
+A **website preview** is a shareable **website preview link** onto the **unpublished website**,
+tied to the onboarding session. It is not the website editor. The preview token stays; the
+rendered website pages are the current unpublished rows (copy from 05 shows up as those rows
+update).
 
 ## Token
 
-The API issues a website preview token (HMAC, default **14 days**). Only `token_hash` is stored
-(`website_previews.token_hash`). Anyone with the unexpired token can open the public website
-preview URL (`/preview/{token}/` on the public-site runtime). Expired or superseded → 410.
+The API issues a preview token (HMAC, default **14 days**). Only `token_hash` is stored
+(`website_previews.token_hash`). Anyone with the unexpired website preview link can open
+`/preview/{token}/` on the public-site runtime. Expired or superseded → 410.
 
 ## What it holds
 
@@ -16,8 +17,8 @@ preview URL (`/preview/{token}/` on the public-site runtime). Expired or superse
 - `unresolved_fields` — checklist/profile gaps still empty when the website preview is created
   (it can still be shown).
 - `expires_at`
-- `status` — `active` while it is the current website preview; a newer generate **supersedes**
-  the old one.
+- `status` — `active` while it is the current website preview; applying the website template again
+  **supersedes** the old one.
 
 ## How the contractor gets here
 
@@ -30,9 +31,9 @@ preview URL (`/preview/{token}/` on the public-site runtime). Expired or superse
    so copy from 05 appears on reload / next render. **Pay / website activation** is on that
    website preview (07) and does not wait for 05.
 
-SSE is the onboarding session stream (business research + generate + copy events). The public
-website preview itself is not an SSE endpoint. The website preview **token** stays; 05 does not
-supersede the website preview.
+SSE is the onboarding session stream (business research + apply-the-website-template + copy
+events). The public website preview itself is not an SSE endpoint. The preview **token** stays;
+05 does not supersede the website preview.
 
 - **Persists** `website_previews` (`token_hash`, `personas`, `unresolved_fields`, `expires_at`,
   `status=active`) and `website_preview_events`.

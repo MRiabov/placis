@@ -7,5 +7,6 @@
 - **Assert**: checklist statuses (`filled_by_source` vs `filled_by_user` vs `empty` vs
   `conflict`); autosave then final `text_interview_submissions`; an invalid voice tool call is
   rejected; accepted details merge into a new `business_profile_versions` row; conflicts surface,
-  not silent overwrites; `interview/complete` moves the onboarding session to `generating`.
+  not silent overwrites; `interview/complete` moves the onboarding session to `generating`
+  (TODO: rename this status).
 - **Mocked**: the voice agent (returns fixed tool-call proposals).

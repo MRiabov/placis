@@ -3,8 +3,8 @@
 Docs for the Placis application — a **Go backend** plus the **`frontend-2`** Vite/React client. The
 product: a
 **done-for-you — delivered into your inbox, so you can DIY too** — marketing and advertising
-service for construction companies. We research a business, build a profile, generate and edit a
-website from website templates, and suggest ads; the owner can do the same edits and ads
+service for construction companies. We research a business, build a profile, apply a website
+template and edit a website, and suggest ads; the owner can do the same edits and ads
 themselves in The CMS.
 
 ## Reading order
@@ -16,10 +16,10 @@ themselves in The CMS.
 5. [General architecture](general-architecture/README.md) — LLM layer, audit, jobs, files, data model
 6. [Auth](features/other/auth/README.md) — Clerk, tenant == Clerk organization
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building; [website activation](features/onboarding/pipeline/07-website-activation.md) is pay-and-activate
-8. [Website](features/website/README.md) — website templates, generation, editing, website publication
+8. [Website](features/website/README.md) — website templates, applying them, editing, website publication
 9. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md)
 10. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
-11. [CI and delivery](ci-cd.md) — file-size guard, provider isolation, generated-code freshness
+11. [CI and delivery](ci-cd.md) — file-size guard, external API isolation, generated-code freshness
 12. [Testing](testing.md) — the per-feature E2E tests
 
 ## Canonical references
@@ -69,8 +69,8 @@ only.
 
 ## Documentation rules
 
-- Update canonical docs when contracts, shipped behavior, data models, provider boundaries, or
-  validation gates change.
+- Update canonical docs when contracts, shipped behavior, data models, Google / LLM / Stripe /
+  voice boundaries, or validation gates change.
 - Terminology is canonical: `onboarding` (never "setup"), `business_profile` (never
   "setup_profile"), `website_*` (never `cms_*`), `Placis` for the product (keep "OnCall" when
   naming the predecessor repo). Domain words come from

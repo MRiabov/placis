@@ -1,4 +1,7 @@
-# 04 — Generate (after client interview complete)
+# 04 — Apply the website template (after client interview complete)
+
+<!-- TODO: rename this file off 04-generate.md; the action is apply the website template. -->
+<!-- TODO: onboarding session status `generating` still means this step; rename the enum. -->
 
 `POST .../interview/complete` (text submit or voice `end_interview`) sets the onboarding session
 to `generating` and enqueues this step. It does **not** run at find-confirm.
@@ -12,9 +15,9 @@ unpublished rows — the same tables The CMS edits later.
 1. Keep the accepted profile history (`current_version_id`).
 2. **One bounded LLM call** picks a website template + website styles from the website template
    catalog and website style catalog, with a heuristic fallback (trade → website template, else a
-   default). This is not website-page-by-website-page generation and not website copy generation.
+   default). This is not website-page-by-website-page website copy generation.
    Trade does not pick the website template 1:1.
-3. **Deterministic instantiate** — profile + chosen website template → unpublished
+3. **Apply the website template** (deterministic) — profile + chosen website template → unpublished
    `website_pages` / `website_page_versions` / `website_sections` / `website_slots`. Website
    placeholders (`{{business_name}}`, `{{phone}}`, …) stay in the unpublished website. Same
    profile + same website template → same website pages.

@@ -61,7 +61,7 @@ See [data-model.md](data-model.md). Media assets are
   reactivates.
 - Website template application rejects unknown website component ids / invalid props before writing.
 - One E2E: generate → edit → website assistant → website publication → resolve website manifest
-  (providers mocked, core logic unmocked).
+  (LLM faked, core logic unmocked).
 
 ## Frontend
 

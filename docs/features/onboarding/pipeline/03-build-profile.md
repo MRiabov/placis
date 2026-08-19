@@ -2,7 +2,8 @@
 
 Not a wait step. Every registry select, Maps attach, business research slot, and client interview
 detail **appends** a [business profile](../../other/details/data-model.md)
-`business_profile_versions` row as it arrives. Generation (04) reads `current_version_id` at
+`business_profile_versions` row as it arrives. Applying the website template (04) reads
+`current_version_id` at
 client interview complete.
 
 Each field carries its value, status, source refs, and confidence.
