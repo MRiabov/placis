@@ -1,7 +1,7 @@
 export const setupSessionFixture = {
   id: "setup-session-1",
   locale: "en-IE",
-  requested_modules: ["website", "dashboard"] as ("website" | "dashboard" | "customer" | "office" | "crew" | "voice_intake")[],
+  requested_modules: ["website"] as ("website")[],
   source: "guided_onboarding",
   status: "in_progress" as const,
 };

@@ -24,7 +24,7 @@ describe("setup api", () => {
   it("creates a guided setup session", async () => {
     const session = await createGuidedSetupSession();
     expect(session.id).toBe("setup-session-1");
-    expect(session.requested_modules).toEqual(["website", "dashboard"]);
+    expect(session.requested_modules).toEqual(["website"]);
   });
 
   it("loads the setup profile", async () => {

@@ -60,7 +60,7 @@ export async function createGooglePlaceSetupWorkflow(
         create_preview: true,
         locale: "en-IE",
         refinement_mode: "llm_refine_later",
-        requested_modules: ["website", "dashboard"],
+        requested_modules: ["website"],
         run_generation: true,
         source: "website_google_place",
         ...input,
@@ -157,13 +157,13 @@ export async function searchCompanyRegistry(
   return response.data;
 }
 
-export async function createGuidedSetupSession(
-  requestedModules: SetupRequestedModule[] = ["website", "dashboard"],
-): Promise<SuccessContent<"setup_create_session">> {
+export async function createGuidedSetupSession(): Promise<
+  SuccessContent<"setup_create_session">
+> {
   const response = await apiClient.POST("/api/v1/setup-sessions", {
     body: {
       locale: "en-IE",
-      requested_modules: requestedModules,
+      requested_modules: ["website"],
       source: "guided_onboarding",
     },
   });

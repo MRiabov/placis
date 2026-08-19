@@ -96,7 +96,7 @@ const previewHandlers = [
   http.post(`${apiBaseUrl}/api/v1/setup-sessions/from-google-place`, () =>
     HttpResponse.json({
       next_step: "profile_gathering",
-      requested_modules: ["website", "dashboard"],
+      requested_modules: ["website"],
       setup_session: setupSessionFixture,
     }),
   ),

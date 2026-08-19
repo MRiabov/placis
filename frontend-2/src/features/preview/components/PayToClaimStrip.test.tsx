@@ -28,7 +28,7 @@ describe("PayToClaimStrip", () => {
   it("gates checkout behind sign-in", () => {
     renderStrip({ configured: true, isLoaded: true, isSignedIn: false });
     expect(
-      screen.getByText("Pay to claim this workspace"),
+      screen.getByText("Pay to activate this website"),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /sign in/i })).toBeInTheDocument();
     expect(
