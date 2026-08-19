@@ -73,7 +73,8 @@ review trail. They do not duplicate website, media library, or Details content: 
 projects, certifications, reviews, and website pages stay where they are, and the ad records
 reference them by id (for example `ad_image_placements.media_asset_id`).
 
-In code: Creative set is the persisted ad record. The table is `ads`. Go/persistence forms are
+In code: Creative set is the marketing set (images + text), stored today as `ads` plus variants.
+Distinct from Ad. Go/persistence forms are
 snake_case tables with a `*_id` primary key, per [data-model.md](../data-model.md): Ad →
 `ads`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
 `AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no separate

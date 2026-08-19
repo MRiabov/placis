@@ -65,8 +65,8 @@ area, and the date.
     that owns them.
 
 12. **New ad tables, reuse by reference** — Ads need their own records (ad, variants,
-    copy, placements, ad lead form, review). Internal: Creative set is the persisted ad record
-    (`ads`). What is not duplicated is media library, projects, certifications, reviews, and
+    copy, placements, ad lead form, review). Internal: Creative set is images + text (not Ad);
+    today stored as `ads` plus variants. What is not duplicated is media library, projects, certifications, reviews, and
     website pages: they stay where they are and ad records reference them by id.
 
 13. **Approved media only, gated twice** — The picker only offers approved media owned by that
