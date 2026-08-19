@@ -1,12 +1,11 @@
 # 03 — Build the profile (continuous merge)
 
 Not a wait step. Every registry select, Maps attach, business research slot, and client interview
-detail **appends** a [business profile](../../other/details/data-model.md)
-`business_profile_history` row as it arrives. Applying the website template (04) reads
-`current_history_id` at
-client interview complete.
+detail **appends** [business profile](../../other/details/data-model.md) `business_profile_edits`
+rows (one increment per field or list item actually set — never a full profile). Applying the
+website template (04) reads the fold as of `accepted_edit_id` at client interview complete.
 
-Each field carries its value, status, source refs, and confidence.
+Each field carries its value, status, where it came from, and confidence.
 
 - **Merge rules**: contractor answers win over business research (unless marked uncertain). Official
   registry wins for legal identity (`legal_name`, `company_number`, `registered_office`,
@@ -21,7 +20,9 @@ Each field carries its value, status, source refs, and confidence.
   other. The Maps listing address stays on the Google Maps listing, not as a second legal address.
 - **VAT conditional**: `vat_registration_status` marks whether they are VAT-registered; the VAT
   number is required (and later website publication may block) only when that status is set.
+- **Concurrency**: interview and research run at the same time. Each writer `SELECT … FOR UPDATE`
+  the profile row, inserts only its increments, and updates only those fold columns. Do not read
+  the whole profile, merge in memory, and write it back.
 
-- **Persists** `business_profiles` + `business_profile_history` (append-only: `details`,
-  `source_refs`, `created_by`) + `business_profile_services` / `_service_areas` / `_opening_hours`.
-  `current_history_id` always points at the latest `business_profile_history` row.
+- **Persists** `business_profiles` (the fold) + `business_profile_edits` + `business_profile_services`
+  / `_service_areas` / `_opening_hours`. `last_edit_id` is the latest applied edit.

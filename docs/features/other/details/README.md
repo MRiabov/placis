@@ -24,4 +24,4 @@ application draws from. Onboarding builds it; the website shows it; ads reuse it
 
 One source of truth: the business profile. Editing it here changes the website and the next ad draft.
 
-Tables: [data-model.md](data-model.md).
+Decisions: [ADR.md](ADR.md). Tables: [data-model.md](data-model.md).

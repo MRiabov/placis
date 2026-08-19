@@ -3,10 +3,12 @@
 Every tenant-owned row carries `tenant_id`; all primary queries include it. Cross-tenant isolation
 is proven by integration tests (two tenants, assert reads/writes/files are blocked).
 
-Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic content (website component
-props, website slot values, business research raw payloads, website manifests); structural data is real columns. Columns
-named `source_refs` record where each value came from. A media library item records `supplied_by` and,
-when it is a copy, `parent_media_asset_id`; its `file_id` is never replaced.
+Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic content (website
+component props, website slot values, business research raw payloads, website manifests);
+structural data is real columns. Columns named `source_refs` record where a website slot or
+website section value came from (not profile details). Profile history is typed
+`business_profile_edits` increments; the live profile is the fold. A media library item records
+`supplied_by` and, when it is a copy, `parent_media_asset_id`; its `file_id` is never replaced.
 
 Own ids and foreign keys are `uuid` in Postgres and `uuid.UUID` (`github.com/google/uuid`) in Go —
 never strings; they serialize as strings only at the HTTP boundary. Clerk's own ids (`clerk_org_id`,

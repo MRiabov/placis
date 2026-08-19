@@ -15,7 +15,7 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
 
 3. **Client interview** — fill the gaps (text path in this E2E so it does not depend on a live voice
    service); submit.
-   - DB: `client_interview_submissions`; profile history row `created_by=text`.
+   - DB: `client_interview_submissions`; `business_profile_edits` with `created_by=text`.
 
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
    - DB: `business_research_runs` → `business_research_sources` + `google_maps_listing_cache` when a place was selected.

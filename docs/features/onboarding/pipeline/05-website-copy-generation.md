@@ -23,7 +23,7 @@ activation does **not** wait for this job.
 
 Once, when 04 succeeds (client interview complete). Not at find-confirm. Not on every later
 business research event — business research has been running since confirm and should mostly be
-in by client interview complete. The job reads the current profile history at start.
+in by client interview complete. The job reads the profile fold as of `accepted_edit_id` at start.
 
 The website assistant (plan mode, activity cards, revert) is still **after website activation**.
 Same tools, owner-driven, different entry.

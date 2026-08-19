@@ -42,5 +42,5 @@ autosave rows rehydrate the client interview.
 
 Status stays `client_interviewing` until complete, then `applying_website_template` (04).
 
-- **Persists** `client_interview_submissions` (autosave + final) and profile-history deltas (03).
+- **Persists** `client_interview_submissions` (autosave + final) and `business_profile_edits` (03).
   `onboarding_sessions.channel` = `text` or `voice`.
