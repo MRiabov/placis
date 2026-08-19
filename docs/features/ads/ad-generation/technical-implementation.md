@@ -118,7 +118,7 @@ Hard-typed fields:
     `owner`), `review_status`; default is married couples aged 30-40; loose by design — steers
     generation now, precise targeting comes with ad posting)
 
-Flexible JSON is allowed only for AI provenance and ad-platform-specific payload extras such as
+Flexible JSON is allowed only for `ai_generations` traces and ad-platform-specific payload extras such as
 `platform_refs`. Status, tenant ownership, offer, goal, ad destination, and review status are
 hard typed.
 
@@ -189,9 +189,9 @@ metadata on the placement or create a derived crop media asset through the exist
 derivation pattern so the renderer can produce the exact pixels.
 
 Light cleanup edits follow the same pattern: the LLM drafts a cleanup preset (declutter, tidy
-background) that produces a derived image variant of the approved source media asset. The derived
-variant keeps parent-media-asset provenance and `pending_review` status, and only an approved
-derived variant can appear in an ad set.
+background) that creates a new media library item (a copy) of the approved source media asset.
+The copy sets `parent_media_asset_id`, inherits `supplied_by`, and stays `pending_review`; only
+an approved copy can appear in an ad set.
 
 ### AdLeadForm
 
@@ -308,8 +308,8 @@ the first implementation.
 2. output is a rendered video ad set per ad format (`story` 9:16, `feed_square` 1:1, `feed_portrait` 4:5)
 3. assembly, not generation: cuts of approved pieces together; the LLM may add transitions or
    short generated segments for a cinematic style
-4. review works like images: the assembled video is reviewable derived media with
-   where it came from and `pending_review` status until approved
+4. review works like images: the assembled video is a reviewable media library copy with
+   inherited supplied by and `pending_review` status until approved
 5. rendering is a separate pipeline (encoding, timing, copy/subtitle overlay) and stays out of
    the first implementation
 
@@ -341,7 +341,7 @@ An ad can reach `ad_ready_to_post` only when:
 
 1. the tenant owns every referenced media asset and ad-destination website page
 2. every image placement resolves to an approved tenant-owned media asset with a media caption
-   and a valid crop for its ad format; a cleanup-edited derived variant counts only once it has
+   and a valid crop for its ad format; a cleanup copy counts only once it has
    passed review
 3. the ad destination, if set, is a tenant-owned published (or scheduled-to-publish) website
    page; unpublished or hidden website pages are invalid ad destinations
@@ -402,7 +402,7 @@ Allowed AI behavior:
    destination copy
 2. propose an image gallery from approved media with relevance/quality ranking
 3. apply light cleanup edits to selected images (remove clutter/trash, tidy backgrounds) as
-   reviewable derived variants
+   reviewable copies
 4. suggest an ideal customer profile from the business profile and business research,
    asynchronously and reviewable
 5. flag sensitive marketing statements in generated copy for review
@@ -442,8 +442,8 @@ Backend tests:
 12. manual edits are preserved when a variant is regenerated
 13. an internal caller gets the ad set through the service without the Ads UI, and the ad set
     shape is asserted by a focused service test
-14. light cleanup edits produce non-destructive derived variants with provenance and
-    `pending_review`, cannot enter an ad set until reviewed, and never modify the source media
+14. light cleanup edits produce a new media library item (a copy) that inherits `supplied_by`,
+    stays `pending_review`, cannot enter an ad set until reviewed, and never modify the source media
     asset
 15. `platform_refs` and `platform_status` default safely (empty / `not_connected`) and never
     affect approval or the ad set format

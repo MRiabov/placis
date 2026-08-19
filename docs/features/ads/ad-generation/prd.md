@@ -87,7 +87,7 @@ Useful follow-on features that should remain outside the first implementation:
 2. external destinations beyond the contractor's website pages, such as phone links, booking
    links, or direct contact URLs
 3. fuller AI image editing and generation for ad-specific enhancements beyond light cleanup,
-   reusing epic D12 non-destructive derived media
+   reusing epic D12 media copies (parent file never replaced)
 4. audience and offer suggestions from public business research and existing details from the
    business profile
 5. A/B copy variants and simple ad performance input
@@ -257,15 +257,15 @@ the ad is blocked with an owner-readable message until the image is approved or 
 
 The LLM drafts a gallery from this approved media using project/service relevance and quality
 signals; the owner can swap, add, or remove images. No image is used without a per-ad-format crop
-that is valid for that ad format, and every selected image keeps where it came from so the owner
+that is valid for that ad format, and every selected image keeps supplied by so the owner
 can see its origin.
 
 The LLM may also draft light cleanup edits — removing clutter or trash, tidying backgrounds —
 when an image needs it. Cleanup is cosmetic: it must not add or remove objects in a way that
 changes what the photo shows, must not conceal damage or defects, and must not change the work
-being displayed. Cleanup creates a non-destructive derived variant of the source media; the
-source media is never modified, the edit keeps where it came from, and the edited variant needs
-normal review before it can appear in an **ad ready to post** ad set.
+being displayed. Cleanup creates a new media library item (a copy); the source media is never
+modified, the copy inherits supplied by from the parent, and the copy needs normal review
+before it can appear in an **ad ready to post** ad set.
 
 Photos showing third-party properties or identifiable people are fine to use when their
 media-library review is already approved — that approval is the owner's consent.

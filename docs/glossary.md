@@ -235,6 +235,18 @@ A media item the owner has accepted for use.
 
 ---
 
+### Supplied by
+
+Who originated this picture in the media library: the user, research, or AI. A generated image is
+supplied by AI. A cleanup copy inherits supplied by from the parent; edits always create a new
+media library item and never replace the parent’s file.
+
+Distinct from: Source refs (where a detail came from). Never say “provenance”.
+
+In code: `supplied_by`.
+
+---
+
 ### Copy
 
 The words we write for the contractor — headlines, body, calls to action — on the website or in
@@ -722,7 +734,10 @@ Positioning, not a domain object.
 ### Media asset
 
 A row in the media library. Never say bare “asset” (a website is not this). Distinct from: Media
-library (the library), File (bytes).
+library (the library), File (bytes), Supplied by (who originated the picture).
+
+The file on a row is never replaced. An edit creates a new row with `parent_media_asset_id` set
+to the parent.
 
 In code: `media_assets`.
 
@@ -738,8 +753,9 @@ In code: `files`; `media_assets.file_id`.
 
 ### Source refs
 
-During business research, the provenance of a detail (for example marked as their Google Maps
-listing). Distinct from: Detail (the information itself). Never say `source_refs` in product docs.
+Where a detail came from (for example marked as their Google Maps listing). Distinct from: Detail
+(the information itself), Supplied by (who originated a picture). Never say `source_refs` in
+product docs.
 
 In code: `source_refs`.
 
@@ -944,6 +960,8 @@ Never in product/user-facing text or PRD prose.
 | organization (Clerk) | Clerk organization |
 | needs review (bare) | ad needs review (Ad states) |
 | source reference / `source_refs` | where a detail came from |
+| provenance | supplied by (media) or where it came from (a detail) |
+| citation | where it came from |
 | state / state machine | steps / where things stand |
 | normalize(d) | combine / turn into |
 | materialize(d) | make a published website copy |

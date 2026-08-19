@@ -29,7 +29,7 @@ failed event.
 | `generate_image` | generate a media asset from a prompt, optionally attach it to an image website slot |
 
 `generate_image`: the model supplies a prompt + media caption; the backend creates a generated
-media asset (provenance + review status) and attaches it to a website slot through the unpublished
+media asset (`supplied_by=ai`, pending review) and attaches it to a website slot through the unpublished
 website page-version path.
 
 Two plan tools carry the owner-facing reply, the plan, assumptions, open questions, and
