@@ -68,6 +68,7 @@ deploy) end to end. The first real slice after it is **tenancy + auth** — ever
 - **Name everything from the glossary.** Coining a new word is wrong; add it to the glossary first
   if a concept is genuinely missing.
 - **Keep files under 800 lines** (hard error at 1200); split into a feature package instead.
+  Exception: `docs/glossary.md`.
 
 ## What "good" looks like
 

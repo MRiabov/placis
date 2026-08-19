@@ -1,6 +1,6 @@
 # Onboarding Frontend
 
-The contractor-facing onboarding surface in `frontend-2` (`src/features/setup/`). Screens and
+The contractor-facing onboarding in `frontend-2` (`src/features/setup/`). Screens and
 fields match the implemented app (copied from OnCall).
 
 Related: [PRD](prd.md), [ADR](ADR.md), [pipeline](pipeline/README.md).
@@ -36,7 +36,7 @@ Timeline from the onboarding session SSE (04 apply the website template, then 05
 website section renders while it runs. **View website** appears as soon as the website preview exists —
 do not wait for website copy generation to finish.
 
-### 5. Public website preview + website activation — `/preview/{token}/…`
+### 5. Website preview + website activation — `/preview/{token}/…`
 
 Rendered site (current unpublished website; copy appears as 05 writes website slots).
 **Website activation** starts Clerk if needed, then Stripe checkout (07). Copy still running
@@ -55,4 +55,4 @@ preview resumes on the website preview screen.
 - Voice panel — `useSetupVoiceInterview`.
 - `GenerationPanel` / `PreviewProgressPanels` — timeline (TODO: rename `GenerationPanel`; this
   is apply-the-website-template + copy progress).
-- `TargetedPreviewView` / `PayToClaimStrip` — public website preview + website activation (`src/features/preview/`).
+- `TargetedPreviewView` / `PayToClaimStrip` — website preview + website activation (`src/features/preview/`).

@@ -24,13 +24,13 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
    exists (do not wait for copy).
    - DB: unpublished `website_pages` / website sections / website slots; `website_previews` (`token_hash`, `status=active`);
      onboarding session `previewing`. Copy-generation job may still be running.
-   - UI: public website preview renders the current unpublished website.
+   - UI: website preview renders the current unpublished website.
 
 6. **Website copy generation** (faked LLM tools, overlapping 5–7) — website slots/SEO update; tokens preserved.
    - DB: `ai_generations` for the tool batches; no `create_page`; no `website_publications`.
    - Failure: unpublished website from 04 still has a website preview and can be activated.
 
-7. **Website activation** — pay on the public website preview (Clerk testing token + Stripe test webhook).
+7. **Website activation** — pay on the website preview (Clerk testing token + Stripe test webhook).
    - DB: `website_activations`, `stripe_events`, `tenants.status=active`, `tenant_memberships.owner`,
      `tenant_domains`; onboarding session `activated`; **no** `website_publications`.
    - UI: lands in `/cms/website`.

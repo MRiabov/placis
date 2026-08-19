@@ -12,7 +12,7 @@ Status: decided (2026-08-16, product owner + engineering).
    `website_manifest` is built at website publication only; it is never the editable source.
 
 3. **Website component contracts are one typed struct each, dumped to JSON** — under `catalog/`,
-   consumed by both the TS public-site renderer (validation) and the Go backend (save / website
+   consumed by both the TypeScript renderer for the contractor website (validation) and the Go backend (save / website
    publication validation). No forked duplicate of website component schemas (kills the old TS-types
    + Python-`typed_values` duplication).
 

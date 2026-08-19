@@ -6,8 +6,9 @@ editing a doc.
 ## Layout
 
 - `README.md` — the router (reading order + canonical references).
-- `glossary.md` — the ubiquitous language (`## Domain` / `## Enums` / `## Internal`; terms as
-  `###`; closed label sets live under Enums); the only place names are coined.
+- `glossary.md` — the ubiquitous language (`## Domain` / `## Enums` / `## Internal`; parent terms as
+  `###`, children as `####` under Website, Ad, Onboarding; closed label sets live under Enums); the
+  only place names are coined.
 - `development-principles.md` — how work is sliced and reviewed.
 - `architecture.md` — full-stack architecture, centered on the API contract.
 - `ci-cd.md` / `testing.md` — delivery gates and the per-feature E2E rule.

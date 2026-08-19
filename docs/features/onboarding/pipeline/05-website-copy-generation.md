@@ -16,7 +16,7 @@ they should not wait again the way they no longer wait on business research.
 
 04 finishes → [06](06-website-preview.md) issues the website preview on the **unpublished
 website** (structure + detail tokens). This job fills copy in the background. SSE reports website
-slot updates; the public website preview re-renders the current unpublished website. Website
+slot updates; the website preview re-renders the current unpublished website. Website
 activation does **not** wait for this job.
 
 ## When it runs

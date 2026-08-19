@@ -31,9 +31,15 @@ different concepts, keep both, with Distinct from.
 The glossary defines what terms mean. It never prescribes — no scope, pipeline, validation rules,
 or how something is implemented. Those belong in PRDs and technical docs.
 
-A website term always includes **website**. Never say page, section, slot, styles, form, editor,
-template, draft, preview, or publish as if they were generic. Header and footer are named
-separately; there is no umbrella “menu”.
+In PRDs, user stories, and UI, a website term includes **website**. Never say page, section, slot,
+styles, form, editor, template, draft, preview, or publish as if they were generic. **Top menu**
+and **footer** are named separately; never say header, navigation, or bare “menu”. The same idea for ads and onboarding: use
+the full glossary term when the feature is not already the context.
+
+In technical docs and code that **clearly already belong to that feature** (a website architecture
+doc, `internal/website/`, an ads package), the short word is acceptable: page, section, slot; copy,
+variant; session. Do not use the short word in a mixed or product-facing sentence where it could
+mean something else.
 
 Do not say **user**, **frozen**, bare **session**, **provider**, **instantiate**, or **population**.
 Say contractor, owner, or website visitor; name Google Maps, the LLM, or Stripe; say apply the
@@ -66,31 +72,6 @@ research conflicts during onboarding.
 “Owner” is the person, not a synonym for the business.
 
 Distinct from: Contractor (the business).
-
----
-
-### Website visitor
-
-An unauthenticated person looking at the contractor’s live website. A website visitor who
-submits a website form becomes a Website lead.
-
-Distinct from: Contractor, Owner.
-
----
-
-### Website lead
-
-A website visitor who got in touch through a website form.
-
-Distinct from: Ad lead.
-
----
-
-### Ad lead
-
-A person who got in touch through an ad (a Meta lead form).
-
-Distinct from: Website lead.
 
 ---
 
@@ -174,7 +155,10 @@ Use “projects” in product docs and UI. Do not say “portfolio”.
 
 The kept record of how the business profile changed.
 
-Do not say “version”, “versioned”, “snapshot”, or bare “history”.
+Do not say “version”, “versioned”, or “snapshot” for this. Distinct from: Website version
+(the history of the website).
+
+In code: `business_profile_history`, `business_profiles.current_history_id`.
 
 ---
 
@@ -185,20 +169,11 @@ the contractor decides. A research conflict is not an error.
 
 ---
 
-### Onboarding
-
-Learning about the business and building its profile: start from a Google Maps listing or
-company registry record, online research consent, client interview, business research, one
-business profile, then an unpublished website and a website preview. It ends at website activation
-(paid, not published). Never call this “setup”.
-
-Distinct from: Onboarding session (the persisted run).
-
----
-
 ### Google Maps listing
 
 The contractor’s Google Maps place, used to start onboarding and pre-fill what we already know.
+
+In code: `google_maps`, `google_maps_listing_cache` (Google’s `place_id` as the external id).
 
 ---
 
@@ -206,158 +181,6 @@ The contractor’s Google Maps place, used to start onboarding and pre-fill what
 
 The contractor’s entry in a company registry (Companies House, CRO, or a US state registry),
 used to start onboarding and pre-fill legal details. Never say bare “registry record”.
-
----
-
-### Online research consent
-
-The one acknowledgement, during the client interview, that Placis may collect public information
-about the business to prepare the website preview. Never say bare “consent”.
-
----
-
-### Business research
-
-Finding out about the business from public sources (Maps, the company registry, Facebook, their
-current website, photos of their work) after online research consent. Never say bare “research”.
-
----
-
-### Website activation
-
-Pay and activate: sign-in if needed, pay, the website address is reserved. The website stays
-unpublished.
-
-Distinct from: Sign up, Website publication. Never say “claim” or “website claim”.
-
-In code: `website_activations`.
-
----
-
-### Sign up
-
-Create the contractor’s account. Happens around website activation if they are not already signed in.
-Sign up is identity, not payment.
-
-Distinct from: Website activation.
-
----
-
-### Unpublished website
-
-The website after applying the website template, before website publication. Website visitors do
-not see it.
-
-Do not say bare “draft”. An ad in draft is an Ad states value; say “ad draft” if you must.
-
-Distinct from: Website preview (the sales stage where they choose to buy), Live website.
-
----
-
-### Website preview
-
-A stage in our sales process where they choose to buy the website or not. Never say bare
-“preview”. Do not use this word for the website editor canvas or for ad format mocks.
-
-Distinct from: Unpublished website, Website activation, Website preview link.
-
-In code: `website_previews`, `internal/onboarding/websitepreview/`.
-
----
-
-### Website preview link
-
-The shareable URL for a website preview. Anyone who has the link can open the unpublished
-website until the link expires. Never say “signed website preview”.
-
-Distinct from: Website preview (the sales stage), Preview token, Signed URL.
-
----
-
-### Website
-
-The contractor’s site: website pages, website sections, website slots, website forms, header,
-footer, website styles, built from a website template and the business profile, edited in the
-website editor, shown to website visitors only after website publication.
-
----
-
-### Website template
-
-The starting point for a website: the website pages and website sections a typical site of that
-trade needs. Never say bare “template” or “blueprint”.
-
-In code: `website_template`, website template catalog.
-
----
-
-### Website page
-
-One page of the website (home, a service page, contact, legal), with a website page path, title,
-and an ordered list of website sections. Never say bare “page”.
-
----
-
-### Website section
-
-A block on a website page (hero, services, reviews, …), edited through its website slots. Never
-say bare “section”.
-
-Internal: Website component (a website component catalog building block a website section is an
-instance of).
-
----
-
-### Website slot
-
-A named editable value inside a website section: text, rich text, image, list, link, reviews, or
-a project gallery. Never say bare “slot”.
-
-In code: `website_slots`.
-
----
-
-### Copy
-
-The words we write for the contractor — headlines, body, calls to action — on the website or in
-an ad.
-
----
-
-### Website copy generation
-
-Writing website copy into the unpublished website from the business profile. Do not call this
-“refinement” in onboarding. Never say generate without “website copy”.
-
-Distinct from: Website assistant, Apply the website template (the unpublished website structure).
-
----
-
-### Apply the website template
-
-Write unpublished website pages, website sections, and website slots from a website template and
-the business profile. Website placeholders stay. Never say instantiate, population, or generate
-for this.
-
-Distinct from: Website copy generation (the words), Website template (the starting point).
-
----
-
-### Website styles
-
-The look of the website (colors, fonts, and related design controls). Never say bare “styles” or
-“design system”.
-
-Internal: Website style catalog.
-
----
-
-### Website form
-
-A form on the website a website visitor can submit. A submission creates a Website lead. Never
-say bare “form”.
-
-Distinct from: Ad lead form (suggested Meta fields on an ad).
 
 ---
 
@@ -382,15 +205,212 @@ A media item the owner has accepted for use.
 
 ---
 
-### Website editor
+### Copy
 
-The website editing screen: website pages, canvas, header, footer, and website styles. Details,
-Media library, and Ads are their own screens beside it, not website page content. Never say bare
-“editor”.
+The words we write for the contractor — headlines, body, calls to action — on the website or in
+an ad.
 
 ---
 
-### Website assistant
+### Placis website
+
+Placis’s own site. Never say “our site”, “our website”, or “public site” for this.
+
+Distinct from: Website (the contractor website). Say contractor website when the contrast is needed.
+
+---
+
+### Onboarding
+
+Learning about the business and building its profile: start from a Google Maps listing or
+company registry record, online research consent, client interview, business research, one
+business profile, then an unpublished website and a website preview. It ends at website activation
+(paid, not published). Never call this “setup”.
+
+Distinct from: Onboarding session (the persisted run).
+
+---
+
+#### Online research consent
+
+The one acknowledgement, during the client interview, that Placis may collect public information
+about the business to prepare the website preview. Never say bare “consent”.
+
+In code: `onboarding_sessions.online_research_consent_at`.
+
+---
+
+#### Business research
+
+Finding out about the business from public sources (Maps, the company registry, Facebook, their
+current website, photos of their work) after online research consent. Never say bare “research”.
+
+In code: `business_research_runs`, `business_research_events`, `business_research_sources`.
+
+---
+
+#### Sign up
+
+Create the contractor’s account. Happens around website activation if they are not already signed in.
+Sign up is identity, not payment.
+
+Distinct from: Website activation.
+
+---
+
+#### Website activation
+
+Pay and activate: sign-in if needed, pay, the website address is reserved. The website stays
+unpublished.
+
+Distinct from: Sign up, Website publication. Never say “claim” or “website claim”.
+
+In code: `website_activations`.
+
+---
+
+#### Website preview
+
+A stage in our sales process where they choose to buy the website or not. Never say bare
+“preview”. Do not use this word for the website editor canvas or for ad format mocks.
+
+Distinct from: Unpublished website, Website activation, Website preview link.
+
+In code: `website_previews`, `internal/onboarding/websitepreview/`.
+
+---
+
+#### Website preview link
+
+The shareable URL for a website preview. Anyone who has the link can open the unpublished
+website until the link expires. Never say “signed website preview”.
+
+Distinct from: Website preview (the sales stage), Preview token, Signed URL.
+
+---
+
+### Website
+
+The contractor’s site: website pages, website sections, website slots, website forms, top menu,
+footer, website styles, built from a website template and the business profile, edited in the
+website editor, shown to website visitors only after website publication.
+
+Say **contractor website** when you need to tell it apart from Placis website.
+
+Distinct from: Placis website.
+
+---
+
+#### Unpublished website
+
+The website after applying the website template, before website publication. Website visitors do
+not see it.
+
+Do not say bare “draft”. An ad in draft is an Ad states value; say “ad draft” if you must.
+
+Distinct from: Website preview (the sales stage where they choose to buy), Live website.
+
+---
+
+#### Live website
+
+What website visitors see: the currently published website. Distinct from the unpublished website,
+Published website copy (the content), and Placis website (whose site is still the contractor’s).
+
+---
+
+#### Website template
+
+The starting point for a website: the website pages and website sections a typical site of that
+trade needs. Never say bare “template” or “blueprint”.
+
+In code: `website_template`, website template catalog.
+
+---
+
+#### Website page
+
+One page of the website (home, a service page, contact, legal), with a website page path, title,
+and an ordered list of website sections. Never say bare “page” in PRDs or UI.
+
+---
+
+#### Website page path
+
+The URL-safe path of a website page (for example a service page). Never say `slug` or bare “page
+path” in PRDs or UI.
+
+Distinct from: Website address.
+
+---
+
+#### Website section
+
+A block on a website page (hero, services, reviews, …), edited through its website slots. Never
+say bare “section” in PRDs or UI.
+
+Internal: Website component (a website component catalog building block a website section is an
+instance of).
+
+---
+
+#### Website slot
+
+A named editable value inside a website section: text, rich text, image, list, link, reviews, or
+a project gallery. Never say bare “slot” in PRDs or UI.
+
+In code: `website_slots`.
+
+---
+
+#### Website styles
+
+The look of the website (colors, fonts, and related design controls). Never say bare “styles” or
+“design system” in PRDs or UI.
+
+Internal: Website style catalog.
+
+---
+
+#### Website form
+
+A form on the website a website visitor can submit. A submission creates a Website lead. Never
+say bare “form” in PRDs or UI.
+
+Distinct from: Ad lead form (suggested Meta fields on an ad).
+
+---
+
+#### Website editor
+
+The website editing screen: website pages, canvas, top menu, footer, and website styles. Details,
+Media library, and Ads are their own screens beside it, not website page content. Never say bare
+“editor” in PRDs or UI.
+
+---
+
+#### Top menu
+
+The bar at the top of the website. Never say header, navigation, or bare “menu”.
+
+Distinct from: Footer, Website section (a block on a website page). Top menu is not a website
+page.
+
+In code: `top_menu_items`.
+
+---
+
+#### Footer
+
+The footer of the website. Never say navigation or menu for this.
+
+Distinct from: Top menu, Website section.
+
+In code: `footer_items`.
+
+---
+
+#### Website assistant
 
 The chat (and later voice) that proposes website edits. It drafts; the owner decides.
 
@@ -398,7 +418,7 @@ Distinct from: Website copy generation, Website assistant plan.
 
 ---
 
-### Website assistant plan
+#### Website assistant plan
 
 What the website assistant shows the owner before it edits: which website pages and website
 sections, the proposed edits, assumptions, and open questions. Nothing is changed until the
@@ -411,31 +431,62 @@ the unpublished website on its own).
 
 ---
 
-### Website publication
+#### Apply the website template
+
+Write unpublished website pages, website sections, and website slots from a website template and
+the business profile. Website placeholders stay. Never say instantiate, population, or generate
+for this.
+
+Distinct from: Website copy generation (the words), Website template (the starting point).
+
+In code: onboarding session status `applying_website_template` / `apply_website_template_failed`.
+
+---
+
+#### Website copy generation
+
+Writing website copy into the unpublished website from the business profile. Do not call this
+“refinement” in onboarding. Never say generate without “website copy”.
+
+Distinct from: Website assistant, Apply the website template (the unpublished website structure).
+
+---
+
+#### Website publication
 
 Putting the website on the internet. Distinct from: Unpublished website, Published website copy
 (the content), Live website (what visitors see), Ad states.
 
-Never say bare “publish” or “go live”.
+Never say bare “publish” or “go live” in PRDs or UI.
 
-In code: `website_publications`.
-
----
-
-### Website rollback
-
-Make an earlier published website copy the live website again, without deleting profile history.
+In code: `website_publications` (each row is a website version).
 
 ---
 
-### Live website
+#### Website version
 
-What website visitors see: the currently published website. Distinct from the unpublished website
-and from Published website copy (the content).
+One kept checkpoint of the whole website. Website versions are the history of the website.
+Website publication makes a website version the live website. Website rollback makes an earlier
+website version live.
+
+Distinct from: Profile history (the business profile), Unpublished website (what the editor
+mutates), Website publication (the act), Published website copy (the content of the live website
+version), Live website.
+
+Do not say “website history”, “website page version”, or “website page history”. Never say bare
+“version” for the business profile.
+
+In code: `website_publications` (`version_number` is the website version number).
 
 ---
 
-### Website address
+#### Website rollback
+
+Make an earlier website version the live website again, without deleting profile history.
+
+---
+
+#### Website address
 
 The default host of the business’s site: they may be deployed under **our subdomain**. Reserved
 at website activation. Never say `slug`.
@@ -446,12 +497,20 @@ In code: generated subdomain host — not a rival concept named slug.
 
 ---
 
-### Website page path
+#### Website visitor
 
-The URL-safe path of a website page (for example a service page). Never say `slug` or bare “page
-path”.
+An unauthenticated person looking at the contractor’s live website. A website visitor who
+submits a website form becomes a Website lead.
 
-Distinct from: Website address.
+Distinct from: Contractor, Owner.
+
+---
+
+#### Website lead
+
+A website visitor who got in touch through a website form.
+
+Distinct from: Ad lead.
 
 ---
 
@@ -464,13 +523,13 @@ deliverable). Never say “creative set” in product docs or UI.
 
 ---
 
-### Ad destination
+#### Ad destination
 
 An existing published website page owned by that contractor, that the ad can send people to.
 
 ---
 
-### Ideal customer profile
+#### Ideal customer profile
 
 Who the ad is for. It steers tone, imagery, and the offer.
 
@@ -478,14 +537,14 @@ Do not abbreviate to “ICP” in product docs.
 
 ---
 
-### Ad lead form
+#### Ad lead form
 
 Suggested title and questions for a Meta lead form, carried on the ad. Distinct from Website
 form.
 
 ---
 
-### Ad set
+#### Ad set
 
 The deliverable of an approved ad: images at each ad format, copy, ad destination, and the
 suggested ad lead form. Never say “ad package”.
@@ -494,7 +553,7 @@ Distinct from: Creative set (images + text), Website preview.
 
 ---
 
-### Ad posting
+#### Ad posting
 
 Sending an ad to an ad platform (Facebook / Meta first) — a running paid ad.
 
@@ -503,9 +562,17 @@ Distinct from: Creative set, Ad states (ad ready to post), Website publication. 
 
 ---
 
-### Ad platform
+#### Ad platform
 
 Facebook / Meta, where an ad is posted. Do not say “platform” for Placis.
+
+---
+
+#### Ad lead
+
+A person who got in touch through an ad (a Meta lead form).
+
+Distinct from: Website lead.
 
 ---
 
@@ -514,7 +581,9 @@ Facebook / Meta, where an ad is posted. Do not say “platform” for Placis.
 Closed sets of user-facing labels. Name the set; the values live only here — never as their own
 terms.
 
-### Ad states
+### Ad
+
+#### Ad states
 
 Where an ad stands. Two closed sets of labels:
 
@@ -538,7 +607,7 @@ In code: `ads.status` (`draft` / `ad_needs_review` / `ad_ready_to_post` / `archi
 
 ---
 
-### Ad format
+#### Ad format
 
 A standard size an ad is produced in.
 
@@ -578,45 +647,6 @@ In code: `tenants.clerk_org_id`.
 
 ---
 
-### Onboarding session
-
-The persisted onboarding run. Distinct from: Onboarding (the process). Do not say “session” in
-product docs.
-
-In code: `onboarding_sessions`, `internal/onboarding/`.
-
----
-
-### Client interview
-
-The questions we ask the contractor to fill gaps the Google Maps listing and company registry
-record do not cover. Text and voice are two channels into the same business profile. Never say
-bare “interview”.
-
-Domain: (internal — use this name in technical docs; onboarding copy may describe the
-questions).
-
-In code: `text_interview_submissions`; voice tools write the same profile.
-
----
-
-### Voice
-
-A way to answer the client interview (and later to drive the website assistant). Voice is a
-channel, not a separate product and not a separate profile.
-
----
-
-### Preview token
-
-The secret in a website preview link. Technical docs only. Never say “signed” for this.
-
-Distinct from: Website preview link, Signed URL.
-
-In code: `website_previews.token_hash`.
-
----
-
 ### Signed URL
 
 A time-limited file download URL. Distinct from: Website preview link. Never call a website
@@ -631,7 +661,7 @@ In code: object-storage signed URLs.
 The app where the owner edits marketing: website, ads, Details, and Media library. Umbrella
 name, not a synonym for the website editor. Never in PRDs as if it were a domain object.
 
-In code: `/cms/website`, `/cms/ads`, Details, Media library.
+In code: `frontend-2` (`/cms/website`, `/cms/ads`, Details, Media library).
 
 ---
 
@@ -641,52 +671,6 @@ In code: `/cms/website`, `/cms/ads`, Details, Media library.
 into their inbox. **DIY:** the owner can do the same website edits and ad creation themselves.
 
 Positioning, not a domain object.
-
----
-
-### Custom website address
-
-The website address **they supply**, which we publish under. Distinct from: Website address (the
-default: they may be deployed under our subdomain). Never say bare “custom domain”.
-
-In code: `type=custom` on the website-address host row.
-
----
-
-### Website placeholder
-
-A blank in the unpublished website that stands for a business detail (`{{business_name}}`,
-`{{phone}}`, …). Never say bare “placeholder”.
-
----
-
-### Website component
-
-A named building block of a website section (`public.hero.image`, …), with a contract for props,
-website slots, and design controls. Never say bare “component”.
-
-Domain: Website section (a website section is an instance of a website component).
-
-In code: website component catalog structs under `catalog/`.
-
----
-
-### Website template catalog
-
-Where website templates live. Never say bare “catalog”. In code: `catalog/` (templates).
-
----
-
-### Website component catalog
-
-Where website section building blocks live. Never say bare “catalog”. In code: `catalog/`
-(component contracts).
-
----
-
-### Website style catalog
-
-Where website style presets live. Never say bare “catalog”. In code: `catalog/` (style presets).
 
 ---
 
@@ -725,7 +709,96 @@ In code: leftover `research_runs.provider` and `research/providers/` — not the
 
 ---
 
-### Published website copy
+### Onboarding
+
+#### Onboarding session
+
+The persisted onboarding run. Distinct from: Onboarding (the process). Do not say “session” in
+product docs.
+
+In code: `onboarding_sessions`, `internal/onboarding/`.
+
+---
+
+#### Client interview
+
+The questions we ask the contractor to fill gaps the Google Maps listing and company registry
+record do not cover. Text and voice are two channels into the same business profile. Never say
+bare “interview”.
+
+Domain: (internal — use this name in technical docs; onboarding copy may describe the
+questions).
+
+In code: `text_interview_submissions`; voice tools write the same profile.
+
+---
+
+#### Voice
+
+A way to answer the client interview (and later to drive the website assistant). Voice is a
+channel, not a separate product and not a separate profile.
+
+---
+
+#### Preview token
+
+The secret in a website preview link. Technical docs only. Never say “signed” for this.
+
+Distinct from: Website preview link, Signed URL.
+
+In code: `website_previews.token_hash`.
+
+---
+
+### Website
+
+#### Custom website address
+
+The website address **they supply**, which we publish under. Distinct from: Website address (the
+default: they may be deployed under our subdomain). Never say bare “custom domain”.
+
+In code: `type=custom` on the website-address host row.
+
+---
+
+#### Website placeholder
+
+A blank in the unpublished website that stands for a business detail (`{{business_name}}`,
+`{{phone}}`, …). Never say bare “placeholder”.
+
+---
+
+#### Website component
+
+A named building block of a website section (`public.hero.image`, …), with a contract for props,
+website slots, and design controls. Never say bare “component”.
+
+Domain: Website section (a website section is an instance of a website component).
+
+In code: website component catalog structs under `catalog/`.
+
+---
+
+#### Website template catalog
+
+Where website templates live. Never say bare “catalog”. In code: `catalog/` (templates).
+
+---
+
+#### Website component catalog
+
+Where website section building blocks live. Never say bare “catalog”. In code: `catalog/`
+(component contracts).
+
+---
+
+#### Website style catalog
+
+Where website style presets live. Never say bare “catalog”. In code: `catalog/` (style presets).
+
+---
+
+#### Published website copy
 
 The content of the website: text, images, and arrangement — the website manifest produced to convert
 a website visitor to purchase or call.
@@ -738,7 +811,7 @@ In code: one `website_publications` row holding `website_manifest`.
 
 ---
 
-### Website manifest
+#### Website manifest
 
 The concise technical JSON read model: website pages → website sections → props. Distinct from:
 Website publication, Published website copy. Never say “site manifest”.
@@ -747,7 +820,9 @@ In code: `website_manifest`.
 
 ---
 
-### Creative set
+### Ad
+
+#### Creative set
 
 A marketing set: images + text. Distinct from: Ad (an offer or marketing goal), Ad set (the
 owner-facing deliverable), Ad posting (running a paid ad). Never say “creative set” in product docs
@@ -785,7 +860,7 @@ Never in product/user-facing text or PRD prose.
 | claim / website claim | website activation |
 | draft (bare) | unpublished website, or ad draft (Ad states) |
 | template (bare) | website template |
-| page / section / slot / styles (bare) | website page / website section / website slot / website styles |
+| page / section / slot / styles (bare) | website page / website section / website slot / website styles (PRDs and UI; short form OK in website technical docs and code) |
 | menu (as header+footer) | header or footer |
 | form (bare) | website form or ad lead form |
 | caption (bare) | media caption |
@@ -796,6 +871,10 @@ Never in product/user-facing text or PRD prose.
 | placeholder (bare) | website placeholder |
 | catalog (bare) | website template catalog, website component catalog, or website style catalog |
 | component (bare) | website component |
+| our site / our website | Placis website |
+| public site / public-site runtime | contractor website or Placis website (whose site) |
+| runtime (for that application) | do not name the application “runtime”; `apps/public-site` until named |
+| private app / private Vite app / private client | the part of the application: The CMS, onboarding, or website preview (`frontend-2`) |
 | custom domain | custom website address |
 | published copy (bare) | published website copy |
 | site manifest | website manifest |
@@ -831,8 +910,10 @@ Never in product/user-facing text or PRD prose.
 
 ## Code naming rules
 
-- Domain words in product surfaces **and in code** when they name that concept. Internal names only
+- Domain words in PRDs, UI, **and in code** when they name that concept. Internal names only
   for a different concept (technical docs and code).
+- In technical docs and code that clearly already belong to a feature, the short word is
+  acceptable (page, section, slot in a website package).
 - Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned row, `*_id`
   foreign keys, `snake_case` enum values.
 - Go: feature-nested packages (`internal/<domain>/<feature>/`), no package stutter

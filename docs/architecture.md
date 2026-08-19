@@ -22,8 +22,8 @@ whole system.
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
 | LLM | internal interface; Vercel AI SDK primary, OpenRouter as an alternative |
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
-| Frontend (private app) | `frontend-2` — Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; reused mostly, adapted to the huma OpenAPI |
-| Public site | one shared runtime — Astro with React islands (Cloudflare Workers) — that renders every tenant's live website; not yet imported from `OnCall` |
+| Frontend (`frontend-2`) | Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; The CMS, onboarding, website preview; reused mostly, adapted to the huma OpenAPI |
+| Contractor website (`apps/public-site`) | Astro with React islands (Cloudflare Workers) — shows every contractor’s live website; not yet imported from `OnCall` |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 ## Module layout
@@ -91,14 +91,14 @@ Rules:
 
 ## Frontend (`frontend-2`)
 
-`frontend-2` is the private client and is **reused mostly** — the rewrite does not rebuild it. It is
+`frontend-2` is **reused mostly** — the rewrite does not rebuild it. It is
 adapted only where the huma-derived OpenAPI improves the contract.
 
 - `src/generated/api-types.ts` — regenerated from the served `/openapi.json` via
   `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` client + Clerk token.
 - `src/features/onboarding/` — onboarding (sources, client interview, business research progress, website preview).
 - `src/features/cms/` — the website + ads parts of The CMS (website editor, media library, inspector, ads workspace).
-- `src/features/preview/` — the onboarding website preview + public-site module website preview.
+- `src/features/preview/` — the onboarding website preview (and the website preview shown by `apps/public-site`).
 
 The client keeps its own feature-local structure and is not folded into `internal/`; the file-size
 guard applies to it too (see `ci-cd.md`).
@@ -110,12 +110,12 @@ Two backend processes share one database, and two frontend apps talk to the API:
 1. `cmd/api` — the Go HTTP API. Completes requests quickly and persists intent.
 2. `cmd/worker` — runs `River` jobs: AI generation, business research, file processing,
    notifications, and export generation.
-3. `frontend-2` — the private Vite client (The CMS, onboarding, website preview) built as static assets, talking
+3. `frontend-2` — The CMS, onboarding, and website preview; built as static assets, talking
    to the API through the generated `openapi-fetch` client.
-4. **public site** — one shared runtime, Astro with React islands, on Cloudflare Workers. It renders
-   every tenant's live website from its website manifest; a single deploy serves all tenants (no
-   per-tenant build). This runtime still lives in `OnCall` and has not been imported into this repo
-   yet.
+4. **Contractor website** (`apps/public-site`) — Astro with React islands, on Cloudflare Workers. It
+   shows every contractor’s live website from its website manifest; a single deploy serves all
+   tenants (no per-tenant build). This application still lives in `OnCall` and has not been imported
+   into this repo yet.
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
 work enqueued, and the request returned — see
@@ -134,7 +134,8 @@ convention.
 ## Component contract (single source of truth)
 
 Each website component (what a `public.hero.image` website section accepts) is **one typed struct, dumped to JSON**,
-under `catalog/`. That JSON is the contract: the TypeScript public-site renderer consumes it to
+under `catalog/`. That JSON is the contract: the TypeScript renderer for the contractor website
+consumes it to
 validate and render, and the Go backend loads the same structs for save and website publication validation.
 Website templates and website component contracts are static catalog data, kept as catalog versions — not database rows.
 The Go backend loads and validates them; it must not hand-duplicate the struct shapes.
@@ -160,5 +161,5 @@ The Go backend loads and validates them; it must not hand-duplicate the struct s
 ## Deployment
 
 Railway containers for `cmd/api` and `cmd/worker`; `frontend-2` builds to static assets. Cloudflare
-for the public-site edge/CDN and R2 object storage. Local infra (Postgres, MinIO) via Docker
+for the contractor website edge/CDN and R2 object storage. Local infra (Postgres, MinIO) via Docker
 Compose; the API, worker, and `frontend-2` run directly for fast iteration.
