@@ -18,7 +18,7 @@ asserts name the tables from [data-model.md](data-model.md) (and
 
 4. **Website publication** — the owner does a website publication.
    - DB: `website_publications` (status=`published`, `active=true`, `website_manifest`,
-     `version_number`); `website_pages.published_version_id` updated.
+     `version_number` — a website version).
    - UI: the live website is shown.
 
 5. **Resolve** — the live website renders the published website copy (`website_manifest`).
@@ -30,5 +30,5 @@ asserts name the tables from [data-model.md](data-model.md) (and
    - UI: the live website shows the earlier published website copy.
 
 7. **Website form → website lead** — a website visitor submits a website form.
-   - DB: `leads` (source=`public_form`, form_id, `contact` jsonb, message, status=`new`) under the
+   - DB: `leads` (source=`website_form`, `website_form_id`, `contact` jsonb, message, status=`new`) under the
      tenant.

@@ -46,15 +46,15 @@ timeline. The stream is a **mirror** — Postgres is authoritative.
 
 ## Where things stand
 
-`created → interviewing → generating → previewing → activated` (`generation_failed` if applying
-the website template throws; TODO: rename these statuses off `generating` / `generation_failed`).
+`created → client_interviewing → applying_website_template → previewing → activated`
+(`apply_website_template_failed` if applying the website template throws).
 Website copy generation may still be running while `previewing`. Website previews expire
 on `expires_at`; the onboarding session does not.
 
 ## Voice
 
-Voice is a client interview **channel** into the same profile as text. Transport:
-[voice-agent.md](../../general-architecture/voice-agent.md). Tools:
+Voice is a **channel** (client interview, website assistant, and the voice agent in The CMS).
+Transport: [voice-agent.md](../../general-architecture/voice-agent.md). Tools:
 `obtained_information`, `mark_information_status`, `request_lookup`, `confirm_conflict`,
 `update_interview_plan`. `end_interview` calls the same complete path as the text client
 interview. Applying the website template consumes the accepted profile, never the raw transcript.

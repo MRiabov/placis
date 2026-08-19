@@ -9,7 +9,7 @@ Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.m
 
 A contractor's marketing starts with a website. The site must be built from their business profile
 and a website template, then stay editable by the owner (or done-for-you) through the website
-editor — website pages, copy, photos, website forms, header, and footer — then website
+editor — website pages, copy, photos, website forms, top menu, and footer — then website
 publication.
 
 ## Goals
@@ -17,7 +17,7 @@ publication.
 1. Build an unpublished website from a **website template** + their business profile (their
    details fill in the blanks).
 2. Let the owner (or done-for-you) **edit** the site: website pages, copy, photos, website forms,
-   header, footer, and their projects.
+   top menu, footer, and their projects.
 3. **Improve** it with the website assistant — it suggests copy and images, but the owner decides.
 4. **Website publication** — put it on the internet, with website rollback if a publication is
    wrong.
@@ -38,10 +38,10 @@ The website editor is one workspace with a left sidebar and a canvas:
 - **Media library** — the photo library: their work, logos, and documents, each with a media
   caption.
 - **Website styles** — the look (colors and fonts) via design controls.
-- **Header and footer** — named separately; there is no umbrella “menu”.
+- **Top menu and footer** — named separately; never say header, navigation, or bare “menu”.
 
 A **Details** view edits the business details shown on the site: business name, legal name, trade,
-established year, description, marketing phone and email, website, location, service areas,
+established year, description, marketing phone, marketing email, existing site URL, location, service areas,
 featured services, company/VAT number, registered office, and opening hours.
 
 Each **website page** is built from **website sections** (hero, services, reviews, …), and each

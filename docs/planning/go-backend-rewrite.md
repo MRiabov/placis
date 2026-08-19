@@ -17,11 +17,11 @@ One loop:
 ```text
 onboard (from their Google Maps listing or company registry record)
   -> a few questions to fill the gaps
-  -> business research (Google Places, company registry, Facebook, website crawl, photo classification)
+  -> business research (Google Maps, company registry, Facebook, website crawl, photo classification)
   -> one clear business profile
-  -> generate a website from a trade website template (their details fill the blanks)
+  -> apply the website template (their details fill the blanks)
   -> website copy generation (AI suggests, owner decides)
-  -> edit in The CMS (website pages / website sections / website slots / media library / website forms / header/footer)
+  -> edit in The CMS (website pages / website sections / website slots / media library / website forms / top menu / footer)
   -> website publication (a published website copy goes live)
   -> generate ads from the profile + approved media (#403)
 ```
@@ -34,14 +34,14 @@ auditability, and voice agents as a **separate, optional** channel.
 ### In scope
 
 1. **Identity, auth, tenancy** — Clerk identity + Clerk organizations; tenant == Clerk organization 1-1;
-   memberships with roles; domains (generated subdomain + custom website domain).
+   memberships with roles; website addresses (`type=subdomain` / `type=custom`).
 2. **Onboarding (business research → profile)** — onboarding sessions (start from a Google Maps listing or
    company registry record), client interview, Google Maps / company registry / Facebook / crawl /
    photos, business profile.
 3. **Website building from website templates** — trade website templates + website component contracts as static catalog
    data; website template application; website copy generation as governed, propose-only edits.
-4. **Website editing (The CMS)** — website pages (kept, never overwritten), website sections, website slots, media
-   library, website forms, header/footer, projects, certification selections, website publications.
+4. **Website editing (The CMS)** — unpublished website rows, website sections, website slots, media
+   library, website forms, top menu, footer, projects, certification selections, website versions.
 5. **Contractor website + website lead capture** — resolve active website publication website manifests by host/path; website
    forms persist into a minimal `leads` table.
 6. **Website preview + website activation** — website preview links; self-serve Stripe website activation/checkout;
@@ -98,18 +98,18 @@ placis/
     audit/               # audit events
 
     # product domains — feature-nested (one package per feature)
-    tenancy/             # tenants.go, memberships.go, domains.go
+    tenancy/             # tenants.go, memberships.go, website_addresses.go
     onboarding/          # session.go, interview.go, orchestrate.go, activation.go
       websitepreview/    #   package.go, events.go (website preview of the unpublished website)
-    research/            # service.go + providers/{googleplaces,registry,facebook,crawl,photo}.go
-                         # TODO: rename — do not say provider in prose; this folder still does.
-    profile/             # profile.go, versions.go, services.go, areas.go, hours.go
+    research/            # service.go + googlemaps/, companyregistry/, facebook/, crawl/, photo/ with fakes
+    profile/             # profile.go, history.go, services.go, areas.go, hours.go
     website/             # root types.go, service.go + feature packages
       pages/             #   handler.go, service.go, model.go
       sections/
       slots/
       forms/
-      navigation/
+      topmenu/
+      footer/
       publications/
       projects/
       certifications/
@@ -177,17 +177,17 @@ Canonical table definitions live with the feature that owns them — see
 
 ## 5. Workflows and state machines
 
-1. **Onboarding session** — `created → interviewing → generating → previewing → activated`
-   (`generation_failed` if applying the website template throws; TODO: rename these statuses).
+1. **Onboarding session** — `created → client_interviewing → applying_website_template → previewing → activated`
+   (`apply_website_template_failed` if applying the website template throws).
    Business research runs in the background alongside review/client interview; applying the website
    template starts at client interview complete; website copy generation runs after that and does
    not block website preview or website activation. Website previews expire; the onboarding session
    does not.
-2. **Business profile** — profile history; `current_version_id` points at the current row;
+2. **Business profile** — profile history; `current_history_id` points at the current row;
    details carry `source_refs` and `created_by`.
-3. **Website page** — `unpublished → approved → published`; kept copies are never overwritten; website publication creates a new
-   `website_publications` row (profile history untouched).
-4. **Website publication** — `published → rolled_back/archived`; website rollback reactivates an earlier published website copy.
+3. **Website page** — unpublished website rows mutated in place; website publication creates a new
+   website version (`website_publications` row; profile history untouched).
+4. **Website publication** — `published → rolled_back/archived`; website rollback reactivates an earlier website version.
 5. **Website activation** — `checkout.session.completed` accepted only after Stripe SDK signature
    verification (`webhook.ConstructEvent`) + metadata matching; website activation is safe to replay and
    never driven by a browser success URL alone. It links the onboarding session, ensures the owner
@@ -205,17 +205,17 @@ Route groups (full struct definitions come with the `huma` types):
 
 - `/api/v1/health`
 - `/api/v1/me`, `/api/v1/me/organization` (Clerk organization provisioning)
-- `/api/v1/onboarding-sessions` + nested: company-registry search, google-places
-  autocomplete/from-google-place, profile (+ checklist/confirmations), client interview, business research runs,
-  generation runs, website previews, voice/progress events
-- `/api/v1/tenants/{slug}` + business-profile, domains, website (website templates, website pages, website forms,
+- `/api/v1/onboarding-sessions` + nested: company-registry search, Google Maps
+  autocomplete/from-google-maps-listing, profile (+ checklist/confirmations), client interview, business research runs,
+  apply-the-website-template runs, website previews, voice/progress events
+- `/api/v1/tenants/{website_address}` + business-profile, website addresses, website (website templates, website pages, website forms,
   website publications, certifications), memberships
 - `/api/v1/website/editor` + website pages/website sections/website slots/media assets/projects/website publications/business-profile
 - `/api/v1/ads` + ads/export (new)
 - `/api/v1/public/site` (resolve/meta/sitemap/assets), `/api/v1/public/forms/{id}/submit`,
   `/api/v1/public/forms/{id}/uploads`
-- `/api/v1/preview/{token}` + activate/activation/activation-checkout/activation-status/module/
-  website-preview/events/persona/request-changes
+- `/api/v1/preview/{token}` + activate/activation/activation-checkout/activation-status/
+  website-preview/events
 - `/api/v1/webhooks/stripe`
 - Voice integration boundary (separate service)
 
@@ -225,7 +225,7 @@ Route groups (full struct definitions come with the `huma` types):
 | --- | --- |
 | `setup`, `setup_session`, `setup_profile` | `onboarding`, `onboarding_session`, `business_profile` |
 | loose `fact` | `detail` / `business_profile.*` |
-| `cms_projects`, `cms_career_*` | `website_projects`, `website_career_*` |
+| `cms_projects`, `cms_career_*` | `projects`, `website_career_*` |
 | `Demo`-prefixed ops; `save` vs `update` | `Create`/`Update`/`Get`/`List`/`Delete`, one `*Read` suffix |
 | "OnCall" as the product | "Placis" (keep "OnCall" when naming the predecessor repo) |
 | opaque `JsonRecord`/`JsonObjectPayload` wrappers | typed structs; `jsonb` only at persistence/API boundary |
@@ -243,7 +243,7 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
    roles, cross-tenant isolation tests.
 2. **Onboarding & business research & profile** — onboarding sessions, client interview, Google Maps /
    company registry / Facebook / crawl / photos
-   (Google Places, company registry, Facebook, website crawl, photo classification), business
+   (Google Maps, company registry, Facebook, website crawl, photo classification), business
    profile with profile history.
 3. **Website templates & website** — website component/website template catalog loaders + website component contracts, website template
    application, website copy generation (propose-only), CMS CRUD, website publications.

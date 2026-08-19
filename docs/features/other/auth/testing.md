@@ -24,5 +24,5 @@ using a real Clerk testing token — never a fake verifier. DB asserts name the 
      not asked to type the name again.
    - UI: `/me` transitions from `tenant: null` to the tenant; the contractor proceeds without a
      re-entry step.
-   - DB: `tenants` (`clerk_org_id`, `slug`) and `tenant_memberships` (`owner`) are written, reusing
+   - DB: `tenants` (`clerk_org_id`) and `tenant_memberships` (`owner`) are written, reusing
      the onboarding profile's name.

@@ -12,6 +12,9 @@ onboarding session status is anything except `activated`.
 - `website_addresses` — `id`, `tenant_id` fk, `hostname` unique, `type` (`subdomain`/`custom`),
   `status` (`reserved`/`pending`/`active`/`failed`), `dns_verified_at`, `activated_at`, `created_at`
 
+`type=subdomain` is the default website address (our subdomain). `type=custom` is the custom
+website address (the hostname they supply).
+
 ## Indexes
 
-Unique: `tenants.clerk_org_id`, `tenants.website_address`.
+Unique: `tenants.clerk_org_id`, `tenants.website_address`, `website_addresses.hostname`.

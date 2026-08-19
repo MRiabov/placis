@@ -20,7 +20,7 @@ Status: decided (2026-08-16, product owner + engineering).
    templates + website component contracts are JSON + sidecars under `catalog/`; the backend loads
    and validates them, never hand-duplicates their schemas.
 
-5. **Website placeholders fill in at website publication** — `{{business_name}}`, `{{phone}}`,
+5. **Website placeholders fill in at website publication** — `{{business_name}}`, `{{marketing_phone}}`,
    `{{trade}}`, … pull from the business profile when website publication runs; the unpublished
    website keeps the website placeholders rather than inventing details.
 

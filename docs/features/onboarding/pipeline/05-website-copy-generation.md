@@ -1,6 +1,6 @@
 # 05 — Website copy generation (async)
 
-After [04](04-generate.md) applies the website template, this step **writes the words** —
+After [04](04-apply-website-template.md) applies the website template, this step **writes the words** —
 headlines, body, calls to action, SEO titles — into the existing website slots. It is not the
 website editor and not a human approval loop. The predecessor called this "refinement"; the work
 is website copy generation (and the same tool pass for SEO / image prompts).
@@ -36,7 +36,7 @@ Continuous-mode website assistant tools on the unpublished website 04 wrote. No 
    the rest of the website assistant tools that make sense on an already-built website page
    (`generate_image` if a website slot still has no photo). **Do not** `create_page` — 04 already
    applied the website template's website page set.
-2. Keep `{{business_name}}`, `{{phone}}`, … tokens for reusable details. Do not bake raw detail
+2. Keep `{{business_name}}`, `{{marketing_phone}}`, … tokens for reusable details. Do not bake raw detail
    values into copy that should stay a website placeholder.
 3. Validate every tool result against website component contracts before keeping it.
 4. Cap steps and total tool calls (predecessor: 3 steps / 12 calls / 4 website pages at a time).

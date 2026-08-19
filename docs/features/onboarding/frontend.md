@@ -53,6 +53,5 @@ preview resumes on the website preview screen.
 - `FoundInformationReview` — found vs missing.
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist` — text client interview.
 - Voice panel — `useSetupVoiceInterview`.
-- `GenerationPanel` / `PreviewProgressPanels` — timeline (TODO: rename `GenerationPanel`; this
-  is apply-the-website-template + copy progress).
+- `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — timeline (apply-the-website-template + copy progress).
 - `TargetedPreviewView` / `PayToClaimStrip` — website preview + website activation (`src/features/preview/`).

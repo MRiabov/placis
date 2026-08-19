@@ -7,7 +7,7 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
 
 1. **Find** — country, registry and/or Google Maps, online research consent, Confirm.
    - UI: `/onboarding/find` → Review.
-   - DB: `onboarding_sessions` (`status=interviewing`, token, `consent_given_at`, no tenant yet).
+   - DB: `onboarding_sessions` (`status=client_interviewing`, token, `online_research_consent_at`, no tenant yet).
 
 2. **Review** — found vs missing; Continue to client interview.
    - UI: `/onboarding/review`.
@@ -15,10 +15,10 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
 
 3. **Client interview** — fill the gaps (text path in this E2E so it does not depend on a live voice
    service); submit.
-   - DB: `text_interview_submissions`; profile history row `created_by=text`.
+   - DB: `client_interview_submissions`; profile history row `created_by=text`.
 
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
-   - DB: `research_runs` → `research_sources` + `google_places_cache` when a place was selected.
+   - DB: `business_research_runs` → `business_research_sources` + `google_maps_listing_cache` when a place was selected.
 
 5. **Apply the website template + website preview** — `/onboarding/preview`, then View website as soon as the website preview
    exists (do not wait for copy).
@@ -32,7 +32,7 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
 
 7. **Website activation** — pay on the website preview (Clerk testing token + Stripe test webhook).
    - DB: `website_activations`, `stripe_events`, `tenants.status=active`, `tenant_memberships.owner`,
-     `tenant_domains`; onboarding session `activated`; **no** `website_publications`.
+     `website_addresses` (`type=subdomain`); onboarding session `activated`; **no** `website_publications`.
    - UI: lands in `/cms/website`.
 
 8. **Isolation** — a second onboarding session.

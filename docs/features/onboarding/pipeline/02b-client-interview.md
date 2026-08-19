@@ -17,14 +17,15 @@ and is **not** on the text client interview.
 
 ## Client interview (`/onboarding/interview`)
 
-Fill only the gaps. Two writers, same path that writes details; generation never reads a transcript.
+Fill only the gaps. Two writers, same path that writes details; applying the website template never reads a transcript.
 
 **Text** — fields, autosaved (`PUT .../text-interview/draft` →
-`text_interview_submissions`), submitted as final
+`client_interview_submissions`), submitted as final
 (`POST .../text-interview/submissions`) then `POST .../interview/complete`:
 
 - Who they are — display name, trade.
-- Contact — contact name, phone, email, website.
+- Contact — contact name, marketing phone, marketing email, existing site URL; emergency phone
+  (how we reach the owner).
 - What they do — main services, service area.
 - Opening hours — per day: open, close, closed.
 - Photos — use the found ones, take them from Google, upload later, or use neutral ones.
@@ -39,7 +40,7 @@ Fill only the gaps. Two writers, same path that writes details; generation never
 Leave-and-come-back restores the onboarding session from `localStorage` + `GET .../profile`; text
 autosave rows rehydrate the client interview.
 
-Status stays `interviewing` until complete, then `generating` (04; TODO: rename this status).
+Status stays `client_interviewing` until complete, then `applying_website_template` (04).
 
-- **Persists** `text_interview_submissions` (autosave + final) and profile-history deltas (03).
+- **Persists** `client_interview_submissions` (autosave + final) and profile-history deltas (03).
   `onboarding_sessions.channel` = `text` or `voice`.

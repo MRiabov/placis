@@ -5,8 +5,8 @@
   submit the final text client interview; also exercise voice tool calls (`obtained_information` /
   `confirm_conflict`) on a second onboarding session.
 - **Assert**: checklist statuses (`filled_by_source` vs `filled_by_user` vs `empty` vs
-  `conflict`); autosave then final `text_interview_submissions`; an invalid voice tool call is
-  rejected; accepted details merge into a new `business_profile_versions` row; conflicts surface,
-  not silent overwrites; `interview/complete` moves the onboarding session to `generating`
-  (TODO: rename this status).
+  `conflict`); autosave then final `client_interview_submissions`; an invalid voice tool call is
+  rejected; accepted details merge into a new `business_profile_history` row; conflicts surface,
+  not silent overwrites; `interview/complete` moves the onboarding session to
+  `applying_website_template`.
 - **Mocked**: the voice agent (returns fixed tool-call proposals).

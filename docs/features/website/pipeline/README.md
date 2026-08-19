@@ -13,9 +13,9 @@
   `website_sections` / `website_slots`, website placeholders kept.
 - **02** — website copy generation writes copy into the unpublished website through typed,
   validated, parallel tool calls (not the website assistant).
-- **03** — the owner reviews and edits; every edit is a new website page version.
-- **04** — website sections are validated against their website component contracts before save
-  and website publication.
-- **05** — website publication resolves website placeholders, writes the `website_manifest` into a
+- **03** — the owner reviews and edits unpublished website rows in place.
+- **04** — website sections are validated against their website component contracts before
   website publication.
-- **06** — the live website renders the active website publication (Astro shell, React islands).
+- **05** — website publication resolves website placeholders, writes the `website_manifest` into a
+  website version (`website_publications` row).
+- **06** — the live website renders the active website version (Astro shell, React islands).

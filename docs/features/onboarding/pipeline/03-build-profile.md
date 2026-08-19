@@ -2,8 +2,8 @@
 
 Not a wait step. Every registry select, Maps attach, business research slot, and client interview
 detail **appends** a [business profile](../../other/details/data-model.md)
-`business_profile_versions` row as it arrives. Applying the website template (04) reads
-`current_version_id` at
+`business_profile_history` row as it arrives. Applying the website template (04) reads
+`current_history_id` at
 client interview complete.
 
 Each field carries its value, status, source refs, and confidence.
@@ -18,10 +18,10 @@ Each field carries its value, status, source refs, and confidence.
   A registry "not found" is recorded, not papered over.
 - **Legal identity vs where they work**: `registered_office` is the legal address.
   `business_profile_service_areas` is operating geography. Business research never writes one into the
-  other. The Maps listing address stays on the Google profile, not as a second legal address.
+  other. The Maps listing address stays on the Google Maps listing, not as a second legal address.
 - **VAT conditional**: `vat_registration_status` marks whether they are VAT-registered; the VAT
   number is required (and later website publication may block) only when that status is set.
 
-- **Persists** `business_profiles` + `business_profile_versions` (append-only: `details`,
+- **Persists** `business_profiles` + `business_profile_history` (append-only: `details`,
   `source_refs`, `created_by`) + `business_profile_services` / `_service_areas` / `_opening_hours`.
-  `current_version_id` always points at the latest `business_profile_versions` row.
+  `current_history_id` always points at the latest `business_profile_history` row.
