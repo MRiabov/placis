@@ -1,7 +1,8 @@
 # Details
 
 The **Details** view edits the business details — the one **business profile** the rest of the
-application draws from. Onboarding builds it; the website shows it; ads reuse it.
+application draws from. Onboarding builds it; the website shows it; ads reuse it. The owner
+reaches it from **Profile** → **Business details**.
 
 ## What it edits
 
@@ -24,4 +25,5 @@ application draws from. Onboarding builds it; the website shows it; ads reuse it
 
 One source of truth: the business profile. Editing it here changes the website and the next ad draft.
 
-Decisions: [ADR.md](ADR.md). Tables: [data-model.md](data-model.md).
+How the owner reaches it: [frontend.md](frontend.md). Decisions: [ADR.md](ADR.md). Tables:
+[data-model.md](data-model.md).

@@ -92,6 +92,8 @@ disagrees with business research, both are shown and they decide.
 
 Do not say “setup profile”, “facts”, or “structured facts”.
 
+Distinct from: Profile (the left-nav group).
+
 ---
 
 ### Detail
@@ -141,7 +143,10 @@ In code: `business_profiles.emergency_phone`.
 ### Details
 
 The screen where the contractor edits the business profile. Editing Details changes the website
-and the next ad draft.
+and the next ad draft. In Profile, Details is labeled **Business details** (also the in-page
+title).
+
+Distinct from: Profile (the nav group), Business profile (the record).
 
 ---
 
@@ -175,9 +180,19 @@ Distinct from: Projects (photos of their work).
 ### Projects
 
 The contractor’s work shown on the website — jobs with photos — edited separately from website
-sections.
+sections. Reached from Profile, not as its own top-level nav item.
 
 Use “projects” in product docs and UI. Do not say “portfolio”.
+
+---
+
+### Profile
+
+The left-nav group in The CMS that holds Details and Projects. It is not a page and not a
+record.
+
+Distinct from: Business profile (the data), Details (the Business details screen), Profile
+history (how the business profile changed).
 
 ---
 
@@ -185,8 +200,8 @@ Use “projects” in product docs and UI. Do not say “portfolio”.
 
 The kept record of how the business profile changed.
 
-Do not say “version”, “versioned”, or “snapshot” for this. Distinct from: Website version
-(the history of the website).
+Do not say “version”, “versioned”, or “snapshot” for this. Distinct from: Profile (the nav
+group), Website version (the history of the website).
 
 In code: `business_profile_edits`, `business_profiles.last_edit_id`,
 `business_profiles.accepted_edit_id`.
@@ -441,8 +456,8 @@ Distinct from: Ad lead form (suggested Meta fields on an ad).
 #### Website editor
 
 The website editing screen: website pages, canvas, top menu, footer, and website styles. Details,
-Media library, and Ads are their own screens beside it, not website page content. Never say bare
-“editor” in PRDs or UI.
+Projects, Media library, and Ads are their own screens beside it, not website page content.
+Never say bare “editor” in PRDs or UI.
 
 ---
 
@@ -716,10 +731,12 @@ In code: object-storage signed URLs.
 
 ### The CMS
 
-The app where the owner edits marketing: website, ads, Details, and Media library. Umbrella
-name, not a synonym for the website editor. Never in PRDs as if it were a domain object.
+The app where the owner edits marketing: website, ads, Details, Projects, and Media library.
+Umbrella name, not a synonym for the website editor. Never in PRDs as if it were a domain
+object.
 
-In code: `frontend-2` (`/cms/website`, `/cms/ads`, Details, Media library).
+In code: `frontend-2` (`/cms/website`, `/cms/ads`, `/cms/details`, `/cms/projects`, Details,
+Media library). Profile is the left-nav group, not a route.
 
 ---
 
@@ -984,7 +1001,8 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | portfolio | projects |
 | ICP | ideal customer profile |
 | session | client interview, sign-in, or onboarding |
-| CMS (in a PRD) | website editor, Details, Media library, or Ads as appropriate |
+| CMS (in a PRD) | website editor, Details, Projects, Media library, or Ads as appropriate |
+| profile tab | Profile |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |
 
 ## Code naming rules
