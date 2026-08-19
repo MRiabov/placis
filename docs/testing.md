@@ -19,7 +19,7 @@ E2E with unit tests is a failure, not a pass.
 At least **one E2E test per feature** — a "feature" is a directory under `docs/features/`. E2E is
 **full-stack**: a Playwright test drives `frontend-2` (the real UI) against the real Go API and a
 real Postgres (Testcontainers), with migrations run. Only Google, the LLM, and voice are faked.
-Each E2E asserts both the UI state and the DB rows. A feature does
+Each E2E asserts both what the UI shows and the DB rows. A feature does
 not pass without its E2E test green.
 
 Each feature defines its E2E test in its own `testing.md`, spelling out the exact tables read and
@@ -32,7 +32,7 @@ written at each step (names come from that feature's `data-model.md`):
 
 ## Notes
 
-- **Clerk** is the one external dependency that is *not* faked: it has real testing tokens (signed
+- **Clerk** is the one external dependency that is *not* faked: it has real testing tokens (HMAC
   with a test key, verifiable against the test JWKS). Use them through the real SDK — never a fake
   verifier. Fiddly to set up once, then reusable.
 - **Stripe** uses test mode the same way: real SDK + test keys, no real charge.

@@ -1,7 +1,7 @@
 # Onboarding — E2E test
 
-One full-stack E2E: find → review → client interview → apply the website template → website
-preview → website activation. Drives `frontend-2` (Playwright) against the real API + real
+One full-stack E2E: find → review → client interview → apply the website template → website preview
+→ website activation. Drives `frontend-2` (Playwright) against the real API + real
 Postgres; Google Maps / company registry / Facebook / crawl and the LLM are faked. DB
 asserts use [data-model.md](data-model.md) and [details](../other/details/data-model.md).
 

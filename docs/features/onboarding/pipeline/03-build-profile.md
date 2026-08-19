@@ -1,6 +1,6 @@
 # 03 — Build the profile (continuous merge)
 
-Not a wait step. Every registry select, Maps attach, business research slot, and client interview
+Not a wait step. Every registry select, Maps attach, business research row, and client interview
 detail **appends** [business profile](../../other/details/data-model.md) `business_profile_edits`
 rows (one increment per field or list item actually set — never a full profile). Applying the
 website template (04) reads the fold as of `accepted_edit_id` at client interview complete.

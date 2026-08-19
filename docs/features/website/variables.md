@@ -19,8 +19,8 @@ Two forms:
 
 ## The details
 
-Variables resolve from **tenant default details** built from the business profile, business
-research, and media assets: branding (address, logo, legal name, established year, incorporation,
+Variables resolve from **tenant default details** built from the business profile, business research,
+and media assets: branding (address, logo, legal name, established year, incorporation,
 service region, legal disclosure), images (per website slot image details), services (featured,
 marquee, footer links, project types), projects (featured, recent, home gallery, projects website
 page, categories), and certifications (accreditations).

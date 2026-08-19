@@ -24,7 +24,7 @@ Fill only the gaps. Two writers, same path that writes details; applying the web
 (`POST .../text-interview/submissions`) then `POST .../interview/complete`:
 
 - Who they are — display name, trade.
-- Contact — contact name, marketing phone, marketing email, existing site URL; emergency phone
+- Contact — contact name, marketing phone, marketing email, existing site URL; emergency phone number
   (how we reach the owner).
 - What they do — main services, service area.
 - Opening hours — per day: open, close, closed.

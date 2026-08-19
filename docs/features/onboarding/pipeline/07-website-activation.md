@@ -2,7 +2,7 @@
 
 The contractor pays on the **website preview**. Clerk sign-in/sign up if needed, then Stripe
 checkout. The tenant activates; the site stays an **unpublished website** until website publication
-in The CMS ([ADR 12](../ADR.md)).
+in the CMS ([ADR 12](../ADR.md)).
 
 Stripe (via `stripe-go`) handles this checkout only. Amount is the activation price (predecessor:
 EUR 4900). `checkout.session.completed` is accepted only after the SDK verifies the signature

@@ -12,7 +12,7 @@ decision + date) instead of silently rewriting history.
    insert only what they set, and update only those fold columns. No writer may submit a full
    profile. (2026-08-19)
 
-   OnCall stored profile history as a details blob / full merge. Under a race (client interview and
+   The predecessor stored profile history as a details blob / full merge. Under a race (client interview and
    business research at the same time) one write omitted a field the other had set; the UI went
    from 7 populated fields to 6 with no explicit edit. Last snapshot wins. Increments keep both
    writes; a dropped field is a `clear` or an overwrite of that field, visible in the log. Same

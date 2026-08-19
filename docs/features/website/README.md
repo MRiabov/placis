@@ -1,7 +1,7 @@
 # Website
 
 Building a website from a website template, editing it in the website editor, and website
-publication. Ads live in [../ads/](../ads/README.md). Together they sit under The CMS.
+publication. Ads live in [../ads/](../ads/README.md). Together they sit under the CMS.
 
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
@@ -13,7 +13,7 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under Th
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density, motion
 - [technical-implementation.md](technical-implementation.md) — website template application, website publication, pipeline
 - [details](../other/details/README.md) — the Details view (shared with ads)
-- [media](../other/media/README.md) — the media library + image editing
+- [media library](../other/media/README.md) — the media library + image editing
 - [leads](../other/leads/README.md) — website form contacts (attribution and follow-up)
 - [testing.md](testing.md) — the website E2E test
 

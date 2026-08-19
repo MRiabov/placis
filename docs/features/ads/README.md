@@ -25,16 +25,16 @@ Placis is **done-for-you, delivered into your inbox, so you can DIY too**:
 
 Ad posting, campaign operations (budget, bidding, targeting, scheduling, reporting) are **future
 work** built on top of the ads service — the model reserves stable ids, `platform_refs`, and
-`platform_status` for it. The MVP terminal state is **ad ready to post** (a deterministic export
+`platform_status` for it. The MVP terminal Ad status is **ad ready to post** (a deterministic export
 ad set), never actual ad posting.
 
 ## Domain model
 
-- **ad** — name, offer/goal, service focus, ad destination, ideal customer profile, review state,
+- **ad** — name, offer/goal, service focus, ad destination, ideal customer profile, review status,
   `platform_refs`/`platform_status`.
 - **ad variants** — one per ad format (`feed_square` 1:1, `feed_portrait` 4:5, `carousel` 1:1
   cards, `story` 9:16); each pairs an image selection with copy. Ad formats without suitable
-  approved media are omitted, never rendered empty.
+  approved media items are omitted, never rendered empty.
 - **ad copy variants** — headline, primary text, description, button label (fixed set), with
   platform character limits in one shared constants module.
 - **ad image placements** — references to approved media assets with per-ad-format crop/focal
@@ -43,14 +43,14 @@ ad set), never actual ad posting.
 - **ad destination** — a tenant-owned published (or scheduled) website page.
 
 Rules to preserve: AI **proposes** (copy + image gallery + light cleanup), the owner decides;
-approved media only (gated twice); every AI call records reasoning + output + tool calls via
+approved media items only (gated twice); every AI call records reasoning + output + tool calls via
 `ai_generations`; conservative, source-backed marketing statements; validation before approval.
 
 ## Where things stand
 
 - Creation flow: `draft → ad_needs_review → ad_ready_to_post → archived`.
 - Existing-ad statuses (detail view): `Draft / Creative ready / Published / Archived`
-  ("Creative ready" = the ad is done; "Published" is the next state once ad posting exists).
+  ("Creative ready" = the ad is done; "Published" is the next Ad status once ad posting exists).
 
 Website leads from website forms (and later ad lead forms) are a separate surface:
 [leads](../other/leads/README.md).

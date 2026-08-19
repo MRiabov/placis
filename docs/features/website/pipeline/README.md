@@ -18,4 +18,4 @@
   website publication.
 - **05** — website publication resolves website placeholders, writes the `website_manifest` into a
   website version (`website_publications` row).
-- **06** — the live website renders the active website version (Astro shell, React islands).
+- **06** — the live website renders the active website version (Astro document, React islands).

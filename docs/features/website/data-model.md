@@ -4,7 +4,7 @@ Website pages, website sections, website slots, website forms, top menu, footer,
 publications (each row is a website version), projects, and certifications.
 Conventions: [data-model conventions](../../general-architecture/data-model.md).
 
-Media assets are owned by [media](../other/media/data-model.md). The business profile the
+Media assets are owned by [media library](../other/media/data-model.md). The business profile the
 website templates fill is [details](../other/details/data-model.md). Website forms write
 [leads](../other/leads/data-model.md).
 

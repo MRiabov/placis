@@ -6,7 +6,7 @@ application draws from. Onboarding builds it; the website shows it; ads reuse it
 ## What it edits
 
 - **Who they are** — business name, legal name, trade, established year, description.
-- **Contact** — marketing phone, marketing email, existing site URL. Emergency phone is how we
+- **Contact** — marketing phone, marketing email, existing site URL. Emergency phone number is how we
   reach the owner, not what leads use.
 - **Where they are** — business location, service areas.
 - **What they do** — featured services.

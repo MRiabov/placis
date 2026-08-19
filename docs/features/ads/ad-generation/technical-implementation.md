@@ -14,12 +14,12 @@ Related docs:
 
 Ad generation creates ads for a tenant. It is not a campaign-operations system: campaign
 status, spend, ad leads, and reporting are future work, not part of ad generation. The first
-version must produce an **ad ready to post** ad set (images cropped for each ad format, plus
+slice must produce an **ad ready to post** ad set (images cropped for each ad format, plus
 copy) without doing ad posting itself.
 
 The key rules:
 
-1. **Approved media only**: ad images reference media assets owned by the tenant and approved
+1. **Approved media items only**: ad images reference media assets owned by the tenant and approved
    for public use, with per-ad-format crop/focal metadata or derived crop variants. No raw URLs, no
    unreviewed media assets, no external hotlinks.
 2. **The LLM drafts; the owner edits**: the LLM drafts copy, proposes image galleries, and may
@@ -27,14 +27,14 @@ The key rules:
    reviewable draft records with where it came from. Manual edits always win and are preserved;
    the LLM never overwrites an approved variant silently.
 3. **Empty ad formats are left out**: an ad format with no suitable approved images is omitted
-   from the ad set, never rendered as an empty placeholder.
+   from the ad set, never rendered empty.
 4. **Validation before approval**: ad destination, images, copy limits, and marketing statements are validated
    before an ad can reach `ad_ready_to_post`.
 5. **LLM outputs are recorded**: every AI generation call records its reasoning, user-visible
    output, and tool calls through the existing `ai_generations` trace path, with tenant scope and
    actor context.
 6. **A service of its own**: ad generation is a separate service with clearly defined inputs and
-   a fixed output format with a version number (the ad set). Ads under `/cms/ads` is one caller of it;
+   a fixed output format with an ad set format number (the ad set). Ads under `/cms/ads` is one caller of it;
    other internal parts of Placis (a future campaign-management feature) and later external
    systems can call the same service. For now it can live inside the main app, but it should be
    written so it can move into its own deployment or open to external callers without changing
@@ -55,11 +55,10 @@ Build the smallest real feature that produces a usable ad set as a service:
    human path
 8. Ads under `/cms/ads` as one caller of the service
 
-Do not build: ad posting, campaign objects, budgets, audience targeting, landing page
+Do not build: ad posting, campaign objects, budgets, audience targeting, website page
 generation, or AI image generation and substantive editing (beyond light cleanup). Those are
 follow-up features documented in the PRD;
-the future ads manager is expected to grow on top of this service rather than in the website
-editor.
+the future ads manager is expected to grow on top of this service rather than in the website editor.
 
 ## Proposed Domain Objects
 
@@ -73,7 +72,7 @@ review trail. They do not duplicate website, media library, or Details content: 
 projects, certifications, reviews, and website pages stay where they are, and the ad records
 reference them by id (for example `ad_image_placements.media_asset_id`).
 
-In code: Creative set is the marketing set (images + text), stored today as `ads` plus variants.
+In code: the marketing set is images + text, stored today as `ads` plus variants.
 Distinct from Ad. Go/persistence forms are
 snake_case tables with a `*_id` primary key, per [data-model.md](../data-model.md): Ad →
 `ads`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
@@ -161,7 +160,7 @@ Hard-typed fields:
 09. `created_at`
 10. `updated_at`
 
-Limits live in one constants module shared by the editor UI and backend validation:
+Limits live in one constants module shared by the Ads UI and backend validation:
 
 1. headline: max 40 characters
 2. primary_text: max 5000 characters, recommended max 500 for generated drafts
@@ -179,13 +178,13 @@ Hard-typed fields:
 03. `variant_id`
 04. `media_asset_id` (must resolve to a tenant-owned approved media asset)
 05. `format`
-06. `crop` (typed: `x`, `y`, `width`, `height` normalized, or `full`)
-07. `focal_point` (`x`, `y` normalized, inherited from the source media asset by default)
+06. `crop` (typed: `x`, `y`, `width`, `height` as 0–1 coordinates, or `full`)
+07. `focal_point` (`x`, `y` as 0–1 coordinates, inherited from the source media asset by default)
 08. `position`
 09. `media_caption` (inherited from the media asset unless overridden here)
 
 Crops are non-destructive. The source media asset is never modified; either store crop/focal
-metadata on the placement or create a derived crop media asset through the existing media
+metadata on the placement or create a derived crop media asset through the existing media library
 derivation pattern so the renderer can produce the exact pixels.
 
 Light cleanup edits follow the same pattern: the LLM drafts a cleanup preset (declutter, tidy
@@ -204,8 +203,8 @@ Hard-typed fields:
 02. `tenant_id`
 03. `ad_id`
 04. `title` (suggested)
-05. `questions` (ordered structured list of a fixed set of standard fields — phone, full
-    name, postcode, email — each mapped to a Meta ad-lead-form field type; phone is the
+05. `questions` (ordered structured list of a fixed set of standard fields — marketing phone, full
+    name, postcode, email — each mapped to a Meta ad-lead-form field type; marketing phone is the
     essential default; no custom questions)
 06. `created_at`
 07. `updated_at`
@@ -222,7 +221,7 @@ Supported ad formats and target ratios:
 3. `carousel`: `1:1` cards, 2-10 images
 4. `story`: `9:16`
 
-The crop model stores normalized crop and focal point so previews and the ad-set renderer use
+The crop model stores 0–1 coordinate crop and focal point so the framing UI and the ad-set renderer use
 the same framing. Rendering cuts the source media asset to the crop (sharpening/format conversion
 via the existing image pipeline) into a per-ad-format output file. Output naming is
 deterministic, e.g. `{ad_id}/{variant_format}/{position}.{ext}`.
@@ -235,16 +234,16 @@ future public API would expose. All routes use `/api/v1` and stable `operation_i
 
 Service-level rules:
 
-1. inputs are per tenant and clearly defined: details from the business profile, approved media
-   asset ids, service focus, ad goal, ideal customer profile, and ad-destination website page id
+1. inputs are per tenant and clearly defined: details from the business profile, approved media asset
+   ids, service focus, ad goal, ideal customer profile, and ad-destination website page id
 2. the output is the ad set (ad, variants, copy, image placements, ad lead form,
-   ad destination, `ideal_customer_profile`) with a version number and the stable ad/variant ids
+   ad destination, `ideal_customer_profile`) with an ad set format number and the stable ad/variant ids
    in the response, so an ad-platform integration can map its own objects back to the ad
 3. generation is safe to retry: running the same request twice gives the same result
-4. for now only internal callers (the app's own session/actor context) can use it; external
+4. for now only internal callers (the app's own sign-in/actor context) can use it; external
    API keys are future work and must not change the ad set format
 
-Recommended private editor routes (the Ads client):
+Recommended private Ads routes (the Ads app):
 
 1. `GET /api/v1/ads`
 2. `POST /api/v1/ads`
@@ -257,8 +256,8 @@ Recommended private editor routes (the Ads client):
    draft for copy and/or image gallery on one variant)
 9. `POST /api/v1/ads/{ad_id}/approve`
 10. `POST /api/v1/ads/{ad_id}/ad-set` (returns the ad set)
-11. `POST /api/v1/ads/{ad_id}/download` (renders and returns a signed
-    ad-set download for the human path)
+11. `POST /api/v1/ads/{ad_id}/download` (renders and returns a signed URL
+    for the ad-set download on the human path)
 
 Mutating routes that can be retried accept `Idempotency-Key`. Approve/ad-set/download/archive
 mutations audit. The contractor website application never calls these routes; ad sets are not live-website content.
@@ -304,7 +303,7 @@ Video ads are deferred future work, noted here so the image ad set does not bloc
 Making good videos is a real challenge for contractors, so this is likely worth building after
 the first implementation.
 
-1. input is the same approved media: photos and, later, source video clips
+1. input is the same approved media items: photos and, later, source video clips
 2. output is a rendered video ad set per ad format (`story` 9:16, `feed_square` 1:1, `feed_portrait` 4:5)
 3. assembly, not generation: cuts of approved pieces together; the LLM may add transitions or
    short generated segments for a cinematic style
@@ -343,8 +342,8 @@ An ad can reach `ad_ready_to_post` only when:
 2. every image placement resolves to an approved tenant-owned media asset with a media caption
    and a valid crop for its ad format; a cleanup copy counts only once it has
    passed review
-3. the ad destination, if set, is a tenant-owned published (or scheduled-to-publish) website
-   page; unpublished or hidden website pages are invalid ad destinations
+3. the ad destination, if set, is a tenant-owned published (or scheduled for website publication)
+   website page; unpublished or hidden website pages are invalid ad destinations
 4. copy satisfies character limits and `cta_label` is in the allowed set
 5. sensitive marketing statements (reviews, ratings, guarantees, certifications, insurance, pricing, results)
    are source-backed or explicitly owner or done-for-you approved. Anything
@@ -367,14 +366,14 @@ Rendering is deterministic and offline:
 3. write the suggested ad lead form fields (title, questions) as the starting point for the ad
    lead form created on Meta
 4. write a mapping of each output image to its source media asset, crop, and ad format
-5. pack as a zip; the download is a signed short-lived read, not a public URL
+5. pack as a zip; the download is a short-lived signed URL, not a public URL
 
 The same approved ad always yields the same ad set and the same rendered bytes for the same
 source media assets. Rendering requires no ad-platform credentials and does no ad posting.
 
 ## Frontend Ads Work
 
-Add Ads under `/cms/ads` in The CMS (`frontend-2`):
+Add Ads under `/cms/ads` in the CMS (`frontend-2`):
 
 1. ad list with status badges and last-updated
 2. create-an-ad flow (name, offer/goal and service focus pickers pre-filled from the business
@@ -382,13 +381,13 @@ Add Ads under `/cms/ads` in The CMS (`frontend-2`):
    budget/schedule shown but disabled) then generation
 3. variant tabs for square, portrait, carousel, and story
 4. the media library, scoped to approved tenant media assets, with framing controls
-5. copy editor with live character counts and button-label select
+5. copy fields with live character counts and button-label select
 6. format-accurate previews rendered from the backend response — one card per variant returned;
    only ad formats with approved images appear, empty ad formats are omitted (never rendered as
    placeholders); rendered from the same projection the ad-set renderer uses
 7. inline validation errors next to the relevant field
 8. approve and download actions
-9. mobile-safe preview of the story variant (9:16) without horizontal overflow
+9. mobile-safe view of the story variant (9:16) without horizontal overflow
 
 The ad destination picker lists tenant website pages that are published or scheduled, defaulting
 to the contact/quote website page or the matching service website page.
@@ -399,7 +398,7 @@ Allowed AI behavior:
 
 1. draft headline/primary text/description from approved business-profile details and ad
    destination copy
-2. propose an image gallery from approved media with relevance/quality ranking
+2. propose an image gallery from approved media items with relevance/quality ranking
 3. apply light cleanup edits to selected images (remove clutter/trash, tidy backgrounds) as
    reviewable copies
 4. suggest an ideal customer profile from the business profile and business research,
@@ -441,8 +440,7 @@ Backend tests:
 13. an internal caller gets the ad set through the service without the Ads UI, and the ad set
     shape is asserted by a focused service test
 14. light cleanup edits produce a new media library item (a copy) that inherits `supplied_by`,
-    stays `pending_review`, cannot enter an ad set until reviewed, and never modify the source media
-    asset
+    stays `pending_review`, cannot enter an ad set until reviewed, and never modify the source media asset
 15. `platform_refs` and `platform_status` default safely (empty / `not_connected`) and never
     affect approval or the ad set format
 16. the ideal customer profile defaults to married couples aged 30-40, and an LLM suggestion is
@@ -454,7 +452,7 @@ Frontend tests:
 1. Ads shows Ad states: ad draft / ad needs review / ad ready to post
 2. create flow requires an ad destination before approval
 3. media picker only offers approved tenant media assets
-4. copy editor shows live character counts and blocks over-limit approval
+4. copy fields show live character counts and blocks over-limit approval
 5. square, portrait, carousel, and story previews render without overflow, including mobile story
 6. approve and download actions produce the expected ad-set rendering without ad-platform
    credentials

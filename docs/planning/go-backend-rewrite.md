@@ -1,7 +1,7 @@
 # Placis Go Backend — Exhaustive Rewrite Plan
 
 > Status: planning (in discussion). This document is the working plan for the Go rewrite of the
-> Placis backend. It supersedes the Python docs (`OnCall/docs/*`), which describe a larger,
+> Placis backend. It supersedes the predecessor Python docs, which describe a larger,
 > two-track product that was never fully built. Scope decisions below are locked with Maksym.
 
 ## 1. Product definition
@@ -9,7 +9,7 @@
 Placis helps construction companies **not make mistakes with advertisement and marketing**, in a
 **done-for-you — delivered into your inbox, so you can DIY too** way. The system researches a
 business, builds a business profile, generates a website from a trade website template, lets the owner
-edit it (or we do it), and produces ads from the profile and approved media (ad ready to post;
+edit it (or we do it), and produces ads from the profile and approved media items (ad ready to post;
 never ad posting).
 
 One loop:
@@ -21,9 +21,9 @@ onboard (from their Google Maps listing or company registry record)
   -> one clear business profile
   -> apply the website template (their details fill the blanks)
   -> website copy generation (AI suggests, owner decides)
-  -> edit in The CMS (website pages / website sections / website slots / media library / website forms / top menu / footer)
+  -> edit in the CMS (website pages / website sections / website slots / media library / website forms / top menu / footer)
   -> website publication (a published website copy goes live)
-  -> generate ads from the profile + approved media (#403)
+  -> generate ads from the profile + approved media items (#403)
 ```
 
 Cross-cutting: Clerk auth, tenant == Clerk organization (1-1), Postgres multitenancy, LLM + system
@@ -38,16 +38,16 @@ auditability, and voice agents as a **separate, optional** channel.
 2. **Onboarding (business research → profile)** — onboarding sessions (start from a Google Maps listing or
    company registry record), client interview, Google Maps / company registry / Facebook / crawl /
    photos, business profile.
-3. **Website building from website templates** — trade website templates + website component contracts as static catalog
-   data; website template application; website copy generation as governed, propose-only edits.
-4. **Website editing (The CMS)** — unpublished website rows, website sections, website slots, media
-   library, website forms, top menu, footer, projects, certification selections, website versions.
+3. **Website building from website templates** — trade website templates + website component contracts as static website template catalog
+   data; website template application; website copy generation as governed edits (the LLM drafts; the contractor edits).
+4. **Website editing (the CMS)** — unpublished website rows, website sections, website slots, media library,
+   website forms, top menu, footer, projects, certification selections, website versions.
 5. **Contractor website + website lead capture** — resolve active website publication website manifests by host/path; website
    forms persist into a minimal `leads` table.
 6. **Website preview + website activation** — website preview links; self-serve Stripe website activation/checkout;
    webhook-driven website activation (safe to replay).
 7. **Ad generation (#403)** — ads with per-format variants, copy, and image
-   placements built from the profile + approved media; propose-only AI; terminal state is a
+   placements built from the profile + approved photos; the LLM drafts and the contractor edits; terminal Ad status is a
    deterministic "ad ready to post" export (no ad posting, no campaign ops — those are future work on
    the same ad service). Spec: `docs/features/ads/ad-generation/`.
 8. **Cross-cutting** — AI/LLM layer with mandatory recording of reasoning + output + tool calls;
@@ -64,13 +64,17 @@ auditability, and voice agents as a **separate, optional** channel.
 - **App-modification surface** — `tenant_app_configs`, `tenant_app_change_requests`, module
   definitions, "Modify App" flow, omission/declined-module machinery.
 - **Deprecated tenant/org management** — org chooser, selected-org cookie, `/me/orgs`,
-  `/me/tenants`, `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{slug}`, `.../memberships/*` CRUD.
+  `/me/tenants`, `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{website_address}`, `.../memberships/*` CRUD.
 - **Freeform-JSON islands** — opaque `JsonRecord`/`JsonObjectPayload` wrappers, the planned-but-
   unshipped `schemas_registry_public.py` API, hard-coded website template imagery as tenant variables.
 - **Blog posts and careers** — deferred; `page_type` enum omits `blog_post`; no `website_career_*`
   tables for now.
 - **Frontend (`frontend-2`)** — reused mostly, not rebuilt. It is adapted only where the
   huma-derived OpenAPI improves the contract (regenerated `openapi-typescript` types).
+  **TODO:** rename leftover CMS layout type names to match the glossary (never "shell").
+  **TODO:** align `frontend-2` names to the glossary in general (large follow-up).
+  **TODO:** enable Don't-say `frontend-2` in `cmd/ci/check-dont-say` (`--frontend`; drop the
+  `frontend-2/` pre-commit exclude) when frontend work starts from the Go backend.
 
 ### Deferred (later)
 
@@ -99,10 +103,10 @@ placis/
 
     # product domains — feature-nested (one package per feature)
     tenancy/             # tenants.go, memberships.go, website_addresses.go
-    onboarding/          # session.go, interview.go, orchestrate.go, activation.go
+    onboarding/          # onboarding.go, clientinterview.go, orchestrate.go, activation.go
       websitepreview/    #   package.go, events.go (website preview of the unpublished website)
     research/            # service.go + googlemaps/, companyregistry/, facebook/, crawl/, photo/ with fakes
-    profile/             # profile.go, history.go, services.go, areas.go, hours.go
+    profile/             # profile.go, profilehistory.go, services.go, areas.go, hours.go
     website/             # root types.go, service.go + feature packages
       pages/             #   handler.go, service.go, model.go
       sections/
@@ -119,7 +123,7 @@ placis/
     billing/             # checkout.go, webhooks.go (Stripe only)
     leads/               # leads.go
   migrations/            # goose SQL migrations (greenfield)
-  catalog/               # website templates + website component contracts (typed structs, kept as catalog versions)
+  catalog/               # website templates + website component contracts (typed structs, kept as website template catalog format revisions)
   docs/                  # rescoped canonical docs
   go.mod
 ```
@@ -134,7 +138,7 @@ when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard err
 | --- | --- | --- |
 | Language | Go (latest stable toolchain) | |
 | HTTP | `chi` + `net/http` | stdlib `http.ServeMux` is the zero-dep alternative |
-| API contract | **Go-first**: `huma` v2 (locked) | structs + tags derive OpenAPI 3.1 + runtime validation; frontend regenerates via `openapi-typescript` |
+| API contract | **Go-first**: `huma` v2 (locked) | structs + tags derive OpenAPI 3.1 + validation when the request is handled; frontend regenerates via `openapi-typescript` |
 | Data access | `sqlc` + `pgx/v5` | `jsonb` -> typed Go structs via custom mapping at the boundary only |
 | Migrations | `goose` | plain SQL, embedded |
 | Jobs | `River` | Postgres-backed, typed args, safe retries |
@@ -149,22 +153,22 @@ when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard err
 `/openapi.json`. The website preview **SSE** stream and the **voice WebSocket** are raw `net/http`
 handlers outside huma.
 
-### Component contract (single source of truth)
+### Website component contract (single source of truth)
 
 Website component contracts (what a `public.hero.image` website section accepts) currently exist twice — TS types
-in `packages/public-site-components/` and Python `typed_values.py`. The rewrite uses **one typed
+in the contractor-website component package and Python `typed_values.py`. The rewrite uses **one typed
 struct per website component, dumped to JSON**, under `catalog/`, consumed by both the TS renderer
 (validation) and the Go backend (save and website publication validation). Website templates and website component contracts are
-static, versioned catalog data, **not** database rows; the Go backend loads and validates them and
+static website template catalog data with format revisions, **not** database rows; the Go backend loads and validates them and
 must not hand-duplicate the struct shapes.
 
 ### Tenancy and auth rules
 
 - Clerk proves identity + Clerk organization; Placis decides tenant access and permissions.
 - `tenants.clerk_org_id` (unique) is the only tenant entry point. No org chooser, no selected-org
-  cookie, no client-controlled tenant selector.
+  cookie, no app-controlled tenant selector.
 - Tenant context is resolved once per request from: authenticated Clerk organization, contractor website hostname,
-  preview token, or onboarding session token. Services take `tenantID` explicitly.
+  website preview token, or onboarding session token. Services take `tenantID` explicitly.
 - Every tenant-owned row carries `tenant_id`; all primary queries include it; cross-tenant
   isolation is proven by integration tests (create two tenants, assert reads/writes/files blocked).
 - Roles (`tenant_memberships.role`): `owner`. Platform admins work across tenants via Clerk native
@@ -175,12 +179,12 @@ must not hand-duplicate the struct shapes.
 Canonical table definitions live with the feature that owns them — see
 [data-model conventions](../general-architecture/data-model.md). Do not copy tables here.
 
-## 5. Workflows and state machines
+## 5. Workflows and steps
 
 1. **Onboarding session** — `created → client_interviewing → applying_website_template → previewing → activated`
    (`apply_website_template_failed` if applying the website template throws).
-   Business research runs in the background alongside review/client interview; applying the website
-   template starts at client interview complete; website copy generation runs after that and does
+   Business research runs in the background alongside review/client interview; applying the website template
+   starts at client interview complete; website copy generation runs after that and does
    not block website preview or website activation. Website previews expire; the onboarding session
    does not.
 2. **Business profile** — profile history is `business_profile_edits` (typed increments); the live
@@ -195,17 +199,17 @@ Canonical table definitions live with the feature that owns them — see
    membership, rebuilds website records as an **unpublished website** from the selected website template (it does **not**
    do website publication), activates the tenant + generated domain, and marks the onboarding session activated. Website publication is
    a separate, later owner action.
-6. **Ad** — creation flow `draft → ad_needs_review → ad_ready_to_post → archived`; existing-ad
-   statuses `Draft / Creative ready / Published / Archived`. AI is propose-only (drafts copy,
-   proposes image galleries from approved media, light cleanup); the owner reviews/edits/approves;
-   terminal state is a deterministic export ad set — never actual ad posting.
+6. **Ad** — creation flow `ad_draft → ad_needs_review → ad_ready_to_post → archived`; existing-ad
+   statuses `ad_draft / Creative ready / Published / Archived`. The LLM drafts copy; the contractor edits.
+   proposes image galleries from approved media items, light cleanup); the owner reviews/edits/approves;
+   terminal Ad status is a deterministic export ad set — never actual ad posting.
 
 ## 6. API surface (condensed)
 
 Route groups (full struct definitions come with the `huma` types):
 
 - `/api/v1/health`
-- `/api/v1/me`, `/api/v1/me/organization` (Clerk organization provisioning)
+- `/api/v1/me` and Clerk organization provisioning
 - `/api/v1/onboarding-sessions` + nested: company-registry search, Google Maps
   autocomplete/from-google-maps-listing, profile (+ checklist/confirmations), client interview, business research runs,
   apply-the-website-template runs, website previews, voice/progress events
@@ -224,8 +228,8 @@ Route groups (full struct definitions come with the `huma` types):
 
 | Old (kill) | New |
 | --- | --- |
-| `setup`, `setup_session`, `setup_profile` | `onboarding`, `onboarding_session`, `business_profile` |
-| loose `fact` | `detail` / `business_profile.*` |
+| old onboarding package names | `onboarding`, `onboarding_session`, `business_profile` |
+| loose detail names | `detail` / `business_profile.*` |
 | `cms_projects`, `cms_career_*` | `projects`, `website_career_*` |
 | `Demo`-prefixed ops; `save` vs `update` | `Create`/`Update`/`Get`/`List`/`Delete`, one `*Read` suffix |
 | "OnCall" as the product | "Placis" (keep "OnCall" when naming the predecessor repo) |
@@ -237,7 +241,7 @@ Each phase ends with: typed models, migrations applied, integration tests (incl.
 isolation), regenerated frontend types, and an E2E test for each major feature.
 
 0. **Foundation** — repo scaffold, `cmd/api` + `cmd/worker`, config, `slog`, Postgres + `goose` +
-   `sqlc`, `River`, `huma` skeleton + `/health`, Railway deploy, and CI (CircleCI + GitHub Actions):
+   `sqlc`, `River`, walking skeleton (`huma` + `/health`), Railway deploy, and CI (CircleCI + GitHub Actions):
    file-size guard, gofmt/vet/lint, build+test (Testcontainers), generated-code freshness
    (sqlc/huma/frontend-typegen), external API isolation, evals local-only.
 1. **Auth & tenancy** — Clerk verification → `Principal`, tenant resolution, memberships, domains,
@@ -247,10 +251,10 @@ isolation), regenerated frontend types, and an E2E test for each major feature.
    (Google Maps, company registry, Facebook, website crawl, photo classification), business
    profile with profile history.
 3. **Website templates & website** — website component/website template catalog loaders + website component contracts, website template
-   application, website copy generation (propose-only), CMS CRUD, website publications.
+   application, website copy generation (the LLM drafts; the contractor edits), CMS CRUD, website publications.
 4. **Website preview, website activation, contractor website, website leads** — website previews, Stripe checkout + webhooks +
    website activation, contractor website resolve/website manifest, website lead capture.
-5. **Ads (#403)** — ads + variants, propose-only AI, export ad set, ad lead attribution.
+5. **Ads (#403)** — ads + variants, LLM drafts with contractor edits, export ad set, ad lead attribution.
 6. **Auditability hardening** — audit completeness, AI trace completeness, observability.
 
 Voice is a **later milestone**: the voice service stays swappable, but the onboarding voice
@@ -259,8 +263,8 @@ agent is not built in the first pass.
 ## 9. Locked decisions
 
 - **Module path** — `github.com/MRiabov/placis`.
-- **API tooling** — `huma` v2 (Go-first: structs derive OpenAPI 3.1 + runtime validation).
-- **Clerk** — official `github.com/clerk/clerk-sdk-go/v2` for session/JWT verification (JWKS,
+- **API tooling** — `huma` v2 (Go-first: structs derive OpenAPI 3.1 + validation when the request is handled).
+- **Clerk** — official `github.com/clerk/clerk-sdk-go/v2` for Clerk session / JWT verification (JWKS,
   clock skew, audience, org claim → `ActiveOrganizationID`) and org provisioning
   (`Organizations().Create`). No hand-rolled JWT/JWKS logic or Clerk data types.
 - **Stripe** — official `github.com/stripe/stripe-go` SDK for checkout-session creation and webhook

@@ -5,14 +5,14 @@ this directory say *what* we build; this record says *why* we chose what we did,
 not get lost or re-litigated.
 
 How to use this file: when a decision changes, update the entry (keep the old decision and date
-as a note) instead of silently rewriting history. Add new entries with the next number, the
+as a note) instead of silently replacing the old entry. Add new entries with the next number, the
 area, and the date.
 
 ## Decisions
 
-1. **Ad set is the deliverable, not a landing page** — Ads produce a reviewable
+1. **Ad set is the deliverable, not a website page** — Ads produce a reviewable
    ad set (images, copy, placements, ad lead form suggestions, ad destination, ideal customer
-   profile). Campaign landing pages are not planned for the contractor segment; ads link to
+   profile). Campaign website pages are not planned for the contractor segment; ads link to
    existing published website pages. This matches how contractors actually buy: they have no
    custom landings, and an ad lead form captures ad leads without one.
 
@@ -29,9 +29,9 @@ area, and the date.
 4. **Light cleanup is cosmetic only** — Cleanup may not add/remove objects in a way that changes
    what the photo shows, must not conceal damage or defects, and must not change the work
    displayed. It creates a new media library item (a copy) that inherits supplied by; the source
-   media is never modified.
+   media library item is never modified.
 
-5. **The zip download is a temporary step** — The ad set is machine-readable and has a version number;
+5. **The zip download is a temporary step** — The ad set is machine-readable and has an ad set format number;
    the download exists only so a human can do ad posting manually until direct transmission to
    Meta (future work) replaces it. When ad posting lands, the ad-platform integration reads the
    ad set directly and the download goes away.
@@ -70,11 +70,11 @@ area, and the date.
     that owns them.
 
 12. **New ad tables, reuse by reference** — Ads need their own records (ad, variants,
-    copy, placements, ad lead form, review). Internal: Creative set is images + text (not Ad);
+    copy, placements, ad lead form, review). Internal: images + text as a set, not Ad;
     today stored as `ads` plus variants. What is not duplicated is media library, projects, certifications, reviews, and
     website pages: they stay where they are and ad records reference them by id.
 
-13. **Approved media only, gated twice** — The picker only offers approved media owned by that
+13. **Approved media items only, gated twice** — The picker only offers approved media items owned by that
     contractor with a media caption (prevention), and approval re-validates every image's current
     review (the gate), so a media item that went into review after selection, a pending cleanup
     edit, or a missing media caption blocks **ad ready to post** with an owner-readable message.
@@ -99,7 +99,7 @@ area, and the date.
 18. **Conservative marketing statements** — No fabricated reviews, ratings, years, guarantees, certifications,
     insurance, or pricing; no stock imagery passed off as the contractor's work; photos of
     identifiable people or third-party properties are usable once approved in the media library
-    (that approval is the consent); no personal data in copy.
+    (that is owner approval); no personal data in copy.
 
 19. **Meta first, Google Ads later** — Ad posting (future work) starts with Meta (Facebook /
     Instagram): ad formats, ad lead forms, and ideal-customer-profile targeting are Meta-shaped
@@ -108,9 +108,9 @@ area, and the date.
 20. **Who first, how second** — The workflow decides who the ad is for (ideal customer profile,
     ad-lead capture) before any ad mechanics. The owner picks the target and the ad-lead path;
     ad formats, crops, and sizes follow automatically and are not exposed as ad jargon. Approval
-    is the last step of the page; LLM generation is async and never blocks.
+    is the last step of the flow; LLM generation is async and never blocks.
 
-21. **One accordion wrapper, two expandable steps** — The flow and the editor are the same
+21. **One accordion wrapper, two expandable steps** — The flow and the Ads screen are the same
     screen: an accordion wrapper shows both steps immediately — step 1 "About the ad" (open by
     default, all the questions) and step 2 "Review" (visible but locked until step 1 is
     complete, then expands; step 1 can be returned to) — then the approve block when the ad is ad ready to post.
@@ -119,15 +119,15 @@ area, and the date.
 22. **Ideal customer profile is loose; it steers generation** — The ideal customer profile is a
     loose profile, not precise targeting data. Today it tailors the ad's tone and imagery;
     precise targeting on the ideal customer profile (age, household, location) arrives with ad
-    posting; internal ad logic outside Meta is future work and out of scope for now. The ideal
-    customer profile never appears in the copy itself — no "ideal for homeowners 40-55" marketing statements.
+    posting; internal ad logic outside Meta is future work and out of scope for now. The ideal customer
+    profile never appears in the copy itself — no "ideal for homeowners 40-55" marketing statements.
 
-23. **Drop to add photos anywhere** — Dragging a photo onto the page adds it to the ad (drop
+23. **Drop to add photos anywhere** — Dragging a photo onto the ad adds it (drop
     overlay, upload through the media library flow). The pattern is meant to extend across the
     website editor, Details, Media library, and Ads, not just Ads.
 
-24. **Reuse the existing media library gallery** — The ad page's photo selection is the existing
-    media library gallery (same component and tokens as the rest of the app), not a new parallel
+24. **Reuse the existing media library gallery** — The ad's photo selection is the existing
+    media library gallery (same gallery and tokens as the rest of the app), not a new parallel
     gallery. "+ Add" opens the file picker; drag-anywhere adds photos; both go through the
     existing media library flow.
 
@@ -138,8 +138,8 @@ area, and the date.
 
 26. **Prefetch + cache ads data** — The ads list and ad-platform connection status are fetched as
     soon as the app loads and cached in the browser (query cache), so Ads is
-    already resolved by the time the owner reaches it and revisits don't re-fetch. A loading
-    state is a fallback only — it appears solely on direct routing to `/ads` or a bug. Connect
+    already resolved by the time the owner reaches it and revisits don't re-fetch. A loading state
+    is a fallback only — it appears solely on direct routing to `/ads` or a bug. Connect
     buttons render only from the prefetched status.
 
 27. **Existing-ad detail view** — Clicking an ad card opens a read-oriented detail: the ad name

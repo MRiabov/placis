@@ -2,7 +2,7 @@
 
 After [04](04-apply-website-template.md) applies the website template, this step **writes the words** —
 headlines, body, calls to action, SEO titles — into the existing website slots. It is not the
-website editor and not a human approval loop. The predecessor called this "refinement"; the work
+website editor and not a human approval loop. The predecessor used that name for this step; the work
 is website copy generation (and the same tool pass for SEO / image prompts).
 
 Onboarding **enqueues** it. The writes go through the website assistant tools
@@ -15,8 +15,8 @@ website page, several bounded batches). The contractor already waited through th
 they should not wait again the way they no longer wait on business research.
 
 04 finishes → [06](06-website-preview.md) issues the website preview on the **unpublished
-website** (structure + detail tokens). This job fills copy in the background. SSE reports website
-slot updates; the website preview re-renders the current unpublished website. Website
+website** (structure + detail tokens). This job fills copy in the background. SSE reports website slot
+updates; the website preview re-renders the current unpublished website. Website
 activation does **not** wait for this job.
 
 ## When it runs
@@ -46,13 +46,13 @@ Continuous-mode website assistant tools on the unpublished website 04 wrote. No 
 
 If the job throws, keep the unpublished website from 04. Onboarding session stays
 `previewing`. The unpublished website is the fallback (the predecessor already did this). Retry is
-safe (explicit River key). Website copy generation failing must not fail applying the website
-template or block website activation.
+safe (explicit River key). Website copy generation failing must not fail applying the website template
+or block website activation.
 
 ## Status
 
-Onboarding session is already `previewing` (04 + 06). This job does not get its own onboarding
-session status. Progress events on the onboarding session stream (`copy_generation_started` /
+Onboarding session is already `previewing` (04 + 06). This job does not get its own
+onboarding session status. Progress events on the onboarding session stream (`copy_generation_started` /
 `copy_generation_completed` / `copy_generation_failed`, plus per-website-page/slot updates).
 
 - **Persists** updates to existing `website_slots` / website page SEO (unpublished versions);

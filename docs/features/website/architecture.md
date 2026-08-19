@@ -82,8 +82,8 @@ website version.
 Live websites and website previews are served by a **separate Astro + React app**
 (`apps/public-site`), not the website editor. It calls `/api/v1/public/site/resolve` with
 the incoming host + website page path, reads the active `website_manifest`, and renders each
-website section by its `component_id` through the shared `public-site-components` package — Astro
-owns routing, page shell, static/prerender, and metadata; React owns interactive islands.
+website section by its `component_id` through the shared contractor-website component package — Astro
+owns routing, the Astro document, static/prerender, and metadata; React owns interactive islands.
 
 One application serves every contractor website — no per-tenant build — and imports only the
 website component package (a bundle-boundary check blocks imports from `frontend-2`).

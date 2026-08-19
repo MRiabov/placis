@@ -6,8 +6,8 @@ in the background, applying the website template starts only after the client in
 completes, and website copy generation fills the unpublished website after that without blocking
 the website preview link.
 
-**Screens** (`/onboarding/find` → `/review` → `/interview` → `/preview`, then the website
-preview URL, then pay):
+**Screens** (`/onboarding/find` → `/review` → `/interview` → `/preview`, then the website preview
+URL, then pay):
 
 ```text
 01a. find the business (country + company registry and/or Google Maps, unauthenticated) + online research consent
@@ -28,8 +28,8 @@ applying the website template and copy — not only step 06. Postgres is authori
 
 `created` (onboarding session exists) → `client_interviewing` (confirmed; business research + review +
 client interview) → `applying_website_template` (client interview complete; 04 running)
-→ `previewing` (website
-preview ready; 05 may still be writing copy) → `activated`. `apply_website_template_failed` if 04 throws.
+→ `previewing` (website preview ready; 05 may still be writing copy) → `activated`.
+`apply_website_template_failed` if 04 throws.
 05
 failing does not change onboarding session status. Website previews expire (`expires_at`); the
 onboarding session has no `expired` status.

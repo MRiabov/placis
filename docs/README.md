@@ -1,18 +1,18 @@
 # Placis Documentation
 
-Docs for the Placis application — a **Go backend** plus the **`frontend-2`** Vite/React client. The
+Docs for the Placis application — a **Go backend** plus the **`frontend-2`** Vite/React SPA. The
 product: a
 **done-for-you — delivered into your inbox, so you can DIY too** — marketing and advertising
-service for construction companies. We research a business, build a profile, apply a website
-template and edit a website, and suggest ads; the owner can do the same edits and ads
-themselves in The CMS.
+service for construction companies. We do business research, build a profile, apply a website template
+and edit a website, and suggest ads; the owner can do the same edits and ads
+themselves in the CMS.
 
 ## Reading order
 
 1. [Development principles](development-principles.md) — how work is sliced and reviewed (read before writing code)
 2. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
 3. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
-4. [Architecture](architecture.md) — stack, module layout, runtime, boundaries
+4. [Architecture](architecture.md) — stack, module layout, how processes run, boundaries
 5. [General architecture](general-architecture/README.md) — LLM layer, audit, jobs, files, data model
 6. [Auth](features/other/auth/README.md) — Clerk, tenant == Clerk organization
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building; [website activation](features/onboarding/pipeline/07-website-activation.md) is pay-and-activate
@@ -26,7 +26,7 @@ themselves in The CMS.
 
 | Topic | Doc |
 | --- | --- |
-| Stack, module layout, runtime | [architecture.md](architecture.md) |
+| Stack, module layout, how processes run | [architecture.md](architecture.md) |
 | How work is sliced and reviewed | [development-principles.md](development-principles.md) |
 | How docs are structured and written | [docs-conventions.md](docs-conventions.md) |
 | Naming / vocabulary | [glossary.md](glossary.md) |
@@ -49,12 +49,12 @@ One product, one loop:
 ```text
 onboard (from their Google Maps listing or company registry record)
   -> a few questions -> business research -> business profile
-  -> website (website template + website copy generation) -> edit in The CMS -> website publication
-  -> ads from the profile + approved media
+  -> website (website template + website copy generation) -> edit in the CMS -> website publication
+  -> ads from the profile + approved photos
 ```
 
-Done-for-you + DIY: Placis can research, build, tweak, and suggest ads; the owner can do the
-website edits and ad creation themselves in The CMS.
+Done-for-you + DIY: Placis can do business research, build, tweak, and suggest ads; the owner can do the
+website edits and ad creation themselves in the CMS.
 
 There is **no** CRM/operations track (quotes/invoices/jobs/workflows). Website forms persist a
 minimal `leads` table for ad attribution and done-for-you follow-up only.
@@ -63,16 +63,14 @@ minimal `leads` table for ad attribution and done-for-you follow-up only.
 
 The authoritative **ubiquitous language** is the [Glossary](glossary.md) — domain terms, enums,
 and internal terms, each defined once as a heading there. Product docs and owner-facing text use the
-business's own words ("business profile", "their website", "website publication"); implementation
-words ("versioned", "normalize", "state machine", `source_refs`) stay in technical docs and code
-only.
+business's own words ("business profile", "their website", "website publication"); Internal names
+stay in technical docs and code only (see the glossary Don't-say table).
 
 ## Documentation rules
 
 - Update canonical docs when contracts, shipped behavior, data models, Google / LLM / Stripe /
   voice boundaries, or validation gates change.
 - Terminology is canonical: `onboarding` (never "setup"), `business_profile` (never
-  "setup_profile"), `website_*` (never `cms_*`), `Placis` for the product (keep "OnCall" when
-  naming the predecessor repo). Domain words come from
+  "setup_profile"), `website_*` (never `cms_*`), `Placis` for the product (keep `OnCall` when naming the predecessor repo). Domain words come from
   the [Glossary](glossary.md); implementation words never appear in product docs.
 - Plans and proposed (unshipped) work live under `planning/`, not here.

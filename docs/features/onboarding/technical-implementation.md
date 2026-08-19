@@ -13,8 +13,8 @@ See [data-model.md](data-model.md). The business profile is
 
 `created → client_interviewing → applying_website_template → previewing → activated`
 (`apply_website_template_failed` if applying the website template throws).
-Business research runs in the background alongside review/client interview; applying the website
-template starts at client interview complete; website copy generation runs after that and does not
+Business research runs in the background alongside review/client interview; applying the website template
+starts at client interview complete; website copy generation runs after that and does not
 block website preview or website activation.
 
 ## API surface
@@ -32,13 +32,13 @@ block website preview or website activation.
 1. Google Maps, the company registry, Facebook, the LLM, or a fake returns raw payload.
 2. Turn it into a typed `business_research_sources` row: kind, external id, where it came from,
    `raw`, lookup `status`, confidence.
-3. Photo classification tags media assets (hero/project/service/founder/logo) for the media
-   library / website slot mapping.
+3. Photo classification tags media assets (hero/project/service/founder/logo) for the media library
+   / website slot mapping.
 4. Every run is safe to retry (explicit key).
 
 ## Profile building
 
-1. Each client interview answer and each business research slot becomes one or more
+1. Each client interview answer and each business research row becomes one or more
    `business_profile_edits` rows (only the fields/list items that writer set) applied to the live
    fold in the same transaction (`SELECT … FOR UPDATE`, then those columns only).
 2. Surface research conflicts for the owner to review.
@@ -55,6 +55,6 @@ block website preview or website activation.
 
 ## Frontend
 
-- `frontend-2/src/features/setup/**` is the existing onboarding surface (find-the-business,
-  client interview, business research progress, website preview). It is refactored against the regenerated types; the
-  `/setup-*` route naming it consumes maps to `/onboarding-*` on the Go side.
+- The existing onboarding surface in `frontend-2` (find-the-business,
+  client interview, business research progress, website preview) is refactored against the regenerated types;
+  onboarding routes on the Go side use `/onboarding-*`.

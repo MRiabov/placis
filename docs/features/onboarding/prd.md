@@ -45,8 +45,7 @@ The contractor picks a **country** (Ireland, UK, or US), then finds their busine
 
 They can select either, or both when they describe the same business. Then a single checkbox for
 **online research consent**:
-"I agree that Placis can collect public information about this business to prepare the website
-preview."
+"I agree that Placis can collect public information about this business to prepare the website preview."
 
 A short set of questions then fills in what the Google Maps listing and company registry record
 don't cover. Text and voice write the same business profile.
@@ -58,8 +57,8 @@ By the end, the business profile holds:
 - **Who they are** — display name, legal name, trade, established year, and a short description.
 - **Legal details** — company number, VAT number, registered office.
 - **Contact** — contact name, marketing phone, marketing email, existing site URL, opening hours,
-  and their Google Maps listing and Facebook profiles. Emergency phone is how we reach the owner
-  (draft; may be the personal number).
+  and their Google Maps listing and Facebook profiles. Emergency contact is how we reach the owner
+  (unpublished; may be the personal number).
 - **What they do** — their main trade and the services they offer, plus the service areas they
   cover.
 - **Certifications and reviews** — accreditations and certifications, the founder, and reviews.

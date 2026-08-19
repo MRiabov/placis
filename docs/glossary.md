@@ -797,7 +797,7 @@ status `client_interviewing`.
 #### Voice
 
 A channel: answer the client interview, drive the website assistant, and use the voice agent in
-The CMS. Not a separate product and not a separate profile.
+the CMS. Not a separate product and not a separate profile.
 
 Distinct from: Voice agent.
 
@@ -908,58 +908,59 @@ In code: `ads` plus `ad_variants`, `ad_copy_variants`, `ad_image_placements`,
 
 ### Don't say
 
-Never in product/user-facing text or PRD prose.
+Never in product/user-facing text, PRD prose, technical docs, or code, unless a home marker says the unqualified word is self-understood there. `cmd/ci/check-dont-say` reads this table: keep the `Don't say | Say` header, separator, data rows, and end the section at the next `## ` heading. Unmarked = nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` = unqualified only in that feature’s technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`; other features use the Say. `(in a PRD)` is only for `CMS`. Leftover `(bare)` is unmarked. Worked examples: `cmd/ci/check-dont-say/ref.md`.
 
 | Don't say | Say |
 | --- | --- |
 | setup | onboarding |
 | OnCall | Placis |
 | frozen / frozen copy | published website copy |
-| refine / refinement (onboarding) | website copy generation |
+| refine / refinement | website copy generation |
 | instantiate / population | apply the website template |
-| generate (for the unpublished website structure) | apply the website template |
+| generate unpublished website / generate website structure | apply the website template |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
-| signed (website preview) | website preview link (product); preview token (technical) |
+| signed (onboarding) | website preview link (product); preview token (technical) |
 | live markdown plan | website assistant plan |
 | handoff boundary | the owner approves the plan, then the assistant applies it |
 | website email | marketing email |
-| phone (on the website or an ad, bare) | marketing phone |
-| fact / structured facts | detail / information |
+| phone | marketing phone |
+| fact (details) / structured facts | detail / information |
 | proof | certifications, reviews, or projects as appropriate |
-| history (bare) | profile history or website versions |
-| menu (bare) / header / navigation | top menu or footer |
-| version / versioned / snapshot | website version or profile history |
-| consent (bare) | online research consent |
-| interview (bare) | client interview |
-| research (bare) | business research |
-| preview (bare) | website preview |
+| history (details) | profile history or website versions |
+| menu (website) / header / navigation | top menu or footer |
+| version (website, details) / versioned (website, details) / snapshot (website, details) | website version or profile history |
+| consent (onboarding) | online research consent |
+| interview (onboarding) | client interview |
+| research (onboarding) | business research |
+| preview (website) | website preview |
 | preview package | website preview |
 | claim / website claim (activation) | website activation |
 | marketing claim / advertising claim / unsupported claim | marketing statement / unsupported marketing statement |
-| draft (bare) | unpublished website, or ad draft (Ad states) |
-| template (bare) | website template |
-| page / section / slot / styles (bare) | website page / website section / website slot / website styles (PRDs and UI; short form OK in website technical docs and code) |
-| form (bare) | website form or ad lead form |
-| caption (bare) | media caption |
-| media (the library) | media library |
-| editor (bare) | website editor |
-| publish / go live / website publish (bare) | website publication |
-| registry record (bare) | company registry record |
-| placeholder (bare) | website placeholder |
-| catalog (bare) | website template catalog, website component catalog, or website style catalog |
-| component (bare) | website component |
+| draft (website, ads) | unpublished website, or ad draft (Ad states) |
+| template (website) | website template |
+| page (website) / section (website) / slot (website) / styles (website) | website page / website section / website slot / website styles |
+| form (website, ads) | website form or ad lead form |
+| caption (media) | media caption |
+| media (media) | media library |
+| editor (website) | website editor |
+| publish (website) / go live (website) / website publish (website) | website publication |
+| registry record | company registry record |
+| placeholder (website) | website placeholder |
+| catalog (website) | website template catalog, website component catalog, or website style catalog |
+| component (website) | website component |
 | our site / our website | Placis website |
 | public site / public-site runtime | contractor website or Placis website (whose site) |
-| runtime (for that application) | do not name the application “runtime”; `apps/public-site` until named |
-| private app / private Vite app / private client | the part of the application: The CMS, onboarding, or website preview (`frontend-2`) |
+| runtime | do not name the application “runtime”; `apps/public-site` until named |
+| private app / private Vite app / private client | the part of the application: the CMS, onboarding, or website preview (`frontend-2`) |
+| shell / profile shell / app shell / page shell / Astro shell / CMS shell / editor shell | empty business profile; the CMS (sidebar + main area); Astro document vs React islands |
 | custom domain | custom website address |
-| published copy (bare) | published website copy |
+| published copy | published website copy |
 | site manifest | website manifest |
-| ready to post (bare) | ad ready to post (Ad states) |
-| posting (bare) | ad posting |
+| ready to post (ads) | ad ready to post (Ad states) |
+| posting (ads) | ad posting |
 | ad package | ad set |
-| organization (Clerk) | Clerk organization |
-| needs review (bare) | ad needs review (Ad states) |
+| organization | Clerk organization |
+| needs review (ads) | ad needs review (Ad states) |
 | source reference / `source_refs` | where a detail came from |
 | provenance | supplied by (media) or where it came from (a detail) |
 | citation | where it came from |
@@ -968,21 +969,21 @@ Never in product/user-facing text or PRD prose.
 | materialize(d) | make a published website copy |
 | immutable | kept / never overwritten |
 | artifact | what we built (or the specific deliverable) |
-| idempotent | safe to retry (tech only) |
+| idempotent | safe to retry |
 | source-first | start from an existing Google Maps listing |
 | propose-only | the LLM drafts; the contractor edits and does a website publication |
 | blueprint | website template |
 | skeleton | unpublished website |
 | creative set | never in product (Internal: Creative set — images + text; not Ad) |
-| asset (bare) | media asset (internal) or photo / item in the media library (product) |
+| asset (media) | media asset (internal) or photo / item in the media library (product) |
 | slug | website address |
 | user | contractor, owner, or website visitor |
-| visitor (bare) | website visitor |
-| lead (bare) | website lead or ad lead |
+| visitor | website visitor |
+| lead (website, ads) | website lead or ad lead |
 | client / customer | contractor |
 | portfolio | projects |
 | ICP | ideal customer profile |
-| session (bare) | client interview, sign-in, or onboarding |
+| session | client interview, sign-in, or onboarding |
 | CMS (in a PRD) | website editor, Details, Media library, or Ads as appropriate |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |
 
@@ -990,8 +991,9 @@ Never in product/user-facing text or PRD prose.
 
 - Domain words in PRDs, UI, **and in code** when they name that concept. Internal names only
   for a different concept (technical docs and code).
-- In technical docs and code that clearly already belong to a feature, the short word is
-  acceptable (page, section, slot in a website package).
+- Unqualified Domain words (`page`, `section`, `slot`) only in that feature’s technical docs and
+  package. Other features use the Say (`website page`). Banned synonyms (`slug`, `skeleton`,
+  `blueprint`) appear nowhere, including code.
 - Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned row, `*_id`
   foreign keys, `snake_case` enum values.
 - Go: feature-nested packages (`internal/<domain>/<feature>/`), no package stutter

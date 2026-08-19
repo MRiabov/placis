@@ -8,8 +8,8 @@ Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.m
 ## Problem
 
 A contractor's marketing starts with a website. The site must be built from their business profile
-and a website template, then stay editable by the owner (or done-for-you) through the website
-editor — website pages, copy, photos, website forms, top menu, and footer — then website
+and a website template, then stay editable by the owner (or done-for-you) through the website editor
+— website pages, copy, photos, website forms, top menu, and footer — then website
 publication.
 
 ## Goals
@@ -35,8 +35,7 @@ publication.
 The website editor is one workspace with a left sidebar and a canvas:
 
 - **Website pages** — home, services, contact, and utility website pages, reorderable.
-- **Media library** — the photo library: their work, logos, and documents, each with a media
-  caption.
+- **Media library** — the photo library: their work, logos, and documents, each with a media caption.
 - **Website styles** — the look (colors and fonts) via design controls.
 - **Top menu and footer** — named separately; never say header, navigation, or bare “menu”.
 
@@ -67,8 +66,7 @@ Their **projects** and **certifications** are edited separately. Website publica
 1. Content is checked against what each website section allows before saving and before website
    publication.
 2. Website publication writes a published website copy; that copy is never overwritten.
-3. Website visitors see the live website; the owner edits the unpublished website in the website
-   editor.
+3. Website visitors see the live website; the owner edits the unpublished website in the website editor.
 4. The unpublished website is validated before it becomes the live website.
 5. One end-to-end test covers build → edit → improve → website publication → view the live website,
    with outside services mocked but the core logic real.
