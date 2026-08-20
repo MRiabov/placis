@@ -42,7 +42,8 @@ The website editor is one typed **projection** (read) and one **patch** (write).
   page_type, status, validation status,
   website-publication-blocker count).
 - `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`,
-  `seo_noindex`, `seo_primary_keyword`; `theme` (website style catalog preset + overrides).
+  `seo_noindex`, `seo_primary_keyword`; tenant **website styles** (preset + overrides from
+  `website_settings`, shown here, stored once per tenant).
 - `sections[]` — each: `id`, `page_id`, `component_id` (+ `component_version`, `schema_version`,
   `family`, `variant`), `position`, `status`, `visible`, `props`, `design`, `slots[]`,
   `design_controls[]`, `origin`, `unsupported_component`.
@@ -92,12 +93,13 @@ a website version.
 | add / remove a website section | `website_sections` + `website_slots` |
 | add a website page | `website_pages` + `website_sections` + `website_slots` |
 | swap a website component | `website_sections.component_id` (preserving compatible website slots) |
-| change the website style catalog preset | the website page's theme (applied only on explicit apply) |
+| change the website style catalog preset | `website_settings` (applied only on explicit apply) |
 
 Website publication writes `website_publications` + `website_manifest` (a website version).
 
-The Astro contractor website application (`apps/public-site`) does **no per-edit work** — it is
+The contractor website application (`apps/contractor-website`) does **no per-edit work** — it is
 stateless and resolves the *published website copy* (`website_manifest`) on request. Editing only
 mutates unpublished website records; the live website changes only on website publication. The
 website editor canvas renders the unpublished website (React + that package), not
-through Astro. That canvas is not a website preview.
+through Astro. That canvas is not a website preview. The frontend holds one projection; it does
+not accumulate draft documents in memory.

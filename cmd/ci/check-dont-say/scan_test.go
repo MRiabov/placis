@@ -119,7 +119,7 @@ func TestMarkdownDoesNotUseIdentifierInflection(t *testing.T) {
 		t.Fatal(err)
 	}
 	path := filepath.Join("testdata", "architecture.md")
-	if err := os.WriteFile(path, []byte("Serve from `apps/public-site` and store a website_manifest.\n"), 0o644); err != nil {
+	if err := os.WriteFile(path, []byte("Serve from `apps/contractor-website` and store a website_manifest.\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = os.Remove(path) })

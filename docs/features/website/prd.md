@@ -3,7 +3,7 @@
 Status: proposed product scope for the website.
 
 Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.md),
-[data model](data-model.md).
+[data model](data-model.md), [frontend.md](frontend.md).
 
 ## Problem
 
@@ -27,14 +27,14 @@ publication.
 ## Non-goals
 
 - No per-contractor code or deploy — every site runs on one shared renderer.
-- No blog posts or careers website pages in the first pass.
+- No blog posts, careers, or `landing` website pages in the first pass.
 - No CRM/operations content.
 
 ## The site is made of
 
 The website editor is one workspace with a left sidebar and a canvas:
 
-- **Website pages** — home, services, contact, and utility website pages, reorderable.
+- **Website pages** — home, service, contact, and legal website pages, reorderable.
 - **Media library** — the photo library: their work, logos, and documents, each with a media caption.
 - **Website styles** — the look (colors and fonts) via design controls.
 - **Top menu and footer** — named separately; never say header, navigation, or bare “menu”.
@@ -44,11 +44,14 @@ established year, description, marketing phone, marketing email, existing site U
 featured services, company/VAT number, registered office, and opening hours.
 
 Each **website page** is built from **website sections** (hero, services, reviews, …), and each
-website section is edited through its **website slots** — text, rich text, images, lists, links,
-reviews, or a project gallery.
+website section is edited through its **website slots** — text, rich text, images, lists, and
+links. Reviews on a website section are selected profile reviews. A project gallery lists their
+projects.
 
-Their **projects** and **certifications** are edited separately. Website publication makes a
-**published website copy** of the site each time.
+**Projects** are edited at `/cms/projects`. **Certifications and reviews** are edited at
+`/cms/certifications-and-reviews`. Website publication makes a **published website copy** of the
+site each time. Those screens update the website editor immediately; the live website changes only on
+the next website publication.
 
 ## User stories
 
@@ -68,5 +71,6 @@ Their **projects** and **certifications** are edited separately. Website publica
 2. Website publication writes a published website copy; that copy is never overwritten.
 3. Website visitors see the live website; the owner edits the unpublished website in the website editor.
 4. The unpublished website is validated before it becomes the live website.
-5. One end-to-end test covers build → edit → improve → website publication → view the live website,
-   with outside services mocked but the core logic real.
+5. One end-to-end test covers edit → website assistant → website publication → resolve → website
+   rollback → website form, with outside services mocked but the core logic real. Apply the
+   website template is the onboarding E2E.

@@ -23,7 +23,7 @@ whole system.
 | LLM | internal interface; Vercel AI SDK primary, OpenRouter as an alternative |
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (`frontend-2`) | Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; the CMS, onboarding, website preview; reused mostly, adapted to the huma OpenAPI |
-| Contractor website (`apps/public-site`) | Astro with React islands (Cloudflare Workers) — shows every contractor’s live website; not yet imported from the predecessor repo |
+| Contractor website (`apps/contractor-website`) | Astro with React islands (Cloudflare Workers) — shows every contractor’s live website; not yet imported from the predecessor repo |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 ## Module layout
@@ -99,7 +99,7 @@ adapted only where the huma-derived OpenAPI improves the contract.
   `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` helper + Clerk token.
 - `src/features/onboarding/` — onboarding (sources, client interview, business research progress, website preview).
 - `src/features/cms/` — the website + ads parts of the CMS (website editor, media library, inspector, ads workspace).
-- `src/features/preview/` — the onboarding website preview (and the website preview shown by `apps/public-site`).
+- `src/features/preview/` — the onboarding website preview (and the website preview shown by the contractor website app).
 
 frontend-2 keeps its own feature-local structure and is not folded into `internal/`; the file-size
 guard applies to it too (see `ci-cd.md`).
@@ -113,10 +113,11 @@ Two backend processes share one database, and two frontend apps talk to the API:
    notifications, and export generation.
 3. `frontend-2` — the CMS, onboarding, and website preview; built as static assets, talking
    to the API through the generated `openapi-fetch` helper.
-4. **Contractor website** (`apps/public-site`) — Astro with React islands, on Cloudflare Workers. It
+4. **Contractor website** (`apps/contractor-website`) — Astro with React islands, on Cloudflare Workers. It
    shows every contractor’s live website from its website manifest; a single deploy serves all
    tenants (no per-tenant build). This application still lives in the predecessor repo and has not been imported
-   into this repo yet.
+   into this repo yet. Edge details are a later TODO in
+   [website architecture](features/website/architecture.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
 work enqueued, and the request returned — see
