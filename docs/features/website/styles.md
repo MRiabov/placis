@@ -2,8 +2,9 @@
 
 A **website style catalog preset** is the website's visual skin — one choice that sets colors,
 typography, radius, density, spacing, and motion across every website section. The
-`website_manifest` carries a `theme` field (preset id + bounded overrides), and the public renderer
-applies it to all website components.
+`website_manifest` carries a `website_styles` field (preset id + bounded overrides), and the
+contractor website applies it to all website components. Unpublished storage is `website_settings`
+(one row per tenant).
 
 ## What a preset controls
 
@@ -26,7 +27,7 @@ hand-picked palettes.
 ## How it flows
 
 1. The preset is selected during generation (or changed in the Website styles workspace).
-2. `website_manifest.theme` carries the preset id + bounded overrides (`primary`, `neutral`, `accent`,
+2. `website_manifest.website_styles` carries the preset id + bounded overrides (`primary`, `neutral`, `accent`,
    `radius`, `density`).
 3. The renderer maps the preset tokens to CSS variables; every website component reads those tokens,
    so switching the preset restyles the whole website without touching website section logic.

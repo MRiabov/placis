@@ -1,15 +1,16 @@
 # Website — data model
 
 Website pages, website sections, website slots, website forms, top menu, footer, website
-publications (each row is a website version), projects, and certifications.
+publications (each row is a website version), website settings, projects, and certifications.
 Conventions: [data-model conventions](../../general-architecture/data-model.md).
 
 Media assets are owned by [media library](../other/media/data-model.md). The business profile the
 website templates fill is [details](../other/details/data-model.md) (including reviews). Website
-forms write [leads](../other/leads/data-model.md).
+forms write [leads](../other/leads/data-model.md). The dump shape of a website publication is
+[manifest.md](manifest.md).
 
-- `website_pages` — `id`, `tenant_id` fk, `path`, `title`, `page_type` (`standard`/`service`/
-  `landing`/`legal`), `status` (`unpublished`/`published`/`archived`), `seo_title`,
+- `website_pages` — `id`, `tenant_id` fk, `path`, `title`, `page_type` (`home`/`service`/
+  `contact`/`legal`), `status` (`unpublished`/`archived`), `seo_title`,
   `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`, `seo_noindex`,
   `seo_primary_keyword`, timestamps; unique `(tenant_id, path)`
 - `website_sections` — `id`, `tenant_id` fk, `page_id` fk, `component_id`, `component_version`,
@@ -31,6 +32,9 @@ forms write [leads](../other/leads/data-model.md).
   `label`, `path`, `url`, `position`, `status` (`visible`/`hidden`)
 - `footer_items` — `id`, `tenant_id` fk, `parent_id` nullable fk, `page_id` nullable fk,
   `label`, `path`, `url`, `position`, `status` (`visible`/`hidden`)
+- `website_settings` — `id`, `tenant_id` fk unique, `preset_id`, bounded website-style overrides
+  (`primary`, `neutral`, `accent`, `radius`, `density`), timestamps. One row per tenant. Copied
+  into `website_manifest.website_styles` at website publication.
 - `website_publications` — one row is a website version: `id`, `tenant_id` fk, `version_number`,
   `status` (`published`/`archived`/`rolled_back`), `active`, `manifest_version`,
   `website_manifest` jsonb, `published_by`,
@@ -39,19 +43,25 @@ forms write [leads](../other/leads/data-model.md).
   nullable, `entity_id` nullable
 - `projects` — `id`, `tenant_id` fk, `title`, `description`, `cover_media_asset_id` nullable fk,
   `status` (`unpublished`/`published`), timestamps
-- `website_certification_selections` — `id`, `tenant_id` fk, `certification_id`, `status`
+- `website_certification_definitions` — global (not tenant): `id`, `name`, `short_label`,
+  `trades`, `country`, `badge` (file or URL), `registry_url`
+- `website_certification_selections` — `id`, `tenant_id` fk, `certification_id` fk, `status`
   (`selected`/`removed`), `created_at`
 - `website_slot_reviews` — `id`, `tenant_id` fk, `slot_id` fk, `business_profile_review_id` fk,
   `position`; unique `(slot_id, business_profile_review_id)`
 
 Reviews on the website are these rows, not a jsonb dump in `website_slots.value`. The text
-lives on [business_profile_reviews](../other/details/data-model.md).
+lives on [business_profile_reviews](../other/details/data-model.md). A project gallery is a
+`json` / `list` website slot of project ids, not a `slot_type`.
 
-`props`, `design`, `value`, and `website_manifest` stay jsonb: each website component / slot /
-published website copy has its own catalog-shaped dump.
+`props`, `design`, and slot `value` stay jsonb: each website component / slot has its own
+catalog-shaped dump. `website_manifest` is jsonb because it is a published website copy
+(see [manifest.md](manifest.md)), not because the tree is polymorphic.
+
+There is no unpublished revision table and no per-page version table.
 
 ## Indexes
 
 Unique: `(tenant_id, website_pages.path)`, `(tenant_id, website_forms.form_key)`,
-`(tenant_id, website_publications.version_number)`. Lookup: `(tenant_id, status, created_at)` on
-website pages.
+`(tenant_id, website_publications.version_number)`, `website_settings.tenant_id`. Lookup:
+`(tenant_id, status, created_at)` on website pages.

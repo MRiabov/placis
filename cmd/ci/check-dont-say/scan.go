@@ -182,7 +182,10 @@ func shouldSkipPath(path string, frontend bool) bool {
 var extraAllowed = []string{
 	"the cms",
 	"/cms",
-	"apps/public-site",
+	"apps/contractor-website",
+	"/cms/proof",
+	"site_manifest.v1",
+	"site_page.v1",
 	"clerk organization",
 	"ideal customer profile",
 	"ideal customer",

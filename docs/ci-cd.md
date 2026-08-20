@@ -80,7 +80,7 @@ Identifier inflections of always-ban and home-scoped phrases (snake, kebab, Pasc
 banned outside the allowed files, including inside backticks (table names, types, paths).
 Backticks are not an escape. Home-scoped tokens in a `/`-delimited route or file path are not
 flagged (the URL still uses the short word). Always-ban tokens in paths still fail.
-`apps/public-site` is the Internal directory until that application is named.
+`apps/contractor-website` is the contractor website application directory.
 `docs/glossary.md` itself is not scanned (it is the list). Worked examples:
 [`cmd/ci/check-dont-say/ref.md`](../cmd/ci/check-dont-say/ref.md).
 

@@ -3,7 +3,7 @@
 Status: proposed implementation plan.
 
 Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](../../architecture.md),
-[data model](data-model.md).
+[data model](data-model.md), [manifest](manifest.md).
 
 ## Domain objects
 
@@ -12,44 +12,53 @@ See [data-model.md](data-model.md). Media assets are
 
 ## Website template application
 
-1. Load the selected website template + website component contracts from `catalog/`.
+Owned by onboarding [04](../onboarding/pipeline/04-apply-website-template.md). This feature owns
+the tables it writes.
+
+1. Load the selected website template + website component contracts from `catalog/` (imported
+   predecessor catalog as the first-pass set).
 2. Validate website component ids, props, design controls, website page paths, website forms, and
    top menu / footer against the website component contract structs.
-3. Resolve website placeholders from the live business profile (website placeholders kept in the
-   unpublished website).
+3. Keep website placeholders in the unpublished website; they resolve only at website publication.
 4. Create tenant-owned `website_*` records as an unpublished website; never write a live website
-   from generation.
+   from this step.
 
 ## Website assistant (the LLM drafts; the owner decides)
 
-- Tool calls: `update_slot` (copy), `generate_image` (only when no approved source fits).
+- Tool calls: see [assistant.md](assistant.md) (`update_slot`, `update_form`,
+  `update_website_styles`, `generate_image`, …).
 - Output is a reviewable diff, validated against website component contracts before apply.
 - Every call records reasoning + output + tool calls via `ai_generations`.
+- Revert the last website assistant batch from recorded before/after. No unpublished revision stack.
 
 ## Website publication / renderer rules
 
 1. Only registered website components render; props validated before save and before website
    publication.
 2. Website publication creates a `website_publications` row (kept, not edited; active flag +
-   website rollback chain).
+   website rollback chain) holding a typed `website.v1` document.
 3. Contractor website pages render only the active website publication; a website preview renders the
    unpublished website.
 4. Website rollback reactivates an earlier website publication; earlier published website copies are
    never overwritten.
 5. Website publication emits an audit event.
+6. Website publication is not a Cloudflare deploy. Edge details are a later TODO in
+   [architecture.md](architecture.md).
 
 ## Where things stand
 
-- Website page: `unpublished → approved → published`.
+- Website page: `unpublished` / `archived`.
 - Website publication: `published → rolled_back/archived`.
 
 ## API surface
 
 - `/api/v1/website/editor/...` — website pages, website sections, website slots, media assets,
-  projects, website publications, business-profile, certifications.
-- `/api/v1/tenants/{website_address}/website/...` — website templates, website pages, website forms, website
-  publications, certifications. `{website_address}` is the reserved subdomain label.
-- `/api/v1/public/site/...` — resolve, meta, sitemap, media assets (the public read model).
+  projects, website publications, website settings, certifications, website forms, top menu, footer.
+- `/api/v1/website/publications/...` — website publication and website rollback (if not under editor).
+- `/api/v1/public/site/...` — resolve, meta, sitemap, media assets (the public read model). Host
+  lookup uses [website_addresses](../other/auth/data-model.md).
+
+Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
 
 ## Validation & testing
 
@@ -60,11 +69,10 @@ See [data-model.md](data-model.md). Media assets are
 - Website versions (`website_publications`) are never overwritten; website rollback
   reactivates an earlier website version.
 - Website template application rejects unknown website component ids / invalid props before writing.
-- One E2E: apply the website template → edit → website assistant → website publication → resolve website manifest
-  (LLM faked, core logic unmocked).
+- One E2E: edit → website assistant → website publication → resolve → website rollback → website
+  form (LLM faked, core logic unmocked). Apply the website template is the onboarding E2E.
 
 ## Frontend
 
-- `frontend-2/src/features/cms/**` is the existing website editor (website pages, website sections,
-  website slots, media assets, media library, inspector). It consumes the regenerated types;
-  `/website/editor/*` routes map to the Go side.
+See [frontend.md](frontend.md). `frontend-2/src/features/cms/**` is the existing website editor.
+It consumes the regenerated types; `/website/editor/*` routes map to the Go side.

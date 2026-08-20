@@ -24,6 +24,10 @@ decision + date) instead of silently rewriting history.
    disclosure, not a destination of its own; there is no `/cms/profile`. The Details screen stays.
    Projects stays until a Projects view ships. (2026-08-19)
 
+   (2026-08-20): Projects is a working Projects screen in the website first slice, still under
+   Profile. **Certifications and reviews** (`/cms/certifications-and-reviews`) is a third Profile
+   child. No `/cms/proof`. Top menu and footer stay in the website editor, not Details.
+
 3. **Founder and brand are columns** — `founder_name` / `founder_role` / `founder_occupation` /
    `founder_nationality` / `founder_country_of_residence` / `founder_appointed_on` /
    `founder_media_asset_id`, and `logo_media_asset_id` / `brand_tone` / `brand_typography` /

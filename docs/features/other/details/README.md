@@ -13,13 +13,12 @@ reaches it from **Profile** → **Business details**.
 - **What they do** — featured services.
 - **Legal** — company number, VAT number, registered office.
 - **Opening hours** — per day: open, close, and a note.
-- **Website structure** — top menu, footer, contact website page, service website pages, and footer
-  legal.
 
 ## Shared by everyone
 
 - **Onboarding** builds these details (from the company registry record, Google Maps listing, and the client interview).
-- **The website** shows them — top menu, footer, contact website page, service website pages.
+- **The website** shows them — including on the contact website page and service website pages
+  (top menu and footer are edited in the website editor).
 - **Ads** read them — the business name, trade, marketing phone, marketing email, and services become the ad copy,
   and the ideal customer profile starts from the same details.
 

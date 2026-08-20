@@ -15,12 +15,15 @@ The photo library and image editing — a standalone part of the CMS.
 
 ## Used by
 
-- **The website** — images inside website sections.
+- **The website** — images inside website sections. Pending-review AI images may show on the
+  unpublished canvas with a warning; owner approval makes them approved. Website publication
+  and the live website still require approved media (with a media caption).
 - **Ads** — only approved media with a media caption become ad images.
 
 ## Review
 
-Only approved media (with a media caption) can be used by the website or by ads.
+Only approved media (with a media caption) can be used on the live website or by ads. The
+unpublished website editor may show pending-review AI images with a warning.
 
 Bytes live in [files](../../../general-architecture/files.md) (`media_assets.file_id`).
 Tables: [data-model.md](data-model.md).

@@ -40,3 +40,34 @@ Status: decided (2026-08-16, product owner + engineering).
    acquired by taking inspiration from existing websites, decomposing them into website page /
    website section patterns, then switching the content and remixing the colors for a new business.
    They are not hand-authored from scratch.
+
+10. **First-pass page types are `home` / `service` / `contact` / `legal`** — no `standard`, no
+    `landing` (ads do not send people to the website for now). Blog and careers stay deferred.
+    (2026-08-20)
+
+11. **Website page status is `unpublished` / `archived`** — publication is website-level
+    (`website_publications`). There is no page-level `approved` or `published`. (2026-08-20)
+
+12. **No unpublished revision stack** — edits upsert unpublished rows. Revert restores the last
+    website assistant batch from recorded before/after. Website versions are
+    `website_publications` only. Do not bring back predecessor per-page version snapshots.
+    (2026-08-20)
+
+13. **Website styles live on `website_settings`** — one row per tenant, copied into the website
+    manifest at website publication. Not per website page. (2026-08-20)
+
+14. **Live website is the published website copy** — Details, Projects, certifications and reviews, and
+    website styles update the website editor immediately and need website publication to change what
+    website visitors see. (2026-08-20)
+
+15. **Import the contractor website as `apps/contractor-website`** — never the predecessor package
+    name. Website publication is not a Cloudflare deploy; edge (SSR vs R2, cache purge, TLS) is later.
+    (2026-08-20)
+
+16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
+    Global `website_certification_definitions`; tenant selections. Reviews stay
+    `business_profile_reviews`. No `/cms/proof`. (2026-08-20)
+
+17. **`generate_image` may attach pending-review on the unpublished canvas** — always a warning;
+    owner approval makes it approved; website publication still requires approved media assets.
+    (2026-08-20)

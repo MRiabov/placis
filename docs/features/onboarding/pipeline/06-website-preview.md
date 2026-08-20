@@ -9,7 +9,7 @@ update).
 
 The API issues a website preview token (HMAC, default **14 days**). Only `token_hash` is stored
 (`website_previews.token_hash`). Anyone with the unexpired website preview link can open
-`/preview/{token}/` on the contractor website application (`apps/public-site`). Expired or superseded → 410.
+`/preview/{token}/` on the contractor website application (`apps/contractor-website`). Expired or superseded → 410.
 
 ## What it holds
 

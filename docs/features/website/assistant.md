@@ -20,7 +20,8 @@ failed event.
 | --- | --- |
 | `update_slot` | update one typed website slot on an existing website section (copy or image) |
 | `update_seo` | update bounded unpublished-website SEO metadata for the current website page |
-| `update_theme` | update bounded theme tokens for the current unpublished website page |
+| `update_form` | update a website form (title, fields, privacy notice) the same way the editor PATCH does |
+| `update_website_styles` | update the tenant website styles (preset + bounded overrides), not per website page |
 | `set_section_visibility` | show or hide one existing website section |
 | `update_section_design` | update one website section's **design controls** — the per-website-component enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values from the website component contract |
 | `reorder_sections` | set the full ordered list of website section ids for the website page |
@@ -29,8 +30,10 @@ failed event.
 | `generate_image` | generate a media asset from a prompt, optionally attach it to an image website slot |
 
 `generate_image`: the model supplies a prompt + media caption; the backend creates a generated
-media asset (`supplied_by=ai`, pending review) and attaches it to a website slot through the unpublished
-website page-version path.
+media asset (`supplied_by=ai`, pending review) and may attach it to a website slot on the
+unpublished canvas (convenience). The canvas always surfaces a warning on that image. Owner
+approval makes the media asset approved and permanent. Website publication and the live website
+still require approved media assets. Ads stay approved-only.
 
 Two plan tools carry the owner-facing reply, the plan, assumptions, open questions, and
 activity: `refinement_plan` (plan mode, no mutation) and `assistant_plan` (summarize alongside the
@@ -44,16 +47,17 @@ edit tools).
   acceptance criteria). Nothing is changed until the owner approves the plan. After they approve,
   the assistant applies the edits in bounded batches — apply, report failures, retry repaired
   calls, continue until done or capped.
-- **Continuous mode** — bounded, low-risk edits applied directly, still as unpublished website page
-  versions with validation.
+- **Continuous mode** — bounded, low-risk edits applied directly to unpublished rows, still
+  validated.
 
 ## Output and undo
 
 - **Activity cards** are generated from execution events (`Edited 2 website sections`, `Created 1
   website page`, `Updated SEO`, `Changed colors`, `Failed to apply`); expanding one shows the
   affected targets and a before/after, and selecting it focuses the canvas/inspector.
-- **Revert** — website-assistant-authored edits can be reverted to the prior unpublished website
-  page version; it refuses if a manual edit came after.
+- **Revert** — revert the last website assistant batch by restoring the recorded before-values
+  (`ai_generations.applied_changes` / execution events). It refuses if a manual edit came after.
+  There is no unpublished revision stack and no per-page version table.
 
 The website assistant never does a website publication, never bypasses validation, and never writes
 arbitrary registry JSON.

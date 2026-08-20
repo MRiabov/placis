@@ -6,8 +6,10 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
 - [architecture.md](architecture.md) — content model, applying the website template, website editor, website publication, render
-- [data-model.md](data-model.md) — website pages, website sections, website slots, website forms, top menu, footer, website publications
+- [data-model.md](data-model.md) — website pages, website sections, website slots, website forms, top menu, footer, website publications, website settings
+- [manifest.md](manifest.md) — `website.v1` keep / keep-out
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
+- [frontend.md](frontend.md) — `/cms/website`, `/cms/projects`, `/cms/certifications-and-reviews`
 - [variables.md](variables.md) — the `{{var}}` website placeholders and how they resolve
 - [assistant.md](assistant.md) — the website assistant: tools, plan/continuous mode, undo
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density, motion
@@ -17,6 +19,6 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [leads](../other/leads/README.md) — website form contacts (attribution and follow-up)
 - [testing.md](testing.md) — the website E2E test
 
-Standalone screens beside the website editor: **Profile** (Details and Projects), **Media
-library** (above), and later a **Leads** screen. These are their own views, not website page
-content.
+Standalone screens beside the website editor: **Profile** (Details, Projects, Certifications and
+reviews), **Media library** (above), and later a **Leads** screen. These are their own views, not
+website page content.

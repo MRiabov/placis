@@ -8,12 +8,14 @@ out of this.
 A website is a list of **website pages**; a website page is an ordered list of **website
 sections**; a website section is one **website component** given props and editable website slots.
 
-- **website page** — website page path, title, type (`home`/`service`/`landing`/`legal`), SEO, and
-  an ordered list of website sections.
+- **website page** — website page path, title, type (`home`/`service`/`contact`/`legal`), SEO, and
+  an ordered list of website sections. Status is `unpublished` or `archived`. The live set is the
+  active website publication, not a page-level published flag.
 - **website section** — an instance of a website component (`component_id`), with its props and
   design, at a position on the website page.
 - **website slot** — a named editable value inside a website section: text, rich text, image, link,
-  list, or json.
+  list, or json. Reviews on a website section are selected profile reviews
+  (`website_slot_reviews`), not a `slot_type`. A project gallery is a list/json of project ids.
 - **media asset** — a photo, logo, or document in the media library.
 
 ## The website component model
@@ -23,6 +25,9 @@ Each has a **contract**: the props it accepts, the website slots it exposes, and
 controls** — small enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`spacious`) with
 allowed values. The contract is one typed struct dumped to JSON under `catalog/` — the website
 editor and the renderer read the same structs. Only registered website components render.
+
+The first-pass website template catalog and website component catalog are imported from the
+predecessor, not a short list written here.
 
 ## Apply the website template
 
@@ -38,8 +43,8 @@ needs. Applying the website template writes those onto the business profile:
 5. validate against website component contracts, the company registry, marketing statements, links,
    website forms, SEO.
 
-The result is an unpublished website, never a live website. Website copy generation is a later
-step.
+The result is an unpublished website, never a live website. Website copy generation is onboarding
+[05](../onboarding/pipeline/05-website-copy-generation.md) — async, same tools, not this editor.
 
 **Where website templates come from**: mostly by taking inspiration from existing websites —
 decomposing them into patterns (website page structure + website section composition), then
@@ -58,32 +63,53 @@ The website editor is one workspace with three surfaces:
 
 Edits upsert unpublished website rows in place. Website assistant edits arrive as proposals
 (a diff), never a direct write. Website publication writes a website version. The **Details** view
-(the business profile) and **Media library** (image editing) are their own standalone parts, not
-website page content. The full edit → backend → re-render loop is in [editing.md](editing.md).
+(the business profile), **Projects**, **Certifications and reviews**, and **Media library** are
+their own parts, not website page content. The full edit → backend → re-render loop is in
+[editing.md](editing.md). Screens: [frontend.md](frontend.md).
 
 ## Website assistant
 
 The LLM edits the unpublished website through the **website assistant** — hard-typed, validated,
-parallel tool calls (`update_slot`, `generate_image`, website section/theme/SEO/website form/website page
+parallel tool calls (`update_slot`, `generate_image`, website section/website styles/SEO/website form/website page
 actions), in plan mode (default) or continuous mode. See [assistant.md](assistant.md).
 
 ## Website publication
 
 Website publication walks the unpublished website, validates every website section against its
 website component contract, resolves the `{{var}}` website placeholders from the business profile
-(see [variables.md](variables.md)), and writes one `website_publications` row holding the
-published website copy as `website_manifest` (a `website.v1` website manifest: website pages →
-website sections → props). That row is a website version. The website manifest is the read model —
-the renderer only ever reads the active website version. Website rollback reactivates an earlier
-website version.
+(see [variables.md](variables.md)), copies tenant website styles from `website_settings`, and
+writes one `website_publications` row holding the published website copy as `website_manifest`
+(a `website.v1` website manifest — [manifest.md](manifest.md)). That row is a website version.
+The website manifest is the read model — the renderer only ever reads the active website version.
+Website rollback reactivates an earlier website version.
+
+Edits to Details, Projects, certifications and reviews, website styles, or the unpublished
+website do not change the live website until the next website publication.
+
+Website publication is not a Cloudflare deploy. One shared contractor-website application serves
+every tenant. Host routing uses `website_addresses` reserved at website activation.
+
+### TODO (later) — contractor website on Cloudflare
+
+Do not design Wrangler, R2, or DNS in this spec. A later pass must define:
+
+- Import the contractor website app (`apps/contractor-website`)
+- Serve path: Worker SSR from Go resolve vs R2 static HTML/manifest files
+- Cache purge on website publication: which host/path URLs, Cloudflare API, fakes in tests
+- Convert images to same-host WebP on website publication
+- Custom website address: Cloudflare custom-hostname / TLS (auth/ops)
+- Local run of the contractor website Worker next to `cmd/api` (no per-contractor build)
+
+Until then the contract is `/api/v1/public/site/resolve` + the typed `website.v1` document.
 
 ## Contractor website (separate Astro app)
 
 Live websites and website previews are served by a **separate Astro + React app**
-(`apps/public-site`), not the website editor. It calls `/api/v1/public/site/resolve` with
-the incoming host + website page path, reads the active `website_manifest`, and renders each
-website section by its `component_id` through the shared contractor-website component package — Astro
-owns routing, the Astro document, static/prerender, and metadata; React owns interactive islands.
+(`apps/contractor-website`, not yet imported), not the website editor. It calls
+`/api/v1/public/site/resolve` with the incoming host + website page path, reads the active
+`website_manifest`, and renders each website section by its `component_id` through the shared
+contractor-website component package — Astro owns routing, the Astro document, static/prerender,
+and metadata; React owns interactive islands.
 
 One application serves every contractor website — no per-tenant build — and imports only the
 website component package (a bundle-boundary check blocks imports from `frontend-2`).
@@ -105,5 +131,5 @@ authority.
 
 ## Where things stand
 
-- website page: `unpublished → approved → published`
+- website page: `unpublished` / `archived`
 - website publication: `published → rolled_back / archived`
