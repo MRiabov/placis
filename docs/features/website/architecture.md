@@ -87,32 +87,24 @@ Edits to Details, Projects, certifications and reviews, website styles, or the u
 website do not change the live website until the next website publication.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website application serves
-every tenant. Host routing uses `website_addresses` reserved at website activation.
-
-### TODO (later) — contractor website on Cloudflare
-
-Do not design Wrangler, R2, or DNS in this spec. A later pass must define:
-
-- Import the contractor website app (`apps/contractor-website`)
-- Serve path: Worker SSR from Go resolve vs R2 static HTML/manifest files
-- Cache purge on website publication: which host/path URLs, Cloudflare API, fakes in tests
-- Convert images to same-host WebP on website publication
-- Custom website address: Cloudflare custom-hostname / TLS (auth/ops)
-- Local run of the contractor website Worker next to `cmd/api` (no per-contractor build)
-
-Until then the contract is `/api/v1/public/site/resolve` + the typed `website.v1` document.
+every tenant. Host routing uses `website_addresses` reserved at website activation. Serve path,
+R2 keys, cache purge, custom website address, and local Worker:
+[cloudflare.md](cloudflare.md). Import of `apps/contractor-website` is later.
 
 ## Contractor website (separate Astro app)
 
 Live websites and website previews are served by a **separate Astro + React app**
-(`apps/contractor-website`, not yet imported), not the website editor. It calls
-`/api/v1/public/site/resolve` with the incoming host + website page path, reads the active
-`website_manifest`, and renders each website section by its `component_id` through the shared
-contractor-website component package — Astro owns routing, the Astro document, static/prerender,
-and metadata; React owns interactive islands.
+(`apps/contractor-website`, not yet imported), not the website editor.
 
-One application serves every contractor website — no per-tenant build — and imports only the
-website component package (a bundle-boundary check blocks imports from `frontend-2`).
+At **website publication**, that app renders each live website page from the active
+`website_manifest` (`website.v1`) and writes HTML to R2 `latest/`. A live GET is Cache then R2.
+It never calls Go. Website preview (`/preview/{token}/`) uses the same website components but
+renders unpublished website rows on each request via `GET /api/v1/public/site/resolve`.
+
+Astro owns routing, the Astro document, prerender-at-publication, and metadata; React owns
+interactive islands. One application serves every contractor website — no per-tenant build —
+and imports only the website component package (a bundle-boundary check blocks imports from
+`frontend-2`).
 
 Website previews use the same application: the onboarding website preview renders the unpublished
 website behind a preview token, so the contractor sees the real website

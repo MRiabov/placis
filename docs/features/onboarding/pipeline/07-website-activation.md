@@ -18,7 +18,11 @@ replayed safely and is never triggered by a browser success URL alone.
    **person**.
 2. `tenant_memberships` (`owner`) for the paying owner.
 3. Attach `onboarding_sessions.tenant_id` and `business_profiles.tenant_id`.
-4. Provision the website address → `website_addresses` (`type=subdomain`).
+4. Provision the website address → `tenants.website_address` (unique label, **fixed**) and
+   `website_addresses` (`type=subdomain`, hostname `{website_address}.placis.com`,
+   `status=reserved`). Create the CNAME for that host on **our** `placis.com` zone. Do not show
+   it in the CMS as the live website. Custom website address is a later CMS step
+   ([Connect website address](../../website/cloudflare.md)).
 5. `tenants.status=active`. Onboarding session → `activated`. Website preview → `activated`.
 6. Does **not** write `website_publications`. The unpublished website from 04 (plus whatever 05
    has already written) is what they edit. Website activation does **not** wait for website copy

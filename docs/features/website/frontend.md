@@ -45,7 +45,17 @@ explicit apply. Top menu and footer are edited here, not in Details.
 
 **Website publication** is an explicit action (toolbar / inspector). It is blocked while
 required website slots cannot resolve or media library items on the live path are not approved. After it
-succeeds, `has_unpublished_changes` is false until the next edit.
+succeeds, `has_unpublished_changes` is false until the next edit. Website publication does **not**
+attach a custom website address.
+
+**Connect website address** is a separate flow on this same route (toolbar / empty live URL), not
+a new left-nav item. The owner types `acme.ie` or `www.acme.ie`. The API creates the Cloudflare
+custom hostname and returns copyable DNS rows (type, name, value): TXT for the certificate, and
+CNAME (or ALIAS / later Apex Proxying `A`) as in [cloudflare.md](cloudflare.md). Short copy:
+add these at GoDaddy, Porkbun, or Squarespace — do not move nameservers to Placis. Status:
+waiting for DNS → waiting for certificate → active (the CMS polls Go; Go polls Cloudflare).
+When active, the live website URL is that hostname. Until then the live URL is empty; the owner
+uses the website preview. Never show `{website_address}.placis.com` as the live website.
 
 **Website assistant** is a chat in this workspace. Plan mode by default; revert last
 website-assistant batch (refuses if a manual edit came after). Pending-review AI images may

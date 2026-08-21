@@ -1,8 +1,9 @@
 # Website — E2E test
 
-One full-stack E2E test: edit → website assistant → website publication → resolve → website
-rollback → website form. Drives `frontend-2` (Playwright) against the real API + real Postgres;
-the LLM is faked. Apply the website template is the [onboarding E2E](../onboarding/testing.md).
+One full-stack E2E test: edit → website assistant → website publication → live HTML (fake R2 +
+fake purge) → website rollback → website form. Drives `frontend-2` (Playwright) against the real
+API + real Postgres; the LLM is faked. Cloudflare is faked (Custom Hostnames, `purge_cache`, R2).
+Apply the website template is the [onboarding E2E](../onboarding/testing.md).
 DB asserts name the tables from [data-model.md](data-model.md) (and
 [leads](../other/leads/data-model.md) for the website form).
 
@@ -24,10 +25,15 @@ DB asserts name the tables from [data-model.md](data-model.md) (and
 5. **Website publication** — the owner does a website publication.
    - DB: `website_publications` (status=`published`, `active=true`, `website_manifest`,
      `version_number` — a website version).
-   - UI: the live website is shown.
+   - Fake: R2 keys `sites/{website_address}/{version_number}/` then `…/latest/`, plus
+     `purge_cache` for live website page URLs (and sitemap, robots, WebP) on every active
+     hostname. No live Cloudflare.
+   - UI: the live website is shown when a custom website address is `active`; otherwise the
+     owner still uses website preview.
 
-6. **Resolve** — the live website renders the published website copy (`website_manifest`).
-   - Assert: the contractor website page shows the edited content.
+6. **Live website** — the published website copy is the files in `latest/`, not a Go resolve.
+   - Assert: fake R2 objects for the edited website page; `GET /api/v1/public/site/resolve` is
+     not required for this live assert.
 
 7. **Website rollback** — the owner does a website rollback.
    - DB: an earlier `website_publications` is `active` again; earlier published website copies are

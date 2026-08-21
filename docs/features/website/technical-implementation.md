@@ -42,8 +42,8 @@ the tables it writes.
 4. Website rollback reactivates an earlier website publication; earlier published website copies are
    never overwritten.
 5. Website publication emits an audit event.
-6. Website publication is not a Cloudflare deploy. Edge details are a later TODO in
-   [architecture.md](architecture.md).
+6. Website publication is not a Cloudflare deploy. River asks the contractor website Worker to
+   render HTML into R2 and purge; live GET is Cache then R2. Details: [cloudflare.md](cloudflare.md).
 
 ## Where things stand
 
@@ -55,8 +55,9 @@ the tables it writes.
 - `/api/v1/website/editor/...` — website pages, website sections, website slots, media assets,
   projects, website publications, website settings, certifications, website forms, top menu, footer.
 - `/api/v1/website/publications/...` — website publication and website rollback (if not under editor).
-- `/api/v1/public/site/...` — resolve, meta, sitemap, media assets (the public read model). Host
-  lookup uses [website_addresses](../other/auth/data-model.md).
+- `/api/v1/public/site/...` — website preview resolve, meta, sitemap, media assets (the public
+  read model). Host lookup uses [website_addresses](../other/auth/data-model.md). Live GET does
+  not call resolve; it reads R2. Connect-website-address APIs live under the CMS editor surface.
 
 Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
 
@@ -69,8 +70,9 @@ Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
 - Website versions (`website_publications`) are never overwritten; website rollback
   reactivates an earlier website version.
 - Website template application rejects unknown website component ids / invalid props before writing.
-- One E2E: edit → website assistant → website publication → resolve → website rollback → website
-  form (LLM faked, core logic unmocked). Apply the website template is the onboarding E2E.
+- One E2E: edit → website assistant → website publication → live R2 keys + fake purge → website
+  rollback → website form (LLM faked, core logic unmocked). Apply the website template is the
+  onboarding E2E.
 
 ## Frontend
 
