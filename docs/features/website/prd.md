@@ -71,6 +71,6 @@ the next website publication.
 2. Website publication writes a published website copy; that copy is never overwritten.
 3. Website visitors see the live website; the owner edits the unpublished website in the website editor.
 4. The unpublished website is validated before it becomes the live website.
-5. One end-to-end test covers edit → website assistant → website publication → resolve → website
-   rollback → website form, with outside services mocked but the core logic real. Apply the
-   website template is the onboarding E2E.
+5. One end-to-end test covers edit → website assistant → website publication → live HTML (fake
+   R2 + fake purge) → website rollback → website form, with outside services faked in tests but
+   the core logic real. Apply the website template is the onboarding E2E.

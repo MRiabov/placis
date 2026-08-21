@@ -61,8 +61,10 @@ Status: decided (2026-08-16, product owner + engineering).
     website visitors see. (2026-08-20)
 
 15. **Import the contractor website as `apps/contractor-website`** — never the predecessor package
-    name. Website publication is not a Cloudflare deploy; edge (SSR vs R2, cache purge, TLS) is later.
-    (2026-08-20)
+    name. Website publication is not a Cloudflare deploy. Live HTML is R2 `latest/` behind one
+    Worker; website preview is the only per-request render. Custom website address uses Custom
+    Hostnames, not Pages. See [cloudflare.md](cloudflare.md) and ADR 18–20.
+    (2026-08-20; edge locked 2026-08-21)
 
 16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
     Global `website_certification_definitions`; tenant selections. Reviews stay
@@ -71,3 +73,19 @@ Status: decided (2026-08-16, product owner + engineering).
 17. **`generate_image` may attach pending-review on the unpublished canvas** — always a warning;
     owner approval makes it approved; website publication still requires approved media assets.
     (2026-08-20)
+
+18. **Live GET is Cache then R2 only** — website publication prebuilds HTML into
+    `sites/{website_address}/latest/`. A cache miss still reads R2. Missing object is 404, not a
+    render from Postgres. `GET /api/v1/public/site/resolve` is website preview (and tests) only.
+    (2026-08-21)
+
+19. **R2 tree is keyed by the internal website address** — `tenants.website_address`, fixed at
+    website activation. Custom website address maps `sites/hosts/{hostname}` → that label.
+    `{website_address}.placis.com` is not owner-facing.
+    (2026-08-21)
+
+20. **Custom website address uses Custom Hostnames, not Pages** —
+    `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS **Connect website
+    address** shows records to paste. Do not take over the contractor’s nameservers. Apex `A`
+    records need Apex Proxying (later, Enterprise).
+    (2026-08-21)

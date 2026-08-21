@@ -113,11 +113,11 @@ Two backend processes share one database, and two frontend apps talk to the API:
    notifications, and export generation.
 3. `frontend-2` — the CMS, onboarding, and website preview; built as static assets, talking
    to the API through the generated `openapi-fetch` helper.
-4. **Contractor website** (`apps/contractor-website`) — Astro with React islands, on Cloudflare Workers. It
-   shows every contractor’s live website from its website manifest; a single deploy serves all
-   tenants (no per-tenant build). This application still lives in the predecessor repo and has not been imported
-   into this repo yet. Edge details are a later TODO in
-   [website architecture](features/website/architecture.md).
+4. **Contractor website** (`apps/contractor-website`) — Astro with React islands, on Cloudflare
+   Workers. Website publication writes HTML to R2 `latest/`; a live GET is Cache then R2 (no Go).
+   A single deploy serves all tenants (no per-tenant build). This application still lives in the
+   predecessor repo and has not been imported into this repo yet. Locked serve path:
+   [website Cloudflare](features/website/cloudflare.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
 work enqueued, and the request returned — see
@@ -163,5 +163,6 @@ The Go backend loads and validates them; it must not hand-duplicate the struct s
 ## Deployment
 
 Railway containers for `cmd/api` and `cmd/worker`; `frontend-2` builds to static assets. Cloudflare
-for the contractor website edge/CDN and R2 object storage. Local infra (Postgres, MinIO) via Docker
-Compose; the API, worker, and `frontend-2` run directly for fast iteration.
+Workers + R2 for the contractor website (one Worker, prebuilt HTML in `latest/`). Local infra
+(Postgres, MinIO) via Docker; the API, worker, `frontend-2`, and `wrangler dev` (Miniflare R2 on)
+run directly. See [website Cloudflare](features/website/cloudflare.md).

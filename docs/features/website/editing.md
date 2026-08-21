@@ -97,9 +97,9 @@ a website version.
 
 Website publication writes `website_publications` + `website_manifest` (a website version).
 
-The contractor website application (`apps/contractor-website`) does **no per-edit work** — it is
-stateless and resolves the *published website copy* (`website_manifest`) on request. Editing only
-mutates unpublished website records; the live website changes only on website publication. The
-website editor canvas renders the unpublished website (React + that package), not
-through Astro. That canvas is not a website preview. The frontend holds one projection; it does
-not accumulate draft documents in memory.
+The contractor website application (`apps/contractor-website`) does **no per-edit work**. Live
+GET reads prebuilt HTML in R2 `latest/` ([cloudflare.md](cloudflare.md)). Website preview calls
+`GET /api/v1/public/site/resolve`. Editing only mutates unpublished website records; the live
+website changes only on website publication. The website editor canvas renders the unpublished
+website (React + that package), not through Astro. That canvas is not a website preview. The
+frontend holds one projection; it does not accumulate unpublished documents in memory.
