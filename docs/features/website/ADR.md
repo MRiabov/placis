@@ -79,12 +79,14 @@ Status: decided (2026-08-16, product owner + engineering).
     website visitors see. (2026-08-20)
 
 15. **The contractor website is `apps/contractor-website`** — never the predecessor package
-    name. The predecessor renderer is in this repo. Remaining live-site work is R2 `latest/`,
-    website publication HTML, Custom Hostnames, and Connect website address — not a second
-    import. Website publication is not a Cloudflare deploy. Live HTML is R2 `latest/` behind one
-    Worker; website preview is the only per-request render. Custom website address uses Custom
-    Hostnames, not Pages. See [cloudflare.md](cloudflare.md) and ADR 18–20.
-    (2026-08-20; edge locked 2026-08-21; imported 2026-08-23)
+    name. The website component package is keep-and-cut; the Worker is write-thin against
+    this serve path (live GET never calls Go). Remaining live-site work is R2 `latest/`,
+    website publication HTML, Custom Hostnames, and Connect website address. Website
+    publication is not a Cloudflare deploy. Website preview is the only per-request render.
+    Custom website address uses Custom Hostnames, not Pages. See
+    [cloudflare.md](cloudflare.md), [contractor-website-debloat.md](contractor-website-debloat.md),
+    and ADR 18–20.
+    (2026-08-20; edge locked 2026-08-21; imported 2026-08-23; Worker write-thin 2026-08-23)
 
 16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
     Global `website_certification_definitions`; tenant selections. Reviews stay
