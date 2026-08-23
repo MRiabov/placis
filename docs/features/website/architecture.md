@@ -44,7 +44,7 @@ needs. Applying the website template writes those onto the business profile:
    website forms, SEO.
 
 The result is an unpublished website, never a live website. Website copy generation is onboarding
-[05](../onboarding/pipeline/05-website-copy-generation.md) — async, same tools, not this editor.
+[06](../onboarding/pipeline/06-website-copy-generation.md) — async, same tools, not this editor.
 
 **Where website templates come from**: mostly by taking inspiration from existing websites —
 decomposing them into patterns (website page structure + website section composition), then

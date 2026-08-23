@@ -11,6 +11,6 @@ Cross-cutting architecture that doesn't belong to one feature.
 - [frontend.md](frontend.md) — `frontend-2` loading placeholders and other UI rules that no
   single feature owns
 
-Payments live with [website activation](../features/onboarding/pipeline/07-website-activation.md). Website leads live in
+Payments live with [website activation](../features/onboarding/pipeline/08-website-activation.md). Website leads live in
 [features/other/leads](../features/other/leads/README.md). Website preview progress events:
-[06-website-preview.md](../features/onboarding/pipeline/06-website-preview.md).
+[07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md).

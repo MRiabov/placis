@@ -8,11 +8,11 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
 1. **Find** — country, registry and/or Google Maps, online research consent, Confirm.
    - UI: `/onboarding/find` → Review.
    - DB: `tenants` (`status=unactivated`); `onboarding_sessions` (`status=client_interviewing`, token,
-     `online_research_consent_at`, `tenant_id` set); `business_profiles.tenant_id` matches the session.
+     `online_research_consent_at`, `tenant_id` set); `business_profiles.tenant_id` matches the onboarding session.
 
 2. **Review** — found vs missing; Continue to client interview.
    - UI: `/onboarding/review`.
-   - DB: checklist rows from 01a/02a (`filled_by_research` appearing as business research fakes complete).
+   - DB: checklist rows from 01/02 (`filled_by_research` appearing as business research fakes complete).
 
 3. **Client interview** — fill the gaps (text path in this E2E so it does not depend on a live voice
    service); submit. Reload mid-interview: lands on `/onboarding/interview` with autosaved answers,
@@ -29,9 +29,9 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
      onboarding session `previewing`. Copy-generation job may still be running.
    - UI: website preview renders the current unpublished website.
 
-6. **Website copy generation** (faked LLM tools, overlapping 5–7) — website slots/SEO update; tokens preserved.
+6. **Website copy generation** (faked LLM tools, overlapping DAG 06–08) — website slots/SEO update; tokens preserved.
    - DB: `ai_generations` for the tool batches; no `create_page`; no `website_publications`.
-   - Failure: unpublished website from 04 still has a website preview and can be activated.
+   - Failure: unpublished website from 05 still has a website preview and can be activated.
 
 7. **Website activation** — pay on the website preview (Clerk testing token + Stripe test webhook).
    - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as confirm, now `tenants.status=active`,

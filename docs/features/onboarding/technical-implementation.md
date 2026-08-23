@@ -24,26 +24,30 @@ block website preview or website activation.
 - profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/details`)
 - client interview (autosave + submissions)
 - business research runs (list/get), apply-the-website-template runs (list/get/cancel)
-- website publications (list/get/apply/approve/reject/profile history/website rollback)
-- website previews (under onboarding — see the website activation note)
+- website previews (under onboarding — see website activation)
+- website publication / website rollback: owned by the [website feature](../website/technical-implementation.md), not this API surface
 
 ## Business research pipeline
 
-1. Look up `business_research_fetches` (kind + cache key) and `google_maps_listings` (`place_id`)
+1. Before enqueue: count `business_research_waves` for this `tenant_id` in the last 30 minutes.
+   Five already → do not enqueue; expose `research_wait_until` (oldest of those five + 30 minutes)
+   on profile and SSE; a later source-change returns `429` with that timestamp. River retries of
+   an existing `business_research_run` do not insert a wave. See [02](pipeline/02-business-research.md).
+2. Look up `business_research_fetches` (kind + cache key) and `google_maps_listings` (`place_id`)
    before any external call. Hit → reuse `raw`; skip Google Maps Details, scrape, Facebook, crawl,
    and Parallel.
-2. On a miss: Google Maps, OpenRouter Parallel search (only when we lack `place_id` or a known
+3. On a miss: Google Maps, OpenRouter Parallel search (only when we lack `place_id` or a known
    website URL), the company registry parquet, Facebook, the LLM extract, or a fake returns a raw
    fetch body.
    Persist the fetch. OpenRouter is the gateway: Parallel via `openrouter:web_search` for the
    search hop; a separate extract call over retrieved text (no search tools).
-3. Upsert typed output: a `business_research_sources` row (kind, external id, where it came from,
+4. Upsert typed output: a `business_research_sources` row (kind, external id, where it came from,
    lookup `status`, confidence) for **this** onboarding session even on a cache hit. A Google Maps
    listing also upserts `google_maps_listings` (columns + `raw` ETL cache), hours, and reviews.
    Other kinds copy `raw` onto the source row from the fetch cache.
-4. Photo classification tags media assets (hero/project/service/founder/logo) for the media library
+5. Photo classification tags media assets (hero/project/service/founder/logo) for the media library
    / website slot mapping.
-5. Every run is safe to retry (explicit key). Do not refetch on retry when the cache already has
+6. Every run is safe to retry (explicit key). Do not refetch on retry when the cache already has
    the body.
 
 ## Profile building
@@ -58,7 +62,8 @@ block website preview or website activation.
 ## Validation & testing
 
 - Tenant isolation for onboarding sessions, business research, and profile rows.
-- Fakes force deterministic tests; CI never spends Google / LLM / Stripe quota (see `ci-cd.md`).
+- Fakes force deterministic tests; CI never spends Google / LLM / Stripe quota (see
+  [ci-cd.md](../../ci-cd.md)).
 - One E2E: find → review → client interview → apply the website template → website preview →
   website activation (Google / LLM / Stripe faked, core logic unmocked). The website preview can
   be activated before website copy generation finishes.

@@ -82,8 +82,8 @@ find the business (company registry and/or Google Maps) + online research consen
 ## Online research consent
 
 A simple ask before we do business research — one acknowledgement that we'll look the business up
-and use the public information to build their profile. It's part of those questions, not a
-separate flow.
+and use the public information to build their profile. It is a checkbox on find, required before
+Confirm, not a client interview question.
 
 ## User stories
 
@@ -97,7 +97,8 @@ separate flow.
      from.
 3. **As a contractor**, I want research conflicts between what I said and what was found to be
    shown to me, so I decide which is right.
-   - Differences appear during review; I confirm or edit before anything is generated.
+   - Differences appear as research conflicts; I confirm or edit during the client interview
+     before applying the website template.
 4. **As a contractor**, I want the profile to keep profile history, so we can see how it changed
    and where each detail came from.
    - Each change is kept, so nothing is lost.
