@@ -98,7 +98,7 @@ adapted only where the huma-derived OpenAPI improves the contract.
 - `src/generated/api-types.ts` — regenerated from the served `/openapi.json` via
   `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` helper + Clerk token.
 - `src/features/onboarding/` — onboarding (sources, client interview, business research progress, website preview).
-- `src/features/cms/` — the website + ads parts of the CMS (website editor, media library, inspector, ads workspace).
+- `src/features/cms/` — the website + ads parts of the CMS (website editor, media library, editing panel, ads workspace).
 - `src/features/preview/` — the onboarding website preview (and the website preview shown by the contractor website app).
 
 frontend-2 keeps its own feature-local structure and is not folded into `internal/`; the file-size
