@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Variable.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-VariableItalic.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --site-font: "Satoshi", "Helvetica Neue", Arial, sans-serif;
+  --background: #ffffff;
+  --foreground: #27272a;
+  --card: #ffffff;
+  --primary: #13120a;
+  --primary-foreground: #ffffff;
+  --border: #e4e4e7;
+  --page-bg: var(--background);
+  --hairline: var(--border);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #181818;
+    --foreground: #e4e4e4;
+    --card: #181818;
+    --primary: #13120a;
+    --primary-foreground: #ffffff;
+    --border: rgba(228, 228, 228, 0.07);
+  }
+}
+
+.marketing-heading-flat {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    background-color: var(--page-bg);
+    color-scheme: light dark;
+    font-family: var(--site-font);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    color: var(--foreground);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    min-height: 100dvh;
+    background-color: var(--page-bg);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+::selection {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  ::selection {
+    background-color: #ffffff;
+    color: #000000;
+  }
+}
+
+.page-canvas {
+  background-color: var(--page-bg);
+  color: var(--foreground);
+  font-family: var(--site-font);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.heading-flip {
+  display: inline-block;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+@keyframes heading-flip-in {
+  0% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(0.18em);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.heading-flip__face {
+  display: inline-block;
+  animation: heading-flip-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heading-flip__face {
+    animation: none;
+  }
+}
+
+@keyframes prompt-empty-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.prompt-empty-nudge {
+  animation: prompt-empty-nudge 420ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prompt-empty-nudge {
+    animation: none;
+  }
+}
