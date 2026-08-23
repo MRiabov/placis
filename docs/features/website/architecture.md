@@ -26,8 +26,8 @@ controls** — small enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`s
 allowed values. The contract is one typed struct dumped to JSON under `catalog/` — the website
 editor and the renderer read the same structs. Only registered website components render.
 
-The first-pass website template catalog and website component catalog are imported from the
-predecessor, not a short list written here.
+The first-pass website template catalog and website component catalog live in
+`packages/website-components` (from the predecessor), not a short list written here.
 
 ## Apply the website template
 

@@ -68,5 +68,4 @@ files + one E2E per epic (docs-only PRs excepted).
 
 ## Out of scope
 
-Contractor-website import, voice WebSocket, ad posting, blog, careers, renaming Sites,
-rebuilding the design system.
+Voice WebSocket, ad posting, blog, careers, renaming Sites, rebuilding the design system.
