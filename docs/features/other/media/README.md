@@ -22,9 +22,11 @@ website styles, top menu and footer). Not the editing panel (right).
 - Drop image files onto that panel to upload into the media library. A file picker does the
   same. Ads’ “drop a photo anywhere” pattern is the same upload flow.
 - Drag a media library item onto an image on the canvas to attach it to that website slot
-  (discrete PATCH, not debounced typing).
+  (discrete PATCH, not text click-off).
 - Drop an image file onto the canvas: upload into the media library, then attach if the drop
   is over an image website slot; otherwise the new item stays in the media library.
+- An in-flight upload is covered by the website editor leave guard
+  ([editing.md](../../website/editing.md)).
 
 Screens: [website frontend](../../website/frontend.md).
 

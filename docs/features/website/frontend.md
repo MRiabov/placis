@@ -20,9 +20,11 @@ live website uses.
 The frontend holds **one** website editor projection in React. Edits mutate that working copy
 first; the canvas paints it. PATCH copies the change to the backend; it does not round-trip the
 projection to re-render ([editing.md](editing.md)). Text copies out on click-off, not while
-typing. It does not accumulate unpublished documents in memory. There is no unpublished revision
-stack. There is **no Save** in the website editor toolbar. The predecessor `EditorHeader` Save
-control is dropped. A Saving / Saved status is allowed.
+typing. A 500ms safety timer coalesces sends so `429` is rare. If a copy-out or upload is in
+flight, leaving is blocked until it finishes or the owner confirms discard. It does not
+accumulate unpublished documents in memory. There is no unpublished revision stack. There is
+**no Save** in the website editor toolbar. The predecessor `EditorHeader` Save control is
+dropped. A Saving / Saved status is allowed.
 
 ## Routes
 
