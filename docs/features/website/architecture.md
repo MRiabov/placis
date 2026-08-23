@@ -65,9 +65,10 @@ The website editor is one workspace with three surfaces:
 Edits upsert unpublished website rows in place. Typing is debounced before PATCH; the API
 rate-limits website-editor writes (`429` + backoff). See [editing.md](editing.md). Website
 assistant edits arrive as proposals (a diff), never a direct write. Website publication writes a
-website version. The **Details** view
-(the business profile), **Projects**, **Certifications and reviews**, and **Media library** are
-their own parts, not website page content. The full edit → backend → re-render loop is in
+website version. **Details** (the business profile), **Projects**, **Certifications and
+reviews**, and the **media library** are website page content (placeholders, project galleries,
+reviews, photos). They are separate entities, edited on their own screens — not as website slots
+in the website editor. The full edit → backend → re-render loop is in
 [editing.md](editing.md). Screens: [frontend.md](frontend.md).
 
 ## Website assistant
