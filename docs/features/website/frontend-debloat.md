@@ -9,6 +9,7 @@ Status: planning (port instructions, not shipped UI).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 Projects and certifications screens: [details frontend](../other/details/frontend.md).
 Media library: [media library](../other/media/frontend-debloat.md).
+Contractor website (Astro): [contractor-website-debloat.md](contractor-website-debloat.md).
 
 ## Code today
 
