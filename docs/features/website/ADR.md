@@ -51,17 +51,7 @@ Status: decided (2026-08-16, product owner + engineering).
 12. **No unpublished revision stack** — edits upsert unpublished rows. Revert restores the last
     website assistant batch from recorded before/after. Website versions are
     `website_publications` only. Do not bring back predecessor per-page version snapshots.
-    Text PATCH on click-off (leave the field), not while typing. Discrete actions queue a
-    PATCH immediately. The frontend safety timer paces sends (one in flight, 500ms min gap,
-    coalesce) so `429` is a backstop, not the normal path. Do not audit every website slot
-    edit. There is no Save action in the website editor; edits persist on click-off. The
-    in-memory website editor projection is the working copy; PATCH copies out. Do not replace
-    it from the PATCH response. The PATCH body is dirty keys only, typically under 10 KB; reject
-    over 64 KB. Never send the whole unpublished website or file bytes. Leaving while a
-    copy-out or upload is in flight uses a discard confirm (`beforeunload` + in-app). Explicit
-    actions remain website publication, Connect website address, and apply website styles.
-    (2026-08-20; write budget 2026-08-23; no Save 2026-08-23; local-first PATCH 2026-08-23;
-    click-off 2026-08-23; send timer + leave guard 2026-08-23; PATCH delta 64 KB 2026-08-23)
+    (2026-08-20)
 
 13. **Website styles live on `website_settings`** — one row per tenant, copied into the website
     manifest at website publication. Not per website page. (2026-08-20)
@@ -71,11 +61,10 @@ Status: decided (2026-08-16, product owner + engineering).
     website visitors see. (2026-08-20)
 
 15. **Import the contractor website as `apps/contractor-website`** — never the predecessor package
-    name. That import is the **first implementation step** for the live contractor website.
-    Website publication is not a Cloudflare deploy. Live HTML is R2 `latest/` behind one
+    name. Website publication is not a Cloudflare deploy. Live HTML is R2 `latest/` behind one
     Worker; website preview is the only per-request render. Custom website address uses Custom
     Hostnames, not Pages. See [cloudflare.md](cloudflare.md) and ADR 18–20.
-    (2026-08-20; edge locked 2026-08-21; import-first 2026-08-23)
+    (2026-08-20; edge locked 2026-08-21)
 
 16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
     Global `website_certification_definitions`; tenant selections. Reviews stay
@@ -90,21 +79,13 @@ Status: decided (2026-08-16, product owner + engineering).
     render from Postgres. `GET /api/v1/public/site/resolve` is website preview (and tests) only.
     (2026-08-21)
 
-19. **R2 tree is keyed by the website address** — `tenants.website_address`, fixed at
+19. **R2 tree is keyed by the internal website address** — `tenants.website_address`, fixed at
     website activation. Custom website address maps `sites/hosts/{hostname}` → that label.
-    Owner-facing default live host is `{website_address}.preview.placis.com` (wildcard on our
-    zone). Do not advertise `{website_address}.placis.com`. One `latest/` tree; publication
-    destinations share it (no Placis-host version vs custom-host version).
-    (2026-08-21; `.preview.placis.com` 2026-08-23)
+    `{website_address}.placis.com` is not owner-facing.
+    (2026-08-21)
 
 20. **Custom website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS **Connect website
-    address** is a modal over the website editor, opened from **New URL** in the website publication
-    dropdown. Shows records to paste. Do not take over the contractor’s nameservers. Apex `A`
+    address** shows records to paste. Do not take over the contractor’s nameservers. Apex `A`
     records need Apex Proxying (later, Enterprise).
-    (2026-08-21; Connect modal 2026-08-23)
-
-21. **Website publication is a destination dropdown** — `{website_address}.preview.placis.com`,
-    each connected custom website address, or New URL (Connect website address). Not a Worker
-    deploy. See [frontend.md](frontend.md).
-    (2026-08-23)
+    (2026-08-21)

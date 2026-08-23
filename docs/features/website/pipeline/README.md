@@ -9,7 +9,7 @@ onboarding:
 ```text
 01. apply the website template (onboarding 04) → unpublished website pages / website sections / website slots
 02. website copy generation (onboarding 05) → copy in unpublished website slots
-03. owner edits (canvas / workspace / editing panel)
+03. owner edits (canvas / workspace / inspector)
 04. validate (website component contracts)
 05. website publication → website.v1 website manifest → website publication row → R2 HTML
 06. live GET (Cache then R2 latest/)

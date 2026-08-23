@@ -54,7 +54,7 @@ edit tools).
 
 - **Activity cards** are generated from execution events (`Edited 2 website sections`, `Created 1
   website page`, `Updated SEO`, `Changed colors`, `Failed to apply`); expanding one shows the
-  affected targets and a before/after, and selecting it focuses the canvas/editing panel.
+  affected targets and a before/after, and selecting it focuses the canvas/inspector.
 - **Revert** — revert the last website assistant batch by restoring the recorded before-values
   (`ai_generations.applied_changes` / execution events). It refuses if a manual edit came after.
   There is no unpublished revision stack and no per-page version table.
