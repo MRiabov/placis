@@ -244,7 +244,8 @@ used to start onboarding and pre-fill legal details. Never say bare “registry 
 ### Media library
 
 The photo library: the contractor’s work, logos, and documents. Never say bare “media” for this
-library.
+library. Full screen at `/cms/media`. In the website editor it is a selectable **workspace
+item** (same library). Drop files onto that workspace item to upload.
 
 Internal: Media asset, File. Do not say bare “asset” in product docs.
 
@@ -357,7 +358,9 @@ In code: `website_activations`.
 A stage in our sales process where they choose to buy the website or not. Never say bare
 “preview”. Do not use this word for the website editor canvas or for ad format mocks.
 
-Distinct from: Unpublished website, Website activation, Website preview link.
+Distinct from: Unpublished website, Website activation, Website preview link, the
+`{website_address}.preview.placis.com` host (that is the website address after website
+publication, not this sales stage).
 
 In code: `website_previews`, `internal/onboarding/websitepreview/`.
 
@@ -466,9 +469,21 @@ Distinct from: Ad lead form (suggested Meta fields on an ad).
 
 #### Website editor
 
-The website editing screen: website pages, canvas, top menu, footer, and website styles. Details,
-Projects, Media library, and Ads are their own screens beside it, not website page content.
-Never say bare “editor” in PRDs or UI.
+The website editing screen: website pages, canvas, editing panel, top menu, footer, and website
+styles. Details, Projects, Certifications and reviews, and the media library are website page
+content; they are separate entities edited on their own screens, not as website slots here. Ads
+are their own screens and are not website page content. Never say bare “editor” in PRDs or UI.
+
+---
+
+#### Editing panel
+
+The right-hand column of the website editor. The owner edits the selected website section
+(website slots, design) and website-page SEO, website forms, and website versions. Never say
+inspector.
+
+Distinct from: Canvas (the website page), Workspace (website pages / media library / website
+styles / top menu and footer).
 
 ---
 
@@ -971,6 +986,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | caption (media) | media caption |
 | media (media) | media library |
 | editor (website) | website editor |
+| inspector | editing panel |
 | publish (website) / go live (website) / website publish (website) | website publication |
 | registry record | company registry record |
 | placeholder (website) | website placeholder |

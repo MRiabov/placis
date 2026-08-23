@@ -57,15 +57,23 @@ scratch. Trade does not pick the website template 1:1.
 The website editor is one workspace with three surfaces:
 
 - **Canvas** — renders the selected website page live from its website sections.
-- **Workspace** — Website pages / Media library / Website styles / Top menu and footer: what is on
-  the site.
-- **Inspector** — edits the selected website section: its props, its website slots, its design.
+- **Workspace** — left column. Selectable **workspace items** (website pages, media library,
+  website styles, top menu, footer). Drop files onto the media library item to upload
+  ([media library](../other/media/README.md)).
+- **Editing panel** — edits the selected website section (website slots, design) and website-page
+  SEO, website forms, and website versions.
 
-Edits upsert unpublished website rows in place. Website assistant edits arrive as proposals
-(a diff), never a direct write. Website publication writes a website version. The **Details** view
-(the business profile), **Projects**, **Certifications and reviews**, and **Media library** are
-their own parts, not website page content. The full edit → backend → re-render loop is in
-[editing.md](editing.md). Screens: [frontend.md](frontend.md).
+Edits mutate the in-memory website editor projection first, then PATCH copies them to unpublished
+rows. There is no Save action; do not re-render from the PATCH response. Text copies out on
+click-off, not while typing; the frontend safety timer paces sends (500ms, coalesce of dirty
+keys, typically under 10 KB) so `429` stays a backstop. PATCH is not the whole unpublished
+website; reject over 64 KB. Leaving while a copy-out is in flight confirms discard. See
+[editing.md](editing.md). Website
+assistant edits arrive as proposals (a diff), never a direct write. Website publication writes a
+website version. **Details** (the business profile), **Projects**, **Certifications and
+reviews**, and the **media library** are website page content (placeholders, project galleries,
+reviews, photos). They are separate entities, edited on their own screens — not as website slots
+in the website editor. The edit loop is in [editing.md](editing.md). Screens: [frontend.md](frontend.md).
 
 ## Website assistant
 
@@ -87,14 +95,16 @@ Edits to Details, Projects, certifications and reviews, website styles, or the u
 website do not change the live website until the next website publication.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website application serves
-every tenant. Host routing uses `website_addresses` reserved at website activation. Serve path,
-R2 keys, cache purge, custom website address, and local Worker:
-[cloudflare.md](cloudflare.md). Import of `apps/contractor-website` is later.
+every tenant. The website publication control is a destination dropdown
+(`{website_address}.preview.placis.com`, a connected custom website address, or New URL). Host
+routing uses `website_addresses` reserved at website activation. Serve path, R2 keys, cache
+purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md). **First
+implementation step:** import `apps/contractor-website`.
 
 ## Contractor website (separate Astro app)
 
 Live websites and website previews are served by a **separate Astro + React app**
-(`apps/contractor-website`, not yet imported), not the website editor.
+(`apps/contractor-website`; import it first when implementation starts), not the website editor.
 
 At **website publication**, that app renders each live website page from the active
 `website_manifest` (`website.v1`) and writes HTML to R2 `latest/`. A live GET is Cache then R2.

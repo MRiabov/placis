@@ -56,8 +56,8 @@ the tables it writes.
   projects, website publications, website settings, certifications, website forms, top menu, footer.
 - `/api/v1/website/publications/...` — website publication and website rollback (if not under editor).
 - `/api/v1/public/site/...` — website preview resolve, meta, sitemap, media assets (the public
-  read model). Host lookup uses [website_addresses](../other/auth/data-model.md). Live GET does
-  not call resolve; it reads R2. Connect-website-address APIs live under the CMS editor surface.
+  read model). Host lookup uses [website_addresses](data-model.md). Live GET does
+  not call resolve; it reads R2. Connect-website-address APIs live under the website editor.
 
 Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
 
@@ -78,3 +78,11 @@ Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
 
 See [frontend.md](frontend.md). `frontend-2/src/features/cms/**` is the existing website editor.
 It consumes the regenerated types; `/website/editor/*` routes map to the Go side.
+
+## Implementation order (live contractor website)
+
+1. Import `apps/contractor-website` (first).
+2. R2 `latest/` serve + Cache.
+3. Website publication render into R2 + purge.
+4. Custom Hostnames + Connect website address in the CMS.
+5. Website preview SSR on the same app.
