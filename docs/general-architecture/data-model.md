@@ -1,6 +1,7 @@
 # Data model conventions
 
-Every tenant-owned row carries `tenant_id`; all primary queries include it. Cross-tenant isolation
+Every tenant-owned row carries `tenant_id`; all primary queries include it. That is true from
+onboarding confirm (the tenant may still be `unactivated`). Cross-tenant isolation
 is proven by integration tests (two tenants, assert reads/writes/files are blocked).
 
 Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic dumps: website component

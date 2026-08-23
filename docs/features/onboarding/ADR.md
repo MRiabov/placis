@@ -112,3 +112,12 @@ decision + date) instead of silently replacing the old entry.
     superseded (apply the website template again) or activated. 410 only for unknown, superseded,
     or already-activated tokens. Drop `expires_at` / status `expired`. (2026-08-23. Earlier: HMAC
     default 14 days, then 410 and activation refused.)
+
+16. **Unactivated tenant at confirm; activation upgrades** — confirm (01a) inserts a `tenants` row
+    with `status=unactivated`, `clerk_org_id` null, `website_address` null, and sets that
+    `tenant_id` on the onboarding session and the business profile. Website activation (07)
+    **upgrades** the same row (Clerk org, owner membership, reserved website address,
+    `status=active`). It does not insert a second tenant and does not first-write child
+    `tenant_id`s. `/me` returns a tenant only when `status=active`; unactivated work is reached
+    via the onboarding session token. Clerk organization 1-1 holds for active tenants only.
+    (2026-08-23)
