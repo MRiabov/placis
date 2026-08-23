@@ -12,7 +12,7 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
 - [frontend.md](frontend.md) — `/cms/website` (publication dropdown + Connect modal), `/cms/projects`, `/cms/certifications-and-reviews`
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
-- [contractor-website-debloat.md](contractor-website-debloat.md) — Astro Worker + website component package
+- [contractor-website-debloat.md](contractor-website-debloat.md) — keep the website component catalog; write a thin Worker
 - [variables.md](variables.md) — the `{{var}}` website placeholders and how they resolve
 - [assistant.md](assistant.md) — the website assistant: tools, plan vs continuous, instant apply vs Ask first
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density, motion

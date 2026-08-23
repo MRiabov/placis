@@ -4,10 +4,14 @@ How the live contractor website is stored, attached to a custom website address,
 This document locks the serve path so the import does not invent a second HTML engine or a
 per-contractor Cloudflare deploy.
 
-**First implementation step:** import the predecessor contractor website app as
-`apps/contractor-website` (rename away from its old directory name). Then wire R2 `latest/`,
+**First implementation step:** import the predecessor website component package and a
+contractor-website Worker directory as `apps/contractor-website` (rename away from the old
+directory name). The package is the first-pass website component catalog (keep and cut).
+The Worker is write-thin against this serve path — do not keep the live route that calls
+Go on an R2 miss.
+See [contractor-website-debloat.md](contractor-website-debloat.md). Then wire R2 `latest/`,
 website publication render, Custom Hostnames, and Connect website address. Do not start those
-slices without the app in this repo.
+slices without the package in this repo.
 
 Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 [website_addresses](data-model.md), [frontend.md](frontend.md),

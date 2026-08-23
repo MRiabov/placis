@@ -2,9 +2,19 @@
 
 Status: planning (port instructions, not shipped UI).
 
-The Astro Worker is **small**. The predecessor quality problem is mostly leftover names,
-unconstrained JSON, a duplicated island script, and the **website component package**
-(blog, careers, `JsonObject` props). Import it, then cut — do not rewrite.
+This is **not** the `frontend-2` call. Split the tree:
+
+- **Website component package — keep and cut.** ~50 React website components, themes,
+  and ~10k lines of CSS. That is the first-pass website component catalog. Do not rebuild the visuals.
+- **Astro Worker — write thin.** ~4k lines in `src/`, of which ~3k is a duplicated
+  island script plus a local website-template browser. The remaining ~1k still has the wrong
+  live path (Go `resolve` on R2 miss). Pruning leftover names through that Worker is
+  slower than a small Worker that matches [cloudflare.md](cloudflare.md) and imports
+  the same package.
+
+Do not rewrite the registry JSX/CSS from scratch. Do not import-then-prune the Worker
+as if it were a large CMS. Glue (`JsonObject` props, `asRecord` / `text()` helpers)
+retargets onto `catalog/` structs; that is plumbing, not a visual rewrite.
 
 ## Target
 
@@ -50,20 +60,28 @@ names.
 
 ## Keep
 
-- One Worker for every tenant. Astro document + React islands. No per-tenant
-  build. Bundle-boundary: this app must not import `frontend-2`.
-- Live serve: Cache then R2 `latest/` (`middleware.ts` path). Go never emits HTML.
-- Website preview: `/preview/{token}/` renders unpublished rows via
-  `GET /api/v1/public/site/resolve` or the preview module route — **this** is the
-  per-request render.
+**Package (do not rewrite):**
+
 - Registry families in first pass: top menu, hero, services, gallery, content,
   contact, website forms (`form.lead` and similar), footer, FAQ, process, CTA,
   privacy, service area. Projects and certifications paint from the slim
   `website.v1` lists ([manifest.md](manifest.md)).
-- Website form POST to `/api/v1/public/forms/{id}/submit` (and uploads).
-- Islands for top menu / carousel **once** (delete the duplicate).
+- Themes / website style catalog CSS under `src/themes/` and `src/styles/`
+  (drop blog/careers CSS with those components).
 - Website component contracts as typed structs in `catalog/` (Go + TS consume
   the same JSON). Do not keep a second freeform `props` bag as the contract.
+
+**Worker (locked behavior; implement thin, reuse `middleware.ts`
+patterns where they already do Cache then R2):**
+
+- One Worker for every tenant. Astro document + React islands. No per-tenant
+  build. Bundle-boundary: this app must not import `frontend-2`.
+- Live serve: Cache then R2 `latest/`. Go never emits HTML. R2 miss is 404.
+- Website preview: `/preview/{token}/` renders unpublished rows via
+  `GET /api/v1/public/site/resolve` or the preview module route — **this** is the
+  per-request render.
+- Website form POST to `/api/v1/public/forms/{id}/submit` (and uploads).
+- Islands for top menu / carousel **once**.
 
 ## Delete
 
@@ -140,5 +158,8 @@ names.
 - Manifest and website-slot props are catalog-typed, not `JsonObject`.
 - Don't say public site, shell, blueprint, proof, claim, or runtime in this app
   Don't say public site: and the package.
-- Import PR can land thin; remaining cuts can follow in the same feature's later
-  PRs, driven by this file.
+- Package import can land with blog/careers still present if the next PR in the
+  same feature deletes them immediately; do not land a Worker that still calls
+  Go on a live miss.
+- A thin Worker that imports the package is the intended shape. Copying the
+  predecessor `pages/[...path].astro` live path is not.
