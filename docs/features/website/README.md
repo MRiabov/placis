@@ -10,7 +10,7 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [data-model.md](data-model.md) — website pages, website sections, website slots, website forms, top menu, footer, website publications, website settings
 - [manifest.md](manifest.md) — `website.v1` keep / keep-out
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
-- [frontend.md](frontend.md) — `/cms/website`, `/cms/projects`, `/cms/certifications-and-reviews`
+- [frontend.md](frontend.md) — `/cms/website` (publication dropdown + Connect modal), `/cms/projects`, `/cms/certifications-and-reviews`
 - [variables.md](variables.md) — the `{{var}}` website placeholders and how they resolve
 - [assistant.md](assistant.md) — the website assistant: tools, plan/continuous mode, undo
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density, motion
