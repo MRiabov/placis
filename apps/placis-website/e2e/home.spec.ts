@@ -13,7 +13,7 @@ test("home, contact, and support are the static Placis website", async ({
   );
   await expect(
     page.getByRole("textbox", { name: "Describe what you want Placis to build" }),
-  ).toBeVisible();
+  ).toHaveCSS("text-align", "left");
 
   await page.goto("/contact/");
   await expect(
