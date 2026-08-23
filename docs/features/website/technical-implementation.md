@@ -12,7 +12,7 @@ See [data-model.md](data-model.md). Media assets are
 
 ## Website template application
 
-Owned by onboarding [04](../onboarding/pipeline/04-apply-website-template.md). This feature owns
+Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). This feature owns
 the tables it writes.
 
 1. Load the selected website template + website component contracts from `catalog/` (imported
