@@ -78,3 +78,11 @@ Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
 
 See [frontend.md](frontend.md). `frontend-2/src/features/cms/**` is the existing website editor.
 It consumes the regenerated types; `/website/editor/*` routes map to the Go side.
+
+## Implementation order (live contractor website)
+
+1. Import `apps/contractor-website` (first).
+2. R2 `latest/` serve + Cache.
+3. Website publication render into R2 + purge.
+4. Custom Hostnames + Connect website address in the CMS.
+5. Website preview SSR on the same app.
