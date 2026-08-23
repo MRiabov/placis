@@ -62,7 +62,8 @@ deploy) end to end. The first real slice after it is **tenancy + auth** — ever
   types). Never "add the website feature" as one task.
 - **Don't write the whole OpenAPI up front.** `huma` derives it from the DTOs, so writing every DTO
   now is the speculative batch that caused the last collapse. Write each feature's DTOs as you
-  build that slice.
+  build that slice. Predecessor OpenAPI is not a compatibility surface for `frontend-2` or the
+  contractor website: do not wrap it, alias old paths, or generate types from it.
 - **Two type layers by default** (see `architecture.md`): sqlc rows + huma DTOs. A third "domain
   value" only for a composite of several rows — never a hand-written model mirroring a table.
 - **Name everything from the glossary.** Coining a new word is wrong; add it to the glossary first

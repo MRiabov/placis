@@ -7,6 +7,9 @@ feature’s `frontend.md`. Cut lists stay in that feature’s `frontend-debloat.
 Debloat, not rewrite. Stack stays Vite + React + TanStack Router/Query + `openapi-fetch`.
 The Go rewrite already changes the API, so the frontend switches to that smaller,
 field-constrained huma contract instead of wrapping the predecessor OpenAPI.
+Predecessor OpenAPI is not a compatibility surface: no old paths, operation ids,
+or unconstrained JSON. Contractor website API cutover:
+[port-placis-website.md](../features/website/port-placis-website.md).
 
 ## Instruction files
 
@@ -19,16 +22,39 @@ field-constrained huma contract instead of wrapping the predecessor OpenAPI.
 | [media library](../features/other/media/frontend-debloat.md) | Media library workspace item + `/cms/media` |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, one Clerk organization provision, `/me` |
 | [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
-| [contractor website](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
+| [contractor website port](../features/website/port-placis-website.md) | Worker API cutover: public resolve + `website.v1`; no predecessor OpenAPI |
+| [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
 
 No leads instruction file: website forms persist website leads; there is no CMS leads
 console.
 
 ## Shared contract rules
 
+- Go `/openapi.json` is the only typegen source for `frontend-2`. First
+  frontend-from-Go PR switches typegen; the generated file shrinks to routes Go
+  actually serves. Predecessor OpenAPI is human reference, not an input, not a
+  second schema to generate from.
+- Keep as Go DTOs in current glossary names (fields may change): `/me`, health,
+  onboarding session + profile + events stream (SSE outside huma), website editor
+  GET/PATCH, publication, Connect website address, website preview resolve,
+  website activation / checkout / status, media library, ads when that slice
+  exists. Contractor website public routes: website preview resolve, website
+  form submit (see [port-placis-website.md](../features/website/port-placis-website.md)).
+- Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
+  `/api/v1/tenants/{website_address}/website/…`, blog, careers,
+  website-template-apply leftovers, unconstrained JSON in UI-facing schemas,
+  predecessor names (`setup-sessions`, public-site, shell, blueprint, claim),
+  predecessor preview module path (`/api/v1/preview/{token}/module/website`)
+  and `PublicSite*` hand types. “Genuinely good” means the **behavior** is still
+  in the feature spec. Copy Python field lists only when that feature’s
+  `technical-implementation.md` already says so.
+- Unported `api/*.ts` and MSW stubs are deleted or retargeted in the **same
+  slice** that adds the Go routes. No shims, no `as any`, no mapping layer.
+  Screens with no Go route yet stay unwired, not typed against old paths.
 - Regenerate `frontend-2/src/generated/api-types.ts` from Go `/openapi.json`. Every DTO
   field is constrained (`minLength`/`maxLength`, `minimum`/`maximum`, enums). No
-  unconstrained JSON blobs in UI code.
+  unconstrained JSON blobs in UI code. The generated file must not reintroduce
+  predecessor-only paths.
 - CMS calls `/api/v1/website/editor/…` only. Do not call
   `/api/v1/tenants/{website_address}/website/…`.
 - Onboarding calls `/api/v1/onboarding-sessions…` and
@@ -53,7 +79,7 @@ Done = regenerated types for routes this feature calls + Don’t-say clean on to
 files + one E2E per epic (docs-only PRs excepted).
 
 1. **This docs set** (instruction files + pointers).
-2. **Contract scaffolding** — types from Go `/health` + `/me`; stop generating unused
+2. **Contract scaffolding** — switch typegen to Go `/health` + `/me`; stop generating unused
    predecessor paths. Cross-cutting file.
 3. **Onboarding** — rename the predecessor onboarding folder; drop voice; text
    client interview + SSE progress.
@@ -70,5 +96,6 @@ files + one E2E per epic (docs-only PRs excepted).
 ## Out of scope
 
 Voice WebSocket, ad posting, blog, careers, renaming Sites, rebuilding the website component
-visuals. Remaining contractor-website cuts (CSS split, typed website component catalog, Don’t-say):
+visuals. Contractor website API: [port-placis-website.md](../features/website/port-placis-website.md).
+Remaining cuts (CSS split, typed catalog, Don’t-say):
 [contractor-website-debloat.md](../features/website/contractor-website-debloat.md).
