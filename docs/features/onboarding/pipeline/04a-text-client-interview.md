@@ -1,0 +1,57 @@
+# 04a — Text client interview
+
+Text writer into the same fold as 04b. Not a root mode file. Channel is XOR with 04b.
+
+## Trigger
+
+Contractor is on `/onboarding/interview` with `onboarding_sessions.channel=text` (setting this
+unsets voice as the active writer). Autosave: `PUT .../text-interview/autosave`. Final:
+`POST .../text-interview/submissions` then `POST .../interview/complete`.
+
+## Pre
+
+- `status=client_interviewing`.
+- 03 may have been skipped.
+- Checklist and complete gate: [build-profile](build-profile.md).
+
+## Must not
+
+- Voice mint, realtime tools, transcript replay.
+- Parallel / research jobs / photo classification.
+- `POST` a new onboarding session on Resume.
+- Complete while required checklist rows are `empty` / `in_progress` / `conflict`.
+- Run a second complete after 04b (exactly one complete → 05).
+- Repeat legal-identity fields (shown on 03).
+
+## Do
+
+1. Set `channel=text`. Switching to 04b later is allowed; do not complete twice.
+2. Autosave writes `business_profile_edits` for the fields this save set, plus
+   `client_interview_submissions` `kind=autosave` (interview-only choices: photos, Maps listing,
+   reviews unavailable, extra notes).
+3. Fields: who they are (display name, trade); contact (contact name, marketing phone, marketing
+   email, existing site URL, `emergency_phone`); services and service area; opening hours; photos
+   choice (`use_found` / `source_from_google` / `upload_later` / `use_neutral`); accreditations /
+   review notes. Not legal identity.
+4. Final submission `kind=final`, then `POST .../interview/complete` iff the complete gate.
+5. Contractor may mark a required row `skipped` in this step, then complete.
+
+## Persist
+
+`client_interview_submissions`; `business_profile_edits` via build-profile;
+`onboarding_sessions.channel=text`. Complete → `accepted_edit_id=last_edit_id`, status
+`applying_website_template`, enqueue 05.
+
+## Fail
+
+Autosave fail keeps the token. Complete rejected if the gate fails; stay `client_interviewing`.
+
+## Out
+
+Gate pass → 05. 02 may still be running; later 02 writes are new edits after `accepted_edit_id`.
+
+## Invariants
+
+- Skip 03 does not relax the complete gate.
+- Same complete path as 04b.
+- Applying the website template never reads a transcript.

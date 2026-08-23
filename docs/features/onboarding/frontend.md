@@ -30,22 +30,28 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
 Found vs missing checklist (who they are, legal, contact, services, service area, certifications and
 reviews, photos). Business research may still be filling rows (SSE). **Continue**.
 
+When `research_wait_until` is in the future, a quiet inline wait on this screen (and on the
+client interview if they Continue): “We’ll look the business up again in a few minutes.” Not a
+modal, not a full-screen stop, Continue stays enabled. Same field on `GET .../profile` and SSE.
+
 ### 3. Client interview — `/onboarding/interview`
 
-First-pass surface is **text** (same fields as [02b](pipeline/02b-client-interview.md)).
-Submit completes the client interview and starts applying the website template. Voice is a
-**later milestone** (not in this port); see [frontend-debloat.md](frontend-debloat.md).
+Default surface is **voice** (mic → realtime agent). Text client interview is the other writer
+([04a](pipeline/04a-text-client-interview.md)). Voice is the default
+([04b](pipeline/04b-voice-client-interview.md)); `end_interview` completes the client interview,
+then 05 apply the website template and 07 website preview. Text submit completes the same way.
+Port: [frontend-debloat.md](frontend-debloat.md).
 
 ### 4. Website preview (progress) — `/onboarding/preview`
 
-Timeline from the onboarding session SSE (04 apply the website template, then 05 copy filling in). On-screen
+Timeline from the onboarding session SSE (05 apply the website template, then 06 copy filling in). On-screen
 website section renders while it runs. **View website** appears as soon as the website preview exists —
 do not wait for website copy generation to finish.
 
 ### 5. Website preview + website activation — `/preview/{token}/…`
 
-Rendered site (current unpublished website; copy appears as 05 writes website slots).
-**Website activation** starts Clerk if needed, then Stripe checkout (07). Copy still running
+Rendered site (current unpublished website; copy appears as 06 writes website slots).
+**Website activation** starts Clerk if needed, then Stripe checkout (08). Copy still running
 is not a blocker. Success → `/cms/website`.
 
 ## Resume

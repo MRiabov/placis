@@ -10,8 +10,8 @@ Conventions: [data-model conventions](../../../general-architecture/data-model.m
 A **detail** is a column (or a row in a list table). Their existing site URL is a detail; it is not
 **Website** and not **Placis website**.
 
-Contact split (TBD further): **marketing phone** and **marketing email** are on the website
-and in ads (where leads call / write). **Emergency phone number** is how we contact the owner (personal;
+Contact split: **marketing phone** and **marketing email** are on the website and in ads
+(where leads call / write). **`emergency_phone`** is how we contact the owner (unpublished;
 may be the same number). The owner’s sign-in email is Clerk’s, not a profile column.
 
 The live `business_profiles` row plus the list tables is the **fold** of profile history. Website,

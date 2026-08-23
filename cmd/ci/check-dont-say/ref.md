@@ -17,7 +17,7 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 - `docs/features/website/architecture.md`: “each page has sections” → **pass** (`page (website)`).
 - `docs/features/website/prd.md`: “each page has sections” → **fail**. PRDs are product-facing. Say **website page**.
 - `docs/features/website/frontend.md`: same as PRD → **fail**.
-- `docs/features/onboarding/pipeline/04-apply-website-template.md`: “create the page” → **fail**. Onboarding is not the website. Say **website page**.
+- `docs/features/onboarding/pipeline/05-apply-website-template.md`: “create the page” → **fail**. Onboarding is not the website. Say **website page**.
 - `docs/features/ads/ad-generation/technical-implementation.md`: “landing page” if it matches `\bpage\b` → **fail**. Say **website page**.
 - Same ads file: “website page” → **pass** (covering).
 - `docs/features/website/architecture.md`: “route `/preview/page`” → **pass** (home-scoped token inside a `/` path is skipped).
@@ -31,7 +31,7 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 
 ## Self-understood at home — onboarding `interview`
 
-- `docs/features/onboarding/pipeline/01a-find-business.md`: “after the interview” → **pass**.
+- `docs/features/onboarding/pipeline/01-find-business.md`: “after the interview” → **pass**.
 - `docs/features/website/editing.md`: “after the interview” → **fail**. Say **client interview**.
 - `docs/README.md`: “interview” → **fail**. Say **client interview**.
 
@@ -55,5 +55,5 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 
 The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`. Fixture headings stay **Setup** / Invoke / Assert.
 
-- `docs/features/onboarding/pipeline/testing/01a-find-business.md`: “**Setup**: …” → **pass**.
+- `docs/features/onboarding/pipeline/testing/01-find-business.md`: “**Setup**: …” → **pass**.
 - `docs/features/onboarding/technical-implementation.md`: “setup” → **fail**. Say **onboarding**.
