@@ -11,9 +11,11 @@ it update, then website publication.
    drag onto the canvas), reorder / add / remove a website section, change a design control, SEO,
    or the website style catalog preset.
 3. The frontend calls a schema-validated **patch API** (`/api/v1/website/editor/...`). The canvas
-   and editing panel update the in-memory website editor projection immediately. Typing is
-   **debounced** (same idea as onboarding Maps/registry search): coalesce keystrokes, then one
-   PATCH. Discrete actions (image swap, reorder, add/remove a website section) PATCH immediately.
+   and editing panel update the in-memory website editor projection immediately. There is **no
+   Save action**. Edits persist automatically. Typing is **debounced** (same idea as onboarding
+   Maps/registry search): coalesce keystrokes, then one PATCH. Discrete actions (image swap,
+   reorder, add/remove a website section) PATCH immediately. A non-clickable Saving / Saved status
+   is allowed; a Save button is not.
 4. The backend validates the change against the website component contract and **upserts** the
    unpublished website rows. The body is only the changed website slots / website sections — not
    the whole unpublished website. Over-chatty PATCH from one tenant is `429` with `Retry-After`;
@@ -35,6 +37,8 @@ chips in the website editor.
   (a published website copy) from the current unpublished website.
 
 Website publication is always a separate, explicit action. Do not write a per-page version table.
+The website editor has no Save; unpublished rows are written as the owner edits. Explicit
+actions that remain: website publication, Connect website address, and apply website styles.
 
 ## Models
 
