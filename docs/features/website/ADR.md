@@ -51,12 +51,14 @@ Status: decided (2026-08-16, product owner + engineering).
 12. **No unpublished revision stack** — edits upsert unpublished rows. Revert restores the last
     website assistant batch from recorded before/after. Website versions are
     `website_publications` only. Do not bring back predecessor per-page version snapshots.
-    Typing is debounced before PATCH; the API returns `429` if a tenant’s website-editor writes
-    are too chatty. Do not audit every website slot edit. There is no Save action in the
-    website editor; edits persist automatically. The in-memory website editor projection is the
-    working copy; PATCH copies out. Do not replace it from the PATCH response. Explicit actions
-    remain website publication, Connect website address, and apply website styles.
-    (2026-08-20; write budget 2026-08-23; no Save 2026-08-23; local-first PATCH 2026-08-23)
+    Text PATCH on click-off (leave the field), not while typing. Discrete actions PATCH
+    immediately. The API returns `429` if a tenant’s website-editor writes are too chatty. Do
+    not audit every website slot edit. There is no Save action in the website editor; edits
+    persist on click-off. The in-memory website editor projection is the working copy; PATCH
+    copies out. Do not replace it from the PATCH response. Explicit actions remain website
+    publication, Connect website address, and apply website styles.
+    (2026-08-20; write budget 2026-08-23; no Save 2026-08-23; local-first PATCH 2026-08-23;
+    click-off 2026-08-23)
 
 13. **Website styles live on `website_settings`** — one row per tenant, copied into the website
     manifest at website publication. Not per website page. (2026-08-20)

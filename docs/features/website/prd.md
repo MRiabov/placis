@@ -17,7 +17,7 @@ publication.
 1. Build an unpublished website from a **website template** + their business profile (their
    details fill in the blanks).
 2. Let the owner (or done-for-you) **edit** the site: website pages, copy, photos, website forms,
-   top menu, footer, and their projects. Edits persist automatically; there is no Save.
+   top menu, footer, and their projects. Text persists on click-off; there is no Save.
 3. **Improve** it with the website assistant — it suggests copy and images, but the owner decides.
 4. **Website publication** — put it on the internet, with website rollback if a publication is
    wrong.
@@ -59,7 +59,7 @@ the next website publication.
 1. **As a contractor**, I want a website built from my profile and trade, so I get a branded
    unpublished website without doing it myself.
 2. **As a contractor**, I want to edit text and swap photos in the website editor, so I can keep it
-   correct without code. Edits persist as I type; I do not click Save.
+   correct without code. Text persists when I click off the field; I do not click Save.
 3. **As a contractor**, I want the website assistant to improve the copy and suggest images, so I
    get better content faster.
 4. **As a contractor**, I want website publication and website rollback, so I'm never stuck with a

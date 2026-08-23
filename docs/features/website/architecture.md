@@ -64,8 +64,8 @@ The website editor is one workspace with three surfaces:
   SEO, website forms, and website versions.
 
 Edits mutate the in-memory website editor projection first, then PATCH copies them to unpublished
-rows. There is no Save action; do not re-render from the PATCH response. Typing is
-debounced before PATCH; the API rate-limits website-editor writes (`429` + backoff). See
+rows. There is no Save action; do not re-render from the PATCH response. Text copies out on
+click-off, not while typing; the API rate-limits website-editor writes (`429` + backoff). See
 [editing.md](editing.md). Website
 assistant edits arrive as proposals (a diff), never a direct write. Website publication writes a
 website version. **Details** (the business profile), **Projects**, **Certifications and
