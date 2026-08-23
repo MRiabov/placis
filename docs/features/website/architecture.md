@@ -65,8 +65,9 @@ The website editor is one workspace with three surfaces:
 
 Edits mutate the in-memory website editor projection first, then PATCH copies them to unpublished
 rows. There is no Save action; do not re-render from the PATCH response. Text copies out on
-click-off, not while typing; the frontend safety timer paces sends (500ms, coalesce) so `429` stays
-a backstop. Leaving while a copy-out is in flight confirms discard. See
+click-off, not while typing; the frontend safety timer paces sends (500ms, coalesce of dirty
+keys, typically under 10 KB) so `429` stays a backstop. PATCH is not the whole unpublished
+website; reject over 64 KB. Leaving while a copy-out is in flight confirms discard. See
 [editing.md](editing.md). Website
 assistant edits arrive as proposals (a diff), never a direct write. Website publication writes a
 website version. **Details** (the business profile), **Projects**, **Certifications and
