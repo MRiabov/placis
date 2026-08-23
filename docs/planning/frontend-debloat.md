@@ -19,7 +19,7 @@ field-constrained huma contract instead of wrapping the predecessor OpenAPI.
 | [media library](../features/other/media/frontend-debloat.md) | Media library workspace item + `/cms/media` |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, one Clerk organization provision, `/me` |
 | [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
-| [contractor website](../features/website/contractor-website-debloat.md) | Astro Worker + website component package (import slice) |
+| [contractor website](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
 
 No leads instruction file: website forms persist website leads; there is no CMS leads
 console.
@@ -69,6 +69,6 @@ files + one E2E per epic (docs-only PRs excepted).
 
 ## Out of scope
 
-Contractor-website **code import** (separate worktree), voice WebSocket, ad posting, blog, careers, renaming Sites,
-rebuilding the design system. Cut lists for that import:
+Contractor-website **code** (separate worktree), voice WebSocket, ad posting, blog, careers, renaming Sites,
+rebuilding the website component visuals. The Worker is write-thin; the package is keep-and-cut:
 [contractor-website-debloat.md](../features/website/contractor-website-debloat.md).
