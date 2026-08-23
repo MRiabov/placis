@@ -1,7 +1,9 @@
 # Frontend (`frontend-2`) — cross-cutting UI
 
 Conventions that apply to every screen in `frontend-2` (the CMS, onboarding, website preview).
-Feature screens stay in that feature’s `frontend.md`. Stack and packages:
+Feature screens stay in that feature’s `frontend.md`. Port instructions:
+[frontend-debloat.md](frontend-debloat.md) (index:
+[planning/frontend-debloat.md](../planning/frontend-debloat.md)). Stack and packages:
 [architecture.md](../architecture.md).
 
 ## Loading placeholders

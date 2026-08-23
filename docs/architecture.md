@@ -93,8 +93,9 @@ Rules:
 
 ## Frontend (`frontend-2`)
 
-`frontend-2` is **reused mostly** — the rewrite does not rebuild it. It is
-adapted only where the huma-derived OpenAPI improves the contract.
+`frontend-2` is **reused and debloated** — the rewrite does not rebuild it.
+Per-feature port instructions: [planning/frontend-debloat.md](planning/frontend-debloat.md).
+It is adapted to the huma-derived OpenAPI (regenerated `openapi-typescript` types).
 
 - `src/generated/api-types.ts` — regenerated from the served `/openapi.json` via
   `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` helper + Clerk token.

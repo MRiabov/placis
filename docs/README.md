@@ -17,7 +17,7 @@ themselves in the CMS.
 6. [Auth](features/other/auth/README.md) — Clerk, tenant == Clerk organization
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building; [website activation](features/onboarding/pipeline/07-website-activation.md) is pay-and-activate
 8. [Website](features/website/README.md) — website templates, applying them, editing, website publication
-9. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/00-index-research.md) (research, not the spec)
+9. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/) (investigation, not the spec)
 10. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
 11. [CI and delivery](ci-cd.md) — file-size guard, external API isolation, generated-code freshness
 12. [Testing](testing.md) — the per-feature E2E tests
@@ -37,11 +37,12 @@ themselves in the CMS.
 | Website activation / payments | [features/onboarding/pipeline/07-website-activation.md](features/onboarding/pipeline/07-website-activation.md) |
 | Website building + editing | [features/website/README.md](features/website/README.md) |
 | Ad generation | [features/ads/README.md](features/ads/README.md) |
-| Meta ad posting (research) | [features/ads/ad-application/meta/00-index-research.md](features/ads/ad-application/meta/00-index-research.md) |
+| Meta ad posting (investigation) | [features/ads/ad-application/meta](features/ads/ad-application/meta/) |
 | Leads | [features/other/leads/README.md](features/other/leads/README.md) |
 | CI and delivery | [ci-cd.md](ci-cd.md) |
 | Testing / per-feature E2E | [testing.md](testing.md) |
 | Exhaustive rewrite plan | [planning/go-backend-rewrite.md](planning/go-backend-rewrite.md) |
+| `frontend-2` port (debloat index) | [planning/frontend-debloat.md](planning/frontend-debloat.md) |
 
 ## Product boundary
 

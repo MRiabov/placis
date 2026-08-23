@@ -24,8 +24,10 @@ block website preview or website activation.
 - profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/details`)
 - client interview (autosave + submissions)
 - business research runs (list/get), apply-the-website-template runs (list/get/cancel)
-- website publications (list/get/apply/approve/reject/profile history/website rollback)
 - website previews (under onboarding — see the website activation note)
+
+Website publication and website rollback are the website editor, not this API
+([website technical implementation](../website/technical-implementation.md)).
 
 ## Business research pipeline
 
@@ -67,4 +69,5 @@ block website preview or website activation.
 
 - The existing onboarding surface in `frontend-2` (find-the-business,
   client interview, business research progress, website preview) is refactored against the regenerated types;
-  onboarding routes on the Go side use `/onboarding-*`.
+  onboarding routes on the Go side use `/onboarding-*`. Port instructions:
+  [frontend-debloat.md](frontend-debloat.md).

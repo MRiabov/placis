@@ -10,6 +10,8 @@ Cross-cutting architecture that doesn't belong to one feature.
 - [data-model.md](data-model.md) — conventions and index of per-feature schemas
 - [frontend.md](frontend.md) — `frontend-2` loading placeholders and other UI rules that no
   single feature owns
+- [frontend-debloat.md](frontend-debloat.md) — cross-cutting `frontend-2` port (generated types,
+  leftover layout names, parity e2e). Per-feature cut lists live with the feature.
 
 Payments live with [website activation](../features/onboarding/pipeline/07-website-activation.md). Website leads live in
 [features/other/leads](../features/other/leads/README.md). Website preview progress events:
