@@ -53,6 +53,22 @@ no single feature owns.
 - Voice-first onboarding (onboarding file).
 - Rebuilding the design system or adding shadcn sprawl.
 
+## Cutover
+
+Lockstep. First frontend-from-Go PR **switches** `frontend-2` typegen to Go
+`/openapi.json` only. Predecessor OpenAPI is not a typegen source and is not
+checked in as a second schema.
+
+Unported `api/*.ts` and MSW stubs are deleted or retargeted in the same slice
+that adds the Go routes. Screens with no Go route yet stay unwired, not typed
+against old paths. No shims, no `as any`, no mapping layer
+(`setup-sessions` → `onboarding-sessions`), no frozen `predecessor-api-types.ts`.
+
+Do not wait until Go has “enough” routes. The generated file must not
+reintroduce predecessor-only paths (CRM sandbox, tenant-scoped website CRUD,
+unconstrained blobs). Contractor website typegen is a different consumer:
+[port-placis-website.md](../features/website/port-placis-website.md).
+
 ## Retarget
 
 - Typegen: `openapi-typescript` from Go `/openapi.json` served by huma. CI

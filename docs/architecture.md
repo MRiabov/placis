@@ -101,6 +101,8 @@ Rules:
 `frontend-2` is **reused and debloated** — the rewrite does not rebuild it.
 Per-feature port instructions: [planning/frontend-debloat.md](planning/frontend-debloat.md).
 It is adapted to the huma-derived OpenAPI (regenerated `openapi-typescript` types).
+Go `/openapi.json` is the only typegen source; predecessor OpenAPI is not a
+compatibility surface.
 
 - `src/generated/api-types.ts` — regenerated from the served `/openapi.json` via
   `openapi-typescript`; `src/shared/api/` is the typed `openapi-fetch` helper + Clerk token.
@@ -128,6 +130,7 @@ Two backend processes share one database, and two frontend apps talk to the API:
    A single deploy serves all tenants (no per-tenant build). The website component
    package is keep-and-cut; the Worker is write-thin (live GET never calls Go). Remaining
    cuts: [contractor-website-debloat.md](features/website/contractor-website-debloat.md).
+   API cutover: [port-placis-website.md](features/website/port-placis-website.md).
    Locked serve path:
    [website Cloudflare](features/website/cloudflare.md).
 
