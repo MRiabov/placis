@@ -84,3 +84,12 @@ decision + date) instead of silently replacing the old entry.
     after applying the website template, a River job writes copy into existing website slots. The
     website preview is issued on the unpublished website; if copy fails, the unpublished website
     stays. Same website assistant tools as the website editor, no chat UI, no `create_page`.
+
+14. **Unactivated tenant at confirm; activation upgrades** — confirm (01a) inserts a `tenants` row
+    with `status=unactivated`, `clerk_org_id` null, `website_address` null, and sets that
+    `tenant_id` on the onboarding session and the business profile. Website activation (07)
+    **upgrades** the same row (Clerk org, owner membership, reserved website address,
+    `status=active`). It does not insert a second tenant and does not first-write child
+    `tenant_id`s. `/me` returns a tenant only when `status=active`; unactivated work is reached
+    via the onboarding session token. Clerk organization 1-1 holds for active tenants only.
+    (2026-08-23)

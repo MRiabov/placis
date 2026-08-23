@@ -9,19 +9,25 @@ Clerk owns contractor identity, sign-in, and Clerk organizations. Placis never b
 > Clerk proves who the contractor is and which Clerk organization they belong to. Placis decides what tenants
 > they can access and what actions they can perform.
 
-## Tenant == Clerk organization (1-1)
+## Tenant vs Clerk organization
 
-- `tenants.clerk_org_id` (unique) is the only tenant entry point. No org chooser, no selected-org
-  cookie, no app-controlled tenant selector.
+An **unactivated** tenant exists from onboarding confirm (`status=unactivated`, no Clerk org). An
+**activated** tenant is that same row after website activation (`status=active`). `/me` returns a
+tenant only when `status=active` (the "not paid / CMS closed" signal is still `tenant: null`).
+
+- Clerk organization ↔ tenant is 1-1 for **active** tenants only. `tenants.clerk_org_id` (unique,
+  nullable) is the entry point for CMS/API calls that use a Clerk session. No org chooser, no
+  selected-org cookie, no app-controlled tenant selector.
 - The API verifies the Clerk session/JWT, builds `Principal{userID, orgID, platformRole}`, and
-  resolves the tenant from `orgID`.
-- `/me` returns `{owner, platform_role, tenant}` — a single `TenantRead` or `null` (the
-  "not onboarded/paid" signal).
-- After sign-in with no Clerk organization → provision one via the Clerk organization provisioning POST
-  (`createOrganization`); the frontend then calls `clerk.setActive` with that Clerk organization so sign-in
-  tokens carry the Clerk organization claim. The Clerk organization is named after the **person** (the account owner), and
-  this intentionally differs from the **tenant** name, which is the business — the two are distinct
-  concepts and never share a name field.
+  resolves the tenant from `orgID` **only if that tenant is `active`**. An unactivated tenant is
+  resolved from the onboarding session token, not from Clerk.
+- `/me` returns `{owner, platform_role, tenant}` — a single `TenantRead` or `null`. Signed-in but
+  not activated → `tenant: null` even if an unactivated tenant exists for the onboarding session.
+- Website activation provisions the Clerk organization (POST `createOrganization`) and attaches it
+  to the **existing** unactivated tenant, then sets `status=active`. The frontend then calls
+  `clerk.setActive` so sign-in tokens carry the Clerk organization claim. The Clerk organization is
+  named after the **person** (the account owner); the tenant name is the business — the two never
+  share a name field. Do not create a second tenant at activation.
 - Deleted surfaces (do not resurrect): `/me/orgs`, `/me/tenants`, `/me/selected-org`,
   `placis_selected_org` cookie, `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{website_address}`,
   `.../memberships/*` CRUD.
@@ -42,10 +48,10 @@ JWT/JWKS verification or Clerk data types.
 
 Resolved once per request from one of:
 
-1. authenticated Clerk organization,
+1. authenticated Clerk organization (active tenant only),
 2. contractor website hostname,
 3. website preview token,
-4. onboarding session token.
+4. onboarding session token (unactivated or active tenant for that session).
 
 Services take `tenantID` explicitly.
 

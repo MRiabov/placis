@@ -10,7 +10,8 @@ The business profile these onboarding sessions write is owned by
 
 ## Onboarding sessions and client interview
 
-- `onboarding_sessions` — `id`, `tenant_id` nullable fk, `started_from` (`google_maps_listing`/
+- `onboarding_sessions` — `id`, `tenant_id` fk (required; the unactivated tenant created at
+  confirm), `started_from` (`google_maps_listing`/
   `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`client_interviewing`/
   `applying_website_template`/`previewing`/`activated`/`apply_website_template_failed`),
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at` nullable, timestamps
