@@ -78,12 +78,13 @@ Status: decided (2026-08-16, product owner + engineering).
     website styles update the website editor immediately and need website publication to change what
     website visitors see. (2026-08-20)
 
-15. **Import the contractor website as `apps/contractor-website`** — never the predecessor package
-    name. That import is the **first implementation step** for the live contractor website.
-    Website publication is not a Cloudflare deploy. Live HTML is R2 `latest/` behind one
+15. **The contractor website is `apps/contractor-website`** — never the predecessor package
+    name. The predecessor renderer is in this repo. Remaining live-site work is R2 `latest/`,
+    website publication HTML, Custom Hostnames, and Connect website address — not a second
+    import. Website publication is not a Cloudflare deploy. Live HTML is R2 `latest/` behind one
     Worker; website preview is the only per-request render. Custom website address uses Custom
     Hostnames, not Pages. See [cloudflare.md](cloudflare.md) and ADR 18–20.
-    (2026-08-20; edge locked 2026-08-21; import-first 2026-08-23)
+    (2026-08-20; edge locked 2026-08-21; imported 2026-08-23)
 
 16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
     Global `website_certification_definitions`; tenant selections. Reviews stay

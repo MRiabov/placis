@@ -15,8 +15,8 @@ See [data-model.md](data-model.md). Media assets are
 Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). This feature owns
 the tables it writes.
 
-1. Load the selected website template + website component contracts from `catalog/` (imported
-   predecessor catalog as the first-pass set).
+1. Load the selected website template + website component contracts from the first-pass
+   sidecars in `packages/website-components` (later the `catalog/` dump).
 2. Validate website component ids, props, design controls, website page paths, website forms, and
    top menu / footer against the website component contract structs.
 3. Keep website placeholders in the unpublished website; they resolve only at website publication.
@@ -86,9 +86,9 @@ It consumes the regenerated types; `/website/editor/*` routes map to the Go side
 
 ## Implementation order (live contractor website)
 
-1. Import `apps/contractor-website` (done) plus `packages/website-components` (website templates,
-   website component contracts, website style catalog presets).
-2. R2 `latest/` serve + Cache.
-3. Website publication render into R2 + purge.
-4. Custom Hostnames + Connect website address in the CMS.
-5. Website preview SSR on the same app.
+`apps/contractor-website` and `packages/website-components` are in this repo.
+
+1. R2 `latest/` serve + Cache.
+2. Website publication render into R2 + purge.
+3. Custom Hostnames + Connect website address in the CMS.
+4. Website preview SSR on the same app.
