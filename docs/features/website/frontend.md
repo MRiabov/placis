@@ -17,11 +17,11 @@ Stack: Vite + React + TanStack Router, generated API types. The canvas renders u
 website sections through the shared contractor-website component package — the same package the
 live website uses.
 
-The frontend holds **one** website editor projection in React and PATCHes. It does not accumulate
-unpublished documents in memory. There is no unpublished revision stack. Edits persist
-automatically: typing in the canvas or editing panel is debounced before PATCH
-([editing.md](editing.md)). There is **no Save** in the website editor toolbar. The predecessor
-`EditorHeader` Save control is dropped. A Saving / Saved status is allowed.
+The frontend holds **one** website editor projection in React. Edits mutate that working copy
+first; the canvas paints it. PATCH copies the change to the backend; it does not round-trip the
+projection to re-render ([editing.md](editing.md)). It does not accumulate unpublished documents
+in memory. There is no unpublished revision stack. There is **no Save** in the website editor
+toolbar. The predecessor `EditorHeader` Save control is dropped. A Saving / Saved status is allowed.
 
 ## Routes
 

@@ -5,28 +5,39 @@ it update, then website publication.
 
 ## The loop
 
-1. The website editor canvas (`frontend-2`) renders the **unpublished website** through the
-   shared contractor-website component package — the same ones the live website (Astro) uses.
+1. `GET` loads the typed **website editor projection** once (page select / reload). That is the
+   only hydrate. The canvas (`frontend-2`) renders that unpublished website through the shared
+   contractor-website component package — the same ones the live website (Astro) uses.
 2. The owner edits inline: click-to-edit visible text, swap an image (media library panel or
    drag onto the canvas), reorder / add / remove a website section, change a design control, SEO,
    or the website style catalog preset.
-3. The frontend calls a schema-validated **patch API** (`/api/v1/website/editor/...`). The canvas
-   and editing panel update the in-memory website editor projection immediately. There is **no
-   Save action**. Edits persist automatically. Typing is **debounced** (same idea as onboarding
-   Maps/registry search): coalesce keystrokes, then one PATCH. Discrete actions (image swap,
-   reorder, add/remove a website section) PATCH immediately. A non-clickable Saving / Saved status
-   is allowed; a Save button is not.
-4. The backend validates the change against the website component contract and **upserts** the
+3. The canvas and editing panel mutate the **in-memory website editor projection immediately**
+   and re-render from it. That working copy is the cache. There is **no Save action**. Edits
+   persist automatically. A non-clickable Saving / Saved status is allowed; a Save button is not.
+4. A schema-validated **PATCH** (`/api/v1/website/editor/...`) **copies** the change to unpublished
+   rows. It is persistence, not the render path. Do not `GET` after each PATCH. Do not replace the
+   whole projection from the PATCH response (that is frontend → backend → frontend, and it races
+   typing). Merge only what the frontend cannot invent: assigned ids, validation status,
+   website-publication blockers. Typing is **debounced** (same idea as onboarding Maps/registry
+   search): coalesce keystrokes, then one PATCH. Discrete actions (image swap, reorder, add/remove
+   a website section) PATCH immediately.
+5. The backend validates the change against the website component contract and **upserts** the
    unpublished website rows. The body is only the changed website slots / website sections — not
    the whole unpublished website. Over-chatty PATCH from one tenant is `429` with `Retry-After`;
-   the website editor retries with backoff. Do not write `audit_events` per website slot edit.
-5. The canvas re-renders from the updated website editor projection.
+   the website editor retries with backoff and **keeps the local edit**. Do not write
+   `audit_events` per website slot edit.
 
 The backend serves a typed **website editor projection** — website pages, website sections, current
 website slot values, validation status, website publication blockers, allowed controls — and the
-frontend consumes that, never raw records. Tokenized values
-(`{{business_name}}`) stay as tokens in the unpublished website and show as small inline variable
-chips in the website editor.
+frontend consumes that on hydrate, never raw records. After hydrate, the frontend owns the working
+copy. Tokenized values (`{{business_name}}`) stay as tokens in the unpublished website and show as
+small inline variable chips in the website editor.
+
+Sending PATCH is not enough on its own. The predecessor `useSaveEditorPage` `onSuccess` that
+`setQueryData`s the full PATCH response is the round-trip to stop. Website publication, apply
+website styles, Connect website address, media-library upload, and adding a website page still
+take their response (new ids / publication metadata). Do not background-refetch the projection
+on window focus while the website editor is open.
 
 ## Edits mutate unpublished rows; website publication writes a website version
 
@@ -127,7 +138,8 @@ Website publication writes `website_publications` + `website_manifest` (a websit
 
 The contractor website application (`apps/contractor-website`) does **no per-edit work**. Live
 GET reads prebuilt HTML in R2 `latest/` ([cloudflare.md](cloudflare.md)). Website preview calls
-`GET /api/v1/public/site/resolve`. Editing only mutates unpublished website records; the live
-website changes only on website publication. The website editor canvas renders the unpublished
-website (React + that package), not through Astro. That canvas is not a website preview. The
-frontend holds one projection; it does not accumulate unpublished documents in memory.
+`GET /api/v1/public/site/resolve`. Editing mutates the in-memory projection, then copies unpublished
+rows via PATCH; the live website changes only on website publication. The website editor canvas
+renders the unpublished website (React + that package), not through Astro. That canvas is not a
+website preview. The frontend holds one working projection; it does not accumulate unpublished
+documents in memory.
