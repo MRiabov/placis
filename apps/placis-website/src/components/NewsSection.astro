@@ -1,0 +1,72 @@
+---
+import { HAIRLINE_BORDER_CLASS } from "../lib/marketingSite";
+
+const posts = [
+  {
+    category: "Research",
+    title: "Sourced proof: registries and reviews, verified",
+    image: "/news/site-and-woodland.jpg",
+  },
+  {
+    category: "Product",
+    title: "Smarter follow-up questions in the client interview",
+    image: "/news/earthworks-site.jpg",
+  },
+  {
+    category: "Announcement",
+    title: "Placis opens early access for trades",
+    image: "/news/quarry-processing.jpg",
+  },
+];
+
+const [featured, ...rest] = posts;
+---
+
+<section class="scroll-mt-14 bg-background pt-12 pb-0 sm:pt-20" id="blog">
+  <div class="mx-auto w-full max-w-[1200px] px-6 sm:px-8">
+    <div class="sm:flex sm:h-[30rem] sm:gap-5">
+      <article class="group flex flex-col sm:w-2/3">
+        <div
+          class={`relative aspect-[3/2] overflow-hidden rounded-lg sm:aspect-auto sm:min-h-0 sm:flex-1 ${HAIRLINE_BORDER_CLASS}`}
+        >
+          <img
+            alt={featured.title}
+            class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+            loading="lazy"
+            src={featured.image}
+          />
+        </div>
+        <div class="mt-3 overflow-hidden sm:h-12">
+          <h3 class="line-clamp-1 font-medium text-[15px] text-foreground leading-snug tracking-tight">
+            {featured.title}
+          </h3>
+          <p class="mt-1 text-[12px] text-zinc-500 dark:text-zinc-400">{featured.category}</p>
+        </div>
+      </article>
+      <div class="mt-4 flex flex-col gap-4 sm:mt-0 sm:w-1/3 sm:gap-5">
+        {
+          rest.map((post) => (
+            <article class="group flex flex-col sm:min-h-0 sm:flex-1">
+              <div
+                class={`relative aspect-[16/10] overflow-hidden rounded-lg sm:aspect-auto sm:min-h-0 sm:flex-1 ${HAIRLINE_BORDER_CLASS}`}
+              >
+                <img
+                  alt={post.title}
+                  class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                  loading="lazy"
+                  src={post.image}
+                />
+              </div>
+              <div class="mt-3 overflow-hidden sm:h-12">
+                <h3 class="line-clamp-1 font-medium text-[15px] text-foreground leading-snug tracking-tight">
+                  {post.title}
+                </h3>
+                <p class="mt-1 text-[12px] text-zinc-500 dark:text-zinc-400">{post.category}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -42,7 +42,7 @@ CI never rewrites files.
     [website Cloudflare](features/website/cloudflare.md).
   - `deploy placis website` — `astro build` and upload `dist/` to the Placis website R2 bucket
     (`placis-website` | `placis-website-staging`), then purge cache. Workflow YAML is not in
-    the repo until the app exists. Serve path:
+    this PR. Serve path:
     [Placis website Cloudflare](features/placis-website/cloudflare.md).
 - Railway deploys `cmd/api` and `cmd/worker` from the integration branch — release, not CI.
 

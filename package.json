@@ -17,7 +17,12 @@
     "contractor-website:cf:dev": "pnpm --dir apps/contractor-website cf:dev",
     "contractor-website:cf:types": "pnpm --dir apps/contractor-website cf:types",
     "website-components:check": "pnpm --dir packages/website-components check",
-    "contractor-website:bundle-boundary": "node scripts/check_contractor_website_bundle_boundary.mjs"
+    "contractor-website:bundle-boundary": "node scripts/check_contractor_website_bundle_boundary.mjs",
+    "placis-website:dev": "pnpm --dir apps/placis-website dev",
+    "placis-website:build": "pnpm --dir apps/placis-website build",
+    "placis-website:check": "pnpm --dir apps/placis-website check",
+    "placis-website:test": "pnpm --dir apps/placis-website test",
+    "placis-website:test:e2e": "pnpm --dir apps/placis-website test:e2e"
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
