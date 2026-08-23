@@ -9,7 +9,9 @@ Related: [PRD](prd.md), [editing.md](editing.md), [assistant.md](assistant.md),
 ## Purpose
 
 The contractor-facing website editor in `frontend-2`, under `/cms/website` (left-nav **Sites**).
-It is not Details, not the media library, not Ads, and not the live contractor website.
+Details, Projects, Certifications and reviews, and the media library still appear on website
+pages; they are edited on their own screens, not in this website editor. Ads and the live
+contractor website are separate.
 
 Stack: Vite + React + TanStack Router, generated API types. The canvas renders unpublished
 website sections through the shared contractor-website component package — the same package the

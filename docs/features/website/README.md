@@ -21,5 +21,5 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [testing.md](testing.md) — the website E2E test
 
 Standalone screens beside the website editor: **Profile** (Details, Projects, Certifications and
-reviews), **Media library** (above), and later a **Leads** screen. These are their own views, not
-website page content.
+reviews), **Media library** (above), and later a **Leads** screen. Those entities are website
+page content; they are edited on those screens, not as website slots in the website editor.

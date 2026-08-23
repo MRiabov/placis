@@ -467,8 +467,9 @@ Distinct from: Ad lead form (suggested Meta fields on an ad).
 #### Website editor
 
 The website editing screen: website pages, canvas, editing panel, top menu, footer, and website
-styles. Details, Projects, Media library, and Ads are their own screens beside it, not website
-page content. Never say bare “editor” in PRDs or UI.
+styles. Details, Projects, Certifications and reviews, and the media library are website page
+content; they are separate entities edited on their own screens, not as website slots here. Ads
+are their own screens and are not website page content. Never say bare “editor” in PRDs or UI.
 
 ---
 
