@@ -1,0 +1,475 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "description": {
+      "label": "Business description",
+      "source": "business_profile.description",
+      "type": "textarea"
+    },
+    "phone": {
+      "label": "Phone",
+      "source": "business_profile.phone",
+      "type": "text"
+    },
+    "email": {
+      "label": "Email",
+      "source": "business_profile.email",
+      "type": "text"
+    },
+    "service_area": {
+      "label": "Service area",
+      "source": "business_profile.service_area",
+      "type": "list"
+    },
+    "opening_hours": {
+      "label": "Opening hours",
+      "source": "business_profile.opening_hours",
+      "type": "list"
+    },
+    "logo_url": {
+      "label": "Logo",
+      "source": "business_profile.branding.logo_url",
+      "type": "image"
+    },
+    "services.featured": {
+      "label": "Selected services",
+      "source": "business_research.services",
+      "type": "list"
+    },
+    "services.marquee": {
+      "label": "Service ticker items",
+      "source": "business_research.services",
+      "type": "list"
+    },
+    "services.project_types": {
+      "label": "Project planner service options",
+      "source": "business_research.services",
+      "type": "list"
+    },
+    "projects.recent": {
+      "label": "Recent projects",
+      "source": "business_research.projects",
+      "type": "list"
+    },
+    "proof.accreditations": {
+      "label": "Accreditations",
+      "source": "business_research.accreditations",
+      "type": "list"
+    },
+    "proof.hero_stats": {
+      "label": "Hero proof stats",
+      "source": "business_research.proof",
+      "type": "list"
+    },
+    "people.founder.bio": {
+      "label": "Founder bio",
+      "source": "business_research.people.founder.bio",
+      "type": "textarea"
+    },
+    "people.founder.name": {
+      "label": "Founder name",
+      "source": "business_research.people.founder.name",
+      "type": "text"
+    },
+    "people.founder.role": {
+      "label": "Founder role",
+      "source": "business_research.people.founder.role",
+      "type": "text"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "logo_url",
+      "value": "{{logo_url}}"
+    },
+    {
+      "component_id": "public.navigation.standard",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.standard",
+      "path": "logo_url",
+      "value": "{{logo_url}}"
+    },
+    {
+      "component_id": "public.hero.type_first_trust",
+      "path": "headline",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.hero.type_first_trust",
+      "path": "subheadline",
+      "value": "{{description}}"
+    },
+    {
+      "component_id": "public.hero.type_first",
+      "path": "headline",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.hero.type_first",
+      "path": "subheadline",
+      "value": "{{description}}"
+    },
+    {
+      "component_id": "public.hero.image",
+      "path": "headline",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.hero.image",
+      "path": "subheadline",
+      "value": "{{description}}"
+    },
+    {
+      "component_id": "public.contact.cta_panel",
+      "path": "title",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.contact.cta_panel",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.contact.cta_panel",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "title",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "service_area",
+      "value": "{{service_area}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "logo_url",
+      "value": "{{logo_url}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.hero.type_first_trust",
+      "path": "proof_items",
+      "value": "{{proof.hero_stats}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Template proof counts must be confirmed for the tenant before publication.",
+        "fallback_value": [
+          {
+            "value": "5th",
+            "label": "Generation Trade"
+          },
+          {
+            "value": "100+",
+            "label": "Projects Completed"
+          },
+          {
+            "value": "15",
+            "label": "Trade Specialists"
+          },
+          {
+            "value": "4",
+            "label": "Accreditations"
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.marquee.services",
+      "path": "items",
+      "value": "{{services.marquee}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Service ticker must be selected from researched tenant services.",
+        "fallback_value": [
+          "New Builds",
+          "House Extensions",
+          "Home Renovations",
+          "Shop Fit-Outs",
+          "Attic Conversions",
+          "Landscaping",
+          "{{service_area}} & South East"
+        ]
+      }
+    },
+    {
+      "component_id": "public.content.story_split",
+      "path": "eyebrow",
+      "value": "Our Story",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "edit_reason": "Story framing may be template language and must be confirmed."
+      }
+    },
+    {
+      "component_id": "public.content.story_split",
+      "path": "title",
+      "value": "A fifth-generation tradition in building excellence",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "edit_reason": "Generation/family-history claim must be source-backed for the tenant."
+      }
+    },
+    {
+      "component_id": "public.content.story_split",
+      "path": "paragraphs",
+      "value": [
+        "{{people.founder.bio}}",
+        "The team includes trusted tradesmen across carpentry, stonework, block laying, plumbing, plastering, electrics, tiling, painting, decorating, interiors, landscaping and outdoor works."
+      ],
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "edit_reason": "Story paragraphs include inherited trade/team claims."
+      }
+    },
+    {
+      "component_id": "public.services.tabs",
+      "path": "services",
+      "value": "{{services.featured}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Services must be picked/reranked from business research, not inherited wholesale from the reference page.",
+        "fallback_value": [
+          {
+            "label": "New Builds",
+            "kicker": "New Builds",
+            "title": "Architecturally-quality homes built around your brief.",
+            "description": "From concept to completion, {{business_name}} develops new homes with close communication, quality trade coordination and a finish shaped around each client.",
+            "items": [
+              "New residential builds",
+              "Budget and timing clarity",
+              "Architectural finish standards"
+            ],
+            "image_url": "{{images.new_builds_service_image}}",
+            "alt_text": "New build home exterior"
+          },
+          {
+            "label": "Extensions",
+            "kicker": "House Extensions",
+            "title": "More space planned around how you live.",
+            "description": "{{business_name}} works closely with homeowners to extend existing houses with practical phasing, careful trade coordination and a finish that feels connected to the original home.",
+            "items": [
+              "Single and multi-room extensions",
+              "Existing-home integration",
+              "Outdoor areas, patios and boundaries"
+            ],
+            "image_url": "{{images.extensions_service_image}}",
+            "alt_text": "House extension and renovation work"
+          },
+          {
+            "label": "Renovations",
+            "kicker": "Home Renovations",
+            "title": "Renovations that turn older spaces into finished homes.",
+            "description": "From internal refurbishments to attic conversions, {{business_name}} renovates homes with close attention to layout, finish, budget and timing.",
+            "items": [
+              "Full internal refurbishments",
+              "Attic conversions and en-suites",
+              "Bedrooms, lounges and living spaces"
+            ],
+            "image_url": "{{images.renovations_service_image}}",
+            "alt_text": "Home renovation interior"
+          },
+          {
+            "label": "Shop Fit-Outs",
+            "kicker": "Shop Fit-Outs",
+            "title": "Commercial renovations for shops, salons and bars.",
+            "description": "{{business_name}} provides specialist shop fit-outs and in-store renovation services for commercial spaces needing a clean, high-quality finish.",
+            "items": [
+              "Shop fit-outs",
+              "In-store renovations",
+              "Salon and bar projects"
+            ],
+            "image_url": "{{images.shop_fit_outs_service_image}}",
+            "alt_text": "Commercial shop renovation"
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.gallery.edge_grid",
+      "path": "title",
+      "value": "Recent Projects",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "edit_reason": "Recent-project section title must be confirmed against tenant project evidence."
+      }
+    },
+    {
+      "component_id": "public.gallery.edge_grid",
+      "path": "items",
+      "value": "{{projects.recent}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Recent projects must be selected from tenant project evidence or replaced.",
+        "fallback_value": [
+          {
+            "title": "Knockhouse Project",
+            "caption": "Full internal refurbishment, extension, patio, boundary walls and new tarmacadam.",
+            "category": "Renovation",
+            "location": "{{service_area}}",
+            "date": "2024",
+            "image_url": "{{images.knockhouse_project_project_image}}",
+            "alt_text": "Knockhouse Project"
+          },
+          {
+            "title": "Viewmount Attic Conversion",
+            "caption": "Attic conversion including new w/c, bedroom and lounge suite.",
+            "category": "Attic Conversion",
+            "location": "{{service_area}}",
+            "date": "2024",
+            "image_url": "{{images.viewmount_attic_conversion_project_image}}",
+            "alt_text": "Viewmount Attic Conversion"
+          },
+          {
+            "title": "Newtown Project",
+            "caption": "Victorian-style attic conversion with modern bedroom and en-suite.",
+            "category": "Victorian Renovation",
+            "location": "Kilkenny",
+            "date": "2023",
+            "image_url": "{{images.newtown_project_project_image}}",
+            "alt_text": "Newtown Project"
+          },
+          {
+            "title": "Shop Renovations",
+            "caption": "Specialist shop fit-outs: salons, bars and commercial interiors.",
+            "category": "Commercial",
+            "location": "South East",
+            "date": "Ongoing",
+            "image_url": "{{images.shop_renovations_project_image}}",
+            "alt_text": "Shop Renovations"
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.proof.accreditations",
+      "path": "items",
+      "value": "{{proof.accreditations}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Accreditations must be selected from source-backed proof records.",
+        "fallback_value": [
+          {
+            "title": "Construction Federation",
+            "description": "Industry Member",
+            "image_url": "{{images.construction_federation_logo}}",
+            "alt_text": "Construction Federation"
+          },
+          {
+            "title": "CIRI Registered",
+            "description": "Registered Builder",
+            "image_url": "{{images.ciri_registered_logo}}",
+            "alt_text": "CIRI"
+          },
+          {
+            "title": "Safe-T-Cert",
+            "description": "Safety Certified",
+            "image_url": "{{images.safe_t_cert_logo}}",
+            "alt_text": "Safe-T-Cert"
+          },
+          {
+            "title": "SEAI Registered",
+            "description": "Energy Registered",
+            "image_url": "{{images.seai_registered_logo}}",
+            "alt_text": "SEAI"
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.form.project_planner",
+      "path": "project_types",
+      "value": "{{services.project_types}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Project planner options should follow selected tenant services.",
+        "fallback_value": [
+          {
+            "label": "New Build",
+            "value": "a new build"
+          },
+          {
+            "label": "House Extension",
+            "value": "a house extension"
+          },
+          {
+            "label": "Home Renovation",
+            "value": "a home renovation"
+          },
+          {
+            "label": "Shop Fit-Out",
+            "value": "a shop fit-out"
+          }
+        ]
+      }
+    }
+  ]
+}

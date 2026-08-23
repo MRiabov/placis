@@ -1,0 +1,62 @@
+{
+  "id": "public.cta.band",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "CTA Band",
+  "family": "cta",
+  "variant": "band",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "href": {
+        "type": "string"
+      },
+      "label": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title"]
+  },
+  "editable_slots": [
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "label",
+      "type": "text",
+      "label": "CTA label",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "href",
+      "type": "link",
+      "label": "CTA link",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "title",
+      "value": "{{business_name}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

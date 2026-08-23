@@ -1,0 +1,76 @@
+{
+  "id": "public.services.grid",
+  "aliases": ["public.services.v1", "public.services_grid.v1"],
+  "schema_version": 1,
+  "display_name": "Services Grid",
+  "family": "services",
+  "variant": "grid",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "intro": {
+        "type": "string"
+      },
+      "services": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "cta_label": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["name", "description"]
+        },
+        "minItems": 1
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title", "services"]
+  },
+  "editable_slots": [
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "intro",
+      "type": "textarea",
+      "label": "Intro",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "services",
+      "type": "list",
+      "label": "Services",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

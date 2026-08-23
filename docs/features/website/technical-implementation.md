@@ -86,7 +86,8 @@ It consumes the regenerated types; `/website/editor/*` routes map to the Go side
 
 ## Implementation order (live contractor website)
 
-1. Import `apps/contractor-website` (first).
+1. Import `apps/contractor-website` (done) plus `packages/website-components` (website templates,
+   website component contracts, website style catalog presets).
 2. R2 `latest/` serve + Cache.
 3. Website publication render into R2 + purge.
 4. Custom Hostnames + Connect website address in the CMS.

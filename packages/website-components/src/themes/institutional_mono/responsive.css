@@ -1,0 +1,167 @@
+@media (max-width: 760px) {
+  .public-theme-institutional-mono {
+    --public-container-inline: 24px;
+    --public-section-block: 64px;
+  }
+
+  .public-theme-institutional-mono .public-fixed-cta-nav {
+    background: #3a3535;
+    min-height: 82px;
+    padding: 12px 28px;
+    position: relative;
+  }
+
+  .public-theme-institutional-mono .public-fixed-cta-nav--plain img {
+    filter: none;
+  }
+
+  .public-theme-institutional-mono .public-fixed-cta-nav__brand {
+    font-size: 2rem;
+    left: 50%;
+    max-width: 140px;
+    position: absolute;
+    transform: translateX(-50%);
+  }
+
+  .public-theme-institutional-mono .public-fixed-cta-nav__brand img {
+    max-height: 66px;
+    max-width: 132px;
+  }
+
+  .public-theme-institutional-mono .public-fixed-cta-nav__toggle {
+    display: grid;
+  }
+
+  .public-theme-institutional-mono .public-fixed-cta-nav__links {
+    display: none;
+  }
+
+  .public-theme-institutional-mono .public-page-hero,
+  .public-theme-institutional-mono .public-overlay-title-hero {
+    min-height: calc(100vh - 82px);
+  }
+
+  .public-theme-institutional-mono .public-page-hero__content,
+  .public-theme-institutional-mono .public-overlay-title-hero__content {
+    padding: 110px 20px 72px;
+  }
+
+  .public-theme-institutional-mono .public-page-hero h1,
+  .public-theme-institutional-mono .public-overlay-title-hero h1 {
+    font-size: clamp(1.8rem, 8vw, 2.55rem);
+    letter-spacing: 0.1em;
+    max-width: calc(100vw - 40px);
+    padding: 0.92em 0.85em;
+  }
+
+  .public-theme-institutional-mono .public-content-intro h2,
+  .public-theme-institutional-mono .public-content-split h2,
+  .public-theme-institutional-mono .public-story-text h2,
+  .public-theme-institutional-mono .public-services-cards h2,
+  .public-theme-institutional-mono .public-gallery-grid h2,
+  .public-theme-institutional-mono .public-poster-grid h2,
+  .public-theme-institutional-mono .public-proof-logo-strip h2,
+  .public-theme-institutional-mono .public-leadership-grid h2,
+  .public-theme-institutional-mono .public-contact-panel h2,
+  .public-theme-institutional-mono .public-lead-form h2,
+  .public-theme-institutional-mono .public-form-location-contact h2 {
+    font-size: 2rem;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .public-theme-institutional-mono .public-carousel__slide img,
+  .public-theme-institutional-mono .public-carousel__placeholder {
+    height: 260px;
+  }
+
+  .public-theme-institutional-mono .public-poster-grid__items,
+  .public-theme-institutional-mono .public-story-text--split .public-story-text__inner,
+  .public-theme-institutional-mono .public-leadership-grid__items,
+  .public-theme-institutional-mono .public-form-location-contact__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .public-theme-institutional-mono .public-story-text__inner,
+  .public-theme-institutional-mono
+    .public-story-text--split
+    .public-story-text__inner {
+    max-width: none;
+    padding-left: var(--public-container-inline);
+    padding-right: var(--public-container-inline);
+  }
+
+  .public-theme-institutional-mono .public-story-text h2,
+  .public-theme-institutional-mono .public-leadership-grid h2 {
+    text-align: center;
+  }
+
+  .public-theme-institutional-mono .public-leadership-grid h2 {
+    margin-bottom: 34px;
+  }
+
+  .public-theme-institutional-mono .public-proof-logo-strip .public-logo-grid__items {
+    gap: 28px 36px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 28px;
+  }
+
+  .public-theme-institutional-mono
+    #clients.public-proof-logo-strip
+    .public-logo-grid__items,
+  .public-theme-institutional-mono #news-index .public-poster-grid__items {
+    grid-template-columns: 1fr;
+  }
+
+  .public-theme-institutional-mono #news-index.public-poster-grid {
+    padding-top: 56px;
+  }
+
+  .public-theme-institutional-mono #news-index .public-poster-grid__inner {
+    max-width: 300px;
+  }
+
+  .public-theme-institutional-mono #news-index .public-poster-grid__items {
+    gap: 34px;
+  }
+
+  .public-theme-institutional-mono
+    .public-form-location-contact--map-only
+    .public-form-location-contact__intro,
+  .public-theme-institutional-mono
+    .public-form-location-contact--map-only
+    .public-form-location-contact__layout {
+    max-width: none;
+    padding-left: var(--public-container-inline);
+    padding-right: var(--public-container-inline);
+  }
+
+  .public-theme-institutional-mono
+    .public-form-location-contact--map-only
+    .public-form-location-contact__map-placeholder,
+  .public-theme-institutional-mono
+    .public-form-location-contact--map-only
+    .public-form-location-contact__location
+    iframe {
+    height: 320px;
+    max-width: none;
+  }
+
+  .public-theme-institutional-mono .public-proof-logo-strip .public-logo-grid__item {
+    min-height: 70px;
+  }
+
+  .public-theme-institutional-mono
+    .public-proof-logo-strip
+    .public-logo-grid__item
+    img {
+    max-height: 58px;
+    max-width: 98px;
+  }
+
+  .public-theme-institutional-mono
+    .public-form-location-contact
+    .public-lead-form-fields {
+    grid-template-columns: 1fr;
+  }
+}

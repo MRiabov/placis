@@ -1,0 +1,414 @@
+.public-theme-dark-serif {
+  --public-primary: #1c2024;
+  --public-accent: #ffb224;
+  --public-accent-text: #ad5700;
+  --public-background: #ffffff;
+  --public-border: #e3e0d7;
+  --public-muted: #706f6c;
+  --public-radius: 0px;
+  --public-text: #1c2024;
+  --public-brand-muted: #706f6c;
+  --public-dark: #07192f;
+  --public-surface: #f9f8f6;
+  --public-font-heading: Georgia, "Times New Roman", serif;
+  --public-font-body: "Source Sans 3", Arial, sans-serif;
+  --public-section-block: 68px;
+  --public-container-inline: 32px;
+  --public-ease: cubic-bezier(0.2, 0, 0, 1);
+  background: var(--public-background);
+  color: var(--public-text);
+  font-family: var(--public-font-body);
+}
+
+.public-site-root.public-theme-dark-serif {
+  background: var(--public-background);
+  font-family: var(--public-font-body);
+}
+
+.public-theme-dark-serif h1,
+.public-theme-dark-serif h2,
+.public-theme-dark-serif h3 {
+  font-family: var(--public-font-heading);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.public-theme-dark-serif .public-site-shell {
+  max-width: 1060px;
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+.public-theme-dark-serif .public-site-button,
+.public-theme-dark-serif button.public-site-button {
+  background: transparent;
+  border: 1px solid var(--public-text);
+  border-radius: 0;
+  color: var(--public-text);
+  font-family: var(--public-font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  min-height: 42px;
+  padding: 0.75rem 1.3rem;
+  text-transform: uppercase;
+  transition:
+    background 180ms var(--public-ease),
+    color 180ms var(--public-ease),
+    border-color 180ms var(--public-ease);
+}
+
+.public-theme-dark-serif .public-site-button:hover,
+.public-theme-dark-serif button.public-site-button:hover {
+  background: var(--public-text);
+  color: var(--public-background);
+}
+
+.public-theme-dark-serif .public-eyebrow {
+  color: var(--public-muted);
+  font-family: var(--public-font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.public-theme-dark-serif .public-nav {
+  border-bottom: 1px solid var(--public-border);
+  color: var(--public-text);
+}
+
+.public-theme-dark-serif .public-nav__utility {
+  background: var(--public-background);
+  border-bottom: 1px solid var(--public-border);
+  color: var(--public-muted);
+  font-size: 0.83rem;
+}
+
+.public-theme-dark-serif .public-nav__utility-inner {
+  min-height: 38px;
+}
+
+.public-theme-dark-serif .public-nav__main {
+  min-height: 92px;
+}
+
+.public-theme-dark-serif .public-nav__brand {
+  font-family: var(--public-font-heading);
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+  font-weight: 400;
+  line-height: 1;
+  max-width: 220px;
+}
+
+.public-theme-dark-serif .public-nav__brand img {
+  height: 74px;
+  object-fit: contain;
+  width: auto;
+}
+
+.public-theme-dark-serif .public-nav__links {
+  background: transparent;
+  color: var(--public-muted);
+  font-family: var(--public-font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  gap: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.public-theme-dark-serif .public-nav__links a {
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 6px 0;
+}
+
+.public-theme-dark-serif .public-nav__links a:hover,
+.public-theme-dark-serif .public-nav__links a.is-active {
+  border-color: var(--public-text);
+  color: var(--public-text);
+}
+
+.public-theme-dark-serif .public-page-hero {
+  min-height: 520px;
+  text-align: center;
+}
+
+.public-theme-dark-serif .public-page-hero__overlay {
+  background:
+    linear-gradient(rgba(7, 25, 47, 0.66), rgba(7, 25, 47, 0.66)),
+    linear-gradient(90deg, rgba(7, 25, 47, 0.2), rgba(7, 25, 47, 0.1));
+}
+
+.public-theme-dark-serif .public-page-hero__content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 520px;
+  padding: 96px 28px;
+}
+
+.public-theme-dark-serif .public-page-hero h1 {
+  color: #ffffff;
+  font-size: clamp(2.3rem, 5vw, 4.8rem);
+  line-height: 1.02;
+  max-width: 760px;
+}
+
+.public-theme-dark-serif .public-page-hero p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(1.05rem, 2vw, 1.45rem);
+  line-height: 1.5;
+  margin-top: 18px;
+  max-width: 720px;
+}
+
+.public-theme-dark-serif .public-page-hero__actions {
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.public-theme-dark-serif .public-page-hero a {
+  background: transparent;
+  border: 1px solid #ffffff;
+  border-radius: 0;
+  color: #ffffff;
+  font-family: var(--public-font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 12px 22px;
+  text-transform: uppercase;
+}
+
+.public-theme-dark-serif .public-page-hero a:hover {
+  background: #ffffff;
+  color: var(--public-dark);
+}
+
+.public-theme-dark-serif .public-content-split {
+  background: var(--public-background);
+}
+
+.public-theme-dark-serif .public-content-split__inner {
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.46fr);
+}
+
+.public-theme-dark-serif .public-content-split__copy h2,
+.public-theme-dark-serif .public-lead-form h2,
+.public-theme-dark-serif .public-services-simple h2,
+.public-theme-dark-serif .public-gallery-grid h2 {
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1.1;
+}
+
+.public-theme-dark-serif .public-content-split__copy h3 {
+  color: var(--public-muted);
+  font-family: var(--public-font-body);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+.public-theme-dark-serif .public-content-split__copy p {
+  color: var(--public-muted);
+  font-size: 1.02rem;
+  line-height: 1.78;
+}
+
+.public-theme-dark-serif .public-content-split__copy a {
+  border-bottom: 1px solid var(--public-text);
+  color: var(--public-text);
+  display: inline-flex;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: 18px;
+  padding-bottom: 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.public-theme-dark-serif .public-content-split__image {
+  border: 0;
+  border-radius: 0;
+  max-width: 260px;
+}
+
+.public-theme-dark-serif .public-content-split__image img {
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.public-theme-dark-serif .public-services-simple {
+  border-top: 1px solid var(--public-border);
+  border-bottom: 1px solid var(--public-border);
+}
+
+.public-theme-dark-serif .public-services-simple__inner {
+  display: grid;
+  gap: 42px;
+  grid-template-columns: 0.42fr 1fr;
+}
+
+.public-theme-dark-serif .public-services-simple__heading p {
+  color: var(--public-muted);
+  line-height: 1.7;
+  margin-top: 14px;
+}
+
+.public-theme-dark-serif .public-services-simple__list {
+  display: grid;
+  gap: 0;
+}
+
+.public-theme-dark-serif .public-services-simple__list > * {
+  border-top: 1px solid var(--public-border);
+  color: var(--public-text);
+  display: grid;
+  gap: 8px;
+  padding: 22px 0;
+  text-decoration: none;
+}
+
+.public-theme-dark-serif .public-services-simple__list > *:last-child {
+  border-bottom: 1px solid var(--public-border);
+}
+
+.public-theme-dark-serif .public-services-simple__list span {
+  font-family: var(--public-font-heading);
+  font-size: clamp(1.35rem, 2.3vw, 2rem);
+}
+
+.public-theme-dark-serif .public-services-simple__list small {
+  color: var(--public-muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.public-theme-dark-serif .public-section-panel--muted {
+  background: var(--public-surface);
+  padding: 78px 28px;
+}
+
+.public-theme-dark-serif .public-trust-statement {
+  max-width: 820px;
+}
+
+.public-theme-dark-serif .public-trust-statement blockquote {
+  color: var(--public-text);
+  font-family: var(--public-font-heading);
+  font-size: clamp(1.6rem, 3vw, 3rem);
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.public-theme-dark-serif .public-trust-statement blockquote span {
+  display: inline;
+}
+
+.public-theme-dark-serif .public-trust-statement p:last-child {
+  color: var(--public-muted);
+  font-family: var(--public-font-body);
+}
+
+.public-theme-dark-serif .public-lead-form {
+  background: var(--public-background);
+}
+
+.public-theme-dark-serif .public-lead-form__inner {
+  grid-template-columns: 0.72fr 1fr;
+}
+
+.public-theme-dark-serif .public-lead-form form,
+.public-theme-dark-serif .public-lead-contact,
+.public-theme-dark-serif .public-lead-contact__row,
+.public-theme-dark-serif .public-gallery-grid figure,
+.public-theme-dark-serif .public-footer {
+  border-radius: 0;
+}
+
+.public-theme-dark-serif .public-lead-form form {
+  background: var(--public-surface);
+}
+
+.public-theme-dark-serif .public-lead-form input,
+.public-theme-dark-serif .public-lead-form textarea {
+  background: #ffffff;
+  border-radius: 0;
+}
+
+.public-theme-dark-serif .public-gallery-grid {
+  background: var(--public-background);
+}
+
+.public-theme-dark-serif .public-gallery-grid figure {
+  border-color: var(--public-border);
+}
+
+.public-theme-dark-serif .public-gallery-grid img,
+.public-theme-dark-serif .public-gallery-grid figure > div {
+  aspect-ratio: 1 / 1;
+  height: auto;
+}
+
+.public-theme-dark-serif .public-cta-band {
+  background: var(--public-dark);
+  color: #ffffff;
+}
+
+.public-theme-dark-serif .public-cta-band h2 {
+  color: #ffffff;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 400;
+}
+
+.public-theme-dark-serif .public-cta-band a {
+  background: transparent;
+  border: 1px solid #ffffff;
+  border-radius: 0;
+  color: #ffffff;
+}
+
+.public-theme-dark-serif .public-cta-band a:hover {
+  background: #ffffff;
+  color: var(--public-dark);
+}
+
+.public-theme-dark-serif .public-footer {
+  background: #ffffff;
+  border-top: 1px solid var(--public-border);
+  color: var(--public-text);
+}
+
+.public-theme-dark-serif .public-footer__inner {
+  gap: 32px;
+}
+
+.public-theme-dark-serif .public-footer h2 {
+  color: var(--public-muted);
+  font-family: var(--public-font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.public-theme-dark-serif .public-footer a {
+  color: var(--public-text);
+}
+
+.public-theme-dark-serif .public-footer__badges img {
+  max-height: 62px;
+}
+
+.public-theme-dark-serif .public-footer__bottom {
+  background: var(--public-surface);
+  color: var(--public-muted);
+}
+

@@ -1,0 +1,368 @@
+{
+  "id": "red_charcoal_home.reference",
+  "schema_version": 1,
+  "name": "Red charcoal reference home",
+  "description": "Source-backed home-page decomposition with quote-led hero, service sections, proof bands, review proof, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Roof Shield",
+    "RoofShield",
+    "roofshield",
+    "roofshield.ie",
+    "www.roofshield.ie",
+    "Tom O' Brien",
+    "Mary Sweeney",
+    "Steve Dennehy",
+    "Pat Finnerty",
+    "TJ McCarthy",
+    "Vincent Scott",
+    "John",
+    "Swords",
+    "Blanchardstown",
+    "Tallaght",
+    "Lucan",
+    "Clondalkin",
+    "Malahide"
+  ],
+  "theme": "red_charcoal",
+  "forms": [
+    {
+      "form_id": "red-charcoal-quote",
+      "title": "Free Quote Request",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "name",
+          "label": "Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "label": "Phone",
+          "type": "phone",
+          "required": true
+        },
+        {
+          "id": "service_type",
+          "label": "Service needed",
+          "type": "text",
+          "required": false,
+          "placeholder": "Tell us what you need help with"
+        }
+      ],
+      "privacy_notice": "Contact details are used only to prepare a free, no-obligation roofing quote."
+    }
+  ],
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "title": "Roofing {{service_region}} - Roof Repair {{service_region}} - {{business_name}}",
+      "page_type": "home",
+      "seo": {
+        "title": "Roofing {{service_region}} - Roof Repair {{service_region}} - {{business_name}}",
+        "description": "At {{business_name}}, we understand the importance of a sturdy and reliable roof over your head. Serving {{service_region}}, we specialise in providing roofing solutions."
+      },
+      "metadata": {
+        "source_url": "https://roofshield.ie/",
+        "source_type": "live_website",
+        "source_platform": "WordPress 6.8 / Astra / Elementor 3.31",
+        "source_last_modified": "2026-06-09T11:04:47+00:00"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call Us",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/",
+                "active": true
+              },
+              {
+                "label": "Services",
+                "href": "#services"
+              },
+              {
+                "label": "Gallery",
+                "href": "#work"
+              },
+              {
+                "label": "Testimonials",
+                "href": "#testimonials"
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "header",
+              "note": "Elementor header template post-11: contact bar, centered logo row, and black uppercase navigation bar with red active item."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "Trusted Roofing Experts {{service_region}}",
+            "subheadline": "Top Recommended {{service_region}} Roofing Company for all your Home and Business Roofing or Guttering Needs. Trust us for quality service and expert solutions.",
+            "primary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "secondary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "actions": [
+              {
+                "label": "{{phone}}",
+                "href": "tel:{{phone}}"
+              },
+              {
+                "label": "{{email}}",
+                "href": "mailto:{{email}}"
+              }
+            ],
+            "media": {
+              "url": "{{images.roofing_work_in_service_area}}",
+              "alt_text": "{{business_name}} roofing work in {{service_area}}"
+            },
+            "proof_line": ""
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "hero",
+              "note": "Elementor slides widget post-26 element 05a60ea: 610px image hero, 54% black overlay, 100px left padding, 40px Roboto heading."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "anchor_id": "about",
+            "title": "{{business_name}}",
+            "subheading": "Roofing Experts in {{service_region}}",
+            "paragraphs": [
+              "At {{business_name}}, we understand the importance of a sturdy and reliable roof over your head. Serving {{service_area}}, we specialise in providing top-notch roofing solutions tailored to meet your specific needs. Whether it's a minor repair or a complete roof installation, our team of experienced professionals is dedicated to ensuring quality workmanship and customer satisfaction."
+            ],
+            "image_url": "{{images.roofing_about_image}}",
+            "alt_text": "{{business_name}} roofing project",
+            "image_position": "right"
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "about",
+              "note": "About block post-26 elements ac30c82/565d91e: tiny SEO heading, 'Roof Shield' heading, 'Roofing Experts in Dublin' subheading, dotted primary divider, body copy, right image."
+            }
+          ]
+        },
+        {
+          "component_id": "public.cta.band",
+          "props": {
+            "anchor_id": "contact-cta",
+            "title": "Contact us today for a free consultation and let {{business_name}} protect your home with excellence.",
+            "actions": [
+              {
+                "label": "{{phone}}",
+                "href": "tel:{{phone}}"
+              },
+              {
+                "label": "{{email}}",
+                "href": "mailto:{{email}}"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "contact_cta",
+              "note": "Full-width contact band post-26 element 0999d91 with strong color contrast and three pill contact buttons."
+            }
+          ]
+        },
+        {
+          "component_id": "public.services.cards",
+          "props": {
+            "anchor_id": "services"
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "services",
+              "note": "Seven Elementor service cards across two rows, each with a 3:2 image, red heading, body copy, and pill button named after the service."
+            }
+          ]
+        },
+        {
+          "component_id": "public.proof.logo_strip",
+          "props": {
+            "anchor_id": "suppliers",
+            "title": "Roofing materials and suppliers used on local projects",
+            "items": [
+              {
+                "label": "Tegral",
+                "image_url": "{{images.tegral_logo}}",
+                "alt_text": "Tegral logo"
+              },
+              {
+                "label": "Velux",
+                "image_url": "{{images.velux_logo}}",
+                "alt_text": "Velux logo"
+              },
+              {
+                "label": "SIG",
+                "image_url": "{{images.sig_logo}}",
+                "alt_text": "SIG logo"
+              },
+              {
+                "label": "KLI",
+                "image_url": "{{images.kli_logo}}",
+                "alt_text": "KLI logo"
+              },
+              {
+                "label": "Celu",
+                "image_url": "{{images.celu_logo}}",
+                "alt_text": "Celu logo"
+              },
+              {
+                "label": "Building Products",
+                "image_url": "{{images.building_products_logo}}",
+                "alt_text": "Building products logo"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "supplier_logo_marquee",
+              "note": "Elementor image carousel post-26 element 03d935f: six logos, six desktop slides, three tablet/mobile slides, no navigation, linear 8000ms marquee. The improved fixture keeps the sourced logos but renders them as a static supplier row after services."
+            }
+          ]
+        },
+        {
+          "component_id": "public.gallery.grid",
+          "props": {
+            "anchor_id": "work",
+            "layout": "carousel",
+            "carousel_label": "Recent {{business_name}} roofing work",
+            "slides_per_view": 3,
+            "mobile_slides_per_view": 2,
+            "show_controls": true,
+            "show_dots": false,
+            "show_captions": false,
+            "items": "{{projects.recent}}"
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "work_gallery",
+              "note": "Full-width image carousel post-26 element 68c60c4: seven images, three desktop slides, two mobile slides, and arrow navigation."
+            }
+          ]
+        },
+        {
+          "component_id": "public.faq.list",
+          "props": {
+            "anchor_id": "faq",
+            "title": "{{business_name}} FAQ's",
+            "items": [
+              {
+                "question": "1. What materials do you use for flat roofs?",
+                "answer": "We use high-quality materials like EPDM rubber, GRP fibreglass, and felt roofing to ensure durability, weather resistance, and long-lasting protection."
+              },
+              {
+                "question": "2. Do you offer free quotes for roofing services?",
+                "answer": "Yes, we provide free, no-obligation quotes. Contact us today, and our team will assess your needs and offer expert advice."
+              },
+              {
+                "question": "3. How do I know if my roof needs repairs?",
+                "answer": "Look for signs like leaks, missing tiles, sagging, damp patches, or mould growth. If unsure, our team can inspect and advise."
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "faq",
+              "note": "Narrow 850px static FAQ list post-26 element 0ffceba with three numbered questions and thin #b2b2b2 dividers."
+            }
+          ]
+        },
+        {
+          "component_id": "public.proof.testimonials",
+          "props": {
+            "anchor_id": "testimonials",
+            "title": "WHAT PEOPLE SAY",
+            "items": [
+              {
+                "quote": "Very happy with {{business_name}}. They did a fantastic job on my roof, responded very quickly, and gave a very fair price. I would definitely hire them again.",
+                "name": "Local customer",
+                "rating": 5,
+                "source_label": "Google review"
+              },
+              {
+                "quote": "I Recently hired {{business_name}} to put new dry verge on my gable end very pleased with their work & very professional.",
+                "name": "Verified customer",
+                "rating": 5,
+                "source_label": "Google review"
+              },
+              {
+                "quote": "The team responded quickly after storm damage, repaired the roof, and kept the price fair. I would hire them again.",
+                "name": "Homeowner customer",
+                "rating": 5,
+                "source_label": "Google review"
+              },
+              {
+                "quote": "{{business_name}} was great to organise their guys to come out to do Emergency Roof repairs on my Roof & replace new gutters also very Qualified team if guys & tidy to clean up afterwards",
+                "name": "Repeat customer",
+                "rating": 5,
+                "source_label": "Google review"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "testimonials",
+              "note": "Review block post-26 element 5fba5db with uppercase WHAT PEOPLE SAY heading and four one-slide Elementor review widgets."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "contact_line": "{{address}}",
+            "address": "{{address}}"
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "footer",
+              "note": "Footer post-26 element 60a8ca1: logo column, Dublin address column, phone/email column, and useful service links column."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "key": "home_header",
+      "location": "header",
+      "label": "Home",
+      "page_key": "home",
+      "position": 0
+    }
+  ]
+}

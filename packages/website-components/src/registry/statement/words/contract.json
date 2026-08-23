@@ -1,0 +1,61 @@
+{
+  "id": "public.statement.words",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Statement Words",
+  "family": "statement",
+  "variant": "words",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "words": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1
+      },
+      "description": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["words"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "words",
+      "type": "list",
+      "label": "Statement words",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "description",
+      "type": "textarea",
+      "label": "Description",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "description",
+      "value": "{{description}}"
+    }
+  ],
+  "design_controls": []
+}

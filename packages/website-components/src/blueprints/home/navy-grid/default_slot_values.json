@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "images.hero_motif_shapes": {
+      "label": "Hero motif shapes",
+      "source": "/fixtures/suffolk/parallax-hero-shapes.png",
+      "type": "image"
+    },
+    "images.hero_excavation_worker": {
+      "label": "Hero excavation worker",
+      "source": "/fixtures/suffolk/worker-dig.png",
+      "type": "image"
+    },
+    "images.hero_excavation_worker_mobile": {
+      "label": "Mobile hero excavation worker",
+      "source": "/fixtures/suffolk/worker-dig.png",
+      "type": "image"
+    },
+    "images.story_feature_project": {
+      "label": "Story featured project",
+      "source": "/fixtures/suffolk/naples-beach-club.png",
+      "type": "image"
+    },
+    "images.story_glass_tower": {
+      "label": "Story glass tower",
+      "source": "/fixtures/suffolk/glass-building.jpg",
+      "type": "image"
+    },
+    "images.story_careers_worker": {
+      "label": "Story careers worker",
+      "source": "/fixtures/suffolk/careers-worker.jpg",
+      "type": "image"
+    },
+    "images.metric_tablet_worker": {
+      "label": "Metric tablet worker",
+      "source": "/fixtures/suffolk/tablet-worker.png",
+      "type": "image"
+    },
+    "images.metric_rebar_measurement": {
+      "label": "Metric rebar measurement",
+      "source": "/fixtures/suffolk/measuring-rebar.jpg",
+      "type": "image"
+    },
+    "images.metric_certification_badge": {
+      "label": "Metric certification badge",
+      "source": "/fixtures/suffolk/great-place-to-work.png",
+      "type": "image"
+    },
+    "images.metric_safety_leader": {
+      "label": "Metric safety leader",
+      "source": "/fixtures/suffolk/helmet-worker.png",
+      "type": "image"
+    },
+    "images.system_operations_project": {
+      "label": "System operations project",
+      "source": "/fixtures/suffolk/naples-beach-club.png",
+      "type": "image"
+    },
+    "images.system_robotics_layout": {
+      "label": "System robotics layout",
+      "source": "/fixtures/suffolk/rugged-robotics.jpg",
+      "type": "image"
+    },
+    "images.system_data_worker": {
+      "label": "System data worker",
+      "source": "/fixtures/suffolk/worker-dig.png",
+      "type": "image"
+    },
+    "images.system_expertise_tower": {
+      "label": "System expertise tower",
+      "source": "/fixtures/suffolk/glass-building.jpg",
+      "type": "image"
+    },
+    "images.tile_careers_worker": {
+      "label": "Tile careers worker",
+      "source": "/fixtures/suffolk/careers-worker.jpg",
+      "type": "image"
+    },
+    "images.tile_projects_building": {
+      "label": "Tile projects building",
+      "source": "/fixtures/suffolk/projects-building.jpg",
+      "type": "image"
+    },
+    "images.tile_community_giveback": {
+      "label": "Tile community giveback",
+      "source": "/fixtures/suffolk/community-shirt.jpg",
+      "type": "image"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.center_logo",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    }
+  ]
+}

@@ -1,0 +1,413 @@
+{
+  "id": "red_charcoal_service.reference",
+  "schema_version": 1,
+  "name": "Red charcoal reference service page",
+  "description": "Source-backed service-page decomposition with service explanation, common concerns, proof notes, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Roof Shield",
+    "RoofShield",
+    "roofshield",
+    "roofshield.ie",
+    "www.roofshield.ie",
+    "Tom O' Brien",
+    "Mary Sweeney",
+    "Steve Dennehy",
+    "Pat Finnerty",
+    "TJ McCarthy",
+    "Vincent Scott",
+    "John",
+    "Swords",
+    "Blanchardstown",
+    "Tallaght",
+    "Lucan",
+    "Clondalkin",
+    "Malahide"
+  ],
+  "theme": "red_charcoal",
+  "forms": [
+    {
+      "form_id": "red-charcoal-service-quote",
+      "title": "Free Service Quote Request",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "name",
+          "label": "Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "label": "Phone",
+          "type": "phone",
+          "required": true
+        },
+        {
+          "id": "message",
+          "label": "Tell us what you need",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "privacy_notice": "Contact details are used only to prepare a free, no-obligation roofing quote."
+    }
+  ],
+  "pages": [
+    {
+      "key": "service",
+      "path": "/roof-repair/",
+      "title": "Roof Repair - {{business_name}}",
+      "page_type": "service",
+      "seo": {
+        "title": "Roof Repair - {{business_name}}",
+        "description": "Your roof protects your home from the elements, but over time, wear and tear, harsh weather, and general aging can cause damage."
+      },
+      "metadata": {
+        "source_url": "https://roofshield.ie/roof-repair/",
+        "source_type": "live_website",
+        "source_platform": "WordPress 6.8 / Astra / Elementor 3.31",
+        "source_last_modified": "2025-04-29T17:56:39",
+        "route_variants": [
+          {
+            "slug": "roof-repair",
+            "path": "/roof-repair/",
+            "title": "Roof Repair",
+            "source_url": "https://roofshield.ie/roof-repair/",
+            "source_last_modified": "2025-04-29T17:56:39",
+            "intro": "Your roof protects your home from the elements, but over time, wear and tear, harsh weather, and general aging can cause damage. Even small leaks or missing tiles can lead to bigger problems like water damage, mould growth, or structural issues. At {{business_name}}, we provide expert roof repairs to restore your roof's integrity and keep your home safe.",
+            "features": [
+              "Leak Detection & Repair",
+              "Storm Damage Repair",
+              "Roof Repointing & Sealing",
+              "Flat Roof Repairs",
+              "Emergency Roof Repairs"
+            ]
+          },
+          {
+            "slug": "guttering",
+            "path": "/guttering/",
+            "title": "Guttering",
+            "source_url": "https://roofshield.ie/guttering/",
+            "source_last_modified": "2025-04-29T17:57:43",
+            "intro": "Gutters play a crucial role in directing rainwater away from your home, preventing foundation issues, dampness, and structural damage. At {{business_name}}, we offer expert guttering services, from new installations to repairs and maintenance.",
+            "features": [
+              "Gutter installation",
+              "Gutter repairs",
+              "Downpipe installation and repairs",
+              "Fascia & soffit integration"
+            ]
+          },
+          {
+            "slug": "chimney-repair",
+            "path": "/chimney-repair/",
+            "title": "Chimney Repair",
+            "source_url": "https://roofshield.ie/chimney-repair/",
+            "source_last_modified": "2025-04-29T17:58:15",
+            "intro": "Chimneys are constantly exposed to harsh weather, which can cause cracks, leaks, and structural damage over time. At {{business_name}}, we offer expert chimney repair services to keep your chimney functional and safe.",
+            "features": [
+              "Chimney repointing",
+              "Flashing repairs",
+              "Brickwork restoration",
+              "Chimney cap installation",
+              "Smoke and draft issues fixed"
+            ]
+          },
+          {
+            "slug": "new-roofs",
+            "path": "/new-roofs/",
+            "title": "New Roofs",
+            "source_url": "https://roofshield.ie/new-roofs/",
+            "source_last_modified": "2025-04-29T17:58:25",
+            "intro": "A new roof is a significant investment that enhances your home's safety, energy efficiency, and visual appeal. At {{business_name}}, we provide expert new roof installations tailored to your property's style.",
+            "features": [
+              "Pitched and sloped roof installation",
+              "Slate and tile roofs",
+              "Timber and roof truss construction",
+              "Insulation and ventilation",
+              "Custom roof designs"
+            ]
+          },
+          {
+            "slug": "flat-roofs",
+            "path": "/flat-roofs/",
+            "title": "Flat Roofs",
+            "source_url": "https://roofshield.ie/flat-roofs/",
+            "source_last_modified": "2025-04-29T17:58:56",
+            "intro": "Flat roofs are a practical and modern choice for extensions, garages, and commercial properties. At {{business_name}}, we specialise in high-quality flat roofing solutions and repairs.",
+            "features": [
+              "EPDM rubber roofing",
+              "GRP fibreglass roofing",
+              "Felt roofing",
+              "Flat roof repairs and resealing",
+              "Insulation and drainage solutions"
+            ]
+          },
+          {
+            "slug": "fascia-soffits",
+            "path": "/fascia-soffits/",
+            "title": "Fascia & Soffits",
+            "source_url": "https://roofshield.ie/fascia-soffits/",
+            "source_last_modified": "2025-04-29T17:59:29",
+            "intro": "Fascia and soffits protect the roofline from moisture damage while improving the overall appearance of your home. At {{business_name}}, we offer professional fascia and soffit services.",
+            "features": [
+              "Fascia installation and replacement",
+              "Soffit installation and repairs",
+              "uPVC, timber, and aluminium fascia",
+              "Painting and maintenance",
+              "Ventilation and weatherproofing"
+            ]
+          },
+          {
+            "slug": "power-washing",
+            "path": "/power-washing/",
+            "title": "Power Washing",
+            "source_url": "https://roofshield.ie/power-washing/",
+            "source_last_modified": "2025-03-13T17:16:57",
+            "intro": "Over time, moss, algae, lichen, and dirt accumulate on roofs, leading to discoloration, damage, and potential drainage issues. At {{business_name}}, we offer professional roof power washing services.",
+            "features": [
+              "Safe removal of moss, algae, and lichen",
+              "High-pressure roof cleaning",
+              "Gentle soft washing for delicate roofing materials",
+              "Preventative treatments to slow future moss growth",
+              "Clearing of debris to improve drainage and gutter function"
+            ]
+          }
+        ]
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call Us",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "Services",
+                "href": "/#services",
+                "active": true
+              },
+              {
+                "label": "Gallery",
+                "href": "/gallery/"
+              },
+              {
+                "label": "Testimonials",
+                "href": "/testimonials/"
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/roof-repair/",
+              "section": "header",
+              "note": "Service pages reuse the source header/contact treatment from the Roof Shield WordPress theme."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "Roof Repair",
+            "subheadline": "Fast, practical roof repairs for leaks, storm damage, repointing, sealing, flat roofs, and emergency issues around {{service_area}}.",
+            "primary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "secondary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "media": {
+              "url": "{{images.roofing_about_image_roof_repair_work}}",
+              "alt_text": "{{business_name}} roof repair work"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/roof-repair/",
+              "section": "hero",
+              "note": "The service routes share the same Elementor page shape with top contact CTA, service copy, feature list, CTA repeat, and FAQ."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "anchor_id": "service-overview",
+            "title": "Roof Repair Services",
+            "subheading": "Reliable repairs before small roof problems become major damage.",
+            "paragraphs": [
+              "Your roof protects your home from the elements, but over time, wear and tear, harsh weather, and general aging can cause damage. Even small leaks or missing tiles can lead to bigger problems like water damage, mould growth, or structural issues.",
+              "At {{business_name}}, we provide expert roof repairs to restore your roof's integrity and keep your home safe. Our team works efficiently to diagnose problems and provide long-lasting solutions, ensuring your roof remains strong, secure, and fully weatherproof."
+            ],
+            "image_url": "{{images.roof_repair_services}}",
+            "alt_text": "{{business_name}} repair project",
+            "image_position": "right"
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/roof-repair/",
+              "section": "service_body",
+              "note": "Main roof repair body copy extracted from the WordPress REST page content."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.feature_grid",
+          "props": {
+            "eyebrow": "What We Handle",
+            "title": "Our Roof Repair Services Include",
+            "items": [
+              {
+                "title": "Leak Detection & Repair",
+                "body": "Find and repair roof leaks before they spread into interior damage."
+              },
+              {
+                "title": "Storm Damage Repair",
+                "body": "Restore damaged sections after severe rain, wind, or weather exposure."
+              },
+              {
+                "title": "Roof Repointing & Sealing",
+                "body": "Improve weather protection around vulnerable joints and details."
+              },
+              {
+                "title": "Flat Roof Repairs",
+                "body": "Repair flat-roof leaks, seams, surfaces, and water-pooling problems."
+              },
+              {
+                "title": "Emergency Roof Repairs",
+                "body": "Urgent repair support when roof damage needs a fast response."
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/roof-repair/",
+              "section": "feature_list",
+              "note": "The original page renders this as a simple service bullet list. The upgraded CMS version uses feature cards for scanability."
+            }
+          ]
+        },
+        {
+          "component_id": "public.cta.band",
+          "props": {
+            "anchor_id": "service-contact",
+            "title": "Contact us today for a free consultation and let {{business_name}} protect your home with excellence.",
+            "actions": [
+              {
+                "label": "{{phone}}",
+                "href": "tel:{{phone}}"
+              },
+              {
+                "label": "{{email}}",
+                "href": "mailto:{{email}}"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/roof-repair/",
+              "section": "cta",
+              "note": "All service pages repeat the same source CTA block."
+            }
+          ]
+        },
+        {
+          "component_id": "public.faq.list",
+          "props": {
+            "anchor_id": "service-faq",
+            "title": "Roof Repair FAQ's",
+            "items": [
+              {
+                "question": "How long do roof repairs take?",
+                "answer": "It depends on the extent of damage. Minor repairs can be completed in a few hours, while major repairs may take a day or more."
+              },
+              {
+                "question": "How do I know if my roof needs repairs?",
+                "answer": "Look for signs such as leaks, damp patches, missing tiles, or sagging areas. A professional inspection can confirm any issues."
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/roof-repair/",
+              "section": "faq",
+              "note": "FAQ questions and answers extracted from the source service page."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "contact_line": "{{address}}",
+            "service_links": [
+              {
+                "label": "Roof Repair",
+                "href": "/roof-repair/",
+                "active": true
+              },
+              {
+                "label": "Guttering",
+                "href": "/guttering/"
+              },
+              {
+                "label": "Chimney Repair",
+                "href": "/chimney-repair/"
+              },
+              {
+                "label": "New Roofs",
+                "href": "/new-roofs/"
+              },
+              {
+                "label": "Flat Roofs",
+                "href": "/flat-roofs/"
+              },
+              {
+                "label": "Fascia & Soffits",
+                "href": "/fascia-soffits/"
+              },
+              {
+                "label": "Power Washing",
+                "href": "/power-washing/"
+              }
+            ],
+            "copyright": "Copyright 2025 {{business_name}}. All rights reserved."
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Home",
+      "path": "/",
+      "position": 1,
+      "key": "home"
+    },
+    {
+      "location": "primary",
+      "label": "Roof Repair",
+      "page_key": "service",
+      "position": 2,
+      "key": "service"
+    },
+    {
+      "location": "primary",
+      "label": "Contact Us",
+      "path": "/contact-us/",
+      "position": 3,
+      "key": "contact"
+    }
+  ]
+}

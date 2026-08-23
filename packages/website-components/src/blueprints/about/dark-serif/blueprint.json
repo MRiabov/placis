@@ -1,0 +1,155 @@
+{
+  "id": "dark_serif_about.reference",
+  "schema_version": 1,
+  "name": "Dark serif reference about page",
+  "description": "Source-backed about-page decomposition with founder story, portrait media, proof text, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Big Oaks Construction",
+    "Big Oaks",
+    "bigoaksconstruction.com",
+    "www.bigoaksconstruction.com",
+    "Brannan Williams",
+    "Brannan",
+    "Monroe",
+    "Georgia",
+    "GA",
+    "Atlanta"
+  ],
+  "theme": "dark_serif",
+  "pages": [
+    {
+      "key": "about",
+      "path": "/about/",
+      "title": "About - {{business_name}}",
+      "page_type": "about",
+      "seo": {
+        "title": "About - {{business_name}}",
+        "description": "{{business_name}} history, construction experience, and custom home building approach."
+      },
+      "metadata": {
+        "source_url": "https://www.bigoaksconstruction.com/about",
+        "source_type": "live_website",
+        "source_platform": "Squarespace template 7",
+        "source_last_modified": "2018-12-08"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call",
+            "links": [
+              {
+                "label": "home",
+                "href": "/",
+                "active": false
+              },
+              {
+                "label": "about",
+                "href": "/about/",
+                "active": true
+              },
+              {
+                "label": "projects",
+                "href": "/clients/",
+                "active": false
+              },
+              {
+                "label": "contact",
+                "href": "/contact/",
+                "active": false
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "text_only",
+            "eyebrow": "About",
+            "headline": "Passion. Experience.\nDiligence."
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/about",
+              "section": "page_header",
+              "note": "About page title and description: Passion. Experience. Diligence."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "layout": "balanced",
+            "title": "History",
+            "image_url": "{{images.dark_serif_founder_portrait}}",
+            "image_position": "inline",
+            "alt_text": "{{business_name}} founder portrait",
+            "paragraphs": [
+              "{{business_name}} was founded to bring experienced residential building leadership directly to clients. The company combines hands-on project management with practical knowledge from years of home-building work.",
+              "{{business_name}} is dedicated to providing a turn key custom home build to fit your needs, with communication and planning kept clear from the first consultation.",
+              "Bringing passion, experience, and diligence to the building process, you will have no worries about your future home."
+            ],
+            "side_panel": {
+              "title": "Get in touch",
+              "description": "We at {{business_name}} know that finding the right construction professional for building your dream home or updating your current home is not a choice to be taken lightly. That's why we offer free consultations to walk you through your needs, the scope of your goals, and your budget.",
+              "href": "/contact/",
+              "link_label": "Book an appointment >"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/about",
+              "section": "history",
+              "note": "About history block with 200x200 founder image and founder/company history copy."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "links": [
+              {
+                "label": "home",
+                "href": "/"
+              },
+              {
+                "label": "about",
+                "href": "/about/"
+              },
+              {
+                "label": "services",
+                "href": "/#services"
+              },
+              {
+                "label": "clients",
+                "href": "/clients/"
+              },
+              {
+                "label": "news",
+                "href": "/news/"
+              },
+              {
+                "label": "contact",
+                "href": "/contact/"
+              }
+            ],
+            "description": "{{business_name}} is a full-service custom home builder that provides top quality energy efficient homes of all sizes.",
+            "legal_disclosure_lines": ["Powered by Squarespace"],
+            "copyright": ""
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "About",
+      "page_key": "about",
+      "position": 1,
+      "key": "about"
+    }
+  ]
+}

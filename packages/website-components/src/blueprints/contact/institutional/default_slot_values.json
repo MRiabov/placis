@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "phone": {
+      "label": "Phone",
+      "source": "business_profile.phone",
+      "type": "text"
+    },
+    "email": {
+      "label": "Email",
+      "source": "business_profile.email",
+      "type": "text"
+    },
+    "address": {
+      "label": "Address",
+      "source": "business_profile.address",
+      "type": "text"
+    },
+    "license_number": {
+      "label": "License number",
+      "source": "business_profile.license_number",
+      "type": "text"
+    },
+    "images.logo": {
+      "label": "Logo",
+      "source": "business_assets.logo",
+      "type": "image"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.contact.form_location",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.contact.form_location",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.contact.form_location",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.contact.form_location",
+      "path": "address",
+      "value": "{{address}}"
+    },
+    {
+      "component_id": "public.contact.form_location",
+      "path": "license_number",
+      "value": "{{license_number}}"
+    },
+    {
+      "component_id": "public.contact.form_location",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.contact.form_location",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.contact.form_location",
+      "path": "address",
+      "value": "{{address}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "address",
+      "value": "{{address}}"
+    }
+  ]
+}

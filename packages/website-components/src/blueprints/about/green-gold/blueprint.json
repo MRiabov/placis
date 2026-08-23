@@ -1,0 +1,105 @@
+{
+  "id": "green_gold_about.reference",
+  "schema_version": 1,
+  "status": "ready",
+  "production_selectable": true,
+  "selection_visibility": "public",
+  "deprecated": false,
+  "source_type": "source_backed_reference",
+  "modelled_after": [
+    "PCL Construction",
+    "PCL",
+    "pcl.com",
+    "www.pcl.com",
+    "Special Projects",
+    "North America",
+    "160 Front Street West",
+    "CAMH",
+    "Canada",
+    "United States",
+    "Australia"
+  ],
+  "theme": "green_gold",
+  "name": "Green gold reference about page",
+  "description": "Source-backed about-page decomposition with story, safety proof, innovation proof, ownership notes, leadership content, and CTA sections.",
+  "affinity_group": "green_gold.reference_family",
+  "companion_blueprints": [
+    "green_gold_home.reference",
+    "green_gold_services.reference",
+    "green_gold_work.reference",
+    "green_gold_careers.reference",
+    "green_gold_contact.reference"
+  ],
+  "forms": [],
+  "pages": [
+    {
+      "key": "about",
+      "path": "/about",
+      "title": "Who We Are - {{business_name}}",
+      "page_type": "about",
+      "seo": {
+        "title": "Who We Are - {{business_name}}",
+        "description": "Company story, safety, innovation, ownership, and leadership proof."
+      },
+      "metadata": {
+        "source_urls": [
+          "https://www.pcl.com/us/en/who-we-are/about-us",
+          "https://www.pcl.com/us/en/who-we-are/our-history",
+          "https://www.pcl.com/us/en/who-we-are/safety",
+          "https://www.pcl.com/us/en/who-we-are/innovations"
+        ]
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.mega_menu",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}",
+            "home_href": "/"
+          }
+        },
+        {
+          "component_id": "public.content.intro_metrics",
+          "props": {
+            "eyebrow": "Who We Are",
+            "title": "{{business_name}} story and standards",
+            "paragraphs": [
+              "Use this page for company history, ownership, leadership, innovation, safety, sustainability, and DEI content when the tenant has enough proof to support it."
+            ],
+            "metrics": [
+              {
+                "value": "{{proof.years_in_business}}",
+                "label": "Years in operation"
+              },
+              {
+                "value": "{{proof.active_projects}}",
+                "label": "Active projects"
+              },
+              {
+                "value": "{{proof.employee_owned_percent}}",
+                "label": "Employee owned"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "anchor_id": "safety",
+            "title": "Safety and quality guide the work",
+            "paragraphs": ["{{proof.safety_statement}}"],
+            "image_url": "{{images.safety_proof}}",
+            "image_position": "right"
+          }
+        },
+        {
+          "component_id": "public.footer.multi_column",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}"
+          }
+        }
+      ]
+    }
+  ]
+}

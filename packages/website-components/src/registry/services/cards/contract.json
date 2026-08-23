@@ -1,0 +1,95 @@
+{
+  "id": "public.services.cards",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Service Cards",
+  "family": "services",
+  "variant": "cards",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "intro": {
+        "type": "string"
+      },
+      "services": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "alt_text": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "cta_label": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["name"]
+        },
+        "minItems": 1
+      }
+    },
+    "additionalProperties": true,
+    "required": ["services"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "intro",
+      "type": "textarea",
+      "label": "Intro",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "services",
+      "type": "list",
+      "label": "Services",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

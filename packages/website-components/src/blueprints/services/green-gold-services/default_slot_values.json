@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "services.delivery_methods": {
+      "label": "Delivery services",
+      "source": "business_research.services",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.services.tabs",
+      "path": "services",
+      "value": "{{services.delivery_methods}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Service tabs must be selected from tenant capabilities and should not reuse source delivery-method copy unless verified."
+      }
+    }
+  ]
+}

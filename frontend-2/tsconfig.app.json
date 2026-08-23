@@ -18,14 +18,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@placis/public-site-components": [
-        "../packages/public-site-components/src/index.ts"
+      "@placis/website-components": [
+        "../packages/website-components/src/index.ts"
       ],
-      "@placis/public-site-components/*": [
-        "../packages/public-site-components/src/*"
+      "@placis/website-components/*": [
+        "../packages/website-components/src/*"
       ],
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "../packages/public-site-components/src"]
+  "include": ["src", "../packages/website-components/src"]
 }

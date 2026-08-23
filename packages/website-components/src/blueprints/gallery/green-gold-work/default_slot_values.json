@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "projects.featured": {
+      "label": "Featured projects",
+      "source": "business_research.projects",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.gallery.project_showcase",
+      "path": "projects",
+      "value": "{{projects.featured}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Featured projects must come from the tenant portfolio or approved project evidence before publication."
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "public.proof.review_panel",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Review Panel",
+  "family": "proof",
+  "variant": "review_panel",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": { "type": "string" },
+      "eyebrow": { "type": "string" },
+      "title": { "type": "string" },
+      "items": {
+        "type": "array",
+        "items": { "type": "object", "additionalProperties": true },
+        "maxItems": 6
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title", "items"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Reviews",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": []
+}

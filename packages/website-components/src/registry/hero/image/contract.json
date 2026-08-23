@@ -1,0 +1,188 @@
+{
+  "id": "public.hero.image",
+  "aliases": ["public.hero.v1"],
+  "schema_version": 1,
+  "display_name": "Image Hero",
+  "family": "hero",
+  "variant": "image",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "headline": {
+        "type": "string"
+      },
+      "subheadline": {
+        "type": "string"
+      },
+      "primary_cta": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string",
+            "enum": ["same_tab", "new_tab"]
+          }
+        },
+        "additionalProperties": true,
+        "required": ["label", "href"]
+      },
+      "secondary_cta": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string",
+            "enum": ["same_tab", "new_tab"]
+          }
+        },
+        "additionalProperties": true,
+        "required": ["label", "href"]
+      },
+      "actions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "target": {
+              "type": "string",
+              "enum": ["same_tab", "new_tab"]
+            }
+          },
+          "additionalProperties": true,
+          "required": ["label", "href"]
+        }
+      },
+      "media": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "generated_image_url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "alt_text": {
+            "type": "string"
+          },
+          "focal_point": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "proof_line": {
+        "type": "string"
+      },
+      "cta_label": {
+        "type": "string"
+      },
+      "href": {
+        "type": "string"
+      },
+      "layout": {
+        "type": "string",
+        "enum": ["default", "center_overlay", "text_only"]
+      },
+      "eyebrow": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["headline"]
+  },
+  "editable_slots": [
+    {
+      "key": "headline",
+      "type": "text",
+      "label": "Headline",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "subheadline",
+      "type": "textarea",
+      "label": "Subheadline",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "primary_cta.label",
+      "type": "text",
+      "label": "Primary CTA",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "media.asset_id",
+      "type": "image",
+      "label": "Hero image",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "headline",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "subheadline",
+      "value": "{{description}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "layout",
+      "type": "enum",
+      "label": "Layout",
+      "values": [
+        "default",
+        "media_left",
+        "media_right",
+        "centered",
+        "center_overlay"
+      ],
+      "default": "default"
+    },
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

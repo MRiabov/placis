@@ -14,14 +14,14 @@ export default defineConfig({
         find: /^@placis\/public-site-components$/,
         replacement: path.resolve(
           __dirname,
-          "../packages/public-site-components/src/index.ts",
+          "../packages/website-components/src/index.ts",
         ),
       },
       {
         find: /^@placis\/public-site-components\/(.*)$/,
         replacement: path.resolve(
           __dirname,
-          "../packages/public-site-components/src/$1",
+          "../packages/website-components/src/$1",
         ),
       },
       {

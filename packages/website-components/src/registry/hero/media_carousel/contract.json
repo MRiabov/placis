@@ -1,0 +1,71 @@
+{
+  "id": "public.hero.media_carousel",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Media Carousel Hero",
+  "family": "hero",
+  "variant": "media_carousel",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": { "type": "string" },
+      "eyebrow": { "type": "string" },
+      "headline": { "type": "string" },
+      "subheadline": { "type": "string" },
+      "autoplay": { "type": "boolean" },
+      "auto_advance_ms": { "type": "number", "minimum": 1000 },
+      "primary_cta": { "type": "object", "additionalProperties": true },
+      "secondary_cta": { "type": "object", "additionalProperties": true },
+      "slides": {
+        "type": "array",
+        "items": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "additionalProperties": true,
+    "required": ["slides"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "headline",
+      "type": "text",
+      "label": "Fallback headline",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "subheadline",
+      "type": "textarea",
+      "label": "Fallback subheadline",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "slides",
+      "type": "list",
+      "label": "Hero slides",
+      "required": true,
+      "max_length": 5
+    }
+  ],
+  "default_values": [
+    { "path": "headline", "value": "{{business_name}}" },
+    { "path": "primary_cta.label", "value": "Start a project" },
+    { "path": "primary_cta.href", "value": "/contact" }
+  ],
+  "design_controls": [
+    {
+      "key": "overlay_strength",
+      "label": "Overlay strength",
+      "type": "enum",
+      "values": ["medium", "strong"],
+      "default": "strong"
+    }
+  ]
+}

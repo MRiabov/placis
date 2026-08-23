@@ -1,0 +1,16 @@
+@import "@placis/website-components/styles.css";
+@import "./accreditations.css";
+@import "./interactive-panels.css";
+@import "./service-tabs.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  background: #f8fafc;
+}
+
+body {
+  margin: 0;
+}

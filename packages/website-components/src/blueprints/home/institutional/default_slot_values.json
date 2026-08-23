@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "phone": {
+      "label": "Phone",
+      "source": "business_profile.phone",
+      "type": "text"
+    },
+    "email": {
+      "label": "Email",
+      "source": "business_profile.email",
+      "type": "text"
+    },
+    "address": {
+      "label": "Address",
+      "source": "business_profile.address",
+      "type": "text"
+    },
+    "images.logo": {
+      "label": "Logo",
+      "source": "business_assets.logo",
+      "type": "image"
+    },
+    "projects.home_gallery": {
+      "label": "Home project gallery",
+      "source": "business_research.project_images",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "address",
+      "value": "{{address}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "copyright",
+      "value": "©2017 {{business_name}} All Rights Reserved"
+    },
+    {
+      "component_id": "public.gallery.grid",
+      "path": "items",
+      "value": "{{projects.home_gallery}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Home gallery images must come from the tenant's approved project portfolio, not from the source site.",
+        "fallback_value": [
+          {
+            "title": "Aviation project",
+            "image_url": "{{images.institutional_home_gallery_1}}",
+            "alt_text": "Aviation construction project"
+          },
+          {
+            "title": "Campus project",
+            "image_url": "{{images.institutional_home_gallery_2}}",
+            "alt_text": "Campus construction project"
+          },
+          {
+            "title": "Public facility project",
+            "image_url": "{{images.institutional_home_gallery_3}}",
+            "alt_text": "Public facility construction project"
+          },
+          {
+            "title": "Interior construction",
+            "image_url": "{{images.institutional_home_gallery_4}}",
+            "alt_text": "Interior construction progress"
+          },
+          {
+            "title": "Education project",
+            "image_url": "{{images.institutional_home_gallery_5}}",
+            "alt_text": "Education construction project"
+          }
+        ]
+      }
+    }
+  ]
+}

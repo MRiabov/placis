@@ -1,0 +1,94 @@
+{
+  "id": "public.contact.form_location",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Form Location Contact",
+  "family": "contact",
+  "variant": "form_location",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "form_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      },
+      "business_name": {
+        "type": "string"
+      },
+      "address": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "license_number": {
+        "type": "string"
+      },
+      "map_embed_url": {
+        "type": "string"
+      },
+      "map_title": {
+        "type": "string"
+      },
+      "submit_label": {
+        "type": "string"
+      },
+      "fields": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["id", "label"]
+        }
+      }
+    },
+    "additionalProperties": true,
+    "required": ["form_id", "title", "fields"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "fields",
+      "type": "list",
+      "label": "Form fields",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "path": "address",
+      "value": "{{address}}"
+    }
+  ],
+  "design_controls": []
+}

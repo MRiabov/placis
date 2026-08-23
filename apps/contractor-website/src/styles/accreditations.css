@@ -1,0 +1,9 @@
+@layer components {
+  @media (min-width: 640px) {
+    .public-accreditations[data-item-count="4"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-inline: auto;
+      max-width: 760px;
+    }
+  }
+}

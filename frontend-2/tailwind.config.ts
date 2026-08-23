@@ -5,7 +5,7 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{ts,tsx}",
-    "../packages/public-site-components/src/**/*.{ts,tsx}",
+    "../packages/website-components/src/**/*.{ts,tsx}",
     "./node_modules/streamdown/dist/**/*.{js,mjs}",
   ],
   safelist: [
