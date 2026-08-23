@@ -22,7 +22,7 @@ unpublished documents in memory. There is no unpublished revision stack.
 
 | Route | Purpose |
 | -- | -- |
-| `/cms/website` | Website editor (website pages rail, canvas, inspector, website assistant, website publication) |
+| `/cms/website` | Website editor (website pages rail, canvas, editing panel, website assistant, website publication) |
 | `/cms/projects` | Projects under Profile |
 | `/cms/certifications-and-reviews` | Certifications and reviews under Profile |
 | `/cms/details` | Details (business profile) — owned by [details](../other/details/frontend.md) |
@@ -36,14 +36,14 @@ Three surfaces, one unpublished website:
 
 - **Canvas** — the selected website page, live from its website sections. Not a website preview.
 - **Workspace** — Website pages, Media library, Website styles, Top menu and footer.
-- **Inspector** — the selected website section: website slots, design controls, SEO columns,
+- **Editing panel** — the selected website section: website slots, design controls, SEO columns,
   website forms. Website versions show website publications and website-assistant activity, not
   unpublished checkpoints per website page.
 
 Website styles are tenant-wide (`website_settings`), shown on the website page GET, applied only on
 explicit apply. Top menu and footer are edited here, not in Details.
 
-**Website publication** is an explicit action (toolbar / inspector). It is blocked while
+**Website publication** is an explicit action (toolbar / editing panel). It is blocked while
 required website slots cannot resolve or media library items on the live path are not approved. After it
 succeeds, `has_unpublished_changes` is false until the next edit. Website publication does **not**
 attach a custom website address.
