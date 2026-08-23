@@ -1,0 +1,64 @@
+{
+  "id": "public.posts.list",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Posts List",
+  "family": "posts",
+  "variant": "list",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "intro": {
+        "type": "string"
+      },
+      "posts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "additionalProperties": true,
+    "required": ["posts"]
+  },
+  "editable_slots": [
+    {
+      "key": "eyebrow",
+      "type": "text",
+      "label": "Eyebrow",
+      "required": false,
+      "max_length": 80
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": 120
+    },
+    {
+      "key": "intro",
+      "type": "textarea",
+      "label": "Intro",
+      "required": false,
+      "max_length": 300
+    }
+  ],
+  "default_values": [],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

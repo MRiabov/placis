@@ -1,0 +1,80 @@
+{
+  "id": "public.content.story_text",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Story Text",
+  "family": "content",
+  "variant": "story_text",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": { "type": "string" },
+      "title": { "type": "string" },
+      "layout": { "type": "string", "enum": ["centered", "split"] },
+      "image_url": { "type": "string" },
+      "alt_text": { "type": "string" },
+      "image_position": { "type": "string", "enum": ["left", "right"] },
+      "blocks": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "heading": { "type": "string" },
+            "paragraphs": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "paragraphs": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": 80
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": false,
+      "max_length": 120
+    },
+    {
+      "key": "blocks",
+      "type": "list",
+      "label": "Story blocks",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "title",
+      "value": "{{section_title}}"
+    },
+    {
+      "path": "blocks",
+      "value": "{{story_blocks}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "layout",
+      "type": "enum",
+      "label": "Layout",
+      "values": ["centered", "split"],
+      "default": "centered"
+    }
+  ]
+}

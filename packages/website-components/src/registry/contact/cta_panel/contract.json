@@ -1,0 +1,73 @@
+{
+  "id": "public.contact.cta_panel",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Contact CTA Panel",
+  "family": "contact",
+  "variant": "cta_panel",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "eyebrow": { "type": "string" },
+      "title": { "type": "string" },
+      "description": { "type": "string" },
+      "email": { "type": "string" },
+      "phone": { "type": "string" },
+      "whatsapp_url": { "type": "string" },
+      "email_label": { "type": "string" },
+      "phone_label": { "type": "string" },
+      "whatsapp_label": { "type": "string" }
+    },
+    "additionalProperties": true,
+    "required": ["title"]
+  },
+  "editable_slots": [
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "description",
+      "type": "textarea",
+      "label": "Description",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "email",
+      "type": "text",
+      "label": "Email",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "phone",
+      "type": "text",
+      "label": "Phone",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "title",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "description",
+      "value": "{{description}}"
+    },
+    {
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "path": "phone",
+      "value": "{{phone}}"
+    }
+  ],
+  "design_controls": []
+}

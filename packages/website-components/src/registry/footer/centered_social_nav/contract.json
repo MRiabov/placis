@@ -1,0 +1,85 @@
+{
+  "id": "public.footer.centered_social_nav",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Centered Social Footer",
+  "family": "footer",
+  "variant": "centered_social_nav",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "business_name": {
+        "type": "string"
+      },
+      "logo_url": {
+        "type": "string"
+      },
+      "logo": {
+        "type": ["object", "string"],
+        "additionalProperties": true
+      },
+      "links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["label"]
+        }
+      },
+      "legal_links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["label"]
+        }
+      },
+      "social_links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["label", "href"]
+        }
+      },
+      "contact_line": {
+        "type": "string"
+      },
+      "copyright": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "links",
+      "type": "list",
+      "label": "Footer links",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "social_links",
+      "type": "list",
+      "label": "Social links",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "path": "logo",
+      "value": "{{images.logo}}"
+    }
+  ],
+  "design_controls": []
+}

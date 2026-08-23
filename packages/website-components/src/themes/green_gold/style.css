@@ -1,0 +1,138 @@
+@layer components {
+  .public-theme-green-gold {
+    --public-component-accent: var(--public-accent);
+    --public-component-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --public-component-muted-surface: #f1f3f2;
+    --public-component-on-accent: #1f2329;
+    --public-component-strong-surface: #082b21;
+    --public-component-link-on-brand: rgba(255, 255, 255, 0.78);
+    font-family: "Barlow", Inter, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+  }
+
+  .public-theme-green-gold .public-site-shell {
+    max-width: 1220px;
+  }
+
+  .public-theme-green-gold h1,
+  .public-theme-green-gold h2,
+  .public-theme-green-gold h3 {
+    font-family: "Barlow", "Arial Narrow", system-ui, sans-serif;
+    letter-spacing: 0;
+  }
+
+  .public-theme-green-gold .public-mega-nav__links,
+  .public-theme-green-gold .public-mega-nav__tools,
+  .public-theme-green-gold .public-section-label,
+  .public-theme-green-gold .public-media-hero__eyebrow {
+    letter-spacing: 0;
+  }
+
+  .public-theme-green-gold
+    .public-mega-nav.is-overlay
+    .public-mega-nav__mega {
+    display: none;
+  }
+
+  .public-theme-green-gold .public-content-split h2,
+  .public-theme-green-gold .public-gallery-grid h2,
+  .public-theme-green-gold .public-proof-testimonials h2,
+  .public-theme-green-gold .public-region-map-stats h2,
+  .public-theme-green-gold .public-cta-band h2 {
+    font-family: "Barlow", "Arial Narrow", system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.02;
+    text-transform: none;
+  }
+
+  .public-theme-green-gold .public-media-hero__actions a {
+    background: transparent;
+    color: #fff;
+    min-height: auto;
+    padding: 0 106px 0 0;
+    position: relative;
+  }
+
+  .public-theme-green-gold .public-media-hero__actions a::after {
+    background: #fff;
+    content: "";
+    height: 2px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 88px;
+  }
+
+  .public-theme-green-gold .public-media-hero__controls > button {
+    align-items: center;
+    border: 2px solid var(--public-accent);
+    border-radius: 999px;
+    color: #fff;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 0;
+    height: 34px;
+    justify-content: center;
+    min-height: 34px;
+    padding: 0;
+    position: relative;
+    width: 34px;
+  }
+
+  .public-theme-green-gold .public-media-hero__pause-icon {
+    color: #fff;
+  }
+
+  .public-theme-green-gold .public-intro-metrics::after {
+    background: color-mix(in srgb, var(--public-accent) 45%, #fff);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    content: "";
+    height: 210px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 174px;
+  }
+
+  .public-theme-green-gold .public-video-feature__poster::after {
+    animation: public-green-gold-geometry-in 850ms var(--public-component-ease)
+      110ms both;
+    border-color: var(--public-accent) transparent transparent transparent;
+    border-style: solid;
+    border-width: 110px 110px 0 0;
+    content: "";
+    height: 0;
+    position: absolute;
+    right: 36px;
+    top: 0;
+    width: 0;
+  }
+
+  .public-theme-green-gold .public-sector-tabs__panel,
+  .public-theme-green-gold .public-project-showcase__panel,
+  .public-theme-green-gold .public-video-feature__poster {
+    box-shadow: 0 18px 60px rgba(8, 43, 33, 0.1);
+  }
+
+  @keyframes public-green-gold-geometry-in {
+    from {
+      opacity: 0;
+      transform: translate(70px, -42px) skewX(-8deg);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0) skewX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .public-theme-green-gold
+      .public-video-feature__poster::after {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

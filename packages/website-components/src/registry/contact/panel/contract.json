@@ -1,0 +1,113 @@
+{
+  "id": "public.contact.panel",
+  "aliases": ["public.contact_panel.v1", "public.contact.v1"],
+  "schema_version": 1,
+  "display_name": "Contact Panel",
+  "family": "contact",
+  "variant": "panel",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "business_name": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "service_area": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "opening_hours": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "hours": {
+        "type": "string"
+      },
+      "address": {
+        "type": "string"
+      },
+      "cta_label": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title"]
+  },
+  "editable_slots": [
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "phone",
+      "type": "text",
+      "label": "Phone",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "email",
+      "type": "text",
+      "label": "Email",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "service_area",
+      "type": "list",
+      "label": "Service area",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "title",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "path": "service_area",
+      "value": "{{service_area}}"
+    },
+    {
+      "path": "opening_hours",
+      "value": "{{opening_hours}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

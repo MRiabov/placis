@@ -1,0 +1,173 @@
+{
+  "id": "institutional_projects.reference",
+  "schema_version": 1,
+  "name": "Institutional mono reference projects page",
+  "description": "Source-backed projects-page decomposition with category tiles, image proof, reviewable facts, and CTA sections.",
+  "status": "ready",
+  "modelled_after": [
+    "Harper Construction",
+    "Harper Construction Company",
+    "Harper Construction Company, Inc.",
+    "Harper",
+    "harperconstruction.com",
+    "www.harperconstruction.com",
+    "Jeff Harper",
+    "Ron Harper",
+    "Stephen Marble",
+    "Marble",
+    "San Diego",
+    "California",
+    "U.S. Army",
+    "US Army",
+    "Department of Navy",
+    "UC San Diego",
+    "SDSU",
+    "San Diego Sheriff",
+    "US Marine Corps",
+    "Marine Corps"
+  ],
+  "production_selectable": false,
+  "selection_visibility": "internal",
+  "theme": "institutional_mono",
+  "pages": [
+    {
+      "key": "projects",
+      "path": "/projects",
+      "title": "Projects | {{business_name}}",
+      "page_type": "gallery",
+      "seo": {
+        "title": "Projects | {{business_name}}",
+        "description": "Project portfolio categories for commercial, public, education, healthcare, aviation, residential, sustainable, and parking work."
+      },
+      "metadata": {
+        "source_url": "https://www.harperconstruction.com/projects",
+        "source_type": "live_website",
+        "source_platform": "Squarespace 7",
+        "style_reference": "theme.institutional_mono",
+        "multipage_reference_family": "harper_construction"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.fixed_cta",
+          "props": {
+            "home_href": "/",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Projects",
+                "href": "/projects",
+                "active": true
+              },
+              {
+                "label": "News",
+                "href": "/news"
+              },
+              {
+                "label": "Careers",
+                "href": "/careers"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact",
+                "cta": true
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.overlay_title",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "We Take Pride In Our Projects",
+            "media": {
+              "url": "{{images.institutional_projects_hero}}",
+              "alt_text": "Large construction project exterior"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/projects",
+              "section": "projects_intro",
+              "note": "Full-screen image intro uses the headline 'We Take Pride In Our Projects' over ALEX_NYE_LATTC_2.jpg."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.intro",
+          "props": {
+            "anchor_id": "overview",
+            "title": "Projects",
+            "paragraphs": [
+              "Delivering projects that fulfill and exceed the owners expectations is a process that starts during the conceptual stage with a collaborative team from design through construction. This integrated team approach puts the focus of all team members specifically towards the culmination of the completed project. Check out our projects by clicking on the categories below."
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/projects",
+              "section": "projects_overview",
+              "note": "Intro copy connects owner expectations, collaboration, design, construction, and integrated project teams."
+            }
+          ]
+        },
+        {
+          "component_id": "public.gallery.grid",
+          "props": {
+            "anchor_id": "project-categories",
+            "layout": "packed",
+            "show_captions": true
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/projects",
+              "section": "project_category_gallery",
+              "note": "Projects page uses category image tiles for Residential, Government, Higher Education, Sustainable, Healthcare, Education K-12, Aviation, Commercial Offices, and Parking."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.centered_social_nav",
+          "props": {
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Projects",
+      "page_key": "projects",
+      "position": 1,
+      "key": "projects"
+    }
+  ]
+}

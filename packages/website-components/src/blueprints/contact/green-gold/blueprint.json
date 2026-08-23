@@ -1,0 +1,193 @@
+{
+  "id": "green_gold_contact.reference",
+  "schema_version": 1,
+  "status": "ready",
+  "production_selectable": true,
+  "selection_visibility": "public",
+  "deprecated": false,
+  "source_type": "source_backed_reference",
+  "modelled_after": [
+    "PCL Construction",
+    "PCL",
+    "pcl.com",
+    "www.pcl.com",
+    "Special Projects",
+    "North America",
+    "160 Front Street West",
+    "CAMH",
+    "Canada",
+    "United States",
+    "Australia"
+  ],
+  "theme": "green_gold",
+  "name": "Green gold reference contact page",
+  "description": "Source-backed contact-page decomposition with routed inquiry form, adjacent resource links, office details, and CTA sections.",
+  "affinity_group": "green_gold.reference_family",
+  "companion_blueprints": [
+    "green_gold_home.reference",
+    "green_gold_services.reference",
+    "green_gold_work.reference",
+    "green_gold_about.reference",
+    "green_gold_careers.reference"
+  ],
+  "forms": [
+    {
+      "form_id": "green-gold-contact",
+      "title": "Start a conversation",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "inquiry_type",
+          "label": "Inquiry type",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "label": "New project",
+              "value": "new_project"
+            },
+            {
+              "label": "Preconstruction",
+              "value": "preconstruction"
+            },
+            {
+              "label": "Partnership",
+              "value": "partnership"
+            },
+            {
+              "label": "Careers",
+              "value": "careers"
+            },
+            {
+              "label": "General",
+              "value": "general"
+            }
+          ]
+        },
+        {
+          "id": "name",
+          "label": "Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "type": "email",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "label": "Phone",
+          "type": "phone",
+          "required": false
+        },
+        {
+          "id": "message",
+          "label": "Project description",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "privacy_notice": "Contact details are used to respond to the inquiry and create a lead record for follow-up."
+    }
+  ],
+  "pages": [
+    {
+      "key": "contact",
+      "path": "/contact",
+      "title": "Contact - {{business_name}}",
+      "page_type": "quote_contact",
+      "seo": {
+        "title": "Contact {{business_name}}",
+        "description": "Contact {{business_name}} to discuss a construction project, partnership, career, or general inquiry."
+      },
+      "metadata": {
+        "source_url": "https://www.pcl.com/us/en/contact-us"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.mega_menu",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}",
+            "home_href": "/"
+          }
+        },
+        {
+          "component_id": "public.form.lead",
+          "props": {
+            "form_id": "green-gold-contact",
+            "layout": "centered",
+            "eyebrow": "Contact",
+            "title": "Tell us about the project",
+            "privacy_notice": "Route inspired by {{business_name}}'s contact page form and adjacent office/career/recruitment links. Contact details are used only for project follow-up.",
+            "submit_label": "Submit",
+            "submit_action": "create_lead",
+            "fields": [
+              {
+                "id": "inquiry_type",
+                "label": "Inquiry type",
+                "type": "select",
+                "required": true,
+                "options": [
+                  {
+                    "label": "New project",
+                    "value": "new_project"
+                  },
+                  {
+                    "label": "Preconstruction",
+                    "value": "preconstruction"
+                  },
+                  {
+                    "label": "Partnership",
+                    "value": "partnership"
+                  },
+                  {
+                    "label": "Careers",
+                    "value": "careers"
+                  },
+                  {
+                    "label": "General",
+                    "value": "general"
+                  }
+                ]
+              },
+              {
+                "id": "name",
+                "label": "Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": "email",
+                "label": "Email",
+                "type": "email",
+                "required": true
+              },
+              {
+                "id": "phone",
+                "label": "Phone",
+                "type": "phone",
+                "required": false
+              },
+              {
+                "id": "message",
+                "label": "Project description",
+                "type": "textarea",
+                "required": true
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.footer.multi_column",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}"
+          }
+        }
+      ]
+    }
+  ]
+}

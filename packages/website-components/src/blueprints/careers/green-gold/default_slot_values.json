@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "images.logo": {
+      "label": "Business logo",
+      "source": "/fixtures/bellfield/logo.svg",
+      "type": "image"
+    },
+    "images.careers_video_poster": {
+      "label": "Careers video poster",
+      "source": "/fixtures/bellfield/construction-site1.jpg",
+      "type": "image"
+    }
+  },
+  "values": []
+}

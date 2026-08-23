@@ -1,0 +1,63 @@
+{
+  "id": "public.hero.scroll_story",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Scroll Story Hero",
+  "family": "hero",
+  "variant": "scroll_story",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "motif_image_url": {
+        "type": "string"
+      },
+      "hero": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "panels": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": 80
+    },
+    {
+      "key": "hero.headline",
+      "type": "text",
+      "label": "Hero headline",
+      "required": true,
+      "max_length": 120
+    },
+    {
+      "key": "hero.image_url",
+      "type": "image",
+      "label": "Hero image",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "panels",
+      "type": "list",
+      "label": "Story panels",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [],
+  "design_controls": []
+}

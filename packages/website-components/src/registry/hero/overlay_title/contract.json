@@ -1,0 +1,92 @@
+{
+  "id": "public.hero.overlay_title",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Overlay Title Hero",
+  "family": "hero",
+  "variant": "overlay_title",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "headline": {
+        "type": "string"
+      },
+      "media": {
+        "type": "object",
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "generated_image_url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "alt_text": {
+            "type": "string"
+          },
+          "focal_point": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "image_url": {
+        "type": "string"
+      },
+      "alt_text": {
+        "type": "string"
+      },
+      "scroll_label": {
+        "type": "string"
+      },
+      "show_scroll_indicator": {
+        "type": "boolean"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["headline"]
+  },
+  "editable_slots": [
+    {
+      "key": "headline",
+      "type": "text",
+      "label": "Headline",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "media.asset_id",
+      "type": "image",
+      "label": "Hero image",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "headline",
+      "value": "{{business_name}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "overlay",
+      "type": "enum",
+      "label": "Overlay strength",
+      "values": ["light", "medium", "dark"],
+      "default": "medium"
+    }
+  ]
+}

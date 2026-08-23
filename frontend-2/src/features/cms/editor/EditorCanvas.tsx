@@ -6,7 +6,7 @@ import {
   type LoadedPublicSiteComponent,
   type PublicSitePage,
   type PublicSiteSection,
-} from "@placis/public-site-components";
+} from "@placis/website-components";
 import { type DragEvent, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { cn } from "@/shared/lib/cn";

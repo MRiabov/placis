@@ -1,0 +1,75 @@
+{
+  "id": "public.hero.type_first_trust",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Trust Hero",
+  "family": "hero",
+  "variant": "type_first_trust",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": { "type": "string" },
+      "eyebrow": { "type": "string" },
+      "headline": { "type": "string" },
+      "emphasized_headline": { "type": "string" },
+      "subheadline": { "type": "string" },
+      "media": { "type": "object", "additionalProperties": true },
+      "primary_cta": { "type": "object", "additionalProperties": true },
+      "secondary_cta": { "type": "object", "additionalProperties": true },
+      "proof_items": {
+        "type": "array",
+        "items": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "additionalProperties": true,
+    "required": ["headline"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "headline",
+      "type": "text",
+      "label": "Headline",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "emphasized_headline",
+      "type": "text",
+      "label": "Emphasized headline",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "subheadline",
+      "type": "textarea",
+      "label": "Subheadline",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "media.url",
+      "type": "image",
+      "label": "Hero image",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "headline",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "subheadline",
+      "value": "{{description}}"
+    }
+  ],
+  "design_controls": []
+}

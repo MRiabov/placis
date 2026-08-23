@@ -1,0 +1,156 @@
+{
+  "id": "home.stub",
+  "schema_version": 1,
+  "name": "Basic home page",
+  "description": "Skeletal home-page CMS record factory for imported website content.",
+  "status": "stub",
+  "production_selectable": false,
+  "selection_visibility": "internal",
+  "deprecated": true,
+  "modelled_after": null,
+  "theme": "navy_cream",
+  "forms": [
+    {
+      "form_id": "lead",
+      "title": "",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "name",
+          "label": "",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "privacy_notice": ""
+    }
+  ],
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "title": "",
+      "page_type": "home",
+      "seo": {
+        "title": "",
+        "description": ""
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "business_name": "{{business_name}}",
+            "home_href": "/",
+            "links": [
+              {
+                "label": "",
+                "href": "/"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "headline": "",
+            "subheadline": "",
+            "primary_cta": {
+              "label": "",
+              "href": "#lead"
+            },
+            "media": {
+              "alt_text": ""
+            }
+          },
+          "design": {
+            "layout": "media_right",
+            "density": "comfortable"
+          }
+        },
+        {
+          "component_id": "public.services.grid",
+          "props": {
+            "title": "",
+            "intro": "",
+            "services": [
+              {
+                "name": "",
+                "description": "",
+                "href": "#lead"
+              }
+            ]
+          },
+          "design": {
+            "density": "comfortable"
+          }
+        },
+        {
+          "component_id": "public.form.lead",
+          "props": {
+            "form_id": "lead",
+            "title": "",
+            "submit_label": "",
+            "submit_action": "create_lead",
+            "fields": [
+              {
+                "id": "name",
+                "label": "",
+                "type": "text",
+                "required": true
+              }
+            ],
+            "privacy_notice": ""
+          },
+          "design": {
+            "density": "comfortable"
+          }
+        },
+        {
+          "component_id": "public.contact.panel",
+          "props": {
+            "title": "",
+            "business_name": "{{business_name}}",
+            "phone": "{{phone}}",
+            "email": "{{email}}",
+            "service_area": [],
+            "opening_hours": []
+          },
+          "design": {
+            "density": "comfortable"
+          }
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "business_name": "{{business_name}}",
+            "links": [
+              {
+                "label": "",
+                "href": "/"
+              }
+            ],
+            "legal_links": [],
+            "copyright": ""
+          },
+          "design": {
+            "density": "comfortable"
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "key": "home_header",
+      "location": "header",
+      "label": "",
+      "page_key": "home"
+    },
+    {
+      "key": "home_footer",
+      "location": "footer",
+      "label": "",
+      "page_key": "home"
+    }
+  ]
+}

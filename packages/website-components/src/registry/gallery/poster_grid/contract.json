@@ -1,0 +1,96 @@
+{
+  "id": "public.gallery.poster_grid",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Poster Grid",
+  "family": "gallery",
+  "variant": "poster_grid",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "intro": {
+        "type": "string"
+      },
+      "items": {
+        "oneOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "caption": {
+                  "type": "string"
+                },
+                "href": {
+                  "type": "string"
+                },
+                "image_url": {
+                  "type": "string"
+                },
+                "generated_image_url": {
+                  "type": "string"
+                },
+                "alt_text": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          {
+            "type": "string",
+            "pattern": "^\\{\\{\\s*projects\\.[a-zA-Z0-9_.]+\\s*\\}\\}$"
+          }
+        ]
+      }
+    },
+    "additionalProperties": true,
+    "required": ["items"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Poster items",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "items",
+      "value": "{{projects.featured}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

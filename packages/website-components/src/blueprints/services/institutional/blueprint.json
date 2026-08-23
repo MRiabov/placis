@@ -1,0 +1,173 @@
+{
+  "id": "institutional_services.reference",
+  "schema_version": 1,
+  "name": "Institutional mono reference services page",
+  "description": "Source-backed services-page decomposition with delivery capabilities, process copy, image proof, and CTA sections.",
+  "status": "ready",
+  "modelled_after": [
+    "Harper Construction",
+    "Harper Construction Company",
+    "Harper Construction Company, Inc.",
+    "Harper",
+    "harperconstruction.com",
+    "www.harperconstruction.com",
+    "Jeff Harper",
+    "Ron Harper",
+    "Stephen Marble",
+    "Marble",
+    "San Diego",
+    "California",
+    "U.S. Army",
+    "US Army",
+    "Department of Navy",
+    "UC San Diego",
+    "SDSU",
+    "San Diego Sheriff",
+    "US Marine Corps",
+    "Marine Corps"
+  ],
+  "production_selectable": false,
+  "selection_visibility": "internal",
+  "theme": "institutional_mono",
+  "pages": [
+    {
+      "key": "services",
+      "path": "/services",
+      "title": "Services | {{business_name}}",
+      "page_type": "service",
+      "seo": {
+        "title": "Construction Services | {{business_name}}",
+        "description": "Construction services from early collaboration and delivery planning through construction completion."
+      },
+      "metadata": {
+        "source_url": "https://www.harperconstruction.com/services",
+        "source_type": "live_website",
+        "source_platform": "Squarespace 7",
+        "style_reference": "theme.institutional_mono",
+        "multipage_reference_family": "harper_construction"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.fixed_cta",
+          "props": {
+            "home_href": "/",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Services",
+                "href": "/services",
+                "active": true
+              },
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "News",
+                "href": "/news"
+              },
+              {
+                "label": "Careers",
+                "href": "/careers"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact",
+                "cta": true
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.overlay_title",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "Services to Fit Your Needs",
+            "media": {
+              "url": "{{images.institutional_services_hero}}",
+              "alt_text": "Large education construction project"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/services",
+              "section": "services_intro",
+              "note": "Full-screen image intro uses the headline 'Services to Fit Your Needs' over ALEX_NYE_ELAC-G8_001-Stars.jpg."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.intro",
+          "props": {
+            "anchor_id": "services-overview",
+            "title": "Our Services",
+            "paragraphs": [
+              "Our company offers a variety of services to meet your project's needs, to take you from collaboration meetings all the way to ribbon-cutting and beyond. We believe that every project is unique, and can customize our approach to fit your particular project. While we are at the forefront of and specialize in design-build, we are very familiar with a number of delivery methods and are confident we can find the process that will best help you meet your goals."
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/services",
+              "section": "services_overview",
+              "note": "Intro copy says every project is unique and positions Harper as familiar with many delivery methods, with design-build as a specialty."
+            }
+          ]
+        },
+        {
+          "component_id": "public.gallery.grid",
+          "props": {
+            "anchor_id": "capabilities",
+            "layout": "packed",
+            "show_captions": true
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/services",
+              "section": "services_gallery",
+              "note": "Services gallery contains seven categories: Delivery Methods, Preconstruction, Building Information Modeling, Construction, Safety, Sustainability, and Design Management."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.centered_social_nav",
+          "props": {
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Services",
+      "page_key": "services",
+      "position": 1,
+      "key": "services"
+    }
+  ]
+}

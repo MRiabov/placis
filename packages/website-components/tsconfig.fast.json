@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "../../.frontend-quality-cache/website-components-fast.tsbuildinfo"
+  }
+}

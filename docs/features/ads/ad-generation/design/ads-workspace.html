@@ -246,8 +246,8 @@
   .cleanup-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
   /* before/after sweep viewer */
   .sweep { position: relative; width: 100%; height: 280px; border: 1px solid var(--line); border-radius: var(--radius-control); overflow: hidden; cursor: ew-resize; user-select: none; touch-action: none; }
-  .sweep-after { position: absolute; inset: 0; background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; }
-  .sweep-before { position: absolute; top: 0; bottom: 0; left: 0; width: 50%; background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; filter: grayscale(.75) brightness(.92) saturate(.55); }
+  .sweep-after { position: absolute; inset: 0; background-image: url("../../../../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; }
+  .sweep-before { position: absolute; top: 0; bottom: 0; left: 0; width: 50%; background-image: url("../../../../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; filter: grayscale(.75) brightness(.92) saturate(.55); }
   .sweep-divider { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: #fff; box-shadow: 0 0 0 1px rgb(39 39 42 / 15%); cursor: ew-resize; }
   .sweep-divider::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; border-radius: var(--radius-pill); background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
   .sweep-label { position: absolute; top: 8px; font-size: 11px; background: rgb(255 255 255 / 88%); color: var(--muted); padding: 2px 8px; border-radius: var(--radius-pill); }
@@ -267,15 +267,15 @@
   .previews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
   .preview { border: 1px solid var(--line); border-radius: var(--radius-card); background: #fff; overflow: hidden; min-width: 0; }
   .preview .cap { padding: 8px 10px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); }
-  .feedmock .img { height: 150px; background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; }
+  .feedmock .img { height: 150px; background-image: url("../../../../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg"); background-size: cover; background-position: 50% 32%; }
   .feedmock .txt { padding: 10px; font-size: 12px; color: var(--muted); }
   .feedmock .btn { width: calc(100% - 20px); margin: 0 10px 10px; }
-  .storymock .img { height: 240px; background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image2.jpeg"); background-size: cover; background-position: 50% 32%; display: grid; place-items: center; color: #fff; font-weight: 700; text-shadow: 0 1px 6px rgb(0 0 0 / 40%); }
+  .storymock .img { height: 240px; background-image: url("../../../../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg"); background-size: cover; background-position: 50% 32%; display: grid; place-items: center; color: #fff; font-weight: 700; text-shadow: 0 1px 6px rgb(0 0 0 / 40%); }
   .carmock .imgs { display: flex; gap: 6px; padding: 10px 10px 0; }
   .carmock .imgs div { flex: 1; aspect-ratio: 1; border-radius: 6px; background-size: cover; background-position: 50% 32%; }
-  .carmock .imgs div:nth-child(1) { background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image0.jpeg"); }
-  .carmock .imgs div:nth-child(2) { background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg"); }
-  .carmock .imgs div:nth-child(3) { background-image: url("../../../../../apps/public-site/public/fixtures/bellfield/image2.jpeg"); }
+  .carmock .imgs div:nth-child(1) { background-image: url("../../../../../apps/contractor-website/public/fixtures/bellfield/image0.jpeg"); }
+  .carmock .imgs div:nth-child(2) { background-image: url("../../../../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg"); }
+  .carmock .imgs div:nth-child(3) { background-image: url("../../../../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg"); }
   .carmock .txt { padding: 8px 10px; font-size: 12px; color: var(--muted); }
 
   .blocker { display: flex; gap: 10px; align-items: center; padding: 8px 12px; border-radius: var(--radius-control); background: var(--bad-soft); color: var(--bad); font-size: 13px; margin-bottom: 8px; }
@@ -330,7 +330,7 @@
     <p class="note" style="margin:-6px 0 14px">Ads usually run 6 at a time, so cards are large; more than 6 compress automatically. Sorted: active first, then newest.</p>
     <div class="adcards">
       <div class="adcard">
-        <img src="../../../../../apps/public-site/public/fixtures/bellfield/image0.jpeg" alt="" />
+        <img src="../../../../../apps/contractor-website/public/fixtures/bellfield/image0.jpeg" alt="" />
         <div class="adinfo">
           <b>Gutter cleaning — summer</b>
           <div class="admeta2"><span class="badge ready">Creative ready</span><span class="adsub">Updated yesterday · Guttering</span></div>
@@ -343,7 +343,7 @@
         </div>
       </div>
       <div class="adcard">
-        <img src="../../../../../apps/public-site/public/fixtures/bellfield/image1.jpeg" alt="" />
+        <img src="../../../../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg" alt="" />
         <div class="adinfo">
           <b>Roofing replacement — spring push</b>
           <div class="admeta2"><span class="badge ready">Creative ready</span><span class="adsub">Updated today · Roofing</span></div>
@@ -357,7 +357,7 @@
       </div>
 
       <div class="adcard">
-        <img src="../../../../../apps/public-site/public/fixtures/bellfield/image2.jpeg" alt="" />
+        <img src="../../../../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg" alt="" />
         <div class="adinfo">
           <b>Roof repair — winter</b>
           <div class="admeta2"><span class="badge draft">Draft</span><span class="adsub">Updated 3 days ago · Roofing</span></div>
@@ -370,7 +370,7 @@
         </div>
       </div>
       <div class="adcard">
-        <img src="../../../../../apps/public-site/public/fixtures/bellfield/new-house.jpg" alt="" />
+        <img src="../../../../../apps/contractor-website/public/fixtures/bellfield/new-house.jpg" alt="" />
         <div class="adinfo">
           <b>Garage conversions</b>
           <div class="admeta2"><span class="badge draft">Draft</span><span class="adsub">Updated last week · Conversions</span></div>
@@ -485,8 +485,8 @@
       <div class="formbody">
         <div class="q">Photos</div>
         <div class="thumbs">
-          <div class="thumb"><img src="../../../../../apps/public-site/public/fixtures/bellfield/new-house.jpg" alt="New roof" /><span class="cap">New roof</span></div>
-          <div class="thumb"><img src="../../../../../apps/public-site/public/fixtures/bellfield/image2.jpeg" alt="Crew at work" /><span class="cap">Crew at work</span></div>
+          <div class="thumb"><img src="../../../../../apps/contractor-website/public/fixtures/bellfield/new-house.jpg" alt="New roof" /><span class="cap">New roof</span></div>
+          <div class="thumb"><img src="../../../../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg" alt="Crew at work" /><span class="cap">Crew at work</span></div>
           <button class="thumb add" id="addBtn">+ Add</button>
         </div>
         <input type="file" id="fileAdd" accept="image/*" style="display:none" />
@@ -692,7 +692,7 @@
 
   // gallery: main image top left, clickable thumbnails underneath
   const galMain = document.getElementById("galMain");
-  const galBase = "../../../../../apps/public-site/public/fixtures/bellfield/";
+  const galBase = "../../../../../apps/contractor-website/public/fixtures/bellfield/";
   const galThumbs = [...document.querySelectorAll(".gal-thumb")];
   galThumbs.forEach(t => {
     t.style.backgroundImage = 'url("' + galBase + t.dataset.img + '")';

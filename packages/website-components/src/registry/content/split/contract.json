@@ -1,0 +1,144 @@
+{
+  "id": "public.content.split",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Split Content",
+  "family": "content",
+  "variant": "split",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      },
+      "paragraphs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "image_url": {
+        "type": "string"
+      },
+      "alt_text": {
+        "type": "string"
+      },
+      "href": {
+        "type": "string"
+      },
+      "link_label": {
+        "type": "string"
+      },
+      "image_position": {
+        "type": "string",
+        "enum": ["left", "right", "inline"]
+      },
+      "surface": {
+        "type": "string",
+        "enum": ["default", "muted"]
+      },
+      "side_panel": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          },
+          "link_label": {
+            "type": "string"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title"]
+  },
+  "editable_slots": [
+    {
+      "key": "eyebrow",
+      "type": "text",
+      "label": "Eyebrow",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "paragraphs",
+      "type": "list",
+      "label": "Paragraphs",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "image_url",
+      "type": "image",
+      "label": "Image",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "layout",
+      "type": "enum",
+      "label": "Layout",
+      "values": [
+        "balanced",
+        "compact",
+        "editorial",
+        "media_left",
+        "media_right",
+        "centered",
+        "default"
+      ],
+      "default": "balanced"
+    },
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    },
+    {
+      "key": "surface",
+      "type": "enum",
+      "label": "Surface",
+      "values": ["default", "muted"],
+      "default": "default"
+    }
+  ]
+}

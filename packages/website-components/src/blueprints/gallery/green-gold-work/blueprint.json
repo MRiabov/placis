@@ -1,0 +1,74 @@
+{
+  "id": "green_gold_work.reference",
+  "schema_version": 1,
+  "status": "ready",
+  "production_selectable": true,
+  "selection_visibility": "public",
+  "deprecated": false,
+  "source_type": "source_backed_reference",
+  "modelled_after": [
+    "PCL Construction",
+    "PCL",
+    "pcl.com",
+    "www.pcl.com",
+    "Special Projects",
+    "North America",
+    "160 Front Street West",
+    "CAMH",
+    "Canada",
+    "United States",
+    "Australia"
+  ],
+  "theme": "green_gold",
+  "name": "Green gold reference work page",
+  "description": "Source-backed work-index decomposition with project showcase, proof media, project facts, and CTA sections.",
+  "affinity_group": "green_gold.reference_family",
+  "companion_blueprints": [
+    "green_gold_home.reference",
+    "green_gold_services.reference",
+    "green_gold_about.reference",
+    "green_gold_careers.reference",
+    "green_gold_contact.reference"
+  ],
+  "forms": [],
+  "pages": [
+    {
+      "key": "our-work",
+      "path": "/our-work",
+      "title": "Our Work - {{business_name}}",
+      "page_type": "projects",
+      "seo": {
+        "title": "Our Work - {{business_name}}",
+        "description": "Featured construction projects and proof of delivery."
+      },
+      "metadata": {
+        "source_url": "https://www.pcl.com/us/en/our-work"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.mega_menu",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}",
+            "home_href": "/"
+          }
+        },
+        {
+          "component_id": "public.gallery.project_showcase",
+          "props": {
+            "eyebrow": "Our Work",
+            "title": "Featured projects",
+            "projects": "{{projects.featured}}"
+          }
+        },
+        {
+          "component_id": "public.footer.multi_column",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "id": "green_gold_sectors.reference",
+  "schema_version": 1,
+  "status": "ready",
+  "production_selectable": true,
+  "selection_visibility": "public",
+  "deprecated": false,
+  "source_type": "source_backed_reference",
+  "modelled_after": [
+    "PCL Construction",
+    "PCL",
+    "pcl.com",
+    "www.pcl.com",
+    "Special Projects",
+    "North America",
+    "160 Front Street West",
+    "CAMH",
+    "Canada",
+    "United States",
+    "Australia"
+  ],
+  "theme": "green_gold",
+  "name": "Green gold reference capabilities page",
+  "description": "Source-backed services capability page with media hero, capability tabs, project proof, and CTA sections.",
+  "affinity_group": "green_gold.reference_family",
+  "companion_blueprints": [
+    "green_gold_home.reference",
+    "green_gold_services.reference",
+    "green_gold_work.reference",
+    "green_gold_about.reference",
+    "green_gold_careers.reference",
+    "green_gold_contact.reference"
+  ],
+  "forms": [],
+  "pages": [
+    {
+      "key": "capabilities",
+      "path": "/services",
+      "title": "Services - {{business_name}}",
+      "page_type": "service",
+      "seo": {
+        "title": "Construction Services - {{business_name}}",
+        "description": "Service capabilities for commercial, civil, and industrial construction."
+      },
+      "metadata": {
+        "source_urls": [
+          "https://www.pcl.com/us/en/sectors/buildings",
+          "https://www.pcl.com/us/en/sectors/civil",
+          "https://www.pcl.com/us/en/sectors/industrial"
+        ]
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.mega_menu",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}",
+            "home_href": "/",
+            "links": [
+              {
+                "label": "Services",
+                "href": "/services",
+                "active": true
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Our Work",
+                "href": "/our-work"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.media_carousel",
+          "props": {
+            "headline": "Construction services for complex work",
+            "subheadline": "Service capability page for contractors with multiple project types and proof points.",
+            "primary_cta": {
+              "label": "Discuss a project",
+              "href": "/contact"
+            },
+            "slides": [
+              {
+                "label": "Building Work",
+                "headline": "Buildings",
+                "media": {
+                  "url": "{{images.sector_buildings}}"
+                }
+              },
+              {
+                "label": "Infrastructure",
+                "headline": "Civil infrastructure",
+                "media": {
+                  "url": "{{images.sector_civil}}"
+                }
+              },
+              {
+                "label": "Specialist Work",
+                "headline": "Industrial",
+                "media": {
+                  "url": "{{images.sector_industrial}}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.services.sector_tabs",
+          "props": {
+            "anchor_id": "capabilities",
+            "eyebrow": "Services",
+            "title": "Service capabilities",
+            "sectors": [
+              {
+                "label": "{{services.sector_capabilities.0.label}}",
+                "title": "{{services.sector_capabilities.0.title}}",
+                "description": "{{services.sector_capabilities.0.description}}",
+                "href": "{{services.sector_capabilities.0.href}}",
+                "link_label": "Learn more",
+                "image": "{{services.sector_capabilities.0.image}}"
+              },
+              {
+                "label": "{{services.sector_capabilities.1.label}}",
+                "title": "{{services.sector_capabilities.1.title}}",
+                "description": "{{services.sector_capabilities.1.description}}",
+                "href": "{{services.sector_capabilities.1.href}}",
+                "link_label": "Learn more",
+                "image": "{{services.sector_capabilities.1.image}}"
+              },
+              {
+                "label": "{{services.sector_capabilities.2.label}}",
+                "title": "{{services.sector_capabilities.2.title}}",
+                "description": "{{services.sector_capabilities.2.description}}",
+                "href": "{{services.sector_capabilities.2.href}}",
+                "link_label": "Learn more",
+                "image": "{{services.sector_capabilities.2.image}}"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.footer.multi_column",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}"
+          }
+        }
+      ]
+    }
+  ]
+}

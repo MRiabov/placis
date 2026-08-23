@@ -1,0 +1,118 @@
+{
+  "id": "public.proof.testimonials",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Testimonials",
+  "family": "proof",
+  "variant": "testimonials",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "testimonials": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "quote": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "author": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "source_label": {
+              "type": "string"
+            },
+            "source_url": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "rating": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "additionalProperties": true
+        },
+        "minItems": 1,
+        "maxItems": 6
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "quote": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "author": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "source_label": {
+              "type": "string"
+            },
+            "source_url": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "rating": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5
+            }
+          },
+          "additionalProperties": true
+        },
+        "minItems": 1,
+        "maxItems": 6
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Testimonials",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "id": "public.content.feature_grid",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Feature Grid",
+  "family": "content",
+  "variant": "feature_grid",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "icon_url": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "minItems": 1
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title", "items"]
+  },
+  "editable_slots": [
+    {
+      "key": "eyebrow",
+      "type": "text",
+      "label": "Eyebrow",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Feature items",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

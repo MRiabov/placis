@@ -1,0 +1,142 @@
+.public-theme-red-charcoal {
+  /* Radix Colors mapping: slate12 primary/dark, red9 accent, red11 text accent, slate text/border. */
+  --public-primary: #1c2024;
+  --public-accent: #e5484d;
+  --public-accent-text: #ce2c31;
+  --public-background: #fbfdff;
+  --public-border: #d9d9e0;
+  --public-muted: #60646c;
+  --public-radius: 4px;
+  --public-text: #1c2024;
+  --public-brand-muted: #60646c;
+  --public-dark: #1c2024;
+  --public-orange: #e5484d;
+  --public-surface: #f8f9fa;
+  --public-font-heading: "Archivo", system-ui, sans-serif;
+  --public-font-body: "Source Sans 3", system-ui, sans-serif;
+  --public-section-block: 56px;
+  --public-container-inline: 24px;
+  --public-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --red-charcoal-shadow: 0 16px 48px rgba(28, 32, 36, 0.12);
+  --red-charcoal-shadow-soft: 0 8px 22px rgba(28, 32, 36, 0.08);
+  background: var(--public-background);
+  color: var(--public-text);
+  font-family: var(--public-font-body);
+}
+
+.public-site-root.public-theme-red-charcoal {
+  background: var(--public-background);
+  font-family: var(--public-font-body);
+}
+
+.public-theme-red-charcoal h1,
+.public-theme-red-charcoal h2,
+.public-theme-red-charcoal h3 {
+  font-family: var(--public-font-heading);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.public-theme-red-charcoal .public-site-button {
+  border-radius: 999px;
+  letter-spacing: 0.025em;
+  text-transform: none;
+  transition:
+    background 200ms var(--public-ease),
+    color 200ms var(--public-ease),
+    transform 200ms var(--public-ease),
+    border-color 200ms var(--public-ease);
+}
+
+.public-theme-red-charcoal .public-site-button:hover {
+  transform: translateY(-2px);
+}
+
+.public-theme-red-charcoal .public-eyebrow {
+  color: var(--public-accent-text);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.public-theme-red-charcoal .public-site-shell {
+  max-width: 1140px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.public-theme-red-charcoal .public-cta-band,
+.public-theme-red-charcoal .public-footer,
+.public-theme-red-charcoal .public-proof-testimonials {
+  background: var(--public-dark);
+}
+
+.public-theme-red-charcoal .public-nav__utility {
+  background: var(--public-dark);
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.public-theme-red-charcoal .public-nav__utility-inner {
+  justify-content: flex-end;
+  min-height: 42px;
+}
+
+.public-theme-red-charcoal .public-nav__main {
+  display: flex;
+  gap: 34px;
+  min-height: 96px;
+}
+
+.public-theme-red-charcoal .public-nav__brand {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0;
+}
+
+.public-theme-red-charcoal .public-nav__brand img {
+  height: 74px;
+}
+
+.public-theme-red-charcoal .public-nav__links {
+  align-items: center;
+  background: transparent;
+  color: var(--public-text);
+  font-family: var(--public-font-heading);
+  font-size: 0.86rem;
+  font-weight: 700;
+  gap: 8px;
+  justify-content: flex-end;
+  min-height: 0;
+  text-transform: uppercase;
+}
+
+.public-theme-red-charcoal .public-nav__links a {
+  border: 0;
+  border-radius: 999px;
+  color: inherit;
+  padding: 10px 13px;
+  transition:
+    background 180ms var(--public-ease),
+    color 180ms var(--public-ease),
+    transform 180ms var(--public-ease);
+}
+
+.public-theme-red-charcoal .public-nav__links a:hover,
+.public-theme-red-charcoal .public-nav__links a.is-active {
+  background: #feebec;
+  color: var(--public-accent-text);
+}
+
+.public-theme-red-charcoal .public-nav__links a:last-child {
+  background: var(--public-accent);
+  color: #ffffff;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.public-theme-red-charcoal .public-nav__links a:last-child:hover {
+  background: var(--public-accent-text);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+

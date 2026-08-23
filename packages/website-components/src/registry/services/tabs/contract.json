@@ -1,0 +1,52 @@
+{
+  "id": "public.services.tabs",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Services Tabs",
+  "family": "services",
+  "variant": "tabs",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "services": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "minItems": 1
+      },
+      "href": {
+        "type": "string"
+      },
+      "link_label": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title", "services"]
+  },
+  "editable_slots": [
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "services",
+      "type": "list",
+      "label": "Services",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": []
+}

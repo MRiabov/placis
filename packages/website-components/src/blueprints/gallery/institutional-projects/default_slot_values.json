@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "phone": {
+      "label": "Phone",
+      "source": "business_profile.phone",
+      "type": "text"
+    },
+    "email": {
+      "label": "Email",
+      "source": "business_profile.email",
+      "type": "text"
+    },
+    "address": {
+      "label": "Address",
+      "source": "business_profile.address",
+      "type": "text"
+    },
+    "images.logo": {
+      "label": "Logo",
+      "source": "business_assets.logo",
+      "type": "image"
+    },
+    "projects.categories": {
+      "label": "Project categories",
+      "source": "business_research.project_categories",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.gallery.grid",
+      "path": "items",
+      "value": "{{projects.categories}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Project categories, claims, and images must be selected from the tenant's own portfolio.",
+        "fallback_value": [
+          {
+            "title": "Residential",
+            "category": "Residential",
+            "image_url": "{{images.institutional_project_residential}}",
+            "alt_text": "Residential construction project",
+            "href": "/residential"
+          },
+          {
+            "title": "Government",
+            "category": "Government",
+            "image_url": "{{images.institutional_project_government}}",
+            "alt_text": "Government construction project",
+            "href": "/government"
+          },
+          {
+            "title": "Higher Education",
+            "category": "Higher Education",
+            "image_url": "{{images.institutional_project_higher_education}}",
+            "alt_text": "Higher education construction project",
+            "href": "/higher-education"
+          },
+          {
+            "title": "Sustainable",
+            "category": "Sustainable",
+            "image_url": "{{images.institutional_project_sustainable}}",
+            "alt_text": "Sustainable construction project",
+            "href": "/sustainable"
+          },
+          {
+            "title": "Healthcare",
+            "category": "Healthcare",
+            "image_url": "{{images.institutional_project_healthcare}}",
+            "alt_text": "Healthcare construction project",
+            "href": "/healthcare"
+          },
+          {
+            "title": "Education K-12",
+            "category": "Education K-12",
+            "image_url": "{{images.institutional_project_education_k12}}",
+            "alt_text": "K-12 education construction project",
+            "href": "/education-k12"
+          },
+          {
+            "title": "Aviation",
+            "category": "Aviation",
+            "image_url": "{{images.institutional_project_aviation}}",
+            "alt_text": "Aviation construction project",
+            "href": "/aviation"
+          },
+          {
+            "title": "Commercial Offices",
+            "category": "Commercial Offices",
+            "image_url": "{{images.institutional_project_commercial_offices}}",
+            "alt_text": "Commercial office construction project",
+            "href": "/commercial-offices"
+          },
+          {
+            "title": "Parking",
+            "category": "Parking",
+            "image_url": "{{images.institutional_project_parking}}",
+            "alt_text": "Parking structure construction project",
+            "href": "/parking"
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "address",
+      "value": "{{address}}"
+    }
+  ]
+}

@@ -14,7 +14,7 @@ import { Button } from "@/shared/ui/button";
 import { PayToClaimStrip } from "./PayToClaimStrip";
 import { PublicSiteModulePreview } from "./PublicSiteModulePreview";
 import { UnsupportedPreviewModule } from "./UnsupportedPreviewModule";
-import type { PublicSiteManifest } from "@placis/public-site-components";
+import type { PublicSiteManifest } from "@placis/website-components";
 
 interface TargetedPreviewViewProps {
   previewToken: string;

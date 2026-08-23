@@ -1,0 +1,330 @@
+{
+  "id": "navy_grid_home.reference",
+  "schema_version": 1,
+  "name": "Navy grid reference home",
+  "description": "Source-backed home-page decomposition with editorial hero panels, metric proof, system cards, and image-led destination tiles.",
+  "status": "ready",
+  "modelled_after": [
+    "Suffolk Construction",
+    "Suffolk Construction Company",
+    "Suffolk",
+    "suffolk.com",
+    "www.suffolk.com",
+    "suffolktech.com",
+    "www.suffolktech.com",
+    "America",
+    "Naples Beach Club",
+    "Great Place to Work",
+    "Naples"
+  ],
+  "theme": "navy_grid",
+  "forms": [],
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "title": "{{business_name}} | Redefining how projects are built",
+      "page_type": "home",
+      "seo": {
+        "title": "{{business_name}} | Redefining how projects are built",
+        "description": "{{business_name}} reference decomposition for reference construction storytelling and proof-led public website generation."
+      },
+      "metadata": {
+        "source_url": "https://suffolk.com/",
+        "captured_at": "2026-07-02",
+        "reference_notes": "Live reference uses GSAP ScrollTrigger and Lenis. This blueprint models the behavior as reusable scroll-story panels rather than importing source-site scripts."
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.center_logo",
+          "props": {
+            "business_name": "{{business_name}}",
+            "home_href": "/",
+            "left_links": [
+              {
+                "label": "About",
+                "href": "/about",
+                "has_menu": true
+              },
+              {
+                "label": "Careers",
+                "href": "/careers",
+                "has_menu": true
+              }
+            ],
+            "right_links": [
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              }
+            ],
+            "show_search": true,
+            "search_href": "/?s="
+          },
+          "source_refs": [
+            {
+              "url": "https://suffolk.com/",
+              "lines": "31-55",
+              "notes": "Main navigation labels and search affordance."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.scroll_story",
+          "props": {
+            "anchor_id": "top",
+            "motif_image_url": "{{images.hero_motif_shapes}}",
+            "hero": {
+              "headline": "Redefining how projects are built",
+              "eyebrow": "Proud to build with care",
+              "image_url": "{{images.hero_excavation_worker}}",
+              "mobile_image_url": "{{images.hero_excavation_worker_mobile}}",
+              "alt_text": "{{business_name}} worker on an active construction site",
+              "links": [
+                {
+                  "label": "Explore",
+                  "href": "#at-a-glance"
+                }
+              ]
+            },
+            "panels": [
+              {
+                "headline": "Our {{business_name}} System integrates the entire building lifecycle into a seamless platform.",
+                "image_url": "{{images.story_feature_project}}",
+                "alt_text": "{{projects.featured.0.title}} project",
+                "links": [
+                  {
+                    "label": "About",
+                    "href": "/about"
+                  },
+                  {
+                    "label": "The {{business_name}} System",
+                    "href": "/about/delivery-system"
+                  }
+                ]
+              },
+              {
+                "headline": "Our teams bring local knowledge and national resources to projects in every corner of the country.",
+                "image_url": "{{images.story_glass_tower}}",
+                "alt_text": "Modern glass building",
+                "links": [
+                  {
+                    "label": "Projects",
+                    "href": "/projects"
+                  },
+                  {
+                    "label": "National Locations",
+                    "href": "/about/national-locations"
+                  }
+                ]
+              },
+              {
+                "headline": "People come here for the opportunity to be the best at what they do, building alongside fellow achievers.",
+                "image_url": "{{images.story_careers_worker}}",
+                "alt_text": "{{business_name}} workers on a construction site",
+                "links": [
+                  {
+                    "label": "Careers",
+                    "href": "/careers"
+                  }
+                ]
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://suffolk.com/",
+              "lines": "56-73",
+              "notes": "Hero headline and three scroll-stop editorial statements."
+            }
+          ]
+        },
+        {
+          "component_id": "public.proof.metric_mosaic",
+          "props": {
+            "anchor_id": "at-a-glance",
+            "title": "{{business_name}} at a glance",
+            "items": [
+              {
+                "value": "{{proof.hero_stats.0.value}}",
+                "label": "{{proof.hero_stats.0.label}}",
+                "image_url": "{{images.metric_projects}}",
+                "alt_text": "{{business_name}} project proof"
+              },
+              {
+                "value": "{{proof.hero_stats.1.value}}",
+                "label": "{{proof.hero_stats.1.label}}",
+                "image_url": "{{images.metric_team}}",
+                "alt_text": "{{business_name}} team proof"
+              },
+              {
+                "value": "{{proof.hero_stats.2.value}}",
+                "label": "{{proof.hero_stats.2.label}}",
+                "image_url": "{{images.metric_quality}}",
+                "alt_text": "{{business_name}} quality proof"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://suffolk.com/",
+              "lines": "74-88",
+              "notes": "Suffolk at a glance metric grid and proof imagery."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.system_cards",
+          "props": {
+            "anchor_id": "system",
+            "eyebrow": "The {{business_name}} System",
+            "title": "How we build",
+            "cta_label": "View the {{business_name}} System",
+            "cta_href": "/about/delivery-system",
+            "items": [
+              {
+                "anchor_id": "operations-playbook",
+                "title": "Operations Playbook",
+                "image_url": "{{images.system_operations_project}}",
+                "alt_text": "{{business_name}} workers coordinating on site",
+                "description": "A reliable set of standards that we’ve refined over decades of building that informs our approach on every project across the country.",
+                "href": "/about/delivery-system/operations-playbook",
+                "link_label": "Learn more"
+              },
+              {
+                "anchor_id": "proven-technologies",
+                "title": "Proven Technologies",
+                "image_url": "{{images.system_robotics_layout}}",
+                "alt_text": "Rugged robotics equipment",
+                "description": "Digital solutions, tested and scaled on {{business_name}} jobsites, that boost efficiency and safety.",
+                "href": "/about/delivery-system/proven-technologies",
+                "link_label": "Learn more"
+              },
+              {
+                "anchor_id": "data-ai",
+                "title": "Data & AI",
+                "image_url": "{{images.system_data_worker}}",
+                "alt_text": "{{business_name}} worker in an active construction site dig",
+                "description": "Live dashboards that visualize information in real time, driving transparency and predicting challenges before they arise.",
+                "href": "/about/delivery-system/data-ai",
+                "link_label": "Learn more"
+              },
+              {
+                "anchor_id": "advanced-expertise",
+                "title": "Advanced Expertise",
+                "image_url": "{{images.system_expertise_tower}}",
+                "alt_text": "Modern glass building at night",
+                "description": "A network of the best building experts in the business, navigating every aspect of the project lifecycle to ensure your project’s success.",
+                "href": "/about/delivery-system/advanced-expertise",
+                "link_label": "Learn more"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://suffolk.com/",
+              "lines": "89-134",
+              "notes": "Suffolk System section, four method pillars, imagery, and CTA labels."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.image_tiles",
+          "props": {
+            "anchor_id": "what-we-build",
+            "title": "What We Build",
+            "items": [
+              {
+                "title": "Careers",
+                "image_url": "{{images.tile_careers_worker}}",
+                "alt_text": "{{business_name}} worker on construction site",
+                "description": "When you work at {{business_name}}, you’re never at a standstill. Neither is your career.",
+                "href": "/careers",
+                "link_label": "Join the team"
+              },
+              {
+                "title": "Projects",
+                "image_url": "{{images.tile_projects_building}}",
+                "alt_text": "Modern office with curved red facade",
+                "description": "We have the privilege of managing some of the most iconic, complex projects in the country.",
+                "href": "/projects",
+                "link_label": "See our work"
+              },
+              {
+                "title": "Communities",
+                "image_url": "{{images.tile_community_giveback}}",
+                "alt_text": "{{business_name}} t-shirt reading Proud to give back",
+                "description": "We give back to our communities in a deliberate and personal way that reinforces our core value of caring.",
+                "href": "/about/community",
+                "link_label": "Our impact"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://suffolk.com/",
+              "lines": "135-154",
+              "notes": "What We Build destination cards."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.logo_nav",
+          "props": {
+            "business_name": "{{business_name}}",
+            "links": [
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Careers",
+                "href": "/careers"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact"
+              },
+              {
+                "label": "Sustainability",
+                "href": "/about/sustainability"
+              },
+              {
+                "label": "{{business_name}} Tech",
+                "href": "/technology"
+              },
+              {
+                "label": "{{business_name}} Design",
+                "href": "/design-services"
+              },
+              {
+                "label": "Giving Circle",
+                "href": "/giving-circle"
+              }
+            ],
+            "copyright": "© 2026 {{business_name}}. All Rights Reserved. | Privacy Policy"
+          },
+          "source_refs": [
+            {
+              "url": "https://suffolk.com/",
+              "lines": "156-170",
+              "notes": "Footer navigation and copyright."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

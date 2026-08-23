@@ -1,0 +1,109 @@
+{
+  "id": "public.service_area.region_map_stats",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Region Map Stats",
+  "family": "service_area",
+  "variant": "region_map_stats",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      },
+      "image_url": {
+        "type": "string"
+      },
+      "source_image_url": {
+        "type": "string"
+      },
+      "stats": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "regions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "stats": {
+              "type": "array"
+            }
+          },
+          "additionalProperties": true
+        },
+        "minItems": 1
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title", "regions"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "body",
+      "type": "textarea",
+      "label": "Body",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "regions",
+      "type": "list",
+      "label": "Regions",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}
