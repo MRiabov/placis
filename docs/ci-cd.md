@@ -1,8 +1,9 @@
 # CI and Delivery
 
 Adapted from the previous repo's CI policy. Two-layer CI: **CircleCI** is the primary validation
-runner; **GitHub Actions** is reserved for emergency comparison and the Cloudflare contractor-website
-deploy. Both run only non-mutating checks — CI never rewrites files.
+runner; **GitHub Actions** is reserved for emergency comparison, the Cloudflare contractor-website
+Worker deploy, and the Placis website R2 upload. Validation jobs run only non-mutating checks —
+CI never rewrites files.
 
 ## Gates
 
@@ -31,13 +32,18 @@ deploy. Both run only non-mutating checks — CI never rewrites files.
   are already validated by the PR checks). Path filtering skips jobs irrelevant to the change.
 - Diagnostics (per-gate stdout/stderr, JUnit XML) are published as artifacts so failures are
   API-retrievable.
-- GitHub Actions: manual `workflow_dispatch` for emergency comparison; plus the manual
-  `deploy contractor website cloudflare` workflow (separate from validation CI). That workflow
-  does **not** run on pull request. It deploys the shared `placis-contractor-website` Worker
-  (staging | production). Required secrets/vars stay in GitHub Environments, not git:
-  Cloudflare account id, zone id for `placis.com`, API token (Workers + R2 + Cache Purge; Custom
-  Hostnames write is the Go API, not this workflow), R2 bucket name. CircleCI still does not
-  deploy this Worker. Serve path: [website Cloudflare](features/website/cloudflare.md).
+- GitHub Actions: manual `workflow_dispatch` for emergency comparison; plus two upload/deploy
+  workflows (separate from validation CI). Neither runs on pull request. Secrets/vars stay in
+  GitHub Environments, not git. CircleCI does not deploy either origin.
+  - `deploy contractor website cloudflare` — the shared `placis-contractor-website` Worker
+    (staging | production). Cloudflare account id, zone id for `placis.com`, API token
+    (Workers + R2 + Cache Purge; Custom Hostnames write is the Go API, not this workflow),
+    contractor R2 bucket name. Serve path:
+    [website Cloudflare](features/website/cloudflare.md).
+  - `deploy placis website` — `astro build` and upload `dist/` to the Placis website R2 bucket
+    (`placis-website` | `placis-website-staging`), then purge cache. Workflow YAML is not in
+    the repo until the app exists. Serve path:
+    [Placis website Cloudflare](features/placis-website/cloudflare.md).
 - Railway deploys `cmd/api` and `cmd/worker` from the integration branch — release, not CI.
 
 ## Dev tooling (`justfile`)

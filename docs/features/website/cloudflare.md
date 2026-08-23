@@ -25,7 +25,8 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 - Owner-facing default live host after website publication is
   `{website_address}.preview.placis.com` (our-zone wildcard → the one Worker). R2 is still keyed
   by `tenants.website_address`. Do not advertise `{website_address}.placis.com` (no
-  `preview.placis.com` suffix).
+  `preview.placis.com` suffix). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md)
+  (R2), not this Worker.
 - One `latest/` tree. Publication destinations share it; they are not independent website
   versions.
 
