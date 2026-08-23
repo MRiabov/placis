@@ -750,20 +750,23 @@ and Domain would name the same concept, drop Internal; code snake_cases the Doma
 
 ### Tenant
 
-Placis’s tenancy record for one contractor after website activation. One tenant maps to one Clerk
-organization. The tenant name is the business.
+Placis’s tenancy record for one contractor. Created at onboarding confirm as an **unactivated**
+tenant; website activation upgrades the same row to an **activated** tenant. One **activated**
+tenant maps to one Clerk organization. The tenant name is the business. Never in PRDs.
 
 Domain: (none — never in PRDs). Distinct from: Business profile, Clerk organization.
 
 In code: `tenants`, `tenant_id` on every tenant-owned row;
-`tenants.status` (`active` / `suspended`). A tenant row exists only after website activation.
+`tenants.status` (`unactivated` / `active` / `suspended`). `/me` exposes a tenant only when
+`status=active`.
 
 ---
 
 ### Clerk organization
 
-The Clerk organization, 1-1 with a Tenant, named after the person (the account owner), not the
-business. Never say bare “organization”.
+The Clerk organization, 1-1 with an **activated** tenant, named after the person (the account
+owner), not the business. Never say bare “organization”. Unactivated tenants have no Clerk
+organization yet.
 
 Domain: (none — never in PRDs as a synonym for the contractor).
 

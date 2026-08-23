@@ -7,7 +7,8 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
 
 1. **Find** — country, registry and/or Google Maps, online research consent, Confirm.
    - UI: `/onboarding/find` → Review.
-   - DB: `onboarding_sessions` (`status=client_interviewing`, token, `online_research_consent_at`, no tenant yet).
+   - DB: `tenants` (`status=unactivated`); `onboarding_sessions` (`status=client_interviewing`, token,
+     `online_research_consent_at`, `tenant_id` set); `business_profiles.tenant_id` matches the session.
 
 2. **Review** — found vs missing; Continue to client interview.
    - UI: `/onboarding/review`.
@@ -33,10 +34,12 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
    - Failure: unpublished website from 04 still has a website preview and can be activated.
 
 7. **Website activation** — pay on the website preview (Clerk testing token + Stripe test webhook).
-   - DB: `website_activations`, `stripe_events`, `tenants.status=active`, `tenant_memberships.owner`,
-     `website_addresses` (`type=subdomain`); onboarding session `activated`; **no** `website_publications`.
+   - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as confirm, now `tenants.status=active`,
+     `tenant_memberships.owner`, `website_addresses` (`type=subdomain`); onboarding session `activated`;
+     **no** `website_publications`.
    - UI: lands in `/cms/website`.
    - Optional: open the website preview link in a clean storage (no `localStorage`) and still pay.
 
-8. **Isolation** — a second onboarding session.
-   - Assert: the first tenant's profile and website pages are not readable under the second tenant.
+8. **Isolation** — a second onboarding session (second unactivated tenant).
+   - Assert: the first tenant's profile and website pages are not readable under the second tenant
+     (before or after activation).

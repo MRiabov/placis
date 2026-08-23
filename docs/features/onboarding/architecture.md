@@ -34,9 +34,9 @@ activation. The LLM never does website publication.
 
 ## End of onboarding: paid, not published
 
-Website activation activates the tenant (Clerk organization, owner membership, generated
-subdomain). The site stays an **unpublished website**. Website publication is a later, explicit
-action in the CMS.
+Website activation **upgrades** the existing unactivated tenant (Clerk organization, owner
+membership, generated subdomain, `status=active`). It does not create a tenant. The site stays
+an **unpublished website**. Website publication is a later, explicit action in the CMS.
 
 ## Progressive progress (SSE)
 

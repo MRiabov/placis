@@ -18,7 +18,8 @@ The live `business_profiles` row plus the list tables is the **fold** of profile
 ads, Details, and apply-the-website-template (when the fold has not moved past
 `accepted_edit_id`) **read the fold**. They do not replay edits on every call.
 
-- `business_profiles` — `id`, `tenant_id` fk unique, `trade` (`roofing`/`landscaping_paving`/
+- `business_profiles` — `id`, `tenant_id` fk unique (required; the unactivated tenant created at
+  onboarding confirm, same row later activated), `trade` (`roofing`/`landscaping_paving`/
   `bathroom_renovation`/`kitchen_installation`/`general_builder`/`property_maintenance`),
   `display_name`, `trading_name`, `legal_name`, `legal_form`, `company_status`, `description`,
   `established_year`, `company_number`, `vat_number`, `vat_registration_status`,
