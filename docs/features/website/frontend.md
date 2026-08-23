@@ -16,7 +16,8 @@ website sections through the shared contractor-website component package — the
 live website uses.
 
 The frontend holds **one** website editor projection in React and PATCHes. It does not accumulate
-unpublished documents in memory. There is no unpublished revision stack.
+unpublished documents in memory. There is no unpublished revision stack. Typing in the canvas or
+editing panel is debounced before PATCH ([editing.md](editing.md)).
 
 ## Routes
 
