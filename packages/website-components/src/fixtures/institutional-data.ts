@@ -32,25 +32,6 @@ export const assets = {
   projectAviation: `${cdn}/1502140634801-8MA5EP0LVQUBBHSOOTTH/_MG_9735_HDR.jpg`,
   projectCommercialOffices: `${cdn}/1502142013171-NL53H6UKBLSAHDTXSD7Z/Commercial+Offices.jpg`,
   projectParking: `${cdn}/1502142033378-3OX13QCC108P95PPAXI4/Parking.jpg`,
-  newsHero: `${cdn}/1656532512915-P6EIE4845NN0G5E60RXT/_S1A1731-HDR.jpg`,
-  newsAmerica250: `${cdn}/1783011290813-RAP5BPFSN1CGR0E53NG2/image+%281%29.png`,
-  newsMiramar: `${cdn}/1763665609857-3PBKWO14S0N9NZXFHT1W/Harper+Construction+Logo+120108.jpg`,
-  newsSafety: `${cdn}/1758582961621-LKOLVNG1OJH20ZMGJN1V/IMG_0021.jpg`,
-  newsToppingOut: `${cdn}/1752699662853-KXU2OMV684G96M26DLJK/20250715.P201_topOff-07.jpg`,
-  newsTrussLift: `${cdn}/1752698316604-Q514F9VYVMZBLWA835QV/P201+Truss+Lift+2-1.png`,
-  newsTopContractor: `${cdn}/2b0bd631-2b8c-472c-acfd-b41baf8f16b9/SDBJ+Top10+GC.png`,
-  newsBusinessJournal: `${cdn}/1716586503266-HUIBTDNJOSE0X5ZF4RTH/ALEX_NYE_231113_0738-A.jpg`,
-  newsYumaHangar: `${cdn}/1720023027732-U7VHBG5T8K3R2M08AFV0/_DSF8212-HDR.jpg`,
-  newsCoronadoHangar: `${cdn}/1719962349227-395PH6UTD5FV6H3B8FL5/ALEX_NYE_230828_HCC_Coronado_0008-C.jpg`,
-  newsEnr2023: `${cdn}/1721412680076-KCC1T5GRZ5J59EMV2W0I/Add+a+heading+%281%29.png`,
-  newsEnrContractors: `${cdn}/1664297956464-6K2E1ZEG93DMW4MX9IE1/ALEX_NYE_220309_Harper_Lemoore_2303-A.jpg`,
-  newsRonHarper: `${cdn}/1659992692539-9HRWEB0EMFSU2DX1AQL9/Unknown.jpeg`,
-  newsAwardedProjects: `${cdn}/1658442278455-E164BXWAGRWVDM30PK5H/Screen+Shot+2022-07-21+at+3.23.20+PM.png`,
-  newsTop400: `${cdn}/1656359429341-I5DM9ZJYGT0B9DCR94BP/%23328+%283%29.png`,
-  newsToppingCeremony: `${cdn}/1651712584928-NMEJAAOKZ25WPRXZDVC3/EE09AA15-98D2-4664-9275-F72DBA7F76AB.jpg`,
-  newsChinaLake: `${cdn}/1651710874025-BS1LUZK0IIHWLEPSZQAL/220216-N-RA951-4920.jpg`,
-  newsLemooreCompleted: `${cdn}/1642789673111-G14ZZUQY98Y6ULCDJ3ME/Screen+Shot+2022-01-21+at+10.26.12+AM.png`,
-  careersHero: `${cdn}/1502403792088-4PQZVLBSRE5K0BH6Y5L6/_MG_1421.jpg`,
   contactHero: `${cdn}/1502401761113-YQ93ANFTK3HJ0XNIAIKM/_MG_9693.jpg`,
   clientArmy: `${cdn}/1495737965221-LKSP34S3R8PR03NI0BFY/u.s.+army.png`,
   clientNavy: `${cdn}/1495742373866-7Z4MVPGOVYYBJ3QGMPVD/department+of+navy.png`,
@@ -68,15 +49,11 @@ export const business = {
   license: "CA License # 668612",
 };
 
-const newsThumb = (url: string) => `${url}?format=500w`;
-
 export const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Projects", href: "/projects" },
-  { label: "News", href: "/news" },
-  { label: "Careers", href: "/careers" },
   { label: "Contact", href: "/contact", cta: true },
 ];
 
@@ -304,165 +281,3 @@ export const clientLogoItems = [
   image_url: `${cdn}/${path}`,
   alt_text: `${label} logo`,
 }));
-
-export const newsItems = [
-  {
-    title: "HAPPY AMERICA 250!",
-    caption: "July 2, 2026",
-    alt_text: "America 250 Harper Construction news graphic",
-    href: "/news/2026/7/2/happy-america-250",
-  },
-  {
-    title:
-      "New Aviation Training Facility Enters Design Phase with Miramar College",
-    caption: "November 20, 2025",
-    image_url: newsThumb(assets.newsMiramar),
-    alt_text: "Harper Construction aviation training facility news",
-    href: "/news/2025/11/20/new-aviation-training-facility-enters-design-phase-with-miramar-college",
-  },
-  {
-    title: "Safety Milestone Achieved: 37,000 Hours Without a Lost Time Injury",
-    caption: "September 23, 2025",
-    image_url: newsThumb(assets.newsSafety),
-    alt_text: "Harper Construction safety milestone",
-    href: "/news/2025/9/23/safety-milestone-achieved-37000-hours-without-a-lost-time-injury",
-  },
-  {
-    title: "Structural Topping Out Reached at P201, MCAS Miramar",
-    caption: "July 16, 2025",
-    alt_text: "P-201 MCAS Miramar topping out ceremony",
-    href: "/news/2025/7/16/structural-topping-out-reached-at-p201-mcas-miramar",
-  },
-  {
-    title: "Box Truss Milestone at P-201",
-    caption: "June 30, 2025",
-    alt_text: "P-201 truss lift construction milestone",
-    href: "/news/2025/7/16/box-truss-milestone-at-p201",
-  },
-  {
-    title:
-      "Building Success: Harper Construction Named Among Top 2024 Performers",
-    caption: "June 26, 2025",
-    alt_text: "San Diego Business Journal top general contractor graphic",
-    href: "/news/2025/6/26/building-success-harper-construction-named-among-top-2024-performers",
-  },
-  {
-    title:
-      "Progress in Motion: Significant Lift Marks Milestone at MCAS Miramar",
-    caption: "April 22, 2025",
-    href: "/news/2025/4/17/progress-in-motion-significant-lift-marks-milestone-at-mcas-miramar",
-  },
-  {
-    title: "P538 Yuma BEQ Groundbreak",
-    caption: "April 22, 2025",
-    href: "/news/2025/4/16/p538-yuma-beq-groundbreak",
-  },
-  {
-    title: "NAVFAC SW Safety Conference 2025",
-    caption: "April 22, 2025",
-    href: "/news/2025/4/16/navfac-sw-safety-conference-2025",
-  },
-  {
-    title: "San Diego Business Journal Top Contractor 2024",
-    caption: "April 15, 2024",
-    image_url: newsThumb(assets.newsBusinessJournal),
-    alt_text: "San Diego Business Journal Top Contractor 2024",
-    excerpt:
-      "Harper Construction Company has been ranked among the top 10 general contractors in San Diego by the San Diego Business Journal, based on 2023 gross revenues from San Diego County offices. Read More",
-    href: "/news/2024/4/15/san-diego-business-journal-top-contractor-2024",
-  },
-  {
-    title:
-      "Harper Construction Celebrates Completion of New Two-Bay Hangar at U.S. Army Yuma Proving Ground",
-    caption: "April 12, 2024",
-    image_url: newsThumb(assets.newsYumaHangar),
-    alt_text:
-      "Harper Construction celebrates completion of a new two-bay hangar",
-    excerpt:
-      "We at Harper Construction are thrilled to announce the successful completion and official dedication of a new two-bay hangar at the U.S. Army Yuma Proving Ground. Read More",
-    href: "/news/2024/7/3/harper-construction-celebrates-completion-of-new-two-bay-hangar-at-us-army-yuma-proving-ground",
-  },
-  {
-    title:
-      "Harper Construction Completes New Aircraft Hangar at Naval Base Coronado",
-    caption: "December 11, 2023",
-    image_url: newsThumb(assets.newsCoronadoHangar),
-    alt_text: "New aircraft hangar at Naval Base Coronado",
-    excerpt:
-      "At Harper Construction, we are proud to announce the successful completion of the state-of-the-art V-22 aircraft maintenance hangar at Naval Air Station North Island. Read More",
-    href: "/news/2023/12/11/harper-construction-completes-new-aircraft-hangar-at-naval-base-coronado",
-  },
-  {
-    title: "2023 ENR Top 400 General Contractors",
-    caption: "May 31, 2023",
-    image_url: newsThumb(assets.newsEnr2023),
-    alt_text: "2023 ENR Top 400 General Contractors",
-    excerpt:
-      "Harper Construction Company was ranked #299 on the ENR Top 400 General Contractors list in 2023 with a total revenue of $373.8 million. Read More",
-    href: "/news/2024/7/19/2023-enr-top-400-general-contractors",
-  },
-  {
-    title: "Harper Construction Ranks on ENR's List of Top Contractors",
-    caption: "September 27, 2022",
-    image_url: newsThumb(assets.newsEnrContractors),
-    alt_text: "Harper Construction ranks on ENR's List of Top Contractors",
-    excerpt:
-      "Engineering News Record ranked Harper Construction as a top contractor in 3 different categories. Read More",
-    href: "/news/2022/9/27/harper-construction-ranks-on-enrs-list-of-top-contractors",
-  },
-  {
-    title:
-      "Harper Construction Founder, Ron Harper, Recognized by His Alma Mater",
-    caption: "August 8, 2022",
-    image_url: newsThumb(assets.newsRonHarper),
-    alt_text: "Ron Harper recognized by his alma mater",
-    excerpt:
-      "The University of Arizona College of Engineering recognized Ron Harper, Founder of Harper Construction, as a member of their Engineering Hall of Fame. Read More",
-    href: "/news/2022/8/8/harper-construction-founder-ron-harper-recognized-by-his-alma-mater",
-  },
-  {
-    title: "Harper Construction Awarded Two New Projects",
-    caption: "June 24, 2022",
-    image_url: newsThumb(assets.newsAwardedProjects),
-    alt_text: "Harper Construction awarded two new projects",
-    excerpt:
-      "Harper Construction was awarded two new projects - one at MCAS Miramar, the other at Fort Sill, Oklahoma. Read More",
-    href: "/news/2022/6/27/harper-construction-awarded-two-new-projects",
-  },
-  {
-    title: "ENR Lists Harper Construction on Top 400 Contractors List",
-    caption: "June 13, 2022",
-    image_url: newsThumb(assets.newsTop400),
-    alt_text: "ENR Top 400 Contractors List",
-    excerpt:
-      "Engineering News-Record published a list of the Top 400 Contractors. ENR ranks companies by their construction revenue in 2021. Read More",
-    href: "/news/2022/6/27/enr-lists-harper-construction-on-top-400-contractors-list",
-  },
-  {
-    title: "Topping Out Ceremony Held at Naval Air Station North Island",
-    caption: "May 4, 2022",
-    image_url: newsThumb(assets.newsToppingCeremony),
-    alt_text: "Topping out ceremony at Naval Air Station North Island",
-    excerpt:
-      "Naval Air Station North Island held a topping out ceremony for new hangars that will house two V-22 Osprey Squadrons. Read More",
-    href: "/news/2022/5/4/topping-out-ceremony-held-at-naval-air-station-north-island",
-  },
-  {
-    title: "New China Lake Project Breaks Ground",
-    caption: "February 26, 2022",
-    image_url: newsThumb(assets.newsChinaLake),
-    alt_text: "New China Lake project groundbreaking",
-    excerpt:
-      "On February 16, NAVFAC hosted a groundbreaking ceremony at Naval Air Weapons Station China Lake. Read More",
-    href: "/news/2022/5/4/new-china-lake-project-breaks-ground",
-  },
-  {
-    title: "Naval Air Station Lemoore Hangar Completed",
-    caption: "January 21, 2022",
-    image_url: newsThumb(assets.newsLemooreCompleted),
-    alt_text: "Naval Air Station Lemoore hangar completed",
-    excerpt:
-      "A new F-35 Maintenance Hangar is now open at NAS Lemoore. A ribbon cutting ceremony was held to celebrate the opening of the hangar. Read More",
-    href: "/news/2022/1/21/naval-air-station-lemoore-hangar-completed",
-  },
-];

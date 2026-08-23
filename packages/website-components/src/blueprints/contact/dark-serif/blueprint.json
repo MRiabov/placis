@@ -189,16 +189,14 @@
                 "href": "/clients/"
               },
               {
-                "label": "news",
-                "href": "/news/"
-              },
-              {
                 "label": "contact",
                 "href": "/contact/"
               }
             ],
             "description": "{{business_name}} is a full-service custom home builder that provides top quality energy efficient homes of all sizes.",
-            "legal_disclosure_lines": ["Powered by Squarespace"],
+            "legal_disclosure_lines": [
+              "Powered by Squarespace"
+            ],
             "copyright": ""
           }
         }
