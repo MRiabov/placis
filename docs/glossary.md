@@ -435,7 +435,8 @@ Distinct from: Website address.
 #### Website section
 
 A block on a website page (hero, services, reviews, …), edited through its website slots. Never
-say bare “section” in PRDs or UI.
+say bare “section” in PRDs or UI. The top menu and footer each have one site-wide look website
+section (`page_id` null); they are not copied onto every website page.
 
 Internal: Website component (a website component catalog building block a website section is an
 instance of).
@@ -493,10 +494,14 @@ styles / top menu and footer).
 
 The bar at the top of the website. Never say header, navigation, or bare “menu”.
 
-Distinct from: Footer, Website section (a block on a website page). Top menu is not a website
-page.
+A JSON tree of website pages, text groups, and URL nodes (depth 2: bar + one dropdown), stored on
+`website.menus.top_menu`. Look (logo, marketing phone, design) is the site-wide top-menu website
+section. Edited in the website editor workspace, not Details.
 
-In code: `top_menu_items`.
+Distinct from: Footer, Website section (a block on a website page — except the site-wide top-menu
+look section). Top menu is not a website page. Distinct from the Placis website.
+
+In code: `website.menus.top_menu`.
 
 ---
 
@@ -504,9 +509,12 @@ In code: `top_menu_items`.
 
 The footer of the website. Never say navigation or menu for this.
 
-Distinct from: Top menu, Website section.
+A JSON tree of the same node kinds as the top menu (depth 2), stored on `website.menus.footer`.
+Look is the site-wide footer website section. Edited in the website editor workspace, not Details.
 
-In code: `footer_items`.
+Distinct from: Top menu, Website section. Distinct from the Placis website.
+
+In code: `website.menus.footer`.
 
 ---
 

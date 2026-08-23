@@ -27,7 +27,8 @@ failed event.
 | `update_section_design` | update one website section's **design controls** — the per-website-component enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values from the website component contract |
 | `reorder_sections` | set the full ordered list of website section ids for the website page |
 | `create_section` | propose a new website section using an approved website component |
-| `create_page` | propose a new unpublished website page |
+| `create_page` | propose a new unpublished website page (also appends a top-level page node on the footer, and on the top menu unless legal or cap) |
+| `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` |
 | `generate_image` | generate a media asset from a prompt, optionally attach it to an image website slot |
 
 `generate_image`: the model supplies a prompt + media caption; the backend creates a generated
@@ -103,6 +104,48 @@ affected targets and a before/after, and selecting it focuses the canvas/editing
 
 There is no unpublished snapshot per edit and no per-page version table.
 Website edit history is typed increments on `edit_history`; Ctrl+Z is in-memory, then PATCH.
+
+### `update_menus`
+
+One tool for both bars. This surface is rare; eight named tools are not worth it. Same Ask first /
+instant apply gate as `update_slot`.
+
+```text
+update_menus(
+  which: top_menu | footer,
+  add_entries?,
+  remove_entries?,
+  reorder_entries?,
+  update_entries?,
+  show_phone?: bool | omit,
+  show_email?: bool | omit
+)
+```
+
+Omitted lists and omitted `show_*` are no-ops. Empty `{}` / `[]` are no-ops, not wipes.
+
+Apply order:
+
+1. **remove** — old ids, max 4
+2. **add** — new nodes; server sets `id` from the label (page title for `kind: page`)
+3. **reorder** — nested `{ id, children }` using **pre-update** ids (GET ids plus ids just
+   assigned by add). Membership = tree after remove+add. Does not delete. A flat id array is
+   invalid.
+4. **update** — labels / hrefs / path last. Label change recomputes `id` after reorder.
+5. **show_phone / show_email** — bar CTA visibility. Not tree nodes. Href is always
+   `{{marketing_phone}}` / `{{marketing_email}}`. No `tel:` / `mailto:` override.
+
+`add_entries`: parent `id` (omit = top-level) + new node (`kind` + `path` or `label`/`href`).
+`remove_entries`: ids, at most 4. `update_entries`: text → `label`; url → `label` and/or `href`;
+page → `path`, optional display `label`. Kind is not changed by update (heading ↔ link is remove
++ add).
+
+Invalid is `400`; over bar cap (8 top-level top menu, 12 footer, 8 children per parent) is `409`.
+A page already in that tree is `400`. Tool result returns the tree (post-update ids). GET for
+the assistant returns both trees with `id` / `kind` / `label` / `path` / `href` (no UUID).
+
+Logo and density stay on the site-wide look website sections (other tools). Do not name this
+tool `update_nav`.
 
 The website assistant never does a website publication, never bypasses validation, and never writes
 arbitrary registry JSON.
