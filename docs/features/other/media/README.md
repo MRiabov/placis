@@ -35,7 +35,8 @@ editing. It is not a second library. Not the editing panel (right).
 - An in-flight upload is covered by the website editor leave guard
   ([editing.md](../../website/editing.md)).
 
-Screens: [website frontend](../../website/frontend.md).
+Screens: [website frontend](../../website/frontend.md). Port:
+[frontend-debloat.md](frontend-debloat.md).
 
 ## Used by
 

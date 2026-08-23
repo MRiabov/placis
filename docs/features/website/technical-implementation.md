@@ -80,7 +80,8 @@ Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
 
 ## Frontend
 
-See [frontend.md](frontend.md). `frontend-2/src/features/cms/**` is the existing website editor.
+See [frontend.md](frontend.md) and [frontend-debloat.md](frontend-debloat.md).
+`frontend-2/src/features/cms/**` is the existing website editor.
 It consumes the regenerated types; `/website/editor/*` routes map to the Go side.
 
 ## Implementation order (live contractor website)

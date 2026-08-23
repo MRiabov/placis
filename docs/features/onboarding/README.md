@@ -10,6 +10,7 @@ that drives a website and ads.
 - [data-model.md](data-model.md) — onboarding sessions, business research, website preview, website activation
 - [technical-implementation.md](technical-implementation.md) — the technical plan (flow, API, pipeline)
 - [frontend.md](frontend.md) — the onboarding screens and fields
+- [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](testing.md) — the onboarding E2E test
 
 Auth is interleaved with onboarding (website activation), but auth and tenancy are owned by

@@ -4,7 +4,7 @@ Status: proposed frontend specification. Screens already exist under
 `frontend-2/src/features/cms/`; this doc names them against the Go contract.
 
 Related: [PRD](prd.md), [editing.md](editing.md), [assistant.md](assistant.md),
-[manifest](manifest.md).
+[manifest](manifest.md). Port: [frontend-debloat.md](frontend-debloat.md).
 
 ## Purpose
 
