@@ -1,48 +1,9 @@
 ---
-import {
-  loadPublicSiteComponents,
-  pageDescription,
-  pageSections,
-  pageTitle,
-  PublicSiteRenderer,
-  resolveManifestPage,
-  type PublicSiteManifest,
-} from "@placis/website-components";
-import PublicSiteClientBehaviors from "../components/PublicSiteClientBehaviors.astro";
 import "../styles/global.css";
-import {
-  publicSiteApiBaseUrl,
-  requestHost,
-  resolvePublicSite,
-  type PublicSiteRuntimeEnv,
-} from "../lib/publicSiteApi";
 
 export const prerender = false;
 
-const requestedPath = Astro.url.pathname || "/";
-const runtimeEnv = Astro.locals.runtime?.env as PublicSiteRuntimeEnv | undefined;
-const host = requestHost(Astro.request, Astro.url, runtimeEnv);
-const apiBaseUrl = publicSiteApiBaseUrl(runtimeEnv);
-const resolved = await resolvePublicSite({
-  apiBaseUrl,
-  host,
-  path: requestedPath,
-});
-const manifest: PublicSiteManifest = resolved.manifest ?? {};
-const page = resolveManifestPage(manifest, requestedPath);
-const sections = pageSections(page);
-const loadedComponents = await loadPublicSiteComponents(sections);
-const title = pageTitle(manifest, page);
-const description = pageDescription(manifest, page);
-const ttl = resolved.cache?.ttl_seconds;
-
-if (typeof ttl === "number" && ttl > 0 && resolved.status === "published") {
-  Astro.response.headers.set("cache-control", `public, max-age=${ttl}, stale-while-revalidate=300`);
-}
-
-if (resolved.status !== "published" || !page) {
-  Astro.response.status = 404;
-}
+Astro.response.status = 404;
 ---
 
 <!doctype html>
@@ -50,41 +11,23 @@ if (resolved.status !== "published" || !page) {
   <head>
     <meta charset="UTF-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta content={description} name="description" />
     <meta content="placis-contractor-website" name="placis:bundle" />
-    <meta content="astro-react" name="placis:runtime" />
     <meta content="false" name="placis:tenant-specific-build" />
     <link href="/favicon.ico" rel="icon" />
-    <title>{title}</title>
+    <title>Website not found</title>
   </head>
   <body>
-    {
-      resolved.status === "published" && page ? (
-        <PublicSiteRenderer
-          context={{
-            formSubmitBasePath: `${apiBaseUrl}/api/v1/public/forms`,
-            mode: "published",
-            path: requestedPath,
-            tenantSlug: resolved.tenant_slug ?? undefined,
-          }}
-          loadedComponents={loadedComponents}
-          manifest={manifest}
-          page={page}
-        />
-      ) : (
-        <main class="public-site-root grid min-h-screen place-items-center px-4 text-center">
-          <div>
-            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">
-              Website unavailable
-            </p>
-            <h1 class="mt-3 text-3xl font-bold text-slate-950">No published site found</h1>
-            <p class="mt-3 max-w-md text-sm leading-6 text-slate-600">
-              This domain is reserved for a contractor website, but there is no published page for this path yet.
-            </p>
-          </div>
-        </main>
-      )
-    }
-    <PublicSiteClientBehaviors />
+    <main class="grid min-h-screen place-items-center px-4 text-center">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">
+          Website unavailable
+        </p>
+        <h1 class="mt-3 text-3xl font-bold text-slate-950">No published website found</h1>
+        <p class="mt-3 max-w-md text-sm leading-6 text-slate-600">
+          This hostname is reserved for a contractor website, but there is no published
+          website for this path.
+        </p>
+      </div>
+    </main>
   </body>
 </html>

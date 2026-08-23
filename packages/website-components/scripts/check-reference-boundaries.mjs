@@ -172,20 +172,6 @@ for (const filePath of blueprintFiles) {
   }
 }
 
-const blueprintDocs = await collectFiles(
-  blueprintRoot,
-  (path) => path.endsWith("BLUEPRINT.md"),
-);
-for (const filePath of blueprintDocs) {
-  const source = await readFile(filePath, "utf8");
-  const token = containsForbiddenToken(source, forbiddenTokens);
-  if (token) {
-    failures.push(
-      `${relative(packageRoot, filePath)} blueprint guidance contains forbidden token ${JSON.stringify(token)}`,
-    );
-  }
-}
-
 const packageJsonPath = join(packageRoot, "package.json");
 const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
 for (const key of Object.keys(packageJson.exports ?? {})) {

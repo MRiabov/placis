@@ -11,18 +11,16 @@ sidecars instead of duplicating website component schemas.
 Website templates live as JSON + sidecars next to this package's website page factories (home,
 service, contact, legal, plus predecessor extras). Website style catalog presets live under
 `src/themes/`. First-pass page types for the rewrite are `home` / `service` / `contact` /
-`legal`. Blog and careers stay deferred: those predecessor files are imported so they are not
-lost, and they are not first-pass website page types.
+`legal`. Blog and careers are deferred and are not in this package.
 
 ## Website templates
 
 Reusable website templates are backend-readable factories, not a live website and not
 tenant-owned content. The backend validates them against website component `contract.json`
 files, then applies them to create unpublished website pages, website sections, website slots,
-website forms, top menu, and footer.
-
-Content rules live in the DESIGN.md beside the website templates. Each website template folder
-has a matching markdown sidecar for agents choosing structure before website styles.
+website forms, top menu, and footer. Website template JSON is the contract. Selection and
+visual rules live in [website architecture](../../docs/features/website/architecture.md) and
+[website styles](../../docs/features/website/styles.md).
 
 `home.stub` is skeletal on purpose. Source-backed website templates recompose a reference site
 into website page structure + website section composition, then switch content
@@ -88,8 +86,9 @@ Website components consume `website_styles` through CSS variables (`--public-pri
 selectors.
 
 Presets under `src/themes/`: `navy_cream`, `dark_serif`, `red_charcoal`,
-`institutional_mono`, `green_gold`, `navy_grid`, `timbermill_classic`. Rules live in
-`src/themes/DESIGN.md`.
+`institutional_mono`, `green_gold`, `navy_grid`, `timbermill_classic`. Token and
+override rules: [website styles](../../docs/features/website/styles.md). Each preset’s
+typed tokens live in that folder’s `index.ts`.
 
 ## Loading
 
