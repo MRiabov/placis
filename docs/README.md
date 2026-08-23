@@ -15,7 +15,7 @@ themselves in the CMS.
 4. [Architecture](architecture.md) — stack, module layout, how processes run, boundaries
 5. [General architecture](general-architecture/README.md) — LLM layer, audit, jobs, files, data model, `frontend-2` UI
 6. [Auth](features/other/auth/README.md) — Clerk, tenant == Clerk organization
-7. [Onboarding](features/onboarding/README.md) — business research and business-profile building; [website activation](features/onboarding/pipeline/07-website-activation.md) is pay-and-activate
+7. [Onboarding](features/onboarding/README.md) — business research and business-profile building; [website activation](features/onboarding/pipeline/08-website-activation.md) is pay-and-activate
 8. [Website](features/website/README.md) — website templates, applying them, editing, website publication
 9. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/) (investigation, not the spec)
 10. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
@@ -34,7 +34,7 @@ themselves in the CMS.
 | Data model conventions + index | [general-architecture/data-model.md](general-architecture/data-model.md) |
 | LLM layer, audit, jobs, files, `frontend-2` UI | [general-architecture/](general-architecture/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
-| Website activation / payments | [features/onboarding/pipeline/07-website-activation.md](features/onboarding/pipeline/07-website-activation.md) |
+| Website activation / payments | [features/onboarding/pipeline/08-website-activation.md](features/onboarding/pipeline/08-website-activation.md) |
 | Website building + editing | [features/website/README.md](features/website/README.md) |
 | Ad generation | [features/ads/README.md](features/ads/README.md) |
 | Meta ad posting (investigation) | [features/ads/ad-application/meta](features/ads/ad-application/meta/) |

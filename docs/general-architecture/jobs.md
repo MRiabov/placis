@@ -6,6 +6,6 @@ retried safely (an explicit key).
 
 River-managed tables for the job queue. Postgres schema `jobs`.
 
-Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/07-website-activation.md).
-Onboarding [website copy generation](../features/onboarding/pipeline/05-website-copy-generation.md) is a River job after
+Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/08-website-activation.md).
+Onboarding [website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md) is a River job after
 applying the website template; it must not block the website preview link.

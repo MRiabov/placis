@@ -6,7 +6,7 @@ website forms, SEO, validation blockers, website publication status, and website
 turns requests into governed, reviewable website editor edits. Text chat, voice handoffs, and
 website editor assistance all share the same tool surface.
 
-Onboarding [website copy generation](../onboarding/pipeline/05-website-copy-generation.md) reuses
+Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses
 these tools headless (**continuous** workflow + **instant apply**, no chat UI, no `create_page`)
 after the website template is applied. That job is website copy generation, not this website
 assistant.
@@ -90,8 +90,8 @@ Ask first edits are not in the table. Reject never writes a row. Apply sends
 `base_edit_history_head` on the existing apply request; success / `409`
 `edit_history_conflict` match PATCH ([editing.md](editing.md)).
 
-**One in-flight website-assistant run per tenant** (includes onboarding 05). A second start is
-`409` until the current run finishes, fails, or is cancelled. Two tabs, voice + text, or 05 +
+**One in-flight website-assistant run per tenant** (includes onboarding 06). A second start is
+`409` until the current run finishes, fails, or is cancelled. Two tabs, voice + text, or 06 +
 the editor must not both apply. PATCH (including undo copy-out) is `409` while a run is
 applying.
 

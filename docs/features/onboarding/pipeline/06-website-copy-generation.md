@@ -1,0 +1,60 @@
+# 06 — Website copy generation
+
+Async. After 05. Writes headlines, body, CTAs, SEO into **existing** website slots. Same website
+assistant tools as the CMS, **continuous + instant apply**, no chat UI. Does not block 07 or 08.
+
+## Trigger
+
+05 succeeded. One River job. Lock key: `tenant_id` (unactivated tenant already exists). One
+in-flight website-assistant run per tenant ([assistant.md](../../website/assistant.md)). A second
+start is 409.
+
+## Pre
+
+- Unpublished website from 05 exists.
+- Fold as of `accepted_edit_id` at job start.
+
+## Must not
+
+- `create_page` (05 already applied the website page set).
+- Block 07 or 08.
+- Supersede the website preview.
+- Set website slot `approved`. Website publication is website-level, not website slot `published`. Publication
+  requires approved **media library** items, not approved copy website slots.
+- Bake raw detail values into copy that should stay a token (`{{business_name}}`,
+  `{{marketing_phone}}`, …).
+- Wait for pay / 08. After 08 the same job **continues** on the same `tenant_id`. CMS website
+  assistant 409 while this run is in flight.
+- Run at find-confirm. Not on every later 02 event.
+
+## Do
+
+1. Per website page, bounded parallel: `update_slot` (prose), `update_seo`, `generate_image` if a
+   website slot still has no photo.
+2. After 06 a hero headline is **generated prose** that may still contain detail tokens. It is
+   not a raw fold dump and not a lone `{{business_name}}` unless 06 left it. Remaining tokens
+   resolve at website publication ([variables.md](../../website/variables.md)).
+3. Validate every tool result against website component contracts. Whole-and-valid or the batch fails.
+4. Cap steps and tool calls (predecessor: 3 steps / 12 calls / 4 website pages at a time).
+
+## Persist
+
+Updates to existing `website_slots` and website page SEO columns; `ai_generations` for tool batches. No
+`website_publications`. Onboarding session status stays `previewing` (set by 05+07). Progress events on the
+onboarding session stream.
+
+## Fail
+
+Keep the unpublished website from 05. Onboarding session stays `previewing`. Retry is safe (River
+key; safe to retry). Copy fail must not fail 05 or block 08.
+
+## Out
+
+07 already issued (or issues) the website preview. The website preview re-renders current unpublished rows.
+
+## Invariants
+
+- Lock = `tenant_id` before and after 08.
+- No `create_page`.
+- Detail tokens that should stay reusable stay in the prose.
+- Does not set website slot `approved`.

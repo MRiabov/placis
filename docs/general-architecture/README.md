@@ -13,6 +13,6 @@ Cross-cutting architecture that doesn't belong to one feature.
 - [frontend-debloat.md](frontend-debloat.md) — cross-cutting `frontend-2` port (generated types,
   leftover layout names, parity e2e). Per-feature cut lists live with the feature.
 
-Payments live with [website activation](../features/onboarding/pipeline/07-website-activation.md). Website leads live in
+Payments live with [website activation](../features/onboarding/pipeline/08-website-activation.md). Website leads live in
 [features/other/leads](../features/other/leads/README.md). Website preview progress events:
-[06-website-preview.md](../features/onboarding/pipeline/06-website-preview.md).
+[07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md).

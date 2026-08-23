@@ -18,6 +18,8 @@ decision + date) instead of silently replacing the old entry.
    business research (we'll look the business up and use the public information). No per-purpose
    consent records, versioning, or withdrawal machinery — that was over-engineering, not a real
    requirement.
+   (2026-08-23: the acknowledgement is a checkbox on find (01), required before Confirm; not a
+   client interview question.)
 
 4. **Business research is an interface + typed output** — Google Maps, company registry, Facebook,
    website crawl, and photo classification sit behind one interface with fakes. Output lands in
@@ -79,14 +81,14 @@ decision + date) instead of silently replacing the old entry.
     from the website template catalog. Same profile + same website template → same website
     pages, no LLM in that write. Choosing the website template and website styles is one bounded
     LLM call with a heuristic fallback. Copy (headlines, body, CTAs, SEO) is a separate async job
-    ([05](pipeline/05-website-copy-generation.md)) that uses the website assistant tools on that
+    ([06](pipeline/06-website-copy-generation.md)) that uses the website assistant tools on that
     unpublished website. The website assistant is in the CMS after website activation. The LLM
     never does website publication.
     (2026-08-17: replaced "no LLM in the loop" — predecessor/`frontend-2` pick website
     template/website styles with one LLM call, then apply the website template deterministically.
     Same day: website copy generation is an onboarding job, not "the website assistant after
     website activation". 2026-08-19: do not say instantiate / generate / population for this
-    step.)
+    step. 2026-08-23: applying the website template is 05; website copy generation is 06.)
 
 11. **Progressive progress over SSE** — during onboarding the backend pushes a progress event every
     2–10 seconds (or on each change) over SSE; the frontend re-renders progressively so the website
@@ -113,11 +115,11 @@ decision + date) instead of silently replacing the old entry.
     or already-activated tokens. Drop `expires_at` / status `expired`. (2026-08-23. Earlier: HMAC
     default 14 days, then 410 and activation refused.)
 
-16. **Unactivated tenant at confirm; activation upgrades** — confirm (01a) inserts a `tenants` row
+16. **Unactivated tenant at confirm; activation upgrades** — confirm (01) inserts a `tenants` row
     with `status=unactivated`, `clerk_org_id` null, `website_address` null, and sets that
-    `tenant_id` on the onboarding session and the business profile. Website activation (07)
+    `tenant_id` on the onboarding session and the business profile. Website activation (08)
     **upgrades** the same row (Clerk org, owner membership, reserved website address,
     `status=active`). It does not insert a second tenant and does not first-write child
     `tenant_id`s. `/me` returns a tenant only when `status=active`; unactivated work is reached
     via the onboarding session token. Clerk organization 1-1 holds for active tenants only.
-    (2026-08-23)
+    (2026-08-23: numbered 01a / 07. Same day, later: find is 01; website activation is 08.)

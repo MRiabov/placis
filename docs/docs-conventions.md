@@ -38,7 +38,7 @@ A feature directory holds, as applicable:
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md) |
 | `testing.md` | the full-stack E2E test(s) with DB asserts |
-| `pipeline/` | one doc per step (`01a-…`, `02a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline) |
+| `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline) |
 | `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features) |
 
 Not every file is needed — a feature uses only the ones it has content for. A complex pipeline uses

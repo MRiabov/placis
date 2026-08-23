@@ -28,7 +28,11 @@ live here.
 
 ## Business research
 
-- `business_research_runs` — `id`, `onboarding_session_id` fk, `place_id` nullable (Google’s
+- `business_research_waves` — `id`, `tenant_id` fk, `onboarding_session_id` fk, `started_at`.
+  One row per 02 enqueue (Confirm or source change), not per job. Cap: 5 rows per `tenant_id` in
+  any rolling 30 minutes ([02](pipeline/02-business-research.md)). `research_wait_until` on profile
+  / SSE is derived: oldest in-window `started_at` + 30 minutes when the cap is hit.
+- `business_research_runs` — `id`, `wave_id` fk, `onboarding_session_id` fk, `place_id` nullable (Google’s
   id on the Maps path), `kind` (`google_maps_listing`/`company_registry`/`trade_registry`/`facebook`/
   `social_profile`/`website_crawl`/`review`/`directory`/`photo`), `status`, `started_at`,
   `finished_at`
@@ -60,8 +64,9 @@ live here.
 
 The Google Maps listing is this row, not a blob and not a second copy on
 `business_research_sources`. `raw` is the ETL fetch body only. Hours and reviews are child
-rows. Photos from the listing become media library items. Profile increments (03) copy selected
-fields and review rows onto the business profile; the listing address stays here.
+rows. Photos from the listing become media library items. Profile increments
+([build-profile](pipeline/build-profile.md)) copy selected fields and review rows onto the
+business profile; the listing address stays here.
 
 ## Website preview and website activation
 
@@ -76,5 +81,6 @@ fields and review rows onto the business profile; the listing address stays here
 
 ## Indexes
 
-Lookup: `(tenant_id, status, created_at)` on onboarding sessions. Unique: `stripe_events.event_id`,
+Lookup: `(tenant_id, status, created_at)` on onboarding sessions;
+`business_research_waves` `(tenant_id, started_at)`. Unique: `stripe_events.event_id`,
 `business_research_fetches` `(kind, cache_key)`.

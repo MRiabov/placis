@@ -131,8 +131,7 @@ In code: `business_profiles.marketing_email`.
 
 ### Emergency phone
 
-How we contact the owner. Draft: this is the personal/owner number; it may be the same number.
-TBD further.
+How we contact the owner. Unpublished; may be the same number as marketing phone.
 
 Distinct from: Marketing phone.
 
@@ -318,8 +317,9 @@ Distinct from: Onboarding session (the persisted run).
 
 #### Online research consent
 
-The one acknowledgement, during the client interview, that Placis may collect public information
-about the business to prepare the website preview. Never say bare “consent”.
+The one acknowledgement, on find (a checkbox required before Confirm), that Placis may collect
+public information about the business to prepare the website preview. Not a client interview
+question. Never say bare “consent”.
 
 In code: `onboarding_sessions.online_research_consent_at`.
 
@@ -330,7 +330,8 @@ In code: `onboarding_sessions.online_research_consent_at`.
 Finding out about the business from public sources (Maps, the company registry, Facebook, their
 current website, photos of their work) after online research consent. Never say bare “research”.
 
-In code: `business_research_runs`, `business_research_events`, `business_research_sources`.
+In code: `business_research_waves`, `business_research_runs`, `business_research_events`,
+`business_research_sources`, `business_research_fetches`.
 
 ---
 
@@ -361,7 +362,7 @@ A stage in our sales process where they choose to buy the website or not. Never 
 
 Distinct from: Unpublished website, Website activation, Website preview link, the
 `{website_address}.preview.placis.com` host (that is the website address after website
-publication, not this sales stage).
+publication, not this sales stage). Never label that host website preview.
 
 In code: `website_previews`, `internal/onboarding/websitepreview/`.
 
