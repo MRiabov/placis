@@ -57,8 +57,9 @@ scratch. Trade does not pick the website template 1:1.
 The website editor is one workspace with three surfaces:
 
 - **Canvas** — renders the selected website page live from its website sections.
-- **Workspace** — Website pages / Media library / Website styles / Top menu and footer: what is on
-  the site.
+- **Workspace** — left column. Website pages / media library panel / website styles / top menu
+  and footer. Drop files onto the media library panel to upload
+  ([media library](../other/media/README.md)).
 - **Editing panel** — edits the selected website section (website slots, design) and website-page
   SEO, website forms, and website versions.
 
