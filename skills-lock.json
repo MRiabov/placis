@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "astro-best-practices": {
+      "source": "incluud/astro-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/astro-best-practices/SKILL.md",
+      "computedHash": "353ad7ebffed9a06dab2cb762b28ec6b8fb07abb00cb731b34c9df60315e0e7f"
+    },
     "clerk": {
       "source": "clerk/skills",
       "sourceType": "github",
