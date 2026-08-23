@@ -18,8 +18,10 @@ website sections through the shared contractor-website component package — the
 live website uses.
 
 The frontend holds **one** website editor projection in React and PATCHes. It does not accumulate
-unpublished documents in memory. There is no unpublished revision stack. Typing in the canvas or
-editing panel is debounced before PATCH ([editing.md](editing.md)).
+unpublished documents in memory. There is no unpublished revision stack. Edits persist
+automatically: typing in the canvas or editing panel is debounced before PATCH
+([editing.md](editing.md)). There is **no Save** in the website editor toolbar. The predecessor
+`EditorHeader` Save control is dropped. A Saving / Saved status is allowed.
 
 ## Routes
 
@@ -48,7 +50,7 @@ Three surfaces, one unpublished website:
 Website styles are tenant-wide (`website_settings`), shown on the website page GET, applied only on
 explicit apply. Top menu and footer are edited here, not in Details.
 
-**Website publication** is an explicit action (toolbar / editing panel). It is blocked while
+**Website publication** is an explicit action (toolbar / editing panel). It is not Save. It is blocked while
 required website slots cannot resolve or media library items on the live path are not approved. After it
 succeeds, `has_unpublished_changes` is false until the next edit. Website publication does **not**
 attach a custom website address.
