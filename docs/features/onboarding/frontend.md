@@ -1,7 +1,8 @@
 # Onboarding Frontend
 
 The contractor-facing onboarding in `frontend-2`. Screens and
-fields match the implemented app (copied from the predecessor).
+fields match the implemented app (copied from the predecessor). Port:
+[frontend-debloat.md](frontend-debloat.md).
 
 Related: [PRD](prd.md), [ADR](ADR.md), [pipeline](pipeline/README.md).
 
@@ -31,9 +32,9 @@ reviews, photos). Business research may still be filling rows (SSE). **Continue*
 
 ### 3. Client interview — `/onboarding/interview`
 
-Default surface is **voice** (mic → realtime agent). Text client interview is the other writer
-(same fields as [02b](pipeline/02b-client-interview.md)). Voice `end_interview` goes to the
-website preview; text submit completes the client interview the same way.
+First-pass surface is **text** (same fields as [02b](pipeline/02b-client-interview.md)).
+Submit completes the client interview and starts applying the website template. Voice is a
+**later milestone** (not in this port); see [frontend-debloat.md](frontend-debloat.md).
 
 ### 4. Website preview (progress) — `/onboarding/preview`
 
@@ -57,8 +58,7 @@ An active website preview lands on `/onboarding/preview` with View website. The 
 link still opens without `localStorage` and has no TTL (410 only if unknown, superseded, or
 activated).
 
-Minting a new voice realtime connection includes current profile, checklist, extra notes, and
-last `update_interview_plan`. Do not replay the transcript. Restore failure keeps the token and
+Restore failure keeps the token and
 retries; it does not `POST` a new onboarding session.
 
 ## Components (`frontend-2`)
@@ -66,6 +66,5 @@ retries; it does not `POST` a new onboarding session.
 - `BusinessSourcePanel` — country, registry, optional Maps, online research consent.
 - `FoundInformationReview` — found vs missing.
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist` — text client interview.
-- Voice panel — `useSetupVoiceInterview`.
 - `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — timeline (apply-the-website-template + copy progress).
-- `TargetedPreviewView` / `PayToClaimStrip` — website preview + website activation (`src/features/preview/`).
+- `TargetedPreviewView` plus the website-activation strip — website preview + website activation (`src/features/preview/`).

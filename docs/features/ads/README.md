@@ -10,9 +10,10 @@ services) into a reviewable, exportable ad set. This doc is the overview; the
 - [technical-implementation.md](ad-generation/technical-implementation.md) — domain objects, API,
   generation pipeline, validation, export
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
+- [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](ad-generation/testing.md) — the ads E2E test
 - [design/ads-workspace.html](ad-generation/design/ads-workspace.html) — static design mock
-- [ad-application/meta](ad-application/meta/00-index-research.md) — research for future ad posting to Meta (not the spec)
+- [ad-application/meta](ad-application/meta/) — investigation for future ad posting to Meta (not the spec)
 
 ## Positioning (done-for-you + DIY)
 
@@ -29,8 +30,8 @@ work** built on top of the ads service — the model reserves stable ids, `platf
 `platform_status` for it. The MVP terminal Ad status is **ad ready to post** (a deterministic export
 ad set), never actual ad posting.
 
-How we would post to Meta (Facebook / Instagram) is researched in
-[`ad-application/meta/`](ad-application/meta/00-index-research.md). That directory is not the
+How we would post to Meta (Facebook / Instagram) is written in
+[`ad-application/meta/`](ad-application/meta/). That directory is not the
 product spec; `ad-generation/` still is.
 
 ## Domain model

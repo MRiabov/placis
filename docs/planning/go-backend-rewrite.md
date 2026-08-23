@@ -69,12 +69,15 @@ auditability, and voice agents as a **separate, optional** channel.
   unshipped `schemas_registry_public.py` API, hard-coded website template imagery as tenant variables.
 - **Blog posts and careers** — deferred; `page_type` enum omits `blog_post`; no `website_career_*`
   tables for now.
-- **Frontend (`frontend-2`)** — reused mostly, not rebuilt. It is adapted only where the
-  huma-derived OpenAPI improves the contract (regenerated `openapi-typescript` types).
-  **TODO:** rename leftover CMS layout type names to match the glossary (never "shell").
-  **TODO:** align `frontend-2` names to the glossary in general (large follow-up).
+- **Frontend (`frontend-2`)** — reused and **debloated**, not rebuilt. Port instructions
+  (keep / delete / do not port / constrained API) live per feature in `frontend-debloat.md`;
+  index: [frontend-debloat.md](frontend-debloat.md). Types still regenerate from huma
+  OpenAPI.
+  **TODO:** leftover CMS layout type names — never "shell" (details + cross-cutting files).
+  **TODO:** align `frontend-2` names to the glossary (each feature’s instruction file).
   **TODO:** enable Don't-say `frontend-2` in `cmd/ci/check-dont-say` (`--frontend`; drop the
-  `frontend-2/` pre-commit exclude) when frontend work starts from the Go backend.
+  `frontend-2/` pre-commit exclude) when frontend work starts from the Go backend
+  (cross-cutting file).
 
 ### Deferred (later)
 

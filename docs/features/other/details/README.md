@@ -24,5 +24,6 @@ reaches it from **Profile** → **Business details**.
 
 One source of truth: the business profile. Editing it here changes the website and the next ad draft.
 
-How the owner reaches it: [frontend.md](frontend.md). Decisions: [ADR.md](ADR.md). Tables:
+How the owner reaches it: [frontend.md](frontend.md). Port:
+[frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). Tables:
 [data-model.md](data-model.md).
