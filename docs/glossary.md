@@ -370,7 +370,7 @@ In code: `website_previews`, `internal/onboarding/websitepreview/`.
 #### Website preview link
 
 The shareable URL for a website preview. Anyone who has the link can open the unpublished
-website until the link expires. Never say “signed website preview”.
+website until the website preview is superseded or activated. Never say “signed website preview”.
 
 Distinct from: Website preview (the sales stage), Preview token, Signed URL.
 
@@ -852,10 +852,23 @@ dependency.
 
 #### Onboarding session
 
-The persisted onboarding run. Distinct from: Onboarding (the process). Do not say “session” in
-product docs.
+The persisted onboarding run. Distinct from: Onboarding (the process), Resume. Do not say
+“session” in product docs.
 
 In code: `onboarding_sessions`, `internal/onboarding/`.
+
+---
+
+#### Resume
+
+Continuing an in-progress onboarding session on the same browser. `localStorage` holds the
+onboarding session token; restore is `GET .../profile`. There is no second token. Never say
+“resume token”.
+
+Distinct from: Onboarding session (the persisted run), Website preview link (opens without
+`localStorage` after the website template is applied).
+
+In code: `onboarding_sessions.token` in `localStorage`.
 
 ---
 

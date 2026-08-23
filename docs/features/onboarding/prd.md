@@ -105,6 +105,11 @@ separate flow.
    exists, so I don't wait on the words being written.
    - The website preview opens on the unpublished website; website copy generation fills in in the
      background. If copy fails, I can still open the website preview and do website activation.
+6. **As a contractor**, I want to close the tab and continue later on the same browser, so I don't
+   start over.
+   - Reload lands on the same step with answers, extra notes, and remaining questions kept.
+     Confirm runs once. The website preview link still works after applying the website template,
+     with no expiry clock.
 
 ## Acceptance criteria
 
@@ -117,3 +122,8 @@ separate flow.
 5. After they answer the questions they can open the website preview as soon as the unpublished website
    exists; website copy generation fills in in the background. If copy fails, they can still open
    the website preview and do website activation.
+6. Closing the tab and coming back on the same browser continues where they left off. Confirm
+   does not start a second run. Clearing storage before the website preview hides the pointer on
+   that browser; the data stays. The website preview link has no TTL. Coming back mid-client-interview
+   keeps answers, extra notes, and remaining questions. A new voice connection does not re-ask
+   filled checklist rows.

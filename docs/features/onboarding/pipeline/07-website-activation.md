@@ -31,7 +31,7 @@ replayed safely and is never triggered by a browser success URL alone.
    has already written) is what they edit. Website activation does **not** wait for website copy
    generation.
 
-Expired website preview (`expires_at` passed) cannot be activated. Replaying the webhook does not
+A superseded or already-activated website preview cannot be activated. Replaying the webhook does not
 activate twice.
 
 - **Persists** `website_activations` (`clerk_subject`, `checkout_session_id`, `payment_status`,

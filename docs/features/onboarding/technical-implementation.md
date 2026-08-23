@@ -29,13 +29,22 @@ block website preview or website activation.
 
 ## Business research pipeline
 
-1. Google Maps, the company registry, Facebook, the LLM, or a fake returns a raw fetch body.
-2. Upsert typed output: a `business_research_sources` row (kind, external id, where it came from,
-   lookup `status`, confidence). A Google Maps listing also upserts `google_maps_listings`
-   (columns + `raw` ETL cache), hours, and reviews. Other kinds keep `raw` on the source row.
-3. Photo classification tags media assets (hero/project/service/founder/logo) for the media library
+1. Look up `business_research_fetches` (kind + cache key) and `google_maps_listings` (`place_id`)
+   before any external call. Hit → reuse `raw`; skip Google Maps Details, scrape, Facebook, crawl,
+   and Parallel.
+2. On a miss: Google Maps, OpenRouter Parallel search (only when we lack `place_id` or a known
+   website URL), the company registry parquet, Facebook, the LLM extract, or a fake returns a raw
+   fetch body.
+   Persist the fetch. OpenRouter is the gateway: Parallel via `openrouter:web_search` for the
+   search hop; a separate extract call over retrieved text (no search tools).
+3. Upsert typed output: a `business_research_sources` row (kind, external id, where it came from,
+   lookup `status`, confidence) for **this** onboarding session even on a cache hit. A Google Maps
+   listing also upserts `google_maps_listings` (columns + `raw` ETL cache), hours, and reviews.
+   Other kinds copy `raw` onto the source row from the fetch cache.
+4. Photo classification tags media assets (hero/project/service/founder/logo) for the media library
    / website slot mapping.
-4. Every run is safe to retry (explicit key).
+5. Every run is safe to retry (explicit key). Do not refetch on retry when the cache already has
+   the body.
 
 ## Profile building
 

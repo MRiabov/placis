@@ -7,13 +7,14 @@ update).
 
 ## Token
 
-The API issues a website preview token (HMAC, default **14 days**). Only `token_hash` is stored
-(`website_previews.token_hash`). Anyone with the unexpired website preview link can open
-`/preview/{token}/` on the contractor website application (`apps/contractor-website`). Expired or superseded → 410.
+The API issues a website preview token (HMAC). Only `token_hash` is stored
+(`website_previews.token_hash`). Anyone with the website preview link can open
+`/preview/{token}/` on the contractor website application (`apps/contractor-website`).
+The link has **no TTL**. 410 only when the token is unknown, **superseded**, or already
+**activated**.
 
 ## What it holds
 
-- `expires_at`
 - `status` — `active` while it is the current website preview; applying the website template again
   **supersedes** the old one.
 
@@ -35,5 +36,4 @@ SSE is the onboarding session stream (business research + apply-the-website-temp
 events). The website preview itself is not an SSE endpoint. The website preview **token** stays;
 05 does not supersede the website preview.
 
-- **Persists** `website_previews` (`token_hash`, `expires_at`,
-  `status=active`) and `website_preview_events`.
+- **Persists** `website_previews` (`token_hash`, `status=active`) and `website_preview_events`.

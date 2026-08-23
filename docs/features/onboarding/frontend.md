@@ -19,8 +19,10 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
   status, registered office).
 - **Google Maps** (optional) — search and pick the place. Confirm with registry, Maps, or both.
 - **Online research consent** — checkbox required to enable Confirm.
-- **Confirm and review** — creates the onboarding session, starts business research, goes to
-  Review. Does not apply the website template or create a website preview yet.
+- **Confirm and review** — creates the onboarding session **once** (when this browser has no
+  token), starts business research, goes to Review. Does not apply the website template or create a
+  website preview yet. Opening Find with nothing stored must not `POST` an onboarding session.
+  Opening Find with a stored token restores (see Resume).
 
 ### 2. Review — `/onboarding/review`
 
@@ -47,8 +49,17 @@ is not a blocker. Success → `/cms/website`.
 
 ## Resume
 
-`localStorage` holds the onboarding session id and step. Reload calls `GET .../profile`. An active website preview
-resumes on the website preview screen.
+Same browser. `localStorage` holds the onboarding session **token** and last UI step. Reload calls
+`GET .../profile`. The stored step is a hint; onboarding session status and `active_website_preview`
+win. Screen map: [pipeline README](pipeline/README.md).
+
+An active website preview lands on `/onboarding/preview` with View website. The website preview
+link still opens without `localStorage` and has no TTL (410 only if unknown, superseded, or
+activated).
+
+Minting a new voice realtime connection includes current profile, checklist, extra notes, and
+last `update_interview_plan`. Do not replay the transcript. Restore failure keeps the token and
+retries; it does not `POST` a new onboarding session.
 
 ## Components (`frontend-2`)
 

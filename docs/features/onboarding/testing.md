@@ -11,11 +11,13 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
 
 2. **Review** — found vs missing; Continue to client interview.
    - UI: `/onboarding/review`.
-   - DB: checklist rows from 01a/02a (`filled_by_source` appearing as business research fakes complete).
+   - DB: checklist rows from 01a/02a (`filled_by_research` appearing as business research fakes complete).
 
 3. **Client interview** — fill the gaps (text path in this E2E so it does not depend on a live voice
-   service); submit.
-   - DB: `client_interview_submissions`; `business_profile_edits` with `created_by=text`.
+   service); submit. Reload mid-interview: lands on `/onboarding/interview` with autosaved answers,
+   extra notes, and last `update_interview_plan` still present.
+   - DB: `client_interview_submissions`; `business_profile_edits` with `created_by=text`;
+     `onboarding_sessions.interview_plan_*` when voice `update_interview_plan` ran.
 
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
    - DB: `business_research_runs` → `business_research_sources` + `google_maps_listings` when a place was selected.
@@ -34,6 +36,7 @@ asserts use [data-model.md](data-model.md) and [details](../other/details/data-m
    - DB: `website_activations`, `stripe_events`, `tenants.status=active`, `tenant_memberships.owner`,
      `website_addresses` (`type=subdomain`); onboarding session `activated`; **no** `website_publications`.
    - UI: lands in `/cms/website`.
+   - Optional: open the website preview link in a clean storage (no `localStorage`) and still pay.
 
 8. **Isolation** — a second onboarding session.
    - Assert: the first tenant's profile and website pages are not readable under the second tenant.

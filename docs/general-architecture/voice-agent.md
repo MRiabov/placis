@@ -20,6 +20,10 @@ Never say “activate” for the voice agent — that word is website activation
    never flows through the backend.
 4. The browser never receives the long-lived voice API key.
 
+Minting a client-interview realtime connection includes the current profile, checklist, extra notes,
+and last `update_interview_plan`. A new socket is not a blank client interview. Do not replay the
+transcript.
+
 ## Authority
 
 Voice is transport, not authority. The agent calls the same governed, typed, validated tools as the

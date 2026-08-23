@@ -13,7 +13,9 @@ The business profile these onboarding sessions write is owned by
 - `onboarding_sessions` — `id`, `tenant_id` nullable fk, `started_from` (`google_maps_listing`/
   `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`client_interviewing`/
   `applying_website_template`/`previewing`/`activated`/`apply_website_template_failed`),
-  `token` unique, `clerk_user_id` nullable, `online_research_consent_at` nullable, timestamps
+  `token` unique, `clerk_user_id` nullable, `online_research_consent_at` nullable,
+  `interview_plan_markdown` nullable, `interview_plan_completed` text[] nullable,
+  `interview_plan_next_questions` text[] nullable, timestamps
 - `client_interview_submissions` — `id`, `onboarding_session_id` fk, `kind` (`autosave`/`final`),
   `photos_choice` (`use_found`/`source_from_google`/`upload_later`/`use_neutral`),
   `google_maps_listing_choice` (`use_found`/`lookup`/`no_profile`/`add_later`),
@@ -33,8 +35,17 @@ live here.
   `created_at`
 - `business_research_sources` — `id`, `business_research_run_id` fk, `kind` (same closed set as
   runs), `external_id`, `source_ref`, `raw` jsonb (ETL dump for kinds with no listing table;
-  null when `kind` is `google_maps_listing` or `review`), `status` (`matched`/`ambiguous`/`not_found`/
-  `not_attempted`/`blocked`/`error`), `confidence`, `created_at`
+  null when `kind` is `google_maps_listing` or `review`; copy of the cache hit, not a second fetch),
+  `status` (`matched`/`ambiguous`/`not_found`/`not_attempted`/`blocked`/`error`), `confidence`,
+  `created_at`
+- `business_research_fetches` — `id`, `kind` (same closed set as runs, plus `web_search`),
+  `cache_key` unique with `kind` (canonical URL, scrape query, Facebook URL, trade-registry id,
+  Parallel query, or `place_id` for Maps scrape fallback), `raw` jsonb, `fetched_at`. Global ETL
+  cache: look up before any external call. Hit → reuse `raw`; do not call Google Maps Details,
+  scrape, Facebook, crawl, or Parallel again. Still write a `business_research_run` +
+  `business_research_sources` row for **this** onboarding session. Maps listings also reuse
+  `google_maps_listings` by `place_id`. Company registry parquet and Find autocomplete are not
+  this cache. No TTL.
 - `google_maps_listings` — `id`, `place_id` unique (Google’s id),
   `fetched_from` (`google_maps_details`/`scrape`), `display_name`, `primary_type`,
   `marketing_phone`, `website_url`, `google_maps_listing_url`, `listing_address`, `locality`,
@@ -54,7 +65,7 @@ fields and review rows onto the business profile; the listing address stays here
 ## Website preview and website activation
 
 - `website_previews` — `id`, `onboarding_session_id` fk, `token_hash` unique, `status` (`active`/
-  `superseded`/`expired`/`activated`), `expires_at`, `created_at`
+  `superseded`/`activated`), `created_at`
 - `website_preview_events` — `id`, `website_preview_id` fk, `event_type`, `payload` jsonb,
   `created_at`
 - `website_activations` — `id`, `website_preview_id` fk, `clerk_subject`, `checkout_session_id`,
@@ -64,4 +75,5 @@ fields and review rows onto the business profile; the listing address stays here
 
 ## Indexes
 
-Lookup: `(tenant_id, status, created_at)` on onboarding sessions. Unique: `stripe_events.event_id`.
+Lookup: `(tenant_id, status, created_at)` on onboarding sessions. Unique: `stripe_events.event_id`,
+`business_research_fetches` `(kind, cache_key)`.

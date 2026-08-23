@@ -30,15 +30,36 @@ applying the website template and copy — not only step 06. Postgres is authori
 client interview) → `applying_website_template` (client interview complete; 04 running)
 → `previewing` (website preview ready; 05 may still be writing copy) → `activated`.
 `apply_website_template_failed` if 04 throws.
-05
-failing does not change onboarding session status. Website previews expire (`expires_at`); the
-onboarding session has no `expired` status.
+05 failing does not change onboarding session status. The website preview link has no TTL; 410
+only when the token is unknown, superseded, or already activated. The onboarding session has no
+`expired` status.
 
 ## Resume
 
-The frontend stores the onboarding session id and step in `localStorage` and restores with
-`GET .../profile`. If `active_website_preview` exists, resume on the website preview. There is no
-server-side resume token.
+Same browser only. `localStorage` holds the onboarding session **token** (`onboarding_sessions.token`)
+plus last UI step. Restore is `GET .../profile`. The stored step is a hint; status and
+`active_website_preview` win. There is no second token and no server-side resume
+token.
+
+| Onboarding session | Screen |
+| --- | --- |
+| No stored token | `/onboarding/find` |
+| Token present, `GET .../profile` failing | stay on a loading placeholder; keep the token; retry. Do not go to Find and do not `POST` |
+| `client_interviewing`, no client interview started | `/onboarding/review` |
+| `client_interviewing`, interview in progress (channel set or an autosave exists) | `/onboarding/interview` |
+| `applying_website_template`, `apply_website_template_failed`, or `previewing` | `/onboarding/preview` |
+| Active website preview | `/onboarding/preview` with View website; the website preview link still works without `localStorage` |
+| `activated` | clear storage; `/cms/website` |
+
+Confirm creates the onboarding session **once** (01a), when this browser has no token. Opening Find
+with nothing stored must not `POST` an onboarding session. Opening `/onboarding/find` with a stored
+token restores (same table as reload); it does not Confirm again. Restore failure keeps the token
+and retries `GET .../profile` on a loading placeholder — do not drop the pointer and do not `POST`
+a replacement.
+
+Voice minting seeds the new realtime connection from the profile, checklist, extra notes, and last
+`update_interview_plan`. Live audio is gone; structured answers are not. Canonical detail:
+[frontend.md](../frontend.md), [02b](02b-client-interview.md).
 
 ## Steps
 

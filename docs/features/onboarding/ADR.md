@@ -23,16 +23,32 @@ decision + date) instead of silently replacing the old entry.
    website crawl, and photo classification sit behind one interface with fakes. Output lands in
    typed `business_research_sources` rows with where it came from + confidence; a Google Maps listing
    also upserts `google_maps_listings` (columns, hours, reviews). Raw fetch bodies stay on the ETL
-   cache (`google_maps_listings.raw`, or `business_research_sources.raw` for kinds with no listing
-   or reviews table) and never leak past that boundary into the profile.
+   cache (`google_maps_listings.raw`, `business_research_fetches.raw`, or
+   `business_research_sources.raw` for kinds with no listing or reviews table) and never leak past
+   that boundary into the profile.
 
-5. **Google Maps is cached** — `google_maps_listings` keyed by `place_id` is the listing: typed
-   columns plus `raw` as the ETL cache of the last Google Maps Details or scrape fetch. A repeat
-   attach reuses that row instead of refetching. It is not the business profile.
+5. **External research is cached per business** — look up before any paid/external call. Google
+   Maps listings keyed by `place_id` (`google_maps_listings.raw`) plus `business_research_fetches`
+   keyed by kind + stable key (canonical URL, scrape query, Facebook URL, trade-registry id,
+   Parallel query). A repeat attach reuses `raw` instead of refetching. Still write a
+   `business_research_run` + `business_research_sources` row for this onboarding session. Not the
+   business profile. Company registry parquet and Find autocomplete are not this cache. No TTL.
    (2026-08-16: a `google_maps_listing_cache` jsonb-only payload, described as “repeat paid
    lookups”. 2026-08-19: Google Maps Details is the free API; scrape is the fallback. Same day,
    later: that table is `google_maps_listings` (typed columns + `raw` ETL body); do not also dump
-   the body onto `business_research_sources.raw`.)
+   the body onto `business_research_sources.raw`. 2026-08-23: cache is global for every external
+   kind, not Maps-only.)
+
+5a. **Open web search is Parallel on OpenRouter** — Parallel is the search engine for our agents.
+    When a research job must discover a URL or listing and we do not already have `place_id` or a
+    known website URL, call Parallel through OpenRouter (`openrouter:web_search`, engine Parallel).
+    Do not call Parallel’s API directly. Do not use Exa, Perplexity, a model's built-in search,
+    `:online`, or any other OpenRouter search engine. OpenRouter is also the fast extract over
+    retrieved text (no search tools on that call). Known-URL crawl, Maps Details, scrape, and
+    Facebook stay typed adapters. (2026-08-23: Parallel named, and OpenRouter web tools wrongly
+    forbidden. Same day, later: Parallel is a search engine on OpenRouter; we use OpenRouter for
+    both search and extract. Predecessor used Perplexity Sonar via OpenRouter and Exa for Facebook
+    discovery.)
 
 6. **The business profile keeps profile history and every detail is attributable** — each change is a new
    `business_profile_history` row with where each detail came from and who changed it; the profile
@@ -84,3 +100,15 @@ decision + date) instead of silently replacing the old entry.
     after applying the website template, a River job writes copy into existing website slots. The
     website preview is issued on the unpublished website; if copy fails, the unpublished website
     stays. Same website assistant tools as the website editor, no chat UI, no `create_page`.
+
+14. **Resume is same-browser `localStorage` + the existing onboarding session token** —
+    restore with `GET .../profile`. No server-side resume token. Clerk still starts at
+    website activation (`clerk_user_id` stays null until then). Confirm creates an onboarding session
+    once; do not `POST` on Find mount and do not replace the row. A new voice realtime connection is
+    seeded from persisted profile, checklist, extra notes, and last `update_interview_plan`.
+    (2026-08-23.)
+
+15. **The website preview link has no TTL** — it stays valid until the website preview is
+    superseded (apply the website template again) or activated. 410 only for unknown, superseded,
+    or already-activated tokens. Drop `expires_at` / status `expired`. (2026-08-23. Earlier: HMAC
+    default 14 days, then 410 and activation refused.)
