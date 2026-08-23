@@ -9,9 +9,14 @@ it update, then website publication.
    shared contractor-website component package — the same ones the live website (Astro) uses.
 2. The owner edits inline: click-to-edit visible text, swap an image, reorder / add / remove a
    website section, change a design control, SEO, or the website style catalog preset.
-3. The frontend calls a schema-validated **patch API** (`/api/v1/website/editor/...`).
+3. The frontend calls a schema-validated **patch API** (`/api/v1/website/editor/...`). The canvas
+   and editing panel update the in-memory website editor projection immediately. Typing is
+   **debounced** (same idea as onboarding Maps/registry search): coalesce keystrokes, then one
+   PATCH. Discrete actions (image swap, reorder, add/remove a website section) PATCH immediately.
 4. The backend validates the change against the website component contract and **upserts** the
-   unpublished website rows.
+   unpublished website rows. The body is only the changed website slots / website sections — not
+   the whole unpublished website. Over-chatty PATCH from one tenant is `429` with `Retry-After`;
+   the website editor retries with backoff. Do not write `audit_events` per website slot edit.
 5. The canvas re-renders from the updated website editor projection.
 
 The backend serves a typed **website editor projection** — website pages, website sections, current
@@ -79,6 +84,24 @@ the edits. To update a website slot you send:
 - **website page create** — `path`, `title`, `page_type`, SEO columns, unpublished content.
 - **website form patch** — `website_form_id`, `title`, `submit_action`, `fields[]` (typed form
   field rows), `privacy_notice`.
+
+Typing (`text` / `rich_text` website slots, SEO copy): wait **500ms** after the last keystroke,
+and flush at **2s** even if they are still typing, so a long edit still reaches Postgres. On
+blur, route change, or website publication, flush immediately. Discrete patches skip the wait.
+
+The jsonb columns (`website_slots.value`, `website_sections.props` / `design`) are in-place
+`UPDATE`s of one row. There is no unpublished revision stack, so we do not append a jsonb blob
+per keystroke. Chatty writes still rewrite TOAST and WAL — debounce is what keeps that down.
+Website publication still writes one `website_manifest` jsonb per website version (kept, never
+overwritten).
+
+The API allows **30** website-editor PATCH requests per tenant per **10 seconds**. Above that:
+`429` and `Retry-After`. The website editor backs off and retries; it does not spin. Website
+assistant applies (after the owner approves a plan, or one continuous-mode tool) go through the
+same upsert path and the same cap. Streaming model tokens never write jsonb.
+
+Slot `value` stays bounded by the website component contract (`max_length` and typed structs).
+Reject oversized jsonb at the API; do not store it.
 
 ## What each action does
 
