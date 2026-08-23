@@ -23,7 +23,7 @@ whole system.
 | LLM | internal interface; Vercel AI SDK primary, OpenRouter as an alternative |
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (`frontend-2`) | Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; the CMS, onboarding, website preview; reused mostly, adapted to the huma OpenAPI |
-| Contractor website (`apps/contractor-website`) | Astro with React islands (Cloudflare Workers) — shows every contractor’s live website; not yet imported from the predecessor repo |
+| Contractor website (`apps/contractor-website`) | Astro with React islands (Cloudflare Workers) — shows every contractor’s live website; import this app first when implementation starts |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 ## Module layout
@@ -115,8 +115,8 @@ Two backend processes share one database, and two frontend apps talk to the API:
    to the API through the generated `openapi-fetch` helper.
 4. **Contractor website** (`apps/contractor-website`) — Astro with React islands, on Cloudflare
    Workers. Website publication writes HTML to R2 `latest/`; a live GET is Cache then R2 (no Go).
-   A single deploy serves all tenants (no per-tenant build). This application still lives in the
-   predecessor repo and has not been imported into this repo yet. Locked serve path:
+   A single deploy serves all tenants (no per-tenant build). Import this application first when
+   implementation starts (it still lives in the predecessor repo today). Locked serve path:
    [website Cloudflare](features/website/cloudflare.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the

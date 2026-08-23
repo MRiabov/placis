@@ -1,8 +1,13 @@
 # Contractor website on Cloudflare
 
 How the live contractor website is stored, attached to a custom website address, and served.
-Import of `apps/contractor-website` is later; this document locks the serve path so that import
-does not invent a second HTML engine or a per-contractor Cloudflare deploy.
+This document locks the serve path so the import does not invent a second HTML engine or a
+per-contractor Cloudflare deploy.
+
+**First implementation step:** import the predecessor contractor website app as
+`apps/contractor-website` (rename away from its old directory name). Then wire R2 `latest/`,
+website publication render, Custom Hostnames, and Connect website address. Do not start those
+slices without the app in this repo.
 
 Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 [website_addresses](../other/auth/data-model.md), [frontend.md](frontend.md),
@@ -210,7 +215,6 @@ Worker; optional Apex Proxying contract. No Cloudflare account work in this docu
 
 ## Out of this spec
 
-- Import `apps/contractor-website`
 - Per-tenant Workers or Pages projects
 - `workers.dev` adapter
 - Registrar DNS automation (Domain Connect)
