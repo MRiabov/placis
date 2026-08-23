@@ -121,7 +121,8 @@ Two backend processes share one database, and two frontend apps talk to the API:
 4. **Contractor website** (`apps/contractor-website`) — Astro with React islands, on Cloudflare
    Workers. Website publication writes HTML to R2 `latest/`; a live GET is Cache then R2 (no Go).
    A single deploy serves all tenants (no per-tenant build). Import this application first when
-   implementation starts (it still lives in the predecessor repo today). Locked serve path:
+   implementation starts (it still lives in the predecessor repo today). Port instructions:
+   [contractor-website-debloat.md](features/website/contractor-website-debloat.md). Locked serve path:
    [website Cloudflare](features/website/cloudflare.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the

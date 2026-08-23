@@ -11,6 +11,7 @@ slices without the app in this repo.
 
 Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 [website_addresses](data-model.md), [frontend.md](frontend.md),
+[contractor-website-debloat.md](contractor-website-debloat.md),
 [website activation](../onboarding/pipeline/07-website-activation.md), [ci-cd.md](../../../ci-cd.md).
 
 ## Locks

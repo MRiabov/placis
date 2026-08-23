@@ -36,7 +36,7 @@ A feature directory holds, as applicable:
 | `data-model.md` | that feature's tables (columns, indexes); shared tables are linked, never copied |
 | `technical-implementation.md` | API surface, validation, testing — references `data-model.md`, does not re-define tables |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
-| `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md) |
+| `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). The contractor website (Astro) uses [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
 | `testing.md` | the full-stack E2E test(s) with DB asserts |
 | `pipeline/` | one doc per step (`01a-…`, `02a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline) |
 | `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features) |
