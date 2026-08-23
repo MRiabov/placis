@@ -259,8 +259,11 @@ Recommended private Ads routes (the Ads app):
 11. `POST /api/v1/ads/{ad_id}/download` (renders and returns a signed URL
     for the ad-set download on the human path)
 
-Mutating routes that can be retried accept `Idempotency-Key`. Approve/ad-set/download/archive
-mutations audit. The contractor website application never calls these routes; ad sets are not live-website content.
+Mutating routes that can be retried accept `Idempotency-Key`. PATCH / regenerate / approve
+send `base_updated_at` (last-seen `ads.updated_at`). Match → bump `ads.updated_at` and
+return it. Mismatch → `409`; frontend re-GETs. No undo/redo routes ([ADR 31](ADR.md)).
+Approve/ad-set/download/archive mutations audit. The contractor website application never
+calls these routes; ad sets are not live-website content.
 
 ## Future Callers Of The Service
 

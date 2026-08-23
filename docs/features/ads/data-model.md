@@ -17,7 +17,10 @@ Referenced, not owned here: [details](../other/details/data-model.md) (profile, 
   `icp_notes`, `icp_source` (`default`/`llm_suggested`/`owner`), `icp_review_status`,
   `review_status`, `origin` (`owner`/`llm`/`done_for_you`/`business_profile`), `created_by`,
   `updated_by`, `platform_refs` jsonb (ad-platform object ids; empty until ad posting),
-  `platform_status` (`not_connected`/`synced`/`needs_sync`/`error`), timestamps
+  `platform_status` (`not_connected`/`synced`/`needs_sync`/`error`), timestamps.
+  `updated_at` is the conflict token for the whole ad set: any nested write (variant, copy,
+  image placement, ad lead form) bumps this column. Mutating APIs send `base_updated_at`
+  ([ADR 31](ad-generation/ADR.md)). Not an undo log.
 - `ad_variants` — `id`, `tenant_id` fk, `ad_id` fk, `format` (`feed_square`/
   `feed_portrait`/`carousel`/`story`), `status` (`draft`/`ad_needs_review`/`approved`/`hidden`/
   `archived`), `copy_variant_id` fk, `position`, `review_status`,

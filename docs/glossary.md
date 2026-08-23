@@ -212,7 +212,8 @@ history (how the business profile changed).
 The kept record of how the business profile changed.
 
 Do not say “version”, “versioned”, or “snapshot” for this. Distinct from: Profile (the nav
-group), Website version (the history of the website).
+group), Website version (published checkpoints of the website), Website edit history
+(unpublished website edits).
 
 In code: `business_profile_edits`, `business_profiles.last_edit_id`,
 `business_profiles.accepted_edit_id`.
@@ -510,7 +511,9 @@ In code: `footer_items`.
 
 #### Website assistant
 
-The chat (and the voice agent) that proposes website edits. It drafts; the owner decides.
+The chat (and the voice agent) that proposes website edits. Two configs combine: **plan** vs
+**continuous** (text plan first, or not), and **instant apply** vs **Ask first** (Apply /
+Reject, or not). It drafts; the owner decides except in instant apply.
 
 Distinct from: Website copy generation, Website assistant plan.
 
@@ -518,14 +521,22 @@ Distinct from: Website copy generation, Website assistant plan.
 
 #### Website assistant plan
 
-What the website assistant shows the owner before it edits: which website pages and website
-sections, the proposed edits, assumptions, and open questions. Nothing is changed until the
-owner approves the plan. After they approve, the assistant applies the edits.
+Text the website assistant shows before it continuously applies (plan workflow). Confirmation
+text, like asking Cursor for a plan. Nothing is written until the owner accepts that text
+(then Apply / Reject still follow Ask first or Instant apply).
 
 Never say “live markdown plan” or “handoff boundary”.
 
-Distinct from: Website assistant (the chat), Website copy generation (no plan; it writes into
-the unpublished website on its own).
+Distinct from: Website assistant (the chat), continuous workflow (no plan text), instant apply
+(no Apply / Reject), Ask first (Apply / Reject), Website copy generation (continuous + instant apply, no chat).
+
+---
+
+#### Ask first
+
+The website assistant shows Apply / Reject before an edit lands. Opposite of Instant apply.
+
+Distinct from: Instant apply, Website assistant plan.
 
 ---
 
@@ -567,14 +578,28 @@ One kept checkpoint of the whole website. Website versions are the history of th
 Website publication makes a website version the live website. Website rollback makes an earlier
 website version live.
 
-Distinct from: Profile history (the business profile), Unpublished website (what the editor
-mutates), Website publication (the act), Published website copy (the content of the live website
-version), Live website.
+Distinct from: Profile history (the business profile), Website edit history (unpublished
+website edits), Unpublished website (what the editor mutates), Website publication (the act),
+Published website copy (the content of the live website version), Live website.
 
 Do not say “website history”, “website page version”, or “website page history”. Never say bare
 “version” for the business profile.
 
 In code: `website_publications` (`version_number` is the website version number).
+
+---
+
+#### Website edit history
+
+The kept record of how the unpublished website changed (typed increments, not published
+checkpoints).
+
+Distinct from: Website version (published checkpoints of the whole website), Profile history
+(the business profile), audit events.
+
+Do not say “website history”.
+
+In code: `edit_history`, `website_settings.edit_history_head`.
 
 ---
 
@@ -766,6 +791,17 @@ Media library). Profile is the left-nav group, not a route.
 
 ---
 
+### Loading placeholder
+
+The shaped stand-in shown **in** a field, row, or slot while that value is still loading. Same
+layout as the loaded UI. Not a spinner that replaces a whole card, panel, canvas, or screen.
+Not the unpublished website (never say “skeleton” for either). Distinct from: Website placeholder
+(`{{…}}` in unpublished copy).
+
+In code: `LoadingPlaceholder`. Never `Skeleton`.
+
+---
+
 ### Done-for-you / DIY
 
 **Done-for-you:** Placis researches, builds, tweaks, and runs ads for the contractor, delivered
@@ -879,7 +915,8 @@ In code: `website_addresses.type=custom`.
 #### Website placeholder
 
 A blank in the unpublished website that stands for a business detail (`{{business_name}}`,
-`{{marketing_phone}}`, …). Never say bare “placeholder”.
+`{{marketing_phone}}`, …). Never say bare “placeholder”. Distinct from: Loading placeholder
+(UI while a field loads).
 
 ---
 
@@ -969,7 +1006,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | phone | marketing phone |
 | fact (details) / structured facts | detail / information |
 | proof | certifications, reviews, or projects as appropriate |
-| history (details) | profile history or website versions |
+| history (details, website) | profile history, website versions, or website edit history |
 | menu (website) / header / navigation | top menu or footer |
 | version (website, details) / versioned (website, details) / snapshot (website, details) | website version or profile history |
 | consent (onboarding) | online research consent |
@@ -989,7 +1026,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | inspector | editing panel |
 | publish (website) / go live (website) / website publish (website) | website publication |
 | registry record | company registry record |
-| placeholder (website) | website placeholder |
+| placeholder (website) | website placeholder or loading placeholder |
 | catalog (website) | website template catalog, website component catalog, or website style catalog |
 | component (website) | website component |
 | our site / our website | Placis website |
@@ -1017,7 +1054,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | source-first | start from an existing Google Maps listing |
 | propose-only | the LLM drafts; the contractor edits and does a website publication |
 | blueprint | website template |
-| skeleton | unpublished website |
+| skeleton | unpublished website (the unpublished site) or loading placeholder (UI while a field loads) |
 | creative set | never in product (Internal: Creative set — images + text; not Ad) |
 | asset (media) | media asset (internal) or photo / item in the media library (product) |
 | slug | website address |

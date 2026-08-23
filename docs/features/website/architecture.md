@@ -67,9 +67,10 @@ Edits mutate the in-memory website editor projection first, then PATCH copies th
 rows. There is no Save action; do not re-render from the PATCH response. Text copies out on
 click-off, not while typing; the frontend safety timer paces sends (500ms, coalesce of dirty
 keys, typically under 10 KB) so `429` stays a backstop. PATCH is not the whole unpublished
-website; reject over 64 KB. Leaving while a copy-out is in flight confirms discard. See
-[editing.md](editing.md). Website
-assistant edits arrive as proposals (a diff), never a direct write. Website publication writes a
+website; reject over 64 KB. Leaving while a copy-out is in flight confirms discard. Opening
+the website editor hydrates undo/redo from website edit history; Ctrl+Z is in-memory, then
+PATCH. See [editing.md](editing.md). Website assistant edits follow [assistant.md](assistant.md):
+Ask first waits for Apply / Reject; instant apply writes. Website publication writes a
 website version. **Details** (the business profile), **Projects**, **Certifications and
 reviews**, and the **media library** are website page content (placeholders, project galleries,
 reviews, photos). They are separate entities, edited on their own screens — not as website slots
@@ -79,7 +80,8 @@ in the website editor. The edit loop is in [editing.md](editing.md). Screens: [f
 
 The LLM edits the unpublished website through the **website assistant** — hard-typed, validated,
 parallel tool calls (`update_slot`, `generate_image`, website section/website styles/SEO/website form/website page
-actions), in plan mode (default) or continuous mode. See [assistant.md](assistant.md).
+actions). Two configs: plan vs continuous, instant apply vs Ask first. See
+[assistant.md](assistant.md).
 
 ## Website publication
 

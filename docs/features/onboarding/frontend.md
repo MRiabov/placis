@@ -7,6 +7,9 @@ Related: [PRD](prd.md), [ADR](ADR.md), [pipeline](pipeline/README.md).
 
 Onboarding is reachable **without** signing in. `/cms` with no active tenant redirects here.
 
+Loading placeholders: every screen, per field / row — not a whole-panel swap
+([frontend.md](../../general-architecture/frontend.md)).
+
 ## Screens
 
 ### 1. Find — `/onboarding/find`

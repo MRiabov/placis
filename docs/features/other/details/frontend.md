@@ -21,6 +21,9 @@ left-nav group, not a destination. There is no `/cms/proof`.
 A top-level Projects item is too much sidebar for how often it is used; Details is also opened
 infrequently. One Profile group keeps them reachable without adding another peer of Sites.
 
+Loading placeholders: every screen, per field / row — not a whole-panel swap
+([frontend.md](../../../general-architecture/frontend.md)).
+
 ## Left nav
 
 The CMS left nav lives in `frontend-2/src/features/cms/CmsDashboardShell.tsx`. Profile
