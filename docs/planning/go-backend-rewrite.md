@@ -185,8 +185,8 @@ Canonical table definitions live with the feature that owns them — see
    (`apply_website_template_failed` if applying the website template throws).
    Business research runs in the background alongside review/client interview; applying the website template
    starts at client interview complete; website copy generation runs after that and does
-   not block website preview or website activation. Website previews expire; the onboarding session
-   does not.
+   not block website preview or website activation. The website preview link has no TTL; the
+   onboarding session has no `expired` status.
 2. **Business profile** — profile history is `business_profile_edits` (typed increments); the live
    `business_profiles` row is the fold (`last_edit_id`, `accepted_edit_id` at client interview
    complete). No `details` jsonb dump.

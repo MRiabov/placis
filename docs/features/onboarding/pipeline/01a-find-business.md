@@ -22,6 +22,9 @@ Without it, business research does not start.
 ## What confirm does
 
 1. `POST /api/v1/onboarding-sessions` — no Clerk required. Status `created`. Token unique.
+   Confirm does this **once**, when this browser has no token. Opening Find does not `POST`.
+   If the browser already has a token, restore instead of creating another onboarding session.
+   Wrong company is not a new run: attach or change sources on the **same** onboarding session.
 2. Record online research consent (`online_research_consent_at`).
 3. Registry selected → persist the company registry record. Maps selected → attach the place (same
    onboarding session if registry already ran).

@@ -7,5 +7,7 @@
   `online_research_consent_at`, `tenant_id` null, `clerk_user_id` null) and an empty
   `business_profiles` row; confirm with Maps-only, registry-only, and both succeeds; without online
   research consent, business research does not start; lookups are debounced (no request per
-  keystroke); no `website_pages` and no `website_previews` yet.
+  keystroke); opening Find with no stored token does not `POST` an onboarding session; a second
+  Confirm with a stored token does not insert another `onboarding_sessions` row; no `website_pages`
+  and no `website_previews` yet.
 - **Mocked**: registry parquet query and Google Maps autocomplete (fakes).

@@ -4,7 +4,7 @@ Two UI surfaces, one profile.
 
 ## Review (`/onboarding/review`)
 
-The checklist is the review surface. Each row has a status — `filled_by_source`,
+The checklist is the review surface. Each row has a status — `filled_by_research`,
 `filled_by_user`, `empty`, `in_progress`, `needs_confirmation`, `conflict`, `skipped`,
 `not_applicable` — plus where it came from. Grouped as: who they are, legal details, contact,
 services, service area, certifications and reviews, photos.
@@ -37,10 +37,15 @@ as final (`POST .../text-interview/submissions` → `kind=final`) then `POST ...
 `update_interview_plan`. `end_interview` is allowed only when required checklist rows are filled
 (no open conflicts) and then calls the same `interview/complete` as text.
 
-Leave-and-come-back restores the onboarding session from `localStorage` + `GET .../profile`.
+Resume restores the onboarding session from `localStorage` + `GET .../profile`
+([pipeline README](README.md)). A new voice realtime connection is **not** a blank client interview:
+minting seeds it from the profile fold, checklist, extra notes, and last `update_interview_plan`.
+Do not replay the transcript.
 
 Status stays `client_interviewing` until complete, then `applying_website_template` (04).
 
 - **Persists** `client_interview_submissions` (`kind=autosave` / `kind=final`, plus interview-only
   choices) and `business_profile_edits` (03) for the profile answers.
-  `onboarding_sessions.channel` = `text` or `voice`.
+  `onboarding_sessions.channel` = `text` or `voice`. Last `update_interview_plan` lands on
+  `onboarding_sessions` (`interview_plan_markdown`, `interview_plan_completed`,
+  `interview_plan_next_questions`).

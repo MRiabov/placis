@@ -48,8 +48,9 @@ timeline. The stream is a **mirror** — Postgres is authoritative.
 
 `created → client_interviewing → applying_website_template → previewing → activated`
 (`apply_website_template_failed` if applying the website template throws).
-Website copy generation may still be running while `previewing`. Website previews expire
-on `expires_at`; the onboarding session does not.
+Website copy generation may still be running while `previewing`. The website preview link has no
+TTL (410 only if unknown, superseded, or already activated); the onboarding session has no
+`expired` status.
 
 ## Voice
 
@@ -57,4 +58,6 @@ Voice is a **channel** (client interview, website assistant, and the voice agent
 Transport: [voice-agent.md](../../general-architecture/voice-agent.md). Tools:
 `obtained_information`, `mark_information_status`, `request_lookup`, `confirm_conflict`,
 `update_interview_plan`. `end_interview` calls the same complete path as the text client interview.
-Applying the website template consumes the accepted profile, never the raw transcript.
+Applying the website template consumes the accepted profile, never the raw transcript. Minting a
+client-interview realtime connection includes the current profile, checklist, extra notes, and last
+`update_interview_plan`.
