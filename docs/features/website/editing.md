@@ -19,9 +19,14 @@ it update, then website publication.
    whole projection from the PATCH response (that is frontend → backend → frontend). Merge only
    what the frontend cannot invent: assigned ids, validation status, website-publication blockers.
    Typing does **not** PATCH. Copy-out for `text` / `rich_text` / SEO happens on **click-off**
-   (leave the field). Also flush on route change, website publication, and page hide / unload so a
-   close-tab without blur is not lost. Discrete actions (image swap, reorder, add/remove a website
-   section) PATCH immediately.
+   (leave the field). Discrete actions (image swap, reorder, add/remove a website section) queue
+   a PATCH immediately. The frontend has a **safety timer**: at most one website-editor PATCH in
+   flight, and at most one send every **500ms**, coalescing queued click-offs and discrete
+   actions into the next body. That is why `429` should be rare. Also flush on route change,
+   website publication, and page hide / unload so a close-tab without blur is not lost. If a
+   copy-out or media-library upload is queued or in flight, or the focused field is dirty, the
+   website editor **blocks leaving** until it finishes or the owner confirms discard (in-app
+   confirm plus `beforeunload` on tab close / reload).
 5. The backend validates the change against the website component contract and **upserts** the
    unpublished website rows. The body is only the changed website slots / website sections — not
    the whole unpublished website. Over-chatty PATCH from one tenant is `429` with `Retry-After`;
@@ -49,7 +54,8 @@ on window focus while the website editor is open.
   (a published website copy) from the current unpublished website.
 
 Website publication is always a separate, explicit action. Do not write a per-page version table.
-The website editor has no Save; unpublished rows are written as the owner edits. Explicit
+The website editor has no Save; unpublished rows are written on click-off (and discrete
+actions), paced by the safety timer. Explicit
 actions that remain: website publication, Connect website address, and apply website styles.
 
 ## Models
@@ -103,20 +109,37 @@ the edits. To update a website slot you send:
   field rows), `privacy_notice`.
 
 Typing (`text` / `rich_text` website slots, SEO copy, website form field labels): PATCH on
-**click-off** (blur), not per keystroke and not on an idle timer. The canvas already has the
-text. Also flush on leaving the website page, website publication, and page hide / unload.
-Discrete patches (image, reorder, add/remove) skip the field and PATCH immediately.
+**click-off** (blur), not per keystroke and not on an idle-while-typing timer. The canvas
+already has the text. Discrete patches (image, reorder, add/remove) skip the field and queue
+immediately. Both go through the frontend safety timer (one in flight, **500ms** min gap,
+coalesce). Flush on leaving the website page, website publication, and page hide / unload —
+those wait on the in-flight copy-out rather than opening a second connection.
 
 The jsonb columns (`website_slots.value`, `website_sections.props` / `design`) are in-place
 `UPDATE`s of one row. There is no unpublished revision stack, so we do not append a jsonb blob
-per keystroke. Click-off (not debounce-while-typing) is what keeps TOAST and WAL down.
+per keystroke. Click-off plus the safety timer is what keeps TOAST and WAL down.
 Website publication still writes one `website_manifest` jsonb per website version (kept, never
 overwritten).
 
 The API allows **30** website-editor PATCH requests per tenant per **10 seconds**. Above that:
-`429` and `Retry-After`. The website editor backs off and retries; it does not spin. Website
-assistant applies (after the owner approves a plan, or one continuous-mode tool) go through the
-same upsert path and the same cap. Streaming model tokens never write jsonb.
+`429` and `Retry-After`. That cap is a backstop (second tab, website-assistant burst). A single
+website editor must not hit it: the 500ms safety timer tops out around 20 sends / 10s. On `429`
+the website editor backs off and retries; it does not spin. Website assistant applies (after the
+owner approves a plan, or one continuous-mode tool) go through the same upsert path, the same
+frontend timer, and the same cap. Streaming model tokens never write jsonb.
+
+### Leave guard
+
+If the focused field is dirty, a PATCH is queued or in flight, or a media-library upload is in
+progress, do not let the owner leave immediately.
+
+- **In-app** (another CMS route, browser back): confirm first — same idea as Gmail’s “discard
+  edits?”. Copy: edits are still being copied. Stay, or leave anyway.
+- **Tab close / reload**: `beforeunload`. Modern browsers show their own string; do not depend
+  on custom text.
+- Prefer finishing the copy-out, then navigate, so the confirm is the exception.
+- Confirming leave discards only what has not been copied; an in-flight request may still
+  finish. Website publication flushes first and does not show discard.
 
 Slot `value` stays bounded by the website component contract (`max_length` and typed structs).
 Reject oversized jsonb at the API; do not store it.

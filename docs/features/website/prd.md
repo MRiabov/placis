@@ -59,7 +59,8 @@ the next website publication.
 1. **As a contractor**, I want a website built from my profile and trade, so I get a branded
    unpublished website without doing it myself.
 2. **As a contractor**, I want to edit text and swap photos in the website editor, so I can keep it
-   correct without code. Text persists when I click off the field; I do not click Save.
+   correct without code. Text persists when I click off the field; I do not click Save. If I
+   leave while edits are still being copied, I am asked first.
 3. **As a contractor**, I want the website assistant to improve the copy and suggest images, so I
    get better content faster.
 4. **As a contractor**, I want website publication and website rollback, so I'm never stuck with a
