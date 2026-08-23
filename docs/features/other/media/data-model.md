@@ -1,7 +1,8 @@
 # Media — data model
 
 The photo library. Website sections and ads reference these rows; they do not copy them.
-Conventions: [data-model conventions](../../../general-architecture/data-model.md). Bytes live in
+Conventions: [data-model conventions](../../../general-architecture/data-model.md)
+(Postgres schema `media_library`). Bytes live in
 [files](../../../general-architecture/files-and-s3.md).
 
 The file on a media library item is never replaced. An edit (owner replace or AI cleanup) creates

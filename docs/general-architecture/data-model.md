@@ -21,19 +21,33 @@ UUIDs.
 
 Use DB check constraints for stable enums; transition tests before production use.
 
+## Postgres schemas (namespaces)
+
+One PostgreSQL database. A **Postgres schema** here is a **namespace** for tables (a prefix), not
+a data model, not OpenAPI, not a website component contract. Do not put product tables in
+`public`.
+
+The first goose migration `CREATE SCHEMA`s the namespaces below. sqlc and app SQL use
+**qualified names** (`website.website_pages`, `ads.ads`). Do not set `search_path` to every
+feature namespace — that would collapse the split. Cross-namespace foreign keys are allowed
+(e.g. `ads.ad_image_placements.media_asset_id` → `media_library.media_assets`). One pool, one
+goose migration chain.
+
 Table definitions live with the feature that owns them. Shared tables live in one owning file —
 never copied into a second `data-model.md`.
 
-| Owner | Tables |
-| --- | --- |
-| [auth](../features/other/auth/data-model.md) | `tenants`, `tenant_memberships`, `website_addresses` |
-| [onboarding](../features/onboarding/data-model.md) | onboarding sessions, business research, `google_maps_listings`, website previews, website activations, `stripe_events` |
-| [details](../features/other/details/data-model.md) | `business_profiles` and related (services, areas, hours, reviews) |
-| [website](../features/website/data-model.md) | website pages, website sections, website slots, website forms, website form fields, top menu, footer, website settings, website publications (website versions), projects, certifications |
-| [media library](../features/other/media/data-model.md) | `media_assets` |
-| [ads](../features/ads/data-model.md) | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
-| [leads](../features/other/leads/data-model.md) | `leads` |
-| [files](files-and-s3.md) | `files` |
-| [audit](audit.md) | `audit_events` |
-| [LLM layer](llm-layer.md) | `ai_generations`, `ai_generation_tool_revisions` |
-| [jobs](jobs.md) | River-managed tables |
+| Owner | Postgres schema (namespace) | Tables |
+| --- | --- | --- |
+| [auth](../features/other/auth/data-model.md) | `auth` | `tenants`, `tenant_memberships` |
+| [onboarding](../features/onboarding/data-model.md) | `onboarding` | onboarding sessions, business research, `google_maps_listings`, website previews, website activations, `stripe_events` |
+| [details](../features/other/details/data-model.md) | `details` | `business_profiles` and related (services, areas, hours, reviews) |
+| [website](../features/website/data-model.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, top menu, footer, website settings, website publications (website versions), projects, certifications |
+| [media library](../features/other/media/data-model.md) | `media_library` | `media_assets` |
+| [ads](../features/ads/data-model.md) | `ads` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
+| [leads](../features/other/leads/data-model.md) | `leads` | `leads` |
+| [files](files-and-s3.md) | `files` | `files` |
+| [audit](audit.md) | `audit` | `audit_events` |
+| [LLM layer](llm-layer.md) | `llm` | `ai_generations`, `ai_generation_tool_revisions` |
+| [jobs](jobs.md) | `jobs` | River-managed tables |
+
+`tenants` and `media_assets` stay out of `website` / `ads`. Those are the real intersections.

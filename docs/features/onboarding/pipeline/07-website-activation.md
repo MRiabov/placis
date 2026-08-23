@@ -18,10 +18,13 @@ replayed safely and is never triggered by a browser success URL alone.
    **person**.
 2. `tenant_memberships` (`owner`) for the paying owner.
 3. Attach `onboarding_sessions.tenant_id` and `business_profiles.tenant_id`.
-4. Provision the website address → `tenants.website_address` (unique label, **fixed**) and
-   `website_addresses` (`type=subdomain`, hostname `{website_address}.placis.com`,
-   `status=reserved`). Create the CNAME for that host on **our** `placis.com` zone. Do not show
-   it in the CMS as the live website. Custom website address is a later CMS step
+4. Provision the website address → `tenants.website_address` (unique label, **fixed**) and a
+   `website_addresses` row (`type=subdomain`, `status=reserved`, `is_primary=true`; hostname in
+   [cloudflare.md](../../website/cloudflare.md), table in
+   [website data-model](../../website/data-model.md)). A
+   wildcard on **our** `placis.com` zone already points at the Worker; do not create one CNAME
+   per tenant. The website editor lists that host as a website publication destination; it has
+   no `latest/` until the first website publication. Custom website address is a later modal
    ([Connect website address](../../website/cloudflare.md)).
 5. `tenants.status=active`. Onboarding session → `activated`. Website preview → `activated`.
 6. Does **not** write `website_publications`. The unpublished website from 04 (plus whatever 05

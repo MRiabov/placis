@@ -1,14 +1,28 @@
 # Website — data model
 
 Website pages, website sections, website slots, website forms, top menu, footer, website
-publications (each row is a website version), website settings, projects, and certifications.
-Conventions: [data-model conventions](../../general-architecture/data-model.md).
+publications (each row is a website version), website settings, projects, certifications, and
+live hostnames (`website_addresses`).
+Conventions: [data-model conventions](../../general-architecture/data-model.md)
+(Postgres schema `website`).
 
 Media assets are owned by [media library](../other/media/data-model.md). The business profile the
 website templates fill is [details](../other/details/data-model.md) (including reviews). Website
 forms write [leads](../other/leads/data-model.md). The dump shape of a website publication is
-[manifest.md](manifest.md).
+[manifest.md](manifest.md). The reserved label on the tenant row is
+[auth](../other/auth/data-model.md) (`tenants.website_address`).
 
+- `website_addresses` — `id`, `tenant_id` fk, `hostname` unique, `type` (`subdomain`/`custom`),
+  `status` (`reserved`/`pending`/`active`/`failed`), `is_primary` bool,
+  `cloudflare_custom_hostname_id` (nullable, `type=custom`), `dcv_txt_name`, `dcv_txt_value`,
+  `cloudflare_hostname_status`, `cloudflare_ssl_status`, `dns_verified_at`, `activated_at`,
+  `created_at`.
+  `type=subdomain` is the website address host (`{website_address}.preview.placis.com`; R2 prefix
+  is `tenants.website_address`). Show it as the default live host after website publication.
+  `type=custom` is the custom website address (the hostname they supply). `is_primary` marks
+  sitemap and canonical: the subdomain host until a `type=custom` row is `active`, then that
+  custom website address. Custom Hostnames columns are written by **Connect website address**
+  (modal over the website editor), not website publication. See [cloudflare.md](cloudflare.md).
 - `website_pages` — `id`, `tenant_id` fk, `path`, `title`, `page_type` (`home`/`service`/
   `contact`/`legal`), `status` (`unpublished`/`archived`), `seo_title`,
   `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`, `seo_noindex`,
@@ -55,13 +69,15 @@ lives on [business_profile_reviews](../other/details/data-model.md). A project g
 `json` / `list` website slot of project ids, not a `slot_type`.
 
 `props`, `design`, and slot `value` stay jsonb: each website component / slot has its own
-catalog-shaped dump. `website_manifest` is jsonb because it is a published website copy
+catalog-shaped dump. Website editor writes are in-place `UPDATE`s of those columns, on
+click-off for text and rate-limited — [editing.md](editing.md). `website_manifest` is jsonb because it is a published website copy
 (see [manifest.md](manifest.md)), not because the tree is polymorphic.
 
 There is no unpublished revision table and no per-page version table.
 
 ## Indexes
 
-Unique: `(tenant_id, website_pages.path)`, `(tenant_id, website_forms.form_key)`,
+Unique: `website_addresses.hostname`, at most one `is_primary=true` per `tenant_id`;
+`(tenant_id, website_pages.path)`, `(tenant_id, website_forms.form_key)`,
 `(tenant_id, website_publications.version_number)`, `website_settings.tenant_id`. Lookup:
 `(tenant_id, status, created_at)` on website pages.

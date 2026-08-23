@@ -7,5 +7,5 @@ This is not a CRM: there are no quotes, invoices, jobs, or pipelines. The websit
 website form → website lead ([website testing](../../website/testing.md)). Ads read the same rows for
 attribution ([ads](../../ads/README.md)).
 
-The schema lives in [data-model.md](data-model.md). A Leads website page
-in the CMS is later work; until then the table is the whole product surface.
+The schema lives in [data-model.md](data-model.md). A Leads screen is later work (not a website editor
+side panel); until then the table is the whole product surface.

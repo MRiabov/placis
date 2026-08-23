@@ -3,7 +3,8 @@
 The **business profile** — the one set of tables the rest of the application draws from.
 Onboarding builds it; this view edits it; the website shows it; ads read it.
 
-Conventions: [data-model conventions](../../../general-architecture/data-model.md). Decisions:
+Conventions: [data-model conventions](../../../general-architecture/data-model.md)
+(Postgres schema `details`). Decisions:
 [ADR.md](ADR.md).
 
 A **detail** is a column (or a row in a list table). Their existing site URL is a detail; it is not

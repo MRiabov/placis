@@ -1,7 +1,7 @@
 # Files
 
 Files live in S3-compatible storage (R2 in production, MinIO/local FS in development). A `files`
-row records the checksum, visibility, and scan status. Access always goes through a signed URL,
+row records the checksum, visibility, and scan status. Postgres schema `files`. Access always goes through a signed URL,
 and only after a tenant + visibility check. Public delivery URLs are not expiring signed URLs.
 
 The media library ([media library](../features/other/media/data-model.md)) and website form uploads store

@@ -17,9 +17,12 @@ publication.
 1. Build an unpublished website from a **website template** + their business profile (their
    details fill in the blanks).
 2. Let the owner (or done-for-you) **edit** the site: website pages, copy, photos, website forms,
-   top menu, footer, and their projects.
+   top menu, footer, and their projects. Text persists on click-off; there is no Save and no
+   Saving / Saved indicator. If the copy has not succeeded after 10 seconds, show a visible
+   error; leaving stays blocked while it is uncopied.
 3. **Improve** it with the website assistant — it suggests copy and images, but the owner decides.
-4. **Website publication** — put it on the internet, with website rollback if a publication is
+4. **Website publication** — put it on the internet (dropdown: website address host, a connected
+   custom website address, or New URL), with website rollback if a publication is
    wrong.
 5. Keep the unpublished website the source of truth; website publication writes a published
    website copy of it.
@@ -32,10 +35,12 @@ publication.
 
 ## The site is made of
 
-The website editor is one workspace with a left sidebar and a canvas:
+The website editor is one workspace with a left sidebar, a canvas, and an editing panel:
 
 - **Website pages** — home, service, contact, and legal website pages, reorderable.
-- **Media library** — the photo library: their work, logos, and documents, each with a media caption.
+- **Media library** — a selectable workspace item (same library as `/cms/media`): their work,
+  logos, and documents, each with a media caption. Drop files there to upload. Drag a photo
+  onto an image on the canvas to attach it.
 - **Website styles** — the look (colors and fonts) via design controls.
 - **Top menu and footer** — named separately; never say header, navigation, or bare “menu”.
 
@@ -58,16 +63,17 @@ the next website publication.
 1. **As a contractor**, I want a website built from my profile and trade, so I get a branded
    unpublished website without doing it myself.
 2. **As a contractor**, I want to edit text and swap photos in the website editor, so I can keep it
-   correct without code.
+   correct without code. Text persists when I click off the field; I do not click Save. If I
+   leave while edits are still being copied, I am asked first.
 3. **As a contractor**, I want the website assistant to improve the copy and suggest images, so I
    get better content faster.
 4. **As a contractor**, I want website publication and website rollback, so I'm never stuck with a
-   broken live website.
+   broken live website. I choose our subdomain or my custom website address, or I connect a new URL.
 
 ## Acceptance criteria
 
-1. Content is checked against what each website section allows before saving and before website
-   publication.
+1. Content is checked against what each website section allows before the unpublished website is
+   written and before website publication. The website editor has no Save action.
 2. Website publication writes a published website copy; that copy is never overwritten.
 3. Website visitors see the live website; the owner edits the unpublished website in the website editor.
 4. The unpublished website is validated before it becomes the live website.
