@@ -8,8 +8,7 @@ Until that dump exists, the **first-pass** set is the imported predecessor JSON 
 `packages/website-components`:
 
 - website component contracts beside each renderer (`contract.json`)
-- website templates as JSON + markdown sidecars (home, service, contact, legal, plus
-  predecessor extras)
+- website templates as JSON (home, service, contact, legal, plus predecessor extras)
 - website style catalog presets under `packages/website-components/src/themes/`
 
 Do not hand-duplicate those shapes in Go. Load the sidecars; later dump the same structs
