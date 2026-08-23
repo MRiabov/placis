@@ -5,45 +5,20 @@ it update, then website publication.
 
 ## The loop
 
-1. `GET` loads the typed **website editor projection** once (page select / reload). That is the
-   only hydrate. The canvas (`frontend-2`) renders that unpublished website through the shared
-   contractor-website component package — the same ones the live website (Astro) uses.
-2. The owner edits inline: click-to-edit visible text, swap an image (media library panel or
-   drag onto the canvas), reorder / add / remove a website section, change a design control, SEO,
-   or the website style catalog preset.
-3. The canvas and editing panel mutate the **in-memory website editor projection immediately**
-   and re-render from it. That working copy is the cache. There is **no Save action**. Edits
-   persist automatically. A non-clickable Saving / Saved status is allowed; a Save button is not.
-4. A schema-validated **PATCH** (`/api/v1/website/editor/...`) **copies** the change to unpublished
-   rows. It is persistence, not the render path. Do not `GET` after each PATCH. Do not replace the
-   whole projection from the PATCH response (that is frontend → backend → frontend). Merge only
-   what the frontend cannot invent: assigned ids, validation status, website-publication blockers.
-   Typing does **not** PATCH. Copy-out for `text` / `rich_text` / SEO happens on **click-off**
-   (leave the field). Discrete actions (image swap, reorder, add/remove a website section) queue
-   a PATCH immediately. The frontend has a **safety timer**: at most one website-editor PATCH in
-   flight, and at most one send every **500ms**, coalescing queued click-offs and discrete
-   actions into the next body. That is why `429` should be rare. Also flush on route change,
-   website publication, and page hide / unload so a close-tab without blur is not lost. If a
-   copy-out or media-library upload is queued or in flight, or the focused field is dirty, the
-   website editor **blocks leaving** until it finishes or the owner confirms discard (in-app
-   confirm plus `beforeunload` on tab close / reload).
-5. The backend validates the change against the website component contract and **upserts** the
-   unpublished website rows. The body is only the changed website slots / website sections — not
-   the whole unpublished website. Over-chatty PATCH from one tenant is `429` with `Retry-After`;
-   the website editor retries with backoff and **keeps the local edit**. Do not write
-   `audit_events` per website slot edit.
+1. The website editor canvas (`frontend-2`) renders the **unpublished website** through the
+   shared contractor-website component package — the same ones the live website (Astro) uses.
+2. The owner edits inline: click-to-edit visible text, swap an image, reorder / add / remove a
+   website section, change a design control, SEO, or the website style catalog preset.
+3. The frontend calls a schema-validated **patch API** (`/api/v1/website/editor/...`).
+4. The backend validates the change against the website component contract and **upserts** the
+   unpublished website rows.
+5. The canvas re-renders from the updated website editor projection.
 
 The backend serves a typed **website editor projection** — website pages, website sections, current
 website slot values, validation status, website publication blockers, allowed controls — and the
-frontend consumes that on hydrate, never raw records. After hydrate, the frontend owns the working
-copy. Tokenized values (`{{business_name}}`) stay as tokens in the unpublished website and show as
-small inline variable chips in the website editor.
-
-Sending PATCH is not enough on its own. The predecessor `useSaveEditorPage` `onSuccess` that
-`setQueryData`s the full PATCH response is the round-trip to stop. Website publication, apply
-website styles, Connect website address, media-library upload, and adding a website page still
-take their response (new ids / publication metadata). Do not background-refetch the projection
-on window focus while the website editor is open.
+frontend consumes that, never raw records. Tokenized values
+(`{{business_name}}`) stay as tokens in the unpublished website and show as small inline variable
+chips in the website editor.
 
 ## Edits mutate unpublished rows; website publication writes a website version
 
@@ -54,9 +29,6 @@ on window focus while the website editor is open.
   (a published website copy) from the current unpublished website.
 
 Website publication is always a separate, explicit action. Do not write a per-page version table.
-The website editor has no Save; unpublished rows are written on click-off (and discrete
-actions), paced by the safety timer. Explicit
-actions that remain: website publication, Connect website address, and apply website styles.
 
 ## Models
 
@@ -108,54 +80,6 @@ the edits. To update a website slot you send:
 - **website form patch** — `website_form_id`, `title`, `submit_action`, `fields[]` (typed form
   field rows), `privacy_notice`.
 
-Coalesce means the **dirty keys since the last successful copy-out**, not the full draft. Do not
-send sibling website slots, `media_assets[]`, the website manifest, or file bytes. Image website
-slots send a `media_asset_id` (and crop / focal point if those changed). Photos go through the
-media-library upload, not this PATCH.
-
-Typical PATCH is **under 10 KB** (one headline is hundreds of bytes; a rich-text click-off is a
-few KB). A busy coalesced window stays in that band. A **1 MB** body would mean we shipped the
-whole unpublished website or a `data:` image — both are bugs. The API rejects a PATCH body over
-**64 KB** (`413`); slot `max_length` and typed structs reject earlier. `GET` hydrates one website
-page (tens of KB of JSON: copy, ids, public URLs). Website publication is a small POST; Go builds
-the website manifest from Postgres and writes R2 — the owner does not upload HTML.
-
-Typing (`text` / `rich_text` website slots, SEO copy, website form field labels): PATCH on
-**click-off** (blur), not per keystroke and not on an idle-while-typing timer. The canvas
-already has the text. Discrete patches (image, reorder, add/remove) skip the field and queue
-immediately. Both go through the frontend safety timer (one in flight, **500ms** min gap,
-coalesce). Flush on leaving the website page, website publication, and page hide / unload —
-those wait on the in-flight copy-out rather than opening a second connection.
-
-The jsonb columns (`website_slots.value`, `website_sections.props` / `design`) are in-place
-`UPDATE`s of one row. There is no unpublished revision stack, so we do not append a jsonb blob
-per keystroke. Click-off plus the safety timer is what keeps TOAST and WAL down.
-Website publication still writes one `website_manifest` jsonb per website version (kept, never
-overwritten).
-
-The API allows **30** website-editor PATCH requests per tenant per **10 seconds**. Above that:
-`429` and `Retry-After`. That cap is a backstop (second tab, website-assistant burst). A single
-website editor must not hit it: the 500ms safety timer tops out around 20 sends / 10s. On `429`
-the website editor backs off and retries; it does not spin. Website assistant applies (after the
-owner approves a plan, or one continuous-mode tool) go through the same upsert path, the same
-frontend timer, and the same cap. Streaming model tokens never write jsonb.
-
-### Leave guard
-
-If the focused field is dirty, a PATCH is queued or in flight, or a media-library upload is in
-progress, do not let the owner leave immediately.
-
-- **In-app** (another CMS route, browser back): confirm first — same idea as Gmail’s “discard
-  edits?”. Copy: edits are still being copied. Stay, or leave anyway.
-- **Tab close / reload**: `beforeunload`. Modern browsers show their own string; do not depend
-  on custom text.
-- Prefer finishing the copy-out, then navigate, so the confirm is the exception.
-- Confirming leave discards only what has not been copied; an in-flight request may still
-  finish. Website publication flushes first and does not show discard.
-
-Slot `value` stays bounded by the website component contract (`max_length` and typed structs).
-Reject oversized jsonb at the API; do not store it. Reject a PATCH over 64 KB.
-
 ## What each action does
 
 All website editor actions are CRUD on the unpublished website records. Website publication writes
@@ -175,8 +99,7 @@ Website publication writes `website_publications` + `website_manifest` (a websit
 
 The contractor website application (`apps/contractor-website`) does **no per-edit work**. Live
 GET reads prebuilt HTML in R2 `latest/` ([cloudflare.md](cloudflare.md)). Website preview calls
-`GET /api/v1/public/site/resolve`. Editing mutates the in-memory projection, then copies unpublished
-rows via PATCH; the live website changes only on website publication. The website editor canvas
-renders the unpublished website (React + that package), not through Astro. That canvas is not a
-website preview. The frontend holds one working projection; it does not accumulate unpublished
-documents in memory.
+`GET /api/v1/public/site/resolve`. Editing only mutates unpublished website records; the live
+website changes only on website publication. The website editor canvas renders the unpublished
+website (React + that package), not through Astro. That canvas is not a website preview. The
+frontend holds one projection; it does not accumulate unpublished documents in memory.

@@ -6,11 +6,11 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
 - [architecture.md](architecture.md) — content model, applying the website template, website editor, website publication, render
-- [cloudflare.md](cloudflare.md) — live R2 serve path; **import `apps/contractor-website` first**
+- [cloudflare.md](cloudflare.md) — live R2 serve path, custom website address, Connect website address, local Worker
 - [data-model.md](data-model.md) — website pages, website sections, website slots, website forms, top menu, footer, website publications, website settings
 - [manifest.md](manifest.md) — `website.v1` keep / keep-out
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
-- [frontend.md](frontend.md) — `/cms/website` (publication dropdown + Connect modal), `/cms/projects`, `/cms/certifications-and-reviews`
+- [frontend.md](frontend.md) — `/cms/website`, `/cms/projects`, `/cms/certifications-and-reviews`
 - [variables.md](variables.md) — the `{{var}}` website placeholders and how they resolve
 - [assistant.md](assistant.md) — the website assistant: tools, plan/continuous mode, undo
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density, motion
@@ -21,5 +21,5 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [testing.md](testing.md) — the website E2E test
 
 Standalone screens beside the website editor: **Profile** (Details, Projects, Certifications and
-reviews), **Media library** (above), and later a **Leads** screen. Those entities are website
-page content; they are edited on those screens, not as website slots in the website editor.
+reviews), **Media library** (above), and later a **Leads** screen. These are their own views, not
+website page content.

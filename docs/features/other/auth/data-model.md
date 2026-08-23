@@ -16,16 +16,15 @@ onboarding session status is anything except `activated`.
   `cloudflare_hostname_status`, `cloudflare_ssl_status`, `dns_verified_at`, `activated_at`,
   `created_at`
 
-`type=subdomain` is the website address host (FQDN in
-[cloudflare.md](../../website/cloudflare.md); R2 prefix is `tenants.website_address`). Show it as
-the default live host after website publication. `type=custom` is the custom website address
-(the hostname they supply). `is_primary` marks sitemap and canonical: the subdomain host until a
-`type=custom` row is `active`, then that custom website address.
+`type=subdomain` is the internal host `{website_address}.placis.com` (R2 prefix, tenancy, a
+CNAME we create on our zone). Do not show it as the live website. `type=custom` is the custom
+website address (the hostname they supply). `is_primary` marks the hostname used for sitemap and
+canonical (first connected `type=custom` that becomes `active`).
 
-Custom Hostnames columns are written by **Connect website address** (CMS modal), not website
-publication. See [cloudflare.md](../../website/cloudflare.md).
+Custom Hostnames columns are written by **Connect website address**, not website publication.
+See [cloudflare.md](../../website/cloudflare.md).
 
 ## Indexes
 
 Unique: `tenants.clerk_org_id`, `tenants.website_address`, `website_addresses.hostname`.
-At most one `is_primary=true` per `tenant_id`.
+At most one `is_primary=true` per `tenant_id` among `type=custom`.
