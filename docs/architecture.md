@@ -102,6 +102,9 @@ adapted only where the huma-derived OpenAPI improves the contract.
 - `src/features/cms/` — the website + ads parts of the CMS (website editor, `/cms/media`, editing panel, ads workspace).
 - `src/features/preview/` — the onboarding website preview (and the website preview shown by the contractor website app).
 
+Loading placeholders: every screen, per field / row / website slot — not swapping the whole panel.
+See [frontend.md](general-architecture/frontend.md).
+
 frontend-2 keeps its own feature-local structure and is not folded into `internal/`; the file-size
 guard applies to it too (see `ci-cd.md`).
 

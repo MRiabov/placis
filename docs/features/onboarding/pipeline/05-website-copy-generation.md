@@ -6,7 +6,8 @@ website editor and not a human approval loop. The predecessor used that name for
 is website copy generation (and the same tool pass for SEO / image prompts).
 
 Onboarding **enqueues** it. The writes go through the website assistant tools
-([assistant.md](../../website/assistant.md)) onto the same unpublished website rows 04 created.
+([assistant.md](../../website/assistant.md)) as **continuous + instant apply** onto the same
+unpublished website rows 04 created.
 
 ## Why it is async
 
@@ -25,12 +26,13 @@ Once, when 04 succeeds (client interview complete). Not at find-confirm. Not on 
 business research event — business research has been running since confirm and should mostly be
 in by client interview complete. The job reads the profile fold as of `accepted_edit_id` at start.
 
-The website assistant (plan mode, activity cards, revert) is still **after website activation**.
-Same tools, owner-driven, different entry.
+The website assistant (plan + Ask first in the website editor) is still **after website
+activation**. Same tools, owner-driven, different entry.
 
 ## What it does
 
-Continuous-mode website assistant tools on the unpublished website 04 wrote. No chat UI.
+Continuous + instant apply on the unpublished website 04 wrote. No chat UI. One in-flight
+website-assistant run per tenant ([assistant.md](../../website/assistant.md)).
 
 1. Per website page, in parallel (bounded concurrency): `update_slot` for copy, `update_seo`, and
    the rest of the website assistant tools that make sense on an already-built website page

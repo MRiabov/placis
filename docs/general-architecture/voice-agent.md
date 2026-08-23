@@ -23,4 +23,4 @@ Never say “activate” for the voice agent — that word is website activation
 ## Authority
 
 Voice is transport, not authority. The agent calls the same governed, typed, validated tools as the
-text assistant (plan mode or continuous mode); it cannot do website publication or bypass validation.
+text assistant (plan vs continuous, instant apply vs Ask first); it cannot do website publication or bypass validation.

@@ -19,21 +19,23 @@ it update, then website publication.
 4. A schema-validated **PATCH** (`/api/v1/website/editor/...`) **copies** the change to unpublished
    rows. It is persistence, not the render path. Do not `GET` after each PATCH. Do not replace the
    whole projection from the PATCH response (that is frontend → backend → frontend). Merge only
-   what the frontend cannot invent: assigned ids, validation status, website-publication blockers.
-   Typing does **not** PATCH. Copy-out for `text` / `rich_text` / SEO happens on **click-off**
-   (leave the field). Discrete actions (image swap, reorder, add/remove a website section) queue
-   a PATCH immediately. The frontend has a **safety timer**: at most one website-editor PATCH in
-   flight, and at most one send every **500ms**, coalescing queued click-offs and discrete
-   actions into the next body. That is why `429` should be rare. Also flush on route change,
-   website publication, and page hide / unload so a close-tab without blur is not lost. If a
-   copy-out or media-library upload is queued or in flight, or the focused field is dirty, the
-   website editor **blocks leaving** until it finishes or the owner confirms discard (in-app
-   confirm plus `beforeunload` on tab close / reload).
+   `{ edit_history_head, batch_id }` (plus assigned ids on create). Typing does **not** PATCH.
+   Copy-out for `text` / `rich_text` / SEO happens on **click-off** (leave the field). Discrete
+   actions (image swap, reorder, add/remove a website section) queue a PATCH immediately. The
+   frontend has a **safety timer**: at most one website-editor PATCH in flight, and at most one
+   send every **500ms**, coalescing queued click-offs and discrete actions into the next body.
+   That is why `429` should be rare. Also flush on route change, website publication, and page
+   hide / unload so a close-tab without blur is not lost. If a copy-out or media-library upload
+   is queued or in flight, or the focused field is dirty, the website editor **blocks leaving**
+   until it finishes or the owner confirms discard (in-app confirm plus `beforeunload` on tab
+   close / reload).
 5. The backend validates the change against the website component contract and **upserts** the
-   unpublished website rows. The body is only the changed website slots / website sections — not
-   the whole unpublished website. Over-chatty PATCH from one tenant is `429` with `Retry-After`;
-   the website editor retries with backoff and **keeps the local edit**. Do not write
-   `audit_events` per website slot edit.
+   unpublished website rows, appends `edit_history` for that copy-out, and advances
+   `edit_history_head`. The body is only the changed website slots / website sections — not the
+   whole unpublished website. Over-chatty PATCH from one tenant is `429` with `Retry-After`; the
+   website editor retries with backoff and **keeps the local edit**. Do not write `audit_events`
+   per website slot edit. Last writer is `edit_history` only ([assistant.md](assistant.md)).
+   There is no `POST /undo` or `POST /redo`.
 
 The backend serves a typed **website editor projection** — website pages, website sections, current
 website slot values, validation status, website publication blockers, allowed controls — and the
@@ -83,6 +85,19 @@ The website editor is one typed **projection** (read) and one **patch** (write).
   `validation`.
 - `preview_url`, live website URL. The website editor canvas is not a website preview.
 
+No new routes. Optional query on this same GET: `include_edit_history=true`.
+
+**Open hydrate** (enter `/cms/website`, full reload, or after `409` `edit_history_conflict`):
+`GET /api/v1/website/editor/pages/{page_id}?include_edit_history=true` — the fold for the
+selected website page **and** tenant-scoped website edit history (last 200 batches). A batch
+can be website styles, a website form, or another website page, so the log is not a per-page
+slice. Extra fields: `edit_history_head` (uuid, null if the stack is empty), `edit_history[]`
+(each batch: `batch_id`, `edited_by`, `ai_generation_id`, rows of target / `op` / `before` /
+`after`).
+
+**Website page switch:** the same GET with the query off. Fold only. Do not re-download
+`edit_history`.
+
 A **website slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`, `required`, `max_length`,
 `value` (typed), `status`, `origin`, `validation_errors`.
 
@@ -92,7 +107,10 @@ A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`, `
 ### Write — the patch
 
 `PATCH /api/v1/website/editor/pages/{page_id}` takes a website page patch whose `sections[]` carry
-the edits. To update a website slot you send:
+the edits, plus required `base_edit_history_head` (the acked head; null only if the stack is
+empty). Dirty keys unchanged — including keys dirtied by in-memory undo/redo. Success returns
+**only** `{ edit_history_head, batch_id }` — not the projection, not the log. To update a
+website slot you send:
 
 ```json
 { "sections": [ { "id": "<section id>", "slots": [
@@ -130,17 +148,31 @@ coalesce). Flush on leaving the website page, website publication, and page hide
 those wait on the in-flight copy-out rather than opening a second connection.
 
 The jsonb columns (`website_slots.value`, `website_sections.props` / `design`) are in-place
-`UPDATE`s of one row. There is no unpublished revision stack, so we do not append a jsonb blob
-per keystroke. Click-off plus the safety timer is what keeps TOAST and WAL down.
-Website publication still writes one `website_manifest` jsonb per website version (kept, never
-overwritten).
+`UPDATE`s of one row. There is no unpublished snapshot per edit, so we do not append a page- or
+site-sized jsonb blob per keystroke. Click-off plus the safety timer is what keeps TOAST and
+WAL down. Website edit history appends typed increments for the copy-out (one field / slot /
+structure change), not a second fold. Website publication still writes one `website_manifest`
+jsonb per website version (kept, never overwritten).
+
+`base_edit_history_head` must match `website_settings.edit_history_head`. Match → apply, append
+the batch, return the new head. Mismatch → `409` `code=edit_history_conflict` (body may echo
+server `edit_history_head`). The frontend rehydrates once with `include_edit_history=true` for
+the selected website page. Do not merge by hand. Do not keep painting a stale stack. Website
+assistant Apply sends the same `base_edit_history_head` on its existing apply request; same
+success / `409` shape. PATCH (including undo copy-out) is `409` if a website assistant run is
+applying.
+
+Do not periodically hash the unpublished website or the undo log. Equality is only the acked
+`edit_history_head`. The frontend is ahead when it has dirty or queued keys — that is local-first,
+not a bug. Two tabs, Apply, or another device moving the head are the mismatch cases. No timer
+ping. The next copy-out after a long hide still carries `base_edit_history_head`.
 
 The API allows **30** website-editor PATCH requests per tenant per **10 seconds**. Above that:
 `429` and `Retry-After`. That cap is a backstop (second tab, website-assistant burst). A single
 website editor must not hit it: the 500ms safety timer tops out around 20 sends / 10s. On `429`
-the website editor backs off and retries; it does not spin. Website assistant applies (after the
-owner approves a plan, or one continuous-mode tool) go through the same upsert path, the same
-frontend timer, and the same cap. Streaming model tokens never write jsonb.
+the website editor backs off and retries; it does not spin. Website assistant applies
+([assistant.md](assistant.md)) use the same upsert path and the same cap. Streaming model tokens
+never write jsonb.
 
 ### Leave guard
 
@@ -158,6 +190,26 @@ immediately.
 
 Slot `value` stays bounded by the website component contract (`max_length` and typed structs).
 Reject oversized jsonb at the API; do not store it. Reject a PATCH over 64 KB.
+
+## Undo / redo (in memory)
+
+Undo and redo are **in-memory**. There is no `POST /undo` or `POST /redo`. The database stores
+the fold (live unpublished rows) and the **record** (`edit_history`). It does not perform undo.
+
+1. If the focused field is dirty and not yet copied out: Ctrl+Z restores **in-memory** text
+   only. Same as not PATCHing while typing. Not a website edit history batch yet.
+2. Otherwise Ctrl+Z applies that batch’s `before` to the in-memory projection (local-first).
+   Redo (Ctrl+Shift+Z) applies `after`. Then copy-out with the **existing PATCH** (dirty keys,
+   safety timer, leave guard, 10s error) so the fold matches. That PATCH appends a new
+   website edit history row (the record of the copy-out) and returns a new `edit_history_head`.
+3. The frontend keeps undo/redo stacks in RAM. Hydrate (`include_edit_history`) **seeds** those
+   stacks from the last 200 batches so Ctrl+Z can go farther than this tab’s RAM. After
+   reload, redo of a not-yet-copied local undo is gone; undo still walks the hydrated record.
+4. Empty stack: no-op. Website publication rollback is unrelated. Undo is not Reject.
+
+After PATCH / Apply: do not re-GET the log. Merge only `batch_id` and `edit_history_head`.
+After in-memory undo/redo, the following PATCH is the same merge. Do not replace the
+projection from the PATCH body.
 
 ## What each action does
 

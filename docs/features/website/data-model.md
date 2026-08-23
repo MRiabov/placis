@@ -1,8 +1,8 @@
 # Website — data model
 
 Website pages, website sections, website slots, website forms, top menu, footer, website
-publications (each row is a website version), website settings, projects, certifications, and
-live hostnames (`website_addresses`).
+publications (each row is a website version), website settings, website edit history, projects,
+certifications, and live hostnames (`website_addresses`).
 Conventions: [data-model conventions](../../general-architecture/data-model.md)
 (Postgres schema `website`).
 
@@ -47,8 +47,9 @@ forms write [leads](../other/leads/data-model.md). The dump shape of a website p
 - `footer_items` — `id`, `tenant_id` fk, `parent_id` nullable fk, `page_id` nullable fk,
   `label`, `path`, `url`, `position`, `status` (`visible`/`hidden`)
 - `website_settings` — `id`, `tenant_id` fk unique, `preset_id`, bounded website-style overrides
-  (`primary`, `neutral`, `accent`, `radius`, `density`), timestamps. One row per tenant. Copied
-  into `website_manifest.website_styles` at website publication.
+  (`primary`, `neutral`, `accent`, `radius`, `density`), `edit_history_head` uuid nullable
+  (last copied-out `edit_history.batch_id`; not a server undo cursor), timestamps. One row
+  per tenant. Copied into `website_manifest.website_styles` at website publication.
 - `website_publications` — one row is a website version: `id`, `tenant_id` fk, `version_number`,
   `status` (`published`/`archived`/`rolled_back`), `active`, `manifest_version`,
   `website_manifest` jsonb, `published_by`,
@@ -63,6 +64,30 @@ forms write [leads](../other/leads/data-model.md). The dump shape of a website p
   (`selected`/`removed`), `created_at`
 - `website_slot_reviews` — `id`, `tenant_id` fk, `slot_id` fk, `business_profile_review_id` fk,
   `position`; unique `(slot_id, business_profile_review_id)`
+- `edit_history` — Website edit history. Append-only typed increments, same pattern as
+  `business_profile_edits`. Never a full website page or unpublished-website jsonb dump. One
+  row is one field or structure change (a slot value, a section reorder, an SEO column, a
+  form field, a website styles preset, create/remove a section). Slot `before` / `after` as
+  jsonb is allowed because it is **one** slot, same as the live `value` column.
+
+  `id`, `tenant_id` fk, `batch_id` uuid (one successful copy-out), `edited_by` (`human`/
+  `agent`), `ai_generation_id` nullable fk (`ai_generations`; set when `edited_by=agent`),
+  `entity_type` (`website_page`/`website_section`/`website_slot`/`website_form`/
+  `website_form_field`/`website_settings`/`top_menu_item`/`footer_item`), `entity_id` uuid,
+  `field` nullable (column or `slot_key`), `op` (`set`/`clear`/`add`/`remove`/`update`),
+  `before` jsonb nullable, `after` jsonb nullable, `created_at`.
+
+  **Batch** = one successful copy-out (not a server undo step): owner PATCH (click-off or
+  coalesced discrete actions) = one `batch_id`; website assistant **Ask first Apply** =
+  one `batch_id` for the whole Apply; **instant apply** = one validated tool = one
+  `batch_id`. Pending Ask first edits are not in this table. Reject never writes a row.
+
+  Last writer lives **only** here. Live unpublished rows have no `edited_by` /
+  `ai_generation_id`. `origin` on sections/slots stays (first source, not last writer).
+
+  Keep the last **200** batches per tenant; prune older. Do not write `audit_events` per
+  slot. The editor hydrates an in-memory undo stack from this table
+  ([editing.md](editing.md)). The database does not perform undo.
 
 Reviews on the website are these rows, not a jsonb dump in `website_slots.value`. The text
 lives on [business_profile_reviews](../other/details/data-model.md). A project gallery is a
@@ -70,14 +95,18 @@ lives on [business_profile_reviews](../other/details/data-model.md). A project g
 
 `props`, `design`, and slot `value` stay jsonb: each website component / slot has its own
 catalog-shaped dump. Website editor writes are in-place `UPDATE`s of those columns, on
-click-off for text and rate-limited — [editing.md](editing.md). `website_manifest` is jsonb because it is a published website copy
+click-off for text and rate-limited — [editing.md](editing.md). Last writer is
+`edit_history` only ([assistant.md](assistant.md)). `origin` is first source, not last
+writer. `website_manifest` is jsonb because it is a published website copy
 (see [manifest.md](manifest.md)), not because the tree is polymorphic.
 
-There is no unpublished revision table and no per-page version table.
+There is no unpublished snapshot per edit and no per-page version table. The fold is
+in-place `UPDATE`. Website edit history is typed increments, like `business_profile_edits`.
 
 ## Indexes
 
 Unique: `website_addresses.hostname`, at most one `is_primary=true` per `tenant_id`;
 `(tenant_id, website_pages.path)`, `(tenant_id, website_forms.form_key)`,
 `(tenant_id, website_publications.version_number)`, `website_settings.tenant_id`. Lookup:
-`(tenant_id, status, created_at)` on website pages.
+`(tenant_id, status, created_at)` on website pages; `(tenant_id, created_at desc)` and
+`(tenant_id, batch_id)` on `edit_history`.

@@ -25,9 +25,10 @@ Status: decided (2026-08-16, product owner + engineering).
    website keeps the website placeholders rather than inventing details.
 
 6. **The LLM drafts; the owner decides** — the website assistant drafts copy and proposes images
-   via governed tool calls (`update_slot`, `generate_image`), validated against contracts, producing
-   reviewable diffs — never direct unvalidated writes. `generate_image` is used only when no
-   approved source fits.
+   via governed tool calls (`update_slot`, `generate_image`), validated against contracts. Default
+   is plan + Ask first (Apply / Reject, one-way). Instant apply still uses those tools; it
+   does not write freeform JSON. `generate_image` is used only when no approved source fits.
+   (2026-08-20; assistant configs + Apply/Reject terminal 2026-08-23; Ask first 2026-08-23)
 
 7. **Website publication is kept and can be rolled back** — website publication creates a
    `website_publications` row (a published website copy); website rollback reactivates an earlier
@@ -48,9 +49,13 @@ Status: decided (2026-08-16, product owner + engineering).
 11. **Website page status is `unpublished` / `archived`** — publication is website-level
     (`website_publications`). There is no page-level `approved` or `published`. (2026-08-20)
 
-12. **No unpublished revision stack** — edits upsert unpublished rows. Revert restores the last
-    website assistant batch from recorded before/after. Website versions are
-    `website_publications` only. Do not bring back predecessor per-page version snapshots.
+12. **No unpublished snapshot per edit** — the fold is in-place `UPDATE` of unpublished rows.
+    Website edit history (`edit_history`) is typed increments, like `business_profile_edits`,
+    not a full unpublished website or website page jsonb dump. Last writer is only that log
+    (no `edited_by` / `ai_generation_id` on live rows). Ctrl+Z / redo are in-memory; copy-out
+    is the existing PATCH (`base_edit_history_head`). No `POST /undo` or `POST /redo`. Website
+    versions are `website_publications` only. Do not bring back predecessor per-page version
+    snapshots.
     Text PATCH on click-off (leave the field), not while typing. Discrete actions queue a
     PATCH immediately. The frontend safety timer paces sends (one in flight, 500ms min gap,
     coalesce) so `429` is a backstop, not the normal path. Do not audit every website slot
@@ -64,7 +69,7 @@ Status: decided (2026-08-16, product owner + engineering).
     actions remain website publication, Connect website address, and apply website styles.
     (2026-08-20; write budget 2026-08-23; no Save 2026-08-23; local-first PATCH 2026-08-23;
     click-off 2026-08-23; send timer + leave guard 2026-08-23; PATCH delta 64 KB 2026-08-23;
-    no Saving indicator + 10s copy-out error 2026-08-23)
+    no Saving indicator + 10s copy-out error 2026-08-23; website edit history 2026-08-23)
 
 13. **Website styles live on `website_settings`** — one row per tenant, copied into the website
     manifest at website publication. Not per website page. (2026-08-20)

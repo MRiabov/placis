@@ -13,15 +13,17 @@ DB asserts name the tables from [data-model.md](data-model.md) (and
 
 2. **Edit** — the owner edits a website section's text and swaps an image via the media library
    panel (drop a file onto the left panel, or drag a photo onto the canvas).
-   - DB: `website_slots.value` (new text) and `website_sections` (new media asset id) are updated.
+   - DB: `website_slots.value` (new text) and `website_sections` (new media asset id) are updated;
+     `edit_history` has a human batch; `website_settings.edit_history_head` moved.
    - UI: the edit is visible in the canvas.
 
 3. **Validate** — saving an invalid prop is rejected.
    - UI: inline error next to the field.
 
 4. **Website assistant** — the owner asks the website assistant to improve copy (LLM faked).
-   - DB: a website slot value changes through a governed tool; `ai_generations` records the batch.
-   - UI: activity card; revert last website assistant batch is offered.
+   - DB: a website slot value changes through a governed tool; `ai_generations` records the batch;
+     `edit_history` has an agent batch.
+   - UI: activity card. Apply / Reject if Ask first; no revert-after-apply.
 
 5. **Website publication** — the owner does a website publication.
    - DB: `website_publications` (status=`published`, `active=true`, `website_manifest`,

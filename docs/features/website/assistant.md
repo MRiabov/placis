@@ -7,8 +7,9 @@ turns requests into governed, reviewable website editor edits. Text chat, voice 
 website editor assistance all share the same tool surface.
 
 Onboarding [website copy generation](../onboarding/pipeline/05-website-copy-generation.md) reuses
-these tools headless (continuous mode, no chat UI, no `create_page`) after the website template
-is applied. That job is website copy generation, not this website assistant.
+these tools headless (**continuous** workflow + **instant apply**, no chat UI, no `create_page`)
+after the website template is applied. That job is website copy generation, not this website
+assistant.
 
 ## Tools (hard-typed, validated, parallel)
 
@@ -35,29 +36,73 @@ unpublished canvas (convenience). The canvas always surfaces a warning on that i
 approval makes the media asset approved and permanent. Website publication and the live website
 still require approved media assets. Ads stay approved-only.
 
-Two plan tools carry the owner-facing reply, the plan, assumptions, open questions, and
-activity: `refinement_plan` (plan mode, no mutation) and `assistant_plan` (summarize alongside the
-edit tools).
+`refinement_plan` is the plan-workflow text (no mutation). It is confirmation text, not a required
+schema of affected pages / assumptions / acceptance criteria. `assistant_plan` may summarize
+alongside the edit tools.
 
-## Plan mode vs continuous mode
+## Two configs
 
-- **Plan mode (default)** — for new website pages, multi-website-section redesigns, ambiguous
-  copy/website styles, structural changes. The website assistant keeps a plan (affected website
-  pages/website sections, proposed edits, assumptions, open questions, validation risks,
-  acceptance criteria). Nothing is changed until the owner approves the plan. After they approve,
-  the assistant applies the edits in bounded batches — apply, report failures, retry repaired
-  calls, continue until done or capped.
-- **Continuous mode** — bounded, low-risk edits applied directly to unpublished rows, still
-  validated.
+Independent knobs. They combine. Default in the website editor: **plan + Ask first**.
 
-## Output and undo
+**Workflow: plan vs continuous** (how the request is scoped)
 
-- **Activity cards** are generated from execution events (`Edited 2 website sections`, `Created 1
-  website page`, `Updated SEO`, `Changed colors`, `Failed to apply`); expanding one shows the
-  affected targets and a before/after, and selecting it focuses the canvas/editing panel.
-- **Revert** — revert the last website assistant batch by restoring the recorded before-values
-  (`ai_generations.applied_changes` / execution events). It refuses if a manual edit came after.
-  There is no unpublished revision stack and no per-page version table.
+- **Plan** — plan in text first (Cursor-style). Only after the owner accepts that text does the
+  website assistant continuously apply. For larger or ambiguous work.
+- **Continuous** — no plan text. Start applying. For a small ask like “make the about us section
+  a bit clearer”.
+
+**Gate: instant apply vs Ask first** (whether Apply / Reject exist)
+
+- **Ask first** (`ask_first`) — each (or batched) edit shows **Apply** / **Reject**. Nothing
+  lands until the owner picks. Never `on_confirm`.
+- **Instant apply** — those buttons are bypassed. Validated tools write as they succeed. There is
+  no Reject for that edit.
+
+After a plan is accepted, apply uses the same engine as continuous workflow. Only the gate
+changes whether Apply / Reject appear.
+
+## Apply / Reject is one-way
+
+The same agent edit must never **Apply** and then **Reject** (or the reverse).
+
+- **Ask first:** `pending` → Apply *or* Reject, never both. The first committed transition
+  wins. A second Apply, Reject, or retry after that is a no-op / `409`. The UI drops the
+  buttons once the server says terminal.
+- **Instant apply:** the edit is created **already applied**. Reject is not offered; the API
+  refuses it.
+
+Applied writes the unpublished row. After that, the owner does not Reject that edit. Changing
+the canvas later is a **new** human edit (PATCH / typing). That is not Reject. There is no
+“revert last website-assistant batch” via Reject. Activity cards show what happened; they are
+not an undo control. After Apply, Ctrl+Z undoes that **batch in RAM**, then PATCHes like any
+owner edit. The Apply row in `edit_history` keeps `edited_by=agent`; the copy-out of the undo
+is a later human batch. Instant-apply tools undo one tool at a time in RAM. Website
+publication rollback is a different surface.
+
+## Last writer
+
+Last writer lives only on `edit_history` (`edited_by` `human`/`agent`, `ai_generation_id` when
+agent). Live unpublished rows have no last-writer columns. See
+[data-model.md](data-model.md). `origin` is still first source, not last writer.
+
+Apply (Ask first whole Apply, or one instant-apply tool) is one `edit_history` batch. Pending
+Ask first edits are not in the table. Reject never writes a row. Apply sends
+`base_edit_history_head` on the existing apply request; success / `409`
+`edit_history_conflict` match PATCH ([editing.md](editing.md)).
+
+**One in-flight website-assistant run per tenant** (includes onboarding 05). A second start is
+`409` until the current run finishes, fails, or is cancelled. Two tabs, voice + text, or 05 +
+the editor must not both apply. PATCH (including undo copy-out) is `409` while a run is
+applying.
+
+## Output
+
+**Activity cards** are generated from execution events (`Edited 2 website sections`, `Created 1
+website page`, `Updated SEO`, `Changed colors`, `Failed to apply`); expanding one shows the
+affected targets and a before/after, and selecting it focuses the canvas/editing panel.
+
+There is no unpublished snapshot per edit and no per-page version table.
+Website edit history is typed increments on `edit_history`; Ctrl+Z is in-memory, then PATCH.
 
 The website assistant never does a website publication, never bypasses validation, and never writes
 arbitrary registry JSON.

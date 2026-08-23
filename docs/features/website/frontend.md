@@ -24,8 +24,14 @@ typing. A 500ms safety timer coalesces sends so `429` is rare. There is **no Sav
 Saving / Saved indicator. If a copy-out or upload has not succeeded after 10 seconds, show a
 visible error ([editing.md](editing.md)). If a copy-out or upload is in flight or has failed,
 leaving is blocked until it succeeds or the owner confirms discard. It does not
-accumulate unpublished documents in memory. There is no unpublished revision stack. The
-predecessor `EditorHeader` Save control is dropped.
+accumulate unpublished documents in memory. Edits do not keep a second unpublished copy.
+Opening `/cms/website` hydrates undo/redo stacks from website edit history (last 200
+batches). Switching website page GETs the fold only. Ctrl+Z is
+in-memory, then the ordinary PATCH. No `/undo` or `/redo` routes. The predecessor
+`EditorHeader` Save control is dropped.
+
+Loading placeholders: every screen, per field / row / website slot — not swapping the whole panel
+([frontend.md](../../general-architecture/frontend.md)).
 
 ## Routes
 
@@ -51,7 +57,8 @@ Three surfaces, one unpublished website:
   [media library](../other/media/README.md).
 - **Editing panel** — the selected website section: website slots, design controls, SEO columns,
   website forms. Website versions show website publications and website-assistant activity, not
-  unpublished checkpoints per website page.
+  unpublished checkpoints per website page. Undo/redo stacks are in RAM, seeded from
+  website edit history on `/cms/website` open; they are not a timeline UI.
 
 Website styles are tenant-wide (`website_settings`), shown on the website page GET, applied only on
 explicit apply. Top menu and footer are edited here, not in Details.
@@ -90,8 +97,10 @@ attach a custom website address.
 
 Do not advertise `{website_address}.placis.com` as a live URL.
 
-**Website assistant** is a chat in this workspace. Plan mode by default; revert last
-website-assistant batch (refuses if a manual edit came after). Pending-review AI images may
+**Website assistant** is a chat in this workspace. Two configs: plan vs continuous, and
+instant apply vs Ask first (Apply / Reject). Default is plan + Ask first. Apply and
+Reject are one-way; there is no revert-after-apply. Ctrl+Z after Apply is in-memory undo
+of that batch, then PATCH — not Apply then Reject. Pending-review AI images may
 show on the canvas with a warning; owner approval makes them approved. Website publication
 still requires approved media assets.
 

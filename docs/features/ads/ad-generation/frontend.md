@@ -256,7 +256,10 @@ Used for offers, services, the ideal customer profile, and location. Behavior:
 - The contractor comes from the authenticated sign-in / Clerk context, never from a URL or
   request header the browser controls.
 - Standard loading/error/empty handling; mutations are explicit (no silent autosave surprises
-  mid-review).
+  mid-review). Loading placeholders are per field / row / image cell, not a whole-card swap
+  ([frontend.md](../../../general-architecture/frontend.md)). Mutating calls send last-seen
+  `ads.updated_at` as `base_updated_at`; `409` re-GETs the ad (two tabs), not an undo stack
+  ([ADR 31](ADR.md)).
 - No raw JSON editing anywhere in this workspace.
 
 ## Responsive And Mobile

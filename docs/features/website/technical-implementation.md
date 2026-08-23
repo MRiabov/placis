@@ -29,7 +29,9 @@ the tables it writes.
   `update_website_styles`, `generate_image`, …).
 - Output is a reviewable diff, validated against website component contracts before apply.
 - Every call records reasoning + output + tool calls via `ai_generations`.
-- Revert the last website assistant batch from recorded before/after. No unpublished revision stack.
+- Apply / Reject is one-way; no revert-after-apply. No unpublished snapshot per edit.
+  Website edit history is increments on `edit_history`; undo is in-memory, then PATCH.
+  No `/undo`, `/redo`, or `/edit-history` routes.
 
 ## Website publication / renderer rules
 
@@ -53,7 +55,9 @@ the tables it writes.
 ## API surface
 
 - `/api/v1/website/editor/...` — website pages, website sections, website slots, media assets,
-  projects, website publications, website settings, certifications, website forms, top menu, footer.
+  projects, website publications, website settings, certifications, website forms, top menu,
+  footer. Same GET/PATCH page fold: optional `include_edit_history`, `base_edit_history_head`
+  on PATCH/Apply. No extra undo/redo/history routes.
 - `/api/v1/website/publications/...` — website publication and website rollback (if not under editor).
 - `/api/v1/public/site/...` — website preview resolve, meta, sitemap, media assets (the public
   read model). Host lookup uses [website_addresses](data-model.md). Live GET does

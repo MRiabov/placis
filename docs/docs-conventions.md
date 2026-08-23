@@ -14,7 +14,8 @@ editing a doc.
 - `ci-cd.md` / `testing.md` — delivery gates and the per-feature E2E rule.
 - `general-architecture/` — cross-cutting architecture no single feature owns:
   `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`, `files.md`, `data-model.md`
-  (conventions + index of per-feature schemas). Feature-owned capabilities (website
+  (conventions + index of per-feature schemas), `frontend.md` (`frontend-2` UI rules).
+  Feature-owned capabilities (website
   activation/payments, leads, media library) live under `features/`, not here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that feature's docs in one
   place).

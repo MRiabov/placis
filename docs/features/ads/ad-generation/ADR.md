@@ -1,6 +1,6 @@
 # Ad Generation Decision Record
 
-Status: all entries decided as of 2026-08-19 (product owner + engineering). The spec docs in
+Status: all entries decided as of 2026-08-23 (product owner + engineering). The spec docs in
 this directory say *what* we build; this record says *why* we chose what we did, so decisions do
 not get lost or re-litigated.
 
@@ -174,3 +174,15 @@ area, and the date.
     may return later; it is deferred, not cancelled. Shipped-initially design, frontend spec,
     data model, and tests do not include an ad destination picker, a Website page toggle, or
     destination columns. Mention of the later option belongs only here and in PRD Post-MVP.
+
+31. **No website-style undo log; `updated_at` is enough** (2026-08-23) — Do not copy website edit history onto ads. Ads is a review workspace (few fields, LLM draft then
+    accept / edit / reject, then Approve), not a canvas of many small writes. Native
+    text-field undo plus reject / regenerate is the undo story. Last writer on copy is
+    `ad_copy_variants.source`. Approve is the checkpoint (`ad_ready_to_post`). Later
+    posting “revision” is a new post to Meta, not undo in Ads.
+
+    Two tabs (or two devices) still need a cheap conflict check: every write that changes
+    the ad set bumps `ads.updated_at` (including variant / copy / image / ad lead form
+    patches). Mutating requests send the last-seen `base_updated_at`. Match → write and
+    return the new `updated_at`. Mismatch → `409`; the frontend re-GETs; no merge. No undo
+    table, no undo/redo routes, no hydrate of 200 batches.
