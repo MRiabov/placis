@@ -11,8 +11,7 @@ sidecars instead of duplicating website component schemas.
 Website templates live as JSON + sidecars next to this package's website page factories (home,
 service, contact, legal, plus predecessor extras). Website style catalog presets live under
 `src/themes/`. First-pass page types for the rewrite are `home` / `service` / `contact` /
-`legal`. Blog and careers stay deferred: those predecessor files are imported so they are not
-lost, and they are not first-pass website page types.
+`legal`. Blog and careers are deferred and are not in this package.
 
 ## Website templates
 

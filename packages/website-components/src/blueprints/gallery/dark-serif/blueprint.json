@@ -32,7 +32,9 @@
         "source_type": "live_website",
         "source_platform": "Squarespace template 7",
         "source_last_modified": "2018-12-04",
-        "route_variants": ["/projects/"],
+        "route_variants": [
+          "/projects/"
+        ],
         "source_gallery_warning": "The source template has gallery settings and a Projects page route, but the live extraction exposes mostly spacer/rule structure. Project gallery items are mandatory owner/research selections."
       },
       "sections": [
@@ -101,16 +103,14 @@
                 "href": "/clients/"
               },
               {
-                "label": "news",
-                "href": "/news/"
-              },
-              {
                 "label": "contact",
                 "href": "/contact/"
               }
             ],
             "description": "{{business_name}} is a full-service custom home builder that provides top quality energy efficient homes of all sizes.",
-            "legal_disclosure_lines": ["Powered by Squarespace"],
+            "legal_disclosure_lines": [
+              "Powered by Squarespace"
+            ],
             "copyright": ""
           }
         }

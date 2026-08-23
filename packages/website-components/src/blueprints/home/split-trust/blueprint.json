@@ -4,7 +4,10 @@
   "name": "Split trust reference home",
   "description": "Source-backed home-page decomposition with proof-heavy structure, hero trust markers, gallery, review proof, services, and contact CTA.",
   "status": "ready",
-  "modelled_after": ["Bellfield Developments", "Bellfield"],
+  "modelled_after": [
+    "Bellfield Developments",
+    "Bellfield"
+  ],
   "theme": "navy_cream",
   "forms": [
     {
@@ -182,7 +185,11 @@
           "props": {
             "anchor_id": "statement",
             "eyebrow": "Approach",
-            "words": ["Confidential", "Collaborative", "Uncompromising"],
+            "words": [
+              "Confidential",
+              "Collaborative",
+              "Uncompromising"
+            ],
             "description": "Premium craftsmanship, with every joint, surface and contour finished to an architecturally-quality standard."
           },
           "source_refs": [

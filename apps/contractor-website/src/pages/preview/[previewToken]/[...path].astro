@@ -34,14 +34,11 @@ const title = page ? `${pageTitle(manifest, page)} Preview` : "Website preview";
 const description = page
   ? pageDescription(manifest, page)
   : "Signed website preview link";
-const actionStatus = Astro.url.searchParams.get("preview_action");
-const actionMessage = Astro.url.searchParams.get("preview_message");
-const actionBasePath = `/preview-actions/${encodeURIComponent(previewToken)}`;
 
 Astro.response.headers.set("cache-control", "private, no-store");
 Astro.response.headers.set("x-robots-tag", "noindex, nofollow");
 if (!page) {
-  Astro.response.status = resolved ? 404 : 404;
+  Astro.response.status = 404;
 }
 ---
 
@@ -53,7 +50,6 @@ if (!page) {
     <meta content={description} name="description" />
     <meta content="noindex,nofollow" name="robots" />
     <meta content="placis-contractor-website-preview" name="placis:bundle" />
-    <meta content="astro-react" name="placis:runtime" />
     <meta content="false" name="placis:tenant-specific-build" />
     <link href="/favicon.ico" rel="icon" />
     <title>{title}</title>
@@ -86,138 +82,6 @@ if (!page) {
       )
     }
 
-    <aside class="preview-action-bar" aria-label="Website preview actions">
-      <div class="preview-action-bar__inner">
-        <div class="preview-action-bar__copy">
-          <p class="preview-action-bar__title">Website preview draft</p>
-          <p class="preview-action-bar__message">
-            {actionMessage || "Review this draft, then activate or claim it."}
-          </p>
-          {
-            actionStatus ? (
-              <p class="preview-action-bar__status">Latest action: {actionStatus}</p>
-            ) : null
-          }
-        </div>
-        <div class="preview-action-bar__actions">
-          <form action={`${actionBasePath}/activate`} method="post">
-            <input name="return_to" type="hidden" value={Astro.url.pathname} />
-            <button class="preview-action-bar__button preview-action-bar__button--primary" type="submit">
-              Activate
-            </button>
-          </form>
-          <form action={`${actionBasePath}/claim`} method="post">
-            <input name="return_to" type="hidden" value={Astro.url.pathname} />
-            <button class="preview-action-bar__button preview-action-bar__button--secondary" type="submit">
-              Claim
-            </button>
-          </form>
-        </div>
-      </div>
-    </aside>
-
     <PublicSiteClientBehaviors />
   </body>
 </html>
-
-<style is:global>
-  body {
-    padding-bottom: 108px;
-  }
-
-  .preview-action-bar {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    border-top: 1px solid rgba(212, 212, 216, 0.95);
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 -14px 34px rgba(24, 24, 27, 0.16);
-    backdrop-filter: blur(12px);
-  }
-
-  .preview-action-bar__inner {
-    display: flex;
-    width: min(100%, 1180px);
-    margin: 0 auto;
-    padding: 12px 16px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .preview-action-bar__copy {
-    min-width: 0;
-  }
-
-  .preview-action-bar__title {
-    margin: 0;
-    color: #18181b;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 1.35;
-  }
-
-  .preview-action-bar__message,
-  .preview-action-bar__status {
-    margin: 2px 0 0;
-    color: #52525b;
-    font-size: 14px;
-    line-height: 1.45;
-  }
-
-  .preview-action-bar__status {
-    color: #047857;
-  }
-
-  .preview-action-bar__actions {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .preview-action-bar__button {
-    min-height: 40px;
-    border-radius: 6px;
-    padding: 0 14px;
-    font-weight: 700;
-    font-size: 13px;
-    line-height: 1;
-    cursor: pointer;
-  }
-
-  .preview-action-bar__button--primary {
-    border: 1px solid #18181b;
-    background: #18181b;
-    color: #ffffff;
-  }
-
-  .preview-action-bar__button--secondary {
-    border: 1px solid #d4d4d8;
-    background: #ffffff;
-    color: #18181b;
-  }
-
-  @media (max-width: 720px) {
-    body {
-      padding-bottom: 168px;
-    }
-
-    .preview-action-bar__inner {
-      display: grid;
-      gap: 10px;
-    }
-
-    .preview-action-bar__actions {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .preview-action-bar__button {
-      width: 100%;
-      padding-inline: 8px;
-    }
-  }
-</style>

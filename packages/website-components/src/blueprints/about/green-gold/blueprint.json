@@ -27,7 +27,6 @@
     "green_gold_home.reference",
     "green_gold_services.reference",
     "green_gold_work.reference",
-    "green_gold_careers.reference",
     "green_gold_contact.reference"
   ],
   "forms": [],
@@ -87,7 +86,9 @@
           "props": {
             "anchor_id": "safety",
             "title": "Safety and quality guide the work",
-            "paragraphs": ["{{proof.safety_statement}}"],
+            "paragraphs": [
+              "{{proof.safety_statement}}"
+            ],
             "image_url": "{{images.safety_proof}}",
             "image_position": "right"
           }
