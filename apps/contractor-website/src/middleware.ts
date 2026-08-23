@@ -24,6 +24,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (!cacheableMethods.has(context.request.method)) {
     return next();
   }
+  if (context.url.pathname.startsWith("/preview/")) {
+    return next();
+  }
   const env = context.locals.runtime?.env as StaticSiteEnv | undefined;
   const bucket = env?.CMS_STATIC_SITE_BUCKET;
   if (!bucket) {

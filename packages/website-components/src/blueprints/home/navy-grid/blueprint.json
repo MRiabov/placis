@@ -45,11 +45,6 @@
                 "label": "About",
                 "href": "/about",
                 "has_menu": true
-              },
-              {
-                "label": "Careers",
-                "href": "/careers",
-                "has_menu": true
               }
             ],
             "right_links": [
@@ -126,12 +121,7 @@
                 "headline": "People come here for the opportunity to be the best at what they do, building alongside fellow achievers.",
                 "image_url": "{{images.story_careers_worker}}",
                 "alt_text": "{{business_name}} workers on a construction site",
-                "links": [
-                  {
-                    "label": "Careers",
-                    "href": "/careers"
-                  }
-                ]
+                "links": []
               }
             ]
           },
@@ -239,14 +229,6 @@
             "title": "What We Build",
             "items": [
               {
-                "title": "Careers",
-                "image_url": "{{images.tile_careers_worker}}",
-                "alt_text": "{{business_name}} worker on construction site",
-                "description": "When you work at {{business_name}}, you’re never at a standstill. Neither is your career.",
-                "href": "/careers",
-                "link_label": "Join the team"
-              },
-              {
                 "title": "Projects",
                 "image_url": "{{images.tile_projects_building}}",
                 "alt_text": "Modern office with curved red facade",
@@ -288,10 +270,6 @@
               {
                 "label": "About",
                 "href": "/about"
-              },
-              {
-                "label": "Careers",
-                "href": "/careers"
               },
               {
                 "label": "Contact",

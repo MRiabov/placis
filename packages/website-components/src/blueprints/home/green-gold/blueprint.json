@@ -27,7 +27,6 @@
     "green_gold_services.reference",
     "green_gold_work.reference",
     "green_gold_about.reference",
-    "green_gold_careers.reference",
     "green_gold_contact.reference"
   ],
   "forms": [],
@@ -68,10 +67,6 @@
               {
                 "label": "Who We Are",
                 "href": "/about"
-              },
-              {
-                "label": "Careers",
-                "href": "/careers"
               },
               {
                 "label": "Contact",
@@ -383,20 +378,7 @@
             "body": "{{business_name}} is more than a job, it's your career and it matters. Explore a career with {{business_name}}.",
             "poster": "{{images.careers_video_poster}}",
             "video_href": "{{media.careers_video_url}}",
-            "actions": [
-              {
-                "label": "Professionals",
-                "href": "/careers#professionals"
-              },
-              {
-                "label": "Skilled Trades + Craft",
-                "href": "/careers#craft"
-              },
-              {
-                "label": "Students",
-                "href": "/careers#students"
-              }
-            ]
+            "actions": []
           },
           "source_refs": [
             {
@@ -554,11 +536,6 @@
                 "label": "Ready to work together?",
                 "title": "Start a project",
                 "href": "/contact"
-              },
-              {
-                "label": "Build your career",
-                "title": "Explore careers",
-                "href": "/careers"
               }
             ],
             "columns": [
@@ -572,10 +549,6 @@
                   {
                     "label": "Safety",
                     "href": "/about#safety"
-                  },
-                  {
-                    "label": "Careers",
-                    "href": "/careers"
                   }
                 ]
               },

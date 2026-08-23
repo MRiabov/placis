@@ -262,18 +262,6 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
     load: () => import("./registry/proof/accreditations/component"),
   },
   {
-    id: "public.posts.list",
-    family: "posts",
-    variant: "list",
-    load: () => import("./registry/posts/list/component"),
-  },
-  {
-    id: "public.posts.detail",
-    family: "posts",
-    variant: "detail",
-    load: () => import("./registry/posts/detail/component"),
-  },
-  {
     id: "public.gallery.grid",
     aliases: ["public.gallery.v1"],
     family: "gallery",

@@ -16,4 +16,4 @@ Do not hand-duplicate those shapes in Go. Load the sidecars; later dump the same
 here as website template catalog revisions.
 
 First-pass website page types are `home` / `service` / `contact` / `legal`. Blog and careers
-are deferred even though predecessor files were imported with the package.
+are deferred and are not in the website component package.

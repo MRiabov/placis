@@ -8,7 +8,6 @@ import {
   footerLinks,
   leadershipItems,
   navLinks,
-  newsItems,
   projectCategoryItems,
   serviceItems,
   socialLinks,
@@ -317,70 +316,6 @@ export const harperConstructionManifest = {
             layout: "packed",
             show_captions: true,
             items: projectCategoryItems,
-          },
-        },
-        footer(),
-      ],
-    },
-    {
-      path: "/news",
-      title: "News | Harper Construction",
-      sections: [
-        nav("/news", "plain"),
-        {
-          component: "public.gallery.poster_grid",
-          props: {
-            anchor_id: "news-index",
-            hide_missing_images: true,
-            layout: "grid",
-            show_captions: true,
-            items: newsItems,
-          },
-        },
-        footer(),
-      ],
-    },
-    {
-      path: "/careers",
-      title: "Careers | Harper Construction",
-      sections: [
-        nav("/careers"),
-        hero(
-          "Join The Team",
-          assets.careersHero,
-          "Harper Construction team members on a jobsite",
-        ),
-        {
-          component: "public.content.intro",
-          props: {
-            anchor_id: "careers",
-            title: "Careers",
-            paragraphs: [
-              "Our most valuable resource is our people, who carry forth Harper's traditions, values, and long-standing reputation for performance. We invest the time and energy to recruit, train and develop the best talent in our industry.",
-              "Please see the below job openings and contact us with inquiries about joining our team. Harper Construction Company, Inc. is an Equal Opportunity Employer.",
-            ],
-          },
-        },
-        {
-          component: "public.cta.band",
-          props: {
-            anchor_id: "current-openings",
-            title: "Current Openings",
-            body: "Explore current roles and opportunities to join Harper Construction.",
-            href: "https://harper-construction.breezy.hr/",
-            label: "View Current Openings",
-          },
-        },
-        {
-          component: "public.content.intro",
-          props: {
-            anchor_id: "resume",
-            title: "Interested in a future with Harper Construction?",
-            paragraphs: [
-              "If you don't see a position for you listed here but are interested in a future with Harper Construction, please send us your resume and we will reach out to you to discuss your qualifications.",
-            ],
-            href: "mailto:hr@harperconstruction.com?cc=mpurdue%40harperconstruction.com&subject=Resume%20Submission%20for%20Harper%20Construction",
-            link_label: "hr@harperconstruction.com",
           },
         },
         footer(),

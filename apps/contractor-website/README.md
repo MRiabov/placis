@@ -6,8 +6,8 @@ live website and website preview. One Worker, no per-tenant build. The website e
 
 This directory is the predecessor renderer, renamed from its old package name. Do not invent a
 second HTML engine. Website publication is not a Cloudflare deploy. Live HTML belongs in R2
-`latest/`; a live GET is Cache then R2 and never calls Go. Website preview is the only
-per-request render (`/preview/{token}/` → `GET /api/v1/public/site/resolve`).
+`latest/`; a live GET is Cache then R2 and never calls Go. An R2 miss is 404. Website preview
+is the only per-request render (`/preview/{token}/`).
 
 The locked serve path, Worker names, R2 keys, and Connect website address flow:
 [docs/features/website/cloudflare.md](../../docs/features/website/cloudflare.md).
