@@ -244,7 +244,8 @@ used to start onboarding and pre-fill legal details. Never say bare “registry 
 ### Media library
 
 The photo library: the contractor’s work, logos, and documents. Never say bare “media” for this
-library.
+library. In the website editor it is a **left-side panel** (the workspace). Drop files onto that
+panel to upload.
 
 Internal: Media asset, File. Do not say bare “asset” in product docs.
 

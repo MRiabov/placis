@@ -38,7 +38,9 @@ inside the website editor and a standalone surface; see [media library](../other
 Three surfaces, one unpublished website:
 
 - **Canvas** — the selected website page, live from its website sections. Not a website preview.
-- **Workspace** — Website pages, Media library, Website styles, Top menu and footer.
+- **Workspace** — left column. Website pages, **media library panel**, website styles, top menu
+  and footer. The media library panel is where the owner drops files to upload (and a file
+  picker). See [media library](../other/media/README.md).
 - **Editing panel** — the selected website section: website slots, design controls, SEO columns,
   website forms. Website versions show website publications and website-assistant activity, not
   unpublished checkpoints per website page.

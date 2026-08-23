@@ -1,6 +1,7 @@
 # Media
 
-The photo library and image editing — a standalone part of the CMS.
+The photo library and image editing — a standalone part of the CMS, and a **left-side panel**
+in the website editor.
 
 ## What it is
 
@@ -12,6 +13,20 @@ The photo library and image editing — a standalone part of the CMS.
   inherits supplied by from the parent. The copy stays pending review before it can be used.
   Uses (website slots, ads) keep the old item until they are pointed at the copy. Heavier
   editing stays here, not in ads.
+
+## CMS panel (website editor)
+
+On `/cms/website` the media library is the **left workspace panel** (with website pages,
+website styles, top menu and footer). Not the editing panel (right).
+
+- Drop image files onto that panel to upload into the media library. A file picker does the
+  same. Ads’ “drop a photo anywhere” pattern is the same upload flow.
+- Drag a media library item onto an image on the canvas to attach it to that website slot
+  (discrete PATCH, not debounced typing).
+- Drop an image file onto the canvas: upload into the media library, then attach if the drop
+  is over an image website slot; otherwise the new item stays in the media library.
+
+Screens: [website frontend](../../website/frontend.md).
 
 ## Used by
 

@@ -11,7 +11,8 @@ DB asserts name the tables from [data-model.md](data-model.md) (and
    - UI: the website page list renders.
    - DB: reads `website_pages` for the tenant.
 
-2. **Edit** — the owner edits a website section's text and swaps an image via the media library.
+2. **Edit** — the owner edits a website section's text and swaps an image via the media library
+   panel (drop a file onto the left panel, or drag a photo onto the canvas).
    - DB: `website_slots.value` (new text) and `website_sections` (new media asset id) are updated.
    - UI: the edit is visible in the canvas.
 

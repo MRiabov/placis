@@ -32,10 +32,11 @@ publication.
 
 ## The site is made of
 
-The website editor is one workspace with a left sidebar and a canvas:
+The website editor is one workspace with a left sidebar, a canvas, and an editing panel:
 
 - **Website pages** — home, service, contact, and legal website pages, reorderable.
-- **Media library** — the photo library: their work, logos, and documents, each with a media caption.
+- **Media library** — left-side panel: their work, logos, and documents, each with a media caption.
+  Drop files onto that panel to upload. Drag a photo onto an image on the canvas to attach it.
 - **Website styles** — the look (colors and fonts) via design controls.
 - **Top menu and footer** — named separately; never say header, navigation, or bare “menu”.
 

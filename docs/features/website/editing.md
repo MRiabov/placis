@@ -7,8 +7,9 @@ it update, then website publication.
 
 1. The website editor canvas (`frontend-2`) renders the **unpublished website** through the
    shared contractor-website component package — the same ones the live website (Astro) uses.
-2. The owner edits inline: click-to-edit visible text, swap an image, reorder / add / remove a
-   website section, change a design control, SEO, or the website style catalog preset.
+2. The owner edits inline: click-to-edit visible text, swap an image (media library panel or
+   drag onto the canvas), reorder / add / remove a website section, change a design control, SEO,
+   or the website style catalog preset.
 3. The frontend calls a schema-validated **patch API** (`/api/v1/website/editor/...`). The canvas
    and editing panel update the in-memory website editor projection immediately. Typing is
    **debounced** (same idea as onboarding Maps/registry search): coalesce keystrokes, then one
