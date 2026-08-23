@@ -103,7 +103,7 @@ routing uses `website_addresses` reserved at website activation. Serve path, R2 
 purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md).
 `apps/contractor-website` is in this repo; remaining cuts:
 [contractor-website-debloat.md](contractor-website-debloat.md). API cutover:
-[port-placis-website.md](port-placis-website.md). Next is R2 `latest/` +
+[port-contractor-website.md](port-contractor-website.md). Next is R2 `latest/` +
 website publication HTML.
 
 ## Contractor website (separate Astro app)

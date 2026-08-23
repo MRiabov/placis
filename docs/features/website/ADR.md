@@ -85,7 +85,7 @@ Status: decided (2026-08-16, product owner + engineering).
     publication is not a Cloudflare deploy. Website preview is the only per-request render.
     Custom website address uses Custom Hostnames, not Pages. See
     [cloudflare.md](cloudflare.md), [contractor-website-debloat.md](contractor-website-debloat.md),
-    [port-placis-website.md](port-placis-website.md), and ADR 18–20.
+    [port-contractor-website.md](port-contractor-website.md), and ADR 18–20.
     (2026-08-20; edge locked 2026-08-21; imported 2026-08-23; Worker write-thin 2026-08-23)
 
 16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
