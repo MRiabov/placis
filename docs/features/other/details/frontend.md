@@ -8,6 +8,7 @@ Related docs:
 2. [Details decision record](ADR.md)
 3. [Details data model](data-model.md)
 4. [Website frontend](../../website/frontend.md) — Projects and Certifications and reviews
+5. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 
 ## Purpose
 
@@ -26,9 +27,10 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
 
 ## Left nav
 
-The CMS left nav lives in `frontend-2/src/features/cms/CmsDashboardShell.tsx`. Profile
+The CMS left nav lives in `frontend-2/src/features/cms/` (layout module; names in
+[frontend-debloat.md](frontend-debloat.md)). Profile
 replaces the current top-level Details item. Sites (the website editor entry) and AI tools stay
-where they are.
+where they are. Ads is a destination (screens: [ads frontend](../../ads/ad-generation/frontend.md)).
 
 ```text
 New chat
@@ -37,6 +39,7 @@ Profile
   Business details
   Projects
   Certifications and reviews
+Ads
 AI tools
 ```
 
@@ -48,6 +51,7 @@ AI tools
 | Business details | destination under Profile | `/cms/details` |
 | Projects | destination under Profile | `/cms/projects` |
 | Certifications and reviews | destination under Profile | `/cms/certifications-and-reviews` |
+| Ads | destination | `/cms/ads` |
 | AI tools | destination | `/cms/website` |
 
 ## Profile disclosure

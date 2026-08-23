@@ -21,7 +21,7 @@ tenant only when `status=active` (the "not paid / CMS closed" signal is still `t
 - The API verifies the Clerk session/JWT, builds `Principal{userID, orgID, platformRole}`, and
   resolves the tenant from `orgID` **only if that tenant is `active`**. An unactivated tenant is
   resolved from the onboarding session token, not from Clerk.
-- `/me` returns `{owner, platform_role, tenant}` — a single `TenantRead` or `null`. Signed-in but
+- `/me` returns `{owner, platform_role, tenant}` — a single `TenantRead` or `null`. Authenticated but
   not activated → `tenant: null` even if an unactivated tenant exists for the onboarding session.
 - Website activation provisions the Clerk organization (POST `createOrganization`) and attaches it
   to the **existing** unactivated tenant, then sets `status=active`. The frontend then calls
@@ -51,7 +51,7 @@ Resolved once per request from one of:
 1. authenticated Clerk organization (active tenant only),
 2. contractor website hostname,
 3. website preview token,
-4. onboarding session token (unactivated or active tenant for that session).
+4. onboarding session token (unactivated or active tenant for that onboarding session).
 
 Services take `tenantID` explicitly.
 
@@ -63,3 +63,4 @@ impersonation** (sign in as a contractor from the Clerk Dashboard or Backend API
 mechanism.
 
 - [testing.md](testing.md) — the auth/tenancy E2E tests
+- [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: Clerk gate, one Clerk organization, `/me`

@@ -7,6 +7,7 @@ Related docs:
 1. [Ad generation PRD](prd.md)
 2. [Ad generation technical implementation](technical-implementation.md)
 3. [Ad generation decision record](ADR.md)
+4. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 
 ## Purpose
 
@@ -246,7 +247,7 @@ Used for offers, services, the ideal customer profile, and location. Behavior:
 ## Data And API
 
 - Consumes the typed generated API types for `/api/v1/ads/*` (list, create, get,
-  patch, variant patch, regenerate, approve, package, download).
+  patch, variant patch, regenerate, approve, ad-set, download).
 - **Prefetch early + cache**: the ads list and ad-platform connection status are fetched as soon
   as the app loads and **cached in the browser** (query cache), so `/ads` renders
   instantly — cards and connect buttons are already resolved, revisits don't re-fetch. A

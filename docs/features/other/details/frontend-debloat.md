@@ -1,0 +1,100 @@
+# Details `frontend-2` port — what to reduce
+
+Status: planning (port instructions, not shipped UI).
+
+## Target
+
+[frontend.md](frontend.md), [README.md](README.md), [data-model.md](data-model.md).
+Projects and certifications field specs:
+[website frontend](../../website/frontend.md).
+Shared rules: [planning index](../../../../planning/frontend-debloat.md).
+
+This file also owns the **CMS left nav** change (Profile disclosure + Ads).
+
+## Code today
+
+- Don't say shell: `frontend-2/src/features/cms/CmsDashboardShell.tsx` — flat nav:
+  New chat, Sites, Details, AI tools.
+- `frontend-2/src/features/cms/types.ts` / `routing.ts` — Don't say proof: views include `proof`.
+- `frontend-2/src/features/cms/CmsRoute.tsx` — `/cms/proof` and `/cms/projects`
+  render `PlaceholderView`.
+- `frontend-2/src/features/cms/views/PlaceholderView.tsx`.
+- `frontend-2/src/features/cms/details/` — `DetailsEditor.tsx` (~693 lines),
+  `DetailsView.tsx`, `Field.tsx`, `detailsModel.ts`, `collectionWorkspace.tsx`.
+- `app/router/index.tsx` registers `/cms/proof` and `/cms/projects`.
+- Careers CSS classes reused on the Business details screen (`DetailsEditor.tsx`).
+
+## Keep
+
+- `/cms/details` — Business details (who they are, contact, where, services, legal,
+  opening hours). Top menu and footer stay in the website editor.
+- Typed Business details fields (`detailsModel.ts` `emptyForm` / `profileToForm` / `formToPatch`).
+- Per-field loading placeholders ([general frontend](../../../general-architecture/frontend.md)).
+- `GET/PATCH /api/v1/website/editor/business-profile` until the Go contract names
+  the same fold.
+
+## Delete
+
+- Don't say proof: `/cms/proof` route, `proof` `CmsView`, and the Proof `PlaceholderView`.
+- `PlaceholderView` once projects and certifications are real screens (do not
+  leave “next CMS port batch” copy).
+- **Save details** control — same click-off / explicit Update as the rest of
+  the CMS; busy on the control, not a whole-screen swap.
+- Careers class names on the Business details screen (`.cms-careers-*`).
+
+## Do not port
+
+- `/cms/profile` as a route. Profile is a disclosure, not a destination.
+- Restoring `/cms/proof`.
+- Merging Details into the website editor.
+- Renaming Sites in this pass ([frontend.md](frontend.md) out of scope).
+- Org chooser, tenant CRUD (auth file).
+
+## Retarget
+
+| Today | Target |
+| --- | --- |
+| Top-level Details nav item | Profile disclosure: Business details, Projects, Certifications and reviews |
+| `/cms/proof` stub | `/cms/certifications-and-reviews` (website feature; wire in website port) |
+| `/cms/projects` stub | working Projects screen (title, description, cover photo) |
+| Ads missing from nav | left-nav **Ads** → `/cms/ads` (ads feature implements the screens) |
+| Media library | not a fifth top-level peer; workspace item + `/cms/media` deep link |
+
+Recommended left nav:
+
+```text
+New chat
+Sites
+Profile
+  Business details
+  Projects
+  Certifications and reviews
+Ads
+AI tools
+```
+
+AI tools stays `/cms/website`. Do not rename Sites here.
+
+## Don't say / rename
+
+- Don't say shell: `CmsDashboardShell` → CMS layout (sidebar + main area);
+  Don't say shell: CSS `cms-dashboard-shell` → CMS layout class.
+- Don't say proof: view id, route, and heading.
+- Don't say history: this screen edits the live business profile; profile history
+  is not a details timeline UI.
+- Don't say client: the owner / contractor, never “customer”.
+
+## Tests
+
+- `CmsRoute.test.tsx` — Don't say proof: drop that view; Profile disclosure; Ads dest.
+- `DetailsView.test.tsx` — drop “Save details”.
+- `e2e/parity/details-parity.spec.ts` — drop with the cross-cutting parity suite.
+- `e2e/parity/cms-parity.spec.ts` — retarget nav labels.
+
+## Done when
+
+- No `/cms/proof`. No top-level Details item.
+- Profile disclosure matches [frontend.md](frontend.md) (expanded/collapsed,
+  `aria-current` on the child).
+- Ads is a left-nav destination (screens may still be later).
+- Business details has no Save control.
