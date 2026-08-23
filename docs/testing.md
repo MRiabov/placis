@@ -29,6 +29,7 @@ written at each step (names come from that feature's `data-model.md`):
 - [website](features/website/testing.md)
 - [ads](features/ads/ad-generation/testing.md)
 - [auth](features/other/auth/testing.md)
+- [Placis website](features/placis-website/testing.md) — static origin only (no Go / Postgres)
 
 ## Notes
 
