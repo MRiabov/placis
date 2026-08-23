@@ -13,7 +13,9 @@ contractor website applies it to all website components. Unpublished storage is 
   scales, not free-form palettes.
 - **Typography** — heading/body font family, label tracking, heading/body weight, plus a
   display/h1/h2/body/label scale.
-- **Radius** — `none`/`xs`/`sm`/`md`/`lg`/`pill` (0/2/4/8/12/9999px).
+- **Radius** — `none`/`xs`/`sm`/`md`/`lg` (0/2/4/8/12px). This is the base corner for
+  surfaces (cards, media, fields, panels). Capsule buttons and tags are a control shape on
+  the preset, not `radius=pill` applied to every surface.
 - **Density** — `compact`/`comfortable`/`spacious`.
 - **Spacing** — `xs`–`2xl` (8–48px) plus website section block and container inline.
 - **Motion** — easing, reveal duration, hover duration.
