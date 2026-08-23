@@ -1,0 +1,16 @@
+---
+const { compact = false } = Astro.props;
+---
+
+<footer
+  class:list={[
+    "page-canvas mt-auto px-6 text-center sm:px-8",
+    compact
+      ? "py-4 pb-[calc(1rem+env(safe-area-inset-bottom))]"
+      : "py-16 pb-[calc(4rem+env(safe-area-inset-bottom))]",
+  ]}
+>
+  <p class="text-[12px] text-zinc-500 dark:text-zinc-400">
+    Copyright &copy; 2026 Placis. All rights reserved.
+  </p>
+</footer>

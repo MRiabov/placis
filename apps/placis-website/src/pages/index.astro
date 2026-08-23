@@ -1,0 +1,32 @@
+---
+import GettingStarted from "../components/GettingStarted.astro";
+import NewsSection from "../components/NewsSection.astro";
+import { PromptBox } from "../components/PromptBox";
+import { RotatingWord, TRADE_WORDS } from "../components/RotatingWord";
+import SiteFooter from "../components/SiteFooter.astro";
+import Layout from "../layouts/Layout.astro";
+import { MARKETING_HOME_HERO_H1_CLASS, MARKETING_MAIN_CLASS } from "../lib/marketingSite";
+---
+
+<Layout>
+  <main class={MARKETING_MAIN_CLASS}>
+    <section class="bg-background" id="start">
+      <div
+        class="mx-auto flex w-full min-w-0 max-w-[1200px] flex-col items-center justify-start px-4 pt-5 pb-0 text-center sm:px-8 sm:pt-20"
+      >
+        <div class="flex w-full min-w-0 justify-center overflow-x-clip">
+          <h1 class={`${MARKETING_HOME_HERO_H1_CLASS} pb-px`}>
+            Built for{" "}
+            <RotatingWord client:load suffix="." words={TRADE_WORDS} />
+          </h1>
+        </div>
+        <div class="mt-6 flex w-full min-w-0 justify-center sm:mt-10">
+          <PromptBox client:load />
+        </div>
+      </div>
+    </section>
+    <NewsSection />
+    <GettingStarted />
+    <SiteFooter />
+  </main>
+</Layout>

@@ -1,0 +1,83 @@
+---
+import { ContactMailto } from "../components/ContactMailto";
+import MinimalFooter from "../components/MinimalFooter.astro";
+import Layout from "../layouts/Layout.astro";
+import {
+  CONTACT_EMAIL,
+  MARKETING_CARD_BODY_CLASS,
+  MARKETING_CARD_H3_CLASS,
+  MARKETING_HERO_H1_CLASS,
+  MARKETING_MAIN_CLASS,
+  RAISED_BOX_CLASS,
+} from "../lib/marketingSite";
+---
+
+<Layout title="Contact — Placis" description="Talk to the Placis team.">
+  <main class={MARKETING_MAIN_CLASS}>
+    <section class="flex flex-1 justify-center px-6 py-12 sm:px-8 sm:py-16 lg:py-20">
+      <div
+        class="grid w-full max-w-5xl items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16"
+      >
+        <div class="max-w-md">
+          <p
+            class="font-medium text-[12px] text-zinc-500 uppercase tracking-[0.18em] dark:text-zinc-400"
+          >
+            Contact
+          </p>
+          <h1 class={`mt-4 ${MARKETING_HERO_H1_CLASS}`}>Talk to the Placis team.</h1>
+          <p class={`mt-4 ${MARKETING_CARD_BODY_CLASS}`}>
+            Partnerships, press, careers, or anything else. Send us a note and the
+            right person on the team will follow up.
+          </p>
+          <div class="mt-8 space-y-4">
+            <a
+              class="inline-flex items-center gap-1 font-medium text-[13px] text-zinc-500 transition hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white"
+              href="/"
+            >
+              <span aria-hidden="true">&larr;</span> Back to Placis
+            </a>
+            <div
+              class="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-white/10 dark:bg-white/5"
+            >
+              <p class="font-medium text-[13px] text-zinc-950 dark:text-zinc-50">
+                Response time
+              </p>
+              <p class="mt-1 text-[13px] text-zinc-500 leading-5 dark:text-zinc-400">
+                We reply to most messages within one business day.
+              </p>
+            </div>
+            <p class="text-[13px] text-zinc-500 leading-5 dark:text-zinc-400">
+              Need help with an existing build or account?{" "}
+              <a
+                class="font-medium text-zinc-950 underline underline-offset-2 dark:text-zinc-50"
+                href="/support/"
+              >
+                Visit support
+              </a>
+              .
+            </p>
+            <p class="text-[13px] text-zinc-500 leading-5 dark:text-zinc-400">
+              Prefer email?{" "}
+              <a
+                class="font-medium text-zinc-950 underline underline-offset-2 dark:text-zinc-50"
+                href={`mailto:${CONTACT_EMAIL}`}
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </p>
+          </div>
+        </div>
+        <div class={`w-full p-6 sm:p-8 ${RAISED_BOX_CLASS}`}>
+          <div class="mb-6 border-b border-zinc-200 pb-6 dark:border-white/10">
+            <h2 class={MARKETING_CARD_H3_CLASS}>Send a message</h2>
+            <p class="mt-1.5 text-[13px] text-zinc-500 leading-5 dark:text-zinc-400">
+              We route your message to the right team member.
+            </p>
+          </div>
+          <ContactMailto client:load />
+        </div>
+      </div>
+    </section>
+    <MinimalFooter />
+  </main>
+</Layout>

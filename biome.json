@@ -10,6 +10,7 @@
     "ignoreUnknown": true,
     "includes": [
       "apps/contractor-website/**",
+      "apps/placis-website/**",
       "packages/website-components/**",
       "biome.json",
       "package.json",

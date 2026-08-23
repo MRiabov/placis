@@ -31,6 +31,9 @@ frontend/storybook-static/
 frontend/.vite/
 apps/contractor-website/.astro/
 apps/contractor-website/dist/
+apps/placis-website/.astro/
+apps/placis-website/dist/
+apps/placis-website/playwright-report/
 packages/*/dist/
 openapi.json
 frontend-2/dist/

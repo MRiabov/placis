@@ -4,8 +4,7 @@ How the Placis website is built, stored, and served. This document locks the ori
 `apps/placis-website` does not become a Worker, a Cloudflare Pages project, or the
 contractor website.
 
-The app is not in this repo yet. Next: Astro app in `apps/placis-website/`, then the
-upload workflow.
+The app is in `apps/placis-website/`. Next: the R2 upload workflow and zone rules.
 
 Related: [ADR.md](ADR.md), [contractor website Cloudflare](../website/cloudflare.md),
 [ci-cd.md](../../../ci-cd.md), [architecture.md](../../../architecture.md).
@@ -32,7 +31,7 @@ Stripe webhook routes.
 | | Placis website | Contractor website |
 | --- | --- | --- |
 | Whose site | Placis | the contractor |
-| App | `apps/placis-website/` (not in the repo yet) | `apps/contractor-website/` |
+| App | `apps/placis-website/` | `apps/contractor-website/` |
 | Build | `astro build` → `dist/` | Worker + publication HTML |
 | Store | one R2 tree per environment | `sites/{website_address}/latest/` |
 | Live GET | hostname on the R2 bucket | Worker, Cache then R2 |
@@ -124,19 +123,18 @@ Manual GitHub Actions `workflow_dispatch` only, workflow name `deploy placis web
 environment staging | production. CircleCI does not upload this bucket. Secrets stay
 out of git. Does not run on pull request. See [ci-cd.md](../../../ci-cd.md).
 
-The workflow YAML is not in this documentation commit.
+The workflow YAML is not in this PR.
 
 ## One-time ops (not this commit)
 
 On the `placis.com` zone: attach the production bucket to `placis.com`; staging bucket
 to `staging.placis.com`; Redirect Rule www → apex; URL
 Rewrite Rules for `/` and `*/` → `index.html`; Cache Rule so HTML is cached. Move DNS
-off Vercel when the first upload is ready. No Cloudflare account work in this
-documentation commit.
+off Vercel when the first upload is ready. No Cloudflare account work in this PR.
 
 ## Out of this spec
 
-- Implementing `apps/placis-website/` or copying files from `placis-web`
+- The R2 upload workflow and zone rules
 - A Worker, a Cloudflare Pages project, or `@astrojs/cloudflare` adapter
 - The contractor-website Worker, its R2 bucket, or Custom Hostnames
 - How `frontend-2` is hosted on `app.placis.com`
