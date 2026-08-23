@@ -1,0 +1,58 @@
+{
+  "id": "public.content.intro_metrics",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Intro With Metrics",
+  "family": "content",
+  "variant": "intro_metrics",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": { "type": "string" },
+      "eyebrow": { "type": "string" },
+      "title": { "type": "string" },
+      "body": { "type": "string" },
+      "cta_href": { "type": "string" },
+      "cta_label": { "type": "string" },
+      "paragraphs": { "type": "array", "items": { "type": "string" } },
+      "metrics": {
+        "type": "array",
+        "items": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "paragraphs",
+      "type": "list",
+      "label": "Intro copy",
+      "required": false,
+      "max_length": 3
+    },
+    {
+      "key": "metrics",
+      "type": "list",
+      "label": "Metrics",
+      "required": false,
+      "max_length": 6
+    }
+  ],
+  "default_values": [{ "path": "title", "value": "{{business_name}}" }],
+  "design_controls": []
+}

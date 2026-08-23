@@ -1,0 +1,236 @@
+{
+  "id": "institutional_about.reference",
+  "schema_version": 1,
+  "name": "Institutional mono reference about page",
+  "description": "Source-backed about-page decomposition with history, leadership continuity, client proof, and CTA sections.",
+  "status": "ready",
+  "modelled_after": [
+    "Harper Construction",
+    "Harper Construction Company",
+    "Harper Construction Company, Inc.",
+    "Harper",
+    "harperconstruction.com",
+    "www.harperconstruction.com",
+    "Jeff Harper",
+    "Ron Harper",
+    "Stephen Marble",
+    "Marble",
+    "San Diego",
+    "California",
+    "U.S. Army",
+    "US Army",
+    "Department of Navy",
+    "UC San Diego",
+    "SDSU",
+    "San Diego Sheriff",
+    "US Marine Corps",
+    "Marine Corps"
+  ],
+  "production_selectable": false,
+  "selection_visibility": "internal",
+  "theme": "institutional_mono",
+  "pages": [
+    {
+      "key": "about",
+      "path": "/about",
+      "title": "About {{business_name}}",
+      "page_type": "about",
+      "seo": {
+        "title": "About {{business_name}}",
+        "description": "Company history, leadership, client relationships, and long-running construction experience."
+      },
+      "metadata": {
+        "source_url": "https://www.harperconstruction.com/about",
+        "source_type": "live_website",
+        "source_platform": "Squarespace 7",
+        "style_reference": "theme.institutional_mono",
+        "multipage_reference_family": "harper_construction"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.fixed_cta",
+          "props": {
+            "home_href": "/",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "About",
+                "href": "/about",
+                "active": true
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "News",
+                "href": "/news"
+              },
+              {
+                "label": "Careers",
+                "href": "/careers"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact",
+                "cta": true
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.overlay_title",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "A history of excellence",
+            "media": {
+              "url": "{{images.about_hero}}",
+              "alt_text": "Construction team in the field"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/about",
+              "section": "about_intro",
+              "note": "Full-screen image intro uses the headline 'A history of excellence' over IMG_6403.JPG."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.story_text",
+          "props": {
+            "anchor_id": "our-story",
+            "title": "Our Story",
+            "blocks": [
+              {
+                "heading": "{{business_name}}'s Story",
+                "paragraphs": [
+                  "{{business_name}}'s company history, leadership, and source-backed milestones should be reviewed before publication. Add confirmed founding, established, or incorporation details only when the tenant or a cited source supports the claim."
+                ]
+              },
+              {
+                "heading": "A Legacy Built on Teamwork and Dedication",
+                "paragraphs": [
+                  "Our continued success is built on clear communication, dependable project delivery, and the experience of the people behind the work."
+                ]
+              },
+              {
+                "heading": "A Culture of Stability and Tenure",
+                "paragraphs": [
+                  "{{business_name}} fosters a work environment that values stability and long-term commitment. This is reflected in the impressive tenure of our team members. This level of experience and continuity is a valuable asset to our company and our clients."
+                ]
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/about",
+              "section": "our_story",
+              "note": "Source narrative includes the Our Story heading and three subheaded text blocks about the source company's milestone, teamwork, and long-tenured staff. Tenant drafts must replace source-specific age claims with source-backed tenant facts."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.story_text",
+          "props": {
+            "anchor_id": "experience",
+            "image_url": "{{images.about_history}}",
+            "alt_text": "Historic construction company team",
+            "image_position": "left",
+            "blocks": [
+              {
+                "heading": "Experience You Can Trust, Delivered on Every Project",
+                "paragraphs": [
+                  "At {{business_name}}, we understand that your project is more than just bricks and mortar. It's a vision, an investment, and a reflection of your dreams. That's why we place the most experienced construction professionals at the helm of every project we undertake.",
+                  "We're not just building structures, we're building trust. Every project is planned around practical guidance, reliable scheduling, and a clear standard of workmanship."
+                ]
+              },
+              {
+                "heading": "Build with a team focused on the long term",
+                "paragraphs": [
+                  "We're grateful for the opportunity to serve our community and look forward to continuing to build a brighter future, together."
+                ]
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/about",
+              "section": "experience_split",
+              "note": "Image-left split section uses the historic Harper sign photo and text about experience, trust, and the source company's milestone."
+            }
+          ]
+        },
+        {
+          "component_id": "public.proof.leadership_grid",
+          "props": {
+            "anchor_id": "leadership",
+            "title": "Leadership"
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/about",
+              "section": "leadership",
+              "note": "Source leadership includes Jeff Harper, Ron Harper, and Stephen Marble with biographical profile copy."
+            }
+          ]
+        },
+        {
+          "component_id": "public.proof.logo_strip",
+          "props": {
+            "anchor_id": "clients",
+            "layout": "grid",
+            "title": "Our Valued Clients",
+            "intro": "{{business_name}} has always embraced our clients and partners as part of Our Team. Every project is performed with open communication. The partnering methodology is implemented and a mutual respect with our clients provides the groundwork for our success."
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/about",
+              "section": "client_logo_gallery",
+              "note": "About page includes a large logo grid with military, university, municipal, nonprofit, and private-sector clients."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.centered_social_nav",
+          "props": {
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "About",
+      "page_key": "about",
+      "position": 1,
+      "key": "about"
+    }
+  ]
+}

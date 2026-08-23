@@ -1,0 +1,63 @@
+{
+  "name": "@placis/website-components",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/index.ts"
+    },
+    "./styles.css": "./src/styles.css",
+    "./themes": {
+      "types": "./dist/themes/index.d.ts",
+      "import": "./dist/themes/index.js"
+    },
+    "./themes/dark_serif.css": "./src/themes/dark_serif/style.css",
+    "./themes/dark_serif/style.css": "./src/themes/dark_serif/style.css",
+    "./themes/navy_cream.css": "./src/themes/navy_cream/style.css",
+    "./themes/navy_cream/style.css": "./src/themes/navy_cream/style.css",
+    "./themes/red_charcoal.css": "./src/themes/red_charcoal/style.css",
+    "./themes/red_charcoal/style.css": "./src/themes/red_charcoal/style.css",
+    "./themes/green_gold.css": "./src/themes/green_gold/style.css",
+    "./themes/green_gold/style.css": "./src/themes/green_gold/style.css",
+    "./themes/navy_grid.css": "./src/themes/navy_grid/style.css",
+    "./themes/navy_grid/style.css": "./src/themes/navy_grid/style.css",
+    "./themes/institutional_mono.css": "./src/themes/institutional_mono/style.css",
+    "./themes/institutional_mono/style.css": "./src/themes/institutional_mono/style.css",
+    "./fixtures/timbermill": {
+      "types": "./dist/fixtures/timbermill.d.ts",
+      "import": "./dist/fixtures/timbermill.js"
+    },
+    "./fixtures/institutional": {
+      "types": "./dist/fixtures/institutional.d.ts",
+      "import": "./dist/fixtures/institutional.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit && node scripts/check-style-boundaries.mjs && node scripts/check-reference-boundaries.mjs && node scripts/check-blueprint-intent.mjs",
+    "check:style-boundaries": "node scripts/check-style-boundaries.mjs",
+    "check:reference-boundaries": "node scripts/check-reference-boundaries.mjs",
+    "check:blueprint-intent": "node scripts/check-blueprint-intent.mjs"
+  },
+  "dependencies": {
+    "@radix-ui/colors": "^3.0.0",
+    "lucide-react": "^1.23.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

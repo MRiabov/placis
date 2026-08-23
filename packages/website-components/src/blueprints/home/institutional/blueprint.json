@@ -1,0 +1,309 @@
+{
+  "id": "institutional_home.reference",
+  "schema_version": 1,
+  "name": "Institutional mono reference home",
+  "description": "Source-backed home-page decomposition with overlay hero, project media, organization story, news cards, and multi-page navigation.",
+  "status": "ready",
+  "modelled_after": [
+    "Harper Construction",
+    "Harper Construction Company",
+    "Harper Construction Company, Inc.",
+    "Harper",
+    "harperconstruction.com",
+    "www.harperconstruction.com",
+    "Jeff Harper",
+    "Ron Harper",
+    "Stephen Marble",
+    "Marble",
+    "San Diego",
+    "California",
+    "U.S. Army",
+    "US Army",
+    "Department of Navy",
+    "UC San Diego",
+    "SDSU",
+    "San Diego Sheriff",
+    "US Marine Corps",
+    "Marine Corps"
+  ],
+  "production_selectable": false,
+  "selection_visibility": "internal",
+  "theme": "institutional_mono",
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "title": "{{business_name}} | Building Together",
+      "page_type": "home",
+      "seo": {
+        "title": "{{business_name}} | Building Together",
+        "description": "General contracting, design-build, preconstruction, and construction services for complex public and private projects."
+      },
+      "metadata": {
+        "source_url": "https://www.harperconstruction.com/",
+        "source_type": "live_website",
+        "source_platform": "Squarespace 7",
+        "style_reference": "theme.institutional_mono",
+        "multipage_reference_family": "harper_construction"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.fixed_cta",
+          "props": {
+            "home_href": "/",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/",
+                "active": true
+              },
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "News",
+                "href": "/news"
+              },
+              {
+                "label": "Careers",
+                "href": "/careers"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact",
+                "cta": true
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/",
+              "section": "header",
+              "note": "White logo and thin uppercase navigation sit over the image hero on desktop; mobile uses a dark top bar with hamburger and search controls."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.overlay_title",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "Building together",
+            "media": {
+              "url": "{{images.home_hero}}",
+              "alt_text": "Large aviation construction project at dusk"
+            },
+            "proof_line": "Design-build construction partner."
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/",
+              "section": "home_intro",
+              "note": "Full-browser image intro uses the sourced text 'Building together' over ALEX_NYE_220309_Harper_Lemoore_0380-A.jpg."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "anchor_id": "about",
+            "title": "{{business_name}} has a proud tradition of service",
+            "paragraphs": [
+              "{{business_name}} has a proud tradition of service in the construction industry. With a legacy of local and regional experience, the team focuses on delivering distinctive design-build projects with clear schedules, budgets, and communication. The approach to every project starts with understanding the owner's needs and expectations, then building a plan around those goals."
+            ],
+            "href": "/about",
+            "link_label": "Read our story."
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/",
+              "section": "home_about",
+              "note": "Home About block introduces the source company history and leads to the About page."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.intro",
+          "props": {
+            "anchor_id": "services",
+            "title": "We Offer a Wide Range of Services",
+            "paragraphs": [
+              "From conception to completion, our entire team of estimators, designers, project managers and experienced executives make our clients' needs a priority. We have experience in a wide variety of projects and delivery methods, and use both time-proven practices and cutting-edge techniques to make sure our customers' projects meet their maximum potential."
+            ],
+            "href": "/services",
+            "link_label": "Learn More"
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/",
+              "section": "home_services_teaser",
+              "note": "Source heading reads 'We Offer a Wide Range of Services' and links to the services page."
+            }
+          ]
+        },
+        {
+          "component_id": "public.gallery.grid",
+          "props": {
+            "anchor_id": "work",
+            "layout": "packed",
+            "show_captions": false
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/",
+              "section": "home_gallery",
+              "note": "Home gallery is a static-looking Squarespace packed image index with five construction project images, no visible title, and mobile stacks the images full-width."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.intro",
+          "props": {
+            "anchor_id": "projects",
+            "title": "We Take Pride In The Projects We've Done",
+            "paragraphs": [
+              "While our clients' satisfaction is our primary metric for excellence, we have also been recognized with numerous awards over the years for safety, business practices, and design excellence. We are proud to be at the forefront of green building practices, with dozens of LEED-certified projects, many achieving silver, gold and even platinum LEED certification. We understand that projects represent not only buildings, but the plans for the future of our clients"
+            ],
+            "href": "/projects",
+            "link_label": "See Our Latest Projects"
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/",
+              "section": "home_projects_teaser",
+              "note": "Source heading reads 'We Take Pride In The Projects We've Done' and links to the Projects page."
+            }
+          ]
+        },
+        {
+          "component_id": "public.cta.band",
+          "props": {
+            "anchor_id": "contact",
+            "title": "Contact Us",
+            "body": "We'd love to discuss your upcoming project!",
+            "href": "/contact",
+            "label": "Get In Touch"
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/",
+              "section": "contact_cta",
+              "note": "Home page ends with a simple Contact Us prompt and Get In Touch action."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.centered_social_nav",
+          "props": {
+            "social_links": [
+              {
+                "label": "LinkedIn",
+                "icon_label": "in",
+                "href": "https://www.linkedin.com/company/10689726"
+              },
+              {
+                "label": "Facebook",
+                "icon_label": "f",
+                "href": "/social/facebook"
+              },
+              {
+                "label": "Instagram",
+                "icon_label": "ig",
+                "href": "/social/instagram"
+              },
+              {
+                "label": "X",
+                "icon_label": "x",
+                "href": "/social/x"
+              }
+            ],
+            "links": [
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/",
+              "section": "footer",
+              "note": "Source footer carries the main page set, social links, and business contact details."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Home",
+      "page_key": "home",
+      "position": 1,
+      "key": "home"
+    },
+    {
+      "location": "primary",
+      "label": "About",
+      "path": "/about",
+      "position": 2,
+      "key": "about"
+    },
+    {
+      "location": "primary",
+      "label": "Services",
+      "path": "/services",
+      "position": 3,
+      "key": "services"
+    },
+    {
+      "location": "primary",
+      "label": "Projects",
+      "path": "/projects",
+      "position": 4,
+      "key": "projects"
+    },
+    {
+      "location": "primary",
+      "label": "News",
+      "path": "/news",
+      "position": 5,
+      "key": "news"
+    },
+    {
+      "location": "primary",
+      "label": "Careers",
+      "path": "/careers",
+      "position": 6,
+      "key": "careers"
+    },
+    {
+      "location": "primary",
+      "label": "Contact",
+      "path": "/contact",
+      "position": 7,
+      "key": "contact"
+    }
+  ]
+}

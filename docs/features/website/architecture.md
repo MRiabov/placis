@@ -100,13 +100,14 @@ Website publication is not a Cloudflare deploy. One shared contractor-website ap
 every tenant. The website publication control is a destination dropdown
 (`{website_address}.preview.placis.com`, a connected custom website address, or New URL). Host
 routing uses `website_addresses` reserved at website activation. Serve path, R2 keys, cache
-purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md). **First
-implementation step:** import `apps/contractor-website`.
+purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md).
+`apps/contractor-website` is in this repo; next is R2 `latest/` + website publication HTML.
 
 ## Contractor website (separate Astro app)
 
 Live websites and website previews are served by a **separate Astro + React app**
-(`apps/contractor-website`; import it first when implementation starts), not the website editor.
+(`apps/contractor-website`), not the website editor. Website components live in
+`packages/website-components`.
 
 At **website publication**, that app renders each live website page from the active
 `website_manifest` (`website.v1`) and writes HTML to R2 `latest/`. A live GET is Cache then R2.

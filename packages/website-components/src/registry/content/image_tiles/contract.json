@@ -1,0 +1,52 @@
+{
+  "id": "public.content.image_tiles",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Image Tiles",
+  "family": "content",
+  "variant": "image_tiles",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": 80
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Section title",
+      "required": true,
+      "max_length": 80
+    },
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Image tiles",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "default_values": [],
+  "design_controls": []
+}

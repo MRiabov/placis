@@ -1,0 +1,458 @@
+{
+  "id": "split_trust_home.reference",
+  "schema_version": 1,
+  "name": "Split trust reference home",
+  "description": "Source-backed home-page decomposition with proof-heavy structure, hero trust markers, gallery, review proof, services, and contact CTA.",
+  "status": "ready",
+  "modelled_after": ["Bellfield Developments", "Bellfield"],
+  "theme": "navy_cream",
+  "forms": [
+    {
+      "form_id": "split-trust-scope",
+      "title": "Project Planner",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "name",
+          "label": "Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "label": "Phone",
+          "type": "phone",
+          "required": true
+        },
+        {
+          "id": "project_type",
+          "label": "Project Type",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "label": "New Build",
+              "value": "new_build"
+            },
+            {
+              "label": "House Extension",
+              "value": "house_extension"
+            },
+            {
+              "label": "Home Renovation",
+              "value": "home_renovation"
+            },
+            {
+              "label": "Shop Fit-Out",
+              "value": "shop_fitout"
+            }
+          ]
+        }
+      ],
+      "privacy_notice": "Project details are used to prepare a {{business_name}} scope conversation."
+    }
+  ],
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "title": "{{business_name}} | You Dream, We Build",
+      "page_type": "home",
+      "seo": {
+        "title": "{{business_name}} | You Dream, We Build",
+        "description": "{{business_name}} specialises in new builds, house extensions, home renovations and shop renovations in {{service_area}}."
+      },
+      "metadata": {
+        "source_repository": "bongagift/bellfield-site",
+        "source_commit": "cda3aa67d71ba2c085c3bfde719911743925c83d"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.fixed_cta",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo_url": "{{images.logo}}",
+            "home_href": "#top",
+            "links": [
+              {
+                "label": "Services",
+                "href": "#services"
+              },
+              {
+                "label": "Projects",
+                "href": "#work"
+              },
+              {
+                "label": "Process",
+                "href": "#process"
+              },
+              {
+                "label": "Certifications",
+                "href": "#certifications"
+              },
+              {
+                "label": "Reviews",
+                "href": "#reviews"
+              },
+              {
+                "label": "Get a Quote",
+                "href": "#contact",
+                "cta": true
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "34-49"
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.type_first_trust",
+          "props": {
+            "anchor_id": "top",
+            "eyebrow": "{{service_area}} & South East Ireland",
+            "headline": "You Dream,",
+            "emphasized_headline": "We Build.",
+            "subheadline": "New builds · Extensions · Renovations · Shop Fit-Outs",
+            "primary_cta": {
+              "label": "Plan My Project",
+              "href": "#contact"
+            },
+            "secondary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "media": {
+              "url": "{{images.construction_site_for_a_residential_build}}",
+              "alt_text": "Construction site for a residential build"
+            }
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "51-92"
+            }
+          ]
+        },
+        {
+          "component_id": "public.marquee.services",
+          "props": {},
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "94-112"
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.story_split",
+          "props": {
+            "anchor_id": "about",
+            "image_url": "{{images.a_fifth_generation_tradition_in_building_excellence}}",
+            "alt_text": "{{business_name}} project interior",
+            "image_position": "left",
+            "profile": {
+              "name": "{{people.founder.name}}",
+              "role": "{{people.founder.role}}",
+              "image_url": "{{images.founder_profile}}",
+              "alt_text": "{{people.founder.name}}, {{people.founder.role}}"
+            },
+            "link_label": "See how we work",
+            "href": "#process"
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "115-149"
+            }
+          ]
+        },
+        {
+          "component_id": "public.statement.words",
+          "props": {
+            "anchor_id": "statement",
+            "eyebrow": "Approach",
+            "words": ["Confidential", "Collaborative", "Uncompromising"],
+            "description": "Premium craftsmanship, with every joint, surface and contour finished to an architecturally-quality standard."
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "151-165"
+            }
+          ]
+        },
+        {
+          "component_id": "public.services.tabs",
+          "props": {
+            "eyebrow": "What We Do",
+            "title": "Our Services",
+            "href": "#contact",
+            "link_label": "Discuss your project"
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "167-214"
+            }
+          ]
+        },
+        {
+          "component_id": "public.gallery.edge_grid",
+          "props": {
+            "anchor_id": "work",
+            "eyebrow": "Selected Works"
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "216-282"
+            }
+          ]
+        },
+        {
+          "component_id": "public.process.steps",
+          "props": {
+            "anchor_id": "process",
+            "eyebrow": "How We Work",
+            "title": "A journey designed around you",
+            "steps": [
+              {
+                "title": "Discover",
+                "description": "A quick conversation captures the property, goal, budget range, timing, and any unknowns before commitments are made."
+              },
+              {
+                "title": "Define",
+                "description": "The project becomes a practical plan: scope, budget logic, sequence, materials, and decision deadlines are made visible."
+              },
+              {
+                "title": "Build",
+                "description": "Craft teams coordinate around clean execution, direct communication, and momentum homeowners can track from a phone."
+              },
+              {
+                "title": "Live",
+                "description": "The handoff focuses on comfort, finish quality, maintenance awareness, and confidence in the home after the final walk-through."
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "284-316"
+            }
+          ]
+        },
+        {
+          "component_id": "public.proof.accreditations",
+          "props": {
+            "anchor_id": "certifications",
+            "eyebrow": "Accreditations",
+            "title": "Standards & Certifications"
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "318-360"
+            }
+          ]
+        },
+        {
+          "component_id": "public.form.project_planner",
+          "props": {
+            "anchor_id": "planner",
+            "eyebrow": "Project Planner",
+            "title": "Let's explore the scope of your new build",
+            "description": "Book a call today to get total clarity on your budget and project feasibility.",
+            "priorities": [
+              {
+                "label": "Budget Clarity",
+                "value": "clarity on budget and feasibility"
+              },
+              {
+                "label": "Schedule Confidence",
+                "value": "schedule confidence"
+              },
+              {
+                "label": "Finish Quality",
+                "value": "an architecturally-quality finish"
+              }
+            ],
+            "timeline": [
+              {
+                "label": "Just exploring",
+                "value": "1"
+              },
+              {
+                "label": "Planning this season",
+                "value": "2"
+              },
+              {
+                "label": "Ready for pricing",
+                "value": "3"
+              },
+              {
+                "label": "Urgent timeline",
+                "value": "4"
+              }
+            ],
+            "result_prefix": "Start with a scope conversation",
+            "result_text": "Start with a {{business_name}} scope conversation for a new build, focused on clarity on budget and feasibility, with planning this season."
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "362-419"
+            }
+          ]
+        },
+        {
+          "component_id": "public.proof.review_panel",
+          "props": {
+            "anchor_id": "reviews",
+            "eyebrow": "Our Reputation",
+            "title": "Client Reviews",
+            "items": [
+              {
+                "quote": "Matthew and the team transformed our home beyond what we imagined. Every detail was handled with real care and professionalism.",
+                "author": "Sarah & Tom K.",
+                "location": "{{service_area}}"
+              },
+              {
+                "quote": "The extension was delivered on time and exactly on budget. Communication was brilliant throughout, and we always knew what was happening.",
+                "author": "David M.",
+                "location": "Kilkenny"
+              },
+              {
+                "quote": "From our first conversation to the final walk-through, {{business_name}} made the whole process feel easy. Exceptional craftsmanship.",
+                "author": "Claire R.",
+                "location": "Wexford"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "421-465"
+            }
+          ]
+        },
+        {
+          "component_id": "public.contact.cta_panel",
+          "props": {
+            "eyebrow": "Get in Touch",
+            "title": "Talk to us about your project",
+            "description": "Whether you're just exploring or ready to start, the first conversation is always free.",
+            "business_name": "{{business_name}}",
+            "phone": "{{phone}}",
+            "phone_label": "Call Now",
+            "email": "{{email}}",
+            "email_label": "Email the Team",
+            "whatsapp_url": "https://wa.me/{{phone}}",
+            "whatsapp_label": "WhatsApp",
+            "service_area": "{{service_area}}"
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "467-490"
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.logo_nav",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo_url": "{{images.logo}}",
+            "links": [
+              {
+                "label": "Services",
+                "href": "#services"
+              },
+              {
+                "label": "Projects",
+                "href": "#work"
+              },
+              {
+                "label": "Process",
+                "href": "#process"
+              },
+              {
+                "label": "Certifications",
+                "href": "#certifications"
+              },
+              {
+                "label": "Contact",
+                "href": "#contact"
+              }
+            ],
+            "copyright": "© 2026 {{business_name}} - {{service_area}}"
+          },
+          "source_refs": [
+            {
+              "repository": "bongagift/bellfield-site",
+              "commit": "cda3aa67d71ba2c085c3bfde719911743925c83d",
+              "path": "index.html",
+              "lines": "492-508"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "key": "home_header",
+      "location": "header",
+      "label": "Home",
+      "page_key": "home",
+      "position": 0
+    },
+    {
+      "key": "services_header",
+      "location": "header",
+      "label": "Services",
+      "page_key": "home",
+      "position": 1
+    },
+    {
+      "key": "projects_header",
+      "location": "header",
+      "label": "Projects",
+      "page_key": "home",
+      "position": 2
+    },
+    {
+      "key": "contact_footer",
+      "location": "footer",
+      "label": "Contact",
+      "page_key": "home",
+      "position": 0
+    }
+  ]
+}

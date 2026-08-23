@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "about.intro_paragraphs": {
+      "label": "About intro paragraphs",
+      "source": "business_research.about.intro_paragraphs",
+      "type": "list"
+    },
+    "proof.company_metrics": {
+      "label": "Company proof metrics",
+      "source": "business_research.proof.company_metrics",
+      "type": "list"
+    },
+    "proof.safety_statement": {
+      "label": "Safety statement",
+      "source": "business_research.proof.safety_statement",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.content.intro_metrics",
+      "path": "paragraphs",
+      "value": "{{about.intro_paragraphs}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rewrite",
+        "edit_reason": "About-page intro copy must be rewritten from verified tenant story and positioning before publication."
+      }
+    },
+    {
+      "component_id": "public.content.intro_metrics",
+      "path": "metrics",
+      "value": "{{proof.company_metrics}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_verify",
+        "edit_reason": "Company metrics are proof claims and must be verified for the tenant before publication."
+      }
+    },
+    {
+      "component_id": "public.content.split",
+      "path": "paragraphs",
+      "value": "{{proof.safety_statement}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rewrite",
+        "edit_reason": "About-page safety and quality copy must be replaced with tenant-specific proof or removed."
+      }
+    }
+  ]
+}

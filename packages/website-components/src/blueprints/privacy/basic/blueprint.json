@@ -1,0 +1,105 @@
+{
+  "id": "privacy.basic",
+  "schema_version": 1,
+  "name": "Basic privacy page",
+  "description": "Reusable privacy-page CMS record factory for public website forms and lead capture.",
+  "status": "ready",
+  "modelled_after": null,
+  "theme": "navy_cream",
+  "pages": [
+    {
+      "key": "privacy",
+      "path": "/privacy/",
+      "title": "Privacy Notice",
+      "page_type": "privacy",
+      "seo": {
+        "title": "Privacy Notice",
+        "description": "How customer details submitted through website forms are used for enquiries, quotes, and service follow-up."
+      },
+      "metadata": {
+        "content_scope": "basic_public_form_notice",
+        "requires_legal_review_before_publication": true
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo_url": "{{logo_url}}",
+            "home_href": "/",
+            "phone": "{{phone}}",
+            "email": "{{email}}",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact-us/"
+              },
+              {
+                "label": "Privacy",
+                "href": "/privacy/",
+                "active": true
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.privacy.notice",
+          "props": {
+            "title": "Website form and lead privacy notice",
+            "notice_version": "public-form-privacy-v1",
+            "policy_url": "/privacy/",
+            "contact_email": "{{email}}",
+            "body": "When you send a contact, quote, callback, booking, or photo-upload form, the business collects the details you choose to provide, such as your name, phone number, email address, property address or area, service requirements, message, and uploaded images. The business uses this information to respond to your enquiry, prepare a quote, arrange appointments, carry out requested work, keep customer records, and follow up on open enquiries or jobs. For customers in Ireland and the UK, this processing is usually based on steps taken before entering a contract, performance of a contract, legitimate business interests, or consent where consent is specifically requested. Details may be shared with trusted service providers who help operate the website, store leads, send messages, schedule work, or deliver the requested service. Customer details are not sold. Records should be kept only for as long as needed for the enquiry, customer relationship, legal obligations, accounting records, dispute handling, and ordinary business administration. You can ask to access, correct, delete, restrict, or receive a copy of your personal data, or object to certain processing, by using the contact email on this page. You may also complain to the Data Protection Commission in Ireland or the Information Commissioner's Office in the UK."
+          },
+          "source_refs": [
+            {
+              "section": "basic_public_form_notice",
+              "note": "Generic CMS privacy notice for public website forms and lead capture in Ireland and the UK. Operators should review local legal requirements before publication."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo_url": "{{logo_url}}",
+            "phone": "{{phone}}",
+            "email": "{{email}}",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact-us/"
+              },
+              {
+                "label": "Privacy",
+                "href": "/privacy/",
+                "active": true
+              }
+            ],
+            "copyright": "All rights reserved."
+          },
+          "design": {
+            "density": "comfortable"
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "footer",
+      "label": "Privacy",
+      "page_key": "privacy",
+      "position": 90,
+      "key": "privacy_footer"
+    }
+  ]
+}

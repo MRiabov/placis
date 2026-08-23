@@ -1,0 +1,210 @@
+{
+  "id": "red_charcoal_testimonials.reference",
+  "schema_version": 1,
+  "name": "Red charcoal reference testimonials page",
+  "description": "Source-backed testimonials-page decomposition with review cards, proof metadata, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Roof Shield",
+    "RoofShield",
+    "roofshield",
+    "roofshield.ie",
+    "www.roofshield.ie",
+    "Tom O' Brien",
+    "Mary Sweeney",
+    "Steve Dennehy",
+    "Pat Finnerty",
+    "TJ McCarthy",
+    "Vincent Scott",
+    "John",
+    "Swords",
+    "Blanchardstown",
+    "Tallaght",
+    "Lucan",
+    "Clondalkin",
+    "Malahide"
+  ],
+  "theme": "red_charcoal",
+  "pages": [
+    {
+      "key": "testimonials",
+      "path": "/testimonials/",
+      "title": "Testimonials - {{business_name}}",
+      "page_type": "testimonials",
+      "seo": {
+        "title": "Testimonials - {{business_name}}",
+        "description": "{{business_name}} customer testimonials and Google review excerpts from roofing customers around {{service_area}}."
+      },
+      "metadata": {
+        "source_url": "https://roofshield.ie/testimonials/",
+        "source_type": "live_website",
+        "source_platform": "WordPress 6.8 / Astra / Elementor 3.31",
+        "source_last_modified": "2026-06-09T11:06:37"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call Us",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "Services",
+                "href": "/#services"
+              },
+              {
+                "label": "Gallery",
+                "href": "/gallery/"
+              },
+              {
+                "label": "Testimonials",
+                "href": "/testimonials/",
+                "active": true
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/testimonials/",
+              "section": "header",
+              "note": "Testimonials page reuses the Roof Shield WordPress header/navigation treatment."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "What People Say",
+            "primary_cta": {
+              "label": "Request a free quote",
+              "href": "/contact-us/"
+            },
+            "secondary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "media": {
+              "url": "{{images.roofing_work}}",
+              "alt_text": "{{business_name}} roofing work"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/testimonials/",
+              "section": "testimonial_page_intro",
+              "note": "The source page starts with a WHAT PEOPLE SAY heading and review widgets. The upgraded blueprint adds a route-level hero before the proof grid."
+            }
+          ]
+        },
+        {
+          "component_id": "public.proof.testimonials",
+          "props": {
+            "anchor_id": "testimonials",
+            "title": "WHAT PEOPLE SAY",
+            "items": [
+              {
+                "quote": "Very happy with {{business_name}}. They did a fantastic job on my roof, responded very quickly, and gave a very fair price. I would definitely hire them again.",
+                "name": "Local customer",
+                "rating": 5,
+                "source_label": "Google review"
+              },
+              {
+                "quote": "I Recently hired {{business_name}} to put new dry verge on my gable end very pleased with their work & very professional.",
+                "name": "Verified customer",
+                "rating": 5,
+                "source_label": "Google review"
+              },
+              {
+                "quote": "The team responded quickly after storm damage, repaired the roof, and kept the price fair. I would hire them again.",
+                "name": "Homeowner customer",
+                "rating": 5,
+                "source_label": "Google review"
+              },
+              {
+                "quote": "{{business_name}} was great to organise their guys to come out to do Emergency Roof repairs on my Roof & replace new gutters also very Qualified team if guys & tidy to clean up afterwards",
+                "name": "Repeat customer",
+                "rating": 5,
+                "source_label": "Google review"
+              },
+              {
+                "quote": "The team from {{business_name}} came out to check a roof leak, found the issue quickly, and got it sorted straight away at a very fair price.",
+                "name": "Service customer",
+                "rating": 5,
+                "source_label": "Google review"
+              },
+              {
+                "quote": "Fast response and fixed my leaking roof quickly.",
+                "name": "Emergency repair customer",
+                "rating": 5,
+                "source_label": "Google review"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/testimonials/",
+              "section": "review_widgets",
+              "note": "Elementor reviews widgets post-387: WHAT PEOPLE SAY heading with one-slide review carousels. Six reviews were extracted from the rendered page content."
+            }
+          ]
+        },
+        {
+          "component_id": "public.cta.band",
+          "props": {
+            "anchor_id": "testimonial-quote",
+            "title": "Ready to get practical roofing advice from {{business_name}}?",
+            "actions": [
+              {
+                "label": "{{phone}}",
+                "href": "tel:{{phone}}"
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "contact_line": "{{address}}",
+            "address": "{{address}}"
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Home",
+      "path": "/",
+      "position": 1,
+      "key": "home"
+    },
+    {
+      "location": "primary",
+      "label": "Testimonials",
+      "page_key": "testimonials",
+      "position": 2,
+      "key": "testimonials"
+    },
+    {
+      "location": "primary",
+      "label": "Contact Us",
+      "path": "/contact-us/",
+      "position": 3,
+      "key": "contact"
+    }
+  ]
+}

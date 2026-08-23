@@ -1,0 +1,53 @@
+{
+  "id": "public.service_area.coverage",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Service Area Coverage",
+  "family": "service_area",
+  "variant": "coverage",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "intro": {
+        "type": "string"
+      },
+      "areas": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title", "areas"]
+  },
+  "editable_slots": [
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "areas",
+      "type": "list",
+      "label": "Areas served",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

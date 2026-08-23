@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "services.sector_capabilities": {
+      "label": "Service capabilities",
+      "source": "business_research.services",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.services.sector_tabs",
+      "path": "sectors",
+      "value": "{{services.sector_capabilities}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Capability tabs must be selected from tenant services and should not reuse source-market categories unless verified."
+      }
+    }
+  ]
+}

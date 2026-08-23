@@ -1,0 +1,240 @@
+{
+  "id": "institutional_contact.reference",
+  "schema_version": 1,
+  "name": "Institutional mono reference contact page",
+  "description": "Source-backed contact-page decomposition with business details, compact form, map media, and direct contact actions.",
+  "status": "ready",
+  "modelled_after": [
+    "Harper Construction",
+    "Harper Construction Company",
+    "Harper Construction Company, Inc.",
+    "Harper",
+    "harperconstruction.com",
+    "www.harperconstruction.com",
+    "Jeff Harper",
+    "Ron Harper",
+    "Stephen Marble",
+    "Marble",
+    "San Diego",
+    "California",
+    "U.S. Army",
+    "US Army",
+    "Department of Navy",
+    "UC San Diego",
+    "SDSU",
+    "San Diego Sheriff",
+    "US Marine Corps",
+    "Marine Corps"
+  ],
+  "production_selectable": false,
+  "selection_visibility": "internal",
+  "theme": "institutional_mono",
+  "forms": [
+    {
+      "form_id": "institutional-contact",
+      "title": "Contact {{business_name}}",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "first_name",
+          "label": "First Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "last_name",
+          "label": "Last Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "email",
+          "label": "Email Address",
+          "type": "email",
+          "required": true
+        },
+        {
+          "id": "subject",
+          "label": "Subject",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "message",
+          "label": "Message",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "privacy_notice": "Contact details are used only to respond to your {{business_name}} enquiry."
+    }
+  ],
+  "pages": [
+    {
+      "key": "contact",
+      "path": "/contact",
+      "title": "Contact {{business_name}}",
+      "page_type": "quote_contact",
+      "seo": {
+        "title": "Contact {{business_name}}",
+        "description": "Contact {{business_name}} to discuss an upcoming project, employment, subcontracting, or current project questions."
+      },
+      "metadata": {
+        "source_url": "https://www.harperconstruction.com/contact",
+        "source_type": "live_website",
+        "source_platform": "Squarespace 7",
+        "source_form_id": "59039f90ff7c500bd3b65aa5",
+        "style_reference": "theme.institutional_mono",
+        "multipage_reference_family": "harper_construction"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.fixed_cta",
+          "props": {
+            "home_href": "/",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Projects",
+                "href": "/projects"
+              },
+              {
+                "label": "News",
+                "href": "/news"
+              },
+              {
+                "label": "Careers",
+                "href": "/careers"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact",
+                "active": true,
+                "cta": true
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.overlay_title",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "How Can We Help?",
+            "media": {
+              "url": "{{images.institutional_contact_hero}}",
+              "alt_text": "Construction project exterior"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/contact",
+              "section": "contact_intro",
+              "note": "Full-screen image intro uses the headline 'How Can We Help?' over _MG_9693.jpg."
+            }
+          ]
+        },
+        {
+          "component_id": "public.contact.form_location",
+          "props": {
+            "anchor_id": "details",
+            "form_id": "institutional-contact",
+            "title": "Contact",
+            "body": "Please feel free to call us to discuss your upcoming project. For inquiries about employment, subcontracting for us, or information about our current project, please use the form below so we can connect you to the best person to help you.",
+            "map_title": "Office map",
+            "show_form": true,
+            "submit_label": "Submit",
+            "submit_action": "create_lead",
+            "fields": [
+              {
+                "id": "first_name",
+                "label": "First Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": "last_name",
+                "label": "Last Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": "email",
+                "label": "Email Address",
+                "type": "email",
+                "required": true
+              },
+              {
+                "id": "subject",
+                "label": "Subject",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": "message",
+                "label": "Message",
+                "type": "textarea",
+                "required": true
+              }
+            ],
+            "privacy_notice": "Contact details are used only to respond to your {{business_name}} enquiry."
+          },
+          "source_refs": [
+            {
+              "url": "https://www.harperconstruction.com/contact",
+              "section": "contact_details",
+              "note": "Source contact details list Harper Construction Company, Inc., San Diego address, main phone number, map, and California license number."
+            },
+            {
+              "url": "https://www.harperconstruction.com/contact",
+              "section": "contact_form",
+              "note": "Source Squarespace form uses required First Name, Last Name, Email Address, Subject, and Message fields plus captcha."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.centered_social_nav",
+          "props": {
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "About",
+                "href": "/about"
+              },
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Projects",
+                "href": "/projects"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Contact",
+      "page_key": "contact",
+      "position": 1,
+      "key": "contact"
+    }
+  ]
+}

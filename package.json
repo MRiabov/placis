@@ -1,0 +1,26 @@
+{
+  "name": "placis",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "frontend-2:dev": "pnpm --dir frontend-2 dev",
+    "frontend-2:build": "pnpm --dir frontend-2 build",
+    "frontend-2:check": "pnpm --dir frontend-2 check",
+    "frontend-2:test": "pnpm --dir frontend-2 test",
+    "contractor-website:dev": "pnpm --dir apps/contractor-website cf:dev",
+    "contractor-website:build": "pnpm --dir apps/contractor-website build",
+    "contractor-website:check": "pnpm --dir apps/contractor-website check",
+    "contractor-website:cf:deploy:production": "pnpm --dir apps/contractor-website cf:deploy:production",
+    "contractor-website:cf:deploy:staging": "pnpm --dir apps/contractor-website cf:deploy:staging",
+    "contractor-website:deploy:local": "pnpm --dir apps/contractor-website deploy:local",
+    "contractor-website:cf:dev": "pnpm --dir apps/contractor-website cf:dev",
+    "contractor-website:cf:types": "pnpm --dir apps/contractor-website cf:types",
+    "website-components:check": "pnpm --dir packages/website-components check",
+    "contractor-website:bundle-boundary": "node scripts/check_contractor_website_bundle_boundary.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "id": "dark_serif_contact.reference",
+  "schema_version": 1,
+  "name": "Dark serif reference contact page",
+  "description": "Source-backed contact-page decomposition with appointment form, location details, proof metadata, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Big Oaks Construction",
+    "Big Oaks",
+    "bigoaksconstruction.com",
+    "www.bigoaksconstruction.com",
+    "Brannan Williams",
+    "Brannan",
+    "Monroe",
+    "Georgia",
+    "GA",
+    "Atlanta"
+  ],
+  "theme": "dark_serif",
+  "forms": [
+    {
+      "form_id": "dark-serif-appointment",
+      "title": "Book an appointment",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "name",
+          "label": "Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "email",
+          "label": "Email Address",
+          "type": "email",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "label": "Phone",
+          "type": "phone",
+          "required": true
+        },
+        {
+          "id": "message",
+          "label": "How Can We Help?",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "privacy_notice": "Appointment request details are used only to schedule a response."
+    }
+  ],
+  "pages": [
+    {
+      "key": "contact",
+      "path": "/contact/",
+      "title": "Contact - {{business_name}}",
+      "page_type": "quote_contact",
+      "seo": {
+        "title": "Contact - {{business_name}}",
+        "description": "Contact {{business_name}} to schedule a custom home, remodeling, or design-build consultation."
+      },
+      "metadata": {
+        "source_url": "https://www.bigoaksconstruction.com/contact",
+        "source_type": "live_website",
+        "source_platform": "Squarespace template 7",
+        "source_last_modified": "2018-12-05"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call",
+            "links": [
+              {
+                "label": "home",
+                "href": "/",
+                "active": false
+              },
+              {
+                "label": "about",
+                "href": "/about/",
+                "active": false
+              },
+              {
+                "label": "projects",
+                "href": "/clients/",
+                "active": false
+              },
+              {
+                "label": "contact",
+                "href": "/contact/",
+                "active": true
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "text_only",
+            "eyebrow": "Contact",
+            "headline": "Let’s chat."
+          }
+        },
+        {
+          "component_id": "public.form.lead",
+          "props": {
+            "layout": "contact_split",
+            "form_id": "dark-serif-contact",
+            "title": "Book an appointment",
+            "privacy_notice": "Use the form below to tell us about your inquiry, and we'll call you back to schedule an appointment. Please be as detailed as possible. Our general response time is one business day.",
+            "fields": [
+              {
+                "id": "first_name",
+                "label": "First Name",
+                "type": "text",
+                "required": true,
+                "width": "half"
+              },
+              {
+                "id": "last_name",
+                "label": "Last Name",
+                "type": "text",
+                "required": true,
+                "width": "half"
+              },
+              {
+                "id": "email",
+                "label": "Email Address",
+                "type": "email",
+                "required": true
+              },
+              {
+                "id": "phone",
+                "label": "Phone",
+                "type": "phone",
+                "required": true
+              },
+              {
+                "id": "message",
+                "label": "How Can We Help?",
+                "type": "textarea",
+                "required": true,
+                "description": "Please do not include confidential or sensitive information in your message."
+              },
+              {
+                "id": "extra",
+                "label": "",
+                "type": "text",
+                "required": false
+              }
+            ],
+            "submit_label": "Submit",
+            "contact_details": {
+              "layout": "location_contact",
+              "address_label": "Location",
+              "email_label": "Contact"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/contact",
+              "section": "appointment_form",
+              "note": "Contact page form includes Name, Email Address, Phone, and How Can We Help fields."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "links": [
+              {
+                "label": "home",
+                "href": "/"
+              },
+              {
+                "label": "about",
+                "href": "/about/"
+              },
+              {
+                "label": "services",
+                "href": "/#services"
+              },
+              {
+                "label": "clients",
+                "href": "/clients/"
+              },
+              {
+                "label": "news",
+                "href": "/news/"
+              },
+              {
+                "label": "contact",
+                "href": "/contact/"
+              }
+            ],
+            "description": "{{business_name}} is a full-service custom home builder that provides top quality energy efficient homes of all sizes.",
+            "legal_disclosure_lines": ["Powered by Squarespace"],
+            "copyright": ""
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Contact",
+      "page_key": "contact",
+      "position": 1,
+      "key": "contact"
+    }
+  ]
+}

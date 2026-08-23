@@ -1,0 +1,96 @@
+{
+  "id": "green_gold_careers.reference",
+  "schema_version": 1,
+  "status": "ready",
+  "production_selectable": true,
+  "selection_visibility": "public",
+  "deprecated": false,
+  "source_type": "source_backed_reference",
+  "modelled_after": [
+    "PCL Construction",
+    "PCL",
+    "pcl.com",
+    "www.pcl.com",
+    "Special Projects",
+    "North America",
+    "160 Front Street West",
+    "CAMH",
+    "Canada",
+    "United States",
+    "Australia"
+  ],
+  "theme": "green_gold",
+  "name": "Green gold reference careers page",
+  "description": "Source-backed careers-page decomposition with video feature, role links, training content, and CTA sections.",
+  "affinity_group": "green_gold.reference_family",
+  "companion_blueprints": [
+    "green_gold_home.reference",
+    "green_gold_services.reference",
+    "green_gold_work.reference",
+    "green_gold_about.reference",
+    "green_gold_contact.reference"
+  ],
+  "forms": [],
+  "pages": [
+    {
+      "key": "careers",
+      "path": "/careers",
+      "title": "Careers - {{business_name}}",
+      "page_type": "careers",
+      "seo": {
+        "title": "Careers - {{business_name}}",
+        "description": "Career paths, craft roles, student opportunities, and professional construction roles."
+      },
+      "metadata": {
+        "source_urls": [
+          "https://www.pcl.com/us/en/careers",
+          "https://www.pcl.com/us/en/careers/professionals",
+          "https://www.pcl.com/us/en/careers/considering-construction",
+          "https://www.pcl.com/us/en/careers/skilled-craft",
+          "https://www.pcl.com/us/en/careers/students"
+        ]
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.mega_menu",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}",
+            "home_href": "/"
+          }
+        },
+        {
+          "component_id": "public.media.video_feature",
+          "props": {
+            "eyebrow": "Careers",
+            "title": "A construction career with room to grow",
+            "body": "Use this page only for contractors actively recruiting with clear role categories.",
+            "layout": "stacked",
+            "poster": "{{images.careers_video_poster}}",
+            "actions": [
+              {
+                "label": "Professionals",
+                "href": "/careers#professionals"
+              },
+              {
+                "label": "Skilled Trades + Craft",
+                "href": "/careers#craft"
+              },
+              {
+                "label": "Students",
+                "href": "/careers#students"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.footer.multi_column",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}"
+          }
+        }
+      ]
+    }
+  ]
+}

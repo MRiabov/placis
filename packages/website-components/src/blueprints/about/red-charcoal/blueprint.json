@@ -1,0 +1,185 @@
+{
+  "id": "red_charcoal_about.reference",
+  "schema_version": 1,
+  "name": "Red charcoal reference about page",
+  "description": "Source-backed about-page decomposition with origin story, service proof, reviewable claims, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Roof Shield",
+    "RoofShield",
+    "roofshield",
+    "roofshield.ie",
+    "www.roofshield.ie",
+    "Tom O' Brien",
+    "Mary Sweeney",
+    "Steve Dennehy",
+    "Pat Finnerty",
+    "TJ McCarthy",
+    "Vincent Scott",
+    "John",
+    "Swords",
+    "Blanchardstown",
+    "Tallaght",
+    "Lucan",
+    "Clondalkin",
+    "Malahide"
+  ],
+  "theme": "red_charcoal",
+  "pages": [
+    {
+      "key": "about",
+      "path": "/about-us/",
+      "title": "About Us - {{business_name}}",
+      "page_type": "about",
+      "seo": {
+        "title": "About Us - {{business_name}}",
+        "description": "{{business_name}} services for customers around {{service_area}}."
+      },
+      "metadata": {
+        "source_url": "https://roofshield.ie/",
+        "source_section": "home_about",
+        "source_type": "live_website",
+        "source_platform": "WordPress 6.8 / Astra / Elementor 3.31",
+        "source_last_modified": "2026-06-09T11:04:47",
+        "source_note": "Roof Shield does not currently expose a standalone About page in the WordPress page list. This blueprint derives a standalone about route from the home-page about block."
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call Us",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "About",
+                "href": "/about-us/",
+                "active": true
+              },
+              {
+                "label": "Services",
+                "href": "/#services"
+              },
+              {
+                "label": "Gallery",
+                "href": "/gallery/"
+              },
+              {
+                "label": "Testimonials",
+                "href": "/testimonials/"
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "header",
+              "note": "About route uses the Roof Shield source header treatment with an added About navigation item for the generated standalone page."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "About {{business_name}}",
+            "primary_cta": {
+              "label": "Request a free quote",
+              "href": "/contact-us/"
+            },
+            "secondary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "media": {
+              "url": "{{images.roofing_project}}",
+              "alt_text": "{{business_name}} roofing project"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "about",
+              "note": "Generated standalone route hero uses the source home-page about image from post-26 elements ac30c82/565d91e."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "anchor_id": "about",
+            "title": "{{business_name}}",
+            "subheading": "Roofing Experts in {{service_area}}",
+            "paragraphs": [
+              "At {{business_name}}, we understand the importance of a sturdy and reliable roof over your head. Serving {{service_area}}, we specialise in providing top-notch roofing solutions tailored to meet your specific needs. Whether it's a minor repair or a complete roof installation, our team of experienced professionals is dedicated to ensuring quality workmanship and customer satisfaction."
+            ],
+            "image_url": "{{images.roofing_about_image}}",
+            "alt_text": "{{business_name}} roofing project",
+            "image_position": "right"
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/",
+              "section": "about",
+              "note": "Extracted from the source home-page about block: title 'Roof Shield', subheading 'Roofing Experts in Dublin', and one paragraph of body copy."
+            }
+          ]
+        },
+        {
+          "component_id": "public.cta.band",
+          "props": {
+            "anchor_id": "about-quote",
+            "title": "Contact {{business_name}} for a free consultation and practical roofing advice.",
+            "actions": [
+              {
+                "label": "{{phone}}",
+                "href": "tel:{{phone}}"
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "contact_line": "{{address}}",
+            "address": "{{address}}"
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Home",
+      "path": "/",
+      "position": 1,
+      "key": "home"
+    },
+    {
+      "location": "primary",
+      "label": "About Us",
+      "page_key": "about",
+      "position": 2,
+      "key": "about"
+    },
+    {
+      "location": "primary",
+      "label": "Contact Us",
+      "path": "/contact-us/",
+      "position": 3,
+      "key": "contact"
+    }
+  ]
+}

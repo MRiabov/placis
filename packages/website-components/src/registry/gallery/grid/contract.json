@@ -1,0 +1,122 @@
+{
+  "id": "public.gallery.grid",
+  "aliases": ["public.gallery.v1"],
+  "schema_version": 1,
+  "display_name": "Gallery Grid",
+  "family": "gallery",
+  "variant": "grid",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "layout": {
+        "type": "string",
+        "enum": ["grid", "carousel", "placeholder_lines", "packed"]
+      },
+      "carousel_label": {
+        "type": "string"
+      },
+      "slides_per_view": {
+        "type": "number"
+      },
+      "desktop_slides_per_view": {
+        "type": "number"
+      },
+      "mobile_slides_per_view": {
+        "type": "number"
+      },
+      "show_controls": {
+        "type": "boolean"
+      },
+      "show_dots": {
+        "type": "boolean"
+      },
+      "show_captions": {
+        "type": "boolean"
+      },
+      "anchor_id": {
+        "type": "string"
+      },
+      "items": {
+        "oneOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "caption": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "asset_id": {
+                  "type": "string"
+                },
+                "image_file_id": {
+                  "type": "string"
+                },
+                "image_url": {
+                  "type": "string"
+                },
+                "generated_image_url": {
+                  "type": "string"
+                },
+                "alt_text": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          {
+            "type": "string",
+            "pattern": "^\\{\\{\\s*projects\\.[a-zA-Z0-9_.]+\\s*\\}\\}$"
+          }
+        ]
+      },
+      "placeholder_count": {
+        "type": "number"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["items"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Gallery items",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

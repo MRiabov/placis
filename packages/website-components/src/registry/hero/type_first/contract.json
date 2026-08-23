@@ -1,0 +1,80 @@
+{
+  "id": "public.hero.type_first",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Type-first Hero",
+  "family": "hero",
+  "variant": "type_first",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "headline": {
+        "type": "string"
+      },
+      "subheadline": {
+        "type": "string"
+      },
+      "primary_cta": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string",
+            "enum": ["same_tab", "new_tab"]
+          }
+        },
+        "additionalProperties": true,
+        "required": ["label", "href"]
+      },
+      "proof_line": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["headline"]
+  },
+  "editable_slots": [
+    {
+      "key": "headline",
+      "type": "text",
+      "label": "Headline",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "subheadline",
+      "type": "textarea",
+      "label": "Subheadline",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "headline",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "subheadline",
+      "value": "{{description}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

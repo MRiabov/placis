@@ -1,0 +1,227 @@
+{
+  "id": "red_charcoal_contact.reference",
+  "schema_version": 1,
+  "name": "Red charcoal reference contact page",
+  "description": "Source-backed contact-page decomposition with message form, location details, direct contact actions, and proof notes.",
+  "status": "ready",
+  "modelled_after": [
+    "Roof Shield",
+    "RoofShield",
+    "roofshield",
+    "roofshield.ie",
+    "www.roofshield.ie",
+    "Tom O' Brien",
+    "Mary Sweeney",
+    "Steve Dennehy",
+    "Pat Finnerty",
+    "TJ McCarthy",
+    "Vincent Scott",
+    "John",
+    "Swords",
+    "Blanchardstown",
+    "Tallaght",
+    "Lucan",
+    "Clondalkin",
+    "Malahide"
+  ],
+  "theme": "red_charcoal",
+  "forms": [
+    {
+      "form_id": "red-charcoal-contact",
+      "title": "Contact {{business_name}}",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "first_name",
+          "label": "First Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "last_name",
+          "label": "Last Name",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "type": "email",
+          "required": true
+        },
+        {
+          "id": "phone",
+          "label": "Phone",
+          "type": "phone",
+          "required": true
+        },
+        {
+          "id": "message",
+          "label": "Message",
+          "type": "textarea",
+          "required": false
+        }
+      ],
+      "privacy_notice": "Contact details are used only to respond to your {{business_name}} enquiry."
+    }
+  ],
+  "pages": [
+    {
+      "key": "contact",
+      "path": "/contact-us/",
+      "title": "Contact Us - {{business_name}}",
+      "page_type": "quote_contact",
+      "seo": {
+        "title": "Contact Us - {{business_name}}",
+        "description": "{{address}}"
+      },
+      "metadata": {
+        "source_url": "https://roofshield.ie/contact-us/",
+        "source_type": "live_website",
+        "source_platform": "WordPress 6.8 / Astra / Elementor 3.31",
+        "source_last_modified": "2025-12-08T12:26:35",
+        "source_contact_note": "The contact page currently uses different phone numbers from the home/service pages. Preserve as source content until reviewed."
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call Us",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "Services",
+                "href": "/#services"
+              },
+              {
+                "label": "Gallery",
+                "href": "/gallery/"
+              },
+              {
+                "label": "Testimonials",
+                "href": "/testimonials/"
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/",
+                "active": true
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "Contact {{business_name}}",
+            "subheadline": "Request a roofing quote, arrange a consultation, or send the team a message.",
+            "primary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "secondary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "media": {
+              "url": "{{images.roofing_about_image_contact}}",
+              "alt_text": "{{business_name}} contact"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/contact-us/",
+              "section": "contact_hero",
+              "note": "The source contact page is mostly address/contact text plus a simple Elementor form. The upgraded version gives the page a clearer hero and contact hierarchy."
+            }
+          ]
+        },
+        {
+          "component_id": "public.form.lead",
+          "props": {
+            "form_id": "red-charcoal-contact",
+            "title": "Send {{business_name}} a Message",
+            "submit_label": "Send",
+            "submit_action": "create_lead",
+            "fields": [
+              {
+                "id": "first_name",
+                "label": "First Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": "last_name",
+                "label": "Last Name",
+                "type": "text",
+                "required": false
+              },
+              {
+                "id": "email",
+                "label": "Email",
+                "type": "email",
+                "required": true
+              },
+              {
+                "id": "phone",
+                "label": "Phone",
+                "type": "phone",
+                "required": true
+              },
+              {
+                "id": "message",
+                "label": "Message",
+                "type": "textarea",
+                "required": false
+              }
+            ],
+            "privacy_notice": "Contact details are used only to respond to your {{business_name}} enquiry.",
+            "contact_details": {
+              "address": "{{address}}",
+              "hours": "Opening hours: {{opening_hours}}"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/contact-us/",
+              "section": "contact_form",
+              "note": "Source form labels: First Name, Last Name, Email, Phone, Message, Send."
+            },
+            {
+              "url": "https://roofshield.ie/contact-us/",
+              "section": "contact_details",
+              "note": "Extracted source contact fields are mapped to tenant variables in the upgraded form section."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "contact_line": "{{address}}",
+            "copyright": "Copyright 2025 {{business_name}}. All rights reserved."
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Home",
+      "path": "/",
+      "position": 1,
+      "key": "home"
+    },
+    {
+      "location": "primary",
+      "label": "Contact Us",
+      "page_key": "contact",
+      "position": 2,
+      "key": "contact"
+    }
+  ]
+}

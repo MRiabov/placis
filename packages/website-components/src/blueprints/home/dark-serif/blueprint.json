@@ -1,0 +1,324 @@
+{
+  "id": "dark_serif_home.reference",
+  "schema_version": 1,
+  "name": "Dark serif reference home",
+  "description": "Source-backed home-page decomposition with dark image banner, serif headings, sparse service labels, project proof, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Big Oaks Construction",
+    "Big Oaks",
+    "bigoaksconstruction.com",
+    "www.bigoaksconstruction.com",
+    "Brannan Williams",
+    "Brannan",
+    "Monroe",
+    "Georgia",
+    "GA",
+    "Atlanta"
+  ],
+  "theme": "dark_serif",
+  "forms": [
+    {
+      "form_id": "dark-serif-inquiry",
+      "title": "Project Inquiry",
+      "submit_action": "create_lead",
+      "fields": [
+        {
+          "id": "name",
+          "label": "Name",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "email",
+          "label": "Email Address",
+          "type": "email",
+          "required": true
+        },
+        {
+          "id": "message",
+          "label": "How Can We Help?",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "privacy_notice": "Inquiry details are used only to respond to the project request."
+    }
+  ],
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "title": "{{business_name}} | Full-service custom home builder",
+      "page_type": "home",
+      "seo": {
+        "title": "{{business_name}} | Full-service custom home builder",
+        "description": "{{business_name}} builds custom homes, remodeling projects, and design-build projects across {{service_area}}."
+      },
+      "metadata": {
+        "source_url": "https://www.bigoaksconstruction.com/",
+        "source_type": "live_website",
+        "source_platform": "Squarespace template 7",
+        "source_last_modified": "2023-06-24",
+        "source_sitemap_url": "https://www.bigoaksconstruction.com/sitemap.xml"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call",
+            "links": [
+              {
+                "label": "home",
+                "href": "/",
+                "active": true
+              },
+              {
+                "label": "about",
+                "href": "/about/",
+                "active": false
+              },
+              {
+                "label": "projects",
+                "href": "/clients/",
+                "active": false
+              },
+              {
+                "label": "contact",
+                "href": "/contact/",
+                "active": false
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/",
+              "section": "header",
+              "note": "Desktop and mobile header: logo/wordmark, Home/About/Projects/Contact primary links, and phone secondary link."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "center_overlay",
+            "eyebrow": "Established 2016",
+            "headline": "{{business_name}}",
+            "actions": [],
+            "media": {
+              "image_url": "{{images.dark_serif_hero_pattern}}",
+              "alt_text": "Blue patterned {{business_name}} hero background"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/",
+              "section": "hero",
+              "note": "Squarespace page banner with hero_pattern.png, collection title 'Established 2016', and description 'Big Oaks Construction'."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "layout": "balanced",
+            "title": "Full-service custom home builder for your future home.",
+            "paragraphs": [
+              "{{business_name}} builds custom homes across {{service_area}}. We bring extensive experience and professionalism to every home we construct.",
+              "With clear planning and careful coordination, each project is scoped around the client's goals, budget, and timeline.",
+              "Get in touch with us to set up a consultation, or use the contact form at the bottom of this page to contact us."
+            ],
+            "href": "/about/",
+            "link_label": "Learn More",
+            "side_panel": {
+              "title": "Contact",
+              "rows": [
+                {
+                  "label": "Location",
+                  "value": "{{address}}"
+                },
+                {
+                  "label": "Contact",
+                  "value": "{{email}}\n{{phone}}"
+                }
+              ]
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/",
+              "section": "intro",
+              "note": "Left seven-column text block beneath the banner, followed by a square outline Learn More button."
+            }
+          ]
+        },
+        {
+          "component_id": "public.services.simple_list",
+          "props": {
+            "anchor_id": "services",
+            "title": "Services",
+            "services": [
+              {
+                "name": "Remodeling"
+              },
+              {
+                "name": "Custom Homes"
+              },
+              {
+                "name": "Design Builds"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/",
+              "section": "services",
+              "note": "Three service labels separated by horizontal rules: Remodeling, Custom Homes, and Design Builds."
+            }
+          ]
+        },
+        {
+          "component_id": "public.statement.words",
+          "props": {
+            "words": [
+              "Where we love is home-home that our feet may leave, but not our hearts."
+            ],
+            "description": "- OLIVER WENDELL HOLMES, SR."
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/",
+              "section": "quote",
+              "note": "Centered quotation block after the service labels."
+            }
+          ]
+        },
+        {
+          "component_id": "public.form.lead",
+          "props": {
+            "layout": "centered",
+            "form_id": "dark-serif-inquiry",
+            "title": "Let's Chat.",
+            "privacy_notice": "Use the form below to contact us regarding your inquiry. Please be as detailed as possible. Include the location of the new home along with any specific details. To help us best service your inquiry, we recommend that you first describe the type of home you're wanting built. You may also email or call us to make an appointment.",
+            "fields": [
+              {
+                "id": "first_name",
+                "label": "First Name",
+                "type": "text",
+                "required": true,
+                "width": "half"
+              },
+              {
+                "id": "last_name",
+                "label": "Last Name",
+                "type": "text",
+                "required": true,
+                "width": "half"
+              },
+              {
+                "id": "email",
+                "label": "Email Address",
+                "type": "email",
+                "required": true
+              },
+              {
+                "id": "message",
+                "label": "How Can We Help?",
+                "type": "textarea",
+                "required": true,
+                "description": "Please do not include confidential or sensitive information in your message."
+              },
+              {
+                "id": "extra",
+                "label": "",
+                "type": "text",
+                "required": false
+              }
+            ],
+            "submit_label": "Submit",
+            "contact_details": {}
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/",
+              "section": "home_form",
+              "note": "Squarespace form block with Name, Email Address, and How Can We Help fields."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "links": [
+              {
+                "label": "home",
+                "href": "/"
+              },
+              {
+                "label": "about",
+                "href": "/about/"
+              },
+              {
+                "label": "services",
+                "href": "/#services"
+              },
+              {
+                "label": "clients",
+                "href": "/clients/"
+              },
+              {
+                "label": "news",
+                "href": "/news/"
+              },
+              {
+                "label": "contact",
+                "href": "/contact/"
+              }
+            ],
+            "description": "{{business_name}} is a full-service custom home builder that provides top quality energy efficient homes of all sizes.",
+            "legal_disclosure_lines": ["Powered by Squarespace"],
+            "copyright": ""
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/",
+              "section": "footer",
+              "note": "Footer includes Licensed in Georgia heading, small license image, text links, contact line, address, and short business description."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Home",
+      "page_key": "home",
+      "position": 1,
+      "key": "home"
+    },
+    {
+      "location": "primary",
+      "label": "About",
+      "path": "/about/",
+      "position": 2,
+      "key": "about"
+    },
+    {
+      "location": "primary",
+      "label": "Projects",
+      "path": "/clients/",
+      "position": 3,
+      "key": "projects"
+    },
+    {
+      "location": "primary",
+      "label": "Contact",
+      "path": "/contact/",
+      "position": 4,
+      "key": "contact"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "id": "public.hero.form",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Hero With Form",
+  "family": "hero",
+  "variant": "form",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "headline": {
+        "type": "string"
+      },
+      "subheadline": {
+        "type": "string"
+      },
+      "form_id": {
+        "type": "string"
+      },
+      "privacy_notice": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["headline", "form_id"]
+  },
+  "editable_slots": [
+    {
+      "key": "headline",
+      "type": "text",
+      "label": "Headline",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "subheadline",
+      "type": "textarea",
+      "label": "Subheadline",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "form_id",
+      "type": "form",
+      "label": "Lead form",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "layout",
+      "type": "enum",
+      "label": "Layout",
+      "values": ["default", "media_left", "media_right", "centered"],
+      "default": "default"
+    },
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

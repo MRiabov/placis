@@ -1,0 +1,148 @@
+{
+  "id": "public.content.story_split",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Story Split",
+  "family": "content",
+  "variant": "story_split",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      },
+      "paragraphs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "layout": {
+        "type": "string",
+        "enum": ["default", "carousel"]
+      },
+      "stories": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            },
+            "paragraphs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "alt_text": {
+              "type": "string"
+            },
+            "profile": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      },
+      "image_url": {
+        "type": "string"
+      },
+      "alt_text": {
+        "type": "string"
+      },
+      "profile": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "href": {
+        "type": "string"
+      },
+      "link_label": {
+        "type": "string"
+      },
+      "image_position": {
+        "type": "string",
+        "enum": ["left", "right"]
+      }
+    },
+    "additionalProperties": true,
+    "anyOf": [
+      {
+        "required": ["title"]
+      },
+      {
+        "required": ["stories"]
+      }
+    ]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "eyebrow",
+      "type": "text",
+      "label": "Eyebrow",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "paragraphs",
+      "type": "list",
+      "label": "Paragraphs",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "image_url",
+      "type": "image",
+      "label": "Image",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "layout",
+      "type": "enum",
+      "label": "Layout",
+      "values": ["default", "carousel"],
+      "default": "default"
+    },
+    {
+      "key": "image_position",
+      "type": "enum",
+      "label": "Image position",
+      "values": ["left", "right"],
+      "default": "left"
+    }
+  ]
+}

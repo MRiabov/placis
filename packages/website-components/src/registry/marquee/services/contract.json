@@ -1,0 +1,32 @@
+{
+  "id": "public.marquee.services",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Marquee Services",
+  "family": "marquee",
+  "variant": "services",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1
+      }
+    },
+    "additionalProperties": true,
+    "required": ["items"]
+  },
+  "editable_slots": [
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Ticker items",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": []
+}

@@ -1,4 +1,4 @@
-import type { PublicSiteManifest, PublicSiteSection } from "@placis/public-site-components";
+import type { PublicSiteManifest, PublicSiteSection } from "@placis/website-components";
 
 import { currentOrigin } from "@/shared/lib/navigation";
 import type { CmsPageProjection, CmsPageSummary, CmsSection, CmsSlot } from "../api/cms";

@@ -1,0 +1,125 @@
+{
+  "id": "green_gold_services.reference",
+  "schema_version": 1,
+  "status": "ready",
+  "production_selectable": true,
+  "selection_visibility": "public",
+  "deprecated": false,
+  "source_type": "source_backed_reference",
+  "modelled_after": [
+    "PCL Construction",
+    "PCL",
+    "pcl.com",
+    "www.pcl.com",
+    "Special Projects",
+    "North America",
+    "160 Front Street West",
+    "CAMH",
+    "Canada",
+    "United States",
+    "Australia"
+  ],
+  "theme": "green_gold",
+  "name": "Green gold reference services page",
+  "description": "Source-backed services-page decomposition with planning-through-delivery capability groups, media hero, service tabs, and CTA sections.",
+  "affinity_group": "green_gold.reference_family",
+  "companion_blueprints": [
+    "green_gold_home.reference",
+    "green_gold_work.reference",
+    "green_gold_about.reference",
+    "green_gold_careers.reference",
+    "green_gold_contact.reference"
+  ],
+  "forms": [],
+  "pages": [
+    {
+      "key": "services",
+      "path": "/services",
+      "title": "Services - {{business_name}}",
+      "page_type": "service",
+      "seo": {
+        "title": "Construction Services - {{business_name}}",
+        "description": "Construction, preconstruction, delivery, digital construction, and sustainable construction services."
+      },
+      "metadata": {
+        "source_urls": [
+          "https://www.pcl.com/us/en/services/construction-services",
+          "https://www.pcl.com/us/en/services/preconstruction",
+          "https://www.pcl.com/us/en/services/delivery-methods",
+          "https://www.pcl.com/us/en/services/digital-construction-services",
+          "https://www.pcl.com/us/en/services/sustainable-construction-services"
+        ]
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.mega_menu",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}",
+            "home_href": "/"
+          }
+        },
+        {
+          "component_id": "public.hero.media_carousel",
+          "props": {
+            "headline": "Services from planning through delivery",
+            "subheadline": "A service landing page for reference construction capability families.",
+            "primary_cta": {
+              "label": "Plan a project",
+              "href": "/contact"
+            },
+            "slides": [
+              {
+                "label": "Construction",
+                "headline": "Construction services",
+                "media": {
+                  "url": "{{images.service_construction}}"
+                }
+              },
+              {
+                "label": "Preconstruction",
+                "headline": "Preconstruction",
+                "media": {
+                  "url": "{{images.service_preconstruction}}"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.services.tabs",
+          "props": {
+            "title": "How we support the work",
+            "services": [
+              {
+                "title": "{{services.delivery_methods.0.title}}",
+                "description": "{{services.delivery_methods.0.description}}",
+                "href": "{{services.delivery_methods.0.href}}",
+                "image": "{{services.delivery_methods.0.image}}"
+              },
+              {
+                "title": "{{services.delivery_methods.1.title}}",
+                "description": "{{services.delivery_methods.1.description}}",
+                "href": "{{services.delivery_methods.1.href}}",
+                "image": "{{services.delivery_methods.1.image}}"
+              },
+              {
+                "title": "{{services.delivery_methods.2.title}}",
+                "description": "{{services.delivery_methods.2.description}}",
+                "href": "{{services.delivery_methods.2.href}}",
+                "image": "{{services.delivery_methods.2.image}}"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.footer.multi_column",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}"
+          }
+        }
+      ]
+    }
+  ]
+}

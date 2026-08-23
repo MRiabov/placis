@@ -1,0 +1,231 @@
+.public-theme-red-charcoal .public-faq-list {
+  background: var(--public-surface);
+  padding-bottom: 86px;
+  padding-top: 86px;
+}
+
+.public-theme-red-charcoal .public-faq-list .public-site-shell {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  max-width: 850px;
+  padding: 0 20px;
+}
+
+.public-theme-red-charcoal .public-faq-list .public-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: lowercase;
+}
+
+.public-theme-red-charcoal .public-faq-list h2 {
+  font-family: var(--public-font-heading);
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  font-weight: 800;
+}
+
+.public-theme-red-charcoal .public-faq-list__items {
+  border-top: 2px solid var(--public-text);
+  margin-top: 28px;
+}
+
+.public-theme-red-charcoal .public-faq-list__item {
+  border-bottom: 1px solid var(--public-border);
+}
+
+.public-theme-red-charcoal .public-faq-list__item[open] {
+  padding-bottom: 22px;
+}
+
+.public-theme-red-charcoal .public-faq-list__summary {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-family: var(--public-font-heading);
+  font-weight: 700;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.public-theme-red-charcoal .public-faq-list__summary::-webkit-details-marker {
+  display: none;
+}
+
+.public-theme-red-charcoal .public-faq-list__summary::after {
+  color: var(--public-accent);
+  content: "+";
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-left: 24px;
+}
+
+.public-theme-red-charcoal
+  .public-faq-list__item[open]
+  .public-faq-list__summary::after {
+  content: "−";
+}
+
+.public-theme-red-charcoal .public-faq-list__answer {
+  max-width: 720px;
+}
+
+.public-theme-red-charcoal .public-cta-band {
+  background: var(--public-dark);
+  border-bottom: 6px solid var(--public-accent);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 64px 0;
+  text-align: left;
+}
+
+.public-theme-red-charcoal .public-cta-band__inner {
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.public-theme-red-charcoal .public-cta-band__actions {
+  justify-content: flex-end;
+}
+
+.public-theme-red-charcoal .public-cta-band h2 {
+  color: #ffffff;
+  font-family: var(--public-font-heading);
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.2;
+  max-width: 620px;
+}
+
+.public-theme-red-charcoal .public-cta-band--long-title h2 {
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  line-height: 1.35;
+  max-width: 720px;
+}
+
+.public-theme-red-charcoal .public-cta-band a {
+  align-items: center;
+  background: transparent;
+  border: 1px solid #ffffff;
+  border-radius: 23px;
+  color: #ffffff;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 700;
+  justify-content: center;
+  letter-spacing: 0.025em;
+  line-height: 1;
+  min-height: 40px;
+  padding-left: 22px;
+  padding-right: 22px;
+  text-transform: none;
+}
+
+.public-theme-red-charcoal .public-proof-testimonials {
+  background: #ffffff;
+  color: var(--public-text);
+  padding-bottom: 92px;
+  padding-top: 90px;
+}
+
+.public-theme-red-charcoal .public-proof-testimonials h2 {
+  color: var(--public-text);
+  font-family: var(--public-font-heading);
+  font-size: clamp(2.2rem, 4vw, 3.35rem);
+  font-weight: 800;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.public-theme-red-charcoal .public-proof-testimonials .grid {
+  align-items: stretch;
+  column-gap: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  row-gap: 22px;
+}
+
+.public-theme-red-charcoal .public-proof-testimonials figure {
+  background: #ffffff;
+  border: 1px solid var(--public-border);
+  border-radius: 8px;
+  color: var(--public-text);
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  min-height: 225px;
+  padding: 24px;
+}
+
+.public-theme-red-charcoal .public-proof-testimonials figure:first-child {
+  grid-row: auto;
+  padding: 24px;
+}
+
+.public-theme-red-charcoal
+  .public-proof-testimonials
+  figure:first-child
+  blockquote {
+  color: var(--public-text);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.65;
+}
+
+.public-theme-red-charcoal .public-proof-testimonials blockquote {
+  color: var(--public-muted);
+  flex: 1;
+  margin-top: 14px;
+}
+
+.public-theme-red-charcoal .public-proof-testimonials figcaption {
+  align-items: center;
+  border-top: 1px solid var(--public-border);
+  color: var(--public-text);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-top: 22px;
+  padding-top: 16px;
+}
+
+.public-theme-red-charcoal .public-testimonial-rating {
+  color: #fbbc05;
+  display: flex;
+  font-size: 1.05rem;
+  gap: 2px;
+  line-height: 1;
+}
+
+.public-theme-red-charcoal .public-testimonial-rating span:not(.is-filled) {
+  color: var(--public-border);
+}
+
+.public-theme-red-charcoal .public-testimonial-source {
+  align-items: center;
+  color: var(--public-muted);
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 700;
+  gap: 8px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.public-theme-red-charcoal .public-testimonial-google-icon {
+  display: block;
+  height: 18px;
+  width: 18px;
+}
+
+.public-theme-red-charcoal .public-footer {
+  color: #ffffff;
+}
+
+.public-theme-red-charcoal .public-footer__inner {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.public-theme-red-charcoal .public-footer__brand img {
+  background: #ffffff;
+  max-width: 210px;
+}

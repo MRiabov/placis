@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "phone": {
+      "label": "Phone",
+      "source": "business_profile.phone",
+      "type": "text"
+    },
+    "email": {
+      "label": "Email",
+      "source": "business_profile.email",
+      "type": "text"
+    },
+    "address": {
+      "label": "Address",
+      "source": "business_profile.address",
+      "type": "text"
+    },
+    "images.logo": {
+      "label": "Logo",
+      "source": "business_assets.logo",
+      "type": "image"
+    },
+    "services.featured": {
+      "label": "Selected services",
+      "source": "business_research.services",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.gallery.grid",
+      "path": "items",
+      "value": "{{services.featured}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Service categories must be selected from tenant capabilities and should not reuse the source site's construction-delivery taxonomy unless it fits.",
+        "fallback_value": [
+          {
+            "name": "Delivery Methods",
+            "description": "Collaborative delivery planning matched to owner needs, schedule, risk, and project complexity.",
+            "image_url": "{{images.institutional_service_delivery_methods}}",
+            "alt_text": "Construction delivery planning",
+            "href": "/services#delivery-methods",
+            "cta_label": "Delivery Methods"
+          },
+          {
+            "name": "Preconstruction",
+            "description": "Budgeting, estimating, constructability review, scheduling, and early project planning before construction starts.",
+            "image_url": "{{images.institutional_service_preconstruction}}",
+            "alt_text": "Preconstruction planning",
+            "href": "/services#preconstruction",
+            "cta_label": "Preconstruction"
+          },
+          {
+            "name": "Building Information Modeling",
+            "description": "Model-based coordination to improve planning, communication, and construction execution.",
+            "image_url": "{{images.institutional_service_bim}}",
+            "alt_text": "Building information modeling",
+            "href": "/services#bim",
+            "cta_label": "BIM"
+          },
+          {
+            "name": "Construction",
+            "description": "Field execution, project management, subcontractor coordination, and owner communication through completion.",
+            "image_url": "{{images.institutional_service_construction}}",
+            "alt_text": "Active construction project",
+            "href": "/services#construction",
+            "cta_label": "Construction"
+          },
+          {
+            "name": "Safety",
+            "description": "Safety planning and jobsite practices that protect crews, owners, and the surrounding community.",
+            "image_url": "{{images.institutional_service_safety}}",
+            "alt_text": "Construction safety activity",
+            "href": "/services#safety",
+            "cta_label": "Safety"
+          },
+          {
+            "name": "Sustainability",
+            "description": "Construction practices and project choices that support durable, resource-aware outcomes.",
+            "image_url": "{{images.institutional_service_sustainability}}",
+            "alt_text": "Sustainable construction project",
+            "href": "/services#sustainability",
+            "cta_label": "Sustainability"
+          },
+          {
+            "name": "Design Management",
+            "description": "Design coordination and constructability management that keep the project team aligned.",
+            "image_url": "{{images.institutional_service_design_management}}",
+            "alt_text": "Design management meeting",
+            "href": "/services#design-management",
+            "cta_label": "Design Management"
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "address",
+      "value": "{{address}}"
+    }
+  ]
+}

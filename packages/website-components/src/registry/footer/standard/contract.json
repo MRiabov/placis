@@ -1,0 +1,269 @@
+{
+  "id": "public.footer.standard",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Standard Footer",
+  "family": "footer",
+  "variant": "standard",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "business_name": {
+        "type": "string"
+      },
+      "logo_url": {
+        "type": "string"
+      },
+      "logo": {
+        "type": ["object", "string"],
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "alt_text": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "canonical_name": {
+            "type": "string"
+          },
+          "review_status": {
+            "type": "string"
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["label"]
+        }
+      },
+      "service_links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["label"]
+        }
+      },
+      "legal_links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["label"]
+        }
+      },
+      "contact_summary": {
+        "type": "string"
+      },
+      "contact_line": {
+        "type": "string"
+      },
+      "hours": {
+        "type": "string"
+      },
+      "address": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "badges": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "asset_id": {
+              "type": "string"
+            },
+            "file_id": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "generated_image_url": {
+              "type": "string"
+            },
+            "alt": {
+              "type": "string"
+            },
+            "alt_text": {
+              "type": "string"
+            },
+            "focal_point": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "copyright": {
+        "type": "string"
+      },
+      "legal_disclosure_lines": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "company_registration_number": {
+        "type": "string"
+      },
+      "vat_number": {
+        "type": "string"
+      },
+      "registered_office": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "business_name",
+      "type": "text",
+      "label": "Business name",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "logo",
+      "type": "image",
+      "label": "Logo",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "links",
+      "type": "list",
+      "label": "Footer links",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "service_links",
+      "type": "list",
+      "label": "Service links",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "legal_disclosure_lines",
+      "type": "list",
+      "label": "Legal disclosure lines",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "company_registration_number",
+      "type": "text",
+      "label": "Company registration number",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "vat_number",
+      "type": "text",
+      "label": "VAT number",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "registered_office",
+      "type": "text",
+      "label": "Registered office",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "logo",
+      "value": "{{images.logo}}"
+    },
+    {
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "path": "email",
+      "value": "{{email}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}
