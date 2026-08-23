@@ -24,6 +24,7 @@ whole system.
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (`frontend-2`) | Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; the CMS, onboarding, website preview; reused mostly, adapted to the huma OpenAPI |
 | Contractor website (`apps/contractor-website`) | Astro with React islands (Cloudflare Workers) — shows every contractor’s live website; website components in `packages/website-components` |
+| Placis website (`apps/placis-website`) | Astro `output: 'static'` — Placis’s own site; `astro build` uploaded to R2. Not in the repo yet. Serve path: [Placis website Cloudflare](features/placis-website/cloudflare.md) |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 ## Module layout
@@ -70,6 +71,7 @@ internal/
 migrations/       # goose SQL migrations (greenfield)
 apps/
   contractor-website/  # Astro + React islands (Cloudflare Workers); one Worker for every tenant
+  placis-website/      # Astro static (not in the repo yet); R2 origin for placis.com
 packages/
   website-components/  # website templates, website component renderers + contract.json, website style catalog presets
 catalog/          # later: typed structs dumped to JSON; first-pass JSON sidecars live in packages/website-components
@@ -116,7 +118,8 @@ guard applies to it too (see `ci-cd.md`).
 
 ## Processes
 
-Two backend processes share one database, and two frontend apps talk to the API:
+Two backend processes share one database. `frontend-2` and the contractor website talk to
+the API. The Placis website is a separate static origin and does not call Go.
 
 1. `cmd/api` — the Go HTTP API. Completes requests quickly and persists intent.
 2. `cmd/worker` — runs `River` jobs: AI generation, business research, file processing,
@@ -130,6 +133,9 @@ Two backend processes share one database, and two frontend apps talk to the API:
    cuts: [contractor-website-debloat.md](features/website/contractor-website-debloat.md).
    Locked serve path:
    [website Cloudflare](features/website/cloudflare.md).
+5. **Placis website** (`apps/placis-website`) — Astro static build uploaded to R2; hostname
+   `placis.com`. No Worker. Not in the repo yet. Locked serve path:
+   [Placis website Cloudflare](features/placis-website/cloudflare.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
 work enqueued, and the request returned — see
@@ -175,7 +181,10 @@ The Go backend loads and validates them; it must not hand-duplicate the struct s
 
 ## Deployment
 
-Railway containers for `cmd/api` and `cmd/worker`; `frontend-2` builds to static assets. Cloudflare
-Workers + R2 for the contractor website (one Worker, prebuilt HTML in `latest/`). Local infra
-(Postgres, MinIO) via Docker; the API, worker, `frontend-2`, and `wrangler dev` (Miniflare R2 on)
-run directly. See [website Cloudflare](features/website/cloudflare.md).
+Railway containers for `cmd/api` and `cmd/worker`; `frontend-2` builds to static assets.
+Cloudflare Workers + R2 for the contractor website (one Worker, prebuilt HTML in
+`latest/`). The Placis website is an Astro static build uploaded to its own R2 buckets;
+`placis.com` is the hostname on that bucket (no Worker). Local infra (Postgres, MinIO) via
+Docker; the API, worker, `frontend-2`, and `wrangler dev` (Miniflare R2 on) run directly.
+See [website Cloudflare](features/website/cloudflare.md) and
+[Placis website Cloudflare](features/placis-website/cloudflare.md).
