@@ -1,0 +1,159 @@
+{
+  "id": "public.navigation.standard",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Standard Navigation",
+  "family": "navigation",
+  "variant": "standard",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "business_name": {
+        "type": "string"
+      },
+      "logo_url": {
+        "type": "string"
+      },
+      "logo": {
+        "type": ["object", "string"],
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "alt_text": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "canonical_name": {
+            "type": "string"
+          },
+          "review_status": {
+            "type": "string"
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "home_href": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "mobile_phone_label": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "social_label": {
+        "type": "string"
+      },
+      "links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["label"]
+        }
+      },
+      "service_links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["label"]
+        }
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "business_name",
+      "type": "text",
+      "label": "Business name",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "logo",
+      "type": "image",
+      "label": "Logo",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "links",
+      "type": "list",
+      "label": "Navigation links",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "service_links",
+      "type": "list",
+      "label": "Service links",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "logo",
+      "value": "{{images.logo}}"
+    },
+    {
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "path": "email",
+      "value": "{{email}}"
+    }
+  ],
+  "design_controls": []
+}

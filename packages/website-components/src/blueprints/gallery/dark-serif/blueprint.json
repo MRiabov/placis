@@ -1,0 +1,129 @@
+{
+  "id": "dark_serif_gallery.reference",
+  "schema_version": 1,
+  "name": "Dark serif reference projects page",
+  "description": "Source-backed project-gallery decomposition with sparse copy, image proof, reviewable project facts, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Big Oaks Construction",
+    "Big Oaks",
+    "bigoaksconstruction.com",
+    "www.bigoaksconstruction.com",
+    "Brannan Williams",
+    "Brannan",
+    "Monroe",
+    "Georgia",
+    "GA",
+    "Atlanta"
+  ],
+  "theme": "dark_serif",
+  "pages": [
+    {
+      "key": "projects",
+      "path": "/clients/",
+      "title": "Projects - {{business_name}}",
+      "page_type": "gallery",
+      "seo": {
+        "title": "Projects - {{business_name}}",
+        "description": "{{business_name}} custom home, remodeling, and design-build project gallery."
+      },
+      "metadata": {
+        "source_url": "https://www.bigoaksconstruction.com/clients",
+        "source_type": "live_website",
+        "source_platform": "Squarespace template 7",
+        "source_last_modified": "2018-12-04",
+        "route_variants": ["/projects/"],
+        "source_gallery_warning": "The source template has gallery settings and a Projects page route, but the live extraction exposes mostly spacer/rule structure. Project gallery items are mandatory owner/research selections."
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call",
+            "links": [
+              {
+                "label": "home",
+                "href": "/",
+                "active": false
+              },
+              {
+                "label": "about",
+                "href": "/about/",
+                "active": false
+              },
+              {
+                "label": "projects",
+                "href": "/clients/",
+                "active": true
+              },
+              {
+                "label": "contact",
+                "href": "/contact/",
+                "active": false
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.gallery.grid",
+          "props": {
+            "title": "Projects",
+            "layout": "placeholder_lines",
+            "placeholder_count": 5
+          },
+          "source_refs": [
+            {
+              "url": "https://www.bigoaksconstruction.com/clients",
+              "section": "projects_gallery",
+              "note": "Squarespace Projects page. Template tweak settings indicate gallery grid behavior, 1:1 gallery ratio, two mobile items per row, rectangular arrows, and thumbnail navigation. Live content extraction did not expose source project images."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "links": [
+              {
+                "label": "home",
+                "href": "/"
+              },
+              {
+                "label": "about",
+                "href": "/about/"
+              },
+              {
+                "label": "services",
+                "href": "/#services"
+              },
+              {
+                "label": "clients",
+                "href": "/clients/"
+              },
+              {
+                "label": "news",
+                "href": "/news/"
+              },
+              {
+                "label": "contact",
+                "href": "/contact/"
+              }
+            ],
+            "description": "{{business_name}} is a full-service custom home builder that provides top quality energy efficient homes of all sizes.",
+            "legal_disclosure_lines": ["Powered by Squarespace"],
+            "copyright": ""
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Projects",
+      "page_key": "projects",
+      "position": 1,
+      "key": "projects"
+    }
+  ]
+}

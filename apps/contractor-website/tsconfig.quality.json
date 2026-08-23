@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@placis/website-components": [
+        "../../packages/website-components/src/index.ts"
+      ],
+      "@placis/website-components/*": [
+        "../../packages/website-components/src/*"
+      ]
+    },
+    "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "../../.frontend-quality-cache/contractor-website.tsbuildinfo",
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedSideEffectImports": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
+}

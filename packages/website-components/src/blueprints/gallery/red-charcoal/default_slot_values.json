@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "description": {
+      "label": "Business description",
+      "source": "business_profile.description",
+      "type": "textarea"
+    },
+    "phone": {
+      "label": "Phone",
+      "source": "business_profile.phone",
+      "type": "text"
+    },
+    "email": {
+      "label": "Email",
+      "source": "business_profile.email",
+      "type": "text"
+    },
+    "service_area": {
+      "label": "Service area",
+      "source": "business_profile.service_area",
+      "type": "list"
+    },
+    "opening_hours": {
+      "label": "Opening hours",
+      "source": "business_profile.opening_hours",
+      "type": "list"
+    },
+    "services.footer_links": {
+      "label": "Footer service links",
+      "source": "business_research.services",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.standard",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.standard",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.navigation.standard",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.hero.image",
+      "path": "headline",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.hero.image",
+      "path": "subheadline",
+      "value": "{{description}}"
+    },
+    {
+      "component_id": "public.cta.band",
+      "path": "title",
+      "value": "Contact {{business_name}} for a free consultation and practical roofing advice."
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "title",
+      "value": "Send {{business_name}} a Message"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "privacy_notice",
+      "value": "Contact details are used only to respond to your {{business_name}} enquiry."
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.service_area",
+      "value": "{{service_area}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.email_href",
+      "value": "mailto:{{email}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "copyright",
+      "value": "Copyright 2025 {{business_name}}. All rights reserved."
+    },
+    {
+      "component_id": "public.hero.image",
+      "path": "subheadline",
+      "value": "{{description}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Hero service wording must be checked against researched tenant services.",
+        "fallback_value": "Recent roofing, repair, and guttering project photos from {{business_name}} work around {{service_area}}."
+      }
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "links",
+      "value": "{{services.footer_links}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Footer service links should follow selected tenant services.",
+        "fallback_value": [
+          {
+            "label": "Roof Repair",
+            "href": "/roof-repair/"
+          },
+          {
+            "label": "Guttering",
+            "href": "/guttering/"
+          },
+          {
+            "label": "Chimney Repair",
+            "href": "/chimney-repair/"
+          },
+          {
+            "label": "New Roofs",
+            "href": "/new-roofs/"
+          }
+        ]
+      }
+    }
+  ]
+}

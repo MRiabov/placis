@@ -1,0 +1,622 @@
+{
+  "id": "green_gold_home.reference",
+  "schema_version": 1,
+  "status": "ready",
+  "production_selectable": true,
+  "selection_visibility": "public",
+  "deprecated": false,
+  "source_type": "source_backed_reference",
+  "modelled_after": [
+    "PCL Construction",
+    "PCL",
+    "pcl.com",
+    "www.pcl.com",
+    "Special Projects",
+    "North America",
+    "160 Front Street West",
+    "CAMH",
+    "Canada",
+    "United States",
+    "Australia"
+  ],
+  "theme": "green_gold",
+  "name": "Green gold reference home",
+  "description": "Source-backed home-page decomposition with mega navigation, media hero, metric proof, region tabs, project showcase, news, and CTA sections.",
+  "affinity_group": "green_gold.reference_family",
+  "companion_blueprints": [
+    "green_gold_services.reference",
+    "green_gold_work.reference",
+    "green_gold_about.reference",
+    "green_gold_careers.reference",
+    "green_gold_contact.reference"
+  ],
+  "forms": [],
+  "pages": [
+    {
+      "key": "home",
+      "path": "/",
+      "title": "{{business_name}} - Reference Construction",
+      "page_type": "home",
+      "seo": {
+        "title": "{{business_name}} - Reference Construction",
+        "description": "Construction services, specialist capabilities, project work, and delivery support from {{business_name}}."
+      },
+      "metadata": {
+        "source_url": "https://www.pcl.com/us/en",
+        "source_type": "live_website_reference",
+        "source_observed": "2026-07-02",
+        "notes": "Home route decomposition of PCL's navigation, hero, intro metrics, locations, future/insight feature, capability tabs, project showcase, careers video, owner proof, safety feature, latest news, conversion CTA, and multi-column footer."
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.mega_menu",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}",
+            "home_href": "/",
+            "locale_label": "{{service_area}}",
+            "overlay_hero": true,
+            "links": [
+              {
+                "label": "Services",
+                "href": "/services"
+              },
+              {
+                "label": "Our Work",
+                "href": "/our-work"
+              },
+              {
+                "label": "Who We Are",
+                "href": "/about"
+              },
+              {
+                "label": "Careers",
+                "href": "/careers"
+              },
+              {
+                "label": "Contact",
+                "href": "/contact"
+              }
+            ],
+            "groups": [
+              {
+                "label": "Services",
+                "items": [
+                  {
+                    "label": "Construction",
+                    "href": "/services#construction"
+                  },
+                  {
+                    "label": "Preconstruction",
+                    "href": "/services#preconstruction"
+                  },
+                  {
+                    "label": "Sustainable construction",
+                    "href": "/services#sustainability"
+                  }
+                ]
+              },
+              {
+                "label": "Company",
+                "items": [
+                  {
+                    "label": "About",
+                    "href": "/about"
+                  },
+                  {
+                    "label": "Safety",
+                    "href": "/about#safety"
+                  },
+                  {
+                    "label": "Innovation",
+                    "href": "/about#innovation"
+                  }
+                ]
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/us/en",
+              "section": "header",
+              "note": "Transparent/white reference header with services, work, locations, company, insights, newsroom, careers, locale, and search."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.media_carousel",
+          "props": {
+            "anchor_id": "home",
+            "autoplay": true,
+            "auto_advance_ms": 15000,
+            "headline": "Trends Shaping Sustainable Construction",
+            "primary_cta": {
+              "label": "Read the story",
+              "href": "/insights/sustainable-construction"
+            },
+            "slides": [
+              {
+                "label": "Building Better",
+                "eyebrow": "Sustainability",
+                "headline": "Trends Shaping Sustainable Construction",
+                "media": {
+                  "type": "video",
+                  "url": "{{media.green_gold_hero_sustainability_video_url}}",
+                  "poster_url": "{{images.green_gold_hero_sustainability}}",
+                  "alt_text": "{{business_name}} sustainable construction story",
+                  "source_url": "https://www.pcl.com/content/dam/videos/Sustainability%20Header.mp4"
+                }
+              },
+              {
+                "label": "Defence Procurement",
+                "eyebrow": "Procurement",
+                "headline": "Partners, planning, and certainty for mission-critical work",
+                "media": {
+                  "type": "video",
+                  "url": "{{media.green_gold_hero_procurement_video_url}}",
+                  "poster_url": "{{images.green_gold_hero_procurement}}",
+                  "alt_text": "{{business_name}} complex procurement project",
+                  "source_url": "https://www.pcl.com/content/dam/header-videos/freecompress-Military-Header-Final.mov"
+                }
+              },
+              {
+                "label": "Data Centers",
+                "eyebrow": "Data Centers",
+                "headline": "Building capacity for connected infrastructure",
+                "media": {
+                  "type": "video",
+                  "url": "{{media.green_gold_hero_data_centers_video_url}}",
+                  "poster_url": "{{images.green_gold_hero_data_centers}}",
+                  "alt_text": "{{business_name}} data center construction project",
+                  "source_url": "https://www.pcl.com/content/dam/header-videos/datacenter-intro.mp4"
+                }
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/ca/en",
+              "section": "hero",
+              "note": "Full-viewport media carousel with extracted video source provenance, 15-second slide cycling, dark overlay, uppercase labels, yellow progress line, and pause/resume."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.intro_metrics",
+          "props": {
+            "anchor_id": "overview",
+            "eyebrow": "Who We Are",
+            "title": "Focused and Future Ready",
+            "cta_label": "About us",
+            "cta_href": "/about",
+            "paragraphs": [
+              "{{business_name}} partners with owners from early planning through delivery, aligning field execution, safety, cost certainty, and communication around the project outcome.",
+              "This reference section should be populated with verified tenant facts before publication."
+            ],
+            "metrics": [
+              {
+                "value": "{{proof.years_in_business}}",
+                "label": "Years in operation",
+                "description": "Replace with a verified founding or operating history fact."
+              },
+              {
+                "value": "{{proof.annual_project_volume}}",
+                "label": "Annual volume",
+                "description": "Use only when the tenant can substantiate the claim."
+              },
+              {
+                "value": "{{proof.team_size}}",
+                "label": "Team members",
+                "description": "Optional scale proof for larger contractors."
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/us/en",
+              "section": "who_we_are",
+              "note": "Two-column corporate intro with large statistics for years, volume, and ranking."
+            }
+          ]
+        },
+        {
+          "component_id": "public.services.sector_tabs",
+          "props": {
+            "anchor_id": "capabilities",
+            "eyebrow": "What We Do",
+            "title": "Services and capabilities for complex work.",
+            "sectors": [
+              {
+                "label": "Building Work",
+                "title": "Stunning structures, sustainably built",
+                "description": "{{business_name}}'s network of construction professionals rise to the challenges associated with a diverse buildings portfolio, bringing added value to every educational, institutional, residential and commercial construction project. {{business_name}} offers substantial construction experience, competitive pricing, financial strength, integrity and a commitment to your project that is supported by a foundation of quality and workplace safety.",
+                "href": "/services#capabilities",
+                "link_label": "Learn more",
+                "image": "{{images.sector_buildings}}",
+                "source_image_url": "https://www.pcl.com/content/dam/project-profiles-2024/BMO%20Centre%20Expansion%20MAIN.jpg"
+              },
+              {
+                "label": "Infrastructure",
+                "title": "Connecting and supplying our communities",
+                "description": "The geographical diversity, project complexity and public nature of civil work results in an exceptionally challenging industry that demands a high level of technical construction expertise. Whether building on land or over water, in busy cities or in remote areas, from water treatment plants to bridge rehabilitations, {{business_name}}'s civil construction specialists possess the ingenuity and experience required to undertake any civil structure imaginable.",
+                "href": "/services#capabilities",
+                "link_label": "Learn more",
+                "image": "{{images.sector_civil}}",
+                "source_image_url": "https://www.pcl.com/content/dam/pcl-projects/project-main-photos/Jack%20Tennant%20Memorial%20Bridge%20MAIN.jpg"
+              },
+              {
+                "label": "Specialist Work",
+                "title": "Building the future of industry",
+                "description": "{{business_name}}'s industrial construction companies respond to the unique needs of clients in the petrochemical, oil and gas, pulp and paper, mining, and power and renewable industries. Our experts offer a full range of general contracting services, specializing in mechanical, civil and electrical construction, as well as piping and plant shutdowns/turnarounds.",
+                "href": "/services#capabilities",
+                "link_label": "Learn more",
+                "image": "{{images.sector_industrial}}",
+                "source_image_url": "https://www.pcl.com/content/dam/pcl-projects/project-main-photos/Industrial%20Stock%20Power.jpg"
+              },
+              {
+                "label": "Complex Projects",
+                "title": "Unique solutions for specialized needs",
+                "description": "A focused delivery model for specialized scopes, responsive client service, and complex project needs. Use this tab only when the tenant has verified services and proof for complex or fast-moving work.",
+                "href": "/services/complex-projects",
+                "link_label": "Learn more",
+                "image": "{{images.sector_complex_projects}}",
+                "source_image_url": "https://www.pcl.com/content/dam/pcl-projects/project-main-photos/Chinook%20Centre%20Dining%20Hall_Calgary_Special%20Projects_Main-71.jpg"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/ca/en",
+              "section": "what_we_do",
+              "note": "Case-study style capability tabs with image-left content, market pills, and right-to-left image reveal animation."
+            }
+          ]
+        },
+        {
+          "component_id": "public.service_area.region_map_stats",
+          "props": {
+            "anchor_id": "locations",
+            "eyebrow": "Where We Work",
+            "title": "Helping you transform communities across the globe.",
+            "body": "No matter where or what you want to build, mobilize the right resources and experts to drive value and realize your project goals.",
+            "source_image_url": "https://www.pcl.com/content/dam/maps/Maps_Canada_US_Aus-2024-07-10_Canada.png",
+            "regions": [
+              {
+                "label": "{{service_area.regions.0.label}}",
+                "image_url": "{{images.locations_primary_region_map}}",
+                "stats": [
+                  {
+                    "value": "{{proof.employee_owned_percent}}",
+                    "label": "{{proof.employee_owned_label}}"
+                  },
+                  {
+                    "value": "1700+",
+                    "label": "Active Projects"
+                  }
+                ]
+              },
+              {
+                "label": "{{service_area.regions.1.label}}",
+                "image_url": "{{images.locations_secondary_region_map}}",
+                "stats": [
+                  {
+                    "value": "{{proof.employee_owned_percent}}",
+                    "label": "{{proof.employee_owned_label}}"
+                  },
+                  {
+                    "value": "{{proof.us_active_projects}}",
+                    "label": "Active Projects"
+                  }
+                ]
+              },
+              {
+                "label": "{{service_area.regions.2.label}}",
+                "image_url": "{{images.locations_tertiary_region_map}}",
+                "stats": [
+                  {
+                    "value": "{{proof.employee_owned_percent}}",
+                    "label": "{{proof.employee_owned_label}}"
+                  },
+                  {
+                    "value": "{{service_area.regions.2.active_projects}}",
+                    "label": "Active Projects"
+                  }
+                ]
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/ca/en",
+              "section": "where_we_work",
+              "note": "Dark regional coverage section with tabs, animated map imagery, body copy, and large scale statistics."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "anchor_id": "future",
+            "eyebrow": "Our Insights",
+            "title": "We have a vision for the future of construction.",
+            "paragraphs": [
+              "Use this section for strategic thought leadership, innovation, sustainability, or future-of-work content backed by a real story."
+            ],
+            "image_url": "{{images.future_construction_feature}}",
+            "alt_text": "{{business_name}} future construction insight",
+            "href": "/insights",
+            "link_label": "Learn more",
+            "image_position": "right",
+            "source_image_url": "https://www.pcl.com/content/dam/insights-images/People-First%20Construction%20Safety%20Program%201.jpg"
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/ca/en",
+              "section": "future_construction",
+              "note": "Editorial insight feature between locations and what-we-build sections."
+            }
+          ]
+        },
+        {
+          "component_id": "public.gallery.project_showcase",
+          "props": {
+            "anchor_id": "work",
+            "eyebrow": "Our Work",
+            "title": "Featured projects",
+            "projects": "{{projects.featured}}"
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/us/en",
+              "section": "project_showcase",
+              "note": "Large image project feature with category tabs, project title, copy, and CTA."
+            }
+          ]
+        },
+        {
+          "component_id": "public.media.video_feature",
+          "props": {
+            "anchor_id": "careers",
+            "eyebrow": "Careers",
+            "title": "Shape Your Future with {{business_name}}",
+            "layout": "stacked",
+            "body": "{{business_name}} is more than a job, it's your career and it matters. Explore a career with {{business_name}}.",
+            "poster": "{{images.careers_video_poster}}",
+            "video_href": "{{media.careers_video_url}}",
+            "actions": [
+              {
+                "label": "Professionals",
+                "href": "/careers#professionals"
+              },
+              {
+                "label": "Skilled Trades + Craft",
+                "href": "/careers#craft"
+              },
+              {
+                "label": "Students",
+                "href": "/careers#students"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/us/en",
+              "section": "careers_video",
+              "note": "Recruiting section with video thumbnail, play affordance, and role CTAs."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.story_split",
+          "props": {
+            "anchor_id": "owners",
+            "eyebrow": "Our Owners",
+            "layout": "carousel",
+            "image_position": "right",
+            "stories": [
+              {
+                "title": "{{team.owner_story_name}}",
+                "paragraphs": [
+                  "Use this carousel card for an employee-owner story, safety leader quote, superintendent profile, or culture proof point backed by a real portrait and named attribution."
+                ],
+                "image_url": "{{images.owner_story_portrait}}",
+                "alt_text": "{{business_name}} employee owner",
+                "profile": {
+                  "role": "Employee owner"
+                }
+              },
+              {
+                "title": "{{team.owner_story_name_2}}",
+                "paragraphs": [
+                  "Add a second story when the tenant has another verified leader, craft professional, or project team member who can speak to ownership, safety, or delivery culture."
+                ],
+                "image_url": "{{images.owner_story_portrait_2}}",
+                "alt_text": "{{business_name}} employee owner",
+                "profile": {
+                  "role": "Project leader"
+                }
+              },
+              {
+                "title": "{{team.owner_story_name_3}}",
+                "paragraphs": [
+                  "Add a third story for proof depth when the business has named people and real portraits available."
+                ],
+                "image_url": "{{images.owner_story_portrait_3}}",
+                "alt_text": "{{business_name}} employee owner",
+                "profile": {
+                  "role": "Employee owner"
+                }
+              }
+            ],
+            "source_image_url": "https://www.pcl.com/content/dam/headshots/Gibney_Tricia_Saskatoon.jpg"
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/ca/en",
+              "section": "our_owners",
+              "note": "Owner/employee proof section with portrait-led story, attribution, and ownership narrative."
+            }
+          ]
+        },
+        {
+          "component_id": "public.content.split",
+          "props": {
+            "anchor_id": "safety",
+            "eyebrow": "Safety",
+            "title": "Safety: A Way of Life",
+            "surface": "muted",
+            "paragraphs": [
+              "Use this section for the tenant's safety culture, training discipline, and operating standards. Replace with verified safety proof before publication."
+            ],
+            "image_url": "{{images.safety_feature}}",
+            "alt_text": "{{business_name}} safety culture",
+            "href": "/about#safety",
+            "link_label": "Learn more",
+            "image_position": "left",
+            "source_image_url": "https://www.pcl.com/content/dam/insights-images/People-First%20Construction%20Safety%20Program%201.jpg"
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/ca/en",
+              "section": "safety",
+              "note": "Safety feature before latest news, with image, headline, and learn-more CTA."
+            }
+          ]
+        },
+        {
+          "component_id": "public.gallery.grid",
+          "props": {
+            "anchor_id": "news",
+            "title": "Latest News",
+            "layout": "carousel",
+            "desktop_slides_per_view": 3,
+            "mobile_slides_per_view": 1,
+            "show_controls": true,
+            "show_captions": true,
+            "items": [
+              {
+                "category": "Press Release",
+                "title": "{{business_name}} awarded contract to advance Green Line LRT Maintenance and Storage Facility",
+                "caption": "Use this card for timely award, project, or company news.",
+                "image_url": "{{news.latest.0.image_url}}"
+              },
+              {
+                "category": "Press Release",
+                "title": "{{news.latest.1.title}}",
+                "caption": "Use this card for public milestone or project progress news.",
+                "image_url": "{{news.latest.1.image_url}}"
+              },
+              {
+                "category": "Company News",
+                "title": "{{business_name}} strengthens its construction capabilities",
+                "caption": "Use this card for company updates, awards, or capability proof.",
+                "image_url": "{{news.latest.2.image_url}}"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/ca/en",
+              "section": "latest_news",
+              "note": "Latest news carousel/grid with category labels, article images, and multiple cards before the prefooter."
+            }
+          ]
+        },
+        {
+          "component_id": "public.cta.band",
+          "props": {
+            "anchor_id": "ready",
+            "title": "Ready to work together?",
+            "actions": [
+              {
+                "label": "Contact us",
+                "href": "/contact"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/ca/en",
+              "section": "ready_to_work",
+              "note": "Conversion prefooter callout before the multi-column footer."
+            }
+          ]
+        },
+        {
+          "component_id": "public.footer.multi_column",
+          "props": {
+            "business_name": "{{business_name}}",
+            "logo": "{{images.logo}}",
+            "tagline": "Built for complex construction work.",
+            "legal_line": "Copyright {{business_name}}",
+            "ctas": [
+              {
+                "label": "Ready to work together?",
+                "title": "Start a project",
+                "href": "/contact"
+              },
+              {
+                "label": "Build your career",
+                "title": "Explore careers",
+                "href": "/careers"
+              }
+            ],
+            "columns": [
+              {
+                "title": "Company",
+                "links": [
+                  {
+                    "label": "About",
+                    "href": "/about"
+                  },
+                  {
+                    "label": "Safety",
+                    "href": "/about#safety"
+                  },
+                  {
+                    "label": "Careers",
+                    "href": "/careers"
+                  }
+                ]
+              },
+              {
+                "title": "Work",
+                "links": [
+                  {
+                    "label": "Services",
+                    "href": "/services"
+                  },
+                  {
+                    "label": "Projects",
+                    "href": "/our-work"
+                  }
+                ]
+              },
+              {
+                "title": "Contact",
+                "links": [
+                  {
+                    "label": "{{phone}}",
+                    "href": "tel:{{phone}}"
+                  },
+                  {
+                    "label": "{{email}}",
+                    "href": "mailto:{{email}}"
+                  }
+                ]
+              }
+            ],
+            "social_links": []
+          },
+          "source_refs": [
+            {
+              "url": "https://www.pcl.com/us/en",
+              "section": "footer",
+              "note": "Footer combines project CTA, career CTA, newsletter/resources, legal links, social links, logo, and tagline."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

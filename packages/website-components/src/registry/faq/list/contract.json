@@ -1,0 +1,85 @@
+{
+  "id": "public.faq.list",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "FAQ List",
+  "family": "faq",
+  "variant": "list",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "intro": {
+        "type": "string"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string"
+            },
+            "answer": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["question", "answer"]
+        },
+        "minItems": 1
+      },
+      "questions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string"
+            },
+            "answer": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["question", "answer"]
+        },
+        "minItems": 1
+      }
+    },
+    "additionalProperties": true,
+    "required": ["items"]
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Questions",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "design_controls": []
+}

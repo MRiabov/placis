@@ -1,0 +1,92 @@
+name: deploy contractor website cloudflare
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Cloudflare Worker environment to deploy.
+        required: true
+        default: staging
+        type: choice
+        options:
+          - staging
+          - production
+      dry_run:
+        description: Build and validate the Wrangler package without uploading.
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: deploy-contractor-website-cloudflare-${{ inputs.environment }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy shared contractor website Worker
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Check contractor website
+        run: |
+          pnpm website-components:check
+          pnpm contractor-website:check
+          pnpm contractor-website:bundle-boundary
+
+      - name: Resolve deploy configuration
+        shell: bash
+        env:
+          PUBLIC_SITE_API_BASE_URL_STAGING: ${{ vars.PUBLIC_SITE_API_BASE_URL_STAGING }}
+          PUBLIC_SITE_API_BASE_URL_PRODUCTION: ${{ vars.PUBLIC_SITE_API_BASE_URL_PRODUCTION }}
+        run: |
+          set -euo pipefail
+
+          case "${{ inputs.environment }}" in
+            staging)
+              api_base_url="$PUBLIC_SITE_API_BASE_URL_STAGING"
+              ;;
+            production)
+              api_base_url="$PUBLIC_SITE_API_BASE_URL_PRODUCTION"
+              ;;
+            *)
+              echo "Unsupported environment: ${{ inputs.environment }}" >&2
+              exit 1
+              ;;
+          esac
+
+          if [[ -z "$api_base_url" ]]; then
+            echo "Set PUBLIC_SITE_API_BASE_URL_${{ inputs.environment == 'production' && 'PRODUCTION' || 'STAGING' }} as a GitHub environment variable." >&2
+            exit 1
+          fi
+
+          {
+            echo "PUBLIC_SITE_API_BASE_URL=$api_base_url"
+            echo "PLACIS_API_BASE_URL=$api_base_url"
+          } >> "$GITHUB_ENV"
+
+      - name: Build and deploy Worker
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          args=("${{ inputs.environment }}")
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            args+=("--dry-run")
+          fi
+          node scripts/deploy_contractor_website_cloudflare.mjs "${args[@]}"

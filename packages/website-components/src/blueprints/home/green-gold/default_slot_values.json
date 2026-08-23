@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "proof.years_in_business": {
+      "label": "Years in business",
+      "source": "business_research.proof.years_in_business",
+      "type": "text"
+    },
+    "proof.annual_project_volume": {
+      "label": "Annual project volume",
+      "source": "business_research.proof.annual_project_volume",
+      "type": "text"
+    },
+    "proof.active_projects": {
+      "label": "Active projects",
+      "source": "business_research.proof.active_projects",
+      "type": "text"
+    },
+    "proof.employee_owned_percent": {
+      "label": "Employee owned percentage",
+      "source": "business_research.proof.employee_owned_percent",
+      "type": "text"
+    },
+    "projects.featured": {
+      "label": "Featured projects",
+      "source": "business_research.projects",
+      "type": "list"
+    },
+    "services.sector_capabilities": {
+      "label": "Service capabilities",
+      "source": "business_research.services",
+      "type": "list"
+    },
+    "careers.role_paths": {
+      "label": "Career role paths",
+      "source": "business_research.careers",
+      "type": "list"
+    },
+    "about.intro_paragraphs": {
+      "label": "Home intro paragraphs",
+      "source": "business_research.about.intro_paragraphs",
+      "type": "list"
+    },
+    "about.feature_paragraphs": {
+      "label": "Feature section paragraphs",
+      "source": "business_research.about.feature_paragraphs",
+      "type": "list"
+    },
+    "proof.company_metrics": {
+      "label": "Company proof metrics",
+      "source": "business_research.proof.company_metrics",
+      "type": "list"
+    },
+    "service_area.regions": {
+      "label": "Service regions",
+      "source": "business_research.service_area.regions",
+      "type": "list"
+    },
+    "team.owner_stories": {
+      "label": "Team stories",
+      "source": "business_research.people.stories",
+      "type": "list"
+    },
+    "news.latest": {
+      "label": "Latest news items",
+      "source": "business_research.news",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.content.intro_metrics",
+      "path": "paragraphs",
+      "value": "{{about.intro_paragraphs}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rewrite",
+        "edit_reason": "Home intro copy must be rewritten from verified tenant story and positioning before publication."
+      }
+    },
+    {
+      "component_id": "public.content.intro_metrics",
+      "path": "metrics",
+      "value": "{{proof.company_metrics}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_verify",
+        "edit_reason": "Home metrics are proof claims and must be verified for the tenant before publication."
+      }
+    },
+    {
+      "component_id": "public.services.sector_tabs",
+      "path": "sectors",
+      "value": "{{services.sector_capabilities}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Capability tabs must be selected from tenant services and should not reuse source-market categories unless verified."
+      }
+    },
+    {
+      "component_id": "public.service_area.region_map_stats",
+      "path": "regions",
+      "value": "{{service_area.regions}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_verify",
+        "edit_reason": "Region coverage and stats must match verified tenant service areas and proof claims."
+      }
+    },
+    {
+      "component_id": "public.content.split",
+      "path": "paragraphs",
+      "value": "{{about.feature_paragraphs}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rewrite",
+        "edit_reason": "Feature/safety split copy must be replaced with tenant-specific proof or removed."
+      }
+    },
+    {
+      "component_id": "public.gallery.project_showcase",
+      "path": "projects",
+      "value": "{{projects.featured}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Featured projects must come from tenant portfolio evidence before publication."
+      }
+    },
+    {
+      "component_id": "public.content.story_split",
+      "path": "stories",
+      "value": "{{team.owner_stories}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rewrite",
+        "edit_reason": "Team story cards require tenant-specific people, portraits, roles, and proof before publication."
+      }
+    },
+    {
+      "component_id": "public.gallery.grid",
+      "path": "items",
+      "value": "{{news.latest}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "News/project cards must be selected from tenant news or project evidence before publication."
+      }
+    }
+  ]
+}

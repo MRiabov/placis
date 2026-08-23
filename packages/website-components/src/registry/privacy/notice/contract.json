@@ -1,0 +1,44 @@
+{
+  "id": "public.privacy.notice",
+  "aliases": ["public.privacy_notice.v1"],
+  "schema_version": 1,
+  "display_name": "Privacy Notice",
+  "family": "privacy",
+  "variant": "notice",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "notice_version": {
+        "type": "string"
+      },
+      "policy_url": {
+        "type": "string"
+      },
+      "contact_email": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["contact_email"]
+  },
+  "editable_slots": [
+    {
+      "key": "body",
+      "type": "rich_text",
+      "label": "Privacy notice",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "contact_email",
+      "type": "text",
+      "label": "Contact email",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "design_controls": []
+}

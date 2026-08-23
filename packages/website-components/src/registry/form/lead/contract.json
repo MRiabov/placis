@@ -1,0 +1,187 @@
+{
+  "id": "public.form.lead",
+  "aliases": ["public.lead_form.v1"],
+  "schema_version": 1,
+  "display_name": "Lead Form",
+  "family": "form",
+  "variant": "lead",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "form_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "submit_label": {
+        "type": "string"
+      },
+      "submit_action": {
+        "type": "string",
+        "enum": ["create_lead"]
+      },
+      "fields": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "slug"
+            },
+            "label": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "text",
+                "textarea",
+                "email",
+                "phone",
+                "tel",
+                "address",
+                "select",
+                "multi_select",
+                "date",
+                "time",
+                "file_upload",
+                "checkbox",
+                "number"
+              ]
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "placeholder": {
+              "type": ["string", "null"]
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true,
+                "required": ["label", "value"]
+              }
+            },
+            "width": {
+              "type": "string",
+              "enum": ["full", "half"]
+            },
+            "description": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true,
+          "required": ["id", "label"]
+        },
+        "minItems": 1
+      },
+      "privacy_notice": {
+        "type": "string"
+      },
+      "contact_details": {
+        "type": "object",
+        "properties": {
+          "service_area": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "phone": {
+            "type": "string"
+          },
+          "phone_href": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "email_href": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "hours": {
+            "type": "string"
+          },
+          "layout": {
+            "type": "string",
+            "enum": ["default", "location_contact"]
+          },
+          "address_label": {
+            "type": "string"
+          },
+          "email_label": {
+            "type": "string"
+          },
+          "phone_label": {
+            "type": "string"
+          },
+          "hours_label": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "layout": {
+        "type": "string",
+        "enum": ["default", "centered", "contact_split"]
+      },
+      "eyebrow": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true,
+    "required": ["form_id", "title", "fields"]
+  },
+  "editable_slots": [
+    {
+      "key": "form_id",
+      "type": "form",
+      "label": "Form",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "privacy_notice",
+      "type": "textarea",
+      "label": "Privacy notice",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "title",
+      "value": "{{business_name}}"
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

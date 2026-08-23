@@ -1,0 +1,145 @@
+.public-theme-red-charcoal #contact {
+  background: #ffffff !important;
+  padding-bottom: 82px;
+  padding-top: 82px;
+}
+
+.public-theme-red-charcoal #contact .public-site-shell {
+  align-items: start;
+}
+
+.public-theme-red-charcoal #contact h2,
+.public-theme-red-charcoal #quote h2 {
+  font-family: var(--public-font-heading);
+  font-size: clamp(2rem, 3.2vw, 2.9rem);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.public-theme-red-charcoal #contact [class*="rounded-"],
+.public-theme-red-charcoal #quote form {
+  border-color: var(--public-border) !important;
+  border-radius: 8px;
+  box-shadow: var(--red-charcoal-shadow-soft);
+}
+
+.public-theme-red-charcoal #contact [class*="rounded-"] {
+  background: var(--public-surface) !important;
+  min-height: 130px;
+}
+
+.public-theme-red-charcoal #quote {
+  background: var(--public-surface) !important;
+  padding-bottom: 88px;
+  padding-top: 86px;
+}
+
+.public-theme-red-charcoal #quote form {
+  background: #ffffff;
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.public-theme-red-charcoal .public-lead-contact {
+  border-top: 1px solid var(--public-border);
+  margin-top: 26px;
+  padding-top: 22px;
+}
+
+.public-theme-red-charcoal .public-lead-contact__area {
+  color: var(--public-text);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.45;
+  margin: 0 0 18px;
+}
+
+.public-theme-red-charcoal .public-lead-contact__list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+
+.public-theme-red-charcoal .public-lead-contact__row {
+  display: grid;
+  gap: 3px;
+}
+
+.public-theme-red-charcoal .public-lead-contact__row dt {
+  color: var(--public-accent-text);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.public-theme-red-charcoal .public-lead-contact__row dd {
+  color: var(--public-text);
+  font-size: 1rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.public-theme-red-charcoal .public-lead-contact__row a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.public-theme-red-charcoal .public-lead-contact__row a:hover {
+  color: var(--public-accent-text);
+}
+
+.public-theme-red-charcoal #quote label {
+  color: var(--public-text);
+  font-weight: 700;
+}
+
+.public-theme-red-charcoal #quote input,
+.public-theme-red-charcoal #quote textarea {
+  background: #ffffff;
+  border: 1px solid var(--public-border);
+  border-radius: 4px;
+  color: var(--public-text);
+  min-height: 48px;
+}
+
+.public-theme-red-charcoal #quote textarea {
+  min-height: 130px;
+}
+
+.public-theme-red-charcoal #quote input:focus,
+.public-theme-red-charcoal #quote textarea:focus {
+  border-color: var(--public-accent);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--public-accent) 18%, transparent);
+  outline: none;
+}
+
+.public-theme-red-charcoal .public-gallery-grid {
+  border-top: 0;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.public-theme-red-charcoal .public-gallery-grid--carousel .public-site-shell {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.public-theme-red-charcoal .public-carousel {
+  --public-carousel-slides: 3;
+  cursor: grab;
+}
+
+.public-theme-red-charcoal .public-carousel__slide img,
+.public-theme-red-charcoal .public-carousel__placeholder {
+  height: 295px;
+}
+
+.public-theme-red-charcoal .public-carousel__control {
+  background: rgba(28, 32, 36, 0.92);
+  color: #ffffff;
+  height: 40px;
+  width: 40px;
+}
+

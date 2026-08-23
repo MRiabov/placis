@@ -1,0 +1,7 @@
+[data-public-tab-panel][hidden] {
+  display: none !important;
+}
+
+.public-region-map-stats__region-panel:not([hidden]) {
+  display: contents;
+}

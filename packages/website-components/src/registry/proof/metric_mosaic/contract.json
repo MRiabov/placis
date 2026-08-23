@@ -1,0 +1,52 @@
+{
+  "id": "public.proof.metric_mosaic",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Metric Mosaic",
+  "family": "proof",
+  "variant": "metric_mosaic",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "anchor_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "anchor_id",
+      "type": "text",
+      "label": "Anchor ID",
+      "required": false,
+      "max_length": 80
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Section title",
+      "required": true,
+      "max_length": 80
+    },
+    {
+      "key": "items",
+      "type": "list",
+      "label": "Metrics",
+      "required": true,
+      "max_length": null
+    }
+  ],
+  "default_values": [],
+  "design_controls": []
+}

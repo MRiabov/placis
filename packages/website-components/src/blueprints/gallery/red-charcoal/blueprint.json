@@ -1,0 +1,175 @@
+{
+  "id": "red_charcoal_gallery.reference",
+  "schema_version": 1,
+  "name": "Red charcoal reference gallery page",
+  "description": "Source-backed gallery-page decomposition with image proof, category-light organization, and contact CTA.",
+  "status": "ready",
+  "modelled_after": [
+    "Roof Shield",
+    "RoofShield",
+    "roofshield",
+    "roofshield.ie",
+    "www.roofshield.ie",
+    "Tom O' Brien",
+    "Mary Sweeney",
+    "Steve Dennehy",
+    "Pat Finnerty",
+    "TJ McCarthy",
+    "Vincent Scott",
+    "John",
+    "Swords",
+    "Blanchardstown",
+    "Tallaght",
+    "Lucan",
+    "Clondalkin",
+    "Malahide"
+  ],
+  "theme": "red_charcoal",
+  "pages": [
+    {
+      "key": "gallery",
+      "path": "/gallery/",
+      "title": "Gallery - {{business_name}}",
+      "page_type": "gallery",
+      "seo": {
+        "title": "Gallery - {{business_name}}",
+        "description": "{{business_name}} roofing project gallery with recent roof repair and roofing work photos from {{service_area}}."
+      },
+      "metadata": {
+        "source_url": "https://roofshield.ie/gallery/",
+        "source_type": "live_website",
+        "source_platform": "WordPress 6.8 / Astra / Elementor 3.31",
+        "source_last_modified": "2025-03-05T15:52:58"
+      },
+      "sections": [
+        {
+          "component_id": "public.navigation.standard",
+          "props": {
+            "home_href": "/",
+            "mobile_phone_label": "Call Us",
+            "links": [
+              {
+                "label": "Home",
+                "href": "/"
+              },
+              {
+                "label": "Services",
+                "href": "/#services"
+              },
+              {
+                "label": "Gallery",
+                "href": "/gallery/",
+                "active": true
+              },
+              {
+                "label": "Testimonials",
+                "href": "/testimonials/"
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/"
+              }
+            ]
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/gallery/",
+              "section": "header",
+              "note": "Gallery page reuses the Roof Shield WordPress header/navigation treatment."
+            }
+          ]
+        },
+        {
+          "component_id": "public.hero.image",
+          "props": {
+            "layout": "center_overlay",
+            "headline": "{{business_name}} Gallery",
+            "primary_cta": {
+              "label": "Request a free quote",
+              "href": "/contact-us/"
+            },
+            "secondary_cta": {
+              "label": "{{phone}}",
+              "href": "tel:{{phone}}"
+            },
+            "media": {
+              "url": "{{images.roofing_about_image_gallery_roofing_project}}",
+              "alt_text": "{{business_name}} gallery roofing project"
+            }
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/gallery/",
+              "section": "gallery_page_intro",
+              "note": "The source page is a sparse gallery grid. The upgraded blueprint adds a route-level hero using a sourced gallery image."
+            }
+          ]
+        },
+        {
+          "component_id": "public.gallery.grid",
+          "props": {
+            "anchor_id": "gallery",
+            "title": "Recent Roofing Work",
+            "layout": "grid",
+            "show_captions": false,
+            "items": "{{projects.recent}}"
+          },
+          "source_refs": [
+            {
+              "url": "https://roofshield.ie/gallery/",
+              "section": "gallery_grid",
+              "note": "Elementor gallery widget post-93 element 95a57fd: eight images, four desktop columns, two tablet/mobile columns, 1:1 aspect ratio, 10px gaps, file lightbox links."
+            }
+          ]
+        },
+        {
+          "component_id": "public.cta.band",
+          "props": {
+            "anchor_id": "gallery-quote",
+            "title": "Seen a roofing finish you need? Ask {{business_name}} for a free consultation.",
+            "actions": [
+              {
+                "label": "{{phone}}",
+                "href": "tel:{{phone}}"
+              },
+              {
+                "label": "Contact Us",
+                "href": "/contact-us/"
+              }
+            ]
+          }
+        },
+        {
+          "component_id": "public.footer.standard",
+          "props": {
+            "contact_line": "{{address}}",
+            "address": "{{address}}"
+          }
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "location": "primary",
+      "label": "Home",
+      "path": "/",
+      "position": 1,
+      "key": "home"
+    },
+    {
+      "location": "primary",
+      "label": "Gallery",
+      "page_key": "gallery",
+      "position": 2,
+      "key": "gallery"
+    },
+    {
+      "location": "primary",
+      "label": "Contact Us",
+      "path": "/contact-us/",
+      "position": 3,
+      "key": "contact"
+    }
+  ]
+}

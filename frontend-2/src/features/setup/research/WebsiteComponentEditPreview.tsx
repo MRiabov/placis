@@ -7,7 +7,7 @@ import {
   type PublicSiteSection,
   pageSections,
   resolveManifestPage,
-} from "@placis/public-site-components";
+} from "@placis/website-components";
 import { PanelsTopLeft } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 

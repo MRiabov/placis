@@ -6,7 +6,7 @@ import {
   type LoadedPublicSiteComponent,
   type PublicSiteManifest,
   type PublicSiteSection,
-} from "@placis/public-site-components";
+} from "@placis/website-components";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 interface PublicSiteModulePreviewProps {

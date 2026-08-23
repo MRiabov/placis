@@ -23,7 +23,7 @@ whole system.
 | LLM | internal interface; Vercel AI SDK primary, OpenRouter as an alternative |
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (`frontend-2`) | Vite + React + TanStack Router/Query + `openapi-typescript`/`openapi-fetch`; the CMS, onboarding, website preview; reused mostly, adapted to the huma OpenAPI |
-| Contractor website (`apps/contractor-website`) | Astro with React islands (Cloudflare Workers) — shows every contractor’s live website; import this app first when implementation starts |
+| Contractor website (`apps/contractor-website`) | Astro with React islands (Cloudflare Workers) — shows every contractor’s live website; website components in `packages/website-components` |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 ## Module layout
@@ -68,7 +68,12 @@ internal/
   billing/        # checkout.go, webhooks.go (Stripe only)
   leads/          # leads.go
 migrations/       # goose SQL migrations (greenfield)
-catalog/          # website templates + website component contracts (typed structs, kept as website template catalog revisions)
+apps/
+  contractor-website/  # Astro + React islands (Cloudflare Workers); one Worker for every tenant
+packages/
+  website-components/  # website templates, website component renderers + contract.json, website style catalog presets
+catalog/          # later: typed structs dumped to JSON; first-pass JSON sidecars live in packages/website-components
+frontend-2/       # CMS, onboarding, website preview (Vite)
 docs/
 go.mod
 ```
@@ -120,8 +125,9 @@ Two backend processes share one database, and two frontend apps talk to the API:
    to the API through the generated `openapi-fetch` helper.
 4. **Contractor website** (`apps/contractor-website`) — Astro with React islands, on Cloudflare
    Workers. Website publication writes HTML to R2 `latest/`; a live GET is Cache then R2 (no Go).
-   A single deploy serves all tenants (no per-tenant build). Import this application first when
-   implementation starts (it still lives in the predecessor repo today). Locked serve path:
+   A single deploy serves all tenants (no per-tenant build). The predecessor renderer is in this
+   repo as this application; next slices wire R2 `latest/`, website publication HTML, and
+   Connect website address. Locked serve path:
    [website Cloudflare](features/website/cloudflare.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
@@ -141,7 +147,8 @@ convention.
 ## Website component contract (single source of truth)
 
 Each website component (what a `public.hero.image` website section accepts) is **one typed struct, dumped to JSON**,
-under `catalog/`. That JSON is the contract: the TypeScript renderer for the contractor website
+under `catalog/`. Until that dump exists, the first-pass JSON sidecars live in
+`packages/website-components` (renderers + `contract.json`, website templates, and website style catalog presets). That JSON is the contract: the TypeScript renderer for the contractor website
 consumes it to
 validate and render, and the Go backend loads the same structs for save and website publication validation.
 Website templates and website component contracts are static website template catalog data, kept as website template catalog revisions — not database rows.

@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "phone": {
+      "label": "Phone",
+      "source": "business_profile.phone",
+      "type": "text"
+    },
+    "email": {
+      "label": "Email",
+      "source": "business_profile.email",
+      "type": "text"
+    },
+    "address": {
+      "label": "Address",
+      "source": "business_profile.address",
+      "type": "text"
+    },
+    "established_year": {
+      "label": "Established year",
+      "source": "business_research.established_year",
+      "type": "text"
+    },
+    "incorporation_year": {
+      "label": "Incorporation year",
+      "source": "company_registry.incorporation_date",
+      "type": "text"
+    },
+    "images.logo": {
+      "label": "Logo",
+      "source": "business_assets.logo",
+      "type": "image"
+    },
+    "people.leadership": {
+      "label": "Leadership profiles",
+      "source": "business_research.people",
+      "type": "list"
+    },
+    "proof.clients": {
+      "label": "Client proof logos",
+      "source": "business_research.client_logos",
+      "type": "list"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.fixed_cta",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.proof.leadership_grid",
+      "path": "items",
+      "value": "{{people.leadership}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Leadership names and roles are source-specific and must be replaced for another tenant.",
+        "fallback_value": [
+          {
+            "name": "{{people.owner.name}}",
+            "role": "Owner/CEO/President",
+            "image_url": "{{images.institutional_leader_owner}}",
+            "alt_text": "{{people.owner.name}}",
+            "bio": "Since purchasing the company in 2005, current Owner and President {{people.owner.name}}, continues the construction family tradition while maintaining the company's outstanding reputation and uncompromising commitment to quality and safety."
+          },
+          {
+            "name": "{{people.founder.name}}",
+            "role": "Founder/Chairman",
+            "image_url": "{{images.institutional_leader_founder}}",
+            "alt_text": "{{people.founder.name}}",
+            "bio": "The founder profile for {{business_name}} needs source-backed review before publication. Add confirmed founding, established, or incorporation details only when supported by tenant-approved evidence."
+          },
+          {
+            "name": "{{people.executive.name}}",
+            "role": "Executive Vice President",
+            "image_url": "{{images.institutional_leader_executive}}",
+            "alt_text": "{{people.executive.name}}",
+            "bio": "This leader brings deep construction management experience and executive oversight to the team."
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.proof.logo_strip",
+      "path": "items",
+      "value": "{{proof.clients}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "edit_reason": "Client logos are claims and must be confirmed from the tenant's own evidence before publication.",
+        "fallback_value": [
+          {
+            "label": "Public sector client",
+            "image_url": "{{images.institutional_client_public_sector}}",
+            "alt_text": "Public sector client logo"
+          },
+          {
+            "label": "Federal agency client",
+            "image_url": "{{images.institutional_client_federal_agency}}",
+            "alt_text": "Federal agency client logo"
+          },
+          {
+            "label": "University client",
+            "image_url": "{{images.institutional_client_university}}",
+            "alt_text": "University client logo"
+          },
+          {
+            "label": "Campus client",
+            "image_url": "{{images.institutional_client_campus}}",
+            "alt_text": "Campus client logo"
+          },
+          {
+            "label": "Public safety client",
+            "image_url": "{{images.institutional_client_public_safety}}",
+            "alt_text": "Public safety client logo"
+          },
+          {
+            "label": "Defense client",
+            "image_url": "{{images.institutional_client_defense}}",
+            "alt_text": "Defense client logo"
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "logo_url",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.footer.centered_social_nav",
+      "path": "address",
+      "value": "{{address}}"
+    }
+  ]
+}

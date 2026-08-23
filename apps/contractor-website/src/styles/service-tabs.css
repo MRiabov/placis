@@ -1,0 +1,5 @@
+@layer components {
+  .public-service-pane[hidden] {
+    display: none;
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "variables": {
+    "business_name": {
+      "label": "Business name",
+      "source": "business_profile.business_name",
+      "type": "text"
+    },
+    "phone": {
+      "label": "Phone",
+      "source": "business_profile.phone",
+      "type": "text"
+    },
+    "email": {
+      "label": "Email",
+      "source": "business_profile.email",
+      "type": "text"
+    },
+    "address": {
+      "label": "Address",
+      "source": "business_profile.branding.address",
+      "type": "text"
+    },
+    "service_area": {
+      "label": "Service area",
+      "source": "business_profile.service_area",
+      "type": "list"
+    },
+    "opening_hours": {
+      "label": "Opening hours",
+      "source": "business_profile.opening_hours",
+      "type": "list"
+    },
+    "images.logo": {
+      "label": "Logo",
+      "source": "website_assets.logo",
+      "type": "image"
+    },
+    "images.dark_serif_hero_pattern": {
+      "label": "{{business_name}} hero pattern",
+      "source": "source_reference.image.hero_pattern",
+      "type": "image"
+    },
+    "proof.accreditations": {
+      "label": "Accreditations",
+      "source": "business_research.proof",
+      "type": "list"
+    },
+    "proof.license_label": {
+      "label": "License/proof label",
+      "source": "business_research.license_label",
+      "type": "text"
+    }
+  },
+  "values": [
+    {
+      "component_id": "public.navigation.standard",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.navigation.standard",
+      "path": "logo",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.navigation.standard",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.navigation.standard",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.service_area",
+      "value": "{{service_area}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.phone_href",
+      "value": "tel:{{phone}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.email_href",
+      "value": "mailto:{{email}}"
+    },
+    {
+      "component_id": "public.form.lead",
+      "path": "contact_details.address",
+      "value": "{{address}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "address",
+      "value": "{{address}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "service_area",
+      "value": "{{service_area}}"
+    },
+    {
+      "component_id": "public.contact.panel",
+      "path": "opening_hours",
+      "value": "{{opening_hours}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "logo",
+      "value": "{{images.logo}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "phone",
+      "value": "{{phone}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "email",
+      "value": "{{email}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "address",
+      "value": "{{address}}"
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "contact_line",
+      "value": "{{proof.license_label}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "edit_reason": "License/proof text must match the target business before publication."
+      }
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "badges",
+      "value": "{{proof.accreditations}}",
+      "metadata": {
+        "mandatory_edit": true,
+        "review_required": true,
+        "candidate_source": "source_reference_template",
+        "selection_strategy": "research_rerank",
+        "fallback_value": [
+          {
+            "label": "{{proof.license_label}}",
+            "image_url": "{{proof.accreditations.0.image_url}}",
+            "alt_text": "{{proof.license_label}} badge"
+          }
+        ]
+      }
+    },
+    {
+      "component_id": "public.footer.standard",
+      "path": "copyright",
+      "value": "Copyright 2026 {{business_name}}. All rights reserved."
+    }
+  ]
+}

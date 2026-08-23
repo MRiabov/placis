@@ -1,0 +1,62 @@
+{
+  "id": "public.content.intro",
+  "aliases": [],
+  "schema_version": 1,
+  "display_name": "Intro Content",
+  "family": "content",
+  "variant": "intro",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      },
+      "paragraphs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "additionalProperties": true,
+    "required": ["title"]
+  },
+  "editable_slots": [
+    {
+      "key": "eyebrow",
+      "type": "text",
+      "label": "Eyebrow",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "title",
+      "type": "text",
+      "label": "Title",
+      "required": true,
+      "max_length": null
+    },
+    {
+      "key": "paragraphs",
+      "type": "list",
+      "label": "Paragraphs",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "design_controls": [
+    {
+      "key": "density",
+      "type": "enum",
+      "label": "Density",
+      "values": ["compact", "comfortable", "spacious"],
+      "default": "comfortable"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="120" viewBox="0 0 240 120" role="img" aria-label="Registered Gas Installer">
+  <rect width="240" height="120" rx="14" fill="#ffffff"/>
+  <path d="M64 22c20 22 29 39 29 55 0 20-15 33-33 33S28 97 28 77c0-16 11-32 36-55z" fill="#f7931e"/>
+  <path d="M63 49c10 12 15 20 15 29 0 10-7 17-16 17s-16-7-16-17c0-9 6-18 17-29z" fill="#ffffff"/>
+  <text x="116" y="60" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" fill="#222222">RGI</text>
+  <text x="117" y="82" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#555555">REGISTERED GAS INSTALLER</text>
+</svg>

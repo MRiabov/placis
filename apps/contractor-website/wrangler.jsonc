@@ -1,0 +1,60 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "placis-contractor-website-local",
+  "main": "./dist/_worker.js/index.js",
+  "compatibility_date": "2026-06-26",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.05
+  },
+  "vars": {
+    "PUBLIC_SITE_ENV": "local",
+    "PUBLIC_SITE_PRIVATE_APP_BASE_URL": "http://localhost:5173",
+    "CMS_STATIC_SITE_KEY_PREFIX": "sites"
+  },
+  "env": {
+    "staging": {
+      "name": "placis-contractor-website-staging",
+      "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+      "r2_buckets": [
+        {
+          "binding": "CMS_STATIC_SITE_BUCKET",
+          "bucket_name": "placis-contractor-websites-staging"
+        }
+      ],
+      "observability": {
+        "enabled": true,
+        "head_sampling_rate": 0.05
+      },
+      "vars": {
+        "PUBLIC_SITE_ENV": "staging",
+        "PUBLIC_SITE_PRIVATE_APP_BASE_URL": "https://app.placis.com",
+        "CMS_STATIC_SITE_KEY_PREFIX": "sites"
+      }
+    },
+    "production": {
+      "name": "placis-contractor-website",
+      "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+      "r2_buckets": [
+        {
+          "binding": "CMS_STATIC_SITE_BUCKET",
+          "bucket_name": "placis-contractor-websites"
+        }
+      ],
+      "observability": {
+        "enabled": true,
+        "head_sampling_rate": 0.05
+      },
+      "vars": {
+        "PUBLIC_SITE_ENV": "production",
+        "PUBLIC_SITE_PRIVATE_APP_BASE_URL": "https://app.placis.com",
+        "CMS_STATIC_SITE_KEY_PREFIX": "sites"
+      }
+    }
+  }
+}

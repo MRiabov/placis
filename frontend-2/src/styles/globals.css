@@ -1,6 +1,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "../../../packages/public-site-components/src/styles.css";
+@import "../../../packages/website-components/src/styles.css";
 @import "./private-app-tokens.css";
 @import "./cms/index.css";
 /* biome-ignore lint/suspicious/noUnknownAtRules: tailwind directive */
