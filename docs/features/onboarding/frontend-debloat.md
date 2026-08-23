@@ -5,12 +5,12 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [frontend.md](frontend.md), [pipeline README](pipeline/README.md),
-[06 website preview](pipeline/06-website-preview.md),
-[07 website activation](pipeline/07-website-activation.md).
+[07 website preview](pipeline/07-website-preview.md),
+[08 website activation](pipeline/08-website-activation.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 
-First-pass client interview is **text**. Voice is a later milestone
-([go-backend-rewrite.md](../../../planning/go-backend-rewrite.md)).
+Default client interview is **voice**. Text is the other writer
+([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)).
 
 ## Code today
 

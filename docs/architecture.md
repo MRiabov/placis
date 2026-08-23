@@ -157,8 +157,8 @@ The Go backend loads and validates them; it must not hand-duplicate the struct s
 ## Boundaries
 
 1. `auth` proves identity via the Clerk Go SDK; `tenancy` decides tenant access and permissions.
-2. `onboarding` owns business research, profile building, the first unpublished website (04), async website copy
-   generation (05), and website preview/website activation; it does not do website publication. The website
+2. `onboarding` owns business research, profile building, the first unpublished website (05), async website copy
+   generation (06), and website preview/website activation; it does not do website publication. The website
    assistant (website editor) and website publication live in `website`.
 3. `templates` applies website templates into tenant-owned `website_*` rows; it validates website component ids,
    props, design controls, website page paths, website forms, and top menu / footer before writing.
