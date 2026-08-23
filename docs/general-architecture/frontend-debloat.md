@@ -67,7 +67,7 @@ against old paths. No shims, no `as any`, no mapping layer
 Do not wait until Go has “enough” routes. The generated file must not
 reintroduce predecessor-only paths (CRM sandbox, tenant-scoped website CRUD,
 unconstrained blobs). Contractor website typegen is a different consumer:
-[port-placis-website.md](../features/website/port-placis-website.md).
+[port-contractor-website.md](../features/website/port-contractor-website.md).
 
 ## Retarget
 

@@ -9,7 +9,7 @@ The Go rewrite already changes the API, so the frontend switches to that smaller
 field-constrained huma contract instead of wrapping the predecessor OpenAPI.
 Predecessor OpenAPI is not a compatibility surface: no old paths, operation ids,
 or unconstrained JSON. Contractor website API cutover:
-[port-placis-website.md](../features/website/port-placis-website.md).
+[port-contractor-website.md](../features/website/port-contractor-website.md).
 
 ## Instruction files
 
@@ -22,7 +22,7 @@ or unconstrained JSON. Contractor website API cutover:
 | [media library](../features/other/media/frontend-debloat.md) | Media library workspace item + `/cms/media` |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, one Clerk organization provision, `/me` |
 | [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
-| [contractor website port](../features/website/port-placis-website.md) | Worker API cutover: public resolve + `website.v1`; no predecessor OpenAPI |
+| [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover: public resolve + `website.v1`; no predecessor OpenAPI |
 | [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
 
 No leads instruction file: website forms persist website leads; there is no CMS leads
@@ -39,7 +39,7 @@ console.
   GET/PATCH, publication, Connect website address, website preview resolve,
   website activation / checkout / status, media library, ads when that slice
   exists. Contractor website public routes: website preview resolve, website
-  form submit (see [port-placis-website.md](../features/website/port-placis-website.md)).
+  form submit (see [port-contractor-website.md](../features/website/port-contractor-website.md)).
 - Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
   `/api/v1/tenants/{website_address}/website/…`, blog, careers,
   website-template-apply leftovers, unconstrained JSON in UI-facing schemas,
@@ -96,6 +96,6 @@ files + one E2E per epic (docs-only PRs excepted).
 ## Out of scope
 
 Voice WebSocket, ad posting, blog, careers, renaming Sites, rebuilding the website component
-visuals. Contractor website API: [port-placis-website.md](../features/website/port-placis-website.md).
+visuals. Contractor website API: [port-contractor-website.md](../features/website/port-contractor-website.md).
 Remaining cuts (CSS split, typed catalog, Don’t-say):
 [contractor-website-debloat.md](../features/website/contractor-website-debloat.md).
