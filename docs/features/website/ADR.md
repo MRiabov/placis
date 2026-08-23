@@ -56,11 +56,12 @@ Status: decided (2026-08-16, product owner + engineering).
     coalesce) so `429` is a backstop, not the normal path. Do not audit every website slot
     edit. There is no Save action in the website editor; edits persist on click-off. The
     in-memory website editor projection is the working copy; PATCH copies out. Do not replace
-    it from the PATCH response. Leaving while a copy-out or upload is in flight uses a
-    discard confirm (`beforeunload` + in-app). Explicit actions remain website publication,
-    Connect website address, and apply website styles.
+    it from the PATCH response. The PATCH body is dirty keys only, typically under 10 KB; reject
+    over 64 KB. Never send the whole unpublished website or file bytes. Leaving while a
+    copy-out or upload is in flight uses a discard confirm (`beforeunload` + in-app). Explicit
+    actions remain website publication, Connect website address, and apply website styles.
     (2026-08-20; write budget 2026-08-23; no Save 2026-08-23; local-first PATCH 2026-08-23;
-    click-off 2026-08-23; send timer + leave guard 2026-08-23)
+    click-off 2026-08-23; send timer + leave guard 2026-08-23; PATCH delta 64 KB 2026-08-23)
 
 13. **Website styles live on `website_settings`** — one row per tenant, copied into the website
     manifest at website publication. Not per website page. (2026-08-20)

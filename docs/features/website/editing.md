@@ -108,6 +108,18 @@ the edits. To update a website slot you send:
 - **website form patch** — `website_form_id`, `title`, `submit_action`, `fields[]` (typed form
   field rows), `privacy_notice`.
 
+Coalesce means the **dirty keys since the last successful copy-out**, not the full draft. Do not
+send sibling website slots, `media_assets[]`, the website manifest, or file bytes. Image website
+slots send a `media_asset_id` (and crop / focal point if those changed). Photos go through the
+media-library upload, not this PATCH.
+
+Typical PATCH is **under 10 KB** (one headline is hundreds of bytes; a rich-text click-off is a
+few KB). A busy coalesced window stays in that band. A **1 MB** body would mean we shipped the
+whole unpublished website or a `data:` image — both are bugs. The API rejects a PATCH body over
+**64 KB** (`413`); slot `max_length` and typed structs reject earlier. `GET` hydrates one website
+page (tens of KB of JSON: copy, ids, public URLs). Website publication is a small POST; Go builds
+the website manifest from Postgres and writes R2 — the owner does not upload HTML.
+
 Typing (`text` / `rich_text` website slots, SEO copy, website form field labels): PATCH on
 **click-off** (blur), not per keystroke and not on an idle-while-typing timer. The canvas
 already has the text. Discrete patches (image, reorder, add/remove) skip the field and queue
@@ -142,7 +154,7 @@ progress, do not let the owner leave immediately.
   finish. Website publication flushes first and does not show discard.
 
 Slot `value` stays bounded by the website component contract (`max_length` and typed structs).
-Reject oversized jsonb at the API; do not store it.
+Reject oversized jsonb at the API; do not store it. Reject a PATCH over 64 KB.
 
 ## What each action does
 
