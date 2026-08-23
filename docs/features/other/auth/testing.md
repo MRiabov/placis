@@ -8,21 +8,22 @@ using a real Clerk testing token — never a fake verifier. DB asserts name the 
 
 1. **Before sign-in** — open `/cms`.
    - UI: redirected to authenticate; not into the CMS.
-2. **After sign-in, not onboarded** — a contractor with no Clerk organization.
+2. **After sign-in, not activated** — a contractor with no Clerk organization (an unactivated
+   tenant may already exist from onboarding confirm).
    - UI: routed to onboarding, not `/cms` (`/me` returns `tenant: null`).
-3. **After sign-in, onboarded** — a contractor whose Clerk organization maps to an active tenant.
+3. **After sign-in, activated** — a contractor whose Clerk organization maps to an **active** tenant.
    - UI: lands in `/cms`; the Clerk profile icon shows; a read operation (the website page list) renders
      data.
-   - DB: `tenants` (`clerk_org_id`) and `tenant_memberships` (`owner`) are populated; the website page list
+   - DB: `tenants` (`clerk_org_id`, `status=active`) and `tenant_memberships` (`owner`) are populated; the website page list
      reads `website_pages` for that `tenant_id`.
 
 ## 2. Clerk organization created without re-entering the name
 
-1. **Authenticated, no Clerk organization, onboarding details present** — a contractor who already gave their business
-   name in onboarding.
-   - Action: the system creates the Clerk organization **programmatically from the known name**; the contractor is
-     not asked to type the name again.
-   - UI: `/me` transitions from `tenant: null` to the tenant; the contractor proceeds without a
-     re-entry step.
-   - DB: `tenants` (`clerk_org_id`) and `tenant_memberships` (`owner`) are written, reusing
-     the onboarding profile's name.
+1. **Authenticated, no Clerk organization, onboarding details present** — a contractor who already
+   confirmed onboarding (unactivated tenant + business name on the profile).
+   - Action: website activation creates the Clerk organization **programmatically from the known
+     name** and **upgrades** that unactivated tenant; the contractor is not asked to type the name
+     again.
+   - UI: `/me` stays `tenant: null` until activation; then it returns the **same** tenant id.
+   - DB: the existing `tenants` row gets `clerk_org_id` and `status=active`; `tenant_memberships`
+     (`owner`) is written; no second tenant row.

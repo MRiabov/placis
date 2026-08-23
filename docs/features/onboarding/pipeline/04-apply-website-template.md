@@ -5,7 +5,8 @@ to `applying_website_template` and enqueues this step. It does **not** run at fi
 
 Onboarding **owns** kicking this off and waiting until an unpublished website exists. The records
 it writes are [website](../../website/data-model.md) + [media library](../../other/media/data-model.md)
-unpublished rows — the same tables the CMS edits later.
+unpublished rows — the same tables the CMS edits later. Those rows use the onboarding session’s
+`tenant_id` (the unactivated tenant created at confirm).
 
 ## What runs
 
