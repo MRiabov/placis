@@ -101,7 +101,9 @@ every tenant. The website publication control is a destination dropdown
 (`{website_address}.preview.placis.com`, a connected custom website address, or New URL). Host
 routing uses `website_addresses` reserved at website activation. Serve path, R2 keys, cache
 purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md).
-`apps/contractor-website` is in this repo; next is R2 `latest/` + website publication HTML.
+`apps/contractor-website` is in this repo; remaining cuts:
+[contractor-website-debloat.md](contractor-website-debloat.md). Next is R2 `latest/` +
+website publication HTML.
 
 ## Contractor website (separate Astro app)
 

@@ -19,6 +19,7 @@ field-constrained huma contract instead of wrapping the predecessor OpenAPI.
 | [media library](../features/other/media/frontend-debloat.md) | Media library workspace item + `/cms/media` |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, one Clerk organization provision, `/me` |
 | [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
+| [contractor website](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
 
 No leads instruction file: website forms persist website leads; there is no CMS leads
 console.
@@ -68,4 +69,6 @@ files + one E2E per epic (docs-only PRs excepted).
 
 ## Out of scope
 
-Voice WebSocket, ad posting, blog, careers, renaming Sites, rebuilding the design system.
+Voice WebSocket, ad posting, blog, careers, renaming Sites, rebuilding the website component
+visuals. Remaining contractor-website cuts (CSS split, typed website component catalog, Don’t-say):
+[contractor-website-debloat.md](../features/website/contractor-website-debloat.md).

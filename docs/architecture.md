@@ -125,9 +125,10 @@ Two backend processes share one database, and two frontend apps talk to the API:
    to the API through the generated `openapi-fetch` helper.
 4. **Contractor website** (`apps/contractor-website`) — Astro with React islands, on Cloudflare
    Workers. Website publication writes HTML to R2 `latest/`; a live GET is Cache then R2 (no Go).
-   A single deploy serves all tenants (no per-tenant build). The predecessor renderer is in this
-   repo as this application; next slices wire R2 `latest/`, website publication HTML, and
-   Connect website address. Locked serve path:
+   A single deploy serves all tenants (no per-tenant build). The website component
+   package is keep-and-cut; the Worker is write-thin (live GET never calls Go). Remaining
+   cuts: [contractor-website-debloat.md](features/website/contractor-website-debloat.md).
+   Locked serve path:
    [website Cloudflare](features/website/cloudflare.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw payload saved, the
