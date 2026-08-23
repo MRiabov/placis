@@ -95,9 +95,11 @@ Edits to Details, Projects, certifications and reviews, website styles, or the u
 website do not change the live website until the next website publication.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website application serves
-every tenant. Host routing uses `website_addresses` reserved at website activation. Serve path,
-R2 keys, cache purge, custom website address, and local Worker:
-[cloudflare.md](cloudflare.md). **First implementation step:** import `apps/contractor-website`.
+every tenant. The website publication control is a destination dropdown
+(`{website_address}.preview.placis.com`, a connected custom website address, or New URL). Host
+routing uses `website_addresses` reserved at website activation. Serve path, R2 keys, cache
+purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md). **First
+implementation step:** import `apps/contractor-website`.
 
 ## Contractor website (separate Astro app)
 

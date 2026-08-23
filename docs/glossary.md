@@ -358,7 +358,9 @@ In code: `website_activations`.
 A stage in our sales process where they choose to buy the website or not. Never say bare
 “preview”. Do not use this word for the website editor canvas or for ad format mocks.
 
-Distinct from: Unpublished website, Website activation, Website preview link.
+Distinct from: Unpublished website, Website activation, Website preview link, the
+`{website_address}.preview.placis.com` host (that is the website address after website
+publication, not this sales stage).
 
 In code: `website_previews`, `internal/onboarding/websitepreview/`.
 

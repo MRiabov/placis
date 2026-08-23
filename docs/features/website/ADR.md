@@ -90,13 +90,21 @@ Status: decided (2026-08-16, product owner + engineering).
     render from Postgres. `GET /api/v1/public/site/resolve` is website preview (and tests) only.
     (2026-08-21)
 
-19. **R2 tree is keyed by the internal website address** — `tenants.website_address`, fixed at
+19. **R2 tree is keyed by the website address** — `tenants.website_address`, fixed at
     website activation. Custom website address maps `sites/hosts/{hostname}` → that label.
-    `{website_address}.placis.com` is not owner-facing.
-    (2026-08-21)
+    Owner-facing default live host is `{website_address}.preview.placis.com` (wildcard on our
+    zone). Do not advertise `{website_address}.placis.com`. One `latest/` tree; publication
+    destinations share it (no Placis-host version vs custom-host version).
+    (2026-08-21; `.preview.placis.com` 2026-08-23)
 
 20. **Custom website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS **Connect website
-    address** shows records to paste. Do not take over the contractor’s nameservers. Apex `A`
+    address** is a modal over the website editor, opened from **New URL** in the website publication
+    dropdown. Shows records to paste. Do not take over the contractor’s nameservers. Apex `A`
     records need Apex Proxying (later, Enterprise).
-    (2026-08-21)
+    (2026-08-21; Connect modal 2026-08-23)
+
+21. **Website publication is a destination dropdown** — `{website_address}.preview.placis.com`,
+    each connected custom website address, or New URL (Connect website address). Not a Worker
+    deploy. See [frontend.md](frontend.md).
+    (2026-08-23)
