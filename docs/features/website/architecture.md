@@ -63,7 +63,8 @@ The website editor is one workspace with three surfaces:
 - **Editing panel** — edits the selected website section (website slots, design) and website-page
   SEO, website forms, and website versions.
 
-Edits upsert unpublished website rows in place. There is no Save action; typing is
+Edits mutate the in-memory website editor projection first, then PATCH copies them to unpublished
+rows. There is no Save action; do not re-render from the PATCH response. Typing is
 debounced before PATCH; the API rate-limits website-editor writes (`429` + backoff). See
 [editing.md](editing.md). Website
 assistant edits arrive as proposals (a diff), never a direct write. Website publication writes a
