@@ -16,11 +16,12 @@ it update, then website publication.
    persist automatically. A non-clickable Saving / Saved status is allowed; a Save button is not.
 4. A schema-validated **PATCH** (`/api/v1/website/editor/...`) **copies** the change to unpublished
    rows. It is persistence, not the render path. Do not `GET` after each PATCH. Do not replace the
-   whole projection from the PATCH response (that is frontend → backend → frontend, and it races
-   typing). Merge only what the frontend cannot invent: assigned ids, validation status,
-   website-publication blockers. Typing is **debounced** (same idea as onboarding Maps/registry
-   search): coalesce keystrokes, then one PATCH. Discrete actions (image swap, reorder, add/remove
-   a website section) PATCH immediately.
+   whole projection from the PATCH response (that is frontend → backend → frontend). Merge only
+   what the frontend cannot invent: assigned ids, validation status, website-publication blockers.
+   Typing does **not** PATCH. Copy-out for `text` / `rich_text` / SEO happens on **click-off**
+   (leave the field). Also flush on route change, website publication, and page hide / unload so a
+   close-tab without blur is not lost. Discrete actions (image swap, reorder, add/remove a website
+   section) PATCH immediately.
 5. The backend validates the change against the website component contract and **upserts** the
    unpublished website rows. The body is only the changed website slots / website sections — not
    the whole unpublished website. Over-chatty PATCH from one tenant is `429` with `Retry-After`;
@@ -101,13 +102,14 @@ the edits. To update a website slot you send:
 - **website form patch** — `website_form_id`, `title`, `submit_action`, `fields[]` (typed form
   field rows), `privacy_notice`.
 
-Typing (`text` / `rich_text` website slots, SEO copy): wait **500ms** after the last keystroke,
-and flush at **2s** even if they are still typing, so a long edit still reaches Postgres. On
-blur, route change, or website publication, flush immediately. Discrete patches skip the wait.
+Typing (`text` / `rich_text` website slots, SEO copy, website form field labels): PATCH on
+**click-off** (blur), not per keystroke and not on an idle timer. The canvas already has the
+text. Also flush on leaving the website page, website publication, and page hide / unload.
+Discrete patches (image, reorder, add/remove) skip the field and PATCH immediately.
 
 The jsonb columns (`website_slots.value`, `website_sections.props` / `design`) are in-place
 `UPDATE`s of one row. There is no unpublished revision stack, so we do not append a jsonb blob
-per keystroke. Chatty writes still rewrite TOAST and WAL — debounce is what keeps that down.
+per keystroke. Click-off (not debounce-while-typing) is what keeps TOAST and WAL down.
 Website publication still writes one `website_manifest` jsonb per website version (kept, never
 overwritten).
 

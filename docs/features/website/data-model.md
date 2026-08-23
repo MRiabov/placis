@@ -55,8 +55,8 @@ lives on [business_profile_reviews](../other/details/data-model.md). A project g
 `json` / `list` website slot of project ids, not a `slot_type`.
 
 `props`, `design`, and slot `value` stay jsonb: each website component / slot has its own
-catalog-shaped dump. Website editor writes are in-place `UPDATE`s of those columns, debounced
-and rate-limited — [editing.md](editing.md). `website_manifest` is jsonb because it is a published website copy
+catalog-shaped dump. Website editor writes are in-place `UPDATE`s of those columns, on
+click-off for text and rate-limited — [editing.md](editing.md). `website_manifest` is jsonb because it is a published website copy
 (see [manifest.md](manifest.md)), not because the tree is polymorphic.
 
 There is no unpublished revision table and no per-page version table.
