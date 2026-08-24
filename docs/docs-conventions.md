@@ -13,7 +13,8 @@ editing a doc.
 - `general-prd.md` — product-level loop and in/out of scope (pointers to feature PRDs).
 - `general-architecture/` — cross-cutting architecture no single feature owns:
   `backend-stack.md`, `frontend-stack.md`, `module-layout.md`, `processes.md`,
-  `package-boundaries.md`, `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
+  `package-boundaries.md`, `api.md` (HTTP conventions + index of per-feature `api.md` files),
+  `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
   `files-and-s3.md`, `data-model.md`
   (conventions + index of per-feature schemas), `frontend.md` (`frontend-2` UI rules),
   `frontend-debloat.md` (cross-cutting port), `ci-cd.md`, `testing.md`.
@@ -36,7 +37,8 @@ A feature directory holds, as applicable:
 | `ADR.md` | numbered decision record |
 | `architecture.md` | the logic: content/component model, flows, states (no structs) |
 | `data-model.md` | that feature's tables (columns, indexes); shared tables are linked, never copied |
-| `technical-implementation.md` | API surface, validation, testing — references `data-model.md`, does not re-define tables |
+| `api.md` | Canonical HTTP routes for this feature. Routes, auth, callers, request/response fields, errors, do-not-create. Not Go structs. Conventions: [general-architecture/api.md](general-architecture/api.md). |
+| `technical-implementation.md` | pipeline, validation, testing — references `data-model.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
 | `testing.md` | the full-stack E2E test(s) with DB asserts |
@@ -58,4 +60,6 @@ Not every file is needed — a feature uses only the ones it has content for. A 
 - **New names come from the glossary** — coin a word there first, never in a PRD. The glossary
   defines terms; it never prescribes.
 - **Logic before structs**: architecture/pipeline docs describe flows and models; structs/DTOs fall
-  out at implementation time and are not pre-written.
+  out at implementation time and are not pre-written. The **HTTP routes** are per-feature `api.md`
+  (plus [general-architecture/api.md](general-architecture/api.md)); that is paths and fields, not
+  huma structs.

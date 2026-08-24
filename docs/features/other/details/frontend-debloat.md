@@ -4,7 +4,8 @@ Status: planning (port instructions, not shipped UI).
 
 ## Target
 
-[frontend.md](frontend.md), [README.md](README.md), [data-model.md](data-model.md).
+[frontend.md](frontend.md), [README.md](README.md), [data-model.md](data-model.md),
+[api.md](api.md).
 Projects and certifications field specs:
 [website frontend](../../website/frontend.md).
 Shared rules: [planning index](../../../../planning/frontend-debloat.md).
@@ -30,8 +31,7 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
   opening hours). Top menu and footer stay in the website editor.
 - Typed Business details fields (`detailsModel.ts` `emptyForm` / `profileToForm` / `formToPatch`).
 - Per-field loading placeholders ([general frontend](../../../general-architecture/frontend.md)).
-- `GET/PATCH /api/v1/website/editor/business-profile` until the Go contract names
-  the same fold.
+- `GET/PATCH /v1/business-profile` ([api.md](api.md)).
 
 ## Delete
 

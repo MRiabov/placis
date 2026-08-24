@@ -15,7 +15,8 @@ API. The Placis website is a separate static origin and does not call Go.
    package is keep-and-cut; the Worker is write-thin (live GET never calls Go). Remaining
    cuts: [contractor-website-debloat.md](../features/website/contractor-website-debloat.md).
    API cutover: [port-contractor-website.md](../features/website/port-contractor-website.md).
-   Website preview is this app in preview mode (`{website_address}.preview.placis.com`).
+   Don't say preview: live host after website publication is `{website_address}.preview.placis.com` (Cache then R2).
+   Website preview is `/preview/{token}/` on the same app (unpublished rows; not R2).
    Locked serve path:
    [website Cloudflare](../features/website/cloudflare.md).
 4. **Placis website** (`apps/placis-website`) — Astro static build uploaded to R2; hostname
@@ -28,11 +29,12 @@ work enqueued, and the request returned — see
 job can be retried safely (an explicit key) — see [jobs](jobs.md).
 
 Onboarding session progress events stream over SSE — see
-[07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md). Anyone with the
-website preview link opens `/preview/{token}/` on the contractor website, which renders unpublished
-rows via `GET /api/v1/public/site/resolve`. The website preview itself is not an SSE endpoint.
+[07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md) and
+[onboarding HTTP](../features/onboarding/api.md). Anyone with the website preview link opens
+`/preview/{token}/` on the contractor website, which renders unpublished rows through the
+Worker internal render (not public OpenAPI). The website preview itself is not an SSE endpoint.
 
-HTTP split (huma vs raw `net/http`): [backend stack](backend-stack.md).
+HTTP conventions: [api.md](api.md). Huma vs streaming: [backend stack](backend-stack.md).
 
 River is required: slow work must not sit on an HTTP request. A second always-on Go process is
 not. Jobs are Postgres rows in schema `jobs`; the worker is a loop that claims them. At this

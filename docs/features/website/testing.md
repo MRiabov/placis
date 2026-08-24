@@ -35,8 +35,7 @@ DB asserts name the tables from [data-model.md](data-model.md) (and
      owner still uses website preview.
 
 6. **Live website** — the published website copy is the files in `latest/`, not a Go resolve.
-   - Assert: fake R2 objects for the edited website page; `GET /api/v1/public/site/resolve` is
-     not required for this live assert.
+   - Assert: fake R2 objects for the edited website page; live GET never calls Go.
 
 7. **Website rollback** — the owner does a website rollback.
    - DB: an earlier `website_publications` is `active` again; earlier published website copies are

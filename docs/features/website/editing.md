@@ -16,7 +16,7 @@ it update, then website publication.
    Saving / Saved indicator. Edits persist automatically. If a copy-out or media-library upload
    has not succeeded after **10 seconds**, show a visible error. Keep the local edit and keep
    retrying. The leave guard still applies — the change is still uncopied.
-4. A schema-validated **PATCH** (`/api/v1/website/editor/...`) **copies** the change to unpublished
+4. A schema-validated **PATCH** (`/v1/website/editor/...`) **copies** the change to unpublished
    rows. It is persistence, not the render path. Do not `GET` after each PATCH. Do not replace the
    whole projection from the PATCH response (that is frontend → backend → frontend). Merge only
    `{ edit_history_head, batch_id }` (plus assigned ids on create). Typing does **not** PATCH.
@@ -68,7 +68,7 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 
 ### Read — the website editor projection
 
-`GET /api/v1/website/editor/pages/{page_id}` returns:
+`GET /v1/website/editor/pages/{page_id}` returns:
 
 - `tenant` (id, website address, name); `page` (id, path / website page path, title,
   page_type, status, validation status,
@@ -88,7 +88,7 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 No new routes. Optional query on this same GET: `include_edit_history=true`.
 
 **Open hydrate** (enter `/cms/website`, full reload, or after `409` `edit_history_conflict`):
-`GET /api/v1/website/editor/pages/{page_id}?include_edit_history=true` — the fold for the
+`GET /v1/website/editor/pages/{page_id}?include_edit_history=true` — the fold for the
 selected website page **and** tenant-scoped website edit history (last 200 batches). A batch
 can be website styles, a website form, or another website page, so the log is not a per-page
 slice. Extra fields: `edit_history_head` (uuid, null if the stack is empty), `edit_history[]`
@@ -106,7 +106,7 @@ A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`, `
 
 ### Write — the patch
 
-`PATCH /api/v1/website/editor/pages/{page_id}` takes a website page patch whose `sections[]` carry
+`PATCH /v1/website/editor/pages/{page_id}` takes a website page patch whose `sections[]` carry
 the edits, plus required `base_edit_history_head` (the acked head; null only if the stack is
 empty). Dirty keys unchanged — including keys dirtied by in-memory undo/redo. Success returns
 **only** `{ edit_history_head, batch_id }` — not the projection, not the log. To update a
@@ -238,8 +238,8 @@ a website version.
 Website publication writes `website_publications` + `website_manifest` (a website version).
 
 The contractor website application (`apps/contractor-website`) does **no per-edit work**. Live
-GET reads prebuilt HTML in R2 `latest/` ([cloudflare.md](cloudflare.md)). Website preview calls
-`GET /api/v1/public/site/resolve`. Editing mutates the in-memory projection, then copies unpublished
+GET reads prebuilt HTML in R2 `latest/` ([cloudflare.md](cloudflare.md)). Website preview uses
+Worker internal render. Editing mutates the in-memory working copy, then copies unpublished
 rows via PATCH; the live website changes only on website publication. The website editor canvas
 renders the unpublished website (React + that package), not through Astro. That canvas is not a
 website preview. The frontend holds one working projection; it does not accumulate unpublished

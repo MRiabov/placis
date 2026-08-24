@@ -4,7 +4,7 @@ Status: planning (port instructions, not shipped UI).
 
 ## Target
 
-[README.md](README.md), [data-model.md](data-model.md),
+[README.md](README.md), [data-model.md](data-model.md), [api.md](api.md),
 [testing.md](testing.md). Shared rules:
 [planning index](../../../../planning/frontend-debloat.md).
 
@@ -46,7 +46,7 @@ Website activation Clerk + Stripe is owned by
 
 - Org chooser, `placis_selected_org` cookie, `/me/orgs`, `/me/tenants`,
   `/me/selected-org`.
-- `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{website_address}`,
+- `POST /v1/tenants`, `PATCH /v1/tenants/{website_address}`,
   memberships CRUD.
 - Custom impersonation (platform admins use Clerk native impersonation).
 - Clerk testing-token flows in CI unless explicitly asked.
@@ -55,8 +55,8 @@ Website activation Clerk + Stripe is owned by
 
 | Today | Constrained API |
 | --- | --- |
-| `GET /api/v1/me` | same shape; tenant only if active |
-| Don't say organization: `POST /api/v1/me/organization` | Clerk organization provisioning (one, at activation / first login as specified) |
+| `GET /api/v1/me` | `GET /v1/me`; tenant only if active |
+| Don't say organization: `POST /api/v1/me/organization` | `POST /v1/me/clerk-organization` |
 
 ## Don't say / rename
 

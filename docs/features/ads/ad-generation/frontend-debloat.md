@@ -5,7 +5,7 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [frontend.md](frontend.md), [technical-implementation.md](technical-implementation.md),
-[ADR.md](ADR.md). Shared rules: [planning index](../../../../planning/frontend-debloat.md).
+[ADR.md](ADR.md), [api.md](../api.md). Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 Left nav Ads item: [details](../../other/details/frontend-debloat.md).
 Photos: [media library](../../other/media/frontend-debloat.md).
 
@@ -16,7 +16,7 @@ so the predecessor OpenAPI does not grow a campaign console.
 
 - No `frontend-2/src/features/ads/`.
 - No `/cms/ads`, `/cms/ads/new`, `/cms/ads/{id}` in `app/router/index.tsx`.
-- `frontend-2/src/generated/api-types.ts` has **no** `/api/v1/ads/*`.
+- `frontend-2/src/generated/api-types.ts` has **no** `/v1/ads/*`.
 - Predecessor leftovers that must not become Ads screens: CRM sandbox schemas
   (quotes, invoices, crew, workflows) and unconstrained JSON blobs in that
   generated file (cross-cutting file owns the typegen cut).
@@ -38,7 +38,7 @@ predecessor contract.
 - Ad posting UI (disabled control only, until that work ships).
 - Raw JSON editing.
 - Don't say: ad package — the deliverable is an **ad set**
-  (`POST /api/v1/ads/{ad_id}/ad-set`).
+  (`POST /v1/ads/{ad_id}/ad-set`).
 - Website-editor integration (ads are their own records).
 - A second media picker or token palette.
 
@@ -46,8 +46,8 @@ predecessor contract.
 
 When implementing, call only:
 
-1. `GET/POST /api/v1/ads`
-2. `GET/PATCH/DELETE /api/v1/ads/{ad_id}` (delete = draft-only)
+1. `GET/POST /v1/ads`
+2. `GET/PATCH/DELETE /v1/ads/{ad_id}` (delete = draft-only)
 3. variants GET/PATCH; `POST …/regenerate`
 4. `POST …/approve`
 5. `POST …/ad-set`
@@ -75,5 +75,5 @@ list (and ad-platform connection status) into the query cache as specified.
 ## Done when
 
 - `/cms/ads` matches [frontend.md](frontend.md) and the routes above.
-- Generated types include `/api/v1/ads/*` and not predecessor campaign/ops paths.
+- Generated types include `/v1/ads/*` and not predecessor campaign/ops paths.
 - No unconstrained JSON editing in this workspace.

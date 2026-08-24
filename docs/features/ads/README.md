@@ -5,9 +5,10 @@ services) into a reviewable, exportable ad set. This doc is the overview; the
 **single authority** for the feature is [`ad-generation/`](ad-generation/ADR.md):
 
 - [data-model.md](data-model.md) — `ads` and `ad_*` tables
+- [api.md](api.md) — HTTP (`/v1/ads`)
 - [ADR](ad-generation/ADR.md) — the decision record (why each choice was made)
 - [PRD](ad-generation/prd.md) — product spec, user stories, acceptance criteria
-- [technical-implementation.md](ad-generation/technical-implementation.md) — domain objects, API,
+- [technical-implementation.md](ad-generation/technical-implementation.md) — domain objects,
   generation pipeline, validation, export
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
 - [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-2` port: keep / delete / retarget

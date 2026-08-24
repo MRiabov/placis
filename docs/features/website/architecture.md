@@ -123,7 +123,7 @@ Live websites and website previews are served by a **separate Astro + React app*
 At **website publication**, that app renders each live website page from the active
 `website_manifest` (`website.v1`) and writes HTML to R2 `latest/`. A live GET is Cache then R2.
 It never calls Go. Website preview (`/preview/{token}/`) uses the same website components but
-renders unpublished website rows on each request via `GET /api/v1/public/site/resolve`.
+renders unpublished website rows on each request through the Worker internal render.
 
 Astro owns routing, the Astro document, prerender-at-publication, and metadata; React owns
 interactive islands. One application serves every contractor website — no per-tenant build —

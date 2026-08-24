@@ -56,7 +56,10 @@ diagnosable from GitHub Checks, the connection mode is wrong.
    **local-only** and never run in ordinary CI.
 7. **OpenAPI constraints** — the generated spec must constrain every field: strings carry
    `minLength` (and `maxLength`), numbers carry `minimum`/`maximum`, fixed sets are `enum`. A field
-   missing its constraints fails CI (the Go equivalent of the old "strict schema contract" check).
+   missing its constraints fails CI. The check must also fail `map[string]any`,
+   `json.RawMessage`, `additionalProperties: true`, and string fields documented as JSON blobs
+   on huma DTOs (including SSE event structs). Persistence `jsonb` columns are not this check.
+   See [HTTP conventions](api.md).
 
 ## Runner policy
 
@@ -129,8 +132,8 @@ did (Python had no compiler backing; Go does). We do **not** hand-roll AST scrip
 
 A custom `go/analysis` analyzer is added only when a concrete mistake keeps recurring — the one
 candidate is the Go analog of the old "freeform-JSON" ratchet ("no `map[string]any` /
-`json.RawMessage` in domain code, only at the persistence/API boundary"). Defer it until it
-actually bites.
+`json.RawMessage` on huma DTOs; `jsonb` is persistence-only"). Required for DTOs when Go exists;
+see [HTTP conventions](api.md).
 
 ### Don't-say checker
 

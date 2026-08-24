@@ -6,10 +6,11 @@ Status: planning (port instructions, not shipped UI).
 
 [frontend.md](frontend.md), [pipeline README](pipeline/README.md),
 [07 website preview](pipeline/07-website-preview.md),
-[08 website activation](pipeline/08-website-activation.md).
+[08 website activation](pipeline/08-website-activation.md),
+[api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 
-Default client interview is **voice**. Text is the other writer
+Default client interview is **text**. Voice is listed and deferred
 ([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)).
 
 ## Code today
@@ -19,7 +20,7 @@ Default client interview is **voice**. Text is the other writer
 - Website preview + website activation: leftover `frontend-2/src/features/preview/`
   (`PreviewRoute.tsx`, `TargetedPreviewView.tsx`, `PayToClaimStrip.tsx`,
   `api/preview.ts`). Drop that folder; website preview is `apps/contractor-website`
-  in preview mode ([frontend stack](../../general-architecture/frontend-stack.md)).
+  in website preview mode ([frontend stack](../../general-architecture/frontend-stack.md)).
   Keep the website-activation strip on `/onboarding/preview`.
 - Router: `/onboarding`, `/onboarding/$step`, `/preview/$token/$module` in
   `frontend-2/src/app/router/index.tsx`.
@@ -64,13 +65,13 @@ Default client interview is **voice**. Text is the other writer
 
 | Today | Constrained API |
 | --- | --- |
-| Don't say setup: `POST /api/v1/setup-sessions` | `POST /api/v1/onboarding-sessions` |
-| Don't say setup: `…/from-google-place` | `…/from-google-maps-listing` |
+| Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding-sessions/confirm` |
+| Don't say setup: `…/from-google-place` | collapsed into Confirm (no `from-google-maps-listing` URL) |
 | Company registry search, Google Maps autocomplete | same nested under onboarding sessions |
-| `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations, details |
-| Text client interview autosave + submissions | client interview autosave + submissions |
-| Don't say setup: `GET …/events/stream` | `GET /api/v1/onboarding-sessions/{id}/events/stream` |
-| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | activate / activation-checkout / activation-status |
+| `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations |
+| Text client interview autosave + submissions | client interview autosave + submissions + complete |
+| Don't say setup: `GET …/events/stream` | `GET /v1/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`) |
+| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | `/v1/website-previews/{token}/activate` / `activation-checkout` / `activation-status` |
 | Don't say claim: `GET …/claim/status` | activation-status |
 
 SSE drives `/onboarding/preview` only. The `/preview/{token}` route reloads; it is
@@ -102,6 +103,6 @@ not an SSE endpoint.
 
 - Folder and types use onboarding, not the predecessor name.
 - Voice code is gone from first-pass `frontend-2`.
-- Generated types and MSW call `/api/v1/onboarding-sessions…` only.
+- Generated types and MSW call `/v1/onboarding-sessions…` only.
 - Text client interview is the default `/onboarding/interview` surface.
 - Website activation copy and routes match 07. Don't say claim.

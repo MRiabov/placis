@@ -246,7 +246,7 @@ Used for offers, services, the ideal customer profile, and location. Behavior:
 
 ## Data And API
 
-- Consumes the typed generated API types for `/api/v1/ads/*` (list, create, get,
+- Consumes the typed generated API types for `/v1/ads/*` (list, create, get,
   patch, variant patch, regenerate, approve, ad-set, download).
 - **Prefetch early + cache**: the ads list and ad-platform connection status are fetched as soon
   as the app loads and **cached in the browser** (query cache), so `/ads` renders
