@@ -5,7 +5,7 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [frontend.md](frontend.md), [editing.md](editing.md), [assistant.md](assistant.md),
-[technical-implementation.md](technical-implementation.md).
+[technical-implementation.md](technical-implementation.md), [api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 Projects and certifications screens: [details frontend](../other/details/frontend.md).
 Media library: [media library](../other/media/frontend-debloat.md).
@@ -68,18 +68,18 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   edit history on open.
 - GET-after-PATCH that replaces the website editor projection (`useSaveEditorPage`
   `onSuccess` `setQueryData` of the full body).
-- `/api/v1/tenants/{website_address}/website/…` for the CMS.
+- `/v1/tenants/{website_address}/website/…` for the CMS.
 
 ## Retarget
 
 | Today | Constrained API |
 | --- | --- |
-| `GET/PATCH /api/v1/website/editor/pages…` | same group; PATCH body is dirty keys; response `{ edit_history_head, batch_id }` plus assigned ids |
-| `POST …/publish` | website publication via `/api/v1/website/editor/…` or `/api/v1/website/publications/…` |
-| Sections/slots/assets/assistant | `/api/v1/website/editor/…` |
-| `GET/PATCH …/business-profile` | keep for the editor fold; Details owns the Business details screen |
-| Projects CRUD already in `cms.ts` | wire `/cms/projects` (title, description, cover photo) |
-| Certifications helpers already in `cms.ts` | wire `/cms/certifications-and-reviews` |
+| `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/website/editor/pages…`; PATCH body is dirty keys; response `{ edit_history_head, batch_id }` plus assigned ids |
+| `POST …/publish` | `POST /v1/website/publications` |
+| Sections/slots/assets/assistant | fields on the page PATCH; assistant under `/v1/website/editor/pages/{page_id}/assistant`. Media library: `/v1/media-assets` |
+| `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
+| Projects CRUD already in `cms.ts` | `/v1/projects` |
+| Certifications helpers already in `cms.ts` | `/v1/business-profile/certifications` |
 
 Connect website address is a **modal on `/cms/website`** (no extra route). Add with
 the website Go phase (Cloudflare custom hostname + DNS rows).

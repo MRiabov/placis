@@ -18,7 +18,8 @@ work in small vertical slices, and let the gates + glossary catch drift.
      tables are in `features/<feature>/data-model.md`
    - [backend-stack.md](general-architecture/backend-stack.md) — stack, type layers
    - [module-layout.md](general-architecture/module-layout.md) — package tree
-   - [features/](features/) — per-feature PRD / ADR / technical-implementation / frontend
+   - [api.md](general-architecture/api.md) — HTTP conventions; per-feature `api.md` is the HTTP routes
+   - [features/](features/) — per-feature PRD / ADR / `api.md` / technical-implementation / frontend
    - [ci-cd.md](general-architecture/ci-cd.md) — the gates
    - [general-prd.md](general-prd.md) — product-level scope
 
@@ -53,7 +54,7 @@ Each slice is **one PR**, complete and green before the next starts. A slice is:
 ## The walking skeleton first
 
 Before the first feature, build the walking skeleton: `cmd/api` (HTTP + in-process River), config, `slog`,
-`huma` + `/health`, Postgres + `goose` + `sqlc`, and the CI pipeline. A few hundred lines,
+`huma` + `GET /v1/health`, Postgres + `goose` + `sqlc`, and the CI pipeline. A few hundred lines,
 but it proves the whole toolchain (sqlc → huma → OpenAPI → frontend typegen → Testcontainers →
 deploy) end to end. The first real slice after it is **tenancy + auth** — everything else FKs into
 `tenants`.
@@ -64,7 +65,8 @@ deploy) end to end. The first real slice after it is **tenancy + auth** — ever
   types). Never "add the website feature" as one task.
 - **Don't write the whole OpenAPI up front.** `huma` derives it from the DTOs, so writing every DTO
   now is the speculative batch that caused the last collapse. Write each feature's DTOs as you
-  build that slice. Predecessor OpenAPI is not a compatibility surface for `frontend-2` or the
+  build that slice. The **HTTP routes** (paths, auth, fields) are already in that feature's
+  `api.md`. Predecessor OpenAPI is not a compatibility surface for `frontend-2` or the
   contractor website: do not wrap it, alias old paths, or generate types from it.
 - **Two type layers by default** (see [backend-stack.md](general-architecture/backend-stack.md)): sqlc rows + huma DTOs. A third "domain
   value" only for a composite of several rows — never a hand-written model mirroring a table.

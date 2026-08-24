@@ -3,7 +3,7 @@
 Status: proposed implementation plan.
 
 Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture.md),
-[data model](data-model.md), [manifest](manifest.md).
+[data model](data-model.md), [manifest](manifest.md), [HTTP](api.md).
 
 ## Domain objects
 
@@ -53,18 +53,11 @@ the tables it writes.
 - Website page: `unpublished` / `archived`.
 - Website publication: `published → rolled_back/archived`.
 
-## API surface
+## HTTP
 
-- `/api/v1/website/editor/...` — website pages, website sections, website slots, media assets,
-  projects, website publications, website settings, certifications, website forms, top menu,
-  footer. Same GET/PATCH page fold: optional `include_edit_history`, `base_edit_history_head`
-  on PATCH/Apply. No extra undo/redo/history routes.
-- `/api/v1/website/publications/...` — website publication and website rollback (if not under editor).
-- `/api/v1/public/site/...` — website preview resolve, meta, sitemap, media assets (the public
-  read model). Host lookup uses [website_addresses](data-model.md). Live GET does
-  not call resolve; it reads R2. Connect-website-address APIs live under the website editor.
-
-Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
+Routes: [api.md](api.md). Media library, Details, and website form submit are other features'
+`api.md` files.
+Live HTML never calls Go. **Do not create** `/v1/public/site/…`.
 
 ## Validation & testing
 

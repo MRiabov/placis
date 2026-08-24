@@ -3,10 +3,11 @@
 Cross-cutting architecture that doesn't belong to one feature. Product loop:
 [general-prd.md](../general-prd.md).
 
-- [backend-stack.md](backend-stack.md) — stack, type layers, DTO constraints, `Idempotency-Key`
+- [backend-stack.md](backend-stack.md) — stack, type layers
 - [frontend-stack.md](frontend-stack.md) — `frontend-2` stack, folders, typegen
 - [module-layout.md](module-layout.md) — Go package tree, file-size guard, folder fan-out
 - [processes.md](processes.md) — `cmd/api`, `frontend-2`, contractor website, Placis website, deploy
+- [api.md](api.md) — HTTP conventions (versioning, typing, opacity, auth modes, errors) and index of per-feature `api.md` files
 - [package-boundaries.md](package-boundaries.md) — which Go package owns which work
 - [llm-layer.md](llm-layer.md) — LLM, AI tools, traceability
 - [voice-agent.md](voice-agent.md) — voice architecture (minted secret, tools)

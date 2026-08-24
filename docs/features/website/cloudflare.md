@@ -177,11 +177,13 @@ status: not published yet). That empty host is not a website preview.
 ## Website preview
 
 `/preview/{token}/` always renders the unpublished website. It never reads R2 HTML.
-`GET /api/v1/public/site/resolve` stays for website preview (and tests). Live GET does not call it.
+That render is the Worker **internal render** (shared secret / service binding), not
+`GET /v1/public/site/resolve` (**do not create**). Live GET does not call Go. Tests
+hit `/preview/{token}/`.
 
 ## Website form POST
 
-The React island posts to `cmd/api` (public website-form endpoint). CORS allows the contractor
+The React island posts to `cmd/api` (`POST /v1/website-forms/{form_id}/submissions`). CORS allows the contractor
 `Host`. The Worker does not render or proxy that POST.
 
 ## Connect website address (CMS)

@@ -29,7 +29,7 @@ tenant only when `status=active` (the "not paid / CMS closed" signal is still `t
   named after the **person** (the account owner); the tenant name is the business — the two never
   share a name field. Do not create a second tenant at activation.
 - Deleted surfaces (do not resurrect): `/me/orgs`, `/me/tenants`, `/me/selected-org`,
-  `placis_selected_org` cookie, `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{website_address}`,
+  `placis_selected_org` cookie, `POST /v1/tenants`, `PATCH /v1/tenants/{website_address}`,
   `.../memberships/*` CRUD.
 
 ## Clerk SDK
@@ -55,16 +55,11 @@ Resolved once per request from one of:
 
 Services take `tenantID` explicitly.
 
-## API surface
+## HTTP
 
-- `GET /api/v1/health` — process liveness (no tenant).
-- `GET /api/v1/me` — `{owner, platform_role, tenant}` (`tenant` only when `status=active`).
-- Clerk organization provisioning at website activation (`Organizations().Create`); the frontend then
-  `clerk.setActive`. Not a tenant-collection API.
-
-Do not resurrect: `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{website_address}`,
-`.../memberships/*` CRUD, `/me/orgs`, `/me/tenants`, `/me/selected-org`. CMS website routes are
-`/api/v1/website/editor/...`, not nested under `/api/v1/tenants/{website_address}`.
+Routes: [api.md](api.md). Health: [HTTP conventions](../../../general-architecture/api.md).
+CMS website routes are `/v1/website/editor/...`, not nested under
+`/v1/tenants/{website_address}`.
 
 ## Roles
 

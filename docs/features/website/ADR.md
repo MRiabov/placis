@@ -102,7 +102,8 @@ Status: decided (2026-08-16, product owner + engineering).
 
 18. **Live GET is Cache then R2 only** — website publication prebuilds HTML into
     `sites/{website_address}/latest/`. A cache miss still reads R2. Missing object is 404, not a
-    render from Postgres. `GET /api/v1/public/site/resolve` is website preview (and tests) only.
+    render from Postgres. Website preview is Worker internal render (and tests hit
+    `/preview/{token}/`). **Do not create** `GET /v1/public/site/resolve`.
     (2026-08-21)
 
 19. **R2 tree is keyed by the website address** — `tenants.website_address`, fixed at

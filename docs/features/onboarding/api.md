@@ -1,0 +1,158 @@
+# Onboarding HTTP
+
+Conventions: [HTTP conventions](../../general-architecture/api.md). Confirm, resume,
+client interview, SSE, website activation. Details after website activation:
+[details HTTP](../other/details/api.md). Applying the website template is owned by
+[website](../website/api.md); this feature only enqueues it.
+
+## OpenAPI opacity
+
+| Location | Persistence | HTTP |
+| --- | --- | --- |
+| Company registry / Maps search | raw ETL cache | Closed `*Read` candidates (id, name, address, …). **Omit** `raw`. |
+| Business research fetches | `raw` jsonb | **Omit.** Checklist `*Read` is closed keys + status enum. |
+| Stripe event body | jsonb | **Omit.** Activation-status is a closed enum + checkout URL. |
+| Client interview extra notes | text | `string` + `maxLength`. |
+| SSE events | — | Huma `sse.Register` event name → struct. Not an unconstrained `payload`. |
+
+## Complete
+
+Confirm is **one** command. Collapse predecessor Don't say setup: `POST /setup-sessions` and
+`…/from-google-place`. **Do not create** a bare collection `POST /v1/onboarding-sessions`.
+
+### POST /v1/onboarding-sessions/confirm
+
+- **Auth:** none
+- **Callers:** `frontend-2` `/onboarding/find` Confirm once. Mount/keystroke must not POST.
+- **Idempotency-Key:** yes (same browser must not insert a second tenant).
+- **Request:** country (`ie` / `gb` / `us`; default Ireland), **online research consent**
+  (required boolean), company registry record candidate and/or Google Maps `place_id`. Consent
+  is this body field, not a `/research-consent` resource.
+- **Response:** `{ id, token, status, research_wait_until? }`. Token → `localStorage`. Inserts
+  unactivated tenant + onboarding session + empty business profile; enqueues business research
+  if under the 5-wave cap. Over cap → still 200 with `research_wait_until` (later source change
+  that would start a wave is `429`).
+- **Must not:** apply the website template; wait for business research.
+
+### GET /v1/onboarding-sessions/company-registry/search
+
+- **Auth:** none
+- **Callers:** Find typeahead (debounced).
+- **Query:** country + search string (`minLength`/`maxLength`).
+- **Response:** closed candidate `*Read` list. **Omit** `raw`.
+
+### GET /v1/onboarding-sessions/google-maps-listings/autocomplete
+
+- **Auth:** none
+- **Callers:** Find typeahead (debounced).
+- **Response:** closed listing `*Read` list. **Omit** Maps `raw`.
+
+### GET /v1/onboarding-sessions/{id}/profile
+
+- **Auth:** onboarding session token
+- **Callers:** Resume and confirm-data screen. Restore failure does not POST.
+- **Response:** onboarding session status, checklist `*Read`, research conflicts,
+  `active_website_preview` (plaintext token **once**), `research_wait_until`. This is **not**
+  Details.
+- **Must not:** return business-research `raw`.
+
+### GET /v1/onboarding-sessions/{id}/profile/checklist
+
+- **Auth:** onboarding session token
+- **Callers:** confirm-data / client interview.
+- **Response:** closed checklist keys + status enum (`in_progress` / `conflict` /
+  `needs_confirmation` / `filled_by_user` / `filled_by_research` / `skipped` /
+  `not_applicable` / `empty` — [build-profile](pipeline/build-profile.md)).
+
+### POST /v1/onboarding-sessions/{id}/profile/confirmations
+
+- **Auth:** onboarding session token
+- **Callers:** contractor picks a research conflict.
+- **Idempotency-Key:** yes.
+- **Request:** checklist key + chosen value (closed fields, not a JSON bag).
+
+### PATCH /v1/onboarding-sessions/{id}/sources
+
+- **Auth:** onboarding session token
+- **Callers:** attach/change Google Maps listing or company registry record on the **same**
+  onboarding session (new business-research wave, same cap).
+- **Idempotency-Key:** yes.
+- **Replaces:** predecessor `company-selection` / `imports` / `consents`.
+- **Errors:** `429` with `research_wait_until` when the wave cap would be exceeded.
+
+### PUT /v1/onboarding-sessions/{id}/text-interview/autosave
+
+- **Auth:** onboarding session token
+- **Callers:** text client interview (save on click-off / periodic autosave).
+- **Idempotency-Key:** yes.
+- **Request:** closed answer fields + extra notes (`string` + `maxLength`).
+
+### POST /v1/onboarding-sessions/{id}/text-interview/submissions
+
+- **Auth:** onboarding session token
+- **Callers:** text client interview step submit.
+- **Idempotency-Key:** yes.
+
+### POST /v1/onboarding-sessions/{id}/interview/complete
+
+- **Auth:** onboarding session token
+- **Callers:** complete gate in [build-profile](pipeline/build-profile.md).
+- **Idempotency-Key:** yes.
+- **Behavior:** sets `accepted_edit_id`; enqueues apply-the-website-template. **No**
+  `generation-runs` from `frontend-2`.
+
+### GET /v1/onboarding-sessions/{id}/events/stream
+
+- **Auth:** onboarding session token
+- **Callers:** `/onboarding/preview` (and confirm-data while 02 runs). Not the website preview
+  link.
+- **Transport:** Huma `sse.Register`. Closed event names, for example:
+  `checklist_row`, `timeline_step`, `research_wait_until`, `website_preview_ready`.
+- **Must not:** unconstrained `payload` object; unknown events parsed as `any` (`frontend-2`
+  drops them).
+
+### POST /v1/website-previews/{token}/activate
+
+- **Auth:** website preview token
+- **Callers:** website-activation strip on `/onboarding/preview`.
+- **Idempotency-Key:** yes.
+- **Must not:** website publication; browser Stripe success URL as the source of truth.
+
+### POST /v1/website-previews/{token}/activation-checkout
+
+- **Auth:** website preview token
+- **Callers:** start Stripe checkout.
+- **Idempotency-Key:** yes.
+- **Response:** checkout URL. **Omit** Stripe bodies.
+
+### GET /v1/website-previews/{token}/activation-status
+
+- **Auth:** website preview token
+- **Callers:** poll after checkout.
+- **Response:** closed status enum + checkout URL if still needed.
+
+### POST /v1/webhooks/stripe
+
+- **Auth:** Stripe webhook signature
+- **Callers:** Stripe. Never `frontend-2`.
+- **Behavior:** verify, persist event, enqueue website activation, return. Never trust the
+  browser success URL.
+
+## Listed
+
+- `GET /v1/onboarding-sessions/{id}/business-research-runs` (+ get by id) — debug/status.
+  Progress is SSE.
+- `GET /v1/onboarding-sessions/{id}/apply-website-template-runs` (+ get/cancel) — debug/status.
+- Voice mint / events / WebSocket — deferred. First-pass client interview is text.
+  [voice agent](../../general-architecture/voice-agent.md).
+
+## Do not create
+
+- Don't say setup: `/setup-sessions`, `…/from-google-place`, `profile/facts`
+- separate consents resource, artifacts, contract-versions
+- Don't say: preview-packages
+- Don't say: `preview/{token}/module/{module}`
+- Don't say claim: `…/claim`, `…/claim/checkout`, `…/package`, `approve-publish`, `request-changes`
+- sandbox-actions, `generation-runs` from `frontend-2`
+- `/v1/preview/{token}/…` (predecessor path; use `/v1/website-previews/…`)
+- bare `POST /v1/onboarding-sessions`

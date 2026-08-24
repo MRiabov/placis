@@ -68,4 +68,5 @@ Only approved media (with a media caption) can be used on the live website or by
 unpublished website editor may show pending-review AI images with a warning.
 
 Bytes live in [files](../../../general-architecture/files-and-s3.md) (`media_assets.file_id`).
-Tables: [data-model.md](data-model.md).
+HTTP: [api.md](api.md) (this resource owns upload; no `/v1/files`). Tables:
+[data-model.md](data-model.md).

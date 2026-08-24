@@ -21,18 +21,19 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 | LLM | `LLMProvider`; Vercel AI SDK for generation; open-web search is Parallel as a Vercel AI Gateway server tool ([LLM layer](llm-layer.md)) |
 | Payments | Stripe via `stripe-go` SDK (activation checkout only) |
 | Frontend (`frontend-2`) | CMS + onboarding. Stack: [frontend stack](frontend-stack.md) |
-| Contractor website (`apps/contractor-website`) | Astro with React islands — that app renders website HTML; live GET is CDN cache then R2 (Worker is write-thin, never Go). Preview is the only per-request render. Serve path: [website Cloudflare](../features/website/cloudflare.md). Website components in `packages/website-components` |
+| Contractor website (`apps/contractor-website`) | Astro with React islands — that app renders website HTML; live GET is CDN cache then R2 (Worker is write-thin, never Go). Website preview is the only per-request render. Serve path: [website Cloudflare](../features/website/cloudflare.md). Website components in `packages/website-components` |
 | Placis website (`apps/placis-website`) | Astro `output: 'static'` — Placis’s own site; `astro build` uploaded to R2. Serve path: [Placis website Cloudflare](../features/placis-website/cloudflare.md) |
 | IDs | UUID PKs, `timestamptz` defaults |
 
 `huma` handles JSON request/response endpoints and serves the derived OpenAPI spec at
-`/openapi.json`. The onboarding session **SSE** stream is a raw `net/http` handler outside huma.
-The website preview itself is not an SSE endpoint
+`/openapi.json`. Onboarding session progress uses Huma `sse.Register`
+([HTTP conventions](api.md)). The website preview itself is not an SSE endpoint
 ([07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md)). Voice audio does
 not go through a Go WebSocket — the browser connects to the voice service with a minted secret
 ([voice agent](voice-agent.md)).
 
-Mutating routes that can be safely retried accept an `Idempotency-Key` header (checked per tenant).
+HTTP conventions (prefix, opacity, auth modes, errors, `Idempotency-Key`):
+[api.md](api.md).
 
 ## Dependencies
 
@@ -55,10 +56,11 @@ manifest) — never to mirror a single table. Reuse one `*Read` per entity and o
 
 **Every DTO field is constrained**: strings carry `minLength`/`maxLength`, numbers carry
 `minimum`/`maximum`, fixed sets use `enum` (huma tags). CI checks the generated OpenAPI and fails
-on an unconstrained field.
+on an unconstrained field, including `map[string]any` / `json.RawMessage` /
+`additionalProperties: true` on DTOs ([HTTP conventions](api.md)).
 
-Opaque freeform-JSON wrappers (`JsonRecord`, `JsonObjectPayload`, `map[string]any` /
-`json.RawMessage` in domain code) are out. `jsonb` only at the persistence/API boundary.
+Don't say: Opaque freeform-JSON wrappers (`JsonRecord`, `JsonObjectPayload`, `map[string]any` /
+`json.RawMessage` in domain code) are out. `jsonb` is persistence-only — not on huma DTOs.
 
 Module layout and file-size guard: [module layout](module-layout.md). Delivery gates:
 [CI and delivery](ci-cd.md).

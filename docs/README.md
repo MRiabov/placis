@@ -13,7 +13,7 @@ themselves in the CMS.
 2. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
 3. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
 4. [Product](general-prd.md) — the loop, product-level in/out of scope
-5. [General architecture](general-architecture/README.md) — stack, module layout, processes, LLM layer, audit, jobs, files, `frontend-2` UI
+5. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes, LLM layer, audit, jobs, files, `frontend-2` UI
 6. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization for active tenants
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building; [website activation](features/onboarding/pipeline/08-website-activation.md) is pay-and-activate
 8. [Website](features/website/README.md) — website templates, applying them, editing, website publication
@@ -34,6 +34,7 @@ themselves in the CMS.
 | Naming / vocabulary | [glossary.md](glossary.md) |
 | Auth | [features/other/auth/README.md](features/other/auth/README.md) |
 | Data model conventions + index | [general-architecture/data-model.md](general-architecture/data-model.md) |
+| HTTP conventions + per-feature `api.md` | [general-architecture/api.md](general-architecture/api.md) |
 | LLM layer, audit, jobs, files, `frontend-2` UI | [general-architecture/](general-architecture/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
 | Website activation / payments | [features/onboarding/pipeline/08-website-activation.md](features/onboarding/pipeline/08-website-activation.md) |

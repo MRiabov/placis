@@ -6,7 +6,7 @@ confirm data (03).
 
 ## Trigger
 
-Contractor submits Confirm on `/onboarding/find` (`POST /api/v1/onboarding-sessions`) when this
+Contractor submits Confirm on `/onboarding/find` (`POST /v1/onboarding-sessions/confirm`) when this
 browser has no stored token.
 
 ## Pre

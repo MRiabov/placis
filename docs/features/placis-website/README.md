@@ -3,7 +3,8 @@
 Placis’s own site. Distinct from the [contractor website](../website/README.md).
 
 This directory locks how the Placis website is built and served. It is not a copy or
-design PRD. The app lives in `apps/placis-website/`.
+design PRD. The app lives in `apps/placis-website/`. This origin has **no Go HTTP**
+([HTTP conventions](../../general-architecture/api.md)).
 
 - [ADR](ADR.md) — decisions
 - [cloudflare.md](cloudflare.md) — Astro static build, R2 origin, zone hosts

@@ -36,7 +36,7 @@ business research is already running** before the contractor sees confirm data.
                                       └─► build-profile
 ```
 
-SSE (`GET /api/v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from confirm through
+SSE (`GET /v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from confirm through
 applying the website template and copy. Postgres is authoritative.
 
 ## Onboarding session status
