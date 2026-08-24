@@ -80,7 +80,7 @@ The website editor is one typed **projection** (read) and one **patch** (write).
   `family`, `variant`), `position`, `status`, `visible`, `props`, `design`, `slots[]`,
   `design_controls[]`, `origin`, `unsupported_component`.
 - `media_assets[]`, `forms[]` (website forms), `menus` (`top_menu` and `footer` trees plus
-  `show_phone` / `show_email` — [data-model.md](data-model.md)).
+  `show_phone` / `show_email` — [persistence.md](persistence.md)).
 - `publication` (active website version + `has_unpublished_changes`),
   `validation`.
 - `preview_url`, live website URL. The website editor canvas is not a website preview.

@@ -1,9 +1,9 @@
-# Details — data model
+# Details — persistence
 
 The **business profile** — the one set of tables the rest of the application draws from.
 Onboarding builds it; this view edits it; the website shows it; ads read it.
 
-Conventions: [data-model conventions](../../../general-architecture/data-model.md)
+Conventions: [persistence conventions](../../../general-architecture/persistence.md)
 (Postgres schema `details`). Decisions:
 [ADR.md](ADR.md).
 

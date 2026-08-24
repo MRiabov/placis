@@ -69,4 +69,4 @@ unpublished website editor may show pending-review AI images with a warning.
 
 Bytes live in [files](../../../general-architecture/files-and-s3.md) (`media_assets.file_id`).
 HTTP: [api.md](api.md) (this resource owns upload; no `/v1/files`). Tables:
-[data-model.md](data-model.md).
+[persistence.md](persistence.md).

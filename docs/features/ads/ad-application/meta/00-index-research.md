@@ -11,7 +11,7 @@ Related:
 
 - [Ads overview](../../README.md)
 - [Ad generation PRD](../../ad-generation/prd.md) (post-MVP: Meta first)
-- [Ads data model](../../data-model.md) (`platform_refs`, `platform_status`)
+- [Ads persistence](../../persistence.md) (`platform_refs`, `platform_status`)
 - [Leads](../../../other/leads/README.md) (website leads today; ad leads later)
 
 ## What this answers

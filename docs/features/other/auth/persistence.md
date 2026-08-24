@@ -1,9 +1,9 @@
-# Auth — data model
+# Auth — persistence
 
-Clerk identity and tenant membership. Conventions: [data-model conventions](../../../general-architecture/data-model.md)
+Clerk identity and tenant membership. Conventions: [persistence conventions](../../../general-architecture/persistence.md)
 (Postgres schema `auth`).
 
-Hostnames for the live contractor website are [website data-model](../../website/data-model.md)
+Hostnames for the live contractor website are [website persistence](../../website/persistence.md)
 (`website_addresses`), not this file.
 
 A tenant row is created at onboarding confirm (`status=unactivated`). Website activation

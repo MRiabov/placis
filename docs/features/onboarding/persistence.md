@@ -1,11 +1,11 @@
-# Onboarding — data model
+# Onboarding — persistence
 
 Onboarding session, business research, website preview, and website activation tables.
-Conventions: [data-model conventions](../../general-architecture/data-model.md)
+Conventions: [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `onboarding`).
 
 The business profile these onboarding sessions write is owned by
-[details](../other/details/data-model.md). LLM traces:
+[details](../other/details/persistence.md). LLM traces:
 [LLM layer](../../general-architecture/llm-layer.md).
 
 ## Onboarding sessions and client interview

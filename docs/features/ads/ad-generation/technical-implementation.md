@@ -5,7 +5,7 @@ Status: proposed implementation plan.
 Related docs:
 
 1. [Ad generation PRD](prd.md)
-2. [Ads data model](../data-model.md)
+2. [Ads persistence](../persistence.md)
 3. [Website](../../website/README.md)
 4. [Architecture and JSON standards](../../../general-architecture/backend-stack.md)
 5. [HTTP](../api.md)
@@ -74,7 +74,7 @@ reference them by id (for example `ad_image_placements.media_asset_id`).
 
 In code: the marketing set is images + text, stored today as `ads` plus variants.
 Distinct from Ad. Go/persistence forms are
-snake_case tables with a `*_id` primary key, per [data-model.md](../data-model.md): Ad →
+snake_case tables with a `*_id` primary key, per [persistence.md](../persistence.md): Ad →
 `ads`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
 `AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no ad
 destination on `ads` for now.

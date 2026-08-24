@@ -13,7 +13,7 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 | API contract | `huma` (Go-first: structs derive OpenAPI + validation when the request is handled) |
 | Data access | `sqlc` + `pgx` |
 | Migrations | `goose` (plain SQL) |
-| Database | PostgreSQL (one database; [Postgres schemas as feature namespaces](data-model.md#postgres-schemas-namespaces)) |
+| Database | PostgreSQL (one database; [Postgres schemas as feature namespaces](persistence.md#postgres-schemas-namespaces)) |
 | Background jobs | `River` (Postgres-backed, typed args, safe retries) |
 | Config | env → typed struct, validated once at startup |
 | Logging | `log/slog` (structured) + request ids |

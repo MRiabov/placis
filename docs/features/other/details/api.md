@@ -7,7 +7,7 @@ is [onboarding `/profile`](../../onboarding/api.md), not this resource.
 ## OpenAPI opacity
 
 Profile history is typed `business_profile_edits` increments — never a `details` jsonb dump.
-`GET`/`PATCH` fields are the columns and list tables in [data-model.md](data-model.md).
+`GET`/`PATCH` fields are the columns and list tables in [persistence.md](persistence.md).
 Validation errors: `string[]` with `maxLength` per item.
 
 ## Complete
