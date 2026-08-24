@@ -36,7 +36,8 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 - Website assistant chat in this workspace (plan vs continuous; instant apply vs
   Ask first). Apply / Reject are one-way.
 - Media library as a **workspace item** (same library as `/cms/media`).
-- `PagesWorkspacePanel`, `StylesWorkspacePanel`, `MenuWorkspacePanel`,
+- `PagesWorkspacePanel`, `StylesWorkspacePanel`, `MenuWorkspacePanel` (tree editor for
+  top menu / footer),
   `EditorCanvas`, `CmsEditorLayout`.
 
 ## Delete

@@ -27,8 +27,12 @@ Root:
 - website-level SEO fallback: `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
   `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`
 - `pages[]`
-- `top_menu[]` (`label`, `path` or `url`, `position`, children)
+- `top_menu[]` — resolved tree: `id`, `kind`, `label`, `path` or `href`, `children` (depth 2).
+  Page nodes bake path/title from `website_pages`. Do not leave unpublished `page_id` in the
+  dump.
 - `footer[]` (same shape)
+- `show_phone`, `show_email` (bar CTA visibility; values already resolved from
+  `{{marketing_phone}}` / `{{marketing_email}}`)
 - `website_forms[]` (`form_key`, `title`, `fields[]`, `privacy_notice`)
 - slim `projects[]` (`id`, `title`, `description`, cover URL + media caption) — baked at website
   publication. Same staleness as Details. Not a live query of `/cms/projects`.
@@ -57,8 +61,8 @@ Per website section:
 - unpublished-only fields: `origin`, slot `status`, `validation_errors`, `has_unpublished_changes`,
   preview tokens
 - Clerk / tenant internals, file ids, signed-URL machinery (resolved public URLs only)
-- top menu / footer stuffed into each page’s `sections` — they come from `top_menu` / `footer`,
-  not from website sections on every website page
+- top menu / footer stuffed into each page’s `sections` — they come from root `top_menu` /
+  `footer` (baked from `website.menus`), not from website sections on every website page
 
 Reviews: bake the selected review into the website section `props` at publication
 (`website_slot_reviews`). Do not dump the whole profile review list.

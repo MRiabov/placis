@@ -79,8 +79,8 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 - `sections[]` — each: `id`, `page_id`, `component_id` (+ `component_version`, `schema_version`,
   `family`, `variant`), `position`, `status`, `visible`, `props`, `design`, `slots[]`,
   `design_controls[]`, `origin`, `unsupported_component`.
-- `media_assets[]`, `forms[]` (website forms), top menu and footer
-  (`top_menu_items`, `footer_items`).
+- `media_assets[]`, `forms[]` (website forms), `menus` (`top_menu` and `footer` trees plus
+  `show_phone` / `show_email` — [data-model.md](data-model.md)).
 - `publication` (active website version + `has_unpublished_changes`),
   `validation`.
 - `preview_url`, live website URL. The website editor canvas is not a website preview.
@@ -127,6 +127,10 @@ website slot you send:
 - **website page create** — `path`, `title`, `page_type`, SEO columns, unpublished content.
 - **website form patch** — `website_form_id`, `title`, `submit_action`, `fields[]` (typed form
   field rows), `privacy_notice`.
+- **menus patch** — optional `top_menu` and/or `footer` (full closed JSON trees) and optional
+  `show_phone` / `show_email`. Omit a field = no change. Human PATCH may replace a whole tree
+  (including a wipe). Assistant writes use `update_menus` ([assistant.md](assistant.md)), not
+  a blob replace.
 
 Coalesce means the **dirty keys since the last successful copy-out**, not the full draft. Do not
 send sibling website slots, `media_assets[]`, the website manifest, or file bytes. Image website
@@ -222,7 +226,8 @@ a website version.
 | change design controls / visibility | `website_sections.design` / `status` |
 | reorder website sections | `website_sections.position` |
 | add / remove a website section | `website_sections` + `website_slots` |
-| add a website page | `website_pages` + `website_sections` + `website_slots` |
+| add a website page | `website_pages` + `website_sections` + `website_slots`; append a top-level page node on `menus.footer` (and `menus.top_menu` unless legal or cap) |
+| edit top menu / footer tree or bar CTAs | `website.menus` (`top_menu` / `footer` / `show_phone` / `show_email`) |
 | swap a website component | `website_sections.component_id` (preserving compatible website slots) |
 | change the website style catalog preset | `website_settings` (applied only on explicit apply) |
 

@@ -27,10 +27,13 @@ forms write [leads](../other/leads/data-model.md). The dump shape of a website p
   `contact`/`legal`), `status` (`unpublished`/`archived`), `seo_title`,
   `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`, `seo_noindex`,
   `seo_primary_keyword`, timestamps; unique `(tenant_id, path)`
-- `website_sections` — `id`, `tenant_id` fk, `page_id` fk, `component_id`, `component_version`,
-  `position`, `status` (`visible`/`hidden`), `props` jsonb, `design` jsonb,
-  `origin` (`website_template`/`website_copy_generation`/`owner`/`business_research`),
-  unique `(page_id, position)`
+- `website_sections` — `id`, `tenant_id` fk, `page_id` nullable fk, `component_id`,
+  `component_version`, `position`, `status` (`visible`/`hidden`), `props` jsonb, `design` jsonb,
+  `origin` (`website_template`/`website_copy_generation`/`owner`/`business_research`).
+  `page_id` set: a block on that website page; unique `(page_id, position)`. `page_id` null: the
+  site-wide top-menu or footer **look** section (logo, marketing phone, design). At most one
+  top-menu look section and one footer look section per tenant. Structure of the bars is not
+  here — it is `website.menus`.
 - `website_slots` — `id`, `tenant_id` fk, `section_id` fk, `slot_key`, `slot_type` (`text`/
   `rich_text`/`image`/`link`/`list`/`json`), `value` jsonb, `status` (`unpublished`/`reviewed`/
   `approved`/`rejected`),
@@ -42,10 +45,12 @@ forms write [leads](../other/leads/data-model.md). The dump shape of a website p
   `field_type` (`text`/`textarea`/`email`/`marketing_phone`/`address`/`select`/`date`/`checkbox`),
   `label`, `required`, `placeholder`; unique `(form_id, field_key)`
 - `website_form_field_options` — `id`, `field_id` fk, `position`, `label`, `value`
-- `top_menu_items` — `id`, `tenant_id` fk, `parent_id` nullable fk, `page_id` nullable fk,
-  `label`, `path`, `url`, `position`, `status` (`visible`/`hidden`)
-- `footer_items` — `id`, `tenant_id` fk, `parent_id` nullable fk, `page_id` nullable fk,
-  `label`, `path`, `url`, `position`, `status` (`visible`/`hidden`)
+- `menus` — qualified `website.menus`. One row per tenant (`tenant_id` unique). `top_menu` jsonb
+  and `footer` jsonb (closed trees, extra keys rejected), `show_phone` bool, `show_email` bool,
+  timestamps. Hide = omit from the tree. Bar CTA **values** are always
+  `{{marketing_phone}}` / `{{marketing_email}}` ([variables.md](variables.md)); these flags are
+  visibility only. Trees and flags are jsonb/bools on this row, not item tables. Node structs
+  below.
 - `website_settings` — `id`, `tenant_id` fk unique, `preset_id`, bounded website-style overrides
   (`primary`, `neutral`, `accent`, `radius`, `density`), `edit_history_head` uuid nullable
   (last copied-out `edit_history.batch_id`; not a server undo cursor), timestamps. One row
@@ -73,7 +78,7 @@ forms write [leads](../other/leads/data-model.md). The dump shape of a website p
   `id`, `tenant_id` fk, `batch_id` uuid (one successful copy-out), `edited_by` (`human`/
   `agent`), `ai_generation_id` nullable fk (`ai_generations`; set when `edited_by=agent`),
   `entity_type` (`website_page`/`website_section`/`website_slot`/`website_form`/
-  `website_form_field`/`website_settings`/`top_menu_item`/`footer_item`), `entity_id` uuid,
+  `website_form_field`/`website_settings`/`website_menus`), `entity_id` uuid,
   `field` nullable (column or `slot_key`), `op` (`set`/`clear`/`add`/`remove`/`update`),
   `before` jsonb nullable, `after` jsonb nullable, `created_at`.
 
@@ -94,11 +99,45 @@ lives on [business_profile_reviews](../other/details/data-model.md). A project g
 `json` / `list` website slot of project ids, not a `slot_type`.
 
 `props`, `design`, and slot `value` stay jsonb: each website component / slot has its own
-catalog-shaped dump. Website editor writes are in-place `UPDATE`s of those columns, on
+catalog-shaped dump. `menus.top_menu` / `menus.footer` are jsonb because they are closed typed
+trees (extra keys rejected), same idea as `website_manifest` — not because the tree is
+polymorphic. Website editor writes are in-place `UPDATE`s of those columns, on
 click-off for text and rate-limited — [editing.md](editing.md). Last writer is
 `edit_history` only ([assistant.md](assistant.md)). `origin` is first source, not last
 writer. `website_manifest` is jsonb because it is a published website copy
 (see [manifest.md](manifest.md)), not because the tree is polymorphic.
+
+## `website.menus` trees
+
+Each of `top_menu` and `footer` is a JSON array of nodes. Depth **2**: bar + one dropdown. No
+groups inside groups. Closed keys only.
+
+Every node has `id`, derived from its **label** (page node: website page title; text/URL node:
+the `label` field). Same fold as a website page path: lowercase, hyphenate, strip junk,
+length-bounded. Unique in that tree; collision → `-2`, `-3`. On label/title change, recompute
+`id`. Tools match by this `id`, never by UUID. Never say slug.
+
+Kinds:
+
+- `page` — `page_id` (uuid). Clickable; path from the website page. May have `children`. Optional
+  display `label` if the bar text should differ from the page title (default: page title).
+  Assistant I/O uses `path`; storage uses `page_id`. Each `page_id` at most once per tree.
+- `text` — `label` (length-bounded), `children` (may be empty in the editor; publication may omit
+  empty groups). Heading only, not a link. Parent only.
+- `url` — `label`, `href`. Leaf only. Schemes: `https`, `http`, `mailto`, `tel`. Reject
+  `javascript:` and unbounded hrefs.
+
+Clickable vs heading is `kind`, not a reorder flag. `reorder` sends nested `id` / `children`
+only. Heading → link is remove + add.
+
+Caps: **8** top-level nodes on the top menu, **12** on the footer (a 9th top-level node is
+`409`). **8** children per parent. Hide = not in the tree.
+
+On **create page**: append `{ id, kind: page, page_id }` as a top-level footer node (if under
+cap); same on the top menu unless `legal` or cap (then omit). On **archive/delete page**: strip
+that node; drop empty text groups. Duplicate page in a tree is `400`.
+
+Human PATCH may replace a whole tree (including a wipe). Assistant `remove_entries` max 4.
 
 There is no unpublished snapshot per edit and no per-page version table. The fold is
 in-place `UPDATE`. Website edit history is typed increments, like `business_profile_edits`.
@@ -107,6 +146,7 @@ in-place `UPDATE`. Website edit history is typed increments, like `business_prof
 
 Unique: `website_addresses.hostname`, at most one `is_primary=true` per `tenant_id`;
 `(tenant_id, website_pages.path)`, `(tenant_id, website_forms.form_key)`,
-`(tenant_id, website_publications.version_number)`, `website_settings.tenant_id`. Lookup:
+`(tenant_id, website_publications.version_number)`, `website_settings.tenant_id`,
+`menus.tenant_id`. Lookup:
 `(tenant_id, status, created_at)` on website pages; `(tenant_id, created_at desc)` and
 `(tenant_id, batch_id)` on `edit_history`.

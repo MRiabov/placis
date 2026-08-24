@@ -119,3 +119,9 @@ Status: decided (2026-08-16, product owner + engineering).
     each connected custom website address, or New URL (Connect website address). Not a Worker
     deploy. See [frontend.md](frontend.md).
     (2026-08-23)
+
+22. **Top menu and footer trees live on one `website.menus` row** — `top_menu` and `footer` are
+    closed jsonb trees (page / text / URL nodes, depth 2), plus `show_phone` / `show_email`.
+    Look stays on site-wide website sections (`page_id` null). No `top_menu_items` /
+    `footer_items` tables. The website assistant uses `update_menus`, not `update_nav`.
+    (2026-08-23)

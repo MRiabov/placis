@@ -61,7 +61,9 @@ Three surfaces, one unpublished website:
   website edit history on `/cms/website` open; they are not a timeline UI.
 
 Website styles are tenant-wide (`website_settings`), shown on the website page GET, applied only on
-explicit apply. Top menu and footer are edited here, not in Details.
+explicit apply. Top menu and footer are edited here as a **depth-2 tree** (bar + one dropdown;
+website page / text / URL nodes), plus show/hide for marketing phone and marketing email CTAs.
+Look (logo, density) is the site-wide website section for that bar, not Details.
 
 **Website publication** is a toolbar **dropdown**, not one toolbar button and not Save. Choose
 where this website publication goes. It is blocked while required website slots cannot resolve

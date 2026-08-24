@@ -43,7 +43,7 @@ never copied into a second `data-model.md`.
 | [auth](../features/other/auth/data-model.md) | `auth` | `tenants`, `tenant_memberships` |
 | [onboarding](../features/onboarding/data-model.md) | `onboarding` | onboarding sessions, business research, `google_maps_listings`, website previews, website activations, `stripe_events` |
 | [details](../features/other/details/data-model.md) | `details` | `business_profiles` and related (services, areas, hours, reviews) |
-| [website](../features/website/data-model.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, top menu, footer, website settings, website edit history, website publications (website versions), projects, certifications |
+| [website](../features/website/data-model.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions), projects, certifications |
 | [media library](../features/other/media/data-model.md) | `media_library` | `media_assets` |
 | [ads](../features/ads/data-model.md) | `ads` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
 | [leads](../features/other/leads/data-model.md) | `leads` | `leads` |
