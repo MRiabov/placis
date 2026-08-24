@@ -43,8 +43,9 @@ result).
 - **The LLM drafts; the contractor edits** — tools write unpublished website edits and reviewable changes, never a published website copy. The owner
   decides and does a website publication.
 
-Each domain owns a small tool registry — the set of tools its agent may call (e.g. `update_slot`
-and `generate_image` for the website editor; copy + image-gallery proposals for ads).
+Each domain owns a small tool registry — the set of tools its agent may call (e.g. `update_slot`,
+`cleanup_image`, and `generate_image` for the website editor; copy + image-gallery proposals for
+ads). Website assistant tools call the same media-library / website editor functions as the owner UI.
 
 ## Where the LLM sits in each feature
 

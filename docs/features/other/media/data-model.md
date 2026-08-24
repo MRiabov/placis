@@ -5,8 +5,15 @@ Conventions: [data-model conventions](../../../general-architecture/data-model.m
 (Postgres schema `media_library`). Bytes live in
 [files](../../../general-architecture/files-and-s3.md).
 
-The file on a media library item is never replaced. An edit (owner replace or AI cleanup) creates
-a new row; uses keep pointing at the old item until they are retargeted to the copy.
+The file on a media library item is never replaced. An edit creates a new row
+(`parent_media_asset_id`); uses keep pointing at the old item until they are retargeted to the
+copy. That copy-on-write is an invariant of those functions (`/cms/media`, website editor,
+website assistant, ads light cleanup are callers — [README.md](README.md)).
+
+- **Crop / focal** — child keeps the parent’s `file_id`. Stay `approved` if the parent is.
+- **AI cleanup** — child gets a new `file_id`, `pending_review`, inherits `supplied_by`.
+- **Owner replace** — child gets a new `file_id`, `pending_review`.
+- **Attach** — no new row; the website slot (or ad placement) points at an existing item.
 
 - `media_assets` — `id`, `tenant_id` fk, `asset_type` (`image`/`logo`/`document`/
   `generated_image`), `source` (`upload`/`generated`/`imported`/`external`), `supplied_by`

@@ -29,8 +29,9 @@ start is 409.
 
 ## Do
 
-1. Per website page, bounded parallel: `update_slot` (prose), `update_seo`, `generate_image` if a
-   website slot still has no photo.
+1. Per website page, bounded parallel: `update_slot` (prose), `update_seo`, then image: **attach
+   first** (`update_slot` + `media_asset_id`) when `media_assets[]` already has a fit;
+   `generate_image` only when nothing fits (ADR 6).
 2. After 06 a hero headline is **generated prose** that may still contain detail tokens. It is
    not a raw fold dump and not a lone `{{business_name}}` unless 06 left it. Remaining tokens
    resolve at website publication ([variables.md](../../website/variables.md)).
