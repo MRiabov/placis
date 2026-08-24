@@ -4,7 +4,7 @@ Status: planning (port instructions, not shipped UI).
 
 ## Target
 
-[README.md](README.md), [data-model.md](data-model.md), [api.md](api.md),
+[README.md](README.md), [persistence.md](persistence.md), [api.md](api.md),
 [website frontend](../../website/frontend.md) (workspace item + `/cms/media`).
 Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 

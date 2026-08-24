@@ -4,7 +4,7 @@ After client interview complete. `POST .../interview/complete` (04a submit or 04
 sets `applying_website_template` and enqueues this step. It does **not** run at find-confirm.
 
 Onboarding **owns** kicking this off and waiting until an unpublished website exists. Rows are
-[website](../../website/data-model.md) + [media library](../../other/media/data-model.md)
+[website](../../website/persistence.md) + [media library](../../other/media/persistence.md)
 unpublished tables. They use the onboarding session’s `tenant_id` (unactivated tenant from 01).
 
 ## Trigger

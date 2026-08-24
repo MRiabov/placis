@@ -25,14 +25,14 @@ browser has no stored token.
 
 ## Do
 
-1. Insert [unactivated tenant](../../other/auth/data-model.md): `tenants.status=unactivated`,
+1. Insert [unactivated tenant](../../other/auth/persistence.md): `tenants.status=unactivated`,
    `clerk_org_id` null, `website_address` null, `name` = known legal/display name or empty.
 2. Insert `onboarding_sessions`: `status=created` then immediately `client_interviewing`; unique
    `token`; `tenant_id` that tenant; `clerk_user_id` null; `channel` unset;
    `started_from` = `company_registry` / `google_maps_listing` / both via sources.
 3. Record `online_research_consent_at`.
 4. Persist the selected company registry record and/or attach the Maps place on **this** onboarding session. Wrong company is not a new run: attach or change sources on the same row.
-5. Initialize [business profile](../../other/details/data-model.md): `business_profiles` with that
+5. Initialize [business profile](../../other/details/persistence.md): `business_profiles` with that
    `tenant_id`, empty/unknown details, `last_edit_id` and `accepted_edit_id` null. Registry fills
    legal identity; Maps fills contact/listing fields. Both: registry wins legal identity
    ([build-profile](build-profile.md)).
@@ -50,7 +50,7 @@ onboarding session column.
 `online_research_consent_at`, `status=client_interviewing`); empty `business_profiles` (same
 `tenant_id`); registry/Maps attach rows; profile increments via [build-profile](build-profile.md).
 
-Schemas: [data-model.md](../data-model.md), [details](../../other/details/data-model.md). Do not
+Schemas: [persistence.md](../persistence.md), [details](../../other/details/persistence.md). Do not
 re-define them here.
 
 ## Fail

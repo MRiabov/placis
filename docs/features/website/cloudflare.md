@@ -11,7 +11,7 @@ Next: wire R2 `latest/`, website publication render, Custom Hostnames, and Conne
 address.
 
 Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
-[website_addresses](data-model.md), [frontend.md](frontend.md),
+[website_addresses](persistence.md), [frontend.md](frontend.md),
 [contractor-website-debloat.md](contractor-website-debloat.md),
 [port-contractor-website.md](port-contractor-website.md),
 [website activation](../onboarding/pipeline/08-website-activation.md), [ci-cd.md](../../general-architecture/ci-cd.md).

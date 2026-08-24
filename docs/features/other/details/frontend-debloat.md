@@ -4,7 +4,7 @@ Status: planning (port instructions, not shipped UI).
 
 ## Target
 
-[frontend.md](frontend.md), [README.md](README.md), [data-model.md](data-model.md),
+[frontend.md](frontend.md), [README.md](README.md), [persistence.md](persistence.md),
 [api.md](api.md).
 Projects and certifications field specs:
 [website frontend](../../website/frontend.md).

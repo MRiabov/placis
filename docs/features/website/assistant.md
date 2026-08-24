@@ -98,7 +98,7 @@ publication rollback is a different surface.
 
 Last writer lives only on `edit_history` (`edited_by` `human`/`agent`, `ai_generation_id` when
 agent). Live unpublished rows have no last-writer columns. See
-[data-model.md](data-model.md). `origin` is still first source, not last writer.
+[persistence.md](persistence.md). `origin` is still first source, not last writer.
 
 Apply (Ask first whole Apply, or one instant-apply tool) is one `edit_history` batch. Pending
 Ask first edits are not in the table. Reject never writes a row. Apply sends

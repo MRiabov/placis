@@ -33,7 +33,7 @@ themselves in the CMS.
 | How docs are structured and written | [docs-conventions.md](docs-conventions.md) |
 | Naming / vocabulary | [glossary.md](glossary.md) |
 | Auth | [features/other/auth/README.md](features/other/auth/README.md) |
-| Data model conventions + index | [general-architecture/data-model.md](general-architecture/data-model.md) |
+| Persistence conventions + index | [general-architecture/persistence.md](general-architecture/persistence.md) |
 | HTTP conventions + per-feature `api.md` | [general-architecture/api.md](general-architecture/api.md) |
 | LLM layer, audit, jobs, files, `frontend-2` UI | [general-architecture/](general-architecture/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |

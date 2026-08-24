@@ -2,12 +2,12 @@
 
 Status: proposed implementation plan.
 
-Related: [PRD](prd.md), [ADR](ADR.md), [data model](data-model.md), [HTTP](api.md).
+Related: [PRD](prd.md), [ADR](ADR.md), [persistence](persistence.md), [HTTP](api.md).
 
 ## Domain objects
 
-See [data-model.md](data-model.md). The business profile is
-[details/data-model.md](../other/details/data-model.md).
+See [persistence.md](persistence.md). The business profile is
+[details](../other/details/persistence.md).
 
 ## Flow
 

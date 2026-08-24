@@ -3,12 +3,12 @@
 Status: proposed implementation plan.
 
 Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture.md),
-[data model](data-model.md), [manifest](manifest.md), [HTTP](api.md).
+[persistence](persistence.md), [manifest](manifest.md), [HTTP](api.md).
 
 ## Domain objects
 
-See [data-model.md](data-model.md). Media assets are
-[media/data-model.md](../other/media/data-model.md).
+See [persistence.md](persistence.md). Media assets are
+[media library](../other/media/persistence.md).
 
 ## Website template application
 

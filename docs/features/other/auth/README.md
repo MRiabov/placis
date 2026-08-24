@@ -2,7 +2,7 @@
 
 Identity, sign-in, Clerk organizations, and tenant resolution — a mostly-internal feature with a small
 owner-facing surface (`/me`, Clerk organization provisioning). The schema lives in
-[data-model.md](data-model.md).
+[persistence.md](persistence.md).
 
 Clerk owns contractor identity, sign-in, and Clerk organizations. Placis never builds password auth.
 

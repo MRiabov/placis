@@ -26,5 +26,5 @@ One source of truth: the business profile. Editing it here changes the website a
 
 How the owner reaches it: [frontend.md](frontend.md). Port:
 [frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). HTTP:
-[api.md](api.md). Tables: [data-model.md](data-model.md). Projects:
+[api.md](api.md). Tables: [persistence.md](persistence.md). Projects:
 [website HTTP](../../website/api.md).

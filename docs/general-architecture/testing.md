@@ -23,7 +23,7 @@ Each E2E asserts both what the UI shows and the DB rows. A feature does
 not pass without its E2E test green.
 
 Each feature defines its E2E test in its own `testing.md`, spelling out the exact tables read and
-written at each step (names come from that feature's `data-model.md`):
+written at each step (names come from that feature's `persistence.md`):
 
 - [onboarding](../features/onboarding/testing.md)
 - [website](../features/website/testing.md)

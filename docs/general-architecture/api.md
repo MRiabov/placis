@@ -1,6 +1,6 @@
 # HTTP conventions
 
-Canonical HTTP rules for `cmd/api`. Same role as [data-model.md](data-model.md) for tables:
+Canonical HTTP rules for `cmd/api`. Same role as [persistence.md](persistence.md) for tables:
 conventions here, route lists in per-feature `api.md`. Feature `api.md` files open with a
 pointer here and do not restate these rules.
 
@@ -57,7 +57,7 @@ Don't say: `JsonRecord` / `JsonObjectPayload` / `additionalProperties`.
 **Forbid that on every frontend-facing field.**
 
 Postgres may keep polymorphic dumps as `jsonb` columns
-([data-model](data-model.md)). That is storage. Huma request/response types are **not** those
+([persistence](persistence.md)). That is storage. Huma request/response types are **not** those
 columns. A DTO field that is `map[string]any`, `json.RawMessage`, `object` with
 `additionalProperties: true`, or a `string` the UI `JSON.parse`s is a failed contract.
 

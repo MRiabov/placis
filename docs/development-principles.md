@@ -14,12 +14,12 @@ work in small vertical slices, and let the gates + glossary catch drift.
 
 1. **The ubiquitous language + schema + per-feature specs are already written:**
    - [glossary.md](glossary.md) — the only place names come from
-   - [data-model.md](general-architecture/data-model.md) — conventions + index; each feature's
-     tables are in `features/<feature>/data-model.md`
+   - [persistence.md](general-architecture/persistence.md) — conventions + index; each feature's
+     tables are in `features/<feature>/persistence.md`
    - [backend-stack.md](general-architecture/backend-stack.md) — stack, type layers
    - [module-layout.md](general-architecture/module-layout.md) — package tree
    - [api.md](general-architecture/api.md) — HTTP conventions; per-feature `api.md` is the HTTP routes
-   - [features/](features/) — per-feature PRD / ADR / `api.md` / technical-implementation / frontend
+   - [features/](features/) — per-feature PRD / ADR / `persistence.md` / `api.md` / technical-implementation / frontend
    - [ci-cd.md](general-architecture/ci-cd.md) — the gates
    - [general-prd.md](general-prd.md) — product-level scope
 

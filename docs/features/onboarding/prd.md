@@ -3,7 +3,7 @@
 Status: proposed product scope for onboarding — learning about a business and building its profile.
 
 Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.md),
-[data model](data-model.md).
+[persistence](persistence.md).
 
 ## Problem
 
