@@ -42,7 +42,7 @@ alongside the edit tools.
 
 ## Two configs
 
-Independent variables. They combine. Default in the website editor: **plan + Ask first**.
+Independent options. They combine. Default in the website editor: **plan + Ask first**.
 
 **Workflow: plan vs continuous** (how the request is scoped)
 
