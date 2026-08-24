@@ -68,7 +68,7 @@ console.
   500ms coalesce; leave guard. See [editing.md](../features/website/editing.md).
 - Ads (when they exist): explicit mutations + `base_updated_at` / `409` re-GET;
   `POST …/ad-set` and download. Not the website autosave loop.
-- Voice is a later milestone. First-pass onboarding is the **text** client interview.
+- Voice is a channel now ([voice agent](../general-architecture/voice-agent.md)); `frontend-2` defaults to voice during onboarding. Text remains available.
 - Enable `cmd/ci/check-dont-say --frontend` and drop the `frontend-2/` pre-commit
   exclude when the first frontend-from-Go PR lands.
 

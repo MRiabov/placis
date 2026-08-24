@@ -7,8 +7,8 @@ Related docs:
 1. [Ad generation PRD](prd.md)
 2. [Ads data model](../data-model.md)
 3. [Website](../../website/README.md)
-4. [Architecture and JSON standards](../../../architecture.md)
-5. [Backend API surface](../../../planning/go-backend-rewrite.md)
+4. [Architecture and JSON standards](../../../general-architecture/backend-stack.md)
+5. [Backend API surface](#backend-api-surface)
 
 ## Technical Thesis
 

@@ -12,22 +12,23 @@ themselves in the CMS.
 1. [Development principles](development-principles.md) — how work is sliced and reviewed (read before writing code)
 2. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
 3. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
-4. [Architecture](architecture.md) — stack, module layout, how processes run, boundaries
-5. [General architecture](general-architecture/README.md) — LLM layer, audit, jobs, files, data model, `frontend-2` UI
-6. [Auth](features/other/auth/README.md) — Clerk, tenant == Clerk organization
+4. [Product](general-prd.md) — the loop, product-level in/out of scope
+5. [General architecture](general-architecture/README.md) — stack, module layout, processes, LLM layer, audit, jobs, files, `frontend-2` UI
+6. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization for active tenants
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building; [website activation](features/onboarding/pipeline/08-website-activation.md) is pay-and-activate
 8. [Website](features/website/README.md) — website templates, applying them, editing, website publication
 9. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)
 10. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/) (investigation, not the spec)
 11. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
-12. [CI and delivery](ci-cd.md) — file-size guard, external API isolation, generated-code freshness
-13. [Testing](testing.md) — the per-feature E2E tests
+12. [CI and delivery](general-architecture/ci-cd.md) — file-size guard, folder fan-out, external API isolation, generated-code freshness
+13. [Testing](general-architecture/testing.md) — the per-feature E2E tests
 
 ## Canonical references
 
 | Topic | Doc |
 | --- | --- |
-| Stack, module layout, how processes run | [architecture.md](architecture.md) |
+| Product loop and product-level scope | [general-prd.md](general-prd.md) |
+| Stack, module layout, how processes run | [general-architecture/README.md](general-architecture/README.md) |
 | How work is sliced and reviewed | [development-principles.md](development-principles.md) |
 | How docs are structured and written | [docs-conventions.md](docs-conventions.md) |
 | Naming / vocabulary | [glossary.md](glossary.md) |
@@ -41,9 +42,8 @@ themselves in the CMS.
 | Ad generation | [features/ads/README.md](features/ads/README.md) |
 | Meta ad posting (investigation) | [features/ads/ad-application/meta](features/ads/ad-application/meta/) |
 | Leads | [features/other/leads/README.md](features/other/leads/README.md) |
-| CI and delivery | [ci-cd.md](ci-cd.md) |
-| Testing / per-feature E2E | [testing.md](testing.md) |
-| Exhaustive rewrite plan | [planning/go-backend-rewrite.md](planning/go-backend-rewrite.md) |
+| CI and delivery | [general-architecture/ci-cd.md](general-architecture/ci-cd.md) |
+| Testing / per-feature E2E | [general-architecture/testing.md](general-architecture/testing.md) |
 | `frontend-2` port (debloat index) | [planning/frontend-debloat.md](planning/frontend-debloat.md) |
 
 ## Product boundary

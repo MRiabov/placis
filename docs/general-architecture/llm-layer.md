@@ -1,8 +1,13 @@
 # LLM layer
 
-The LLM sits behind an internal interface (Vercel AI SDK primary, OpenRouter
-alternative), so prompts, model names, response shapes, and cost logging never leak into domain
-logic.
+The LLM sits behind `LLMProvider` so prompts, model names, response shapes, and cost
+logging never leak into domain logic. Shared `ai` is that interface and its implementation.
+
+Generation uses the Vercel AI SDK. **Open-web search is Parallel as a Vercel AI Gateway
+server tool** (`gateway.tools.parallelSearch()`) — not OpenRouter, not a model's built-in search,
+not Exa, Perplexity, or Tako, not Parallel's API directly (onboarding ADR 5a). Parallel returns
+excerpts; a follow-up extract over retrieved text is a Vercel generation call with no search tools.
+Generation and search share Vercel; there is no OpenRouter hop.
 
 - Prompts are a prompt catalog keyed by id and format revision — not hardcoded strings.
 - Output is parsed against a schema before it enters the app. A mismatch is **repaired under a
@@ -40,12 +45,11 @@ result).
 - **Validated on input** — a call that doesn't fit the struct, or fails its constraints, is rejected
   (or repaired and re-validated) — never executed blindly.
 - **Parallel** — independent tool calls run concurrently; only declared dependencies serialize.
-- **The LLM drafts; the contractor edits** — tools write unpublished website edits and reviewable changes, never a published website copy. The owner
-  decides and does a website publication.
+- **Recorded** — every call lands in `ai_generations.tool_calls`. Domain packages own the
+  registries that mutate unpublished rows. They call `LLMProvider`; they are not `LLMProvider`.
 
-Each domain owns a small tool registry — the set of tools its agent may call (e.g. `update_slot`,
-`cleanup_image`, and `generate_image` for the website editor; copy + image-gallery proposals for
-ads). Website assistant tools call the same media-library / website editor functions as the owner UI.
+Website-editor tools (Ask first / instant apply) live in `website/assistant`
+([website assistant](../features/website/assistant.md)). Ads tools live in `ads`.
 
 ## Where the LLM sits in each feature
 

@@ -2,7 +2,7 @@
 
 Status: proposed implementation plan.
 
-Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](../../architecture.md),
+Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture.md),
 [data model](data-model.md), [manifest](manifest.md).
 
 ## Domain objects

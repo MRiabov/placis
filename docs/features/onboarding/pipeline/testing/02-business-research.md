@@ -18,5 +18,5 @@
   insert a wave. A 6th wave after `research_wait_until` succeeds.
 - **Fail**: job error → source `status=error`; onboarding session stays `client_interviewing`; prior fold
   kept. Wave cap is not this Fail.
-- **Mocked**: Google Maps Details / scrape, OpenRouter Parallel + extract, Facebook, trade
-  registry, photo classifier (fakes). Never Parallel’s API, Exa, Perplexity, `:online`.
+- **Mocked**: Google Maps Details / scrape, Vercel Parallel + extract, Facebook, trade
+  registry, photo classifier (fakes). Never Parallel’s API, Exa, Perplexity, Tako, `:online`, OpenRouter web search.

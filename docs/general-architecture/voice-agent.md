@@ -1,8 +1,10 @@
 # Voice agent
 
-Voice is a **later milestone**, but its architecture is recorded now so it isn't reconstructed from
-scratch. Everything sits behind a voice-service-neutral interface; the concrete voice service is
-swappable.
+Voice is a **channel into the same governed tools as text**, not a later milestone and not a
+separate product. Everything sits behind a voice-service-neutral interface; the concrete voice
+service is swappable. Text and voice both write the same business profile; `frontend-2` defaults
+to voice during onboarding. After website activation the same agent can drive the website
+assistant (onboarding ADR 2).
 
 The realtime **voice agent** is the thing the owner turns on in the application: client interview
 during onboarding, the website assistant, and the CMS after website activation. It asks clarifying

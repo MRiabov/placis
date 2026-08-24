@@ -27,8 +27,8 @@ onboarding session, **and** the tenant is under the wave cap. River jobs per res
 
 ## Must not
 
-- Call Parallel’s API; use Exa, Perplexity, a model’s built-in search, `:online`, or OpenRouter
-  web search with any engine other than Parallel.
+- Call Parallel’s API; use Exa, Perplexity, Tako, a model’s built-in search, `:online`, or
+  OpenRouter web search.
 - Refetch on `business_research_fetches` hit (kind + cache key) or `google_maps_listings` hit by
   `place_id`.
 - Text autosave, voice mint, `end_interview`, interview field lists, set `channel`.
@@ -63,10 +63,10 @@ Registry-only onboarding sessions still get runs.
 | Reviews and photos | reviews, rating, photos | `review` / `photo` |
 
 Adapters: Google Maps Details (upsert `google_maps_listings`; scrape when Maps is not configured),
-OpenRouter fast extract (LLM over retrieved text, no search tools), Facebook lookup, photo
+Vercel fast extract (LLM over retrieved text, no search tools), Facebook lookup, photo
 classification (hero / project / service / founder / logo), trade-registry lookups (Safe Electric,
 RGI, … for IE; Gas Safe, NICEIC, … for GB). Discovery of a URL or listing without `place_id` or a
-known website URL is **Parallel** through OpenRouter (`openrouter:web_search`, engine Parallel).
+known website URL is **Parallel** through Vercel AI Gateway (`gateway.tools.parallelSearch()`).
 
 Before any **external** fetch: look up `business_research_fetches` by kind + stable key (and
 `google_maps_listings` by `place_id` on the Maps path). Hit → reuse `raw`; still write
@@ -115,5 +115,5 @@ SSE on the onboarding session stream. 03 and/or 04a/04b may already be open.
 - A wave is one enqueue, not one `business_research_run`. River retries are not a new wave.
 - Cache hit still writes run + source for this onboarding session (when a wave is allowed).
 - Photo classification is here, not in 04a/04b.
-- Parallel only via OpenRouter engine Parallel.
+- Parallel only via the Vercel AI Gateway Parallel server tool.
 - The wait does not change onboarding session status and does not block 03/04.

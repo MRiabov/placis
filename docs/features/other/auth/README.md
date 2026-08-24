@@ -55,6 +55,17 @@ Resolved once per request from one of:
 
 Services take `tenantID` explicitly.
 
+## API surface
+
+- `GET /api/v1/health` — process liveness (no tenant).
+- `GET /api/v1/me` — `{owner, platform_role, tenant}` (`tenant` only when `status=active`).
+- Clerk organization provisioning at website activation (`Organizations().Create`); the frontend then
+  `clerk.setActive`. Not a tenant-collection API.
+
+Do not resurrect: `POST /api/v1/tenants`, `PATCH /api/v1/tenants/{website_address}`,
+`.../memberships/*` CRUD, `/me/orgs`, `/me/tenants`, `/me/selected-org`. CMS website routes are
+`/api/v1/website/editor/...`, not nested under `/api/v1/tenants/{website_address}`.
+
 ## Roles
 
 `tenant_memberships.role`: `owner`. Platform admins work across tenants through Clerk's **native

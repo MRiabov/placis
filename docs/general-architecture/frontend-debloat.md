@@ -4,7 +4,7 @@ Status: planning (port instructions, not shipped UI).
 
 ## Target
 
-[frontend.md](frontend.md) (loading placeholders), [architecture.md](../architecture.md),
+[frontend.md](frontend.md) (loading placeholders), [frontend-stack.md](frontend-stack.md),
 [glossary Don't say](../glossary.md). Shared rules:
 [planning index](../planning/frontend-debloat.md).
 
@@ -72,7 +72,7 @@ unconstrained blobs). Contractor website typegen is a different consumer:
 ## Retarget
 
 - Typegen: `openapi-typescript` from Go `/openapi.json` served by huma. CI
-  generated-code freshness as in [ci-cd.md](../ci-cd.md).
+  generated-code freshness as in [ci-cd.md](ci-cd.md).
 - Enable `go run ./cmd/ci/check-dont-say --frontend` and drop the `frontend-2/`
   pre-commit exclude on the first frontend-from-Go PR.
 - Playwright product e2e: fresh port; empty publishable key only for no-auth
