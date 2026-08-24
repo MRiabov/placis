@@ -32,8 +32,10 @@ unpublished tables. They use the onboarding session’s `tenant_id` (unactivated
 2. One bounded LLM call picks website template + website styles (heuristic fallback: trade →
    website template, else default). Not website-page-by-website-page copy.
 3. Deterministic apply: profile + website template → unpublished `website_pages` /
-   `website_sections` / `website_slots`. Reviews sections attach `website_slot_reviews` to
-   `business_profile_reviews`. Placeholders (`{{business_name}}`, `{{marketing_phone}}`, …)
+   `website_sections` / `website_slots`, one `website.menus` row (top menu + footer trees), and
+   the two site-wide look website sections (`page_id` null). Reviews sections attach
+   `website_slot_reviews` to `business_profile_reviews`. Placeholders (`{{business_name}}`,
+   `{{marketing_phone}}`, …)
    **stay**. Same profile + same website template → same website pages.
 4. Prefer real projects / Maps photos for image website slots; do not invent work photos.
 5. Validate against website component contracts before the unpublished website is kept.
@@ -43,7 +45,8 @@ Copy is **not** this step — [06](06-website-copy-generation.md).
 
 ## Persist
 
-Unpublished website + media library rows, including `website_slot_reviews`; `ai_generations` for
+Unpublished website + media library rows, including `website.menus`, site-wide look website
+sections, and `website_slot_reviews`; `ai_generations` for
 the website template/website styles pick only. Onboarding session → `previewing` once 07 writes the website preview.
 
 ## Fail

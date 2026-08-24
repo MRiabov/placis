@@ -7,7 +7,7 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [ADR](ADR.md) — decision record
 - [architecture.md](architecture.md) — content model, applying the website template, website editor, website publication, render
 - [cloudflare.md](cloudflare.md) — live R2 serve path (`apps/contractor-website` is in this repo). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md), not this Worker.
-- [data-model.md](data-model.md) — `website_addresses`, website pages, website sections, website slots, website forms, top menu, footer, website publications, website settings, `edit_history`
+- [data-model.md](data-model.md) — `website_addresses`, website pages, website sections, website slots, website forms, `website.menus`, website publications, website settings, `edit_history`
 - [manifest.md](manifest.md) — `website.v1` keep / keep-out
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
 - [frontend.md](frontend.md) — `/cms/website` (publication dropdown + Connect modal), `/cms/projects`, `/cms/certifications-and-reviews`

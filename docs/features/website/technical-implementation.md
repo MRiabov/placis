@@ -26,7 +26,7 @@ the tables it writes.
 ## Website assistant (the LLM drafts; the owner decides)
 
 - Tool calls: see [assistant.md](assistant.md) (`update_slot`, `update_form`,
-  `update_website_styles`, `generate_image`, …).
+  `update_website_styles`, `update_menus`, `generate_image`, …).
 - Output is a reviewable diff, validated against website component contracts before apply.
 - Every call records reasoning + output + tool calls via `ai_generations`.
 - Apply / Reject is one-way; no revert-after-apply. No unpublished snapshot per edit.

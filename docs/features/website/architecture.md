@@ -12,10 +12,13 @@ sections**; a website section is one **website component** given props and edita
   an ordered list of website sections. Status is `unpublished` or `archived`. The live set is the
   active website publication, not a page-level published flag.
 - **website section** — an instance of a website component (`component_id`), with its props and
-  design, at a position on the website page.
+  design, at a position on the website page. Two site-wide look sections (`page_id` null) paint
+  the top menu and footer (logo, density); link trees live on `website.menus`.
 - **website slot** — a named editable value inside a website section: text, rich text, image, link,
   list, or json. Reviews on a website section are selected profile reviews
   (`website_slot_reviews`), not a `slot_type`. A project gallery is a list/json of project ids.
+- **menus** — one `website.menus` row per tenant: `top_menu` and `footer` JSON trees (page / text /
+  URL nodes, depth 2) plus `show_phone` / `show_email`.
 - **media asset** — a photo, logo, or document in the media library.
 
 ## The website component model
@@ -79,7 +82,7 @@ in the website editor. The edit loop is in [editing.md](editing.md). Screens: [f
 ## Website assistant
 
 The LLM edits the unpublished website through the **website assistant** — hard-typed, validated,
-parallel tool calls (`update_slot`, `generate_image`, website section/website styles/SEO/website form/website page
+parallel tool calls (`update_slot`, `generate_image`, `update_menus`, website section/website styles/SEO/website form/website page
 actions). Two configs: plan vs continuous, instant apply vs Ask first. See
 [assistant.md](assistant.md).
 
