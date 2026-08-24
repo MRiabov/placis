@@ -35,9 +35,9 @@ failed event.
 **Owner action = assistant action.** Each tool is another caller of the same website-editor /
 media-library execution the owner already uses (Ask first / instant apply around it). Text
 `update_slot` is the same upsert as click-off PATCH. Image attach, crop, focal, and AI cleanup
-are the same services as the editor PATCH and `/cms/media`. There is no second assistant
+are the same writes as the website editor PATCH and `/cms/media`. There is no second assistant
 implementation and no public copy helper the tools call. Copy-on-write
-(`parent_media_asset_id`, parent file never replaced) stays **inside** those services.
+(`parent_media_asset_id`, parent file never replaced) stays **inside** those functions.
 
 Planner: a named real photo → **attach first** (`update_slot` + `media_asset_id`). Cleanup only
 when they ask to tidy that photo. `generate_image` only when nothing in GET `media_assets[]`
@@ -176,9 +176,9 @@ update_slot(
 ```
 
 - Image + `media_asset_id` only → **attach** (same as drag onto the canvas). No copy.
-- Image + `crop` and/or `focal` → crop and/or focal **service**, then point the slot at the
+- Image + `crop` and/or `focal` → crop and/or focal **write**, then point the slot at the
   returned item. Omit `media_asset_id` → the slot’s current item. Crop and focal may be one
-  service with two knobs — still one implementation.
+  function with two fields — still one implementation.
 - `value` on an image slot is `400`. Image fields on a text slot are `400`.
 - Tenant mismatch, archived, or `rejected` → `400`. `pending_review` may attach on the
   unpublished canvas (warning). Publication still needs `approved`.
@@ -188,7 +188,7 @@ Same Ask first / instant apply gate as text `update_slot`.
 ### `cleanup_image`
 
 Same AI cleanup as `/cms/media`. Ads light cleanup, when it writes a media-library copy, calls
-this same service.
+this same function.
 
 ```text
 cleanup_image(
@@ -199,8 +199,8 @@ cleanup_image(
 )
 ```
 
-Resolve parent → **AI cleanup service** → point **that slot** at the returned item. Other slots
-and ads keep the parent until retargeted. Cosmetic bound lives on the cleanup service (same as
+Resolve parent → **AI cleanup** → point **that slot** at the returned item. Other slots
+and ads keep the parent until retargeted. Cosmetic bound lives on that cleanup (same as
 ads: no fake results). Canvas warning until approved. Publication blocked until approved. Same
 Ask first / instant apply gate as `update_slot`.
 
@@ -208,4 +208,4 @@ The website assistant never does a website publication, never bypasses validatio
 arbitrary registry JSON. It does not edit Details, Projects, or Certifications and reviews (those
 are Profile screens). It does not delete or archive a website section or website page (hide
 stays: `set_section_visibility`). It does not upload or replace file bytes — replace stays the
-existing replace service on `/cms/media` / editor upload.
+existing replace on `/cms/media` / website editor upload.

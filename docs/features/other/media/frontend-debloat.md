@@ -25,7 +25,7 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
   to a website slot as a discrete PATCH).
 - Media caption, focal point, crop, replace, AI cleanup that **creates a copy**
   (`parent_media_asset_id`); parent file is never replaced. Website editor PATCH, website
-  assistant tools, and ads light cleanup call these same services ([README.md](README.md)).
+  assistant tools, and ads light cleanup call these same functions ([README.md](README.md)).
 - Leave guard covers an in-flight upload ([editing.md](../../website/editing.md)).
 
 ## Delete
