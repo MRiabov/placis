@@ -25,11 +25,18 @@ not pass without its E2E test green.
 Each feature defines its E2E test in its own `testing.md`, spelling out the exact tables read and
 written at each step (names come from that feature's `data-model.md`):
 
-- [onboarding](features/onboarding/testing.md)
-- [website](features/website/testing.md)
-- [ads](features/ads/ad-generation/testing.md)
-- [auth](features/other/auth/testing.md)
-- [Placis website](features/placis-website/testing.md) — static origin only (no Go / Postgres)
+- [onboarding](../features/onboarding/testing.md)
+- [website](../features/website/testing.md)
+- [ads](../features/ads/ad-generation/testing.md)
+- [auth](../features/other/auth/testing.md)
+- [Placis website](../features/placis-website/testing.md) — static origin only (no Go / Postgres)
+
+## Cross-tenant isolation
+
+Every feature that stores tenant-owned rows must have an **integration** test that creates two
+tenants and asserts reads, writes, and **files** are blocked across them. This is in addition to
+the per-feature E2E rule above. Auth spells out the two-tenant case in
+[auth testing](../features/other/auth/testing.md).
 
 ## Notes
 
@@ -37,5 +44,5 @@ written at each step (names come from that feature's `data-model.md`):
   with a test key, verifiable against the test JWKS). Use them through the real SDK — never a fake
   verifier. Fiddly to set up once, then reusable.
 - **Stripe** uses test mode the same way: real SDK + test keys, no real charge.
-- Fakes for Google, the LLM, Stripe, and voice live in the repo (see `ci-cd.md`); tests never
+- Fakes for Google, the LLM, Stripe, and voice live in the repo (see [ci-cd.md](ci-cd.md)); tests never
   spend money or reach production APIs.

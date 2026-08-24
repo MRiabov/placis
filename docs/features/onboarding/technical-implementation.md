@@ -39,11 +39,11 @@ Website publication and website rollback are the website editor, not this API
 2. Look up `business_research_fetches` (kind + cache key) and `google_maps_listings` (`place_id`)
    before any external call. Hit → reuse `raw`; skip Google Maps Details, scrape, Facebook, crawl,
    and Parallel.
-3. On a miss: Google Maps, OpenRouter Parallel search (only when we lack `place_id` or a known
+3. On a miss: Google Maps, Vercel Parallel search (only when we lack `place_id` or a known
    website URL), the company registry parquet, Facebook, the LLM extract, or a fake returns a raw
    fetch body.
-   Persist the fetch. OpenRouter is the gateway: Parallel via `openrouter:web_search` for the
-   search hop; a separate extract call over retrieved text (no search tools).
+   Persist the fetch. Vercel AI Gateway is the search hop: Parallel via
+   `gateway.tools.parallelSearch()`; a separate extract call over retrieved text (no search tools).
 4. Upsert typed output: a `business_research_sources` row (kind, external id, where it came from,
    lookup `status`, confidence) for **this** onboarding session even on a cache hit. A Google Maps
    listing also upserts `google_maps_listings` (columns + `raw` ETL cache), hours, and reviews.
@@ -66,7 +66,7 @@ Website publication and website rollback are the website editor, not this API
 
 - Tenant isolation for onboarding sessions, business research, and profile rows.
 - Fakes force deterministic tests; CI never spends Google / LLM / Stripe quota (see
-  [ci-cd.md](../../ci-cd.md)).
+  [ci-cd.md](../../general-architecture/ci-cd.md)).
 - One E2E: find → review → client interview → apply the website template → website preview →
   website activation (Google / LLM / Stripe faked, core logic unmocked). The website preview can
   be activated before website copy generation finishes.
