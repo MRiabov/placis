@@ -14,7 +14,7 @@ area, and the date.
    reviewable ad set (images, copy, placements, ad lead form suggestions, ideal customer
    profile). Campaign landing website pages are not planned for the contractor segment. Ads
    capture ad leads through a Meta ad lead form; they do not send people to a website page in
-   the first version. This matches how contractors actually buy: they have no custom campaign
+   the first pass. This matches how contractors actually buy: they have no custom campaign
    website pages, and an ad lead form captures ad leads without one.
    Previous decision (2026-08-14): ads linked to existing published website pages as the ad
    destination. Website-page click-through is deferred (see decision 30).
@@ -32,7 +32,8 @@ area, and the date.
 4. **Light cleanup is cosmetic only** — Cleanup may not add/remove objects in a way that changes
    what the photo shows, must not conceal damage or defects, and must not change the work
    displayed. It creates a new media library item (a copy) that inherits supplied by; the source
-   media library item is never modified.
+   media library item is never modified. Ads call the same AI cleanup service as `/cms/media`
+   and the website assistant `cleanup_image`; there is no ads-only cleanup.
 
 5. **The zip download is a temporary step** — The ad set is machine-readable and has an ad set format number;
    the download exists only so a human can do ad posting manually until direct transmission to
@@ -169,7 +170,7 @@ area, and the date.
     Audience and area are shown as settled details of the ad, not as controls.
 
 30. **Meta ad lead form only; website-page click-through is deferred** (2026-08-19) — The first
-    version does not let the owner send people to a website page. Every ad carries a suggested
+    pass does not let the owner send people to a website page. Every ad carries a suggested
     Meta ad lead form. Website-page click-through (and a thank-you redirect onto a website page)
     may return later; it is deferred, not cancelled. Shipped-initially design, frontend spec,
     data model, and tests do not include an ad destination picker, a Website page toggle, or

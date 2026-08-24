@@ -24,11 +24,14 @@ Status: decided (2026-08-16, product owner + engineering).
    `{{trade}}`, … pull from the business profile when website publication runs; the unpublished
    website keeps the website placeholders rather than inventing details.
 
-6. **The LLM drafts; the owner decides** — the website assistant drafts copy and proposes images
-   via governed tool calls (`update_slot`, `generate_image`), validated against contracts. Default
-   is plan + Ask first (Apply / Reject, one-way). Instant apply still uses those tools; it
-   does not write freeform JSON. `generate_image` is used only when no approved source fits.
-   (2026-08-20; assistant configs + Apply/Reject terminal 2026-08-23; Ask first 2026-08-23)
+6. **The LLM drafts; the owner decides** — the website assistant is another caller of the same
+   website-editor / media-library execution the owner already uses (`update_slot`,
+   `cleanup_image`, `generate_image`, …), validated against contracts. Default is plan + Ask
+   first (Apply / Reject, one-way). Instant apply still uses those tools; it does not write
+   freeform JSON. Named real photo → attach first. AI cleanup is the `/cms/media` cleanup
+   service. `generate_image` is last resort when nothing in `media_assets[]` fits.
+   (2026-08-20; assistant configs + Apply/Reject terminal 2026-08-23; Ask first 2026-08-23;
+   attach-before-generate + shared media-library services 2026-08-24)
 
 7. **Website publication is kept and can be rolled back** — website publication creates a
    `website_publications` row (a published website copy); website rollback reactivates an earlier
@@ -93,8 +96,9 @@ Status: decided (2026-08-16, product owner + engineering).
     `business_profile_reviews`. No `/cms/proof`. (2026-08-20)
 
 17. **`generate_image` may attach pending-review on the unpublished canvas** — always a warning;
-    owner approval makes it approved; website publication still requires approved media assets.
-    (2026-08-20)
+    owner approval makes it approved; website publication still requires approved media library
+    items. Attach of an existing library photo is `update_slot`, not `generate_image`.
+    (2026-08-20; attach vs generate 2026-08-24)
 
 18. **Live GET is Cache then R2 only** — website publication prebuilds HTML into
     `sites/{website_address}/latest/`. A cache miss still reads R2. Missing object is 404, not a

@@ -134,8 +134,12 @@ website slot you send:
 
 Coalesce means the **dirty keys since the last successful copy-out**, not the full draft. Do not
 send sibling website slots, `media_assets[]`, the website manifest, or file bytes. Image website
-slots send a `media_asset_id` (and crop / focal point if those changed). Photos go through the
-media-library upload, not this PATCH.
+slots send a `media_asset_id` (and crop / focal point if those changed). That PATCH is the same
+**attach**, **crop**, and **focal** services the website assistant calls (`update_slot`;
+[assistant.md](assistant.md)). Attach only retargets the slot. Crop / focal run the crop / focal
+service, then the slot points at the returned item (copy-on-write stays inside that service;
+[media library](../other/media/README.md)). Photos go through the media-library upload, not this
+PATCH. File replace is that upload / replace service, not this body.
 
 Typical PATCH is **under 10 KB** (one headline is hundreds of bytes; a rich-text click-off is a
 few KB). A busy coalesced window stays in that band. A **1 MB** body would mean we shipped the
