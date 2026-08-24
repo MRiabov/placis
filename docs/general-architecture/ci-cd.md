@@ -96,14 +96,14 @@ diagnosable from GitHub Checks, the connection mode is wrong.
     (`placis-website` | `placis-website-staging`), then purge cache. Workflow YAML is not in
     this PR. Serve path:
     [Placis website Cloudflare](../features/placis-website/cloudflare.md).
-- Railway deploys `cmd/api` and `cmd/worker` from the integration branch — release, not CI.
+- Railway deploys `cmd/api` from the integration branch — release, not CI.
 
 ## Dev tooling (`justfile`)
 
 The `justfile` is the **developer entry point**, and nothing more — only the high-frequency dev loop:
 
 - `just servers-up` / `just servers-down` — start/stop the dev environment (Postgres via Docker,
-  migrations, `cmd/api`, `cmd/worker`, `frontend-2`, with env-var + port resolution).
+  migrations, `cmd/api`, `frontend-2`, with env-var + port resolution).
 - `just test`, `just lint`, `just fmt`, `just sqlc`, `just typegen`, `just check-files` — the
   fix-it-locally feedback loop.
 
