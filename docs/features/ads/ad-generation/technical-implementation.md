@@ -185,9 +185,9 @@ Crops are non-destructive. The source media asset is never modified; either stor
 metadata on the placement or create a derived crop media asset through the existing media library
 derivation pattern so the renderer can produce the exact pixels.
 
-Light cleanup edits call the **same AI cleanup service** as `/cms/media` and the website
+Light cleanup edits call the **same AI cleanup** as `/cms/media` and the website
 assistant `cleanup_image` ([media library](../../other/media/README.md)): declutter, tidy
-background; not invent work. That service creates a new media library item (a copy) of the
+background; not invent work. That write creates a new media library item (a copy) of the
 approved source. The copy sets `parent_media_asset_id`, inherits `supplied_by`, and stays
 `pending_review`; only an approved copy can appear in an ad set.
 

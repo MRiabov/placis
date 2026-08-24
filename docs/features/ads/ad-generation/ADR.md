@@ -32,7 +32,7 @@ area, and the date.
 4. **Light cleanup is cosmetic only** — Cleanup may not add/remove objects in a way that changes
    what the photo shows, must not conceal damage or defects, and must not change the work
    displayed. It creates a new media library item (a copy) that inherits supplied by; the source
-   media library item is never modified. Ads call the same AI cleanup service as `/cms/media`
+   media library item is never modified. Ads call the same AI cleanup as `/cms/media`
    and the website assistant `cleanup_image`; there is no ads-only cleanup.
 
 5. **The zip download is a temporary step** — The ad set is machine-readable and has an ad set format number;

@@ -84,7 +84,7 @@ in the website editor. The edit loop is in [editing.md](editing.md). Screens: [f
 The LLM edits the unpublished website through the **website assistant** — hard-typed, validated,
 parallel tool calls (`update_slot`, `cleanup_image`, `generate_image`, `update_menus`, website
 section/website styles/SEO/website form/website page actions). Same attach / crop / focal /
-cleanup services as the owner UI. Two configs: plan vs continuous, instant apply vs Ask first. See
+cleanup as the owner UI. Two configs: plan vs continuous, instant apply vs Ask first. See
 [assistant.md](assistant.md).
 
 ## Website publication
