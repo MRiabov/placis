@@ -244,7 +244,8 @@ Each phase ends with: typed models, migrations applied, integration tests (incl.
 isolation), regenerated frontend types, and an E2E test for each major feature.
 
 0. **Foundation** — repo scaffold, `cmd/api` + `cmd/worker`, config, `slog`, Postgres + `goose` +
-   `sqlc`, `River`, walking skeleton (`huma` + `/health`), Railway deploy, and CI (CircleCI + GitHub Actions):
+   `sqlc`, `River`, walking skeleton (`huma` + `/health`), Railway deploy, and CI (CircleCI GitHub App
+   or GitHub Actions):
    file-size guard, gofmt/vet/lint, build+test (Testcontainers), generated-code freshness
    (sqlc/huma/frontend-typegen), external API isolation, evals local-only.
 1. **Auth & tenancy** — Clerk verification → `Principal`, tenant resolution, memberships, domains,
@@ -275,9 +276,11 @@ agent is not built in the first pass.
 - **LLM** — behind an internal interface. Vercel AI SDK is the primary candidate
   (OpenRouter is the alternative — it now adds up to ~15% per transaction). The interface keeps the
   concrete LLM swappable; the Go client choice is an implementation detail behind it.
-- **CI/CD** — CircleCI primary (PR-only, path-filtered, non-mutating); GitHub Actions for emergency
-  + Cloudflare deploy; file-size guard (< 800 warn / > 1200 hard error); backend tests
-  isolated from Google, the LLM, Stripe, and voice; evals local-only. See `docs/ci-cd.md`.
+- **CI/CD** — GitHub Checks inspection; CircleCI via GitHub App or GitHub Actions (comment trigger
+  lines in the YAML to switch; GitHub Actions is live while CircleCI quota is exhausted);
+  Cloudflare deploys stay on GitHub Actions; file-size guard (< 800 warn / > 1200 hard error);
+  backend tests isolated from Google, the LLM, Stripe, and voice; evals local-only. See
+  `docs/ci-cd.md`.
 - **Voice** — later milestone; the voice service stays swappable, but the onboarding voice agent
   is deferred.
 
