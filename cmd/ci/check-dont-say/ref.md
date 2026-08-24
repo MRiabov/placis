@@ -48,7 +48,7 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 ## What a leftover rewrite looks like
 
 - Ads technical doc “crop is normalized” → “crop is stored as 0–1 coordinates” (or the Say **combine / turn into** where that is the meaning).
-- `docs/planning/go-backend-rewrite.md` “huma skeleton” → walking skeleton (already extra-allowed) or drop the word.
+- Development principles “walking skeleton” is already extra-allowed; do not write “huma skeleton”.
 - Architecture “runtime validation” → “validation when the request is handled” (do not name the contractor website a runtime; do not use `runtime` as a synonym).
 
 ## `setup` in testing docs

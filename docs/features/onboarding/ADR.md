@@ -41,16 +41,18 @@ decision + date) instead of silently replacing the old entry.
    the body onto `business_research_sources.raw`. 2026-08-23: cache is global for every external
    kind, not Maps-only.)
 
-5a. **Open web search is Parallel on OpenRouter** — Parallel is the search engine for our agents.
-    When a research job must discover a URL or listing and we do not already have `place_id` or a
-    known website URL, call Parallel through OpenRouter (`openrouter:web_search`, engine Parallel).
-    Do not call Parallel’s API directly. Do not use Exa, Perplexity, a model's built-in search,
-    `:online`, or any other OpenRouter search engine. OpenRouter is also the fast extract over
-    retrieved text (no search tools on that call). Known-URL crawl, Maps Details, scrape, and
-    Facebook stay typed adapters. (2026-08-23: Parallel named, and OpenRouter web tools wrongly
-    forbidden. Same day, later: Parallel is a search engine on OpenRouter; we use OpenRouter for
-    both search and extract. Predecessor used Perplexity Sonar via OpenRouter and Exa for Facebook
-    discovery.)
+5a. **Open web search is Parallel via the Vercel AI Gateway server tool** — Parallel is the
+    search engine for our agents. When a research job must discover a URL or listing and we do not
+    already have `place_id` or a known website URL, call Parallel through Vercel AI Gateway
+    (`gateway.tools.parallelSearch()`, any model). Do not call Parallel’s API directly. Do not use
+    Exa, Perplexity, Tako, a model's built-in search, `:online`, or OpenRouter web search. Fast
+    extract over retrieved text is a Vercel generation call with no search tools. Known-URL crawl,
+    Maps Details, scrape, and Facebook stay typed adapters. (2026-08-23: Parallel named, and
+    OpenRouter web tools wrongly forbidden. Same day, later: Parallel is a search engine on
+    OpenRouter; we use OpenRouter for both search and extract. Predecessor used Perplexity Sonar
+    via OpenRouter and Exa for Facebook discovery. 2026-08-24: Vercel AI Gateway exposes Parallel
+    as a server tool; OpenRouter is no longer the search/extract hop — generation and search stay
+    on Vercel.)
 
 6. **The business profile keeps profile history and every detail is attributable** — each change is a new
    `business_profile_history` row with where each detail came from and who changed it; the profile

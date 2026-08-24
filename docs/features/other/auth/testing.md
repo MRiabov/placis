@@ -29,3 +29,12 @@ using a real Clerk testing token — never a fake verifier. DB asserts name the 
    - UI: `/me` stays `tenant: null` until activation; then it returns the **same** tenant id.
    - DB: the existing `tenants` row gets `clerk_org_id` and `status=active`; `tenant_memberships`
      (`owner`) is written; no second tenant row.
+
+## 3. Two-tenant isolation
+
+1. **Two activated tenants** — create tenant A and tenant B (separate Clerk organizations, separate
+   `tenant_id`s), each with at least one website page and one file.
+2. **As tenant A**, read/write website pages and files that belong to B.
+   - API: 404 or forbidden; never B's rows.
+   - DB: A's queries include `tenant_id = A`; B's `website_pages` and `files` rows are unchanged.
+3. Repeat as tenant B against A's rows. Same block.

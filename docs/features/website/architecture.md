@@ -30,7 +30,11 @@ allowed values. The contract is one typed struct dumped to JSON under `catalog/`
 editor and the renderer read the same structs. Only registered website components render.
 
 The first-pass website template catalog and website component catalog live in
-`packages/website-components` (from the predecessor), not a short list written here.
+`packages/website-components` (from the predecessor), not a short list written here. Go loads those
+JSON sidecars for save and website publication validation; it must not hand-duplicate the struct
+shapes. A later dump of the same typed structs lives under `catalog/`.
+Website templates and website component contracts are static website template catalog data,
+kept as website template catalog revisions — not database rows.
 
 ## Apply the website template
 

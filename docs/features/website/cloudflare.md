@@ -14,7 +14,7 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 [website_addresses](data-model.md), [frontend.md](frontend.md),
 [contractor-website-debloat.md](contractor-website-debloat.md),
 [port-contractor-website.md](port-contractor-website.md),
-[website activation](../onboarding/pipeline/08-website-activation.md), [ci-cd.md](../../../ci-cd.md).
+[website activation](../onboarding/pipeline/08-website-activation.md), [ci-cd.md](../../general-architecture/ci-cd.md).
 
 ## Locks
 
@@ -228,7 +228,7 @@ Website preview talks to local `cmd/api`. R2-off is incompatible with R2-only li
 
 **CI deploy.** Manual GitHub Actions `workflow_dispatch` only, workflow name
 `deploy contractor website cloudflare`, environment staging | production. CircleCI does not
-deploy this Worker. Secrets stay out of git. Does not run on pull request. See [ci-cd.md](../../../ci-cd.md).
+deploy this Worker. Secrets stay out of git. Does not run on pull request. See [ci-cd.md](../../general-architecture/ci-cd.md).
 
 **Tests.** No live Cloudflare. Fakes for Custom Hostnames, `purge_cache`, and R2 writes. Website
 publication E2E asserts fake purge + R2 keys; see [testing.md](testing.md).

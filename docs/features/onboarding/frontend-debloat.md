@@ -16,9 +16,11 @@ Default client interview is **voice**. Text is the other writer
 
 - Don't say setup: `frontend-2/src/features/setup/` (Find, Review, client interview,
   progress, resume). Target folder: `frontend-2/src/features/onboarding/`.
-- Website preview + website activation: `frontend-2/src/features/preview/`
+- Website preview + website activation: leftover `frontend-2/src/features/preview/`
   (`PreviewRoute.tsx`, `TargetedPreviewView.tsx`, `PayToClaimStrip.tsx`,
-  `api/preview.ts`).
+  `api/preview.ts`). Drop that folder; website preview is `apps/contractor-website`
+  in preview mode ([frontend stack](../../general-architecture/frontend-stack.md)).
+  Keep the website-activation strip on `/onboarding/preview`.
 - Router: `/onboarding`, `/onboarding/$step`, `/preview/$token/$module` in
   `frontend-2/src/app/router/index.tsx`.
 - Don't say setup: API `frontend-2/src/features/setup/api/setup.ts`,
@@ -36,8 +38,9 @@ Default client interview is **voice**. Text is the other writer
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist`.
 - Progress timeline (`PreviewProgressPanels` / apply-the-website-template panel).
-  **View website** as soon as the website preview exists.
-- `TargetedPreviewView` + Stripe website-activation strip. Success → `/cms/website`.
+  **View website** as soon as the website preview exists (contractor-website preview mode).
+- Stripe website-activation strip on `/onboarding/preview`. Success → `/cms/website`.
+  Drop leftover `TargetedPreviewView`.
 - Resume: `localStorage` holds the onboarding session token + last UI step;
   `GET …/profile` restores. Restore failure does not `POST` a new onboarding session.
 

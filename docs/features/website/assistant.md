@@ -4,7 +4,8 @@ The website assistant is a chat-like command surface in the website editor — n
 generator. It reads the selected website page, website sections, website slots, media assets,
 website forms, SEO, validation blockers, website publication status, and website versions, and
 turns requests into governed, reviewable website editor edits. Text chat, voice handoffs, and
-website editor assistance all share the same tool surface.
+website editor assistance all share the same tool surface. The registry lives here; generation
+and search go through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
 Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses
 these tools headless (**continuous** workflow + **instant apply**, no chat UI, no `create_page`)
