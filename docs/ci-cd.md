@@ -1,9 +1,31 @@
 # CI and Delivery
 
-Adapted from the previous repo's CI policy. Two-layer CI: **CircleCI** is the primary validation
-runner; **GitHub Actions** is reserved for emergency comparison, the Cloudflare contractor-website
-Worker deploy, and the Placis website R2 upload. Validation jobs run only non-mutating checks —
+Adapted from the previous repo's CI policy. Validation jobs run only non-mutating checks —
 CI never rewrites files.
+
+**CircleCI** and **GitHub Actions** both run the same gates. Switch by commenting the trigger
+lines in the YAML (`on: pull_request` in `.github/workflows/ci.yml`, or the CircleCI workflow
+trigger in `.circleci/config.yml`). GitHub Actions is the live runner today (CircleCI quota
+is exhausted). Cloudflare deploys stay on GitHub Actions and are not part of this switch.
+
+## Terms
+
+- **GitHub Checks** — check runs on the pull request. This is how humans and agents inspect
+  CI: the Checks tab and `gh pr checks`. Logs belong here, not on the CircleCI dashboard.
+- **CircleCI GitHub App** — CircleCI installed on the GitHub org, granted this repo. Not a
+  CircleCI-native project.
+- **Commit statuses** — the `ci/circleci:*` pass/fail bits. Not enough: they do not carry logs.
+
+## GitHub integration
+
+When CircleCI is the live runner, install it as a GitHub App on the org (this repo only) and
+enable GitHub Checks. Do not register a CircleCI-native / standalone project (opaque project
+id `circleci/<org-id>/<project-id>`, VCS type "CircleCI"). That mode is what the previous
+repo used: GitHub only received commit statuses, and logs lived in CircleCI.
+
+CircleCI currently labels some GitHub App orgs "standalone" and gives them
+`circleci/<uuid>/<uuid>` project ids. Ignore that product name. If a failing job is not
+diagnosable from GitHub Checks, the connection mode is wrong.
 
 ## Gates
 
@@ -13,8 +35,8 @@ CI never rewrites files.
    Prefer splitting a feature into its own package over allowing a file to creep past 800.
 2. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`, `golangci-lint` (non-mutating);
    `frontend-2` TypeScript check + Biome (non-mutating).
-3. **Build + test** — `go build ./...` and `go test ./...` (Testcontainers Postgres on CircleCI's
-   machine executor); `frontend-2` typecheck + Vitest + Playwright e2e.
+3. **Build + test** — `go build ./...` and `go test ./...` (Testcontainers Postgres; CircleCI
+   uses the machine executor when it is live); `frontend-2` typecheck + Vitest + Playwright e2e.
 4. **Generated-code freshness** — `sqlc generate` must produce no diff; `goose` migrations apply
    cleanly to a fresh DB; the `huma` OpenAPI spec + frontend typegen stay in sync with the API
    structs (a contract check), so generated types are evidence and never drift.
@@ -28,13 +50,16 @@ CI never rewrites files.
 
 ## Runner policy
 
-- CircleCI runs on **pull-request branches only** and ignores direct `main` pushes (merge commits
-  are already validated by the PR checks). Path filtering skips jobs irrelevant to the change.
-- Diagnostics (per-gate stdout/stderr, JUnit XML) are published as artifacts so failures are
-  API-retrievable.
-- GitHub Actions: manual `workflow_dispatch` for emergency comparison; plus two upload/deploy
-  workflows (separate from validation CI). Neither runs on pull request. Secrets/vars stay in
-  GitHub Environments, not git. CircleCI does not deploy either origin.
+- Validation runs on **pull-request branches only** and ignores direct `main` pushes (merge
+  commits are already validated by the PR checks). Path filtering skips jobs irrelevant to
+  the change.
+- Both `.github/workflows/ci.yml` and `.circleci/config.yml` live in the repo. Comment the
+  unused runner's trigger lines; leave the other uncommented.
+- Diagnostics (per-gate stdout/stderr, JUnit XML) are uploaded with the job as a backup.
+  Ordinary failure diagnosis is GitHub Checks, not the CircleCI CLI.
+- GitHub Actions also has two upload/deploy workflows (separate from validation CI). They are
+  not on the runner switch. Secrets/vars stay in GitHub Environments, not git. CircleCI does
+  not deploy either origin.
   - `deploy contractor website cloudflare` — the shared `placis-contractor-website` Worker
     (staging | production). Cloudflare account id, zone id for `placis.com`, API token
     (Workers + R2 + Cache Purge; Custom Hostnames write is the Go API, not this workflow),
