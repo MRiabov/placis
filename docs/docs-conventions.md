@@ -10,11 +10,13 @@ editing a doc.
   `###`, children as `####` under Website, Ad, Onboarding; closed label sets live under Enums); the
   only place names are coined.
 - `development-principles.md` — how work is sliced and reviewed.
-- `architecture.md` — full-stack architecture, centered on the API contract.
-- `ci-cd.md` / `testing.md` — delivery gates and the per-feature E2E rule.
+- `general-prd.md` — product-level loop and in/out of scope (pointers to feature PRDs).
 - `general-architecture/` — cross-cutting architecture no single feature owns:
-  `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`, `files.md`, `data-model.md`
-  (conventions + index of per-feature schemas), `frontend.md` (`frontend-2` UI rules).
+  `backend-stack.md`, `frontend-stack.md`, `module-layout.md`, `processes.md`,
+  `package-boundaries.md`, `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
+  `files-and-s3.md`, `data-model.md`
+  (conventions + index of per-feature schemas), `frontend.md` (`frontend-2` UI rules),
+  `frontend-debloat.md` (cross-cutting port), `ci-cd.md`, `testing.md`.
   Feature-owned capabilities (website
   activation/payments, leads, media library) live under `features/`, not here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that feature's docs in one

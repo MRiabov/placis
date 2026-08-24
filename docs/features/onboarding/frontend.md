@@ -73,4 +73,6 @@ retries; it does not `POST` a new onboarding session.
 - `FoundInformationReview` — found vs missing.
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist` — text client interview.
 - `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — timeline (apply-the-website-template + copy progress).
-- `TargetedPreviewView` plus the website-activation strip — website preview + website activation (`src/features/preview/`).
+- Website-activation strip on `/onboarding/preview`; **View website** opens contractor-website
+  preview mode (`{website_address}.preview.placis.com`). Leftover `src/features/preview/` is
+  predecessor CMS to drop.

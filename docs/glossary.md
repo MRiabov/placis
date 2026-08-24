@@ -1094,6 +1094,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | profile tab | Profile |
 | knob / knobs | option (product); field / variable (technical) |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |
+| JsonRecord / JsonObjectPayload / `map[string]any` in domain code | typed struct; `jsonb` only at the persistence/API boundary |
 
 ## Code naming rules
 
@@ -1105,7 +1106,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 - Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned row, `*_id`
   foreign keys, `snake_case` enum values.
 - Go: feature-nested packages (`internal/<domain>/<feature>/`), no package stutter
-  (`website/pages`, not `website/websitepages`); the file-size guard applies (see `ci-cd.md`).
+  (`website/pages`, not `website/websitepages`); the file-size guard applies (see `general-architecture/ci-cd.md`).
 - API: `/api/v1/<domain>/...`, domain nouns in paths, `Create/Update/Get/List/Delete` verbs, one
   `*Read` response suffix.
 - New terms are added to this glossary first; a PRD never invents a synonym.

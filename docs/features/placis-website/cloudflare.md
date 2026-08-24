@@ -7,7 +7,7 @@ contractor website.
 The app is in `apps/placis-website/`. Next: the R2 upload workflow and zone rules.
 
 Related: [ADR.md](ADR.md), [contractor website Cloudflare](../website/cloudflare.md),
-[ci-cd.md](../../../ci-cd.md), [architecture.md](../../../architecture.md).
+[ci-cd.md](../../general-architecture/ci-cd.md), [general architecture](../../general-architecture/README.md).
 
 ## Locks
 
@@ -121,7 +121,7 @@ Miniflare R2 for this origin; the live path is the uploaded tree.
 
 Manual GitHub Actions `workflow_dispatch` only, workflow name `deploy placis website`,
 environment staging | production. CircleCI does not upload this bucket. Secrets stay
-out of git. Does not run on pull request. See [ci-cd.md](../../../ci-cd.md).
+out of git. Does not run on pull request. See [ci-cd.md](../../general-architecture/ci-cd.md).
 
 The workflow YAML is not in this PR.
 

@@ -33,18 +33,25 @@ diagnosable from GitHub Checks, the connection mode is wrong.
    `docs/glossary.md` (one ubiquitous-language file; do not split it). Enforced
    by a `just check-files` recipe over `internal/`, `cmd/`, `migrations/`, `catalog/`, `docs/`.
    Prefer splitting a feature into its own package over allowing a file to creep past 800.
-2. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`, `golangci-lint` (non-mutating);
+2. **Folder fan-out** — a nested dir under `internal/` may hold at most **9** entries
+   (tracked files + child dirs). `internal/` root may hold at most **15**. Split a fat folder
+   into a nested package; that is why `templates` and `assistant` nest under `website/`
+   instead of sitting as siblings at `internal/` root. Scope is `internal/` only this pass
+   (the predecessor `backend/app` analog) — not `docs/`, `frontend-2/`, or `packages/`.
+   Documented as a later `cmd/ci` check; this file does not implement the checker. Layout:
+   [module layout](module-layout.md).
+3. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`, `golangci-lint` (non-mutating);
    `frontend-2` TypeScript check + Biome (non-mutating).
-3. **Build + test** — `go build ./...` and `go test ./...` (Testcontainers Postgres; CircleCI
+4. **Build + test** — `go build ./...` and `go test ./...` (Testcontainers Postgres; CircleCI
    uses the machine executor when it is live); `frontend-2` typecheck + Vitest + Playwright e2e.
-4. **Generated-code freshness** — `sqlc generate` must produce no diff; `goose` migrations apply
+5. **Generated-code freshness** — `sqlc generate` must produce no diff; `goose` migrations apply
    cleanly to a fresh DB; the `huma` OpenAPI spec + frontend typegen stay in sync with the API
    structs (a contract check), so generated types are evidence and never drift.
-5. **External API isolation** — the backend test job strips Google / LLM / Stripe / voice
+6. **External API isolation** — the backend test job strips Google / LLM / Stripe / voice
    credentials and forces fakes, then fails if any credential-shaped env var remains. Tests must
    not spend LLM, Google, registry, or business research quota. Eval suites are
    **local-only** and never run in ordinary CI.
-6. **OpenAPI constraints** — the generated spec must constrain every field: strings carry
+7. **OpenAPI constraints** — the generated spec must constrain every field: strings carry
    `minLength` (and `maxLength`), numbers carry `minimum`/`maximum`, fixed sets are `enum`. A field
    missing its constraints fails CI (the Go equivalent of the old "strict schema contract" check).
 
@@ -64,11 +71,11 @@ diagnosable from GitHub Checks, the connection mode is wrong.
     (staging | production). Cloudflare account id, zone id for `placis.com`, API token
     (Workers + R2 + Cache Purge; Custom Hostnames write is the Go API, not this workflow),
     contractor R2 bucket name. Serve path:
-    [website Cloudflare](features/website/cloudflare.md).
+    [website Cloudflare](../features/website/cloudflare.md).
   - `deploy placis website` — `astro build` and upload `dist/` to the Placis website R2 bucket
     (`placis-website` | `placis-website-staging`), then purge cache. Workflow YAML is not in
     this PR. Serve path:
-    [Placis website Cloudflare](features/placis-website/cloudflare.md).
+    [Placis website Cloudflare](../features/placis-website/cloudflare.md).
 - Railway deploys `cmd/api` and `cmd/worker` from the integration branch — release, not CI.
 
 ## Dev tooling (`justfile`)
@@ -94,6 +101,8 @@ did (Python had no compiler backing; Go does). We do **not** hand-roll AST scrip
   `unused`, `misspell`, `revive`).
 - **Don't-say glossary check** (`cmd/ci/check-dont-say`) — see below.
 - Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen).
+- Later: file-size guard and folder fan-out (`cmd/ci`), documented above, not implemented in
+  this pass.
 
 A custom `go/analysis` analyzer is added only when a concrete mistake keeps recurring — the one
 candidate is the Go analog of the old "freeform-JSON" ratchet ("no `map[string]any` /
@@ -118,7 +127,7 @@ Backticks are not an escape. Home-scoped tokens in a `/`-delimited route or file
 flagged (the URL still uses the short word). Always-ban tokens in paths still fail.
 `apps/contractor-website` is the contractor website application directory.
 `docs/glossary.md` itself is not scanned (it is the list). Worked examples:
-[`cmd/ci/check-dont-say/ref.md`](../cmd/ci/check-dont-say/ref.md).
+[`cmd/ci/check-dont-say/ref.md`](../../cmd/ci/check-dont-say/ref.md).
 
 **Tiers**
 
@@ -134,7 +143,7 @@ flagged (the URL still uses the short word). Always-ban tokens in paths still fa
   (`docs/`, `internal/`, `cmd/`, `migrations/`, `catalog/`).
 - CI: the same command over those trees, `go run ./cmd/ci/check-dont-say --all` (not via `just`).
   `--frontend` stays off until frontend work starts from the Go backend (see
-  `docs/planning/go-backend-rewrite.md`).
+  [frontend-debloat.md](frontend-debloat.md)).
 
 Skip `.agents/` and generated files. There is no empty-list or shrink ratchet: parse failure is
 the failure.
