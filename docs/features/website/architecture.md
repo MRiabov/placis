@@ -82,8 +82,9 @@ in the website editor. The edit loop is in [editing.md](editing.md). Screens: [f
 ## Website assistant
 
 The LLM edits the unpublished website through the **website assistant** — hard-typed, validated,
-parallel tool calls (`update_slot`, `generate_image`, `update_menus`, website section/website styles/SEO/website form/website page
-actions). Two configs: plan vs continuous, instant apply vs Ask first. See
+parallel tool calls (`update_slot`, `cleanup_image`, `generate_image`, `update_menus`, website
+section/website styles/SEO/website form/website page actions). Same attach / crop / focal /
+cleanup services as the owner UI. Two configs: plan vs continuous, instant apply vs Ask first. See
 [assistant.md](assistant.md).
 
 ## Website publication
@@ -133,12 +134,12 @@ components before website activation.
 
 The website assistant can be driven by voice (see
 [voice-agent.md](../../general-architecture/voice-agent.md)): the agent clarifies what to change
-— which website page/website section, new website page vs. copy edit, generate vs. select an
+— which website page/website section, new website page vs. copy edit, attach vs. generate an
 image — then emits one structured instruction resolved through the same governed website assistant
-tools (`update_slot`, website styles changes, website section reorder, SEO/website form updates,
-website page creation, website-publication-readiness). Two modes — plan (approve a concrete plan
-first) and continuous (bounded direct edits) — share the same tool surface. Voice grants no extra
-authority.
+tools (`update_slot`, `cleanup_image`, `generate_image`, website styles changes, website section
+reorder, SEO/website form updates, website page creation, website-publication-readiness). Two
+modes — plan (approve a concrete plan first) and continuous (bounded direct edits) — share the
+same tool surface. Voice grants no extra authority.
 
 ## Where things stand
 

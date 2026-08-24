@@ -9,11 +9,28 @@ media library item on the left while you edit).
 - A library of the contractor's photos: their work, logos, and documents.
 - Each media item carries a media caption (alt text), a focal point, a crop, and **supplied by**
   (owner, business research, or AI).
-- **Edits always create a copy.** The parent’s file is never replaced. Owner replace and AI
-  cleanup both insert a new media library item with `parent_media_asset_id` set; a cleanup copy
-  inherits supplied by from the parent. The copy stays pending review before it can be used.
+- **Edits always create a copy.** The parent’s file is never replaced. Copy-on-write
+  (`parent_media_asset_id`) lives **inside** the media services, not a helper callers reimplement.
   Uses (website slots, ads) keep the old item until they are pointed at the copy. Heavier
   editing stays here, not in ads.
+
+| Intent | Service | Child `file_id` | `review_status` |
+| --- | --- | --- | --- |
+| Attach | attach | none (no copy) | as-is |
+| Crop / focal | crop / focal (may be one media-edit service, two knobs) | same as parent | stay `approved` if parent is |
+| AI cleanup | AI cleanup | new | `pending_review`; inherit `supplied_by` |
+| Owner replace | replace | new | `pending_review` |
+
+## Callers (same services)
+
+`/cms/media`, the website editor PATCH, the website assistant (`update_slot`, `cleanup_image`),
+and ads light cleanup are callers of these services. The assistant does not get a second attach,
+crop, focal, or cleanup path. Ads light cleanup, when it writes a copy, calls this **AI cleanup
+service** — not an ads-only cleanup.
+
+Replace and first upload take file bytes, so they stay on `/cms/media` / website editor drop. The
+assistant has no replace or upload tool (no bytes on a tool). When a later slice adds one, it
+still calls this replace / upload service.
 
 ## `/cms/media`
 
