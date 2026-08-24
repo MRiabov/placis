@@ -7,7 +7,7 @@ Conventions: [data-model conventions](../../../general-architecture/data-model.m
 
 The file on a media library item is never replaced. An edit creates a new row
 (`parent_media_asset_id`); uses keep pointing at the old item until they are retargeted to the
-copy. That copy-on-write is an invariant of those writes (`/cms/media`, website editor,
+copy. That copy-on-write is an invariant of those functions (`/cms/media`, website editor,
 website assistant, ads light cleanup are callers — [README.md](README.md)).
 
 - **Crop / focal** — child keeps the parent’s `file_id`. Stay `approved` if the parent is.

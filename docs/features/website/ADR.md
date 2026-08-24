@@ -31,7 +31,7 @@ Status: decided (2026-08-16, product owner + engineering).
    freeform JSON. Named real photo → attach first. AI cleanup is the `/cms/media` cleanup.
    `generate_image` is last resort when nothing in `media_assets[]` fits.
    (2026-08-20; assistant configs + Apply/Reject terminal 2026-08-23; Ask first 2026-08-23;
-   attach-before-generate + shared media-library writes 2026-08-24)
+   attach-before-generate + shared media-library functions 2026-08-24)
 
 7. **Website publication is kept and can be rolled back** — website publication creates a
    `website_publications` row (a published website copy); website rollback reactivates an earlier
