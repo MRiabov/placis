@@ -22,8 +22,9 @@ no single feature owns.
   `05`, `dashboard.css`, `details.css`; `components-04.css` is 1134 lines).
 - `frontend-2/e2e/parity/` — onboarding / CMS / details parity vs old `frontend/`
   on 5173.
-- `playwright.config.ts` — `reuseExistingServer: !CI`; starts frontend-2 (5174)
-  and `../frontend` (5173) for parity.
+- `playwright.config.ts` — `reuseExistingServer: !CI`; starts frontend-2 (5174). Starts
+  `../frontend` (5173) for parity only when that tree exists. Clerk testing-token specs
+  use `playwright.auth.config.ts` with `workers: 1`.
 
 ## Keep
 

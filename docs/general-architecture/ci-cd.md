@@ -42,8 +42,11 @@ diagnosable from GitHub Checks, the connection mode is wrong.
    [module layout](module-layout.md).
 3. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`, `golangci-lint` (non-mutating);
    `frontend-2` TypeScript check + Biome (non-mutating).
-4. **Build + test** — `go build ./...` and `go test ./...` (Testcontainers Postgres; CircleCI
-   uses the machine executor when it is live); `frontend-2` typecheck + Vitest + Playwright e2e.
+4. **Build + test** — `go build ./...` and `go test ./...` with **no** `-count=1` (Testcontainers
+   Postgres; CircleCI uses the machine executor when it is live); `frontend-2` typecheck +
+   `vitest run --changed origin/main` + Playwright e2e (`--only-changed=origin/main` unless Go /
+   migrations / OpenAPI / Playwright config / lockfile force the full list). Cache paths and
+   worker rules: Runner policy below, and [testing.md](testing.md).
 5. **Generated-code freshness** — `sqlc generate` must produce no diff; `goose` migrations apply
    cleanly to a fresh DB; the `huma` OpenAPI spec + frontend typegen stay in sync with the API
    structs (a contract check), so generated types are evidence and never drift.
@@ -59,7 +62,24 @@ diagnosable from GitHub Checks, the connection mode is wrong.
 
 - Validation runs on **pull-request branches only** and ignores direct `main` pushes (merge
   commits are already validated by the PR checks). Path filtering skips jobs irrelevant to
-  the change.
+  the change: `frontend-2` e2e unless `frontend-2/`, `packages/website-components/`, Go,
+  migrations, or `openapi.json` changed; `apps/placis-website` e2e unless that app (or its
+  shared packages) changed.
+- Non-shallow git (or an explicit fetch of `origin/main`) so `--changed` / `--only-changed`
+  can diff against main. Empty Vitest selection is a pass (`--passWithNoTests` where needed).
+- **Caches (both runners, same keys).** GitHub Actions is live: `actions/setup-go` with
+  `cache: true` persists `GOCACHE` (`~/.cache/go-build`) and the module cache — do not add a
+  second overlapping `actions/cache` for those paths. Persist `golangci-lint` cache separately.
+  Persist Vite `cacheDir` (`node_modules/.vite`), `.frontend-quality-cache/`, and Playwright
+  Chromium (`~/.cache/ms-playwright`) keyed on `pnpm-lock.yaml`. CircleCI, when live, uses
+  `restore_cache`/`save_cache` for the same Go paths (keyed on `go.sum` plus a bump suffix when
+  the cache format changes), the lint cache, and the same frontend paths. Do not restore Clerk
+  `storageState`, cookies, or `test-results/` across jobs. Do not expect skipped tests from a
+  restored Vite cache. Chromium only; `playwright install chromium` without `--with-deps`.
+- Playwright workers, not `--shard`. Default workers for specs that do not hit Clerk's Frontend
+  API. Clerk testing-token specs (`workers: 1`) because testing tokens are 2 requests per second:
+  mint once per job (`clerkSetup()`), then reuse `CLERK_TESTING_TOKEN`. Do not start a second
+  Vite for missing `../frontend`. Do not `--shard` until one job with workers is still too slow.
 - Both `.github/workflows/ci.yml` and `.circleci/config.yml` live in the repo. Comment the
   unused runner's trigger lines; leave the other uncommented.
 - Diagnostics (per-gate stdout/stderr, JUnit XML) are uploaded with the job as a backup.
@@ -88,8 +108,11 @@ The `justfile` is the **developer entry point**, and nothing more — only the h
   fix-it-locally feedback loop.
 
 **Not** in the `justfile`: dependency installs / one-off install, and anything CI runs. CI invokes the
-underlying tools directly (`go test ./...`, `golangci-lint`, `sqlc generate`) — never `just`
-recipes. A recipe that is only ever executed by CI is dead weight.
+underlying tools directly (`go test ./...`, `golangci-lint`, `sqlc generate`, `vitest run --changed
+origin/main`, `playwright test --only-changed=origin/main`) — never `just` recipes. A recipe that
+is only ever executed by CI is dead weight. Local `just test` (when added) should leave Go's
+test cache on and prefer `--changed` / `--only-changed`; full-suite escape hatches are not CI
+defaults.
 
 ## Pre-commit & static analysis
 

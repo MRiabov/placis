@@ -26,7 +26,9 @@ const authBaseUrl = `http://127.0.0.1:${authPort}`;
 export default defineConfig({
   testDir: "./e2e/auth",
   timeout: 60_000,
-  workers: process.env.CI ? 1 : undefined,
+  // Clerk testing tokens are 2 req/s (mint + Frontend API). This whole config
+  // hits sign-in / bot-protection; keep one worker. Mint once in clerk-setup.
+  workers: 1,
   expect: { timeout: 10_000 },
   fullyParallel: false,
   retries: process.env.CI ? 1 : 0,
