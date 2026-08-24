@@ -1084,6 +1084,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | session | client interview, sign-in, or onboarding |
 | CMS (in a PRD) | website editor, Details, Projects, Media library, or Ads as appropriate |
 | profile tab | Profile |
+| knob / knobs | field / variable |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |
 
 ## Code naming rules
