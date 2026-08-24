@@ -19,7 +19,7 @@ failed event.
 
 | Tool | What it does |
 | --- | --- |
-| `update_slot` | update one typed website slot on an existing website section (copy or image) |
+| `update_slot` | update one typed website slot on an existing website section (copy, or image attach / crop / focal) |
 | `update_seo` | update bounded unpublished-website SEO metadata for the current website page |
 | `update_form` | update a website form (title, fields, privacy notice) the same way the editor PATCH does |
 | `update_website_styles` | update the tenant website styles (preset + bounded overrides), not per website page |
@@ -29,13 +29,26 @@ failed event.
 | `create_section` | propose a new website section using an approved website component |
 | `create_page` | propose a new unpublished website page (also appends a top-level page node on the footer, and on the top menu unless legal or cap) |
 | `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` |
-| `generate_image` | generate a media asset from a prompt, optionally attach it to an image website slot |
+| `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
+| `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
+
+**Owner action = assistant action.** Each tool is another caller of the same website-editor /
+media-library execution the owner already uses (Ask first / instant apply around it). Text
+`update_slot` is the same upsert as click-off PATCH. Image attach, crop, focal, and AI cleanup
+are the same functions as the website editor PATCH and `/cms/media`. There is no second assistant
+implementation and no public copy helper the tools call. Copy-on-write
+(`parent_media_asset_id`, parent file never replaced) stays **inside** those functions.
+
+Planner: a named real photo → **attach first** (`update_slot` + `media_asset_id`). Cleanup only
+when they ask to tidy that photo. `generate_image` only when nothing in GET `media_assets[]`
+fits ([ADR](ADR.md) 6). UUIDs are the media library key.
 
 `generate_image`: the model supplies a prompt + media caption; the backend creates a generated
-media asset (`supplied_by=ai`, pending review) and may attach it to a website slot on the
-unpublished canvas (convenience). The canvas always surfaces a warning on that image. Owner
-approval makes the media asset approved and permanent. Website publication and the live website
-still require approved media assets. Ads stay approved-only.
+media library item (`supplied_by=ai`, pending review) and may attach **that new item** to an
+image website slot on the unpublished canvas (convenience). It does not attach an existing
+library photo — that is `update_slot`. The canvas always surfaces a warning on that image. Owner
+approval makes the media library item approved and permanent. Website publication and the live
+website still require approved media library items. Ads stay approved-only.
 
 `refinement_plan` is the plan-workflow text (no mutation). It is confirmation text, not a required
 schema of affected pages / assumptions / acceptance criteria. `assistant_plan` may summarize
@@ -147,5 +160,52 @@ the assistant returns both trees with `id` / `kind` / `label` / `path` / `href` 
 Logo and density stay on the site-wide look website sections (other tools). Do not name this
 tool `update_nav`.
 
+### `update_slot` (image)
+
+Same tool as text. No `attach_image` verb. Text / rich-text `value` is unchanged.
+
+```text
+update_slot(
+  section_id,
+  slot_key,
+  value?,              # text / rich_text only
+  media_asset_id?,     # image: attach this library item
+  crop?,               # { mode: full | rect, x, y, width, height } 0–1
+  focal?               # { x, y } 0–1
+)
+```
+
+- Image + `media_asset_id` only → **attach** (same as drag onto the canvas). No copy.
+- Image + `crop` and/or `focal` → crop and/or focal **function**, then point the slot at the
+  returned item. Omit `media_asset_id` → the slot’s current item. Crop and focal may be one
+  function with two fields — still one implementation.
+- `value` on an image slot is `400`. Image fields on a text slot are `400`.
+- Tenant mismatch, archived, or `rejected` → `400`. `pending_review` may attach on the
+  unpublished canvas (warning). Publication still needs `approved`.
+
+Same Ask first / instant apply gate as text `update_slot`.
+
+### `cleanup_image`
+
+Same AI cleanup as `/cms/media`. Ads light cleanup, when it writes a media-library copy, calls
+this same function.
+
+```text
+cleanup_image(
+  section_id,
+  slot_key,
+  prompt,              # light cleanup: declutter, tidy background; not invent work
+  media_asset_id?      # omit = the slot’s current item
+)
+```
+
+Resolve parent → **AI cleanup** → point **that slot** at the returned item. Other slots
+and ads keep the parent until retargeted. Cosmetic bound lives on that cleanup (same as
+ads: no fake results). Canvas warning until approved. Publication blocked until approved. Same
+Ask first / instant apply gate as `update_slot`.
+
 The website assistant never does a website publication, never bypasses validation, and never writes
-arbitrary registry JSON.
+arbitrary registry JSON. It does not edit Details, Projects, or Certifications and reviews (those
+are Profile screens). It does not delete or archive a website section or website page (hide
+stays: `set_section_visibility`). It does not upload or replace file bytes — replace stays the
+existing replace on `/cms/media` / website editor upload.
