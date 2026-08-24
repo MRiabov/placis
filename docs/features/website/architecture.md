@@ -22,7 +22,7 @@ sections**; a website section is one **website component** given props and edita
 
 A website component is a named building block (`public.hero.image`, `public.services.grid`, …).
 Each has a **contract**: the props it accepts, the website slots it exposes, and its **design
-controls** — small enum/bool knobs (e.g. `density`: `compact`/`comfortable`/`spacious`) with
+controls** — small enum/bool fields (e.g. `density`: `compact`/`comfortable`/`spacious`) with
 allowed values. The contract is one typed struct dumped to JSON under `catalog/` — the website
 editor and the renderer read the same structs. Only registered website components render.
 
