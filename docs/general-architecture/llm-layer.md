@@ -45,7 +45,7 @@ result).
 
 Each domain owns a small tool registry — the set of tools its agent may call (e.g. `update_slot`,
 `cleanup_image`, and `generate_image` for the website editor; copy + image-gallery proposals for
-ads). Website assistant tools call the same media-library / website editor writes as the owner UI.
+ads). Website assistant tools call the same media-library / website editor functions as the owner UI.
 
 ## Where the LLM sits in each feature
 

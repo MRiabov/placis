@@ -35,7 +35,7 @@ failed event.
 **Owner action = assistant action.** Each tool is another caller of the same website-editor /
 media-library execution the owner already uses (Ask first / instant apply around it). Text
 `update_slot` is the same upsert as click-off PATCH. Image attach, crop, focal, and AI cleanup
-are the same writes as the website editor PATCH and `/cms/media`. There is no second assistant
+are the same functions as the website editor PATCH and `/cms/media`. There is no second assistant
 implementation and no public copy helper the tools call. Copy-on-write
 (`parent_media_asset_id`, parent file never replaced) stays **inside** those functions.
 
@@ -176,7 +176,7 @@ update_slot(
 ```
 
 - Image + `media_asset_id` only → **attach** (same as drag onto the canvas). No copy.
-- Image + `crop` and/or `focal` → crop and/or focal **write**, then point the slot at the
+- Image + `crop` and/or `focal` → crop and/or focal **function**, then point the slot at the
   returned item. Omit `media_asset_id` → the slot’s current item. Crop and focal may be one
   function with two fields — still one implementation.
 - `value` on an image slot is `400`. Image fields on a text slot are `400`.

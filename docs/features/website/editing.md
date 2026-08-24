@@ -136,7 +136,7 @@ Coalesce means the **dirty keys since the last successful copy-out**, not the fu
 send sibling website slots, `media_assets[]`, the website manifest, or file bytes. Image website
 slots send a `media_asset_id` (and crop / focal point if those changed). That PATCH is the same
 **attach**, **crop**, and **focal** the website assistant calls (`update_slot`;
-[assistant.md](assistant.md)). Attach only retargets the slot. Crop / focal run that write,
+[assistant.md](assistant.md)). Attach only retargets the slot. Crop / focal run that function,
 then the slot points at the returned item (copy-on-write stays inside that function;
 [media library](../other/media/README.md)). Photos go through the media-library upload, not this
 PATCH. File replace is that upload / replace, not this body.

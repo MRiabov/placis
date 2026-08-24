@@ -10,18 +10,18 @@ media library item on the left while you edit).
 - Each media item carries a media caption (alt text), a focal point, a crop, and **supplied by**
   (owner, business research, or AI).
 - **Edits always create a copy.** The parent’s file is never replaced. Copy-on-write
-  (`parent_media_asset_id`) lives **inside** those writes, not a helper callers reimplement.
+  (`parent_media_asset_id`) lives **inside** those functions, not a helper callers reimplement.
   Uses (website slots, ads) keep the old item until they are pointed at the copy. Heavier
   editing stays here, not in ads.
 
-| Intent | Write | Child `file_id` | `review_status` |
+| Intent | Function | Child `file_id` | `review_status` |
 | --- | --- | --- | --- |
 | Attach | attach | none (no copy) | as-is |
 | Crop / focal | crop / focal (may be one function, two fields) | same as parent | stay `approved` if parent is |
 | AI cleanup | AI cleanup | new | `pending_review`; inherit `supplied_by` |
 | Owner replace | replace | new | `pending_review` |
 
-## Callers (same writes)
+## Callers (same functions)
 
 `/cms/media`, the website editor PATCH, the website assistant (`update_slot`, `cleanup_image`),
 and ads light cleanup call these same functions. The assistant does not get a second attach,
