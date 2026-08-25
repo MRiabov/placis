@@ -83,7 +83,7 @@ containing two expandable steps, an inline loading state, and the approve block 
   ad posting exists), archived. "Ad needs review" and "Ad ready to post" are creation-flow labels
   and are not used on existing ads.
 - filter by status, search by name
-- ad-platform connection: a **"Connect Meta" / "Connect Google"** button appears next to
+- ad-platform connection: a **"Connect Meta" / "Connect Google Ads"** button appears next to
   "+ New ad" for each **unconnected** ad platform; the buttons are **never rendered by default**
   — they load only after the connection-status check confirms an ad platform is unconnected, so
   the owner never sees one flash and disappear; a connected ad platform shows nothing at all, and
