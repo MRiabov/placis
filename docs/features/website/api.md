@@ -7,8 +7,9 @@ the website-editor PATCH body remains [editing.md](editing.md); this file locks 
 Live business profile: [details](../other/details/api.md). Media library:
 [media library](../other/media/api.md). Website form submit: [leads](../other/leads/api.md).
 
-Live `{website_address}.preview.placis.com` never calls Go. **Do not create**
-`/v1/public/site/…`. Website preview HTML is Worker internal render.
+Live HTML GET on `{website_address}.preview.placis.com` never calls Go. **Do not create**
+`/v1/public/site/…`. Website preview HTML is Worker internal render. Website form POST is
+[leads](../other/leads/api.md).
 
 ## OpenAPI opacity
 
