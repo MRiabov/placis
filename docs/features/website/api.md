@@ -81,7 +81,8 @@ authenticated internal render (not public OpenAPI) — that is not a live GET an
   Do not round-trip the `*Read`.
 - **Errors:** `409 edit_history_conflict`, `413`, `429` with `Retry-After`.
 - **Must not:** predecessor `POST …/sections`, `PATCH …/sections/order`, `DELETE …/sections/{id}`,
-  `POST …/slots/{key}/asset` — those edits are fields on this body.
+  `POST …/slots/{key}/asset` — those edits are fields on this body. Top menu / footer are
+  `/menus`, not this body.
 
 ### GET /v1/website/editor/settings / PATCH /v1/website/editor/settings
 
@@ -91,24 +92,29 @@ authenticated internal render (not public OpenAPI) — that is not a live GET an
 - **Request/response:** named website styles (`preset_id`, `primary`, `neutral`, `accent`,
   `radius`, `density`). Extra keys 4xx.
 
-### GET /v1/website/editor/top-menu / PATCH /v1/website/editor/top-menu
+### GET /v1/website/editor/menus / PATCH /v1/website/editor/menus
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** top menu tree editor.
+- **Callers:** top menu and footer tree editors. One resource — one `website.menus` row
+  (`top_menu`, `footer`, `show_phone`, `show_email`).
 - **PATCH Idempotency-Key:** yes.
-- **Body:** named menu tree fields (extra keys 4xx).
-
-### GET /v1/website/editor/footer / PATCH /v1/website/editor/footer
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** footer tree editor.
-- **PATCH Idempotency-Key:** yes.
-- **Body:** named menu tree fields (extra keys 4xx).
+- **Request:** `base_edit_history_head` plus dirty keys only (`top_menu` and/or `footer`
+  and/or `show_phone` / `show_email`). Extra keys 4xx.
+- **Response:** `{ edit_history_head, batch_id }`. Same `409 edit_history_conflict` as the
+  website page PATCH.
+- **Must not:** `/top-menu` or `/footer` as peer routes; menus fields on the website page PATCH.
 
 ## Complete — website assistant
 
 One in-flight run per tenant (includes onboarding website copy generation). Tools never do
-website publication.
+website publication. CMS unpublished writes are the existing website page PATCH and `/menus`
+— not a second apply path. The website editor owns the working copy: Apply mutates the
+in-memory projection, then copy-out is the ordinary PATCH (`ai_generation_id` on those dirty
+keys so `edit_history` is `edited_by=agent`). Instant apply PATCHes as tools succeed. Ask first
+**Apply** / **Reject** only `record-apply` / `record-reject` (activity metadata).
+
+Onboarding 06 is the exception: the River job writes unpublished rows headless (no
+`frontend-2`). While 06 is in flight, CMS PATCH and this assistant POST are `409`.
 
 ### POST /v1/website/editor/pages/{page_id}/assistant
 
@@ -117,19 +123,27 @@ website publication.
 - **Idempotency-Key:** yes.
 - **Request:** plan vs continuous; Ask first vs instant apply. Plan text is `string` +
   `maxLength`.
-- **Must not:** return `ai_generations` blobs.
+- **Response:** named activity / tool event structs. Proposed edits, not applied rows.
+- **Must not:** return `ai_generations` blobs; write unpublished rows from this POST in the CMS.
 
-### POST /v1/website/editor/pages/{page_id}/assistant/apply
-
-- **Auth:** Clerk JWT, active tenant
-- **Idempotency-Key:** yes.
-- **Request:** `base_edit_history_head`. One-way. Second transition `409`. **No revert.**
-
-### POST /v1/website/editor/pages/{page_id}/assistant/reject
+### POST /v1/website/editor/pages/{page_id}/assistant/record-apply
 
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
-- **Behavior:** one-way reject. Second transition `409`.
+- **Callers:** Ask first **Apply** after the website editor PATCHed (or queued) the dirty keys.
+- **Request:** metadata only (`ai_generation_id` of the pending batch). No unpublished payload,
+  no `base_edit_history_head` — the PATCH already took the head.
+- **Behavior:** activity card terminal. **Must not** upsert website pages / sections / slots /
+  menus and **must not** append `edit_history`. Second transition `409`. **No revert.**
+
+### POST /v1/website/editor/pages/{page_id}/assistant/record-reject
+
+- **Auth:** Clerk JWT, active tenant
+- **Idempotency-Key:** yes.
+- **Callers:** Ask first **Reject**. The website editor drops pending edits in memory; no PATCH.
+- **Request:** metadata only (`ai_generation_id`).
+- **Behavior:** activity card terminal. **Must not** write unpublished rows or `edit_history`.
+  Second transition `409`.
 
 ## Complete — website publication and Connect website address
 
@@ -152,8 +166,24 @@ not this CMS POST. They are never website-rollback targets.
 
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
+- **Callers:** website publication dropdown — **live** website rollback.
 - **Behavior:** copy that owner website version onto `latest/`, purge. `409` if
-  `published_by=onboarding` or the id is not an owner row.
+  `published_by=onboarding` or the id is not an owner row. Does not rewrite unpublished
+  website rows.
+- **Response:** that publication `*Read` (`active=true`, `version_number`, times). The
+  dropdown updates from this body — no extra GET required.
+
+### POST /v1/website/publications/{id}/restore-unpublished
+
+- **Auth:** Clerk JWT, active tenant
+- **Idempotency-Key:** yes.
+- **Callers:** website editor — reset unpublished rows to that owner website version and
+  keep editing. Not live website rollback.
+- **Behavior:** copy that owner version onto unpublished website rows; append
+  `edit_history`. Does not write `latest/` or purge. `409` if `published_by=onboarding`
+  or the id is not an owner row.
+- **Response:** `{ edit_history_head }`. The website editor re-GETs the open website page (same
+  hydrate as select / reload).
 
 ### GET /v1/website/addresses / POST /v1/website/addresses
 
@@ -197,6 +227,9 @@ the website editor and not under the business profile.
 - `POST /v1/website/addresses` with `type=subdomain` (reserved at 07)
 - blueprints, posts, careers
 - `/undo` `/redo` `/edit-history`
+- `/v1/website/editor/top-menu`, `/v1/website/editor/footer` (use `/menus`)
+- `assistant/apply`, `assistant/reject` that write unpublished rows (use `record-apply` /
+  `record-reject` + PATCH)
 - assistant/revert
 - per-website-page website publication
 - `POST …/pages/{id}/sections`, `PATCH …/sections/order`, `DELETE …/sections/{id}`,

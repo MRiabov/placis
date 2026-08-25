@@ -21,7 +21,8 @@ DB asserts name the tables from [persistence.md](persistence.md) (and
    - UI: inline error next to the field.
 
 4. **Website assistant** — the owner asks the website assistant to improve copy (LLM faked).
-   - DB: a website slot value changes through a governed tool; `ai_generations` records the batch;
+   - UI: proposal on the canvas; **Apply** PATCHes dirty keys then `record-apply`.
+   - DB: a website slot value changes through that PATCH; `ai_generations` records the batch;
      `edit_history` has an agent batch.
    - UI: activity card. Apply / Reject if Ask first; no revert-after-apply.
 
@@ -37,10 +38,14 @@ DB asserts name the tables from [persistence.md](persistence.md) (and
 6. **Live website** — the published website copy is the files in `latest/`, not a Go resolve.
    - Assert: fake R2 objects for the edited website page; live GET never calls Go.
 
-7. **Website rollback** — the owner does a website rollback.
-   - DB: an earlier `website_publications` is `active` again; earlier published website copies are
-     never overwritten (both rows remain).
-   - UI: the live website shows the earlier published website copy.
+7. **Website rollback** — the owner does a live website rollback (dropdown).
+   - DB: an earlier owner `website_publications` is `active` again; earlier published website
+     copies are never overwritten (both rows remain). Unpublished rows are unchanged.
+   - UI: the dropdown updates from the rollback `*Read`; the live website shows the earlier
+     published website copy.
+
+   Restore unpublished (`POST …/restore-unpublished`) is a separate website-editor action
+   (re-GET the open website page). Not this step.
 
 8. **Website form → website lead** — a website visitor submits a website form.
    - DB: `leads` (source=`website_form`, `website_form_id`, `contact_name`, `marketing_phone`,
