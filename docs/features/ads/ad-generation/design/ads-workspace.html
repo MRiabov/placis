@@ -345,30 +345,21 @@
     color: var(--muted);
   }
   .sech:hover { background: #f4f4f5; }
-  .accwrap > .form:first-child .sech { cursor: default; }
+  .accwrap > .form:first-child .sech {
+    cursor: default;
+    justify-content: center;
+  }
+  .accwrap > .form:first-child .sech .ttl { flex: none; }
   .accwrap > .form:first-child .sech:hover { background: var(--prompt-header); }
   .form:last-child .sech { border-bottom: 0; }
   .form.open > .sech { border-bottom: 1px solid var(--prompt-hairline); }
-  .sech .num {
-    width: 22px;
-    height: 22px;
-    border-radius: var(--radius-pill);
-    background: #fff;
-    color: var(--muted);
-    border: 1px solid var(--prompt-icon-border);
-    font-size: 12px;
-    display: grid;
-    place-items: center;
-    flex: none;
-  }
-  .sech .ttl { flex: 1; color: var(--ink); font-weight: 600; font-size: 14px; }
+  .sech .ttl { flex: 1; color: var(--ink); font-weight: 500; font-size: 13px; }
   .sech .state { font-size: 12px; color: var(--muted); font-weight: 400; }
   .sech .chev { color: var(--muted); transition: transform .15s; }
   .form.open .chev { transform: rotate(180deg); }
   .formbody { display: none; padding: 20px 22px 24px; }
   .form.open .formbody { display: block; }
   .form.locked .sech { cursor: not-allowed; }
-  .form.locked .sech .num { background: var(--private-surface-raised); color: var(--subtle); }
   .form.locked .sech .state { color: var(--disabled); }
   .form.locked .sech .chev { color: var(--disabled); }
 
@@ -584,7 +575,7 @@
 
     <!-- form 1: about the ad (not collapsible) -->
     <div class="form open" id="f1">
-      <button class="sech"><span class="num">1</span><span class="ttl">About the ad</span><span class="state"></span></button>
+      <button class="sech"><span class="ttl">About the ad</span><span class="state"></span></button>
       <div class="formbody">
         <div class="q">What are you promoting?</div>
         <div class="field">
@@ -672,7 +663,7 @@
 
     <!-- form 2: review (visible but locked until form 1 is complete) -->
     <div class="form locked" id="f2">
-      <button class="sech"><span class="num">2</span><span class="ttl">Review</span><span class="state">Complete step 1 to unlock</span><span class="chev">▾</span></button>
+      <button class="sech"><span class="ttl">Review</span><span class="state">Complete step 1 to unlock</span><span class="chev">▾</span></button>
       <div class="formbody">
         <div class="q">Photos</div>
         <div class="thumbs">
@@ -1009,10 +1000,9 @@
     ld.classList.add("show");
     setTimeout(() => {
       ld.classList.remove("show");
-      f1.querySelector(".state").textContent = "done";
       f2.classList.remove("locked");
       f2.classList.add("open");
-      f2.querySelector(".state").textContent = "ready";
+      f2.querySelector(".state").textContent = "";
       window.scrollTo({ top: f2.offsetTop - 100, behavior: "smooth" });
     }, 2500);
   });
@@ -1025,10 +1015,9 @@
   function unlockReview() {
     const svc = document.querySelector("#f1 .combo input");
     if (svc && !svc.value.trim()) svc.value = "Roofing replacement";
-    f1.querySelector(".state").textContent = "done";
     f2.classList.remove("locked");
     f2.classList.add("open");
-    f2.querySelector(".state").textContent = "ready";
+    f2.querySelector(".state").textContent = "";
   }
   const params = new URLSearchParams(location.search);
   const scene = params.get("scene") || (location.hash || "#list").slice(1) || "list";
