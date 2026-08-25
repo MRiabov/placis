@@ -50,7 +50,8 @@ Build the smallest real feature that produces a usable ad set as a service:
 4. an ad lead form on every ad (suggested title and standard fields)
 5. an LLM draft step (copy + image gallery + light cleanup edits) that writes reviewable
    draft records and traces
-6. format-accurate previews for square, portrait, carousel, and story
+6. format-accurate previews for the ad's family: posts (square, portrait, carousel) or
+   stories, never both ([ADR 32](ADR.md))
 7. validation and approval gates, then the ad set output with a downloadable rendering for the
    human path
 8. Ads under `/cms/ads` as one caller of the service
@@ -382,7 +383,8 @@ Add Ads under `/cms/ads` in the CMS (`frontend-2`):
 2. create-an-ad flow (name, offer/goal and service focus pickers pre-filled from the business
    profile, ideal customer profile, ad lead form, budget/schedule shown but disabled) then
    generation
-3. variant tabs for square, portrait, carousel, and story
+3. variant tabs for the ad's family only: posts (square, portrait, carousel) or stories,
+   never mixed ([ADR 32](ADR.md))
 4. the media library, scoped to approved tenant media assets, with framing controls
 5. copy fields with live character counts and button-label select
 6. format-accurate previews rendered from the backend response — one card per variant returned;

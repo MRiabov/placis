@@ -748,6 +748,9 @@ A standard size an ad is produced in.
 - **Carousel**
 - **Story**
 
+Square feed, Portrait feed, and Carousel are **posts**. Story is **stories**. One ad is
+posts or stories, never both.
+
 In code: `feed_square` / `feed_portrait` / `carousel` / `story`.
 
 ---

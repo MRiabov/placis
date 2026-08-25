@@ -1,6 +1,6 @@
 # Ad Generation Decision Record
 
-Status: all entries decided as of 2026-08-23 (product owner + engineering). The spec docs in
+Status: all entries decided as of 2026-08-25 (product owner + engineering). The spec docs in
 this directory say *what* we build; this record says *why* we chose what we did, so decisions do
 not get lost or re-litigated.
 
@@ -22,7 +22,8 @@ area, and the date.
 2. **Ad formats from the start** — Square feed (1:1), portrait feed (4:5), carousel (1:1 cards),
    and Story (9:16). These are the standard Facebook ad formats; starting with all four
    avoids a later "can I get stories too?" rebuild. Ad formats without suitable approved images
-   are left out of the ad set, never rendered empty.
+   are left out of the ad set, never rendered empty. A single ad is still only **posts** or
+   only **stories**, never both (decision 32).
 
 3. **The LLM drafts; the owner edits** — The LLM drafts copy, proposes image galleries, and may
    apply light cleanup (remove clutter/trash, tidy backgrounds). Everything lands in reviewable
@@ -187,3 +188,9 @@ area, and the date.
     patches). Mutating requests send the last-seen `base_updated_at`. Match → write and
     return the new `updated_at`. Mismatch → `409`; the frontend re-GETs; no merge. No undo
     table, no undo/redo routes, no hydrate of 200 batches.
+
+32. **An ad is posts or stories, never both** (2026-08-25) — One ad is either **posts**
+    (Square feed, Portrait feed, Carousel) or **stories** (Story). The create/review
+    preview for a given ad shows only that family. Mixing a carousel (a post) with a
+    Story on the same ad is invalid. The four formats remain the catalog (decision 2);
+    the ad set for one ad never contains both families.
