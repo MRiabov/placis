@@ -45,7 +45,7 @@ applying the website template and copy. Postgres is authoritative.
 (client interview complete; 05 running) → `previewing` (07 wrote `latest/`; 06 may still write
 copy) → `activated`.
 `apply_website_template_failed` if 05 throws.
-06 failing does not change onboarding session status. The website preview host has no token and
+06 failing does not change onboarding session status. The preview website address has no token and
 no TTL. The onboarding session has no `expired` status. Confirm data (03) does not get its own
 status.
 
@@ -63,7 +63,7 @@ resume token.
 | `client_interviewing`, no client interview started | `/onboarding/review` (Review) |
 | `client_interviewing`, interview in progress (`channel` set or an autosave exists) | `/onboarding/interview` |
 | `applying_website_template` or `apply_website_template_failed` | `/onboarding/preview` (SSE carousel; same wait) |
-| `previewing` | the website preview host |
+| `previewing` | the preview website address |
 | `activated` | clear storage; `/cms/website` |
 
 Business lookup creates the onboarding session **once** (01), when this browser has no token. Opening Find

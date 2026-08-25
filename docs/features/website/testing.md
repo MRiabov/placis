@@ -29,11 +29,11 @@ DB asserts name the tables from [persistence.md](persistence.md) (and
 5. **Website publication** — the owner does a website publication.
    - DB: `website_publications` (status=`published`, `active=true`, `website_manifest`,
      `version_number` — a website version).
-   - Fake: R2 keys `sites/{website_address}/{version_number}/` then `…/latest/`, plus
+   - Fake: R2 keys `sites/{website_prefix}/{version_number}/` then `…/latest/`, plus
      `purge_cache` for live website page URLs (and sitemap, robots, WebP) on every active
      hostname. No live Cloudflare.
-   - UI: the live website is shown when a custom website address is `active`; otherwise the
-     owner still uses the website address host.
+   - UI: the live website is shown when a website address is `active`; otherwise the
+     owner still uses the preview website address.
 
 6. **Live website** — the published website copy is the files in `latest/`, not a Go resolve.
    - Assert: fake R2 objects for the edited website page; live GET does not call Go.

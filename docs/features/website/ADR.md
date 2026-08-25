@@ -89,7 +89,7 @@ Status: decided (2026-08-16, product owner + engineering).
     this serve path (live GET never calls Go). Remaining live-site work is R2 `latest/`,
     website publication HTML, Custom Hostnames, and Connect website address. Website
     publication is not a Cloudflare deploy. There is no per-request unpublished render.
-    Custom website address uses Custom Hostnames, not Pages. See
+    Website address uses Custom Hostnames, not Pages. See
     [cloudflare.md](cloudflare.md), [contractor-website-debloat.md](contractor-website-debloat.md),
     [port-contractor-website.md](port-contractor-website.md), and ADR 18–20.
     (2026-08-20; edge locked 2026-08-21; imported 2026-08-23; Worker write-thin 2026-08-23;
@@ -105,30 +105,30 @@ Status: decided (2026-08-16, product owner + engineering).
     (2026-08-20; attach vs generate 2026-08-24)
 
 18. **Live GET is Cache then R2 only** — website publication prebuilds HTML into
-    `sites/{website_address}/latest/`. A cache miss still reads R2. Missing object is 404, not a
+    `sites/{website_prefix}/latest/`. A cache miss still reads R2. Missing object is 404, not a
     render from Postgres. Drop leftover `GET /api/v1/public/site/resolve` (it was the token
     website preview). Tests assert R2 keys, not resolve.
     (2026-08-21; token preview dropped 2026-08-25)
 
-19. **R2 tree is keyed by the website address** — `tenants.website_address`, **reserved at 07**
-    from `display_name`. Custom website address maps `sites/hosts/{hostname}` → that label.
-    Owner-facing default host is `{website_address}.preview.placis.com` (wildcard on our zone).
+19. **R2 tree is keyed by the website prefix** — `tenants.website_prefix`, **reserved at 07**
+    from `display_name`. A website address maps `sites/hosts/{hostname}` → that prefix.
+    Owner-facing default host is `{website_prefix}.preview.placis.com` (wildcard on our zone).
     While unactivated, that host **is** the website preview (static `latest/` + website-activation
     strip island). After 08: **v2** on the same host without the strip; the site stays up (not
-    empty). Empty host = no `latest/` yet. Do not advertise `{website_address}.placis.com`. One
+    empty). Empty host = no `latest/` yet. Do not advertise `{website_prefix}.placis.com`. One
     `latest/` tree; publication destinations share it (no Placis-host version vs custom-host
     version).
     (2026-08-21; `.preview.placis.com` 2026-08-23; reserved at 07 + sales host 2026-08-25)
 
-20. **Custom website address uses Custom Hostnames, not Pages** —
+20. **Website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS **Connect website
     address** is a modal over the website editor, opened from **New URL** in the website publication
     dropdown. Shows records to paste. Do not take over the contractor’s nameservers. Apex `A`
     records need Apex Proxying (later, Enterprise).
     (2026-08-21; Connect modal 2026-08-23)
 
-21. **Website publication is a destination dropdown** — `{website_address}.preview.placis.com`,
-    each connected custom website address, or New URL (Connect website address). Not a Worker
+21. **Website publication is a destination dropdown** — `{website_prefix}.preview.placis.com`,
+    each connected website address, or New URL (Connect website address). Not a Worker
     deploy. See [frontend.md](frontend.md).
     (2026-08-23)
 

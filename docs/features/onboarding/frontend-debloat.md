@@ -39,7 +39,7 @@ Default client interview is **text**. Voice is listed and deferred
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist`.
 - Progress timeline (`PreviewProgressPanels` / apply-the-website-template panel): SSE carousel of
-  complete website sections (~2s). Navigate to the website preview host when 07
+  complete website sections (~2s). Navigate to the preview website address when 07
   has written `latest/` (copy done or ~15s cap).
 - Drop leftover `TargetedPreviewView` and any website-activation strip on `/onboarding/preview`.
 - Resume: `localStorage` holds the onboarding session token + last UI step;
@@ -71,7 +71,7 @@ Default client interview is **text**. Voice is listed and deferred
 | `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations, details |
 | Text client interview autosave + submissions | client interview autosave + submissions |
 | Don't say setup: `GET …/events/stream` | `GET /api/v1/onboarding-sessions/{id}/events/stream` |
-| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | public `activation/checkout` / activation-status (Host / `website_address`) |
+| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | public `activation/checkout` / activation-status (Host / `website_prefix`) |
 | Don't say claim: `GET …/claim/status` | activation-status |
 
 SSE drives `/onboarding/preview` only. The contractor host is static HTML; it is not an SSE

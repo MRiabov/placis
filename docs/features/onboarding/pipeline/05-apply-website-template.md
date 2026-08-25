@@ -54,7 +54,7 @@ the website template/website styles pick only. Onboarding session stays
 ## Fail
 
 Throw → `apply_website_template_failed`. No `latest/`. Retry is a new apply (same
-`website_address` if 07 already reserved it; new onboarding publication on that prefix).
+`website_prefix` if 07 already reserved it; new onboarding publication on that prefix).
 
 ## Out
 

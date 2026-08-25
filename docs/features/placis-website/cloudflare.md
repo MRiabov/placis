@@ -17,7 +17,7 @@ Related: [ADR.md](ADR.md), [contractor website Cloudflare](../website/cloudflare
 - Dedicated buckets: `placis-website` and `placis-website-staging`. Not the contractor
   website R2 tree.
 - Canonical host is **`https://placis.com`**. `www.placis.com` 301s to apex. Do not
-  advertise `{website_address}.placis.com`.
+  advertise `{website_prefix}.placis.com`.
 - Trailing slash so objects are `index.html` and `about/index.html`.
 - Onboarding, sign-in, and the client interview stay on `frontend-2`
   (`https://app.placis.com`).
@@ -33,14 +33,14 @@ Stripe webhook routes.
 | Whose site | Placis | the contractor |
 | App | `apps/placis-website/` | `apps/contractor-website/` |
 | Build | `astro build` → `dist/` | Worker + publication HTML |
-| Store | one R2 tree per environment | `sites/{website_address}/latest/` |
+| Store | one R2 tree per environment | `sites/{website_prefix}/latest/` |
 | Live GET | hostname on the R2 bucket | Worker, Cache then R2 |
 | Host | `placis.com` | locked in [contractor website Cloudflare](../website/cloudflare.md) |
 
 ## Why not a Worker
 
 The contractor-website Worker exists because a live GET maps `Host` to an R2 key, attaches
-custom website addresses, and renders website preview. The Placis website has none of
+website addresses, and renders website preview. The Placis website has none of
 that: one build, one tree of files.
 
 Workers Static Assets would still be a Worker *project* and a `wrangler deploy` to host

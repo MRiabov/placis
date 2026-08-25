@@ -1,6 +1,6 @@
 # 08 — Website activation
 
-The contractor pays on the **website preview** host (FQDN in
+The contractor pays on the **preview website address** (FQDN in
 [cloudflare.md](../../website/cloudflare.md)). Clerk sign-in/sign-up if needed (modal island), then
 Stripe checkout (island POSTs public `activation/checkout` to `cmd/api`; do not bake a Checkout Session
 URL into R2 HTML). Website activation **upgrades** the existing unactivated tenant
@@ -23,7 +23,7 @@ Verified Stripe `checkout.session.completed` for an unactivated tenant whose hos
 
 ## Pre
 
-- `tenants.website_address` already reserved at 07.
+- `tenants.website_prefix` already reserved at 07.
 - `website_publications` v1 `active` (strip on) or a later onboarding write on that prefix.
 - Authenticated Clerk subject (the payer).
 - `onboarding_sessions.tenant_id` is the unactivated tenant from 01.
@@ -32,7 +32,7 @@ Verified Stripe `checkout.session.completed` for an unactivated tenant whose hos
 
 - Insert a second `tenants` row.
 - First-write child `tenant_id`s (website/media/profile already have it).
-- Invent or rename `website_address`.
+- Invent or rename `website_prefix`.
 - Wait for 06.
 - Activate twice (replay / second payer).
 - Treat the browser success URL as activation.
@@ -49,7 +49,7 @@ Verified Stripe `checkout.session.completed` for an unactivated tenant whose hos
 4. `tenants.status=active`. Onboarding session → `activated`.
 5. Write **`website_publications` v2** without the website-activation strip, `published_by=onboarding`,
    `active`. Archive v1. Same R2 write as 07 / CMS website publication; purge Cache so v1-with-strip
-   does not linger. Host stays up. Custom website address is a later CMS modal.
+   does not linger. Host stays up. Website address is a later CMS modal.
 6. In-flight 06 **continues** on the same `tenant_id`. CMS website assistant 409 until that run
    ends.
 
@@ -65,7 +65,7 @@ payer after the first verified completion is refused.
 
 ## Out
 
-`/cms/website`. `/me` now returns the tenant. The website preview host stays up
+`/cms/website`. `/me` now returns the tenant. The preview website address stays up
 without the strip (live website, not website preview). Unpublished website from 05 (+ whatever 06
 has written) is what they edit. First **owner** website publication is v3+ and the first
 rollback-eligible website version.
@@ -73,7 +73,7 @@ rollback-eligible website version.
 ## Invariants
 
 - Same `tenant_id` as 01.
-- Same `website_address` as 07.
+- Same `website_prefix` as 07.
 - `/me` tenant only when `status=active`.
 - Clerk organization 1-1 for **active** tenants only.
 - v1 and v2 are never website-rollback targets.

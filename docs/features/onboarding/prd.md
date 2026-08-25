@@ -76,7 +76,7 @@ find the business (company registry and/or Google Maps) + online research consen
 -> one clear business profile (their answers + what we found, side by side)
 -> apply the website template → website copy generation fills in in the background
 -> `/onboarding/preview` (complete website sections rotate until copy is done or the wait cap)
--> the website preview host (static HTML, website-activation strip)
+-> the preview website address (static HTML, website-activation strip)
 -> website activation (pay) → same host stays up without the strip; owner website publication later in the website editor
 ```
 
@@ -106,7 +106,7 @@ business lookup, not a client interview question.
 5. **As a contractor**, I want to watch complete website sections while the words are written, then
    land on the real host, so I am not staring at a spinner and I am not on a throwaway URL.
    - `/onboarding/preview` rotates filled website sections until website copy generation finishes
-     or a short cap. Then the website preview host is the website preview (pay strip
+     or a short cap. Then the preview website address is the website preview (pay strip
      on the website). If copy is still running after that, the host does not live-update. Anyone with
      the URL may pay.
 6. **As a contractor**, I want to close the tab and continue later on the same browser, so I don't
@@ -124,7 +124,7 @@ business lookup, not a client interview question.
    contractor picks the right one.
 5. After they answer the questions they wait on `/onboarding/preview` (complete website sections)
    until website copy generation finishes or the wait cap, then land on
-   the website preview host. If copy fails or the cap hits first, they can still
+   the preview website address. If copy fails or the cap hits first, they can still
    open the host and do website activation.
 6. Closing the tab and coming back on the same browser continues where they left off. Confirm
    does not start a second run. Clearing storage before 07 hides the pointer on

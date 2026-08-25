@@ -84,13 +84,13 @@ then PATCH. Onboarding 07/08 rows are not targets.
 
 Rows:
 
-1. **Website address host** — `{website_address}` plus the suffix in
+1. **Preview website address** — `{website_prefix}` plus the suffix in
    [cloudflare.md](cloudflare.md). Always listed after website activation. Open in a new tab when
    `latest/` exists. Status: not published yet / last website publication time. This is the live
-   URL in the website editor until (and alongside) a custom website address. Product copy:
-   **website address** / our subdomain. Do not call this host website preview after website
+   URL in the website editor until (and alongside) a website address. Product copy:
+   **preview website address**. Do not call this host website preview after website
    activation (while unactivated it **is** the website preview).
-2. **Each connected custom website address** (`acme.ie`) — listed once Connect website address
+2. **Each connected website address** (`acme.ie`) — listed once Connect website address
    has a hostname. Disabled until `website_addresses.status=active` (waiting for DNS /
    certificate).
 3. **New URL** — not a website publication. Opens the **Connect website address** modal.
@@ -104,9 +104,9 @@ Squarespace — do not move nameservers to Placis. Status in the modal: waiting 
 for certificate → active (the website editor polls Go; Go polls Cloudflare). Close returns to
 the website editor. The host then appears as row 2; it is enabled when active. Re-open the modal
 from New URL or from a still-waiting host to copy records again. Website publication does **not**
-attach a custom website address.
+attach a website address.
 
-Do not advertise `{website_address}.placis.com` as a live URL.
+Do not advertise `{website_prefix}.placis.com` as a live URL.
 
 **Website assistant** is a chat in this workspace. Two configs: plan vs continuous, and
 instant apply vs Ask first (Apply / Reject). Default is plan + Ask first. Apply mutates the

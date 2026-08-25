@@ -67,7 +67,7 @@ the tables it writes.
   [website_addresses](persistence.md). Live GET does not call Go; it reads R2. Drop leftover
   resolve. Connect-website-address APIs live under the website editor.
 
-Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
+Do not use `/api/v1/tenants/{website_prefix}/website/...` for the CMS.
 
 ## Validation & testing
 

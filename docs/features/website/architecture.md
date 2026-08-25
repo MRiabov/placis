@@ -108,9 +108,9 @@ website do not change the live website until the next website publication.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website application serves
 every tenant. The website publication control is a destination dropdown
-(`{website_address}.preview.placis.com`, a connected custom website address, or New URL). Host
+(`{website_prefix}.preview.placis.com`, a connected website address, or New URL). Host
 routing uses `website_addresses` reserved at onboarding 07. Serve path, R2 keys, cache
-purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md).
+purge, website address, and local Worker: [cloudflare.md](cloudflare.md).
 `apps/contractor-website` is in this repo; remaining cuts:
 [contractor-website-debloat.md](contractor-website-debloat.md). API cutover:
 [port-contractor-website.md](port-contractor-website.md). Next is R2 `latest/` +

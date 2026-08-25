@@ -32,7 +32,7 @@ job can be retried safely (an explicit key) — see [jobs](jobs.md).
 Onboarding session progress events stream over SSE — see
 [07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md) and
 [onboarding frontend](../features/onboarding/frontend.md). Anyone with the host URL opens
-the website preview host (Cache then R2). The contractor host is not an SSE
+the preview website address (Cache then R2). The contractor host is not an SSE
 endpoint.
 
 HTTP conventions: [api.md](api.md). Huma vs streaming: [backend stack](backend-stack.md).

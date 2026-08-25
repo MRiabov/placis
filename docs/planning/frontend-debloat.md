@@ -41,7 +41,7 @@ console.
   exists. Contractor website public routes: website form submit
   (see [port-contractor-website.md](../features/website/port-contractor-website.md)).
 - Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
-  `/api/v1/tenants/{website_address}/website/…`, blog, careers,
+  `/api/v1/tenants/{website_prefix}/website/…`, blog, careers,
   website-template-apply leftovers, unconstrained JSON in UI-facing schemas.
   Don't say setup / public site / shell / blueprint / claim: predecessor names.
   Don't say preview: predecessor module path (`/api/v1/preview/{token}/module/website`)
@@ -56,12 +56,12 @@ console.
   unconstrained JSON blobs in UI code. The generated file must not reintroduce
   predecessor-only paths.
 - CMS calls `/v1/website/editor/…` only. Do not call
-  `/v1/tenants/{website_address}/website/…`.
+  `/v1/tenants/{website_prefix}/website/…`.
 - Onboarding calls `/v1/onboarding-sessions/business-lookup` and
   `GET …/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`).
   Restore is `GET …/profile`.
 - `/onboarding/preview` is the SSE website-section carousel; the shareable host is
-  the website preview host (not `/preview/{token}/…`, not an SSE endpoint). Website
+  the preview website address (not `/preview/{token}/…`, not an SSE endpoint). Website
   activation uses activate / activation-checkout / activation-status (not a browser
   success URL alone).
 - Website editor: one in-memory projection; PATCH copies dirty keys; merge only

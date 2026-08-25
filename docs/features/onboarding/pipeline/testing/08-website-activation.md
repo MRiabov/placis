@@ -8,7 +8,7 @@
   completion.
 - **Assert**: `website_activations` written; `stripe_events` stored; the **existing** `tenants` row
   (same `tenant_id` as confirm) now has `clerk_org_id` and `status=active`; `tenant_memberships`
-  (`owner`); same `website_address` as 07; onboarding session `activated`;
+  (`owner`); same `website_prefix` as 07; onboarding session `activated`;
   `website_publications` v2 without the strip, v1 archived; neither v1 nor v2 is returned by
   website rollback list; replay does not activate twice; second payer is refused; in-flight 06
   continues; host GET no longer includes the website-activation island.

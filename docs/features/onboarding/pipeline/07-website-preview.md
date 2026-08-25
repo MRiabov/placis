@@ -1,6 +1,6 @@
 # 07 — Website preview
 
-A **website preview** is the contractor host (`{website_address}` plus the suffix in
+A **website preview** is the **preview website address** (`{website_prefix}` plus the suffix in
 [cloudflare.md](../../website/cloudflare.md)) with static
 HTML in R2 `latest/` and a website-activation strip. It is not the website editor. It is not
 `/onboarding/preview` (that route is the wait teaser). There is no leftover token.
@@ -25,13 +25,13 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant. Wait 
 - Issue a leftover token / `website_previews` / `/preview/{token}/`.
 - Wait for 06 past the cap.
 - Let 06 supersede this website preview.
-- Rename `website_address` after it is reserved.
+- Rename `website_prefix` after it is reserved.
 - SSE the contractor host.
 - Call this a third serve path of full website pages on `/onboarding/preview`.
 
 ## Do
 
-1. **Reserve** `tenants.website_address` from `display_name` (`{{business_name}}` — Maps / public
+1. **Reserve** `tenants.website_prefix` from `display_name` (`{{business_name}}` — Maps / public
    name, required at client interview complete). Not `legal_name`.
    - Lowercase; keep `[a-z0-9]`; hyphens for the rest; collapse/trim hyphens.
    - Cap length so a locality suffix and a later `-2` still fit a DNS label (63).
@@ -61,13 +61,13 @@ SSE is the onboarding session stream. The contractor host is not an SSE endpoint
 
 ## Persist
 
-`tenants.website_address`; `website_addresses`; `website_publications` (v1, strip on); R2
+`tenants.website_prefix`; `website_addresses`; `website_publications` (v1, strip on); R2
 `latest/`. Onboarding session → `previewing`. No `website_previews`.
 
 ## Fail
 
 Issue failure: onboarding session stays `applying_website_template` or
-`apply_website_template_failed`; no `latest/`. Retry 05+07 (same `website_address` if already
+`apply_website_template_failed`; no `latest/`. Retry 05+07 (same `website_prefix` if already
 reserved).
 
 ## Out
@@ -79,5 +79,5 @@ completion does **not** live-update the host.
 
 - No token, no TTL, no 410-for-unknown-token.
 - 06 does not supersede.
-- `website_address` never renamed after this step.
+- `website_prefix` never renamed after this step.
 - v1 is never a website-rollback target.

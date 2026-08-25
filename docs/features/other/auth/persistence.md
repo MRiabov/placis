@@ -7,12 +7,12 @@ Hostnames for the live contractor website are [website persistence](../../websit
 (`website_addresses`), not this file.
 
 A tenant row is created at onboarding confirm (`status=unactivated`). 07 reserves
-`website_address`. Website activation **upgrades** that row (`status=active`); it does not insert
+`website_prefix`. Website activation **upgrades** that row (`status=active`); it does not insert
 a second tenant. `/me` returns a tenant only when `status=active`. Unactivated work is reached
 via the onboarding session token.
 
 - `tenants` — `id` uuid pk, `clerk_org_id` unique nullable (null while `unactivated`; set at
-  website activation), `website_address` unique nullable (reserved label, **fixed at 07** from
+  website activation), `website_prefix` unique nullable (reserved label, **fixed at 07** from
   `display_name`, R2 prefix; FQDN is a `website_addresses` row; null until 07), `name`
   (business display/legal name when known, else empty until business research fills it),
   `status` (`unactivated`/`active`/`suspended`), `created_at`, `updated_at`
@@ -21,5 +21,5 @@ via the onboarding session token.
 
 ## Indexes
 
-Unique: `tenants.clerk_org_id`, `tenants.website_address` (nullable; many unactivated rows may
+Unique: `tenants.clerk_org_id`, `tenants.website_prefix` (nullable; many unactivated rows may
 have null — Postgres unique allows that).
