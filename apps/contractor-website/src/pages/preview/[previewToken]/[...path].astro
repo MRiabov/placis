@@ -15,10 +15,11 @@ import {
   resolvePreviewWebsite,
   type PublicSiteRuntimeEnv,
 } from "../../../lib/publicSiteApi";
+import { env } from "cloudflare:workers";
 
 export const prerender = false;
 
-const runtimeEnv = Astro.locals.runtime?.env as PublicSiteRuntimeEnv | undefined;
+const runtimeEnv = env as PublicSiteRuntimeEnv;
 const apiBaseUrl = publicSiteApiBaseUrl(runtimeEnv);
 const previewToken = Astro.params.previewToken ?? "";
 const pathParam = Astro.params.path;

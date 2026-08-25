@@ -145,10 +145,10 @@ export function PromptBox() {
                   className={`pointer-events-none absolute inset-x-0 top-0 truncate px-1 pt-1 text-left ${SIZE.placeholder}`}
                 >
                   <span
-                    className={`inline-block max-w-full truncate text-zinc-400 transition-[opacity,transform,filter] duration-[480ms] ease-[cubic-bezier(0.22,1,0.36,1)] dark:text-zinc-500 ${
+                    className={`inline-block max-w-full truncate text-zinc-400 transition-[opacity,transform,filter] duration-480 ease-[cubic-bezier(0.22,1,0.36,1)] dark:text-zinc-500 ${
                       placeholderVisible
                         ? "translate-y-0 opacity-100 blur-0"
-                        : "-translate-y-[0.22em] opacity-0 blur-[2px]"
+                        : "translate-y-[-0.22em] opacity-0 blur-[2px]"
                     }`}
                   >
                     {PROMPT_PLACEHOLDERS[placeholderIndex]}
@@ -157,7 +157,7 @@ export function PromptBox() {
               )}
               <textarea
                 aria-label="Describe what you want Placis to build"
-                className={`relative w-full resize-none bg-transparent px-1 pt-1 text-left text-zinc-950 outline-none dark:text-zinc-50 ${SIZE.textarea}`}
+                className={`relative w-full resize-none bg-transparent px-1 pt-1 text-left text-zinc-950 outline-hidden dark:text-zinc-50 ${SIZE.textarea}`}
                 onBlur={resetMobileInputZoom}
                 onChange={(event) => setValue(event.target.value)}
                 onKeyDown={(event) => {

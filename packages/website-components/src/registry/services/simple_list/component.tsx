@@ -9,7 +9,7 @@ export default function ServicesSimpleList({
   const services = asRecords(props.services);
   return (
     <section
-      className={`${sectionPadding(theme)} public-services-simple bg-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} public-services-simple bg-(--public-background)`}
       id={text(props.anchor_id, "") || undefined}
     >
       <div className="public-site-shell public-services-simple__inner">

@@ -4,6 +4,7 @@ import type {
   Request as CloudflareRequest,
   Response as CloudflareResponse,
 } from "@cloudflare/workers-types";
+import { env } from "cloudflare:workers";
 import { requestHost, type PublicSiteRuntimeEnv } from "./lib/publicSiteApi";
 
 type StaticSiteEnv = Partial<{
@@ -27,21 +28,19 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (context.url.pathname.startsWith("/preview/")) {
     return next();
   }
-  const env = context.locals.runtime?.env as StaticSiteEnv | undefined;
-  const bucket = env?.CMS_STATIC_SITE_BUCKET;
+  const runtimeEnv = env as StaticSiteEnv;
+  const bucket = runtimeEnv.CMS_STATIC_SITE_BUCKET;
   if (!bucket) {
     return next();
   }
-  const host = requestHost(context.request, context.url, env);
+  const host = requestHost(context.request, context.url, runtimeEnv);
   const key = staticArtifactKey({
     host,
     pathname: context.url.pathname,
-    prefix: env.CMS_STATIC_SITE_KEY_PREFIX ?? "sites",
+    prefix: runtimeEnv.CMS_STATIC_SITE_KEY_PREFIX ?? "sites",
   });
   const htmlArtifact = isHtmlArtifactPath(context.url.pathname);
-  const cache = context.locals.runtime?.caches.default as
-    | CloudflareCache
-    | undefined;
+  const cache = (caches as unknown as { default?: CloudflareCache }).default;
   const cacheRequest = new Request(context.request.url, {
     method: "GET",
   }) as unknown as CloudflareRequest;
@@ -50,7 +49,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const cachedResponse = cached as unknown as Response;
     if (htmlArtifact && !isTrustedStaticHtmlResponse(cachedResponse)) {
       if (cache) {
-        context.locals.runtime?.ctx.waitUntil(cache.delete(cacheRequest));
+        context.locals.cfContext.waitUntil(cache.delete(cacheRequest));
       }
     } else {
       const headers = new Headers(cachedResponse.headers);
@@ -97,7 +96,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const response = new Response(object.body, { headers });
   if (cache && cacheWriteMethods.has(context.request.method)) {
     const cacheResponse = response.clone() as unknown as CloudflareResponse;
-    context.locals.runtime?.ctx.waitUntil(
+    context.locals.cfContext.waitUntil(
       cache.put(cacheRequest, cacheResponse),
     );
   }

@@ -7,20 +7,20 @@ export default defineConfig({
       {
         find: /^@placis\/public-site-components$/,
         replacement: path.resolve(
-          __dirname,
+          import.meta.dirname,
           "../packages/website-components/src/index.ts",
         ),
       },
       {
         find: /^@placis\/public-site-components\/(.*)$/,
         replacement: path.resolve(
-          __dirname,
+          import.meta.dirname,
           "../packages/website-components/src/$1",
         ),
       },
       {
         find: "@",
-        replacement: path.resolve(__dirname, "./src"),
+        replacement: path.resolve(import.meta.dirname, "./src"),
       },
     ],
   },
