@@ -28,9 +28,12 @@ the tables it writes.
 - Tool calls: see [assistant.md](assistant.md) (`update_slot`, `cleanup_image`, `update_form`,
   `update_website_styles`, `update_menus`, `generate_image`, …). Same attach / crop / focal /
   cleanup as `/cms/media` and the website editor PATCH.
-- Output is a reviewable diff, validated against website component contracts before apply.
+- Output is a reviewable diff, validated against website component contracts before the website
+  editor PATCHes (CMS) or the 06 job writes (headless).
 - Every call records reasoning + output + tool calls via `ai_generations`.
-- Apply / Reject is one-way; no revert-after-apply. No unpublished snapshot per edit.
+- Apply / Reject is one-way; no revert-after-apply. CMS Apply is the website editor PATCH +
+  `record-apply`.
+  No unpublished snapshot per edit.
   Website edit history is increments on `edit_history`; undo is in-memory, then PATCH.
   No `/undo`, `/redo`, or `/edit-history` routes.
 

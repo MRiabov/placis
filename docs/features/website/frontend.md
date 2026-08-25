@@ -65,13 +65,20 @@ explicit apply. Top menu and footer are edited here as a **depth-2 tree** (bar +
 website page / text / URL nodes), plus show/hide for marketing phone and marketing email CTAs.
 Look (logo, density) is the site-wide website section for that bar, not Details.
 
-**Website publication** is a toolbar **dropdown**, not one toolbar button and not Save. Choose
-where this website publication goes. It is blocked while required website slots cannot resolve
-or media library items on the live path are not approved; show those blockers in the dropdown
-panel. After a successful website publication, `has_unpublished_changes` is false until the next
-edit. One destination per click. All destinations share one R2 `latest/` tree
-([cloudflare.md](cloudflare.md)) — this is where the publication is aimed (copy, confirmation,
-purge), not two different website versions.
+**Website publication** is a toolbar **dropdown**, not one toolbar button and not Save. It is
+blocked while required website slots cannot resolve or media library items on the live path
+are not approved; show those blockers in the dropdown panel. After a successful website
+publication, `has_unpublished_changes` is false until the next edit. The POST has no
+destination: one R2 `latest/` tree, then purge the website address and every `active`
+custom website address ([api.md](api.md), [cloudflare.md](cloudflare.md)). Hosts in the dropdown
+are where the live site is reachable (open in a new tab, Connect), not independent website
+versions.
+
+Live **website rollback** (`POST …/publications/{id}/rollback`) returns that publication
+`*Read`; the dropdown updates from the body. **Restore unpublished**
+(`POST …/publications/{id}/restore-unpublished`) resets unpublished rows to that owner
+website version so they keep editing; the canvas re-GETs the open website page. Onboarding
+07/08 rows are not targets.
 
 Rows:
 
@@ -100,9 +107,10 @@ attach a custom website address.
 Do not advertise `{website_address}.placis.com` as a live URL.
 
 **Website assistant** is a chat in this workspace. Two configs: plan vs continuous, and
-instant apply vs Ask first (Apply / Reject). Default is plan + Ask first. Apply and
-Reject are one-way; there is no revert-after-apply. Ctrl+Z after Apply is in-memory undo
-of that batch, then PATCH — not Apply then Reject. Pending-review AI images may
+instant apply vs Ask first (Apply / Reject). Default is plan + Ask first. Apply mutates the
+in-memory projection, then the ordinary PATCH; **Apply** / **Reject** only record activity
+metadata. They are one-way; there is no revert-after-apply. Ctrl+Z after Apply is in-memory
+undo of that batch, then PATCH — not Apply then Reject. Pending-review AI images may
 show on the canvas with a warning; owner approval makes them approved. Website publication
 still requires approved media assets.
 

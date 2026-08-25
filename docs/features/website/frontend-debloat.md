@@ -76,7 +76,7 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 | --- | --- |
 | `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/website/editor/pages…`; PATCH body is dirty keys; response `{ edit_history_head, batch_id }` plus assigned ids |
 | `POST …/publish` | `POST /v1/website/publications` |
-| Sections/slots/assets/assistant | fields on the page PATCH; assistant under `/v1/website/editor/pages/{page_id}/assistant`. Media library: `/v1/media-assets` |
+| Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; assistant start under `/v1/website/editor/pages/{page_id}/assistant`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
 | `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
 | Projects CRUD already in `cms.ts` | `/v1/projects` |
 | Certifications helpers already in `cms.ts` | `/v1/business-profile/certifications` |

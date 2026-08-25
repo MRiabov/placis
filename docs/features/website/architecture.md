@@ -77,7 +77,8 @@ keys, typically under 10 KB) so `429` stays a backstop. PATCH is not the whole u
 website; reject over 64 KB. Leaving while a copy-out is in flight confirms discard. Opening
 the website editor hydrates undo/redo from website edit history; Ctrl+Z is in-memory, then
 PATCH. See [editing.md](editing.md). Website assistant edits follow [assistant.md](assistant.md):
-Ask first waits for Apply / Reject; instant apply writes. Website publication writes a
+Ask first waits for Apply / Reject (website editor PATCH, then record metadata); instant apply
+is the website editor PATCHing as tools succeed. Website publication writes a
 website version. **Details** (the business profile), **Projects**, **Certifications and
 reviews**, and the **media library** are website page content (placeholders, project galleries,
 reviews, photos). They are separate entities, edited on their own screens — not as website slots
@@ -99,14 +100,17 @@ website component contract, resolves the `{{var}}` website placeholders from the
 writes one `website_publications` row holding the published website copy as `website_manifest`
 (a `website.v1` website manifest — [manifest.md](manifest.md)). That row is a website version.
 The website manifest is the read model — the renderer only ever reads the active website version.
-Website rollback reactivates an earlier website version.
+Website rollback copies an earlier owner website version onto `latest/` (live). Restore
+unpublished copies that owner website version onto unpublished rows so the website editor
+continues; it is not website rollback.
 
 Edits to Details, Projects, certifications and reviews, website styles, or the unpublished
 website do not change the live website until the next website publication.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website application serves
-every tenant. The website publication control is a destination dropdown
-(`{website_address}.preview.placis.com`, a connected custom website address, or New URL). Host
+every tenant. The website publication control is a dropdown of hosts (`{website_address}` on
+our subdomain, a connected custom website address, or New URL) — the POST has no destination
+([api.md](api.md)). Host
 routing uses `website_addresses` reserved at website activation. Serve path, R2 keys, cache
 purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md).
 `apps/contractor-website` is in this repo; remaining cuts:
