@@ -84,9 +84,9 @@ and flags both runners must share.
 
 ## Notes
 
-- **Clerk** is the one external dependency that is *not* faked. Backend tests use
-  `github.com/clerk/clerk-sdk-go/v2` (`Sessions().Verify`, `Organizations().Create`, and so on) —
-  never a fake verifier, never hand-rolled JWT or JWKS. The SDK fetches and caches JWKS; app and
+- **Clerk** is the one external dependency that is *not* faked. Backend tests use the official
+  Clerk Go SDK (`Sessions().Verify`, `Organizations().Create`, and so on) — never a fake
+  verifier, never hand-rolled JWT or JWKS. The SDK fetches and caches JWKS; app and
   test code must not decode tokens. Playwright **testing tokens** (bot-protection,
   `__clerk_testing_token`) are a different path: mint once per CI job (`clerkSetup()` or the
   Backend API), put `CLERK_TESTING_TOKEN` in the job env, and reuse it. Attaching that token to a

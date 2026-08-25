@@ -10,8 +10,8 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 | --- | --- |
 | Language | Go (latest stable toolchain) |
 | HTTP | `chi` + `net/http` |
-| API contract | `huma` v2 (Go-first: structs derive OpenAPI 3.1 + validation when the request is handled) |
-| Data access | `sqlc` + `pgx/v5` |
+| API contract | `huma` (Go-first: structs derive OpenAPI + validation when the request is handled) |
+| Data access | `sqlc` + `pgx` |
 | Migrations | `goose` (plain SQL) |
 | Database | PostgreSQL (one database; [Postgres schemas as feature namespaces](data-model.md#postgres-schemas-namespaces)) |
 | Background jobs | `River` (Postgres-backed, typed args, safe retries) |
@@ -33,6 +33,18 @@ not go through a Go WebSocket — the browser connects to the voice service with
 ([voice agent](voice-agent.md)).
 
 Mutating routes that can be safely retried accept an `Idempotency-Key` header (checked per tenant).
+
+## Dependencies
+
+The rewrite is greenfield. Default to the **latest stable** of each chosen library and of the Go
+toolchain. Names in this file (`huma`, `pgx`, `chi`, `River`, Clerk, Stripe, …) identify the
+library, not a frozen major or minor. When a new stable major lands, take it on the next upgrade
+pass; do not keep an old import path in these docs as policy.
+
+Do **not** add Dependabot, Renovate, or other automated upgrade PRs. Upgrade on a regular
+cadence — about every two weeks — as a deliberate pass (`go get -u ./...`, toolchain bump,
+lockfile refresh). Goose SQL migrations stay manual and reviewed; this cadence is for
+dependencies, not schema automigration.
 
 ## Type layers
 
