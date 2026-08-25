@@ -24,7 +24,7 @@ block website activation. 07 waits copy-done or the wait cap, then writes the ho
 - profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/details`)
 - client interview (autosave + submissions)
 - business research runs (list/get), apply-the-website-template runs (list/get/cancel)
-- website activation checkout (public, Host / `website_address`)
+- website activation checkout (public, Host / `website_prefix`)
 - website publication / website rollback: owned by the [website feature](../website/technical-implementation.md), not this API surface
 
 Website publication of 07/08 is the same write as the website editor’s website publication;

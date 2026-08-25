@@ -51,11 +51,11 @@ not website placeholders), named interval ~2s, smooth phase in/out especially im
 website editor path.
 
 Wait until **website copy generation finishes** or the **~15s cap**, whichever first. Then 07
-writes `latest/` and the browser **navigates** to the website preview host. Do not
+writes `latest/` and the browser **navigates** to the preview website address. Do not
 paint full website pages here. Do not put the website-activation strip on this route (it lives in
 the host HTML).
 
-### 5. Website preview + website activation — website preview host
+### 5. Website preview + website activation — preview website address
 
 Static R2 HTML (Cache then R2). Website-activation strip is a Clerk/Stripe **island** in that
 HTML ([07](pipeline/07-website-preview.md), [cloudflare.md](../website/cloudflare.md)). Copy still

@@ -19,7 +19,7 @@ start is 409.
 - `create_page` (05 already applied the website page set).
 - Block 08.
 - Wait past 07’s cap to “finish” before the host can exist.
-- Supersede the website preview (06 does not change `website_address` or replace 07’s row).
+- Supersede the website preview (06 does not change `website_prefix` or replace 07’s row).
 - Set website slot `approved`. Website publication is website-level, not website slot `published`. Publication
   requires approved **media library** items, not approved copy website slots.
 - Bake raw detail values into copy that should stay a token (`{{business_name}}`,

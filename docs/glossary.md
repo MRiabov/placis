@@ -370,21 +370,22 @@ In code: `website_activations`.
 A stage in our sales process where they choose to buy the website or not. Never say bare
 “preview”. Do not use this word for the website editor canvas or for ad format mocks.
 
-The sales surface is `{website_address}.preview.placis.com` (static HTML, website-activation
-strip) until website activation. After website activation that same host is the live website —
-never call it website preview then.
+The sales surface is the **preview website address** (static HTML, website-activation strip)
+until website activation. After website activation that same host is the live website — never
+call it website preview then.
 
 Distinct from: Unpublished website, Website activation, Website preview link, Live website
-(the same host after they pay).
+(the same host after they pay), Preview website address (the host).
 
 ---
 
 #### Website preview link
 
-The shareable URL of the website preview: `{website_address}.preview.placis.com`. Anyone who
-has it can open the host. Never say “signed website preview”.
+The shareable URL of the website preview: the preview website address
+(`{website_prefix}.preview.placis.com`). Anyone who has it can open the host. Never say
+“signed website preview”.
 
-Distinct from: Website preview (the sales stage), Signed URL.
+Distinct from: Website preview (the sales stage), Preview website address (the host), Signed URL.
 
 ---
 
@@ -634,11 +635,24 @@ rollback targets.
 
 #### Website address
 
-The default host of the business’s site: they may be deployed under **our subdomain**. Reserved
-from `display_name` when the website preview host is first written. Never say `slug`.
+The hostname they supply (`acme.ie`), which we publish under. Never say “custom domain” or
+“custom website address”.
 
-Distinct from: Website prefix (the DNS/R2 label), Custom website address (the address they
-supply), Website page path.
+Distinct from: Preview website address (our `preview.placis.com` host), Website prefix,
+Website page path.
+
+In code: `website_addresses` with `type=custom`.
+
+---
+
+#### Preview website address
+
+Our host for their site: `{website_prefix}.preview.placis.com`. While unactivated this host is
+the website preview (sales stage). After website activation it is still a preview website
+address (same zone) and the live default until they attach a website address. Never call the
+host “website preview” after they pay. Never say “website preview host”.
+
+Distinct from: Website address (`acme.ie`), Website prefix, Website preview (the sales stage).
 
 In code: `website_addresses` with `type=subdomain`.
 
@@ -646,10 +660,11 @@ In code: `website_addresses` with `type=subdomain`.
 
 #### Website prefix
 
-The reserved DNS label and R2 key (`acme-roofing-dublin`). Not a URL. Never renamed. Never say
+The reserved DNS label and R2 key (`acme-roofing-dublin`). Not a URL. Reserved from
+`display_name` when the preview website address is first written. Never renamed. Never say
 `slug` or `website-prefix`.
 
-Distinct from: Website address (the host), Custom website address, Website page path.
+Distinct from: Website address, Preview website address, Website page path.
 
 In code: `tenants.website_prefix`.
 
@@ -958,15 +973,6 @@ agent).
 
 ### Website
 
-#### Custom website address
-
-The website address **they supply**, which we publish under. Distinct from: Website address (the
-default: they may be deployed under our subdomain). Never say bare “custom domain”.
-
-In code: `website_addresses.type=custom`.
-
----
-
 #### Website placeholder
 
 A blank in the unpublished website that stands for a business detail (`{{business_name}}`,
@@ -1068,7 +1074,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | consent confirm | business lookup |
 | interview (onboarding) | client interview |
 | research (onboarding) | business research |
-| preview (website, ads) | website preview or ad format preview |
+| preview (website, ads) | website preview, preview website address, or ad format preview |
 | preview package | website preview |
 | claim / website claim (activation) | website activation |
 | marketing claim / advertising claim / unsupported claim | marketing statement / unsupported marketing statement |
@@ -1090,7 +1096,9 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | runtime | do not name the application “runtime”; the contractor website lives in `apps/contractor-website` |
 | private app / private Vite app / private client | the part of the application: the CMS, onboarding, or website preview (`frontend-2`) |
 | shell / profile shell / app shell / page shell / Astro shell / CMS shell / editor shell / chrome / wrapper chrome / app chrome | empty business profile; the CMS (sidebar + main area); Astro document vs React islands; no extra wrapper around the page |
-| custom domain | custom website address |
+| custom domain | website address |
+| custom website address | website address |
+| website preview host | preview website address |
 | published copy | published website copy |
 | site manifest | website manifest |
 | ready to post (ads) | ad ready to post (Ad states) |

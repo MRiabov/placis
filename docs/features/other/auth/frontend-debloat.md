@@ -46,7 +46,7 @@ Website activation Clerk + Stripe is owned by
 
 - Org chooser, `placis_selected_org` cookie, `/me/orgs`, `/me/tenants`,
   `/me/selected-org`.
-- `POST /v1/tenants`, `PATCH /v1/tenants/{website_address}`,
+- `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`,
   memberships CRUD.
 - Custom impersonation (platform admins use Clerk native impersonation).
 - Clerk testing-token flows in CI unless explicitly asked.

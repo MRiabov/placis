@@ -96,7 +96,7 @@ decision + date) instead of silently replacing the old entry.
     each change (not faster than ~2s) over SSE; the stream mirrors the DB; it is not the source
     of truth. On `/onboarding/preview`, the frontend rotates **complete** filled website sections
     (~2s, image fade) from that stream, then navigates to the host. Not full website pages. Not
-    SSE on the website preview host.
+    SSE on the preview website address.
     (2026-08-25: carousel + host navigate; earlier: 2–10s re-render so the website builds up.)
 
 12. **Website activation writes the strip-off website publication** — 07 already wrote
@@ -127,25 +127,25 @@ decision + date) instead of silently replacing the old entry.
     `activated` → `/cms/website`.
     (2026-08-23. 2026-08-25: resume during wait vs after 07.)
 
-15. **The website preview is the contractor host** — `{website_address}` plus the suffix in
+15. **The website preview is the preview website address** — `{website_prefix}` plus the suffix in
     [cloudflare.md](../website/cloudflare.md)
     with static R2 HTML and a website-activation strip until they pay. No HMAC token, no
     `/preview/{token}/`, no TTL, no 410-for-unknown-token. Guarding who can **pay** is not a
     goal; the URL is the sales surface. Integrity still refuses double activation and a
-    superseded 05-retry (same `website_address`, new publication on that prefix).
+    superseded 05-retry (same `website_prefix`, new publication on that prefix).
     (2026-08-23: link has no TTL / token 410. 2026-08-25: drop the token path.)
 
-16. **Unactivated tenant at confirm; website address at 07; activation upgrades** — confirm (01)
-    inserts a `tenants` row with `status=unactivated`, `clerk_org_id` null, `website_address`
+16. **Unactivated tenant at confirm; website prefix at 07; activation upgrades** — confirm (01)
+    inserts a `tenants` row with `status=unactivated`, `clerk_org_id` null, `website_prefix`
     null, and sets that `tenant_id` on the onboarding session and the business profile. 07
-    **reserves** `website_address` from `display_name` (collision: locality once, then sequential
+    **reserves** `website_prefix` from `display_name` (collision: locality once, then sequential
     `-2` / `-3`) and the `website_addresses` (`type=subdomain`) row. Website activation (08)
     **upgrades** the same tenant (Clerk org, owner membership, `status=active`). It does not
     insert a second tenant, does not first-write child `tenant_id`s, and does not invent the
     label. `/me` returns a tenant only when `status=active`; unactivated work is reached via the
     onboarding session token. Clerk organization 1-1 holds for active tenants only.
     (2026-08-23: numbered 01a / 07. Same day, later: find is 01; website activation is 08.
-    2026-08-25: `website_address` at 07 from `display_name`, not 08. Same day: collision tries
+    2026-08-25: `website_prefix` at 07 from `display_name`, not 08. Same day: collision tries
     locality before `-2`.)
 
 17. **Whoever pays becomes the owner** — unauthenticated visitors may Clerk sign-in/sign-up and

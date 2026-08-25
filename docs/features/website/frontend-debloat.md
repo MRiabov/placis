@@ -68,7 +68,7 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   edit history on open.
 - GET-after-PATCH that replaces the website editor projection (`useSaveEditorPage`
   `onSuccess` `setQueryData` of the full body).
-- `/v1/tenants/{website_address}/website/…` for the CMS.
+- `/v1/tenants/{website_prefix}/website/…` for the CMS.
 
 ## Retarget
 

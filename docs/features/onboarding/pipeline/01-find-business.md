@@ -27,7 +27,7 @@ Contractor submits business lookup on `/onboarding/find`
 ## Do
 
 1. Insert [unactivated tenant](../../other/auth/persistence.md): `tenants.status=unactivated`,
-   `clerk_org_id` null, `website_address` null, `name` = known legal/display name or empty.
+   `clerk_org_id` null, `website_prefix` null, `name` = known legal/display name or empty.
 2. Insert `onboarding_sessions`: `status=created` then immediately `client_interviewing`; unique
    `token`; `tenant_id` that tenant; `clerk_user_id` null; `channel` unset;
    `started_from` = `company_registry` / `google_maps_listing` / both via sources.
@@ -73,5 +73,5 @@ re-define them here.
 - Find mount never `POST`s.
 - 02 does not start without `online_research_consent_at`.
 - 02 does not start a 6th wave for this tenant inside 30 minutes.
-- No `website_pages` / `website_address` yet.
+- No `website_pages` / `website_prefix` yet.
 - `/me` still has no tenant (`status=unactivated`).

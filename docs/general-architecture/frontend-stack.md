@@ -17,7 +17,7 @@ Reuse and debloat; do not rebuild. Port index:
 | Folders | `src/generated/` (types); `src/features/onboarding/`; `src/features/cms/` |
 
 Website preview is **not** a `frontend-2` folder. The sales/live host is
-`apps/contractor-website` at the website preview host
+`apps/contractor-website` at the preview website address
 ([website Cloudflare](../features/website/cloudflare.md)): static HTML in R2, same app as live.
 `/onboarding/preview` is the wait carousel in this app, then the browser navigates to that host.
 Leftover `frontend-2/src/features/preview/` is predecessor CMS code to drop.

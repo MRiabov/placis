@@ -24,9 +24,9 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
    - DB: `business_research_runs` → `business_research_sources` + `google_maps_listings` when a place was selected.
 
 5. **Apply the website template + website preview** — `/onboarding/preview` SSE carousel, then
-   navigate to the website preview host when 07 has written `latest/` (copy done or
+   navigate to the preview website address when 07 has written `latest/` (copy done or
    ~15s cap).
-   - DB: unpublished `website_pages` / website sections / website slots; `tenants.website_address`;
+   - DB: unpublished `website_pages` / website sections / website slots; `tenants.website_prefix`;
      `website_addresses` (`type=subdomain`); `website_publications` v1 (`published_by=onboarding`,
      strip on); onboarding session `previewing`. Copy-generation job may still be running.
    - UI: host is static R2 HTML with the website-activation island.
@@ -42,7 +42,7 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
      `tenants.status=active`, `tenant_memberships.owner`; onboarding session `activated`;
      `website_publications` v2 strip off, v1 archived (neither is a website-rollback target).
    - UI: lands in `/cms/website`. Host stays up without the strip.
-   - Optional: open the website preview host in a clean storage (no `localStorage`)
+   - Optional: open the preview website address in a clean storage (no `localStorage`)
      and still pay.
 
 8. **Isolation** — a second onboarding session (second unactivated tenant).

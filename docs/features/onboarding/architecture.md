@@ -41,7 +41,7 @@ publication).
 ## End of onboarding: paid, host stays up
 
 Website activation (08) **upgrades** the existing unactivated tenant (Clerk organization, owner
-membership, `status=active`). It does not create a tenant and does not invent `website_address`
+membership, `status=active`). It does not create a tenant and does not invent `website_prefix`
 (07 already reserved it). 08 writes website publication v2 without the strip. The host stays up.
 Owner CMS website publication is v3+.
 
