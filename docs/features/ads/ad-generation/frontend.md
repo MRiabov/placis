@@ -50,13 +50,12 @@ expandable steps, both visible immediately** — step 1 "About the ad" (open by 
 questions), step 2 "Review" (visible but locked — "Complete step 1 to unlock" — and
 expands once step 1 is complete; step 1 can be returned to), then the approve block when the ad is ad ready to post.
 The combobox is closed by default with a conditional "create new". No ad-format or ad-set jargon.
-The mock is skinned with the app's actual tokens, mirrored verbatim from
-the CMS and app token stylesheets in `frontend-2`: **white canvas
-background** like the rest of the app, near-black accent, zinc neutrals, status colors
-(error/success/warning), 8/12/16 radii, Satoshi type (the app is switching to Satoshi
-globally; the demo uses it too, falling back to Switzer/Inter when the font file isn't
-available locally). The real implementation imports the app globals directly — Ads
-must not duplicate the palette.
+The mock is skinned to match the live CMS home composer (`.cms-dashboard-prompt` in
+`frontend-2`): **white canvas**, Satoshi / Helvetica Neue / Arial, `#e1e1e1` hairlines,
+`#fafafa` section headers (not blue-gray wizard chrome), 28px composer radius and the
+prompt's soft shadow on the accordion and ad cards, sunken 10px fields, 36px controls,
+near-black accent. The real implementation imports the app globals and should reuse the
+dashboard prompt chrome rather than duplicate a palette.
 
 ## Routes
 
