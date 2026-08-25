@@ -509,6 +509,7 @@
   <div class="viewtabs">
     <button class="viewtab on" data-v="list">My ads</button>
     <button class="viewtab" data-v="flow">New ad</button>
+    <button class="viewtab" data-v="review">Review</button>
   </div>
 
   <!-- ===== list of existing ads ===== -->
@@ -845,10 +846,18 @@
   const viewDetail = document.getElementById("viewDetail");
   const vtabs = [...document.querySelectorAll(".viewtab")];
   const show = v => {
+    const onFlow = v === "flow" || v === "review";
     vtabs.forEach(t => t.classList.toggle("on", t.dataset.v === v || (v === "detail" && t.dataset.v === "list")));
     viewList.classList.toggle("placeholder", v !== "list");
-    viewFlow.classList.toggle("placeholder", v !== "flow");
+    viewFlow.classList.toggle("placeholder", !onFlow);
     viewDetail.classList.toggle("placeholder", v !== "detail");
+    if (v === "review") {
+      unlockReview();
+      window.scrollTo({ top: 0 });
+      f2.scrollIntoView({ block: "start" });
+      return;
+    }
+    if (v === "flow") lockReview();
     window.scrollTo({ top: 0 });
   };
   vtabs.forEach(t => t.addEventListener("click", () => show(t.dataset.v)));
@@ -1011,10 +1020,9 @@
     ld.classList.add("show");
     setTimeout(() => {
       ld.classList.remove("show");
-      f2.classList.remove("locked");
-      f2.classList.add("open");
-      f2.querySelector(".state").textContent = "";
-      window.scrollTo({ top: f2.offsetTop - 100, behavior: "smooth" });
+      unlockReview();
+      vtabs.forEach(t => t.classList.toggle("on", t.dataset.v === "review"));
+      window.scrollTo({ top: f2.offsetTop - 80, behavior: "smooth" });
     }, 2500);
   });
   // once unlocked, form 2 can be collapsed/expanded and form 1 reopened
@@ -1023,6 +1031,11 @@
     f2.classList.toggle("open");
   });
 
+  function lockReview() {
+    f2.classList.add("locked");
+    f2.classList.remove("open");
+    f2.querySelector(".state").textContent = "Complete step 1 to unlock";
+  }
   function unlockReview() {
     const svc = document.querySelector("#f1 .combo input");
     if (svc && !svc.value.trim()) svc.value = "Roofing replacement";
@@ -1036,10 +1049,10 @@
     const tabs = document.querySelector(".viewtabs");
     if (tabs) tabs.style.display = "none";
   }
-  if (scene === "flow" || scene === "review") show("flow");
+  if (scene === "review") show("review");
+  else if (scene === "flow") show("flow");
   if (scene === "detail") show("detail");
   if (scene === "compact") { show("list"); adcards.classList.add("compact"); compactBtn.textContent = "Show large"; }
-  if (scene === "review") unlockReview();
   window.__SCREENSHOT_READY = true;
 </script>
 </body>
