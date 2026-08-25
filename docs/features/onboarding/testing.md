@@ -5,7 +5,7 @@ One full-stack E2E: find → review → client interview → apply the website t
 Postgres; Google Maps / company registry / Facebook / crawl and the LLM are faked. DB
 asserts use [persistence.md](persistence.md) and [details](../other/details/persistence.md).
 
-1. **Find** — country, registry and/or Google Maps, online research consent, Confirm.
+1. **Find** — country, registry and/or Google Maps, online research consent, business lookup.
    - UI: `/onboarding/find` → Review.
    - DB: `tenants` (`status=unactivated`); `onboarding_sessions` (`status=client_interviewing`, token,
      `online_research_consent_at`, `tenant_id` set); `business_profiles.tenant_id` matches the onboarding session.
@@ -23,8 +23,9 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
    - DB: `business_research_runs` → `business_research_sources` + `google_maps_listings` when a place was selected.
 
-5. **Apply the website template + website preview** — `/onboarding/preview`, then View website as soon as the website preview
-   exists (do not wait for copy).
+5. **Apply the website template + website preview** — short progress screen in `frontend-2`, then
+   View website as soon as the website preview exists (do not wait for copy). Pay is on
+   `/preview/{token}/`.
    - DB: unpublished `website_pages` / website sections / website slots; `website_previews` (`token_hash`, `status=active`);
      onboarding session `previewing`. Copy-generation job may still be running.
    - UI: website preview renders the current unpublished website.
@@ -34,7 +35,7 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
    - Failure: unpublished website from 05 still has a website preview and can be activated.
 
 7. **Website activation** — pay on the website preview (Clerk testing token + Stripe test webhook).
-   - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as confirm, now `tenants.status=active`,
+   - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as business lookup, now `tenants.status=active`,
      `tenant_memberships.owner`, `website_addresses` (`type=subdomain`); onboarding session `activated`;
      **no** `website_publications`.
    - UI: lands in `/cms/website`.

@@ -6,10 +6,10 @@ that drives a website and ads.
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — decision record
 - [architecture.md](architecture.md) — pipeline, SSE, where things stand
-- [pipeline](pipeline/README.md) — one doc per step (DAG: 01 find, 02 research, 03 confirm data,
+- [pipeline](pipeline/README.md) — one doc per step (DAG: 01 find, 02 research, 03 Review,
   04a/04b interview, build-profile, 05–08)
 - [persistence.md](persistence.md) — onboarding sessions, business research, website preview, website activation
-- [api.md](api.md) — HTTP (Confirm, resume, SSE, website activation)
+- [api.md](api.md) — HTTP (business lookup, resume, SSE, website activation)
 - [technical-implementation.md](technical-implementation.md) — the technical plan (flow, pipeline)
 - [frontend.md](frontend.md) — the onboarding screens and fields
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget

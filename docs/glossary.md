@@ -315,9 +315,20 @@ Distinct from: Onboarding session (the persisted run).
 
 ---
 
+#### Business lookup
+
+On Find: submit the picked company registry record and/or Google Maps listing. One command:
+insert the unactivated tenant and onboarding session, record online research consent, enqueue
+business research if under the wave cap. Distinct from typeahead search, from business research,
+from Review, from picking a research conflict. Never say Confirm for this command.
+
+In code: `POST /v1/onboarding-sessions/business-lookup`.
+
+---
+
 #### Online research consent
 
-The one acknowledgement, on find (a checkbox required before Confirm), that Placis may collect
+The one acknowledgement, on find (a checkbox required on business lookup), that Placis may collect
 public information about the business to prepare the website preview. Not a client interview
 question. Never say bare “consent”.
 
@@ -1047,6 +1058,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | menu (website) / header / navigation | top menu or footer |
 | version (website, details) / versioned (website, details) / snapshot (website, details) | website version or profile history |
 | consent (onboarding) | online research consent |
+| consent confirm | business lookup |
 | interview (onboarding) | client interview |
 | research (onboarding) | business research |
 | preview (website) | website preview |

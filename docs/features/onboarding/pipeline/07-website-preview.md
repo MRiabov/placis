@@ -30,9 +30,10 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
    **No TTL.** 410 only when the token is unknown, **superseded**, or already **activated**.
 2. `status=active` while it is the current website preview. Applying the website template again
    **supersedes** the old one (05 retry), not 06.
-3. Empty details show as website placeholders. Onboarding `/onboarding/preview` shows SSE then
-   **View website** once the plaintext token is returned (once).
-4. **Pay / website activation** is on that website preview (08) and does not wait for 06.
+3. Empty details show as website placeholders. The short progress screen in `frontend-2` shows SSE
+   then **View website** once the plaintext token is returned (once).
+4. **Pay / website activation** is on that website preview (`/preview/{token}/`, 08) and does not
+   wait for 06.
 
 SSE is the onboarding session stream. The website preview itself is not an SSE endpoint.
 

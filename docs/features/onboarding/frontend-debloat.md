@@ -21,7 +21,7 @@ Default client interview is **text**. Voice is listed and deferred
   (`PreviewRoute.tsx`, `TargetedPreviewView.tsx`, `PayToClaimStrip.tsx`,
   `api/preview.ts`). Drop that folder; website preview is `apps/contractor-website`
   in website preview mode ([frontend stack](../../general-architecture/frontend-stack.md)).
-  Keep the website-activation strip on `/onboarding/preview`.
+  Website-activation strip is on `/preview/{token}/`, not a `frontend-2` route.
 - Router: `/onboarding`, `/onboarding/$step`, `/preview/$token/$module` in
   `frontend-2/src/app/router/index.tsx`.
 - Don't say setup: API `frontend-2/src/features/setup/api/setup.ts`,
@@ -33,15 +33,15 @@ Default client interview is **text**. Voice is listed and deferred
 ## Keep
 
 - Screens: `/onboarding/find`, `/onboarding/review`, `/onboarding/interview`,
-  `/onboarding/preview`.
+  short progress screen (SSE). Website preview + pay: `/preview/{token}/` on the contractor website.
 - `BusinessSourcePanel` (country, company registry, optional Google Maps, online
-  research consent). Confirm creates the onboarding session **once**.
+  research consent). Business lookup creates the onboarding session **once**.
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist`.
 - Progress timeline (`PreviewProgressPanels` / apply-the-website-template panel).
-  **View website** as soon as the website preview exists (contractor-website preview mode).
-- Stripe website-activation strip on `/onboarding/preview`. Success → `/cms/website`.
-  Drop leftover `TargetedPreviewView`.
+  **View website** as soon as the website preview exists (`/preview/{token}/`).
+- Stripe website-activation strip on `/preview/{token}/`. Success → `/cms/website`.
+  Drop leftover `TargetedPreviewView` and `frontend-2` `/onboarding/preview`.
 - Resume: `localStorage` holds the onboarding session token + last UI step;
   `GET …/profile` restores. Restore failure does not `POST` a new onboarding session.
 
@@ -65,8 +65,8 @@ Default client interview is **text**. Voice is listed and deferred
 
 | Today | Constrained API |
 | --- | --- |
-| Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding-sessions/confirm` |
-| Don't say setup: `…/from-google-place` | collapsed into Confirm (no `from-google-maps-listing` URL) |
+| Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding-sessions/business-lookup` |
+| Don't say setup: `…/from-google-place` | collapsed into business lookup (no `from-google-maps-listing` URL) |
 | Company registry search, Google Maps autocomplete | same nested under onboarding sessions |
 | `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations |
 | Text client interview autosave + submissions | client interview autosave + submissions + complete |
@@ -74,8 +74,8 @@ Default client interview is **text**. Voice is listed and deferred
 | Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | `/v1/website-previews/{token}/activate` / `activation-checkout` / `activation-status` |
 | Don't say claim: `GET …/claim/status` | activation-status |
 
-SSE drives `/onboarding/preview` only. The `/preview/{token}` route reloads; it is
-not an SSE endpoint.
+SSE drives the short progress screen (and Review while 02 runs). The `/preview/{token}` route
+reloads; it is not an SSE endpoint.
 
 ## Don't say / rename
 
@@ -84,7 +84,7 @@ not an SSE endpoint.
 - Don't say setup: `createGuidedSetupSession` / `getSetupProfile` → onboarding session helpers.
 - Don't say setup: `localStorage` key `placis.contractorOnboarding.setupSessionId` → onboarding session token key.
 - Don't say shell: `OnboardingShell` → onboarding layout.
-- Don't say claim: `PayToClaimStrip` → website-activation strip; copy is website activation, never claim.
+- Don't say claim: `PayToClaimStrip` → website-activation strip on `/preview/{token}/`; copy is website activation, never claim.
 - Don't say session (bare): always **onboarding session** (or sign-in / client interview).
 
 ## Tests

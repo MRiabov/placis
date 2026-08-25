@@ -6,7 +6,7 @@
 - **Invoke**: `POST .../activation/checkout`; deliver `checkout.session.completed` (Stripe SDK
   signature against a test key); replay it; attempt website activation on a superseded website preview.
 - **Assert**: `website_activations` written; `stripe_events` stored; the **existing** `tenants` row
-  (same `tenant_id` as confirm) now has `clerk_org_id` and `status=active`; `tenant_memberships`
+  (same `tenant_id` as business lookup) now has `clerk_org_id` and `status=active`; `tenant_memberships`
   (`owner`) + `website_addresses` (`type=subdomain`); onboarding session `activated` and website preview `activated`; no second tenant; **no** `website_publications`; replay does not activate
   twice; superseded website preview cannot be activated; an old website preview link still
   activates when the website preview is still `active`; in-flight 06 continues.

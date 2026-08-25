@@ -1,13 +1,14 @@
 # 01 — Find the business
 
 Unauthenticated. Country (Ireland / United Kingdom / United States; default Ireland), find the
-business, online research consent. Confirm creates an unactivated tenant and the onboarding session, then returns immediately. Business research (02) starts in the background. UI lands on
-confirm data (03).
+business, online research consent. Business lookup creates an unactivated tenant and the
+onboarding session, then returns immediately. Business research (02) starts in the background.
+UI lands on Review (03).
 
 ## Trigger
 
-Contractor submits Confirm on `/onboarding/find` (`POST /v1/onboarding-sessions/confirm`) when this
-browser has no stored token.
+Contractor submits business lookup on `/onboarding/find`
+(`POST /v1/onboarding-sessions/business-lookup`) when this browser has no stored token.
 
 ## Pre
 
@@ -38,7 +39,7 @@ browser has no stored token.
    ([build-profile](build-profile.md)).
 6. Enqueue 02 **if** this `tenant_id` has fewer than 5 business-research waves in the last 30
    minutes ([02](02-business-research.md)). Otherwise persist sources, do not enqueue 02, and
-   expose `research_wait_until`. Navigate UI to confirm data (`/onboarding/review`) either way.
+   expose `research_wait_until`. Navigate UI to Review (`/onboarding/review`) either way.
    Attaching or changing sources on this onboarding session later is a new wave (same cap).
 
 Lookups are debounced (no request per keystroke). Country is a search parameter, not an
@@ -59,7 +60,7 @@ re-define them here.
 - Registry/Maps lookup error → show miss; do not invent a business.
 - Restore path: stored token + `GET .../profile` failing → loading placeholder; keep the token;
   retry; do not `POST`.
-- 02 wave cap ([02](02-business-research.md)): Confirm still succeeds; 02 is not enqueued;
+- 02 wave cap ([02](02-business-research.md)): business lookup still succeeds; 02 is not enqueued;
   `research_wait_until` is set. Not this Fail.
 
 ## Out
@@ -68,7 +69,7 @@ re-define them here.
 
 ## Invariants
 
-- Confirm runs once per browser token.
+- Business lookup runs once per browser token.
 - Find mount never `POST`s.
 - 02 does not start without `online_research_consent_at`.
 - 02 does not start a 6th wave for this tenant inside 30 minutes.

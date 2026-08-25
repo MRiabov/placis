@@ -18,7 +18,7 @@ decision + date) instead of silently replacing the old entry.
    business research (we'll look the business up and use the public information). No per-purpose
    consent records, versioning, or withdrawal machinery — that was over-engineering, not a real
    requirement.
-   (2026-08-23: the acknowledgement is a checkbox on find (01), required before Confirm; not a
+   (2026-08-23: the acknowledgement is a checkbox on find (01), required on business lookup; not a
    client interview question.)
 
 4. **Business research is an interface + typed output** — Google Maps, company registry, Facebook,
@@ -107,7 +107,7 @@ decision + date) instead of silently replacing the old entry.
 
 14. **Resume is same-browser `localStorage` + the existing onboarding session token** —
     restore with `GET .../profile`. No server-side resume token. Clerk still starts at
-    website activation (`clerk_user_id` stays null until then). Confirm creates an onboarding session
+    website activation (`clerk_user_id` stays null until then). Business lookup creates an onboarding session
     once; do not `POST` on Find mount and do not replace the row. A new voice realtime connection is
     seeded from persisted profile, checklist, extra notes, and last `update_interview_plan`.
     (2026-08-23.)
@@ -117,7 +117,7 @@ decision + date) instead of silently replacing the old entry.
     or already-activated tokens. Drop `expires_at` / status `expired`. (2026-08-23. Earlier: HMAC
     default 14 days, then 410 and activation refused.)
 
-16. **Unactivated tenant at confirm; activation upgrades** — confirm (01) inserts a `tenants` row
+16. **Unactivated tenant at business lookup; activation upgrades** — business lookup (01) inserts a `tenants` row
     with `status=unactivated`, `clerk_org_id` null, `website_address` null, and sets that
     `tenant_id` on the onboarding session and the business profile. Website activation (08)
     **upgrades** the same row (Clerk org, owner membership, reserved website address,
