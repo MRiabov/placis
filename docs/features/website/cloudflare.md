@@ -183,19 +183,20 @@ hostname’s certificate ready. Empty host = no `latest/` yet (before 07).
 
 While unactivated, `{website_prefix}.preview.placis.com` **is** the website preview: static
 `latest/` + website-activation strip island. No `/preview/{token}/`. No
-`GET /api/v1/public/site/resolve`. After 08 do not call that host website preview.
+`GET /v1/public/site/resolve`. After 08 do not call that host website preview.
 
 The strip is the website-form pattern: shared Worker static assets hydrate Clerk (sign-in/sign-up
-modal, publishable key in the shared island) and Stripe (POST public `activation/checkout` to
-`cmd/api`; CORS by `Host`). Do not bake a Checkout Session URL into R2 HTML. 08 rewrites without
+modal, publishable key in the shared island) and Stripe (POST public checkout to
+`cmd/api`; CORS by `Host` / `website_prefix` — not `/v1/website-previews/{token}/…`). Do not bake a Checkout Session URL into R2 HTML. 08 rewrites without
 the island and purges Cache.
 
 `/onboarding/preview` is the wait carousel in `frontend-2`, not this host.
 
 ## Website form POST
 
-The React island posts to `cmd/api` (`POST /v1/website-forms/{form_id}/submissions`). CORS allows the contractor
-`Host`. The Worker does not render or proxy that POST.
+The React island posts to `POST /v1/website-forms/{form_id}/submissions` ([leads
+HTTP](../other/leads/api.md)). CORS allows the contractor `Host`. The Worker does not render or
+proxy that POST.
 
 ## Connect website address (CMS)
 

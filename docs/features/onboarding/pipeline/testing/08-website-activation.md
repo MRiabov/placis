@@ -3,7 +3,7 @@
 - **Setup**: 07 has written `latest/` (strip on); a Clerk testing-token contractor (Clerk organization
   may be missing). Website copy generation may still be running, or may have failed —
   neither blocks website activation.
-- **Invoke**: `POST .../activation/checkout`; deliver `checkout.session.completed` (Stripe SDK
+- **Invoke**: public checkout POST (CORS by `Host` / `website_prefix`); deliver `checkout.session.completed` (Stripe SDK
   signature against a test key); replay it; attempt a second payer after the first verified
   completion.
 - **Assert**: `website_activations` written; `stripe_events` stored; the **existing** `tenants` row

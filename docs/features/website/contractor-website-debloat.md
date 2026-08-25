@@ -31,7 +31,7 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - Website preview: leftover `pages/preview/[previewToken]/[...path].astro` — drop.
 - R2 + Cache: `middleware.ts` (skips `/preview/`).
 - One island module: Don't say public site: `PublicSiteClientBehaviors.astro`.
-- `lib/publicSiteApi.ts` — still calls predecessor `GET /api/v1/preview/{token}/module/website`
+- `lib/publicSiteApi.ts` — still calls predecessor `GET /v1/preview/{token}/module/website`
   and leftover predecessor types. Leftover env names remain. Retarget in
   [port-contractor-website.md](port-contractor-website.md).
 
@@ -67,8 +67,8 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - Live serve: Cache then R2 `latest/`. Go never emits HTML. R2 miss is 404.
 - Website-activation strip island on unactivated hosts (Clerk + Stripe POST
   `activation/checkout`). 08 HTML has no strip.
-- Drop leftover `/preview/{token}/` and `GET /api/v1/public/site/resolve`.
-- Website form POST to `/api/v1/public/forms/{id}/submit` (and uploads).
+- Drop leftover `/preview/{token}/` and `GET /v1/public/site/resolve`.
+- Website form POST to `POST /v1/website-forms/{form_id}/submissions` (and uploads).
 - Islands for top menu / carousel **once**.
 
 ## Delete / still cut
@@ -86,7 +86,7 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - A second HTML engine or per-contractor Cloudflare deploy
   ([cloudflare.md](cloudflare.md)).
 - Predecessor OpenAPI, a full-CMS typegen, leftover predecessor types,
-  casts, or `/api/v1/preview/{token}/module/website`.
+  casts, or `/v1/preview/{token}/module/website`.
 - Don't say public site as the app name. Don't say private app for `frontend-2`.
 
 ## Retarget
@@ -94,11 +94,11 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 | Today | Constrained contract |
 | --- | --- |
 | One concatenated `styles.css` (every preset) | CSS owned under `src/themes/<preset>/`; shared `src/styles/` only for CSS not gated on a preset class. Live publication links or inlines **that** preset only. CMS may load the selected preset (or all, if style switching must be instant). |
-| `GET /api/v1/preview/{token}/module/website` | drop leftover resolve. No predecessor casts. |
-| `formSubmitBasePath` → `/api/v1/public/forms` | same group; website lead capture |
+| `GET /v1/preview/{token}/module/website` | drop leftover resolve. No predecessor casts. |
+| `formSubmitBasePath` → `/api/v1/public/forms` | `POST /v1/website-forms/{form_id}/submissions` |
 | Don't say blueprint: `packages/.../blueprints/` | `catalog/` website templates + website component contracts |
 | `JsonObject` props | per-`component_id` catalog struct |
-| `tenant_slug` | website address / tenant id as the Go DTO names it |
+| `tenant_slug` | `website_prefix` / tenant id as the Go DTO names it |
 
 ## Don't say / rename
 

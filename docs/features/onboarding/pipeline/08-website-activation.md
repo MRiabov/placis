@@ -2,7 +2,8 @@
 
 The contractor pays on the **preview website address** (FQDN in
 [cloudflare.md](../../website/cloudflare.md)). Clerk sign-in/sign-up if needed (modal island), then
-Stripe checkout (island POSTs public `activation/checkout` to `cmd/api`; do not bake a Checkout Session
+Stripe checkout (island POSTs public checkout to `cmd/api`, CORS by `Host` / `website_prefix`;
+not `/v1/website-previews/{token}/…`; do not bake a Checkout Session
 URL into R2 HTML). Website activation **upgrades** the existing unactivated tenant
 (`status=active`); it does not insert a second tenant. Does **not** wait for 06.
 

@@ -19,13 +19,10 @@ block website activation. 07 waits copy-done or the wait cap, then writes the ho
 
 ## HTTP
 
-- `POST /api/v1/onboarding-sessions` (+ `.../from-google-maps-listing`)
-- company-registry search, Google Maps autocomplete
-- profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/details`)
-- client interview (autosave + submissions)
-- business research runs (list/get), apply-the-website-template runs (list/get/cancel)
-- website activation checkout (public, Host / `website_prefix`)
-- website publication / website rollback: owned by the [website feature](../website/technical-implementation.md), not this API surface
+Routes: [api.md](api.md). Confirm is `POST /v1/onboarding-sessions/confirm` (no bare collection
+POST). Website activation checkout is public, CORS by `Host` / `website_prefix` — not
+`/v1/website-previews/{token}/…`. Website publication / website rollback: [website
+HTTP](../website/api.md).
 
 Website publication of 07/08 is the same write as the website editor’s website publication;
 website rollback of onboarding rows is refused

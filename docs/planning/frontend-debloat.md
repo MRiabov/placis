@@ -22,7 +22,7 @@ or unconstrained JSON. Contractor website API cutover:
 | [media library](../features/other/media/frontend-debloat.md) | Media library workspace item + `/cms/media` |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, one Clerk organization provision, `/me` |
 | [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
-| [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover: internal render + website form POST; no predecessor OpenAPI |
+| [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover: website form POST + `website.v1`; no predecessor OpenAPI |
 | [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
 
 No leads instruction file: website forms persist website leads; there is no CMS leads
@@ -36,15 +36,15 @@ console.
   second schema to generate from.
 - Keep as Go DTOs in current glossary names (fields may change): `/me`, health,
   onboarding session + profile + events stream (SSE outside huma), website editor
-  GET/PATCH, publication, Connect website address, website preview resolve,
+  GET/PATCH, publication, Connect website address,
   07 website preview (host), website activation checkout / status, media library, ads when that slice
   exists. Contractor website public routes: website form submit
   (see [port-contractor-website.md](../features/website/port-contractor-website.md)).
 - Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
-  `/api/v1/tenants/{website_prefix}/website/…`, blog, careers,
+  `/v1/tenants/{website_prefix}/website/…`, blog, careers,
   website-template-apply leftovers, unconstrained JSON in UI-facing schemas.
   Don't say setup / public site / shell / blueprint / claim: predecessor names.
-  Don't say preview: predecessor module path (`/api/v1/preview/{token}/module/website`)
+  Don't say preview: predecessor module path (`/v1/preview/{token}/module/website`)
   and leftover predecessor hand types. “Genuinely good” means the **behavior** is still
   in the feature spec. Copy Python field lists only when that feature’s
   `technical-implementation.md` already says so.
@@ -58,7 +58,7 @@ console.
 - CMS calls `/v1/website/editor/…` only. Do not call
   `/v1/tenants/{website_prefix}/website/…`.
 - Onboarding calls `/v1/onboarding-sessions/business-lookup` and
-  `GET …/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`).
+  `GET /v1/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`).
   Restore is `GET …/profile`.
 - `/onboarding/preview` is the SSE website-section carousel; the shareable host is
   the preview website address (not `/preview/{token}/…`, not an SSE endpoint). Website

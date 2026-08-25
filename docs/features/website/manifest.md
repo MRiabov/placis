@@ -52,7 +52,7 @@ Per website section:
 
 ## Keep out
 
-- a tenant website-address column or path aliases (the website address is the resolve key)
+- a tenant website-prefix column or path aliases (the website prefix is the R2 key)
 - dual `components` and `sections` at root or page — one list: `sections`
 - root-level `sections` used as a single-page fallback
 - blog / careers collections (deferred)
