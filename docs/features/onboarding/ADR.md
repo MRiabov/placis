@@ -138,14 +138,15 @@ decision + date) instead of silently replacing the old entry.
 16. **Unactivated tenant at confirm; website address at 07; activation upgrades** — confirm (01)
     inserts a `tenants` row with `status=unactivated`, `clerk_org_id` null, `website_address`
     null, and sets that `tenant_id` on the onboarding session and the business profile. 07
-    **reserves** `website_address` from `display_name` (sequential `-2` / `-3` on collision) and
-    the `website_addresses` (`type=subdomain`) row. Website activation (08) **upgrades** the same
-    tenant (Clerk org, owner membership, `status=active`). It does not insert a second tenant,
-    does not first-write child `tenant_id`s, and does not invent the label. `/me` returns a
-    tenant only when `status=active`; unactivated work is reached via the onboarding session
-    token. Clerk organization 1-1 holds for active tenants only.
+    **reserves** `website_address` from `display_name` (collision: locality once, then sequential
+    `-2` / `-3`) and the `website_addresses` (`type=subdomain`) row. Website activation (08)
+    **upgrades** the same tenant (Clerk org, owner membership, `status=active`). It does not
+    insert a second tenant, does not first-write child `tenant_id`s, and does not invent the
+    label. `/me` returns a tenant only when `status=active`; unactivated work is reached via the
+    onboarding session token. Clerk organization 1-1 holds for active tenants only.
     (2026-08-23: numbered 01a / 07. Same day, later: find is 01; website activation is 08.
-    2026-08-25: `website_address` at 07 from `display_name`, not 08.)
+    2026-08-25: `website_address` at 07 from `display_name`, not 08. Same day: collision tries
+    locality before `-2`.)
 
 17. **Whoever pays becomes the owner** — unauthenticated visitors may Clerk sign-in/sign-up and
     pay on the host. First verified Stripe `checkout.session.completed` wins. Later completions
