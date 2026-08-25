@@ -172,7 +172,7 @@
   h1 { font-size: 21px; font-weight: 600; letter-spacing: -0.025em; margin: 0; }
   .hint { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0 0 20px; }
   .field { margin-bottom: 20px; }
-  .field label {
+  .field > label {
     display: block;
     color: var(--muted);
     font-size: 11px;
@@ -316,10 +316,25 @@
   .q:first-child { margin-top: 0; }
   .q .sub { color: var(--muted); font-size: 12px; font-weight: 400; letter-spacing: 0; }
 
-  .qlist { border: 1px solid var(--prompt-border); border-radius: 12px; overflow: hidden; margin-bottom: 8px; background: #fff; }
-  .qrow { display: flex; align-items: center; gap: 10px; padding: 11px 14px; font-size: 14px; border-bottom: 1px solid var(--prompt-hairline); cursor: pointer; }
-  .qrow:last-child { border-bottom: 0; }
-  .qrow .qtype { flex: 1; }
+  .qlist {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    margin-bottom: 8px;
+  }
+  .qrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .qrow .qtype { flex: none; }
   .qrow input { accent-color: var(--accent); }
 
   .accwrap {
