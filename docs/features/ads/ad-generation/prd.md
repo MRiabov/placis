@@ -191,7 +191,8 @@ Ads under `/cms/ads` should expose:
 2. create-an-ad flow: offer/goal and service focus picked from the contractor's known data, ideal customer profile
    (default married couples aged 30-40), ad lead form, and budget/schedule shown but disabled until ad posting; then
    generation runs and the ad opens for review
-3. variant tabs for square, portrait, carousel, and story ad formats
+3. variant tabs for the ad's family only: posts (square, portrait, carousel) or stories,
+   never mixed
 4. image selection from the media library and projects, with per-ad-format crop
    and focal point controls
 5. copy fields with headline, primary text, description, and button label, each with live
@@ -213,6 +214,9 @@ The first implementation produces these ad formats, matching common Facebook siz
 2. **Portrait feed image** (`4:5`) — single image, recommended mobile feed ratio.
 3. **Carousel** — a gallery of 2-10 square cards, each card an approved image with its own crop.
 4. **Story/reel** (`9:16`) — vertical full-screen format.
+
+Square feed, Portrait feed, and Carousel are **posts**. Story is **stories**. One ad is
+posts or stories, never both ([ADR 32](ADR.md)).
 
 All crops are non-destructive: the source item in the media library is never modified, and each
 variant stores its own crop/focal metadata or references a derived crop variant. Ad formats with

@@ -136,10 +136,12 @@ The questions and review content:
 5. **Text** — headline, primary text, short label, button label. Live character counts against
    the shared limits; button label from the fixed set.
 6. **Ad formats** — format-accurate mocks rendered from the backend response, not hardcoded. Each
-   card corresponds to one variant the backend returns. Only ad formats with approved
-   images appear; empty ad formats are omitted, never rendered as empty slots. Labels are
-   owner-facing ("Square feed", "Portrait feed", "Carousel", "Story") — no ratios. If no variants exist yet, the block
-   shows a brief note instead of empty cards.
+   card corresponds to one variant the backend returns. An ad is **posts or stories, never
+   both** ([ADR 32](ADR.md)): posts are Square feed, Portrait feed, and Carousel; stories are
+   Story. The preview shows only the family this ad belongs to — never Carousel next to Story.
+   Only ad formats with approved images appear; empty ad formats are omitted, never rendered as
+   empty slots. Labels are owner-facing ("Square feed", "Portrait feed", "Carousel", "Story") —
+   no ratios. If no variants exist yet, the block shows a brief note instead of empty cards.
 
 Actions:
 
