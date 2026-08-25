@@ -1,7 +1,7 @@
 # 06 — Website copy generation
 
 Async. After 05. Writes headlines, body, CTAs, SEO into **existing** website slots. Same website
-assistant tools as the CMS, **continuous + instant apply**, no chat UI. Does not block 07 or 08.
+assistant tools as the CMS, **continuous + instant apply**, no chat UI. Does not block 08. 07 waits copy-done or the wait cap, not the full 06 job if the cap hits first.
 
 ## Trigger
 
@@ -17,8 +17,9 @@ start is 409.
 ## Must not
 
 - `create_page` (05 already applied the website page set).
-- Block 07 or 08.
-- Supersede the website preview.
+- Block 08.
+- Wait past 07’s cap to “finish” before the host can exist.
+- Supersede the website preview (06 does not change `website_address` or replace 07’s row).
 - Set website slot `approved`. Website publication is website-level, not website slot `published`. Publication
   requires approved **media library** items, not approved copy website slots.
 - Bake raw detail values into copy that should stay a token (`{{business_name}}`,
@@ -41,17 +42,21 @@ start is 409.
 ## Persist
 
 Updates to existing `website_slots` and website page SEO columns; `ai_generations` for tool batches. No
-`website_publications`. Onboarding session status stays `previewing` (set by 05+07). Progress events on the
-onboarding session stream.
+`website_publications` from this job. Onboarding session status is `applying_website_template` until
+07, then `previewing`. Progress events on the onboarding session stream (complete website sections
+join the `/onboarding/preview` carousel). After they have landed on the host, further 06 writes do
+**not** live-update R2.
 
 ## Fail
 
-Keep the unpublished website from 05. Onboarding session stays `previewing`. Retry is safe (River
-key; safe to retry). Copy fail must not fail 05 or block 08.
+Keep the unpublished website from 05. Onboarding session stays `applying_website_template` or
+`previewing`. Retry is safe (River key; safe to retry). Copy fail must not fail 05 or block 08.
+07 still writes current unpublished rows if the cap elapsed.
 
 ## Out
 
-07 already issued (or issues) the website preview. The website preview re-renders current unpublished rows.
+07 writes (or already wrote) the host from unpublished rows at wait-end. The contractor host is
+static; it does not re-render as this job continues.
 
 ## Invariants
 

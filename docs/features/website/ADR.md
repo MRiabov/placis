@@ -35,7 +35,10 @@ Status: decided (2026-08-16, product owner + engineering).
 
 7. **Website publication is kept and can be rolled back** — website publication creates a
    `website_publications` row (a published website copy); website rollback reactivates an earlier
-   website publication without deleting profile history.
+   **owner** website publication without deleting profile history. Onboarding-written rows
+   (`published_by=onboarding`, including 07 v1, 08 v2, and 05-retry writes) are never
+   website-rollback targets.
+   (2026-08-16; onboarding drafts excluded 2026-08-25)
 
 8. **Deferred: blog posts + careers** — no `blog_post` website page type or `website_career_*`
    tables in the first pass; re-add only when needed.
@@ -85,11 +88,12 @@ Status: decided (2026-08-16, product owner + engineering).
     name. The website component package is keep-and-cut; the Worker is write-thin against
     this serve path (live GET never calls Go). Remaining live-site work is R2 `latest/`,
     website publication HTML, Custom Hostnames, and Connect website address. Website
-    publication is not a Cloudflare deploy. Website preview is the only per-request render.
+    publication is not a Cloudflare deploy. There is no per-request unpublished render.
     Custom website address uses Custom Hostnames, not Pages. See
     [cloudflare.md](cloudflare.md), [contractor-website-debloat.md](contractor-website-debloat.md),
     [port-contractor-website.md](port-contractor-website.md), and ADR 18–20.
-    (2026-08-20; edge locked 2026-08-21; imported 2026-08-23; Worker write-thin 2026-08-23)
+    (2026-08-20; edge locked 2026-08-21; imported 2026-08-23; Worker write-thin 2026-08-23;
+    token preview dropped 2026-08-25)
 
 16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
     Global `website_certification_definitions`; tenant selections. Reviews stay
@@ -102,16 +106,19 @@ Status: decided (2026-08-16, product owner + engineering).
 
 18. **Live GET is Cache then R2 only** — website publication prebuilds HTML into
     `sites/{website_address}/latest/`. A cache miss still reads R2. Missing object is 404, not a
-    render from Postgres. Website preview is Worker internal render (and tests hit
-    `/preview/{token}/`). **Do not create** `GET /v1/public/site/resolve`.
-    (2026-08-21)
+    render from Postgres. Drop leftover `GET /api/v1/public/site/resolve` (it was the token
+    website preview). Tests assert R2 keys, not resolve.
+    (2026-08-21; token preview dropped 2026-08-25)
 
-19. **R2 tree is keyed by the website address** — `tenants.website_address`, fixed at
-    website activation. Custom website address maps `sites/hosts/{hostname}` → that label.
-    Owner-facing default live host is `{website_address}.preview.placis.com` (wildcard on our
-    zone). Do not advertise `{website_address}.placis.com`. One `latest/` tree; publication
-    destinations share it (no Placis-host version vs custom-host version).
-    (2026-08-21; `.preview.placis.com` 2026-08-23)
+19. **R2 tree is keyed by the website address** — `tenants.website_address`, **reserved at 07**
+    from `display_name`. Custom website address maps `sites/hosts/{hostname}` → that label.
+    Owner-facing default host is `{website_address}.preview.placis.com` (wildcard on our zone).
+    While unactivated, that host **is** the website preview (static `latest/` + website-activation
+    strip island). After 08: **v2** on the same host without the strip; the site stays up (not
+    empty). Empty host = no `latest/` yet. Do not advertise `{website_address}.placis.com`. One
+    `latest/` tree; publication destinations share it (no Placis-host version vs custom-host
+    version).
+    (2026-08-21; `.preview.placis.com` 2026-08-23; reserved at 07 + sales host 2026-08-25)
 
 20. **Custom website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS **Connect website

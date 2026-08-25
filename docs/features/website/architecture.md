@@ -100,18 +100,16 @@ website component contract, resolves the `{{var}}` website placeholders from the
 writes one `website_publications` row holding the published website copy as `website_manifest`
 (a `website.v1` website manifest — [manifest.md](manifest.md)). That row is a website version.
 The website manifest is the read model — the renderer only ever reads the active website version.
-Website rollback copies an earlier owner website version onto `latest/` (live). To continue
-editing from that owner website version, the website editor GETs with `publication_id` and
-PATCHes ([api.md](api.md)). That is not website rollback.
+Website rollback reactivates an earlier **owner** website version. Onboarding-written rows are
+never website-rollback targets.
 
 Edits to Details, Projects, certifications and reviews, website styles, or the unpublished
 website do not change the live website until the next website publication.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website application serves
-every tenant. The website publication control is a dropdown of hosts (`{website_address}` on
-our subdomain, a connected custom website address, or New URL) — the POST has no destination
-([api.md](api.md)). Host
-routing uses `website_addresses` reserved at website activation. Serve path, R2 keys, cache
+every tenant. The website publication control is a destination dropdown
+(`{website_address}.preview.placis.com`, a connected custom website address, or New URL). Host
+routing uses `website_addresses` reserved at onboarding 07. Serve path, R2 keys, cache
 purge, custom website address, and local Worker: [cloudflare.md](cloudflare.md).
 `apps/contractor-website` is in this repo; remaining cuts:
 [contractor-website-debloat.md](contractor-website-debloat.md). API cutover:
@@ -126,17 +124,16 @@ Live websites and website previews are served by a **separate Astro + React app*
 
 At **website publication**, that app renders each live website page from the active
 `website_manifest` (`website.v1`) and writes HTML to R2 `latest/`. A live GET is Cache then R2.
-It never calls Go. Website preview (`/preview/{token}/`) uses the same website components but
-renders unpublished website rows on each request through the Worker internal render.
+It never calls Go. Onboarding 07/08 call this same write (strip on, then strip off). There is no
+per-request unpublished render and no `/preview/{token}/`.
 
 Astro owns routing, the Astro document, prerender-at-publication, and metadata; React owns
 interactive islands. One application serves every contractor website — no per-tenant build —
 and imports only the website component package (a bundle-boundary check blocks imports from
 `frontend-2`).
 
-Website previews use the same application: the onboarding website preview renders the unpublished
-website behind a preview token, so the contractor sees the real website
-components before website activation.
+The onboarding wait teaser (`/onboarding/preview`) reuses website components in `frontend-2` for
+**one complete website section** at a time. It is not this app and not the host.
 
 ## Voice (later)
 

@@ -309,7 +309,7 @@ Distinct from: Website (the contractor website). Say contractor website when the
 Learning about the business and building its profile: start from a Google Maps listing or
 company registry record, online research consent, client interview, business research, one
 business profile, then an unpublished website and a website preview. It ends at website activation
-(paid, not published). Never call this “setup”.
+(paid). Never call this “setup”.
 
 Distinct from: Onboarding session (the persisted run).
 
@@ -357,8 +357,7 @@ Distinct from: Website activation.
 
 #### Website activation
 
-Pay and activate: sign-in if needed, pay, the website address is reserved. The website stays
-unpublished.
+Pay and activate: sign-in if needed, pay. The website stays unpublished.
 
 Distinct from: Sign up, Website publication. Never say “website claim”.
 
@@ -371,20 +370,21 @@ In code: `website_activations`.
 A stage in our sales process where they choose to buy the website or not. Never say bare
 “preview”. Do not use this word for the website editor canvas or for ad format mocks.
 
-Distinct from: Unpublished website, Website activation, Website preview link, Ad format
-preview, the `{website_address}.preview.placis.com` host (that is the website address after
-website publication, not this sales stage). Never label that host website preview.
+The sales surface is `{website_address}.preview.placis.com` (static HTML, website-activation
+strip) until website activation. After website activation that same host is the live website —
+never call it website preview then.
 
-In code: `website_previews`, `internal/onboarding/websitepreview/`.
+Distinct from: Unpublished website, Website activation, Website preview link, Live website
+(the same host after they pay).
 
 ---
 
 #### Website preview link
 
-The shareable URL for a website preview. Anyone who has the link can open the unpublished
-website until the website preview is superseded or activated. Never say “signed website preview”.
+The shareable URL of the website preview: `{website_address}.preview.placis.com`. Anyone who
+has it can open the host. Never say “signed website preview”.
 
-Distinct from: Website preview (the sales stage), Preview token, Signed URL.
+Distinct from: Website preview (the sales stage), Signed URL.
 
 ---
 
@@ -627,12 +627,15 @@ In code: `edit_history`, `website_settings.edit_history_head`.
 
 Make an earlier website version the live website again, without deleting profile history.
 
+Distinct from: Website edit history. Onboarding-written website versions are not website
+rollback targets.
+
 ---
 
 #### Website address
 
 The default host of the business’s site: they may be deployed under **our subdomain**. Reserved
-at website activation.
+from `display_name` when the website preview host is first written. Never say `slug`.
 
 Distinct from: Website prefix (the DNS/R2 label), Custom website address (the address they
 supply), Website page path.
@@ -953,16 +956,6 @@ agent).
 
 ---
 
-#### Preview token
-
-The secret in a website preview link. Technical docs only. Never say “signed” for this.
-
-Distinct from: Website preview link, Signed URL.
-
-In code: `website_previews.token_hash`.
-
----
-
 ### Website
 
 #### Custom website address
@@ -1061,7 +1054,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | instantiate / population | apply the website template |
 | generate unpublished website / generate website structure | apply the website template |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
-| signed (onboarding) | website preview link (product); preview token (technical) |
+| signed (onboarding) | website preview link |
 | live markdown plan | website assistant plan |
 | handoff boundary | the owner approves the plan, then the assistant applies it |
 | website email | marketing email |

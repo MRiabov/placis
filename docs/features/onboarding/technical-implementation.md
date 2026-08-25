@@ -15,12 +15,21 @@ See [persistence.md](persistence.md). The business profile is
 (`apply_website_template_failed` if applying the website template throws).
 Business research runs in the background alongside review/client interview; applying the website template
 starts at client interview complete; website copy generation runs after that and does not
-block website preview or website activation.
+block website activation. 07 waits copy-done or the wait cap, then writes the host.
 
 ## HTTP
 
-Routes: [api.md](api.md). Website publication and website rollback are the website editor, not
-this `api.md` ([website HTTP](../website/api.md)).
+- `POST /api/v1/onboarding-sessions` (+ `.../from-google-maps-listing`)
+- company-registry search, Google Maps autocomplete
+- profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/details`)
+- client interview (autosave + submissions)
+- business research runs (list/get), apply-the-website-template runs (list/get/cancel)
+- website activation checkout (public, Host / `website_address`)
+- website publication / website rollback: owned by the [website feature](../website/technical-implementation.md), not this API surface
+
+Website publication of 07/08 is the same write as the website editor’s website publication;
+website rollback of onboarding rows is refused
+([website technical implementation](../website/technical-implementation.md)).
 
 ## Business research pipeline
 

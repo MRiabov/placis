@@ -50,8 +50,7 @@ Resolved once per request from one of:
 
 1. authenticated Clerk organization (active tenant only),
 2. contractor website hostname,
-3. website preview token,
-4. onboarding session token (unactivated or active tenant for that onboarding session).
+3. onboarding session token (unactivated or active tenant for that onboarding session).
 
 Services take `tenantID` explicitly.
 

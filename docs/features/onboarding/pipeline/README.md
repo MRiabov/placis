@@ -4,10 +4,10 @@ Executable spec. Each step file uses Trigger / Pre / Must not / Do / Persist / F
 Invariants. This README is the index: status machine, screens, Resume, business-lookup-once, DAG. It does
 not retell the steps.
 
-The contractor never waits on business research or on copy. Business lookup returns immediately; business
+The contractor never waits on business research. Confirm returns immediately; business
 research fills the checklist in the background; applying the website template starts only after
-the client interview completes; website copy generation fills the unpublished website after that
-without blocking the website preview link.
+the client interview completes. `/onboarding/preview` waits for website copy generation **or** a
+~15s cap, then 07 writes the host. 08 does not wait for 06.
 
 ## DAG
 
@@ -23,9 +23,9 @@ business research is already running** before the contractor sees Review.
 04b. voice client interview
      build the profile — concurrent persist, not a wait
 05.  apply the website template (after client interview complete)
-06.  website copy generation (async; does not block 07 or 08)
-07.  website preview (website preview link)
-08.  website activation (pay → activate tenant; unpublished until website publication)
+06.  website copy generation (async; 07 waits copy-done or cap; does not block 08)
+07.  website preview (reserve website address; website publication v1 + R2 strip on)
+08.  website activation (pay → activate tenant; website publication v2 strip off)
 ```
 
 ```text
@@ -41,19 +41,19 @@ applying the website template and copy. Postgres is authoritative.
 
 ## Onboarding session status
 
-`created` → `client_interviewing` (after business lookup; 02 + 03 + 04a/04b) → `applying_website_template`
-(client interview complete; 05 running) → `previewing` (website preview ready; 06 may still write
+`created` → `client_interviewing` (confirmed; 02 + 03 + 04a/04b) → `applying_website_template`
+(client interview complete; 05 running) → `previewing` (07 wrote `latest/`; 06 may still write
 copy) → `activated`.
 `apply_website_template_failed` if 05 throws.
-06 failing does not change onboarding session status. The website preview link has no TTL; 410
-only when the token is unknown, superseded, or already activated. The onboarding session has no
-`expired` status. Review (03) does not get its own status.
+06 failing does not change onboarding session status. The website preview host has no token and
+no TTL. The onboarding session has no `expired` status. Confirm data (03) does not get its own
+status.
 
 ## Resume
 
 Same browser only. `localStorage` holds the onboarding session **token**
 (`onboarding_sessions.token`) plus last UI step. Restore is `GET .../profile`. The stored step is
-a hint; status and `active_website_preview` win. There is no second token and no server-side
+a hint; status and whether `latest/` exists win. There is no second token and no server-side
 resume token.
 
 | Onboarding session | Screen |
@@ -62,8 +62,8 @@ resume token.
 | Token present, `GET .../profile` failing | stay on a loading placeholder; keep the token; retry. Do not go to Find and do not `POST` |
 | `client_interviewing`, no client interview started | `/onboarding/review` (Review) |
 | `client_interviewing`, interview in progress (`channel` set or an autosave exists) | `/onboarding/interview` |
-| `applying_website_template` or `apply_website_template_failed` | short progress screen in `frontend-2` |
-| `previewing` / active website preview | `/preview/{token}/` on the contractor website; the website preview link still works without `localStorage` |
+| `applying_website_template` or `apply_website_template_failed` | `/onboarding/preview` (SSE carousel; same wait) |
+| `previewing` | the website preview host |
 | `activated` | clear storage; `/cms/website` |
 
 Business lookup creates the onboarding session **once** (01), when this browser has no token. Opening Find

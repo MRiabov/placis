@@ -57,7 +57,8 @@ Three surfaces, one unpublished website:
   [media library](../other/media/README.md).
 - **Editing panel** — the selected website section: website slots, design controls, SEO columns,
   website forms. Website versions show website publications and website-assistant activity, not
-  unpublished checkpoints per website page. Undo/redo stacks are in RAM, seeded from
+  unpublished checkpoints per website page. Onboarding-written website versions are omitted
+  (not website-rollback targets). Undo/redo stacks are in RAM, seeded from
   website edit history on `/cms/website` open; they are not a timeline UI.
 
 Website styles are tenant-wide (`website_settings`), shown on the website page GET, applied only on
@@ -87,8 +88,8 @@ Rows:
    [cloudflare.md](cloudflare.md). Always listed after website activation. Open in a new tab when
    `latest/` exists. Status: not published yet / last website publication time. This is the live
    URL in the website editor until (and alongside) a custom website address. Product copy:
-   **website address** / our subdomain. Do not call this host website preview (that is the sales
-   stage and `/preview/{token}/`).
+   **website address** / our subdomain. Do not call this host website preview after website
+   activation (while unactivated it **is** the website preview).
 2. **Each connected custom website address** (`acme.ie`) — listed once Connect website address
    has a hostname. Disabled until `website_addresses.status=active` (waiting for DNS /
    certificate).

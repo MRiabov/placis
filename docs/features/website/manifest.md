@@ -58,8 +58,7 @@ Per website section:
 - blog / careers collections (deferred)
 - predecessor project-as-blog collection (body, markdown, status, visibility)
 - template keys, `created_by`, how the unpublished website was applied
-- unpublished-only fields: `origin`, slot `status`, `validation_errors`, `has_unpublished_changes`,
-  preview tokens
+- unpublished-only fields: `origin`, slot `status`, `validation_errors`, `has_unpublished_changes`
 - Clerk / tenant internals, file ids, signed-URL machinery (resolved public URLs only)
 - top menu / footer stuffed into each page’s `sections` — they come from root `top_menu` /
   `footer` (baked from `website.menus`), not from website sections on every website page

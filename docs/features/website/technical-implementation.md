@@ -58,11 +58,16 @@ the tables it writes.
 
 ## HTTP
 
-Routes: [api.md](api.md). Media library, Details, and website form submit are other features'
-`api.md` files.
-Live HTML never calls Go. **Do not create** `/v1/public/site/…`.
-CMS unpublished writes are editor `POST`/`PATCH` only. Reset to an owner website version is
-editor GET `publication_id`, then PATCH.
+- `/api/v1/website/editor/...` — website pages, website sections, website slots, media assets,
+  projects, website publications, website settings, certifications, website forms, top menu,
+  footer. Same GET/PATCH page fold: optional `include_edit_history`, `base_edit_history_head`
+  on PATCH/Apply. No extra undo/redo/history routes.
+- `/api/v1/website/publications/...` — website publication and website rollback (if not under editor).
+- `/api/v1/public/forms/...` — website form submit (the public write). Host lookup uses
+  [website_addresses](persistence.md). Live GET does not call Go; it reads R2. Drop leftover
+  resolve. Connect-website-address APIs live under the website editor.
+
+Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
 
 ## Validation & testing
 
@@ -71,7 +76,7 @@ editor GET `publication_id`, then PATCH.
 - Cross-tenant isolation for website pages / website sections / website slots / media assets /
   website forms / website publications.
 - Website versions (`website_publications`) are never overwritten; website rollback
-  reactivates an earlier website version.
+  reactivates an earlier **owner** website version. Onboarding-written rows are refused.
 - Website template application rejects unknown website component ids / invalid props before writing.
 - One E2E: edit → website assistant → website publication → live R2 keys + fake purge → website
   rollback → website form (LLM faked, core logic unmocked). Apply the website template is the
