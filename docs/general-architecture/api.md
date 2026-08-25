@@ -148,12 +148,11 @@ The website preview link is **not** SSE. Onboarding `/onboarding/preview` is.
 
 ## Worker internal render
 
-Website preview (`/preview/{token}/` on the contractor website Worker) renders unpublished
-rows through an authenticated internal render (shared secret / service binding). That is not
-public OpenAPI. **Do not create** `/v1/public/site/…`.
+Website publication (River) renders `website.v1` through an authenticated internal render
+(shared secret / service binding) and writes R2. That is not public OpenAPI. **Do not create**
+`/v1/public/site/…`. Do not create leftover `/preview/{token}/` HTML.
 
-Don't say preview: live `{website_address}.preview.placis.com` is Cache then R2. Never Go.
-That hostname is the live Placis host after website publication, not the sales website preview.
+Live contractor HTML GET is Cache then R2. Never Go. The leftover token path is gone.
 
 ## Cross-cutting routes
 

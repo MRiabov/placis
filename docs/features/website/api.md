@@ -7,9 +7,10 @@ the website-editor PATCH body remains [editing.md](editing.md); this file locks 
 Live business profile: [details](../other/details/api.md). Media library:
 [media library](../other/media/api.md). Website form submit: [leads](../other/leads/api.md).
 
-Live HTML GET on `{website_address}.preview.placis.com` never calls Go. **Do not create**
-`/v1/public/site/…`. Website preview HTML is Worker internal render. Website form POST is
-[leads](../other/leads/api.md).
+Live HTML GET on `{website_prefix}.preview.placis.com` never calls Go. **Do not create**
+`/v1/public/site/…` (including leftover resolve). Website publication writes R2 through an
+authenticated internal render (not public OpenAPI) — that is not a live GET and not leftover
+`/preview/{token}/`. Website form POST is [leads](../other/leads/api.md).
 
 ## Serve only types on HTTP
 
@@ -132,29 +133,43 @@ website publication.
 
 ## Complete — website publication and Connect website address
 
+Onboarding 07/08 also write `website_publications` (`published_by=onboarding`). Those rows are
+not this CMS POST. They are never website-rollback targets.
+
 ### GET /v1/website/publications / POST /v1/website/publications
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website publication dropdown (whole website, not per website page).
 - **POST Idempotency-Key:** yes.
-- **Response:** metadata `*Read` (version number, status, times). **Omit** `website_manifest`.
+- **POST request:** no destination body. One `latest/` tree. Purge the preview website address
+  and every `active` website address. Destinations are not independent website versions.
+- **POST:** `published_by=owner`.
+- **GET list:** metadata `*Read` (`version_number`, `status`, `active`, `published_by`, times).
+  **Omit** `website_manifest`. Rollback UI uses `published_by=owner` only — omit onboarding
+  07/08 and 05-retry rows.
 
 ### POST /v1/website/publications/{id}/rollback
 
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
+- **Behavior:** copy that owner website version onto `latest/`, purge. `409` if
+  `published_by=onboarding` or the id is not an owner row.
 
 ### GET /v1/website/addresses / POST /v1/website/addresses
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** Connect website address modal. Website publication does not attach a custom
-  website address.
+- **Callers:** publication dropdown (list hosts) and Connect website address modal.
+- **GET:** `type=subdomain` (preview website address; reserved at onboarding 07 — this GET does
+  not create it) and `type=custom` (website addresses they connected).
+- **POST:** Connect website address only (`type=custom`, hostname they supply, e.g. `acme.ie`).
+  Does not reserve `tenants.website_prefix` or insert `type=subdomain`. Website publication
+  does not attach a website address.
 - **POST Idempotency-Key:** yes.
 
 ### GET /v1/website/addresses/{id}
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** poll until `active`.
+- **Callers:** poll a connected website address until `active`.
 - **Response:** hostname, type, status, DNS rows (copyable). No GoDaddy/nameserver mutation.
 
 ## Complete — projects
@@ -176,8 +191,10 @@ the website editor and not under the business profile.
 
 ## Do not create
 
-- `/v1/tenants/{website_address}/website/…`
+- `/v1/tenants/{website_prefix}/website/…`
 - `/v1/public/site/…` (including resolve, meta, sitemap, assets)
+- leftover `/preview/{token}/` HTML or `GET …/public/site/resolve`
+- `POST /v1/website/addresses` with `type=subdomain` (reserved at 07)
 - blueprints, posts, careers
 - `/undo` `/redo` `/edit-history`
 - assistant/revert
