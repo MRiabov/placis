@@ -28,11 +28,18 @@ authenticated internal render (not public OpenAPI) — that is not a live GET an
 
 ## Complete — unpublished website
 
+CMS unpublished `website_*` / `website.menus` / `website_settings` writes are only `POST` /
+`PATCH` on `/v1/website/editor/…` from `frontend-2`. No other `/v1` route upserts those rows.
+Onboarding 05/06 write them in River, not via these routes.
+
 ### GET /v1/website/editor/pages
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website editor workspace (website page list).
-- **Response:** list of unpublished website page `*Read` summaries (id, path, title, `page_type`,
+- **Query:** optional `publication_id` (`website_publications` id from the dropdown). Omitted:
+  unpublished list. Set: that owner website version’s page summaries. `409` if
+  `published_by=onboarding` or the id is not an owner row.
+- **Response:** list of website page `*Read` summaries (id, path, title, `page_type`,
   status).
 
 ### POST /v1/website/editor/pages
@@ -45,10 +52,12 @@ authenticated internal render (not public OpenAPI) — that is not a live GET an
 ### GET /v1/website/editor/pages/{page_id}
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** canvas hydrate (once per website page select / reload).
+- **Callers:** canvas hydrate (once per website page select / reload). Reset to an owner
+  website version: same GET, then PATCH dirty keys ([editing.md](editing.md)).
 - **Query:** `include_edit_history=true` only on open hydrate or after `409 edit_history_conflict`.
-  Switching website page: query off.
-- **Response:** unpublished website page `*Read`: `path`, `title`, `page_type`, `status`, SEO
+  Switching website page: query off. Optional `publication_id`: same `*Read` from that owner
+  website version. `409` if `published_by=onboarding` or the id is not an owner row.
+- **Response:** website page `*Read`: `path`, `title`, `page_type`, `status`, SEO
   columns (`seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
   `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`), `validation`,
   website-publication-blocker count, `publication.has_unpublished_changes`, sections/slots
@@ -88,6 +97,7 @@ authenticated internal render (not public OpenAPI) — that is not a live GET an
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website styles workspace. **Explicit apply**, not save on click-off.
+- **GET query:** optional `publication_id` (same as page GET).
 - **PATCH Idempotency-Key:** yes.
 - **Request/response:** named website styles (`preset_id`, `primary`, `neutral`, `accent`,
   `radius`, `density`). Extra keys 4xx.
@@ -97,6 +107,7 @@ authenticated internal render (not public OpenAPI) — that is not a live GET an
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** top menu and footer tree editors. One resource — one `website.menus` row
   (`top_menu`, `footer`, `show_phone`, `show_email`).
+- **GET query:** optional `publication_id` (same as page GET).
 - **PATCH Idempotency-Key:** yes.
 - **Request:** `base_edit_history_head` plus dirty keys only (`top_menu` and/or `footer`
   and/or `show_phone` / `show_email`). Extra keys 4xx.
@@ -173,18 +184,6 @@ not this CMS POST. They are never website-rollback targets.
 - **Response:** that publication `*Read` (`active=true`, `version_number`, times). The
   dropdown updates from this body — no extra GET required.
 
-### POST /v1/website/publications/{id}/restore-unpublished
-
-- **Auth:** Clerk JWT, active tenant
-- **Idempotency-Key:** yes.
-- **Callers:** website editor — reset unpublished rows to that owner website version and
-  keep editing. Not live website rollback.
-- **Behavior:** copy that owner version onto unpublished website rows; append
-  `edit_history`. Does not write `latest/` or purge. `409` if `published_by=onboarding`
-  or the id is not an owner row.
-- **Response:** `{ edit_history_head }`. The website editor re-GETs the open website page (same
-  hydrate as select / reload).
-
 ### GET /v1/website/addresses / POST /v1/website/addresses
 
 - **Auth:** Clerk JWT, active tenant
@@ -227,6 +226,8 @@ the website editor and not under the business profile.
 - `POST /v1/website/addresses` with `type=subdomain` (reserved at 07)
 - blueprints, posts, careers
 - `/undo` `/redo` `/edit-history`
+- `POST /v1/website/publications/{id}/restore-unpublished` (editor GET `publication_id`, then PATCH)
+- `GET /v1/website/publications/{id}/pages` (use editor GET `publication_id`)
 - `/v1/website/editor/top-menu`, `/v1/website/editor/footer` (use `/menus`)
 - `assistant/apply`, `assistant/reject` that write unpublished rows (use `record-apply` /
   `record-reject` + PATCH)

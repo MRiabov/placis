@@ -44,9 +44,6 @@ DB asserts name the tables from [persistence.md](persistence.md) (and
    - UI: the dropdown updates from the rollback `*Read`; the live website shows the earlier
      published website copy.
 
-   Restore unpublished (`POST …/restore-unpublished`) is a separate website-editor action
-   (re-GET the open website page). Not this step.
-
 8. **Website form → website lead** — a website visitor submits a website form.
    - DB: `leads` (source=`website_form`, `website_form_id`, `contact_name`, `marketing_phone`,
      `marketing_email`, message, status=`new`) under the tenant.

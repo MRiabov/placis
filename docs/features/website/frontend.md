@@ -75,10 +75,9 @@ are where the live site is reachable (open in a new tab, Connect), not independe
 versions.
 
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that publication
-`*Read`; the dropdown updates from the body. **Restore unpublished**
-(`POST …/publications/{id}/restore-unpublished`) resets unpublished rows to that owner
-website version so they keep editing; the canvas re-GETs the open website page. Onboarding
-07/08 rows are not targets.
+`*Read`; the dropdown updates from the body. To continue editing from an owner website version,
+the website editor GETs the open website page with `publication_id`, paints that `*Read`, then
+PATCHes dirty keys ([api.md](api.md)). Onboarding 07/08 rows are not targets.
 
 Rows:
 

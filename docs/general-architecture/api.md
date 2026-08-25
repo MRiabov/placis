@@ -50,6 +50,9 @@ Do not say `slug` in paths or fields (website prefix / website page path).
 Do not say **fold** in `api.md` or path names. Say **live business profile** and
 **unpublished website**.
 
+CMS unpublished website writes are `POST`/`PATCH` on `/v1/website/editor/…` only
+([website HTTP](../features/website/api.md)).
+
 ## Serve only types on HTTP
 
 The predecessor shipped unconstrained JSON bags.
