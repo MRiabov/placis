@@ -6,7 +6,7 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [backend-stack.md](backend-stack.md) — stack, type layers, DTO constraints, `Idempotency-Key`
 - [frontend-stack.md](frontend-stack.md) — `frontend-2` stack, folders, typegen
 - [module-layout.md](module-layout.md) — Go package tree, file-size guard, folder fan-out
-- [processes.md](processes.md) — `cmd/api`, `cmd/worker`, `frontend-2`, contractor website, Placis website, deploy
+- [processes.md](processes.md) — `cmd/api`, `frontend-2`, contractor website, Placis website, deploy
 - [package-boundaries.md](package-boundaries.md) — which Go package owns which work
 - [llm-layer.md](llm-layer.md) — LLM, AI tools, traceability
 - [voice-agent.md](voice-agent.md) — voice architecture (minted secret, tools)

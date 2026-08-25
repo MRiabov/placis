@@ -1,8 +1,8 @@
 # Background jobs
 
 Slow work runs off-request in `River` (Postgres-backed): AI generation, business research, file
-processing, notifications, and export generation. `cmd/worker` runs the jobs. Every job can be
-retried safely (an explicit key).
+processing, notifications, and export generation. `cmd/api` runs the jobs in-process. Every job can be
+retried safely (an explicit key). The queue is the isolation, not a second container.
 
 River-managed tables for the job queue. Postgres schema `jobs`.
 
