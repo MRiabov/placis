@@ -4,9 +4,9 @@ Conventions: [HTTP conventions](../../../general-architecture/api.md). Website v
 website forms. No CMS website-leads console in this slice. Website E2E covers website form →
 website lead ([website testing](../../website/testing.md)).
 
-## OpenAPI opacity
+## Serve only types on HTTP
 
-Website form website visitor POST: closed fields matching that website form’s `fields[]`. Extra keys
+Website form website visitor POST: named fields matching that website form’s `fields[]`. Extra keys
 4xx. No leftover “values object”. Uploads compose the `files` table under this resource, not
 `/v1/files`.
 
@@ -17,7 +17,7 @@ Website form website visitor POST: closed fields matching that website form’s 
 - **Auth:** none. CORS allows the contractor website `Host`.
 - **Callers:** contractor website React island (website form). Worker does not proxy the POST.
 - **Idempotency-Key:** yes.
-- **Request:** closed fields for that website form (`text` / `textarea` / `email` /
+- **Request:** named fields for that website form (`text` / `textarea` / `email` /
   `marketing_phone` / …). Extra keys 4xx.
 - **Behavior:** insert `leads` row (source, website form, contact name, marketing phone,
   marketing email, message, status).

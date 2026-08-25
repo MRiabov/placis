@@ -4,7 +4,7 @@ Conventions: [HTTP conventions](../../../general-architecture/api.md). Live busi
 the rest of the app reads. Projects: [website HTTP](../../website/api.md). Onboarding resume
 is [onboarding `/profile`](../../onboarding/api.md), not this resource.
 
-## OpenAPI opacity
+## Serve only types on HTTP
 
 Profile history is typed `business_profile_edits` increments — never a `details` jsonb dump.
 `GET`/`PATCH` fields are the columns and list tables in [persistence.md](persistence.md).

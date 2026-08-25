@@ -11,19 +11,19 @@ Live HTML GET on `{website_address}.preview.placis.com` never calls Go. **Do not
 `/v1/public/site/…`. Website preview HTML is Worker internal render. Website form POST is
 [leads](../other/leads/api.md).
 
-## OpenAPI opacity
+## Serve only types on HTTP
 
 | Location | Persistence | HTTP |
 | --- | --- | --- |
 | Website slot `value` | jsonb | Discriminated union on `slot_type`: `text`/`rich_text` → string + `maxLength`; `image` → media library item id + crop/focal; `link` → url + label; `list` → typed array. **Do not expose `slot_type=json`.** |
 | Website section `props` | jsonb | `oneOf` by `component_id`. Extra keys 4xx. Unknown `component_id` → `unsupported_component` + no props bag. |
-| Website section `design` | jsonb | Closed design-control struct. |
+| Website section `design` | jsonb | Named design-control fields. Extra keys 4xx. |
 | Website edit history `before`/`after` | jsonb | Same union as the live field. |
 | Website manifest | jsonb `website.v1` | **Omit** from website-editor GET/PATCH. Publication `*Read` is metadata only. |
-| Website styles | columns + bounded jsonb | Closed: `preset_id`, `primary`, `neutral`, `accent`, `radius`, `density`. |
+| Website styles | columns + bounded jsonb | Named fields: `preset_id`, `primary`, `neutral`, `accent`, `radius`, `density`. Extra keys 4xx. |
 | Website assistant plan | text | `string` + `maxLength`. Markdown. |
-| LLM traces | jsonb | **Omit.** Activity cards are closed event structs. |
-| Top menu / footer | `website.menus` jsonb trees | Closed node structs (extra keys rejected). |
+| LLM traces | jsonb | **Omit.** Activity cards are named event structs. |
+| Top menu / footer | `website.menus` jsonb trees | Named node fields (extra keys 4xx). |
 
 ## Complete — unpublished website
 
@@ -87,22 +87,22 @@ Live HTML GET on `{website_address}.preview.placis.com` never calls Go. **Do not
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website styles workspace. **Explicit apply**, not save on click-off.
 - **PATCH Idempotency-Key:** yes.
-- **Request/response:** closed website styles (`preset_id`, `primary`, `neutral`, `accent`,
-  `radius`, `density`).
+- **Request/response:** named website styles (`preset_id`, `primary`, `neutral`, `accent`,
+  `radius`, `density`). Extra keys 4xx.
 
 ### GET /v1/website/editor/top-menu / PATCH /v1/website/editor/top-menu
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** top menu tree editor.
 - **PATCH Idempotency-Key:** yes.
-- **Body:** closed menu tree (extra keys 4xx).
+- **Body:** named menu tree fields (extra keys 4xx).
 
 ### GET /v1/website/editor/footer / PATCH /v1/website/editor/footer
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** footer tree editor.
 - **PATCH Idempotency-Key:** yes.
-- **Body:** closed menu tree (extra keys 4xx).
+- **Body:** named menu tree fields (extra keys 4xx).
 
 ## Complete — website assistant
 
