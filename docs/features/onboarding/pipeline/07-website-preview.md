@@ -34,8 +34,10 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant. Wait 
 1. **Reserve** `tenants.website_address` from `display_name` (`{{business_name}}` — Maps / public
    name, required at client interview complete). Not `legal_name`.
    - Lowercase; keep `[a-z0-9]`; hyphens for the rest; collapse/trim hyphens.
-   - Cap length so a suffix still fits a DNS label (63).
-   - Collision: `acme-roofing-2`, then `-3`, sequential, not random.
+   - Cap length so a locality suffix and a later `-2` still fit a DNS label (63).
+   - Collision: append locality once (`acme-roofing-dublin`) — Maps `locality`, else the first
+     service area. Skip if that locality is already in the label. Still taken, or no locality:
+     sequential `-2`, then `-3` on that result, not random.
    - Empty/too short: trade + locality, else `site-{id}`.
    - 05 retry: **keep** the existing label (same host). A new 01 confirm is a new unactivated
      tenant → new label.

@@ -9,5 +9,6 @@
   includes the website-activation island; 05 retry keeps the same `website_address` and writes a
   new onboarding publication (previous archived); 06 does not supersede; SSE apply-template/copy
   events live on the onboarding session stream — the host is not an SSE endpoint. Empty details
-  show as website placeholders. Collision on `display_name` uses sequential `-2`, `-3`.
+  show as website placeholders. Collision on `display_name` appends locality once, then
+  sequential `-2`, `-3`.
 - **Mocked**: nothing (R2 can be MinIO / fake keys).
