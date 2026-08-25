@@ -34,20 +34,20 @@ console.
   frontend-from-Go PR switches typegen; the generated file shrinks to routes Go
   actually serves. Predecessor OpenAPI is human reference, not an input, not a
   second schema to generate from.
-- Keep as Go DTOs in current glossary names (fields may change): `/v1/me`, health,
-  onboarding session + profile + events stream (Huma `sse.Register`), website editor
-  GET/PATCH, publication, Connect website address, website activation / checkout /
-  status, media library, ads when that slice exists. Contractor website → Go:
-  website form submit only ([port-contractor-website.md](../features/website/port-contractor-website.md)).
-  Routes: [HTTP conventions](../general-architecture/api.md).
+- Keep as Go DTOs in current glossary names (fields may change): `/me`, health,
+  onboarding session + profile + events stream (SSE outside huma), website editor
+  GET/PATCH, publication, Connect website address, website preview resolve,
+  07 website preview (host), website activation checkout / status, media library, ads when that slice
+  exists. Contractor website public routes: website form submit
+  (see [port-contractor-website.md](../features/website/port-contractor-website.md)).
 - Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
-  `/v1/tenants/{website_address}/website/…`, blog, careers,
-  website-template-apply leftovers, unconstrained JSON in UI-facing schemas,
-  Don't say: predecessor names (`setup-sessions`, public-site, shell, blueprint, claim),
-  Don't say preview: predecessor module path (`/api/v1/preview/{token}/module/website`),
-  Don't say: `/v1/public/site/…`, and `PublicSite*` hand types. “Genuinely good” means the
-  **behavior** is still in the feature spec. Copy Python field lists only when that
-  feature’s `api.md` already says so.
+  `/api/v1/tenants/{website_address}/website/…`, blog, careers,
+  website-template-apply leftovers, unconstrained JSON in UI-facing schemas.
+  Don't say setup / public site / shell / blueprint / claim: predecessor names.
+  Don't say preview: predecessor module path (`/api/v1/preview/{token}/module/website`)
+  and leftover predecessor hand types. “Genuinely good” means the **behavior** is still
+  in the feature spec. Copy Python field lists only when that feature’s
+  `technical-implementation.md` already says so.
 - Unported `api/*.ts` and MSW stubs are deleted or retargeted in the **same
   slice** that adds the Go routes. No shims, no `as any`, no mapping layer.
   Screens with no Go route yet stay unwired, not typed against old paths.
@@ -60,7 +60,8 @@ console.
 - Onboarding calls `/v1/onboarding-sessions/business-lookup` and
   `GET …/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`).
   Restore is `GET …/profile`.
-- Website preview route is `/preview/{token}/…`. It is not an SSE endpoint. Website
+- `/onboarding/preview` is the SSE website-section carousel; the shareable host is
+  the website preview host (not `/preview/{token}/…`, not an SSE endpoint). Website
   activation uses activate / activation-checkout / activation-status (not a browser
   success URL alone).
 - Website editor: one in-memory projection; PATCH copies dirty keys; merge only

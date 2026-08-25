@@ -73,5 +73,5 @@ re-define them here.
 - Find mount never `POST`s.
 - 02 does not start without `online_research_consent_at`.
 - 02 does not start a 6th wave for this tenant inside 30 minutes.
-- No `website_pages` / `website_previews` yet.
+- No `website_pages` / `website_address` yet.
 - `/me` still has no tenant (`status=unactivated`).

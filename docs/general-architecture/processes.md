@@ -15,8 +15,9 @@ API. The Placis website is a separate static origin and does not call Go.
    package is keep-and-cut; the Worker is write-thin (live GET never calls Go). Remaining
    cuts: [contractor-website-debloat.md](../features/website/contractor-website-debloat.md).
    API cutover: [port-contractor-website.md](../features/website/port-contractor-website.md).
-   Don't say preview: live host after website publication is `{website_address}.preview.placis.com` (Cache then R2).
-   Website preview is `/preview/{token}/` on the same app (unpublished rows; not R2).
+   Website preview is this host while unactivated (FQDN in
+   [website Cloudflare](../features/website/cloudflare.md), strip
+   on). After website activation the same host stays up without the strip.
    Locked serve path:
    [website Cloudflare](../features/website/cloudflare.md).
 4. **Placis website** (`apps/placis-website`) — Astro static build uploaded to R2; hostname
@@ -30,9 +31,9 @@ job can be retried safely (an explicit key) — see [jobs](jobs.md).
 
 Onboarding session progress events stream over SSE — see
 [07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md) and
-[onboarding HTTP](../features/onboarding/api.md). Anyone with the website preview link opens
-`/preview/{token}/` on the contractor website, which renders unpublished rows through the
-Worker internal render (not public OpenAPI). The website preview itself is not an SSE endpoint.
+[onboarding frontend](../features/onboarding/frontend.md). Anyone with the host URL opens
+the website preview host (Cache then R2). The contractor host is not an SSE
+endpoint.
 
 HTTP conventions: [api.md](api.md). Huma vs streaming: [backend stack](backend-stack.md).
 

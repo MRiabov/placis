@@ -21,7 +21,8 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 - Website publication is **not** a per-contractor Cloudflare deploy. One Worker serves every
   tenant.
 - Live HTML is **prebuilt** at website publication into R2 `latest/`. A live GET never calls Go.
-- Website preview is the only per-request render (`/preview/{token}/`, unpublished website rows).
+- There is no per-request unpublished render. 07 writes the sales host the same way as later CMS
+  website publication (strip on, then 08 strip off).
 - Custom website address uses **Cloudflare for SaaS Custom Hostnames**, not Cloudflare Pages
   project hostnames.
 - Owner-facing default live host after website publication is
@@ -32,18 +33,21 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 - One `latest/` tree. Publication destinations share it; they are not independent website
   versions.
 
-Go never emits HTML. Astro in `apps/contractor-website` renders at website publication (live) and
-on each website-preview request.
+Go never emits HTML. Astro in `apps/contractor-website` renders at website publication into R2.
 
 ## Terms already in the glossary
 
 - **Custom website address** — the hostname they supply (`acme.ie`). Live for website visitors
   once DNS and the certificate are ready.
-- **Website address** — `tenants.website_address`, the reserved subdomain label, **fixed at website
-  activation**. R2 prefix. Owner-facing host is `{website_address}.preview.placis.com` after
-  website publication. Not the custom website address they supply. Not the sales website preview.
+- **Website address** — `tenants.website_address`, the reserved subdomain label, **fixed at 07**
+  from `display_name`. R2 prefix. Host is `{website_address}.preview.placis.com`. While
+  unactivated that host is the website preview (static `latest/` + website-activation strip).
+  After 08 it is the live default (strip gone) — never call it website preview then. Not the
+  custom website address they supply.
 - **Website publication** — writes `website_publications` + HTML files. Not a Worker deploy.
-- **Website preview** — unpublished website behind a preview token. Not R2.
+  Onboarding 07/08 call this write (v1 strip on, v2 strip off). Owner CMS publish is v3+.
+- **Website preview** — the sales stage on that host until website activation. Not a token
+  path. Not a per-request render.
 
 SaaS **target** here means the hostname contractors CNAME to (for example `customers.placis.com`).
 That name is a proxied record on our `placis.com` zone whose origin is the one contractor-website
@@ -170,16 +174,22 @@ purge the hosts above. Do not keep the Placis host on website version *n* while 
 on *n−1*.
 
 Live for website visitors on `{website_address}.preview.placis.com` = an active website
-publication (`latest/` present). Live on a custom website address also needs that hostname’s
-certificate ready. Until the first website publication, the Placis host has no `latest/` (CMS
-status: not published yet). That empty host is not a website preview.
+publication (`latest/` present). After 07 that is true for the sales host (strip on). After 08
+the same host stays up without the strip. Live on a custom website address also needs that
+hostname’s certificate ready. Empty host = no `latest/` yet (before 07).
 
 ## Website preview
 
-`/preview/{token}/` always renders the unpublished website. It never reads R2 HTML.
-That render is the Worker **internal render** (shared secret / service binding), not
-`GET /v1/public/site/resolve` (**do not create**). Live GET does not call Go. Tests
-hit `/preview/{token}/`.
+While unactivated, `{website_address}.preview.placis.com` **is** the website preview: static
+`latest/` + website-activation strip island. No `/preview/{token}/`. No
+`GET /api/v1/public/site/resolve`. After 08 do not call that host website preview.
+
+The strip is the website-form pattern: shared Worker static assets hydrate Clerk (sign-in/sign-up
+modal, publishable key in the shared island) and Stripe (POST public `activation/checkout` to
+`cmd/api`; CORS by `Host`). Do not bake a Checkout Session URL into R2 HTML. 08 rewrites without
+the island and purges Cache.
+
+`/onboarding/preview` is the wait carousel in `frontend-2`, not this host.
 
 ## Website form POST
 

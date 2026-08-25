@@ -1,6 +1,6 @@
 # Onboarding — persistence
 
-Onboarding session, business research, website preview, and website activation tables.
+Onboarding session, business research, and website activation tables.
 Conventions: [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `onboarding`).
 
@@ -68,16 +68,16 @@ rows. Photos from the listing become media library items. Profile increments
 ([build-profile](pipeline/build-profile.md)) copy selected fields and review rows onto the
 business profile; the listing address stays here.
 
-## Website preview and website activation
+## Website activation
 
-- `website_previews` — `id`, `onboarding_session_id` fk, `token_hash` unique, `status` (`active`/
-  `superseded`/`activated`), `created_at`
-- `website_preview_events` — `id`, `website_preview_id` fk, `event_type`, `payload` jsonb,
-  `created_at`
-- `website_activations` — `id`, `website_preview_id` fk, `clerk_subject`, `checkout_session_id`,
-  `payment_status` (`pending`/`paid`/`failed`/`refunded`), `amount`, `currency`, `failure_reason`,
-  `tenant_id` nullable fk, `activated_at`, `created_at`; unique webhook key (safe to replay)
+- `website_activations` — `id`, `tenant_id` fk, `onboarding_session_id` fk, `clerk_subject`,
+  `checkout_session_id`, `payment_status` (`pending`/`paid`/`failed`/`refunded`), `amount`,
+  `currency`, `failure_reason`, `activated_at`, `created_at`; unique webhook key (safe to replay)
 - `stripe_events` — `id`, `event_id` unique, `type`, `payload` jsonb, `processed`, `created_at`
+
+No `website_previews` / `token_hash`. The website preview is the host reserved at 07
+([07](pipeline/07-website-preview.md)). Website publications live on
+[website data-model](../website/persistence.md).
 
 ## Indexes
 

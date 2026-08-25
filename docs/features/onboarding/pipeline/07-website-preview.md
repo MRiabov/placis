@@ -1,58 +1,81 @@
 # 07 — Website preview
 
-A **website preview** is a shareable **website preview link** onto the **unpublished website**,
-tied to the onboarding session. It is not the website editor. The website preview token stays; the
-rendered website pages are the current unpublished rows (copy from 06 shows up as those rows update).
+A **website preview** is the contractor host (`{website_address}` plus the suffix in
+[cloudflare.md](../../website/cloudflare.md)) with static
+HTML in R2 `latest/` and a website-activation strip. It is not the website editor. It is not
+`/onboarding/preview` (that route is the wait teaser). There is no leftover token.
 
-The published default host after website publication (glossary Website preview, Distinct from)
-is **live** — never call that host a website preview.
+After website activation that same host is the **live website** — never call it website preview
+then.
 
 ## Trigger
 
-05 finishes. This step writes the website preview. Do **not** wait for 06.
+05 succeeded, and **website copy generation has finished or the wait cap elapsed** (named
+constant, ~15s), whichever first. Do **not** start this write at T=0 in parallel with 06 — those
+files would miss the copy the wait is for.
 
 ## Pre
 
-Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
+Unpublished website from 05 exists. `tenant_id` is the unactivated tenant. Wait gate passed.
 
 ## Must not
 
-- Wait for 06.
+- Run `astro build` (that is CI compile of the shared website component catalog, once per app
+  deploy).
+- Issue a leftover token / `website_previews` / `/preview/{token}/`.
+- Wait for 06 past the cap.
 - Let 06 supersede this website preview.
-- Give the link a TTL / `expired` status.
-- Call the published default host a website preview.
+- Rename `website_address` after it is reserved.
+- SSE the contractor host.
+- Call this a third serve path of full website pages on `/onboarding/preview`.
 
 ## Do
 
-1. Issue a website preview token (HMAC). Store only `token_hash`
-   (`website_previews.token_hash`). Anyone with the website preview link can open
-   `/preview/{token}/` on the contractor website application (`apps/contractor-website`).
-   **No TTL.** 410 only when the token is unknown, **superseded**, or already **activated**.
-2. `status=active` while it is the current website preview. Applying the website template again
-   **supersedes** the old one (05 retry), not 06.
-3. Empty details show as website placeholders. The short progress screen in `frontend-2` shows SSE
-   then **View website** once the plaintext token is returned (once).
-4. **Pay / website activation** is on that website preview (`/preview/{token}/`, 08) and does not
-   wait for 06.
+1. **Reserve** `tenants.website_address` from `display_name` (`{{business_name}}` — Maps / public
+   name, required at client interview complete). Not `legal_name`.
+   - Lowercase; keep `[a-z0-9]`; hyphens for the rest; collapse/trim hyphens.
+   - Cap length so a suffix still fits a DNS label (63).
+   - Collision: `acme-roofing-2`, then `-3`, sequential, not random.
+   - Empty/too short: trade + locality, else `site-{id}`.
+   - 05 retry: **keep** the existing label (same host). A new 01 confirm is a new unactivated
+     tenant → new label.
+2. Write `website_addresses` (`type=subdomain`, `status=reserved`, `is_primary=true`). Wildcard on
+   **our** `placis.com` zone already points at the Worker. FQDN:
+   [cloudflare.md](../../website/cloudflare.md).
+3. Fold current unpublished rows into `website.v1` and write **`website_publications` v1**:
+   `published_by=onboarding`, HTML **with** the website-activation strip (Clerk/Stripe island),
+   `active`. Same write as CMS website publication ([cloudflare.md](../../website/cloudflare.md)):
+   run the already-built website component catalog on the JSON, PUT `{version_number}/` then copy
+   onto `latest/`,
+   purge. Not per-request Astro. On 05 retry, archive the previous onboarding website version and
+   write a new row on the same prefix (strip still on if unpaid).
+4. Onboarding session → `previewing`. Empty details show as website placeholders.
 
-SSE is the onboarding session stream. The website preview itself is not an SSE endpoint.
+`/onboarding/preview` shows the SSE website-section carousel until this write exists, then
+**navigates**
+to the host. Pay / website activation is on that host (08).
+
+SSE is the onboarding session stream. The contractor host is not an SSE endpoint.
 
 ## Persist
 
-`website_previews` (`token_hash`, `status=active`); `website_preview_events`. Onboarding session →
-`previewing`.
+`tenants.website_address`; `website_addresses`; `website_publications` (v1, strip on); R2
+`latest/`. Onboarding session → `previewing`. No `website_previews`.
 
 ## Fail
 
-Issue failure: onboarding session stays `applying_website_template` or `apply_website_template_failed`; no
-link. Retry 05+07.
+Issue failure: onboarding session stays `applying_website_template` or
+`apply_website_template_failed`; no `latest/`. Retry 05+07 (same `website_address` if already
+reserved).
 
 ## Out
 
-Contractor can open the unpublished website and pay (08) while 06 may still run.
+Anyone with the host URL can open the site and pay (08) while 06 may still run. Later 06
+completion does **not** live-update the host.
 
 ## Invariants
 
-- No TTL.
+- No token, no TTL, no 410-for-unknown-token.
 - 06 does not supersede.
-- 410 only unknown / superseded / activated.
+- `website_address` never renamed after this step.
+- v1 is never a website-rollback target.
