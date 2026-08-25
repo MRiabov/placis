@@ -85,7 +85,8 @@ The website editor is one typed **projection** (read) and one **patch** (write).
   `validation`.
 - `preview_url`, live website URL. The website editor canvas is not a website preview.
 
-No extra hydrate query besides optional `include_edit_history=true` on this same GET.
+No extra hydrate query besides optional `include_edit_history=true` and optional
+`publication_id` on this same GET.
 
 **Open hydrate** (enter `/cms/website`, full reload, or after `409` `edit_history_conflict`):
 `GET /v1/website/editor/pages/{page_id}?include_edit_history=true` — the fold for the
@@ -97,6 +98,10 @@ slice. Extra fields: `edit_history_head` (uuid, null if the stack is empty), `ed
 
 **Website page switch:** the same GET with the query off. Fold only. Do not re-download
 `edit_history`.
+
+Reset to an owner website version: `publication_id` on this GET (same `*Read`). Paint the
+in-memory projection, then the ordinary PATCH (and `/menus` / `/settings` if those trees
+differ).
 
 A **website slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`, `required`, `max_length`,
 `value` (typed), `status`, `origin`, `validation_errors`.
@@ -217,8 +222,7 @@ the fold (live unpublished rows) and the **record** (`edit_history`). It does no
 3. The frontend keeps undo/redo stacks in RAM. Hydrate (`include_edit_history`) **seeds** those
    stacks from the last 200 batches so Ctrl+Z can go farther than this tab’s RAM. After
    reload, redo of a not-yet-copied local undo is gone; undo still walks the hydrated record.
-4. Empty stack: no-op. Live website rollback and restore-unpublished are unrelated. Undo is not
-   Reject.
+4. Empty stack: no-op. Live website rollback is unrelated. Undo is not Reject.
 
 After PATCH / Apply: do not re-GET the log. Merge only `batch_id` and `edit_history_head`.
 After in-memory undo/redo, the following PATCH is the same merge. Do not replace the

@@ -95,8 +95,8 @@ later is a **new** human edit (PATCH / typing). That is not Reject. There is no 
 website-assistant batch” via Reject. Activity cards show what happened; they are not an undo
 control. After Apply, Ctrl+Z undoes that **batch in RAM**, then PATCHes like any owner edit.
 The Apply row in `edit_history` keeps `edited_by=agent`; the copy-out of the undo is a later
-human batch. Instant-apply tools undo one tool at a time in RAM. Live website rollback and
-restore-unpublished are different surfaces ([api.md](api.md)).
+human batch. Instant-apply tools undo one tool at a time in RAM. Live website rollback is a
+different surface ([api.md](api.md)).
 
 ## Last writer
 

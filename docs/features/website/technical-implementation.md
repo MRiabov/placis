@@ -61,6 +61,8 @@ the tables it writes.
 Routes: [api.md](api.md). Media library, Details, and website form submit are other features'
 `api.md` files.
 Live HTML never calls Go. **Do not create** `/v1/public/site/…`.
+CMS unpublished writes are editor `POST`/`PATCH` only. Reset to an owner website version is
+editor GET `publication_id`, then PATCH.
 
 ## Validation & testing
 

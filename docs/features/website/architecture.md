@@ -100,9 +100,9 @@ website component contract, resolves the `{{var}}` website placeholders from the
 writes one `website_publications` row holding the published website copy as `website_manifest`
 (a `website.v1` website manifest — [manifest.md](manifest.md)). That row is a website version.
 The website manifest is the read model — the renderer only ever reads the active website version.
-Website rollback copies an earlier owner website version onto `latest/` (live). Restore
-unpublished copies that owner website version onto unpublished rows so the website editor
-continues; it is not website rollback.
+Website rollback copies an earlier owner website version onto `latest/` (live). To continue
+editing from that owner website version, the website editor GETs with `publication_id` and
+PATCHes ([api.md](api.md)). That is not website rollback.
 
 Edits to Details, Projects, certifications and reviews, website styles, or the unpublished
 website do not change the live website until the next website publication.
