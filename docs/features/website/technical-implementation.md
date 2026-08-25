@@ -43,8 +43,9 @@ the tables it writes.
    publication.
 2. Website publication creates a `website_publications` row (kept, not edited; active flag +
    website rollback chain) holding a typed `website.v1` document.
-3. Contractor website pages render only the active website publication; a website preview renders the
-   unpublished website.
+3. Contractor website pages render only the active website publication (R2 `latest/`). The
+   website editor canvas renders the unpublished website. The preview website address is that
+   same `latest/` tree (strip on until 08), not a per-request unpublished render.
 4. Website rollback reactivates an earlier website publication; earlier published website copies are
    never overwritten.
 5. Website publication emits an audit event.
@@ -58,16 +59,15 @@ the tables it writes.
 
 ## HTTP
 
-- `/api/v1/website/editor/...` — website pages, website sections, website slots, media assets,
-  projects, website publications, website settings, certifications, website forms, top menu,
-  footer. Same GET/PATCH page fold: optional `include_edit_history`, `base_edit_history_head`
-  on PATCH/Apply. No extra undo/redo/history routes.
-- `/api/v1/website/publications/...` — website publication and website rollback (if not under editor).
-- `/api/v1/public/forms/...` — website form submit (the public write). Host lookup uses
-  [website_addresses](persistence.md). Live GET does not call Go; it reads R2. Drop leftover
-  resolve. Connect-website-address APIs live under the website editor.
+Routes: [api.md](api.md). Do not re-list them here. Live HTML GET never calls Go.
+Website form POST is [leads HTTP](../other/leads/api.md). Connect website address is
+`POST /v1/website/addresses` (`type=custom` only). Website rollback is owner rows only.
+Media library, Details, and website form submit are other features' `api.md` files.
+CMS unpublished writes are editor `POST`/`PATCH` only. Reset to an owner website version is
+editor GET `publication_id`, then PATCH.
 
-Do not use `/api/v1/tenants/{website_prefix}/website/...` for the CMS.
+Do not create `/v1/public/site/…`, leftover `/preview/{token}/`, or
+`/v1/tenants/{website_prefix}/website/…`.
 
 ## Validation & testing
 

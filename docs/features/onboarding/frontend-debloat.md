@@ -66,12 +66,12 @@ Default client interview is **text**. Voice is listed and deferred
 | Today | Constrained API |
 | --- | --- |
 | Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding-sessions/business-lookup` |
-| Don't say setup: `…/from-google-place` | collapsed into business lookup (no `from-google-maps-listing` URL) |
+| Don't say setup: `…/from-google-place` | company registry / Maps on the business-lookup body (no `…/from-google-maps-listing`) |
 | Company registry search, Google Maps autocomplete | same nested under onboarding sessions |
 | `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations, details |
 | Text client interview autosave + submissions | client interview autosave + submissions |
-| Don't say setup: `GET …/events/stream` | `GET /api/v1/onboarding-sessions/{id}/events/stream` |
-| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | public `activation/checkout` / activation-status (Host / `website_prefix`) |
+| Don't say setup: `GET …/events/stream` | `GET /v1/onboarding-sessions/{id}/events/stream` |
+| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | public checkout / activation-status (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
 | Don't say claim: `GET …/claim/status` | activation-status |
 
 SSE drives `/onboarding/preview` only. The contractor host is static HTML; it is not an SSE

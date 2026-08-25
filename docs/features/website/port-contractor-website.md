@@ -15,11 +15,11 @@ surface. No backward-compatible paths, operation ids, or leftover predecessor ty
 | Call | Talks to | Types |
 | --- | --- | --- |
 | Live GET | Cache then R2 `latest/`. Miss is 404. Never Go. | None. No OpenAPI. |
-| Website-activation checkout | Go public `activation/checkout` (CORS by `Host`). | Closed checkout DTO. |
-| Website form POST | Go `/api/v1/public/forms/{id}/submit` (and uploads). | Closed public form DTO. |
+| Website-activation checkout | Go public checkout (CORS by `Host` / `website_prefix`). Not `/v1/website-previews/{token}/…`. | Closed checkout DTO. |
+| Website form POST | Go `POST /v1/website-forms/{form_id}/submissions` (and uploads). | Closed public form DTO. |
 
-Do not call `GET /api/v1/preview/{token}/module/website` or
-`GET /api/v1/public/site/resolve`. Do not generate a second
+Do not call `GET /v1/preview/{token}/module/website` or
+`GET /v1/public/site/resolve`. Do not generate a second
 full-CMS typegen in this app. Form types come from
 `website.v1` / `catalog/` (same JSON Go writes). A public-only slice of Go
 `/openapi.json` is allowed; the CMS spec is not.
@@ -44,7 +44,7 @@ field lists only when [api.md](api.md) already says so.
 ## Done when
 
 - Live GET still never calls Go.
-- No `GET /api/v1/public/site/resolve`.
-- Website forms use the Go public forms route.
+- No `GET /v1/public/site/resolve`.
+- Website forms use `POST /v1/website-forms/{form_id}/submissions`.
 - No predecessor OpenAPI typegen, leftover predecessor types, or module/website path in
   this app.

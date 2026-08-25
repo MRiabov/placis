@@ -106,7 +106,7 @@ Status: decided (2026-08-16, product owner + engineering).
 
 18. **Live GET is Cache then R2 only** — website publication prebuilds HTML into
     `sites/{website_prefix}/latest/`. A cache miss still reads R2. Missing object is 404, not a
-    render from Postgres. Drop leftover `GET /api/v1/public/site/resolve` (it was the token
+    render from Postgres. Drop leftover `GET /v1/public/site/resolve` (it was the token
     website preview). Tests assert R2 keys, not resolve.
     (2026-08-21; token preview dropped 2026-08-25)
 
