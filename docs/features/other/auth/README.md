@@ -34,8 +34,8 @@ tenant only when `status=active` (the "not paid / CMS closed" signal is still `t
 
 ## Clerk SDK
 
-Use the official **`github.com/clerk/clerk-sdk-go/v2`** for everything Clerk-side; do not hand-roll
-JWT/JWKS verification or Clerk data types.
+Use the official **Clerk Go SDK** (`github.com/clerk/clerk-sdk-go`, current stable major) for
+everything Clerk-side; do not hand-roll JWT/JWKS verification or Clerk data types.
 
 - **Sign-in verification** — the Clerk SDK client `Sessions().Verify(ctx, token)` fetches/caches JWKS, checks
   clock skew + audience, and maps the sign-in's Clerk organization claim to `ActiveOrganizationID`. App code only
