@@ -1,7 +1,7 @@
 # 05 — Apply the website template
 
 After client interview complete. `POST .../interview/complete` (04a submit or 04b `end_interview`)
-sets `applying_website_template` and enqueues this step. It does **not** run at find-confirm.
+sets `applying_website_template` and enqueues this step. It does **not** run at business lookup.
 
 Onboarding **owns** kicking this off and waiting until an unpublished website exists. Rows are
 [website](../../website/persistence.md) + [media library](../../other/media/persistence.md)
@@ -18,7 +18,7 @@ unpublished tables. They use the onboarding session’s `tenant_id` (unactivated
 
 ## Must not
 
-- Run at 01 Confirm.
+- Run at 01 business lookup.
 - Wait for 06 or 02 to finish.
 - `create_page` in 06 (this step already applied the website template’s website page set).
 - Website publication.

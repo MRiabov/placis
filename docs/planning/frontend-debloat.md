@@ -57,7 +57,7 @@ console.
   predecessor-only paths.
 - CMS calls `/v1/website/editor/…` only. Do not call
   `/v1/tenants/{website_address}/website/…`.
-- Onboarding calls `/v1/onboarding-sessions/confirm` and
+- Onboarding calls `/v1/onboarding-sessions/business-lookup` and
   `GET …/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`).
   Restore is `GET …/profile`.
 - Website preview route is `/preview/{token}/…`. It is not an SSE endpoint. Website

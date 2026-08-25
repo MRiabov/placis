@@ -112,7 +112,7 @@ Website component catalog structs are the only polymorphism: discriminator `comp
 
 Named once here. Feature `api.md` files name the mode, they do not redefine it.
 
-1. **none** — Find search + Confirm.
+1. **none** — Find search + business lookup.
 2. **onboarding session token** — request header or query as specified on the onboarding `api.md`.
 3. **Clerk JWT, active tenant only** — `/v1/me.tenant` non-null.
 4. **website preview token** — website activation + Worker internal render.
@@ -147,7 +147,7 @@ struct, so payloads are in `/openapi.json`. Do not use a raw `net/http` handler 
 the spec. `frontend-2` exhaustive-matches; unknown events are logged and dropped, never
 parsed as `any`.
 
-The website preview link is **not** SSE. Onboarding `/onboarding/preview` is.
+The website preview link is **not** SSE. The short progress screen in `frontend-2` is.
 
 ## Worker internal render
 
