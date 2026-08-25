@@ -4,8 +4,7 @@ Target Go layout. `cmd/ci` exists today; `internal/` product packages are still 
 
 ```text
 cmd/
-  api/            # HTTP API server
-  worker/         # background job worker (River)
+  api/            # HTTP API server + in-process River
   ci/             # CI/dev checks (not deployed); check-dont-say, later file-size + folder fan-out, …
 internal/
   # shared / cross-cutting (small, few files each)

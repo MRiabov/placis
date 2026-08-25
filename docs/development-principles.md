@@ -52,8 +52,8 @@ Each slice is **one PR**, complete and green before the next starts. A slice is:
 
 ## The walking skeleton first
 
-Before the first feature, build the walking skeleton: `cmd/api` + `cmd/worker`, config, `slog`,
-`huma` + `/health`, Postgres + `goose` + `sqlc`, `River`, and the CI pipeline. A few hundred lines,
+Before the first feature, build the walking skeleton: `cmd/api` (HTTP + in-process River), config, `slog`,
+`huma` + `/health`, Postgres + `goose` + `sqlc`, and the CI pipeline. A few hundred lines,
 but it proves the whole toolchain (sqlc → huma → OpenAPI → frontend typegen → Testcontainers →
 deploy) end to end. The first real slice after it is **tenancy + auth** — everything else FKs into
 `tenants`.
