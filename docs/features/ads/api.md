@@ -4,7 +4,7 @@ Conventions: [HTTP conventions](../../general-architecture/api.md). Ad generatio
 routes. Spec authority: [ad-generation](ad-generation/ADR.md). Contractor website never calls
 these. `platform_refs` is **omit** from first-slice DTOs.
 
-## OpenAPI opacity
+## Serve only types on HTTP
 
 | Location | Persistence | HTTP |
 | --- | --- | --- |

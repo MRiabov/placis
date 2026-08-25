@@ -5,12 +5,12 @@ client interview, SSE, website activation. Details after website activation:
 [details HTTP](../other/details/api.md). Applying the website template is owned by
 [website](../website/api.md); this feature only enqueues it.
 
-## OpenAPI opacity
+## Serve only types on HTTP
 
 | Location | Persistence | HTTP |
 | --- | --- | --- |
-| Company registry / Maps search | raw ETL cache | Closed `*Read` candidates (id, name, address, …). **Omit** `raw`. |
-| Business research fetches | `raw` jsonb | **Omit.** Checklist `*Read` is closed keys + status enum. |
+| Company registry / Maps search | raw ETL cache | `*Read` (id, name, address, …). **Omit** `raw`. |
+| Business research fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
 | Stripe event body | jsonb | **Omit.** Activation-status is a closed enum + checkout URL. |
 | Client interview extra notes | text | `string` + `maxLength`. |
 | SSE events | — | Huma `sse.Register` event name → struct. Not an unconstrained `payload`. |
@@ -39,13 +39,13 @@ Confirm is **one** command. Collapse predecessor Don't say setup: `POST /setup-s
 - **Auth:** none
 - **Callers:** Find typeahead (debounced).
 - **Query:** country + search string (`minLength`/`maxLength`).
-- **Response:** closed candidate `*Read` list. **Omit** `raw`.
+- **Response:** company registry `*Read` list. **Omit** `raw`.
 
 ### GET /v1/onboarding-sessions/google-maps-listings/autocomplete
 
 - **Auth:** none
 - **Callers:** Find typeahead (debounced).
-- **Response:** closed listing `*Read` list. **Omit** Maps `raw`.
+- **Response:** Google Maps listing `*Read` list. **Omit** Maps `raw`.
 
 ### GET /v1/onboarding-sessions/{id}/profile
 
@@ -60,7 +60,7 @@ Confirm is **one** command. Collapse predecessor Don't say setup: `POST /setup-s
 
 - **Auth:** onboarding session token
 - **Callers:** confirm-data / client interview.
-- **Response:** closed checklist keys + status enum (`in_progress` / `conflict` /
+- **Response:** named checklist keys + status enum (`in_progress` / `conflict` /
   `needs_confirmation` / `filled_by_user` / `filled_by_research` / `skipped` /
   `not_applicable` / `empty` — [build-profile](pipeline/build-profile.md)).
 
@@ -69,7 +69,7 @@ Confirm is **one** command. Collapse predecessor Don't say setup: `POST /setup-s
 - **Auth:** onboarding session token
 - **Callers:** contractor picks a research conflict.
 - **Idempotency-Key:** yes.
-- **Request:** checklist key + chosen value (closed fields, not a JSON bag).
+- **Request:** checklist key + chosen value (named fields, extra keys 4xx).
 
 ### PATCH /v1/onboarding-sessions/{id}/sources
 
@@ -85,7 +85,7 @@ Confirm is **one** command. Collapse predecessor Don't say setup: `POST /setup-s
 - **Auth:** onboarding session token
 - **Callers:** text client interview (save on click-off / periodic autosave).
 - **Idempotency-Key:** yes.
-- **Request:** closed answer fields + extra notes (`string` + `maxLength`).
+- **Request:** named answer fields + extra notes (`string` + `maxLength`). Extra keys 4xx.
 
 ### POST /v1/onboarding-sessions/{id}/text-interview/submissions
 
@@ -106,7 +106,7 @@ Confirm is **one** command. Collapse predecessor Don't say setup: `POST /setup-s
 - **Auth:** onboarding session token
 - **Callers:** `/onboarding/preview` (and confirm-data while 02 runs). Not the website preview
   link.
-- **Transport:** Huma `sse.Register`. Closed event names, for example:
+- **Transport:** Huma `sse.Register`. Named event structs, for example:
   `checklist_row`, `timeline_step`, `research_wait_until`, `website_preview_ready`.
 - **Must not:** unconstrained `payload` object; unknown events parsed as `any` (`frontend-2`
   drops them).

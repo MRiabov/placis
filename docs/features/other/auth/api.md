@@ -4,10 +4,10 @@ Conventions: [HTTP conventions](../../../general-architecture/api.md). Identity,
 Clerk organization, tenant on `/v1/me`. Health is
 [cross-cutting](../../../general-architecture/api.md).
 
-## OpenAPI opacity
+## Serve only types on HTTP
 
-None of these fields are `jsonb`. `TenantRead` is a closed struct (id, website address, name,
-status). Clerk ids are not on these responses; the Clerk SDK verifies the sign-in.
+None of these fields are `jsonb`. `TenantRead` fields: id, website address, name, status.
+Clerk ids are not on these responses; the Clerk SDK verifies the sign-in.
 
 ## Complete
 

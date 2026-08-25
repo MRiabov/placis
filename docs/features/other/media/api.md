@@ -5,7 +5,7 @@ upload**. The `files` table stays ([files-and-s3.md](../../../general-architectu
 there is **no** `/v1/files` HTTP. Bytes on an item are never replaced in place; edits copy
 (`parent_media_asset_id`).
 
-## OpenAPI opacity
+## Serve only types on HTTP
 
 No jsonb bags on these DTOs. Upload signed URL is `string` + `maxLength` (URL). Crop/focal are
 bounded numbers (0–1). Media caption is `string` + `maxLength`.

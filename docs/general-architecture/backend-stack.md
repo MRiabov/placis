@@ -32,7 +32,7 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 not go through a Go WebSocket — the browser connects to the voice service with a minted secret
 ([voice agent](voice-agent.md)).
 
-HTTP conventions (prefix, opacity, auth modes, errors, `Idempotency-Key`):
+HTTP conventions (prefix, serve only types on HTTP, auth modes, errors, `Idempotency-Key`):
 [api.md](api.md).
 
 ## Dependencies

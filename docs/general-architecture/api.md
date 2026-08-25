@@ -50,7 +50,7 @@ Do not say `slug` in paths or fields (website address / website page path).
 Do not say **fold** in `api.md` or path names. Say **live business profile** and
 **unpublished website**.
 
-## OpenAPI opacity
+## Serve only types on HTTP
 
 The predecessor shipped unconstrained JSON bags.
 Don't say: `JsonRecord` / `JsonObjectPayload` / `additionalProperties`.
@@ -75,23 +75,23 @@ repeat only their own rows.
 | --- | --- | --- |
 | Website slot `value` | jsonb | Discriminated union on `slot_type`: `text`/`rich_text` → string + `maxLength`; `image` → media library item id + crop/focal; `link` → url + label; `list` → typed array (e.g. project ids). **Do not expose `slot_type=json`.** Project galleries and reviews are ids / `website_slot_reviews`, not a JSON bag. |
 | Website section `props` | jsonb | `oneOf` by `component_id` from the website component catalog. Extra keys 4xx. Unknown `component_id` → `unsupported_component` flag + no props bag. |
-| Website section `design` | jsonb | Closed design-control struct (enum/bool options from the same website component catalog). |
+| Website section `design` | jsonb | Named design-control fields (enum/bool options from the same website component catalog). Extra keys 4xx. |
 | Website edit history `before`/`after` | jsonb (one website slot or field) | Same union as the live field (`entity_type` + `field` / website slot key). |
 | Website manifest | jsonb `website.v1` | **Omit** from website-editor GET/PATCH. Website publication `*Read` is metadata (website version number, status, times). Live HTML does not use this HTTP. |
-| Website styles overrides | columns + bounded jsonb | Closed: `preset_id`, `primary`, `neutral`, `accent`, `radius`, `density`. |
+| Website styles overrides | columns + bounded jsonb | Named fields: `preset_id`, `primary`, `neutral`, `accent`, `radius`, `density`. Extra keys 4xx. |
 | Ads `platform_refs` | jsonb | **Omit** from first-slice DTOs. When ad posting exists: named fields (`meta_ad_id`, …), not a string map. |
-| Company registry / Maps search | raw ETL cache | Closed `*Read` candidates (id, name, address, …). **Omit** `raw`. |
-| Business research fetches | `raw` jsonb | **Omit.** Checklist `*Read` is closed keys + status enum. |
+| Company registry / Maps search | raw ETL cache | `*Read` (id, name, address, …). **Omit** `raw`. |
+| Business research fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
 | Stripe event body | jsonb | **Omit** from `frontend-2`. Activation-status is a closed enum + checkout URL. |
-| LLM traces (`ai_generations`) | jsonb | **Omit.** Website assistant activity cards are closed event structs. |
+| LLM traces (`ai_generations`) | jsonb | **Omit.** Website assistant activity cards are named event structs. |
 | Audit `before`/`after` | jsonb | **Omit** from `frontend-2`. |
-| Website form website visitor POST | — | Closed fields matching that website form’s `fields[]`. Extra keys 4xx. |
+| Website form website visitor POST | — | Named fields matching that website form’s `fields[]`. Extra keys 4xx. |
 | Upload signed URL | string | URL `maxLength`. |
 | Website assistant plan | text | `string` + `maxLength`. Markdown. Do not `JSON.parse`. |
 | Client interview extra notes | text | `string` + `maxLength`. |
 | Validation errors | `text[]` | `string[]` with `maxLength` per item + closed `code` enum where we have codes. |
 
-### Do not create (opacity)
+### Do not create
 
 - Don't say: `JsonRecord`, `JsonObjectPayload`, `PublicSite*` bags, `props: object`, `value: object`
   without discriminator
@@ -124,7 +124,7 @@ claims. The Clerk SDK verifies the sign-in. They are not an HTTP union and are n
 
 ## Errors
 
-Closed envelope: `code`, `message`, optional `retry_after`.
+Named fields: `code`, `message`, optional `retry_after`.
 
 - `409 edit_history_conflict` — unpublished website PATCH when `base_edit_history_head` is
   stale. `frontend-2` re-GETs with `include_edit_history=true`.
