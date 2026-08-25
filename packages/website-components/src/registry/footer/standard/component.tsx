@@ -33,7 +33,7 @@ export default function FooterStandard({ props }: PublicSiteComponentProps) {
               {text(props.business_name, "Contractor business")}
             </div>
           )}
-          <div className="mt-1 text-sm text-[var(--public-muted)]">
+          <div className="mt-1 text-sm text-(--public-muted)">
             {text(props.contact_line, "")}
           </div>
         </div>

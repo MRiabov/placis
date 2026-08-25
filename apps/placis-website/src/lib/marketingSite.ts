@@ -47,7 +47,7 @@ export const MARKETING_STATEMENT_H2_CLASS = `${MARKETING_HEADING_FLAT_CLASS} ${M
 export const MARKETING_CARD_H3_CLASS = `${MARKETING_HEADING_FLAT_CLASS} ${MARKETING_CARD_HEADING_SIZE_CLASS} font-semibold`;
 
 export const MARKETING_PANEL_BODY_CLASS =
-  "font-normal text-[14px] text-zinc-600 leading-[1.5] sm:text-[15px] sm:leading-[1.55] dark:text-zinc-300";
+  "font-normal text-[14px] text-zinc-600 leading-normal sm:text-[15px] sm:leading-[1.55] dark:text-zinc-300";
 
 export const MARKETING_PANEL_LIST_CLASS =
   "text-[14px] text-zinc-700 leading-6 dark:text-zinc-300";

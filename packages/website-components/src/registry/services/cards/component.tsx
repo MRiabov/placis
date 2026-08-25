@@ -9,7 +9,7 @@ export default function ServicesCards({
   const services = asRecords(props.services);
   return (
     <section
-      className={`${sectionPadding(theme)} public-services-cards bg-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} public-services-cards bg-(--public-background)`}
       id={text(props.anchor_id, "") || undefined}
     >
       <div className="public-site-shell">
@@ -25,7 +25,7 @@ export default function ServicesCards({
             </h2>
           ) : null}
           {props.intro ? (
-            <p className="mt-3 text-sm leading-6 text-[var(--public-muted)]">
+            <p className="mt-3 text-sm leading-6 text-(--public-muted)">
               {text(props.intro, "")}
             </p>
           ) : null}
@@ -38,7 +38,7 @@ export default function ServicesCards({
             const ctaLabel = text(service.cta_label, "Read More");
             return (
               <article
-                className="flex flex-col overflow-hidden rounded-[var(--public-radius)] border border-[var(--public-border)] bg-[var(--public-background)]"
+                className="flex flex-col overflow-hidden rounded-(--public-radius) border border-(--public-border) bg-(--public-background)"
                 key={name}
               >
                 {src ? (
@@ -50,20 +50,20 @@ export default function ServicesCards({
                     />
                   </a>
                 ) : (
-                  <div className="h-44 w-full bg-[var(--public-surface)]" />
+                  <div className="h-44 w-full bg-(--public-surface)" />
                 )}
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="text-lg font-bold text-[var(--public-accent)]">
+                  <h3 className="text-lg font-bold text-(--public-accent)">
                     {name}
                   </h3>
                   {service.description ? (
-                    <p className="mt-2 flex-1 text-sm leading-6 text-[var(--public-muted)]">
+                    <p className="mt-2 flex-1 text-sm leading-6 text-(--public-muted)">
                       {text(service.description, "")}
                     </p>
                   ) : null}
                   {href ? (
                     <a
-                      className="public-site-button mt-4 inline-flex w-fit items-center rounded-full border border-[var(--public-primary)] bg-[var(--public-primary)] px-5 py-2 text-sm font-semibold uppercase tracking-[0.045em] text-[var(--public-background)]"
+                      className="public-site-button mt-4 inline-flex w-fit items-center rounded-full border border-(--public-primary) bg-(--public-primary) px-5 py-2 text-sm font-semibold uppercase tracking-[0.045em] text-(--public-background)"
                       href={href}
                     >
                       {ctaLabel}

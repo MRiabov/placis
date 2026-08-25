@@ -9,19 +9,19 @@ export default function HeroTypeFirst({
   const proof = asStrings(props.trust_badges);
   return (
     <section
-      className={`${sectionPadding(theme)} bg-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} bg-(--public-background)`}
     >
       <div className="public-site-shell">
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--public-muted)]">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-(--public-muted)">
           {text(props.business_name, "Local contractor")}
         </p>
-        <h1 className="mt-4 max-w-4xl text-5xl font-bold leading-tight text-[var(--public-text)] sm:text-6xl">
+        <h1 className="mt-4 max-w-4xl text-5xl font-bold leading-tight text-(--public-text) sm:text-6xl">
           {text(
             props.headline,
             "Practical help from a contractor you can reach",
           )}
         </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--public-muted)]">
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-(--public-muted)">
           {text(
             props.subheadline,
             "Book a visit, send job details, and get a clear next step.",
@@ -44,7 +44,7 @@ export default function HeroTypeFirst({
           <div className="mt-10 grid gap-3 sm:grid-cols-3">
             {proof.slice(0, 3).map((item) => (
               <div
-                className="border-t border-[var(--public-border)] pt-3 text-sm font-semibold"
+                className="border-t border-(--public-border) pt-3 text-sm font-semibold"
                 key={item}
               >
                 {item}

@@ -10,7 +10,7 @@ export default function ProofLogoStrip({ props }: PublicSiteComponentProps) {
 
   return (
     <section
-      className="public-proof-logo-strip border-y border-[var(--public-border)] bg-[var(--public-background)] py-8"
+      className="public-proof-logo-strip border-y border-(--public-border) bg-(--public-background) py-8"
       id={text(props.anchor_id, "") || undefined}
     >
       <div className="public-site-shell">
@@ -61,7 +61,7 @@ export default function ProofLogoStrip({ props }: PublicSiteComponentProps) {
                       src={src}
                     />
                   ) : (
-                    <figcaption className="text-sm font-semibold uppercase tracking-[0.12em] text-[var(--public-muted)]">
+                    <figcaption className="text-sm font-semibold uppercase tracking-[0.12em] text-(--public-muted)">
                       {label}
                     </figcaption>
                   )}
@@ -74,7 +74,7 @@ export default function ProofLogoStrip({ props }: PublicSiteComponentProps) {
         <div className="public-site-shell flex flex-wrap items-center justify-center gap-8">
           {items.map((item, index) => (
             <span
-              className="text-sm font-semibold uppercase tracking-[0.12em] text-[var(--public-muted)]"
+              className="text-sm font-semibold uppercase tracking-[0.12em] text-(--public-muted)"
               key={`${text(item.label, "Supplier")}-${index}`}
             >
               {text(item.label, "Supplier")}
