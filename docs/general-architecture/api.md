@@ -45,7 +45,7 @@ fixed sets `enum`. Persistence-on-blur is **save on click-off** (no Save control
 Website styles use **explicit apply**, not save on click-off.
 
 Verbs: `Create` / `Update` / `Get` / `List` / `Delete`. Domain nouns in paths.
-Do not say `slug` in paths or fields (website address / website page path).
+Do not say `slug` in paths or fields (website prefix / website page path).
 
 Do not say **fold** in `api.md` or path names. Say **live business profile** and
 **unpublished website**.

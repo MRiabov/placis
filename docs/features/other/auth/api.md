@@ -6,7 +6,7 @@ Clerk organization, tenant on `/v1/me`. Health is
 
 ## Serve only types on HTTP
 
-None of these fields are `jsonb`. `TenantRead` fields: id, website address, name, status.
+None of these fields are `jsonb`. `TenantRead` fields: id, website prefix, name, status.
 Clerk ids are not on these responses; the Clerk SDK verifies the sign-in.
 
 ## Complete
@@ -35,7 +35,7 @@ Clerk ids are not on these responses; the Clerk SDK verifies the sign-in.
 
 - `/me/orgs`, `/me/tenants`, `/me/selected-org`
 - Don't say organization: `/me/organization` (predecessor name)
-- `POST /v1/tenants`, `PATCH /v1/tenants/{website_address}`
+- `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`
 - memberships CRUD
 - custom impersonation (Clerk native impersonation only)
 - `placis_selected_org` cookie

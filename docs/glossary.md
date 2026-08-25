@@ -428,7 +428,7 @@ and an ordered list of website sections. Never say bare “page” in PRDs or UI
 The URL-safe path of a website page (for example a service page). Never say `slug` or bare “page
 path” in PRDs or UI.
 
-Distinct from: Website address.
+Distinct from: Website address, Website prefix.
 
 ---
 
@@ -621,11 +621,23 @@ Make an earlier website version the live website again, without deleting profile
 #### Website address
 
 The default host of the business’s site: they may be deployed under **our subdomain**. Reserved
-at website activation. Never say `slug`.
+at website activation.
 
-Distinct from: Custom website address (the address they supply), Website page path.
+Distinct from: Website prefix (the DNS/R2 label), Custom website address (the address they
+supply), Website page path.
 
 In code: `website_addresses` with `type=subdomain`.
+
+---
+
+#### Website prefix
+
+The reserved DNS label and R2 key (`acme-roofing-dublin`). Not a URL. Never renamed. Never say
+`slug` or `website-prefix`.
+
+Distinct from: Website address (the host), Custom website address, Website page path.
+
+In code: `tenants.website_prefix`.
 
 ---
 
@@ -1082,7 +1094,8 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | skeleton | unpublished website (the unpublished site) or loading placeholder (UI while a field loads) |
 | creative set | never in product (Internal: Creative set — images + text; not Ad) |
 | asset (media) | media asset (internal) or photo / item in the media library (product) |
-| slug | website address |
+| slug | website prefix |
+| website-prefix | website prefix |
 | user | contractor, owner, or website visitor |
 | visitor | website visitor |
 | lead (website, ads) | website lead or ad lead |
