@@ -2,7 +2,7 @@
 
 Two full-stack E2E tests. Both drive `frontend-2` (Playwright) against the real API + real Postgres,
 using a real Clerk testing token — never a fake verifier. DB asserts name the tables from
-[data-model.md](data-model.md).
+[persistence.md](persistence.md).
 
 ## 1. Access control (`/cms`)
 

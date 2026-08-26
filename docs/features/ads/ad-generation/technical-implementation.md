@@ -5,10 +5,10 @@ Status: proposed implementation plan.
 Related docs:
 
 1. [Ad generation PRD](prd.md)
-2. [Ads data model](../data-model.md)
+2. [Ads persistence](../persistence.md)
 3. [Website](../../website/README.md)
 4. [Architecture and JSON standards](../../../general-architecture/backend-stack.md)
-5. [Backend API surface](#backend-api-surface)
+5. [HTTP](../api.md)
 
 ## Technical Thesis
 
@@ -74,7 +74,7 @@ reference them by id (for example `ad_image_placements.media_asset_id`).
 
 In code: the marketing set is images + text, stored today as `ads` plus variants.
 Distinct from Ad. Go/persistence forms are
-snake_case tables with a `*_id` primary key, per [data-model.md](../data-model.md): Ad →
+snake_case tables with a `*_id` primary key, per [persistence.md](../persistence.md): Ad →
 `ads`, `AdVariant` → `ad_variants`, `AdCopyVariant` → `ad_copy_variants`,
 `AdImagePlacement` → `ad_image_placements`, `AdLeadForm` → `ad_lead_forms`. There is no ad
 destination on `ads` for now.
@@ -227,44 +227,11 @@ the source media asset to the crop (sharpening/format conversion
 via the existing image pipeline) into a per-ad-format output file. Output naming is
 deterministic, e.g. `{ad_id}/{variant_format}/{position}.{ext}`.
 
-## Backend API Surface
+## HTTP
 
-Ad generation is a service of its own, exposed over HTTP. The routes below are
-what Ads uses; the same service code is what internal callers use, and what a
-future public API would expose. All routes use `/api/v1` and stable `operation_id` values.
-
-Service-level rules:
-
-1. inputs are per tenant and clearly defined: details from the business profile, approved media asset
-   ids, service focus, ad goal, and ideal customer profile
-2. the output is the ad set (ad, variants, copy, image placements, ad lead form, and the
-   ideal customer profile columns) with an ad set format number and the stable ad/variant ids
-   in the response, so an ad-platform integration can map its own objects back to the ad
-3. generation is safe to retry: running the same request twice gives the same result
-4. for now only internal callers (the app's own sign-in/actor context) can use it; external
-   API keys are future work and must not change the ad set format
-
-Recommended private Ads routes (the Ads app):
-
-1. `GET /api/v1/ads`
-2. `POST /api/v1/ads`
-3. `GET /api/v1/ads/{ad_id}`
-4. `PATCH /api/v1/ads/{ad_id}`
-5. `DELETE /api/v1/ads/{ad_id}` for draft-only removal
-6. `GET /api/v1/ads/{ad_id}/variants`
-7. `PATCH /api/v1/ads/{ad_id}/variants/{variant_id}`
-8. `POST /api/v1/ads/{ad_id}/variants/{variant_id}/regenerate` (LLM
-   draft for copy and/or image gallery on one variant)
-9. `POST /api/v1/ads/{ad_id}/approve`
-10. `POST /api/v1/ads/{ad_id}/ad-set` (returns the ad set)
-11. `POST /api/v1/ads/{ad_id}/download` (renders and returns a signed URL
-    for the ad-set download on the human path)
-
-Mutating routes that can be retried accept `Idempotency-Key`. PATCH / regenerate / approve
-send `base_updated_at` (last-seen `ads.updated_at`). Match → bump `ads.updated_at` and
-return it. Mismatch → `409`; frontend re-GETs. No undo/redo routes ([ADR 31](ADR.md)).
-Approve/ad-set/download/archive mutations audit. The contractor website application never
-calls these routes; ad sets are not live-website content.
+Routes, `Idempotency-Key`, `base_updated_at` / `409`, and `platform_refs` omit:
+[ads HTTP](../api.md). The contractor website never calls these. Ad sets are not
+live-website content.
 
 ## Future Callers Of The Service
 

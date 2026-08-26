@@ -2,7 +2,7 @@
 
 One full-stack E2E test: create → generate → approve → download. Drives `frontend-2` (Playwright)
 against the real API + real Postgres; the LLM is faked. DB asserts name the tables from
-[data-model.md](../data-model.md).
+[persistence.md](../persistence.md).
 
 1. **Create** — the owner clicks "create an ad".
    - UI: routed to `/cms/ads/new`.

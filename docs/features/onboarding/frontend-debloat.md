@@ -6,10 +6,11 @@ Status: planning (port instructions, not shipped UI).
 
 [frontend.md](frontend.md), [pipeline README](pipeline/README.md),
 [07 website preview](pipeline/07-website-preview.md),
-[08 website activation](pipeline/08-website-activation.md).
+[08 website activation](pipeline/08-website-activation.md),
+[api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 
-Default client interview is **voice**. Text is the other writer
+Default client interview is **text**. Voice is listed and deferred
 ([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)).
 
 ## Code today
@@ -19,8 +20,8 @@ Default client interview is **voice**. Text is the other writer
 - Website preview + website activation: leftover `frontend-2/src/features/preview/`
   (`PreviewRoute.tsx`, `TargetedPreviewView.tsx`, `PayToClaimStrip.tsx`,
   `api/preview.ts`). Drop that folder; website preview is `apps/contractor-website`
-  in preview mode ([frontend stack](../../general-architecture/frontend-stack.md)).
-  Keep the website-activation strip on `/onboarding/preview`.
+  in website preview mode ([frontend stack](../../general-architecture/frontend-stack.md)).
+  Website-activation strip is on `/preview/{token}/`, not a `frontend-2` route.
 - Router: `/onboarding`, `/onboarding/$step`, `/preview/$token/$module` in
   `frontend-2/src/app/router/index.tsx`.
 - Don't say setup: API `frontend-2/src/features/setup/api/setup.ts`,
@@ -32,15 +33,15 @@ Default client interview is **voice**. Text is the other writer
 ## Keep
 
 - Screens: `/onboarding/find`, `/onboarding/review`, `/onboarding/interview`,
-  `/onboarding/preview`.
+  short progress screen (SSE). Website preview + pay: `/preview/{token}/` on the contractor website.
 - `BusinessSourcePanel` (country, company registry, optional Google Maps, online
-  research consent). Confirm creates the onboarding session **once**.
+  research consent). Business lookup creates the onboarding session **once**.
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist`.
 - Progress timeline (`PreviewProgressPanels` / apply-the-website-template panel).
-  **View website** as soon as the website preview exists (contractor-website preview mode).
-- Stripe website-activation strip on `/onboarding/preview`. Success → `/cms/website`.
-  Drop leftover `TargetedPreviewView`.
+  **View website** as soon as the website preview exists (`/preview/{token}/`).
+- Stripe website-activation strip on `/preview/{token}/`. Success → `/cms/website`.
+  Drop leftover `TargetedPreviewView` and `frontend-2` `/onboarding/preview`.
 - Resume: `localStorage` holds the onboarding session token + last UI step;
   `GET …/profile` restores. Restore failure does not `POST` a new onboarding session.
 
@@ -64,17 +65,17 @@ Default client interview is **voice**. Text is the other writer
 
 | Today | Constrained API |
 | --- | --- |
-| Don't say setup: `POST /api/v1/setup-sessions` | `POST /api/v1/onboarding-sessions` |
-| Don't say setup: `…/from-google-place` | `…/from-google-maps-listing` |
+| Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding-sessions/business-lookup` |
+| Don't say setup: `…/from-google-place` | collapsed into business lookup (no `from-google-maps-listing` URL) |
 | Company registry search, Google Maps autocomplete | same nested under onboarding sessions |
-| `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations, details |
-| Text client interview autosave + submissions | client interview autosave + submissions |
-| Don't say setup: `GET …/events/stream` | `GET /api/v1/onboarding-sessions/{id}/events/stream` |
-| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | activate / activation-checkout / activation-status |
+| `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations |
+| Text client interview autosave + submissions | client interview autosave + submissions + complete |
+| Don't say setup: `GET …/events/stream` | `GET /v1/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`) |
+| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | `/v1/website-previews/{token}/activate` / `activation-checkout` / `activation-status` |
 | Don't say claim: `GET …/claim/status` | activation-status |
 
-SSE drives `/onboarding/preview` only. The `/preview/{token}` route reloads; it is
-not an SSE endpoint.
+SSE drives the short progress screen (and Review while 02 runs). The `/preview/{token}` route
+reloads; it is not an SSE endpoint.
 
 ## Don't say / rename
 
@@ -83,7 +84,7 @@ not an SSE endpoint.
 - Don't say setup: `createGuidedSetupSession` / `getSetupProfile` → onboarding session helpers.
 - Don't say setup: `localStorage` key `placis.contractorOnboarding.setupSessionId` → onboarding session token key.
 - Don't say shell: `OnboardingShell` → onboarding layout.
-- Don't say claim: `PayToClaimStrip` → website-activation strip; copy is website activation, never claim.
+- Don't say claim: `PayToClaimStrip` → website-activation strip on `/preview/{token}/`; copy is website activation, never claim.
 - Don't say session (bare): always **onboarding session** (or sign-in / client interview).
 
 ## Tests
@@ -102,6 +103,6 @@ not an SSE endpoint.
 
 - Folder and types use onboarding, not the predecessor name.
 - Voice code is gone from first-pass `frontend-2`.
-- Generated types and MSW call `/api/v1/onboarding-sessions…` only.
+- Generated types and MSW call `/v1/onboarding-sessions…` only.
 - Text client interview is the default `/onboarding/interview` surface.
 - Website activation copy and routes match 07. Don't say claim.

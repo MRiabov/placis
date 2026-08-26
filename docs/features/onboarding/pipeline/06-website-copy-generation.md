@@ -25,7 +25,7 @@ start is 409.
   `{{marketing_phone}}`, …).
 - Wait for pay / 08. After 08 the same job **continues** on the same `tenant_id`. CMS website
   assistant 409 while this run is in flight.
-- Run at find-confirm. Not on every later 02 event.
+- Run at business lookup. Not on every later 02 event.
 
 ## Do
 
