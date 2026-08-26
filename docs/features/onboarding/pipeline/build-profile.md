@@ -22,7 +22,7 @@ Every registry select, Maps attach, business research source, and client intervi
 - Silently overwrite a disagreeing value onto the fold.
 - Fabricate a value with no source (registry, Maps, crawl, business research, or the contractor).
 - Write `registered_office` into `business_profile_service_areas` or the reverse.
-- Use Maps listing address as a second legal address (it stays on `google_maps_listings`).
+- Use Maps listing address as a second legal address (it stays on `etl.google_maps_listings`).
 - Upsert a checklist row (there is no such table).
 
 ## Do — merge
@@ -66,9 +66,9 @@ Stable keys. 03 groups them for display. 02 jobs may fill; 04a/04b fill gaps.
 | `services` | work | `business_profile_services` | crawl | required |
 | `service_areas` | work | `business_profile_service_areas` | crawl / directory | required |
 | `accreditations` | certifications | list / notes | trade registry | optional |
-| `reviews` | reviews | `business_profile_reviews` | Maps / review job | optional |
+| `reviews` | reviews | `business_profile_reviews` | Maps / Facebook / review job; then LLM pins **top reviews** + review citations | optional |
 | `facebook_profile_url` | reviews | `facebook_profile_url` | Facebook | optional |
-| `photos` | photos | media library + `photos_choice` | Maps photos + 02 classification | required choice |
+| `photos` | photos | media library + `photos_choice` | Maps photos, Facebook/Instagram post images + 02 classification | required choice |
 
 `photos_choice`: `use_found` / `source_from_google` / `upload_later` / `use_neutral`.
 

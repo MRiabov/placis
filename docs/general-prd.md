@@ -16,6 +16,9 @@ onboard (from their Google Maps listing or company registry record)
   -> ads from the profile + approved photos
 ```
 
+Public Maps / Facebook pages keep feeding photos and reviews after website activation (same
+online research consent; not a second onboarding).
+
 Done-for-you + DIY: Placis can do business research, build, tweak, and suggest ads; the owner can
 do the website edits and ad creation themselves.
 
@@ -34,6 +37,7 @@ channel into the same tools (not a separate product). How slices land:
 - [Leads](features/other/leads/README.md) — website form contacts
 - [Details](features/other/details/README.md) — the business profile the rest of the app reads
 - [Media library](features/other/media/README.md)
+- [ETL](features/other/etl/README.md) — continuing public extract (Facebook posts, photos, reviews)
 - [Placis website](features/placis-website/README.md) — Placis’s own site
 
 `frontend-2` is [reused and debloated](planning/frontend-debloat.md), not rebuilt.

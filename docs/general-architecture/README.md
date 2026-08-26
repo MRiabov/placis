@@ -23,5 +23,6 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [testing.md](testing.md) — unit / integration / E2E tiers and the per-feature E2E rule
 
 Payments live with [website activation](../features/onboarding/pipeline/08-website-activation.md). Website leads live in
-[features/other/leads](../features/other/leads/README.md). Website preview progress events:
+[features/other/leads](../features/other/leads/README.md). Public-source extract:
+[ETL](../features/other/etl/README.md). Website preview progress events:
 [07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md).

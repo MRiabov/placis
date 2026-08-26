@@ -192,7 +192,21 @@ the text. Filled during onboarding. Shown on the website; ads read the same rows
 
 Distinct from: Ad needs review (an Ad state), Website preview.
 
-In code: `business_profile_reviews`, `google_maps_listing_reviews`, `website_slot_reviews`.
+In code: `business_profile_reviews`, `etl.google_maps_listing_reviews`,
+`etl.facebook_page_reviews`, `website.website_slot_reviews`.
+
+---
+
+### Review citation
+
+The short text taken from a review for cards, the website, and ads — about two or three
+sentences from the review body, not a paraphrase. Missing spaces in the body may be fixed.
+Never say bare “citation” for this.
+
+Distinct from: where it came from (a detail’s origin). Distinct from Reviews (the full body)
+   and Top reviews (the ads featured set) or the reviews on one website section.
+
+In code: `business_profile_reviews.citation`.
 
 ---
 
@@ -230,7 +244,7 @@ the contractor decides. A research conflict is not an error.
 
 The contractor’s Google Maps place, used to start onboarding and pre-fill what we already know.
 
-In code: `google_maps_listings` (Google’s `place_id` as the external id).
+In code: `etl.google_maps_listings` (Google’s `place_id` as the external id).
 
 ---
 
@@ -319,7 +333,7 @@ Distinct from: Onboarding session (the persisted run).
 
 On Find: submit the picked company registry record and/or Google Maps listing. One command:
 insert the unactivated tenant and onboarding session, record online research consent, enqueue
-business research if under the wave cap. Distinct from typeahead search, from business research,
+business research if under the run cap. Distinct from typeahead search, from business research,
 from Review, from picking a research conflict. Never say Confirm for this command.
 
 In code: `POST /v1/onboarding-sessions/business-lookup`.
@@ -338,11 +352,15 @@ In code: `onboarding_sessions.online_research_consent_at`.
 
 #### Business research
 
-Finding out about the business from public sources (Maps, the company registry, Facebook, their
-current website, photos of their work) after online research consent. Never say bare “research”.
+Finding out about the business from public sources (Maps, the company registry, Facebook,
+Facebook posts when they exist, their current website, photos of their work) after online
+research consent. Starts at onboarding and continues for an activated tenant when those
+sources publish new posts, photos, or reviews. Never say bare “research”.
 
-In code: `business_research_waves`, `business_research_runs`, `business_research_events`,
-`business_research_sources`, `business_research_fetches`.
+Internal: ETL (the extract machinery). Distinct from: Online research consent.
+
+In code: `etl.business_research_runs`,
+`etl.business_research_events`, `etl.business_research_sources`, `etl.fetches`.
 
 ---
 
@@ -908,6 +926,19 @@ In code: `origin`.
 
 ---
 
+### ETL
+
+Extract, transform, and load of public source bodies into typed listing tables, then into the
+business-profile fold and the media library. Not owner-facing. Onboarding business research
+is the first run; scheduled listing updates and source-change runs use the same adapters.
+
+Distinct from: Business research (the product process), the fold (live `business_profiles`),
+Profile history (`business_profile_edits`).
+
+In code: Postgres schema `etl`; `internal/etl/`.
+
+---
+
 ### Provider
 
 Not a term. Name Google Maps, the LLM, Stripe, or fakes in tests. Never use this word for a
@@ -1108,7 +1139,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | needs review (ads) | ad needs review (Ad states) |
 | source reference / `source_refs` | where a detail came from |
 | provenance | supplied by (media) or where it came from (a detail) |
-| citation | where it came from |
+| citation (details) | review citation (the excerpt) or where it came from (a detail’s origin) |
 | state / state machine | steps / where things stand |
 | normalize(d) | combine / turn into |
 | materialize(d) | make a published website copy |

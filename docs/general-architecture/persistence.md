@@ -5,8 +5,8 @@ business lookup (the tenant may still be `unactivated`). Cross-tenant isolation
 is proven by integration tests (two tenants, assert reads/writes/files are blocked).
 
 Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic dumps: website component
-`props` / `design`, website slot `value`, business-research `raw` (kinds with no
-listing table), `google_maps_listings.raw` (ETL fetch body), Stripe and business research /
+`props` / `design`, website slot `value`, ETL fetch bodies (`etl.fetches.raw`; kinds with no
+listing table also copy onto `etl.business_research_sources.raw`), Stripe and ETL /
 website preview event payloads, `ai_generations` traces (`input` / `internal_reasoning` /
 `output` / `tool_calls` / `applied_changes`), audit `before` / `after`, website edit history
 `before` / `after` (one field or website slot), and ads `platform_refs`.
@@ -44,7 +44,8 @@ never copied into a second `persistence.md`.
 | Owner | Postgres schema (namespace) | Tables |
 | --- | --- | --- |
 | [auth](../features/other/auth/persistence.md) | `auth` | `tenants`, `tenant_memberships` |
-| [onboarding](../features/onboarding/persistence.md) | `onboarding` | onboarding sessions, business research, `google_maps_listings`, website previews, website activations, `stripe_events` |
+| [onboarding](../features/onboarding/persistence.md) | `onboarding` | onboarding sessions, client interview, website previews, website activations, `stripe_events` |
+| [ETL](../features/other/etl/persistence.md) | `etl` | runs, sources, append-only `fetches`, watermarks, `google_maps_listings`, `facebook_pages` / reviews / posts, `imported_media` mapping |
 | [details](../features/other/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews) |
 | [website](../features/website/persistence.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions), projects, certifications |
 | [media library](../features/other/media/persistence.md) | `media_library` | `media_assets` |

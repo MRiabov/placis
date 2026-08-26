@@ -38,7 +38,7 @@ the normal fast path.
    on 04 if they Continue): we’ll look the business up again then; not a modal, not a full-screen
    block, not a disabled Continue. Copy stays product language (“We’ll look the business up again
    in a few minutes”) — see [frontend.md](../frontend.md).
-5. Out → 04a or 04b (`/onboarding/interview`). 02 keeps running when a wave is in flight.
+5. Out → 04a or 04b (`/onboarding/interview`). 02 keeps running when a run is in flight.
 
 ## Persist
 
@@ -51,7 +51,7 @@ Do not `POST` a new onboarding session.
 
 ## Out
 
-`/onboarding/interview` (04a or 04b). 02 still running when a wave is in flight.
+`/onboarding/interview` (04a or 04b). 02 still running when a run is in flight.
 
 ## Invariants
 

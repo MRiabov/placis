@@ -45,6 +45,10 @@ Validation errors: `string[]` with `maxLength` per item.
 - **Callers:** Certifications and reviews screen. Website editor picks these onto website slots
   (`website_slot_reviews`); Details owns the rows.
 
+`POST /v1/business-profile/reviews/import` and a Details PATCH of `facebook_profile_url` /
+`google_maps_listing_url` enqueue an `etl` run (`trigger=import` or source-change). The Facebook
+job on that run also lands public **posts** and post images in the media library.
+
 ## Do not create
 
 - `/v1/website/editor/business-profile`

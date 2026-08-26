@@ -16,7 +16,9 @@ may be the same number). The owner’s sign-in email is Clerk’s, not a profile
 
 The live `business_profiles` row plus the list tables is the **fold** of profile history. Website,
 ads, Details, and apply-the-website-template (when the fold has not moved past
-`accepted_edit_id`) **read the fold**. They do not replay edits on every call.
+`accepted_edit_id`) **read the fold**. They do not replay edits on every call. Public listing
+rows (Maps, Facebook posts) live in [ETL](../etl/persistence.md); this schema is the fold those
+runs load into.
 
 - `business_profiles` — `id`, `tenant_id` fk unique (required; the unactivated tenant created at
   business lookup, same row later activated), `trade` (`roofing`/`landscaping_paving`/
@@ -52,7 +54,7 @@ ads, Details, and apply-the-website-template (when the fold has not moved past
   `created_by` (`business_research`/`voice`/`text`/`human`/`llm`),
   origin (where it came from: `google_maps_listing`/`company_registry_record`/`client_interview`/
   `business_research`/`owner`),
-  `request_id`, `business_research_run_id` nullable,
+  `request_id`, `business_research_run_id` nullable fk (`etl.business_research_runs`),
   `created_at`
 
 This table is the audit for profile edits. Generic `audit_events` stays for website publication /
@@ -74,7 +76,7 @@ the profile as of `accepted_edit_id` (client interview complete).
 - `business_profile_opening_hours` — `id`, `tenant_id` fk, `business_profile_id` fk, `day_of_week`,
   `opens_at`, `closes_at`, `closed`
 - `business_profile_reviews` — `id`, `tenant_id` fk, `business_profile_id` fk,
-  `google_maps_listing_review_id` nullable fk, `author_name`, `rating` (1–5), `body`,
+  `google_maps_listing_review_id` nullable fk (`etl.google_maps_listing_reviews`), `author_name`, `rating` (1–5), `body`,
   `published_at` nullable, `language` nullable, `position`
 
 Website sections and ads reference `business_profile_reviews` by id. They do not copy the text.
