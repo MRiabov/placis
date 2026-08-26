@@ -31,9 +31,10 @@ different concepts, keep both, with Distinct from.
 The glossary defines what terms mean. It never prescribes — no scope, pipeline, validation rules,
 or how something is implemented. Those belong in PRDs and technical docs.
 
-In PRDs, user stories, and UI, a website term includes **website**. Never say page, section, slot,
-styles, form, editor, template, draft, preview, or publish as if they were generic. **Top menu**
-and **footer** are named separately; never say header, navigation, or bare “menu”. The same idea for ads and onboarding: use
+In PRDs, user stories, and UI, a website term includes **website**. Never say page, section,
+styles, form, editor, template, draft, preview, or publish as if they were generic. Never say
+**slot** or **website slot** in PRDs or UI (Internal). **Top menu** and **footer** are named
+separately; never say header, navigation, or bare “menu”. The same idea for ads and onboarding: use
 the full glossary term when the feature is not already the context.
 
 In technical docs and code that **clearly already belong to that feature** (a website architecture
@@ -404,9 +405,9 @@ Distinct from: Website preview (the sales stage), Preview website address (the h
 
 ### Website
 
-The contractor’s site: website pages, website sections, website slots, website forms, top menu,
-footer, website styles, built from a website template and the business profile, edited in the
-website editor, shown to website visitors only after website publication.
+The contractor’s site: website pages, website sections, website forms, top menu, footer, website
+styles, built from a website template and the business profile, edited in the website editor, shown
+to website visitors only after website publication.
 
 Say **contractor website** when you need to tell it apart from Placis website.
 
@@ -457,19 +458,10 @@ Distinct from: Website address, Website prefix.
 
 #### Website section
 
-A block on a website page (hero, services, reviews, …), edited through its website slots. Never
-say bare “section” in PRDs or UI.
+A block on a website page (hero, services, reviews, …). Never say bare “section” in PRDs or UI.
 
 Internal: Website component (a website component catalog building block a website section is an
-instance of).
-
----
-
-#### Website slot
-
-A named editable value inside a website section: text, rich text, image, list, link, reviews, or
-a project gallery. **Never in UI** — not “slot”, not “website slot”. Owners see the kind
-(heading, text, or image) on a website section. Specs still say website slot.
+instance of), Website slot (a named editable value on that website section).
 
 ---
 
@@ -570,9 +562,8 @@ Distinct from: Instant apply, Website assistant plan.
 
 #### Apply the website template
 
-Write unpublished website pages, website sections, and website slots from a website template and
-the business profile. Website placeholders stay. Never say instantiate, population, or generate
-for this.
+Write unpublished website pages and website sections from a website template and the business
+profile. Website placeholders stay. Never say instantiate, population, or generate for this.
 
 Distinct from: Website copy generation (the words), Website template (the starting point).
 
@@ -989,6 +980,15 @@ Domain: Website section (a website section is an instance of a website component
 
 ---
 
+#### Website slot
+
+A named editable value inside a website section (text, image, list, and the like). Never in
+product docs or UI — owners see the kind (heading, text, or image) on a website section.
+
+Domain: Website section.
+
+---
+
 #### Website template catalog
 
 Where website templates live. Never say bare “catalog”.
@@ -1071,7 +1071,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | draft (website, ads) | unpublished website, or ad draft (Ad states) |
 | template (website) | website template |
 | page (website) / section (website) / styles (website) | website page / website section / website style or website styles |
-| slot (website) | heading, text, or image on that website section (UI). Technical docs: website slot |
+| slot (website) | heading, text, or image on that website section. Internal: website slot |
 | form (website, ads) | website form or ad lead form |
 | caption (media) | media caption |
 | media (media) | media library |
@@ -1134,8 +1134,9 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 
 - Domain words in PRDs, UI, **and in code** when they name that concept. Internal names only
   for a different concept (technical docs and code).
-- Unqualified Domain words (`page`, `section`, `slot`) only in that feature’s technical docs and
-  package. Other features use the Say (`website page`). `slot` is never owner copy. Banned
+- Unqualified Domain words (`page`, `section`) only in that feature’s technical docs and
+  package. Other features use the Say (`website page`). Internal `slot` / website slot only in
+  website technical docs and code — never owner copy or PRDs. Banned
   synonyms (`slug`, `skeleton`, `blueprint`) appear nowhere, including code.
 - Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned row, `*_id`
   foreign keys, `snake_case` enum values.
