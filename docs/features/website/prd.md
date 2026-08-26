@@ -3,7 +3,7 @@
 Status: proposed product scope for the website.
 
 Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.md),
-[data model](data-model.md), [frontend.md](frontend.md).
+[persistence](persistence.md), [frontend.md](frontend.md).
 
 ## Problem
 

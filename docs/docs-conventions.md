@@ -13,9 +13,10 @@ editing a doc.
 - `general-prd.md` — product-level loop and in/out of scope (pointers to feature PRDs).
 - `general-architecture/` — cross-cutting architecture no single feature owns:
   `backend-stack.md`, `frontend-stack.md`, `module-layout.md`, `processes.md`,
-  `package-boundaries.md`, `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
-  `files-and-s3.md`, `data-model.md`
-  (conventions + index of per-feature schemas), `frontend.md` (`frontend-2` UI rules),
+  `package-boundaries.md`, `api.md` (HTTP conventions + index of per-feature `api.md` files),
+  `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
+  `files-and-s3.md`, `persistence.md`
+  (conventions + index of per-feature tables), `frontend.md` (`frontend-2` UI rules),
   `frontend-debloat.md` (cross-cutting port), `ci-cd.md`, `testing.md`.
   Feature-owned capabilities (website
   activation/payments, leads, media library) live under `features/`, not here.
@@ -35,8 +36,9 @@ A feature directory holds, as applicable:
 | `prd.md` | business requirements, user stories, acceptance criteria (domain language) |
 | `ADR.md` | numbered decision record |
 | `architecture.md` | the logic: content/component model, flows, states (no structs) |
-| `data-model.md` | that feature's tables (columns, indexes); shared tables are linked, never copied |
-| `technical-implementation.md` | API surface, validation, testing — references `data-model.md`, does not re-define tables |
+| `persistence.md` | that feature's tables (columns, indexes); shared tables are linked, never copied |
+| `api.md` | Canonical HTTP routes for this feature. Routes, auth, callers, request/response fields, errors, do-not-create. Not Go structs. Conventions: [general-architecture/api.md](general-architecture/api.md). |
+| `technical-implementation.md` | pipeline, validation, testing — references `persistence.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
 | `testing.md` | the full-stack E2E test(s) with DB asserts |
@@ -50,12 +52,14 @@ Not every file is needed — a feature uses only the ones it has content for. A 
 
 - **Vertical**: a feature's docs live in one `features/<feature>/` dir; cross-cutting stuff lives in
   `general-architecture/`. Don't split one concern across both.
-- **One definition per concept**: each feature's tables live in that feature's `data-model.md`.
+- **One definition per concept**: each feature's tables live in that feature's `persistence.md`.
   A table used by more than one feature lives in one owning file and is linked, never copied.
 - **Domain language in product docs** (PRD, README, user stories); implementation terms stay in the
-  technical docs (`technical-implementation.md`, per-feature `data-model.md`, ADR) and code. See
+  technical docs (`technical-implementation.md`, per-feature `persistence.md`, ADR) and code. See
   `glossary.md`.
 - **New names come from the glossary** — coin a word there first, never in a PRD. The glossary
   defines terms; it never prescribes.
 - **Logic before structs**: architecture/pipeline docs describe flows and models; structs/DTOs fall
-  out at implementation time and are not pre-written.
+  out at implementation time and are not pre-written. The **HTTP routes** are per-feature `api.md`
+  (plus [general-architecture/api.md](general-architecture/api.md)); that is paths and fields, not
+  huma structs.

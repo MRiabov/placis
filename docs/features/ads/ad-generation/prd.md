@@ -7,7 +7,7 @@ Related docs:
 1. [Ad generation technical implementation](technical-implementation.md)
 2. [Ad generation decision record](ADR.md)
 3. [Ad generation frontend specification](frontend.md)
-4. [Ads data model](../data-model.md)
+4. [Ads persistence](../persistence.md)
 5. [Website](../../website/README.md)
 6. [Onboarding](../../onboarding/README.md)
 

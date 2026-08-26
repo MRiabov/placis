@@ -1,20 +1,21 @@
 # 02 — Business research
 
-Async, parallel. Starts when 01 Confirm returns — **not** when 03 finishes. Overlaps confirm data
+Async, parallel. Starts when 01 business lookup returns — **not** when 03 finishes. Overlaps Review
 and the client interview. Progress on the onboarding session SSE stream. Photo classification of
 found photos is this step, not the client interview.
 
 Paid lookups (Maps, Parallel, Facebook, crawl) cost money. A naive contractor must not be able to
-start that work dozens of times by Confirming, picking another company, or retrying. Cap it.
+start that work dozens of times by repeating business lookup, picking another company, or retrying.
+Cap it.
 
-A **wave** is one enqueue of this step’s job set for a tenant (Confirm, or attaching/changing
+A **wave** is one enqueue of this step’s job set for a tenant (business lookup, or attaching/changing
 sources on the same onboarding session). One wave writes several `business_research_runs` (one per
 kind). River retries of those jobs are the same wave. Count waves, not jobs — otherwise one
-Confirm would already exceed the cap.
+business lookup would already exceed the cap.
 
 ## Trigger
 
-01 Confirm returns with `online_research_consent_at` set, or sources change on an existing
+01 business lookup returns with `online_research_consent_at` set, or sources change on an existing
 onboarding session, **and** the tenant is under the wave cap. River jobs per research kind.
 
 ## Pre
@@ -32,18 +33,18 @@ onboarding session, **and** the tenant is under the wave cap. River jobs per res
 - Refetch on `business_research_fetches` hit (kind + cache key) or `google_maps_listings` hit by
   `place_id`.
 - Text autosave, voice mint, `end_interview`, interview field lists, set `channel`.
-- Persist confirm-data. Classify photos during 04a/04b.
+- Write Review. Photo classification of found photos is this step, not 04a/04b.
 - Say a miss means “this business has no profile” — a miss is “ask”.
 - Enqueue a 6th wave for the same `tenant_id` inside 30 minutes (paid or cache-hit).
 - Treat a River retry of an existing `business_research_run` as a new wave.
-- Block Confirm, 03 Continue, or the client interview on this wait.
+- Block business lookup, 03 Continue, or the client interview on this wait.
 
 ## Do
 
 **Wave cap (before any job):** count `business_research_waves` for this `tenant_id` with
 `started_at > now() - 30 minutes`. If the count is **5 or more**, do not insert a wave, do not
 enqueue River jobs, do not call Maps / Parallel / Facebook / crawl. Set
-`research_wait_until` = oldest of those five `started_at` + 30 minutes. Confirm and source
+`research_wait_until` = oldest of those five `started_at` + 30 minutes. Business lookup and source
 changes still persist; 01 still returns; UI still goes to 03. Profile and SSE carry
 `research_wait_until`.
 
@@ -99,7 +100,7 @@ Retryable River jobs. Fail leaves prior fold + source `status=error`. In-progres
 clear when the job ends. Do not change onboarding session status. Job retry keeps the same
 `wave_id`.
 
-Wave cap: not a pipeline Fail. 01 Confirm still succeeds. A later source change that would start
+Wave cap: not a pipeline Fail. 01 business lookup still succeeds. A later source change that would start
 a 6th wave in 30 minutes does not enqueue 02; the mutating request returns `429` with
 `research_wait_until`. Prior fold and in-flight jobs stay.
 

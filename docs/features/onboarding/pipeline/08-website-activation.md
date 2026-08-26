@@ -33,7 +33,7 @@ Verified Stripe `checkout.session.completed` for an `active` website preview.
 
 ## Do
 
-1. Load the unactivated [tenant](../../other/auth/data-model.md) on
+1. Load the unactivated [tenant](../../other/auth/persistence.md) on
    `onboarding_sessions.tenant_id`.
 2. Resolve or create the Clerk organization; set `tenants.clerk_org_id`. Tenant name is the
    **business**; Clerk organization name is the **person**.
