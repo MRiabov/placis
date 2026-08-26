@@ -113,8 +113,7 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 
 ### POST /v1/website-activations/checkout
 
-- **Auth:** Clerk JWT (the payer). Tenant resolved from `Host` / `website_prefix`
-  (unactivated allowed).
+- **Auth:** Clerk JWT, Host / `website_prefix` (unactivated allowed).
 - **Callers:** website-activation strip island on the preview website address.
 - **Idempotency-Key:** yes.
 - **Response:** checkout URL. **Omit** Stripe bodies.
@@ -123,8 +122,7 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 
 ### GET /v1/website-activations/status
 
-- **Auth:** Clerk JWT (the payer). Tenant resolved from `Host` / `website_prefix`
-  (unactivated allowed).
+- **Auth:** Clerk JWT, Host / `website_prefix` (unactivated allowed).
 - **Callers:** poll after checkout.
 - **Response:** closed status enum + checkout URL if still needed.
 

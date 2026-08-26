@@ -39,7 +39,7 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant. Wait 
      service area. Skip if that locality is already in the label. Still taken, or no locality:
      sequential `-2`, then `-3` on that result, not random.
    - Empty/too short: trade + locality, else `site-{id}`.
-   - 05 retry: **keep** the existing label (same host). A new 01 confirm is a new unactivated
+   - 05 retry: **keep** the existing label (same host). A new 01 business lookup is a new unactivated
      tenant → new label.
 2. Write `website_addresses` (`type=subdomain`, `status=reserved`, `is_primary=true`). Wildcard on
    **our** `placis.com` zone already points at the Worker. FQDN:

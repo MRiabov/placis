@@ -18,9 +18,9 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
 - **Country** — Ireland / United Kingdom / United States (default Ireland).
 - **Company registry** — type the corporate name and pick the record (legal name, company number,
   status, registered office).
-- **Google Maps** (optional) — search and pick the place. Confirm with registry, Maps, or both.
-- **Online research consent** — checkbox required to enable Confirm.
-- **Confirm and review** — creates the onboarding session **once** (when this browser has no
+- **Google Maps** (optional) — search and pick the place. Business lookup with registry, Maps, or both.
+- **Online research consent** — checkbox required to enable business lookup.
+- **Business lookup** — creates the onboarding session **once** (when this browser has no
   token), starts business research, goes to Review. Does not apply the website template or write
   the host yet. Opening Find with nothing stored must not `POST` an onboarding session.
   Opening Find with a stored token restores (see Resume).
@@ -36,13 +36,12 @@ modal, not a full-screen stop, Continue stays enabled. Same field on `GET .../pr
 
 ### 3. Client interview — `/onboarding/interview`
 
-Default surface is **voice** (mic → realtime agent). Text client interview is the other writer
-([04a](pipeline/04a-text-client-interview.md)). Voice is the default
-([04b](pipeline/04b-voice-client-interview.md)); `end_interview` completes the client interview,
-then 05 apply the website template. Text submit completes the same way.
+Default surface is **text**. Voice is listed and deferred
+([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)).
+Text submit completes the client interview, then 05 apply the website template.
 Port: [frontend-debloat.md](frontend-debloat.md).
 
-### 4. Short progress screen
+### 4. Wait teaser — `/onboarding/preview`
 
 Wait teaser, not the shareable host. Timeline from the onboarding session SSE (05 apply the
 website template, then 06 copy filling in). Rotate **complete** filled website sections (whole-and-valid,

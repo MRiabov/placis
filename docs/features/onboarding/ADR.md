@@ -135,7 +135,7 @@ decision + date) instead of silently replacing the old entry.
     superseded 05-retry (same `website_prefix`, new publication on that prefix).
     (2026-08-23: link has no TTL / token 410. 2026-08-25: drop the token path.)
 
-16. **Unactivated tenant at confirm; website prefix at 07; activation upgrades** — confirm (01)
+16. **Unactivated tenant at business lookup; website prefix at 07; activation upgrades** — business lookup (01)
     inserts a `tenants` row with `status=unactivated`, `clerk_org_id` null, `website_prefix`
     null, and sets that `tenant_id` on the onboarding session and the business profile. 07
     **reserves** `website_prefix` from `display_name` (collision: locality once, then sequential

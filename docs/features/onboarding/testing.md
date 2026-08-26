@@ -38,7 +38,7 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
 
 7. **Website activation** — pay on the host (Clerk testing token + Stripe test webhook). First
    payer wins.
-   - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as confirm, now
+   - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as business lookup, now
      `tenants.status=active`, `tenant_memberships.owner`; onboarding session `activated`;
      `website_publications` v2 strip off, v1 archived (neither is a website-rollback target).
    - UI: lands in `/cms/website`. Host stays up without the strip.
