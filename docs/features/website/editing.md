@@ -186,7 +186,8 @@ never write jsonb.
 
 If the focused field is dirty, a PATCH is queued or in flight, a media-library upload is in
 progress, or the last copy-out / upload failed (still uncopied), do not let the owner leave
-immediately.
+immediately. Hover the uploading thumb: a circle-and-cross button; click it to abort the bytes
+request. That upload is then not in progress.
 
 - **In-app** (another CMS route, browser back): confirm first — same idea as Gmail’s “discard
   edits?”. Copy: edits are still being copied. Stay, or leave anyway.

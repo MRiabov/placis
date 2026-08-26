@@ -15,17 +15,22 @@ Referenced, not owned here: [details](../other/details/data-model.md) (profile, 
   `service_focus_id` nullable fk,
   `icp_age_min`, `icp_age_max`, `icp_household` (`married_couples`/`any`), `icp_location_focus`,
   `icp_notes`, `icp_source` (`default`/`llm_suggested`/`owner`), `icp_review_status`,
-  `review_status`, `origin` (`owner`/`llm`/`done_for_you`/`business_profile`), `created_by`,
+  `review_status` (no values specified — see [Open questions](README.md#open-questions);
+  `status` is the lifecycle), `origin` (`owner`/`llm`/`done_for_you`/`business_profile`), `created_by`,
   `updated_by`, `platform_refs` jsonb (ad-platform object ids; empty until ad posting),
   `platform_status` (`not_connected`/`synced`/`needs_sync`/`error`), timestamps.
   `updated_at` is the conflict token for the whole ad set: any nested write (variant, copy,
   image placement, ad lead form) bumps this column. Mutating APIs send `base_updated_at`
   ([ADR 31](ad-generation/ADR.md)). Not an undo log.
-- `ad_variants` — `id`, `tenant_id` fk, `ad_id` fk, `format` (`feed_square`/
-  `feed_portrait`/`carousel`/`story`), `status` (`draft`/`ad_needs_review`/`approved`/`hidden`/
-  `archived`), `copy_variant_id` fk, `position`, `review_status`,
-  `platform_refs` jsonb, timestamps
-- `ad_copy_variants` — `id`, `tenant_id` fk, `headline`, `primary_text`, `description`, `cta_label`
+- `ad_variants` — `id`, `tenant_id` fk, `ad_id` fk (one variant per ad), `format` (`feed_square`/
+  `feed_portrait`/`carousel`/`story`), `status` (`draft`/`ad_needs_review`/`approved`/
+  `archived`), `copy_variant_id` fk, `review_status` (no values specified — see
+  [Open questions](README.md#open-questions)),
+  `platform_refs` jsonb, timestamps.
+  Variant `hidden` and variant `position` were multi-format leftovers and are not stored.
+  Card order for carousel lives on `ad_image_placements.position`.
+- `ad_copy_variants` — `id`, `tenant_id` fk, `headline`, `primary_text`, `description`
+  (owner-facing short label; Meta `link_data.description`), `cta_label`
   (`learn_more`/`get_quote`/`call_now`/`message`), `source` (`ai_proposal`/`owner_edit`/
   `done_for_you_edit`/`manual`), `ai_generation_ref`, timestamps
 - `ad_image_placements` — `id`, `tenant_id` fk, `variant_id` fk, `media_asset_id` fk, `format`,

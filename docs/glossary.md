@@ -360,9 +360,9 @@ In code: `website_activations`.
 A stage in our sales process where they choose to buy the website or not. Never say bare
 “preview”. Do not use this word for the website editor canvas or for ad format mocks.
 
-Distinct from: Unpublished website, Website activation, Website preview link, the
-`{website_address}.preview.placis.com` host (that is the website address after website
-publication, not this sales stage). Never label that host website preview.
+Distinct from: Unpublished website, Website activation, Website preview link, Ad format
+preview, the `{website_address}.preview.placis.com` host (that is the website address after
+website publication, not this sales stage). Never label that host website preview.
 
 In code: `website_previews`, `internal/onboarding/websitepreview/`.
 
@@ -648,7 +648,7 @@ Distinct from: Ad lead.
 
 ### Ad
 
-What the owner calls one offer or marketing goal.
+What the owner calls one offer or marketing goal in one ad format.
 
 Distinct from: Creative set (images + text), Ad posting (running a paid ad), Ad set (the
 deliverable). Never say “creative set” in product docs or UI.
@@ -658,6 +658,8 @@ deliverable). Never say “creative set” in product docs or UI.
 #### Ad destination
 
 An existing published website page owned by that contractor, that the ad can send people to.
+
+Deferred for v1 ads: ads use an ad lead form only and do not send people to a website page.
 
 ---
 
@@ -678,10 +680,17 @@ form.
 
 #### Ad set
 
-The deliverable of an approved ad: images at each ad format, copy, and the
+The deliverable of an approved ad: images at this ad's format, copy, and the
 suggested ad lead form. Never say “ad package”.
 
 Distinct from: Creative set (images + text), Website preview.
+
+---
+
+#### Ad format preview
+
+Facebook and Instagram placement mocks of this ad’s one format, shown in Review as the owner
+types. Distinct from: Website preview. Not Meta `generatepreviews` (that is ad posting time).
 
 ---
 
@@ -749,7 +758,9 @@ A standard size an ad is produced in.
 - **Story**
 
 Square feed, Portrait feed, and Carousel are **posts**. Story is **stories**. One ad is
-posts or stories, never both.
+one format — a single creative is a single ad. The owner picks that format before
+generate. The draft matches how the format is used: feed is one photo; a carousel is
+several cards; a story is almost always one image.
 
 In code: `feed_square` / `feed_portrait` / `carousel` / `story`.
 
@@ -1040,7 +1051,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | consent (onboarding) | online research consent |
 | interview (onboarding) | client interview |
 | research (onboarding) | business research |
-| preview (website) | website preview |
+| preview (website, ads) | website preview or ad format preview |
 | preview package | website preview |
 | claim / website claim (activation) | website activation |
 | marketing claim / advertising claim / unsupported claim | marketing statement / unsupported marketing statement |

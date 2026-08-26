@@ -19,11 +19,14 @@ area, and the date.
    Previous decision (2026-08-14): ads linked to existing published website pages as the ad
    destination. Website-page click-through is deferred (see decision 30).
 
-2. **Ad formats from the start** — Square feed (1:1), portrait feed (4:5), carousel (1:1 cards),
-   and Story (9:16). These are the standard Facebook ad formats; starting with all four
-   avoids a later "can I get stories too?" rebuild. Ad formats without suitable approved images
-   are left out of the ad set, never rendered empty. A single ad is still only **posts** or
-   only **stories**, never both (decision 32).
+2. **Ad formats from the start** (updated 2026-08-25) — Square feed (1:1), portrait feed
+   (4:5), carousel (1:1 cards), and Story (9:16). These are the standard Facebook ad formats;
+   starting with all four avoids a later "can I get stories too?" rebuild. One ad is one
+   format (decision 32). Never produce an empty format. If the chosen format hasn't enough
+   ready photos, generate does not succeed — exact UX is an open question in
+   [ads README](../README.md#open-questions).
+   Previous decision: ad formats without suitable approved images were left out of a
+   multi-format ad set, never rendered empty.
 
 3. **The LLM drafts; the owner edits** — The LLM drafts copy, proposes image galleries, and may
    apply light cleanup (remove clutter/trash, tidy backgrounds). Everything lands in reviewable
@@ -79,10 +82,24 @@ area, and the date.
     today stored as `ads` plus variants. What is not duplicated is media library, projects, certifications, reviews, and
     website pages: they stay where they are and ad records reference them by id.
 
-13. **Approved media items only, gated twice** — The picker only offers approved media items owned by that
-    contractor with a media caption (prevention), and approval re-validates every image's current
-    review (the gate), so a media item that went into review after selection, a pending cleanup
-    edit, or a missing media caption blocks **ad ready to post** with an owner-readable message.
+13. **We label photos; the owner never sees media caption or review chores** (updated 2026-08-25) —
+    Placis writes the media caption (LLM) for the media library and for later LLM picks. The
+    contractor is never asked to label a photo and never sees "has no media caption". A photo
+    already in the ad is not shown as "still in review".
+    After the owner **uploads a photo into an ad**, captioning is not a gate: they just
+    chose it. **Uploading…** is only while bytes land. Hover the thumb: a circle-and-cross
+    button (same overlay as `/cms/media` and the website editor media library); click it to
+    abort — no media library item is left. As soon as `file_id` is set (not
+    `failed`), that photo is usable in this ad — target **about 10 seconds**, not an LLM
+    media caption wait. Do not show **Processing…** as a wait-to-use overlay in Ads. The media caption
+    still writes in the background (`processing` → `ready` on the media item) so `/cms/media`
+    and the next generate can use it. Approve waits on failed uploads and bytes that have
+    not landed; it does not wait for a media caption on an owner-added photo.
+    Previous decision (same day): newly added files showed **Uploading…** then
+    **Processing…** until the media caption was written, and Approve waited until thumbs were
+    `ready`. Before that: the picker only offered approved items with a media caption, and
+    approval blocked **ad ready to post** with owner-readable "no media caption" / "still in
+    review" messages.
 
 14. **The spec directory is the single authority** — `docs/features/ads/ad-generation/` holds
     the PRD (with user stories and acceptance criteria) and the implementation plan. No epic
@@ -90,38 +107,64 @@ area, and the date.
     reduced to pointers to this directory.
 
 15. **Copy limits are shared constants, re-verified at implementation** — Headline 40, primary
-    text 5000 (recommended 500 for drafts), description 30, button labels from a fixed set. The
+    text 5000 (recommended 500 for drafts), short label 30 (owner-facing; stored as
+    `description`, Meta `link_data.description`), button labels from a fixed set. The
     exact limits must be re-checked against current Meta policy when implementing.
 
-16. **Generation is safe to retry and recorded** — Running the same generation twice gives the
-    same result, and every AI call records reasoning, user-visible output, and tool calls via
-    `ai_generations` tracing.
+16. **Generation is cached and recorded** — Results are cached per input, ad
+    format, and `prompt_id` / `prompt_version` on `ai_generations`.
+    Retry of the same request while the ad is still an Ad draft or Ad needs review returns that
+    cached generation. If the owner has already accepted it (`ad_ready_to_post`) or a
+    Published (running) ad already occupies that cache identity — including if the agent
+    somehow emitted a duplicate of one already running — roll to the next `prompt_version`
+    instead of cloning. Every call, including a cache hit, records reasoning, user-visible
+    output, tool calls, and the standard inference metadata via `ai_generations`.
 
 17. **Video ads are deferred** — Future work: short cinematic-style videos assembled from
     approved photos and clips (assembly, not generation), with optional AI transitions, rendered
     per ad format through a separate pipeline. Noted now so the image ad set does not block them.
 
-18. **Conservative marketing statements** — No fabricated reviews, ratings, years, guarantees, certifications,
-    insurance, or pricing; no stock imagery passed off as the contractor's work; photos of
-    identifiable people or third-party properties are usable once approved in the media library
-    (that is owner approval); no personal data in copy.
+18. **Conservative marketing statements** (updated 2026-08-25) — Unprompted generation does
+    not invent reviews, ratings, years, guarantees, certifications, insurance, pricing, or
+    results; no stock imagery passed off as the contractor's work; photos of identifiable
+    people or third-party properties are usable once approved in the media library (that is
+    owner approval); no personal data in copy. If the owner types a marketing statement, or
+    **prompts** the Review AI orb to write one, we allow it. Approve is not blocked. If that
+    copy includes a detail (years in business vs `established_year`, and the same class of
+    Details fields), the ads generator makes a **separate tool call** that writes Details —
+    one `business_profile_edits` increment, same writer as Details / onboarding. Recorded in
+    `ai_generations` as its own tool call. Not a side effect of the ads PATCH, Approve, or the
+    copy-rewrite tool. A **notification** (OK / Revert) appears bottom-right; leaving the
+    screen keeps the write. Character limits, uploads still in flight, and failed uploads
+    still block.
+    Previous decision (same day): owner-typed or owner-prompted copy warned inline and did
+    not write the business profile; the warning pointed the owner to Details.
+    Previous decision: unsupported marketing statements blocked **ad ready to post** until
+    owner or done-for-you review.
 
 19. **Meta first, Google Ads later** — Ad posting (future work) starts with Meta (Facebook /
     Instagram): ad formats, ad lead forms, and ideal-customer-profile targeting are Meta-shaped
     on purpose. Google Ads is too early to plan for yet.
 
-20. **Who first, how second** (updated 2026-08-19) — The workflow decides who the ad is for
+20. **Who first, how second** (updated 2026-08-25) — The workflow decides who the ad is for
     (ideal customer profile) before any ad mechanics. Ad-lead capture is always a Meta ad lead
-    form; the owner does not pick a website-page path. Ad formats, crops, and sizes follow
-    automatically and are not exposed as ad jargon. Approval is the last step of the flow; LLM
+    form; the owner does not pick a website-page path. The owner picks one ad format as
+    owner-facing pills before generate (decisions 32 and 33); crops still follow from the stored
+    focal point, and ratios stay out of the UI. Approval is the last step of the flow; LLM
     generation is async and never blocks.
-    Previous decision (2026-08-14): the owner picked the target and the ad-lead path (ad lead
-    form or website page).
+    Previous decision (2026-08-19): ad formats, crops, and sizes followed automatically and
+    were not exposed. Previous decision (2026-08-14): the owner picked the target and the
+    ad-lead path (ad lead form or website page).
 
 21. **One accordion wrapper, two expandable steps** — The flow and the Ads screen are the same
     screen: an accordion wrapper shows both steps immediately — step 1 "About the ad" (open by
     default, all the questions) and step 2 "Review" (visible but locked until step 1 is
-    complete, then expands; step 1 can be returned to) — then the approve block when the ad is ad ready to post.
+    complete, then expands). After generate, About the ad is confirmed (locked). **Revise**
+    sits on the generate row with **Generate again** (after the first generate only — not on
+    the About the ad title, and not before the first generate). Revise unlocks format,
+    audience, offer, or the ad lead form; Generate again applies. Changing format regenerates
+    this ad. Then the approve block
+    when the ad is ad ready to post.
     Current direction, under visual review via the design mock.
 
 22. **Ideal customer profile is loose; it steers generation** — The ideal customer profile is a
@@ -137,7 +180,8 @@ area, and the date.
 24. **Reuse the existing media library gallery** — The ad's photo selection is the existing
     media library gallery (same gallery and tokens as the rest of the app), not a new parallel
     gallery. "+ Add" opens the file picker; drag-anywhere adds photos; both go through the
-    existing media library flow.
+    existing media library flow. The LLM proposes photos; the owner always has a strip to
+    change the pick. Hiding that strip on one-image formats would leave only the LLM choice.
 
 25. **Ad list: large cards, compress past six** — Contractors rarely run more than 6 ads at once,
     so the list uses large cards (6 fill most of the screen) and compresses to dense rows
@@ -165,10 +209,16 @@ area, and the date.
     ad is **Creative ready**, and the next status is **Published** once ad posting exists.
 
 29. **Detail panel: inputs left, outputs right** — The existing-ad detail is a two-column
-    panel. **Left (inputs)**: Images (gallery), then **Budget** (disabled stub until
-    ad posting is connected), then **Audience** and **Area** — read-only, not editable yet,
-    placed below the images. **Right (outputs)**: Performance with Ad leads under it.
-    Audience and area are shown as settled details of the ad, not as controls.
+    panel. **Left (inputs)**: Images, then **Budget**, then **Audience** and **Area**
+    — audience and area are read-only, not editable yet, placed below the images.
+    A one-image ad shows that photo, not a thumbnail gallery; changing it is Edit (the
+    workspace photo strip). Carousel detail shows the cards as viewable thumbs.
+    Daily budget stays a disabled stub until ad posting is connected. Duration is remaining
+    days in the run window (for example `4 days left (15 Aug to 29 Aug)`), not a length like
+    "2 weeks". The end date uses the native browser date picker — also disabled until ad
+    posting. **Right (outputs)**:
+    Performance with Ad leads under it. Audience and area are shown as settled details of
+    the ad, not as controls.
 
 30. **Meta ad lead form only; website-page click-through is deferred** (2026-08-19) — The first
     pass does not let the owner send people to a website page. Every ad carries a suggested
@@ -177,9 +227,10 @@ area, and the date.
     data model, and tests do not include an ad destination picker, a Website page toggle, or
     destination columns. Mention of the later option belongs only here and in PRD Post-MVP.
 
-31. **No website-style undo log; `updated_at` is enough** (2026-08-23) — Do not copy website edit history onto ads. Ads is a review workspace (few fields, LLM draft then
+31. **No website-style undo log; `updated_at` is enough** (updated 2026-08-25) — Do not copy website edit history onto ads. Ads is a review workspace (few fields, LLM draft then
     accept / edit / reject, then Approve), not a canvas of many small writes. Native
-    text-field undo plus reject / regenerate is the undo story. Last writer on copy is
+    text-field undo covers typing. LLM rewrite and cleanup Accept are Ctrl+Z reversible while
+    they are in Ads (decision 36) — not a website-style undo table. Last writer on copy is
     `ad_copy_variants.source`. Approve is the checkpoint (`ad_ready_to_post`). Later
     posting “revision” is a new post to Meta, not undo in Ads.
 
@@ -188,9 +239,49 @@ area, and the date.
     patches). Mutating requests send the last-seen `base_updated_at`. Match → write and
     return the new `updated_at`. Mismatch → `409`; the frontend re-GETs; no merge. No undo
     table, no undo/redo routes, no hydrate of 200 batches.
+    Previous decision (2026-08-23): native text-field undo plus reject / AI-orb rewrite was
+    the whole undo story (JS-applied LLM output was not Ctrl+Z’able).
 
-32. **An ad is posts or stories, never both** (2026-08-25) — One ad is either **posts**
-    (Square feed, Portrait feed, Carousel) or **stories** (Story). The create/review
-    preview for a given ad shows only that family. Mixing a carousel (a post) with a
-    Story on the same ad is invalid. The four formats remain the catalog (decision 2);
-    the ad set for one ad never contains both families.
+32. **One ad is one format** (updated 2026-08-25) — A single creative is a single ad. The
+    owner picks exactly one ad format (Square feed, Portrait feed, Carousel, or Story).
+    Want another format? Create another ad. Square feed, Portrait feed, and Carousel remain
+    **posts**; Story remains **stories** — that is Meta grouping, not a multi-format ad.
+    Previous decision (same day): one ad was posts or stories (several formats in one family).
+
+33. **The format is chosen before generate; drafted for how it's used** (updated 2026-08-25)
+    — The owner picks that one format in About the ad, as clickable pills (single select),
+    **before** Create ad and generate. The draft matches that format: feed is one photo and
+    feed-length copy; carousel is 2–10 cards; story is almost always one 9:16 image with
+    shorter overlay copy. Changing format after generate regenerates this ad's creative; it
+    does not rearrange an existing draft into a different format. After generate, the format
+    pills are locked until the owner hits **Revise** next to **Generate again**. Photo crops still follow
+    from the stored focal point.
+    Previous decision (same day): several formats per ad, each drafted on its own; before
+    that, one LLM contract for the whole set.
+
+34. **First generate is unprompted; Review is promptable** (updated 2026-08-25) — Create ad and
+    generate stays one unprompted draft from About the ad. After that, each copy field
+    (headline, primary text, short label — not the Meta CTA enum) and the current photo’s
+    cleanup get a CMS AI orb. Click reveals a prompt-only **overlay** (not inline under the
+    field). Selecting a span in a copy field opens the same overlay above that selection;
+    the prompt rewrites that span. Orb with no selection rewrites the whole field (Ctrl+Z
+    restores the previous text). Prompt text is required. Copy rewrite is per-field; optional
+    selection on `POST …/rewrite` (omit = whole field). Image cleanup: first upload already
+    ran a tailored default from visual-issue classification; the orb is a **different**
+    cleanup via shared media library `cleanup_image` `prompt`. Not the website assistant chat. This
+    replaces unprompted Review **Regenerate**. Record the owner prompt with reasoning,
+    output, and tool calls in `ai_generations`.
+    Previous decision (same day): prompt form was inline in the field, wrapping with the row.
+
+35. **Review ad format preview is Facebook and Instagram placement** (updated 2026-08-25) — The selected
+    format is shown as both Facebook and Instagram placements, using an existing dual-platform
+    mock kit (MIT preferred), not a generic CMS card. Desktop shows both; narrow screens
+    toggle. Placement type is Meta-like (Helvetica on Facebook, system UI on Instagram), not
+    Satoshi. Meta `generatepreviews` iframes stay posting-time (need a Marketing API
+    creative; cannot update as the owner types).
+
+36. **LLM actions are Ctrl+Z reversible** (2026-08-25) — All copy in Review fields is
+    Ctrl+Z’able, including orb and highlight rewrites. Cleanup Accept is the same: Ctrl+Z
+    restores the previous photo. Restore of the last LLM apply while they are in Ads, then the ordinary
+    PATCH. Default: LLM actions are revertable. Native typing already undoes; JS-applied LLM
+    output does not, which is why this is tested. Still no website-style undo log (decision 31).

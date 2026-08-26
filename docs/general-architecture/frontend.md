@@ -25,3 +25,18 @@ values show a loading placeholder.
   loading placeholder for the whole screen.
 
 Do not say “skeleton”; the name is loading placeholder ([glossary](../glossary.md)).
+
+## Notification
+
+A shared **notification**: fixed bottom-right, above the main area. Message + **OK** (dismiss /
+keep). **Revert** is optional.
+
+First caller: Ads writes a detail to Details via a tool call — the write is applied;
+OK keeps it; Revert undoes that `business_profile_edits` increment. Leaving the screen
+without clicking keeps the write. Stay until OK / Revert (timeout later).
+
+Intended later callers (rare — do not spam): ad leads when they log in, an **ad lead** while they
+are in Ads, an unusually profitable or lossy campaign, a long-running or unexpected operation.
+Website editor and Ads can use the same piece. Do not invent those events in the Ads mock.
+
+Not an inline field warning. Not a modal. Specs say **notification**.
