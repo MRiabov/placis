@@ -17,7 +17,7 @@ Download signed URL: `string` + `maxLength`. Copy fields use platform character 
 ## Complete
 
 All mutating routes: **Auth** Clerk JWT, active tenant; **Idempotency-Key** yes. PATCH /
-regenerate / approve send `base_updated_at` (last-seen `ads.updated_at`). Match → bump and
+rewrite / cleanup / approve send `base_updated_at` (last-seen `ads.updated_at`). Match → bump and
 return it. Mismatch → `409`; `frontend-2` re-GETs. No undo.
 
 - `GET /v1/ads` — list
@@ -27,8 +27,10 @@ return it. Mismatch → `409`; `frontend-2` re-GETs. No undo.
 - `DELETE /v1/ads/{ad_id}` — ad draft only
 - `GET /v1/ads/{ad_id}/variants`
 - `PATCH /v1/ads/{ad_id}/variants/{variant_id}`
-- `POST /v1/ads/{ad_id}/variants/{variant_id}/regenerate` — LLM draft for copy and/or image
-  gallery on one variant
+- `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` — required `field` + `prompt`; optional
+  selection start/end; omit selection = whole field; empty prompt is 400
+- `POST /v1/ads/{ad_id}/variants/{variant_id}/cleanup` — required `prompt`; shared media library
+  `cleanup_image`; not a photo picker
 - `POST /v1/ads/{ad_id}/approve`
 - `POST /v1/ads/{ad_id}/ad-set` — returns the ad set
 - `POST /v1/ads/{ad_id}/download` — renders; returns a signed URL for the ad-set download

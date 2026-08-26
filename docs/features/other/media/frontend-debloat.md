@@ -27,6 +27,7 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
   (`parent_media_asset_id`); parent file is never replaced. Website editor PATCH, website
   assistant tools, and ads light cleanup call these same functions ([README.md](README.md)).
 - Leave guard covers an in-flight upload ([editing.md](../../website/editing.md)).
+  Hover the uploading thumb: a circle-and-cross button; click it to cancel (same overlay as Ads).
 
 ## Delete
 

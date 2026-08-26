@@ -39,19 +39,23 @@ product spec; `ad-generation/` still is.
 
 - **ad** — name, offer/goal, service focus, ad lead form, ideal customer profile, review status,
   `platform_refs`/`platform_status`.
-- **ad variants** — one per ad format (`feed_square` 1:1, `feed_portrait` 4:5, `carousel` 1:1
-  cards, `story` 9:16); each pairs an image selection with copy. Ad formats without suitable
-  approved media items are omitted, never rendered empty.
-- **ad copy variants** — headline, primary text, description, button label (fixed set), with
-  platform character limits in one shared constants module.
-- **ad image placements** — references to approved media assets with per-ad-format crop/focal
-  metadata (non-destructive).
+- **ad variants** — one per ad (one format: `feed_square` 1:1, `feed_portrait` 4:5, `carousel`
+  1:1 cards, or `story` 9:16); pairs an image selection with copy. Never produce an empty
+  format. If that format has no suitable approved photo, generate does not succeed (see
+  [Open questions](#open-questions)).
+- **ad copy variants** — headline, primary text, short label (stored as `description`),
+  button label (fixed set), with platform character limits in one shared constants module.
+- **ad image placements** — references to approved media assets with crop/focal metadata for
+  this ad's format (non-destructive).
 - **ad lead form** — suggested Meta lead-form fields (suggestions only; never block approval).
   Every ad has one. Ads do not send people to a website page.
 
 Rules to preserve: AI **proposes** (copy + image gallery + light cleanup), the owner decides;
 approved media items only (gated twice); every AI call records reasoning + output + tool calls via
-`ai_generations`; conservative, source-backed marketing statements; validation before approval.
+`ai_generations`; conservative unprompted marketing statements (owner override / owner prompt
+allowed — a Details tool call writes the business profile; Approve is not blocked);
+character limits, uploads still in flight, and failed uploads still block. Owner-added
+photos in an ad are usable once bytes land (~10 seconds); captioning is not a gate.
 
 ## Where things stand
 
@@ -63,3 +67,22 @@ Website leads from website forms (and later ad lead forms) are a separate surfac
 [leads](../other/leads/README.md).
 
 See the full spec in `ad-generation/`.
+
+## Open questions
+
+Product calls still needed. Until answered, specs treat an empty format as invalid (do not
+generate one).
+
+1. **Carousel with too few ready photos.** Carousel needs 2–10 ready approved photos. If the
+   library has one, do we disable the Carousel pill until there are enough photos, allow
+   picking Carousel and block **Create ad and generate** with a warning, or tell them to pick
+   Square feed (or another one-image format) instead? Square feed, Portrait feed, and Story
+   need one ready photo — same question if the library is empty.
+2. **`review_status` vs `status`.** `ads` and `ad_variants` each have both `status`
+   (lifecycle) and `review_status` (no values specified). Is `review_status` leftover of
+   `status`, or a second field (for example pending / approved / rejected like the media library)?
+   `icp_review_status` is separate and stays.
+3. **Ad destination in the glossary.** The term is still defined (a published website page
+   the ad can send people to). v1 ads use an ad lead form only and do not send people to a
+   website page ([ADR 1](ad-generation/ADR.md)). Keep the term as deferred Post-MVP, or drop
+   it from the ads glossary until that work?

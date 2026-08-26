@@ -23,6 +23,9 @@ reaches it from **Profile** → **Business details**.
   and the ideal customer profile starts from the same details.
 
 One source of truth: the business profile. Editing it here changes the website and the next ad draft.
+If ad copy conflicts with these details, prefer updating Details rather than leaving a second
+truth only in the ad. Ads may also write a detail here via a tool call (`business_profile_edits`);
+the owner sees a **notification** in Ads (OK keeps it; Revert undoes that increment).
 
 How the owner reaches it: [frontend.md](frontend.md). Port:
 [frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). HTTP:
