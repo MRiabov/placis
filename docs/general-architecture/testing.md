@@ -90,7 +90,7 @@ and flags both runners must share.
   test code must not decode tokens. Playwright **testing tokens** (bot-protection,
   `__clerk_testing_token`) are a different path: mint once per CI job (`clerkSetup()` or the
   Backend API), put `CLERK_TESTING_TOKEN` in the job env, and reuse it. Attaching that token to a
-  new page is fine; fetching a new token per spec or worker is not. Signed-in Playwright tests write
+  new Playwright page is fine; fetching a new token per spec or worker is not. Signed-in Playwright tests write
   `storageState` once per job, then `test.use({ storageState })`. Do not re-sign-in per spec.
 - **Stripe** uses test mode the same way: real SDK + test keys, no real charge.
 - Fakes for Google, the LLM, Stripe, and voice live in the repo (see [ci-cd.md](ci-cd.md)); tests never

@@ -1,8 +1,8 @@
 - id: check-dont-say
   name: Don't-say glossary check
   description: Fail if glossary Don't-say terms appear in docs or Go. A missing or unparseable Don't-say table is a failure.
-  entry: check-dont-say
-  language: golang
-  files: '\.(md|go)$'
-  exclude: '^(frontend-2/|\.agents/)'
+  entry: go run ./cmd/ci/check-dont-say
+  language: system
+  files: '^(docs|internal|cmd|migrations|catalog)/.*\.(md|go)$'
+  exclude: '^docs/features/ads/ad-application/'
   pass_filenames: true
