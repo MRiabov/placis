@@ -36,7 +36,7 @@ const apiBaseUrl = process.env.PUBLIC_SITE_API_BASE_URL ?? process.env.PLACIS_AP
 
 if (!apiBaseUrl) {
   console.error(
-    "Set PUBLIC_SITE_API_BASE_URL or PLACIS_API_BASE_URL in your shell, repo .env, or apps/contractor-website/.env before deploying.",
+    "Set PUBLIC_SITE_API_BASE_URL or PLACIS_API_BASE_URL in the environment, repo .env, or apps/contractor-website/.env before deploying.",
   );
   process.exit(1);
 }

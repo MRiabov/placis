@@ -330,6 +330,12 @@ func TestEnabledTrees(t *testing.T) {
 	if !inEnabledTree("apps/placis-website/README.md", false) {
 		t.Fatal("Placis website should be enabled")
 	}
+	if !inEnabledTree("scripts/deploy_contractor_website_cloudflare.mjs", false) {
+		t.Fatal("scripts should be enabled")
+	}
+	if !scanExt("scripts/deploy_contractor_website_cloudflare.mjs", false) {
+		t.Fatal("scripts .mjs should be scanned")
+	}
 	if inEnabledTree("packages/website-components/src/registry/hero/type_first/docs.md", false) {
 		t.Fatal("packages markdown is outside enabled trees")
 	}

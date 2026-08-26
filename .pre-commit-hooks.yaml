@@ -3,5 +3,5 @@
   description: Fail if glossary Don't-say terms appear in docs or Go. A missing or unparseable Don't-say table is a failure.
   entry: go run ./cmd/ci/check-dont-say
   language: system
-  files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website)/.*\.(md|go)$'
+  files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$'
   pass_filenames: true

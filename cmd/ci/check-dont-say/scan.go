@@ -17,6 +17,7 @@ var defaultRoots = []string{
 	"catalog",
 	"apps/contractor-website",
 	"apps/placis-website",
+	"scripts",
 }
 
 type compiledToken struct {
@@ -194,6 +195,18 @@ func inEnabledTree(path string, frontend bool) bool {
 	return false
 }
 
+func scanExt(path string, frontend bool) bool {
+	ext := strings.ToLower(filepath.Ext(path))
+	switch ext {
+	case ".md", ".go", ".mjs", ".js":
+		return true
+	case ".ts", ".tsx":
+		return frontend
+	default:
+		return false
+	}
+}
+
 func shouldSkipPath(path string, frontend bool) bool {
 	if !inEnabledTree(path, frontend) {
 		return true
@@ -245,6 +258,8 @@ var extraAllowed = []string{
 	"playwright page",
 	"actions/setup-go",
 	"preview.placis.com",
+	"dashboard|preview|support|setup",
+	"session: false",
 	"http header",
 	"request header",
 	"response header",

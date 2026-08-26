@@ -55,8 +55,7 @@ func run(args []string) error {
 		if shouldSkipPath(path, *frontend) {
 			continue
 		}
-		ext := strings.ToLower(filepath.Ext(path))
-		if ext != ".md" && ext != ".go" && !(*frontend && (ext == ".ts" || ext == ".tsx")) {
+		if !scanExt(path, *frontend) {
 			continue
 		}
 		found, err := scanFile(path, compiled)
@@ -112,8 +111,7 @@ func collectFiles(frontend bool) ([]string, error) {
 			if shouldSkipPath(path, frontend) {
 				return nil
 			}
-			ext := strings.ToLower(filepath.Ext(path))
-			if ext == ".md" || ext == ".go" || (frontend && (ext == ".ts" || ext == ".tsx")) {
+			if scanExt(path, frontend) {
 				files = append(files, path)
 			}
 			return nil
