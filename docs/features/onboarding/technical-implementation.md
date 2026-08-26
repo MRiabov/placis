@@ -19,7 +19,7 @@ block website activation. 07 waits copy-done or the wait cap, then writes the ho
 
 ## HTTP
 
-Routes: [api.md](api.md). Confirm is `POST /v1/onboarding-sessions/confirm` (no bare collection
+Routes: [api.md](api.md). Business lookup is `POST /v1/onboarding-sessions/business-lookup` (no bare collection
 POST). Website activation checkout is public, CORS by `Host` / `website_prefix` — not
 `/v1/website-previews/{token}/…`. Website publication / website rollback: [website
 HTTP](../website/api.md).

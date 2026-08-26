@@ -70,8 +70,8 @@ Look (logo, density) is the site-wide website section for that bar, not Details.
 blocked while required website slots cannot resolve or media library items on the live path
 are not approved; show those blockers in the dropdown panel. After a successful website
 publication, `has_unpublished_changes` is false until the next edit. The POST has no
-destination: one R2 `latest/` tree, then purge the website address and every `active`
-custom website address ([api.md](api.md), [cloudflare.md](cloudflare.md)). Hosts in the dropdown
+destination: one R2 `latest/` tree, then purge the preview website address and every `active`
+website address ([api.md](api.md), [cloudflare.md](cloudflare.md)). Hosts in the dropdown
 are where the live site is reachable (open in a new tab, Connect), not independent website
 versions.
 

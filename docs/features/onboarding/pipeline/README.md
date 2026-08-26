@@ -24,7 +24,7 @@ business research is already running** before the contractor sees Review.
      build the profile — concurrent persist, not a wait
 05.  apply the website template (after client interview complete)
 06.  website copy generation (async; 07 waits copy-done or cap; does not block 08)
-07.  website preview (reserve website address; website publication v1 + R2 strip on)
+07.  website preview (reserve website prefix + preview website address; website publication v1 + R2 strip on)
 08.  website activation (pay → activate tenant; website publication v2 strip off)
 ```
 

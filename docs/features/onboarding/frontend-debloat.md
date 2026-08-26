@@ -33,7 +33,7 @@ Default client interview is **text**. Voice is listed and deferred
 ## Keep
 
 - Screens: `/onboarding/find`, `/onboarding/review`, `/onboarding/interview`,
-  short progress screen (SSE). Website preview + pay: `/preview/{token}/` on the contractor website.
+  `/onboarding/preview` (SSE carousel). Website preview + pay: the preview website address.
 - `BusinessSourcePanel` (country, company registry, optional Google Maps, online
   research consent). Business lookup creates the onboarding session **once**.
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
@@ -84,7 +84,7 @@ endpoint.
 - Don't say setup: `createGuidedSetupSession` / `getSetupProfile` → onboarding session helpers.
 - Don't say setup: `localStorage` key `placis.contractorOnboarding.setupSessionId` → onboarding session token key.
 - Don't say shell: `OnboardingShell` → onboarding layout.
-- Don't say claim: `PayToClaimStrip` → website-activation strip on `/preview/{token}/`; copy is website activation, never claim.
+- Don't say claim: `PayToClaimStrip` → website-activation strip on the preview website address; copy is website activation, never claim.
 - Don't say session (bare): always **onboarding session** (or sign-in / client interview).
 
 ## Tests

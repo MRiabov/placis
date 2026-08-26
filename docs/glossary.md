@@ -814,7 +814,7 @@ and Domain would name the same concept, drop Internal; code snake_cases the Doma
 
 ### Tenant
 
-Placis’s tenancy record for one contractor. Created at onboarding confirm as an **unactivated**
+Placis’s tenancy record for one contractor. Created at business lookup as an **unactivated**
 tenant; website activation upgrades the same row to an **activated** tenant. One **activated**
 tenant maps to one Clerk organization. The tenant name is the business. Never in PRDs.
 
