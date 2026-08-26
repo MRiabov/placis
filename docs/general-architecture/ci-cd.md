@@ -168,7 +168,8 @@ flagged (the URL still uses the short word). Always-ban tokens in paths still fa
 - Install once per clone: `pre-commit install`. Git worktrees share `.git/hooks`.
 - Pre-commit: `.pre-commit-config.yaml` runs `go run ./cmd/ci/check-dont-say` on staged files
   under `docs/`, `internal/`, `cmd/`, `migrations/`, `catalog/`, `apps/contractor-website`,
-  and `apps/placis-website` (Go's build cache keeps this cheap). `frontend-2` is excluded.
+  `apps/placis-website`, and `scripts/` (Go's build cache keeps this cheap). Markdown, Go, and
+  `scripts/` JavaScript (`.js` / `.mjs`) are scanned. `frontend-2` is excluded.
   If `docs/glossary.md` is staged, the checker scans those trees in full. Paths outside those
   trees (including `packages/`) are ignored even when filenames are passed in.
 - CI: `.github/workflows/check-dont-say.yml` runs `go test ./cmd/ci/check-dont-say` then

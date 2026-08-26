@@ -11,4 +11,4 @@ repos:
         language: system
         entry: go run ./cmd/ci/check-dont-say
         pass_filenames: true
-        files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website)/.*\.(md|go)$'
+        files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$'
