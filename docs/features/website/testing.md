@@ -29,22 +29,20 @@ DB asserts name the tables from [persistence.md](persistence.md) (and
 5. **Website publication** — the owner does a website publication.
    - DB: `website_publications` (status=`published`, `active=true`, `website_manifest`,
      `version_number` — a website version).
-   - Fake: R2 keys `sites/{website_address}/{version_number}/` then `…/latest/`, plus
+   - Fake: R2 keys `sites/{website_prefix}/{version_number}/` then `…/latest/`, plus
      `purge_cache` for live website page URLs (and sitemap, robots, WebP) on every active
      hostname. No live Cloudflare.
-   - UI: the live website is shown when a custom website address is `active`; otherwise the
-     owner still uses website preview.
+   - UI: the live website is shown when a website address is `active`; otherwise the
+     owner still uses the preview website address.
 
 6. **Live website** — the published website copy is the files in `latest/`, not a Go resolve.
-   - Assert: fake R2 objects for the edited website page; live GET never calls Go.
+   - Assert: fake R2 objects for the edited website page; live GET does not call Go.
 
-7. **Website rollback** — the owner does a live website rollback (dropdown).
-   - DB: an earlier owner `website_publications` is `active` again; earlier published website
-     copies are never overwritten (both rows remain). Unpublished rows are unchanged.
-   - UI: the dropdown updates from the rollback `*Read`; the live website shows the earlier
-     published website copy.
-   Continue editing from an owner website version is editor GET `publication_id` then PATCH,
-   not this step.
+7. **Website rollback** — the owner does a website rollback to an earlier **owner** website
+   version (onboarding v1/v2 are not listed).
+   - DB: an earlier `website_publications` is `active` again; earlier published website copies are
+     never overwritten (both rows remain).
+   - UI: the live website shows the earlier published website copy.
 
 8. **Website form → website lead** — a website visitor submits a website form.
    - DB: `leads` (source=`website_form`, `website_form_id`, `contact_name`, `marketing_phone`,

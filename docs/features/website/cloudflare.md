@@ -1,6 +1,6 @@
 # Contractor website on Cloudflare
 
-How the live contractor website is stored, attached to a custom website address, and served.
+How the live contractor website is stored, attached to a website address, and served.
 This document locks the serve path so `apps/contractor-website` does not invent a second HTML
 engine or a per-contractor Cloudflare deploy.
 
@@ -21,33 +21,38 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 - Website publication is **not** a per-contractor Cloudflare deploy. One Worker serves every
   tenant.
 - Live HTML is **prebuilt** at website publication into R2 `latest/`. A live GET never calls Go.
-- Website preview is the only per-request render (`/preview/{token}/`, unpublished website rows).
-- Custom website address uses **Cloudflare for SaaS Custom Hostnames**, not Cloudflare Pages
+- There is no per-request unpublished render. 07 writes the sales host the same way as later CMS
+  website publication (strip on, then 08 strip off).
+- Website address uses **Cloudflare for SaaS Custom Hostnames**, not Cloudflare Pages
   project hostnames.
 - Owner-facing default live host after website publication is
-  `{website_address}.preview.placis.com` (our-zone wildcard → the one Worker). R2 is still keyed
-  by `tenants.website_address`. Do not advertise `{website_address}.placis.com` (no
+  `{website_prefix}.preview.placis.com` (our-zone wildcard → the one Worker). R2 is still keyed
+  by `tenants.website_prefix`. Do not advertise `{website_prefix}.placis.com` (no
   `preview.placis.com` suffix). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md)
   (R2), not this Worker.
 - One `latest/` tree. Publication destinations share it; they are not independent website
   versions.
 
-Go never emits HTML. Astro in `apps/contractor-website` renders at website publication (live) and
-on each website-preview request.
+Go never emits HTML. Astro in `apps/contractor-website` renders at website publication into R2.
 
 ## Terms already in the glossary
 
-- **Custom website address** — the hostname they supply (`acme.ie`). Live for website visitors
+- **Website address** — the hostname they supply (`acme.ie`). Live for website visitors
   once DNS and the certificate are ready.
-- **Website address** — `tenants.website_address`, the reserved subdomain label, **fixed at website
-  activation**. R2 prefix. Owner-facing host is `{website_address}.preview.placis.com` after
-  website publication. Not the custom website address they supply. Not the sales website preview.
+- **Preview website address** — `{website_prefix}.preview.placis.com`. While unactivated that
+  host is the website preview (static `latest/` + website-activation strip). After 08 it is
+  still a preview website address (same zone) and the live default (strip gone) — never call
+  it website preview then.
+- **Website prefix** — `tenants.website_prefix`, the reserved DNS label and R2 key, **fixed at
+  07** from `display_name`. Not a URL.
 - **Website publication** — writes `website_publications` + HTML files. Not a Worker deploy.
-- **Website preview** — unpublished website behind a preview token. Not R2.
+  Onboarding 07/08 call this write (v1 strip on, v2 strip off). Owner CMS publish is v3+.
+- **Website preview** — the sales stage on that host until website activation. Not a token
+  path. Not a per-request render.
 
 SaaS **target** here means the hostname contractors CNAME to (for example `customers.placis.com`).
 That name is a proxied record on our `placis.com` zone whose origin is the one contractor-website
-Worker. Who serves HTML is independent of how the custom website address is attached.
+Worker. Who serves HTML is independent of how the website address is attached.
 
 ## Why not Cloudflare Pages per contractor
 
@@ -68,7 +73,7 @@ write plus an HTML render job, not “deploy this contractor’s Pages project.�
 
 ## Custom Hostnames API (locked)
 
-Attach a custom website address with
+Attach a website address with
 [Create Custom Hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/):
 
 `POST /zones/{zone_id}/custom_hostnames` with `hostname` and
@@ -82,13 +87,13 @@ route per contractor. Do **not** use `POST .../pages/projects/.../domains` for c
 ## Live serve path
 
 ```text
-Host {website_address}.preview.placis.com
+Host {website_prefix}.preview.placis.com
   → strip the `.preview.placis.com` suffix
-  → R2 sites/{website_address}/latest/{path}/index.html
+  → R2 sites/{website_prefix}/latest/{path}/index.html
 
-Host (custom website address)
-  → R2 sites/hosts/{hostname}  =  {website_address}
-  → R2 sites/{website_address}/latest/{path}/index.html
+Host (website address)
+  → R2 sites/hosts/{hostname}  =  {website_prefix}
+  → R2 sites/{website_prefix}/latest/{path}/index.html
 ```
 
 Home is `index.html`. Unknown live path is prebuilt `404.html`. `{tenant_id}` stays the Postgres
@@ -96,7 +101,7 @@ join; it is not in the R2 path (a uuid in the key would force a lookup on every 
 
 Wildcard `*.preview.placis.com` on our `placis.com` zone points at the contractor-website Worker
 (not Custom Hostnames; that product is for `type=custom` only). Do not advertise
-`{website_address}.placis.com` (no `preview.placis.com` suffix). Do not send website visitors
+`{website_prefix}.placis.com` (no `preview.placis.com` suffix). Do not send website visitors
 there.
 
 **Live GET never calls Go.** Workers Cache (per Cloudflare city, short max-age +
@@ -109,7 +114,7 @@ wrong key, host pointer missing). Do not silently render from Postgres. That wou
 website publication and put Railway on the live GET path.
 
 **Latency.** Cache hit is the nearest Cloudflare city. Cache miss is an in-Cloudflare R2 read,
-not Railway + Postgres + Astro. Website preview is slower (render to Go); that is owner-only.
+not Railway + Postgres + Astro.
 After they paste DNS, wait is propagation + certificate (minutes to hours) — the CMS poll, not
 page TTFB. The website-publication render is a background job; website visitors keep the previous
 `latest/` until copy + purge finish.
@@ -119,8 +124,8 @@ tenant HTML in Worker static assets would make every website publication a Worke
 
 `www` and apex serve the same HTML tree. The Worker serves whichever `Host` arrived. Sitemap and
 canonical use the hostname marked `is_primary` on `website_addresses`: the
-`{website_address}.preview.placis.com` host until a custom website address is `active`, then that
-custom website address. No automatic www↔apex redirect in this spec.
+`{website_prefix}.preview.placis.com` host until a website address is `active`, then that
+website address. No automatic www↔apex redirect in this spec.
 
 ## R2 layout
 
@@ -129,12 +134,12 @@ Not the media library bucket.
 
 | Key | Role |
 | --- | --- |
-| `sites/{website_address}/latest/…` | Live files (real objects, not a pointer) |
-| `sites/{website_address}/{version_number}/…` | Kept copy for website rollback |
-| `sites/hosts/{hostname}` | Custom website address → `{website_address}` |
+| `sites/{website_prefix}/latest/…` | Live files (real objects, not a pointer) |
+| `sites/{website_prefix}/{version_number}/…` | Kept copy for website rollback |
+| `sites/hosts/{hostname}` | Website address → `{website_prefix}` |
 
-`{website_address}` is unique, URL-safe, the label in `{website_address}.preview.placis.com`,
-**fixed at website activation**. Do not rename it when Details change. Not the live business
+`{website_prefix}` is unique, URL-safe, the label in `{website_prefix}.preview.placis.com`,
+**fixed at 07**. Do not rename it when Details change. Not the live business
 name, not `tenant_id`, not `business_profiles.id`.
 
 **Cutover.** Write `{version_number}/` to completion, copy objects onto `latest/`, then purge.
@@ -160,31 +165,38 @@ The job:
 1. Renders HTML for each live website page plus sitemap and robots.
 2. Converts approved live-path images to same-host WebP.
 3. Writes `{version_number}/`, copies onto `latest/`.
-4. Writes or refreshes `sites/hosts/{hostname}` for every **active** custom website address.
+4. Writes or refreshes `sites/hosts/{hostname}` for every **active** website address.
 5. Purges (Cloudflare zone `purge_cache`; **fakes in tests**): each live website page URL,
-   sitemap, robots, rewritten WebP URLs, for `{website_address}.preview.placis.com` and every
-   active custom website address.
+   sitemap, robots, rewritten WebP URLs, for `{website_prefix}.preview.placis.com` and every
+   active website address.
 
 Choosing a publication destination does not write a second HTML tree. Copy onto `latest/`, then
 purge the hosts above. Do not keep the Placis host on website version *n* while `acme.ie` stays
 on *n−1*.
 
-Live for website visitors on `{website_address}.preview.placis.com` = an active website
-publication (`latest/` present). Live on a custom website address also needs that hostname’s
-certificate ready. Until the first website publication, the Placis host has no `latest/` (CMS
-status: not published yet). That empty host is not a website preview.
+Live for website visitors on `{website_prefix}.preview.placis.com` = an active website
+publication (`latest/` present). After 07 that is true for the sales host (strip on). After 08
+the same host stays up without the strip. Live on a website address also needs that
+hostname’s certificate ready. Empty host = no `latest/` yet (before 07).
 
 ## Website preview
 
-`/preview/{token}/` always renders the unpublished website. It never reads R2 HTML.
-That render is the Worker **internal render** (shared secret / service binding), not
-`GET /v1/public/site/resolve` (**do not create**). Live GET does not call Go. Tests
-hit `/preview/{token}/`.
+While unactivated, `{website_prefix}.preview.placis.com` **is** the website preview: static
+`latest/` + website-activation strip island. No `/preview/{token}/`. No
+`GET /v1/public/site/resolve`. After 08 do not call that host website preview.
+
+The strip is the website-form pattern: shared Worker static assets hydrate Clerk (sign-in/sign-up
+modal, publishable key in the shared island) and Stripe (POST public checkout to
+`cmd/api`; CORS by `Host` / `website_prefix` — not `/v1/website-previews/{token}/…`). Do not bake a Checkout Session URL into R2 HTML. 08 rewrites without
+the island and purges Cache.
+
+`/onboarding/preview` is the wait carousel in `frontend-2`, not this host.
 
 ## Website form POST
 
-The React island posts to `cmd/api` (`POST /v1/website-forms/{form_id}/submissions`). CORS allows the contractor
-`Host`. The Worker does not render or proxy that POST.
+The React island posts to `POST /v1/website-forms/{form_id}/submissions` ([leads
+HTTP](../other/leads/api.md)). CORS allows the contractor `Host`. The Worker does not render or
+proxy that POST.
 
 ## Connect website address (CMS)
 
@@ -212,8 +224,8 @@ DNS copy switches to `A`.
 
 Status the website editor polls (Go polls Cloudflare): waiting for DNS → waiting for
 certificate → active.
-When active, that hostname is a publication destination. The `{website_address}.preview.placis.com`
-host stays live on the same `latest/` tree. Do not advertise `{website_address}.placis.com` (no
+When active, that hostname is a publication destination. The `{website_prefix}.preview.placis.com`
+host stays live on the same `latest/` tree. Do not advertise `{website_prefix}.placis.com` (no
 `preview.placis.com` suffix).
 
 ## Workers, local, deploy
@@ -250,6 +262,6 @@ Cloudflare account work in this documentation commit.
 - GC of old `{version_number}/` prefixes
 - Re-render-all-active-sites job (the rule is above; the job is later)
 - Using the Pages hostname API as the contractor hostname product
-- Independent live trees per destination (Placis host on one website version, custom website
+- Independent live trees per destination (Placis host on one website version, website
   address on another)
-- Free-tier pricing for the `{website_address}.preview.placis.com` host
+- Free-tier pricing for the `{website_prefix}.preview.placis.com` host

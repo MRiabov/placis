@@ -75,8 +75,9 @@ find the business (company registry and/or Google Maps) + online research consen
 -> review what we found → questions to fill the gaps
 -> one clear business profile (their answers + what we found, side by side)
 -> apply the website template → website copy generation fills in in the background
--> website preview link (available as soon as the unpublished website exists)
--> website activation (pay) → activate; website publication later in the website editor
+-> `/onboarding/preview` (complete website sections rotate until copy is done or the wait cap)
+-> the preview website address (static HTML, website-activation strip)
+-> website activation (pay) → same host stays up without the strip; owner website publication later in the website editor
 ```
 
 ## Online research consent
@@ -102,15 +103,16 @@ business lookup, not a client interview question.
 4. **As a contractor**, I want the profile to keep profile history, so we can see how it changed
    and where each detail came from.
    - Each change is kept, so nothing is lost.
-5. **As a contractor**, I want to see the website preview as soon as the unpublished website
-   exists, so I don't wait on the words being written.
-   - The website preview opens on the unpublished website; website copy generation fills in in the
-     background. If copy fails, I can still open the website preview and do website activation.
+5. **As a contractor**, I want to watch complete website sections while the words are written, then
+   land on the real host, so I am not staring at a spinner and I am not on a throwaway URL.
+   - `/onboarding/preview` rotates filled website sections until website copy generation finishes
+     or a short cap. Then the preview website address is the website preview (pay strip
+     on the website). If copy is still running after that, the host does not live-update. Anyone with
+     the URL may pay.
 6. **As a contractor**, I want to close the tab and continue later on the same browser, so I don't
    start over.
    - Reload lands on the same step with answers, extra notes, and remaining questions kept.
-     Business lookup runs once. The website preview link still works after applying the website template,
-     with no expiry clock.
+     Business lookup runs once. After 07 the host URL works without this browser’s storage.
 
 ## Acceptance criteria
 
@@ -120,11 +122,12 @@ business lookup, not a client interview question.
 3. The business profile keeps profile history, so we can see how it changed.
 4. When the contractor's answer disagrees with what we found, both are shown side by side so the
    contractor picks the right one.
-5. After they answer the questions they can open the website preview as soon as the unpublished website
-   exists; website copy generation fills in in the background. If copy fails, they can still open
-   the website preview and do website activation.
+5. After they answer the questions they wait on `/onboarding/preview` (complete website sections)
+   until website copy generation finishes or the wait cap, then land on
+   the preview website address. If copy fails or the cap hits first, they can still
+   open the host and do website activation.
 6. Closing the tab and coming back on the same browser continues where they left off. Business lookup
-   does not start a second run. Clearing storage before the website preview hides the pointer on
-   that browser; the data stays. The website preview link has no TTL. Coming back mid-client-interview
+   does not start a second run. Clearing storage before 07 hides the pointer on
+   that browser; the data stays. The host has no token and no TTL. Coming back mid-client-interview
    keeps answers, extra notes, and remaining questions. A new voice connection does not re-ask
    filled checklist rows.

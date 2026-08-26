@@ -13,8 +13,8 @@ find (company registry and/or Google Maps) + online research consent
   → client interview (text XOR voice)
   → profile history accumulates as sources and answers arrive
   → client interview complete → apply the website template (LLM picks website template/website styles; write is deterministic)
-  → website copy generation starts (async; does not block the website preview)
-  → website preview link on the unpublished website → website activation (activate; do not do website publication)
+  → website copy generation starts (async; `/onboarding/preview` waits copy-done or ~15s cap)
+  → 07 writes static HTML to the host (website publication v1, strip on) → website activation (v2 strip off)
 ```
 
 Step docs: [pipeline/](pipeline/README.md). Numbers are DAG order: 02 starts before 03.
@@ -32,30 +32,32 @@ LLM call with a heuristic fallback — not website-page-by-website-page website 
 
 **Website copy generation** (06) is a separate River job after that: the same tools as the
 website editor (`update_slot`, `update_seo`, …), no chat UI, writing into the existing unpublished
-website. The website preview (07) is issued on the unpublished website; copy fills in over SSE. If
-copy fails, the unpublished website stays. The website assistant
+website. 07 writes the host after copy finishes or the wait cap; copy that lands later does not
+SSE the host. If copy fails, the unpublished website stays. The website assistant
 ([website/assistant.md](../website/assistant.md)) is still in the CMS **after** website
-activation. The LLM never does website publication.
+activation. The LLM never does website publication (07/08 call the same HTML write as CMS website
+publication).
 
-## End of onboarding: paid, not published
+## End of onboarding: paid, host stays up
 
 Website activation (08) **upgrades** the existing unactivated tenant (Clerk organization, owner
-membership, generated subdomain, `status=active`). It does not create a tenant. The site stays
-an **unpublished website**. Website publication is a later, explicit action in the CMS.
+membership, `status=active`). It does not create a tenant and does not invent `website_prefix`
+(07 already reserved it). 08 writes website publication v2 without the strip. The host stays up.
+Owner CMS website publication is v3+.
 
 ## Progressive progress (SSE)
 
-From business lookup through applying the website template and copy, the backend pushes onboarding session
-events over SSE (on change, not faster than ~2s). The frontend refreshes the checklist and the
-timeline. The stream is a **mirror** — Postgres is authoritative.
+From confirm through applying the website template and copy, the backend pushes onboarding session
+events over SSE (on change, not faster than ~2s). The frontend refreshes the checklist. On
+`/onboarding/preview` it rotates complete filled website sections (~2s, image fade). The stream is
+a **mirror** — Postgres is authoritative. The contractor host is not an SSE endpoint.
 
 ## Where things stand
 
 `created → client_interviewing → applying_website_template → previewing → activated`
 (`apply_website_template_failed` if applying the website template throws).
-Website copy generation may still be running while `previewing`. The website preview link has no
-TTL (410 only if unknown, superseded, or already activated); the onboarding session has no
-`expired` status.
+Website copy generation may still be running while `previewing`. The website preview is the
+host (no token, no TTL). The onboarding session has no `expired` status.
 
 ## Voice
 

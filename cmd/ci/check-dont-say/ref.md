@@ -8,8 +8,8 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 
 ## Banned synonym (unmarked) — nowhere, including code
 
-- `docs/features/website/architecture.md`: “store the slug” → **fail**. Say **website address**.
-- `internal/website/pages.go`: type `Slug` or column `slug` → **fail**. Same Say (or `path` / `website_address` once named in the glossary).
+- `docs/features/website/architecture.md`: “store the slug” → **fail**. Say **website prefix**.
+- `internal/website/pages.go`: type `Slug` or column `slug` → **fail**. Same Say (or `path` / `website_prefix` once named in the glossary).
 - Backticks do not help: `` `slug` `` → **fail**.
 
 ## Self-understood at home — website `page`

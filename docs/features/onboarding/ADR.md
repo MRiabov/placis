@@ -92,36 +92,63 @@ decision + date) instead of silently replacing the old entry.
     website activation". 2026-08-19: do not say instantiate / generate / population for this
     step. 2026-08-23: applying the website template is 05; website copy generation is 06.)
 
-11. **Progressive progress over SSE** — during onboarding the backend pushes a progress event every
-    2–10 seconds (or on each change) over SSE; the frontend re-renders progressively so the website
-    builds up visually. The stream mirrors the DB; it is not the source of truth.
+11. **Progressive progress over SSE** — during onboarding the backend pushes a progress event on
+    each change (not faster than ~2s) over SSE; the stream mirrors the DB; it is not the source
+    of truth. On `/onboarding/preview`, the frontend rotates **complete** filled website sections
+    (~2s, image fade) from that stream, then navigates to the host. Not full website pages. Not
+    SSE on the preview website address.
+    (2026-08-25: carousel + host navigate; earlier: 2–10s re-render so the website builds up.)
 
-12. **Website activation does not do website publication** — paying at the end of onboarding activates
-    the tenant and leaves the site as an **unpublished website**. The owner edits if they want and
-    does website publication later; website visitors do not see it without an explicit website publication.
+12. **Website activation writes the strip-off website publication** — 07 already wrote
+    `website_publications` **v1** (static HTML on the host, website-activation strip on,
+    `published_by=onboarding`). 08 upgrades the tenant (Clerk, owner, `status=active`) and writes
+    **v2** without the strip, then archives v1. Owner CMS website publication is **v3+** and the
+    first rollback-eligible website version. Onboarding/agent first drafts (including incomplete
+    wait-cap snapshots) are never website-rollback targets.
+    (2026-08-16: activation does not do website publication; unpublished until CMS website
+    publication.
+    2026-08-25: 07 is the first website publication; 08 is v2 strip off.)
 
-13. **Website copy generation is async and does not block website preview or website activation** —
-    after applying the website template, a River job writes copy into existing website slots. The
-    website preview is issued on the unpublished website; if copy fails, the unpublished website
-    stays. Same website assistant tools as the website editor, no chat UI, no `create_page`.
+13. **Website copy generation is async and does not block website activation** —
+    after applying the website template, a River job writes copy into existing website slots.
+    07 waits until copy finishes **or** a ~15s cap, then writes static HTML to R2. 08 does not
+    wait for 06. If copy fails, the unpublished website stays. Same website assistant tools as
+    the website editor, no chat UI, no `create_page`.
+    (2026-08-25: 07 wait is a cap, not “issue the website preview immediately and live-render
+    unpublished rows.”)
 
 14. **Resume is same-browser `localStorage` + the existing onboarding session token** —
     restore with `GET .../profile`. No server-side resume token. Clerk still starts at
     website activation (`clerk_user_id` stays null until then). Business lookup creates an onboarding session
     once; do not `POST` on Find mount and do not replace the row. A new voice realtime connection is
     seeded from persisted profile, checklist, extra notes, and last `update_interview_plan`.
-    (2026-08-23.)
+    Reload during the `/onboarding/preview` wait → stay there, reconnect SSE, finish the **same**
+    wait (copy done or remaining time to the original cap). Reload after 07 → the host.
+    `activated` → `/cms/website`.
+    (2026-08-23. 2026-08-25: resume during wait vs after 07.)
 
-15. **The website preview link has no TTL** — it stays valid until the website preview is
-    superseded (apply the website template again) or activated. 410 only for unknown, superseded,
-    or already-activated tokens. Drop `expires_at` / status `expired`. (2026-08-23. Earlier: HMAC
-    default 14 days, then 410 and activation refused.)
+15. **The website preview is the preview website address** — `{website_prefix}` plus the suffix in
+    [cloudflare.md](../website/cloudflare.md)
+    with static R2 HTML and a website-activation strip until they pay. No HMAC token, no
+    `/preview/{token}/`, no TTL, no 410-for-unknown-token. Guarding who can **pay** is not a
+    goal; the URL is the sales surface. Integrity still refuses double activation and a
+    superseded 05-retry (same `website_prefix`, new publication on that prefix).
+    (2026-08-23: link has no TTL / token 410. 2026-08-25: drop the token path.)
 
-16. **Unactivated tenant at business lookup; activation upgrades** — business lookup (01) inserts a `tenants` row
-    with `status=unactivated`, `clerk_org_id` null, `website_address` null, and sets that
-    `tenant_id` on the onboarding session and the business profile. Website activation (08)
-    **upgrades** the same row (Clerk org, owner membership, reserved website address,
-    `status=active`). It does not insert a second tenant and does not first-write child
-    `tenant_id`s. `/me` returns a tenant only when `status=active`; unactivated work is reached
-    via the onboarding session token. Clerk organization 1-1 holds for active tenants only.
-    (2026-08-23: numbered 01a / 07. Same day, later: find is 01; website activation is 08.)
+16. **Unactivated tenant at business lookup; website prefix at 07; activation upgrades** — business lookup (01)
+    inserts a `tenants` row with `status=unactivated`, `clerk_org_id` null, `website_prefix`
+    null, and sets that `tenant_id` on the onboarding session and the business profile. 07
+    **reserves** `website_prefix` from `display_name` (collision: locality once, then sequential
+    `-2` / `-3`) and the `website_addresses` (`type=subdomain`) row. Website activation (08)
+    **upgrades** the same tenant (Clerk org, owner membership, `status=active`). It does not
+    insert a second tenant, does not first-write child `tenant_id`s, and does not invent the
+    label. `/me` returns a tenant only when `status=active`; unactivated work is reached via the
+    onboarding session token. Clerk organization 1-1 holds for active tenants only.
+    (2026-08-23: numbered 01a / 07. Same day, later: find is 01; website activation is 08.
+    2026-08-25: `website_prefix` at 07 from `display_name`, not 08. Same day: collision tries
+    locality before `-2`.)
+
+17. **Whoever pays becomes the owner** — unauthenticated visitors may Clerk sign-in/sign-up and
+    pay on the host. First verified Stripe `checkout.session.completed` wins. Later completions
+    do not steal the tenant.
+    (2026-08-25.)

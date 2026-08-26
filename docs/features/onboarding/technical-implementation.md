@@ -15,12 +15,18 @@ See [persistence.md](persistence.md). The business profile is
 (`apply_website_template_failed` if applying the website template throws).
 Business research runs in the background alongside review/client interview; applying the website template
 starts at client interview complete; website copy generation runs after that and does not
-block website preview or website activation.
+block website activation. 07 waits copy-done or the wait cap, then writes the host.
 
 ## HTTP
 
-Routes: [api.md](api.md). Website publication and website rollback are the website editor, not
-this `api.md` ([website HTTP](../website/api.md)).
+Routes: [api.md](api.md). Business lookup is `POST /v1/onboarding-sessions/business-lookup` (no bare collection
+POST). Website activation checkout is public, CORS by `Host` / `website_prefix` — not
+`/v1/website-previews/{token}/…`. Website publication / website rollback: [website
+HTTP](../website/api.md).
+
+Website publication of 07/08 is the same write as the website editor’s website publication;
+website rollback of onboarding rows is refused
+([website technical implementation](../website/technical-implementation.md)).
 
 ## Business research pipeline
 

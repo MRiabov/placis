@@ -16,9 +16,10 @@ Reuse and debloat; do not rebuild. Port index:
 | API types | `openapi-typescript` from `/openapi.json`; `openapi-fetch` + Clerk token in `src/shared/api/` |
 | Folders | `src/generated/` (types); `src/features/onboarding/`; `src/features/cms/` |
 
-Website preview is **not** a `frontend-2` folder. It is `apps/contractor-website` in website preview
-mode at `{website_address}.preview.placis.com` ([website Cloudflare](../features/website/cloudflare.md)).
-Same app as live; website preview mode is the per-request unpublished render (`/preview/{token}/`).
+Website preview is **not** a `frontend-2` folder. The sales/live host is
+`apps/contractor-website` at the preview website address
+([website Cloudflare](../features/website/cloudflare.md)): static HTML in R2, same app as live.
+`/onboarding/preview` is the wait carousel in this app, then the browser navigates to that host.
 Leftover `frontend-2/src/features/preview/` is predecessor CMS code to drop.
 
 The file-size guard applies to `frontend-2` too ([CI and delivery](ci-cd.md)).

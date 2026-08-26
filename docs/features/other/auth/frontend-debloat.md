@@ -18,7 +18,7 @@ Website activation Clerk + Stripe is owned by
 - Don't say organization: `frontend-2/src/shared/api/org.ts` — `POST /api/v1/me/organization`.
 - Don't say client: `openapi-fetch` helper in `frontend-2/src/shared/api/client.ts` + Clerk Bearer +
   `credentials: "include"`.
-- `getCurrentCmsSession` → `GET /api/v1/me` in `cms.ts`.
+- `getCurrentCmsSession` → `GET /v1/me` in `cms.ts`.
 - `CmsRoute` redirects to `/onboarding` unless `/me` tenant status is `active`.
 - `CmsAccountMenu` opens the Clerk organization profile (settings, not a switcher).
 - Login path: `/login/$` (`app/router/index.tsx`).
@@ -46,7 +46,7 @@ Website activation Clerk + Stripe is owned by
 
 - Org chooser, `placis_selected_org` cookie, `/me/orgs`, `/me/tenants`,
   `/me/selected-org`.
-- `POST /v1/tenants`, `PATCH /v1/tenants/{website_address}`,
+- `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`,
   memberships CRUD.
 - Custom impersonation (platform admins use Clerk native impersonation).
 - Clerk testing-token flows in CI unless explicitly asked.
@@ -55,7 +55,7 @@ Website activation Clerk + Stripe is owned by
 
 | Today | Constrained API |
 | --- | --- |
-| `GET /api/v1/me` | `GET /v1/me`; tenant only if active |
+| `GET /v1/me` | same shape; tenant only if active |
 | Don't say organization: `POST /api/v1/me/organization` | `POST /v1/me/clerk-organization` |
 
 ## Don't say / rename
