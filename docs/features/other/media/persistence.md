@@ -1,7 +1,7 @@
-# Media — data model
+# Media — persistence
 
 The photo library. Website sections and ads reference these rows; they do not copy them.
-Conventions: [data-model conventions](../../../general-architecture/data-model.md)
+Conventions: [persistence conventions](../../../general-architecture/persistence.md)
 (Postgres schema `media_library`). Bytes live in
 [files](../../../general-architecture/files-and-s3.md).
 

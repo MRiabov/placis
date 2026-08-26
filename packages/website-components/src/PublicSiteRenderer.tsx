@@ -36,11 +36,11 @@ export function PublicSiteRenderer({
         if (!loaded) {
           return (
             <section
-              className="border-b border-[var(--public-border)] bg-white px-4 py-10 sm:px-6 lg:px-8"
+              className="border-b border-(--public-border) bg-white px-4 py-10 sm:px-6 lg:px-8"
               key={`${id || "unknown"}-${index}`}
             >
               <div className="public-site-shell">
-                <p className="text-sm font-semibold text-[var(--public-muted)]">
+                <p className="text-sm font-semibold text-(--public-muted)">
                   Unsupported public component
                 </p>
                 <h2 className="mt-2 text-xl font-bold">

@@ -1,5 +1,5 @@
-@layer components {
-  .public-service-pane[hidden] {
+@utility public-service-pane {
+  &[hidden] {
     display: none;
   }
 }

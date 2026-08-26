@@ -6,7 +6,7 @@ export default function FaqList({ props, theme }: PublicSiteComponentProps) {
   const items = asRecords(props.items ?? props.questions);
   return (
     <section
-      className={`${sectionPadding(theme)} public-faq-list bg-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} public-faq-list bg-(--public-background)`}
       id={text(props.anchor_id, "") || undefined}
     >
       <div className="public-site-shell max-w-[850px]">
@@ -20,7 +20,7 @@ export default function FaqList({ props, theme }: PublicSiteComponentProps) {
             {text(props.title, "Questions")}
           </h2>
         ) : null}
-        <div className="public-faq-list__items mt-5 divide-y divide-[var(--public-border)]">
+        <div className="public-faq-list__items mt-5 divide-y divide-(--public-border)">
           {items.map((item, index) => (
             <details
               className="public-faq-list__item py-4"
@@ -29,7 +29,7 @@ export default function FaqList({ props, theme }: PublicSiteComponentProps) {
               <summary className="public-faq-list__summary text-lg font-normal leading-snug">
                 {text(item.question, "Question")}
               </summary>
-              <p className="public-faq-list__answer mt-2 text-base leading-7 text-[var(--public-muted)]">
+              <p className="public-faq-list__answer mt-2 text-base leading-7 text-(--public-muted)">
                 {text(item.answer, "Answer coming soon.")}
               </p>
             </details>

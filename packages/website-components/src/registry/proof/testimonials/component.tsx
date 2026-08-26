@@ -57,7 +57,7 @@ export default function ProofTestimonials({
   const anchor = text(props.anchor_id, "");
   return (
     <section
-      className={`${sectionPadding(theme)} public-proof-testimonials bg-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} public-proof-testimonials bg-(--public-background)`}
       id={anchor || undefined}
     >
       <div className="public-site-shell">
@@ -85,11 +85,11 @@ export default function ProofTestimonials({
             ) : null;
             return (
               <figure
-                className="rounded-[var(--public-radius)] border border-[var(--public-border)] bg-[var(--public-background)] p-5"
+                className="rounded-(--public-radius) border border-(--public-border) bg-(--public-background) p-5"
                 key={text(item.quote ?? item.body, "testimonial")}
               >
                 <RatingStars rating={Number.isFinite(rating) ? rating : 5} />
-                <blockquote className="text-sm leading-6 text-[var(--public-muted)]">
+                <blockquote className="text-sm leading-6 text-(--public-muted)">
                   “
                   {text(
                     item.quote ?? item.body,

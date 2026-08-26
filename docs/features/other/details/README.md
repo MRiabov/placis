@@ -28,5 +28,6 @@ truth only in the ad. Ads may also write a detail here via a tool call (`busines
 the owner sees a **notification** in Ads (OK keeps it; Revert undoes that increment).
 
 How the owner reaches it: [frontend.md](frontend.md). Port:
-[frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). Tables:
-[data-model.md](data-model.md).
+[frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). HTTP:
+[api.md](api.md). Tables: [persistence.md](persistence.md). Projects:
+[website HTTP](../../website/api.md).

@@ -18,9 +18,9 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
 - **Country** — Ireland / United Kingdom / United States (default Ireland).
 - **Company registry** — type the corporate name and pick the record (legal name, company number,
   status, registered office).
-- **Google Maps** (optional) — search and pick the place. Confirm with registry, Maps, or both.
-- **Online research consent** — checkbox required to enable Confirm.
-- **Confirm and review** — creates the onboarding session **once** (when this browser has no
+- **Google Maps** (optional) — search and pick the place. Business lookup with registry, Maps, or both.
+- **Online research consent** — checkbox required to enable business lookup.
+- **Business lookup** — creates the onboarding session **once** (when this browser has no
   token), starts business research, goes to Review. Does not apply the website template or create a
   website preview yet. Opening Find with nothing stored must not `POST` an onboarding session.
   Opening Find with a stored token restores (see Resume).
@@ -42,17 +42,18 @@ Default surface is **voice** (mic → realtime agent). Text client interview is 
 then 05 apply the website template and 07 website preview. Text submit completes the same way.
 Port: [frontend-debloat.md](frontend-debloat.md).
 
-### 4. Website preview (progress) — `/onboarding/preview`
+### 4. Short progress screen
 
-Timeline from the onboarding session SSE (05 apply the website template, then 06 copy filling in). On-screen
-website section renders while it runs. **View website** appears as soon as the website preview exists —
-do not wait for website copy generation to finish.
+Timeline from the onboarding session SSE (05 apply the website template, then 06 copy filling in).
+**View website** appears as soon as the website preview exists — do not wait for website copy
+generation to finish. This is not the website preview and has no activation strip.
 
-### 5. Website preview + website activation — `/preview/{token}/…`
+### 5. Website preview + website activation — `/preview/{token}/`
 
-Rendered site (current unpublished website; copy appears as 06 writes website slots).
-**Website activation** starts Clerk if needed, then Stripe checkout (08). Copy still running
-is not a blocker. Success → `/cms/website`.
+Rendered unpublished website on the contractor website Worker (copy appears as 06 writes website
+slots). **Website-activation strip** starts Clerk if needed, then Stripe checkout (08). Copy still
+running is not a blocker. Success → `/cms/website`. Not the live website-address host
+(that host is live after website publication; the label is reserved at 08).
 
 ## Resume
 
@@ -60,7 +61,7 @@ Same browser. `localStorage` holds the onboarding session **token** and last UI 
 `GET .../profile`. The stored step is a hint; onboarding session status and `active_website_preview`
 win. Screen map: [pipeline README](pipeline/README.md).
 
-An active website preview lands on `/onboarding/preview` with View website. The website preview
+An active website preview lands on `/preview/{token}/`. The website preview
 link still opens without `localStorage` and has no TTL (410 only if unknown, superseded, or
 activated).
 
@@ -72,7 +73,6 @@ retries; it does not `POST` a new onboarding session.
 - `BusinessSourcePanel` — country, registry, optional Maps, online research consent.
 - `FoundInformationReview` — found vs missing.
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist` — text client interview.
-- `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — timeline (apply-the-website-template + copy progress).
-- Website-activation strip on `/onboarding/preview`; **View website** opens contractor-website
-  preview mode (`{website_address}.preview.placis.com`). Leftover `src/features/preview/` is
-  predecessor CMS to drop.
+- `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — short progress screen (apply-the-website-template + copy).
+- **View website** opens `/preview/{token}/` on the contractor website. Website-activation strip
+  lives there, not in `frontend-2`. Leftover `src/features/preview/` is predecessor code to drop.

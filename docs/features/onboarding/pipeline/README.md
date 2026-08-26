@@ -1,24 +1,24 @@
 # Onboarding — pipeline
 
 Executable spec. Each step file uses Trigger / Pre / Must not / Do / Persist / Fail / Out /
-Invariants. This README is the index: status machine, screens, Resume, Confirm-once, DAG. It does
+Invariants. This README is the index: status machine, screens, Resume, business-lookup-once, DAG. It does
 not retell the steps.
 
-The contractor never waits on business research or on copy. Confirm returns immediately; business
+The contractor never waits on business research or on copy. Business lookup returns immediately; business
 research fills the checklist in the background; applying the website template starts only after
 the client interview completes; website copy generation fills the unpublished website after that
 without blocking the website preview link.
 
 ## DAG
 
-Numbers follow what **starts first**, not the order of screens. 01 Confirm returns → **02
-business research is already running** before the contractor sees confirm data.
+Numbers follow what **starts first**, not the order of screens. 01 business lookup returns → **02
+business research is already running** before the contractor sees Review.
 
 ```text
 01.  find the business + online research consent
      → unactivated tenant + onboarding session; 02 starts; UI → 03
 02.  business research (async) — overlaps 03 and 04a/04b
-03.  confirm data (frontend noop, skip expected) — extra seconds for 02 before 04
+03.  Review (frontend noop, skip expected) — extra seconds for 02 before 04
 04a. text client interview
 04b. voice client interview
      build the profile — concurrent persist, not a wait
@@ -29,25 +29,25 @@ business research is already running** before the contractor sees confirm data.
 ```
 
 ```text
-01 Confirm
+01 business lookup
   ├─► 02 business research ──► build-profile (fold)
-  └─► 03 confirm data (skip ok) ─► 04a XOR 04b ──► 05 ─► 07 ─► 08
+  └─► 03 Review (skip ok) ─► 04a XOR 04b ──► 05 ─► 07 ─► 08
                                       │              └─► 06 (async)
                                       └─► build-profile
 ```
 
-SSE (`GET /api/v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from confirm through
+SSE (`GET /v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from business lookup through
 applying the website template and copy. Postgres is authoritative.
 
 ## Onboarding session status
 
-`created` → `client_interviewing` (confirmed; 02 + 03 + 04a/04b) → `applying_website_template`
+`created` → `client_interviewing` (after business lookup; 02 + 03 + 04a/04b) → `applying_website_template`
 (client interview complete; 05 running) → `previewing` (website preview ready; 06 may still write
 copy) → `activated`.
 `apply_website_template_failed` if 05 throws.
 06 failing does not change onboarding session status. The website preview link has no TTL; 410
 only when the token is unknown, superseded, or already activated. The onboarding session has no
-`expired` status. Confirm data (03) does not get its own status.
+`expired` status. Review (03) does not get its own status.
 
 ## Resume
 
@@ -60,15 +60,15 @@ resume token.
 | --- | --- |
 | No stored token | `/onboarding/find` |
 | Token present, `GET .../profile` failing | stay on a loading placeholder; keep the token; retry. Do not go to Find and do not `POST` |
-| `client_interviewing`, no client interview started | `/onboarding/review` (confirm data) |
+| `client_interviewing`, no client interview started | `/onboarding/review` (Review) |
 | `client_interviewing`, interview in progress (`channel` set or an autosave exists) | `/onboarding/interview` |
-| `applying_website_template`, `apply_website_template_failed`, or `previewing` | `/onboarding/preview` |
-| Active website preview | `/onboarding/preview` with View website; the website preview link still works without `localStorage` |
+| `applying_website_template` or `apply_website_template_failed` | short progress screen in `frontend-2` |
+| `previewing` / active website preview | `/preview/{token}/` on the contractor website; the website preview link still works without `localStorage` |
 | `activated` | clear storage; `/cms/website` |
 
-Confirm creates the onboarding session **once** (01), when this browser has no token. Opening Find
+Business lookup creates the onboarding session **once** (01), when this browser has no token. Opening Find
 with nothing stored must not `POST` an onboarding session. Opening `/onboarding/find` with a stored
-token restores (same table as reload); it does not Confirm again. Restore failure keeps the token
+token restores (same table as reload); it does not submit business lookup again. Restore failure keeps the token
 and retries `GET .../profile` on a loading placeholder — do not drop the pointer and do not `POST`
 a replacement.
 

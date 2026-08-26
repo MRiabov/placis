@@ -15,7 +15,7 @@ export default function GalleryGrid({
     const count = Math.max(1, Number(props.placeholder_count ?? 5));
     return (
       <section
-        className={`${sectionPadding(theme)} public-gallery-grid public-gallery-grid--placeholder-lines bg-[var(--public-background)]`}
+        className={`${sectionPadding(theme)} public-gallery-grid public-gallery-grid--placeholder-lines bg-(--public-background)`}
         id={anchor || undefined}
       >
         <div className="public-site-shell">
@@ -47,7 +47,7 @@ export default function GalleryGrid({
     return (
       <section
         aria-label={carouselLabel}
-        className={`${sectionPadding(theme)} public-gallery-grid public-gallery-grid--carousel bg-[var(--public-background)]`}
+        className={`${sectionPadding(theme)} public-gallery-grid public-gallery-grid--carousel bg-(--public-background)`}
         data-public-carousel=""
         data-public-carousel-mobile-slides={String(
           Number.isFinite(mobileSlidesPerView) ? mobileSlidesPerView : 1,
@@ -141,7 +141,7 @@ export default function GalleryGrid({
 
   return (
     <section
-      className={`${sectionPadding(theme)} public-gallery-grid ${isPacked ? "public-gallery-grid--packed" : ""} bg-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} public-gallery-grid ${isPacked ? "public-gallery-grid--packed" : ""} bg-(--public-background)`}
       id={anchor || undefined}
     >
       <div className="public-site-shell">
@@ -167,12 +167,12 @@ export default function GalleryGrid({
                     src={src}
                   />
                 ) : (
-                  <div className="h-52 bg-[var(--public-surface)]" />
+                  <div className="h-52 bg-(--public-surface)" />
                 )}
                 {showCaptions ? (
                   <figcaption className="p-4">
                     <div className="font-bold">{title}</div>
-                    <p className="mt-1 text-sm text-[var(--public-muted)]">
+                    <p className="mt-1 text-sm text-(--public-muted)">
                       {text(item.caption ?? item.category, "")}
                     </p>
                   </figcaption>
@@ -181,7 +181,7 @@ export default function GalleryGrid({
             );
             return (
               <figure
-                className="overflow-hidden rounded-[var(--public-radius)] border border-[var(--public-border)] bg-[var(--public-background)]"
+                className="overflow-hidden rounded-(--public-radius) border border-(--public-border) bg-(--public-background)"
                 key={`${title}-${index}`}
               >
                 {href ? <a href={href}>{tile}</a> : tile}

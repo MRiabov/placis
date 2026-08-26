@@ -20,7 +20,7 @@ Generation and search share Vercel; there is no OpenRouter hop.
 ## `ai_generations`
 
 Shared by website copy generation, the website assistant, and ads. One table, not copied into
-feature data-models. Postgres schema `llm`.
+feature persistence docs. Postgres schema `llm`.
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `trace_type` (`prod`/`eval`), `generation_type`,
   `model`, `prompt_id`, `prompt_version`, `input` jsonb, `internal_reasoning` jsonb, `output` jsonb,

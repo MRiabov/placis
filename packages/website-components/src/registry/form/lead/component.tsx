@@ -72,7 +72,7 @@ export function LeadFormFields({
             ) : null}
             {type === "textarea" ? (
               <textarea
-                className="min-h-24 rounded-[var(--public-radius)] border border-[var(--public-border)] px-3 py-2 font-normal"
+                className="min-h-24 rounded-(--public-radius) border border-(--public-border) px-3 py-2 font-normal"
                 id={id}
                 name={id}
                 placeholder={text(field.placeholder, showLabel ? label : "")}
@@ -80,7 +80,7 @@ export function LeadFormFields({
               />
             ) : type === "select" ? (
               <select
-                className="min-h-11 rounded-[var(--public-radius)] border border-[var(--public-border)] px-3 py-2 font-normal"
+                className="min-h-11 rounded-(--public-radius) border border-(--public-border) px-3 py-2 font-normal"
                 defaultValue={text(field.default_value, "")}
                 id={id}
                 name={id}
@@ -102,7 +102,7 @@ export function LeadFormFields({
               </select>
             ) : (
               <input
-                className="min-h-11 rounded-[var(--public-radius)] border border-[var(--public-border)] px-3 py-2 font-normal"
+                className="min-h-11 rounded-(--public-radius) border border-(--public-border) px-3 py-2 font-normal"
                 id={id}
                 name={id}
                 placeholder={text(field.placeholder, showLabel ? label : "")}
@@ -201,13 +201,13 @@ export default function LeadForm({
   const layout = text(props.layout, "default");
   const intro = (
     <div className="public-lead-form__intro">
-      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--public-muted)]">
+      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-(--public-muted)">
         {text(props.eyebrow, "Quote request")}
       </p>
       <h2 className="mt-3 text-3xl font-bold">
         {text(props.title, "Tell us about the job")}
       </h2>
-      <p className="mt-3 text-sm leading-6 text-[var(--public-muted)]">
+      <p className="mt-3 text-sm leading-6 text-(--public-muted)">
         {text(
           props.privacy_notice,
           "Your details are used to respond to this enquiry.",
@@ -222,7 +222,7 @@ export default function LeadForm({
     <form
       {...publicLeadFormAttributes({
         className:
-          "rounded-[var(--public-radius)] border border-[var(--public-border)] bg-[var(--public-background)] p-5",
+          "rounded-(--public-radius) border border-(--public-border) bg-(--public-background) p-5",
         context,
         formId,
       })}
@@ -236,7 +236,7 @@ export default function LeadForm({
   if (layout === "centered") {
     return (
       <section
-        className={`${sectionPadding(theme)} public-lead-form public-lead-form--centered bg-[var(--public-background)]`}
+        className={`${sectionPadding(theme)} public-lead-form public-lead-form--centered bg-(--public-background)`}
         id="quote"
       >
         <div className="public-site-shell public-lead-form__inner">
@@ -249,7 +249,7 @@ export default function LeadForm({
   if (layout === "contact_split") {
     return (
       <section
-        className={`${sectionPadding(theme)} public-lead-form public-lead-form--contact-split bg-[var(--public-background)]`}
+        className={`${sectionPadding(theme)} public-lead-form public-lead-form--contact-split bg-(--public-background)`}
         id="quote"
       >
         <div className="public-site-shell public-lead-form__inner">
@@ -264,7 +264,7 @@ export default function LeadForm({
   }
   return (
     <section
-      className={`${sectionPadding(theme)} public-lead-form bg-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} public-lead-form bg-(--public-background)`}
       id="quote"
     >
       <div className="public-site-shell public-lead-form__inner grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">

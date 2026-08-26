@@ -12,7 +12,7 @@ export default function ServiceAreaCoverage({
   const linkLabel = text(props.link_label, "View service area");
   return (
     <section
-      className={`${sectionPadding(theme)} public-service-area-coverage bg-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} public-service-area-coverage bg-(--public-background)`}
     >
       <div className="public-site-shell public-service-area-coverage__inner">
         <div className="public-service-area-coverage__copy">

@@ -68,10 +68,11 @@ Independent options. They combine. Default in the website editor: **plan + Ask f
 
 **Gate: instant apply vs Ask first** (whether Apply / Reject exist)
 
-- **Ask first** (`ask_first`) — each (or batched) edit shows **Apply** / **Reject**. Nothing
-  lands until the owner picks. Never `on_confirm`.
-- **Instant apply** — those buttons are bypassed. Validated tools write as they succeed. There is
-  no Reject for that edit.
+- **Ask first** (`ask_first`) — each (or batched) edit shows **Apply** / **Reject**. The canvas
+  shows the proposal in memory. Nothing is PATCHed until **Apply**. Never `on_confirm`.
+- **Instant apply** — those buttons are bypassed. In the CMS, the website editor applies each
+  validated tool to the in-memory projection and PATCHes as they succeed. There is no Reject for
+  that edit. Onboarding 06 writes unpublished rows headless (no `frontend-2`).
 
 After a plan is accepted, apply uses the same engine as continuous workflow. Only the gate
 changes whether Apply / Reject appear.
@@ -86,29 +87,33 @@ The same agent edit must never **Apply** and then **Reject** (or the reverse).
 - **Instant apply:** the edit is created **already applied**. Reject is not offered; the API
   refuses it.
 
-Applied writes the unpublished row. After that, the owner does not Reject that edit. Changing
-the canvas later is a **new** human edit (PATCH / typing). That is not Reject. There is no
-“revert last website-assistant batch” via Reject. Activity cards show what happened; they are
-not an undo control. After Apply, Ctrl+Z undoes that **batch in RAM**, then PATCHes like any
-owner edit. The Apply row in `edit_history` keeps `edited_by=agent`; the copy-out of the undo
-is a later human batch. Instant-apply tools undo one tool at a time in RAM. Website
-publication rollback is a different surface.
+In the CMS, Apply does not write unpublished rows on a distinct path. The website editor
+mutates the in-memory projection, then the ordinary PATCH (and `/menus`) copies out with
+`ai_generation_id` so that `edit_history` batch is `edited_by=agent`. `record-apply` /
+`record-reject` are activity metadata only. After Apply, the owner does not Reject that edit. Changing the canvas
+later is a **new** human edit (PATCH / typing). That is not Reject. There is no “revert last
+website-assistant batch” via Reject. Activity cards show what happened; they are not an undo
+control. After Apply, Ctrl+Z undoes that **batch in RAM**, then PATCHes like any owner edit.
+The Apply row in `edit_history` keeps `edited_by=agent`; the copy-out of the undo is a later
+human batch. Instant-apply tools undo one tool at a time in RAM. Live website rollback is a
+different surface ([api.md](api.md)).
 
 ## Last writer
 
 Last writer lives only on `edit_history` (`edited_by` `human`/`agent`, `ai_generation_id` when
 agent). Live unpublished rows have no last-writer columns. See
-[data-model.md](data-model.md). `origin` is still first source, not last writer.
+[persistence.md](persistence.md). `origin` is still first source, not last writer.
 
-Apply (Ask first whole Apply, or one instant-apply tool) is one `edit_history` batch. Pending
-Ask first edits are not in the table. Reject never writes a row. Apply sends
-`base_edit_history_head` on the existing apply request; success / `409`
-`edit_history_conflict` match PATCH ([editing.md](editing.md)).
+Apply (Ask first whole Apply, or one instant-apply tool) is one `edit_history` batch, written
+by the CMS PATCH that copies those dirty keys (`ai_generation_id` set). Pending Ask first
+edits are not in the table. Reject never writes a row. `record-apply` / `record-reject` do
+not send `base_edit_history_head`; the PATCH already did. Success / `409`
+`edit_history_conflict` match any other PATCH ([editing.md](editing.md)).
 
 **One in-flight website-assistant run per tenant** (includes onboarding 06). A second start is
-`409` until the current run finishes, fails, or is cancelled. Two tabs, voice + text, or 06 +
-the editor must not both apply. PATCH (including undo copy-out) is `409` while a run is
-applying.
+`409` until the current run finishes or fails. There is no cancel HTTP. Two tabs, voice +
+text, or 06 + the website editor must not both start a run. While 06 is in flight, CMS PATCH
+is `409`. While a CMS run is in flight, PATCH is allowed — that is the apply path.
 
 ## Output
 

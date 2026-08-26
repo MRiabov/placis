@@ -11,7 +11,7 @@ Next: wire R2 `latest/`, website publication render, Custom Hostnames, and Conne
 address.
 
 Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
-[website_addresses](data-model.md), [frontend.md](frontend.md),
+[website_addresses](persistence.md), [frontend.md](frontend.md),
 [contractor-website-debloat.md](contractor-website-debloat.md),
 [port-contractor-website.md](port-contractor-website.md),
 [website activation](../onboarding/pipeline/08-website-activation.md), [ci-cd.md](../../general-architecture/ci-cd.md).
@@ -177,11 +177,13 @@ status: not published yet). That empty host is not a website preview.
 ## Website preview
 
 `/preview/{token}/` always renders the unpublished website. It never reads R2 HTML.
-`GET /api/v1/public/site/resolve` stays for website preview (and tests). Live GET does not call it.
+That render is the Worker **internal render** (shared secret / service binding), not
+`GET /v1/public/site/resolve` (**do not create**). Live GET does not call Go. Tests
+hit `/preview/{token}/`.
 
 ## Website form POST
 
-The React island posts to `cmd/api` (public website-form endpoint). CORS allows the contractor
+The React island posts to `cmd/api` (`POST /v1/website-forms/{form_id}/submissions`). CORS allows the contractor
 `Host`. The Worker does not render or proxy that POST.
 
 ## Connect website address (CMS)

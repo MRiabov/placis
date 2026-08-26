@@ -4,7 +4,7 @@ Status: planning (port instructions, not shipped UI).
 
 ## Target
 
-[README.md](README.md), [data-model.md](data-model.md),
+[README.md](README.md), [persistence.md](persistence.md), [api.md](api.md),
 [website frontend](../../website/frontend.md) (workspace item + `/cms/media`).
 Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 
@@ -47,8 +47,8 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 
 | Today | Target |
 | --- | --- |
-| `GET/POST /api/v1/website/editor/assets` | same group under Go `/api/v1/website/editor/…` (media assets) |
-| Signed URL + complete upload | files API as in [files](../../../general-architecture/files-and-s3.md) |
+| `GET/POST /api/v1/website/editor/assets` | `/v1/media-assets` (this resource owns upload) |
+| Signed URL + complete upload | `POST /v1/media-assets` + `…/complete` |
 | Workspace panel only | add `/cms/media` full-screen (same rows) with the website Go phase |
 
 Media is **not** a fifth top-level left-nav peer in the first nav pass (details
