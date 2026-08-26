@@ -19,9 +19,13 @@ find (company registry and/or Google Maps) + online research consent
 
 Step docs: [pipeline/](pipeline/README.md). Numbers are DAG order: 02 starts before 03.
 
-At most five 02 waves per tenant per rolling 30 minutes (one wave = one enqueue of the job set, not
-one job). A 6th wave waits until the oldest of those five is 30 minutes old. Business lookup still
+At most five 02 runs per tenant per rolling 30 minutes (one run = one enqueue of the job set, not
+one job). A 6th run waits until the oldest of those five is 30 minutes old. Business lookup still
 returns; the wait is a quiet inline note on Review, not a blocker.
+
+After website activation, [ETL](../other/etl/pipeline/scheduled.md) keeps **listing updates**
+(Google Maps reviews / photos, Facebook / Instagram posts and reviews) three times per UTC
+week — not a second onboarding 02 job set.
 
 ## Apply the website template
 

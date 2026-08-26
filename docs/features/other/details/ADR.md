@@ -33,4 +33,6 @@ decision + date) instead of silently rewriting history.
    `founder_media_asset_id`, and `logo_media_asset_id` / `brand_tone` / `brand_typography` /
    `brand_primary_color` / `brand_accent_color`, live on `business_profiles`. They are ordinary
    fold columns and ordinary `business_profile_edits.field` values. Business research extras (confidence,
-   evidence) stay on `business_research_sources`, not a founder blob. (2026-08-19)
+   evidence) stay on `etl.business_research_sources`, not a founder blob. (2026-08-19;
+   2026-08-26: that table moved to schema `etl`. Facebook / Google Maps listing URL changes
+   on Details enqueue the [ETL source-change run](../etl/pipeline/source-change.md).)

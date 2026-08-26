@@ -3,20 +3,22 @@
 - **Setup**: 01 business lookup has returned; `online_research_consent_at` set.
 - **Invoke**: business lookup returns; business research jobs run as background jobs. Also: attach/change
   sources six times inside 30 minutes on the same tenant.
-- **Assert**: Review / checklist reads succeed before jobs finish; one `business_research_waves`
-  row per enqueue and several `business_research_runs` (one per job) sharing that `wave_id`; cache hit
-  on `business_research_fetches` (kind + key) skips the external call and still writes run +
-  `business_research_sources` for this onboarding session; Maps path upserts
-  `google_maps_listings` (+ hours, review rows); `place_id` on the run on the Maps path; each job
+- **Assert**: Review / checklist reads succeed before jobs finish; one `etl.business_research_runs`
+  row (`trigger=onboarding`) per enqueue and several `etl.business_research_sources` (one per job
+  kind) sharing that `run_id`; latest `etl.fetches` inside the 30-minute freshness window skips the
+  external call and still writes `etl.business_research_sources` for this onboarding session
+  (`fetch_id` on the reused fetch); Maps path upserts `etl.google_maps_listings` (+ hours, review rows); Facebook path
+  upserts `etl.facebook_pages` / reviews / **posts** and `etl.imported_media` when the fake returns a post
+  image; `place_id` on the run on the Maps path; each job
   clears in-progress on the checklist projection; photo classification tags found photos (hero /
   project / service / founder / logo); profile increments go through build-profile (conflict does
-  not move the fold). Waves 1–5 insert `business_research_waves` and enqueue jobs. The 6th enqueue
-  in 30 minutes does **not** insert a wave, does **not** call Maps / Parallel / Facebook / crawl,
+  not move the fold). Runs 1–5 insert `etl.business_research_runs` and enqueue jobs. The 6th enqueue
+  in 30 minutes does **not** insert a run, does **not** call Maps / Parallel / Facebook / crawl,
   returns `429` with `research_wait_until` = oldest of the five `started_at` + 30 minutes; prior
   fold stays. After that instant, `GET .../profile` and SSE include `research_wait_until`; Review
   shows the inline wait and Continue still works. A River retry of an existing run does not
-  insert a wave. A 6th wave after `research_wait_until` succeeds.
+  insert a run. A 6th run after `research_wait_until` succeeds.
 - **Fail**: job error → source `status=error`; onboarding session stays `client_interviewing`; prior fold
-  kept. Wave cap is not this Fail.
+  kept. Run cap is not this Fail.
 - **Mocked**: Google Maps Details / scrape, Vercel Parallel + extract, Facebook, trade
   registry, photo classifier (fakes). Never Parallel’s API, Exa, Perplexity, Tako, `:online`, OpenRouter web search.

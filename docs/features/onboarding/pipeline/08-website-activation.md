@@ -53,11 +53,14 @@ Verified Stripe `checkout.session.completed` for an unactivated tenant whose hos
    does not linger. Host stays up. Website address is a later CMS modal.
 6. In-flight 06 **continues** on the same `tenant_id`. CMS website assistant 409 until that run
    ends.
+7. Start the [scheduled ETL run](../../other/etl/pipeline/scheduled.md) periodic for this tenant
+   (Maps / Facebook listing updates after activation — not a repeat of 02).
 
 ## Persist
 
 `website_activations`; `stripe_events`; **update** existing `tenants`; `tenant_memberships`;
-`website_publications` v2 + archive v1; R2 `latest/` without the strip.
+`website_addresses`; `website_publications` v2 + archive v1; R2 `latest/` without the strip.
+River periodic for the [scheduled ETL run](../../other/etl/pipeline/scheduled.md).
 
 ## Fail
 

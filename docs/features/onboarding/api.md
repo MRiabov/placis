@@ -30,8 +30,8 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
   is this body field, not a `/research-consent` resource.
 - **Response:** `{ id, token, status, research_wait_until? }`. Token → `localStorage`. Inserts
   unactivated tenant + onboarding session + empty business profile; enqueues business research
-  if under the 5-wave cap. Over cap → still 200 with `research_wait_until` (later source change
-  that would start a wave is `429`).
+  if under the 5-run cap. Over cap → still 200 with `research_wait_until` (later source change
+  that would start a run is `429`).
 - **Must not:** apply the website template; wait for business research.
 
 ### GET /v1/onboarding-sessions/company-registry/search
@@ -75,10 +75,10 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 
 - **Auth:** onboarding session token
 - **Callers:** attach/change Google Maps listing or company registry record on the **same**
-  onboarding session (new business-research wave, same cap).
+  onboarding session (new business-research run, same cap).
 - **Idempotency-Key:** yes.
 - **Replaces:** predecessor `company-selection` / `imports` / `consents`.
-- **Errors:** `429` with `research_wait_until` when the wave cap would be exceeded.
+- **Errors:** `429` with `research_wait_until` when the run cap would be exceeded.
 
 ### PUT /v1/onboarding-sessions/{id}/text-interview/autosave
 

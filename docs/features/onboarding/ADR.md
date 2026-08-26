@@ -23,23 +23,30 @@ decision + date) instead of silently replacing the old entry.
 
 4. **Business research is an interface + typed output** — Google Maps, company registry, Facebook,
    website crawl, and photo classification sit behind one interface with fakes. Output lands in
-   typed `business_research_sources` rows with where it came from + confidence; a Google Maps listing
-   also upserts `google_maps_listings` (columns, hours, reviews). Raw fetch bodies stay on the ETL
-   cache (`google_maps_listings.raw`, `business_research_fetches.raw`, or
-   `business_research_sources.raw` for kinds with no listing or reviews table) and never leak past
-   that boundary into the profile.
+   typed `etl.business_research_sources` rows with where it came from + confidence; a Google Maps listing
+   also upserts `etl.google_maps_listings` (columns, hours, reviews). Raw fetch bodies stay on
+   `etl.fetches` (append-only) and never leak past that boundary into the profile.
+   (2026-08-26: listing tables and fetches moved to Postgres schema `etl`; see
+   [ETL ADR](../other/etl/ADR.md). Facebook posts are a source kind, not reviews-only.)
 
 5. **External research is cached per business** — look up before any paid/external call. Google
-   Maps listings keyed by `place_id` (`google_maps_listings.raw`) plus `business_research_fetches`
+   Maps listings keyed by `place_id` (`etl.google_maps_listings.latest_fetch_id`) plus `etl.fetches`
    keyed by kind + stable key (canonical URL, scrape query, Facebook URL, trade-registry id,
-   Parallel query). A repeat attach reuses `raw` instead of refetching. Still write a
-   `business_research_run` + `business_research_sources` row for this onboarding session. Not the
-   business profile. Company registry parquet and Find autocomplete are not this cache. No TTL.
+   Parallel query). A repeat attach **inside the 30-minute freshness window** reuses the latest
+   `raw` instead of refetching. Still write an `etl.business_research_run` +
+   `etl.business_research_sources` row for this onboarding session. Not the
+   business profile. Company registry parquet and Find autocomplete are not this cache.
    (2026-08-16: a `google_maps_listing_cache` jsonb-only payload, described as “repeat paid
    lookups”. 2026-08-19: Google Maps Details is the free API; scrape is the fallback. Same day,
    later: that table is `google_maps_listings` (typed columns + `raw` ETL body); do not also dump
    the body onto `business_research_sources.raw`. 2026-08-23: cache is global for every external
-   kind, not Maps-only.)
+   kind, not Maps-only. 2026-08-26: **No TTL is withdrawn.** Fetches are append-only in schema
+   `etl`; reuse is the freshness window. Scheduled waves extract past `etl.watermarks` so new
+   Facebook posts and photos land after onboarding. Listing tables do not store a second `raw`
+   copy.)
+   (2026-08-26, later: the enqueue row is `etl.business_research_runs`, not `waves`.
+   Scheduled extract is three times per UTC week, not daily. It is Google Maps / Facebook /
+   Instagram listing updates, not a repeat of the 02 job set.)
 
 5a. **Open web search is Parallel via the Vercel AI Gateway server tool** — Parallel is the
     search engine for our agents. When a research job must discover a URL or listing and we do not
@@ -65,8 +72,9 @@ decision + date) instead of silently replacing the old entry.
    write race. Same field with disagreeing values is a research conflict. See
    [details ADR](../other/details/ADR.md).
    Same day: founder and brand are columns on `business_profiles`, not jsonb. Contact was already
-   columns. Remaining onboarding jsonb is raw dumps — research `raw` for kinds with no listing
-   or reviews table, `google_maps_listings.raw` (ETL cache), Stripe and event payloads.)
+   columns. Remaining onboarding jsonb is Stripe and website-preview event payloads. Extract
+   dumps live on `etl.fetches` and, for kinds with no listing table, `etl.business_research_sources.raw`.
+   (2026-08-26: `google_maps_listings.raw` removed; listing points at `etl.fetches`.)
 
 7. **Conflicting answers are surfaced, not resolved** — what the contractor said vs. what we found
    are shown side by side; the system never picks one silently.

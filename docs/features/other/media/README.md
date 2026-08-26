@@ -104,4 +104,5 @@ unpublished website editor may show pending-review AI images with a warning.
 
 Bytes live in [files](../../../general-architecture/files-and-s3.md) (`media_assets.file_id`).
 HTTP: [api.md](api.md) (this resource owns upload; no `/v1/files`). Tables:
-[persistence.md](persistence.md).
+[persistence.md](persistence.md). Public-source imports (Maps photos, Facebook/Instagram
+posts): [ETL](../etl/README.md).

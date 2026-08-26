@@ -2,12 +2,14 @@
 
 Status: proposed implementation plan.
 
-Related: [PRD](prd.md), [ADR](ADR.md), [persistence](persistence.md), [HTTP](api.md).
+Related: [PRD](prd.md), [ADR](ADR.md), [persistence](persistence.md),
+[ETL](../other/etl/persistence.md), [HTTP](api.md).
 
 ## Domain objects
 
-See [persistence.md](persistence.md). The business profile is
-[details](../other/details/persistence.md).
+The business profile is
+[details](../other/details/persistence.md). Extract tables:
+[ETL](../other/etl/persistence.md).
 
 ## Flow
 
@@ -30,26 +32,29 @@ website rollback of onboarding rows is refused
 
 ## Business research pipeline
 
-1. Before enqueue: count `business_research_waves` for this `tenant_id` in the last 30 minutes.
+1. Before enqueue: count `etl.business_research_runs` with `trigger=onboarding` for this
+   `tenant_id` in the last 30 minutes.
    Five already → do not enqueue; expose `research_wait_until` (oldest of those five + 30 minutes)
    on profile and SSE; a later source-change returns `429` with that timestamp. River retries of
-   an existing `business_research_run` do not insert a wave. See [02](pipeline/02-business-research.md).
-2. Look up `business_research_fetches` (kind + cache key) and `google_maps_listings` (`place_id`)
-   before any external call. Hit → reuse `raw`; skip Google Maps Details, scrape, Facebook, crawl,
-   and Parallel.
-3. On a miss: Google Maps, Vercel Parallel search (only when we lack `place_id` or a known
-   website URL), the company registry parquet, Facebook, the LLM extract, or a fake returns a raw
-   fetch body.
-   Persist the fetch. Vercel AI Gateway is the search hop: Parallel via
-   `gateway.tools.parallelSearch()`; a separate extract call over retrieved text (no search tools).
-4. Upsert typed output: a `business_research_sources` row (kind, external id, where it came from,
-   lookup `status`, confidence) for **this** onboarding session even on a cache hit. A Google Maps
-   listing also upserts `google_maps_listings` (columns + `raw` ETL cache), hours, and reviews.
-   Other kinds copy `raw` onto the source row from the fetch cache.
+   an existing `etl.business_research_run` do not insert a run. See [02](pipeline/02-business-research.md).
+2. Look up the latest `etl.fetches` (kind + cache key) and `etl.google_maps_listings` (`place_id`)
+   before any external call. Inside the 30-minute freshness window → reuse `raw`; skip Google
+   Maps Details, scrape, Facebook, crawl, and Parallel.
+3. On a miss or a stale fetch: Google Maps, Vercel Parallel search (only when we lack `place_id`
+   or a known website URL), the company registry parquet, Facebook, the LLM extract, or a fake
+   returns a raw fetch body.
+   **Insert** `etl.fetches` (never overwrite a prior `raw`). Vercel AI Gateway is the search hop:
+   Parallel via `gateway.tools.parallelSearch()`; a separate extract call over retrieved text (no
+   search tools).
+4. Upsert typed output: an `etl.business_research_sources` row (kind, external id, where it came
+   from, lookup `status`, confidence) for **this** onboarding session even on a freshness-window
+   hit. A Google Maps listing also upserts `etl.google_maps_listings` (columns + `latest_fetch_id`),
+   hours, and reviews. Facebook upserts `etl.facebook_pages`, reviews, and posts. Other kinds copy `raw` onto
+   the source row from the fetch row.
 5. Photo classification tags media assets (hero/project/service/founder/logo) for the media library
-   / website slot mapping.
-6. Every run is safe to retry (explicit key). Do not refetch on retry when the cache already has
-   the body.
+   / website slot mapping. Post images load through `etl.imported_media`.
+6. Every run is safe to retry (explicit key). Do not refetch on retry when this source already
+   has `fetch_id`.
 
 ## Profile building
 
@@ -62,7 +67,7 @@ website rollback of onboarding rows is refused
 
 ## Validation & testing
 
-- Tenant isolation for onboarding sessions, business research, and profile rows.
+- Tenant isolation for onboarding sessions, ETL runs, and profile rows.
 - Fakes force deterministic tests; CI never spends Google / LLM / Stripe quota (see
   [ci-cd.md](../../general-architecture/ci-cd.md)).
 - One E2E: find → review → client interview → apply the website template → website preview →

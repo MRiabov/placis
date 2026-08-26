@@ -15,6 +15,9 @@ Feature `api.md` files:
 - [Ads](../features/ads/api.md)
 - [Leads](../features/other/leads/api.md) (website form submit)
 
+[ETL](../features/other/etl/README.md) has no HTTP of its own. Onboarding 02, Details URL
+PATCH, and `POST /v1/business-profile/reviews/import` enqueue runs.
+
 The [Placis website](../features/placis-website/README.md) has no Go HTTP. Live contractor
 website HTML is Cache then R2; it never calls Go.
 
@@ -101,7 +104,7 @@ repeat only their own rows.
 - `slot_type=json` on GET/PATCH
 - String fields documented as a JSON blob
 - SSE `payload` as unconstrained object
-- Returning `business_research_fetches.raw`, Maps `raw`, Stripe raw, or `ai_generations`
+- Returning `etl.fetches.raw`, Maps listing fetch bodies, Stripe raw, or `ai_generations`
   blobs to `frontend-2`
 
 Website component catalog structs are the only polymorphism: discriminator `component_id` /
@@ -135,7 +138,7 @@ Named fields: `code`, `message`, optional `retry_after`.
   stale. `frontend-2` re-GETs with `include_edit_history=true`.
 - `409` ads — `base_updated_at` mismatch. `frontend-2` re-GETs.
 - `413` — oversize PATCH (website editor body cap 64 KB).
-- `429` — business research wave cap or over-chatty PATCH. `Retry-After` / `research_wait_until`.
+- `429` — business research run cap or over-chatty PATCH. `Retry-After` / `research_wait_until`.
 
 ## Retries
 

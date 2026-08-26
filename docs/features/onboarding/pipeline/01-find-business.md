@@ -37,10 +37,10 @@ Contractor submits business lookup on `/onboarding/find`
    `tenant_id`, empty/unknown details, `last_edit_id` and `accepted_edit_id` null. Registry fills
    legal identity; Maps fills contact/listing fields. Both: registry wins legal identity
    ([build-profile](build-profile.md)).
-6. Enqueue 02 **if** this `tenant_id` has fewer than 5 business-research waves in the last 30
+6. Enqueue 02 **if** this `tenant_id` has fewer than 5 `trigger=onboarding` runs in the last 30
    minutes ([02](02-business-research.md)). Otherwise persist sources, do not enqueue 02, and
    expose `research_wait_until`. Navigate UI to Review (`/onboarding/review`) either way.
-   Attaching or changing sources on this onboarding session later is a new wave (same cap).
+   Attaching or changing sources on this onboarding session later is a new run (same cap).
 
 Lookups are debounced (no request per keystroke). Country is a search parameter, not an
 onboarding session column.
@@ -51,8 +51,8 @@ onboarding session column.
 `online_research_consent_at`, `status=client_interviewing`); empty `business_profiles` (same
 `tenant_id`); registry/Maps attach rows; profile increments via [build-profile](build-profile.md).
 
-Schemas: [persistence.md](../persistence.md), [details](../../other/details/persistence.md). Do not
-re-define them here.
+Schemas: [persistence.md](../persistence.md), [ETL](../../other/etl/persistence.md),
+[details](../../other/details/persistence.md). Do not re-define them here.
 
 ## Fail
 
@@ -60,7 +60,7 @@ re-define them here.
 - Registry/Maps lookup error → show miss; do not invent a business.
 - Restore path: stored token + `GET .../profile` failing → loading placeholder; keep the token;
   retry; do not `POST`.
-- 02 wave cap ([02](02-business-research.md)): business lookup still succeeds; 02 is not enqueued;
+- 02 run cap ([02](02-business-research.md)): business lookup still succeeds; 02 is not enqueued;
   `research_wait_until` is set. Not this Fail.
 
 ## Out
@@ -72,6 +72,6 @@ re-define them here.
 - Business lookup runs once per browser token.
 - Find mount never `POST`s.
 - 02 does not start without `online_research_consent_at`.
-- 02 does not start a 6th wave for this tenant inside 30 minutes.
+- 02 does not start a 6th run for this tenant inside 30 minutes.
 - No `website_pages` / `website_prefix` yet.
 - `/me` still has no tenant (`status=unactivated`).

@@ -21,7 +21,9 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
      `onboarding_sessions.interview_plan_*` when voice `update_interview_plan` ran.
 
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
-   - DB: `business_research_runs` → `business_research_sources` + `google_maps_listings` when a place was selected.
+   - DB: `etl.business_research_runs` → `etl.business_research_sources` + `etl.google_maps_listings`
+     when a place was selected; Facebook fake with a post also writes `etl.facebook_posts` +
+     `etl.imported_media`.
 
 5. **Apply the website template + website preview** — `/onboarding/preview` SSE carousel, then
    navigate to the preview website address when 07 has written `latest/` (copy done or
