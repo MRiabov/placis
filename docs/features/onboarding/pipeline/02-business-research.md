@@ -158,7 +158,10 @@ calls
 **Pick (one shot).** Dump the pool into context (1M input is enough). Each review in the prompt
 has a handle `review_001`, `review_002`, … (prompt-only, not owner-facing). The model returns
 the list of handles to pin, order = featured-first. That becomes `is_top` + dense
-`top_position`. The owner can change the set later on Certifications and reviews.
+`top_position` 1…n from list order, written in one transaction (same replace as
+[details HTTP](../../other/details/api.md)). Do not merge onto an existing top set (that
+would clash on `top_position`). If any `is_top` is already set, skip the pin (the owner
+already chose). The owner can change the set later on Certifications and reviews.
 
 **Review citations (parallel).** Separate LLM calls, one per pinned review (and any review that
 still needs a review citation): extract a review citation up to `maxLength` 500 (~2–3
