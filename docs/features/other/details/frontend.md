@@ -30,8 +30,9 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
 
 The CMS left nav lives in `frontend-2/src/features/cms/` (layout module; names in
 [frontend-debloat.md](frontend-debloat.md)). Profile
-replaces the current top-level Details item. Sites (the website editor entry) and AI tools stay
-where they are. Ads is a destination (screens: [ads frontend](../../ads/ad-generation/frontend.md)).
+replaces the current top-level Details item. Sites (the website editor entry) stays
+where it is. There is no **AI tools** item: image cleanup is `/cms/media`; the website
+assistant is the canvas overlay. Ads is a destination (screens: [ads frontend](../../ads/ad-generation/frontend.md)).
 
 ```text
 New chat
@@ -42,7 +43,6 @@ Profile
   Certifications and reviews
   Media library
 Ads
-AI tools
 ```
 
 | Label | Kind | Route |
@@ -55,7 +55,6 @@ AI tools
 | Certifications and reviews | destination under Profile | `/cms/certifications-and-reviews` |
 | Media library | destination under Profile | `/cms/media` |
 | Ads | destination | `/cms/ads` |
-| AI tools | destination | `/cms/website` |
 
 ## Profile disclosure
 
@@ -88,24 +87,32 @@ Top menu and footer are not edited here.
 Panel order: **Identity** (including logo) first, then Contact and presence, Services, Legal
 and compliance, then **Opening hours**. Hours is not the first panel.
 
-**Opening hours picker** — Google Calendar-style, same bones as the onboarding
-AvailabilityPicker, in the CMS palette (white, higher contrast). One row per weekday:
-Opens, to, Closes as a time range. **Closed** is the unavailable control on that row
-(not a checkbox under a day column). Copy applies that day’s hours to the following days.
-Add a time block is part of the look. These are when they will pick
-up the **marketing phone**, not appointment copy. Shown on the contact website page. Do **not**
-show an Appointment note field; persistence has no `note` column. Persistence is still one
-Opens / Closes / Closed per day; extra time blocks are the target look.
+#### Opening hours picker
 
-**Logo picker** — pick from the media library (`logo_media_asset_id`).
+Google Calendar-style, same bones as the onboarding AvailabilityPicker, in the CMS palette
+(white, higher contrast). One row per weekday: Opens, to, Closes as a time range. **Closed**
+is the unavailable control on that row (not a checkbox under a day column). Copy applies that
+day’s hours to the following days. Add a time block is part of the look. These are when they
+will pick up the **marketing phone**, not appointment copy. Shown on the contact website page.
+Do **not** show an Appointment note field; persistence has no `note` column. Persistence is
+still one Opens / Closes / Closed per day; extra time blocks are the target look.
 
-**Link your Facebook** — show the button **only when unlinked**. This pass: paste a public
-Facebook business URL (type-to-search TBD). When linked, show the URL and **Change**.
-Writes `facebook_profile_url`. Same link as review import on Certifications and reviews. Not
-Ads Connect Meta, not Facebook Login, no autoposting.
+#### Logo picker
 
-**Google Maps listing** — same link pattern (`google_maps_listing_url`). Certifications and
-reviews imports from that listing.
+Pick from the media library (`logo_media_asset_id`).
+
+#### Link your Facebook
+
+Show the button **only when unlinked**. This pass: paste a public Facebook business URL
+(type-to-search TBD). When linked, show the URL and **Change**. Writes `facebook_profile_url`.
+Same link as review import on Certifications and reviews. Not Ads Connect Meta, not Facebook
+Login, no autoposting. Saving a new URL starts a public extract of that Facebook URL (reviews, posts,
+images).
+
+#### Google Maps listing
+
+Same link pattern (`google_maps_listing_url`). Certifications and reviews imports from that
+listing.
 
 Do not add unless asked: founder columns, brand tone / typography / colors.
 
@@ -126,4 +133,4 @@ Create owner-written at `/cms/certifications-and-reviews/new` (route for now). S
 ## Out of scope
 
 - Renaming Sites, merging Details into the website editor, adding `/cms/profile`, restoring
-  `/cms/proof`.
+  `/cms/proof` or an **AI tools** left-nav item.

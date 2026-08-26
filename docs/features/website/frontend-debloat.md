@@ -41,9 +41,10 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   No right-hand editing panel. No media library rail item.
   No Home crumb on the website-editor toolbar; viewport + Publish stay one row.
 - Canvas via the shared contractor-website component package.
-- Website assistant **overlay** pinned to the canvas (desktop default: single-line composer;
-  mobile ≤1100px default: expanded; expand / reduce height; no website dim;
-  plan vs continuous; instant apply vs Ask first; reduce-height left, Clear context trash right).
+- Website assistant **overlay** pinned to the canvas (desktop default: one-row composer —
+  chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**; mobile ≤1100px default:
+  expanded; collapsed mobile stays two rows; expand / reduce height; no website dim;
+  **Clear context** trash expanded-only).
   Apply / Reject are one-way and never transparent. Delete the assistant modal
   (`#assistantModal` / toolbar modal) and the toolbar **Website assistant** button.
 - Media library at `/cms/media` under Profile. Attach / pick from Content when an image is selected.

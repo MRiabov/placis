@@ -101,10 +101,6 @@
             <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M4 8h10l6-4v16l-6-4H4z"/></svg>
             <span class="js-expanded-only">Ads</span>
           </button>
-          <button class="cms-dashboard-nav-item" data-nav="ai-tools" data-scene="website" type="button" aria-label="AI tools">
-            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="m12 3 1.6 4.8L18 9.4l-4.4 1.6L12 16l-1.6-5L6 9.4l4.4-1.6z"/></svg>
-            <span class="js-expanded-only">AI tools</span>
-          </button>
         </nav>
         <div class="cms-dashboard-sidebar-spacer"></div>
         <div class="cms-dashboard-account">
@@ -240,11 +236,9 @@
                     <button class="cms-page-item" data-page="privacy" type="button">Privacy <small>/privacy</small></button>
                     <button class="cms-page-item" data-page="terms" type="button">Terms <small>/terms</small></button>
                   </div>
-                  <p class="cms-panel-hint">Drag to reorder. Extra unpublished website pages can be archived.</p>
                 </div>
                 <div class="is-hidden" data-rail-panel="seo">
                   <div class="cms-panel-title"><span>SEO</span></div>
-                  <p class="cms-panel-hint" id="seoPageHint">Always the current website page.</p>
                   <div class="cms-field">
                     <label class="cms-field-label" for="pageTitle">Website page title</label>
                     <input class="cms-field-control" id="pageTitle" value="Bellfield Roofing | Dublin" />
@@ -307,7 +301,6 @@
                       <div class="cms-media-tile"></div>
                     </div>
                   </div>
-                  <p class="cms-panel-hint">Overrides apply only when you click Apply.</p>
                 </div>
                 <div class="is-hidden" data-rail-panel="versions">
                   <div class="cms-panel-title"><span>Website versions</span></div>
@@ -342,7 +335,6 @@
                     <strong>Website assistant</strong>
                     <span>Updated image on Hero · 12 Aug 2026, 08:40</span>
                   </div>
-                  <p class="cms-panel-hint">Website versions are website publications and website-assistant activity, not unpublished checkpoints per website page. Preview opens the live website. Website rollback is on earlier owner website versions, not the live one.</p>
                 </div>
                 <div class="is-hidden" data-rail-panel="content" id="contentPanel">
                   <div class="cms-panel-title"><span>Content</span></div>
@@ -378,14 +370,12 @@
                           <button class="cms-media-tile" type="button" data-src="media/job-gutter.jpg" style="background-image:url('media/job-gutter.jpg')" aria-label="Job photo 4"></button>
                         </div>
                         <div class="cms-upload">Drop files here to upload to the media library</div>
-                        <p class="cms-panel-hint">Attach from the media library. Crop and focal on that attach.</p>
                         <p class="cms-panel-hint">Pending-review AI image — publishing still needs approved media.</p>
                       </div>
                     </div>
                   </div>
 
                   <div class="is-hidden" data-content-layout="reviews">
-                    <p class="cms-panel-hint">Reviews on this website section (Home). A service page can use a different set. This layout shows 2; other website components take 3, 6, or 8. Add from all reviews, remove, or reorder here. Top reviews for ads stay on Certifications and reviews.</p>
                     <div class="cms-review-card is-top">
                       <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
                       <div class="cms-review-stars">★★★★★</div>
@@ -521,14 +511,14 @@
                 <button class="cms-ask-pill is-apply" type="button">Apply</button>
                 <button class="cms-ask-pill is-reject" type="button">Reject</button>
               </div>
-              <div class="cms-assistant-overlay" id="assistantOverlay">
+              <div class="cms-assistant-overlay" id="assistantOverlay" tabindex="-1">
                   <div class="cms-assistant-bar">
                     <button class="cms-assistant-icon" type="button" id="assistantCollapse" aria-label="Expand website assistant" title="Expand website assistant">
                       <svg viewBox="0 0 24 24"><path d="m7 13 5 5 5-5"/><path d="m7 6 5 5 5-5"/></svg>
                     </button>
                     <div class="cms-assistant-switches">
-                      <label class="cms-switch"><input type="checkbox" id="switchPlan" checked /> Plan</label>
-                      <label class="cms-switch"><input type="checkbox" id="switchAsk" checked /> Ask first</label>
+                      <label class="cms-switch cms-switch-plan"><input type="checkbox" id="switchPlan" checked /> Plan mode</label>
+                      <label class="cms-switch cms-switch-ask"><input type="checkbox" id="switchAsk" checked /> Ask first</label>
                     </div>
                     <button class="cms-assistant-icon" type="button" id="clearContext" aria-label="Clear context" title="Clear context">
                       <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg>
@@ -841,7 +831,6 @@
               <div class="cms-media-tile-wrap">
                 <div class="cms-media-tile" style="min-height:180px"></div>
                 <p class="cms-media-meta">Rear slope after the storm · supplied by owner · approved</p>
-                <p class="cms-panel-hint">Crop · focal · replace · AI cleanup</p>
               </div>
               <div class="cms-media-tile-wrap">
                 <div class="cms-media-tile" style="min-height:180px"></div>
@@ -853,7 +842,6 @@
                 <p class="cms-media-meta">Logo · supplied by research · approved</p>
               </div>
             </div>
-            <p class="cms-panel-hint">Each item has a media caption. Publishing needs approved media on the live path.</p>
           </div>
         </section>
 
