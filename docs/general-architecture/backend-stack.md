@@ -39,7 +39,7 @@ HTTP conventions (prefix, serve only types on HTTP, auth modes, errors, `Idempot
 
 The rewrite is greenfield. Default to the **latest stable** of each chosen library and of the Go
 toolchain. Names in this file (`huma`, `pgx`, `chi`, `River`, Clerk, Stripe, …) identify the
-library, not a frozen major or minor. When a new stable major lands, take it on the next upgrade
+library, not a pinned major or minor. When a new stable major lands, take it on the next upgrade
 pass; do not keep an old import path in these docs as policy.
 
 Do **not** add Dependabot, Renovate, or other automated upgrade PRs. Upgrade on a regular

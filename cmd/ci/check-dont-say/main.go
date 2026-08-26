@@ -76,7 +76,8 @@ func run(args []string) error {
 func glossaryStaged(files []string, glossaryPath string) bool {
 	want := filepath.ToSlash(glossaryPath)
 	for _, f := range files {
-		if filepath.ToSlash(f) == want {
+		slash := filepath.ToSlash(f)
+		if slash == want || strings.HasSuffix(slash, "/"+want) {
 			return true
 		}
 	}

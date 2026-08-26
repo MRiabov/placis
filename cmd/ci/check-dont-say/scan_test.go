@@ -309,6 +309,39 @@ func TestHomeScopedPostingAndInterview(t *testing.T) {
 	}
 }
 
+func TestSkipAdApplicationInvestigation(t *testing.T) {
+	if !shouldSkipPath("docs/features/ads/ad-application/meta/00-index-research.md", false) {
+		t.Fatal("ad-application investigation notes should be skipped")
+	}
+	if shouldSkipPath("docs/features/ads/ad-generation/prd.md", false) {
+		t.Fatal("ads product spec should still be scanned")
+	}
+}
+
+func TestEnabledTrees(t *testing.T) {
+	if !inEnabledTree("docs/features/ads/ad-generation/prd.md", false) {
+		t.Fatal("docs should be enabled")
+	}
+	if inEnabledTree("packages/website-components/src/registry/hero/type_first/docs.md", false) {
+		t.Fatal("packages markdown is outside enabled trees")
+	}
+	if inEnabledTree("frontend-2/src/x.md", false) {
+		t.Fatal("frontend-2 stays off until --frontend")
+	}
+	if !inEnabledTree("frontend-2/src/x.md", true) {
+		t.Fatal("frontend-2 should be enabled with --frontend")
+	}
+	if !shouldSkipPath("packages/website-components/src/registry/hero/type_first/docs.md", false) {
+		t.Fatal("packages markdown should be skipped")
+	}
+}
+
+func TestGlossaryStagedSuffix(t *testing.T) {
+	if !glossaryStaged([]string{"/tmp/repo/docs/glossary.md"}, "docs/glossary.md") {
+		t.Fatal("absolute glossary path should count as staged")
+	}
+}
+
 func TestSetupAllowedInTestingDocs(t *testing.T) {
 	compiled, err := compileTokens([]token{classifyToken("setup", "onboarding")})
 	if err != nil {

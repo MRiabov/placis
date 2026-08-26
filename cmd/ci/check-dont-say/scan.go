@@ -159,7 +159,31 @@ func appliesTo(tok compiledToken, path string) bool {
 	}
 }
 
+func inEnabledTree(path string, frontend bool) bool {
+	slash := strings.TrimPrefix(filepath.ToSlash(path), "./")
+	if filepath.IsAbs(path) {
+		if wd, err := os.Getwd(); err == nil {
+			if rel, err := filepath.Rel(wd, path); err == nil && !strings.HasPrefix(rel, "..") {
+				slash = strings.TrimPrefix(filepath.ToSlash(rel), "./")
+			}
+		}
+	}
+	roots := append([]string{}, defaultRoots...)
+	if frontend {
+		roots = append(roots, "frontend-2")
+	}
+	for _, root := range roots {
+		if slash == root || strings.HasPrefix(slash, root+"/") {
+			return true
+		}
+	}
+	return false
+}
+
 func shouldSkipPath(path string, frontend bool) bool {
+	if !inEnabledTree(path, frontend) {
+		return true
+	}
 	slash := filepath.ToSlash(path)
 	switch {
 	case slash == "docs/glossary.md" || strings.HasSuffix(slash, "/docs/glossary.md"):
@@ -170,9 +194,9 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	case strings.Contains(slash, "cmd/ci/check-dont-say/"):
 		return true
-	case strings.HasSuffix(slash, "generated/api-types.ts"):
+	case strings.Contains(slash, "docs/features/ads/ad-application/"):
 		return true
-	case !frontend && (strings.HasPrefix(slash, "frontend-2/") || strings.Contains(slash, "/frontend-2/")):
+	case strings.HasSuffix(slash, "generated/api-types.ts"):
 		return true
 	default:
 		return false
@@ -192,6 +216,13 @@ var extraAllowed = []string{
 	"walking skeleton",
 	"signed url",
 	"signed urls",
+	"signed-in",
+	"signed-out",
+	"signed in",
+	"signed out",
+	"playwright page",
+	"actions/setup-go",
+	"preview.placis.com",
 	"http header",
 	"request header",
 	"response header",

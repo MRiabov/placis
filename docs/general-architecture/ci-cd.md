@@ -152,7 +152,8 @@ banned outside the allowed files, including inside backticks (table names, types
 Backticks are not an escape. Home-scoped tokens in a `/`-delimited route or file path are not
 flagged (the URL still uses the short word). Always-ban tokens in paths still fail.
 `apps/contractor-website` is the contractor website application directory.
-`docs/glossary.md` itself is not scanned (it is the list). Worked examples:
+`docs/glossary.md` itself is not scanned (it is the list). Investigation notes under
+`docs/features/ads/ad-application/` are skipped (not the ads product spec). Worked examples:
 [`cmd/ci/check-dont-say/ref.md`](../../cmd/ci/check-dont-say/ref.md).
 
 **Tiers**
@@ -163,13 +164,16 @@ flagged (the URL still uses the short word). Always-ban tokens in paths still fa
 
 **Pre-commit vs CI**
 
-- Pre-commit: `language: golang` in `.pre-commit-config.yaml` builds `cmd/ci/check-dont-say` once and
-  caches the binary. The hook receives staged `*.md` / `*.go` paths (not `go run` on every commit).
-  `frontend-2` is excluded. If `docs/glossary.md` is staged, the checker scans the enabled trees
-  (`docs/`, `internal/`, `cmd/`, `migrations/`, `catalog/`).
-- CI: the same command over those trees, `go run ./cmd/ci/check-dont-say --all` (not via `just`).
+- Install once per clone: `pre-commit install`. Git worktrees share `.git/hooks`.
+- Pre-commit: `.pre-commit-config.yaml` runs `go run ./cmd/ci/check-dont-say` on staged files
+  under `docs/`, `internal/`, `cmd/`, `migrations/`, and `catalog/` (Go's build cache keeps this
+  cheap). `frontend-2` is excluded. If `docs/glossary.md` is staged, the checker scans those
+  trees in full. Paths outside those trees (including `packages/`) are ignored.
+- CI: `.github/workflows/check-dont-say.yml` runs `go test ./cmd/ci/check-dont-say` then
+  `go run ./cmd/ci/check-dont-say --all` on pull requests (not via `just`).
   `--frontend` stays off until frontend work starts from the Go backend (see
   [frontend-debloat.md](frontend-debloat.md)).
 
-Skip `.agents/` and generated files. There is no empty-list or shrink ratchet: parse failure is
+Skip `.agents/`, generated files, and `docs/features/ads/ad-application/` (Meta ad posting
+investigation; not the ads spec). There is no empty-list or shrink ratchet: parse failure is
 the failure.
