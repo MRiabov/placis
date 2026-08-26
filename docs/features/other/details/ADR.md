@@ -42,11 +42,12 @@ decision + date) instead of silently rewriting history.
 
 4. **Reviews have origin, top, archive, and citation** — each `business_profile_reviews` row
    has `origin` (`google_maps_listing` / `facebook_business_page` / `owner`), `is_top` +
-   `top_position` (dense 1…n, n ≤ 30; 1 = most featured), `status` (`in_pool` / `archived`),
+   `top_position` (dense 1…n, n ≤ 30; 1 = most featured; unique per profile when set), `status` (`in_pool` / `archived`),
    and `citation` (`maxLength` 500). Archive is not delete; re-import skips archived external
    ids. Owner-written reviews are editable after create; imported Google/Facebook reviews
    are not. Cards, the website, and ads paint citation (fallback `body` if empty).
-   (2026-08-26)
+   Pin / reorder replaces the whole ordered id list in one transaction; it does not assign
+   one `top_position` at a time. (2026-08-26; unique top set 2026-08-26)
    `is_top` is the **ads** featured set (and the top band on Certifications and reviews). It
    does **not** copy onto every reviews website section. Each reviews website section has its
    own ordered `website_slot_reviews` from the pool, capped by that website component.
