@@ -68,7 +68,7 @@ Onboarding 05/06 write them in River, not via these routes.
   `props` / `design` / `value`. Embeds tenant-scoped website styles, top menu, footer, and
   website forms so the canvas can paint. May embed display name / marketing phone for website
   placeholders; Details owns those writes. Reviews website sections include that section’s
-  ordered pool ids (`website_slot_reviews`), not the ads **top reviews** set. Pool cards for
+  ordered pool ids (`website_slot_reviews`), not the ads **top reviews** list. Pool cards for
   Content “add from the pool” come from Details `GET /v1/business-profile/reviews`.
 - **Must not:** `/pages/{id}/seo` as a separate route; `slot_type=json`; return
   `website_manifest`.

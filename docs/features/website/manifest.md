@@ -66,7 +66,7 @@ Per website section:
 
 Reviews: bake **that website section’s** `website_slot_reviews` into the website section
 `props` at publication (review citation with `body` fallback). Do not dump the whole
-profile review list or the ads **top reviews** set.
+profile review list or the ads **top reviews** list.
 
 Changing Details, Projects, certifications and reviews, website styles, or the unpublished
 website updates the website editor immediately and does **not** change the live website until the

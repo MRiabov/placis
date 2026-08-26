@@ -48,7 +48,7 @@ decision + date) instead of silently rewriting history.
    are not. Cards, the website, and ads paint citation (fallback `body` if empty).
    Pin / reorder replaces the whole ordered id list in one transaction; it does not assign
    one `top_position` at a time. (2026-08-26; unique top set 2026-08-26)
-   `is_top` is the **ads** featured set (and the top band on Certifications and reviews). It
+   `is_top` is the **ads** featured list (and the top band on Certifications and reviews). It
    does **not** copy onto every reviews website section. Each reviews website section has its
    own ordered `website_slot_reviews` from the pool, capped by that website component.
    (2026-08-26)

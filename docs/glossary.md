@@ -189,14 +189,14 @@ ordered list from `in_pool` reviews (the review citation, not the full body when
 Ads use **top reviews**.
 
 Distinct from: Ad needs review (an Ad state), Website preview, Top reviews (the ads featured
-set), Review citation (the short text shown from a review).
+list), Review citation (the short text shown from a review).
 
 ---
 
 ### Top reviews
 
-The ordered set of reviews the owner pinned on Certifications and reviews. Earlier in the
-order is more featured. Ads use this set. It is **not** what every reviews website section
+The ordered list of reviews the owner pinned on Certifications and reviews. Earlier in the
+order is more featured. Ads use this list. It is **not** what every reviews website section
 shows.
 
 Distinct from: Reviews (**All reviews** on Certifications and reviews), the ordered reviews on
@@ -210,7 +210,7 @@ The short text taken from a review for cards, the website, and ads — not a par
 body. Never say bare “citation” for this.
 
 Distinct from: where it came from (a detail’s origin). Distinct from Reviews (the full body)
-and Top reviews (the ads featured set) or the reviews on one website section.
+and Top reviews (the ads featured list) or the reviews on one website section.
 
 ---
 
