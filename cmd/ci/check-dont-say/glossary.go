@@ -161,7 +161,7 @@ func classifyToken(raw, say string) token {
 func coveringPhrases(say string) []string {
 	say = strings.NewReplacer("—", ",", "–", ",").Replace(say)
 	parts := []string{say}
-	for _, sep := range []string{" / ", ";", ",", " or "} {
+	for _, sep := range []string{" / ", ";", ",", " or ", ": "} {
 		var next []string
 		for _, p := range parts {
 			next = append(next, strings.Split(p, sep)...)

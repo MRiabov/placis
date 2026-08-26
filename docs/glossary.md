@@ -171,9 +171,12 @@ A locality the business covers.
 
 ### Certification
 
-A trade accreditation the business holds, edited separately from website sections.
+A trade accreditation the business holds, edited separately from website sections. Ticked on
+Certifications and reviews from a global catalog.
 
 Distinct from: Projects (photos of their work).
+
+In code: `certification_definitions`, `business_profile_certification_selections`.
 
 ---
 
@@ -188,19 +191,50 @@ Use “projects” in product docs and UI. Do not say “portfolio”.
 
 ### Reviews
 
-What people wrote about the business on the Google Maps listing: who wrote it, the rating, and
-the text. Filled during onboarding. Shown on the website; ads read the same rows.
+What people wrote about the business: who wrote it, the rating, and the text. Origins: the
+Google Maps listing, a Facebook business page, or the owner. Filled during onboarding and
+edited on Certifications and reviews (headings: **Top reviews**, **All reviews**, **Archive**).
+**All reviews** is the non-top `in_pool` cards. Each **reviews website section** shows its own
+ordered list from `in_pool` reviews (the review citation, not the full body when those differ).
+Ads use **top reviews**.
 
-Distinct from: Ad needs review (an Ad state), Website preview.
+Distinct from: Ad needs review (an Ad state), Website preview, Top reviews (the ads featured
+set), Review citation (the short text shown from a review).
 
 In code: `business_profile_reviews`, `google_maps_listing_reviews`, `website_slot_reviews`.
 
 ---
 
+### Top reviews
+
+The ordered set of reviews the owner pinned on Certifications and reviews (at most 30).
+Earlier in the order is more featured. Ads use this set. Onboarding’s LLM pins a default
+set; the owner can change it. It is **not** what every reviews website section shows.
+
+Distinct from: Reviews (**All reviews** on Certifications and reviews), the ordered reviews on
+one reviews website section (`website_slot_reviews` on that website section).
+
+In code: `business_profile_reviews.is_top`, `top_position`.
+
+---
+
+### Review citation
+
+The short text taken from a review for cards, the website, and ads — about two or three
+sentences from the review body, not a paraphrase. Missing spaces in the body may be fixed.
+Never say bare “citation” for this.
+
+Distinct from: where it came from (a detail’s origin). Distinct from Reviews (the full body)
+   and Top reviews (the ads featured set) or the reviews on one website section.
+
+In code: `business_profile_reviews.citation`.
+
+---
+
 ### Profile
 
-The left-nav group in The CMS that holds Details and Projects. It is not a page and not a
-record.
+The left-nav group in The CMS that holds Details, Projects, Certifications and reviews, and the
+media library. It is not a page and not a record.
 
 Distinct from: Business profile (the data), Details (the Business details screen), Profile
 history (how the business profile changed).
@@ -264,8 +298,9 @@ used to start onboarding and pre-fill legal details. Never say bare “registry 
 ### Media library
 
 The photo library: the contractor’s work, logos, and documents. Never say bare “media” for this
-library. Full screen at `/cms/media`. In the website editor it is a selectable **workspace
-item** (same library). Drop files onto that workspace item to upload.
+library. Full screen at `/cms/media`, under **Profile** (not a top-level peer of Sites). In the website editor, attach and pick from **Content**
+when an image is selected on the canvas (same library). Drop files onto that image Content to
+upload. Crop, focal, and cleanup stay on `/cms/media`.
 
 Internal: Media asset, File. Do not say bare “asset” in product docs.
 
@@ -478,16 +513,27 @@ instance of).
 #### Website slot
 
 A named editable value inside a website section: text, rich text, image, list, link, reviews, or
-a project gallery. Never say bare “slot” in PRDs or UI.
+a project gallery. **Never in UI** — not “slot”, not “website slot”. Owners see the kind
+(heading, text, or image) on a website section: “Updated image on Hero”. Specs and code still
+say website slot.
 
 In code: `website_slots`.
 
 ---
 
+#### Website style
+
+One look of the website: one website style catalog preset, or the currently applied look.
+Never say bare “style” or “theme” in PRDs or UI.
+
+Distinct from: Website styles (more than one, or the rail item that lists them).
+
+---
+
 #### Website styles
 
-The look of the website (colors, fonts, and related design controls). Never say bare “styles” or
-“design system” in PRDs or UI.
+More than one website style, or the workspace rail item that lists them. Never say bare
+“styles” or “design system” in PRDs or UI.
 
 Internal: Website style catalog.
 
@@ -504,8 +550,11 @@ Distinct from: Ad lead form (suggested Meta fields on an ad).
 
 #### Website editor
 
-The website editing screen: website pages, canvas, editing panel, top menu, footer, and website
-styles. Details, Projects, Certifications and reviews, and the media library are website page
+The website editing screen: website pages, SEO, canvas, Content (from a canvas click), and
+website styles. Top menu
+and footer are edited in **Content** (select the bar on the canvas), not as
+workspace items. Website versions is a workspace item at the bottom of the rail. SEO is its
+own workspace rail panel and always shows the current website page. Details, Projects, Certifications and reviews, and the media library are website page
 content; they are separate entities edited on their own screens, not as website slots here. Ads
 are their own screens and are not website page content. Never say bare “editor” in PRDs or UI.
 
@@ -513,12 +562,12 @@ are their own screens and are not website page content. Never say bare “editor
 
 #### Editing panel
 
-The right-hand column of the website editor. The owner edits the selected website section
-(website slots, design) and website-page SEO, website forms, and website versions. Never say
-inspector.
+Retired. Do not use for the current website editor. Content is the workspace list that opens
+when the owner clicks a website section or image on the canvas (closed union keyed by website
+component). SEO is its own workspace rail panel. Never say inspector.
 
-Distinct from: Canvas (the website page), Workspace (website pages / media library / website
-styles / top menu and footer).
+Distinct from: Canvas (the website page), Workspace (website pages / SEO / website styles /
+website versions).
 
 ---
 
@@ -527,8 +576,10 @@ styles / top menu and footer).
 The bar at the top of the website. Never say header, navigation, or bare “menu”.
 
 A JSON tree of website pages, text groups, and URL nodes (depth 2: bar + one dropdown), stored on
-`website.menus.top_menu`. Look (logo, marketing phone, design) is the site-wide top-menu website
-section. Edited in the website editor workspace, not Details.
+`website.menus.top_menu`. Website page nodes pick a website page; URL nodes pick or create an
+href. Look (logo, marketing phone, design) is the site-wide top-menu website section. Bar CTAs
+are Show marketing phone, Show marketing email, and Show contact. Edited in the website editor
+**Content** (look is Website styles), not Details.
 
 Distinct from: Footer, Website section (a block on a website page — except the site-wide top-menu
 look section). Top menu is not a website page. Distinct from the Placis website.
@@ -542,7 +593,8 @@ In code: `website.menus.top_menu`.
 The footer of the website. Never say navigation or menu for this.
 
 A JSON tree of the same node kinds as the top menu (depth 2), stored on `website.menus.footer`.
-Look is the site-wide footer website section. Edited in the website editor workspace, not Details.
+Look is the site-wide footer website section. Edited in the website editor **Content**
+(look is Website styles), not Details.
 
 Distinct from: Top menu, Website section. Distinct from the Placis website.
 
@@ -552,9 +604,11 @@ In code: `website.menus.footer`.
 
 #### Website assistant
 
-The chat (and the voice agent) that proposes website edits. Two configs combine: **plan** vs
-**continuous** (text plan first, or not), and **instant apply** vs **Ask first** (Apply /
-Reject, or not). It drafts; the owner decides except in instant apply.
+The chat (and the voice agent) that proposes website edits. Default-on overlay on the website
+editor canvas: collapsible; expanded it dims and blocks the covered website. One chat-like
+thread. Two configs combine as boolean switches: **plan** vs **continuous**, and **instant apply**
+vs **Ask first**. **Clear context** starts a new thread (not a glossary term). It drafts; the
+owner decides except in instant apply.
 
 Distinct from: Website copy generation, Website assistant plan.
 
@@ -575,7 +629,8 @@ Distinct from: Website assistant (the chat), continuous workflow (no plan text),
 
 #### Ask first
 
-The website assistant shows Apply / Reject before an edit lands. Opposite of Instant apply.
+The website assistant shows Apply / Reject pills on the canvas (over the chatbot) for the pending
+turn (all tools in that run) before they land. Opposite of Instant apply.
 
 Distinct from: Instant apply, Website assistant plan.
 
@@ -607,7 +662,9 @@ Distinct from: Website assistant, Apply the website template (the unpublished we
 Putting the website on the internet. Distinct from: Unpublished website, Published website copy
 (the content), Live website (what visitors see), Ad states.
 
-Never say bare “publish” or “go live” in PRDs or UI.
+Owner UI on the website editor is the verb **Publish** (toolbar dropdown). Do not label that
+control **website publication**. Specs and code still say website publication. Never say “go
+live”.
 
 In code: `website_publications` (each row is a website version).
 
@@ -869,7 +926,8 @@ In code: object-storage signed URLs.
 
 ### The CMS
 
-The app where the owner edits marketing: website, ads, Details, Projects, and Media library.
+The app where the owner edits marketing: website, ads, and Profile (Details, Projects,
+Certifications and reviews, Media library).
 Umbrella name, not a synonym for the website editor. Never in PRDs as if it were a domain
 object.
 
@@ -1150,13 +1208,14 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | marketing claim / advertising claim / unsupported claim | marketing statement / unsupported marketing statement |
 | draft (website, ads) | unpublished website, or ad draft (Ad states) |
 | template (website) | website template |
-| page (website) / section (website) / slot (website) / styles (website) | website page / website section / website slot / website styles |
+| page (website) / section (website) / styles (website) | website page / website section / website style or website styles |
+| slot (website) | heading, text, or image on that website section (UI). Technical docs: website slot |
 | form (website, ads) | website form or ad lead form |
 | caption (media) | media caption |
 | media (media) | media library |
 | editor (website) | website editor |
-| inspector | editing panel |
-| publish (website) / go live (website) / website publish (website) | website publication |
+| inspector | Content (workspace list from a canvas click) |
+| go live (website) | Publish (owner UI). Specs: website publication |
 | registry record | company registry record |
 | placeholder (website) | website placeholder or loading placeholder |
 | catalog (website) | website template catalog, website component catalog, or website style catalog |
@@ -1178,7 +1237,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | needs review (ads) | ad needs review (Ad states) |
 | source reference / `source_refs` | where a detail came from |
 | provenance | supplied by (media) or where it came from (a detail) |
-| citation | where it came from |
+| citation (details) | review citation (the excerpt) or where it came from (a detail’s origin) |
 | state / state machine | steps / where things stand |
 | normalize(d) | combine / turn into |
 | materialize(d) | make a published website copy |
@@ -1214,8 +1273,8 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 - Domain words in PRDs, UI, **and in code** when they name that concept. Internal names only
   for a different concept (technical docs and code).
 - Unqualified Domain words (`page`, `section`, `slot`) only in that feature’s technical docs and
-  package. Other features use the Say (`website page`). Banned synonyms (`slug`, `skeleton`,
-  `blueprint`) appear nowhere, including code.
+  package. Other features use the Say (`website page`). `slot` is never owner copy. Banned
+  synonyms (`slug`, `skeleton`, `blueprint`) appear nowhere, including code.
 - Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned row, `*_id`
   foreign keys, `snake_case` enum values.
 - Go: feature-nested packages (`internal/<domain>/<feature>/`), no package stutter

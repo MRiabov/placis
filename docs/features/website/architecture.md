@@ -15,10 +15,12 @@ sections**; a website section is one **website component** given props and edita
   design, at a position on the website page. Two site-wide look sections (`page_id` null) paint
   the top menu and footer (logo, density); link trees live on `website.menus`.
 - **website slot** — a named editable value inside a website section: text, rich text, image, link,
-  list, or json. Reviews on a website section are selected profile reviews
-  (`website_slot_reviews`), not a `slot_type`. A project gallery is a list/json of project ids.
+  list, or json. Each **reviews website section** has its own ordered
+  `website_slot_reviews` from the pool (capped by that website component; not
+  `slot_type`). Ads use **top reviews**. A project gallery is a list/json of
+  project ids.
 - **menus** — one `website.menus` row per tenant: `top_menu` and `footer` JSON trees (page / text /
-  URL nodes, depth 2) plus `show_phone` / `show_email`.
+  URL nodes, depth 2) plus `show_phone` / `show_email` / `show_contact`.
 - **media asset** — a photo, logo, or document in the media library.
 
 ## The website component model
@@ -28,6 +30,8 @@ Each has a **contract**: the props it accepts, the website slots it exposes, and
 controls** — small enum/bool fields (e.g. `density`: `compact`/`comfortable`/`spacious`) with
 allowed values. The contract is one typed struct dumped to JSON under `catalog/` — the website
 editor and the renderer read the same structs. Only registered website components render.
+A reviews website component’s contract includes the max number of reviews that layout
+paints (examples 3 / 6 / 8 — not a closed product list).
 
 The first-pass website template catalog and website component catalog live in
 `packages/website-components` (from the predecessor), not a short list written here. Go loads those
@@ -47,7 +51,13 @@ needs. Applying the website template writes those onto the business profile:
    placeholders (`{{business_name}}`, `{{marketing_phone}}`, …) stay in the unpublished website, resolving
    at website publication;
 4. pick or generate media assets (prefer real project photos; generate only when approved);
-5. validate against website component contracts, the company registry, marketing statements, links,
+5. create reviews website sections with empty `website_slot_reviews` (keep the website
+   section, no fake copy). After the unpublished website exists and the pool is ready, one
+   bounded LLM call picks an ordered list **per reviews website section** from the pool
+   (page path, `page_type`, service if service page, `component_id`, max from that website
+   component contract). Overlap across sections is allowed. Length ≤ that max. Do **not**
+   copy **top reviews** onto every section;
+6. validate against website component contracts, the company registry, marketing statements, links,
    website forms, SEO.
 
 The result is an unpublished website, never a live website. Website copy generation is onboarding
@@ -61,14 +71,21 @@ scratch. Trade does not pick the website template 1:1.
 
 ## Editing (the website editor)
 
-The website editor is one workspace with three surfaces:
+The website editor is one workspace with two surfaces plus the global sidebar:
 
-- **Canvas** — renders the selected website page live from its website sections.
-- **Workspace** — left column. Selectable **workspace items** (website pages, media library,
-  website styles, top menu, footer). Drop files onto the media library item to upload
-  ([media library](../other/media/README.md)).
-- **Editing panel** — edits the selected website section (website slots, design) and website-page
-  SEO, website forms, and website versions.
+- **Canvas** — renders the selected website page live from its website sections. This is the
+  wide column; the rest of The CMS is quiet by default.
+- **Workspace** — left rail. Selectable **workspace items** (website pages, SEO, website styles,
+  website versions). The list opens when a rail item is selected; default is rail-only.
+  **Website versions** is pinned to the bottom of the rail. **SEO** is its own rail panel and
+  always shows the current website page. There is no media library rail item; attach from
+  Content when an image is selected ([media library](../other/media/README.md)). Top menu and
+  footer are not workspace items.
+- **Content** — not a rail item. Opens from a canvas website section or image and **replaces**
+  the workspace list. **Closed union** keyed by website component (website slots by default;
+  special layouts for reviews / top menu / footer / website forms / projects). No right-hand
+  editing panel. No Edit handle. No Design tab (look is Website styles). No Website versions
+  tab. No Website forms tab.
 
 Edits mutate the in-memory website editor projection first, then PATCH copies them to unpublished
 rows. There is no Save action; do not re-render from the PATCH response. Text copies out on
@@ -81,15 +98,19 @@ Ask first waits for Apply / Reject (website editor PATCH, then record metadata);
 is the website editor PATCHing as tools succeed. Website publication writes a
 website version. **Details** (the business profile), **Projects**, **Certifications and
 reviews**, and the **media library** are website page content (placeholders, project galleries,
-reviews, photos). They are separate entities, edited on their own screens — not as website slots
-in the website editor. The edit loop is in [editing.md](editing.md). Screens: [frontend.md](frontend.md).
+reviews, photos). They are separate entities. Certifications and reviews is the picker for
+**all reviews** and for pinning **top reviews** (ads). The website editor reviews Content edits **that
+website section’s** ordered `website_slot_reviews` (add from all reviews, remove, reorder;
+cap from the website component). They are not generic website slots. The edit loop
+is in [editing.md](editing.md). Screens: [frontend.md](frontend.md).
 
 ## Website assistant
 
 The LLM edits the unpublished website through the **website assistant** — hard-typed, validated,
-parallel tool calls (`update_slot`, `cleanup_image`, `generate_image`, `update_menus`, website
+parallel tool calls (`update_slot`, `update_reviews`, `cleanup_image`, `generate_image`, `update_menus`, website
 section/website styles/SEO/website form/website page actions). Same attach / crop / focal /
-cleanup as the owner UI. Two configs: plan vs continuous, instant apply vs Ask first. See
+cleanup as the owner UI. Default-on overlay pinned to the canvas (expand / reduce height;
+no website dim); two configs as boolean switches: plan vs continuous, instant apply vs Ask first. See
 [assistant.md](assistant.md).
 
 ## Website publication
@@ -100,17 +121,22 @@ website component contract, resolves the `{{var}}` website placeholders from the
 writes one `website_publications` row holding the published website copy as `website_manifest`
 (a `website.v1` website manifest — [manifest.md](manifest.md)). That row is a website version.
 The website manifest is the read model — the renderer only ever reads the active website version.
-Website rollback reactivates an earlier **owner** website version. Onboarding-written rows are
-never website-rollback targets.
+Website rollback reactivates an earlier **owner** website version (copies it onto `latest/`).
+Onboarding-written rows are never website-rollback targets. That control is on earlier owner
+website versions (Website versions workspace item and the publication dropdown), not on the live
+website version. **Preview** opens the live website. Loading an owner website version into the
+unpublished canvas (`GET` with `publication_id`, then PATCH) is not a Website versions control
+in this UI ([api.md](api.md)). That is not website rollback.
 
 Edits to Details, Projects, certifications and reviews, website styles, or the unpublished
 website do not change the live website until the next website publication.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website application serves
-every tenant. The website publication control is a destination dropdown
-(`{website_prefix}.preview.placis.com`, a connected website address, or New URL). Host
-routing uses `website_addresses` reserved at onboarding 07. Serve path, R2 keys, cache
-purge, website address, and local Worker: [cloudflare.md](cloudflare.md).
+every tenant. The **Publish** dropdown lists hosts (`{website_prefix}.preview.placis.com`, a
+connected website address, or New URL) — the POST has no destination ([api.md](api.md)). Specs
+call the act website publication. Host routing uses `website_addresses` reserved at onboarding
+07. Serve path, R2 keys, cache purge, website address, and local Worker:
+[cloudflare.md](cloudflare.md).
 `apps/contractor-website` is in this repo; remaining cuts:
 [contractor-website-debloat.md](contractor-website-debloat.md). API cutover:
 [port-contractor-website.md](port-contractor-website.md). Next is R2 `latest/` +

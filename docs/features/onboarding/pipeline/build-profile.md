@@ -74,7 +74,7 @@ Stable keys. 03 groups them for display. ETL transform may fill; 04a/04b fill ga
 | `services` | work | `business_profile_services` | crawl | required |
 | `service_areas` | work | `business_profile_service_areas` | crawl / directory | required |
 | `accreditations` | certifications | list / notes | trade registry | optional |
-| `reviews` | reviews | `business_profile_reviews` | Maps / review job | optional |
+| `reviews` | reviews | `business_profile_reviews` | Maps / Facebook / review job; then LLM pins **top reviews** + review citations | optional |
 | `facebook_profile_url` | reviews | `facebook_profile_url` | Facebook | optional |
 | `photos` | photos | media library + `photos_choice` | Maps photos + ETL transform classification | required choice |
 

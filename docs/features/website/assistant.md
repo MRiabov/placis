@@ -7,6 +7,33 @@ turns requests into governed, reviewable website editor edits. Text chat, voice 
 website editor assistance all share the same tool surface. The registry lives here; generation
 and search go through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
+## Owner surface
+
+Default-on overlay on the website-editor canvas. Tools and the apply path below are unchanged;
+this is the owner overlay. Details: [frontend.md](frontend.md), look:
+[design-decisions.md](design-decisions.md), architecture: [ADR](ADR.md) 6.
+
+- **Always on:** pinned to the canvas. **Desktop default** is the single-line composer.
+  **Mobile** (≤1100px) default is expanded (at least half the canvas column). **Reduce
+  height** (left) collapses to the composer; trash **Clear context** is on the right. Not a
+  hide. The overlay does not dim or black out the website; the uncovered canvas stays
+  clickable. Fully opaque panel. No contracted-idle fade.
+- No **Website assistant** label or toolbar button — the overlay is the chatbot.
+- Composer submit is **Plan** while the Plan switch is on, **Send** when it is off (continuous).
+- **Apply / Reject pills never fade.**
+- **Clear context** starts a new thread and discards pending unapplied Ask-first proposals
+  (same as Reject those). It does not undo already-Applied batches and is not “clear selected
+  website section”. Control: silent trash icon on the right of the overlay top row (no label, no fill).
+- The overlay is **one chat-like thread** (owner turns and assistant replies). Ask first
+  **Apply / Reject is per pending turn**: one pair for the whole run’s tools, not per tool.
+  Those two actions are **pills on the canvas**, always over the chatbot (above it), not in
+  the thread. Tool calls in the thread are muted owner lines from the backend, never
+  the tool name. Each line has a kind icon: pencil for writes, lightbulb for thinking.
+  There is no search/grep tool.
+- Configs are **boolean switches** in the overlay. Default **plan + Ask first**.
+- Pending / Applied / Rejected must be obvious (canvas **Not applied** vs **Applied**; Apply /
+  Reject pills present only while that turn is pending).
+
 Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses
 these tools headless (**continuous** workflow + **instant apply**, no chat UI, no `create_page`)
 after the website template is applied. That job is website copy generation, not this website
@@ -21,6 +48,7 @@ failed event.
 | Tool | What it does |
 | --- | --- |
 | `update_slot` | update one typed website slot on an existing website section (copy, or image attach / crop / focal) |
+| `update_reviews` | rewrite the ordered pool ids on one reviews website section (same PATCH as Content; length ≤ that website component’s max) |
 | `update_seo` | update bounded unpublished-website SEO metadata for the current website page |
 | `update_form` | update a website form (title, fields, privacy notice) the same way the editor PATCH does |
 | `update_website_styles` | update the tenant website styles (preset + bounded overrides), not per website page |
@@ -29,7 +57,7 @@ failed event.
 | `reorder_sections` | set the full ordered list of website section ids for the website page |
 | `create_section` | propose a new website section using an approved website component |
 | `create_page` | propose a new unpublished website page (also appends a top-level page node on the footer, and on the top menu unless legal or cap) |
-| `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` |
+| `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` / `show_contact` |
 | `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
 | `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
 
@@ -57,7 +85,8 @@ alongside the edit tools.
 
 ## Two configs
 
-Independent options. They combine. Default in the website editor: **plan + Ask first**.
+Independent options. They combine. Default in the website editor: **plan + Ask first**. In the
+CMS they are boolean switches on the overlay.
 
 **Workflow: plan vs continuous** (how the request is scoped)
 
@@ -68,8 +97,9 @@ Independent options. They combine. Default in the website editor: **plan + Ask f
 
 **Gate: instant apply vs Ask first** (whether Apply / Reject exist)
 
-- **Ask first** (`ask_first`) — each (or batched) edit shows **Apply** / **Reject**. The canvas
-  shows the proposal in memory. Nothing is PATCHed until **Apply**. Never `on_confirm`.
+- **Ask first** (`ask_first`) — **Apply** / **Reject** pills sit on the canvas over the
+  chatbot for the whole pending run. The canvas shows the proposal in memory. Nothing is
+  PATCHed until **Apply**. Never `on_confirm`.
 - **Instant apply** — those buttons are bypassed. In the CMS, the website editor applies each
   validated tool to the in-memory projection and PATCHes as they succeed. There is no Reject for
   that edit. Onboarding 06 writes unpublished rows headless (no `frontend-2`).
@@ -117,12 +147,56 @@ is `409`. While a CMS run is in flight, PATCH is allowed — that is the apply p
 
 ## Output
 
-**Activity cards** are generated from execution events (`Edited 2 website sections`, `Created 1
-website page`, `Updated SEO`, `Changed colors`, `Failed to apply`); expanding one shows the
-affected targets and a before/after, and selecting it focuses the canvas/editing panel.
+**Activity** sits on a chat turn. Each tool call in the thread is a muted **owner line** from
+the backend (`summary`, `string` + `maxLength`). It is not a bordered card per tool. The
+frontend never renders a tool name (`update_slot`, `cleanup_image`, …) and never says slot.
+Expanding a call shows the affected targets and a before/after, and selecting it focuses the
+canvas and Content. Execution events still exist (`Edited 2 website sections`,
+`Created 1 website page`, `Updated SEO`, `Changed colors`, `Failed to apply`). Ask first
+Apply / Reject is a pair of **pills on the canvas** over the chatbot, not in the thread and
+not on each tool.
+
+`summary` is **deterministic**, built by the backend from the validated tool + target. The
+owner-facing kind on `update_slot` is a closed union: **heading**, **text**, or **image**.
+The place is the website section’s owner-facing name (Hero, Services), not an id. The thread
+icon is from a closed union: **write** (pencil) for tool summaries, **think** (lightbulb) for
+thinking. There is no search/grep tool on the website assistant.
+
+- `slot_type=image` → `Updated image on {Section}`
+- `slot_key` `heading` / `headline` / `title` → `Updated heading on {Section}`
+- any other `update_slot` (body, lede, rich text, link, list, …) → `Updated text on {Section}`
+- `update_reviews` → `Updated reviews on {Section}`
+
+Other tools use the same field, never the tool name, for example: `Cleaned up image on Hero`,
+`Generated image on Hero`, `Updated SEO`, `Updated website styles`, `Hid Services`,
+`Added Reviews`, `Created Contact`, `Updated top menu`.
+
+Do not require an LLM `user_description` on the tool call. If we later want a mandatory
+owner-facing description from the model on every tool the owner sees, that can replace or
+prefix this line. Not in this pass.
+
+Parked (out): a plaintext list of that run’s changes next to the pills, opened from a
+hoverable list icon. Not in this pass.
 
 There is no unpublished snapshot per edit and no per-page version table.
 Website edit history is typed increments on `edit_history`; Ctrl+Z is in-memory, then PATCH.
+
+### `update_reviews`
+
+Rewrite the ordered reviews **on one reviews website section**. Same Ask first / instant apply
+gate as `update_slot`. Same PATCH as Content. Does **not** edit the pool or **top reviews**.
+
+```text
+update_reviews(
+  section_id,
+  review_ids[]   # ordered pool ids; length ≤ that website component’s max
+)
+```
+
+Ids must be `in_pool` (not archived). Duplicates in one array are `400`. Over the website
+component max is `400`. Empty `[]` is a valid wipe of **that** website section (keep the
+website section; no fake copy). `create_section` of a reviews website component starts empty
+until this tool or Content fills it. Onboarding 06 may call this tool.
 
 ### `update_menus`
 
@@ -137,7 +211,8 @@ update_menus(
   reorder_entries?,
   update_entries?,
   show_phone?: bool | omit,
-  show_email?: bool | omit
+  show_email?: bool | omit,
+  show_contact?: bool | omit
 )
 ```
 
@@ -151,8 +226,9 @@ Apply order:
    assigned by add). Membership = tree after remove+add. Does not delete. A flat id array is
    invalid.
 4. **update** — labels / hrefs / path last. Label change recomputes `id` after reorder.
-5. **show_phone / show_email** — bar CTA visibility. Not tree nodes. Href is always
-   `{{marketing_phone}}` / `{{marketing_email}}`. No `tel:` / `mailto:` override.
+5. **show_phone / show_email / show_contact** — bar CTA visibility. Not tree nodes. Marketing phone and
+   email hrefs are always `{{marketing_phone}}` / `{{marketing_email}}` (no `tel:` / `mailto:`
+   override). Contact href is the Contact website page.
 
 `add_entries`: parent `id` (omit = top-level) + new node (`kind` + `path` or `label`/`href`).
 `remove_entries`: ids, at most 4. `update_entries`: text → `label`; url → `label` and/or `href`;
@@ -163,7 +239,7 @@ Invalid is `400`; over bar cap (8 top-level top menu, 12 footer, 8 children per 
 A page already in that tree is `400`. Tool result returns the tree (post-update ids). GET for
 the assistant returns both trees with `id` / `kind` / `label` / `path` / `href` (no UUID).
 
-Logo and density stay on the site-wide look website sections (other tools). Do not name this
+Logo and density stay on **Website styles** (other tools). Do not name this
 tool `update_nav`.
 
 ### `update_slot` (image)

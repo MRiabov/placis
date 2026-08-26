@@ -8,10 +8,10 @@ it update, then website publication.
 1. `GET` loads the typed **website editor projection** once (page select / reload). That is the
    only hydrate. The canvas (`frontend-2`) renders that unpublished website through the shared
    contractor-website component package — the same ones the live website (Astro) uses.
-2. The owner edits inline: click-to-edit visible text, swap an image (media library workspace
-   item or drag onto the canvas), reorder / add / remove a website section, change a design control, SEO,
+2. The owner edits inline: click-to-edit visible text, swap an image (Content when an image is
+   selected, or drag onto the canvas), reorder / add / remove a website section, change a design control, SEO,
    or the website style catalog preset.
-3. The canvas and editing panel mutate the **in-memory website editor projection immediately**
+3. The canvas and Content mutate the **in-memory website editor projection immediately**
    and re-render from it. That working copy is the cache. There is **no Save action** and no
    Saving / Saved indicator. Edits persist automatically. If a copy-out or media-library upload
    has not succeeded after **10 seconds**, show a visible error. Keep the local edit and keep
@@ -80,7 +80,7 @@ The website editor is one typed **projection** (read) and one **patch** (write).
   `family`, `variant`), `position`, `status`, `visible`, `props`, `design`, `slots[]`,
   `design_controls[]`, `origin`, `unsupported_component`.
 - `media_assets[]`, `forms[]` (website forms), `menus` (`top_menu` and `footer` trees plus
-  `show_phone` / `show_email` — [persistence.md](persistence.md)).
+  `show_phone` / `show_email` / `show_contact` — [persistence.md](persistence.md)).
 - `publication` (active website version + `has_unpublished_changes`),
   `validation`.
 - `preview_url`, live website URL. The website editor canvas is not a website preview.
@@ -138,7 +138,7 @@ website slot you send:
 
 Top menu and footer writes are **not** on this PATCH. They are
 `PATCH /v1/website/editor/menus`: `base_edit_history_head` plus dirty keys (`top_menu` and/or
-`footer` and/or `show_phone` / `show_email`). Omit a field = no change. Human PATCH may replace
+`footer` and/or `show_phone` / `show_email` / `show_contact`). Omit a field = no change. Human PATCH may replace
 a whole tree (including a wipe). Assistant writes use `update_menus`
 ([assistant.md](assistant.md)), then the website editor copies out on `/menus` like any other
 dirty keys. Same `{ edit_history_head, batch_id }` response and `409 edit_history_conflict`.
@@ -244,7 +244,10 @@ a website version.
 | add / remove a website section | `website_sections` + `website_slots` |
 | add a website page | `website_pages` + `website_sections` + `website_slots`; append a top-level page node on `menus.footer` (and `menus.top_menu` unless legal or cap) |
 | archive a website page | `website_pages.status=archived`; strip that page node from `website.menus` |
-| edit top menu / footer tree or bar CTAs | `website.menus` (`top_menu` / `footer` / `show_phone` / `show_email`) |
+| edit top menu / footer tree or bar CTAs | `website.menus` (`top_menu` / `footer` / `show_phone` / `show_email` / `show_contact`) — Content, not a workspace item |
+| add / remove / reorder reviews on one reviews website section (Content or `update_reviews`) | rewrite that section’s unpublished `website_slot_reviews` (ordered pool ids, ≤ website component max) |
+| pin / unpin / reorder **top reviews** (Certifications and reviews) | `business_profile_reviews.is_top` / `top_position` only — does not rewrite website sections |
+| archive a review | leave the pool and top reviews; drop that id from every `website_slot_reviews` array, then compact |
 | swap a website component | `website_sections.component_id` (preserving compatible website slots) |
 | change the website style catalog preset | `website_settings` (applied only on explicit apply) |
 

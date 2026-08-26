@@ -221,6 +221,8 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	case strings.Contains(slash, "cmd/ci/check-dont-say/"):
 		return true
+	case slash == "docs/website/design" || strings.HasPrefix(slash, "docs/website/design/") || strings.Contains(slash, "/docs/website/design/"):
+		return true
 	case strings.HasSuffix(slash, "generated/api-types.ts"):
 		return true
 	default:
@@ -319,6 +321,7 @@ var extraAllowed = []string{
 	"checkout.session",
 	"openapi-fetch client",
 	"google chrome",
+	"**preview**",
 	"desktop chrome",
 	"chrome devtools",
 	"headless chrome",
