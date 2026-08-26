@@ -102,7 +102,7 @@ instead of silently rewriting history.
    + name). Right: review cards in three headings: **Top reviews**, **All reviews**, **Archive**.
    Create owner-written is a route for now (`/cms/certifications-and-reviews/new`;
    look TBD). Product rules stay in [ADR.md](ADR.md) 16. (2026-08-26)
-   The top reviews heading is the **ads** featured set. Pinning it does not rewrite reviews
+   The top reviews heading is the **ads** featured list. Pinning it does not rewrite reviews
    website sections. Website editor reviews Content is **that website section’s** ordered
    list (see 15). (2026-08-26)
    Owner copy is **All reviews** (not pool). That heading excludes cards already in Top
