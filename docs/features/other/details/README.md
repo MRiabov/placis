@@ -16,7 +16,8 @@ reaches it from **Profile** → **Business details**.
   Hours they pick up the marketing phone. No Appointment note.
 - **Logo** — pick from the media library.
 - **Facebook** — `facebook_profile_url`. Link when unlinked (paste URL this pass);
-  URL + Change when linked. Same link as review import.
+  URL + Change when linked. Same link as review import. Changing it starts another public
+  extract of that Facebook URL (posts and images, not only reviews).
 - **Google Maps listing** — `google_maps_listing_url`. Same link pattern. Certifications and
   reviews imports from that listing.
 

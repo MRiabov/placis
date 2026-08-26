@@ -23,6 +23,9 @@ instead of silently rewriting history.
    (2026-08-26)
    **Media library** (`/cms/media`) is a Profile child, not a top-level peer of Sites. Collapsed
    Profile still goes to Business details. (2026-08-26)
+   No **AI tools** left-nav item. Image cleanup is `/cms/media`. The website assistant stays
+   the canvas overlay (a later cut may drop that overlay; this item still does not come
+   back). (2026-08-26)
 
 2. **Website assistant is a pinned composer, not a toolbar button** — No toolbar **Website
    assistant** control. The composer is always on, pinned to the bottom of the canvas. Default
@@ -52,6 +55,16 @@ instead of silently rewriting history.
    Default height: **desktop** is the single-line composer (thread reduced). **Mobile**
    (≤1100px) is the expanded overlay — that height works there. Chevron still expands or
    reduces. `?assistant=expanded` / `collapsed` still forces a shot. (2026-08-26)
+   Reduced composer is **max-width 40rem**, centered in the canvas (sides of the website stay
+   clickable). Expand (chevrons) grows it to the 12px canvas inset — **180ms**, same ease as
+   other CMS motion. Idle / unfocused is **40% opacity**; hover or focus-within is fully
+   opaque. **Apply / Reject pills never fade.** (2026-08-26)
+   **Desktop collapsed is one row:** chevrons, field, **Plan mode**, **Ask first**, **Plan**
+   (or **Send**). No extra row above the field. Height is one control row. Switch owner copy
+   is **Plan mode** so it is not a second “Plan” next to the submit button. **Clear context**
+   trash is **expanded-only** (hidden while reduced, desktop and mobile). **Mobile** (≤1100px)
+   collapsed stays two rows (overlay bar + composer, no trash) — that height reads well there.
+   Desktop collapsed pills sit just above the bar. (2026-08-26)
 
 3. **Website publication blockers are jumps** — The dropdown heading is **Website publication
    is blocked:** then one **silent** (no background) button per blocker, with a Lucide

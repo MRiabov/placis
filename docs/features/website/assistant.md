@@ -13,17 +13,20 @@ Default-on overlay on the website-editor canvas. Tools and the apply path below 
 this is the owner overlay. Details: [frontend.md](frontend.md), look:
 [design-decisions.md](design-decisions.md), architecture: [ADR](ADR.md) 6.
 
-- **Always on:** pinned to the canvas. **Desktop default** is the single-line composer.
-  **Mobile** (≤1100px) default is expanded (at least half the canvas column). **Reduce
-  height** (left) collapses to the composer; trash **Clear context** is on the right. Not a
-  hide. The overlay does not dim or black out the website; the uncovered canvas stays
-  clickable. Fully opaque panel. No contracted-idle fade.
+- **Always on:** pinned to the canvas. **Desktop default** is the single-line composer
+  (one row: chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**).
+  **Mobile** (≤1100px) default is expanded (at least half the canvas column). Reduce height
+  on mobile stays two rows (overlay bar + composer). **Clear context** trash is expanded-only.
+  Reduced composer is max-width 40rem, centered; expand fills the 12px canvas inset
+  (180ms). Idle / unfocused is 40% opacity; hover or focus-within is opaque. The overlay
+  does not dim or black out the website; the uncovered canvas stays clickable.
 - No **Website assistant** label or toolbar button — the overlay is the chatbot.
-- Composer submit is **Plan** while the Plan switch is on, **Send** when it is off (continuous).
+- Composer submit is **Plan** while **Plan mode** is on, **Send** when it is off (continuous).
 - **Apply / Reject pills never fade.**
 - **Clear context** starts a new thread and discards pending unapplied Ask-first proposals
   (same as Reject those). It does not undo already-Applied batches and is not “clear selected
-  website section”. Control: silent trash icon on the right of the overlay top row (no label, no fill).
+  website section”. Control: silent trash on the right of the overlay top row while
+  **expanded** (no label, no fill). Hidden while reduced.
 - The overlay is **one chat-like thread** (owner turns and assistant replies). Ask first
   **Apply / Reject is per pending turn**: one pair for the whole run’s tools, not per tool.
   Those two actions are **pills on the canvas**, always over the chatbot (above it), not in

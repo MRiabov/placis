@@ -501,6 +501,11 @@ document.getElementById("clearContext")?.addEventListener("click", () => {
 document.getElementById("assistantCollapse")?.addEventListener("click", () => {
   setAssistantExpanded(editorCanvas.classList.contains("is-assistant-collapsed"));
 });
+document.getElementById("assistantOverlay")?.addEventListener("pointerdown", (event) => {
+  const overlay = event.currentTarget;
+  if (event.target.closest("input, textarea, button, label, a")) return;
+  overlay.focus({ preventScroll: true });
+});
 document.getElementById("askPills")?.addEventListener("click", (event) => {
   if (event.target.closest(".cms-ask-pill")) setAskFirst(false);
 });

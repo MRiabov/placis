@@ -18,7 +18,7 @@ not the media library, and not campaign management (which is future work).
 
 `/cms/ads` is a **view in the CMS, not a standalone website page**: the left
 sidebar (New chat, Sites, Profile with Business details, Projects, Certifications and reviews,
-and Media library, AI tools) stays around
+and Media library) stays around
 it, and Ads is dashboard-ish content in the main area — My ads list, the ad workspace, and the ad
 detail all render inside that frame. The mock shows the sidebar for context.
 

@@ -177,14 +177,17 @@ nav (icons) | website (wide canvas column)
 ```
 
 - **Always on** when `/cms/website` is open. There is no toolbar **Website assistant** control
-  and no overlay title. It does not open a modal. **Desktop default** is the single-line
-  composer (thread reduced). **Mobile** (≤1100px) default is expanded, at least half the
-  canvas column. Expand / reduce with the chevrons. Overlay has a 12px inset from the canvas
-  on the left, right, and bottom (not flush to the edges).
-  **Reduce height** (left of the overlay top row) collapses to the composer; chevrons reverse
-  to expand. That is not a hide. The overlay does **not** dim or black out the website; clicks
-  on the uncovered canvas still work. **Apply / Reject pills never fade.**
-- **Clear context** — silent trash icon on the **right** of the overlay top row. Starts a new thread (drops
+  and no overlay title. It does not open a modal. Overlay has a 12px inset from the canvas
+  on the left, right, and bottom (not flush to the edges). Chevrons expand or reduce; that is
+  not a hide. **Desktop default / collapsed** is one row: chevrons, field, **Plan mode**,
+  **Ask first**, **Plan** (or **Send**). Reduced composer is **max-width 40rem**, centered;
+  expand grows it to the 12px canvas inset (180ms). **Mobile** (≤1100px) default is expanded,
+  at least half the canvas column; collapsed stays two rows (overlay bar + composer). Idle /
+  unfocused overlay is **40% opacity**; hover or focus-within is opaque. The overlay does
+  **not** dim or black out the website; clicks on the uncovered canvas still work.
+  **Apply / Reject pills never fade.**
+- **Clear context** — silent trash on the **right** of the overlay top row, **expanded only**
+  (hidden while reduced). Starts a new thread (drops
   prior turns). Discards pending Ask-first proposals that have not been Applied (same as
   Reject those). Does **not** undo already-Applied batches. Not a glossary term; it is a
   control.

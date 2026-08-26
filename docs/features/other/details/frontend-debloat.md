@@ -14,8 +14,8 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
 
 ## Code today
 
-- Don't say shell: `frontend-2/src/features/cms/CmsDashboardShell.tsx` — flat nav:
-  New chat, Sites, Details, AI tools.
+- Don't say shell: `frontend-2/src/features/cms/CmsDashboardShell.tsx` — leftover flat nav:
+  New chat, Sites, Details (no AI tools).
 - `frontend-2/src/features/cms/types.ts` / `routing.ts` — Don't say proof: views include `proof`.
 - `frontend-2/src/features/cms/CmsRoute.tsx` — `/cms/proof` and `/cms/projects`
   render `PlaceholderView`.
@@ -41,12 +41,13 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
   leave “next CMS port batch” copy).
 - **Save details** control — same click-off / explicit Update as the rest of
   the CMS; busy on the control, not a whole-screen swap.
-- Careers class names on the Business details screen (`.cms-careers-*`).
+- **AI tools** left-nav item (it was a second Sites; cleanup is `/cms/media`).
 
 ## Do not port
 
 - `/cms/profile` as a route. Profile is a disclosure, not a destination.
 - Restoring `/cms/proof`.
+- Restoring an **AI tools** left-nav item.
 - Merging Details into the website editor.
 - Renaming Sites in this pass ([frontend.md](frontend.md) out of scope).
 - Org chooser, tenant CRUD (auth file).
@@ -72,10 +73,9 @@ Profile
   Certifications and reviews
   Media library
 Ads
-AI tools
 ```
 
-AI tools stays `/cms/website`. Do not rename Sites here.
+Do not rename Sites here. Do not restore **AI tools**.
 
 ## Don't say / rename
 
@@ -99,4 +99,5 @@ AI tools stays `/cms/website`. Do not rename Sites here.
 - Profile disclosure matches [frontend.md](frontend.md) (expanded/collapsed,
   `aria-current` on the child).
 - Ads is a left-nav destination (screens may still be later).
+- No **AI tools** left-nav item.
 - Business details has no Save control.
