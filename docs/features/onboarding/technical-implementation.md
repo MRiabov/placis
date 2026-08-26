@@ -2,12 +2,12 @@
 
 Status: proposed implementation plan.
 
-Related: [PRD](prd.md), [ADR](ADR.md), [data model](data-model.md).
+Related: [PRD](prd.md), [ADR](ADR.md), [persistence](persistence.md), [HTTP](api.md).
 
 ## Domain objects
 
-See [data-model.md](data-model.md). The business profile is
-[details/data-model.md](../other/details/data-model.md).
+See [persistence.md](persistence.md). The business profile is
+[details](../other/details/persistence.md).
 
 ## Flow
 
@@ -17,18 +17,10 @@ Business research runs in the background alongside review/client interview; appl
 starts at client interview complete; website copy generation runs after that and does not
 block website preview or website activation.
 
-## API surface
+## HTTP
 
-- `POST /api/v1/onboarding-sessions` (+ `.../from-google-maps-listing`)
-- company-registry search, Google Maps autocomplete
-- profile (`/profile`, `/profile/checklist`, `/profile/confirmations`, `/profile/details`)
-- client interview (autosave + submissions)
-- business research runs (list/get), apply-the-website-template runs (list/get/cancel)
-- website previews (under onboarding — see website activation)
-- website publication / website rollback: owned by the [website feature](../website/technical-implementation.md), not this API surface
-
-Website publication and website rollback are the website editor, not this API
-([website technical implementation](../website/technical-implementation.md)).
+Routes: [api.md](api.md). Website publication and website rollback are the website editor, not
+this `api.md` ([website HTTP](../website/api.md)).
 
 ## Business research pipeline
 

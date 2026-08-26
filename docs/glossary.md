@@ -315,9 +315,20 @@ Distinct from: Onboarding session (the persisted run).
 
 ---
 
+#### Business lookup
+
+On Find: submit the picked company registry record and/or Google Maps listing. One command:
+insert the unactivated tenant and onboarding session, record online research consent, enqueue
+business research if under the wave cap. Distinct from typeahead search, from business research,
+from Review, from picking a research conflict. Never say Confirm for this command.
+
+In code: `POST /v1/onboarding-sessions/business-lookup`.
+
+---
+
 #### Online research consent
 
-The one acknowledgement, on find (a checkbox required before Confirm), that Placis may collect
+The one acknowledgement, on find (a checkbox required on business lookup), that Placis may collect
 public information about the business to prepare the website preview. Not a client interview
 question. Never say bare “consent”.
 
@@ -428,7 +439,7 @@ and an ordered list of website sections. Never say bare “page” in PRDs or UI
 The URL-safe path of a website page (for example a service page). Never say `slug` or bare “page
 path” in PRDs or UI.
 
-Distinct from: Website address.
+Distinct from: Website address, Website prefix.
 
 ---
 
@@ -621,11 +632,23 @@ Make an earlier website version the live website again, without deleting profile
 #### Website address
 
 The default host of the business’s site: they may be deployed under **our subdomain**. Reserved
-at website activation. Never say `slug`.
+at website activation.
 
-Distinct from: Custom website address (the address they supply), Website page path.
+Distinct from: Website prefix (the DNS/R2 label), Custom website address (the address they
+supply), Website page path.
 
 In code: `website_addresses` with `type=subdomain`.
+
+---
+
+#### Website prefix
+
+The reserved DNS label and R2 key (`acme-roofing-dublin`). Not a URL. Never renamed. Never say
+`slug` or `website-prefix`.
+
+Distinct from: Website address (the host), Custom website address, Website page path.
+
+In code: `tenants.website_prefix`.
 
 ---
 
@@ -1049,6 +1072,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | menu (website) / header / navigation | top menu or footer |
 | version (website, details) / versioned (website, details) / snapshot (website, details) | website version or profile history |
 | consent (onboarding) | online research consent |
+| consent confirm | business lookup |
 | interview (onboarding) | client interview |
 | research (onboarding) | business research |
 | preview (website, ads) | website preview or ad format preview |
@@ -1096,7 +1120,8 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | skeleton | unpublished website (the unpublished site) or loading placeholder (UI while a field loads) |
 | creative set | never in product (Internal: Creative set — images + text; not Ad) |
 | asset (media) | media asset (internal) or photo / item in the media library (product) |
-| slug | website address |
+| slug | website prefix |
+| website-prefix | website prefix |
 | user | contractor, owner, or website visitor |
 | visitor | website visitor |
 | lead (website, ads) | website lead or ad lead |
@@ -1108,7 +1133,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | profile tab | Profile |
 | knob / knobs | option (product); field / variable (technical) |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |
-| JsonRecord / JsonObjectPayload / `map[string]any` in domain code | typed struct; `jsonb` only at the persistence/API boundary |
+| JsonRecord / JsonObjectPayload / `map[string]any` in domain code | typed struct; `jsonb` is persistence-only |
 
 ## Code naming rules
 
@@ -1121,6 +1146,6 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
   foreign keys, `snake_case` enum values.
 - Go: feature-nested packages (`internal/<domain>/<feature>/`), no package stutter
   (`website/pages`, not `website/websitepages`); the file-size guard applies (see `general-architecture/ci-cd.md`).
-- API: `/api/v1/<domain>/...`, domain nouns in paths, `Create/Update/Get/List/Delete` verbs, one
-  `*Read` response suffix.
+- API: `/v1/<domain>/...`, domain nouns in paths, `Create/Update/Get/List/Delete` verbs, one
+  `*Read` response suffix. Conventions: `docs/general-architecture/api.md`.
 - New terms are added to this glossary first; a PRD never invents a synonym.

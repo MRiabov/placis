@@ -3,12 +3,12 @@
 Status: proposed implementation plan.
 
 Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture.md),
-[data model](data-model.md), [manifest](manifest.md).
+[persistence](persistence.md), [manifest](manifest.md), [HTTP](api.md).
 
 ## Domain objects
 
-See [data-model.md](data-model.md). Media assets are
-[media/data-model.md](../other/media/data-model.md).
+See [persistence.md](persistence.md). Media assets are
+[media library](../other/media/persistence.md).
 
 ## Website template application
 
@@ -28,9 +28,12 @@ the tables it writes.
 - Tool calls: see [assistant.md](assistant.md) (`update_slot`, `cleanup_image`, `update_form`,
   `update_website_styles`, `update_menus`, `generate_image`, …). Same attach / crop / focal /
   cleanup as `/cms/media` and the website editor PATCH.
-- Output is a reviewable diff, validated against website component contracts before apply.
+- Output is a reviewable diff, validated against website component contracts before the website
+  editor PATCHes (CMS) or the 06 job writes (headless).
 - Every call records reasoning + output + tool calls via `ai_generations`.
-- Apply / Reject is one-way; no revert-after-apply. No unpublished snapshot per edit.
+- Apply / Reject is one-way; no revert-after-apply. CMS Apply is the website editor PATCH +
+  `record-apply`.
+  No unpublished snapshot per edit.
   Website edit history is increments on `edit_history`; undo is in-memory, then PATCH.
   No `/undo`, `/redo`, or `/edit-history` routes.
 
@@ -53,18 +56,13 @@ the tables it writes.
 - Website page: `unpublished` / `archived`.
 - Website publication: `published → rolled_back/archived`.
 
-## API surface
+## HTTP
 
-- `/api/v1/website/editor/...` — website pages, website sections, website slots, media assets,
-  projects, website publications, website settings, certifications, website forms, top menu,
-  footer. Same GET/PATCH page fold: optional `include_edit_history`, `base_edit_history_head`
-  on PATCH/Apply. No extra undo/redo/history routes.
-- `/api/v1/website/publications/...` — website publication and website rollback (if not under editor).
-- `/api/v1/public/site/...` — website preview resolve, meta, sitemap, media assets (the public
-  read model). Host lookup uses [website_addresses](data-model.md). Live GET does
-  not call resolve; it reads R2. Connect-website-address APIs live under the website editor.
-
-Do not use `/api/v1/tenants/{website_address}/website/...` for the CMS.
+Routes: [api.md](api.md). Media library, Details, and website form submit are other features'
+`api.md` files.
+Live HTML never calls Go. **Do not create** `/v1/public/site/…`.
+CMS unpublished writes are editor `POST`/`PATCH` only. Reset to an owner website version is
+editor GET `publication_id`, then PATCH.
 
 ## Validation & testing
 

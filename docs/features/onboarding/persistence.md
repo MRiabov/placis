@@ -1,17 +1,17 @@
-# Onboarding — data model
+# Onboarding — persistence
 
 Onboarding session, business research, website preview, and website activation tables.
-Conventions: [data-model conventions](../../general-architecture/data-model.md)
+Conventions: [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `onboarding`).
 
 The business profile these onboarding sessions write is owned by
-[details](../other/details/data-model.md). LLM traces:
+[details](../other/details/persistence.md). LLM traces:
 [LLM layer](../../general-architecture/llm-layer.md).
 
 ## Onboarding sessions and client interview
 
 - `onboarding_sessions` — `id`, `tenant_id` fk (required; the unactivated tenant created at
-  confirm), `started_from` (`google_maps_listing`/
+  business lookup), `started_from` (`google_maps_listing`/
   `company_registry`), `channel` (`text`/`voice`), `status` (`created`/`client_interviewing`/
   `applying_website_template`/`previewing`/`activated`/`apply_website_template_failed`),
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at` nullable,
@@ -29,7 +29,7 @@ live here.
 ## Business research
 
 - `business_research_waves` — `id`, `tenant_id` fk, `onboarding_session_id` fk, `started_at`.
-  One row per 02 enqueue (Confirm or source change), not per job. Cap: 5 rows per `tenant_id` in
+  One row per 02 enqueue (business lookup or source change), not per job. Cap: 5 rows per `tenant_id` in
   any rolling 30 minutes ([02](pipeline/02-business-research.md)). `research_wait_until` on profile
   / SSE is derived: oldest in-window `started_at` + 30 minutes when the cap is hit.
 - `business_research_runs` — `id`, `wave_id` fk, `onboarding_session_id` fk, `place_id` nullable (Google’s

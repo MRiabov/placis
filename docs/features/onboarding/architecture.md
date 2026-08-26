@@ -9,7 +9,7 @@ predecessor (`OnCall`) and `frontend-2`; this is that loop under Placis names.
 ```text
 find (company registry and/or Google Maps) + online research consent
   → business research starts immediately (async)
-  → confirm data (skippable; extra seconds for research)
+  → Review (skippable; extra seconds for research)
   → client interview (text XOR voice)
   → profile history accumulates as sources and answers arrive
   → client interview complete → apply the website template (LLM picks website template/website styles; write is deterministic)
@@ -20,8 +20,8 @@ find (company registry and/or Google Maps) + online research consent
 Step docs: [pipeline/](pipeline/README.md). Numbers are DAG order: 02 starts before 03.
 
 At most five 02 waves per tenant per rolling 30 minutes (one wave = one enqueue of the job set, not
-one job). A 6th wave waits until the oldest of those five is 30 minutes old. Confirm still
-returns; the wait is a quiet inline note on confirm data, not a blocker.
+one job). A 6th wave waits until the oldest of those five is 30 minutes old. Business lookup still
+returns; the wait is a quiet inline note on Review, not a blocker.
 
 ## Apply the website template
 
@@ -45,7 +45,7 @@ an **unpublished website**. Website publication is a later, explicit action in t
 
 ## Progressive progress (SSE)
 
-From confirm through applying the website template and copy, the backend pushes onboarding session
+From business lookup through applying the website template and copy, the backend pushes onboarding session
 events over SSE (on change, not faster than ~2s). The frontend refreshes the checklist and the
 timeline. The stream is a **mirror** — Postgres is authoritative.
 

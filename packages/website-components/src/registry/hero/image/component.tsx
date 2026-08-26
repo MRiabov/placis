@@ -100,17 +100,17 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
   }
   return (
     <section
-      className={`${sectionPadding(theme)} bg-[var(--public-primary)] text-[var(--public-background)]`}
+      className={`${sectionPadding(theme)} bg-(--public-primary) text-(--public-background)`}
     >
       <div className="public-site-shell grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--public-background)] opacity-70">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-(--public-background) opacity-70">
             {text(props.business_name, "Local contractor")}
           </p>
           <h1 className="mt-4 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">
             {text(props.headline, "Reliable contractor services")}
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--public-background)] opacity-80">
+          <p className="mt-4 max-w-2xl text-base leading-7 text-(--public-background) opacity-80">
             {text(
               props.subheadline,
               "Clear quotes, practical scheduling, and work done properly.",
@@ -122,14 +122,14 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
             </a>
             {secondaryHref ? (
               <a
-                className="public-site-button public-site-button-secondary border-[var(--public-background)] text-[var(--public-background)]"
+                className="public-site-button public-site-button-secondary border-(--public-background) text-(--public-background)"
                 href={secondaryHref}
               >
                 {secondaryLabel}
               </a>
             ) : null}
           </div>
-          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--public-background)] opacity-80">
+          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-(--public-background) opacity-80">
             {trustBadges.slice(0, 3).map((badge) => (
               <span key={badge}>{badge}</span>
             ))}
@@ -138,7 +138,7 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
             ) : null}
           </div>
         </div>
-        <div className="min-h-72 overflow-hidden rounded-[var(--public-radius)] border border-[var(--public-border)] bg-[var(--public-surface)]">
+        <div className="min-h-72 overflow-hidden rounded-(--public-radius) border border-(--public-border) bg-(--public-surface)">
           {heroImage ? (
             <img
               alt={text(props.alt_text, "Contractor work preview")}
@@ -146,7 +146,7 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
               src={heroImage}
             />
           ) : (
-            <div className="grid min-h-72 place-items-center bg-[var(--public-surface)] p-8 text-center text-lg font-semibold text-[var(--public-text)]">
+            <div className="grid min-h-72 place-items-center bg-(--public-surface) p-8 text-center text-lg font-semibold text-(--public-text)">
               {text(props.trade, "Business")} services
             </div>
           )}

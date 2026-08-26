@@ -1,16 +1,16 @@
-# Website — data model
+# Website — persistence
 
 Website pages, website sections, website slots, website forms, top menu, footer, website
 publications (each row is a website version), website settings, website edit history, projects,
 certifications, and live hostnames (`website_addresses`).
-Conventions: [data-model conventions](../../general-architecture/data-model.md)
+Conventions: [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `website`).
 
-Media assets are owned by [media library](../other/media/data-model.md). The business profile the
-website templates fill is [details](../other/details/data-model.md) (including reviews). Website
-forms write [leads](../other/leads/data-model.md). The dump shape of a website publication is
+Media assets are owned by [media library](../other/media/persistence.md). The business profile the
+website templates fill is [details](../other/details/persistence.md) (including reviews). Website
+forms write [leads](../other/leads/persistence.md). The dump shape of a website publication is
 [manifest.md](manifest.md). The reserved label on the tenant row is
-[auth](../other/auth/data-model.md) (`tenants.website_address`).
+[auth](../other/auth/persistence.md) (`tenants.website_address`).
 
 - `website_addresses` — `id`, `tenant_id` fk, `hostname` unique, `type` (`subdomain`/`custom`),
   `status` (`reserved`/`pending`/`active`/`failed`), `is_primary` bool,
@@ -95,7 +95,7 @@ forms write [leads](../other/leads/data-model.md). The dump shape of a website p
   ([editing.md](editing.md)). The database does not perform undo.
 
 Reviews on the website are these rows, not a jsonb dump in `website_slots.value`. The text
-lives on [business_profile_reviews](../other/details/data-model.md). A project gallery is a
+lives on [business_profile_reviews](../other/details/persistence.md). A project gallery is a
 `json` / `list` website slot of project ids, not a `slot_type`.
 
 `props`, `design`, and slot `value` stay jsonb: each website component / slot has its own

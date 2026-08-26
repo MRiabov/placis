@@ -3,7 +3,7 @@
 Status: proposed product scope for onboarding — learning about a business and building its profile.
 
 Related: [ADR](ADR.md), [technical-implementation.md](technical-implementation.md),
-[data model](data-model.md).
+[persistence](persistence.md).
 
 ## Problem
 
@@ -82,8 +82,8 @@ find the business (company registry and/or Google Maps) + online research consen
 ## Online research consent
 
 A simple ask before we do business research — one acknowledgement that we'll look the business up
-and use the public information to build their profile. It is a checkbox on find, required before
-Confirm, not a client interview question.
+and use the public information to build their profile. It is a checkbox on find, required on
+business lookup, not a client interview question.
 
 ## User stories
 
@@ -109,7 +109,7 @@ Confirm, not a client interview question.
 6. **As a contractor**, I want to close the tab and continue later on the same browser, so I don't
    start over.
    - Reload lands on the same step with answers, extra notes, and remaining questions kept.
-     Confirm runs once. The website preview link still works after applying the website template,
+     Business lookup runs once. The website preview link still works after applying the website template,
      with no expiry clock.
 
 ## Acceptance criteria
@@ -123,7 +123,7 @@ Confirm, not a client interview question.
 5. After they answer the questions they can open the website preview as soon as the unpublished website
    exists; website copy generation fills in in the background. If copy fails, they can still open
    the website preview and do website activation.
-6. Closing the tab and coming back on the same browser continues where they left off. Confirm
+6. Closing the tab and coming back on the same browser continues where they left off. Business lookup
    does not start a second run. Clearing storage before the website preview hides the pointer on
    that browser; the data stays. The website preview link has no TTL. Coming back mid-client-interview
    keeps answers, extra notes, and remaining questions. A new voice connection does not re-ask

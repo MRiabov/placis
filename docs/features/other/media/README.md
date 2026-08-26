@@ -103,4 +103,5 @@ that same pool; an owner-added photo in an ad is usable once bytes have landed. 
 unpublished website editor may show pending-review AI images with a warning.
 
 Bytes live in [files](../../../general-architecture/files-and-s3.md) (`media_assets.file_id`).
-Tables: [data-model.md](data-model.md).
+HTTP: [api.md](api.md) (this resource owns upload; no `/v1/files`). Tables:
+[persistence.md](persistence.md).

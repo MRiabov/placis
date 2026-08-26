@@ -1,9 +1,9 @@
-# Leads — data model
+# Leads — persistence
 
 Website leads (and later ad leads) persist here.
-Conventions: [data-model conventions](../../../general-architecture/data-model.md)
+Conventions: [persistence conventions](../../../general-architecture/persistence.md)
 (Postgres schema `leads`).
-`website_form_id` points at [website forms](../../website/data-model.md).
+`website_form_id` points at [website forms](../../website/persistence.md).
 
 - `leads` — `id`, `tenant_id` fk, `source` (`website_form`; later `ad`), `website_form_id` nullable fk,
   `contact_name`, `marketing_phone`, `marketing_email`, `message`, `status`

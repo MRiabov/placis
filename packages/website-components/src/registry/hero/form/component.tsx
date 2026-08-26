@@ -13,10 +13,10 @@ export default function HeroForm(props: PublicSiteComponentProps) {
   }
   const formId = text(props.props.form_id, "hero-form");
   return (
-    <section className="grid gap-0 bg-[var(--public-primary)] text-[var(--public-background)] lg:grid-cols-[1fr_0.8fr]">
+    <section className="grid gap-0 bg-(--public-primary) text-(--public-background) lg:grid-cols-[1fr_0.8fr]">
       <HeroImage {...props} />
       <div className="px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <div className="rounded-[var(--public-radius)] bg-[var(--public-background)] p-5 text-[var(--public-text)] shadow-xl">
+        <div className="rounded-(--public-radius) bg-(--public-background) p-5 text-(--public-text) shadow-xl">
           <h2 className="text-xl font-bold">
             {text(
               props.props.form_title ?? props.props.title,

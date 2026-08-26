@@ -6,7 +6,7 @@ Related docs:
 
 1. [Details overview](README.md)
 2. [Details decision record](ADR.md)
-3. [Details data model](data-model.md)
+3. [Details persistence](persistence.md)
 4. [Website frontend](../../website/frontend.md) — Projects and Certifications and reviews
 5. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 

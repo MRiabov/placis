@@ -31,7 +31,7 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - R2 + Cache: `middleware.ts` (skips `/preview/`).
 - One island module: Don't say public site: `PublicSiteClientBehaviors.astro`.
 - `lib/publicSiteApi.ts` — still calls predecessor `GET /api/v1/preview/{token}/module/website`
-  and casts `PublicSite*`. Leftover env names remain. Retarget in
+  Don't say: and casts `PublicSite*`. Leftover env names remain. Retarget in
   [port-contractor-website.md](port-contractor-website.md).
 
 **Website component package (`packages/website-components`):**
@@ -64,10 +64,10 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - One Worker for every tenant. Astro document + React islands. No per-tenant
   build. Bundle-boundary: this app must not import `frontend-2`.
 - Live serve: Cache then R2 `latest/`. Go never emits HTML. R2 miss is 404.
-- Website preview: `/preview/{token}/` renders unpublished rows via
-  `GET /api/v1/public/site/resolve` — **this** is the per-request render.
-  Body is `website.v1` + catalog structs ([port-contractor-website.md](port-contractor-website.md)).
-- Website form POST to `/api/v1/public/forms/{id}/submit` (and uploads).
+- Website preview: `/preview/{token}/` renders unpublished rows via the Worker
+  internal render — **this** is the per-request render. Not `/v1/public/site/resolve`.
+  Body is unpublished website + catalog structs ([port-contractor-website.md](port-contractor-website.md)).
+- Website form POST to `/v1/website-forms/{form_id}/submissions` (and uploads).
 - Islands for top menu / carousel **once**.
 
 ## Delete / still cut
@@ -84,7 +84,7 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
   the `frontend-2` website file). DESIGN.md and per-folder markdown sidecars (dropped).
 - A second HTML engine or per-contractor Cloudflare deploy
   ([cloudflare.md](cloudflare.md)).
-- Predecessor OpenAPI, a full-CMS `openapi-typescript` client, `PublicSite*`
+- Don't say: Predecessor OpenAPI, a full-CMS `openapi-typescript` helper, `PublicSite*`
   casts, or `/api/v1/preview/{token}/module/website`.
 - Don't say public site as the app name. Don't say private app for `frontend-2`.
 
@@ -93,8 +93,8 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 | Today | Constrained contract |
 | --- | --- |
 | One concatenated `styles.css` (every preset) | CSS owned under `src/themes/<preset>/`; shared `src/styles/` only for CSS not gated on a preset class. Live publication links or inlines **that** preset only. CMS may load the selected preset (or all, if style switching must be instant). |
-| `GET /api/v1/preview/{token}/module/website` | drop; retarget to `GET /api/v1/public/site/resolve` + `website.v1`. No `PublicSite*` casts. |
-| `formSubmitBasePath` → `/api/v1/public/forms` | same group; website lead capture |
+| Don't say: `GET /api/v1/preview/{token}/module/website` | drop; Worker internal render. No `PublicSite*` casts. Do not create `/v1/public/site/resolve`. |
+| `formSubmitBasePath` → `/api/v1/public/forms` | `/v1/website-forms/{form_id}/submissions`; website lead capture |
 | Don't say blueprint: `packages/.../blueprints/` | `catalog/` website templates + website component contracts |
 | `JsonObject` props | per-`component_id` catalog struct |
 | `tenant_slug` | website address / tenant id as the Go DTO names it |

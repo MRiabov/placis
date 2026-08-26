@@ -1,10 +1,10 @@
-# 03 — Confirm data
+# 03 — Review
 
 Frontend noop. Today’s `/onboarding/review`. Not a required gate. **Skip is expected.** The only
 product job is extra wall-clock for 02 before the client interview. Lingering is optional; skip is
 the normal fast path.
 
-01 Confirm is not this step. This step does not `POST` an onboarding session.
+01 business lookup is not this step. This step does not `POST` an onboarding session.
 
 ## Trigger
 
@@ -57,5 +57,5 @@ Do not `POST` a new onboarding session.
 
 - Skip 03 does not skip required checklist rows (complete gate unchanged).
 - Skip 03 does not stop 02.
-- No confirm-data POST.
+- No Review POST.
 - No onboarding session status of its own (`client_interviewing` covers 02+03+04).

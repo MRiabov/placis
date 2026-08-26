@@ -12,9 +12,9 @@ import {
   emailLooksValid,
 } from "../lib/contactMailto";
 
-const FIELD_CLASS = `h-11 w-full border border-zinc-200 bg-white px-3.5 text-[15px] text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-400 dark:border-white/10 dark:bg-white dark:text-zinc-950 ${CONTROL_RADIUS_CLASS}`;
+const FIELD_CLASS = `h-11 w-full border border-zinc-200 bg-white px-3.5 text-[15px] text-zinc-950 outline-hidden transition placeholder:text-zinc-400 focus:border-zinc-400 dark:border-white/10 dark:bg-white dark:text-zinc-950 ${CONTROL_RADIUS_CLASS}`;
 
-const TEXTAREA_CLASS = `min-h-[9rem] w-full resize-y border border-zinc-200 bg-white px-3.5 py-3 text-[15px] text-zinc-950 leading-6 outline-none transition placeholder:text-zinc-400 focus:border-zinc-400 dark:border-white/10 dark:bg-white dark:text-zinc-950 ${CONTROL_RADIUS_CLASS}`;
+const TEXTAREA_CLASS = `min-h-36 w-full resize-y border border-zinc-200 bg-white px-3.5 py-3 text-[15px] text-zinc-950 leading-6 outline-hidden transition placeholder:text-zinc-400 focus:border-zinc-400 dark:border-white/10 dark:bg-white dark:text-zinc-950 ${CONTROL_RADIUS_CLASS}`;
 
 const LABEL_CLASS = "font-medium text-[13px] text-zinc-700 dark:text-zinc-300";
 
