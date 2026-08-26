@@ -29,6 +29,13 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 - `docs/features/website/architecture.md`: “the posting” → **fail**. Say **ad posting**.
 - `docs/features/ads/ad-generation/prd.md`: “the posting” → **fail**. Say **ad posting**.
 
+## Self-understood at home — ads `preview`
+
+- `docs/features/ads/ad-generation/technical-implementation.md`: “format-accurate preview” → **pass** (`preview (website, ads)` in a technical ads doc).
+- `docs/features/ads/ad-generation/prd.md`: “the preview” → **fail**. Say **ad format preview**.
+- `docs/features/ads/ad-generation/frontend.md`: “Facebook + Instagram preview” → **fail**. Say **ad format preview**.
+- Same frontend file: “ad format preview” → **pass** (covering).
+
 ## Self-understood at home — onboarding `interview`
 
 - `docs/features/onboarding/pipeline/01-find-business.md`: “after the interview” → **pass**.

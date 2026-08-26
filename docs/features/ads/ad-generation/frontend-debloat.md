@@ -48,7 +48,7 @@ When implementing, call only:
 
 1. `GET/POST /v1/ads`
 2. `GET/PATCH/DELETE /v1/ads/{ad_id}` (delete = draft-only)
-3. variants GET/PATCH; `POST …/regenerate`
+3. variants GET/PATCH; `POST …/rewrite` (required prompt); `POST …/cleanup` (required prompt)
 4. `POST …/approve`
 5. `POST …/ad-set`
 6. `POST …/download`
@@ -63,6 +63,7 @@ list (and ad-platform connection status) into the query cache as specified.
 - Don't say needs review: creation-flow label is **ad needs review**; existing-ad
   badges are Ad draft / Creative ready / Published / archived as in
   [frontend.md](frontend.md).
+- Don't say description in the UI: **short label** (stored as `description`).
 - Don't say ICP: **ideal customer profile**.
 - Don't say client: contractor / owner.
 
