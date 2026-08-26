@@ -105,11 +105,11 @@ containing two expandable steps, an inline loading state, and the approve block 
 One accordion wrapper with two expandable steps; both are visible immediately:
 
 - **Step 1 — About the ad** (always open, **not collapsible**): all the questions in one
-  expandable step (offer, audience, ad lead form, format). After generate this step is
+  expandable step (offer, audience, ad lead form questions, format). After generate this step is
   **confirmed** (fields locked, including format and audience). **Revise** sits next to
   **Generate again** on that row after the first generate (not on the About the ad title,
   and not before the first generate). It unlocks so the owner can change format, audience,
-  offer, or the ad lead form, then **Generate again** — changing format regenerates this ad
+  offer, or the ad lead form questions, then **Generate again** — changing format regenerates this ad
   ([ADR 33](ADR.md)). Revise is not the Review **AI orb** (that rewrites one copy field or
   prompts a different cleanup of the current photo).
 - **Step 2 — Review**: visible but locked — its title reads "Complete step 1 to unlock". It
@@ -134,15 +134,18 @@ The questions and review content:
 1. **What are you promoting?** — offer/goal and service focus from a searchable picker over the
    contractor's known services and goals (pre-filled from onboarding), with a
    conditional "create new" when the typed text matches nothing. No re-typing known data.
-2. **Who it's for** — the ideal customer profile (default married couples aged 30-40) and
-   location, both entered with the same searchable combobox as services (create-new: "profile",
-   "area"). First we decide who the ad speaks to. The ideal customer profile is loose: it steers
+2. **Who it's for** — the ideal customer profile and location, both the same searchable
+   combobox as services (create-new: "profile", "area"). On a new ad they are filled from the
+   last ad the owner created; first ad uses the default married couples aged 30-40 and the
+   service area on the business profile ([ADR 37](ADR.md)). The owner can still pick another.
+   First we decide who the ad speaks to. The ideal customer profile is loose: it steers
    tone and imagery — not precise targeting (that comes with ad posting) — and it never appears
    in the copy itself.
-3. **How people get in touch** — the **ad lead form**: suggested title and a **fixed set of
+3. **How people get in touch** — the **ad lead form** questions: a **fixed set of
    standard fields** (phone number, full name, postcode, email) with include/exclude toggles; each
    field maps to a Meta ad lead form field at ad posting — no custom questions. People answer
-   in Facebook; ads do not send them to a website page.
+   in Facebook; ads do not send them to a website page. The suggested **ad lead form title**
+   is Review copy ([ADR 38](ADR.md)), not this step.
 4. **Ad format** — clickable pills in About the ad, **before generate**, single select: Square
    feed, Portrait feed, Carousel, or Story. One ad is one format ([ADR 32](ADR.md)). The
    ad draft matches that format ([ADR 33](ADR.md)): feed is one photo; carousel is several
@@ -173,7 +176,7 @@ The questions and review content:
    file anywhere on the screen also adds a photo (drop overlay) — a pattern intended to extend
    across the website editor, Details, Media library, and Ads.
 6. **Text** — headline (input sized to 40 characters, not full-bleed), primary text, short
-   label, button label. Live character counts against the shared limits; button label from
+   label, button label, and the suggested **ad lead form title**. Live character counts against the shared limits; button label from
    Meta’s fixed enum (no AI orb on the CTA). After the first unprompted generate, each copy
    field except the CTA has the CMS **AI orb**, sized to the
    44px field height (not the 34px chat orb). Selecting a span opens a prompt
@@ -210,7 +213,7 @@ Actions:
   (OK / Revert) appears bottom-right. Approve is not blocked. Same as website
   generation for the conservative first ad draft.
 - **Revise** — on the generate row after the first generate: unlocks the confirmed step
-  (format, audience, offer, ad lead form). Generate again applies; a format change regenerates this ad.
+  (format, audience, offer, ad lead form questions). Generate again applies; a format change regenerates this ad.
 
 ### 3. Ad detail (existing ad) (`/cms/ads/{id}`)
 
@@ -268,7 +271,7 @@ Reusable pieces (Kibo/shadcn where possible, custom only when the workspace need
   location (create-new per kind). Full control spec below.
 - IdealCustomerProfileEditor (default + free text + async suggestion display; steers
   generation, not targeting)
-- AdLeadFormEditor (title + a fixed set of standard fields: phone number, full name, postcode, email,
+- AdLeadFormQuestions (About the ad: a fixed set of standard fields: phone number, full name, postcode, email,
   include/exclude toggles; each maps to a Meta ad lead form field, no custom questions)
 - FormatPills (About the ad, before generate: Square feed, Portrait feed, Carousel, Story;
   single select — one format per ad; changing format after generate regenerates this ad)
@@ -279,7 +282,7 @@ Reusable pieces (Kibo/shadcn where possible, custom only when the workspace need
 - CleanupReview (before/after per image, accept/reject; frame matches the ad format's ratio;
   photo strip always visible — single-select for one-image formats, card select for carousel;
   the CMS AI orb on cleanup with a required overlay prompt for a different cleanup, calling the shared media library cleanup)
-- CopyEditor (fields + character counts + CTA select; headline ~40ch wide; field labels
+- CopyEditor (fields + character counts + CTA select + ad lead form title; headline ~40ch wide; field labels
   match the rest of the step — uppercase 11px muted; the CMS AI orb on headline, primary
   text, and short label — 44px, matching the field; prompt overlay, required; highlight
   to edit a span)

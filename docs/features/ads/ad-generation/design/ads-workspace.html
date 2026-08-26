@@ -727,8 +727,13 @@
   .ai-prompt {
     display: none;
     position: absolute;
-    z-index: 30;
-    width: min(calc(100% - 52px), 360px);
+    z-index: 40;
+    left: 0;
+    right: auto;
+    top: auto;
+    bottom: calc(100% + 8px);
+    width: min(100%, 360px);
+    max-width: 100%;
     margin: 0;
     padding: 10px;
     background: #fff;
@@ -990,7 +995,7 @@
           <div class="field" style="margin-bottom:0">
             <label>Ideal customer profile</label>
             <div class="combo" data-create="profile">
-              <input type="text" value="" placeholder="Select or type to create a new profile…" />
+              <input type="text" value="Married couples, 30–40" placeholder="Select or type to create a new profile…" />
               <div class="pop">
                 <div class="create">
                   <div class="crow hint"><span class="hintic">✎</span> Type to create a new profile…</div>
@@ -1009,7 +1014,7 @@
           <div class="field" style="margin-bottom:0">
             <label>Where they are</label>
             <div class="combo" data-create="area">
-              <input type="text" value="" placeholder="Select or type to create a new area…" />
+              <input type="text" value="Kildare area" placeholder="Select or type to create a new area…" />
               <div class="pop">
                 <div class="create">
                   <div class="crow hint"><span class="hintic">✎</span> Type to create a new area…</div>
@@ -1029,7 +1034,6 @@
 
         <div class="q">How people get in touch</div>
         <div id="leadForm">
-          <div class="field"><label>Ad lead form title</label><input type="text" value="Get a free roof quote" /></div>
           <div class="field">
             <label>Questions</label>
             <div class="qlist">
@@ -1175,6 +1179,11 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="copyfield">
+          <div class="lbl"><span>Ad lead form title</span></div>
+          <input type="text" id="leadFormTitle" value="Get a free roof quote" />
         </div>
 
         <!-- this format on Facebook and Instagram -->
@@ -1570,18 +1579,12 @@
       other.classList.remove("open");
       other.style.top = "";
       other.style.left = "";
+      other.style.right = "";
+      other.style.bottom = "";
       other.style.transform = "";
       const otherOrb = document.querySelector('[aria-controls="' + other.id + '"]');
       if (otherOrb) otherOrb.setAttribute("aria-expanded", "false");
     });
-  }
-  function placePrompt(prompt, anchor) {
-    const host = prompt.parentElement;
-    const hr = host.getBoundingClientRect();
-    const ar = anchor.getBoundingClientRect();
-    prompt.style.left = Math.max(0, ar.left - hr.left) + "px";
-    prompt.style.top = (ar.top - hr.top - 8) + "px";
-    prompt.style.transform = "translateY(-100%)";
   }
   document.querySelectorAll(".cms-ai-orb").forEach(orb => {
     const prompt = document.getElementById(orb.getAttribute("aria-controls"));
@@ -1593,7 +1596,6 @@
       const open = !prompt.classList.contains("open");
       closeAiPrompts();
       if (!open) return;
-      placePrompt(prompt, orb);
       prompt.classList.add("open");
       orb.setAttribute("aria-expanded", "true");
       ta.focus();
@@ -1618,7 +1620,6 @@
       if (!orb) return;
       const prompt = document.getElementById(orb.getAttribute("aria-controls"));
       closeAiPrompts();
-      placePrompt(prompt, field);
       prompt.classList.add("open");
       orb.setAttribute("aria-expanded", "true");
       prompt.querySelector("textarea").focus();

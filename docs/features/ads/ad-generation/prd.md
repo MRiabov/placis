@@ -188,7 +188,7 @@ Ads under `/cms/ads` should expose:
 
 1. ad list with status badges (Ad draft / Creative ready / Published / Archived) and last updated timestamp
 2. create-an-ad flow: offer/goal and service focus picked from the contractor's known data, ideal customer profile
-   (default married couples aged 30-40), ad lead form, the ad format as pills before generate
+   and area filled from the last ad ([ADR 37](ADR.md)), ad lead form questions, the ad format as pills before generate
    ([ADR 33](ADR.md)), and daily budget shown but disabled until ad posting; then
    generate drafts that one format and the ad opens for review. On an existing ad, duration
    is remaining days in the run window and the end date is a native browser date picker —
@@ -313,8 +313,9 @@ when or how an ad runs) is out of scope for now.
 ## Ad Lead Form
 
 Ads capture ad leads with a Meta ad lead form created at ad posting time. For this implementation
-the ad lead form is just suggested fields: the ad set carries a suggested title and suggested
-questions (phone number, full name, postcode, email), and the final ad lead form is set up at
+the ad lead form is just suggested fields: the ad set carries a suggested title (edited in Review
+with the other copy) and suggested
+questions (phone number, full name, postcode, email) in About the ad, and the final ad lead form is set up at
 ad posting (future work). Every ad has an ad lead form. Ads do not send people to a website page.
 
 Website-page click-through (including a thank-you redirect onto a website page) is deferred. See
