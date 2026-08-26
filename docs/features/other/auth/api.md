@@ -23,13 +23,15 @@ Clerk ids are not on these responses; the Clerk SDK verifies the sign-in.
 ### POST /v1/me/clerk-organization
 
 - **Auth:** Clerk JWT (the person after sign-in). Not an org chooser.
-- **Callers:** `frontend-2` `OrgProvisionStep` at website activation / first login as specified
-  in [README.md](README.md). Then `clerk.setActive`.
+- **Callers:** `frontend-2` `OrgProvisionStep` after sign-in on the website-activation strip
+  (so checkout can attach a Clerk subject) and after 08 so `clerk.setActive` has an org.
+  [README.md](README.md).
 - **Idempotency-Key:** yes.
-- **Behavior:** create the **one** Clerk organization (`Organizations().Create`), attach it to
-  the existing unactivated tenant, set `status=active`. Named after the person; tenant name is
-  the business. Do not insert a second tenant.
-- **Must not:** accept a Clerk organization id from `frontend-2` as a chooser.
+- **Behavior:** create the **one** Clerk organization (`Organizations().Create`) and attach
+  `tenants.clerk_org_id`. Named after the person; tenant name is the business. Do not insert a
+  second tenant.
+- **Must not:** set `tenants.status=active` (website activation / Stripe webhook owns that);
+  accept a Clerk organization id from `frontend-2` as a chooser.
 
 ## Do not create
 

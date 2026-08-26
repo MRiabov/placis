@@ -112,7 +112,7 @@ business lookup, not a client interview question.
 6. **As a contractor**, I want to close the tab and continue later on the same browser, so I don't
    start over.
    - Reload lands on the same step with answers, extra notes, and remaining questions kept.
-     Confirm runs once. After 07 the host URL works without this browser’s storage.
+     Business lookup runs once. After 07 the host URL works without this browser’s storage.
 
 ## Acceptance criteria
 
@@ -126,7 +126,7 @@ business lookup, not a client interview question.
    until website copy generation finishes or the wait cap, then land on
    the preview website address. If copy fails or the cap hits first, they can still
    open the host and do website activation.
-6. Closing the tab and coming back on the same browser continues where they left off. Confirm
+6. Closing the tab and coming back on the same browser continues where they left off. Business lookup
    does not start a second run. Clearing storage before 07 hides the pointer on
    that browser; the data stays. The host has no token and no TTL. Coming back mid-client-interview
    keeps answers, extra notes, and remaining questions. A new voice connection does not re-ask

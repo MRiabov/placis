@@ -20,14 +20,16 @@ tenant only when `status=active` (the "not paid / CMS closed" signal is still `t
   selected-org cookie, no app-controlled tenant selector.
 - The API verifies the Clerk session/JWT, builds `Principal{userID, orgID, platformRole}`, and
   resolves the tenant from `orgID` **only if that tenant is `active`**. An unactivated tenant is
-  resolved from the onboarding session token, not from Clerk.
+  resolved from the onboarding session token or the contractor website hostname, not from a
+  Clerk organization claim.
 - `/me` returns `{owner, platform_role, tenant}` — a single `TenantRead` or `null`. Authenticated but
   not activated → `tenant: null` even if an unactivated tenant exists for the onboarding session.
-- Website activation provisions the Clerk organization (POST `createOrganization`) and attaches it
-  to the **existing** unactivated tenant, then sets `status=active`. The frontend then calls
-  `clerk.setActive` so sign-in tokens carry the Clerk organization claim. The Clerk organization is
-  named after the **person** (the account owner); the tenant name is the business — the two never
-  share a name field. Do not create a second tenant at activation.
+- Website activation (08) attaches the Clerk organization to the **existing** unactivated tenant
+  and sets `status=active`. `POST /v1/me/clerk-organization` creates that org if needed; it does
+  not skip pay. The frontend then calls `clerk.setActive` so sign-in tokens carry the Clerk
+  organization claim. The Clerk organization is named after the **person** (the account owner);
+  the tenant name is the business — the two never share a name field. Do not create a second
+  tenant at activation.
 - Deleted surfaces (do not resurrect): `/me/orgs`, `/me/tenants`, `/me/selected-org`,
   `placis_selected_org` cookie, `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`,
   `.../memberships/*` CRUD.
@@ -57,8 +59,9 @@ Services take `tenantID` explicitly.
 ## HTTP
 
 Routes: [api.md](api.md). Health: [HTTP conventions](../../../general-architecture/api.md).
-Clerk organization provisioning is `POST /v1/me/clerk-organization` at website activation
-(`Organizations().Create`); the frontend then `clerk.setActive`.
+Clerk organization provisioning is `POST /v1/me/clerk-organization` after sign-in on the
+preview website address (`Organizations().Create`); the frontend then `clerk.setActive`.
+That POST does not set `status=active` — website activation (08) does.
 
 Do not resurrect: `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`,
 `.../memberships/*` CRUD, `/me/orgs`, `/me/tenants`, `/me/selected-org`. CMS website routes are

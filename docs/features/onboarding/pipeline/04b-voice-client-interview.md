@@ -1,6 +1,6 @@
 # 04b — Voice client interview
 
-Voice writer into the same fold as 04a. Default surface in `frontend-2`. Client interview only —
+Voice writer into the same fold as 04a. Listed; first-pass is text (04a). Client interview only —
 website assistant / CMS voice stay in [voice-agent.md](../../../general-architecture/voice-agent.md)
 (transport) and website docs.
 

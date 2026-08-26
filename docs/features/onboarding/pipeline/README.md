@@ -4,7 +4,7 @@ Executable spec. Each step file uses Trigger / Pre / Must not / Do / Persist / F
 Invariants. This README is the index: status machine, screens, Resume, business-lookup-once, DAG. It does
 not retell the steps.
 
-The contractor never waits on business research. Confirm returns immediately; business
+The contractor never waits on business research. Business lookup returns immediately; business
 research fills the checklist in the background; applying the website template starts only after
 the client interview completes. `/onboarding/preview` waits for website copy generation **or** a
 ~15s cap, then 07 writes the host. 08 does not wait for 06.
@@ -46,7 +46,7 @@ applying the website template and copy. Postgres is authoritative.
 copy) → `activated`.
 `apply_website_template_failed` if 05 throws.
 06 failing does not change onboarding session status. The preview website address has no token and
-no TTL. The onboarding session has no `expired` status. Confirm data (03) does not get its own
+no TTL. The onboarding session has no `expired` status. Review (03) does not get its own
 status.
 
 ## Resume
