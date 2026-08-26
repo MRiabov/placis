@@ -30,8 +30,8 @@ patterns (projects-style: list, copy fields, media picker modal, blocker panel).
 These principles shape every screen in this workspace:
 
 1. **Who first, how second** — the workflow decides who the ad is for (ideal customer profile)
-   before any ad mechanics. How people get in touch is always a Meta ad lead form. Ad formats,
-   crops, and sizes follow automatically.
+   before any ad mechanics. How people get in touch is always a Meta ad lead form. The owner
+   picks one ad format as pills before generate; crops then follow from that format automatically.
 2. **Business details, not ad jargon** — the UI talks about the business: what you promote, who
    it's for, how people get in touch, photos, text. Internal jargon and ratios like 1:1 or 9:16
    never appear in the UI.
@@ -39,8 +39,9 @@ These principles shape every screen in this workspace:
    approve at the bottom of the flow. Approval is not a toolbar action.
 4. **Generation is not instant** — LLM drafting and photo picking run in the background; the
    flow is progressive and never blocks. The owner can leave and come back later.
-5. **Image descriptions help** — media library items already carry media captions; the picker
-   shows them and LLM selection uses them.
+5. **Media captions help** — we write the media caption (LLM) for the picker and later
+   generates. The picker shows it when it exists; the owner is never asked to label a
+   photo. A photo the owner just added to this ad does not wait on a media caption.
 
 ## Design Mock
 
@@ -48,14 +49,23 @@ A static HTML mock of the workspace lives at `design/ads-workspace.html` — ope
 directly (no build). It shows the current direction: **one accordion wrapper with two
 expandable steps, both visible immediately** — step 1 "About the ad" (open by default, all the
 questions), step 2 "Review" (visible but locked — "Complete step 1 to unlock" — and
-expands once step 1 is complete; step 1 can be returned to), then the approve block when the ad is ad ready to post.
-The combobox is closed by default with a conditional "create new". No ad-format or ad-set jargon.
-The mock is skinned to match the live CMS home composer (`.cms-dashboard-prompt` in
-`frontend-2`): **white canvas**, Satoshi / Helvetica Neue / Arial, `#e1e1e1` hairlines,
-`#fafafa` section headers (not blue-gray wizard chrome), 28px composer radius and the
-prompt's soft shadow on the accordion and ad cards, sunken 10px fields, 36px controls,
-near-black accent. The real implementation imports the app globals and should reuse the
-dashboard prompt chrome rather than duplicate a palette.
+expands once step 1 is complete; after generate, About the ad is confirmed until **Revise**
+on the generate row), then the approve block when the ad is ad ready to post.
+The combobox is closed by default with a conditional "create new". Format pills are single-select
+(one format per ad) using owner-facing names (Square feed, Portrait feed, Carousel, Story) — no
+ratios, no ad-set jargon.
+The mock is skinned to match the CMS home composer in
+`frontend-2`: **white canvas**, Satoshi / Helvetica Neue / Arial, `#e1e1e1` hairlines,
+`#fafafa` titles (not a blue-gray wizard look), 28px composer radius and the
+prompt's soft shadow on the accordion and ad cards, sunken 10px fields, 36px controls
+(8px control radius — same as the rest of the CMS). Pills are only for format selection and
+status badges, not for actions. The real implementation imports the app globals and should reuse the
+dashboard prompt look rather than duplicate a palette.
+
+**My ads / New ad / Review** at the top of the mock are a **developer scene switcher only**
+(dashed "Dev only" strip). They are not product tabs and must not ship. The owner reaches Ads from
+the ad list (`+ New ad`, open a card) and, on the workspace, the About the ad / Review
+accordion. Screenshots pass `?shot=1` so the strip is hidden.
 
 ## Routes
 
@@ -95,19 +105,29 @@ containing two expandable steps, an inline loading state, and the approve block 
 One accordion wrapper with two expandable steps; both are visible immediately:
 
 - **Step 1 — About the ad** (always open, **not collapsible**): all the questions in one
-  expandable step (1-3 below).
+  expandable step (offer, audience, ad lead form, format). After generate this step is
+  **confirmed** (fields locked, including format and audience). **Revise** sits next to
+  **Generate again** on that row after the first generate (not on the About the ad title,
+  and not before the first generate). It unlocks so the owner can change format, audience,
+  offer, or the ad lead form, then **Generate again** — changing format regenerates this ad
+  ([ADR 33](ADR.md)). Revise is not the Review **AI orb** (that rewrites one copy field or
+  prompts a different cleanup of the current photo).
 - **Step 2 — Review**: visible but locked — its title reads "Complete step 1 to unlock". It
   expands once step 1 is complete; step 2 itself is collapsible.
-- **AI loading state**: after "Create ad", a brief loading bar on the same screen
+- **AI loading state**: after **Create ad and generate**, a brief loading bar on the same screen
   ("Drafting your ad… AI is picking photos and writing your text. This takes a moment — you can
   leave and come back.").
 - **Approve block**: actions only at the bottom, in order: **Approve** (→ **ad ready to post**)
   first — Download is disabled until the ad is approved, then becomes the temporary
   manual ad-posting bridge; **Ad posting** stays disabled until ad posting ships. Disabled actions
   carry tooltips explaining why ("Ad posting is not available yet — ad posting to Meta is coming",
-  "Approve the ad first"). Validation lives inline in the steps, not in a separate list here:
-  errors appear next to the field they belong to (e.g. under Photos: "Photo 'Crew at work' is
-  still in review", "Photo 'New roof' has no media caption").
+  "Approve the ad first"). Validation lives inline in the steps, not in a separate list here.
+  Photos never show "has no media caption" or "still in review" — we write the media caption
+  in the background, and a photo already in the ad is not a review chore ([ADR 13](ADR.md)).
+  Owner-added thumbs read **Uploading…** only while bytes land (usable in about 10 seconds).
+  Hover the thumb: a circle-and-cross button; click it to cancel (same overlay as the media library and the website editor).
+  Ads do not show **Processing…** as a wait-to-use overlay. A failed upload is a warning
+  with an upload sign ("Couldn't upload that photo — try again").
 
 The questions and review content:
 
@@ -123,36 +143,74 @@ The questions and review content:
    standard fields** (phone number, full name, postcode, email) with include/exclude toggles; each
    field maps to a Meta ad lead form field at ad posting — no custom questions. People answer
    in Facebook; ads do not send them to a website page.
-4. **Photos** — approved photos from the **media library** (the same gallery
+4. **Ad format** — clickable pills in About the ad, **before generate**, single select: Square
+   feed, Portrait feed, Carousel, or Story. One ad is one format ([ADR 32](ADR.md)). The
+   ad draft matches that format ([ADR 33](ADR.md)): feed is one photo; carousel is several
+   cards; story is almost always one image with shorter overlay copy. Changing format after
+   generate regenerates this ad. Want another format? A new ad. Default: Square feed.
+5. **Photos** — approved photos from the **media library** (the same gallery
    picker as the rest of the app, e.g. the projects media picker — no duplicated
    gallery or tokens), with framing adjustments and light cleanup drafts (reviewable
-   **before/after sweep viewer** — drag the divider to compare — with Accept/Reject). Ad formats
-   are not exposed: photos are fitted to the ad sizes automatically ("we fit them to the ad
-   sizes"). Every size — card thumbnail, feed, carousel, story, sweep — crops from the
-   **photo's stored focal point** (one anchor), so the same photo stays coherent across
-   ad formats instead of being independently framed. "+ Add" opens the file picker; dragging a
+   **before/after sweep viewer** — drag the divider to clip, not resize, the photo — with Accept/Reject).
+   First upload already ran a tailored default cleanup from visual-issue classification
+   (ranked hints on Cleanup edit). After generate, an AI orb asks for a **different**
+   cleanup (required prompt, overlay) and calls the same media library
+   `cleanup_image` as the website assistant — not a photo picker.
+   The sweep's size follows this ad's format: Square feed and Carousel cards are 1:1,
+   Portrait feed is 4:5, Story is 9:16. The **photo strip is always shown** — the LLM
+   proposes, the owner picks. Square feed, Portrait feed, and Story are **one image**:
+   tapping a thumb uses that photo for the ad (single select). Carousel is several square
+   cards: tapping a thumb picks which card the cleanup viewer shows.
+   Crops follow the selected format automatically from the **photo's stored focal
+   point** (one anchor). Thumbnail labels are the media caption (alt text) when it exists —
+   there is no short-title guarantee, so the strip truncates to two lines with the full
+   media caption on hover. Until the media caption is written, the thumb has no media caption line (not an
+   error). A newly added photo shows **Uploading…** only while bytes land; hover the thumb
+   for a circle-and-cross button and click it to cancel (no photo is added). If they do not cancel, it is
+   usable in this ad (about 10 seconds) — captioning continues in the background. The owner
+   is never asked to label it. A failed upload is a warning with an
+   upload sign. "+ Add" opens the file picker; dragging a
    file anywhere on the screen also adds a photo (drop overlay) — a pattern intended to extend
    across the website editor, Details, Media library, and Ads.
-5. **Text** — headline, primary text, short label, button label. Live character counts against
-   the shared limits; button label from the fixed set.
-6. **Ad formats** — format-accurate mocks rendered from the backend response, not hardcoded. Each
-   card corresponds to one variant the backend returns. An ad is **posts or stories, never
-   both** ([ADR 32](ADR.md)): posts are Square feed, Portrait feed, and Carousel; stories are
-   Story. The preview shows only the family this ad belongs to — never Carousel next to Story.
-   Only ad formats with approved images appear; empty ad formats are omitted, never rendered as
-   empty slots. Labels are owner-facing ("Square feed", "Portrait feed", "Carousel", "Story") —
-   no ratios. If no variants exist yet, the block shows a brief note instead of empty cards.
+6. **Text** — headline (input sized to 40 characters, not full-bleed), primary text, short
+   label, button label. Live character counts against the shared limits; button label from
+   Meta’s fixed enum (no AI orb on the CTA). After the first unprompted generate, each copy
+   field except the CTA has the CMS **AI orb**, sized to the
+   44px field height (not the 34px chat orb). Selecting a span opens a prompt
+   **overlay above that selection**. Orb click with no selection rewrites the whole field
+   (Ctrl+Z restores the previous text). Prompt text is required; submit stays disabled while
+   blank. Optional selection on rewrite; omit means the whole field. Other owner edits are
+   kept. Result is still editable. Not the website assistant chat.
+7. **Ad format preview** — the selected format, rendered from the backend response, as
+   **Facebook and Instagram** placements from an existing dual-platform mock kit
+   (title / image / actions; add **Sponsored** and the CTA if the kit is organic-post-only).
+   Desktop shows both platforms; narrow screens toggle Facebook | Instagram. Labels are
+   owner-facing ("Square feed", "Portrait feed", "Carousel", "Story") — no ratios. Placement
+   type is Meta-like, not Satoshi: Facebook is Helvetica / Helvetica Neue / Arial;
+   Instagram is system UI (`-apple-system`, Segoe UI, Roboto). The card label under the card
+   ("Facebook · Square feed") stays the CMS type. Not Meta `generatepreviews` (that is
+   ad posting time). If no variant exists yet, the block shows a brief note.
 
 Actions:
 
-- **Approve** — the last step of the screen; enabled only when no blockers; explicit
+- **Approve** — the last step of the screen; enabled only when no blockers (character
+  limits, uploads still in flight, failed uploads — not a missing media caption on an
+  owner-added photo); explicit
   confirmation; moves the ad to **ad ready to post**.
 - **Ad posting** — present but disabled until direct transmission to Meta exists (ad posting is
   future work).
 - **Download** — produces the zip of the ad set (temporary step until direct transmission to
   Meta exists).
-- **Regenerate** — per format block: re-runs LLM drafts for text and/or the photo selection
-  without losing manual edits; the result is marked **ad needs review**.
+- **AI orb (Review)** — after generate: promptable rewrite of headline, primary text, or
+  short label, and promptable cleanup of the current photo via the shared media library
+  `cleanup_image` (prompt required for a different cleanup; the upload default already ran).
+  Replaces unprompted **Regenerate**. Marks **ad needs
+  review**. Owner-typed or owner-prompted marketing statements are allowed. If they include a
+  detail, a separate Details tool call writes the business profile; a **notification**
+  (OK / Revert) appears bottom-right. Approve is not blocked. Same as website
+  generation for the conservative first ad draft.
+- **Revise** — on the generate row after the first generate: unlocks the confirmed step
+  (format, audience, offer, ad lead form). Generate again applies; a format change regenerates this ad.
 
 ### 3. Ad detail (existing ad) (`/cms/ads/{id}`)
 
@@ -162,14 +220,18 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace 
   heading text, adaptive width, hairline on focus only; blur/Enter saves, no save button).
   The status badge sits **on the right next to the actions**: Ad posting (disabled until
   ad posting), **Download (always available on an existing ad — approve is a creation-flow gate,
-  not a detail action)**, Edit. Back to the list. The badge is an existing-ad status —
+  not a detail action)**, Edit. Edit is the same outline control as Download — not a filled
+  CTA (Approve is the filled action, and only on the create flow). Back to the list. The badge is an existing-ad status —
   **Creative ready** (next status: **Published** once ad posting exists).
 - **One single card, two columns — inputs left, outputs right** — the whole detail view is
   one card (no per-format cards). The top bar, then a two-column area:
-  - **Left (inputs)**: Images (the image gallery: main image with clickable thumbnails
-    underneath), then **Budget** (disabled stub until ad posting is connected: daily budget,
-    duration), then **Audience** and **Area** (read-only, not editable yet, below the
-    images).
+  - **Left (inputs)**: Images — a **one-image ad** shows that photo, not a thumbnail
+    gallery (changing the photo is **Edit**, in the workspace strip). A **carousel** shows
+    the cards as viewable thumbs. Then **Budget** (disabled stub until ad posting is connected): daily budget,
+    and **duration**: a native end-date picker on the same row as daily budget, with remaining
+    days under the picker (`4 days left (15 Aug to 29 Aug)`), not a length like "2 weeks". Both
+    disabled until ad posting. Then
+    **Audience** and **Area** (read-only, not editable yet, below the images).
   - **Right (outputs)**: Performance with Ad leads directly under it (stacks to one column on
     narrow screens).
 - **Performance** — impressions, clicks, spend, results, cost per ad lead (grayed stub until
@@ -208,15 +270,22 @@ Reusable pieces (Kibo/shadcn where possible, custom only when the workspace need
   generation, not targeting)
 - AdLeadFormEditor (title + a fixed set of standard fields: phone number, full name, postcode, email,
   include/exclude toggles; each maps to a Meta ad lead form field, no custom questions)
+- FormatPills (About the ad, before generate: Square feed, Portrait feed, Carousel, Story;
+  single select — one format per ad; changing format after generate regenerates this ad)
 - MediaGallery (the existing media library gallery, reused — no new picker; scoped to
   approved photos, rows show each item's existing media caption) plus a screen-level drop target
   and a "+ Add" that opens the file picker (app-wide pattern)
 - FramingControls (adjust how a photo is framed; touch-friendly)
-- CleanupReview (before/after per image, accept/reject)
-- CopyEditor (fields + character counts + CTA select)
-- AdPreview (conditionally renders one card per variant the backend returns; only ad formats
-  with approved images appear, empty ad formats are omitted; labels are owner-facing, no ratios;
-  shows a brief empty note when no variants exist yet)
+- CleanupReview (before/after per image, accept/reject; frame matches the ad format's ratio;
+  photo strip always visible — single-select for one-image formats, card select for carousel;
+  the CMS AI orb on cleanup with a required overlay prompt for a different cleanup, calling the shared media library cleanup)
+- CopyEditor (fields + character counts + CTA select; headline ~40ch wide; field labels
+  match the rest of the step — uppercase 11px muted; the CMS AI orb on headline, primary
+  text, and short label — 44px, matching the field; prompt overlay, required; highlight
+  to edit a span)
+- AdPreview (Facebook + Instagram placement for this ad's one format, from an existing mock
+  kit; Meta-like fonts inside the placement, the CMS fonts on our card label; labels are
+  owner-facing, no ratios; shows a brief empty note when no variant exists yet)
 - AdReadyBlockersPanel
 - ApproveBar (at the bottom of the screen: approve → ad ready to post; ad posting disabled)
 
@@ -248,7 +317,7 @@ Used for offers, services, the ideal customer profile, and location. Behavior:
 ## Data And API
 
 - Consumes the typed generated API types for `/api/v1/ads/*` (list, create, get,
-  patch, variant patch, regenerate, approve, ad-set, download).
+  patch, variant patch, rewrite, cleanup, approve, ad-set, download).
 - **Prefetch early + cache**: the ads list and ad-platform connection status are fetched as soon
   as the app loads and **cached in the browser** (query cache), so `/ads` renders
   instantly — cards and connect buttons are already resolved, revisits don't re-fetch. A
@@ -269,16 +338,23 @@ Used for offers, services, the ideal customer profile, and location. Behavior:
 Mobile is a primary viewport. Ads must work on a mobile device:
 
 - Story format mock renders 9:16 without horizontal overflow
-- the previews and the bottom approve bar stay reachable
+- the ad format preview and the bottom approve bar stay reachable
 - media picker and framing controls are modal/touch-friendly
 - character counts and blocker messages remain readable at narrow widths
 
 ## Testing
 
-- Workspace statuses: list badges, accordion flow (step 1 pinned, step 2 lock/unlock), copy
-  limits, inline validation errors, approve at the bottom, regeneration preserving manual edits
-- media picker only offers approved tenant photos and shows media captions; cleanup
-  drafts render as before/after and accept/reject per image
+- Workspace statuses: list badges, accordion flow (step 1 pinned, confirmed after generate
+  with Revise next to Generate again, step 2 lock/unlock), copy
+  limits, inline validation errors, approve at the bottom, AI-orb rewrite/cleanup preserving
+  other fields' manual edits (empty prompt does not fire; Ctrl+Z restores an LLM rewrite and
+  cleanup Accept; owner-prompted details write Details via a tool call and a
+  notification, Approve is not blocked)
+- media picker scoped to this contractor's photos; new files show Uploading… until bytes
+  land (hover: circle-and-cross, click to cancel); then they are usable in this ad without waiting on a media caption; cleanup drafts
+  render as before/after and
+  accept/reject per image; photo strip is always shown (single-select on one-image
+  formats; card select on carousel)
 - combobox: create-new pre-highlight, filtering both blocks, active checkmark
 - Story format mock on a mobile viewport
 - one E2E: create → review/edit → approve → use the ad set (service + download),
@@ -287,7 +363,9 @@ Mobile is a primary viewport. Ads must work on a mobile device:
 
 ## Non-Goals (frontend)
 
-- no campaign console, budgets, targeting, scheduling, or performance UIs
+- no campaign console, bidding, targeting, or live performance UIs (daily budget and duration
+  stay disabled stubs until ad posting; duration's future shape is remaining days plus a
+  native end-date picker, not a scheduling console)
 - no ad posting UI
 - no integration with the website editor (ads are their own records)
 - no raw JSON editing

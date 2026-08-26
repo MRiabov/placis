@@ -14,22 +14,24 @@ Related docs:
 
 Ad generation creates ads for a tenant. It is not a campaign-operations system: campaign
 status, spend, ad leads, and reporting are future work, not part of ad generation. The first
-slice must produce an **ad ready to post** ad set (images cropped for each ad format, plus
+slice must produce an **ad ready to post** ad set (images cropped for this ad's format, plus
 copy) without doing ad posting itself.
 
 The key rules:
 
 1. **Approved media items only**: ad images reference media assets owned by the tenant and approved
-   for public use, with per-ad-format crop/focal metadata or derived crop variants. No raw URLs, no
+   for public use, with crop/focal metadata for this ad's format or derived crop variants. No raw URLs, no
    unreviewed media assets, no external hotlinks.
 2. **The LLM drafts; the owner edits**: the LLM drafts copy, proposes image galleries, and may
    apply light cleanup to images (remove clutter/trash, tidy backgrounds). Everything lands in
    reviewable draft records with where it came from. Manual edits always win and are preserved;
    the LLM never overwrites an approved variant silently.
-3. **Empty ad formats are left out**: an ad format with no suitable approved images is omitted
-   from the ad set, never rendered empty.
-4. **Validation before approval**: images, copy limits, and marketing statements are validated
-   before an ad can reach `ad_ready_to_post`. Every ad carries a suggested ad lead form.
+3. **Never produce an empty format**: if the chosen format has no suitable approved images,
+   generate does not succeed (see Open questions in [ads README](../README.md#open-questions)).
+4. **Validation before approval**: images and copy limits are validated before an ad can
+   reach `ad_ready_to_post`. Sensitive marketing statements do not block
+   approval once the owner kept, edited, or prompted them ([ADR 18](ADR.md)). Every ad
+   carries a suggested ad lead form.
 5. **LLM outputs are recorded**: every AI generation call records its reasoning, user-visible
    output, and tool calls through the existing `ai_generations` trace path, with tenant scope and
    actor context.
@@ -46,12 +48,12 @@ Build the smallest real feature that produces a usable ad set as a service:
 
 1. persisted ad and variant records with `draft` as the default status
 2. copy stored as structured fields with ad-platform-aware limits and an allowed button-label set
-3. image placements referencing approved media assets with per-ad-format crop metadata
+3. image placements referencing approved media assets with crop metadata for this ad's format
 4. an ad lead form on every ad (suggested title and standard fields)
 5. an LLM draft step (copy + image gallery + light cleanup edits) that writes reviewable
    draft records and traces
-6. format-accurate previews for the ad's family: posts (square, portrait, carousel) or
-   stories, never both ([ADR 32](ADR.md))
+6. format-accurate Facebook + Instagram preview for this ad's one format ([ADR 32](ADR.md),
+   [ADR 35](ADR.md))
 7. validation and approval gates, then the ad set output with a downloadable rendering for the
    human path
 8. Ads under `/cms/ads` as one caller of the service
@@ -100,7 +102,7 @@ Hard-typed fields:
 05. `offer` (owner-visible goal, e.g. "promote garage conversions")
 06. `ad_goal`: `more_calls`, `more_quotes`, `promote_service`
 07. `service_focus_id` (optional reference to a tenant service)
-08. `review_status`
+08. `review_status` (no values specified — see Open questions in [ads README](../README.md#open-questions); `status` is the lifecycle)
 09. `origin` (`owner`, `llm`, `done_for_you`, `business_profile`)
 10. `created_by`
 11. `updated_by`
@@ -122,7 +124,7 @@ profile are hard typed.
 
 ### AdVariant
 
-One row per ad format within an ad.
+One row per ad — the ad's one format ([ADR 32](ADR.md)).
 
 Hard-typed fields:
 
@@ -130,19 +132,20 @@ Hard-typed fields:
 02. `tenant_id`
 03. `ad_id`
 04. `format`: `feed_square`, `feed_portrait`, `carousel`, `story`
-05. `status`: `draft`, `ad_needs_review`, `approved`, `hidden`, `archived`
+05. `status`: `draft`, `ad_needs_review`, `approved`, `archived`
 06. `copy_variant_id`
 07. `image_placements` (ordered list of `AdImagePlacement`)
-08. `position`
-09. `review_status`
-10. `created_at`
-11. `updated_at`
-12. `platform_refs` (flexible JSON: per-ad-format ad-platform ad object ids; empty until an
+08. `review_status` (no values specified — see Open questions in [ads README](../README.md#open-questions); `status` is the lifecycle)
+09. `created_at`
+10. `updated_at`
+11. `platform_refs` (flexible JSON: ad-platform ad object ids for this format; empty until an
     ad-platform integration exists)
 
-Ad-format-specific rules: `feed_square` and `feed_portrait` hold exactly one image placement;
-`carousel` holds 2-10 square placements in order; `story` holds one or more 9:16 placements
-(gallery-style stories).
+Ad-format-specific rules: one variant per ad ([ADR 32](ADR.md)). `feed_square` and
+`feed_portrait` hold exactly one image placement. `carousel` holds 2-10 square placements in
+order. `story` holds exactly one 9:16 placement and shorter overlay copy. Multi-frame story
+sequences are out of scope. Variant `hidden` and variant `position` were multi-format leftovers
+and are not stored.
 
 ### AdCopyVariant
 
@@ -152,18 +155,20 @@ Hard-typed fields:
 02. `tenant_id`
 03. `headline`
 04. `primary_text`
-05. `description`
+05. `description` (owner-facing **short label**; Meta `link_data.description`)
 06. `cta_label` (from allowed set: `learn_more`, `get_quote`, `call_now`, `message`)
 07. `source` (e.g. `ai_proposal`, `owner_edit`, `done_for_you_edit`, `manual`)
 08. `ai_generation_ref` (trace id when LLM-drafted)
 09. `created_at`
 10. `updated_at`
 
-Limits live in one constants module shared by the Ads UI and backend validation:
+Limits live in one constants module shared by the Ads UI and backend validation. Platform
+maxima are shared; recommended generated length is format-shaped ([ADR 33](ADR.md)):
 
 1. headline: max 40 characters
-2. primary_text: max 5000 characters, recommended max 500 for generated drafts
-3. description: max 30 characters (optional)
+2. primary_text: max 5000 characters; recommended generated length is shorter on feed, shorter
+   still on carousel cards, and overlay-short on story
+3. description (owner-facing short label): max 30 characters (optional)
 4. `cta_label` from the allowed enum set
 
 ### AdImagePlacement
@@ -225,7 +230,7 @@ Supported ad formats and target ratios:
 The crop model stores `crop_mode` plus 0–1 `crop_x` / `crop_y` / `crop_width` / `crop_height` and
 `focal_x` / `focal_y` so the framing UI and the ad-set renderer use the same framing. Rendering cuts
 the source media asset to the crop (sharpening/format conversion
-via the existing image pipeline) into a per-ad-format output file. Output naming is
+via the existing image pipeline) into an output file for this ad's format. Output naming is
 deterministic, e.g. `{ad_id}/{variant_format}/{position}.{ext}`.
 
 ## Backend API Surface
@@ -241,7 +246,10 @@ Service-level rules:
 2. the output is the ad set (ad, variants, copy, image placements, ad lead form, and the
    ideal customer profile columns) with an ad set format number and the stable ad/variant ids
    in the response, so an ad-platform integration can map its own objects back to the ad
-3. generation is safe to retry: running the same request twice gives the same result
+3. generation is cached per input, ad format, and `prompt_id` / `prompt_version`, and is safe to retry
+   on that key. If that cache identity is already used by an Ad ready to post or a
+   Published ad, roll to the next `prompt_version` so the new generate is not a
+   duplicate ([ADR 16](ADR.md))
 4. for now only internal callers (the app's own sign-in/actor context) can use it; external
    API keys are future work and must not change the ad set format
 
@@ -254,14 +262,16 @@ Recommended private Ads routes (the Ads app):
 5. `DELETE /api/v1/ads/{ad_id}` for draft-only removal
 6. `GET /api/v1/ads/{ad_id}/variants`
 7. `PATCH /api/v1/ads/{ad_id}/variants/{variant_id}`
-8. `POST /api/v1/ads/{ad_id}/variants/{variant_id}/regenerate` (LLM
-   draft for copy and/or image gallery on one variant)
-9. `POST /api/v1/ads/{ad_id}/approve`
-10. `POST /api/v1/ads/{ad_id}/ad-set` (returns the ad set)
-11. `POST /api/v1/ads/{ad_id}/download` (renders and returns a signed URL
+8. `POST /api/v1/ads/{ad_id}/variants/{variant_id}/rewrite` (required `field` +
+   `prompt`; optional selection start/end; omit selection = whole field; empty prompt is 400)
+9. `POST /api/v1/ads/{ad_id}/variants/{variant_id}/cleanup` (required `prompt`;
+   shared media library `cleanup_image`; not a photo picker)
+10. `POST /api/v1/ads/{ad_id}/approve`
+11. `POST /api/v1/ads/{ad_id}/ad-set` (returns the ad set)
+12. `POST /api/v1/ads/{ad_id}/download` (renders and returns a signed URL
     for the ad-set download on the human path)
 
-Mutating routes that can be retried accept `Idempotency-Key`. PATCH / regenerate / approve
+Mutating routes that can be retried accept `Idempotency-Key`. PATCH / rewrite / cleanup / approve
 send `base_updated_at` (last-seen `ads.updated_at`). Match → bump `ads.updated_at` and
 return it. Mismatch → `409`; frontend re-GETs. No undo/redo routes ([ADR 31](ADR.md)).
 Approve/ad-set/download/archive mutations audit. The contractor website application never
@@ -319,39 +329,74 @@ the first implementation.
 
 ## Generation Pipeline
 
-The "generate ad ideas" step is one endpoint that writes reviewable drafts, never approved
+The "Create ad and generate" step is one endpoint that writes reviewable drafts, never approved
 status:
 
-1. gather inputs: approved media assets (review approved, tenant-owned, media caption present),
-   projects, services, service area, certifications, reviews, business name and details, and the
-   confirmed ideal customer profile
-2. call the existing structured AI assistant tooling (LLM, with the deterministic
-   no-key fallback used by projects) with a clearly defined ad-copy response schema
-3. record the call through `ai_generations` tracing: reasoning, user-visible copy output, tool
-   calls, usage, and cost, with tenant scope and actor context
+1. gather inputs: the owner's selected ad format (exactly one — [ADR 32](ADR.md),
+   [ADR 33](ADR.md)), approved media assets (review approved, tenant-owned,
+   media caption already written), projects, services, service area, certifications, reviews, business
+   name and details, and the confirmed ideal customer profile. Create one variant row for that
+   format. Changing format after generate regenerates this ad; it does not rearrange an
+   existing draft. Another format is another ad.
+2. draft that format for how it's used (existing structured AI assistant tooling, with
+   the deterministic no-key fallback used by projects): feed is one photo and feed-length copy;
+   carousel is a card sequence (2–10 images); story is overlay-short copy and a single 9:16
+   image.
+3. record the call through `ai_generations` tracing: reasoning, user-visible copy
+   output, tool calls, usage, and cost, plus the standard inference metadata (model,
+   `prompt_id`, `prompt_version`, tenant scope, actor context). See
+   [LLM layer](../../../general-architecture/llm-layer.md). Cache hits record the same
+   metadata so a call can still be reconstructed.
 4. create `draft`/`ad_needs_review` copy variants, proposed image galleries referencing approved
    media assets, and proposed light cleanup edits as derived image variants; never write
    approved status
 5. return the draft to Ads so the owner can review, edit, swap images, and adjust crops
-   per ad format
+   for this ad's format
+6. after that first unprompted draft, directed Review rewrites (`rewrite` with required
+   owner prompt, one copy field) and promptable cleanup (`cleanup` via shared
+   `cleanup_image`) record the owner prompt in `ai_generations`. Empty prompt is rejected.
 
-Image gallery drafts use deterministic scoring first (project/service relevance, review
-status, media caption presence, aspect suitability) with model assistance for ranking where
-useful. Drafts never include unreviewed, non-tenant, or media-caption-free media assets.
+Generation results are **cached** per input, ad format, and `prompt_id` / `prompt_version` on
+`ai_generations` (tool and skill format revisions on
+`ai_generation_tool_revisions`). Retry of the same request while that result is still an Ad
+draft or Ad needs review returns the cached generation — that is what safe to retry means.
+Ad draft / Ad needs review occupancy does not roll the cache: leave-and-return keeps the
+same draft.
+
+**Roll to the next `prompt_version`** (do not reuse that cache entry) when a hit would
+duplicate:
+
+1. an ad the owner already accepted (`ad_ready_to_post`) from that cache identity
+2. a Published (running) ad with that same identity — including if the agent somehow
+   emitted a duplicate of one already running
+
+Image gallery drafts: the pool is `ready` + approved photos
+([processing status](../../other/media/README.md#processing-status)). The media caption
+is always there once `ready`. The LLM picks from that set of media captions for this ad
+(offer, format, ideal customer profile). There is no separate scoring pass on media captions.
+Drafts never include non-tenant media assets. A photo the owner **adds to this ad** is
+usable once bytes have landed (`file_id` set, not `failed`) — target about 10 seconds.
+Captioning (`processing` → `ready`) continues in the background; Ads does not wait on it
+and does not show **Processing…** as a use-blocker. The owner is never asked to write a
+media caption.
 
 ## Validation And Approval Rules
 
 An ad can reach `ad_ready_to_post` only when:
 
 1. the tenant owns every referenced media asset
-2. every image placement resolves to an approved tenant-owned media asset with a media caption
-   and a valid crop for its ad format; a cleanup copy counts only once it has
-   passed review
+2. every image placement resolves to a tenant-owned media asset whose bytes have landed
+   (`file_id` present, not `failed`) with a valid crop for this ad's format. A media caption
+   is **not** required for a photo the owner added to this ad. A cleanup copy counts only
+   once it has passed review. LLM-picked library photos still come from `ready` + approved.
 3. copy satisfies character limits and `cta_label` is in the allowed set
 4. sensitive marketing statements (reviews, ratings, guarantees, certifications, insurance, pricing, results)
-   are source-backed or explicitly owner or done-for-you approved. Anything
-   LLM-drafted resembling such a marketing statement sets `ad_needs_review`
-5. at least one ad format has a complete variant; empty ad formats are left out of the ad set
+   that the **unprompted** LLM drafted are flagged for review (`ad_needs_review`). Owner-edited
+   or owner-prompted copy is allowed and does **not** block
+   `ad_ready_to_post` ([ADR 18](ADR.md)). If it includes a detail, a separate Details
+   tool call writes `business_profile_edits`. Character
+   limits, uploads still in flight, and failed uploads still block.
+5. this ad's format has a complete variant
 6. the ad has a suggested ad lead form (suggestions never block approval)
 
 Approval is explicit, audited, and final within Ads: `ad_ready_to_post` means "can be consumed
@@ -364,12 +409,12 @@ a person doing ad posting manually, until direct transmission to Meta (future wo
 
 Rendering is deterministic and offline:
 
-1. cut each approved source media asset to its crop and produce the per-ad-format image output
-2. write a copy sheet (markdown or plain text) with headline, primary text, description, button
-   label, and per-ad-format notes
+1. cut each approved source media asset to its crop and produce the image output for this ad's format
+2. write a copy sheet (markdown or plain text) with headline, primary text, short label
+   (`description`), button label, and notes for this ad's format
 3. write the suggested ad lead form fields (title and include flags) as the starting point for the ad
    lead form created on Meta
-4. write a mapping of each output image to its source media asset, crop, and ad format
+4. write a mapping of each output image to its source media asset, crop, and this ad's format
 5. pack as a zip; the download is a short-lived signed URL, not a public URL
 
 The same approved ad always yields the same ad set and the same rendered bytes for the same
@@ -381,15 +426,17 @@ Add Ads under `/cms/ads` in the CMS (`frontend-2`):
 
 1. ad list with status badges and last-updated
 2. create-an-ad flow (name, offer/goal and service focus pickers pre-filled from the business
-   profile, ideal customer profile, ad lead form, budget/schedule shown but disabled) then
-   generation
-3. variant tabs for the ad's family only: posts (square, portrait, carousel) or stories,
-   never mixed ([ADR 32](ADR.md))
+   profile, ideal customer profile, ad lead form, format pills before generate, daily budget
+   shown but disabled) then generate drafts that one format. Existing-ad detail: duration is
+   remaining days in the run window; the end date is a native browser date picker; both stay
+   disabled until ad posting
+3. one Facebook + Instagram **ad format preview** for the format this ad uses ([ADR 32](ADR.md),
+   [ADR 35](ADR.md))
 4. the media library, scoped to approved tenant media assets, with framing controls
-5. copy fields with live character counts and button-label select
-6. format-accurate previews rendered from the backend response — one card per variant returned;
-   only ad formats with approved images appear, empty ad formats are omitted (never rendered as
-   placeholders); rendered from the same projection the ad-set renderer uses
+5. copy fields with live character counts, headline sized to 40 characters, button-label select,
+   and a CMS AI orb on headline / primary text / short label (required prompt, overlay)
+6. Facebook + Instagram placement for this ad's format, from an existing mock kit, live
+   as copy/image change; Meta-like fonts inside the placement; not Meta `generatepreviews`
 7. inline validation errors next to the relevant field
 8. approve and download actions
 9. mobile-safe view of the story variant (9:16) without horizontal overflow
@@ -398,26 +445,34 @@ Add Ads under `/cms/ads` in the CMS (`frontend-2`):
 
 Allowed AI behavior:
 
-1. draft headline/primary text/description from approved business-profile details
-2. propose an image gallery from approved media items with relevance/quality ranking
+1. draft headline / primary text / short label (`description`) from approved business-profile details
+2. propose an image gallery by picking from the media captions of ready approved photos
 3. apply light cleanup edits to selected images (remove clutter/trash, tidy backgrounds) as
    reviewable copies
 4. suggest an ideal customer profile from the business profile and business research,
    asynchronously and reviewable
-5. flag sensitive marketing statements in generated copy for review
-6. summarize the ad set into an owner-readable explanation
+5. if copy includes a detail, call a Details tool (`business_profile_edits`); do not invent
+   reviews, ratings, years, guarantees unprompted
+6. rewrite one copy field from a required owner prompt after generate (optional selection;
+   omit = whole field)
+7. apply promptable light cleanup of the current photo through shared `cleanup_image`
+8. summarize the ad set into an owner-readable explanation
 
 Blocked AI behavior:
 
 1. inventing reviews, ratings, years, guarantees, certifications, insurance, pricing, or results
-2. selecting unreviewed, non-tenant, or media-caption-free media assets
+   on the **unprompted** first generate (owner edit or owner prompt is allowed)
+2. selecting unreviewed library photos, non-tenant media assets, or media-caption-free items
+   **for the unprompted gallery draft** (the owner may add a just-uploaded photo to this ad
+   before its media caption exists)
 3. generating new images or making substantive edits — adding/removing objects, changing the
    work shown, concealing damage or defects (heavy editing stays in the media library)
-4. writing the ideal customer profile into the copy (e.g. "ideal for homeowners 40-55") — the
-   ideal customer profile steers tone and imagery, never the text
+4. writing the ideal customer profile into the copy unprompted (e.g. "ideal for homeowners 40-55")
+   — the ideal customer profile steers tone and imagery; an owner prompt may override
 5. writing directly into approved variants or reaching `ad_ready_to_post` without explicit
    approval
-6. auto-creating ad records from onboarding interest alone
+6. running rewrite or cleanup with an empty prompt
+7. auto-creating ad records from onboarding interest alone
 
 Ads are created on demand in Ads. Onboarding and voice do not collect ad
 preferences and never create ad records.
@@ -428,15 +483,22 @@ Backend tests:
 
 01. ads default to `draft` for new tenants
 02. ad records are never created by onboarding or voice flows
-03. image placements reject unreviewed, cross-tenant, and media-caption-free media assets
+03. image placements reject unreviewed library picks, cross-tenant assets, and
+    media-caption-free items on the **LLM gallery draft**. An owner-added upload is
+    acceptable once bytes have landed, without a media caption yet
 04. copy validation enforces character limits and the allowed button-label set
-05. sensitive LLM-drafted marketing statements set `ad_needs_review` and block `ad_ready_to_post`
-06. approval requires images and copy on at least one ad format
-07. empty ad formats are left out of the ad set and the rendered download
-08. the ad set is stable across repeated generation calls (safe to retry)
+05. unprompted sensitive marketing statements set `ad_needs_review`; they do
+    not block `ad_ready_to_post` once the owner kept, edited, or prompted them. A profile
+    detail writes the business profile via a tool call (`business_profile_edits`)
+06. approval requires images and copy on this ad's format
+07. the rendered download contains this ad's format only
+08. retry of the same generate while the ad is still an Ad draft or Ad needs review returns the
+    cached generation; a new generate after `ad_ready_to_post`, or one that would duplicate
+    a Published ad, rolls the `prompt_version`
 09. tenant isolation for ads, variants, and placements
 10. LLM draft calls record `ai_generations` traces with tenant scope and actor context
-11. manual edits are preserved when a variant is regenerated
+11. manual edits on other fields are preserved when one field is rewritten; empty rewrite/cleanup
+    prompt is rejected; Ctrl+Z restores an LLM rewrite and cleanup Accept
 12. an internal caller gets the ad set through the service without the Ads UI, and the ad set
     shape is asserted by a focused service test
 13. light cleanup edits produce a new media library item (a copy) that inherits `supplied_by`,
@@ -449,16 +511,23 @@ Backend tests:
 
 Frontend tests:
 
-1. Ads shows Ad states: ad draft / ad needs review / ad ready to post
+1. Ads shows list badges (Ad draft / Creative ready / Published / Archived) and
+   creation-flow labels (ad draft / ad needs review / ad ready to post) where specified
 2. create flow requires an ad lead form and does not offer a website page
 3. media picker only offers approved tenant media assets
 4. copy fields show live character counts and blocks over-limit approval
-5. square, portrait, carousel, and story previews render without overflow, including mobile story
+5. Facebook and Instagram previews for the selected format render without overflow, including
+   mobile story
 6. approve and download actions produce the expected ad-set rendering without ad-platform
    credentials
-7. regeneration keeps manual edits and marks the result `ad_needs_review`
+7. AI-orb rewrite keeps other fields' manual edits, requires a prompt, and marks
+   `ad_needs_review`; empty prompt does not fire; Ctrl+Z restores the previous copy
 8. cleanup edit drafts render as reviewable before/after image changes and can be accepted or
-   rejected per image
+   rejected per image; a different cleanup orb requires a prompt and uses shared media library cleanup;
+   Ctrl+Z after Accept restores the previous photo
+9. an owner-added photo is usable once bytes have landed (Uploading… only; hover a
+   circle-and-cross, click to cancel); Ads does not
+   block on a media caption or show Processing… as a wait-to-use overlay
 
 Contract checks:
 
