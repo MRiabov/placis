@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The CMS — current design (look export)</title>
+<!--
+  Static design mock of The CMS as it looks in frontend-2 today, with glossary
+  labels. Open this file in a browser (no build).
+
+  Dev-only scene strip is not product UI; hide with ?shot=1.
+  Canvas is a fake homepage, not the contractor website renderer.
+  Ads detail lives in docs/features/ads/ad-generation/design/ads-workspace.html.
+-->
+<style>
+  @font-face {
+    font-family: "Satoshi";
+    src: url("../../../frontend-2/public/fonts/Satoshi-Variable.woff2") format("woff2");
+    font-weight: 300 900;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root {
+    --private-canvas: #ffffff;
+    --private-surface: #f7f7f7;
+    --private-surface-raised: #f4f4f5;
+    --private-surface-active: #e4e4e7;
+    --private-surface-sunken: #fafafa;
+    --private-text: #27272a;
+    --private-text-secondary: #52525b;
+    --private-text-muted: #71717a;
+    --private-text-subtle: #a1a1aa;
+    --private-border: #e4e4e7;
+    --private-border-strong: #d4d4d8;
+    --private-accent: #13120a;
+    --private-accent-hover: #27272a;
+    --private-focus: #13120a;
+    --private-accent-subtle: rgb(19 18 10 / 6%);
+    --private-accent-wash: rgb(19 18 10 / 6%);
+    --private-radius-control: 8px;
+    --private-radius-card: 12px;
+    --private-radius-panel: 16px;
+    --private-radius-pill: 999px;
+    --private-ring: 0 0 0 2px rgb(19 18 10 / 18%);
+    --private-shadow-sm: 0 4px 16px rgb(39 39 42 / 6%);
+    --private-shadow-md: 0 18px 48px rgb(39 39 42 / 10%);
+    --private-ease: cubic-bezier(0.2, 0, 0, 1);
+    --private-duration-fast: 120ms;
+    --private-duration: 160ms;
+    --cms-canvas: var(--private-canvas);
+    --cms-surface: var(--private-surface);
+    --cms-surface-raised: var(--private-surface-raised);
+    --cms-surface-active: var(--private-surface-active);
+    --cms-surface-sunken: var(--private-surface-sunken);
+    --cms-surface-overlay: #ffffff;
+    --cms-text: var(--private-text);
+    --cms-text-secondary: var(--private-text-secondary);
+    --cms-text-muted: var(--private-text-muted);
+    --cms-text-subtle: var(--private-text-subtle);
+    --cms-text-on-accent: #ffffff;
+    --cms-border: var(--private-border);
+    --cms-border-strong: var(--private-border-strong);
+    --cms-border-subtle: var(--private-surface-raised);
+    --cms-overlay-border: #e4e4e7;
+    --cms-overlay-text: #27272a;
+    --cms-overlay-text-muted: #71717a;
+    --cms-accent: var(--private-accent);
+    --cms-accent-hover: var(--private-accent-hover);
+    --cms-accent-subtle: var(--private-accent-subtle);
+    --cms-accent-wash: var(--private-accent-wash);
+    --cms-accent-wash-strong: rgba(19, 18, 10, 0.22);
+    --cms-accent-ring-color: rgba(19, 18, 10, 0.18);
+    --cms-accent-ring-inset: rgba(19, 18, 10, 0.12);
+    --cms-error: #b42318;
+    --cms-success: #166534;
+    --cms-success-strong: #166534;
+    --cms-success-border: rgba(22, 101, 52, 0.35);
+    --cms-success-surface: #f0fdf4;
+    --cms-warning: #a16207;
+    --cms-info: #1d4ed8;
+    --cms-radius-control: var(--private-radius-control);
+    --cms-radius-card: var(--private-radius-card);
+    --cms-radius-panel: var(--private-radius-panel);
+    --cms-radius-pill: var(--private-radius-pill);
+    --cms-shadow-sm: var(--private-shadow-sm);
+    --cms-shadow-md: var(--private-shadow-md);
+    --cms-ease: var(--private-ease);
+    --cms-duration-fast: var(--private-duration-fast);
+    --cms-duration: var(--private-duration);
+    --cms-disabled-opacity: 0.5;
+    --cms-preview-stage: var(--cms-canvas);
+    --cms-preview-stage-grid: rgba(39, 39, 42, 0.045);
+    --prompt-border: #e1e1e1;
+    --prompt-hairline: #e7e7e7;
+    --prompt-header: #fafafa;
+    --prompt-radius: 1.75rem;
+    --prompt-shadow: 0 10px 26px rgb(0 0 0 / 7%);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--cms-canvas);
+    color: var(--cms-text);
+    font-family: "Satoshi", "Helvetica Neue", Arial, sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+  button, input, select, textarea { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    outline: 2px solid var(--cms-border-strong);
+    outline-offset: 2px;
+  }
+  svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .is-hidden { display: none !important; }
+
+  /* Mock-only scene switcher (ads-workspace.html pattern). Not product UI. */
+  .viewtabs {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px dashed var(--cms-border-strong);
+    background: #fffbeb;
+    padding: 8px 16px;
+  }
+  .viewtabs-label {
+    color: var(--cms-warning);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .viewtab {
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-pill);
+    background: #fff;
+    color: var(--cms-text-muted);
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .viewtab.on {
+    border-color: var(--cms-accent);
+    background: var(--prompt-header);
+    color: var(--cms-text);
+    font-weight: 600;
+  }
+
+  .cms-dashboard-frame {
+    display: flex;
+    min-height: calc(100dvh - 41px);
+    min-width: 320px;
+    overflow: hidden;
+    background: var(--cms-canvas);
+  }
+  .cms-dashboard-sidebar {
+    position: relative;
+    z-index: 40;
+    display: flex;
+    width: 15rem;
+    flex: 0 0 auto;
+    border-right: 1px solid var(--cms-border);
+    background: var(--cms-surface);
+    transition: width 180ms ease;
+  }
+  .cms-dashboard-frame.is-collapsed .cms-dashboard-sidebar { width: 3rem; }
+  .cms-dashboard-sidebar-inner {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    padding: 0.75rem 0.5rem;
+  }
+  .cms-dashboard-sidebar-header {
+    display: flex;
+    height: 3rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .cms-dashboard-frame.is-collapsed .cms-dashboard-sidebar-header { justify-content: center; }
+  .cms-dashboard-brand {
+    min-width: 0;
+    overflow: hidden;
+    border: 0;
+    background: transparent;
+    color: var(--cms-text);
+    padding: 0 0.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .cms-dashboard-icon-button {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--cms-text-secondary);
+  }
+  .cms-dashboard-icon-button:hover { background: var(--cms-surface-active); color: var(--cms-text); }
+  .cms-dashboard-icon-button svg { width: 1.125rem; height: 1.125rem; }
+  .cms-dashboard-nav { display: grid; gap: 1px; }
+  .cms-dashboard-nav-item,
+  .cms-dashboard-nav-disclosure {
+    display: flex;
+    width: 100%;
+    min-height: 2rem;
+    align-items: center;
+    gap: 0.625rem;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--cms-text-secondary);
+    padding: 0.375rem 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.25;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .cms-dashboard-nav-item:hover,
+  .cms-dashboard-nav-disclosure:hover { background: var(--cms-surface-raised); color: var(--cms-text); }
+  .cms-dashboard-nav-item.is-active,
+  .cms-dashboard-nav-disclosure.is-active { background: var(--cms-surface-active); color: var(--cms-text); }
+  .cms-dashboard-nav-item svg,
+  .cms-dashboard-nav-disclosure svg { width: 1rem; height: 1rem; flex: 0 0 auto; }
+  .cms-dashboard-frame.is-collapsed .cms-dashboard-nav-item,
+  .cms-dashboard-frame.is-collapsed .cms-dashboard-nav-disclosure {
+    justify-content: center;
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .cms-dashboard-nav-children { display: grid; gap: 1px; padding: 0 0 4px 0.5rem; }
+  .cms-dashboard-nav-children .cms-dashboard-nav-item { padding-left: 0.75rem; font-weight: 450; }
+  .cms-dashboard-nav-disclosure .nav-chevron { margin-left: auto; width: 0.75rem; height: 0.75rem; }
+  .cms-dashboard-sidebar-spacer { min-height: 0; flex: 1 1 auto; }
+  .cms-dashboard-account-divider { border-top: 1px solid var(--cms-border); padding-top: 0.625rem; }
+  .cms-account-trigger {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.5rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--cms-text-secondary);
+    padding: 0.25rem;
+    text-align: left;
+  }
+  .cms-account-trigger:hover,
+  .cms-account-trigger[aria-expanded="true"] { background: var(--cms-surface-raised); }
+  .cms-account-copy { min-width: 0; flex: 1; }
+  .cms-account-name { display: block; font-size: 0.75rem; font-weight: 500; }
+  .cms-account-meta { display: block; color: var(--cms-text-muted); font-size: 0.6875rem; }
+  .cms-user-avatar {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid #fff;
+    border-radius: var(--cms-radius-pill);
+    background: #e4e4e4;
+    color: #767676;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .cms-account-popover {
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 3.5rem;
+    z-index: 80;
+    width: auto;
+    border: 1px solid var(--cms-overlay-border);
+    border-radius: 0.75rem;
+    background: #fff;
+    padding: 0.5rem;
+    box-shadow: 0 18px 48px rgb(0 0 0 / 12%);
+  }
+  .cms-account-popover button {
+    display: flex;
+    width: 100%;
+    min-height: 2rem;
+    align-items: center;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--cms-overlay-text-muted);
+    padding: 0 0.5625rem;
+    font-size: 0.75rem;
+    text-align: left;
+  }
+  .cms-account-popover button:hover { background: var(--cms-surface-raised); }
+  .cms-account-sep { height: 1px; margin: 0.375rem 0; background: var(--cms-border); }
+  .cms-dashboard-main-column {
+    display: flex;
+    min-width: 0;
+    min-height: calc(100dvh - 41px);
+    flex: 1 1 auto;
+    flex-direction: column;
+    background: #ffffff;
+  }
+  .cms-dashboard-main-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: auto;
+  }
+
+  .cms-dashboard-prompt-wrap {
+    display: flex;
+    min-height: 100%;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    padding: 4rem 1rem 5.5rem;
+  }
+  .cms-dashboard-wordmark {
+    margin: 0;
+    font-size: 2.25rem;
+    font-weight: 300;
+    letter-spacing: -0.06em;
+    line-height: 1;
+  }
+  .cms-dashboard-prompt {
+    width: min(100%, 36rem);
+    overflow: hidden;
+    border: 1px solid var(--prompt-border);
+    border-radius: var(--prompt-radius);
+    background: #fff;
+    box-shadow: var(--prompt-shadow);
+  }
+  .cms-dashboard-prompt-label {
+    border-bottom: 1px solid var(--prompt-hairline);
+    background: var(--prompt-header);
+    color: var(--cms-text-muted);
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    text-align: center;
+  }
+  .cms-dashboard-prompt textarea {
+    display: block;
+    width: 100%;
+    min-height: 5.5rem;
+    resize: vertical;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--cms-text);
+    padding: 1rem 1.125rem 0.625rem;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+  .cms-dashboard-prompt textarea::placeholder { color: var(--cms-text-subtle); }
+  .cms-dashboard-prompt-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem 0.75rem;
+  }
+  .cms-dashboard-prompt-left-actions,
+  .cms-dashboard-prompt-right-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .cms-dashboard-prompt-icon,
+  .cms-dashboard-prompt-send {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    border-radius: 999px;
+  }
+  .cms-dashboard-prompt-icon {
+    border: 1px solid #e4e4e4;
+    background: #fff;
+    color: var(--cms-text);
+  }
+  .cms-dashboard-prompt-icon:hover { border-color: #cfcfcf; background: #f7f7f7; }
+  .cms-dashboard-prompt-send { border: 1px solid #13120a; background: #13120a; color: #fff; }
+  .cms-dashboard-prompt-icon svg,
+  .cms-dashboard-prompt-send svg { width: 1.125rem; height: 1.125rem; }
+
+  .cms-editor-page { display: flex; min-height: 100%; flex-direction: column; background: var(--cms-canvas); }
+  .cms-editor-header {
+    z-index: 30;
+    border-bottom: 1px solid var(--cms-border-subtle);
+    background: color-mix(in srgb, var(--cms-canvas) 94%, var(--cms-surface));
+    padding: 12px 16px;
+  }
+  .cms-editor-header-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    max-width: 1580px;
+    margin: 0 auto;
+  }
+  .cms-back-to-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    background: transparent;
+    color: var(--cms-text-muted);
+    padding: 0;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .cms-back-to-home svg { width: 12px; height: 12px; }
+  .cms-editor-header h1 {
+    margin: 4px 0 0;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .cms-editor-header-controls,
+  .cms-editor-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cms-editor-header-actions { justify-content: flex-end; }
+  .cms-viewport-control {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-pill);
+    background: var(--cms-surface-sunken);
+    padding: 3px;
+  }
+  .cms-viewport-control button,
+  .cms-viewport-solo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--cms-text-muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--cms-radius-pill);
+  }
+  .cms-viewport-control button.is-active,
+  .cms-viewport-solo.is-active {
+    background: var(--cms-surface-raised);
+    color: var(--cms-text);
+    box-shadow: 0 0 0 1px var(--cms-border);
+  }
+  .cms-viewport-solo { border: 1px solid var(--cms-border); background: var(--cms-surface-sunken); }
+  .button-primary,
+  .button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: var(--cms-radius-control);
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .button-primary { border: 0; background: var(--cms-accent); color: var(--cms-text-on-accent); }
+  .button-primary:hover { background: var(--cms-accent-hover); }
+  .button-secondary {
+    border: 1px solid var(--cms-border-strong);
+    background: var(--cms-surface-raised);
+    color: var(--cms-text);
+  }
+  .cms-publication { position: relative; }
+  .cms-publication-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 40;
+    width: 320px;
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-card);
+    background: #fff;
+    padding: 10px;
+    box-shadow: var(--cms-shadow-md);
+  }
+  .cms-publication-row {
+    display: grid;
+    gap: 2px;
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .cms-publication-row:hover { background: var(--cms-surface-raised); }
+  .cms-publication-row b { font-size: 13px; }
+  .cms-publication-row span { color: var(--cms-text-muted); font-size: 11px; }
+  .cms-publication-row.is-blocked { opacity: 0.55; }
+
+  .cms-editor-layout {
+    display: grid;
+    grid-template-columns: 332px minmax(0, 1fr) 370px;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+  .cms-workspace {
+    display: grid;
+    grid-template-columns: 60px minmax(0, 1fr);
+    min-height: 0;
+    overflow: hidden;
+    border-right: 1px solid var(--cms-border-subtle);
+    background: var(--cms-surface);
+  }
+  .cms-workspace-rail {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    border-right: 1px solid var(--cms-border-subtle);
+    background: var(--cms-surface-raised);
+    padding: 12px 7px;
+  }
+  .cms-workspace-rail-button {
+    display: grid;
+    height: 54px;
+    width: 100%;
+    place-items: center;
+    gap: 3px;
+    border: 1px solid transparent;
+    border-radius: var(--cms-radius-control);
+    background: transparent;
+    color: var(--cms-text-muted);
+  }
+  .cms-workspace-rail-button span {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .cms-workspace-rail-button:hover,
+  .cms-workspace-rail-button.is-active {
+    border-color: var(--cms-border);
+    background: var(--cms-accent-subtle);
+    color: var(--cms-accent);
+    box-shadow: inset 0 0 0 1px var(--cms-accent-ring-inset);
+  }
+  .cms-workspace-rail-button svg { width: 18px; height: 18px; }
+  .cms-workspace-panel { min-width: 0; overflow: auto; padding: 12px; }
+  .cms-panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .cms-page-list { display: grid; gap: 2px; }
+  .cms-page-item {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--cms-text);
+    padding: 8px 10px;
+    font-size: 13px;
+    text-align: left;
+  }
+  .cms-page-item.is-selected,
+  .cms-page-item:hover { background: var(--cms-surface-active); }
+  .cms-page-item small { color: var(--cms-text-muted); font-size: 11px; }
+  .cms-panel-hint { margin: 12px 0 0; color: var(--cms-text-muted); font-size: 11px; line-height: 1.4; }
+  .cms-utility-label {
+    margin: 14px 0 4px;
+    color: var(--cms-text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .cms-media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cms-media-tile {
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: #d4d4d8;
+    min-height: 72px;
+    cursor: pointer;
+  }
+  .cms-media-tile.is-selected { border-color: var(--cms-accent); box-shadow: inset 0 0 0 1px var(--cms-accent); }
+  .cms-media-tile:nth-child(1) { background: linear-gradient(135deg, #c4b5a0, #8a7a66); }
+  .cms-media-tile:nth-child(2) { background: linear-gradient(135deg, #9aa7b3, #5d6b78); }
+  .cms-media-tile:nth-child(3) { background: linear-gradient(135deg, #b7c4a3, #6f7d5c); }
+  .cms-media-tile:nth-child(4) { background: linear-gradient(135deg, #d7c3b0, #a89078); }
+  .cms-upload {
+    margin-top: 10px;
+    border: 1px dashed var(--cms-border-strong);
+    border-radius: 10px;
+    color: var(--cms-text-muted);
+    padding: 12px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .cms-theme-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    border: 1px solid var(--cms-border);
+    border-radius: 10px;
+    background: var(--cms-surface-overlay);
+    padding: 10px;
+  }
+  .cms-swatches { display: flex; gap: 4px; margin-top: 6px; }
+  .cms-swatches span { width: 12px; height: 12px; border-radius: 99px; border: 1px solid rgb(0 0 0 / 10%); }
+  .cms-nav-link-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-card);
+    background: var(--cms-surface-overlay);
+    padding: 8px 10px;
+  }
+  .cms-nav-link-row input {
+    min-width: 0;
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: var(--cms-text);
+    font-size: 13px;
+  }
+
+  .cms-editor-canvas { min-width: 0; overflow: auto; }
+  .cms-stage-grid {
+    min-height: 100%;
+    background-color: var(--cms-preview-stage);
+    background-image:
+      linear-gradient(var(--cms-preview-stage-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--cms-preview-stage-grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+    padding: 24px;
+  }
+  .cms-public-preview-shell {
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: var(--cms-radius-panel);
+    background: var(--cms-surface-overlay);
+    box-shadow: var(--cms-shadow-md);
+    transition: max-width 160ms var(--cms-ease);
+  }
+  .cms-public-preview-shell.is-desktop { max-width: 1080px; }
+  .cms-public-preview-shell.is-tablet { max-width: 760px; }
+  .cms-public-preview-shell.is-mobile { max-width: 390px; }
+  .cms-browser-chrome {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--cms-border);
+    background: var(--cms-surface-raised);
+    padding: 9px 14px;
+  }
+  .cms-browser-chrome-dots { display: flex; gap: 6px; }
+  .cms-browser-chrome-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--cms-border-strong); }
+  .cms-browser-chrome-url {
+    flex: 1;
+    overflow: hidden;
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-pill);
+    background: #fff;
+    color: var(--cms-text-muted);
+    padding: 5px 12px;
+    font-size: 11px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .fake-site { color: #1c1917; font-family: "Georgia", "Times New Roman", serif; }
+  .fake-top-menu {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: #1f2933;
+    color: #f5f1ea;
+    padding: 14px 28px;
+    font-family: "Satoshi", sans-serif;
+    font-size: 13px;
+  }
+  .fake-top-menu b { font-size: 15px; letter-spacing: -0.02em; }
+  .fake-top-menu span { color: #d6d3cd; }
+  .fake-top-menu .cta {
+    margin-left: auto;
+    border-radius: 999px;
+    background: #c4a574;
+    color: #1c1917;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .fake-hero {
+    background:
+      linear-gradient(180deg, rgb(28 25 23 / 35%), rgb(28 25 23 / 55%)),
+      linear-gradient(135deg, #8a7a66, #c4b5a0);
+    color: #fff;
+    padding: 72px 36px;
+  }
+  .fake-hero p { margin: 0 0 10px; font-family: "Satoshi", sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .fake-hero h2 { margin: 0 0 12px; font-size: 42px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; }
+  .fake-hero .lede { max-width: 28rem; font-size: 16px; line-height: 1.5; opacity: 0.92; }
+  .fake-services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 36px; }
+  .fake-services article { border: 1px solid #e7e5e4; border-radius: 12px; padding: 18px; }
+  .fake-services h3 { margin: 0 0 8px; font-size: 18px; }
+  .fake-services p { margin: 0; color: #57534e; font-family: "Satoshi", sans-serif; font-size: 13px; line-height: 1.45; }
+  .fake-reviews { background: #fafaf9; padding: 36px; }
+  .fake-reviews h3 { margin: 0 0 16px; }
+  .fake-reviews blockquote { margin: 0 0 12px; color: #44403c; font-size: 15px; }
+  .fake-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    background: #1f2933;
+    color: #d6d3cd;
+    padding: 28px;
+    font-family: "Satoshi", sans-serif;
+    font-size: 12px;
+  }
+  .canvas-block { cursor: pointer; outline: 2px solid transparent; outline-offset: -2px; }
+  .canvas-block:hover { outline-color: rgb(19 18 10 / 25%); }
+  .canvas-block.is-selected { outline-color: var(--cms-accent); }
+
+  .cms-editing-panel {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    border-left: 1px solid var(--cms-border-subtle);
+    background: var(--cms-surface);
+  }
+  .cms-editing-panel-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    overflow: hidden;
+    margin: 12px 12px 0;
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-card);
+    background: var(--cms-surface-raised);
+  }
+  .cms-editing-panel-tab {
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--cms-text-muted);
+    padding: 9px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: lowercase;
+  }
+  .cms-editing-panel-tab:hover { background: var(--cms-surface-active); color: var(--cms-text); }
+  .cms-editing-panel-tab.is-active {
+    background: var(--cms-accent);
+    color: var(--cms-text-on-accent);
+  }
+  .cms-editing-panel-body { min-height: 0; overflow: auto; padding: 16px; }
+  .cms-field { display: grid; gap: 6px; margin-bottom: 14px; }
+  .cms-field-label {
+    color: var(--cms-text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .cms-field-control,
+  .cms-careers-input,
+  .cms-careers-textarea {
+    width: 100%;
+    border: 1px solid var(--cms-border);
+    border-radius: 10px;
+    background: var(--cms-surface-sunken);
+    color: var(--cms-text);
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .cms-careers-textarea { min-height: 88px; resize: vertical; }
+  .cms-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .cms-section-head p { margin: 0; }
+  .cms-section-head small { color: var(--cms-text-muted); }
+  .cms-icon-row { display: flex; gap: 6px; }
+  .cms-icon-button {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border: 1px solid var(--cms-border-strong);
+    border-radius: 8px;
+    background: var(--cms-surface-raised);
+    color: var(--cms-text);
+  }
+  .cms-add-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 12px; }
+  .cms-small-button {
+    min-height: 28px;
+    border: 1px solid var(--cms-border-strong);
+    border-radius: var(--cms-radius-control);
+    background: var(--cms-surface);
+    color: var(--cms-text);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 0 8px;
+  }
+  .cms-visibility { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .cms-toggle {
+    position: relative;
+    display: inline-flex;
+    width: 40px;
+    height: 24px;
+    align-items: center;
+    padding: 3px;
+    border: 1px solid var(--cms-border-strong);
+    border-radius: var(--cms-radius-pill);
+    background: var(--cms-success-strong);
+  }
+  .cms-toggle span {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--cms-success);
+    transform: translateX(16px);
+  }
+  .cms-version-card {
+    border: 1px solid var(--cms-border);
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  .cms-version-card strong { display: block; font-size: 13px; }
+  .cms-version-card span { color: var(--cms-text-muted); font-size: 11px; }
+
+  .cms-modal-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    background: rgb(0 0 0 / 40%);
+    padding: 16px;
+  }
+  .cms-modal {
+    width: min(100%, 32rem);
+    display: grid;
+    gap: 12px;
+    border: 1px solid var(--cms-border);
+    border-radius: 12px;
+    background: var(--cms-surface-overlay);
+    padding: 16px;
+  }
+  .cms-modal h2 { margin: 0; font-size: 15px; }
+  .cms-modal-actions { display: flex; gap: 8px; }
+
+  .cms-details-editor { padding: 28px clamp(24px, 4vw, 64px) 56px; }
+  .cms-details-content { width: 100%; max-width: 1280px; margin: 0 auto; }
+  .cms-collection-header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    border-bottom: 1px solid var(--cms-border);
+    padding: 0 0 22px;
+  }
+  .cms-collection-header-icon {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-pill);
+    background: #fff;
+    color: var(--cms-text-secondary);
+  }
+  .cms-collection-eyebrow {
+    color: var(--cms-text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+  .cms-collection-header h2 { margin: 0; font-size: 21px; font-weight: 600; letter-spacing: -0.025em; }
+  .cms-collection-header p { margin: 4px 0 0; max-width: 620px; color: var(--cms-text-muted); font-size: 13px; line-height: 1.5; }
+  .cms-collection-header-meta { margin-top: 7px; color: var(--cms-text-subtle); font-size: 11px; }
+  .cms-collection-header-actions { display: flex; gap: 8px; }
+  .cms-collection-pill {
+    display: inline-flex;
+    min-height: 22px;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--cms-success-surface);
+    color: var(--cms-success);
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .cms-details-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+    gap: 28px;
+    align-items: start;
+    margin-top: 24px;
+  }
+  .cms-details-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .cms-details-form-panel {
+    display: grid;
+    gap: 18px;
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-card);
+    background: #fff;
+    padding: 20px;
+  }
+  .cms-details-panel-heading h3 { margin: 0; font-size: 17px; font-weight: 600; }
+  .cms-details-panel-heading p { margin: 5px 0 0; color: var(--cms-text-muted); font-size: 12px; }
+  .cms-details-field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }
+  .cms-details-form-panel label { display: grid; gap: 6px; }
+  .cms-details-form-panel label > span {
+    color: var(--cms-text-muted);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
+  }
+  .cms-collection-context-card {
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-card);
+    background: #fff;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .cms-collection-context-card h3 { margin: 0; font-size: 15px; }
+  .cms-collection-context-card > p { margin: 4px 0 12px; color: var(--cms-text-muted); font-size: 12px; }
+  .cms-collection-usage-item,
+  .cms-collection-checklist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 0;
+    border-top: 1px solid var(--cms-border-subtle);
+    font-size: 12px;
+  }
+  .cms-collection-usage-item span:last-child,
+  .cms-collection-checklist-item span:last-child { color: var(--cms-text-muted); }
+  .cms-details-readiness-summary { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  .cms-details-progress { height: 6px; border-radius: 99px; background: var(--cms-surface-active); overflow: hidden; }
+  .cms-details-progress span { display: block; width: 83%; height: 100%; background: var(--cms-accent); }
+  .cms-variable-token-row { display: flex; flex-wrap: wrap; gap: 4px; }
+  .cms-variable-token {
+    display: inline-flex;
+    min-height: 20px;
+    align-items: center;
+    border: 1px solid var(--cms-accent-wash-strong);
+    border-radius: var(--cms-radius-pill);
+    background: var(--cms-accent-wash);
+    color: var(--cms-accent);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+  }
+  .cms-project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+  .cms-project-card {
+    overflow: hidden;
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-radius-card);
+    background: #fff;
+  }
+  .cms-project-photo { height: 140px; background: linear-gradient(135deg, #c4b5a0, #8a7a66); }
+  .cms-project-card:nth-child(2) .cms-project-photo { background: linear-gradient(135deg, #9aa7b3, #5d6b78); }
+  .cms-project-card:nth-child(3) .cms-project-photo { background: linear-gradient(135deg, #b7c4a3, #6f7d5c); }
+  .cms-project-card .pad { padding: 14px; }
+  .cms-project-card h3 { margin: 0 0 6px; font-size: 15px; }
+  .cms-project-card p { margin: 0; color: var(--cms-text-muted); font-size: 12px; }
+  .cms-ads-list { width: min(100% - 48px, 960px); margin: 32px auto; }
+  .cms-ads-list h1 { margin: 0 0 8px; font-size: 21px; }
+  .cms-adcard {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    border: 1px solid var(--prompt-border);
+    border-radius: var(--prompt-radius);
+    background: #fff;
+    box-shadow: var(--prompt-shadow);
+    padding: 16px;
+  }
+  .cms-adcard-art { width: 96px; height: 96px; border-radius: 12px; background: linear-gradient(135deg, #c4b5a0, #8a7a66); }
+  .note { color: var(--cms-text-muted); font-size: 13px; }
+
+  @media (max-width: 1100px) {
+    .cms-editor-layout { grid-template-columns: 280px minmax(0, 1fr); }
+    .cms-editing-panel { grid-column: 1 / -1; }
+    .cms-details-form-grid,
+    .cms-details-workspace,
+    .cms-project-grid { grid-template-columns: 1fr; }
+    .cms-editor-header-inner { grid-template-columns: 1fr; }
+    .cms-editor-header-actions { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+  <!-- Mock-only: scene switcher for reviewing this HTML. Not product UI.
+       Hidden when ?shot=1. Product destinations are the left nav. -->
+  <div class="viewtabs" id="viewtabs" role="note" aria-label="Developer scene switcher, not part of the product">
+    <span class="viewtabs-label">Dev only</span>
+    <button type="button" class="viewtab on" data-scene="home">New chat</button>
+    <button type="button" class="viewtab" data-scene="website">Website editor</button>
+    <button type="button" class="viewtab" data-scene="details">Business details</button>
+    <button type="button" class="viewtab" data-scene="projects">Projects</button>
+    <button type="button" class="viewtab" data-scene="certifications">Certifications and reviews</button>
+    <button type="button" class="viewtab" data-scene="media">Media library</button>
+    <button type="button" class="viewtab" data-scene="ads">Ads</button>
+  </div>
+
+  <div class="cms-dashboard-frame" id="frame">
+    <aside class="cms-dashboard-sidebar" aria-label="The CMS">
+      <div class="cms-dashboard-sidebar-inner">
+        <div class="cms-dashboard-sidebar-header">
+          <button class="cms-dashboard-brand js-expanded-only" data-scene="home" type="button">Placis</button>
+          <button class="cms-dashboard-icon-button" id="sidebarToggle" type="button" aria-label="Collapse sidebar">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
+          </button>
+        </div>
+        <nav class="cms-dashboard-nav">
+          <button class="cms-dashboard-nav-item is-active" data-nav="home" data-scene="home" type="button">
+            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+            <span class="js-expanded-only">New chat</span>
+          </button>
+          <button class="cms-dashboard-nav-item" data-nav="website" data-scene="website" type="button">
+            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+            <span class="js-expanded-only">Sites</span>
+          </button>
+          <button class="cms-dashboard-nav-disclosure" id="profileToggle" type="button" aria-expanded="false">
+            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-7h6v7"/></svg>
+            <span class="js-expanded-only">Profile</span>
+            <svg class="nav-chevron js-expanded-only" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="cms-dashboard-nav-children js-expanded-only is-hidden" id="profileChildren">
+            <button class="cms-dashboard-nav-item" data-nav="details" data-scene="details" type="button">Business details</button>
+            <button class="cms-dashboard-nav-item" data-nav="projects" data-scene="projects" type="button">Projects</button>
+            <button class="cms-dashboard-nav-item" data-nav="certifications" data-scene="certifications" type="button">Certifications and reviews</button>
+          </div>
+          <button class="cms-dashboard-nav-item" data-nav="ads" data-scene="ads" type="button">
+            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M4 8h10l6-4v16l-6-4H4z"/></svg>
+            <span class="js-expanded-only">Ads</span>
+          </button>
+        </nav>
+        <div class="cms-dashboard-sidebar-spacer"></div>
+        <div class="cms-dashboard-account js-expanded-only">
+          <div class="cms-dashboard-account-divider">
+            <button class="cms-account-trigger" id="accountToggle" type="button" aria-expanded="false" aria-label="Open account menu">
+              <span class="cms-account-copy">
+                <span class="cms-account-name">Bellfield Roofing</span>
+                <span class="cms-account-meta">Owner</span>
+              </span>
+              <span class="cms-user-avatar">BR</span>
+            </button>
+            <div class="cms-account-popover is-hidden" id="accountPopover">
+              <button type="button">Settings</button>
+              <button type="button">Clerk organization</button>
+              <div class="cms-account-sep"></div>
+              <button type="button">Log out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="cms-dashboard-main-column">
+      <main class="cms-dashboard-main-content">
+
+        <section class="cms-dashboard-prompt-wrap" data-view="home">
+          <h1 class="cms-dashboard-wordmark">placis</h1>
+          <form class="cms-dashboard-prompt" id="homePrompt">
+            <div class="cms-dashboard-prompt-label">Upgrade to Placis Pro</div>
+            <textarea rows="2" placeholder="Describe what you want Placis to build..." aria-label="Describe what you want Placis to build"></textarea>
+            <div class="cms-dashboard-prompt-actions">
+              <div class="cms-dashboard-prompt-left-actions">
+                <button class="cms-dashboard-prompt-icon" type="button" aria-label="Attach a photo">
+                  <svg viewBox="0 0 24 24"><path d="M21.4 11.4 12 20.8a6 6 0 0 1-8.5-8.5l9.4-9.4a4 4 0 0 1 5.7 5.7L9.2 17.9a2 2 0 1 1-2.8-2.8l8.5-8.5"/></svg>
+                </button>
+                <button class="cms-dashboard-prompt-icon" type="button" aria-label="Voice">
+                  <svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>
+                </button>
+              </div>
+              <div class="cms-dashboard-prompt-right-actions">
+                <button class="cms-dashboard-prompt-send" type="submit" aria-label="Send to the website assistant">
+                  <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <div class="cms-editor-page is-hidden" data-view="website">
+          <header class="cms-editor-header">
+            <div class="cms-editor-header-inner">
+              <div>
+                <button class="cms-back-to-home" data-scene="home" type="button">
+                  <svg viewBox="0 0 24 24"><path d="M15 18 9 12l6-6"/></svg>
+                  Home
+                </button>
+                <h1>Website editor</h1>
+              </div>
+              <div class="cms-editor-header-controls">
+                <button class="cms-viewport-solo" id="assistantToggle" type="button" aria-label="Website assistant">
+                  <svg width="15" height="15" viewBox="0 0 24 24"><path d="m12 3 1.6 4.8L18 9.4l-4.4 1.6L12 16l-1.6-5L6 9.4l4.4-1.6z"/></svg>
+                  <span>Website assistant</span>
+                </button>
+                <div class="cms-viewport-control" role="group" aria-label="Canvas width">
+                  <button class="is-active" data-viewport="desktop" type="button">Desktop</button>
+                  <button data-viewport="tablet" type="button">Tablet</button>
+                  <button data-viewport="mobile" type="button">Mobile</button>
+                </div>
+              </div>
+              <div class="cms-editor-header-actions">
+                <div class="cms-publication">
+                  <button class="button-primary" id="publicationToggle" type="button" aria-expanded="false">Website publication</button>
+                  <div class="cms-publication-panel is-hidden" id="publicationPanel">
+                    <button class="cms-publication-row" type="button">
+                      <b>acme-roofing-dublin.placis.com</b>
+                      <span>Website address · last website publication 2 days ago</span>
+                    </button>
+                    <button class="cms-publication-row is-blocked" type="button">
+                      <b>acme.ie</b>
+                      <span>Custom website address · waiting for DNS</span>
+                    </button>
+                    <button class="cms-publication-row" id="connectUrl" type="button">
+                      <b>New URL</b>
+                      <span>Connect website address</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="cms-editor-layout">
+            <aside class="cms-workspace" aria-label="Workspace">
+              <div class="cms-workspace-rail">
+                <button class="cms-workspace-rail-button is-active" data-rail="pages" type="button" title="Website pages">
+                  <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                  <span>Website pages</span>
+                </button>
+                <button class="cms-workspace-rail-button" data-rail="media" type="button" title="Media library">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 15-5-5-7 7"/></svg>
+                  <span>Media library</span>
+                </button>
+                <button class="cms-workspace-rail-button" data-rail="styles" type="button" title="Website styles">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>
+                  <span>Website styles</span>
+                </button>
+                <button class="cms-workspace-rail-button" data-rail="top-menu" type="button" title="Top menu">
+                  <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+                  <span>Top menu</span>
+                </button>
+                <button class="cms-workspace-rail-button" data-rail="footer" type="button" title="Footer">
+                  <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 16h16"/></svg>
+                  <span>Footer</span>
+                </button>
+              </div>
+              <div class="cms-workspace-panel">
+                <div data-rail-panel="pages">
+                  <div class="cms-panel-title">
+                    <span>Website pages</span>
+                    <button class="cms-icon-button" type="button" aria-label="Add a website page">
+                      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                  </div>
+                  <div class="cms-page-list">
+                    <button class="cms-page-item is-selected" data-page="home" type="button">Home <small>/</small></button>
+                    <button class="cms-page-item" data-page="services" type="button">Roof repairs <small>/roof-repairs</small></button>
+                    <button class="cms-page-item" data-page="contact" type="button">Contact <small>/contact</small></button>
+                  </div>
+                  <p class="cms-utility-label">Legal</p>
+                  <div class="cms-page-list">
+                    <button class="cms-page-item" data-page="privacy" type="button">Privacy <small>/privacy</small></button>
+                  </div>
+                  <p class="cms-panel-hint">Select a website page to edit it on the canvas.</p>
+                </div>
+                <div class="is-hidden" data-rail-panel="media">
+                  <div class="cms-panel-title"><span>Media library</span></div>
+                  <div class="cms-media-grid">
+                    <button class="cms-media-tile is-selected" type="button" aria-label="Job photo 1"></button>
+                    <button class="cms-media-tile" type="button" aria-label="Job photo 2"></button>
+                    <button class="cms-media-tile" type="button" aria-label="Job photo 3"></button>
+                    <button class="cms-media-tile" type="button" aria-label="Logo"></button>
+                  </div>
+                  <div class="cms-upload">Drop files here to upload to the media library</div>
+                  <p class="cms-panel-hint">Same media library as the full-screen view. Drag a photo onto a website slot on the canvas.</p>
+                </div>
+                <div class="is-hidden" data-rail-panel="styles">
+                  <div class="cms-panel-title"><span>Website styles</span></div>
+                  <div class="cms-theme-card">
+                    <div>
+                      <strong>Navy &amp; Cream</strong>
+                      <div class="cms-swatches">
+                        <span style="background:#1f2933"></span>
+                        <span style="background:#f5f1ea"></span>
+                        <span style="background:#c4a574"></span>
+                      </div>
+                    </div>
+                    <button class="button-secondary" type="button" disabled>Applied</button>
+                  </div>
+                  <div class="cms-theme-card">
+                    <div>
+                      <strong>Timbermill Classic</strong>
+                      <div class="cms-swatches">
+                        <span style="background:#3f2e1f"></span>
+                        <span style="background:#efe6d6"></span>
+                        <span style="background:#b45309"></span>
+                      </div>
+                    </div>
+                    <button class="cms-small-button" type="button">Apply</button>
+                  </div>
+                </div>
+                <div class="is-hidden" data-rail-panel="top-menu">
+                  <div class="cms-panel-title"><span>Top menu</span></div>
+                  <div class="cms-nav-link-row"><input value="Home" aria-label="Top menu label" /><span class="cms-toggle" aria-hidden="true"><span></span></span></div>
+                  <div class="cms-nav-link-row"><input value="Services" aria-label="Top menu label" /><span class="cms-toggle" aria-hidden="true"><span></span></span></div>
+                  <div class="cms-nav-link-row"><input value="Contact" aria-label="Top menu label" /><span class="cms-toggle" aria-hidden="true"><span></span></span></div>
+                  <div class="cms-field" style="margin-top:12px">
+                    <span class="cms-field-label">Marketing phone on the top menu</span>
+                    <input class="cms-field-control" value="01 555 0199" />
+                  </div>
+                  <p class="cms-panel-hint">Depth 2: bar plus one dropdown. Look (logo, density) is the site-wide top-menu website section.</p>
+                </div>
+                <div class="is-hidden" data-rail-panel="footer">
+                  <div class="cms-panel-title"><span>Footer</span></div>
+                  <div class="cms-nav-link-row"><input value="Privacy" aria-label="Footer label" /><span class="cms-toggle" aria-hidden="true"><span></span></span></div>
+                  <div class="cms-nav-link-row"><input value="Terms" aria-label="Footer label" /><span class="cms-toggle" aria-hidden="true"><span></span></span></div>
+                  <div class="cms-field" style="margin-top:12px">
+                    <span class="cms-field-label">Marketing email on the footer</span>
+                    <input class="cms-field-control" value="hello@acme.ie" />
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <div class="cms-editor-canvas">
+              <div class="cms-stage-grid">
+                <div class="cms-public-preview-shell is-desktop" id="canvasFrame">
+                  <div class="cms-browser-chrome">
+                    <div class="cms-browser-chrome-dots"><span></span><span></span><span></span></div>
+                    <div class="cms-browser-chrome-url">acme-roofing-dublin.placis.com</div>
+                  </div>
+                  <div class="fake-site">
+                    <div class="fake-top-menu canvas-block" data-section="top-menu">
+                      <b>Bellfield Roofing</b>
+                      <span>Home</span><span>Services</span><span>Contact</span>
+                      <span class="cta">01 555 0199</span>
+                    </div>
+                    <div class="fake-hero canvas-block is-selected" data-section="hero">
+                      <p>Dublin roofing</p>
+                      <h2>Roofs that keep Irish weather out.</h2>
+                      <p class="lede">Repairs, re-roofs, and emergency call-outs across Dublin and North County.</p>
+                    </div>
+                    <div class="fake-services canvas-block" data-section="services">
+                      <article><h3>Roof repairs</h3><p>Slate, tile, and flat roof repairs without a full strip.</p></article>
+                      <article><h3>New roofs</h3><p>Re-roofs with a workmanship guarantee on every job.</p></article>
+                      <article><h3>Guttering</h3><p>Cleaning, replacement, and fascia upgrades.</p></article>
+                    </div>
+                    <div class="fake-reviews canvas-block" data-section="reviews">
+                      <h3>What neighbours wrote</h3>
+                      <blockquote>“On the roof the next morning after the storm. Clean site, fair price.” — Aoife K.</blockquote>
+                      <blockquote>“Replaced the back slope and left the garden better than they found it.” — Mark D.</blockquote>
+                    </div>
+                    <div class="fake-footer canvas-block" data-section="footer">
+                      <div>Bellfield Roofing · Dublin<br />01 555 0199 · hello@acme.ie</div>
+                      <div>Privacy · Terms</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="cms-editing-panel" aria-label="Editing panel">
+              <div class="cms-editing-panel-tabs" role="tablist">
+                <button class="cms-editing-panel-tab is-active" data-panel-tab="content" type="button" role="tab" aria-label="Website slots">Content</button>
+                <button class="cms-editing-panel-tab" data-panel-tab="design" type="button" role="tab">Design</button>
+                <button class="cms-editing-panel-tab" data-panel-tab="seo" type="button" role="tab">SEO</button>
+                <button class="cms-editing-panel-tab" data-panel-tab="forms" type="button" role="tab">Website forms</button>
+                <button class="cms-editing-panel-tab" data-panel-tab="versions" type="button" role="tab">Website versions</button>
+              </div>
+              <div class="cms-editing-panel-body">
+                <div data-panel="content">
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="sectionSelect">Website section</label>
+                    <select class="cms-field-control" id="sectionSelect">
+                      <option value="hero" selected>Hero</option>
+                      <option value="services">Services</option>
+                      <option value="reviews">Reviews</option>
+                      <option value="top-menu">Top menu</option>
+                      <option value="footer">Footer</option>
+                    </select>
+                  </div>
+                  <div class="cms-section-head">
+                    <div>
+                      <p id="sectionLabel">Hero</p>
+                      <small>Website section 1 of 5</small>
+                    </div>
+                    <div class="cms-icon-row">
+                      <button class="cms-icon-button" type="button" aria-label="Move website section up"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button>
+                      <button class="cms-icon-button" type="button" aria-label="Move website section down"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                    </div>
+                  </div>
+                  <div class="cms-add-row">
+                    <select class="cms-field-control" aria-label="Website component to add">
+                      <option>Hero</option>
+                      <option>Gallery</option>
+                      <option>Reviews</option>
+                    </select>
+                    <button class="cms-small-button" type="button">Add below</button>
+                  </div>
+                  <div class="cms-visibility">
+                    <span class="cms-field-label">Visible</span>
+                    <span class="cms-toggle" role="switch" aria-checked="true"><span></span></span>
+                  </div>
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="slotHeadline">Headline</label>
+                    <input class="cms-field-control" id="slotHeadline" value="Roofs that keep Irish weather out." />
+                  </div>
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="slotBody">Body</label>
+                    <textarea class="cms-careers-textarea" id="slotBody">Repairs, re-roofs, and emergency call-outs across Dublin and North County.</textarea>
+                  </div>
+                  <div class="cms-field">
+                    <span class="cms-field-label">Image website slot</span>
+                    <div class="cms-media-tile" style="min-height:88px"></div>
+                  </div>
+                </div>
+                <div class="is-hidden" data-panel="design">
+                  <div class="cms-field">
+                    <span class="cms-field-label">Design controls</span>
+                    <label class="cms-field-label" for="heroLayout">Layout</label>
+                    <select class="cms-field-control" id="heroLayout">
+                      <option>Split</option>
+                      <option>Stacked</option>
+                    </select>
+                  </div>
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="heroAlign">Alignment</label>
+                    <select class="cms-field-control" id="heroAlign">
+                      <option>Left</option>
+                      <option>Center</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="is-hidden" data-panel="seo">
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="pageTitle">Website page title</label>
+                    <input class="cms-field-control" id="pageTitle" value="Bellfield Roofing | Dublin" />
+                  </div>
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="pagePath">Website page path</label>
+                    <input class="cms-field-control" id="pagePath" value="/" />
+                  </div>
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="seoDesc">Description</label>
+                    <textarea class="cms-careers-textarea" id="seoDesc">Dublin roofing repairs, re-roofs, and guttering.</textarea>
+                  </div>
+                </div>
+                <div class="is-hidden" data-panel="forms">
+                  <div class="cms-version-card">
+                    <div class="cms-field" style="margin:0">
+                      <label class="cms-field-label" for="formTitle">Website form title</label>
+                      <input class="cms-field-control" id="formTitle" value="Request a call back" />
+                    </div>
+                    <div class="cms-field">
+                      <span class="cms-field-label">Fields</span>
+                      <input class="cms-field-control" value="Name" />
+                      <input class="cms-field-control" value="Marketing phone" style="margin-top:8px" />
+                    </div>
+                  </div>
+                </div>
+                <div class="is-hidden" data-panel="versions">
+                  <div class="cms-version-card">
+                    <strong>Website version 3</strong>
+                    <span>Live website · 12 Aug 2026, 09:14</span>
+                  </div>
+                  <div class="cms-version-card">
+                    <strong>Website version 2</strong>
+                    <span>12 Aug 2026, 08:02</span>
+                  </div>
+                  <p class="cms-panel-hint">Website versions are published checkpoints of the whole website, not unpublished website edit history.</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <section class="cms-details-editor is-hidden" data-view="details">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <span class="cms-collection-header-icon"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-7h6v7"/></svg></span>
+              <div>
+                <div class="cms-collection-eyebrow">Website foundations</div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <h2>Business details</h2>
+                  <span class="cms-collection-pill">Profile active</span>
+                </div>
+                <p>Keep the details that power the website, website forms, SEO, and legal copy in one place.</p>
+                <div class="cms-collection-header-meta">Last saved 12 Aug 2026, 09:14</div>
+              </div>
+              <div class="cms-collection-header-actions">
+                <button class="button-secondary" type="button">Refresh</button>
+                <button class="button-primary" type="button">Save details</button>
+              </div>
+            </div>
+            <div class="cms-details-workspace">
+              <div class="cms-details-form-grid">
+                <div class="cms-details-form-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Identity</h3>
+                    <p>The name and story website visitors should recognise.</p>
+                  </div>
+                  <div class="cms-details-field-grid">
+                    <label><span>Business name</span><input class="cms-careers-input" value="Bellfield Roofing" /></label>
+                    <label><span>Legal name</span><input class="cms-careers-input" value="Bellfield Roofing Ltd" /></label>
+                    <label><span>Trade</span><input class="cms-careers-input" value="Roofing" /></label>
+                    <label><span>Established year</span><input class="cms-careers-input" value="2009" /></label>
+                  </div>
+                  <label><span>Business description</span><textarea class="cms-careers-textarea">Family-run roofing across Dublin and North County.</textarea></label>
+                </div>
+                <div class="cms-details-form-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Contact and presence</h3>
+                    <p>Where website visitors and ad leads can find the business.</p>
+                  </div>
+                  <div class="cms-details-field-grid">
+                    <label><span>Marketing phone</span><input class="cms-careers-input" value="01 555 0199" /></label>
+                    <label><span>Marketing email</span><input class="cms-careers-input" value="hello@acme.ie" /></label>
+                    <label><span>Existing site URL</span><input class="cms-careers-input" value="https://bellfield.ie" /></label>
+                  </div>
+                  <label><span>Business location</span><textarea class="cms-careers-textarea" style="min-height:80px">North County Dublin</textarea></label>
+                </div>
+                <div class="cms-details-form-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Services and availability</h3>
+                    <p>The services and places the website should describe.</p>
+                  </div>
+                  <label><span>Service areas</span><textarea class="cms-careers-textarea">Dublin, Swords, Malahide</textarea></label>
+                  <label><span>Featured services</span><textarea class="cms-careers-textarea">Roof repairs, new roofs, guttering</textarea></label>
+                </div>
+                <div class="cms-details-form-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Legal and compliance</h3>
+                    <p>Company registry details shown on the footer.</p>
+                  </div>
+                  <div class="cms-details-field-grid">
+                    <label><span>Company number</span><input class="cms-careers-input" value="123456" /></label>
+                    <label><span>VAT number</span><input class="cms-careers-input" value="IE1234567T" /></label>
+                  </div>
+                  <label><span>Registered office</span><textarea class="cms-careers-textarea" style="min-height:80px">1 Harbour Road, Swords</textarea></label>
+                </div>
+              </div>
+              <aside>
+                <div class="cms-collection-context-card">
+                  <h3>Used on the website</h3>
+                  <p>These website areas read from the business profile.</p>
+                  <div class="cms-collection-usage-item"><span>Top menu and footer</span><span>Logo, business name, marketing phone</span></div>
+                  <div class="cms-collection-usage-item"><span>Contact website page</span><span>Address, marketing email, hours</span></div>
+                  <div class="cms-collection-usage-item"><span>Service website pages</span><span>Service areas and featured services</span></div>
+                  <div class="cms-collection-usage-item"><span>Footer legal</span><span>Company number, VAT</span></div>
+                </div>
+                <div class="cms-collection-context-card">
+                  <h3>Profile readiness</h3>
+                  <p>Complete these details so every website surface is useful.</p>
+                  <div class="cms-details-readiness-summary"><strong>5/6</strong><span>key details complete</span></div>
+                  <div class="cms-details-progress" aria-hidden="true"><span></span></div>
+                  <div class="cms-collection-checklist-item"><span>Business name</span><span>Done</span></div>
+                  <div class="cms-collection-checklist-item"><span>Marketing phone</span><span>Done</span></div>
+                  <div class="cms-collection-checklist-item"><span>Marketing email</span><span>Done</span></div>
+                  <div class="cms-collection-checklist-item"><span>Opening hours</span><span>Missing</span></div>
+                </div>
+                <div class="cms-collection-context-card">
+                  <h3>Website placeholders</h3>
+                  <p>Details the unpublished website can resolve.</p>
+                  <div class="cms-variable-token-row">
+                    <span class="cms-variable-token">Business name</span>
+                    <span class="cms-variable-token">Marketing phone</span>
+                    <span class="cms-variable-token">Marketing email</span>
+                    <span class="cms-variable-token">Service area</span>
+                    <span class="cms-variable-token">Opening hours</span>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <section class="cms-details-editor is-hidden" data-view="projects">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <span class="cms-collection-header-icon"><svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
+              <div>
+                <div class="cms-collection-eyebrow">Profile</div>
+                <h2>Projects</h2>
+                <p>Jobs with photos shown on the website. Edited here, not as website slots.</p>
+              </div>
+              <div class="cms-collection-header-actions">
+                <button class="button-primary" type="button">Add project</button>
+              </div>
+            </div>
+            <div class="cms-project-grid">
+              <article class="cms-project-card"><div class="cms-project-photo"></div><div class="pad"><h3>Storm repair, Malahide</h3><p>Replaced the rear slope after wind damage.</p></div></article>
+              <article class="cms-project-card"><div class="cms-project-photo"></div><div class="pad"><h3>Full re-roof, Swords</h3><p>New slate, valleys, and ridge.</p></div></article>
+              <article class="cms-project-card"><div class="cms-project-photo"></div><div class="pad"><h3>Guttering, Howth</h3><p>Fascia, soffit, and gutter replacement.</p></div></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="cms-details-editor is-hidden" data-view="certifications">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <span class="cms-collection-header-icon"><svg width="18" height="18" viewBox="0 0 24 24"><path d="m12 3 8 4v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></span>
+              <div>
+                <div class="cms-collection-eyebrow">Profile</div>
+                <h2>Certifications and reviews</h2>
+                <p>Which certifications are selected, and the reviews from the Google Maps listing.</p>
+              </div>
+            </div>
+            <div class="cms-details-workspace">
+              <div class="cms-details-form-panel">
+                <div class="cms-details-panel-heading"><h3>Certifications</h3><p>Trade accreditations the business holds.</p></div>
+                <label><span>Selected</span><input class="cms-careers-input" value="GUARANTEE, SafePass" /></label>
+              </div>
+              <div class="cms-details-form-panel">
+                <div class="cms-details-panel-heading"><h3>Reviews</h3><p>Who wrote it, the rating, and the text.</p></div>
+                <p class="note">“On the roof the next morning after the storm.” — Aoife K. · 5</p>
+                <p class="note">“Left the garden better than they found it.” — Mark D. · 5</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="cms-details-editor is-hidden" data-view="media">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <span class="cms-collection-header-icon"><svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
+              <div>
+                <h2>Media library</h2>
+                <p>Photos of their work, logos, and documents. The same library as the website editor workspace item.</p>
+              </div>
+              <div class="cms-collection-header-actions">
+                <button class="button-primary" type="button">Upload</button>
+              </div>
+            </div>
+            <div class="cms-project-grid">
+              <div class="cms-media-tile" style="min-height:180px"></div>
+              <div class="cms-media-tile" style="min-height:180px"></div>
+              <div class="cms-media-tile" style="min-height:180px"></div>
+            </div>
+            <p class="cms-panel-hint">Each item has a media caption. Website publication needs approved media on the live path.</p>
+          </div>
+        </section>
+
+        <section class="cms-ads-list is-hidden" data-view="ads">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <h1>Ads</h1>
+            <span style="flex:1"></span>
+            <button class="button-primary" type="button">+ New ad</button>
+          </div>
+          <p class="note">Ads sit in The CMS beside the website editor. The detailed Ads mock is <a href="../../features/ads/ad-generation/design/ads-workspace.html">ads-workspace.html</a>.</p>
+          <div class="cms-adcard">
+            <div class="cms-adcard-art"></div>
+            <div>
+              <b>Gutter cleaning — summer</b>
+              <p class="note" style="margin:6px 0 0">Ad ready to post · Roofing</p>
+            </div>
+          </div>
+          <div class="cms-adcard">
+            <div class="cms-adcard-art"></div>
+            <div>
+              <b>Storm repairs</b>
+              <p class="note" style="margin:6px 0 0">Ad draft · Roofing</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="cms-modal-scrim is-hidden" id="assistantModal">
+    <div class="cms-modal" role="dialog" aria-labelledby="assistantTitle">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <h2 id="assistantTitle">Website assistant</h2>
+        <button type="button" id="assistantClose" aria-label="Close">×</button>
+      </div>
+      <textarea class="cms-field-control" rows="3" placeholder="e.g. Make the home website page focus on emergency call-outs"></textarea>
+      <div class="cms-modal-actions">
+        <button class="button-primary" type="button">Plan</button>
+        <button class="button-secondary" type="button">Apply</button>
+      </div>
+      <p class="note">Default: website assistant plan, then Ask first (Apply / Reject).</p>
+    </div>
+  </div>
+
+  <div class="cms-modal-scrim is-hidden" id="connectModal">
+    <div class="cms-modal" role="dialog" aria-labelledby="connectTitle">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <h2 id="connectTitle">Connect website address</h2>
+        <button type="button" id="connectClose" aria-label="Close">×</button>
+      </div>
+      <label class="cms-field">
+        <span class="cms-field-label">Custom website address</span>
+        <input class="cms-field-control" value="www.acme.ie" />
+      </label>
+      <p class="note">Add these DNS rows at GoDaddy, Porkbun, or Squarespace — do not move nameservers to Placis.</p>
+      <div class="cms-version-card"><strong>TXT</strong><span> _cf-custom-hostname.www · waiting for DNS</span></div>
+      <div class="cms-version-card"><strong>CNAME</strong><span> www · acme-roofing-dublin.placis.com</span></div>
+    </div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const frame = document.getElementById("frame");
+  const profileChildren = document.getElementById("profileChildren");
+  const profileToggle = document.getElementById("profileToggle");
+  const accountPopover = document.getElementById("accountPopover");
+  const publicationPanel = document.getElementById("publicationPanel");
+  const canvasFrame = document.getElementById("canvasFrame");
+  const assistantModal = document.getElementById("assistantModal");
+  const connectModal = document.getElementById("connectModal");
+  const sectionSelect = document.getElementById("sectionSelect");
+  const sectionLabel = document.getElementById("sectionLabel");
+  const views = [...document.querySelectorAll("[data-view]")];
+  const navItems = [...document.querySelectorAll("[data-nav]")];
+  const sceneTabs = [...document.querySelectorAll(".viewtab")];
+  const railButtons = [...document.querySelectorAll("[data-rail]")];
+  const railPanels = [...document.querySelectorAll("[data-rail-panel]")];
+  const panelTabs = [...document.querySelectorAll("[data-panel-tab]")];
+  const panels = [...document.querySelectorAll("[data-panel]")];
+  const sectionBlocks = [...document.querySelectorAll("[data-section]")];
+  const profileScenes = new Set(["details", "projects", "certifications"]);
+
+  function show(scene) {
+    const view = scene === "website" ? "website" : scene;
+    views.forEach((node) => node.classList.toggle("is-hidden", node.dataset.view !== view));
+    sceneTabs.forEach((tab) => tab.classList.toggle("on", tab.dataset.scene === scene));
+    navItems.forEach((item) => item.classList.toggle("is-active", item.dataset.nav === scene));
+    const profileOpen = profileScenes.has(scene);
+    profileToggle.classList.toggle("is-active", profileOpen);
+    if (profileOpen) {
+      profileToggle.setAttribute("aria-expanded", "true");
+      if (!frame.classList.contains("is-collapsed")) profileChildren.classList.remove("is-hidden");
+    }
+    publicationPanel.classList.add("is-hidden");
+    accountPopover.classList.add("is-hidden");
+    document.getElementById("accountToggle").setAttribute("aria-expanded", "false");
+    if (!params.get("shot")) history.replaceState(null, "", "#" + scene);
+  }
+
+  function setRail(name) {
+    railButtons.forEach((button) => button.classList.toggle("is-active", button.dataset.rail === name));
+    railPanels.forEach((panel) => panel.classList.toggle("is-hidden", panel.dataset.railPanel !== name));
+  }
+
+  function setPanelTab(name) {
+    panelTabs.forEach((tab) => tab.classList.toggle("is-active", tab.dataset.panelTab === name));
+    panels.forEach((panel) => panel.classList.toggle("is-hidden", panel.dataset.panel !== name));
+  }
+
+  function selectSection(id) {
+    sectionBlocks.forEach((block) => block.classList.toggle("is-selected", block.dataset.section === id));
+    if (sectionSelect) sectionSelect.value = id;
+    const picked = sectionSelect?.selectedOptions[0];
+    if (sectionLabel && picked) sectionLabel.textContent = picked.textContent;
+  }
+
+  function syncCollapsed() {
+    const collapsed = frame.classList.contains("is-collapsed");
+    document.querySelectorAll(".js-expanded-only").forEach((node) => {
+      if (node.id === "profileChildren" && collapsed) node.classList.add("is-hidden");
+      else if (node.id !== "profileChildren") node.classList.toggle("is-hidden", collapsed);
+    });
+    document.querySelectorAll(".js-collapsed-only").forEach((node) => node.classList.toggle("is-hidden", !collapsed));
+    if (!collapsed && profileToggle.getAttribute("aria-expanded") === "true") {
+      profileChildren.classList.remove("is-hidden");
+    }
+  }
+
+  document.querySelectorAll("[data-scene]").forEach((node) => {
+    node.addEventListener("click", () => show(node.dataset.scene));
+  });
+  profileToggle.addEventListener("click", () => {
+    if (frame.classList.contains("is-collapsed")) {
+      frame.classList.remove("is-collapsed");
+      syncCollapsed();
+      profileToggle.setAttribute("aria-expanded", "true");
+      profileChildren.classList.remove("is-hidden");
+      return;
+    }
+    const open = profileToggle.getAttribute("aria-expanded") !== "true";
+    profileToggle.setAttribute("aria-expanded", String(open));
+    profileChildren.classList.toggle("is-hidden", !open);
+  });
+  document.getElementById("sidebarToggle").addEventListener("click", () => {
+    frame.classList.toggle("is-collapsed");
+    syncCollapsed();
+  });
+  document.getElementById("accountToggle").addEventListener("click", () => {
+    const open = accountPopover.classList.toggle("is-hidden") === false;
+    document.getElementById("accountToggle").setAttribute("aria-expanded", String(open));
+  });
+  railButtons.forEach((button) => button.addEventListener("click", () => setRail(button.dataset.rail)));
+  panelTabs.forEach((tab) => tab.addEventListener("click", () => setPanelTab(tab.dataset.panelTab)));
+  sectionBlocks.forEach((block) => block.addEventListener("click", () => selectSection(block.dataset.section)));
+  sectionSelect.addEventListener("change", () => selectSection(sectionSelect.value));
+  document.querySelectorAll("[data-viewport]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll("[data-viewport]").forEach((item) => item.classList.toggle("is-active", item === button));
+      canvasFrame.classList.remove("is-desktop", "is-tablet", "is-mobile");
+      canvasFrame.classList.add("is-" + button.dataset.viewport);
+    });
+  });
+  document.getElementById("publicationToggle").addEventListener("click", () => {
+    publicationPanel.classList.toggle("is-hidden");
+  });
+  document.getElementById("assistantToggle").addEventListener("click", () => assistantModal.classList.remove("is-hidden"));
+  document.getElementById("assistantClose").addEventListener("click", () => assistantModal.classList.add("is-hidden"));
+  assistantModal.addEventListener("click", (event) => {
+    if (event.target === assistantModal) assistantModal.classList.add("is-hidden");
+  });
+  document.getElementById("connectUrl").addEventListener("click", () => {
+    publicationPanel.classList.add("is-hidden");
+    connectModal.classList.remove("is-hidden");
+  });
+  document.getElementById("connectClose").addEventListener("click", () => connectModal.classList.add("is-hidden"));
+  connectModal.addEventListener("click", (event) => {
+    if (event.target === connectModal) connectModal.classList.add("is-hidden");
+  });
+  document.getElementById("homePrompt").addEventListener("submit", (event) => {
+    event.preventDefault();
+    show("website");
+    assistantModal.classList.remove("is-hidden");
+  });
+  document.querySelectorAll(".cms-media-tile").forEach((tile) => {
+    tile.addEventListener("click", () => {
+      tile.parentElement?.querySelectorAll(".cms-media-tile").forEach((item) => item.classList.remove("is-selected"));
+      tile.classList.add("is-selected");
+    });
+  });
+
+  if (params.get("shot") === "1") document.getElementById("viewtabs").style.display = "none";
+  const initial = params.get("scene") || (location.hash || "#home").slice(1) || "home";
+  show(initial);
+  syncCollapsed();
+</script>
+</body>
+</html>
