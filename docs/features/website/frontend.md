@@ -77,7 +77,9 @@ versions.
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that publication
 `*Read`; the dropdown updates from the body. To continue editing from an owner website version,
 the website editor GETs the open website page with `publication_id`, paints that `*Read`, then
-PATCHes dirty keys ([api.md](api.md)). Onboarding 07/08 rows are not targets.
+PATCHes dirty keys ([api.md](api.md)). Extra unpublished website pages archive via PATCH
+`status`; a website page in that website version with no unpublished row is `POST /pages`
+then PATCH. Onboarding 07/08 rows are not targets.
 
 Rows:
 

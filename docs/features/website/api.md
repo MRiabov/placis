@@ -37,8 +37,8 @@ Onboarding 05/06 write them in River, not via these routes.
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website editor workspace (website page list).
 - **Query:** optional `publication_id` (`website_publications` id from the dropdown). Omitted:
-  unpublished list. Set: that owner website version’s page summaries. `409` if
-  `published_by=onboarding` or the id is not an owner row.
+  unpublished list (`status=unpublished`). Set: that owner website version’s page summaries.
+  `409` if `published_by=onboarding` or the id is not an owner row.
 - **Response:** list of website page `*Read` summaries (id, path, title, `page_type`,
   status).
 
@@ -54,16 +54,20 @@ Onboarding 05/06 write them in River, not via these routes.
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** canvas hydrate (once per website page select / reload). Reset to an owner
   website version: same GET, then PATCH dirty keys ([editing.md](editing.md)).
-- **Query:** `include_edit_history=true` only on open hydrate or after `409 edit_history_conflict`.
-  Switching website page: query off. Optional `publication_id`: same `*Read` from that owner
-  website version. `409` if `published_by=onboarding` or the id is not an owner row.
+- **Query:** optional `publication_id` (`website_publications` id). Omitted: unpublished
+  `*Read`. Set: that owner website version’s `*Read`. `409` if `published_by=onboarding` or
+  the id is not an owner row. `404` if `page_id` is not in that website version. Do not send
+  `include_edit_history` with `publication_id` (`400`). `include_edit_history=true` only on
+  unpublished open hydrate or after `409 edit_history_conflict`. Switching website page: both
+  queries off.
 - **Response:** website page `*Read`: `path`, `title`, `page_type`, `status`, SEO
   columns (`seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
   `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`), `validation`,
-  website-publication-blocker count, `publication.has_unpublished_changes`, sections/slots
-  with catalog-discriminated `props` / `design` / `value`. Embeds tenant-scoped website styles,
-  top menu, footer, and website forms so the canvas can paint. May embed display name /
-  marketing phone for website placeholders; Details owns those writes.
+  website-publication-blocker count, `publication.has_unpublished_changes` (unpublished vs
+  live, even when `publication_id` is set), sections/slots with catalog-discriminated
+  `props` / `design` / `value`. Embeds tenant-scoped website styles, top menu, footer, and
+  website forms so the canvas can paint. May embed display name / marketing phone for website
+  placeholders; Details owns those writes.
 - **Must not:** `/pages/{id}/seo` as a separate route; `slot_type=json`; return
   `website_manifest`.
 
@@ -74,9 +78,10 @@ Onboarding 05/06 write them in River, not via these routes.
   and discrete actions ([editing.md](editing.md)).
 - **Idempotency-Key:** yes.
 - **Request:** `base_edit_history_head` plus **dirty keys only** — per-section / per-slot, dirty
-  page metadata (title, path, SEO), website form patches, section create/swap/visibility/design,
-  `ordered_section_ids[]`. Body cap 64 KB. Image website slots send a media library item id, not
-  bytes. Example:
+  page metadata (title, path, SEO, `status` `unpublished`/`archived`), website form patches,
+  section create/swap/visibility/design, `ordered_section_ids[]`. Archive strips that page
+  node from `website.menus` ([persistence.md](persistence.md)). Body cap 64 KB. Image website
+  slots send a media library item id, not bytes. Example:
 
 ```json
 { "base_edit_history_head": "<uuid>", "sections": [
@@ -97,17 +102,19 @@ Onboarding 05/06 write them in River, not via these routes.
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website styles workspace. **Explicit apply**, not save on click-off.
-- **GET query:** optional `publication_id` (same as page GET).
+- **GET query:** optional `publication_id` (same as page GET). Same `409` / `400` as page GET.
 - **PATCH Idempotency-Key:** yes.
-- **Request/response:** named website styles (`preset_id`, `primary`, `neutral`, `accent`,
-  `radius`, `density`). Extra keys 4xx.
+- **PATCH request:** `base_edit_history_head` plus dirty named website styles (`preset_id`,
+  `primary`, `neutral`, `accent`, `radius`, `density`). Extra keys 4xx.
+- **PATCH response:** `{ edit_history_head, batch_id }`. Same `409 edit_history_conflict` as
+  the website page PATCH.
 
 ### GET /v1/website/editor/menus / PATCH /v1/website/editor/menus
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** top menu and footer tree editors. One resource — one `website.menus` row
   (`top_menu`, `footer`, `show_phone`, `show_email`).
-- **GET query:** optional `publication_id` (same as page GET).
+- **GET query:** optional `publication_id` (same as page GET). Same `409` / `400` as page GET.
 - **PATCH Idempotency-Key:** yes.
 - **Request:** `base_edit_history_head` plus dirty keys only (`top_menu` and/or `footer`
   and/or `show_phone` / `show_email`). Extra keys 4xx.
@@ -130,7 +137,8 @@ Onboarding 06 is the exception: the River job writes unpublished rows headless (
 ### POST /v1/website/editor/pages/{page_id}/assistant
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** website assistant chat; onboarding 06 headless.
+- **Callers:** website assistant chat in `frontend-2`. Onboarding 06 does not call this POST
+  (River writes unpublished rows headless).
 - **Idempotency-Key:** yes.
 - **Request:** plan vs continuous; Ask first vs instant apply. Plan text is `string` +
   `maxLength`.
@@ -236,6 +244,7 @@ the website editor and not under the business profile.
 - `POST …/pages/{id}/sections`, `PATCH …/sections/order`, `DELETE …/sections/{id}`,
   `POST …/slots/{key}/asset`
 - Don't say session: `realtime-voice-session` (later)
+- `POST …/assistant/cancel` (the run ends when it finishes or fails)
 - `content-contract` as an HTTP resource (website component catalog files)
 - `/certification-selections` (certifications live on [details](../other/details/api.md))
 - `/v1/website/editor/assets`, `/v1/website/editor/files/…` (media library owns upload)

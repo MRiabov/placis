@@ -101,7 +101,9 @@ slice. Extra fields: `edit_history_head` (uuid, null if the stack is empty), `ed
 
 Reset to an owner website version: `publication_id` on this GET (same `*Read`). Paint the
 in-memory projection, then the ordinary PATCH (and `/menus` / `/settings` if those trees
-differ).
+differ). Compare `GET /pages` with and without `publication_id`: extra unpublished pages
+PATCH `status=archived`; a page in that website version with no unpublished row is
+`POST /pages` then PATCH. `include_edit_history` is unpublished hydrate only.
 
 A **website slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`, `required`, `max_length`,
 `value` (typed), `status`, `origin`, `validation_errors`.
@@ -240,6 +242,7 @@ a website version.
 | reorder website sections | `website_sections.position` |
 | add / remove a website section | `website_sections` + `website_slots` |
 | add a website page | `website_pages` + `website_sections` + `website_slots`; append a top-level page node on `menus.footer` (and `menus.top_menu` unless legal or cap) |
+| archive a website page | `website_pages.status=archived`; strip that page node from `website.menus` |
 | edit top menu / footer tree or bar CTAs | `website.menus` (`top_menu` / `footer` / `show_phone` / `show_email`) |
 | swap a website component | `website_sections.component_id` (preserving compatible website slots) |
 | change the website style catalog preset | `website_settings` (applied only on explicit apply) |
