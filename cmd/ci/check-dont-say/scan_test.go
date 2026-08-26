@@ -222,6 +222,8 @@ func TestHomeScopedPage(t *testing.T) {
 		{"testdata/docs/features/website/architecture.md", "route `/preview/page`\n", false},
 		{"testdata/internal/website/page.go", "type Page struct {}\n", false},
 		{"testdata/internal/ads/page.go", "type Page struct {}\n", true},
+		{"testdata/apps/contractor-website/src/page.go", "each page has sections\n", false},
+		{"testdata/apps/placis-website/README.md", "each page has sections\n", true},
 	}
 	seen := map[string]int{}
 	for _, tc := range cases {
@@ -322,6 +324,12 @@ func TestEnabledTrees(t *testing.T) {
 	if !inEnabledTree("docs/features/ads/ad-generation/prd.md", false) {
 		t.Fatal("docs should be enabled")
 	}
+	if !inEnabledTree("apps/contractor-website/README.md", false) {
+		t.Fatal("contractor website should be enabled")
+	}
+	if !inEnabledTree("apps/placis-website/README.md", false) {
+		t.Fatal("Placis website should be enabled")
+	}
 	if inEnabledTree("packages/website-components/src/registry/hero/type_first/docs.md", false) {
 		t.Fatal("packages markdown is outside enabled trees")
 	}
@@ -333,6 +341,14 @@ func TestEnabledTrees(t *testing.T) {
 	}
 	if !shouldSkipPath("packages/website-components/src/registry/hero/type_first/docs.md", false) {
 		t.Fatal("packages markdown should be skipped")
+	}
+	got := filterEnabledFiles([]string{
+		"packages/website-components/src/x.md",
+		"apps/contractor-website/README.md",
+		"frontend-2/src/x.md",
+	}, false)
+	if len(got) != 1 || got[0] != "apps/contractor-website/README.md" {
+		t.Fatalf("explicit filenames must stay in enabled trees, got %v", got)
 	}
 }
 

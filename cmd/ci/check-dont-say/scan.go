@@ -9,7 +9,15 @@ import (
 	"unicode"
 )
 
-var defaultRoots = []string{"docs", "internal", "cmd", "migrations", "catalog"}
+var defaultRoots = []string{
+	"docs",
+	"internal",
+	"cmd",
+	"migrations",
+	"catalog",
+	"apps/contractor-website",
+	"apps/placis-website",
+}
 
 type compiledToken struct {
 	token
@@ -110,6 +118,8 @@ func homePrefixes(home string) []string {
 		return []string{"docs/features/other/media", "internal/media"}
 	case "details":
 		return []string{"docs/features/other/details", "internal/details"}
+	case "website":
+		return []string{"docs/features/website", "internal/website", "apps/contractor-website"}
 	default:
 		return []string{"docs/features/" + home, "internal/" + home}
 	}
@@ -159,6 +169,14 @@ func appliesTo(tok compiledToken, path string) bool {
 	}
 }
 
+func enabledRoots(frontend bool) []string {
+	roots := append([]string{}, defaultRoots...)
+	if frontend {
+		roots = append(roots, "frontend-2")
+	}
+	return roots
+}
+
 func inEnabledTree(path string, frontend bool) bool {
 	slash := strings.TrimPrefix(filepath.ToSlash(path), "./")
 	if filepath.IsAbs(path) {
@@ -168,11 +186,7 @@ func inEnabledTree(path string, frontend bool) bool {
 			}
 		}
 	}
-	roots := append([]string{}, defaultRoots...)
-	if frontend {
-		roots = append(roots, "frontend-2")
-	}
-	for _, root := range roots {
+	for _, root := range enabledRoots(frontend) {
 		if slash == root || strings.HasPrefix(slash, root+"/") {
 			return true
 		}
