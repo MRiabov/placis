@@ -39,7 +39,8 @@ unpublished tables. They use the onboarding session’s `tenant_id` (unactivated
    **stay**. Same profile + same website template → same website pages.
 4. Prefer real projects / Maps photos for image website slots; do not invent work photos.
 5. Validate against website component contracts before the unpublished website is kept.
-6. Enqueue 06. 07 issues the website preview without waiting for 06.
+6. Enqueue 06. `/onboarding/preview` starts the wait (copy done or ~15s cap). 07 writes the host
+   after that gate — not immediately.
 
 Copy is **not** this step — [06](06-website-copy-generation.md).
 
@@ -47,19 +48,20 @@ Copy is **not** this step — [06](06-website-copy-generation.md).
 
 Unpublished website + media library rows, including `website.menus`, site-wide look website
 sections, and `website_slot_reviews`; `ai_generations` for
-the website template/website styles pick only. Onboarding session → `previewing` once 07 writes the website preview.
+the website template/website styles pick only. Onboarding session stays
+`applying_website_template` until 07 writes `latest/`, then `previewing`.
 
 ## Fail
 
-Throw → `apply_website_template_failed`. No website preview. Retry is a new apply (supersedes a
-later website preview if one exists).
+Throw → `apply_website_template_failed`. No `latest/`. Retry is a new apply (same
+`website_prefix` if 07 already reserved it; new onboarding publication on that prefix).
 
 ## Out
 
-07 website preview. 06 async copy.
+07 website preview (after the wait). 06 async copy.
 
 ## Invariants
 
 - Tokens remain tokens through 05.
 - `tenant_id` is the 01 unactivated tenant.
-- No `website_publications`.
+- No `website_publications` in this step (07 writes v1).

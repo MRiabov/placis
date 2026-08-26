@@ -9,7 +9,7 @@ using a real Clerk testing token — never a fake verifier. DB asserts name the 
 1. **Before sign-in** — open `/cms`.
    - UI: redirected to authenticate; not into the CMS.
 2. **After sign-in, not activated** — a contractor with no Clerk organization (an unactivated
-   tenant may already exist from onboarding confirm).
+   tenant may already exist from business lookup).
    - UI: routed to onboarding, not `/cms` (`/me` returns `tenant: null`). If this browser has a
      stored onboarding session token, restore that onboarding session (do not start Find from
      scratch). Clerk does not list incomplete onboarding sessions.

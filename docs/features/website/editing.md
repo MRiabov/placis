@@ -16,7 +16,7 @@ it update, then website publication.
    Saving / Saved indicator. Edits persist automatically. If a copy-out or media-library upload
    has not succeeded after **10 seconds**, show a visible error. Keep the local edit and keep
    retrying. The leave guard still applies — the change is still uncopied.
-4. A schema-validated **PATCH** (`/v1/website/editor/...`) **copies** the change to unpublished
+4. A schema-validated **PATCH** (`/v1/website/editor/pages/{page_id}` — [api.md](api.md)) **copies** the change to unpublished
    rows. It is persistence, not the render path. Do not `GET` after each PATCH. Do not replace the
    whole projection from the PATCH response (that is frontend → backend → frontend). Merge only
    `{ edit_history_head, batch_id }` (plus assigned ids on create). Typing does **not** PATCH.
@@ -251,8 +251,8 @@ a website version.
 Website publication writes `website_publications` + `website_manifest` (a website version).
 
 The contractor website application (`apps/contractor-website`) does **no per-edit work**. Live
-GET reads prebuilt HTML in R2 `latest/` ([cloudflare.md](cloudflare.md)). Website preview uses
-Worker internal render. Editing mutates the in-memory working copy, then copies unpublished
+GET reads prebuilt HTML in R2 `latest/` ([cloudflare.md](cloudflare.md)). There is no
+`GET /v1/public/site/resolve`. Editing mutates the in-memory projection, then copies unpublished
 rows via PATCH; the live website changes only on website publication. The website editor canvas
 renders the unpublished website (React + that package), not through Astro. That canvas is not a
 website preview. The frontend holds one working projection; it does not accumulate unpublished

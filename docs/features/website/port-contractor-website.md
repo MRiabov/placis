@@ -8,32 +8,35 @@ Don’t-say): [contractor-website-debloat.md](contractor-website-debloat.md).
 HTTP: [website HTTP](api.md), [leads HTTP](../other/leads/api.md).
 
 Product name is **contractor website**. Predecessor OpenAPI is not a compatibility
-surface. No backward-compatible paths, operation ids. Don't say: `PublicSite*` types.
+surface. No backward-compatible paths, operation ids, or leftover predecessor types.
 
 ## Serve vs API
 
 | Call | Talks to | Types |
 | --- | --- | --- |
 | Live GET | Cache then R2 `latest/`. Miss is 404. Never Go. | None. No OpenAPI. |
-| Website preview | Worker internal render (shared secret / service binding). Not public OpenAPI. | Unpublished website + catalog structs ([manifest.md](manifest.md)). |
-| Website form POST | Go `POST /v1/website-forms/{form_id}/submissions` (and uploads). | Closed website-form fields. |
+| Website-activation checkout | Go public checkout (CORS by `Host` / `website_prefix`). Not `/v1/website-previews/{token}/…`. | Closed checkout DTO. |
+| Website form POST | Go `POST /v1/website-forms/{form_id}/submissions` (and uploads). | Closed public form DTO. |
 
-Do not call `GET /api/v1/preview/{token}/module/website`. Don't say: do not create
-`/v1/public/site/…`. Do not generate a second full-CMS `openapi-typescript` helper
-in this app. Live HTML does not use `website.v1` over HTTP.
+Do not call `GET /v1/preview/{token}/module/website` or
+`GET /v1/public/site/resolve`. Do not generate a second
+full-CMS typegen in this app. Form types come from
+`website.v1` / `catalog/` (same JSON Go writes). A public-only slice of Go
+`/openapi.json` is allowed; the CMS spec is not.
 
 ## Glue
 
-Don't say public site: `lib/publicSiteApi.ts` retargets onto internal
-render + website form POST in the **same slice**. No shim that keeps
-`PublicSiteManifest` or unconstrained JSON. Screens/routes with no Go route yet
-stay unwired, not typed against predecessor paths.
+`lib/publicSiteApi.ts` (and leftover env names) retarget onto public forms +
+`website.v1` in the **same slice**. No shim that keeps `PublicSiteManifest` or
+unconstrained JSON. Screens/routes with no Go public route yet stay unwired, not
+typed against predecessor paths.
 
 ## Keep vs drop (API)
 
-Keep: website form submit (+ uploads). Drop (do not alias): predecessor preview
-Don't say: module path, `GET /v1/public/site/resolve`, `PublicSite*` hand types, CRM/sandbox
-routes, unconstrained `additionalProperties` bags.
+Keep as Go DTOs in current glossary names (fields may change): website form submit,
+activation checkout. Drop (do not alias): predecessor preview module
+path, leftover resolve, predecessor hand types, CRM/sandbox routes, unconstrained
+`additionalProperties` bags.
 
 “Genuinely good” means the **behavior** is still in the website spec. Copy Python
 field lists only when [api.md](api.md) already says so.
@@ -41,7 +44,7 @@ field lists only when [api.md](api.md) already says so.
 ## Done when
 
 - Live GET still never calls Go.
-- Website preview uses Worker internal render (tests hit `/preview/{token}/`).
-- Website forms use `/v1/website-forms/{form_id}/submissions`.
-- No predecessor OpenAPI helper. Don't say: `PublicSite*` casts, module/website path, or
-  `public/site/resolve` in this app.
+- No `GET /v1/public/site/resolve`.
+- Website forms use `POST /v1/website-forms/{form_id}/submissions`.
+- No predecessor OpenAPI typegen, leftover predecessor types, or module/website path in
+  this app.

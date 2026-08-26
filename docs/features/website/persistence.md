@@ -10,18 +10,19 @@ Media assets are owned by [media library](../other/media/persistence.md). The bu
 website templates fill is [details](../other/details/persistence.md) (including reviews). Website
 forms write [leads](../other/leads/persistence.md). The dump shape of a website publication is
 [manifest.md](manifest.md). The reserved label on the tenant row is
-[auth](../other/auth/persistence.md) (`tenants.website_address`).
+[auth](../other/auth/persistence.md) (`tenants.website_prefix`).
 
 - `website_addresses` — `id`, `tenant_id` fk, `hostname` unique, `type` (`subdomain`/`custom`),
   `status` (`reserved`/`pending`/`active`/`failed`), `is_primary` bool,
   `cloudflare_custom_hostname_id` (nullable, `type=custom`), `dcv_txt_name`, `dcv_txt_value`,
   `cloudflare_hostname_status`, `cloudflare_ssl_status`, `dns_verified_at`, `activated_at`,
   `created_at`.
-  `type=subdomain` is the website address host (`{website_address}.preview.placis.com`; R2 prefix
-  is `tenants.website_address`). Show it as the default live host after website publication.
-  `type=custom` is the custom website address (the hostname they supply). `is_primary` marks
+  `type=subdomain` is the preview website address (`{website_prefix}.preview.placis.com`; R2 prefix
+  is `tenants.website_prefix`). Reserved at onboarding 07. Show it as the default host (website
+  preview until website activation; live website after).
+  `type=custom` is the website address (the hostname they supply). `is_primary` marks
   sitemap and canonical: the subdomain host until a `type=custom` row is `active`, then that
-  custom website address. Custom Hostnames columns are written by **Connect website address**
+  website address. Custom Hostnames columns are written by **Connect website address**
   (modal over the website editor), not website publication. See [cloudflare.md](cloudflare.md).
 - `website_pages` — `id`, `tenant_id` fk, `path`, `title`, `page_type` (`home`/`service`/
   `contact`/`legal`), `status` (`unpublished`/`archived`), `seo_title`,
@@ -57,8 +58,10 @@ forms write [leads](../other/leads/persistence.md). The dump shape of a website 
   per tenant. Copied into `website_manifest.website_styles` at website publication.
 - `website_publications` — one row is a website version: `id`, `tenant_id` fk, `version_number`,
   `status` (`published`/`archived`/`rolled_back`), `active`, `manifest_version`,
-  `website_manifest` jsonb, `published_by`,
-  `rollback_of_publication_id` nullable, `published_at`; unique `(tenant_id, version_number)`
+  `website_manifest` jsonb, `published_by` (`onboarding`/`owner`),
+  `rollback_of_publication_id` nullable, `published_at`; unique `(tenant_id, version_number)`.
+  Website rollback lists and reactivates `published_by=owner` only. Onboarding 07/08 (and 05-retry)
+  rows stay out of that list; the API refuses them by id.
 - `website_publication_issues` — `id`, `publication_id` fk, `code`, `message`, `entity_type`
   nullable, `entity_id` nullable
 - `projects` — `id`, `tenant_id` fk, `title`, `description`, `cover_media_asset_id` nullable fk,

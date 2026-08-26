@@ -1,35 +1,44 @@
 # 08 — Website activation
 
-The contractor pays on the **website preview**. Clerk sign-in/sign up if needed, then Stripe
-checkout. Website activation **upgrades** the existing unactivated tenant (`status=active`); it
-does not insert a second tenant. The site stays an **unpublished website** until website
-publication in the CMS ([ADR 12](../ADR.md)). Does **not** wait for 06.
+The contractor pays on the **preview website address** (FQDN in
+[cloudflare.md](../../website/cloudflare.md)). Clerk sign-in/sign-up if needed (modal island), then
+Stripe checkout (island POSTs public checkout to `cmd/api`, CORS by `Host` / `website_prefix`;
+not `/v1/website-previews/{token}/…`; do not bake a Checkout Session
+URL into R2 HTML). Website activation **upgrades** the existing unactivated tenant
+(`status=active`); it does not insert a second tenant. Does **not** wait for 06.
 
 Stripe (via `stripe-go`) handles this checkout only. Amount is the activation price (predecessor:
 EUR 4900). `checkout.session.completed` is accepted only after the SDK verifies the signature
-(`webhook.ConstructEvent`) and the metadata matches (`website_preview_id`, authenticated owner).
+(`webhook.ConstructEvent`) and the metadata matches (`tenant_id`, authenticated Clerk subject).
 The raw payload is saved on `stripe_events`, the work is enqueued on
 [River](../../../general-architecture/jobs.md), and the request returns. Activation can be
 replayed safely and is never triggered by a browser success URL alone.
 
+**Whoever pays becomes the owner.** Unauthenticated visitors may authenticate and pay. First
+verified `checkout.session.completed` wins.
+
 ## Trigger
 
-Verified Stripe `checkout.session.completed` for an `active` website preview.
+Verified Stripe `checkout.session.completed` for an unactivated tenant whose host is up (07
+`latest/` present). Not a superseded 05-retry of a different in-flight checkout that already lost.
 
 ## Pre
 
-- Website preview `status=active` (not superseded, not already activated).
-- Authenticated owner (Clerk).
+- `tenants.website_prefix` already reserved at 07.
+- `website_publications` v1 `active` (strip on) or a later onboarding write on that prefix.
+- Authenticated Clerk subject (the payer).
 - `onboarding_sessions.tenant_id` is the unactivated tenant from 01.
 
 ## Must not
 
 - Insert a second `tenants` row.
 - First-write child `tenant_id`s (website/media/profile already have it).
-- Write `website_publications`.
+- Invent or rename `website_prefix`.
 - Wait for 06.
-- Activate a superseded or already-activated website preview.
+- Activate twice (replay / second payer).
 - Treat the browser success URL as activation.
+- Leave v1 as a website-rollback target (archive it).
+- Take the host down (not a 404).
 
 ## Do
 
@@ -38,32 +47,34 @@ Verified Stripe `checkout.session.completed` for an `active` website preview.
 2. Resolve or create the Clerk organization; set `tenants.clerk_org_id`. Tenant name is the
    **business**; Clerk organization name is the **person**.
 3. `tenant_memberships` (`owner`) for the paying owner.
-4. Provision the website address → `tenants.website_address` (unique label, **fixed**) and a
-   `website_addresses` row (`type=subdomain`, `status=reserved`, `is_primary=true`; hostname in
-   [cloudflare.md](../../website/cloudflare.md)). Wildcard on **our** `placis.com` zone already
-   points at the Worker. After website publication that host is the live default (glossary
-   Website preview, Distinct from) — never call it a website preview. Custom website address is a later modal.
-5. `tenants.status=active`. Onboarding session → `activated`. Website preview → `activated`.
+4. `tenants.status=active`. Onboarding session → `activated`.
+5. Write **`website_publications` v2** without the website-activation strip, `published_by=onboarding`,
+   `active`. Archive v1. Same R2 write as 07 / CMS website publication; purge Cache so v1-with-strip
+   does not linger. Host stays up. Website address is a later CMS modal.
 6. In-flight 06 **continues** on the same `tenant_id`. CMS website assistant 409 until that run
    ends.
 
 ## Persist
 
 `website_activations`; `stripe_events`; **update** existing `tenants`; `tenant_memberships`;
-`website_addresses`.
+`website_publications` v2 + archive v1; R2 `latest/` without the strip.
 
 ## Fail
 
-Signature/metadata mismatch → ignore / 4xx; no upgrade. Replay does not activate twice.
+Signature/metadata mismatch → ignore / 4xx; no upgrade. Replay does not activate twice. A second
+payer after the first verified completion is refused.
 
 ## Out
 
-`/cms/website`. `/me` now returns the tenant. Unpublished website from 05 (+ whatever 06 has
-written) is what they edit.
+`/cms/website`. `/me` now returns the tenant. The preview website address stays up
+without the strip (live website, not website preview). Unpublished website from 05 (+ whatever 06
+has written) is what they edit. First **owner** website publication is v3+ and the first
+rollback-eligible website version.
 
 ## Invariants
 
 - Same `tenant_id` as 01.
-- No `website_publications`.
+- Same `website_prefix` as 07.
 - `/me` tenant only when `status=active`.
 - Clerk organization 1-1 for **active** tenants only.
+- v1 and v2 are never website-rollback targets.

@@ -281,6 +281,8 @@ var extraAllowed = []string{
 	"ad state",
 	"us state",
 	"onboarding session",
+	"preview website address",
+	"preview website addresses",
 	"online research consent",
 	"research conflict",
 	"research conflicts",

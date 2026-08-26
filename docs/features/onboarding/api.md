@@ -52,7 +52,7 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 - **Auth:** onboarding session token
 - **Callers:** Resume and Review. Restore failure does not POST.
 - **Response:** onboarding session status, checklist `*Read`, research conflicts,
-  `active_website_preview` (plaintext token **once**), `research_wait_until`. This is **not**
+  preview website address when 07 has reserved it, `research_wait_until`. This is **not**
   Details.
 - **Must not:** return business-research `raw`.
 
@@ -104,30 +104,25 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 ### GET /v1/onboarding-sessions/{id}/events/stream
 
 - **Auth:** onboarding session token
-- **Callers:** short progress screen in `frontend-2` (and Review while 02 runs). Not the
-  website preview link.
+- **Callers:** `/onboarding/preview` in `frontend-2` (and Review while 02 runs). Not the
+  contractor host.
 - **Transport:** Huma `sse.Register`. Named event structs, for example:
   `checklist_row`, `timeline_step`, `research_wait_until`, `website_preview_ready`.
 - **Must not:** unconstrained `payload` object; unknown events parsed as `any` (`frontend-2`
   drops them).
 
-### POST /v1/website-previews/{token}/activate
+### POST /v1/website-activations/checkout
 
-- **Auth:** website preview token
-- **Callers:** website-activation strip on `/preview/{token}/` (contractor website).
-- **Idempotency-Key:** yes.
-- **Must not:** website publication; browser Stripe success URL as the source of truth.
-
-### POST /v1/website-previews/{token}/activation-checkout
-
-- **Auth:** website preview token
-- **Callers:** start Stripe checkout.
+- **Auth:** Clerk JWT, Host / `website_prefix` (unactivated allowed).
+- **Callers:** website-activation strip island on the preview website address.
 - **Idempotency-Key:** yes.
 - **Response:** checkout URL. **Omit** Stripe bodies.
+- **Must not:** website publication; browser Stripe success URL as the source of truth;
+  `/v1/website-previews/{token}/…`.
 
-### GET /v1/website-previews/{token}/activation-status
+### GET /v1/website-activations/status
 
-- **Auth:** website preview token
+- **Auth:** Clerk JWT, Host / `website_prefix` (unactivated allowed).
 - **Callers:** poll after checkout.
 - **Response:** closed status enum + checkout URL if still needed.
 
@@ -154,6 +149,7 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 - Don't say: `preview/{token}/module/{module}`
 - Don't say claim: `…/claim`, `…/claim/checkout`, `…/package`, `approve-publish`, `request-changes`
 - sandbox-actions, `generation-runs` from `frontend-2`
-- `/v1/preview/{token}/…` (predecessor path; use `/v1/website-previews/…`)
+- `/v1/preview/{token}/…` and `/v1/website-previews/{token}/…` (pay is Host /
+  `website_prefix` on `/v1/website-activations/…`)
 - `/v1/onboarding-sessions/confirm` (use `…/business-lookup`)
 - bare `POST /v1/onboarding-sessions`

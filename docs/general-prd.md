@@ -46,7 +46,7 @@ channel into the same tools (not a separate product). How slices land:
 - **App-modification surface** — `tenant_app_configs`, `tenant_app_change_requests`, module
   definitions, a “Modify App” flow, omission / declined-module machinery. Do not resurrect.
 - **Deprecated tenant/org management** — org chooser, selected-org cookie, `/me/orgs`,
-  `/me/tenants`, `POST /v1/tenants`, `PATCH /v1/tenants/{website_address}`, memberships
+  `/me/tenants`, `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`, memberships
   CRUD. See [auth](features/other/auth/README.md).
 - **Opaque freeform-JSON islands** — Don't say: `JsonRecord` / `JsonObjectPayload` wrappers. Typed structs;
   `jsonb` is persistence-only. See [HTTP conventions](general-architecture/api.md).

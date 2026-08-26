@@ -115,11 +115,13 @@ Named once here. Feature `api.md` files name the mode, they do not redefine it.
 1. **none** — Find search + business lookup.
 2. **onboarding session token** — request header or query as specified on the onboarding `api.md`.
 3. **Clerk JWT, active tenant only** — `/v1/me.tenant` non-null.
-4. **website preview token** — website activation + Worker internal render.
+4. **Clerk JWT, Host / `website_prefix`** — unactivated tenant allowed. Website activation
+   checkout and status on the preview website address. Tenant comes from the contractor `Host`,
+   not from `/me.tenant`.
 5. **Stripe webhook signature**.
 
-Contractor website `Host` is CORS for website form POST only. HTML GET never reaches Go, so
-it is not a sixth auth mode.
+Contractor website `Host` is CORS for website form POST and website activation checkout/status.
+HTML GET never reaches Go, so it is not a sixth auth mode.
 
 Clerk ids (`clerk_org_id`, `clerk_user_id`, `clerk_subject`) are Postgres columns and JWT
 claims. The Clerk SDK verifies the sign-in. They are not an HTTP union and are not on
@@ -147,7 +149,7 @@ struct, so payloads are in `/openapi.json`. Do not use a raw `net/http` handler 
 the spec. `frontend-2` exhaustive-matches; unknown events are logged and dropped, never
 parsed as `any`.
 
-The website preview link is **not** SSE. The short progress screen in `frontend-2` is.
+The contractor host is **not** SSE. `/onboarding/preview` in `frontend-2` is.
 
 ## Worker internal render
 

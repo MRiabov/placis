@@ -52,14 +52,13 @@ Per website section:
 
 ## Keep out
 
-- a tenant website-address column or path aliases (the website address is the resolve key)
+- a tenant website-prefix column or path aliases (the website prefix is the R2 key)
 - dual `components` and `sections` at root or page — one list: `sections`
 - root-level `sections` used as a single-page fallback
 - blog / careers collections (deferred)
 - predecessor project-as-blog collection (body, markdown, status, visibility)
 - template keys, `created_by`, how the unpublished website was applied
-- unpublished-only fields: `origin`, slot `status`, `validation_errors`, `has_unpublished_changes`,
-  preview tokens
+- unpublished-only fields: `origin`, slot `status`, `validation_errors`, `has_unpublished_changes`
 - Clerk / tenant internals, file ids, signed-URL machinery (resolved public URLs only)
 - top menu / footer stuffed into each page’s `sections` — they come from root `top_menu` /
   `footer` (baked from `website.menus`), not from website sections on every website page

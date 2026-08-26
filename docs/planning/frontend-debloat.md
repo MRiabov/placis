@@ -22,7 +22,7 @@ or unconstrained JSON. Contractor website API cutover:
 | [media library](../features/other/media/frontend-debloat.md) | Media library workspace item + `/cms/media` |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, one Clerk organization provision, `/me` |
 | [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
-| [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover: internal render + website form POST; no predecessor OpenAPI |
+| [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover: website form POST + `website.v1`; no predecessor OpenAPI |
 | [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
 
 No leads instruction file: website forms persist website leads; there is no CMS leads
@@ -34,20 +34,20 @@ console.
   frontend-from-Go PR switches typegen; the generated file shrinks to routes Go
   actually serves. Predecessor OpenAPI is human reference, not an input, not a
   second schema to generate from.
-- Keep as Go DTOs in current glossary names (fields may change): `/v1/me`, health,
-  onboarding session + profile + events stream (Huma `sse.Register`), website editor
-  GET/PATCH, publication, Connect website address, website activation / checkout /
-  status, media library, ads when that slice exists. Contractor website → Go:
-  website form submit only ([port-contractor-website.md](../features/website/port-contractor-website.md)).
-  Routes: [HTTP conventions](../general-architecture/api.md).
+- Keep as Go DTOs in current glossary names (fields may change): `/me`, health,
+  onboarding session + profile + events stream (SSE outside huma), website editor
+  GET/PATCH, publication, Connect website address,
+  07 website preview (host), website activation checkout / status, media library, ads when that slice
+  exists. Contractor website public routes: website form submit
+  (see [port-contractor-website.md](../features/website/port-contractor-website.md)).
 - Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
-  `/v1/tenants/{website_address}/website/…`, blog, careers,
-  website-template-apply leftovers, unconstrained JSON in UI-facing schemas,
-  Don't say: predecessor names (`setup-sessions`, public-site, shell, blueprint, claim),
-  Don't say preview: predecessor module path (`/api/v1/preview/{token}/module/website`),
-  Don't say: `/v1/public/site/…`, and `PublicSite*` hand types. “Genuinely good” means the
-  **behavior** is still in the feature spec. Copy Python field lists only when that
-  feature’s `api.md` already says so.
+  `/v1/tenants/{website_prefix}/website/…`, blog, careers,
+  website-template-apply leftovers, unconstrained JSON in UI-facing schemas.
+  Don't say setup / public site / shell / blueprint / claim: predecessor names.
+  Don't say preview: predecessor module path (`/v1/preview/{token}/module/website`)
+  and leftover predecessor hand types. “Genuinely good” means the **behavior** is still
+  in the feature spec. Copy Python field lists only when that feature’s
+  `technical-implementation.md` already says so.
 - Unported `api/*.ts` and MSW stubs are deleted or retargeted in the **same
   slice** that adds the Go routes. No shims, no `as any`, no mapping layer.
   Screens with no Go route yet stay unwired, not typed against old paths.
@@ -56,12 +56,13 @@ console.
   unconstrained JSON blobs in UI code. The generated file must not reintroduce
   predecessor-only paths.
 - CMS calls `/v1/website/editor/…` only. Do not call
-  `/v1/tenants/{website_address}/website/…`.
+  `/v1/tenants/{website_prefix}/website/…`.
 - Onboarding calls `/v1/onboarding-sessions/business-lookup` and
-  `GET …/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`).
+  `GET /v1/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`).
   Restore is `GET …/profile`.
-- Website preview route is `/preview/{token}/…`. It is not an SSE endpoint. Website
-  activation uses activate / activation-checkout / activation-status (not a browser
+- `/onboarding/preview` is the SSE website-section carousel; the shareable host is
+  the preview website address (not `/preview/{token}/…`, not an SSE endpoint). Website
+  activation uses public checkout / status (Host / `website_prefix`; not a browser
   success URL alone).
 - Website editor: one in-memory projection; PATCH copies dirty keys; merge only
   `{ edit_history_head, batch_id }`; no GET-after-PATCH; text copies out on click-off;

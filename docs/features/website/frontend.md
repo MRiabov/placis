@@ -57,7 +57,8 @@ Three surfaces, one unpublished website:
   [media library](../other/media/README.md).
 - **Editing panel** — the selected website section: website slots, design controls, SEO columns,
   website forms. Website versions show website publications and website-assistant activity, not
-  unpublished checkpoints per website page. Undo/redo stacks are in RAM, seeded from
+  unpublished checkpoints per website page. Onboarding-written website versions are omitted
+  (not website-rollback targets). Undo/redo stacks are in RAM, seeded from
   website edit history on `/cms/website` open; they are not a timeline UI.
 
 Website styles are tenant-wide (`website_settings`), shown on the website page GET, applied only on
@@ -69,8 +70,8 @@ Look (logo, density) is the site-wide website section for that bar, not Details.
 blocked while required website slots cannot resolve or media library items on the live path
 are not approved; show those blockers in the dropdown panel. After a successful website
 publication, `has_unpublished_changes` is false until the next edit. The POST has no
-destination: one R2 `latest/` tree, then purge the website address and every `active`
-custom website address ([api.md](api.md), [cloudflare.md](cloudflare.md)). Hosts in the dropdown
+destination: one R2 `latest/` tree, then purge the preview website address and every `active`
+website address ([api.md](api.md), [cloudflare.md](cloudflare.md)). Hosts in the dropdown
 are where the live site is reachable (open in a new tab, Connect), not independent website
 versions.
 
@@ -83,13 +84,13 @@ then PATCH. Onboarding 07/08 rows are not targets.
 
 Rows:
 
-1. **Website address host** — `{website_address}` plus the suffix in
+1. **Preview website address** — `{website_prefix}` plus the suffix in
    [cloudflare.md](cloudflare.md). Always listed after website activation. Open in a new tab when
    `latest/` exists. Status: not published yet / last website publication time. This is the live
-   URL in the website editor until (and alongside) a custom website address. Product copy:
-   **website address** / our subdomain. Do not call this host website preview (that is the sales
-   stage and `/preview/{token}/`).
-2. **Each connected custom website address** (`acme.ie`) — listed once Connect website address
+   URL in the website editor until (and alongside) a website address. Product copy:
+   **preview website address**. Do not call this host website preview after website
+   activation (while unactivated it **is** the website preview).
+2. **Each connected website address** (`acme.ie`) — listed once Connect website address
    has a hostname. Disabled until `website_addresses.status=active` (waiting for DNS /
    certificate).
 3. **New URL** — not a website publication. Opens the **Connect website address** modal.
@@ -103,9 +104,9 @@ Squarespace — do not move nameservers to Placis. Status in the modal: waiting 
 for certificate → active (the website editor polls Go; Go polls Cloudflare). Close returns to
 the website editor. The host then appears as row 2; it is enabled when active. Re-open the modal
 from New URL or from a still-waiting host to copy records again. Website publication does **not**
-attach a custom website address.
+attach a website address.
 
-Do not advertise `{website_address}.placis.com` as a live URL.
+Do not advertise `{website_prefix}.placis.com` as a live URL.
 
 **Website assistant** is a chat in this workspace. Two configs: plan vs continuous, and
 instant apply vs Ask first (Apply / Reject). Default is plan + Ask first. Apply mutates the
