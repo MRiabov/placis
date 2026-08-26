@@ -311,9 +311,9 @@ func TestHomeScopedPostingAndInterview(t *testing.T) {
 	}
 }
 
-func TestSkipAdApplicationInvestigation(t *testing.T) {
-	if !shouldSkipPath("docs/features/ads/ad-application/meta/00-index-research.md", false) {
-		t.Fatal("ad-application investigation notes should be skipped")
+func TestAdApplicationIsScanned(t *testing.T) {
+	if shouldSkipPath("docs/features/ads/ad-application/meta/00-index.md", false) {
+		t.Fatal("ad-application investigation notes should be scanned")
 	}
 	if shouldSkipPath("docs/features/ads/ad-generation/prd.md", false) {
 		t.Fatal("ads product spec should still be scanned")

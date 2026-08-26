@@ -1,10 +1,10 @@
-# Meta campaign structure — research
+# Meta campaign structure — investigation
 
-Status: research. How a Placis **ad** becomes Meta Campaign / Ad Set / Ad / Creative
+Status: investigation. How a Placis **ad** becomes Meta Campaign / Ad Set / Ad / Creative
 objects.
 
-See also: [index](00-index-research.md), [access](01-access-and-accounts-research.md),
-[creatives](03-creatives-and-lead-forms-research.md).
+See also: [index](00-index.md), [access](01-access-and-accounts.md),
+[creatives](03-creatives-and-lead-forms.md).
 
 ## Recommendation in one paragraph
 
@@ -23,7 +23,7 @@ Business Portfolio
        └─ Campaign          (objective, special ad category)
             └─ Ad Set       (audience, budget, schedule, destination, optimization)
                  └─ Ad      (pairs a Creative with that Ad Set)
-                      └─ Ad Creative  (Page, images, copy, CTA, Instant Form id)
+                      └─ Ad Creative  (Facebook Page, images, copy, CTA, Instant Form id)
 ```
 
 You cannot create a child without the parent. Creatives can be created on the ad account
@@ -41,11 +41,11 @@ Meta's "Ad Set" is **not** the Placis **ad set**.
 | **Ad** — one offer / marketing goal | Campaign + (usually) one Ad Set + N Ads |
 | **Ad set** — the approved deliverable (images, copy, destination, suggested lead form) | — |
 | **Ad variant** — one ad format | One Ad + one Ad Creative |
-| **Ad lead form** (suggested fields) | Instant Form on the Page (`leadgen_forms`) |
+| **Ad lead form** (suggested fields) | Instant Form on the Facebook Page (`leadgen_forms`) |
 | **Ideal customer profile** | Ad Set `targeting` |
 | Budget / schedule (stub in Ads UI today) | Ad Set `daily_budget` / `lifetime_budget`, `start_time`, `end_time` |
 
-Never say "ad set" in a mixed sentence without making clear which one. In this research
+Never say "ad set" in a mixed sentence without making clear which one. In this investigation
 file, "Meta Ad Set" means Meta's object.
 
 ## Objectives (ODAX)
@@ -64,8 +64,7 @@ For contractors, two objectives matter.
 
 ### Default: `OUTCOME_LEADS` + Instant Form
 
-Matches the product: capture an **ad lead** without inventing a campaign landing website
-page.
+Matches the product: capture an **ad lead** without inventing a campaign landing website page.
 
 Campaign:
 
@@ -98,10 +97,10 @@ When the owner wants people on a website page (and we are not using an Instant F
 - Optimization for traffic is weaker without a Pixel / Conversions API event
 
 This is the true "apply the ad to the website" path: the ad's click lands on a published
-website page. Instant Forms still *use* the website (privacy policy + thank-you page) but
+website page. Instant Forms still *use* the website (privacy policy + thank-you website page) but
 the conversion happens on Meta.
 
-Do not start with `OUTCOME_SALES`. Contractors are not running a catalog checkout.
+Do not start with `OUTCOME_SALES`. Contractors are not running a product checkout.
 
 ## Special Ad Categories
 
@@ -178,7 +177,7 @@ crop for Stories would throw away that work. Prefer:
 
 - **v1:** separate Ads in one Meta Ad Set, with `targeting.publisher_platforms` /
   positions narrowed per format (feed vs story), **or**
-- **soon after:** [Placement Asset Customization](https://developers.facebook.com/docs/marketing-api/ad-creative/asset-customization)
+- **soon after:** [Placement customization](https://developers.facebook.com/docs/marketing-api/ad-creative/asset-customization)
   so one Ad carries per-placement images.
 
 v1 separate Ads is simpler to debug when review fails (feedback is per Ad).
@@ -248,14 +247,14 @@ a silent overwrite.
 
 Safe-to-retry posting: if we already stored `campaign_id` for this ad revision, resume
 from the next missing object instead of creating a second campaign. Use the stable Placis
-ad id + revision number as an idempotency key in our DB, not as a Meta field.
+ad id + revision number as an idempotency-key in our DB, not as a Meta field.
 
 ## Insights (later)
 
 Performance is not required to post, but the model is ready (ADR 6). Read
 `/{object-id}/insights` at campaign, Meta Ad Set, or Ad level. Attach to stable Placis
 ids. Do not build a dashboard in v1; the existing-ad detail already has a performance
-slot.
+area.
 
 ## Implications for Placis
 

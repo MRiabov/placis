@@ -1,12 +1,12 @@
-# Recommended Meta application shape — research
+# Recommended Meta application shape — investigation
 
-Status: research. Proposed product path for **ad posting** to Meta, given the rest of
+Status: investigation. Proposed product path for **ad posting** to Meta, given the rest of
 this folder. Not an ADR until we decide the open questions.
 
-See also: [index](00-index-research.md), [access](01-access-and-accounts-research.md),
-[campaign structure](02-campaign-structure-research.md),
-[creatives](03-creatives-and-lead-forms-research.md),
-[review](04-review-and-verification-research.md).
+See also: [index](00-index.md), [access](01-access-and-accounts.md),
+[campaign structure](02-campaign-structure.md),
+[creatives](03-creatives-and-lead-forms.md),
+[review](04-review-and-verification.md).
 
 ## What "apply to the website" should mean
 
@@ -22,8 +22,8 @@ replaces it (ADR 5). The live website must already be published.
 
 ## Account model
 
-**Contractor-owned Page + ad account + payment method. Placis connected via Facebook
-Login for Business (system user token).**
+**Contractor-owned Facebook Page + ad account + payment method. Placis connected via Facebook
+Login for Business (business integration system user access token).**
 
 Done-for-you operates that account after the owner grants access once. Placis does not
 advertise *as* Placis for them.
@@ -34,17 +34,17 @@ Preconditions (all blocking, all owner-readable):
 
 - Website publication exists; **ad destination** is live HTTPS.
 - A published legal/privacy website page exists (Instant Form).
-- Meta connected: Page (ADVERTISE), ad account active, payment method present.
+- Meta connected: Facebook Page (ADVERTISE), ad account active, payment method present.
 - Instagram linked if the ad includes Story.
 - Placis ad is Creative ready; validation still passes.
 - Budget + schedule filled (today's disabled fields become live).
 - Placis company app has Advanced Access + Marketing API Full Access for production.
 
-Job (River), idempotent on `(tenant_id, ad_id, revision)`:
+Job (River), safe to retry on `(tenant_id, ad_id, revision)`:
 
 ```text
 upload crops → image hashes
-create Instant Form on Page (privacy + thank-you → ad destination)
+create Instant Form on the Facebook Page (privacy + thank-you → ad destination)
 create Campaign PAUSED (OUTCOME_LEADS, special_ad_categories NONE)
 create Meta Ad Set (targeting from ideal customer profile + service area,
                     destination ON_AD, budget/schedule)
@@ -55,7 +55,7 @@ validate_only + synchronous_ad_review
 if fail: stop, platform_status=error, show errors
 else: set Ads (or campaign) ACTIVE
 write platform_refs
-subscribe ad-account + Page leadgen webhooks (once per connection)
+subscribe ad-account + Facebook Page leadgen webhooks (once per connection)
 ```
 
 Then:
@@ -88,11 +88,11 @@ Do not build "full ads manager" to post the first ad.
 | Phase | Ship | Why |
 | --- | --- | --- |
 | **0** | Ad generation (current spec) | Need a stable ad set |
-| **1** | Connect Meta + checklist (Page, ad account, payment, privacy website page) | Unblocks everything; useful even while posting is manual |
+| **1** | Connect Meta + checklist (Facebook Page, ad account, payment, privacy website page) | Unblocks everything; useful even while posting is manual |
 | **2** | Apply one Instant Form campaign from a Creative-ready ad, paused then active; review status in the detail view | Replaces the zip as the real deliverable |
 | **3** | Ad lead webhooks into leads + per-ad list (ADR 27) | Makes posting valuable |
 | **4** | Website-click campaigns, Story/IG hardening, insights on the detail view | Additive |
-| Later | Pixel / Conversions API, Advantage+ / asset customization, call/message destinations, Google Ads | Explicitly later |
+| Later | Pixel / Conversions API, Advantage+ / placement customization, call/message destinations, Google Ads | Explicitly later |
 
 Company ops in parallel with phase 1: Business Verification, App Review, Full Access
 upgrade. Without those, phase 2 only works for app testers.
@@ -113,7 +113,7 @@ upgrade. Without those, phase 2 only works for app testers.
 
 Existing `ads.platform_refs` / `platform_status` are enough for Meta ids. We still need:
 
-- Tenant-level Meta connection (tokens, Page, ad account, Instagram, funding/verification
+- Tenant-level Meta connection (tokens, Facebook Page, ad account, Instagram, funding/verification
   flags). Not an ad row.
 - Budget and schedule on the ad (or a child posting record). Typed, with currency matching
   the ad account.
@@ -126,7 +126,7 @@ edit.
 
 ## Testing stance
 
-- Unit / service tests: mapping, idempotent job, CTA rules, validation gates. Meta
+- Unit / service tests: mapping, safe-to-retry job, CTA rules, validation gates. Meta
   HTTP faked.
 - One E2E per epic: create Creative-ready ad → (with a test connection) run the job
   against a **real test ad account** creating `PAUSED` objects and `validate_only`. Do
@@ -151,7 +151,7 @@ These are product calls, not API facts. Proposed defaults in italics.
    true click-to-call / Messenger as phase 4.*
 6. **Must Story wait for Instagram?** *Yes: omit Story delivery if no IG, still post
    feed formats.*
-7. **Privacy website page:** do templates always publish one? If not, posting is blocked
+7. **Privacy website page:** do templates always include one in website publication? If not, posting is blocked
    until we add it to website templates.
 
 ## Company checklist (Placis ops)
@@ -160,9 +160,9 @@ These are product calls, not API facts. Proposed defaults in italics.
 - [ ] Placis Business Portfolio verified
 - [ ] App Review Advanced Access for the permission set in the access doc
 - [ ] Marketing API Access Tier Full Access (after 500 clean calls)
-- [ ] Webhook HTTPS endpoint (Page `leadgen`, ad account `effective_status`)
+- [ ] Webhook HTTPS endpoint (Facebook Page `leadgen`, ad account `effective_status`)
 - [ ] Token encryption at rest
-- [ ] Test ad account, test Page, test payment method
+- [ ] Test ad account, test Facebook Page, test payment method
 - [ ] Account Quality access for done-for-you
 
 ## Official docs (keep nearby)

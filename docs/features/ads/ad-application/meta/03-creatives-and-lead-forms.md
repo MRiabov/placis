@@ -1,16 +1,16 @@
-# Meta creatives and Instant Forms — research
+# Meta creatives and Instant Forms — investigation
 
-Status: research. How the Placis **ad set** (crops, copy, suggested **ad lead form**,
+Status: investigation. How the Placis **ad set** (crops, copy, suggested **ad lead form**,
 **ad destination**) becomes Meta creatives and a real Instant Form.
 
-See also: [index](00-index-research.md), [campaign structure](02-campaign-structure-research.md),
-[review](04-review-and-verification-research.md).
+See also: [index](00-index.md), [campaign structure](02-campaign-structure.md),
+[review](04-review-and-verification.md).
 
 ## Recommendation in one paragraph
 
 Upload each cropped image to the ad account, keep the returned **image hash**, and build
-one unpublished Page post per ad format via `object_story_spec`. Default conversion is an
-**Instant Form** on the contractor's Page (this is the real **ad lead form**). The form
+one unpublished Facebook Page post per ad format via `object_story_spec`. Default conversion is an
+**Instant Form** on the contractor's Facebook Page (this is the real **ad lead form**). The form
 **must** include a privacy policy URL on the live website. After submit, the thank-you
 button sends people to the **ad destination** website page. Website-only click ads are the
 fallback when the owner opts out of lead capture on Meta.
@@ -38,10 +38,10 @@ Hashes are per ad account. Copying an image to another account uses `copy_from`.
 | Carousel | 1:1 cards, 2–10 | 1080×1080 per card | Feed carousel |
 | Story | 9:16 | 1080×1920 | Stories / Reels |
 
-JPG or PNG, max ~30 MB. Keep Story safe zones in mind (top ~14% / bottom ~35% UI chrome)
+JPG or PNG, max ~30 MB. Keep Story safe zones in mind (top ~14% / bottom ~35% UI overlay)
 when we crop; that is a generation concern more than an API one.
 
-The old "20% text in image" rule is retired. Meta still reviews **claims** in baked-in
+The old "20% text in image" rule is retired. Meta still reviews **marketing statements** in baked-in
 text. Light cleanup that does not invent results is aligned with policy; before/after
 composites that imply guaranteed transformations are not (see review doc).
 
@@ -72,7 +72,7 @@ Useful mappings:
 | --- | --- | --- | --- |
 | `learn_more` | `LEARN_MORE` | `LEARN_MORE` | Allowed on Instant Forms |
 | `get_quote` | `GET_QUOTE` | `GET_QUOTE` | Allowed on Instant Forms |
-| `call_now` | not in Instant Form CTA list | `CALL_NOW` | Needs a phone (`marketing phone`). **Not supported on Facebook Stories.** |
+| `call_now` | not in Instant Form CTA list | `CALL_NOW` | Needs a marketing phone. **Not supported on Facebook Stories.** |
 | `message` | not in Instant Form CTA list | `MESSAGE_PAGE` (Messenger) | Different objective / `destination_type` |
 
 Instant Form CTAs documented for lead creatives: `APPLY_NOW`, `DOWNLOAD`, `GET_QUOTE`,
@@ -86,9 +86,9 @@ Do not send custom button text. Meta will not render it.
 
 ## Building the creative
 
-Pattern: unpublished Page post via `object_story_spec`.
+Pattern: unpublished Facebook Page post via `object_story_spec`.
 
-Required: `page_id` (admin or editor / ADVERTISE). Optional: `instagram_user_id` for IG.
+Required: `page_id` (admin or ADVERTISE). Optional: `instagram_user_id` for IG.
 
 ### Single image (square or portrait)
 
@@ -112,19 +112,19 @@ per-card CTA. All cards of a lead carousel must use the **same** Instant Form id
 
 ## Instant Form = the real ad lead form
 
-Suggested fields on `ad_lead_forms` are not enough to post. Create a form on the Page:
+Suggested fields on `ad_lead_forms` are not enough to post. Create a form on the Facebook Page:
 
 `POST /{PAGE_ID}/leadgen_forms`
 
 Minimum that actually works in production:
 
 1. `name`
-2. `questions` — use built-in types where we can (`FULL_NAME`, `EMAIL`, `PHONE`, plus
+2. `questions` — use built-in types where we can (`FULL_NAME`, `EMAIL`, a phone-number question, plus
    `CUSTOM` for trade-specific questions)
 3. **`privacy_policy`**: `{ "url": "<https live privacy website page>", "link_text": "Privacy policy" }`
    (`link_text` max 70 chars). Omitting this returns
    *"Either legal_content_id or privacy_policy is required"*
-   ([Page leadgen_forms](https://developers.facebook.com/docs/graph-api/reference/page/leadgen_forms/)).
+   ([Facebook Page leadgen_forms](https://developers.facebook.com/docs/graph-api/reference/page/leadgen_forms/)).
 4. `thank_you_page` with `button_type=VIEW_WEBSITE` and `website_url` = **ad destination**
    (this is how the Instant Form still "applies" to the website)
 
@@ -153,14 +153,14 @@ destination is published".
 
 Two channels, both needed:
 
-1. **Webhook** `Page` object, field `leadgen`. Install the app on the Page
+1. **Webhook** Facebook Page object, field `leadgen`. Install the app on the Facebook Page
    (`POST /{page-id}/subscribed_apps`). Payload has `leadgen_id`; then
    `GET /{LEAD_ID}?fields=created_time,id,ad_id,form_id,field_data`.
 2. **Backfill** `GET /{form-id}/leads` for missed webhooks.
 
 Docs: [Webhooks for lead ads](https://developers.facebook.com/docs/marketing-api/guides/lead-ads/quickstart/webhooks-integration/).
 
-Permissions: `leads_retrieval` + the Page permissions in the access doc.
+Permissions: `leads_retrieval` + the Facebook Page permissions in the access doc.
 
 Write into the existing leads table as **ad leads** (distinct from website leads), with
 `ad_id` / Meta lead id for attribution. The ads detail view already specifies a per-ad
@@ -172,11 +172,11 @@ When destination is the website:
 
 - Campaign objective `OUTCOME_TRAFFIC` or `OUTCOME_LEADS` + `destination_type=WEBSITE`
 - `link` = live ad destination
-- Meta's ad review **crawls that website page**. Offer in the ad must match the page.
+- Meta's ad review **crawls that website page**. Offer in the ad must match the website page.
   A published contact/quote website page is the right default (already the picker
   default).
 
-Without a Pixel, optimization is clicks / landing page views, not qualified quotes.
+Without a Pixel, optimization is clicks / website page views, not qualified quotes.
 Acceptable for v1 website-click; Instant Form is still the better default for
 contractors.
 
