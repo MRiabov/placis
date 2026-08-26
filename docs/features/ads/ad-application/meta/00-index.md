@@ -1,6 +1,6 @@
-# Meta ad posting — research index
+# Meta ad posting — investigation index
 
-Status: research (not a PRD). Unshipped. Ad generation remains the shipped-spec authority
+Status: investigation (not a PRD). Unshipped. Ad generation remains the shipped-spec authority
 under [`ad-generation/`](../../ad-generation/prd.md). This directory is how we would later
 do **ad posting** to Meta (Facebook / Instagram).
 
@@ -19,7 +19,7 @@ Related:
 How Placis would take a contractor's **ad ready to post** ad set and run it as a paid ad on
 Meta, including:
 
-1. which Meta assets the contractor must already own
+1. which Meta accounts the contractor must already own
 2. how Placis authenticates and keeps acting without the owner sitting in Ads Manager
 3. how the ad set maps onto Meta's campaign objects
 4. how Instant Forms become the real **ad lead form**
@@ -28,18 +28,18 @@ Meta, including:
 
 ## Reading order
 
-1. [Access and accounts](01-access-and-accounts-research.md) — Business Portfolio, Page, ad
+1. [Access and accounts](01-access-and-accounts.md) — Business Portfolio, Facebook Page, ad
    account, Login for Business, App Review, billing
-2. [Campaign structure](02-campaign-structure-research.md) — Campaign → Ad set → Ad → Creative,
+2. [Campaign structure](02-campaign-structure.md) — Campaign → Ad set → Ad → Creative,
    objectives, mapping to Placis
-3. [Creatives and Instant Forms](03-creatives-and-lead-forms-research.md) — image hashes,
+3. [Creatives and Instant Forms](03-creatives-and-lead-forms.md) — image hashes,
    ad formats, copy, CTAs, privacy policy, thank-you website page
-4. [Review and verification](04-review-and-verification-research.md) — ad review, pre-check,
+4. [Review and verification](04-review-and-verification.md) — ad review, pre-check,
    identity/business verification, contractor-relevant policy
-5. [Recommended application shape](05-recommended-application-shape-research.md) — proposed
+5. [Recommended application shape](05-recommended-application-shape.md) — proposed
    product path, gates, phasing, open decisions
 
-## Scope of this research
+## Scope of this investigation
 
 In:
 
@@ -56,16 +56,15 @@ Out:
 - Pixel / Conversions API as a first requirement (needed later for website-conversion
   optimization)
 - Full ads-manager UX (budgets as a console, A/B, retargeting dashboards)
-- Running ads from a Placis-owned Page as if they were the contractor
+- Running ads from a Placis-owned Facebook Page as if they were the contractor
 
 ## Source of truth for names
 
 Use [glossary](../../../glossary.md) terms in product sentences: **ad**, **ad set**, **ad
-posting**, **ad platform**, **ad lead form**, **ad lead**, **ad destination**, **ideal
-customer profile**.
+posting**, **ad platform**, **ad lead form**, **ad lead**, **ad destination**,
+**ideal customer profile**.
 
-Meta's own object names (Campaign, Ad Set, Ad, Ad Creative, Instant Form, Page, Business
-Portfolio) stay as Meta names in these research files. They are not Placis domain terms.
+Meta's own object names (Campaign, Ad Set, Ad, Ad Creative, Instant Form, Facebook Page, Business Portfolio) stay as Meta names in these investigation files. They are not Placis domain terms.
 
 ## Official starting points
 

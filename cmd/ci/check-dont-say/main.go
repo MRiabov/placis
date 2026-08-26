@@ -46,6 +46,8 @@ func run(args []string) error {
 		if err != nil {
 			return err
 		}
+	} else {
+		files = filterEnabledFiles(files, *frontend)
 	}
 
 	var hits []hit
@@ -53,8 +55,7 @@ func run(args []string) error {
 		if shouldSkipPath(path, *frontend) {
 			continue
 		}
-		ext := strings.ToLower(filepath.Ext(path))
-		if ext != ".md" && ext != ".go" && !(*frontend && (ext == ".ts" || ext == ".tsx")) {
+		if !scanExt(path, *frontend) {
 			continue
 		}
 		found, err := scanFile(path, compiled)
@@ -76,20 +77,27 @@ func run(args []string) error {
 func glossaryStaged(files []string, glossaryPath string) bool {
 	want := filepath.ToSlash(glossaryPath)
 	for _, f := range files {
-		if filepath.ToSlash(f) == want {
+		slash := filepath.ToSlash(f)
+		if slash == want || strings.HasSuffix(slash, "/"+want) {
 			return true
 		}
 	}
 	return false
 }
 
-func collectFiles(frontend bool) ([]string, error) {
-	roots := append([]string{}, defaultRoots...)
-	if frontend {
-		roots = append(roots, "frontend-2")
+func filterEnabledFiles(files []string, frontend bool) []string {
+	var kept []string
+	for _, path := range files {
+		if inEnabledTree(path, frontend) {
+			kept = append(kept, path)
+		}
 	}
+	return kept
+}
+
+func collectFiles(frontend bool) ([]string, error) {
 	var files []string
-	for _, root := range roots {
+	for _, root := range enabledRoots(frontend) {
 		if _, err := os.Stat(root); err != nil {
 			continue
 		}
@@ -103,8 +111,7 @@ func collectFiles(frontend bool) ([]string, error) {
 			if shouldSkipPath(path, frontend) {
 				return nil
 			}
-			ext := strings.ToLower(filepath.Ext(path))
-			if ext == ".md" || ext == ".go" || (frontend && (ext == ".ts" || ext == ".tsx")) {
+			if scanExt(path, frontend) {
 				files = append(files, path)
 			}
 			return nil

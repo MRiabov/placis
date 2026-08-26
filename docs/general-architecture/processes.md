@@ -4,8 +4,8 @@ One Go process shares one database. `frontend-2` and the contractor website talk
 API. The Placis website is a separate static origin and does not call Go.
 
 1. `cmd/api` — the Go HTTP API and in-process `River` workers. Completes requests quickly,
-   persists intent, and runs background jobs in the same process: AI generation, business
-   research, file processing, notifications, and export generation.
+   persists intent, and runs background jobs in the same process: AI generation, business research,
+   file processing, notifications, and export generation.
 2. `frontend-2` — the CMS and onboarding; built as static assets, talking to the API through
    the generated `openapi-fetch` helper. Stack: [frontend stack](frontend-stack.md). UI rules:
    [frontend](frontend.md).

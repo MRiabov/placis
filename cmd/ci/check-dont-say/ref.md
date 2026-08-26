@@ -2,7 +2,7 @@
 
 The ban list is the `### Don't say` table in `docs/glossary.md`. This file is the pass/fail reference for `cmd/ci/check-dont-say`. The checker skips this directory, so illustrations may contain banned words.
 
-Unmarked = nowhere (docs, Go, backticks, table names, paths). `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` = the unqualified word is allowed only in that feature’s technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`. Everywhere else use the Say. `(in a PRD)` stays only for `CMS`. Leftover `(bare)` is unmarked.
+Unmarked = nowhere (docs, Go, backticks, table names, paths). `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` = the unqualified word is allowed only in that feature’s technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`. `(website)` also covers `apps/contractor-website`. `apps/placis-website` is scanned but is not the website home. Everywhere else use the Say. `(in a PRD)` stays only for `CMS`. Leftover `(bare)` is unmarked.
 
 Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `interview (onboarding)`, `CMS (in a PRD)`. Covering still applies: the Say (`website page`) does not flag the shorter Don't-say.
 
@@ -22,6 +22,8 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 - Same ads file: “website page” → **pass** (covering).
 - `docs/features/website/architecture.md`: “route `/preview/page`” → **pass** (home-scoped token inside a `/` path is skipped).
 - Later `internal/website/page.go`: `type Page struct` → **pass** (home package). `internal/ads/page.go` → **fail**.
+- `apps/contractor-website/src/middleware.ts`: “render the page” in a `.md`/`.go` file → **pass** (website home).
+- `apps/placis-website/README.md`: “the page” → **fail**. The Placis website is not the contractor website home. Say **website page**.
 
 ## Self-understood at home — ads `posting`
 
