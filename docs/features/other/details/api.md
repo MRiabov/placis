@@ -55,9 +55,11 @@ Validation errors: `string[]` with `maxLength` per item.
   Website editor reviews Content does **not** call this; it PATCHes that website section’s
   `review_ids[]`.
 - **Idempotency-Key:** yes.
-- **Request:** pin / unpin / reorder **top reviews** (`is_top`, dense `top_position` 1…n,
-  n ≤ 30). New pin appends as least featured. Cap 30 is refused (`400`) with a visible error.
-  Does **not** rewrite `website_slot_reviews`.
+- **Request:** the new top set as ordered `review_ids[]` (featured-first, max 30, each id
+  `in_pool`, no duplicates). The server writes `is_top` + dense `top_position` 1…n from that
+  list; the request does not include `top_position`. New pin appends as least featured. Longer
+  than 30, a duplicate id, or an id not in the pool is `400`. Does **not** rewrite
+  `website_slot_reviews`.
 
 ### PATCH /v1/business-profile/reviews/{id}/archive and …/unarchive
 

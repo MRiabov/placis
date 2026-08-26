@@ -91,6 +91,13 @@ the profile as of `accepted_edit_id` (client interview complete).
   `top_position` nullable int (only when `is_top`; dense order 1…n, **n ≤ 30**; 1 is most
   featured), `status` (`in_pool` / `archived`), `position`
 
+  Top set: partial unique index `(business_profile_id, top_position) WHERE top_position IS NOT NULL`
+  (non-top rows keep `top_position` null). Check: `is_top` iff `top_position` is set, and
+  `top_position` is 1–30. Unique 1–30 is the cap — two rows cannot share a number. Writers never
+  assign a single `top_position`. They replace the whole ordered id list in one transaction
+  (`SELECT … FOR UPDATE` the profile row, then densify 1…n from that list). The LLM pin job
+  and Certifications and reviews PATCH do the same replace, not a merge.
+
 Website sections hold their own ordered ids via `website_slot_reviews`. Ads use `is_top`. They
 do not copy the text except at website publication (citation baked into the website manifest).
 Archive is not delete: archived imported rows stay so re-import does not duplicate that
