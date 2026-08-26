@@ -22,6 +22,7 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [details](../other/details/README.md) — the Details view (shared with ads); reached from Profile
 - [media library](../other/media/README.md) — the media library + image editing
 - [testing.md](testing.md) — the website E2E test
+- [design/cms.html](../../website/design/cms.html) — static design mock of The CMS (open in a browser)
 
 Standalone screens beside the website editor: **Profile** (Details, Projects, Certifications and
 reviews) and **Media library** (`/cms/media`; also a selectable workspace item in the website
