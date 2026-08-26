@@ -62,7 +62,7 @@ console.
   Restore is `GET …/profile`.
 - `/onboarding/preview` is the SSE website-section carousel; the shareable host is
   the preview website address (not `/preview/{token}/…`, not an SSE endpoint). Website
-  activation uses activate / activation-checkout / activation-status (not a browser
+  activation uses public checkout / status (Host / `website_prefix`; not a browser
   success URL alone).
 - Website editor: one in-memory projection; PATCH copies dirty keys; merge only
   `{ edit_history_head, batch_id }`; no GET-after-PATCH; text copies out on click-off;

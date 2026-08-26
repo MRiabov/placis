@@ -147,7 +147,7 @@ struct, so payloads are in `/openapi.json`. Do not use a raw `net/http` handler 
 the spec. `frontend-2` exhaustive-matches; unknown events are logged and dropped, never
 parsed as `any`.
 
-The website preview link is **not** SSE. The short progress screen in `frontend-2` is.
+The contractor host is **not** SSE. `/onboarding/preview` in `frontend-2` is.
 
 ## Worker internal render
 

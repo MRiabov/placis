@@ -77,7 +77,7 @@ business profile; the listing address stays here.
 
 No `website_previews` / `token_hash`. The website preview is the host reserved at 07
 ([07](pipeline/07-website-preview.md)). Website publications live on
-[website data-model](../website/persistence.md).
+[website persistence](../website/persistence.md).
 
 ## Indexes
 

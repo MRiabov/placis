@@ -11,7 +11,7 @@ Clerk owns contractor identity, sign-in, and Clerk organizations. Placis never b
 
 ## Tenant vs Clerk organization
 
-An **unactivated** tenant exists from onboarding confirm (`status=unactivated`, no Clerk org). An
+An **unactivated** tenant exists from business lookup (`status=unactivated`, no Clerk org). An
 **activated** tenant is that same row after website activation (`status=active`). `/me` returns a
 tenant only when `status=active` (the "not paid / CMS closed" signal is still `tenant: null`).
 

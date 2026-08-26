@@ -6,7 +6,7 @@ Clerk identity and tenant membership. Conventions: [persistence conventions](../
 Hostnames for the live contractor website are [website persistence](../../website/persistence.md)
 (`website_addresses`), not this file.
 
-A tenant row is created at onboarding confirm (`status=unactivated`). 07 reserves
+A tenant row is created at business lookup (`status=unactivated`). 07 reserves
 `website_prefix`. Website activation **upgrades** that row (`status=active`); it does not insert
 a second tenant. `/me` returns a tenant only when `status=active`. Unactivated work is reached
 via the onboarding session token.
