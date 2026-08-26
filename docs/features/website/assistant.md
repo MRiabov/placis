@@ -111,9 +111,9 @@ not send `base_edit_history_head`; the PATCH already did. Success / `409`
 `edit_history_conflict` match any other PATCH ([editing.md](editing.md)).
 
 **One in-flight website-assistant run per tenant** (includes onboarding 06). A second start is
-`409` until the current run finishes, fails, or is cancelled. Two tabs, voice + text, or 06 +
-the website editor must not both start a run. While 06 is in flight, CMS PATCH is `409`.
-While a CMS run is in flight, PATCH is allowed — that is the apply path.
+`409` until the current run finishes or fails. There is no cancel HTTP. Two tabs, voice +
+text, or 06 + the website editor must not both start a run. While 06 is in flight, CMS PATCH
+is `409`. While a CMS run is in flight, PATCH is allowed — that is the apply path.
 
 ## Output
 

@@ -43,6 +43,8 @@ DB asserts name the tables from [persistence.md](persistence.md) (and
      copies are never overwritten (both rows remain). Unpublished rows are unchanged.
    - UI: the dropdown updates from the rollback `*Read`; the live website shows the earlier
      published website copy.
+   Continue editing from an owner website version is editor GET `publication_id` then PATCH,
+   not this step.
 
 8. **Website form → website lead** — a website visitor submits a website form.
    - DB: `leads` (source=`website_form`, `website_form_id`, `contact_name`, `marketing_phone`,

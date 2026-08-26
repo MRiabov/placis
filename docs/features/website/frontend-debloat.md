@@ -74,8 +74,8 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 
 | Today | Constrained API |
 | --- | --- |
-| `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/website/editor/pages…`; PATCH body is dirty keys; response `{ edit_history_head, batch_id }` plus assigned ids |
-| `POST …/publish` | `POST /v1/website/publications` |
+| `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/website/editor/pages…`; GET may pass `publication_id` (continue editing from an owner website version, then PATCH). PATCH body is dirty keys including page `status`; response `{ edit_history_head, batch_id }` plus assigned ids |
+| `POST …/publish` | `POST /v1/website/publications` (no destination). Live website rollback: `POST /v1/website/publications/{id}/rollback`. Do not port restore-unpublished. |
 | Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; assistant start under `/v1/website/editor/pages/{page_id}/assistant`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
 | `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
 | Projects CRUD already in `cms.ts` | `/v1/projects` |
