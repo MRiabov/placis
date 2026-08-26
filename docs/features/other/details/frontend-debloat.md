@@ -41,6 +41,7 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
   leave “next CMS port batch” copy).
 - **Save details** control — same click-off / explicit Update as the rest of
   the CMS; busy on the control, not a whole-screen swap.
+- Careers class names on the Business details screen (`.cms-careers-*`).
 - **AI tools** left-nav item (it was a second Sites; cleanup is `/cms/media`).
 
 ## Do not port
