@@ -145,8 +145,10 @@ heading. It must contain a `| Don't say | Say |` title row, a separator row, and
 `| left | right |` data row. Split left cells on ` / `. Parentheticals are stripped from the
 matched phrase. Unmarked tokens are always-ban. `(website)` / `(ads)` / `(onboarding)` /
 `(media)` / `(details)` are unqualified only in that feature’s technical docs (not `prd.md`,
-not `frontend.md`) and later `internal/<home>/`. Backticked names and `CMS (in a PRD)` are
-product-docs only. Leftover `(bare)` is always-ban. The last API-ops row is skipped.
+not `frontend.md`) and later `internal/<home>/`. `(website)` also covers
+`apps/contractor-website`. `apps/placis-website` is scanned and is not website home.
+Backticked names and `CMS (in a PRD)` are product-docs only. Leftover `(bare)` is always-ban.
+The last API-ops row is skipped.
 Identifier inflections of always-ban and home-scoped phrases (snake, kebab, Pascal, camel) are
 banned outside the allowed files, including inside backticks (table names, types, paths).
 Backticks are not an escape. Home-scoped tokens in a `/`-delimited route or file path are not
@@ -157,17 +159,21 @@ flagged (the URL still uses the short word). Always-ban tokens in paths still fa
 
 **Tiers**
 
-- Token **without** a home marker: always-ban in `docs/` and Go.
+- Token **without** a home marker: always-ban in `docs/`, Go, and the website apps.
 - Token **with** `(website)` (or another home): that feature’s technical docs only. PRDs, UI
-  specs, and other features use the Say.
+  specs, and other features use the Say. `(website)` includes `apps/contractor-website`.
 
 **Pre-commit vs CI**
 
-- Pre-commit: `language: golang` in `.pre-commit-config.yaml` builds `cmd/ci/check-dont-say` once and
-  caches the binary. The hook receives staged `*.md` / `*.go` paths (not `go run` on every commit).
-  `frontend-2` is excluded. If `docs/glossary.md` is staged, the checker scans the enabled trees
-  (`docs/`, `internal/`, `cmd/`, `migrations/`, `catalog/`).
-- CI: the same command over those trees, `go run ./cmd/ci/check-dont-say --all` (not via `just`).
+- Install once per clone: `pre-commit install`. Git worktrees share `.git/hooks`.
+- Pre-commit: `.pre-commit-config.yaml` runs `go run ./cmd/ci/check-dont-say` on staged files
+  under `docs/`, `internal/`, `cmd/`, `migrations/`, `catalog/`, `apps/contractor-website`,
+  `apps/placis-website`, and `scripts/` (Go's build cache keeps this cheap). Markdown, Go, and
+  `scripts/` JavaScript (`.js` / `.mjs`) are scanned. `frontend-2` is excluded.
+  If `docs/glossary.md` is staged, the checker scans those trees in full. Paths outside those
+  trees (including `packages/`) are ignored even when filenames are passed in.
+- CI: `.github/workflows/check-dont-say.yml` runs `go test ./cmd/ci/check-dont-say` then
+  `go run ./cmd/ci/check-dont-say --all` on pull requests (not via `just`).
   `--frontend` stays off until frontend work starts from the Go backend (see
   [frontend-debloat.md](frontend-debloat.md)).
 

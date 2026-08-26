@@ -222,6 +222,8 @@ func TestHomeScopedPage(t *testing.T) {
 		{"testdata/docs/features/website/architecture.md", "route `/preview/page`\n", false},
 		{"testdata/internal/website/page.go", "type Page struct {}\n", false},
 		{"testdata/internal/ads/page.go", "type Page struct {}\n", true},
+		{"testdata/apps/contractor-website/src/page.go", "each page has sections\n", false},
+		{"testdata/apps/placis-website/README.md", "each page has sections\n", true},
 	}
 	seen := map[string]int{}
 	for _, tc := range cases {
@@ -306,6 +308,59 @@ func TestHomeScopedPostingAndInterview(t *testing.T) {
 	}
 	if hits := writeScan("testdata/docs/README.md", "interview\n"); len(hits) == 0 {
 		t.Fatal("docs README interview should fail")
+	}
+}
+
+func TestAdApplicationIsScanned(t *testing.T) {
+	if shouldSkipPath("docs/features/ads/ad-application/meta/00-index.md", false) {
+		t.Fatal("ad-application investigation notes should be scanned")
+	}
+	if shouldSkipPath("docs/features/ads/ad-generation/prd.md", false) {
+		t.Fatal("ads product spec should still be scanned")
+	}
+}
+
+func TestEnabledTrees(t *testing.T) {
+	if !inEnabledTree("docs/features/ads/ad-generation/prd.md", false) {
+		t.Fatal("docs should be enabled")
+	}
+	if !inEnabledTree("apps/contractor-website/README.md", false) {
+		t.Fatal("contractor website should be enabled")
+	}
+	if !inEnabledTree("apps/placis-website/README.md", false) {
+		t.Fatal("Placis website should be enabled")
+	}
+	if !inEnabledTree("scripts/deploy_contractor_website_cloudflare.mjs", false) {
+		t.Fatal("scripts should be enabled")
+	}
+	if !scanExt("scripts/deploy_contractor_website_cloudflare.mjs", false) {
+		t.Fatal("scripts .mjs should be scanned")
+	}
+	if inEnabledTree("packages/website-components/src/registry/hero/type_first/docs.md", false) {
+		t.Fatal("packages markdown is outside enabled trees")
+	}
+	if inEnabledTree("frontend-2/src/x.md", false) {
+		t.Fatal("frontend-2 stays off until --frontend")
+	}
+	if !inEnabledTree("frontend-2/src/x.md", true) {
+		t.Fatal("frontend-2 should be enabled with --frontend")
+	}
+	if !shouldSkipPath("packages/website-components/src/registry/hero/type_first/docs.md", false) {
+		t.Fatal("packages markdown should be skipped")
+	}
+	got := filterEnabledFiles([]string{
+		"packages/website-components/src/x.md",
+		"apps/contractor-website/README.md",
+		"frontend-2/src/x.md",
+	}, false)
+	if len(got) != 1 || got[0] != "apps/contractor-website/README.md" {
+		t.Fatalf("explicit filenames must stay in enabled trees, got %v", got)
+	}
+}
+
+func TestGlossaryStagedSuffix(t *testing.T) {
+	if !glossaryStaged([]string{"/tmp/repo/docs/glossary.md"}, "docs/glossary.md") {
+		t.Fatal("absolute glossary path should count as staged")
 	}
 }
 

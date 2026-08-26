@@ -1,8 +1,14 @@
-# Local hooks. language: golang builds cmd/ci/check-dont-say once and caches the binary.
-# repo: . is required so pre-commit `go install ./...` the checker (repo: local cannot).
+# Install once per clone (worktrees share `.git/hooks`): `pre-commit install`.
+# repo: local runs the working-tree checker. `repo: .` + `rev: HEAD` freezes the
+# binary at first install and never picks up checker changes. Go's build cache
+# keeps `go run` cheap after the first compile.
 # frontend-2 is in scope but excluded until frontend work starts from the Go backend.
 repos:
-  - repo: .
-    rev: HEAD
+  - repo: local
     hooks:
       - id: check-dont-say
+        name: Don't-say glossary check
+        language: system
+        entry: go run ./cmd/ci/check-dont-say
+        pass_filenames: true
+        files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$'

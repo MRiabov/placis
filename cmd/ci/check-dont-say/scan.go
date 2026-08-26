@@ -9,7 +9,16 @@ import (
 	"unicode"
 )
 
-var defaultRoots = []string{"docs", "internal", "cmd", "migrations", "catalog"}
+var defaultRoots = []string{
+	"docs",
+	"internal",
+	"cmd",
+	"migrations",
+	"catalog",
+	"apps/contractor-website",
+	"apps/placis-website",
+	"scripts",
+}
 
 type compiledToken struct {
 	token
@@ -110,6 +119,8 @@ func homePrefixes(home string) []string {
 		return []string{"docs/features/other/media", "internal/media"}
 	case "details":
 		return []string{"docs/features/other/details", "internal/details"}
+	case "website":
+		return []string{"docs/features/website", "internal/website", "apps/contractor-website"}
 	default:
 		return []string{"docs/features/" + home, "internal/" + home}
 	}
@@ -159,7 +170,47 @@ func appliesTo(tok compiledToken, path string) bool {
 	}
 }
 
+func enabledRoots(frontend bool) []string {
+	roots := append([]string{}, defaultRoots...)
+	if frontend {
+		roots = append(roots, "frontend-2")
+	}
+	return roots
+}
+
+func inEnabledTree(path string, frontend bool) bool {
+	slash := strings.TrimPrefix(filepath.ToSlash(path), "./")
+	if filepath.IsAbs(path) {
+		if wd, err := os.Getwd(); err == nil {
+			if rel, err := filepath.Rel(wd, path); err == nil && !strings.HasPrefix(rel, "..") {
+				slash = strings.TrimPrefix(filepath.ToSlash(rel), "./")
+			}
+		}
+	}
+	for _, root := range enabledRoots(frontend) {
+		if slash == root || strings.HasPrefix(slash, root+"/") {
+			return true
+		}
+	}
+	return false
+}
+
+func scanExt(path string, frontend bool) bool {
+	ext := strings.ToLower(filepath.Ext(path))
+	switch ext {
+	case ".md", ".go", ".mjs", ".js":
+		return true
+	case ".ts", ".tsx":
+		return frontend
+	default:
+		return false
+	}
+}
+
 func shouldSkipPath(path string, frontend bool) bool {
+	if !inEnabledTree(path, frontend) {
+		return true
+	}
 	slash := filepath.ToSlash(path)
 	switch {
 	case slash == "docs/glossary.md" || strings.HasSuffix(slash, "/docs/glossary.md"):
@@ -171,8 +222,6 @@ func shouldSkipPath(path string, frontend bool) bool {
 	case strings.Contains(slash, "cmd/ci/check-dont-say/"):
 		return true
 	case strings.HasSuffix(slash, "generated/api-types.ts"):
-		return true
-	case !frontend && (strings.HasPrefix(slash, "frontend-2/") || strings.Contains(slash, "/frontend-2/")):
 		return true
 	default:
 		return false
@@ -192,6 +241,25 @@ var extraAllowed = []string{
 	"walking skeleton",
 	"signed url",
 	"signed urls",
+	"signed-in",
+	"signed-out",
+	"signed in",
+	"signed out",
+	"facebook page",
+	"facebook pages",
+	"business portfolio",
+	"system user",
+	"system users",
+	"user token",
+	"user tokens",
+	"user access token",
+	"facebook user",
+	"instagram user",
+	"playwright page",
+	"actions/setup-go",
+	"preview.placis.com",
+	"dashboard|preview|support|setup",
+	"session: false",
 	"http header",
 	"request header",
 	"response header",
