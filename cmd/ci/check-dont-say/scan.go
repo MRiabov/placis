@@ -208,8 +208,6 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	case strings.Contains(slash, "cmd/ci/check-dont-say/"):
 		return true
-	case strings.Contains(slash, "docs/features/ads/ad-application/"):
-		return true
 	case strings.HasSuffix(slash, "generated/api-types.ts"):
 		return true
 	default:
@@ -234,6 +232,16 @@ var extraAllowed = []string{
 	"signed-out",
 	"signed in",
 	"signed out",
+	"facebook page",
+	"facebook pages",
+	"business portfolio",
+	"system user",
+	"system users",
+	"user token",
+	"user tokens",
+	"user access token",
+	"facebook user",
+	"instagram user",
 	"playwright page",
 	"actions/setup-go",
 	"preview.placis.com",

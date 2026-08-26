@@ -4,5 +4,4 @@
   entry: go run ./cmd/ci/check-dont-say
   language: system
   files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website)/.*\.(md|go)$'
-  exclude: '^docs/features/ads/ad-application/'
   pass_filenames: true

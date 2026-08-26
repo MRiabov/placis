@@ -154,8 +154,7 @@ banned outside the allowed files, including inside backticks (table names, types
 Backticks are not an escape. Home-scoped tokens in a `/`-delimited route or file path are not
 flagged (the URL still uses the short word). Always-ban tokens in paths still fail.
 `apps/contractor-website` is the contractor website application directory.
-`docs/glossary.md` itself is not scanned (it is the list). Investigation notes under
-`docs/features/ads/ad-application/` are skipped (not the ads product spec). Worked examples:
+`docs/glossary.md` itself is not scanned (it is the list). Worked examples:
 [`cmd/ci/check-dont-say/ref.md`](../../cmd/ci/check-dont-say/ref.md).
 
 **Tiers**
@@ -177,6 +176,5 @@ flagged (the URL still uses the short word). Always-ban tokens in paths still fa
   `--frontend` stays off until frontend work starts from the Go backend (see
   [frontend-debloat.md](frontend-debloat.md)).
 
-Skip `.agents/`, generated files, and `docs/features/ads/ad-application/` (Meta ad posting
-investigation; not the ads spec). There is no empty-list or shrink ratchet: parse failure is
+Skip `.agents/` and generated files. There is no empty-list or shrink ratchet: parse failure is
 the failure.
