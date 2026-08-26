@@ -1050,7 +1050,7 @@ In code: `ads` plus `ad_variants`, `ad_copy_variants`, `ad_image_placements`,
 
 ### Don't say
 
-Never in product/user-facing text, PRD prose, technical docs, or code, unless a home marker says the unqualified word is self-understood there. `cmd/ci/check-dont-say` reads this table: keep the `Don't say | Say` header, separator, data rows, and end the section at the next `## ` heading. Unmarked = nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` = unqualified only in that feature’s technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`; other features use the Say. `(in a PRD)` is only for `CMS`. Leftover `(bare)` is unmarked. Worked examples: `cmd/ci/check-dont-say/ref.md`.
+Never in product/user-facing text, PRD prose, technical docs, or code, unless a home marker says the unqualified word is self-understood there. `cmd/ci/check-dont-say` reads this table: keep the `Don't say | Say` header, separator, data rows, and end the section at the next `## ` heading. Unmarked = nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` = unqualified only in that feature’s technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`; `(website)` also covers `apps/contractor-website`. Other features use the Say. `(in a PRD)` is only for `CMS`. Leftover `(bare)` is unmarked. Worked examples: `cmd/ci/check-dont-say/ref.md`.
 
 | Don't say | Say |
 | --- | --- |
