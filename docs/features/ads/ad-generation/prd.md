@@ -249,8 +249,10 @@ Ad copy is short and structured. Each variant stores:
 Limits live in one constants module so the UI and validation read the same values. Generated
 length follows the format ([ADR 33](ADR.md)): feed primary text is the longer body; carousel
 copy is card-length; story copy is overlay-short. Copy is
-generated from the business profile: services, service area, marketing phone, certifications and reviews.
-LLM-drafted copy is recorded as a reviewable
+generated from the business profile: services, service area, marketing phone, certifications, and
+**top reviews** (by id; the review citation, not a rewrite of the review). Prefer earlier top
+reviews in copy. Do not invent reviews. **Link your Facebook** is a Details link, not Ads
+Connect Meta. LLM-drafted copy is recorded as a reviewable
 ad draft with where it came from; it never writes directly into an approved variant.
 
 The owner can accept, edit, or reject each generated copy field. Character counts update live and
@@ -288,7 +290,7 @@ before it can appear in an **ad ready to post** ad set.
 
 Photos showing third-party properties or identifiable people are fine to use when their
 media-library review is already approved — that approval is the owner's.
-Photos not yet approved need the same owner approval as website certifications, reviews, or
+Photos not yet approved need the same owner approval as certifications, reviews, or
 projects before they can be used. Ads must not present stock or unrelated imagery as the
 contractor's work.
 
@@ -395,7 +397,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria).
    profile, so that I get advertising that is ad ready to post without writing marketing copy.
    - "Create ad and generate" drafts copy and an image gallery from approved photos, with light
      cleanup edits where needed, based on projects, services, service area, certifications, and
-     reviews.
+     **top reviews**.
    - Drafts are reviewable with where they came from; manual edits are preserved and the LLM
      never overwrites an approved variant silently.
    - LLM tracing calls are recorded through `ai_generations` tracing with contractor scope and

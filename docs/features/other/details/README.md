@@ -8,11 +8,17 @@ reaches it from **Profile** → **Business details**.
 
 - **Who they are** — business name, legal name, trade, established year, description.
 - **Contact** — marketing phone, marketing email, existing site URL. Emergency phone number is how we
-  reach the owner, not what leads use.
+  reach the owner, not what leads use (unpublished; not on this screen unless asked).
 - **Where they are** — business location, service areas.
 - **What they do** — featured services.
 - **Legal** — company number, VAT number, registered office.
-- **Opening hours** — per day: open, close, and a note.
+- **Opening hours** — Google Calendar-style picker, one row per day: Opens, to, Closes, Closed.
+  Hours they pick up the marketing phone. No Appointment note.
+- **Logo** — pick from the media library.
+- **Facebook** — `facebook_profile_url`. Link when unlinked (paste URL this pass);
+  URL + Change when linked. Same link as review import.
+- **Google Maps listing** — `google_maps_listing_url`. Same link pattern. Certifications and
+  reviews imports from that listing.
 
 ## Shared by everyone
 
@@ -28,6 +34,7 @@ truth only in the ad. Ads may also write a detail here via a tool call (`busines
 the owner sees a **notification** in Ads (OK keeps it; Revert undoes that increment).
 
 How the owner reaches it: [frontend.md](frontend.md). Port:
-[frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). HTTP:
+[frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). Look:
+[website design-decisions](../../website/design-decisions.md). HTTP:
 [api.md](api.md). Tables: [persistence.md](persistence.md). Projects:
 [website HTTP](../../website/api.md).

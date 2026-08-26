@@ -18,7 +18,7 @@ Validation errors: `string[]` with `maxLength` per item.
 - **Callers:** `/cms/details` (Business details). Website editor `*Read` may **embed** display
   name / marketing phone for website placeholders; it does not own this resource.
 - **Response:** live business profile `*Read` (who they are, contact, where, services, legal,
-  opening hours). No profile-history timeline.
+  opening hours, Facebook URL, Google Maps listing URL, logo). No profile-history timeline.
 
 ### PATCH /v1/business-profile
 
@@ -35,15 +35,57 @@ Validation errors: `string[]` with `maxLength` per item.
 - **Callers:** `/cms/certifications-and-reviews`.
 - **PUT Idempotency-Key:** yes.
 - **Response:** selected accreditations plus `available[]` (definitions for that trade/country)
-  in the same `*Read`. Persistence may use `website_certification_selections`; that is a table,
-  not an HTTP collection.
+  in the same `*Read`. Persistence is `certification_definitions` +
+  `business_profile_certification_selections`; those are tables, not an HTTP collection.
 - **Must not:** `/v1/certification-selections` or `/v1/certifications` as a peer resource.
 
 ### GET /v1/business-profile/reviews
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** Certifications and reviews screen. Website editor picks these onto website slots
-  (`website_slot_reviews`); Details owns the rows.
+- **Callers:** Certifications and reviews screen. Website editor reviews Content uses this
+  pool to **add** a review onto **that website section**; that website section’s ordered ids live on
+  the website editor GET/PATCH (`website_slot_reviews`). Details owns the rows.
+- **Response:** the **pool** (`status=in_pool`), **top reviews** first (`is_top`, then
+  `top_position`). Archived rows only when listing the archive.
+
+### PATCH /v1/business-profile/reviews (top / order)
+
+- **Auth:** Clerk JWT, active tenant
+- **Callers:** Certifications and reviews only (pin / unpin / reorder **top reviews** for ads).
+  Website editor reviews Content does **not** call this; it PATCHes that website section’s
+  `review_ids[]`.
+- **Idempotency-Key:** yes.
+- **Request:** pin / unpin / reorder **top reviews** (`is_top`, dense `top_position` 1…n,
+  n ≤ 30). New pin appends as least featured. Cap 30 is refused (`400`) with a visible error.
+  Does **not** rewrite `website_slot_reviews`.
+
+### PATCH /v1/business-profile/reviews/{id}/archive and …/unarchive
+
+- **Auth:** Clerk JWT, active tenant
+- **Callers:** Certifications and reviews. Archive leaves the pool and top reviews, and drops
+  that id from every `website_slot_reviews` array (then compact). Unarchive
+  returns the row to the pool (not automatically top, not automatically back onto website
+  sections). Toast Undo is unarchive.
+
+### POST /v1/business-profile/reviews
+
+- **Auth:** Clerk JWT, active tenant
+- **Callers:** `/cms/certifications-and-reviews/new` (and later edit of owner-written rows).
+- **Idempotency-Key:** yes.
+- **Request:** owner-written review: `author_name`, `rating` 1–5, `body` (`maxLength` 500),
+  optional date. `origin=owner`. Lands in the pool. Owner-written rows are editable after
+  create (same fields). Imported Google/Facebook reviews are not patched this way.
+
+### POST /v1/business-profile/reviews/import
+
+- **Auth:** Clerk JWT, active tenant
+- **Callers:** Certifications and reviews toolbar (Google Maps listing and the linked Facebook
+  URL).
+- **Idempotency-Key:** yes.
+- **Request:** import from the linked `google_maps_listing_url` and/or `facebook_profile_url`
+  on the live business profile. Safe to retry on external id. Skip `archived` rows (do not recreate). Import
+  does **not** truncate `body`. The review citation is filled by the onboarding extract (or later
+  the same extract); empty review citation falls back to `body` until then.
 
 ## Do not create
 

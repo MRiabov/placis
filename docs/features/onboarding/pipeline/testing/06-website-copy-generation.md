@@ -3,7 +3,7 @@
 - **Setup**: 05 has applied the website template; 06 may run before or after 07;
   onboarding session `applying_website_template` or `previewing`.
 - **Invoke**: enqueue website copy generation (website assistant-tool LLM faked to a small
-  `update_slot` / `update_seo` batch). Also start a second run; also activate (08) while the job
+  `update_slot` / `update_seo` / `update_reviews` batch). Also start a second run; also activate (08) while the job
   is in flight.
 - **Assert**: onboarding session is `previewing` once 07 has run; targeted website slots/SEO updated
   and still valid; reusable `{{…}}` detail

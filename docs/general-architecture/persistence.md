@@ -45,8 +45,8 @@ never copied into a second `persistence.md`.
 | [auth](../features/other/auth/persistence.md) | `auth` | `tenants`, `tenant_memberships` |
 | [onboarding](../features/onboarding/persistence.md) | `onboarding` | onboarding sessions, client interview submissions, website activations, `stripe_events` |
 | [ETL](../features/etl/persistence.md) | `etl` | `runs`, per-type fetches, `google_maps_listings` (hours, reviews, photos) |
-| [details](../features/other/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews, Facebook / Instagram profile and posts) |
-| [website](../features/website/persistence.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions), projects, certifications |
+| [details](../features/other/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews, Facebook / Instagram profile and posts, `certification_definitions`, `business_profile_certification_selections`) |
+| [website](../features/website/persistence.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions), projects |
 | [media library](../features/other/media/persistence.md) | `media_library` | `media_assets` |
 | [ads](../features/ads/persistence.md) | `ads` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
 | [leads](../features/other/leads/persistence.md) | `leads` | `leads` |

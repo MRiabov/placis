@@ -28,7 +28,8 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
 ## Keep
 
 - `/cms/details` — Business details (who they are, contact, where, services, legal,
-  opening hours). Top menu and footer stay in the website editor.
+  opening hours picker, logo picker, Facebook URL, Google Maps listing). Top menu and footer
+  stay in the website editor Content tab.
 - Typed Business details fields (`detailsModel.ts` `emptyForm` / `profileToForm` / `formToPatch`).
 - Per-field loading placeholders ([general frontend](../../../general-architecture/frontend.md)).
 - `GET/PATCH /v1/business-profile` ([api.md](api.md)).
@@ -54,11 +55,11 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
 
 | Today | Target |
 | --- | --- |
-| Top-level Details nav item | Profile disclosure: Business details, Projects, Certifications and reviews |
+| Top-level Details nav item | Profile disclosure: Business details, Projects, Certifications and reviews, Media library |
 | `/cms/proof` stub | `/cms/certifications-and-reviews` (website feature; wire in website port) |
 | `/cms/projects` stub | working Projects screen (title, description, cover photo) |
 | Ads missing from nav | left-nav **Ads** → `/cms/ads` (ads feature implements the screens) |
-| Media library | not a fifth top-level peer; workspace item + `/cms/media` deep link |
+| Media library | Profile child at `/cms/media`; attach from Content |
 
 Recommended left nav:
 
@@ -69,6 +70,7 @@ Profile
   Business details
   Projects
   Certifications and reviews
+  Media library
 Ads
 AI tools
 ```

@@ -2,13 +2,14 @@
 
 Website pages, website sections, website slots, website forms, top menu, footer, website
 publications (each row is a website version), website settings, website edit history, projects,
-certifications, and live hostnames (`website_addresses`).
+and live hostnames (`website_addresses`).
 Conventions: [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `website`).
 
 Media assets are owned by [media library](../other/media/persistence.md). The business profile the
-website templates fill is [details](../other/details/persistence.md) (including reviews). Website
-forms write [leads](../other/leads/persistence.md). The dump shape of a website publication is
+website templates fill is [details](../other/details/persistence.md) (including reviews and
+certifications). Website forms write [leads](../other/leads/persistence.md). The dump shape of
+a website publication is
 [manifest.md](manifest.md). The reserved label on the tenant row is
 [auth](../other/auth/persistence.md) (`tenants.website_prefix`).
 
@@ -48,6 +49,7 @@ forms write [leads](../other/leads/persistence.md). The dump shape of a website 
 - `website_form_field_options` — `id`, `field_id` fk, `position`, `label`, `value`
 - `menus` — qualified `website.menus`. One row per tenant (`tenant_id` unique). `top_menu` jsonb
   and `footer` jsonb (closed trees, extra keys rejected), `show_phone` bool, `show_email` bool,
+  `show_contact` bool,
   timestamps. Hide = omit from the tree. Bar CTA **values** are always
   `{{marketing_phone}}` / `{{marketing_email}}` ([variables.md](variables.md)); these flags are
   visibility only. Trees and flags are jsonb/bools on this row, not item tables. Node structs
@@ -66,12 +68,13 @@ forms write [leads](../other/leads/persistence.md). The dump shape of a website 
   nullable, `entity_id` nullable
 - `projects` — `id`, `tenant_id` fk, `title`, `description`, `cover_media_asset_id` nullable fk,
   `status` (`unpublished`/`published`), timestamps
-- `website_certification_definitions` — global (not tenant): `id`, `name`, `short_label`,
-  `trades`, `country`, `badge` (file or URL), `registry_url`
-- `website_certification_selections` — `id`, `tenant_id` fk, `certification_id` fk, `status`
-  (`selected`/`removed`), `created_at`
 - `website_slot_reviews` — `id`, `tenant_id` fk, `slot_id` fk, `business_profile_review_id` fk,
-  `position`; unique `(slot_id, business_profile_review_id)`
+  `position`; unique `(slot_id, business_profile_review_id)`. One ordered array **per reviews
+  website section**, from the pool, length ≤ that website component’s max (some layouts take
+  3, others 6 or 8). The LLM fills it after the website template (and the website assistant
+  / Content can rewrite it). Pinning **top reviews** does **not** rewrite these rows. Archive
+  of a review drops that id from every section array, then compact. Empty array: keep the
+  website section. Live website waits for the next website publication.
 - `edit_history` — Website edit history. Append-only typed increments, same pattern as
   `business_profile_edits`. Never a full website page or unpublished-website jsonb dump. One
   row is one field or structure change (a slot value, a section reorder, an SEO column, a
@@ -98,7 +101,8 @@ forms write [leads](../other/leads/persistence.md). The dump shape of a website 
   ([editing.md](editing.md)). The database does not perform undo.
 
 Reviews on the website are these rows, not a jsonb dump in `website_slots.value`. The text
-lives on [business_profile_reviews](../other/details/persistence.md). A project gallery is a
+lives on [business_profile_reviews](../other/details/persistence.md) (the **review citation** is what the
+website paints; fallback `body` if the review citation is empty). A project gallery is a
 `json` / `list` website slot of project ids, not a `slot_type`.
 
 `props`, `design`, and slot `value` stay jsonb: each website component / slot has its own

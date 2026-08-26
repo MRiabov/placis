@@ -67,7 +67,9 @@ Onboarding 05/06 write them in River, not via these routes.
   live, even when `publication_id` is set), sections/slots with catalog-discriminated
   `props` / `design` / `value`. Embeds tenant-scoped website styles, top menu, footer, and
   website forms so the canvas can paint. May embed display name / marketing phone for website
-  placeholders; Details owns those writes.
+  placeholders; Details owns those writes. Reviews website sections include that section’s
+  ordered pool ids (`website_slot_reviews`), not the ads **top reviews** set. Pool cards for
+  Content “add from the pool” come from Details `GET /v1/business-profile/reviews`.
 - **Must not:** `/pages/{id}/seo` as a separate route; `slot_type=json`; return
   `website_manifest`.
 
@@ -79,8 +81,10 @@ Onboarding 05/06 write them in River, not via these routes.
 - **Idempotency-Key:** yes.
 - **Request:** `base_edit_history_head` plus **dirty keys only** — per-section / per-slot, dirty
   page metadata (title, path, SEO, `status` `unpublished`/`archived`), website form patches,
-  section create/swap/visibility/design, `ordered_section_ids[]`. Archive strips that page
-  node from `website.menus` ([persistence.md](persistence.md)). Body cap 64 KB. Image website
+  section create/swap/visibility/design, `ordered_section_ids[]`, and a reviews website
+  section’s ordered `review_ids[]` (from the pool, length ≤ that website component’s max;
+  over max is `400`). Archive of a website page strips that page node from `website.menus`
+  ([persistence.md](persistence.md)). Body cap 64 KB. Image website
   slots send a media library item id, not bytes. Example:
 
 ```json
@@ -113,11 +117,11 @@ Onboarding 05/06 write them in River, not via these routes.
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** top menu and footer tree editors. One resource — one `website.menus` row
-  (`top_menu`, `footer`, `show_phone`, `show_email`).
+  (`top_menu`, `footer`, `show_phone`, `show_email`, `show_contact`).
 - **GET query:** optional `publication_id` (same as page GET). Same `409` / `400` as page GET.
 - **PATCH Idempotency-Key:** yes.
 - **Request:** `base_edit_history_head` plus dirty keys only (`top_menu` and/or `footer`
-  and/or `show_phone` / `show_email`). Extra keys 4xx.
+  and/or `show_phone` / `show_email` / `show_contact`). Extra keys 4xx.
 - **Response:** `{ edit_history_head, batch_id }`. Same `409 edit_history_conflict` as the
   website page PATCH.
 - **Must not:** `/top-menu` or `/footer` as peer routes; menus fields on the website page PATCH.
@@ -142,7 +146,11 @@ Onboarding 06 is the exception: the River job writes unpublished rows headless (
 - **Idempotency-Key:** yes.
 - **Request:** plan vs continuous; Ask first vs instant apply. Plan text is `string` +
   `maxLength`.
-- **Response:** named activity / tool event structs. Proposed edits, not applied rows.
+- **Response:** named activity / tool event structs. Proposed edits, not applied rows. Each
+  tool event has `summary` (`string` + `maxLength`): the owner line, backend-constructed
+  ([assistant.md](assistant.md)). The UI renders `summary` only. Never render `action` /
+  tool names (`update_slot`, …). Icon is from a closed kind: write = pencil, thinking =
+  lightbulb. There is no search/grep tool.
 - **Must not:** return `ai_generations` blobs; write unpublished rows from this POST in the CMS.
 
 ### POST /v1/website/editor/pages/{page_id}/assistant/record-apply

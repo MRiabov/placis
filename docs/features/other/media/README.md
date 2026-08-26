@@ -1,8 +1,8 @@
 # Media
 
-The photo library and image editing. One library: a full screen at `/cms/media`, and the same
-library as a selectable **workspace item** in the website editor (Wix / Webflow: pick the
-media library item on the left while you edit).
+The photo library and image editing. One library: full screen at `/cms/media` under **Profile**.
+In the website editor, attach and pick from **Content** when an image is selected on the canvas (same rows).
+Crop, focal, and cleanup stay on `/cms/media`.
 
 ## What it is
 
@@ -66,16 +66,15 @@ Processing…. Ads shows **Uploading…** only while bytes land — not Processi
 
 ## `/cms/media`
 
-The full media library screen (left-nav). Caption, crop, focal point, replace, AI cleanup.
+The full media library screen, under **Profile** (not a top-level left-nav item). Caption, crop, focal point, replace, AI cleanup.
 
-## Website editor workspace
+## Website editor
 
-On `/cms/website` the left column is the **workspace**. Items are selectable (website pages,
-media library, website styles, top menu, footer). Selecting **media library** opens that
-library in the workspace — the same rows as `/cms/media`, for attach and upload while
-editing. It is not a second library. Not the editing panel (right).
+On `/cms/website` there is no media library rail item. Click an image on the canvas and
+**Content** shows the same rows as `/cms/media` for attach, pick, and upload. Crop / focal /
+cleanup stay on `/cms/media`. It is not a second library.
 
-- Drop image files onto the media library workspace item to upload. A file picker does the
+- Drop image files onto that image Content to upload. A file picker does the
   same. Ads’ “drop a photo anywhere” pattern is the same upload flow.
 - Drag a media library item onto an image on the canvas to attach it to that website slot
   (discrete PATCH, not text click-off).
@@ -89,8 +88,9 @@ Screens: [website frontend](../../website/frontend.md). Port:
 
 ## Used by
 
-- **The website** — images inside website sections. Pending-review AI images may show on the
-  unpublished canvas with a warning; owner approval makes them approved. Website publication
+- **The website** — images inside website sections. Pending-review AI images may attach on the
+  unpublished canvas; the warning is in Content when that image is selected, not copy on
+  the website. Owner approval makes them approved. Website publication
   and the live website still require `ready` + approved media.
 - **Ads** — the LLM picks from `ready` + approved media captions. A photo the owner **adds
   to this ad** is usable once bytes have landed (about 10 seconds); captioning is
@@ -100,7 +100,8 @@ Screens: [website frontend](../../website/frontend.md). Port:
 
 Only `ready` + approved media can be used on the live website. Ads: LLM gallery drafts use
 that same pool; an owner-added photo in an ad is usable once bytes have landed. The
-unpublished website editor may show pending-review AI images with a warning.
+unpublished website editor may attach pending-review AI images; the warning is in Content,
+not copy on the website.
 
 Bytes live in [files](../../../general-architecture/files-and-s3.md) (`media_assets.file_id`).
 HTTP: [api.md](api.md) (this resource owns upload; no `/v1/files`). Tables:
