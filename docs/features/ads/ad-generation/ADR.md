@@ -1,6 +1,6 @@
 # Ad Generation Decision Record
 
-Status: all entries decided as of 2026-08-25 (product owner + engineering). The spec docs in
+Status: all entries decided as of 2026-08-26 (product owner + engineering). The spec docs in
 this directory say *what* we build; this record says *why* we chose what we did, so decisions do
 not get lost or re-litigated.
 
@@ -50,9 +50,10 @@ area, and the date.
    from day one, so connecting a Facebook Ads Manager later does not restructure the model.
    Performance metrics attach to the stable ids.
 
-7. **Ad lead form is suggested fields only (for now)** — The ad set carries a suggested
-   title and questions as a starting point. The real ad lead form (including the privacy notice
-   Meta requires) is finalized at ad posting. Suggested fields never block approval.
+7. **Ad lead form is suggested fields only (for now)** (updated 2026-08-26) — The ad set carries a suggested
+    title and questions as a starting point. The title is edited in Review with the other copy
+    (decision 38). The real ad lead form (including the privacy notice
+    Meta requires) is finalized at ad posting. Suggested fields never block approval.
 
 8. **Ads ask for the ideal customer profile** — The create-an-ad flow asks who the ad
    targets. The default is married couples aged 30-40, which fits most contractors (about 17 of
@@ -162,7 +163,7 @@ area, and the date.
     complete, then expands). After generate, About the ad is confirmed (locked). **Revise**
     sits on the generate row with **Generate again** (after the first generate only — not on
     the About the ad title, and not before the first generate). Revise unlocks format,
-    audience, offer, or the ad lead form; Generate again applies. Changing format regenerates
+    audience, offer, or the ad lead form questions; Generate again applies. Changing format regenerates
     this ad. Then the approve block
     when the ad is ad ready to post.
     Current direction, under visual review via the design mock.
@@ -285,3 +286,17 @@ area, and the date.
     restores the previous photo. Restore of the last LLM apply while they are in Ads, then the ordinary
     PATCH. Default: LLM actions are revertable. Native typing already undoes; JS-applied LLM
     output does not, which is why this is tested. Still no website-style undo log (decision 31).
+
+37. **Ideal customer profile and area start from the last ad** (2026-08-26) — On a new ad, the
+    Who it's for comboboxes (ideal customer profile, Where they are) are filled from the last
+    ad the owner created. They can still pick another. If this is their first ad, use the
+    default ideal customer profile (decision 8) and the service area on the business profile.
+    What are you promoting? is the field they fill. The service list is still known services
+    from onboarding; that is the options, not the selected value.
+
+38. **Ad lead form title is Review copy** (2026-08-26) — The suggested ad lead form title is
+    creative copy: it lives in Review with headline / primary text / short label, not in
+    About the ad. About the ad keeps How people get in touch as the include/exclude questions
+    only (phone number, full name, postcode, email). Generate still writes a suggested title;
+    the owner edits it after generate.
+    Previous decision: the title sat in About the ad under How people get in touch.
