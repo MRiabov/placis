@@ -6,7 +6,7 @@ certifications sit in a card. On a narrow screen (≤1100px) the layout is one c
 **Certifications** is a flat heading (same level as **Top reviews**), not a card.
 
 Left nav: [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md). Look:
-[design-decisions.md](design-decisions.md). Product: [ADR.md](ADR.md). HTTP:
+[design decisions](design-decisions.md). Product: [ADR.md](ADR.md). HTTP:
 [details HTTP](../details/api.md). Tables: [details persistence](../details/persistence.md).
 Port: [frontend-debloat.md](frontend-debloat.md). Headings have no decorative icon. On narrow,
 Open destinations stays inline with the heading.

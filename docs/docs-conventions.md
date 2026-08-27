@@ -67,3 +67,6 @@ Not every file is needed — a feature uses only the ones it has content for. A 
   out at implementation time and are not pre-written. The **HTTP routes** are per-feature `api.md`
   (plus [general-architecture/api.md](general-architecture/api.md)); that is paths and fields, not
   huma structs.
+- **Filenames hyphenate; prose does not.** `design-decisions.md` is the file. In sentences and
+  link text it is **design decisions** (`[CMS design decisions](...)` 3, not
+  `[CMS design-decisions]`). Keep the hyphen in the path and in backticks.

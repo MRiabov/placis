@@ -7,7 +7,7 @@ reviews** / **top reviews** picker (ads). The review and certification **rows** 
 
 How the owner reaches it: [CMS frontend](../../../general-architecture/cms/frontend.md). Screen:
 [frontend.md](frontend.md). Decisions: [ADR.md](ADR.md). Look:
-[design-decisions.md](design-decisions.md). Port: [frontend-debloat.md](frontend-debloat.md).
+[design decisions](design-decisions.md). Port: [frontend-debloat.md](frontend-debloat.md).
 
 Each **reviews website section**’s ordered list is edited in website editor Content
 ([website frontend](../../website/frontend.md), [website ADR](../../website/ADR.md) 16). That is

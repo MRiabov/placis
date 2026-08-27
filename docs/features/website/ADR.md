@@ -31,7 +31,7 @@ Status: decided (2026-08-16, product owner + engineering).
    freeform JSON. Named real photo → attach first. AI cleanup is the `/cms/media` cleanup.
    `generate_image` is last resort when nothing in `media_assets[]` fits.
    Overlay look (always-on overlay, reduce-height left / trash right, Apply / Reject pills) is in
-   [design-decisions.md](design-decisions.md).
+   [design decisions](design-decisions.md).
    (2026-08-20; assistant configs + Apply/Reject terminal 2026-08-23; Ask first 2026-08-23;
    attach-before-generate + shared media-library functions 2026-08-24; collapse + no dim
    2026-08-26)
@@ -101,7 +101,7 @@ Status: decided (2026-08-16, product owner + engineering).
 16. **Certifications and reviews picker is a Profile screen** — `/cms/certifications-and-reviews`.
     Picker rules, top reviews, archive, and certification tables: moved to
     [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md)
-    (2026-08-27). Layout: that directory’s [design-decisions](../business-profile/certifications-and-reviews/design-decisions.md).
+    (2026-08-27). Layout: that directory’s [design decisions](../business-profile/certifications-and-reviews/design-decisions.md).
     (2026-08-20)
 
     Unpin/reorder of **top reviews** used to rewrite unpublished `website_slot_reviews` from
@@ -162,6 +162,6 @@ Status: decided (2026-08-16, product owner + engineering).
     closed jsonb trees (page / text / URL nodes, depth 2), plus `show_phone` / `show_email`.
     Look stays on site-wide website sections (`page_id` null). No `top_menu_items` /
     `footer_items` tables. The website assistant uses `update_menus`, not `update_nav`.
-    Where the owner edits the trees is in [design-decisions.md](design-decisions.md).
+    Where the owner edits the trees is in [design decisions](design-decisions.md).
     (2026-08-23)
     Also `show_contact` (bar CTA to the Contact website page). (2026-08-26)
