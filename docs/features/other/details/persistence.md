@@ -15,9 +15,9 @@ Contact split: **marketing phone** and **marketing email** are on the website an
 (where leads call / write). **`emergency_phone`** is how we contact the owner (unpublished;
 may be the same number). The owner’s sign-in email is Clerk’s, not a profile column.
 
-The live `business_profiles` row plus the list tables is the **fold** of profile history. Website,
-ads, Details, and apply-the-website-template (when the fold has not moved past
-`accepted_edit_id`) **read the fold**. They do not replay edits on every call.
+The live `business_profiles` row plus the list tables **is** the business profile. Website, ads,
+and Details read it. Apply-the-website-template reads it as of `accepted_edit_id`. They do not
+replay profile history on every call.
 
 - `business_profiles` — `id`, `tenant_id` fk unique (required; the unactivated tenant created at
   business lookup, same row later activated), `trade` (`roofing`/`landscaping_paving`/
@@ -61,13 +61,13 @@ This table is the audit for profile edits. Generic `audit_events` stays for webs
 website activation / etc.
 
 **Write:** `SELECT … FOR UPDATE` the profile row, insert one increment per field or list item the
-writer actually set (never the whole profile), `UPDATE` only those fold columns or list rows in the
+writer actually set (never the whole profile), `UPDATE` only those live profile columns or list rows in the
 same transaction. Client interview and business research run at the same time; the row lock
 serializes them. Different fields both persist. Same field: both edits stay in the log; if the
 values disagree, that is a research conflict (show both). Do not read the whole profile, merge in
 memory, and write it back.
 
-**Replay** the edit list only to rebuild a damaged fold, to show Profile history, or to reconstruct
+**Replay** the edit list only to rebuild a damaged live business profile, to show Profile history, or to reconstruct
 the profile as of `accepted_edit_id` (client interview complete).
 
 - `business_profile_services` — `id`, `tenant_id` fk, `business_profile_id` fk, `name`,

@@ -8,7 +8,7 @@ HTTP in this slice.
 ## StartRun
 
 `StartRun(kinds, trigger, tenant)` (onboarding 02 also passes `onboarding_session_id`). `kinds`
-length ≥ 1, explicit. Mint `enqueue_id`. For `trigger=onboarding`, count distinct `enqueue_id` in
+length ≥ 1, explicit. Create `enqueue_id`. For `trigger=onboarding`, count distinct `enqueue_id` in
 the last 30 minutes; 5 or more → do not insert runs (02 surfaces `research_wait_until`). Insert
 one `etl.runs` row per kind. Enqueue one extract River job per row.
 
@@ -18,7 +18,7 @@ Instagram. Skip a kind with no key (`status=skipped`).
 ## Extract then transform
 
 Per kind, in order: extract adapter → fetch insert → (Maps) listing upsert → transform job.
-Transform calls `profile` fold APIs ([build-profile](../onboarding/pipeline/build-profile.md)).
+Transform calls `profile` write APIs ([build-profile](../onboarding/pipeline/build-profile.md)).
 Fakes at the adapter boundary. CI never spends Google / LLM quota.
 
 ## Validation & testing

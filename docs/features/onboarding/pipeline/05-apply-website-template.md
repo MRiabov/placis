@@ -27,8 +27,8 @@ unpublished tables. They use the onboarding session’s `tenant_id` (unactivated
 
 ## Do
 
-1. Set `accepted_edit_id` to current `last_edit_id`. Apply from the fold as of that edit. Later
-   02 writes must not mutate this fold in place.
+1. Set `accepted_edit_id` to current `last_edit_id`. Apply from the live business profile as of that edit. Later
+   02 writes must not mutate this live business profile in place.
 2. One bounded LLM call picks website template + website styles (heuristic fallback: trade →
    website template, else default). Not website-page-by-website-page copy.
 3. Deterministic apply: profile + website template → unpublished `website_pages` /

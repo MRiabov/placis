@@ -49,4 +49,4 @@ Transform job for this kind, or `skipped`.
 
 - One extract job per `etl.runs` row.
 - Fetch rows are append-only.
-- Extract does not write the fold.
+- Extract does not write the live business profile.
