@@ -312,6 +312,7 @@ function show(scene) {
   }
   syncStateGroups(scene);
   if (!params.get("shot")) history.replaceState(null, "", "#" + scene);
+  syncVoiceSurface();
 }
 
 function ensureToolIcons() {
@@ -412,6 +413,82 @@ function setAssistantExpanded(open = true) {
   requestAnimationFrame(syncCanvasScale);
 }
 
+let chatbotSticky = params.get("voice") === "0";
+const voiceOrbTokens = ["is-listening", "is-speaking", "is-tool"];
+let voiceOrbTimer = 0;
+
+function assistantComposerEl() {
+  return document.getElementById("assistantComposer");
+}
+
+function composerEmpty() {
+  return !assistantComposerEl()?.value.trim();
+}
+
+function websiteShowing() {
+  const view = document.querySelector('[data-view="website"]');
+  return Boolean(view && !view.classList.contains("is-hidden"));
+}
+
+function stopVoiceOrb() {
+  if (voiceOrbTimer) {
+    clearInterval(voiceOrbTimer);
+    voiceOrbTimer = 0;
+  }
+  const orb = document.getElementById("voiceOrb");
+  if (!orb) return;
+  orb.classList.remove(...voiceOrbTokens);
+  orb.classList.add("is-listening");
+}
+
+function startVoiceOrb() {
+  const orb = document.getElementById("voiceOrb");
+  if (!orb) return;
+  stopVoiceOrb();
+  let i = 0;
+  const tick = () => {
+    orb.classList.remove(...voiceOrbTokens);
+    orb.classList.add(voiceOrbTokens[i % voiceOrbTokens.length]);
+    i += 1;
+  };
+  tick();
+  voiceOrbTimer = setInterval(tick, 1800);
+}
+
+function setVoiceAgent(on) {
+  if (!editorCanvas) return;
+  editorCanvas.classList.toggle("is-voice", on);
+  stripButton("voice")?.classList.toggle("on", on);
+  if (on) {
+    if (!voiceOrbTimer) startVoiceOrb();
+  } else {
+    stopVoiceOrb();
+  }
+  requestAnimationFrame(syncCanvasScale);
+}
+
+function restoreChatbot() {
+  chatbotSticky = true;
+  syncVoiceSurface();
+}
+
+function turnVoiceOn() {
+  chatbotSticky = false;
+  const composer = assistantComposerEl();
+  if (composer) composer.value = "";
+  syncVoiceSurface();
+}
+
+function syncVoiceSurface() {
+  const overlay = document.getElementById("assistantOverlay");
+  overlay?.classList.toggle("is-composer-empty", composerEmpty());
+  if (!websiteShowing()) {
+    stopVoiceOrb();
+    return;
+  }
+  setVoiceAgent(composerEmpty() && !chatbotSticky);
+}
+
 document.querySelectorAll("[data-scene]").forEach((node) => {
   node.addEventListener("click", () => show(node.dataset.scene));
 });
@@ -430,6 +507,10 @@ document.querySelectorAll("#viewtabs [data-state]").forEach((button) => {
         break;
       case "ask-first":
         setAskFirst(document.getElementById("askPills")?.classList.contains("is-hidden"));
+        break;
+      case "voice":
+        if (editorCanvas.classList.contains("is-voice")) restoreChatbot();
+        else turnVoiceOn();
         break;
       case "assistant":
         setAssistantExpanded(editorCanvas.classList.contains("is-assistant-collapsed"));
@@ -562,7 +643,7 @@ function syncCanvasScale() {
     const canvasRect = editorCanvas.getBoundingClientRect();
     let coverTop = canvasRect.bottom;
     const overlay = document.getElementById("assistantOverlay");
-    if (overlay) {
+    if (overlay && !editorCanvas.classList.contains("is-voice")) {
       const overlayRect = overlay.getBoundingClientRect();
       if (overlayRect.height > 0) coverTop = Math.min(coverTop, overlayRect.top);
     }
@@ -570,6 +651,11 @@ function syncCanvasScale() {
     if (pills && !pills.classList.contains("is-hidden")) {
       const pillsRect = pills.getBoundingClientRect();
       if (pillsRect.height > 0) coverTop = Math.min(coverTop, pillsRect.top);
+    }
+    const dock = document.getElementById("voiceDock");
+    if (dock && editorCanvas.classList.contains("is-voice")) {
+      const dockRect = dock.getBoundingClientRect();
+      if (dockRect.height > 0) coverTop = Math.min(coverTop, dockRect.top);
     }
     const visualCover = Math.max(0, canvasRect.bottom - coverTop) + 12;
     const pad = `${Math.ceil(visualCover / scale)}px`;
@@ -604,6 +690,9 @@ function syncAssistantSubmit() {
   submit.setAttribute("aria-label", planOn ? "Plan" : "Send");
 }
 document.getElementById("switchPlan")?.addEventListener("change", syncAssistantSubmit);
+document.getElementById("assistantComposer")?.addEventListener("input", syncVoiceSurface);
+document.getElementById("assistantVoice")?.addEventListener("click", turnVoiceOn);
+document.getElementById("restoreChatbot")?.addEventListener("click", restoreChatbot);
 document.getElementById("clearContext")?.addEventListener("click", () => {
   document.querySelector("#assistantThread .cms-assistant-thread-inner")?.replaceChildren();
   setAskFirst(false);
@@ -667,6 +756,7 @@ setPage(params.get("page") || "home", false);
 setAssistantExpanded(preferAssistantExpanded());
 setCopyOut(params.get("copyout") === "1");
 setAskFirst(params.get("ask") !== "0");
+syncVoiceSurface();
 if (params.get("publication") === "1") setPublication(true);
 if (params.get("connect") === "1") setConnect(true);
 if (params.get("archive") === "1") setArchive(true);
