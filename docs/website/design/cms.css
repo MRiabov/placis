@@ -1043,7 +1043,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
 
 .cms-editor-canvas {
   --cms-assistant-collapsed-height: 7rem;
-  --cms-voice-orb: min(11rem, 50vw);
+  --cms-voice-orb: min(5.5rem, 30vw);
   position: relative;
   display: flex;
   min-width: 0;
@@ -1053,6 +1053,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
 }
 .cms-stage-grid {
   position: relative;
+  z-index: 0;
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
@@ -1297,7 +1298,8 @@ body.is-shot .viewtabs-fab { display: none !important; }
   right: 12px;
   bottom: 12px;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
+  pointer-events: none;
 }
 .cms-editor-canvas.is-voice .cms-voice-dock {
   display: flex;
@@ -1310,28 +1312,28 @@ body.is-shot .viewtabs-fab { display: none !important; }
   padding: 8px 14px;
   border: 0;
   border-radius: 999px;
-  background: rgb(255 255 255 / 42%);
+  background: rgb(255 255 255 / 28%);
   color: var(--cms-text);
   font-size: 13px;
   font-weight: 600;
   line-height: 1.2;
   text-align: left;
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 55%),
-    0 4px 16px rgb(19 18 10 / 10%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  pointer-events: auto;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 40%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .cms-voice-orb-wrap {
   position: relative;
   flex: 0 0 auto;
   width: var(--cms-voice-orb);
   height: var(--cms-voice-orb);
+  overflow: visible;
 }
 .cms-voice-close {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 2px;
+  right: 2px;
   z-index: 2;
   display: grid;
   width: 28px;
@@ -1339,11 +1341,10 @@ body.is-shot .viewtabs-fab { display: none !important; }
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: rgb(255 255 255 / 72%);
+  background: rgb(255 255 255 / 62%);
   color: var(--cms-text);
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 70%),
-    0 2px 8px rgb(19 18 10 / 12%);
+  pointer-events: auto;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 55%);
 }
 .cms-voice-close::after {
   position: absolute;
@@ -1355,45 +1356,50 @@ body.is-shot .viewtabs-fab { display: none !important; }
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  border-radius: 50%;
+  overflow: visible;
+  pointer-events: none;
 }
-.cms-voice-orb-frost {
+.cms-voice-orb-blur {
   position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: rgb(255 255 255 / 28%);
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 48%),
-    0 8px 28px rgb(19 18 10 / 12%);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  pointer-events: none;
 }
-.cms-voice-orb-dust {
+.cms-voice-orb-blur.is-far {
+  inset: -18%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  mask-image: radial-gradient(circle, rgb(0 0 0 / 28%) 0%, rgb(0 0 0 / 8%) 38%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle, rgb(0 0 0 / 28%) 0%, rgb(0 0 0 / 8%) 38%, transparent 70%);
+}
+.cms-voice-orb-blur.is-mid {
+  inset: -12%;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  mask-image: radial-gradient(circle, rgb(0 0 0 / 42%) 0%, rgb(0 0 0 / 12%) 44%, transparent 68%);
+  -webkit-mask-image: radial-gradient(circle, rgb(0 0 0 / 42%) 0%, rgb(0 0 0 / 12%) 44%, transparent 68%);
+}
+.cms-voice-orb-blur.is-near {
+  inset: 18%;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  mask-image: radial-gradient(circle, rgb(0 0 0 / 55%) 0%, rgb(0 0 0 / 16%) 36%, transparent 64%);
+  -webkit-mask-image: radial-gradient(circle, rgb(0 0 0 / 55%) 0%, rgb(0 0 0 / 16%) 36%, transparent 64%);
+}
+.cms-voice-orb-core {
   position: absolute;
-  inset: 12%;
+  inset: 28%;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 38% 32%, rgb(19 18 10 / 38%) 0 18%, transparent 46%),
-    radial-gradient(circle at 68% 62%, rgb(19 18 10 / 26%) 0 14%, transparent 42%),
-    radial-gradient(circle at 48% 54%, rgb(19 18 10 / 16%) 0 34%, transparent 68%);
-  opacity: 0.7;
+  background: radial-gradient(circle, rgb(255 255 255 / 14%) 0%, rgb(255 255 255 / 4%) 40%, transparent 72%);
   animation: cms-voice-idle 4s ease-in-out infinite;
 }
 @keyframes cms-voice-idle {
-  0%, 100% { transform: scale(1); opacity: 0.62; }
-  50% { transform: scale(1.06); opacity: 0.84; }
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.08); opacity: 1; }
 }
-.cms-voice-orb.is-listening .cms-voice-orb-dust { animation-duration: 1.6s; }
-.cms-voice-orb.is-speaking .cms-voice-orb-dust {
-  animation-duration: 0.7s;
-  opacity: 0.92;
-}
-.cms-voice-orb.is-tool .cms-voice-orb-dust {
-  background:
-    radial-gradient(circle at 42% 40%, rgb(19 18 10 / 48%) 0 16%, transparent 48%),
-    radial-gradient(circle at 62% 58%, rgb(113 113 122 / 35%) 0 14%, transparent 42%),
-    radial-gradient(circle at 48% 54%, rgb(19 18 10 / 16%) 0 34%, transparent 68%);
+.cms-voice-orb.is-listening .cms-voice-orb-core { animation-duration: 1.6s; }
+.cms-voice-orb.is-speaking .cms-voice-orb-core { animation-duration: 0.7s; }
+.cms-voice-orb.is-tool .cms-voice-orb-blur.is-near {
+  backdrop-filter: blur(36px);
+  -webkit-backdrop-filter: blur(36px);
 }
 .cms-assistant-bar {
   display: grid;
