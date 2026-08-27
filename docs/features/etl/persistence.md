@@ -18,20 +18,24 @@ the [business profile](../other/details/persistence.md), not here.
 
 ## Fetches (append-only, one table per extract type)
 
-Never update a row. Latest body for a natural key is the newest `fetched_at`.
+Never update a row. Latest body for a natural key is the newest `fetched_at`. One ETL run may
+insert **several** fetch rows (fast extract, then slow extract chunks). Retry reuses a row that
+already landed for that chunk; it does not collapse the run to a single fetch.
 
 - `google_maps_fetches` — `id`, `place_id`, `fetched_from` (`google_maps_details` / `scrape`),
   `run_id` fk, `fetched_at`, `raw` jsonb
 - `facebook_fetches` — `id`, Facebook page id / URL, handle, `run_id` fk, `fetched_at`, `raw` jsonb
 - `instagram_fetches` — `id`, handle, Instagram user, `run_id` fk, `fetched_at`, `raw` jsonb
 - `website_crawl_fetches` — `id`, canonical URL, `run_id` fk, `fetched_at`, `raw` jsonb
+  (one row per crawled URL; fast crawl is the first URL, slow crawl is the rest)
 - `trade_registry_fetches` — `id`, registry id, `run_id` fk, `fetched_at`, `raw` jsonb
 
 Company registry parquet and Find autocomplete are not these tables. A later Companies House /
 CRO API fetch gets its own fetch table.
 
-Retry of the **same** run may reuse the newest fetch for that type’s natural key. A
-`trigger=scheduled` run extracts again.
+Retry of the **same** run reuses the fetch for a chunk that already landed (`place_id` +
+`fetched_from` for Maps Details vs scrape; canonical URL for crawl). Remaining slow extract
+chunks still insert. A `trigger=scheduled` run extracts again.
 
 ## Google Maps listing (live row, no `raw`)
 
