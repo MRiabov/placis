@@ -68,6 +68,7 @@
     </div>
     <div class="viewtabs-states is-hidden" data-state-for="media">
       <span class="viewtabs-group">Media library</span>
+      <button type="button" class="viewtab" data-state="cleanup">Cleanup compare</button>
       <button type="button" class="viewtab" data-scene="website">Back to website</button>
     </div>
   </div>
@@ -924,21 +925,29 @@
                 <button class="button-primary" type="button">Upload</button>
               </div>
             </div>
-            <div class="cms-project-grid">
-              <div class="cms-media-tile-wrap">
-                <div class="cms-media-tile" style="min-height:180px"></div>
-                <p class="cms-media-meta">Rear slope after the storm · supplied by owner · approved</p>
+            <div class="cms-media-stage">
+              <div class="cms-media-view" id="mediaView" data-ratio="landscape">
+                <div class="cms-media-view-still" id="mediaViewStill"></div>
+                <div class="cms-media-sweep is-hidden" id="mediaSweep">
+                  <div class="cms-media-sweep-after"></div>
+                  <div class="cms-media-sweep-before"></div>
+                  <div class="cms-media-sweep-divider"></div>
+                  <span class="cms-media-sweep-label is-before">before</span>
+                  <span class="cms-media-sweep-label is-after">after</span>
+                </div>
               </div>
-              <div class="cms-media-tile-wrap">
-                <div class="cms-media-tile" style="min-height:180px"></div>
-                <div class="cms-upload-overlay">Uploading…</div>
-                <p class="cms-media-meta">New photo · bytes landing</p>
-              </div>
-              <div class="cms-media-tile-wrap">
-                <div class="cms-media-tile" style="min-height:180px"></div>
-                <p class="cms-media-meta">Logo · supplied by research · approved</p>
-              </div>
+              <form class="cms-media-prompt" id="mediaCleanupForm">
+                <label for="mediaCleanupPrompt">Cleanup</label>
+                <textarea class="cms-field-control" id="mediaCleanupPrompt" rows="3" maxlength="500" placeholder="How should this photo be cleaned up?"></textarea>
+                <p class="cms-media-prompt-meta" id="mediaViewMeta">Rear slope after the storm · supplied by owner · approved</p>
+                <button class="button-primary" id="mediaCleanupSubmit" type="submit" disabled>Cleanup</button>
+                <div class="cms-media-view-actions is-hidden" id="mediaCleanupActions">
+                  <button class="button-secondary" id="mediaCleanupReject" type="button">Reject</button>
+                  <button class="button-primary" id="mediaCleanupAccept" type="button">Accept</button>
+                </div>
+              </form>
             </div>
+            <div class="cms-media-thumbs" id="mediaThumbs"></div>
           </div>
         </section>
 

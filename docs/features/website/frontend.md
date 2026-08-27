@@ -64,7 +64,9 @@ Two surfaces plus global nav, one unpublished website:
   the rail (bottom on a wide screen, trailing on a narrow screen). **SEO** is its own rail panel and always shows the current website page (the
   one on the canvas). It is not under Website pages and not a tab. There is no media library
   rail item; attach / pick / drop-on-image live in **Content** when an image is selected (same
-  library as `/cms/media`). Crop / focal / cleanup and Ads / Details logo stay on `/cms/media`.
+  library as `/cms/media`). Crop / focal / cleanup and Ads / Details logo stay on `/cms/media`
+  ([media library](../other/media/README.md): large view, promptable cleanup, dense mixed-ratio
+  thumbs).
   Top menu and footer are **not** workspace items; select the bar on the canvas and edit it in
   Content.
 - **Content** is not a rail item. Click a website section or an image on the canvas and the

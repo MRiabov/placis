@@ -26,6 +26,9 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 - Media caption, focal point, crop, replace, AI cleanup that **creates a copy**
   (`parent_media_asset_id`); parent file is never replaced. Website editor PATCH, website
   assistant tools, and ads light cleanup call these same functions ([README.md](README.md)).
+  `/cms/media` look: large view (also where they compare cleanup), prompt box beside/under it,
+  before/after sweep on cleanup, dense thumbs (3 then 4 columns; mixed ratios). Not huge
+  square cards.
 - Leave guard covers an in-flight upload ([editing.md](../../website/editing.md)).
   Hover the uploading thumb: a circle-and-cross button; click it to cancel (same overlay as Ads).
 

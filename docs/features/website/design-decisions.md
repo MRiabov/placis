@@ -23,7 +23,9 @@ instead of silently rewriting history.
    (2026-08-26)
    **Media library** (`/cms/media`) is a Profile child, not a top-level peer of Sites. Collapsed
    Profile still goes to Business details. (2026-08-26)
-   No **AI tools** left-nav item. Image cleanup is `/cms/media`. The website assistant stays
+   No **AI tools** left-nav item. Image cleanup is `/cms/media` (large view of the selected
+   photo, prompt box beside or under it, dense mixed-ratio thumbs — not huge square cards).
+   The website assistant stays
    the canvas overlay (a later cut may drop that overlay; this item still does not come
    back). (2026-08-26)
    On **narrow**, this left rail is gone: a full-screen overlay selector (see 16). Collapsed
