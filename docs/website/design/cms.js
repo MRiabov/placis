@@ -459,6 +459,9 @@ function setVoiceAgent(on) {
   if (!editorCanvas) return;
   editorCanvas.classList.toggle("is-voice", on);
   stripButton("voice")?.classList.toggle("on", on);
+  const overlay = document.getElementById("assistantOverlay");
+  overlay?.toggleAttribute("inert", on);
+  overlay?.setAttribute("aria-hidden", on ? "true" : "false");
   if (on) {
     if (!voiceOrbTimer) startVoiceOrb();
   } else {

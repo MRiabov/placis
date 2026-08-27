@@ -1191,6 +1191,12 @@ body.is-shot .viewtabs-fab { display: none !important; }
   white-space: nowrap;
   transform: translateX(-50%);
   pointer-events: none;
+  transition:
+    left 320ms var(--cms-ease),
+    right 320ms var(--cms-ease),
+    bottom 320ms var(--cms-ease),
+    transform 320ms var(--cms-ease),
+    gap 320ms var(--cms-ease);
 }
 .cms-editor-canvas.is-assistant-collapsed .cms-canvas-actions {
   bottom: calc(12px + var(--cms-assistant-collapsed-height) + 8px);
@@ -1252,7 +1258,9 @@ body.is-shot .viewtabs-fab { display: none !important; }
   transition:
     height 180ms var(--cms-ease),
     max-width 180ms var(--cms-ease),
-    opacity 120ms var(--cms-ease);
+    opacity 120ms var(--cms-ease),
+    transform 320ms var(--cms-ease),
+    visibility 0s linear 320ms;
 }
 .cms-assistant-overlay:hover,
 .cms-assistant-overlay:focus-within {
@@ -1301,17 +1309,53 @@ body.is-shot .viewtabs-fab { display: none !important; }
     height: 2.25rem;
   }
 }
-.cms-editor-canvas.is-voice .cms-assistant-overlay {
-  display: none;
+.cms-editor-canvas.is-voice .cms-assistant-overlay,
+.cms-editor-canvas.is-voice .cms-assistant-overlay:hover,
+.cms-editor-canvas.is-voice .cms-assistant-overlay:focus-within {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(10px);
+  transition:
+    height 180ms var(--cms-ease),
+    max-width 180ms var(--cms-ease),
+    opacity 320ms var(--cms-ease),
+    transform 320ms var(--cms-ease),
+    visibility 0s;
 }
 .cms-voice-dock {
-  display: none;
+  display: flex;
+  flex: 0 1 0;
   align-items: center;
-  gap: 12px;
+  gap: 0;
+  min-width: 0;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
   pointer-events: none;
+  transform: translate3d(8px, 6px, 0);
+  transition:
+    opacity 320ms var(--cms-ease),
+    transform 320ms var(--cms-ease),
+    max-width 320ms var(--cms-ease),
+    gap 320ms var(--cms-ease);
 }
 .cms-editor-canvas.is-voice .cms-voice-dock {
-  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+  max-width: 22rem;
+  overflow: visible;
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cms-canvas-actions,
+  .cms-assistant-overlay,
+  .cms-editor-canvas.is-voice .cms-assistant-overlay,
+  .cms-voice-dock,
+  .cms-editor-canvas.is-voice .cms-voice-dock {
+    transition: none;
+  }
 }
 .cms-voice-restore {
   display: inline-flex;
