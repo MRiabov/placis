@@ -5,8 +5,10 @@
   attach/change sources six times inside 30 minutes on the same tenant.
 - **Assert**: Review / checklist reads succeed before jobs finish; one `enqueue_id` per
   `StartRun` and several `etl.runs` (one per kind) sharing that `enqueue_id`; retry of the same
-  `run_id` skips a second fetch; Maps path upserts `etl.google_maps_listings` (+ hours, review
-  rows); `place_id` on the Maps run; each job clears in-progress on the checklist projection;
+  `run_id` does not refetch a chunk that already has a fetch and still runs remaining slow
+  extract; Maps path upserts `etl.google_maps_listings` (+ hours, review
+  rows) from Details **before** scrape finishes; checklist / SSE show that live business profile while the Maps
+  run is still `extracting`; `place_id` on the Maps run; each job clears in-progress on the checklist projection;
   photo classification tags found photos (`photo_kind`); profile increments go through
   transform / build-profile (conflict does not update the live business profile). Enqueues 1–5 insert `etl.runs`
   and start extract. The 6th enqueue in 30 minutes does **not** call `StartRun`, does **not**

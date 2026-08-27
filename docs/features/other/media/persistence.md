@@ -25,7 +25,12 @@ website assistant, ads light cleanup are callers — [README.md](README.md)).
   `review_status` (`pending_review`/`approved`/`rejected`),
   `processing_status` (`uploading`/`processing`/`ready`/`failed`),
   `photo_kind` nullable (`hero` / `project` / `service` / `founder` / `logo`) — ETL transform
-  sets this on business-research photos; skip when `content_hash` already classified,
+  sets this on business-research photos,
+  `photo_kind_algorithm` nullable — classifier identity that wrote `photo_kind` (the skip key
+  `algorithm`; value `human` when the owner set it; a new algorithm does not reclassify until
+  `force=true`; `human` is never overwritten by ETL),
+  `photo_kind_schema_revision` nullable — bump when the `photo_kind` schema gains fields; the
+  next run classifies / extracts by default,
   `content_hash` nullable,
   `clutter_severity`, `busy_background_severity`, `poor_lighting_severity`,
   `color_cast_severity`, `blur_severity`, `overlay_text_severity`,

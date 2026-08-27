@@ -7,13 +7,15 @@ Package ownership. Workflows live in the feature docs this list points at.
    activation upgrades that row.
 2. `onboarding` owns the onboarding session, client interview, enqueueing apply-the-website-template
    (05) and website copy generation (06), website preview, and website activation.
-   Business research (step 02) only calls `etl.StartRun` and mirrors `etl.runs` on SSE. It does
-   not implement extract or transform. It does not implement apply, and it does not do website
-   publication.
+   Business research (step 02) only calls `etl.StartRun` and mirrors Postgres on SSE (`etl.runs`
+   and the live business profile). It does not implement extract or transform. It does not implement apply, and it
+   does not do website publication.
    [Onboarding](../features/onboarding/architecture.md).
-3. `etl` owns extract **and** transform: adapters and fetch / Google Maps listing SQL in
-   `extract/`; profile writes (research conflicts, Facebook / Instagram posts, photo
-   classification) in `transform/`. Callers pass explicit `kinds` to `StartRun`.
+3. `etl` owns extract **and** transform. `StartRun` only starts runs (cap, `enqueue_id`,
+   `etl.runs`, enqueue). Adapters and fetch / Google Maps listing SQL live in
+   `extract/<kind>/`; profile writes live in `transform/<kind>/`. Callers pass explicit `kinds`
+   to `StartRun`. The worker calls transform after each extract chunk (fast extract, then slow
+   extract); it does not wait for the kind to finish. Do not grow `run.go` into every source.
    [ETL](../features/etl/README.md).
 4. `website` owns the editable content model, applying a website template (validate website component
    contracts, write unpublished `website_*` rows), and website publication. A `website_manifest` is

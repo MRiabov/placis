@@ -20,6 +20,8 @@ Every registry select, Maps attach, ETL transform write, and client interview wr
 
 - Read the whole profile, merge in memory, and write it back.
 - Silently overwrite a disagreeing value onto the live business profile.
+- Overwrite a live profile field or list row whose winning `algorithm` is `human` (ETL, including
+  `force=true`). A later override is a manual transform.
 - Fabricate a value with no source (registry, Maps, crawl, business research, or the contractor).
 - Write `registered_office` into `business_profile_service_areas` or the reverse.
 - Use Maps listing address as a second legal address (it stays on `etl.google_maps_listings`).
@@ -33,8 +35,13 @@ live profile columns.
 - **Conflict:** two disagreeing values for the same checklist key → status `conflict`. That live
   profile column **is not updated** (keep previous value, or empty). Research must not `UPDATE` that
   column while `conflict`. Contractor `confirm_conflict` or a contractor edit writes the live
-  business profile and
-  sets `filled_by_user`. That is the only “contractor wins.”
+  business profile, sets `filled_by_user`, and sets `algorithm=human`. That is the only
+  “contractor wins.”
+- **`algorithm` / `schema_revision`:** ETL transform writes the current transform identity and
+  the current schema revision. Client interview / Details / `confirm_conflict` write
+  `algorithm=human`. Transform skips when both match and `force` is false. A bumped
+  `schema_revision` extracts by default (empty new fields may fill). It never overwrites `human`
+  ([ETL pipeline](../../etl/pipeline/README.md)).
 - **Legal identity:** registry wins `legal_name`, `company_number`, `registered_office`,
   `company_status`, `incorporation_date` even if Maps/crawl disagree; not a contractor question
   when a registry source exists.

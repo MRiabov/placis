@@ -956,6 +956,33 @@ In code: `etl.runs`.
 
 ---
 
+#### Fast extract
+
+The first cheap response for a source kind (Google Maps Details first response, or a fast crawl).
+Lands in about a second. Distinct from: Slow extract.
+
+---
+
+#### Slow extract
+
+The remainder after the fast extract (Maps scrape of further reviews and photos, or a slow
+crawl). Tens of seconds. Distinct from: Fast extract.
+
+---
+
+#### Fast crawl
+
+The first-response pass of website crawl. A fast extract for that kind. Distinct from: Slow
+crawl.
+
+---
+
+#### Slow crawl
+
+The rest of the existing site. A slow extract for website crawl. Distinct from: Fast crawl.
+
+---
+
 ### Onboarding
 
 #### Onboarding session

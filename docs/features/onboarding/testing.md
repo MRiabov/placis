@@ -12,7 +12,8 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
 
 2. **Review** — found vs missing; Continue to client interview.
    - UI: `/onboarding/review`.
-   - DB: checklist rows from 01/02 (`filled_by_research` appearing as business research fakes complete).
+   - DB: checklist rows from 01/02 (`filled_by_research` appearing as each extract chunk
+     transforms, Details before scrape finishes).
 
 3. **Client interview** — fill the gaps (text path in this E2E so it does not depend on a live voice
    service); submit. Reload mid-interview: lands on `/onboarding/interview` with autosaved answers,

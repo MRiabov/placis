@@ -54,6 +54,8 @@ replay profile history on every call.
   `created_by` (`business_research`/`voice`/`text`/`human`/`llm`),
   origin (where it came from: `google_maps_listing`/`company_registry_record`/`client_interview`/
   `business_research`/`facebook`/`instagram`/`owner`),
+  `algorithm` (ETL transform identity, or `human` when the contractor wrote it),
+  `schema_revision` (integer; bump when that schema gains fields — next extract runs by default),
   `request_id`, `etl_run_id` nullable,
   `created_at`
 
@@ -61,8 +63,11 @@ This table is the audit for profile edits. Generic `audit_events` stays for webs
 website activation / etc.
 
 **Write:** `SELECT … FOR UPDATE` the profile row, insert one increment per field or list item the
-writer actually set (never the whole profile), `UPDATE` only those live profile columns or list rows in the
-same transaction. Client interview and business research run at the same time; the row lock
+writer actually set (never the whole profile), `UPDATE` only those live profile columns or list
+rows in the same transaction. Client interview writes `algorithm=human`; ETL transform writes
+the current transform `algorithm` and `schema_revision`. ETL must not `UPDATE` a live profile
+column whose winning edit is `algorithm=human` (empty new fields after a `schema_revision` bump
+may still fill). Client interview and business research run at the same time; the row lock
 serializes them. Different fields both persist. Same field: both edits stay in the log; if the
 values disagree, that is a research conflict (show both). Do not read the whole profile, merge in
 memory, and write it back.
@@ -82,15 +87,17 @@ the profile as of `accepted_edit_id` (client interview complete).
 Website sections and ads reference `business_profile_reviews` by id. They do not copy the text.
 
 - `facebook_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique, Facebook page id /
-  URL, handle, `latest_fetch_id` nullable fk → `etl.facebook_fetches`
+  URL, handle, `algorithm`, `schema_revision`, `latest_fetch_id` nullable fk → `etl.facebook_fetches`
 - `facebook_posts` — `id`, `tenant_id` fk, `facebook_profile_id` fk, `external_id` unique per
-  profile, body / media library refs, `published_at` nullable
+  profile, body / media library refs, `published_at` nullable, `algorithm`, `schema_revision`
 - `instagram_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique, handle,
-  Instagram user, `latest_fetch_id` nullable fk → `etl.instagram_fetches`
+  Instagram user, `algorithm`, `schema_revision`, `latest_fetch_id` nullable fk →
+  `etl.instagram_fetches`
 - `instagram_posts` — `id`, `tenant_id` fk, `instagram_profile_id` fk, `external_id` unique per
-  profile, body / media library refs, `published_at` nullable
+  profile, body / media library refs, `published_at` nullable, `algorithm`, `schema_revision`
 
-ETL transform upserts these on source `external_id`. Raw stays on the fetch tables.
+ETL transform upserts these on source `external_id` unless `algorithm=human`. Raw stays on the
+fetch tables. Skip / `force` / `human`: [ETL pipeline](../../etl/pipeline/README.md).
 
 Photo classification (hero / project / service / founder / logo) is `photo_kind` on
 [`media_assets`](../media/persistence.md) used by this profile. There is no `etl.photo_classifications`
