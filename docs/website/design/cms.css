@@ -619,6 +619,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
 }
 .cms-viewport-control button,
 .cms-viewport-solo {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -629,6 +630,12 @@ body.is-shot .viewtabs-fab { display: none !important; }
   font-weight: 450;
   padding: 6px 12px;
   border-radius: var(--cms-radius-pill);
+}
+.cms-viewport-control button svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
 }
 .cms-viewport-control button.is-active,
 .cms-viewport-solo.is-active {
@@ -1008,6 +1015,8 @@ body.is-shot .viewtabs-fab { display: none !important; }
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
+  justify-content: center;
+  align-items: stretch;
   background-color: var(--cms-preview-stage);
   background-image:
     linear-gradient(var(--cms-preview-stage-grid) 1px, transparent 1px),
@@ -1015,21 +1024,30 @@ body.is-shot .viewtabs-fab { display: none !important; }
   background-size: 24px 24px;
   padding: 24px;
 }
-.cms-public-preview-shell {
-  display: grid;
-  width: 100%;
+.cms-stage-scale {
+  position: relative;
+  flex: 0 0 auto;
+  min-width: 0;
   min-height: 0;
-  flex: 1 1 auto;
+  overflow: hidden;
+}
+.cms-public-preview-shell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 1080px;
+  min-height: 0;
   grid-template-rows: auto minmax(0, 1fr);
   overflow: hidden;
+  transform-origin: top left;
   border-radius: var(--cms-radius-panel);
   background: var(--cms-surface-overlay);
   box-shadow: var(--cms-shadow-md);
-  transition: max-width 160ms var(--cms-ease);
 }
-.cms-public-preview-shell.is-desktop { max-width: 1080px; margin-inline: auto; }
-.cms-public-preview-shell.is-tablet { max-width: 760px; margin-inline: auto; }
-.cms-public-preview-shell.is-mobile { max-width: 390px; margin-inline: auto; }
+.cms-public-preview-shell.is-desktop { width: 1080px; }
+.cms-public-preview-shell.is-tablet { width: 760px; }
+.cms-public-preview-shell.is-mobile { width: 390px; }
 .cms-browser-chrome {
   display: flex;
   align-items: center;
@@ -2185,10 +2203,22 @@ body.is-shot .viewtabs-fab { display: none !important; }
     justify-content: flex-end;
   }
   .cms-viewport-control button {
+    width: 44px;
+    min-width: 44px;
     min-height: 44px;
-    padding: 6px 8px;
-    font-size: 12px;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
   }
+  .cms-viewport-control button svg { width: 18px; height: 18px; }
+  .cms-viewport-control button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  .cms-stage-grid { padding: 12px; }
   .button-primary,
   .button-secondary {
     min-height: 44px;

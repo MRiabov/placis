@@ -41,6 +41,9 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   No right-hand editing panel. No media library rail item.
   No Home crumb on the website-editor toolbar; viewport + Publish stay one row.
   On narrow, Open destinations sits inline with **Website editor**.
+  On narrow, Desktop / Tablet / Mobile are icons so Publish fits. Canvas native widths
+  Desktop 1080 / Tablet 760 / Mobile 390; scale down to fit the stage (`transform: scale`,
+  never above 1). Do not reflow the contractor website to the CMS width.
 - Look clones the placis-web dashboard theme ([design-decisions.md](design-decisions.md) 17):
   Satoshi, body tracking `-0.01em`, weights `400` / `450` / `500` / `600`, ink `#13120a`,
   `--secondary` `#f4f4f5`, zinc-600 idle rows, zinc-950/6% active fill, stone `#e7e5e4`
@@ -90,6 +93,8 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 - `/v1/tenants/{website_prefix}/website/…` for the CMS.
 - A second CMS palette, shadcn sprawl, or predecessor dashboard CSS that fights the
   placis-web tokens.
+- `EditorCanvas` `style={{ maxWidth: "100%", width: viewportWidths[viewport] }}` — that
+  reflows Desktop/Tablet to the CMS width. Keep the native widths and scale the frame.
 
 ## Retarget
 
