@@ -85,7 +85,7 @@ Onboarding 05/06 write them in River, not via these routes.
   section’s ordered `review_ids[]` (from the pool, length ≤ that website component’s max;
   over max is `400`). Archive of a website page strips that page node from `website.menus`
   ([persistence.md](persistence.md)). Body cap 64 KB. Image website
-  slots send a media library item id, not bytes. Example:
+  slots send a media library item id, not the file. Example:
 
 ```json
 { "base_edit_history_head": "<uuid>", "sections": [

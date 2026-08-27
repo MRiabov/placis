@@ -88,14 +88,14 @@ area, and the date.
     contractor is never asked to label a photo and never sees "has no media caption". A photo
     already in the ad is not shown as "still in review".
     After the owner **uploads a photo into an ad**, captioning is not a gate: they just
-    chose it. **Uploading…** is only while bytes land. Hover the thumb: a circle-and-cross
+    chose it. **Uploading…** is only while the photo is uploading. Hover the thumb: a circle-and-cross
     button (same overlay as `/cms/media` and the website editor media library); click it to
     abort — no media library item is left. As soon as `file_id` is set (not
     `failed`), that photo is usable in this ad — target **about 10 seconds**, not an LLM
     media caption wait. Do not show **Processing…** as a wait-to-use overlay in Ads. The media caption
     still writes in the background (`processing` → `ready` on the media item) so `/cms/media`
-    and the next generate can use it. Approve waits on failed uploads and bytes that have
-    not landed; it does not wait for a media caption on an owner-added photo.
+    and the next generate can use it. Approve waits on failed uploads and photos that have
+    not finished uploading; it does not wait for a media caption on an owner-added photo.
     Previous decision (same day): newly added files showed **Uploading…** then
     **Processing…** until the media caption was written, and Approve waited until thumbs were
     `ready`. Before that: the picker only offered approved items with a media caption, and

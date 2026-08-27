@@ -1114,8 +1114,7 @@ function setMediaView(item) {
   const meta = document.getElementById("mediaViewMeta");
   if (meta) {
     const who = item.by === "ai" ? "AI" : item.by;
-    const status = item.status === "uploading" ? "bytes landing" : item.status;
-    meta.textContent = `${item.caption} · supplied by ${who} · ${status}`;
+    meta.textContent = `${item.caption} · supplied by ${who} · ${item.status}`;
   }
 }
 

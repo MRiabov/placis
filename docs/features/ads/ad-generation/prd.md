@@ -205,7 +205,7 @@ Ads under `/cms/ads` should expose:
    or Story)
 7. warnings shown inline next to the field they belong to (failed photo upload). In-progress
    owner uploads show **Uploading…** on the thumb until
-   bytes land (about 10 seconds) — hover the thumb for a circle-and-cross; click it to cancel. Never "has no media caption", "still in review", or a
+   the photo is uploaded (about 10 seconds) — hover the thumb for a circle-and-cross; click it to cancel. Never "has no media caption", "still in review", or a
    **Processing…** wait for captioning
 8. approve and download actions that produce the final ad set
 
@@ -269,7 +269,7 @@ The owner is never asked to write a media caption and never sees "has no media c
 "still in review" on a photo already in the ad ([ADR 13](ADR.md)). Placis writes the media caption
 in the background for the library and later LLM picks. After the owner uploads a
 photo **into this ad**, captioning is not required for them to use it — they just added it.
-A newly added file shows **Uploading…** only while bytes land. Hover the thumb: a
+A newly added file shows **Uploading…** only while the photo is uploading. Hover the thumb: a
 circle-and-cross button; click it to cancel (same overlay as the media library). Target: usable in this ad
 within about **10 seconds** (upload), not an LLM media caption wait. Ads do not show
 **Processing…** as a wait-to-use overlay. A failed upload is a warning with an upload sign
@@ -414,7 +414,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria).
 3. **As a contractor owner**, I want people who tap my ad to fill in a Meta ad lead form, so that
    I get ad leads without sending them to a website page.
    - Every ad carries a suggested ad lead form (title and standard fields).
-   - Approval validates contractor-owned imagery with bytes landed (the media caption is written by
+   - Approval validates contractor-owned imagery that has finished uploading (the media caption is written by
      Placis in the background; it is not a gate for a photo the owner just added), crops,
      copy limits, and allowed button labels. Uploads still in flight must finish first
      (about 10 seconds).
@@ -441,7 +441,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria).
 2. Time from "create ad" to "ad ready to post" for a typical contractor.
 3. Percentage of LLM-drafted copy and image selections accepted without edits.
 4. Compliance warnings on unsupported marketing statements (not Approve blockers once the
-   owner kept, edited, or prompted them). Owner uploads show Uploading… until bytes land
+   owner kept, edited, or prompted them). Owner uploads show Uploading… until the photo is uploaded
    (about 10 seconds), not a Processing… media caption wait or a media caption/review error.
 5. Ad sets consumed as-is — via download or via the service — when used for ad posting by the
    contractor or done-for-you.
@@ -465,7 +465,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria).
    fields) with no ad-platform credentials required.
 9. Unprompted generation does not invent unsupported marketing statements. Owner edit or
    owner prompt is allowed — Approve is not blocked. A Details tool call writes the business
-   profile when copy includes a detail. An owner upload is usable once bytes have landed
+   profile when copy includes a detail. An owner upload is usable once the photo is uploaded
    (about 10 seconds); captioning is background, not a gate. Uploading… is not an owner
    caption/review error.
 10. An E2E test covers create → review/edit → approve → use the ad set without

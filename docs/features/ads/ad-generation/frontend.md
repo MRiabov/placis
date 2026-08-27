@@ -126,7 +126,7 @@ One accordion wrapper with two expandable steps; both are visible immediately:
   "Approve the ad first"). Validation lives inline in the steps, not in a separate list here.
   Photos never show "has no media caption" or "still in review" — we write the media caption
   in the background, and a photo already in the ad is not a review chore ([ADR 13](ADR.md)).
-  Owner-added thumbs read **Uploading…** only while bytes land (usable in about 10 seconds).
+  Owner-added thumbs read **Uploading…** only while the photo is uploading (usable in about 10 seconds).
   Hover the thumb: a circle-and-cross button; click it to cancel (same overlay as the media library and the website editor).
   Ads do not show **Processing…** as a wait-to-use overlay. A failed upload is a warning
   with an upload sign ("Couldn't upload that photo — try again").
@@ -170,7 +170,7 @@ The questions and review content:
    point** (one anchor). Thumbnail labels are the media caption (alt text) when it exists —
    there is no short-title guarantee, so the strip truncates to two lines with the full
    media caption on hover. Until the media caption is written, the thumb has no media caption line (not an
-   error). A newly added photo shows **Uploading…** only while bytes land; hover the thumb
+   error). A newly added photo shows **Uploading…** only while the photo is uploading; hover the thumb
    for a circle-and-cross button and click it to cancel (no photo is added). If they do not cancel, it is
    usable in this ad (about 10 seconds) — captioning continues in the background. The owner
    is never asked to label it. A failed upload is a warning with an
@@ -355,8 +355,8 @@ Mobile is a primary viewport. Ads must work on a mobile device:
   other fields' manual edits (empty prompt does not fire; Ctrl+Z restores an LLM rewrite and
   cleanup Accept; owner-prompted details write Details via a tool call and a
   notification, Approve is not blocked)
-- media picker scoped to this contractor's photos; new files show Uploading… until bytes
-  land (hover: circle-and-cross, click to cancel); then they are usable in this ad without waiting on a media caption; cleanup drafts
+- media picker scoped to this contractor's photos; new files show Uploading… until the
+  photo is uploaded (hover: circle-and-cross, click to cancel); then they are usable in this ad without waiting on a media caption; cleanup drafts
   render as before/after and
   accept/reject per image; photo strip is always shown (single-select on one-image
   formats; card select on carousel)

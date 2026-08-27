@@ -2,7 +2,7 @@
 
 The photo library. Website sections and ads reference these rows; they do not copy them.
 Conventions: [persistence conventions](../../../general-architecture/persistence.md)
-(Postgres schema `media_library`). Bytes live in
+(Postgres schema `media_library`). Files live in
 [files](../../../general-architecture/files-and-s3.md).
 
 The file on a media library item is never replaced. An edit creates a new row
@@ -38,10 +38,10 @@ website assistant, ads light cleanup are callers — [README.md](README.md)).
   (each `low` / `medium` / `high` or null), `created_at`
 
 `processing_status` is not `review_status` and not `status` (active/archived). A new
-upload is `uploading` while bytes land, then `processing` while Placis writes the media
+upload is `uploading` while the file is uploading, then `processing` while Placis writes the media
 caption and classifies visual issues, then `ready` — the media caption is always there once ready. Failed upload is
 `failed`. The live website only uses `ready` + `approved` items. Ads LLM picks use that
-same pool; a photo the owner adds to an ad is usable once bytes have landed, even if
+same pool; a photo the owner adds to an ad is usable once the photo is uploaded, even if
 captioning is still `processing`.
 
 Visual-issue severities are Internal/code (`submit_image_visual_issues` on the captioning

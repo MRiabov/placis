@@ -42,10 +42,10 @@ doc, `internal/website/`, an ads package), the short word is acceptable: page, s
 variant; session. Do not use the short word in a mixed or product-facing sentence where it could
 mean something else.
 
-Do not say **user**, **frozen**, bare **session**, **provider**, **instantiate**, **population**, **mint**, or **fold**.
+Do not say **user**, **frozen**, bare **session**, **provider**, **instantiate**, **population**, **mint**, **fold**, or **bytes**.
 Say contractor, owner, or website visitor; name Google Maps, the LLM, or Stripe; say apply the
 website template; say create or use for ephemeral tokens and ids; say live business profile or
-unpublished website.
+unpublished website; say photo, image, file, or binary.
 
 ---
 
@@ -1057,6 +1057,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | instantiate / population | apply the website template |
 | mint / minted / minting | create or use (ephemeral tokens and ids) |
 | fold / folds | live business profile or unpublished website |
+| bytes | photo, image, file, or binary |
 | generate unpublished website / generate website structure | apply the website template |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (onboarding) | website preview link |
