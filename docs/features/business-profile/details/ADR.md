@@ -55,7 +55,7 @@ decision + date) instead of silently rewriting history.
    Closed. Shown on the contact website page. There
    is no `note` column and no Appointment note field. Logo is picked from the media library
    (`logo_media_asset_id`). Persist on click-off; no Save details. Picker look is in
-   [design decisions](design-decisions.md). (2026-08-26)
+   [design decision record](design-decisions.md). (2026-08-26)
 
 7. **Certification definitions and ticks are Details tables** — Global `certification_definitions`
    and tenant `business_profile_certification_selections` live in Postgres schema `details`.

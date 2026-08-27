@@ -1,11 +1,11 @@
-# CMS design decisions
+# CMS design decision record
 
 Look and interaction for The CMS (sidebar + main area): left nav, New chat, viewport lock,
-theme. Website editor look stays in [website design decisions](../../features/website/design-decisions.md).
+theme. Website editor look stays in [website design decision record](../../features/website/design-decisions.md).
 Tokens: [design.md](design.md). Mock: [cms.html](../../design/cms.html). Screens:
 [frontend.md](frontend.md).
 
-Status: decided (dates on each entry). Entries moved from website design decisions keep the
+Status: decided (dates on each entry). Entries moved from website design decision record keep the
 old paragraphs and dates; the website file points here. Do not silently replace the old entry.
 
 ## Decisions

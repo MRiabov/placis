@@ -8,7 +8,7 @@ shows them; ads read them.
 
 Conventions: [persistence conventions](../../../general-architecture/persistence.md)
 (Postgres schema `details`). Later: rename this schema to `business_profile` or `profile`.
-Decisions: [ADR.md](ADR.md). Facebook / Instagram profile
+[ADR](ADR.md). Facebook / Instagram profile
 and post rows live here (tenant-owned). The Google Maps listing stays in [ETL](../../etl/persistence.md).
 
 A **detail** is a column (or a row in a list table). Their existing site URL is a detail; it is not

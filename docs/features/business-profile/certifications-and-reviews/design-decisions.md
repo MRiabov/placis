@@ -1,4 +1,4 @@
-# Certifications and reviews design decisions
+# Certifications and reviews design decision record
 
 Look for `/cms/certifications-and-reviews`. Product: [ADR.md](ADR.md). Screen:
 [frontend.md](frontend.md). Website editor reviews Content look stays in

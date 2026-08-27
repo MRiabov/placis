@@ -35,7 +35,7 @@ no single feature owns.
 - `src/shared/ui/` button + dialog as they exist; do not expand shared UI in this port.
 - Tokens for the CMS (sidebar + main area): [design.md](cms/design.md)
   (clone placis-web `globals.css` + `marketingSite.ts`). Do not invent a second palette.
-  [design decisions](cms/design-decisions.md) 5.
+  [design decision record](cms/design-decisions.md) 5.
 - Left nav (Profile disclosure + Ads), New chat (`/cms`), Connect / Voice / placeholders:
   [frontend](cms/frontend.md). Code today: Don't say shell:
   `frontend-2/src/features/cms/CmsDashboardShell.tsx` — leftover flat nav (New chat, Sites,
@@ -120,6 +120,6 @@ unconstrained blobs). Contractor website typegen is a different consumer:
 - Parity suite is gone; product e2e does not attach to the owner’s dev ports.
 - Leftover layout type names are gone from `frontend-2`.
 - CMS `src/styles/cms/` tokens match placis-web
-  ([CMS design decisions](cms/design-decisions.md) 5).
+  ([CMS design decision record](cms/design-decisions.md) 5).
 - Left nav matches [CMS frontend](cms/frontend.md) (Profile disclosure, Ads dest, no `/cms/proof`,
   no **AI tools** item).

@@ -6,7 +6,7 @@ This directory locks how the Placis website is built and served. It is not a cop
 design PRD. The app lives in `apps/placis-website/`. This origin has **no Go HTTP**
 ([HTTP conventions](../../general-architecture/api.md)).
 
-- [ADR](ADR.md) — decisions
+- [ADR](ADR.md) — architectural decision record
 - [cloudflare.md](cloudflare.md) — Astro static build, R2 origin, zone hosts
 - [testing.md](testing.md) — Playwright against the static build
 

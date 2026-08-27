@@ -40,7 +40,7 @@ the owner sees a **notification** in Ads (OK keeps it; Revert undoes that increm
 
 How the owner reaches it: [CMS frontend](../../../general-architecture/cms/frontend.md). This
 screen: [frontend.md](frontend.md). Port:
-[frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). Look:
-[design decisions](design-decisions.md). HTTP:
+[frontend-debloat.md](frontend-debloat.md). [ADR](ADR.md). Look:
+[design decision record](design-decisions.md). HTTP:
 [api.md](api.md). Tables: [persistence.md](persistence.md). Projects:
 [projects HTTP](../projects/api.md).
