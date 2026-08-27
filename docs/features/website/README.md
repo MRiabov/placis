@@ -5,6 +5,7 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — architectural decision record
+- [design.md](design.md) — tokens for the CMS (sidebar + main area): Satoshi, ink, hairline, outline vs `--secondary`
 - [design-decisions.md](design-decisions.md) — look and interaction (not architecture)
 - [architecture.md](architecture.md) — content model, applying the website template, website editor, website publication, render
 - [cloudflare.md](cloudflare.md) — live R2 serve path (`apps/contractor-website` is in this repo). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md), not this Worker.

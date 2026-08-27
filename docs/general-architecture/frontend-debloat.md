@@ -33,8 +33,8 @@ no single feature owns.
   whole-panel swap). Do not say skeleton.
 - File-size guard on `frontend-2` (&lt; 800 warn, &gt; 1200 hard error).
 - `src/shared/ui/` button + dialog as they exist; do not expand shared UI in this port.
-- CMS tokens clone placis-web `globals.css` + `marketingSite.ts` (Satoshi, `--secondary`
-  `#f4f4f5`, ink `#13120a`). Do not invent a second palette.
+- Tokens for the CMS (sidebar + main area): [website design.md](../features/website/design.md)
+  (clone placis-web `globals.css` + `marketingSite.ts`). Do not invent a second palette.
   [website design-decisions](../features/website/design-decisions.md) 17.
 
 ## Delete
