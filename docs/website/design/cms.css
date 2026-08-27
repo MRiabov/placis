@@ -2213,6 +2213,22 @@ body.is-shot .viewtabs-fab { display: none !important; }
   .cms-project-grid { grid-template-columns: 1fr; }
   .cms-certs-layout,
   .cms-review-grid { grid-template-columns: 1fr; }
+  .cms-certs-layout { gap: 24px; }
+  .cms-certs-layout > .cms-details-form-panel {
+    gap: 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+  }
+  .cms-certs-layout > .cms-details-form-panel .cms-details-panel-heading h3 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  .cms-certs-layout > .cms-details-form-panel .cms-details-panel-heading p {
+    margin: 0 0 6px;
+  }
   .cms-grip { opacity: 1; min-width: 44px; min-height: 44px; }
   .cms-editor-header-inner {
     grid-template-columns: minmax(0, 1fr) auto;
