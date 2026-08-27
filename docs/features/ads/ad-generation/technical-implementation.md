@@ -300,10 +300,12 @@ status:
 
 1. gather inputs: the owner's selected ad format (exactly one — [ADR 32](ADR.md),
    [ADR 33](ADR.md)), approved media assets (review approved, tenant-owned,
-   media caption already written), projects, services, service area, certifications, reviews, business
+   media caption already written), projects, services, service area, certifications, **top
+   reviews** (by id; review citation, not a rewrite; prefer earlier `top_position`), business
    name and details, and the confirmed ideal customer profile. Create one variant row for that
    format. Changing format after generate regenerates this ad; it does not rearrange an
    existing draft. Another format is another ad.
+   **Link your Facebook** on Business details is not Connect Meta.
 2. draft that format for how it's used (existing structured AI assistant tooling, with
    the deterministic no-key fallback used by projects): feed is one photo and feed-length copy;
    carousel is a card sequence (2–10 images); story is overlay-short copy and a single 9:16

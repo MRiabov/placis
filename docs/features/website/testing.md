@@ -24,7 +24,7 @@ DB asserts name the tables from [persistence.md](persistence.md) (and
    - UI: proposal on the canvas; **Apply** PATCHes dirty keys then `record-apply`.
    - DB: a website slot value changes through that PATCH; `ai_generations` records the batch;
      `edit_history` has an agent batch.
-   - UI: activity card. Apply / Reject if Ask first; no revert-after-apply.
+   - UI: muted tool-call rows in the thread. Apply / Reject pills on the canvas over the chatbot if Ask first; no revert-after-apply.
 
 5. **Website publication** — the owner does a website publication.
    - DB: `website_publications` (status=`published`, `active=true`, `website_manifest`,
@@ -41,8 +41,10 @@ DB asserts name the tables from [persistence.md](persistence.md) (and
 7. **Website rollback** — the owner does a website rollback to an earlier **owner** website
    version (onboarding v1/v2 are not listed).
    - DB: an earlier `website_publications` is `active` again; earlier published website copies are
-     never overwritten (both rows remain).
-   - UI: the live website shows the earlier published website copy.
+     never overwritten (both rows remain). Unpublished rows are unchanged.
+   - UI: the dropdown updates from the rollback `*Read`; the live website shows the earlier
+     published website copy. Website versions: rollback on earlier owner website versions;
+     Preview on the live website version.
 
 8. **Website form → website lead** — a website visitor submits a website form.
    - DB: `leads` (source=`website_form`, `website_form_id`, `contact_name`, `marketing_phone`,

@@ -5,7 +5,7 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [README.md](README.md), [persistence.md](persistence.md), [api.md](api.md),
-[website frontend](../../website/frontend.md) (workspace item + `/cms/media`).
+[website frontend](../../website/frontend.md) (Content attach + `/cms/media`).
 Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 
 ## Code today
@@ -21,11 +21,14 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 
 ## Keep
 
-- One library: workspace item on `/cms/website` (upload, drag onto canvas, attach
-  to a website slot as a discrete PATCH).
+- One library: `/cms/media` under Profile, plus attach / pick in Content when an image is selected
+  (upload, drag onto canvas, attach to a website slot as a discrete PATCH).
 - Media caption, focal point, crop, replace, AI cleanup that **creates a copy**
   (`parent_media_asset_id`); parent file is never replaced. Website editor PATCH, website
   assistant tools, and ads light cleanup call these same functions ([README.md](README.md)).
+  `/cms/media` look: large view (also where they compare cleanup), prompt box beside/under it,
+  before/after sweep on cleanup, dense thumbs (3 then 4 columns; mixed ratios). Not huge
+  square cards.
 - Leave guard covers an in-flight upload ([editing.md](../../website/editing.md)).
   Hover the uploading thumb: a circle-and-cross button; click it to cancel (same overlay as Ads).
 
@@ -63,11 +66,11 @@ file). Deep link `/cms/media` is still required.
 ## Tests
 
 - `MediaWorkspacePanel.test.tsx`, `e2e/media-upload.spec.ts` — keep; land on
-  `/cms/website` → media library workspace item (and later `/cms/media`).
+  `/cms/website` → image Content (and `/cms/media`).
 - Do not `reuseExistingServer` against the owner’s 5173/5174 (cross-cutting).
 
 ## Done when
 
-- One library, two entries (workspace item + `/cms/media`).
+- One library: Content attach on `/cms/website` + `/cms/media`.
 - No second picker. No unused modal CSS.
 - Uploads and website-slot attach use the constrained website-editor / files API.

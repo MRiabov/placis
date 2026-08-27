@@ -18,8 +18,10 @@ then ask a few questions to fill the gaps, and do business research from public 
    which pre-fills what we already know.
 2. Ask a few questions to fill in what's missing — their services, the areas they cover, their
    contact details and opening hours.
-3. **Business research** from public sources: Google Maps, the company registry, Facebook, their
-   current website, and photos of their work.
+3. **Business research** from public sources: Google Maps, the company registry, Facebook
+   (reviews and posts when they exist), their current website, and photos of their work.
+   After website activation, the same public sources are extracted again so new posts and
+   photos land in the media library and the review pool.
 4. Combine their answers with what we found into one clear **business profile**, each detail noting
    where it came from.
 5. When their answer disagrees with what we found, **show the research conflict and let them

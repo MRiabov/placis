@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The CMS — current design (look export)</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
+<!--
+  Static design mock of The CMS. Function follows website/details specs; this file is visual.
+  Open cms.html in a browser (no build). Styles: cms.css. Scene wiring: cms.js.
+  Dev-only strip is per-screen states (not sidebar nav); hide with ?shot=1.
+  Collapses to a top-right circle; ?dev=1 keeps it open, ?dev=0 starts collapsed.
+  Desktop and narrow assistant default collapsed. Force with
+  ?assistant=collapsed or ?assistant=expanded.
+  Empty composer turns the voice agent on. Force chatbot with ?voice=0.
+  New chat: ?connected=1 hides Connect; ?homevoice=1 opens the interview orb.
+  Narrow (≤1100px): full-screen overlay selector; Open destinations is inline with the heading.
+  Canvas is a fake homepage, not the contractor website renderer.
+  Ads detail lives in docs/features/ads/ad-generation/design/ads-workspace.html.
+-->
+<link rel="stylesheet" href="cms.css" />
+</head>
+<body>
+  <!-- Mock-only: per-screen states for reviewing this HTML. Not product UI.
+       Hidden when ?shot=1. Product destinations are the left nav. -->
+  <div class="viewtabs" id="viewtabs" role="note" aria-label="Developer states, not part of the product">
+    <span class="viewtabs-label">Dev only</span>
+    <button type="button" class="viewtabs-collapse" id="viewtabsCollapse" aria-label="Hide developer states" title="Hide developer states">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+    </button>
+    <span class="viewtabs-empty is-hidden" data-state-for="ads">Sidebar is the nav. Open a screen for states.</span>
+    <div class="viewtabs-states is-hidden" data-state-for="home">
+      <span class="viewtabs-group">New chat</span>
+      <button type="button" class="viewtab" data-state="mcp-connected">All connected</button>
+      <button type="button" class="viewtab" data-state="home-voice">Voice interview</button>
+    </div>
+    <div class="viewtabs-states is-hidden" data-state-for="website">
+      <span class="viewtabs-group">Website</span>
+      <button type="button" class="viewtab" data-state="sidebar">Sidebar expanded</button>
+      <button type="button" class="viewtab" data-state="workspace">Pages list</button>
+      <button type="button" class="viewtab on" data-state="page" data-page="home">Home</button>
+      <button type="button" class="viewtab" data-state="page" data-page="services">Roof repairs</button>
+      <button type="button" class="viewtab" data-state="page" data-page="contact">Contact</button>
+      <button type="button" class="viewtab" data-state="page" data-page="privacy">Privacy</button>
+      <button type="button" class="viewtab" data-state="copy-out">Copy-out blocked</button>
+      <button type="button" class="viewtab on" data-state="ask-first">Ask first pending</button>
+      <button type="button" class="viewtab on" data-state="voice">Voice agent</button>
+      <button type="button" class="viewtab on" data-state="assistant">Assistant collapsed</button>
+      <button type="button" class="viewtab" data-state="publication">Publish</button>
+      <button type="button" class="viewtab" data-state="connect">Connect</button>
+      <button type="button" class="viewtab" data-state="notify">Notification</button>
+      <button type="button" class="viewtab on" data-state="section" data-section="hero">Hero</button>
+      <button type="button" class="viewtab" data-state="section" data-section="reviews">Reviews</button>
+      <button type="button" class="viewtab" data-state="section" data-section="top-menu">Top menu</button>
+      <button type="button" class="viewtab" data-state="section" data-section="footer">Footer</button>
+      <button type="button" class="viewtab" data-state="section" data-section="form">Website form</button>
+      <button type="button" class="viewtab" data-state="rail" data-rail="seo">SEO</button>
+      <button type="button" class="viewtab" data-state="rail" data-rail="styles">Styles</button>
+      <button type="button" class="viewtab" data-state="rail" data-rail="versions">Website versions</button>
+    </div>
+    <div class="viewtabs-states is-hidden" data-state-for="details">
+      <span class="viewtabs-group">Business details</span>
+      <span class="viewtabs-hint">No extra states on this screen.</span>
+    </div>
+    <div class="viewtabs-states is-hidden" data-state-for="projects">
+      <span class="viewtabs-group">Projects</span>
+      <span class="viewtabs-hint">No extra states on this screen.</span>
+    </div>
+    <div class="viewtabs-states is-hidden" data-state-for="certifications create-review">
+      <span class="viewtabs-group">Certifications and reviews</span>
+      <button type="button" class="viewtab" data-state="archive">Archive open</button>
+      <button type="button" class="viewtab" data-scene="create-review">Create review</button>
+      <button type="button" class="viewtab" data-scene="certifications">All reviews</button>
+    </div>
+    <div class="viewtabs-states is-hidden" data-state-for="media">
+      <span class="viewtabs-group">Media library</span>
+      <button type="button" class="viewtab" data-state="cleanup">Cleanup compare</button>
+      <button type="button" class="viewtab" data-scene="website">Back to website</button>
+    </div>
+  </div>
+  <button type="button" class="viewtabs-fab is-hidden" id="viewtabsOpen" aria-label="Show developer states" title="Show developer states">Dev</button>
+
+  <div class="cms-dashboard-frame" id="frame">
+    <aside class="cms-dashboard-sidebar" aria-label="The CMS">
+      <div class="cms-dashboard-sidebar-inner">
+        <div class="cms-dashboard-sidebar-header">
+          <button class="cms-dashboard-brand js-expanded-only" data-scene="home" type="button">Placis</button>
+          <button class="cms-dashboard-icon-button" id="sidebarToggle" type="button" aria-label="Collapse sidebar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+          </button>
+        </div>
+        <nav class="cms-dashboard-nav">
+          <button class="cms-dashboard-nav-item is-active" data-nav="home" data-scene="home" type="button" aria-label="New chat">
+            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span class="js-expanded-only">New chat</span>
+          </button>
+          <button class="cms-dashboard-nav-item" data-nav="website" data-scene="website" type="button" aria-label="Sites">
+            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+            <span class="js-expanded-only">Sites</span>
+          </button>
+          <button class="cms-dashboard-nav-disclosure js-wide-disclosure" id="profileToggle" type="button" aria-expanded="false" aria-label="Business details">
+            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+            <span class="js-expanded-only">Profile</span>
+            <svg class="nav-chevron js-expanded-only" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="cms-dashboard-nav-children js-expanded-only is-hidden" id="profileChildren">
+            <button class="cms-dashboard-nav-item" data-nav="details" data-scene="details" type="button">Business details</button>
+            <button class="cms-dashboard-nav-item" data-nav="projects" data-scene="projects" type="button">Projects</button>
+            <button class="cms-dashboard-nav-item" data-nav="certifications" data-scene="certifications" type="button">Certifications and reviews</button>
+            <button class="cms-dashboard-nav-item" data-nav="media" data-scene="media" type="button">Media library</button>
+          </div>
+          <button class="cms-dashboard-nav-item" data-nav="ads" data-scene="ads" type="button" aria-label="Ads">
+            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M4 8h10l6-4v16l-6-4H4z"/></svg>
+            <span class="js-expanded-only">Ads</span>
+          </button>
+        </nav>
+        <div class="cms-dashboard-sidebar-spacer"></div>
+        <button class="cms-dashboard-nav-item js-expanded-only" type="button">Settings</button>
+        <div class="cms-dashboard-account">
+          <div class="cms-dashboard-account-divider">
+            <button class="cms-account-trigger" id="accountToggle" type="button" aria-expanded="false" aria-label="Open account menu">
+              <img class="cms-user-avatar" src="owner-avatar.jpg" alt="" width="32" height="32" />
+              <span class="cms-account-copy js-expanded-only">
+                <span class="cms-account-name">Bellfield Roofing</span>
+                <span class="cms-account-meta">Owner</span>
+              </span>
+            </button>
+            <div class="cms-account-popover is-hidden" id="accountPopover">
+              <button type="button">Settings</button>
+              <button type="button">Clerk organization</button>
+              <div class="cms-account-sep"></div>
+              <button type="button">Log out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="cms-dashboard-main-column">
+      <main class="cms-dashboard-main-content">
+
+        <section class="cms-dashboard-prompt-wrap" data-view="home">
+          <button class="cms-nav-open cms-nav-open-home" type="button" aria-label="Open destinations">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+          </button>
+          <h1 class="cms-dashboard-wordmark">placis</h1>
+          <div class="cms-dashboard-prompt-stack">
+            <button class="cms-dashboard-prompt-shelf" type="button">Upgrade to Placis Pro</button>
+            <form class="cms-dashboard-prompt" id="homePrompt">
+              <div class="cms-dashboard-prompt-field">
+                <div class="cms-dashboard-prompt-ph" id="homePromptPh" aria-hidden="true">
+                  <span>Describe what you want Placis to build...</span>
+                </div>
+                <textarea rows="2" aria-label="Describe what you want Placis to build"></textarea>
+              </div>
+              <div class="cms-dashboard-prompt-actions">
+                <div class="cms-dashboard-prompt-left-actions">
+                  <button class="cms-dashboard-prompt-connect" id="homeConnect" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="mcpConnectPanel">Connect</button>
+                  <button class="cms-dashboard-prompt-icon" type="button" aria-label="Attach a photo">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                  </button>
+                </div>
+                <div class="cms-dashboard-prompt-right-actions">
+                  <button class="cms-dashboard-prompt-voice" id="homeVoice" type="button" aria-label="Voice options" aria-haspopup="true" aria-expanded="false" aria-controls="homeVoicePanel">
+                    <svg class="voice-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></svg>
+                  </button>
+                  <button class="cms-dashboard-prompt-send" type="submit" aria-label="Send to the website assistant">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="cms-prompt-panel" id="mcpConnectPanel" aria-hidden="true">
+                <div class="cms-prompt-panel-clip">
+                  <div class="cms-prompt-panel-inner">
+                    <p>Link Google and Meta ad accounts to run campaigns on Placis.</p>
+                    <div class="cms-mcp-brands">
+                      <button class="cms-mcp-brand" type="button" aria-label="Connect Google Ads campaigns">
+                        <span class="cms-mcp-mark" aria-hidden="true">
+                          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        </span>
+                        Google
+                      </button>
+                      <button class="cms-mcp-brand" type="button" aria-label="Connect Meta Ads campaigns">
+                        <span class="cms-mcp-mark" aria-hidden="true">
+                          <svg viewBox="0 0 24 24"><path fill="#0081FB" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z"/></svg>
+                        </span>
+                        Meta
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="cms-prompt-panel" id="homeVoicePanel" aria-hidden="true">
+                <div class="cms-prompt-panel-clip">
+                  <div class="cms-prompt-panel-inner">
+                    <p>Placis interviews you and builds from your answers.</p>
+                    <button class="cms-prompt-interview" id="homeStartInterview" type="button">Start interview</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <div class="cms-editor-page is-hidden" data-view="website">
+          <header class="cms-editor-header">
+            <div class="cms-editor-header-inner">
+              <div class="cms-editor-title">
+                <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                </button>
+                <h1>Website editor</h1>
+              </div>
+              <div class="cms-editor-header-controls">
+                <div class="cms-viewport-control" role="group" aria-label="Canvas width">
+                  <button class="is-active" data-viewport="desktop" type="button" aria-label="Desktop">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    <span>Desktop</span>
+                  </button>
+                  <button data-viewport="tablet" type="button" aria-label="Tablet">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+                    <span>Tablet</span>
+                  </button>
+                  <button data-viewport="mobile" type="button" aria-label="Mobile">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+                    <span>Mobile</span>
+                  </button>
+                </div>
+              </div>
+              <div class="cms-editor-header-actions">
+                <div class="cms-publication">
+                  <button class="button-primary" id="publicationToggle" type="button" aria-expanded="false">Publish</button>
+                  <div class="cms-publication-panel is-hidden" id="publicationPanel">
+                    <div class="cms-publication-hosts">
+                      <button class="cms-publication-row" type="button" aria-label="Open acme-roofing-dublin.preview.placis.com">
+                        <span class="cms-publication-row-copy">
+                          <b>acme-roofing-dublin.preview.placis.com</b>
+                          <span>Last published 2 days ago</span>
+                        </span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                      </button>
+                      <button class="cms-publication-row is-waiting" type="button" data-connect-url>
+                        <span class="cms-publication-row-copy">
+                          <b>acme.ie</b>
+                          <span>Waiting for DNS</span>
+                        </span>
+                      </button>
+                      <button class="cms-publication-row is-add" id="connectUrl" type="button" data-connect-url>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                        <span class="cms-publication-row-copy">
+                          <b>New URL</b>
+                          <span>Connect website address</span>
+                        </span>
+                      </button>
+                    </div>
+                    <div class="cms-publication-blockers">
+                      <p>Publishing is blocked:</p>
+                      <ul>
+                        <li>
+                          <button type="button" class="cms-blocker-link" data-blocker="slot">
+                            <span>A required image on Hero cannot resolve</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button type="button" class="cms-blocker-link" data-blocker="media">
+                            <span>One media library item on the live path is not approved.</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="cms-editor-layout" id="editorLayout">
+            <aside class="cms-workspace is-rail-only" id="workspace" aria-label="Workspace">
+              <div class="cms-workspace-rail">
+                <button class="cms-workspace-rail-button is-active" data-rail="pages" type="button" title="Website pages">
+                  <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                  <span>Website pages</span>
+                </button>
+                <button class="cms-workspace-rail-button" data-rail="seo" type="button" title="SEO">
+                  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                  <span>SEO</span>
+                </button>
+                <button class="cms-workspace-rail-button" data-rail="styles" type="button" title="Website styles">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="8" y="13" width="8" height="8" rx="1"/></svg>
+                  <span>Website styles</span>
+                </button>
+                <button class="cms-workspace-rail-button cms-workspace-rail-end" data-rail="versions" type="button" title="Website versions">
+                  <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+                  <span>Website versions</span>
+                </button>
+              </div>
+              <div class="cms-workspace-panel">
+                <div data-rail-panel="pages">
+                  <div class="cms-panel-title">
+                    <button class="cms-workspace-collapse" type="button" data-workspace="collapse" aria-label="Hide website pages">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 13 5 5 5-5"/><path d="m7 6 5 5 5-5"/></svg>
+                    </button>
+                    <span>Website pages</span>
+                    <button class="cms-icon-button" type="button" aria-label="Add a website page">
+                      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                  </div>
+                  <div class="cms-page-list">
+                    <button class="cms-page-item is-selected" data-page="home" type="button">Home <small>/</small></button>
+                    <button class="cms-page-item" data-page="services" type="button">Roof repairs <small>/roof-repairs</small></button>
+                    <button class="cms-page-item" data-page="contact" type="button">Contact <small>/contact</small></button>
+                  </div>
+                  <p class="cms-utility-label">Legal</p>
+                  <div class="cms-page-list">
+                    <button class="cms-page-item" data-page="privacy" type="button">Privacy <small>/privacy</small></button>
+                    <button class="cms-page-item" data-page="terms" type="button">Terms <small>/terms</small></button>
+                  </div>
+                </div>
+                <div class="is-hidden" data-rail-panel="seo">
+                  <div class="cms-panel-title">
+                    <button class="cms-workspace-collapse" type="button" data-workspace="collapse" aria-label="Hide SEO">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 13 5 5 5-5"/><path d="m7 6 5 5 5-5"/></svg>
+                    </button>
+                    <span>SEO</span>
+                  </div>
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="pageTitle">Website page title</label>
+                    <input class="cms-field-control" id="pageTitle" value="Bellfield Roofing | Dublin" />
+                  </div>
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="pagePath">Website page path</label>
+                    <input class="cms-field-control" id="pagePath" value="/" />
+                  </div>
+                  <div class="cms-field">
+                    <label class="cms-field-label" for="seoDesc">Description</label>
+                    <textarea class="cms-careers-textarea" id="seoDesc">Dublin roofing repairs, re-roofs, and guttering.</textarea>
+                  </div>
+                </div>
+                <div class="is-hidden" data-rail-panel="styles">
+                  <div class="cms-panel-title">
+                    <button class="cms-workspace-collapse" type="button" data-workspace="collapse" aria-label="Hide website styles">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 13 5 5 5-5"/><path d="m7 6 5 5 5-5"/></svg>
+                    </button>
+                    <span>Website styles</span>
+                  </div>
+                  <div class="cms-theme-card">
+                    <div>
+                      <strong>Navy &amp; Cream</strong>
+                      <div class="cms-swatches">
+                        <span style="background:#1f2933"></span>
+                        <span style="background:#f5f1ea"></span>
+                        <span style="background:#c4a574"></span>
+                      </div>
+                    </div>
+                    <button class="button-secondary" type="button" disabled>Applied</button>
+                  </div>
+                  <div class="cms-theme-card">
+                    <div>
+                      <strong>Timbermill Classic</strong>
+                      <div class="cms-swatches">
+                        <span style="background:#3f2e1f"></span>
+                        <span style="background:#efe6d6"></span>
+                        <span style="background:#b45309"></span>
+                      </div>
+                    </div>
+                    <button class="button-secondary" type="button">Apply</button>
+                  </div>
+                  <div class="cms-field" style="margin-top:12px">
+                    <span class="cms-field-label">Bounded overrides</span>
+                    <label class="cms-color-field">
+                      <span class="cms-field-label">Primary</span>
+                      <input class="cms-color-swatch" id="stylePrimary" type="color" value="#1f2933" />
+                    </label>
+                    <label class="cms-color-field">
+                      <span class="cms-field-label">Neutral</span>
+                      <input class="cms-color-swatch" id="styleNeutral" type="color" value="#f5f1ea" />
+                    </label>
+                    <label class="cms-color-field">
+                      <span class="cms-field-label">Accent</span>
+                      <input class="cms-color-swatch" id="styleAccent" type="color" value="#c4a574" />
+                    </label>
+                    <label class="cms-field-label" for="styleRadius">Radius</label>
+                    <select class="cms-field-control" id="styleRadius" style="margin-top:6px">
+                      <option>8</option>
+                      <option selected>12</option>
+                      <option>16</option>
+                    </select>
+                    <label class="cms-field-label" for="styleDensity">Density</label>
+                    <select class="cms-field-control" id="styleDensity" style="margin-top:6px">
+                      <option>Compact</option>
+                      <option selected>Comfortable</option>
+                      <option>Spacious</option>
+                    </select>
+                    <span class="cms-field-label" style="margin-top:10px">Logo</span>
+                    <div class="cms-logo-picker">
+                      <div class="cms-media-tile"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="is-hidden" data-rail-panel="versions">
+                  <div class="cms-panel-title">
+                    <button class="cms-workspace-collapse" type="button" data-workspace="collapse" aria-label="Hide website versions">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 13 5 5 5-5"/><path d="m7 6 5 5 5-5"/></svg>
+                    </button>
+                    <span>Website versions</span>
+                  </div>
+                  <div class="cms-version-card">
+                    <strong>Website version 3</strong>
+                    <span>Live website · 12 Aug 2026, 09:14</span>
+                    <button class="cms-small-button" type="button" style="margin-top:8px">Preview</button>
+                  </div>
+                  <div class="cms-version-card">
+                    <div class="cms-version-card-head">
+                      <div>
+                        <strong>Website version 2</strong>
+                        <span>12 Aug 2026, 08:02</span>
+                      </div>
+                      <button class="cms-version-rollback" type="button" aria-label="Website rollback" title="Website rollback">
+                        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="cms-version-card">
+                    <div class="cms-version-card-head">
+                      <div>
+                        <strong>Website version 1</strong>
+                        <span>11 Aug 2026, 16:40</span>
+                      </div>
+                      <button class="cms-version-rollback" type="button" aria-label="Website rollback" title="Website rollback">
+                        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="cms-version-card">
+                    <strong>Website assistant</strong>
+                    <span>Updated image on Hero · 12 Aug 2026, 08:40</span>
+                  </div>
+                </div>
+                <div class="is-hidden" data-rail-panel="content" id="contentPanel">
+                  <div class="cms-panel-title">
+                    <button class="cms-workspace-collapse" type="button" data-workspace="collapse" aria-label="Hide Content">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 13 5 5 5-5"/><path d="m7 6 5 5 5-5"/></svg>
+                    </button>
+                    <span>Content</span>
+                  </div>
+                  <div class="cms-section-head">
+                    <p id="sectionLabel">Hero</p>
+                    <div class="cms-icon-row">
+                      <button class="cms-icon-button cms-visibility-button" id="sectionVisible" type="button" role="switch" aria-checked="true" aria-label="Hide website section" title="Hide website section">
+                        <svg class="cms-eye-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="cms-eye-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+                      </button>
+                      <button class="cms-icon-button" type="button" aria-label="Move website section up" title="Move website section up"><svg viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg></button>
+                      <button class="cms-icon-button" type="button" aria-label="Move website section down" title="Move website section down"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                    </div>
+                  </div>
+
+                  <div data-content-layout="slots">
+                    <div class="cms-field">
+                      <label class="cms-field-label" for="slotHeadline">Headline</label>
+                      <input class="cms-field-control" id="slotHeadline" value="Roofs that keep Irish weather out." />
+                    </div>
+                    <div class="cms-field">
+                      <label class="cms-field-label" for="slotBody">Body</label>
+                      <textarea class="cms-careers-textarea" id="slotBody">Repairs, re-roofs, and emergency call-outs across Dublin and North County. {{marketing_phone}}</textarea>
+                    </div>
+                    <div class="cms-field">
+                      <span class="cms-field-label">Image</span>
+                      <div class="cms-media-tile cms-content-image-current" id="contentImageCurrent" style="background-image:url('media/hero-roof.jpg')"></div>
+                      <div class="cms-content-image-picker">
+                        <div class="cms-media-grid">
+                          <button class="cms-media-tile is-selected" type="button" data-src="media/hero-roof.jpg" style="background-image:url('media/hero-roof.jpg')" aria-label="Job photo 1"></button>
+                          <button class="cms-media-tile" type="button" data-src="media/job-repair.jpg" style="background-image:url('media/job-repair.jpg')" aria-label="Job photo 2"></button>
+                          <button class="cms-media-tile" type="button" data-src="media/job-new-roof.jpg" style="background-image:url('media/job-new-roof.jpg')" aria-label="Job photo 3"></button>
+                          <button class="cms-media-tile" type="button" data-src="media/job-gutter.jpg" style="background-image:url('media/job-gutter.jpg')" aria-label="Job photo 4"></button>
+                        </div>
+                        <div class="cms-upload">Drop files here to upload to the media library</div>
+                        <p class="cms-panel-hint">Pending-review AI image — publishing still needs approved media.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="is-hidden" data-content-layout="reviews">
+                    <div class="cms-review-card is-top">
+                      <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                      <div class="cms-review-stars">★★★★★</div>
+                      <b>Aoife K.</b>
+                      <div class="cite">On the roof the next morning after the storm. Clean site, fair price.</div>
+                      <div class="origin">Google Maps listing</div>
+                      <label><input type="checkbox" checked /> On this website section</label>
+                    </div>
+                    <div class="cms-review-card is-top" style="margin-top:8px">
+                      <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                      <div class="cms-review-stars">★★★★★</div>
+                      <b>Mark D.</b>
+                      <div class="cite">Replaced the back slope and left the garden better than they found it.</div>
+                      <div class="origin">Google Maps listing</div>
+                      <label><input type="checkbox" checked /> On this website section</label>
+                    </div>
+                  </div>
+
+                  <div class="is-hidden" data-content-layout="top-menu">
+                    <div class="cms-nav-tree">
+                      <div class="cms-nav-link-row" data-kind="page" data-page="home"></div>
+                      <div class="cms-nav-link-row" data-kind="text" data-text="Services"></div>
+                      <div class="cms-nav-children">
+                        <div class="cms-nav-link-row" data-kind="page" data-page="services"></div>
+                        <div class="cms-nav-link-row" data-kind="url" data-url-label="Emergency" data-url-href="https://bellfield.ie/emergency"></div>
+                      </div>
+                      <div class="cms-nav-link-row" data-kind="page" data-page="contact"></div>
+                    </div>
+                    <div class="cms-visibility">
+                      <span class="cms-field-label">Show marketing phone</span>
+                      <button class="cms-toggle" type="button" role="switch" aria-checked="true" data-bar-cta="phone"><span></span></button>
+                    </div>
+                    <div class="cms-visibility">
+                      <span class="cms-field-label">Show marketing email</span>
+                      <button class="cms-toggle" type="button" role="switch" aria-checked="false" data-bar-cta="email"><span></span></button>
+                    </div>
+                    <div class="cms-visibility">
+                      <span class="cms-field-label">Show contact</span>
+                      <button class="cms-toggle" type="button" role="switch" aria-checked="true" data-bar-cta="contact"><span></span></button>
+                    </div>
+                  </div>
+
+                  <div class="is-hidden" data-content-layout="footer">
+                    <div class="cms-nav-tree">
+                      <div class="cms-nav-link-row" data-kind="page" data-page="privacy"></div>
+                      <div class="cms-nav-link-row" data-kind="page" data-page="terms"></div>
+                    </div>
+                    <div class="cms-visibility">
+                      <span class="cms-field-label">Show marketing phone</span>
+                      <button class="cms-toggle" type="button" role="switch" aria-checked="true" data-bar-cta="phone"><span></span></button>
+                    </div>
+                    <div class="cms-visibility">
+                      <span class="cms-field-label">Show marketing email</span>
+                      <button class="cms-toggle" type="button" role="switch" aria-checked="true" data-bar-cta="email"><span></span></button>
+                    </div>
+                    <div class="cms-visibility">
+                      <span class="cms-field-label">Show contact</span>
+                      <button class="cms-toggle" type="button" role="switch" aria-checked="true" data-bar-cta="contact"><span></span></button>
+                    </div>
+                  </div>
+
+                  <div class="is-hidden" data-content-layout="form">
+                    <div class="cms-field">
+                      <label class="cms-field-label" for="formTitle">Website form title</label>
+                      <input class="cms-field-control" id="formTitle" value="Request a call back" />
+                    </div>
+                    <div class="cms-field">
+                      <span class="cms-field-label">Typed fields</span>
+                      <input class="cms-field-control" value="Name" />
+                      <input class="cms-field-control" value="Marketing phone" style="margin-top:8px" />
+                    </div>
+                    <div class="cms-field">
+                      <label class="cms-field-label" for="privacyNotice">Privacy notice</label>
+                      <textarea class="cms-careers-textarea" id="privacyNotice">We use this to call you back about the job.</textarea>
+                    </div>
+                    <div class="cms-field">
+                      <label class="cms-field-label" for="submitAction">submit_action</label>
+                      <input class="cms-field-control" id="submitAction" value="create_website_lead" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <div class="cms-editor-canvas is-assistant-collapsed is-voice" id="editorCanvas">
+              <p class="cms-copy-error is-hidden" id="copyOut">Copy-out has not succeeded after 10 seconds. Leaving is blocked until this succeeds or you discard.</p>
+              <div class="cms-stage-grid" id="canvasStage">
+                <div class="cms-stage-scale" id="canvasScale">
+                <div class="cms-public-preview-shell is-desktop" id="canvasFrame">
+                  <div class="cms-browser-chrome">
+                    <div class="cms-browser-chrome-dots"><span></span><span></span><span></span></div>
+                    <div class="cms-browser-chrome-url">acme-roofing-dublin.preview.placis.com</div>
+                  </div>
+                  <div class="fake-site">
+                    <div class="fake-top-menu canvas-block" data-section="top-menu">
+                      <b>Bellfield Roofing</b>
+                      <span>Home</span><span>Services</span><span>Contact</span>
+                      <div class="fake-top-menu-ctas">
+                        <span class="cta" data-bar-cta-target="phone">01 555 0199</span>
+                        <span class="cta is-hidden" data-bar-cta-target="email">hello@acme.ie</span>
+                        <span class="cta" data-bar-cta-target="contact">Contact</span>
+                      </div>
+                    </div>
+                    <div class="fake-hero canvas-block is-selected is-pending" data-section="hero" data-image="hero">
+                      <p>Dublin roofing</p>
+                      <h2>Roofs that keep Irish weather out. <span class="cms-chip">{{trade}}</span></h2>
+                      <p class="lede">Repairs, re-roofs, and emergency call-outs across Dublin and North County.</p>
+                    </div>
+                    <div class="fake-services canvas-block" data-section="services">
+                      <article><h3>Roof repairs</h3><p>Slate, tile, and flat roof repairs without a full strip.</p></article>
+                      <article><h3>New roofs</h3><p>Re-roofs with a workmanship guarantee on every job.</p></article>
+                      <article><h3>Guttering</h3><p>Cleaning, replacement, and fascia upgrades.</p></article>
+                    </div>
+                    <div class="fake-reviews canvas-block" data-section="reviews">
+                      <h3>What neighbours wrote</h3>
+                      <blockquote>“On the roof the next morning after the storm. Clean site, fair price.” — Aoife K.</blockquote>
+                      <blockquote>“Replaced the back slope and left the garden better than they found it.” — Mark D.</blockquote>
+                    </div>
+                    <div class="fake-services canvas-block" data-section="form" style="grid-template-columns:1fr">
+                      <article>
+                        <h3>Request a call back</h3>
+                        <p>Name, marketing phone, and a privacy notice on this website form.</p>
+                      </article>
+                    </div>
+                    <div class="fake-footer canvas-block" data-section="footer">
+                      <div>Bellfield Roofing · Dublin<br />01 555 0199 · hello@acme.ie</div>
+                      <div>Privacy · Terms</div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+              <div class="cms-canvas-actions" id="canvasActions">
+                <div class="cms-ask-pills" id="askPills">
+                  <button class="cms-ask-pill is-apply" type="button">Apply</button>
+                  <button class="cms-ask-pill is-reject" type="button">Reject</button>
+                </div>
+                <button class="cms-voice-restore" id="restoreChatbot" type="button">Restore chatbot</button>
+                <div class="cms-voice-orb-wrap">
+                  <button class="cms-voice-close" id="voiceClose" type="button" aria-label="Restore chatbot" title="Restore chatbot">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                  <div class="cms-voice-orb is-listening" id="voiceOrb" role="img" aria-label="Voice agent">
+                    <span class="cms-voice-orb-glow"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="cms-assistant-overlay" id="assistantOverlay" tabindex="-1">
+                  <div class="cms-assistant-bar">
+                    <button class="cms-assistant-icon" type="button" id="assistantCollapse" aria-label="Expand website assistant" title="Expand website assistant">
+                      <svg viewBox="0 0 24 24"><path d="m7 13 5 5 5-5"/><path d="m7 6 5 5 5-5"/></svg>
+                    </button>
+                    <div class="cms-assistant-switches">
+                      <label class="cms-switch cms-switch-plan"><input type="checkbox" id="switchPlan" checked /> Plan mode</label>
+                      <label class="cms-switch cms-switch-ask"><input type="checkbox" id="switchAsk" checked /> Ask first</label>
+                    </div>
+                    <button class="cms-assistant-icon" type="button" id="clearContext" aria-label="Clear context" title="Clear context">
+                      <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg>
+                    </button>
+                  </div>
+                  <div class="cms-assistant-thread" id="assistantThread">
+                    <div class="cms-assistant-thread-inner">
+                    <article class="cms-chat-turn">
+                      <p class="cms-chat-msg is-owner">Use the business name on the top menu.</p>
+                      <div class="cms-tool-calls">
+                        <div class="cms-tool-call" data-icon="write">Updated text on Top menu</div>
+                      </div>
+                    </article>
+                    <article class="cms-chat-turn">
+                      <p class="cms-chat-msg is-owner">Attach a job photo to the hero.</p>
+                      <div class="cms-tool-calls">
+                        <div class="cms-tool-call" data-icon="write">Updated image on Hero</div>
+                      </div>
+                    </article>
+                    <article class="cms-chat-turn">
+                      <p class="cms-chat-msg is-owner">Rewrite the services website section.</p>
+                      <div class="cms-tool-calls">
+                        <div class="cms-tool-call" data-icon="write">Updated text on Services</div>
+                      </div>
+                    </article>
+                    <article class="cms-chat-turn">
+                      <p class="cms-chat-msg is-owner">Keep the reviews, but lead with storm work.</p>
+                      <p class="cms-chat-msg is-assistant">I'll keep the two neighbour quotes and put the emergency call-out line first.</p>
+                      <div class="cms-tool-calls">
+                        <div class="cms-tool-call" data-icon="write">Updated text on Reviews</div>
+                      </div>
+                    </article>
+                    <article class="cms-chat-turn" id="pendingTurn">
+                      <p class="cms-chat-msg is-owner">Make the home website page focus on emergency call-outs</p>
+                      <p class="cms-chat-msg is-assistant">I'll rewrite the hero around storm call-outs and attach a job photo from the media library.</p>
+                      <div class="cms-tool-calls">
+                        <div class="cms-tool-call" data-icon="think">Thinking</div>
+                        <div class="cms-tool-call" data-icon="write">Updated heading on Hero</div>
+                        <div class="cms-tool-call" data-icon="write">Updated image on Hero</div>
+                      </div>
+                    </article>
+                    </div>
+                  </div>
+                  <div class="cms-assistant-composer">
+                    <textarea class="cms-field-control" id="assistantComposer" rows="1" placeholder="e.g. Make the home website page focus on emergency call-outs"></textarea>
+                    <button class="button-primary cms-assistant-submit" id="assistantSubmit" type="button">
+                      <span class="cms-assistant-submit-plan">Plan</span>
+                      <span class="cms-assistant-submit-send">Send</span>
+                    </button>
+                    <button class="button-primary cms-assistant-voice" id="assistantVoice" type="button">Voice</button>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+        </div>
+
+        <section class="cms-details-editor is-hidden" data-view="details">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <div>
+                <div class="cms-collection-eyebrow">Website foundations</div>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Business details</h2>
+                  <span class="cms-collection-pill">Profile active</span>
+                </div>
+                <p>Keep the details that power the website, website forms, SEO, and legal copy in one place. Persist on click-off; there is no Save.</p>
+              </div>
+            </div>
+            <div class="cms-details-workspace">
+              <div class="cms-details-form-grid">
+                <div class="cms-details-form-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Identity</h3>
+                    <p>The name and story website visitors should recognise.</p>
+                  </div>
+                  <div class="cms-details-field-grid">
+                    <label><span>Business name</span><input class="cms-careers-input" value="Bellfield Roofing" /></label>
+                    <label><span>Legal name</span><input class="cms-careers-input" value="Bellfield Roofing Ltd" /></label>
+                    <label><span>Trade</span><input class="cms-careers-input" value="Roofing" /></label>
+                    <label><span>Established year</span><input class="cms-careers-input" value="2009" /></label>
+                  </div>
+                  <label><span>Business description</span><textarea class="cms-careers-textarea">Family-run roofing across Dublin and North County.</textarea></label>
+                  <div>
+                    <span class="cms-field-label">Logo</span>
+                    <div class="cms-logo-picker">
+                      <button class="cms-media-tile is-selected" type="button" aria-label="Current logo"></button>
+                      <button class="button-secondary" type="button">Pick from the media library</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="cms-details-form-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Contact and presence</h3>
+                    <p>Where website visitors and ad leads can find the business.</p>
+                  </div>
+                  <div class="cms-details-field-grid">
+                    <label><span>Marketing phone</span><input class="cms-careers-input" value="01 555 0199" /></label>
+                    <label><span>Marketing email</span><input class="cms-careers-input" value="hello@acme.ie" /></label>
+                    <label><span>Existing site URL</span><input class="cms-careers-input" value="https://bellfield.ie" /></label>
+                  </div>
+                  <div class="cms-field" style="margin-top:12px">
+                    <span class="cms-field-label">Facebook</span>
+                    <div class="cms-profile-card">
+                      <div class="cms-profile-card-photo" style="background-image:url('media/hero-roof.jpg')" role="img" aria-hidden="true"></div>
+                      <div class="cms-profile-card-copy">
+                        <b>Bellfield Roofing</b>
+                        <span>4.6 · 38 reviews</span>
+                      </div>
+                      <button class="button-secondary" type="button">Change</button>
+                    </div>
+                  </div>
+                  <div class="cms-field" style="margin-top:12px">
+                    <span class="cms-field-label">Google Maps listing</span>
+                    <div class="cms-profile-card">
+                      <div class="cms-profile-card-photo" style="background-image:url('media/job-repair.jpg')" role="img" aria-hidden="true"></div>
+                      <div class="cms-profile-card-copy">
+                        <b>Bellfield Roofing</b>
+                        <span>4.8 · 214 reviews</span>
+                      </div>
+                      <button class="button-secondary" type="button">Change</button>
+                    </div>
+                  </div>
+                  <label><span>Business location</span><textarea class="cms-careers-textarea" style="min-height:80px">North County Dublin</textarea></label>
+                </div>
+                <div class="cms-details-form-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Services</h3>
+                    <p>The services and places the website should describe.</p>
+                  </div>
+                  <label><span>Service areas</span><textarea class="cms-careers-textarea">Dublin, Swords, Malahide</textarea></label>
+                  <label><span>Featured services</span><textarea class="cms-careers-textarea">Roof repairs, new roofs, guttering</textarea></label>
+                </div>
+                <div class="cms-details-form-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Legal and compliance</h3>
+                    <p>Company registry details shown on the footer.</p>
+                  </div>
+                  <div class="cms-details-field-grid">
+                    <label><span>Company number</span><input class="cms-careers-input" value="123456" /></label>
+                    <label><span>VAT number</span><input class="cms-careers-input" value="IE1234567T" /></label>
+                  </div>
+                  <label><span>Registered office</span><textarea class="cms-careers-textarea" style="min-height:80px">1 Harbour Road, Swords</textarea></label>
+                </div>
+                <div class="cms-details-form-panel cms-hours-panel">
+                  <div class="cms-details-panel-heading">
+                    <h3>Opening hours</h3>
+                    <p>When they pick up the marketing phone.</p>
+                  </div>
+                  <div class="cms-hours-picker" id="hoursPicker"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="cms-details-editor is-hidden" data-view="projects">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <div>
+                <div class="cms-collection-eyebrow">Profile</div>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Projects</h2>
+                </div>
+                <p>Jobs with photos shown on the website. Edited here, not in the website editor.</p>
+              </div>
+              <div class="cms-collection-header-actions">
+                <button class="button-primary" type="button">Add project</button>
+              </div>
+            </div>
+            <div class="cms-project-grid">
+              <article class="cms-project-card">
+                <div class="cms-project-photo"></div>
+                <div class="pad">
+                  <h3>Storm repair, Malahide</h3>
+                  <p>Replaced the rear slope after wind damage.</p>
+                  <button class="cms-small-button" type="button" style="margin-top:8px">Cover from the media library</button>
+                </div>
+              </article>
+              <article class="cms-project-card"><div class="cms-project-photo"></div><div class="pad"><h3>Full re-roof, Swords</h3><p>New slate, valleys, and ridge.</p></div></article>
+              <article class="cms-project-card"><div class="cms-project-photo"></div><div class="pad"><h3>Guttering, Howth</h3><p>Fascia, soffit, and gutter replacement.</p></div></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="cms-details-editor is-hidden" data-view="certifications">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <div>
+                <div class="cms-collection-eyebrow">Profile</div>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Certifications and reviews</h2>
+                </div>
+                <p>Tick certifications. Pin top reviews from all reviews for ads. Each reviews website section picks its own set.</p>
+              </div>
+            </div>
+            <div class="cms-certs-layout">
+              <div class="cms-details-form-panel">
+                <div class="cms-details-panel-heading"><h3>Certifications</h3><p>Catalog for this trade and country. Unchecking is removed.</p></div>
+                <label class="cms-cert-row"><span class="cms-cert-badge" aria-hidden="true"></span><b>GUARANTEE</b><input type="checkbox" checked /></label>
+                <label class="cms-cert-row"><span class="cms-cert-badge" aria-hidden="true"></span><b>SafePass</b><input type="checkbox" checked /></label>
+                <label class="cms-cert-row"><span class="cms-cert-badge" aria-hidden="true"></span><b>RGI</b><input type="checkbox" /></label>
+              </div>
+              <div>
+                <div class="cms-reviews-toolbar">
+                  <button class="button-secondary" type="button">Import from Google Maps listing</button>
+                  <button class="button-secondary" type="button">Import from Facebook</button>
+                  <button class="button-primary" type="button" data-scene="create-review">+</button>
+                </div>
+                <div class="cms-review-section" data-reviews="top">
+                  <h3>Top reviews</h3>
+                  <p>Ads use this set. Featured first. At most 30. Drag onto All reviews to unpin. New pin appends as least featured. Does not rewrite reviews website sections.</p>
+                  <div class="cms-review-grid">
+                    <article class="cms-review-card is-top">
+                      <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                      <div class="cms-review-stars">★★★★★</div>
+                      <b>Aoife K.</b>
+                      <div class="cite">On the roof the next morning after the storm. Clean site, fair price.</div>
+                      <div class="origin">Google Maps listing</div>
+                      <label><input type="checkbox" checked /> In top reviews</label>
+                    </article>
+                    <article class="cms-review-card is-top">
+                      <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                      <div class="cms-review-stars">★★★★★</div>
+                      <b>Mark D.</b>
+                      <div class="cite">Replaced the back slope and left the garden better than they found it.</div>
+                      <div class="origin">Google Maps listing</div>
+                      <label><input type="checkbox" checked /> In top reviews</label>
+                    </article>
+                    <article class="cms-review-card is-top">
+                      <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                      <div class="cms-review-stars">★★★★☆</div>
+                      <b>Siobhan R.</b>
+                      <div class="cite">They arrived on time, were polite, showed my husband the work they had completed.</div>
+                      <div class="origin">Facebook</div>
+                      <label><input type="checkbox" checked /> In top reviews</label>
+                    </article>
+                  </div>
+                </div>
+                <div class="cms-review-section" data-reviews="all">
+                  <h3>All reviews</h3>
+                  <p>Not in top reviews. Drag onto Top reviews to pin.</p>
+                  <div class="cms-review-grid">
+                    <article class="cms-review-card">
+                      <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                      <div class="cms-review-stars">★★★★★</div>
+                      <b>John &amp; Team</b>
+                      <div class="cite">I would certainly recommend them to anyone. Thank you John &amp; Team!</div>
+                      <div class="origin">Owner</div>
+                      <label><input type="checkbox" /> In top reviews</label>
+                    </article>
+                    <article class="cms-review-card">
+                      <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                      <div class="cms-review-stars">★★★★★</div>
+                      <b>Padraig N.</b>
+                      <div class="cite">Quoted fairly and finished before the rain came in.</div>
+                      <div class="origin">Google Maps listing</div>
+                      <label><input type="checkbox" /> In top reviews</label>
+                    </article>
+                  </div>
+                </div>
+                <div class="cms-toast">Archived a review. <button class="cms-small-button" type="button">Undo</button></div>
+                <div class="cms-review-section is-collapsed" data-reviews="archive" id="archiveSection">
+                  <button type="button" class="cms-review-section-disclosure" id="archiveHeading" aria-expanded="false" aria-controls="archiveList">
+                    <span>Archive</span>
+                    <svg class="cms-review-section-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                  <div class="is-hidden" id="archiveList" style="margin-top:10px">
+                    <article class="cms-review-card">
+                      <div class="cms-review-stars">★★★☆☆</div>
+                      <b>Anonymous</b>
+                      <div class="cite">Took a little longer than promised.</div>
+                      <div class="origin">Google Maps listing</div>
+                      <button class="cms-small-button" type="button">Unarchive</button>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="cms-details-editor is-hidden" data-view="create-review">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <div>
+                <div class="cms-collection-eyebrow">Certifications and reviews</div>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Create review</h2>
+                </div>
+                <p>Owner-written. Lands in all reviews. Route for now.</p>
+              </div>
+            </div>
+            <div class="cms-details-form-panel" style="max-width:520px">
+              <label><span>Author name</span><input class="cms-careers-input" value="" /></label>
+              <label style="margin-top:12px"><span>Rating</span>
+                <select class="cms-field-control"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select>
+              </label>
+              <label style="margin-top:12px"><span>Body</span><textarea class="cms-careers-textarea" maxlength="500"></textarea></label>
+              <label style="margin-top:12px"><span>Date (optional)</span><input class="cms-careers-input" type="date" /></label>
+              <div style="margin-top:16px;display:flex;gap:8px">
+                <button class="button-primary" type="button" data-scene="certifications">Create</button>
+                <button class="button-secondary" type="button" data-scene="certifications">Back</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="cms-details-editor is-hidden" data-view="media">
+          <div class="cms-details-content">
+            <div class="cms-collection-header">
+              <div>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Media library</h2>
+                </div>
+                <p>Photos of their work, logos, and documents. Crop, focal, and cleanup live here. Attach a photo from Content when an image is selected on the canvas.</p>
+              </div>
+              <div class="cms-collection-header-actions">
+                <button class="button-primary" type="button">Upload</button>
+              </div>
+            </div>
+            <div class="cms-media-stage">
+              <div class="cms-media-view" id="mediaView" data-ratio="landscape">
+                <div class="cms-media-view-still" id="mediaViewStill"></div>
+                <div class="cms-media-sweep is-hidden" id="mediaSweep">
+                  <div class="cms-media-sweep-after"></div>
+                  <div class="cms-media-sweep-before"></div>
+                  <div class="cms-media-sweep-divider"></div>
+                  <span class="cms-media-sweep-label is-before">before</span>
+                  <span class="cms-media-sweep-label is-after">after</span>
+                </div>
+              </div>
+              <form class="cms-media-prompt" id="mediaCleanupForm">
+                <label for="mediaCleanupPrompt">Cleanup</label>
+                <textarea class="cms-field-control" id="mediaCleanupPrompt" rows="3" maxlength="500" placeholder="How should this photo be cleaned up?"></textarea>
+                <p class="cms-media-prompt-meta" id="mediaViewMeta">Rear slope after the storm · supplied by owner · approved</p>
+                <button class="button-primary" id="mediaCleanupSubmit" type="submit" disabled>Cleanup</button>
+                <div class="cms-media-view-actions is-hidden" id="mediaCleanupActions">
+                  <button class="button-secondary" id="mediaCleanupReject" type="button">Reject</button>
+                  <button class="button-primary" id="mediaCleanupAccept" type="button">Accept</button>
+                </div>
+              </form>
+            </div>
+            <div class="cms-media-thumbs" id="mediaThumbs"></div>
+          </div>
+        </section>
+
+        <section class="cms-ads-list is-hidden" data-view="ads">
+          <div class="cms-page-heading">
+            <button class="cms-nav-open" type="button" aria-label="Open destinations">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+            </button>
+            <h1>Ads</h1>
+            <span style="flex:1"></span>
+            <button class="button-primary" type="button">+ New ad</button>
+          </div>
+          <p class="note">Ads sit in The CMS beside the website editor. The detailed Ads mock is <a href="../../features/ads/ad-generation/design/ads-workspace.html">ads-workspace.html</a>.</p>
+          <div class="cms-adcard">
+            <div class="cms-adcard-art"></div>
+            <div>
+              <b>Gutter cleaning — summer</b>
+              <p class="note" style="margin:6px 0 0">Ad ready to post · Roofing</p>
+            </div>
+          </div>
+          <div class="cms-adcard">
+            <div class="cms-adcard-art"></div>
+            <div>
+              <b>Storm repairs</b>
+              <p class="note" style="margin:6px 0 0">Ad draft · Roofing</p>
+            </div>
+          </div>
+        </section>
+        <div class="cms-notification is-hidden" id="cmsNotification" role="status">
+          <p>Ads wrote a detail to Business details.</p>
+          <button class="button-secondary" type="button">Revert</button>
+          <button class="button-primary js-notify-ok" type="button">OK</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="cms-modal-scrim is-hidden" id="connectModal">
+    <div class="cms-modal cms-connect-modal" role="dialog" aria-labelledby="connectTitle">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <h2 id="connectTitle">Connect website address</h2>
+        <button type="button" id="connectClose" aria-label="Close">×</button>
+      </div>
+      <label class="cms-field">
+        <span class="cms-field-label">Custom website address</span>
+        <input class="cms-field-control" value="www.acme.ie" />
+      </label>
+      <p class="cms-dns-status" role="status">waiting for DNS</p>
+      <div class="cms-dns-howto">
+        <p>Add these records at the DNS panel where acme.ie already lives — GoDaddy, Porkbun, or Squarespace. Do not move nameservers to Placis; that hijacks mail.</p>
+        <ol>
+          <li>Copy <strong>Host</strong> into the name / host field.</li>
+          <li>Copy <strong>Value</strong> into the value / points to field.</li>
+          <li>Reopen this from New URL or the waiting host until status is active.</li>
+        </ol>
+      </div>
+      <article class="cms-dns-record">
+        <div class="cms-dns-record-head"><strong>TXT</strong></div>
+        <label class="cms-dns-field">
+          <span class="cms-field-label">Host</span>
+          <div class="cms-dns-copyrow">
+            <input class="cms-dns-value" readonly spellcheck="false" autocomplete="off" value="_cf-custom-hostname.www" aria-label="TXT host" />
+            <button class="button-secondary" type="button" data-copy>Copy</button>
+          </div>
+        </label>
+        <label class="cms-dns-field">
+          <span class="cms-field-label">Value</span>
+          <div class="cms-dns-copyrow">
+            <input class="cms-dns-value" readonly spellcheck="false" autocomplete="off" value="ca3-8f2a1c9e4b7d6035" aria-label="TXT value" />
+            <button class="button-secondary" type="button" data-copy>Copy</button>
+          </div>
+        </label>
+      </article>
+      <article class="cms-dns-record">
+        <div class="cms-dns-record-head"><strong>CNAME</strong></div>
+        <label class="cms-dns-field">
+          <span class="cms-field-label">Host</span>
+          <div class="cms-dns-copyrow">
+            <input class="cms-dns-value" readonly spellcheck="false" autocomplete="off" value="www" aria-label="CNAME host" />
+            <button class="button-secondary" type="button" data-copy>Copy</button>
+          </div>
+        </label>
+        <label class="cms-dns-field">
+          <span class="cms-field-label">Value</span>
+          <div class="cms-dns-copyrow">
+            <input class="cms-dns-value" readonly spellcheck="false" autocomplete="off" value="customers.placis.com" aria-label="CNAME value" />
+            <button class="button-secondary" type="button" data-copy>Copy</button>
+          </div>
+        </label>
+      </article>
+    </div>
+  </div>
+
+  <div class="cms-dashboard-voice-overlay is-hidden" id="homeVoiceOverlay" aria-hidden="true">
+    <button class="cms-dashboard-voice-back" id="homeVoiceBack" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Back
+    </button>
+    <section>
+      <div class="cms-dashboard-voice-orb cms-voice-orb is-listening" role="img" aria-label="Voice interview">
+        <span class="cms-voice-orb-glow"></span>
+      </div>
+      <p class="cms-dashboard-voice-copy">Placis interviews you and builds from your answers.</p>
+    </section>
+  </div>
+
+<script src="cms.js"></script>
+
+</body>
+</html>

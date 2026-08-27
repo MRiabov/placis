@@ -17,7 +17,8 @@ drafts, edit, approve, and download. It is one caller of the service; it is not 
 not the media library, and not campaign management (which is future work).
 
 `/cms/ads` is a **view in the CMS, not a standalone website page**: the left
-sidebar (New chat, Sites, Profile with Business details and Projects, AI tools) stays around
+sidebar (New chat, Sites, Profile with Business details, Projects, Certifications and reviews,
+and Media library) stays around
 it, and Ads is dashboard-ish content in the main area — My ads list, the ad workspace, and the ad
 detail all render inside that frame. The mock shows the sidebar for context.
 
@@ -97,7 +98,8 @@ containing two expandable steps, an inline loading state, and the approve block 
   "+ New ad" for each **unconnected** ad platform; the buttons are **never rendered by default**
   — they load only after the connection-status check confirms an ad platform is unconnected, so
   the owner never sees one flash and disappear; a connected ad platform shows nothing at all, and
-  the button never comes back
+  the button never comes back. New chat **Connect** uses this same status: gone when Google Ads
+  and Meta are both connected ([website design-decisions](../../website/design-decisions.md) 17).
 - "+ New ad" button; empty state with a one-line explanation and a start button
 
 ### 2. Ad workspace (`/cms/ads/new`, `/cms/ads/{id}`)

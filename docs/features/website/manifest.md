@@ -33,6 +33,7 @@ Root:
 - `footer[]` (same shape)
 - `show_phone`, `show_email` (bar CTA visibility; values already resolved from
   `{{marketing_phone}}` / `{{marketing_email}}`)
+- `show_contact` (bar CTA to the Contact website page)
 - `website_forms[]` (`form_key`, `title`, `fields[]`, `privacy_notice`)
 - slim `projects[]` (`id`, `title`, `description`, cover URL + media caption) — baked at website
   publication. Same staleness as Details. Not a live query of `/cms/projects`.
@@ -47,7 +48,7 @@ Per website page:
 Per website section:
 
 - `component_id`, `component_version`
-- `props` (resolved values, public media-library URLs, selected review author/rating/body already copied in)
+- `props` (resolved values, public media-library URLs, selected review author/rating/review citation already copied in; fallback `body` if the review citation is empty)
 - `design` (design-control values)
 
 ## Keep out
@@ -63,8 +64,9 @@ Per website section:
 - top menu / footer stuffed into each page’s `sections` — they come from root `top_menu` /
   `footer` (baked from `website.menus`), not from website sections on every website page
 
-Reviews: bake the selected review into the website section `props` at publication
-(`website_slot_reviews`). Do not dump the whole profile review list.
+Reviews: bake **that website section’s** `website_slot_reviews` into the website section
+`props` at publication (review citation with `body` fallback). Do not dump the whole
+profile review list or the ads **top reviews** list.
 
 Changing Details, Projects, certifications and reviews, website styles, or the unpublished
 website updates the website editor immediately and does **not** change the live website until the

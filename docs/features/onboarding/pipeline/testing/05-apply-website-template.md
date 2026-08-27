@@ -5,6 +5,11 @@
   fixed website template catalog id; the write is real).
 - **Assert**: `website_pages` / `website_sections` / `website_slots` written as an unpublished
   website; website placeholders unresolved; same profile + same website template → same website
-  pages; one `ai_generations` row for the picker; no copy-generation `update_slot` batch yet
-  (that is 06) and no `website_publications`; rows use the unactivated `tenant_id` from 01.
-- **Mocked**: the website template/website styles LLM only.
+  pages; reviews website sections exist with `website_slot_reviews` picked per reviews
+  website section (empty if the pool is not ready; never a copy of **top reviews** onto every
+  reviews website section); `ai_generations` for the website template/website styles picker
+  and, when the pool is ready, the pick of reviews per website section; no copy-generation
+  `update_slot` batch yet (that is 06) and no `website_publications`; rows use the unactivated
+  `tenant_id` from 01.
+- **Mocked**: the website template/website styles LLM, and the LLM that picks reviews per
+  website section.
