@@ -167,8 +167,8 @@ Do not advertise `{website_prefix}.placis.com` as a live URL.
 
 **Website assistant** is a default-on **overlay** pinned to the bottom of the canvas (not a
 toolbar button, not a modal) while the **chatbot** is showing. Empty composer turns the
-**voice agent** on: overlay hidden, soft orb bottom-right (blur of the canvas behind it,
-not a hard disc), Restore chatbot as text next
+**voice agent** on: overlay hidden, soft orb bottom-right (glow that falls off, no hard
+edge), Restore chatbot as text next
 to the orb (vertically centered to it). A small close on the top-right of the orb also
 restores. Tools and apply stay in [assistant.md](assistant.md). Two overlay switches: plan vs
 continuous, and instant apply vs Ask first (Apply / Reject). **Follow** is a third config,
