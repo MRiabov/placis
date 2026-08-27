@@ -134,18 +134,19 @@ Not the media library bucket.
 
 | Key | Role |
 | --- | --- |
-| `sites/{website_prefix}/latest/…` | Live files (real objects, not a pointer) |
-| `sites/{website_prefix}/{version_number}/…` | Kept copy for website rollback |
-| `sites/hosts/{hostname}` | Website address → `{website_prefix}` |
+| `sites/hosts/{hostname}/latest/…` | Live files for **that** host |
+| `sites/hosts/{hostname}/{version_number}/…` | Kept copy for website rollback on that host |
+| `sites/{website_prefix}/latest/…` | Onboarding 07/08 unactivated write until the first owner publication on the preview host |
 
 `{website_prefix}` is unique, URL-safe, the label in `{website_prefix}.preview.placis.com`,
 **fixed at 07**. Do not rename it when Details change. Not the live business
 name, not `tenant_id`, not `business_profiles.id`.
 
-**Cutover.** Write `{version_number}/` to completion, copy objects onto `latest/`, then purge.
+**Cutover (per host).** Write `{version_number}/` to completion, copy objects onto that host’s
+`latest/`, then purge **that** host.
 No extra HEAD pointer. A handful of website pages may mix for a few seconds. Website rollback
-copies the chosen `{version_number}/` onto `latest/` and purges. Old `website_manifest` JSON and
-that prefix’s HTML stay as they were (rows are kept, never overwritten).
+copies the chosen `{version_number}/` onto that host’s `latest/` and purges. Old `website_manifest` JSON and
+that host’s HTML stay as they were (rows are kept, never overwritten).
 
 `website.v1` → `website.v2` is a new contract generation on **new** website publications only.
 The Worker never re-reads jsonb on a live GET. Renderer or HTML layout changes take effect on
@@ -170,9 +171,9 @@ The job:
    sitemap, robots, rewritten WebP URLs, for `{website_prefix}.preview.placis.com` and every
    active website address.
 
-Choosing a publication destination does not write a second HTML tree. Copy onto `latest/`, then
-purge the hosts above. Do not keep the Placis host on website version *n* while `acme.ie` stays
-on *n−1*.
+Choosing a publication destination writes **that host’s** HTML tree. Do not keep the Placis host
+on website version *n* while `acme.ie` stays on *n−1* **unless** they published those hosts
+separately (they may diverge).
 
 Live for website visitors on `{website_prefix}.preview.placis.com` = an active website
 publication (`latest/` present). After 07 that is true for the sales host (strip on). After 08

@@ -41,7 +41,7 @@ page, categories), and certifications.
 | `{{opening_hours}}` | opening hours |
 | `{{legal_name}}`, `{{company_registration_number}}`, `{{vat_number}}`, `{{registered_office}}` | legal |
 | `{{established_year}}`, `{{incorporation_date}}` | dates |
-| `{{logo_url}}` | logo |
+| `{{logo_url}}` | logo URL emitted at website publication **only from** `logo_media_asset_id` (our media library file). Not a hotlink and not a `website_settings` URL |
 | `{{services.featured}}`, `{{services.marquee}}`, `{{services.footer_links}}`, `{{services.project_types}}` | services |
 | `{{projects.featured}}`, `{{projects.recent}}`, `{{projects.home_gallery}}`, `{{projects.categories}}` | projects |
 | `{{certifications}}` | certifications |

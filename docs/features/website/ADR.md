@@ -144,6 +144,11 @@ Status: decided (2026-08-16, product owner + engineering).
     `latest/` tree; publication destinations share it (no Placis-host version vs custom-host
     version).
     (2026-08-21; `.preview.placis.com` 2026-08-23; reserved at 07 + sales host 2026-08-25)
+    (2026-08-27): **Per-host trees.** Each website address has its own R2 tree
+    (`sites/hosts/{hostname}/latest/` and `…/{version_number}/`). Hosts can diverge. The
+    **host row** is the Publish click (`website_address_id` on POST). Rollback and purge are
+    per that host. Keep `sites/{website_prefix}/…` as the unactivated 07/08 write until the
+    first owner publication on that preview host.
 
 20. **Website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS **Connect website
@@ -157,6 +162,8 @@ Status: decided (2026-08-16, product owner + engineering).
     each connected website address, or New URL (Connect website address). Not a Worker
     deploy. Owner copy is **Publish**. See [frontend.md](frontend.md).
     (2026-08-23; owner copy Publish 2026-08-26)
+    (2026-08-27): Publish is the **host row**, not a destination-less POST. `POST /publications`
+    sends `website_address_id`. One tree per host.
 
 22. **Top menu and footer trees live on one `website.menus` row** — `top_menu` and `footer` are
     closed jsonb trees (page / text / URL nodes, depth 2), plus `show_phone` / `show_email`.

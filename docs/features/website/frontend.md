@@ -104,7 +104,10 @@ Website styles are tenant-wide (`website_settings`), shown on the website page G
 explicit apply. Top menu and footer are edited in **Content** as a **depth-2 tree** (bar + one
 dropdown; website page / text / URL nodes). Website page picks from website pages; URL is a
 combobox (existing or create). Bar CTAs: marketing phone, marketing email, and contact.
-Look (logo, density) is **Website styles**, not Details and not a Design tab. Owner-facing density labels are Compact, Comfortable, Spacious (API stays
+Look (logo, density) is **Website styles**, not a Design tab. Logo store is
+`logo_media_asset_id` on Details (pick from the media library). Publication may emit
+`{{logo_url}}` only from that file — not a hotlink and not a `website_settings` URL.
+Owner-facing density labels are Compact, Comfortable, Spacious (API stays
 `compact` / `comfortable` / `spacious`). Primary, Neutral, and Accent are color pickers
 (the color chip). Hex is not on the field; it is only inside the picker.
 
@@ -125,11 +128,9 @@ plus **one silent jump per
 blocker** (no background): the website section in Content, or `/cms/media` for an unapproved
 library item not on the canvas. Each jump uses a
 Lucide **ArrowUpRight**. After a successful website publication, `has_unpublished_changes` is
-false until the next edit. The POST has no
-destination: one R2 `latest/` tree, then purge the preview website address and every `active`
-website address ([api.md](api.md), [cloudflare.md](cloudflare.md)). Hosts in the dropdown
-are where the live site is reachable (open in a new tab, Connect), not independent website
-versions.
+false until the next edit. The POST sends `website_address_id`: that host’s R2 tree, then purge
+**that** host ([api.md](api.md), [cloudflare.md](cloudflare.md)). The **host row** is the Publish
+click. Hosts can diverge.
 
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that publication
 `*Read`; the dropdown and Website versions list update from the body. Rollback is on

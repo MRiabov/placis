@@ -15,7 +15,11 @@ via the onboarding session token.
   website activation), `website_prefix` unique nullable (reserved label, **fixed at 07** from
   `display_name`, R2 prefix; FQDN is a `website_addresses` row; null until 07), `name`
   (business display/legal name when known, else empty until business research fills it),
-  `status` (`unactivated`/`active`/`suspended`), `created_at`, `updated_at`
+  `status` (`unactivated`/`active`/`suspended`),
+  `subscription_status` (`active`/`lapsed`/`none`, optimistic cache — not Clerk Billing yet),
+  `usage_credit_usd_cents` (remaining monthly credit shown as $; check on LLM calls;
+  generation hop is priced ×5 to the owner),
+  `created_at`, `updated_at`
 - `tenant_memberships` — `id`, `tenant_id` fk, `clerk_user_id`, `role`, `created_at`;
   unique `(tenant_id, clerk_user_id)`
 
