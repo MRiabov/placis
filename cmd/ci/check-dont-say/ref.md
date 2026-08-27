@@ -21,7 +21,7 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 ## Banned synonym (unmarked) — fold
 
 - `docs/features/etl/ADR.md`: “same fold rules as onboarding” → **fail**. Say **live business profile** (same profile-update / conflict rules).
-- `docs/features/website/editing.md`: “GET the fold” → **fail**. Say **unpublished website**.
+- `docs/features/website/editing.md`: “GET the fold” / “the folds” → **fail**. Say **unpublished website** (or **live business profile**).
 - Hero copy “conversion copy above the fold” → **pass** (first viewport; extra-allowed).
 
 ## Self-understood at home — website `page`

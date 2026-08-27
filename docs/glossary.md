@@ -1100,7 +1100,7 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | refine / refinement | website copy generation |
 | instantiate / population | apply the website template |
 | mint / minted / minting | create or use (ephemeral tokens and ids) |
-| fold | live business profile or unpublished website |
+| fold / folds | live business profile or unpublished website |
 | generate unpublished website / generate website structure | apply the website template |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (onboarding) | website preview link |
