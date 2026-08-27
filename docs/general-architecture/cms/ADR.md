@@ -25,3 +25,9 @@ instead of silently replacing the old entry.
    client interview, not the website-editor canvas orb. Placeholders cycle. Look:
    [design decision record](design-decision-record.md) 5 (moved from website design decision 17).
    (2026-08-27)
+
+   (2026-08-27): **`/cms` is a two-card chooser**, not a prompt Send and not a sidebar
+   destination. Cards: **Do my website…** (`/cms/website`) and **Run my ads** (`/cms/ads`).
+   After they pick, the rail is Sites / Profile / Ads. Hide New chat nav, Paperclip, Start
+   client interview, Upgrade shelf, Settings, Log out; keep the mock HTML. Connect stays. No
+   first-turn assistant POST. Name under the photo is the Clerk human name.
