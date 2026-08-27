@@ -24,6 +24,12 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 - `docs/features/website/editing.md`: “GET the fold” / “the folds” → **fail**. Say **unpublished website** (or **live business profile**).
 - Hero copy “conversion copy above the fold” → **pass** (first viewport; extra-allowed).
 
+## Banned synonym (unmarked) — bytes
+
+- `docs/features/other/media/README.md`: “while bytes land” → **fail**. Say **photo** / **file** (the upload).
+- `docs/features/website/api.md`: “send a media library item id, not bytes” → **fail**. Say **file**.
+- Go `import "bytes"` / `bytes.Buffer` → **pass** (stdlib; extra-allowed).
+
 ## Self-understood at home — website `page`
 
 - `docs/features/website/architecture.md`: “each page has sections” → **pass** (`page (website)`).

@@ -2,7 +2,7 @@
 
 Conventions: [HTTP conventions](../../../general-architecture/api.md). This resource **owns
 upload**. The `files` table stays ([files-and-s3.md](../../../general-architecture/files-and-s3.md));
-there is **no** `/v1/files` HTTP. Bytes on an item are never replaced in place; edits copy
+there is **no** `/v1/files` HTTP. The file on an item is never replaced in place; edits copy
 (`parent_media_asset_id`).
 
 ## Serve only types on HTTP

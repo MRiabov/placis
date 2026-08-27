@@ -343,7 +343,7 @@ Image gallery drafts: the pool is `ready` + approved photos
 is always there once `ready`. The LLM picks from that set of media captions for this ad
 (offer, format, ideal customer profile). There is no separate scoring pass on media captions.
 Drafts never include non-tenant media assets. A photo the owner **adds to this ad** is
-usable once bytes have landed (`file_id` set, not `failed`) — target about 10 seconds.
+usable once the photo is uploaded (`file_id` set, not `failed`) — target about 10 seconds.
 Captioning (`processing` → `ready`) continues in the background; Ads does not wait on it
 and does not show **Processing…** as a use-blocker. The owner is never asked to write a
 media caption.
@@ -353,7 +353,7 @@ media caption.
 An ad can reach `ad_ready_to_post` only when:
 
 1. the tenant owns every referenced media asset
-2. every image placement resolves to a tenant-owned media asset whose bytes have landed
+2. every image placement resolves to a tenant-owned media asset whose file is uploaded
    (`file_id` present, not `failed`) with a valid crop for this ad's format. A media caption
    is **not** required for a photo the owner added to this ad. A cleanup copy counts only
    once it has passed review. LLM-picked library photos still come from `ready` + approved.
@@ -385,7 +385,7 @@ Rendering is deterministic and offline:
 4. write a mapping of each output image to its source media asset, crop, and this ad's format
 5. pack as a zip; the download is a short-lived signed URL, not a public URL
 
-The same approved ad always yields the same ad set and the same rendered bytes for the same
+The same approved ad always yields the same ad set and the same rendered images for the same
 source media assets. Rendering requires no ad-platform credentials and does no ad posting.
 
 ## Frontend Ads Work
@@ -453,7 +453,7 @@ Backend tests:
 02. ad records are never created by onboarding or voice flows
 03. image placements reject unreviewed library picks, cross-tenant assets, and
     media-caption-free items on the **LLM gallery draft**. An owner-added upload is
-    acceptable once bytes have landed, without a media caption yet
+    acceptable once the photo is uploaded, without a media caption yet
 04. copy validation enforces character limits and the allowed button-label set
 05. unprompted sensitive marketing statements set `ad_needs_review`; they do
     not block `ad_ready_to_post` once the owner kept, edited, or prompted them. A profile
@@ -493,7 +493,7 @@ Frontend tests:
 8. cleanup edit drafts render as reviewable before/after image changes and can be accepted or
    rejected per image; a different cleanup orb requires a prompt and uses shared media library cleanup;
    Ctrl+Z after Accept restores the previous photo
-9. an owner-added photo is usable once bytes have landed (Uploading… only; hover a
+9. an owner-added photo is usable once the photo is uploaded (Uploading… only; hover a
    circle-and-cross, click to cancel); Ads does not
    block on a media caption or show Processing… as a wait-to-use overlay
 
