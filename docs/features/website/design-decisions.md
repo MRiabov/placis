@@ -227,7 +227,8 @@ instead of silently rewriting history.
     inline with the screen heading. Overlay rows: New chat, Sites, Business details, Projects,
     Certifications and reviews, Media library, Ads. Profile is not a row. Workspace bottom
     bar is **Sites only**. Website assistant default is **collapsed**. Canvas website-width
-    defaults to **Mobile**. Touch targets 44px; review grips visible without hover.
+    defaults to **Mobile**. Touch targets 44px; review grips visible without hover, with
+    compact six-dot marks inside the 44px hit.
     Notifications sit above the workspace bar. Safe-area padding on overlay, bar, assistant.
     **Wide (≥1101px):** sidebar stays permanently collapsible (default collapsed icon rail,
     hover peek, click to pin). Profile icon still goes to Business details. Sites/Ads/Profile

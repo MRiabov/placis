@@ -260,7 +260,7 @@ rewrite reviews website sections.
 **Reorder / pin by drag-and-drop.** Six-dot grip (2×3) on hover on **every** review card (Top
 reviews and All reviews). Drop onto Top reviews to pin; drop onto All reviews to unpin. Reorder
 inside Top reviews is featured-first. Keep drag-and-drop on narrow screens (grip always
-visible; no hover-only). Do not fall back to up/down-only.
+visible; no hover-only). The six dots stay compact; the hit is 44px. Do not fall back to up/down-only.
 
 Unpin / reorder of **top reviews** updates `is_top` / `top_position` only. Live website waits
 for the next website publication. Website editor reviews Content edits **that website section’s**
