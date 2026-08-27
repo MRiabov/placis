@@ -33,6 +33,9 @@ no single feature owns.
   whole-panel swap). Do not say skeleton.
 - File-size guard on `frontend-2` (&lt; 800 warn, &gt; 1200 hard error).
 - `src/shared/ui/` button + dialog as they exist; do not expand shared UI in this port.
+- CMS tokens clone placis-web `globals.css` + `marketingSite.ts` (Satoshi, `--secondary`
+  `#f4f4f5`, ink `#13120a`). Do not invent a second palette.
+  [website design-decisions](../features/website/design-decisions.md) 17.
 
 ## Delete
 
@@ -44,6 +47,8 @@ no single feature owns.
 - Parity e2e (`e2e/parity/*`) when old `frontend/` is removed — they lock
   predecessor routes.
 - Careers and unused modal CSS (coordinate with details + media library files).
+- Predecessor `src/styles/cms/` rules that fight the placis-web dashboard theme
+  (coordinate with website + details). Replace tokens; do not add a second palette.
 - Don't say setup: `src/test/fixtures/setupProfile.ts` name (onboarding fixture).
 
 ## Do not port
@@ -52,7 +57,7 @@ no single feature owns.
 - Org chooser (auth file).
 - Blog, careers, leftover website-template-apply CMS API wrappers (website file).
 - Voice-first onboarding (onboarding file).
-- Rebuilding the design system or adding shadcn sprawl.
+- Rebuilding a new design system or adding shadcn sprawl. Cloning placis-web is the keep.
 
 ## Cutover
 
@@ -106,3 +111,5 @@ unconstrained blobs). Contractor website typegen is a different consumer:
 - Don't say `--frontend` is on and `frontend-2/` is not excluded.
 - Parity suite is gone; product e2e does not attach to the owner’s dev ports.
 - Leftover layout type names are gone from `frontend-2`.
+- CMS `src/styles/cms/` tokens match placis-web
+  ([website design-decisions](../features/website/design-decisions.md) 17).
