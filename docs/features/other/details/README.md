@@ -15,11 +15,13 @@ reaches it from **Profile** → **Business details**.
 - **Opening hours** — Google Calendar-style picker, one row per day: Opens, to, Closes, Closed.
   Hours they pick up the marketing phone. No Appointment note.
 - **Logo** — pick from the media library.
-- **Facebook** — `facebook_profile_url`. Link when unlinked (paste URL this pass);
-  URL + Change when linked. Same link as review import. Changing it starts another public
+- **Facebook** — `facebook_profile_url`. Link when unlinked (paste URL this pass).
+  When linked, show that Facebook profile’s **name, photo, rating, and review count**, plus
+  **Change** — not the raw URL. Same link as review import. Changing it starts another public
   extract of that Facebook URL (posts and images, not only reviews).
-- **Google Maps listing** — `google_maps_listing_url`. Same link pattern. Certifications and
-  reviews imports from that listing.
+- **Google Maps listing** — `google_maps_listing_url`. Same link pattern and the same card
+  (name, photo, rating, review count from that listing). Certifications and reviews imports
+  from that listing.
 
 ## Shared by everyone
 

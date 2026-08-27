@@ -126,15 +126,16 @@ Pick from the media library (`logo_media_asset_id`).
 #### Link your Facebook
 
 Show the button **only when unlinked**. This pass: paste a public Facebook business URL
-(type-to-search TBD). When linked, show the URL and **Change**. Writes `facebook_profile_url`.
+(type-to-search TBD). When linked, show that Facebook profile’s **name, photo, rating, and
+review count**, plus **Change** — not the raw URL. Writes `facebook_profile_url`.
 Same link as review import on Certifications and reviews. Not Ads Connect Meta, not Facebook
 Login, no autoposting. Saving a new URL starts a public extract of that Facebook URL (reviews, posts,
 images).
 
 #### Google Maps listing
 
-Same link pattern (`google_maps_listing_url`). Certifications and reviews imports from that
-listing.
+Same link pattern (`google_maps_listing_url`). When linked, the same card from that listing
+(name, photo, rating, review count). Certifications and reviews imports from that listing.
 
 Do not add unless asked: founder columns, brand tone / typography / colors.
 

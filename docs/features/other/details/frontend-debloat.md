@@ -28,7 +28,7 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
 ## Keep
 
 - `/cms/details` — Business details (who they are, contact, where, services, legal,
-  opening hours picker, logo picker, Facebook URL, Google Maps listing). Top menu and footer
+  opening hours picker, logo picker, Facebook and Google Maps listing as linked cards). Top menu and footer
   stay in the website editor Content tab.
 - CMS layout (sidebar + main area) copies placis-web `DashboardShell` (narrow overlay
   selector; wide collapsed rail + hover peek + pin) and the same dashboard theme
