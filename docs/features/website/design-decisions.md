@@ -121,6 +121,7 @@ instead of silently rewriting history.
    dashed drop well. A drop-target around Top reviews is parked (see mock CSS comment).
    Archive is a collapsible heading (chevron down on the right), default collapsed — not a
    toolbar button. No hairline under the page title. (2026-08-26)
+   The Undo toast sits above Archive with a gap, not flush. (2026-08-27)
 
 7. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
    [design/cms.html](../../website/design/cms.html) (copy-out blocked, Ask first pending,
