@@ -29,7 +29,8 @@ Do not say “skeleton”; the name is loading placeholder ([glossary](../glossa
 ## Notification
 
 A shared **notification**: fixed bottom-right, above the main area. Message + **OK** (dismiss /
-keep). **Revert** is optional.
+keep). **Revert** is optional. On a **narrow** screen (≤1100px), sit **above** the Sites
+workspace bottom bar (not under thumbs or the home indicator).
 
 First caller: Ads writes a detail to Details via a tool call — the write is applied;
 OK keeps it; Revert undoes that `business_profile_edits` increment. Leaving the screen

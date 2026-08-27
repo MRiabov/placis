@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>The CMS — current design (look export)</title>
 <!--
   Static design mock of The CMS. Function follows website/details specs; this file is visual.
   Open cms.html in a browser (no build). Styles: cms.css. Scene wiring: cms.js.
   Dev-only strip is per-screen states (not sidebar nav); hide with ?shot=1.
   Collapses to a top-right circle; ?dev=1 keeps it open, ?dev=0 starts collapsed.
-  Desktop assistant is collapsed; mobile (≤1100px) is expanded. Force with
+  Desktop and narrow assistant default collapsed. Force with
   ?assistant=collapsed or ?assistant=expanded.
+  Narrow (≤1100px): full-screen overlay selector; Open destinations is inline with the heading.
   Canvas is a fake homepage, not the contractor website renderer.
   Ads detail lives in docs/features/ads/ad-generation/design/ads-workspace.html.
 -->
@@ -38,6 +39,7 @@
       <button type="button" class="viewtab on" data-state="assistant">Assistant collapsed</button>
       <button type="button" class="viewtab" data-state="publication">Publish</button>
       <button type="button" class="viewtab" data-state="connect">Connect</button>
+      <button type="button" class="viewtab" data-state="notify">Notification</button>
       <button type="button" class="viewtab on" data-state="section" data-section="hero">Hero</button>
       <button type="button" class="viewtab" data-state="section" data-section="reviews">Reviews</button>
       <button type="button" class="viewtab" data-state="section" data-section="top-menu">Top menu</button>
@@ -74,7 +76,7 @@
         <div class="cms-dashboard-sidebar-header">
           <button class="cms-dashboard-brand js-expanded-only" data-scene="home" type="button">Placis</button>
           <button class="cms-dashboard-icon-button" id="sidebarToggle" type="button" aria-label="Collapse sidebar">
-            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
           </button>
         </div>
         <nav class="cms-dashboard-nav">
@@ -86,7 +88,7 @@
             <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
             <span class="js-expanded-only">Sites</span>
           </button>
-          <button class="cms-dashboard-nav-disclosure" id="profileToggle" type="button" aria-expanded="false" aria-label="Business details">
+          <button class="cms-dashboard-nav-disclosure js-wide-disclosure" id="profileToggle" type="button" aria-expanded="false" aria-label="Business details">
             <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
             <span class="js-expanded-only">Profile</span>
             <svg class="nav-chevron js-expanded-only" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
@@ -103,6 +105,7 @@
           </button>
         </nav>
         <div class="cms-dashboard-sidebar-spacer"></div>
+        <button class="cms-dashboard-nav-item js-expanded-only" type="button">Settings</button>
         <div class="cms-dashboard-account">
           <div class="cms-dashboard-account-divider">
             <button class="cms-account-trigger" id="accountToggle" type="button" aria-expanded="false" aria-label="Open account menu">
@@ -127,6 +130,9 @@
       <main class="cms-dashboard-main-content">
 
         <section class="cms-dashboard-prompt-wrap" data-view="home">
+          <button class="cms-nav-open cms-nav-open-home" type="button" aria-label="Open destinations">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+          </button>
           <h1 class="cms-dashboard-wordmark">placis</h1>
           <form class="cms-dashboard-prompt" id="homePrompt">
             <div class="cms-dashboard-prompt-label">Upgrade to Placis Pro</div>
@@ -152,7 +158,12 @@
         <div class="cms-editor-page is-hidden" data-view="website">
           <header class="cms-editor-header">
             <div class="cms-editor-header-inner">
-              <h1>Website editor</h1>
+              <div class="cms-editor-title">
+                <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                </button>
+                <h1>Website editor</h1>
+              </div>
               <div class="cms-editor-header-controls">
                 <div class="cms-viewport-control" role="group" aria-label="Canvas width">
                   <button class="is-active" data-viewport="desktop" type="button">Desktop</button>
@@ -581,7 +592,10 @@
               <span class="cms-collection-header-icon"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-7h6v7"/></svg></span>
               <div>
                 <div class="cms-collection-eyebrow">Website foundations</div>
-                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
                   <h2>Business details</h2>
                   <span class="cms-collection-pill">Profile active</span>
                 </div>
@@ -673,7 +687,12 @@
               <span class="cms-collection-header-icon"><svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
               <div>
                 <div class="cms-collection-eyebrow">Profile</div>
-                <h2>Projects</h2>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Projects</h2>
+                </div>
                 <p>Jobs with photos shown on the website. Edited here, not in the website editor.</p>
               </div>
               <div class="cms-collection-header-actions">
@@ -701,7 +720,12 @@
               <span class="cms-collection-header-icon"><svg width="18" height="18" viewBox="0 0 24 24"><path d="m12 3 8 4v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></span>
               <div>
                 <div class="cms-collection-eyebrow">Profile</div>
-                <h2>Certifications and reviews</h2>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Certifications and reviews</h2>
+                </div>
                 <p>Tick certifications. Pin top reviews from all reviews for ads. Each reviews website section picks its own set.</p>
               </div>
             </div>
@@ -796,7 +820,12 @@
             <div class="cms-collection-header">
               <div>
                 <div class="cms-collection-eyebrow">Certifications and reviews</div>
-                <h2>Create review</h2>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Create review</h2>
+                </div>
                 <p>Owner-written. Lands in all reviews. Route for now.</p>
               </div>
             </div>
@@ -820,7 +849,12 @@
             <div class="cms-collection-header">
               <span class="cms-collection-header-icon"><svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/></svg></span>
               <div>
-                <h2>Media library</h2>
+                <div class="cms-page-heading">
+                  <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                  </button>
+                  <h2>Media library</h2>
+                </div>
                 <p>Photos of their work, logos, and documents. Crop, focal, and cleanup live here. Attach a photo from Content when an image is selected on the canvas.</p>
               </div>
               <div class="cms-collection-header-actions">
@@ -846,7 +880,10 @@
         </section>
 
         <section class="cms-ads-list is-hidden" data-view="ads">
-          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div class="cms-page-heading">
+            <button class="cms-nav-open" type="button" aria-label="Open destinations">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+            </button>
             <h1>Ads</h1>
             <span style="flex:1"></span>
             <button class="button-primary" type="button">+ New ad</button>
@@ -867,6 +904,11 @@
             </div>
           </div>
         </section>
+        <div class="cms-notification is-hidden" id="cmsNotification" role="status">
+          <p>Ads wrote a detail to Business details.</p>
+          <button class="button-secondary" type="button">Revert</button>
+          <button class="button-primary js-notify-ok" type="button">OK</button>
+        </div>
       </main>
     </div>
   </div>

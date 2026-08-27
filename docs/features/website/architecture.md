@@ -71,12 +71,16 @@ scratch. Trade does not pick the website template 1:1.
 
 ## Editing (the website editor)
 
-The website editor is one workspace with two surfaces plus the global sidebar:
+The website editor is one workspace with two surfaces plus global nav
+([design-decisions.md](design-decisions.md) 16):
 
-- **Canvas** — renders the selected website page live from its website sections. This is the
-  wide column; the rest of The CMS is quiet by default.
-- **Workspace** — left rail. Selectable **workspace items** (website pages, SEO, website styles,
-  website versions). The list opens when a rail item is selected; default is rail-only.
+- **Canvas** — renders the selected website page live from its website sections. On a wide
+  screen this is the wide column; on a small screen the canvas is the screen until they open
+  destinations.
+- **Workspace** — on a **narrow** screen the rail is a **bottom bar** (Sites only); the list
+  opens above it. On a **wide** screen it is a left rail. Selectable **workspace items**
+  (website pages, SEO, website styles, website versions). The list opens when a rail item
+  is selected; default is rail-only.
   **Website versions** is pinned to the bottom of the rail. **SEO** is its own rail panel and
   always shows the current website page. There is no media library rail item; attach from
   Content when an image is selected ([media library](../other/media/README.md)). Top menu and

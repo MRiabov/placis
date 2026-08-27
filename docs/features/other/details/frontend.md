@@ -34,6 +34,21 @@ replaces the current top-level Details item. Sites (the website editor entry) st
 where it is. There is no **AI tools** item: image cleanup is `/cms/media`; the website
 assistant is the canvas overlay. Ads is a destination (screens: [ads frontend](../../ads/ad-generation/frontend.md)).
 
+On a **narrow** screen the destinations are a **full-screen overlay selector** (no leftover
+icon rail). Profile is not a row; the four children are:
+
+```text
+New chat
+Sites
+Business details
+Projects
+Certifications and reviews
+Media library
+Ads
+```
+
+On a **wide** screen Profile is a disclosure:
+
 ```text
 New chat
 Sites
@@ -69,11 +84,13 @@ Profile is not a route. Clicking it only expands or collapses the group.
   a child is current, but is not itself `aria-current` when the sidebar is expanded.
 - **Expanded sidebar:** labels only. Children are indented under Profile; no extra icons on
   children.
-- **Collapsed sidebar:** only the Profile icon (person / `UserRound`, not a house). Children are hidden. The icon
+- **Collapsed sidebar (wide only):** only the Profile icon (person / `UserRound`, not a house). Children are hidden. The icon
   is active if a child is current (`aria-current` on the icon). Click **navigates to Business
   details**. It does not expand the sidebar. Expand or collapse labels with the sidebar panel
-  control only.
-- **Mobile drawer:** same as expanded (labels visible).
+  control, or hover-peek. (2026-08-27: peek + pin; see website design-decisions 16.)
+- **Narrow overlay selector:** no Profile disclosure. The four children are rows in the
+  full-screen overlay (Business details, Projects, Certifications and reviews, Media library),
+  with New chat, Sites, and Ads. Open destinations is inline with the screen heading.
 
 ## Screens
 
