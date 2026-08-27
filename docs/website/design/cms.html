@@ -134,25 +134,28 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
           </button>
           <h1 class="cms-dashboard-wordmark">placis</h1>
-          <form class="cms-dashboard-prompt" id="homePrompt">
-            <div class="cms-dashboard-prompt-label">Upgrade to Placis Pro</div>
-            <textarea rows="2" placeholder="Describe what you want Placis to build..." aria-label="Describe what you want Placis to build"></textarea>
-            <div class="cms-dashboard-prompt-actions">
-              <div class="cms-dashboard-prompt-left-actions">
-                <button class="cms-dashboard-prompt-icon" type="button" aria-label="Attach a photo">
-                  <svg viewBox="0 0 24 24"><path d="M21.4 11.4 12 20.8a6 6 0 0 1-8.5-8.5l9.4-9.4a4 4 0 0 1 5.7 5.7L9.2 17.9a2 2 0 1 1-2.8-2.8l8.5-8.5"/></svg>
-                </button>
-                <button class="cms-dashboard-prompt-icon" type="button" aria-label="Voice">
-                  <svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>
-                </button>
+          <div class="cms-dashboard-prompt-stack">
+            <button class="cms-dashboard-prompt-shelf" type="button">Upgrade to Placis Pro</button>
+            <form class="cms-dashboard-prompt" id="homePrompt">
+              <textarea rows="2" placeholder="Describe what you want Placis to build..." aria-label="Describe what you want Placis to build"></textarea>
+              <div class="cms-dashboard-prompt-actions">
+                <div class="cms-dashboard-prompt-left-actions">
+                  <button class="cms-dashboard-prompt-connect" type="button">Connect</button>
+                  <button class="cms-dashboard-prompt-icon" type="button" aria-label="Attach a photo">
+                    <svg viewBox="0 0 24 24"><path d="M21.4 11.4 12 20.8a6 6 0 0 1-8.5-8.5l9.4-9.4a4 4 0 0 1 5.7 5.7L9.2 17.9a2 2 0 1 1-2.8-2.8l8.5-8.5"/></svg>
+                  </button>
+                  <button class="cms-dashboard-prompt-icon" type="button" aria-label="Voice">
+                    <svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>
+                  </button>
+                </div>
+                <div class="cms-dashboard-prompt-right-actions">
+                  <button class="cms-dashboard-prompt-send" type="submit" aria-label="Send to the website assistant">
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
               </div>
-              <div class="cms-dashboard-prompt-right-actions">
-                <button class="cms-dashboard-prompt-send" type="submit" aria-label="Send to the website assistant">
-                  <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </section>
 
         <div class="cms-editor-page is-hidden" data-view="website">
