@@ -543,17 +543,19 @@ function canvasViewportMode() {
 
 function syncCanvasScale() {
   if (!canvasStage || !canvasScale || !canvasFrame) return;
-  const native = canvasNativeWidths[canvasViewportMode()];
+  const mode = canvasViewportMode();
+  const native = canvasNativeWidths[mode];
   const stageStyle = getComputedStyle(canvasStage);
   const availW = canvasStage.clientWidth - parseFloat(stageStyle.paddingLeft) - parseFloat(stageStyle.paddingRight);
   const availH = canvasStage.clientHeight - parseFloat(stageStyle.paddingTop) - parseFloat(stageStyle.paddingBottom);
   if (availW < 1 || availH < 1) return;
-  const scale = Math.min(1, availW / native);
-  canvasFrame.style.width = `${native}px`;
+  const layoutW = mode === "desktop" ? Math.max(native, availW) : native;
+  const scale = Math.min(1, availW / layoutW);
+  canvasFrame.style.width = `${layoutW}px`;
   canvasFrame.style.height = `${availH / scale}px`;
   canvasFrame.style.transform = `scale(${scale})`;
   canvasFrame.style.transformOrigin = "top left";
-  canvasScale.style.width = `${native * scale}px`;
+  canvasScale.style.width = `${layoutW * scale}px`;
   canvasScale.style.height = `${availH}px`;
   const site = canvasFrame.querySelector(".fake-site");
   if (site && editorCanvas) {
@@ -688,6 +690,9 @@ window.matchMedia("(max-width: 1100px)").addEventListener("change", (event) => {
   if (event.matches) {
     const mobileBtn = document.querySelector('[data-viewport="mobile"]');
     if (mobileBtn) mobileBtn.click();
+  } else {
+    const desktopBtn = document.querySelector('[data-viewport="desktop"]');
+    if (desktopBtn) desktopBtn.click();
   }
   syncCollapsed();
 });

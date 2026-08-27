@@ -114,9 +114,10 @@ is enough. **Desktop / Tablet / Mobile** and **Publish** stay on one row (the ti
 above that row on a narrow canvas). On narrow those three are icons (44px hits) so Publish
 fits; wide keeps the words. The canvas lays out the contractor website at native widths
 (Desktop 1080, Tablet 760, Mobile 390). If the stage is larger, Mobile and Tablet stay those
-widths. If the stage is smaller, CSS `transform: scale()` (same as scaling an iframe) shrinks
-the frame to fit; the website still lays out at the native width. Do not reflow
-(`max-width: 100%`) and do not pan the stage. Never scale up past 1.
+widths; **Desktop fills the stage**. If the stage is smaller, CSS `transform: scale()` (same as
+scaling an iframe) shrinks the frame to fit; the website still lays out at the native width.
+Do not reflow Mobile or Tablet (`max-width: 100%`) and do not pan the stage. Never scale
+Mobile or Tablet up past 1.
 Publish is
 blocked while required website slots cannot resolve or media library items on the live path
 are not approved. Blockers in the dropdown are a short heading (**Publishing is blocked:**)
@@ -185,7 +186,7 @@ workspace rail (bottom bar; list / Content opens above it)
 full-screen overlay selector covers all of that when open
 
 wide (≥1101px):
-nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | website (wide canvas)
+nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | website (Desktop canvas)
                                                                      | website-assistant overlay (one-row composer)
 ```
 

@@ -238,10 +238,14 @@ instead of silently rewriting history.
     Profile and Ads headings have no decorative boxed icon. Open destinations on narrow
     stays. Viewport controls stay on `/cms/website` only. (2026-08-27)
     Canvas widths are native: Desktop **1080**, Tablet **760**, Mobile **390**. If the stage is
-    wider, Mobile and Tablet stay those widths (do not stretch). If the stage is narrower, CSS
+    wider, Mobile and Tablet stay those widths (do not stretch). **Desktop fills the stage**
+    (layout grows with the column; no 1080 card in a sea of grid). If the stage is narrower, CSS
     `transform: scale()` shrinks the frame to fit; the contractor website still lays out at the
-    native width (iframe or in-process renderer, same scale). Do not reflow with
-    `width: 100%` / `max-width: 100%`. Do not pan the stage. Never scale up past 1. (2026-08-27)
+    native width (iframe or in-process renderer, same scale). Do not reflow Mobile or Tablet with
+    `width: 100%` / `max-width: 100%`. Do not pan the stage. Never scale Mobile or Tablet up past
+    1. (2026-08-27)
+    **Wide** canvas website-width defaults to **Desktop**. Crossing the 1100px line to wide
+    restores Desktop; crossing to narrow still selects Mobile. (2026-08-27)
 
 17. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Satoshi, body tracking `-0.01em`,
     light weights (`400` / `450` / `500` / `600`), ink `#13120a`, `--secondary` `#f4f4f5`,
