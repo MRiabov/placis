@@ -317,6 +317,8 @@ var extraAllowed = []string{
 	"(details)",
 	"above the fold",
 	"below the fold",
+	`"bytes"`,
+	"bytes.",
 	"prompt catalog",
 	"checkout.session",
 	"openapi-fetch client",

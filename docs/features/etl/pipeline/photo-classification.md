@@ -24,7 +24,7 @@ not refetch Maps / Facebook / Instagram.
 ## Pre
 
 - Media library items exist for this `tenant_id` with `supplied_by=business_research`.
-- `content_hash` present when we can hash the bytes.
+- `content_hash` present when we can hash the file.
 
 ## Must not
 

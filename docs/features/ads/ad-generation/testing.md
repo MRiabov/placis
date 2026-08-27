@@ -33,11 +33,11 @@ against the real API + real Postgres; the LLM is faked. DB asserts name the tabl
 
 4. **Approve** — the owner reviews, edits copy, approves.
    - DB: `ad_copy_variants.source=owner_edit`, `ad_variants.status=approved`,
-     `ads.status=ad_ready_to_post` — only after every placement has landed bytes (not
+     `ads.status=ad_ready_to_post` — only after every placement has an uploaded photo (not
      `uploading`, not `failed`). A media caption is not required for a photo the owner added
      in Review.
 
 5. **Download** — the owner downloads the ad set.
    - Assert: the download **verbatim matches every field** — headline, primary text, short
      label (`description`), CTA label, image crops for this ad's format, ad lead form fields,
-     and the note of source media library item — and is deterministic (same input → same bytes).
+     and the note of source media library item — and is deterministic (same input → same images).

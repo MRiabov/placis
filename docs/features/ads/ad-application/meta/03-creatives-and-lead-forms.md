@@ -188,7 +188,7 @@ story. Useful in CMS before we set `ACTIVE`, but it is not a substitute for
 
 ## Implications for Placis
 
-- Cropped bytes must be produced by the same deterministic renderer as the zip download.
+- Cropped images must be produced by the same deterministic renderer as the zip download.
 - Instant Form creation is a posting step, not an ad-generation step (already decided:
   privacy notice at posting time).
 - We need a canonical **privacy website page** URL per tenant.

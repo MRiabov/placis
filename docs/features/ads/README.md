@@ -55,7 +55,7 @@ approved media items only (gated twice); every AI call records reasoning + outpu
 `ai_generations`; conservative unprompted marketing statements (owner override / owner prompt
 allowed — a Details tool call writes the business profile; Approve is not blocked);
 character limits, uploads still in flight, and failed uploads still block. Owner-added
-photos in an ad are usable once bytes land (~10 seconds); captioning is not a gate.
+photos in an ad are usable once the photo is uploaded (~10 seconds); captioning is not a gate.
 
 ## Where things stand
 

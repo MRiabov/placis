@@ -311,5 +311,5 @@ Ask first / instant apply gate as `update_slot`.
 The website assistant never does a website publication, never bypasses validation, and never writes
 arbitrary registry JSON. It does not edit Details, Projects, or Certifications and reviews (those
 are Profile screens). It does not delete or archive a website section or website page (hide
-stays: `set_section_visibility`). It does not upload or replace file bytes — replace stays the
+stays: `set_section_visibility`). It does not upload or replace the file — replace stays the
 existing replace on `/cms/media` / website editor upload.

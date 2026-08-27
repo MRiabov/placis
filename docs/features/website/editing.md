@@ -144,7 +144,7 @@ a whole tree (including a wipe). Assistant writes use `update_menus`
 dirty keys. Same `{ edit_history_head, batch_id }` response and `409 edit_history_conflict`.
 
 Coalesce means the **dirty keys since the last successful copy-out**, not the full draft. Do not
-send sibling website slots, `media_assets[]`, the website manifest, or file bytes. Image website
+send sibling website slots, `media_assets[]`, the website manifest, or the file. Image website
 slots send a `media_asset_id` (and crop / focal point if those changed). That PATCH is the same
 **attach**, **crop**, and **focal** the website assistant calls (`update_slot`;
 [assistant.md](assistant.md)). Attach only retargets the slot. Crop / focal run that function,
@@ -152,7 +152,7 @@ then the slot points at the returned item (copy-on-write stays inside that funct
 [media library](../other/media/README.md)). Photos go through the media-library upload, not this
 PATCH. File replace is that upload / replace, not this body.
 
-Typical PATCH is **under 10 KB** (one headline is hundreds of bytes; a rich-text click-off is a
+Typical PATCH is **under 10 KB** (one headline is a few hundred characters; a rich-text click-off is a
 few KB). A busy coalesced window stays in that band. A **1 MB** body would mean we shipped the
 whole unpublished website or a `data:` image — both are bugs. The API rejects a PATCH body over
 **64 KB** (`413`); slot `max_length` and typed structs reject earlier. `GET` hydrates one website
@@ -197,7 +197,7 @@ model tokens never write jsonb.
 
 If the focused field is dirty, a PATCH is queued or in flight, a media-library upload is in
 progress, or the last copy-out / upload failed (still uncopied), do not let the owner leave
-immediately. Hover the uploading thumb: a circle-and-cross button; click it to abort the bytes
+immediately. Hover the uploading thumb: a circle-and-cross button; click it to abort the upload
 request. That upload is then not in progress.
 
 - **In-app** (another CMS route, browser back): confirm first — same idea as Gmail’s “discard
