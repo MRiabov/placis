@@ -82,6 +82,9 @@ instead of silently rewriting history.
    After 12: a required heading, text, or image jumps to that website section’s **Content** on
    the left; an unapproved library item not on the canvas jumps to `/cms/media`. (2026-08-26)
    Owner heading is **Publishing is blocked:** (see 13). (2026-08-26)
+   Host rows and New URL stay one group of actions (open a host, Connect). Blockers sit
+   after that group, not between website addresses and New URL. The dropdown is actions,
+   not a status card of labels. (2026-08-27)
 
 4. **Opening hours picker is Google Calendar-style** — Details **Opening hours**: one row per
    weekday, Opens to Closes as a time range, Closed as the unavailable control, copy to

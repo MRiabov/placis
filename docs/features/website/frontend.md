@@ -152,6 +152,11 @@ Rows:
    certificate).
 3. **New URL** — not a website publication. Opens the **Connect website address** modal.
 
+Those three rows are one group. **Publishing is blocked:** jumps sit **after** that
+group, not between website addresses and New URL. Host rows are actions (open in a new tab,
+or reopen Connect while waiting). New URL is Connect, with a plus. Do not lay this out as a
+status card of labels.
+
 **Connect website address** is the point-their-hostname-at-us flow. It is a **modal over the
 website editor** on `/cms/website` (overlay, no new route, no left-nav item). The owner types
 `acme.ie` or `www.acme.ie`. The API creates the Cloudflare custom hostname and returns copyable
