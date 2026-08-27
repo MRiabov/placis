@@ -31,13 +31,24 @@ Validation errors: `string[]` with `maxLength` per item.
   `business_profile_edits` and the live business profile in one transaction.
 - **Must not:** profile-history timeline HTTP; merge-in-memory rewrite of the whole row.
 
+### POST /v1/business-profile/edits/{id}/undo
+
+- **Auth:** Clerk JWT, active tenant
+- **Callers:** Ads notification **Revert** after a Details tool write. **OK** does not call
+  this. Leaving the screen without Revert keeps the write.
+- **Idempotency-Key:** yes.
+- **Behavior:** undo that `business_profile_edits` increment (replay the inverse onto the live
+  row, append a compensating increment). `409` if that id is already undone or is not the
+  increment the notification named.
+- **Must not:** website edit-history undo; a second Ads-only revert route.
+
 ### GET /v1/business-profile/certifications / PUT /v1/business-profile/certifications
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** `/cms/certifications-and-reviews`.
 - **PUT Idempotency-Key:** yes.
-- **Response:** selected accreditations plus `available[]` (definitions for that trade/country)
-  in the same `*Read`. Persistence is `certification_definitions` +
+- **Response:** selected accreditations plus `available[]` (definitions for that country;
+  do not key `available[]` off a closed trade enum). Persistence is `certification_definitions` +
   `business_profile_certification_selections`; those are tables, not an HTTP collection.
 - **Must not:** `/v1/certification-selections` or `/v1/certifications` as a peer resource.
 
@@ -95,4 +106,4 @@ Validation errors: `string[]` with `maxLength` per item.
 
 - `/v1/website/editor/business-profile`
 - `/v1/certification-selections`, `/v1/certifications`
-- profile-history / replay HTTP
+- profile-history / replay HTTP (except `POST /v1/business-profile/edits/{id}/undo`)

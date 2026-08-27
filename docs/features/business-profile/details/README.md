@@ -11,11 +11,11 @@ The record is larger than this screen (reviews, certifications, projects):
 - **Who they are** — business name, legal name, trade, established year, description.
 - **Contact** — marketing phone, marketing email, existing site URL. Emergency phone number is how we
   reach the owner, not what leads use (unpublished; not on this screen unless asked).
-- **Where they are** — business location, service areas.
-- **What they do** — featured services.
+- **Where they are** — service areas (Google Maps territory lookup). Not a business-location field.
+- **What they do** — featured services as a **list** (not a textarea).
 - **Legal** — company number, VAT number, registered office.
 - **Opening hours** — Google Calendar-style picker, one row per day: Opens, to, Closes, Closed.
-  Hours they pick up the marketing phone. No Appointment note.
+  One range per weekday. No extra time blocks. Hours they pick up the marketing phone. No Appointment note.
 - **Logo** — pick from the media library.
 - **Facebook** — `facebook_profile_url`. Link when unlinked (paste URL this pass).
   When linked, show that Facebook profile’s **name, photo, rating, and review count**, plus
