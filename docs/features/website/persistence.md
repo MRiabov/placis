@@ -116,7 +116,7 @@ Each of `top_menu` and `footer` is a JSON array of nodes. Depth **2**: bar + one
 groups inside groups. Closed keys only.
 
 Every node has `id`, derived from its **label** (page node: website page title; text/URL node:
-the `label` field). Same fold as a website page path: lowercase, hyphenate, strip junk,
+the `label` field). Same rules as a website page path: lowercase, hyphenate, strip junk,
 length-bounded. Unique in that tree; collision → `-2`, `-3`. On label/title change, recompute
 `id`. Tools match by this `id`, never by UUID. Never say slug.
 
@@ -142,7 +142,7 @@ that node; drop empty text groups. Duplicate page in a tree is `400`.
 
 Human PATCH may replace a whole tree (including a wipe). Assistant `remove_entries` max 4.
 
-There is no unpublished snapshot per edit and no per-page version table. The fold is
+There is no unpublished snapshot per edit and no per-page version table. The unpublished website is
 in-place `UPDATE`. Website edit history is typed increments, like `business_profile_edits`.
 
 ## Indexes

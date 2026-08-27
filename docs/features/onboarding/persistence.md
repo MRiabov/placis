@@ -31,7 +31,7 @@ live here.
 
 02 calls `etl.StartRun` ([ETL](../etl/README.md); [02](pipeline/02-business-research.md)). This
 schema has no extract tables. `research_wait_until` is derived from `etl.runs` (`trigger=onboarding`,
-distinct `enqueue_id` in the last 30 minutes). SSE reads `etl.runs`. Fold via
+distinct `enqueue_id` in the last 30 minutes). SSE reads `etl.runs`. Live business profile via
 [build-profile](pipeline/build-profile.md).
 
 ## Website activation

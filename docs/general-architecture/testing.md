@@ -77,7 +77,7 @@ and flags both runners must share.
   hosted minutes and Clerk traffic). Do not restore `storageState`, Clerk cookies, or
   `test-results/` **across** jobs.
 - **Playwright workers** — not `--shard`. Drop a global `workers: 1`. Default workers for specs that
-  do not hit Clerk's Frontend API. Specs that mint or present a Clerk testing token (sign-in,
+  do not hit Clerk's Frontend API. Specs that create or present a Clerk testing token (sign-in,
   signed-out `/login`, `setActive`, bot-protection bypass) stay on a serial project (`workers: 1`)
   because testing tokens are **2 requests per second**. Cap non-Clerk workers only if the runner
   runs out of memory (then `workers: 2`, not a global `1`). Do not start a second Vite for
@@ -89,7 +89,7 @@ and flags both runners must share.
   Clerk Go SDK (`Sessions().Verify`, `Organizations().Create`, and so on) — never a fake
   verifier, never hand-rolled JWT or JWKS. The SDK fetches and caches JWKS; app and
   test code must not decode tokens. Playwright **testing tokens** (bot-protection,
-  `__clerk_testing_token`) are a different path: mint once per CI job (`clerkSetup()` or the
+  `__clerk_testing_token`) are a different path: create once per CI job (`clerkSetup()` or the
   Backend API), put `CLERK_TESTING_TOKEN` in the job env, and reuse it. Attaching that token to a
   new Playwright page is fine; fetching a new token per spec or worker is not. Signed-in Playwright tests write
   `storageState` once per job, then `test.use({ storageState })`. Do not re-sign-in per spec.

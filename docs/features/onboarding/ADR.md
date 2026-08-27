@@ -58,7 +58,8 @@ decision + date) instead of silently replacing the old entry.
    points at the current `business_profile_history` row. Structured identity lives in real columns; only genuinely
    polymorphic brand/contact payloads use `jsonb`.
    (2026-08-19: writers apply only field/list increments in `business_profile_edits` — not a
-   `details` jsonb dump and not a full-row copy. The live profile is the fold. Client interview
+   `details` jsonb dump and not a full-row copy. The live profile is the current `business_profiles`
+   row. Client interview
    and business research run at the same time; each `SELECT … FOR UPDATE`, inserts only
    what it set, and updates only those columns. The predecessor dropped populated fields in the UI under a
    write race. Same field with disagreeing values is a research conflict. See

@@ -3,7 +3,7 @@
 Business logic. Read fetch / listing rows. Write the business profile. Do not call source
 networks.
 
-Conflict and fold rules are [build-profile](../../onboarding/pipeline/build-profile.md) — do not
+Conflict and profile-update rules are [build-profile](../../onboarding/pipeline/build-profile.md) — do not
 fork a second merge.
 
 ## Trigger
@@ -22,14 +22,14 @@ reviews may land while Instagram extract is still running.
 - Call Maps, Facebook, Instagram, crawl, or Parallel.
 - Dump fetch `raw` onto `business_profiles`.
 - Overwrite the whole profile in one write.
-- Silently overwrite an owner-typed value that disagrees (research conflict; fold does not
-  move).
+- Silently overwrite an owner-typed value that disagrees (research conflict; live business profile is not
+  updated).
 - Reclassify a media library item whose `content_hash` already has a photo kind.
 
 ## Do
 
 `SELECT … FOR UPDATE` the profile. Insert only the increments this kind set. Update only those
-fold columns or list rows.
+live profile columns or list rows.
 
 - **New Maps reviews** — `business_profile_reviews` keyed to `etl.google_maps_listing_reviews`.
 - **New Facebook / Instagram posts** — upsert `facebook_posts` / `instagram_posts` (and the
@@ -45,13 +45,13 @@ After website activation the owner sees conflicts on Details. No extra apply scr
 
 ## Persist
 
-`business_profile_edits` + fold columns / list tables;
+`business_profile_edits` + live profile columns / list tables;
 `facebook_profiles` / `facebook_posts` / `instagram_profiles` / `instagram_posts`;
 `media_assets` (new items + photo kind). `etl.runs.status=succeeded`.
 
 ## Fail
 
-Retryable. Prior fold stays. `status=error` when retries exhaust. Extract fetch rows stay.
+Retryable. Prior live business profile stays. `status=error` when retries exhaust. Extract fetch rows stay.
 
 ## Out
 

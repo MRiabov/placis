@@ -91,6 +91,27 @@ func TestAllowedClerkClaim(t *testing.T) {
 	}
 }
 
+func TestAllowedAboveTheFold(t *testing.T) {
+	tokens := []token{{phrase: "fold", class: classAlways}}
+	compiled, err := compileTokens(tokens)
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join("testdata", "hero.md")
+	if err := os.WriteFile(path, []byte("Keep conversion copy above the fold.\nDo not write the fold.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Remove(path) })
+	hits, err := scanFile(path, compiled)
+	if err != nil {
+		t.Fatal(err)
+	}
+	phrases := hitPhrases(hits)
+	if len(hits) != 1 || !phrases["fold"] {
+		t.Fatalf("expected only the bare fold line, got %v", hits)
+	}
+}
+
 func TestCoveredSayPhrase(t *testing.T) {
 	tokens := []token{classifyToken("page (website)", "website page")}
 	compiled, err := compileTokens(tokens)

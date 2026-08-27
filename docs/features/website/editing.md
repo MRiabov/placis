@@ -89,14 +89,14 @@ No extra hydrate query besides optional `include_edit_history=true` and optional
 `publication_id` on this same GET.
 
 **Open hydrate** (enter `/cms/website`, full reload, or after `409` `edit_history_conflict`):
-`GET /v1/website/editor/pages/{page_id}?include_edit_history=true` — the fold for the
+`GET /v1/website/editor/pages/{page_id}?include_edit_history=true` — the unpublished website for the
 selected website page **and** tenant-scoped website edit history (last 200 batches). A batch
 can be website styles, a website form, or another website page, so the log is not a per-page
 slice. Extra fields: `edit_history_head` (uuid, null if the stack is empty), `edit_history[]`
 (each batch: `batch_id`, `edited_by`, `ai_generation_id`, rows of target / `op` / `before` /
 `after`).
 
-**Website page switch:** the same GET with the query off. Fold only. Do not re-download
+**Website page switch:** the same GET with the query off. Unpublished website only. Do not re-download
 `edit_history`.
 
 Reset to an owner website version: `publication_id` on this GET (same `*Read`). Paint the
@@ -170,7 +170,7 @@ The jsonb columns (`website_slots.value`, `website_sections.props` / `design`) a
 `UPDATE`s of one row. There is no unpublished snapshot per edit, so we do not append a page- or
 site-sized jsonb blob per keystroke. Click-off plus the safety timer is what keeps TOAST and
 WAL down. Website edit history appends typed increments for the copy-out (one field / slot /
-structure change), not a second fold. Website publication still writes one `website_manifest`
+structure change), not a second unpublished website copy. Website publication still writes one `website_manifest`
 jsonb per website version (kept, never overwritten).
 
 `base_edit_history_head` must match `website_settings.edit_history_head`. Match → apply, append
@@ -214,13 +214,13 @@ Reject oversized jsonb at the API; do not store it. Reject a PATCH over 64 KB.
 ## Undo / redo (in memory)
 
 Undo and redo are **in-memory**. There is no `POST /undo` or `POST /redo`. The database stores
-the fold (live unpublished rows) and the **record** (`edit_history`). It does not perform undo.
+the unpublished website (live unpublished rows) and the **record** (`edit_history`). It does not perform undo.
 
 1. If the focused field is dirty and not yet copied out: Ctrl+Z restores **in-memory** text
    only. Same as not PATCHing while typing. Not a website edit history batch yet.
 2. Otherwise Ctrl+Z applies that batch’s `before` to the in-memory projection (local-first).
    Redo (Ctrl+Shift+Z) applies `after`. Then copy-out with the **existing PATCH** (dirty keys,
-   safety timer, leave guard, 10s error) so the fold matches. That PATCH appends a new
+   safety timer, leave guard, 10s error) so the unpublished website matches. That PATCH appends a new
    website edit history row (the record of the copy-out) and returns a new `edit_history_head`.
 3. The frontend keeps undo/redo stacks in RAM. Hydrate (`include_edit_history`) **seeds** those
    stacks from the last 200 batches so Ctrl+Z can go farther than this tab’s RAM. After

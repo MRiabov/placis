@@ -8,7 +8,7 @@ StartRun(kinds, trigger, tenant)
   → one etl.runs row per kind (shared enqueue_id)
   → extract job per kind (fetch + listing upsert)
   → transform job per kind when extract succeeded
-       → profile fold / Facebook and Instagram posts / photo classification
+       → live business profile / Facebook and Instagram posts / photo classification
 ```
 
 Triggers:

@@ -44,7 +44,7 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant. Wait 
 2. Write `website_addresses` (`type=subdomain`, `status=reserved`, `is_primary=true`). Wildcard on
    **our** `placis.com` zone already points at the Worker. FQDN:
    [cloudflare.md](../../website/cloudflare.md).
-3. Fold current unpublished rows into `website.v1` and write **`website_publications` v1**:
+3. Build `website.v1` from current unpublished rows and insert **`website_publications` v1**:
    `published_by=onboarding`, HTML **with** the website-activation strip (Clerk/Stripe island),
    `active`. Same write as CMS website publication ([cloudflare.md](../../website/cloudflare.md)):
    run the already-built website component catalog on the JSON, PUT `{version_number}/` then copy
