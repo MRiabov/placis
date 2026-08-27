@@ -5,6 +5,7 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [frontend.md](frontend.md), [editing.md](editing.md), [assistant.md](assistant.md),
+[design-decisions.md](design-decisions.md),
 [technical-implementation.md](technical-implementation.md), [api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 Projects and certifications screens: [details frontend](../other/details/frontend.md).
@@ -14,8 +15,9 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 
 ## Code today
 
-- `frontend-2/src/features/cms/editor/` — canvas, workspace, editing panel, media library
-  workspace, assistant modal, `EditorHeader.tsx`, `CmsEditorLayout.tsx`.
+- `frontend-2/src/features/cms/editor/` — canvas, workspace (including Content), media library
+  attach from Content
+  workspace, assistant modal (delete; overlay replaces it), `EditorHeader.tsx`, `CmsEditorLayout.tsx`.
 - Don't say inspector: `frontend-2/src/features/cms/editor/inspector/`
   (Don't say inspector: `Inspector.tsx`, `SlotControls.tsx`, `SeoInspector.tsx`, `DesignInspector.tsx`,
   `FormsInspector.tsx`, `HistoryInspector.tsx`, `inspectorModel.ts`).
@@ -29,19 +31,39 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 
 ## Keep
 
-- `/cms/website` three surfaces: canvas, workspace (website pages, media library,
-  website styles, top menu, footer), editing panel (website slots, design, SEO,
-  website forms, website versions).
+- `/cms/website` two surfaces: canvas (wide by default), workspace rail (list closed until
+  a workspace item is opened or a canvas section/image is selected). On a narrow screen the
+  rail is a bottom bar (Sites only). Content is the list
+  after that canvas click (closed union by website component). SEO is its own rail panel,
+  always the current website page. Website versions is a workspace item at the
+  end of the rail. No Design tab. No Website forms
+  tab. Top menu / footer trees live in Content.
+  No right-hand editing panel. No media library rail item.
+  No Home crumb on the website-editor toolbar; viewport + Publish stay one row.
+  On narrow, Open destinations sits inline with **Website editor**.
+  On narrow, Desktop / Tablet / Mobile are icons so Publish fits. Canvas native widths
+  Desktop 1080 / Tablet 760 / Mobile 390; scale down to fit the stage (`transform: scale`,
+  never above 1). Do not reflow the contractor website to the CMS width.
+  Canvas website scroll pad clears the website assistant overlay so last sections stay reachable.
+  On narrow, the open list / Content title row is compact; the whole row hides the sheet
+  (Add a website page stays its own hit).
+- Look clones the placis-web dashboard theme ([design.md](design.md),
+  [design-decisions.md](design-decisions.md) 17). Predecessor `src/styles/cms/` tokens that fight this go (cross-cutting file).
 - Canvas via the shared contractor-website component package.
-- Website assistant chat in this workspace (plan vs continuous; instant apply vs
-  Ask first). Apply / Reject are one-way.
-- Media library as a **workspace item** (same library as `/cms/media`).
-- `PagesWorkspacePanel`, `StylesWorkspacePanel`, `MenuWorkspacePanel` (tree editor for
-  top menu / footer),
-  `EditorCanvas`, `CmsEditorLayout`.
+- Website assistant **overlay** pinned to the canvas (default collapsed on wide and narrow;
+  wide: one-row composer — chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**;
+  narrow collapsed stays two rows; expand / reduce height; no website dim;
+  **Clear context** trash expanded-only).
+  Apply / Reject are one-way and never transparent. Delete the assistant modal
+  (`#assistantModal` / toolbar modal) and the toolbar **Website assistant** button.
+- Media library at `/cms/media` under Profile. Attach / pick from Content when an image is selected.
+- `PagesWorkspacePanel`, `StylesWorkspacePanel`,
+  `EditorCanvas`, `CmsEditorLayout`. Move `MenuWorkspacePanel` (tree editor) into the
+  Content layout for top menu / footer.
 
 ## Delete
 
+- Website assistant toolbar modal / `#assistantModal` — overlay in [frontend.md](frontend.md).
 - `EditorHeader` **Save** / Saving control (and e2e that clicks Save).
 - Single **Publish** toolbar button — replace with the website publication
   **dropdown** in [frontend.md](frontend.md).
@@ -69,6 +91,10 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 - GET-after-PATCH that replaces the website editor projection (`useSaveEditorPage`
   `onSuccess` `setQueryData` of the full body).
 - `/v1/tenants/{website_prefix}/website/…` for the CMS.
+- A second CMS palette, shadcn sprawl, or predecessor dashboard CSS that fights the
+  placis-web tokens.
+- `EditorCanvas` `style={{ maxWidth: "100%", width: viewportWidths[viewport] }}` — that
+  reflows Desktop/Tablet to the CMS width. Keep the native widths and scale the frame.
 
 ## Retarget
 
@@ -91,10 +117,11 @@ the website Go phase (Cloudflare custom hostname + DNS rows).
 - Don't say inspector: `editor/inspector/` → `editor/editing-panel/`;
   Don't say inspector: `Inspector.tsx` → editing-panel root; `useEditorInspectorHandlers` → editing-panel handlers.
 - Don't say inspector: `SeoInspector` / `DesignInspector` / `FormsInspector` /
-  `HistoryInspector` → SEO / design / website-forms / website-versions panels.
+  `HistoryInspector` → SEO rail panel / Content (website form) / Website versions workspace item.
+  Drop the Website forms tab; website-form fields are Content.
 - Don't say header: keep the file if needed but the control is the website-editor
   toolbar, not a “Save”.
-- Don't say publish: toolbar copy is **website publication**.
+- Don't say website publication on the toolbar: owner copy is **Publish**.
 - Don't say blueprint: any leftover type or route.
 - Don't say proof: `/cms/proof` is details’ delete list; certifications live at
   `/cms/certifications-and-reviews`.
@@ -115,3 +142,4 @@ the website Go phase (Cloudflare custom hostname + DNS rows).
 - `cms.ts` has no blog, careers, or leftover website-template-apply wrappers.
 - Don't say inspector: no leftover folder or type names in this feature.
 - Publication dropdown + blockers panel match [frontend.md](frontend.md).
+- `/cms/website` type and color match [design-decisions.md](design-decisions.md) 17.

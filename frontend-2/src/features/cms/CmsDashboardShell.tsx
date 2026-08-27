@@ -5,7 +5,6 @@ import {
   Menu,
   MessageSquarePlus,
   PanelLeft,
-  Sparkles,
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
@@ -40,7 +39,6 @@ export function CmsDashboardShell({
     { icon: MessageSquarePlus, label: "New chat", view: "dashboard" },
     { icon: Globe2, label: "Sites", view: "website_editor" },
     { icon: Building2, label: "Details", view: "details" },
-    { icon: Sparkles, label: "AI tools", view: "website_editor" },
   ];
 
   function selectItem(navEntry: NavItem): void {

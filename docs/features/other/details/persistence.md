@@ -46,8 +46,8 @@ replay profile history on every call.
   `founder_role`, `founder_occupation`, `founder_nationality`, `founder_country_of_residence`,
   `founder_appointed_on`, `founder_media_asset_id`, `logo_media_asset_id`, `brand_tone`,
   `brand_typography`, `brand_primary_color`, `brand_accent_color`),
-  `list` nullable (`services`/`service_areas`/`opening_hours`/`reviews`/`facebook_posts`/
-  `instagram_posts` when the op is a list change),
+  `list` nullable (`services`/`service_areas`/`opening_hours`/`reviews`/`certifications`/
+  `facebook_posts`/`instagram_posts` when the op is a list change),
   `list_item_id` nullable,
   `text_value`, `int_value`, `date_value`, `bool_value` (check: the column that matches `field` is
   set; the others are null — not a json `value`),
@@ -79,12 +79,30 @@ the profile as of `accepted_edit_id` (client interview complete).
   `description`, `website_page_path`
 - `business_profile_service_areas` — `id`, `tenant_id` fk, `business_profile_id` fk, `locality`
 - `business_profile_opening_hours` — `id`, `tenant_id` fk, `business_profile_id` fk, `day_of_week`,
-  `opens_at`, `closes_at`, `closed`
+  `opens_at`, `closes_at`, `closed`. Hours they pick up the marketing phone. No `note`
+  column.
 - `business_profile_reviews` — `id`, `tenant_id` fk, `business_profile_id` fk,
-  `google_maps_listing_review_id` nullable fk → `etl.google_maps_listing_reviews`, `author_name`,
-  `rating` (1–5), `body`, `published_at` nullable, `language` nullable, `position`
+  `google_maps_listing_review_id` nullable fk → `etl.google_maps_listing_reviews`,
+  `facebook_page_review_external_id` nullable (unique per profile when set), `author_name`,
+  `rating` (1–5), `body` (full imported text; owner-written `maxLength` 500), `citation`
+  (`maxLength` 500; about two or three sentences; what cards, the website, and ads paint;
+  fallback `body` if empty), `published_at` nullable, `language` nullable, `origin`
+  (`google_maps_listing` / `facebook_business_page` / `owner`), `is_top` bool,
+  `top_position` nullable int (only when `is_top`; dense order 1…n, **n ≤ 30**; 1 is most
+  featured), `status` (`in_pool` / `archived`), `position`
 
-Website sections and ads reference `business_profile_reviews` by id. They do not copy the text.
+  Top set: partial unique index `(business_profile_id, top_position) WHERE top_position IS NOT NULL`
+  (non-top rows keep `top_position` null). Check: `is_top` iff `top_position` is set, and
+  `top_position` is 1–30. Unique 1–30 is the cap — two rows cannot share a number. Writers never
+  assign a single `top_position`. They replace the whole ordered id list in one transaction
+  (`SELECT … FOR UPDATE` the profile row, then densify 1…n from that list). The LLM pin job
+  and Certifications and reviews PATCH do the same replace, not a merge.
+
+Website sections hold their own ordered ids via `website_slot_reviews`. Ads use `is_top`. They
+do not copy the text except at website publication (citation baked into the website manifest).
+Archive is not delete: archived imported rows stay so re-import does not duplicate that
+external id; archive also drops that id from every website section array. Profile-history
+list ops for `reviews` include `update` for top pin/reorder.
 
 - `facebook_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique, Facebook page id /
   URL, handle, `algorithm`, `schema_revision`, `latest_fetch_id` nullable fk → `etl.facebook_fetches`
@@ -102,3 +120,14 @@ fetch tables. Skip / `force` / `human`: [ETL pipeline](../../etl/pipeline/README
 Photo classification (hero / project / service / founder / logo) is `photo_kind` on
 [`media_assets`](../media/persistence.md) used by this profile. There is no `etl.photo_classifications`
 table.
+
+- `certification_definitions` — global (not tenant): `id`, `name`, `short_label`,
+  `trades`, `country`, `badge` (file or URL), `registry_url`. Postgres schema `details`, not
+  `website`.
+- `business_profile_certification_selections` — `id`, `tenant_id` fk, `business_profile_id` fk,
+  `certification_id` fk (`certification_definitions`), `status` (`selected`/`removed`),
+  `created_at`. Unchecking is `removed`. HTTP is `GET`/`PUT /v1/business-profile/certifications`
+  (`available[]` plus selected); this table is not an HTTP collection.
+
+The website and ads read selected certifications from these rows. They do not copy the
+definitions except at website publication (slim `certifications[]` in the website manifest).

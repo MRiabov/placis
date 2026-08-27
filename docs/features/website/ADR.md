@@ -30,8 +30,11 @@ Status: decided (2026-08-16, product owner + engineering).
    first (Apply / Reject, one-way). Instant apply still uses those tools; it does not write
    freeform JSON. Named real photo → attach first. AI cleanup is the `/cms/media` cleanup.
    `generate_image` is last resort when nothing in `media_assets[]` fits.
+   Overlay look (always-on overlay, reduce-height left / trash right, Apply / Reject pills) is in
+   [design-decisions.md](design-decisions.md).
    (2026-08-20; assistant configs + Apply/Reject terminal 2026-08-23; Ask first 2026-08-23;
-   attach-before-generate + shared media-library functions 2026-08-24)
+   attach-before-generate + shared media-library functions 2026-08-24; collapse + no dim
+   2026-08-26)
 
 7. **Website publication is kept and can be rolled back** — website publication creates a
    `website_publications` row (a published website copy); website rollback reactivates an earlier
@@ -96,13 +99,37 @@ Status: decided (2026-08-16, product owner + engineering).
     token preview dropped 2026-08-25)
 
 16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
-    Global `website_certification_definitions`; tenant selections. Reviews stay
-    `business_profile_reviews`. No `/cms/proof`. (2026-08-20)
+    Global `website_certification_definitions`; tenant selections. Unchecking is `removed`.
+    No upload-your-badge. Reviews stay `business_profile_reviews`. **Top reviews** max 30,
+    featured-first; new pin appends as least featured. This screen is the picker for the pool
+    and for pinning more into top reviews. Website editor reviews Content used to show that
+    **same set**. No `/cms/proof`. Layout is in
+    [design-decisions.md](design-decisions.md). (2026-08-20)
+
+    Unpin/reorder of **top reviews** used to rewrite unpublished `website_slot_reviews` from
+    the current top set. (2026-08-20)
+
+    (2026-08-26): Each **reviews website section** has its own ordered `website_slot_reviews`
+    from the pool. The LLM picks that list (onboarding after the website template, and the
+    website assistant). Length is the website component’s max (some layouts take 3, others 6
+    or 8). A service website page can use a different set than Home. The same review may
+    appear on more than one website section. Content edits **that** website section only
+    (add from the pool, remove, reorder). Pinning **top reviews** on Certifications and
+    reviews does **not** rewrite website sections. Archive still drops that review from
+    every website section array and from top reviews. Empty array: keep the website section
+    (no fake copy; do not hide the website component). Origins, archive, and create
+    owner-written stay as above.
+
+    (2026-08-26): Certification definitions and selections are Details / business-profile
+    tables (`certification_definitions`, `business_profile_certification_selections`), not
+    `website_certification_*`. See [details ADR](../other/details/ADR.md) 7.
 
 17. **`generate_image` may attach pending-review on the unpublished canvas** — always a warning;
     owner approval makes it approved; website publication still requires approved media library
     items. Attach of an existing library photo is `update_slot`, not `generate_image`.
     (2026-08-20; attach vs generate 2026-08-24)
+    The warning is in Content when that image is selected, not copy on the website.
+    (2026-08-26)
 
 18. **Live GET is Cache then R2 only** — website publication prebuilds HTML into
     `sites/{website_prefix}/latest/`. A cache miss still reads R2. Missing object is 404, not a
@@ -123,17 +150,20 @@ Status: decided (2026-08-16, product owner + engineering).
 20. **Website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS **Connect website
     address** is a modal over the website editor, opened from **New URL** in the website publication
-    dropdown. Shows records to paste. Do not take over the contractor’s nameservers. Apex `A`
+    dropdown. Owner copy on that control is **Publish**. Shows Host and Value as separate
+    copyable fields, with on-screen how-to. Do not take over the contractor’s nameservers. Apex `A`
     records need Apex Proxying (later, Enterprise).
-    (2026-08-21; Connect modal 2026-08-23)
+    (2026-08-21; Connect modal 2026-08-23; Host/Value copy 2026-08-27)
 
 21. **Website publication is a destination dropdown** — `{website_prefix}.preview.placis.com`,
     each connected website address, or New URL (Connect website address). Not a Worker
-    deploy. See [frontend.md](frontend.md).
-    (2026-08-23)
+    deploy. Owner copy is **Publish**. See [frontend.md](frontend.md).
+    (2026-08-23; owner copy Publish 2026-08-26)
 
 22. **Top menu and footer trees live on one `website.menus` row** — `top_menu` and `footer` are
     closed jsonb trees (page / text / URL nodes, depth 2), plus `show_phone` / `show_email`.
     Look stays on site-wide website sections (`page_id` null). No `top_menu_items` /
     `footer_items` tables. The website assistant uses `update_menus`, not `update_nav`.
+    Where the owner edits the trees is in [design-decisions.md](design-decisions.md).
     (2026-08-23)
+    Also `show_contact` (bar CTA to the Contact website page). (2026-08-26)

@@ -30,7 +30,8 @@ hand-picked palettes.
 
 1. The preset is selected during generation (or changed in the Website styles workspace).
 2. `website_manifest.website_styles` carries the preset id + bounded overrides (`primary`, `neutral`, `accent`,
-   `radius`, `density`).
+   `radius`, `density`). The Website styles workspace edits those three colors with a color
+   picker (hex is only inside the picker, not on the field).
 3. The renderer maps the preset tokens to CSS variables; every website component reads those tokens,
    so switching the preset restyles the whole website without touching website section logic.
 

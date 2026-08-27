@@ -87,7 +87,7 @@ repeat only their own rows.
 | Company registry / Maps search | raw ETL cache | `*Read` (id, name, address, …). **Omit** `raw`. |
 | Business research / ETL fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
 | Stripe event body | jsonb | **Omit** from `frontend-2`. Activation-status is a closed enum + checkout URL. |
-| LLM traces (`ai_generations`) | jsonb | **Omit.** Website assistant activity cards are named event structs. |
+| LLM traces (`ai_generations`) | jsonb | **Omit.** Website assistant activity cards are named event structs. Each tool event has `summary` (`string` + `maxLength`) for owner copy. Never render tool names. |
 | Audit `before`/`after` | jsonb | **Omit** from `frontend-2`. |
 | Website form website visitor POST | — | Named fields matching that website form’s `fields[]`. Extra keys 4xx. |
 | Upload signed URL | string | URL `maxLength`. |

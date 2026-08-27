@@ -4,7 +4,9 @@ Building a website from a website template, editing it in the website editor, an
 publication. Ads live in [../ads/](../ads/README.md). Together they sit under the CMS.
 
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
-- [ADR](ADR.md) — decision record
+- [ADR](ADR.md) — architectural decision record
+- [design.md](design.md) — tokens for the CMS (sidebar + main area): Satoshi, ink, hairline, outline vs `--secondary`
+- [design-decisions.md](design-decisions.md) — look and interaction (not architecture)
 - [architecture.md](architecture.md) — content model, applying the website template, website editor, website publication, render
 - [cloudflare.md](cloudflare.md) — live R2 serve path (`apps/contractor-website` is in this repo). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md), not this Worker.
 - [persistence.md](persistence.md) — `website_addresses`, website pages, website sections, website slots, website forms, `website.menus`, website publications, website settings, `edit_history`
@@ -22,8 +24,10 @@ publication. Ads live in [../ads/](../ads/README.md). Together they sit under th
 - [details](../other/details/README.md) — the Details view (shared with ads); reached from Profile
 - [media library](../other/media/README.md) — the media library + image editing
 - [testing.md](testing.md) — the website E2E test
+- [design/cms.html](../../website/design/cms.html) — static design mock of The CMS (open in a browser; `cms.css` / `cms.js` sit beside it). Visual only; function is these specs.
 
-Standalone screens beside the website editor: **Profile** (Details, Projects, Certifications and
-reviews) and **Media library** (`/cms/media`; also a selectable workspace item in the website
-editor). Details, Projects, and Certifications and reviews are website page content edited on
-those screens, not as website slots.
+Standalone screens beside the website editor sit under **Profile**: Details, Projects,
+Certifications and reviews, and the **media library** (`/cms/media`; attach from Content when an
+image is selected in the website editor). Details, Projects, and Certifications and reviews are
+website page content edited on those screens, not as generic website slots. Each reviews
+website section’s ordered list is edited in Content.

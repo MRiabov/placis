@@ -28,6 +28,10 @@ decision + date) instead of silently rewriting history.
    Profile. **Certifications and reviews** (`/cms/certifications-and-reviews`) is a third Profile
    child. No `/cms/proof`. Top menu and footer stay in the website editor, not Details.
 
+   (2026-08-26): **Media library** (`/cms/media`) is a fourth Profile child. It is not a
+   top-level peer of Sites. Crop / focal / cleanup stay on that screen; attach/pick from
+   Content is unchanged.
+
 3. **Founder and brand are columns** — `founder_name` / `founder_role` / `founder_occupation` /
    `founder_nationality` / `founder_country_of_residence` / `founder_appointed_on` /
    `founder_media_asset_id`, and `logo_media_asset_id` / `brand_tone` / `brand_typography` /
@@ -35,3 +39,36 @@ decision + date) instead of silently rewriting history.
    live profile columns and ordinary `business_profile_edits.field` values. Business research extras (confidence,
    evidence) stay on ETL fetch metadata / the Facebook or Instagram profile row, not a founder blob. (2026-08-19;
    2026-08-27: `business_research_sources` removed.)
+
+4. **Reviews have origin, top, archive, and citation** — each `business_profile_reviews` row
+   has `origin` (`google_maps_listing` / `facebook_business_page` / `owner`), `is_top` +
+   `top_position` (dense 1…n, n ≤ 30; 1 = most featured; unique per profile when set), `status` (`in_pool` / `archived`),
+   and `citation` (`maxLength` 500). Archive is not delete; re-import skips archived external
+   ids. Owner-written reviews are editable after create; imported Google/Facebook reviews
+   are not. Cards, the website, and ads paint citation (fallback `body` if empty).
+   Pin / reorder replaces the whole ordered id list in one transaction; it does not assign
+   one `top_position` at a time. (2026-08-26; unique top set 2026-08-26)
+   `is_top` is the **ads** featured list (and the top band on Certifications and reviews). It
+   does **not** copy onto every reviews website section. Each reviews website section has its
+   own ordered `website_slot_reviews` from the pool, capped by that website component.
+   (2026-08-26)
+
+5. **Facebook and Google Maps listing are Details links** — Business details owns
+   `facebook_profile_url` and `google_maps_listing_url`. **Link your Facebook** /
+   Google Maps listing when unlinked (paste a public URL this pass; type-to-search TBD);
+   when linked, a **card** (name, photo, rating, review count) plus **Change**, not the raw
+   URL. Same URLs feed review import on Certifications and reviews.
+   Not Ads Connect Meta, not Facebook Login, no autoposting. (2026-08-26; linked card
+   2026-08-27)
+
+6. **Opening hours are when they pick up the marketing phone** — per day: Opens / Closes /
+   Closed. Shown on the contact website page. There
+   is no `note` column and no Appointment note field. Logo is picked from the media library
+   (`logo_media_asset_id`). Persist on click-off; no Save details. Picker look is in
+   [website design-decisions](../../website/design-decisions.md). (2026-08-26)
+
+7. **Certification definitions and ticks are Details tables** — Global `certification_definitions`
+   and tenant `business_profile_certification_selections` live in Postgres schema `details`.
+   They are not `website` tables and are not named `website_certification_*`. HTTP stays
+   `GET`/`PUT /v1/business-profile/certifications`. The website paints selected rows at
+   website publication; ads read the same live business profile. (2026-08-26)

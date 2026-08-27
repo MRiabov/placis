@@ -21,9 +21,9 @@ publication.
    Saving / Saved indicator. If the copy has not succeeded after 10 seconds, show a visible
    error; leaving stays blocked while it is uncopied.
 3. **Improve** it with the website assistant — it suggests copy and images, but the owner decides.
-4. **Website publication** — put it on the internet (dropdown: preview website address, a connected
+4. **Publish** — put it on the internet (dropdown: preview website address, a connected
    website address, or New URL), with website rollback if a publication is
-   wrong.
+   wrong. Owner copy is the verb **Publish**; the act is website publication.
 5. Keep the unpublished website the source of truth; website publication writes a published
    website copy of it.
 
@@ -35,28 +35,46 @@ publication.
 
 ## The site is made of
 
-The website editor is one workspace with a left sidebar, a canvas, and an editing panel:
+The website editor is one workspace. By default the canvas is the wide column: the CMS left nav
+collapsed to icons, workspace rail-only until a workspace item or a canvas selection opens the
+list. The owner can open Website pages, SEO, Website styles, or Website versions from the rail,
+and Content from a website section or image on the canvas. There is no right-hand editing panel.
 
 - **Website pages** — home, service, contact, and legal website pages, reorderable.
-- **Media library** — a selectable workspace item (same library as `/cms/media`): their work,
-  logos, and documents, each with a media caption. Drop files there to upload. Drag a photo
-  onto an image on the canvas to attach it.
-- **Website styles** — the look (colors and fonts) via design controls.
-- **Top menu and footer** — named separately; never say header, navigation, or bare “menu”.
+- **SEO** — a standalone workspace rail panel that always shows the current website page.
+- **Website styles** — the look (colors and fonts) via design controls. One **website style**
+  is the applied look; **website styles** is the rail list, same singular/plural as website page /
+  website pages.
+- **Website versions** — website publications and website-assistant activity, pinned to the
+  end of the workspace rail (bottom on desktop; trailing on the mobile bottom bar).
+
+**Content** is a closed union keyed by **website component**: website slots
+by default; special layouts for reviews (that website section’s ordered list from all reviews,
+add / remove / reorder, cap from the website component), top menu /
+footer (depth-2 tree + show/hide marketing phone, marketing email, and contact), website forms, and
+projects. It is the left list after a canvas click, not a rail item. No Design tab (look is
+Website styles). No Website versions tab. No Website
+forms tab. Top menu and
+footer are not workspace-rail items. Attach from the **media library** in Content when an
+image is selected; the full-screen library is `/cms/media`.
 
 A **Details** view edits the business details shown on the site: business name, legal name, trade,
-established year, description, marketing phone, marketing email, existing site URL, location, service areas,
-featured services, company/VAT number, registered office, and opening hours.
+established year, description, marketing phone, marketing email, existing site URL, Facebook URL,
+Google Maps listing, location, service areas, featured services, company/VAT number, registered
+office, opening hours (when they pick up the marketing phone: Opens / Closes / Closed), and logo.
 
 Each **website page** is built from **website sections** (hero, services, reviews, …), and each
 website section is edited through its **website slots** — text, rich text, images, lists, and
-links. Reviews on a website section are selected profile reviews. A project gallery lists their
-projects.
+links. Each reviews website section has its own ordered `website_slot_reviews` from the
+pool (the LLM picks it; Content can change it). Ads use **top reviews**. A project gallery
+lists their projects.
 
 **Projects** are edited at `/cms/projects`. **Certifications and reviews** are edited at
-`/cms/certifications-and-reviews`. Website publication makes a **published website copy** of the
+`/cms/certifications-and-reviews` (definition ticks + **All reviews** / **top reviews** picker).
+Website publication makes a **published website copy** of the
 site each time. Those screens update the website editor immediately; the live website changes only on
-the next website publication.
+the next website publication. **Link your Facebook** is a Details link (paste URL this
+pass), not Ads Connect Meta.
 
 ## User stories
 

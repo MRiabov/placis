@@ -19,7 +19,7 @@ or unconstrained JSON. Contractor website API cutover:
 | [website](../features/website/frontend-debloat.md) | Website editor, publication dropdown, Connect website address, projects, certifications |
 | [details](../features/other/details/frontend-debloat.md) | Profile disclosure, Business details, CMS left nav |
 | [ads](../features/ads/ad-generation/frontend-debloat.md) | `/cms/ads` (no UI today; do not port campaign leftovers) |
-| [media library](../features/other/media/frontend-debloat.md) | Media library workspace item + `/cms/media` |
+| [media library](../features/other/media/frontend-debloat.md) | `/cms/media` + Content attach |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, one Clerk organization provision, `/me` |
 | [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
 | [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover: website form POST + `website.v1`; no predecessor OpenAPI |

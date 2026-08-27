@@ -208,6 +208,12 @@ We do **not** change DNS at GoDaddy, Porkbun, or Squarespace for them (no Domain
 spec). We show copyable records; they paste them at the DNS panel where the domain already lives.
 Do not ask them to move nameservers to us (that hijacks mail).
 
+The Connect modal lists each record as type, **Host**, and **Value** — separate large copyable
+fields, not one mashed line. Status (waiting for DNS → waiting for certificate → active) sits on
+the modal, not inside Value. On-screen how-to: add these at the DNS panel where the domain already
+lives (GoDaddy, Porkbun, or Squarespace); copy Host into name/host and Value into value/points-to;
+do not move nameservers to Placis.
+
 Owner DNS, shown as soon as they enter the hostname:
 
 | Hostname | Record | Target |
