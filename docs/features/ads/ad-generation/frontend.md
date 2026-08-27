@@ -6,7 +6,7 @@ Related docs:
 
 1. [Ad generation PRD](prd.md)
 2. [Ad generation technical implementation](technical-implementation.md)
-3. [Ad generation decision record](ADR.md)
+3. [Ad generation ADR](ADR.md)
 4. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 
 ## Purpose

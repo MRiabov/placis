@@ -1,7 +1,7 @@
-# Details design decisions
+# Details design decision record
 
 Look for Business details. Product: [ADR.md](ADR.md). Screen: [frontend.md](frontend.md).
-CMS theme: [CMS design decisions](../../../general-architecture/cms/design-decisions.md).
+CMS theme: [CMS design decision record](../../../general-architecture/cms/design-decisions.md).
 
 Status: decided (dates on each entry). Moved from website design decision 4.
 

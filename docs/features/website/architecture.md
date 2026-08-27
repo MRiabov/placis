@@ -72,7 +72,7 @@ scratch. Trade does not pick the website template 1:1.
 ## Editing (the website editor)
 
 The website editor is one workspace with two surfaces plus global nav
-([design decisions](design-decisions.md) 16):
+([design decision record](design-decisions.md) 16):
 
 - **Canvas** — renders the selected website page live from its website sections. On a wide
   screen this is the wide column; on a small screen the canvas is the screen until they open
@@ -176,7 +176,7 @@ tools (`update_slot`, `cleanup_image`, `generate_image`, website styles changes,
 reorder, SEO/website form updates, website page creation, website-publication-readiness). Two
 modes — plan (approve a concrete plan first) and continuous (bounded direct edits) — share the
 same tool surface. Voice grants no extra authority. On `/cms/website`, empty composer turns the
-voice agent on (orb, chatbot hidden). Look: [design decisions](design-decisions.md) 18.
+voice agent on (orb, chatbot hidden). Look: [design decision record](design-decisions.md) 18.
 
 ## Where things stand
 

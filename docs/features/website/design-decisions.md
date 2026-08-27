@@ -1,9 +1,9 @@
-# Website design decisions
+# Website design decision record
 
 Look and interaction for The CMS website editor.
 Architecture stays in [ADR.md](ADR.md). Screens: [frontend.md](frontend.md). Tokens:
 [CMS design.md](../../general-architecture/cms/design.md). CMS nav / New chat / theme:
-[CMS design decisions](../../general-architecture/cms/design-decisions.md). Mock:
+[CMS design decision record](../../general-architecture/cms/design-decisions.md). Mock:
 [cms.html](../../design/cms.html).
 
 Status: decided (2026-08-26, product owner). Update an entry (keeping the old decision + date)
@@ -17,7 +17,7 @@ instead of silently rewriting history.
    The three surfaces remain canvas, workspace, editing panel; they do not all sit open at once.
    Two-panel: no right column and no Edit handle; see 12. (2026-08-26)
    Left nav / Profile / Media library as Profile child / no AI tools item / narrow overlay:
-   [CMS design decisions](../../general-architecture/cms/design-decisions.md) 1 (moved from this
+   [CMS design decision record](../../general-architecture/cms/design-decisions.md) 1 (moved from this
    entry, 2026-08-27).
 
 2. **Website assistant is a pinned composer, not a toolbar button** — No toolbar **Website
@@ -78,7 +78,7 @@ instead of silently rewriting history.
    not a status card of labels. (2026-08-27)
 
 4. **Opening hours picker is Google Calendar-style** — moved to
-   [Details design decisions](../business-profile/details/design-decisions.md) 1 (2026-08-27).
+   [Details design decision record](../business-profile/details/design-decisions.md) 1 (2026-08-27).
    Persistence: [details ADR](../business-profile/details/ADR.md) 6. (2026-08-26)
 
 5. **Top menu and footer are Content, not workspace items** — Select the bar on the canvas;
@@ -99,17 +99,17 @@ instead of silently rewriting history.
    Add below / website-component picker and no depth-2 explainer. (2026-08-26)
 
 6. **Certifications and reviews layout is 1fr | 2fr** — moved to
-   [Certifications and reviews design decisions](../business-profile/certifications-and-reviews/design-decisions.md) 1
+   [Certifications and reviews design decision record](../business-profile/certifications-and-reviews/design-decisions.md) 1
    (2026-08-27). Website editor reviews Content is **that website section’s** ordered list (see 15).
    Product: [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md).
    (2026-08-26)
 
 7. **The yellow strip is mock-only states** — moved to
-   [CMS design decisions](../../general-architecture/cms/design-decisions.md) 2 (2026-08-27).
+   [CMS design decision record](../../general-architecture/cms/design-decisions.md) 2 (2026-08-27).
    (2026-08-26)
 
 8. **The CMS is viewport-locked, not a scrolling document** — CMS window lock and inner-region
-   scroll: [CMS design decisions](../../general-architecture/cms/design-decisions.md) 3
+   scroll: [CMS design decision record](../../general-architecture/cms/design-decisions.md) 3
    (moved 2026-08-27). (2026-08-26)
    The website editor canvas does **not** scroll the website page: the page is clipped to the
    stage. (2026-08-26)
@@ -194,7 +194,7 @@ instead of silently rewriting history.
     (2026-08-26)
 
 16. **The CMS is narrow-first** — Nav overlay / wide sidebar / Open destinations:
-    [CMS design decisions](../../general-architecture/cms/design-decisions.md) 4
+    [CMS design decision record](../../general-architecture/cms/design-decisions.md) 4
     (moved from this entry, 2026-08-27). (2026-08-27)
     **Narrow (≤1100px):** Workspace bottom
     bar is **Sites only**. Website assistant default is **collapsed**. Canvas website-width
@@ -213,7 +213,7 @@ instead of silently rewriting history.
     restores Desktop; crossing to narrow still selects Mobile. (2026-08-27)
 
 17. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Theme tokens and
-    New chat prompt: [CMS design decisions](../../general-architecture/cms/design-decisions.md) 5
+    New chat prompt: [CMS design decision record](../../general-architecture/cms/design-decisions.md) 5
     (moved from this entry, 2026-08-27). Token table:
     [CMS design.md](../../general-architecture/cms/design.md). Website-editor Voice stays the
     canvas orb (decision 18). (2026-08-27)
