@@ -247,6 +247,10 @@ function setWorkspaceOpen(open) {
   stripButton("workspace")?.classList.toggle("on", open);
 }
 
+document.getElementById("workspace")?.addEventListener("click", (event) => {
+  if (event.target.closest("[data-workspace=collapse]")) setWorkspaceOpen(false);
+});
+
 function showWorkspacePanel(name) {
   railPanels.forEach((panel) => panel.classList.toggle("is-hidden", panel.dataset.railPanel !== name));
 }

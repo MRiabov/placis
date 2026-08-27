@@ -803,12 +803,13 @@ body.is-shot .viewtabs-fab { display: none !important; }
 .cms-panel-title {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   margin-bottom: 10px;
   font-size: 13px;
   font-weight: 600;
 }
+.cms-panel-title > span { flex: 1 1 auto; min-width: 0; }
+.cms-workspace-collapse { display: none; }
 .cms-content-image-picker { display: none; margin-top: 8px; }
 #contentPanel.is-image-focus .cms-content-image-picker { display: grid; gap: 8px; }
 .cms-page-list { display: grid; gap: 2px; }
@@ -969,6 +970,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
 }
 
 .cms-editor-canvas {
+  --cms-assistant-collapsed-height: 7rem;
   position: relative;
   display: flex;
   min-width: 0;
@@ -1109,7 +1111,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
   position: absolute;
   z-index: 21;
   left: 50%;
-  bottom: calc(50% + 24px);
+  bottom: calc(12px + 50% + 8px);
   display: flex;
   gap: 8px;
   transform: translateX(-50%);
@@ -1136,7 +1138,6 @@ body.is-shot .viewtabs-fab { display: none !important; }
   color: var(--cms-text);
 }
 .cms-assistant-overlay {
-  --cms-assistant-collapsed-height: 7rem;
   position: absolute;
   z-index: 20;
   left: 50%;
@@ -1178,7 +1179,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
   bottom: calc(12px + var(--cms-assistant-collapsed-height) + 8px);
 }
 @media (min-width: 1101px) {
-  .cms-assistant-overlay {
+  .cms-editor-canvas {
     --cms-assistant-collapsed-height: 3.25rem;
   }
   .cms-editor-canvas.is-assistant-collapsed .cms-assistant-overlay {
@@ -2052,6 +2053,37 @@ body.is-shot .viewtabs-fab { display: none !important; }
     width: auto;
     min-width: 0;
     height: 52px;
+  }
+  .cms-panel-title {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: -4px 0 10px;
+    background: var(--cms-surface);
+    padding: 4px 0 8px;
+  }
+  .cms-workspace-collapse {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: var(--cms-text-muted);
+    cursor: pointer;
+  }
+  .cms-workspace-collapse:hover,
+  .cms-workspace-collapse:focus-visible {
+    color: var(--cms-text);
+  }
+  .cms-workspace-collapse svg { width: 15px; height: 15px; }
+  .cms-ask-pills {
+    bottom: calc(12px + env(safe-area-inset-bottom) + 50% + 8px);
+  }
+  .cms-editor-canvas.is-assistant-collapsed .cms-ask-pills {
+    bottom: calc(12px + env(safe-area-inset-bottom) + var(--cms-assistant-collapsed-height) + 8px);
   }
   .cms-assistant-overlay {
     bottom: calc(12px + env(safe-area-inset-bottom));

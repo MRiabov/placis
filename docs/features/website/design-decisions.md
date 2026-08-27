@@ -69,6 +69,8 @@ instead of silently rewriting history.
    trash is **expanded-only** (hidden while reduced, desktop and mobile). **Mobile** (≤1100px)
    collapsed stays two rows (overlay bar + composer, no trash) — that height reads well there.
    Desktop collapsed pills sit just above the bar. (2026-08-26)
+   Apply / Reject sit immediately above the website assistant overlay (collapsed and
+   expanded). They are not at the vertical middle of the canvas. (2026-08-27)
 
 3. **Website publication blockers are jumps** — The dropdown heading is **Website publication
    is blocked:** then one **silent** (no background) button per blocker, with a Lucide
@@ -186,6 +188,9 @@ instead of silently rewriting history.
     the end. The list (and Content) opens above that bar, not beside it. (2026-08-26)
     Safe-area padding on that bar. The list/Content sheet stays a cap so the canvas remains
     visible (~45vh). (2026-08-27)
+    The open list / Content has the same reduce chevrons as the website assistant, on the
+    left of the sheet title. That hides the sheet back to the bottom bar so the canvas is
+    not covered. (2026-08-27)
 
 13. **The website editor control is Publish** — Owner copy is the verb **Publish** (toolbar
     dropdown), not the noun **website publication**. Blocked heading: **Publishing is
