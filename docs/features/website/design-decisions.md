@@ -212,3 +212,9 @@ instead of silently rewriting history.
     **Wide (≥1101px):** sidebar stays permanently collapsible (default collapsed icon rail,
     hover peek, click to pin). Profile icon still goes to Business details. Sites/Ads/Profile
     do not invent a second global nav. (2026-08-27)
+
+17. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Satoshi, body tracking `-0.01em`,
+    light weights (`400` / `450` / `500` / `600`), ink `#13120a`, `--secondary` `#f4f4f5`,
+    zinc-600 idle rows, zinc-950/6% active fill, stone `#e7e5e4` hairline on the prompt box.
+    Do not invent a second palette. Source: placis-web `globals.css` + `marketingSite.ts`.
+    (2026-08-27)
