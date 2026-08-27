@@ -44,6 +44,7 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   On narrow, Desktop / Tablet / Mobile are icons so Publish fits. Canvas native widths
   Desktop 1080 / Tablet 760 / Mobile 390; scale down to fit the stage (`transform: scale`,
   never above 1). Do not reflow the contractor website to the CMS width.
+  Canvas website scroll pad clears the website assistant overlay so last sections stay reachable.
   On narrow, the open list / Content title row is compact; the whole row hides the sheet
   (Add a website page stays its own hit).
 - Look clones the placis-web dashboard theme ([design-decisions.md](design-decisions.md) 17):

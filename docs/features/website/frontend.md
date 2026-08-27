@@ -173,6 +173,7 @@ on, **Send** when Plan is off (continuous).
 **Quiet by default.** On a **narrow** screen the canvas is the destination until they open
 destinations. The CMS is viewport-locked (PWA): the window does not
 scroll. The website page scrolls inside the canvas stage; the website assistant thread scrolls.
+Last website sections can scroll clear of the website assistant overlay (and Apply / Reject).
 See [design-decisions.md](design-decisions.md) 8 and 16.
 
 ```text

@@ -180,6 +180,7 @@ function setAskFirst(on) {
   }
   badge?.classList.toggle("is-hidden", !on);
   stripButton("ask-first")?.classList.toggle("on", on);
+  requestAnimationFrame(syncCanvasScale);
 }
 
 function setPublication(open) {
@@ -417,6 +418,7 @@ function setAssistantExpanded(open = true) {
     collapse.title = label;
   }
   stripButton("assistant")?.classList.toggle("on", !expanded);
+  requestAnimationFrame(syncCanvasScale);
 }
 
 document.querySelectorAll("[data-scene]").forEach((node) => {
@@ -562,6 +564,25 @@ function syncCanvasScale() {
   canvasFrame.style.transformOrigin = "top left";
   canvasScale.style.width = `${native * scale}px`;
   canvasScale.style.height = `${availH}px`;
+  const site = canvasFrame.querySelector(".fake-site");
+  if (site && editorCanvas) {
+    const canvasRect = editorCanvas.getBoundingClientRect();
+    let coverTop = canvasRect.bottom;
+    const overlay = document.getElementById("assistantOverlay");
+    if (overlay) {
+      const overlayRect = overlay.getBoundingClientRect();
+      if (overlayRect.height > 0) coverTop = Math.min(coverTop, overlayRect.top);
+    }
+    const pills = document.getElementById("askPills");
+    if (pills && !pills.classList.contains("is-hidden")) {
+      const pillsRect = pills.getBoundingClientRect();
+      if (pillsRect.height > 0) coverTop = Math.min(coverTop, pillsRect.top);
+    }
+    const visualCover = Math.max(0, canvasRect.bottom - coverTop) + 12;
+    const pad = `${Math.ceil(visualCover / scale)}px`;
+    site.style.setProperty("--cms-canvas-scroll-pad", pad);
+    site.style.paddingBottom = pad;
+  }
 }
 
 document.querySelectorAll("[data-viewport]").forEach((button) => {
@@ -666,6 +687,8 @@ if (isNarrow()) {
   setNavOpen(false);
 }
 if (canvasStage) new ResizeObserver(syncCanvasScale).observe(canvasStage);
+const assistantOverlay = document.getElementById("assistantOverlay");
+if (assistantOverlay) new ResizeObserver(syncCanvasScale).observe(assistantOverlay);
 syncCanvasScale();
 syncAssistantSubmit();
 window.matchMedia("(max-width: 1100px)").addEventListener("change", (event) => {
