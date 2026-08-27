@@ -10,7 +10,8 @@ Related: [PRD](prd.md), [editing.md](editing.md), [assistant.md](assistant.md),
 
 The contractor-facing website editor in `frontend-2`, under `/cms/website` (left-nav **Sites**).
 Details, Projects, and Certifications and reviews still appear on website pages; they are
-edited on their own screens, not in this website editor. The media library is `/cms/media`.
+edited on their own screens ([business profile](../business-profile/README.md)), not in this
+website editor. The media library is `/cms/media`.
 Attach and pick from Content when an image is selected on the canvas. Ads and the live
 contractor website are separate.
 
@@ -39,14 +40,11 @@ Loading placeholders: every screen, per field / row / website slot — not swapp
 | Route | Purpose |
 | -- | -- |
 | `/cms/website` | Website editor (workspace, canvas, website assistant, website publication) |
-| `/cms/media` | Media library under Profile (full screen) — owned by [media library](../other/media/README.md) |
-| `/cms/projects` | Projects under Profile |
-| `/cms/certifications-and-reviews` | Certifications and reviews under Profile |
-| `/cms/certifications-and-reviews/new` | Create owner-written review (route for now; look TBD) |
-| `/cms/details` | Details (business profile) — owned by [details](../other/details/frontend.md) |
 
-No `/cms/proof`. No `/cms/profile` (Profile is a disclosure). The media library is `/cms/media`
-under Profile; attach from Content when an image is selected. See [media library](../other/media/README.md).
+Left nav, New chat, `/cms/details`, `/cms/projects`, `/cms/certifications-and-reviews`,
+`/cms/media`, `/cms/ads`: [The CMS (sidebar + main area)](../../general-architecture/cms/frontend.md).
+
+No `/cms/proof`. No `/cms/profile` (Profile is a disclosure). Attach from Content when an image is selected. See [media library](../other/media/README.md).
 
 ## Website editor (`/cms/website`)
 
@@ -93,7 +91,7 @@ Two surfaces plus global nav, one unpublished website:
     not this panel. No Add below picker and no depth-2 explainer on this panel.
   - **Website form** — title, typed fields, privacy notice, `submit_action`.
   - **Projects** — the project gallery for that website section. Title / description / cover
-    stay at `/cms/projects`.
+    stay at `/cms/projects` ([projects frontend](../business-profile/projects/frontend.md)).
   - Everything else — website slots.
   Click an image on the canvas: Content focused on that image (thumb, pick from the media library,
   upload/drop). SEO stays website-page-level in its own rail panel. Website versions
@@ -243,66 +241,3 @@ may attach on the unpublished canvas; the warning is in **Content** when that im
 selected, not copy on the website. Owner approval makes them approved. Website publication
 still requires approved media assets.
 
-## Profile screens this feature owns
-
-Projects and Certifications and reviews sit under Profile next to Business details. See
-[details frontend](../other/details/frontend.md) for the disclosure. Editing those screens
-updates the unpublished website / website editor immediately; the live website changes only on the
-next website publication.
-
-### Projects (`/cms/projects`)
-
-A working Projects screen in this slice: title, description, cover photo from the media library.
-Not a stub.
-
-### Certifications and reviews (`/cms/certifications-and-reviews`)
-
-This screen is the **picker** for **all reviews** and for pinning **top reviews** (ads).
-Layout (function, not pixels): **1fr certifications | 2fr reviews**. On a wide screen
-certifications sit in a card. On a narrow screen (≤1100px) the layout is one column and
-**Certifications** is a flat heading (same level as **Top reviews**), not a card.
-
-**Left — certifications:** definition rows for this trade/country. Each row: badge (already on
-the definition; it is what the website paints) + name + checkbox. The contractor mostly ticks.
-No upload-your-badge. Unchecking is `removed`. HTTP: `GET`/`PUT /v1/business-profile/certifications`
-with `available[]`.
-
-**Right — reviews:** Google-style cards in a 3–4 column grid (stars, author, review citation, origin).
-Three headings, same look: **Top reviews**, **All reviews**, **Archive**. Top reviews and All
-reviews are ordinary sections (not a dashed drop well). **Top reviews** sit first,
-featured-first (the first cards in that heading are what **ads** start with). Cap **30**.
-Checking an extra card when 30 are already top is refused (visible error). A newly pinned
-card **appends** (least featured). **All reviews** is `in_pool` and not top (the heading
-excludes cards already under Top reviews). Pinning or reordering Top reviews does **not**
-rewrite reviews website sections.
-
-**Reorder / pin by drag-and-drop.** Six-dot grip (2×3) on hover on **every** review card (Top
-reviews and All reviews). Drop onto Top reviews to pin; drop onto All reviews to unpin. Reorder
-inside Top reviews is featured-first. Keep drag-and-drop on narrow screens (grip always
-visible; no hover-only). The six dots stay compact; the hit is 44px. Do not fall back to up/down-only.
-
-Unpin / reorder of **top reviews** updates `is_top` / `top_position` only. Live website waits
-for the next website publication. Website editor reviews Content edits **that website section’s**
-ordered list (add from all reviews, remove, reorder; cap from the website component).
-If a reviews website section has zero reviews: keep it **empty** (no fake copy; do not hide
-the website component).
-
-**Archive** any review (any origin): it leaves all reviews and top reviews, and is dropped from
-every reviews website section array (then compact). Toast with **Undo**
-(unarchives), then a gap, then **Archive**. **Archive** is a collapsible heading (chevron down on the right; not a toolbar
-button). Default collapsed. Unarchive from there. Not a hard
-delete. Re-import must **not** recreate an archived imported row (keep the row, skip that
-external id until unarchived).
-
-Toolbar: import from the Google Maps listing on Business details; **Link your Facebook**
-(paste URL this pass; type-to-search TBD) only when unlinked, otherwise import from that
-Facebook URL; **+** → create review. No Archive toolbar control. No Facebook Login. Not Ads
-Connect Meta.
-
-**Create review** is a **route for now** at `/cms/certifications-and-reviews/new` (TBD: a full
-route is heavy; a modal is also so-so — do not treat the route as locked). Fields: author name,
-rating 1–5, body (`maxLength` 500), optional date. Origin = owner. Lands in all reviews; the
-owner can mark it top on the list. **Owner-written reviews are editable after create** (same
-fields). Imported Google/Facebook reviews are not edited (archive if they should not stay).
-Cards / website / ads paint the **review citation** (`maxLength` 500, about two or three sentences);
-imported `body` is stored in full.

@@ -100,9 +100,10 @@ the website editor hydrates undo/redo from website edit history; Ctrl+Z is in-me
 PATCH. See [editing.md](editing.md). Website assistant edits follow [assistant.md](assistant.md):
 Ask first waits for Apply / Reject (website editor PATCH, then record metadata); instant apply
 is the website editor PATCHing as tools succeed. Website publication writes a
-website version. **Details** (the business profile), **Projects**, **Certifications and
+website version. **Details**, **Projects**, **Certifications and
 reviews**, and the **media library** are website page content (placeholders, project galleries,
-reviews, photos). They are separate entities. Certifications and reviews is the picker for
+reviews, photos) edited on [business profile](../business-profile/README.md) and
+[media library](../other/media/README.md) screens. They are separate entities. Certifications and reviews is the picker for
 **all reviews** and for pinning **top reviews** (ads). The website editor reviews Content edits **that
 website section’s** ordered `website_slot_reviews` (add from all reviews, remove, reorder;
 cap from the website component). They are not generic website slots. The edit loop

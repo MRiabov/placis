@@ -118,7 +118,7 @@ func homePrefixes(home string) []string {
 	case "media":
 		return []string{"docs/features/other/media", "internal/media"}
 	case "details":
-		return []string{"docs/features/other/details", "internal/details"}
+		return []string{"docs/features/business-profile/details", "internal/details"}
 	case "website":
 		return []string{"docs/features/website", "internal/website", "apps/contractor-website"}
 	default:
@@ -221,7 +221,7 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	case strings.Contains(slash, "cmd/ci/check-dont-say/"):
 		return true
-	case slash == "docs/website/design" || strings.HasPrefix(slash, "docs/website/design/") || strings.Contains(slash, "/docs/website/design/"):
+	case slash == "docs/design" || strings.HasPrefix(slash, "docs/design/") || strings.Contains(slash, "/docs/design/"):
 		return true
 	case strings.HasSuffix(slash, "generated/api-types.ts"):
 		return true

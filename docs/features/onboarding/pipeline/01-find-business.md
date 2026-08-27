@@ -33,7 +33,7 @@ Contractor submits business lookup on `/onboarding/find`
    `started_from` = `company_registry` / `google_maps_listing` / both via sources.
 3. Record `online_research_consent_at`.
 4. Persist the selected company registry record and/or attach the Maps place on **this** onboarding session. Wrong company is not a new run: attach or change sources on the same row.
-5. Initialize [business profile](../../other/details/persistence.md): `business_profiles` with that
+5. Initialize [business profile](../../business-profile/details/persistence.md): `business_profiles` with that
    `tenant_id`, empty/unknown details, `last_edit_id` and `accepted_edit_id` null. Registry fills
    legal identity; Maps fills contact/listing fields. Both: registry wins legal identity
    ([build-profile](build-profile.md)).
@@ -52,7 +52,7 @@ onboarding session column.
 `tenant_id`); registry/Maps attach rows; profile increments via [build-profile](build-profile.md).
 
 Schemas: [persistence.md](../persistence.md), [ETL](../../etl/persistence.md),
-[details](../../other/details/persistence.md). Do not re-define them here.
+[details](../../business-profile/details/persistence.md). Do not re-define them here.
 
 ## Fail
 
