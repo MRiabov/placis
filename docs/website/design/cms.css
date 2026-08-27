@@ -824,6 +824,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
 }
 .cms-panel-title {
   display: flex;
+  position: relative;
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
@@ -2107,16 +2108,22 @@ body.is-shot .viewtabs-fab { display: none !important; }
     position: sticky;
     top: 0;
     z-index: 1;
-    margin: -4px 0 10px;
+    min-height: 36px;
+    margin: 0 0 6px;
     background: var(--cms-surface);
-    padding: 4px 0 8px;
+    padding: 0;
+    gap: 6px;
   }
   .cms-workspace-collapse {
-    display: grid;
-    width: 44px;
-    height: 44px;
-    flex: 0 0 auto;
-    place-items: center;
+    display: flex;
+    position: absolute;
+    inset: 0;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 8px;
     border: 0;
     border-radius: 0.5rem;
     background: transparent;
@@ -2125,9 +2132,26 @@ body.is-shot .viewtabs-fab { display: none !important; }
   }
   .cms-workspace-collapse:hover,
   .cms-workspace-collapse:focus-visible {
+    background: var(--cms-surface-active);
     color: var(--cms-text);
   }
-  .cms-workspace-collapse svg { width: 15px; height: 15px; }
+  .cms-workspace-collapse svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+  }
+  .cms-panel-title > span {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+    padding-left: 28px;
+  }
+  .cms-panel-title > .cms-icon-button {
+    position: relative;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+  }
   .cms-ask-pills {
     bottom: calc(12px + env(safe-area-inset-bottom) + 50% + 8px);
   }
