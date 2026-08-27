@@ -94,6 +94,9 @@ Profile is not a route. Clicking it only expands or collapses the group.
 
 ## Screens
 
+Headings on Details, Projects, Certifications and reviews, Media library, and Ads have
+no decorative icon. On narrow, Open destinations stays inline with the heading.
+
 ### Business details (`/cms/details`)
 
 The Details view. The heading is **Business details**. Editing the business profile here

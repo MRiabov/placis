@@ -224,6 +224,8 @@ instead of silently rewriting history.
     **Wide (≥1101px):** sidebar stays permanently collapsible (default collapsed icon rail,
     hover peek, click to pin). Profile icon still goes to Business details. Sites/Ads/Profile
     do not invent a second global nav. (2026-08-27)
+    Profile and Ads headings have no decorative boxed icon. Open destinations on narrow
+    stays. Viewport controls stay on `/cms/website` only. (2026-08-27)
     Canvas widths are native: Desktop **1080**, Tablet **760**, Mobile **390**. If the stage is
     wider, Mobile and Tablet stay those widths (do not stretch). If the stage is narrower, CSS
     `transform: scale()` shrinks the frame to fit; the contractor website still lays out at the
