@@ -260,8 +260,8 @@ instead of silently rewriting history.
 
 18. **Website editor voice agent is an orb, not a full-screen takeover** — Empty composer
     turns the **voice agent** on (`/cms/website` only). The chatbot overlay is hidden so the
-    website stays viewable. A soft orb (`min(5.5rem, 30vw)`) sits bottom-right. Blur of
-    the canvas behind it falls off from the center (not a hard frosted disc). Clicks pass
+    website stays viewable. A soft orb (`min(5.5rem, 30vw)`) sits bottom-right. A glow
+    falls off from the center with no hard edge. Clicks pass
     through except Restore chatbot and close. Restore chatbot is **text** next to the orb,
     vertically centered to it. A small close on the
     top-right of the orb also restores. Restoring is sticky while the field stays empty
