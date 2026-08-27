@@ -5,11 +5,10 @@ business lookup (the tenant may still be `unactivated`). Cross-tenant isolation
 is proven by integration tests (two tenants, assert reads/writes/files are blocked).
 
 Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic dumps: website component
-`props` / `design`, website slot `value`, business-research `raw` (kinds with no
-listing table), `google_maps_listings.raw` (ETL fetch body), Stripe and business research /
-website preview event payloads, `ai_generations` traces (`input` / `internal_reasoning` /
-`output` / `tool_calls` / `applied_changes`), audit `before` / `after`, website edit history
-`before` / `after` (one field or website slot), and ads `platform_refs`.
+`props` / `design`, website slot `value`, ETL fetch `raw` (one column per extract-type fetch
+table), Stripe and website preview event payloads, `ai_generations` traces (`input` /
+`internal_reasoning` / `output` / `tool_calls` / `applied_changes`), audit `before` / `after`,
+website edit history `before` / `after` (one field or website slot), and ads `platform_refs`.
 `website_manifest` is jsonb because it is a published website copy (`website.v1`), not because
 the tree is polymorphic. Structural data is real columns. Where a website slot or website section value came from is
 `origin` (not a blob, not profile details). Profile history is typed `business_profile_edits`
@@ -44,8 +43,9 @@ never copied into a second `persistence.md`.
 | Owner | Postgres schema (namespace) | Tables |
 | --- | --- | --- |
 | [auth](../features/other/auth/persistence.md) | `auth` | `tenants`, `tenant_memberships` |
-| [onboarding](../features/onboarding/persistence.md) | `onboarding` | onboarding sessions, business research, `google_maps_listings`, website previews, website activations, `stripe_events` |
-| [details](../features/other/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews) |
+| [onboarding](../features/onboarding/persistence.md) | `onboarding` | onboarding sessions, client interview submissions, website activations, `stripe_events` |
+| [ETL](../features/etl/persistence.md) | `etl` | `runs`, per-type fetches, `google_maps_listings` (hours, reviews, photos) |
+| [details](../features/other/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews, Facebook / Instagram profile and posts) |
 | [website](../features/website/persistence.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions), projects, certifications |
 | [media library](../features/other/media/persistence.md) | `media_library` | `media_assets` |
 | [ads](../features/ads/persistence.md) | `ads` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |

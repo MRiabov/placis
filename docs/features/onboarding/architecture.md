@@ -19,8 +19,9 @@ find (company registry and/or Google Maps) + online research consent
 
 Step docs: [pipeline/](pipeline/README.md). Numbers are DAG order: 02 starts before 03.
 
-At most five 02 waves per tenant per rolling 30 minutes (one wave = one enqueue of the job set, not
-one job). A 6th wave waits until the oldest of those five is 30 minutes old. Business lookup still
+At most five 02 `StartRun` enqueues per tenant per rolling 30 minutes (one enqueue = one
+`StartRun`, not one ETL run). A 6th enqueue waits until the oldest of those five is 30 minutes
+old. Business lookup still
 returns; the wait is a quiet inline note on Review, not a blocker.
 
 ## Apply the website template
@@ -50,7 +51,8 @@ Owner CMS website publication is v3+.
 From confirm through applying the website template and copy, the backend pushes onboarding session
 events over SSE (on change, not faster than ~2s). The frontend refreshes the checklist. On
 `/onboarding/preview` it rotates complete filled website sections (~2s, image fade). The stream is
-a **mirror** — Postgres is authoritative. The contractor host is not an SSE endpoint.
+a **mirror** — Postgres is authoritative. Business research progress reads `etl.runs`. The
+contractor host is not an SSE endpoint.
 
 ## Where things stand
 

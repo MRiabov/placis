@@ -17,7 +17,7 @@ unsets voice as the active writer). Autosave: `PUT .../text-interview/autosave`.
 ## Must not
 
 - Voice mint, realtime tools, transcript replay.
-- Parallel / research jobs / photo classification.
+- Parallel / research jobs / photo classification (photo kinds are ETL transform).
 - `POST` a new onboarding session on Resume.
 - Complete while required checklist rows are `empty` / `in_progress` / `conflict`.
 - Run a second complete after 04b (exactly one complete → 05).

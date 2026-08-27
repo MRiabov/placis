@@ -1,0 +1,21 @@
+# ETL — tests
+
+ETL has no owner UI. The full-stack onboarding E2E
+([onboarding testing](../onboarding/testing.md)) proves 02 still fills the checklist and writes
+`etl.*` rows. This feature’s own test is **integration** (real Postgres, faked Maps / Facebook /
+Instagram / LLM):
+
+1. **Bootstrap** — `StartRun` with `trigger=onboarding`, kinds including Google Maps, Facebook,
+   Instagram. Assert `etl.runs` (one per kind, shared `enqueue_id`), fetch rows, Maps listing,
+   profile posts / reviews / media library photo kinds.
+2. **Scheduled increment** — second `StartRun` with `trigger=scheduled` and a new review, a new
+   Instagram post, a new photo, and a different marketing phone than the owner typed. Assert new
+   review / post / photo on the business profile; owner-typed marketing phone unchanged
+   (research conflict); photo kind not rewritten for an unchanged content hash.
+3. **Cap** — five onboarding `enqueue_id`s in 30 minutes; a sixth `StartRun(trigger=onboarding)`
+   does not insert runs.
+4. **Skip** — scheduled Instagram with no handle → `status=skipped`, no fetch.
+5. **Isolation** — two tenants; each cannot read the other’s `etl.runs`, fetches, or profile
+   posts.
+
+Step-level asserts: [pipeline/testing](pipeline/testing/README.md).

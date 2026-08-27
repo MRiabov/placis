@@ -7,7 +7,8 @@ pointer here and do not restate these rules.
 Feature `api.md` files:
 
 - [Auth](../features/other/auth/api.md)
-- [Onboarding](../features/onboarding/api.md) (includes website activation)
+- [Onboarding](../features/onboarding/api.md) (includes website activation; SSE
+  reads [ETL](../features/etl/README.md) `etl.runs` — ETL has no public `api.md`)
 - [Website](../features/website/api.md) (unpublished website, website publication, Connect
   website address, projects)
 - [Details](../features/other/details/api.md) (live business profile, certifications, reviews)
@@ -84,7 +85,7 @@ repeat only their own rows.
 | Website styles overrides | columns + bounded jsonb | Named fields: `preset_id`, `primary`, `neutral`, `accent`, `radius`, `density`. Extra keys 4xx. |
 | Ads `platform_refs` | jsonb | **Omit** from first-slice DTOs. When ad posting exists: named fields (`meta_ad_id`, …), not a string map. |
 | Company registry / Maps search | raw ETL cache | `*Read` (id, name, address, …). **Omit** `raw`. |
-| Business research fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
+| Business research / ETL fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
 | Stripe event body | jsonb | **Omit** from `frontend-2`. Activation-status is a closed enum + checkout URL. |
 | LLM traces (`ai_generations`) | jsonb | **Omit.** Website assistant activity cards are named event structs. |
 | Audit `before`/`after` | jsonb | **Omit** from `frontend-2`. |
@@ -101,7 +102,7 @@ repeat only their own rows.
 - `slot_type=json` on GET/PATCH
 - String fields documented as a JSON blob
 - SSE `payload` as unconstrained object
-- Returning `business_research_fetches.raw`, Maps `raw`, Stripe raw, or `ai_generations`
+- Returning ETL fetch `raw`, Stripe raw, or `ai_generations`
   blobs to `frontend-2`
 
 Website component catalog structs are the only polymorphism: discriminator `component_id` /
@@ -135,7 +136,7 @@ Named fields: `code`, `message`, optional `retry_after`.
   stale. `frontend-2` re-GETs with `include_edit_history=true`.
 - `409` ads — `base_updated_at` mismatch. `frontend-2` re-GETs.
 - `413` — oversize PATCH (website editor body cap 64 KB).
-- `429` — business research wave cap or over-chatty PATCH. `Retry-After` / `research_wait_until`.
+- `429` — onboarding ETL enqueue cap or over-chatty PATCH. `Retry-After` / `research_wait_until`.
 
 ## Retries
 

@@ -22,7 +22,9 @@ internal/
   tenancy/        # tenants.go, memberships.go
   onboarding/     # onboarding.go, client_interview.go, orchestrate.go, activation.go
     websitepreview/ #   package.go, events.go (website preview of the unpublished website during onboarding)
-  research/       # service.go + googlemaps/, companyregistry/, facebook/, crawl/, photo/ with fakes
+  etl/            # run.go (StartRun)
+    extract/      #   googlemaps/, facebook/, instagram/, crawl/, photo/ with fakes
+    transform/    #   profile writes: fold, posts, photo classification
   profile/        # profile.go, profile_edits.go, services.go, areas.go, hours.go
   website/        # root: types.go, service.go
     pages/        #   handler.go, service.go, model.go
