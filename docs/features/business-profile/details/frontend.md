@@ -37,12 +37,21 @@ and compliance, then **Opening hours**. Hours is not the first panel.
 Google Calendar-style, same bones as the onboarding AvailabilityPicker, in the CMS palette
 (white, higher contrast). One row per weekday: Opens, to, Closes as a time range. **Closed**
 is the unavailable control on that row (not a checkbox under a day column). Copy applies that
-day’s hours to the following days. Add a time block is part of the look. These are when they
+day’s hours to the following days. One range per day — no Add a time block. These are when they
 will pick up the **marketing phone**, not appointment copy. Shown on the contact website page.
-Do **not** show an Appointment note field; persistence has no `note` column. Persistence is
-still one Opens / Closes / Closed per day; extra time blocks are the target look. On a
-narrow screen the day and Closed / add / copy sit on the first line; Opens and Closes chips
+Do **not** show an Appointment note field; persistence has no `note` column. On a
+narrow screen the day and Closed / copy sit on the first line; Opens and Closes chips
 sit full-width below (Google Calendar on a small screen). Look: [design decision record](design-decision-record.md).
+
+#### Service areas
+
+Google Maps territory lookup, not a textarea. Owner picks a place (for example Dublin); the
+UI shows that territory. Backend stores `locality` and `radius_km` (for Meta when ad posting
+exists).
+
+#### Featured services
+
+A list (`business_profile_services`), list-item PATCH, not a textarea.
 
 #### Logo picker
 
@@ -65,6 +74,13 @@ Same link pattern (`google_maps_listing_url`). When linked, the same card from t
 Do not add unless asked: founder columns, brand tone / typography / colors.
 
 See [README.md](README.md) for the rest of what it edits.
+
+#### Notification after `update_details`
+
+Not a control on this screen. Ads and the website assistant call the one **`update_details`**
+tool ([api.md](api.md)); the shared **notification** (OK / Revert) is
+[frontend.md](../../../general-architecture/frontend.md). Revert is
+`POST /v1/business-profile/edits/{id}/undo`.
 
 ## Out of scope
 

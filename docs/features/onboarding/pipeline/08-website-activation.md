@@ -71,6 +71,21 @@ without the strip (live website, not website preview). Unpublished website from 
 has written) is what they edit. First **owner** website publication is v3+ and the first
 rollback-eligible website version.
 
+## After website activation (billing)
+
+Unpaid access to the application is **forbidden**. Copy later: **keep your Placis Pro
+subscription to continue to edit and host the website** — not “Upgrade.”
+
+1. **One upfront pay** (this checkout; predecessor EUR 4900 stays until that epic).
+2. Then about **50 EUR / month**. If it lapses, the website is **unpublished**.
+3. **Do not commit to Clerk Billing yet.** Optimistic DB cache of subscription status; refresh
+   when expected.
+4. Monthly **usage credit** is visible in the UI as **$**. OpenRouter (or the generation hop)
+   prices are **×5** for the owner: $50 shown ⇒ they can spend **$10** of OpenRouter cost.
+   Persist remaining credit; check it on LLM calls.
+
+Currency for the retainer is **EUR**. Usage credit display is **$**.
+
 ## Invariants
 
 - Same `tenant_id` as 01.

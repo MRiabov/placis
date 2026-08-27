@@ -61,11 +61,14 @@ a website publication is
 - `website_publications` — one row is a website version: `id`, `tenant_id` fk, `version_number`,
   `status` (`published`/`archived`/`rolled_back`), `active`, `manifest_version`,
   `website_manifest` jsonb, `published_by` (`onboarding`/`owner`),
-  `rollback_of_publication_id` nullable, `published_at`; unique `(tenant_id, version_number)`.
-  Website rollback lists and reactivates `published_by=owner` only. Onboarding 07/08 (and 05-retry)
+  `website_address_id` nullable fk (required on owner CMS POST; onboarding 07/08 write the
+  preview host), `rollback_of_publication_id` nullable, `published_at`; unique
+  `(tenant_id, version_number)`.
+  Website rollback lists and reactivates `published_by=owner` only, **on that host**. Onboarding 07/08 (and 05-retry)
   rows stay out of that list; the API refuses them by id.
 - `website_publication_issues` — `id`, `publication_id` fk, `code`, `message`, `entity_type`
-  nullable, `entity_id` nullable
+  nullable, `entity_id` nullable. **Post-publication only.** Unpublished jumpable blockers are
+  computed on the editor GET (`blockers[]`), not rows here.
 - `website_slot_reviews` — `id`, `tenant_id` fk, `slot_id` fk, `business_profile_review_id` fk,
   `position`; unique `(slot_id, business_profile_review_id)`. One ordered array **per reviews
   website section**, from the pool, length ≤ that website component’s max (some layouts take
@@ -129,8 +132,9 @@ Kinds:
   Assistant I/O uses `path`; storage uses `page_id`. Each `page_id` at most once per tree.
 - `text` — `label` (length-bounded), `children` (may be empty in the editor; publication may omit
   empty groups). Heading only, not a link. Parent only.
-- `url` — `label`, `href`. Leaf only. Schemes: `https`, `http`, `mailto`, `tel`. Reject
-  `javascript:` and unbounded hrefs.
+- `url` — `label`, `href`, `url_id` (fk to `website_urls`). Leaf only. Schemes: `https`, `http`,
+  `mailto`, `tel`. Reject `javascript:` and unbounded hrefs. The picker does **not**
+  `POST /pages`. Typing a new URL inserts a `website_urls` row.
 
 Clickable vs heading is `kind`, not a reorder flag. `reorder` sends nested `id` / `children`
 only. Heading → link is remove + add.
@@ -147,11 +151,27 @@ Human PATCH may replace a whole tree (including a wipe). Assistant `remove_entri
 There is no unpublished snapshot per edit and no per-page version table. The unpublished website is
 in-place `UPDATE`. Website edit history is typed increments, like `business_profile_edits`.
 
+- `website_urls` — reusable URL list for top menu / footer `kind: url` nodes. `id`, `tenant_id`
+  fk, `href` (`string`, URL, `maxLength` 2048), `label` (`string`, `maxLength` 80),
+  timestamps. Unique `(tenant_id, href)`. Typing a new URL in the combobox inserts a row. Does
+  not create a website page.
+- `website_assistant_threads` — one per tenant. `id`, `tenant_id` fk unique, `created_at`,
+  `last_assistant_edit_at` nullable. Retain if last **assistant edit** is within 24 hours;
+  else the next open starts a new thread. **Clear context** inserts a new row immediately.
+- `website_assistant_turns` — `id`, `thread_id` fk, `tenant_id` fk, `kind` (`owner` / `reply` /
+  `activity`), `body` (`string` + `maxLength`, markdown for reply), `summary` (`string` +
+  `maxLength`, owner-visible activity line), `created_at`. Never store `ai_generations` blobs
+  here.
+
+Logo on Website styles is `business_profiles.logo_media_asset_id` (Details). Do not add a
+logo URL column on `website_settings`. Website publication may emit `{{logo_url}}` **only from
+that media library file**.
+
 ## Indexes
 
 Unique: `website_addresses.hostname`, at most one `is_primary=true` per `tenant_id`;
 `(tenant_id, website_pages.path)`, `(tenant_id, website_forms.form_key)`,
 `(tenant_id, website_publications.version_number)`, `website_settings.tenant_id`,
-`menus.tenant_id`. Lookup:
+`menus.tenant_id`, `(tenant_id, website_urls.href)`. Lookup:
 `(tenant_id, status, created_at)` on website pages; `(tenant_id, created_at desc)` and
 `(tenant_id, batch_id)` on `edit_history`.

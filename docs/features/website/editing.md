@@ -72,7 +72,7 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 
 - `tenant` (id, website address, name); `page` (id, path / website page path, title,
   page_type, status, validation status,
-  website-publication-blocker count).
+  unpublished `blockers[]`).
 - `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`,
   `seo_noindex`, `seo_primary_keyword`; tenant **website styles** (preset + overrides from
   `website_settings`, shown here, stored once per tenant).

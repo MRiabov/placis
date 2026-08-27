@@ -132,12 +132,14 @@ area, and the date.
     owner approval); no personal data in copy. If the owner types a marketing statement, or
     **prompts** the Review AI orb to write one, we allow it. Approve is not blocked. If that
     copy includes a detail (years in business vs `established_year`, and the same class of
-    Details fields), the ads generator makes a **separate tool call** that writes Details —
-    one `business_profile_edits` increment, same writer as Details / onboarding. Recorded in
+    Details fields), the ads generator calls **`update_details`** (one tool, one
+    implementation — also the website assistant; [details HTTP](../business-profile/details/api.md)).
+    Recorded in
     `ai_generations` as its own tool call. Not a side effect of the ads PATCH, Approve, or the
     copy-rewrite tool. A **notification** (OK / Revert) appears bottom-right; leaving the
     screen keeps the write. Character limits, uploads still in flight, and failed uploads
     still block.
+    (2026-08-27): `update_details` is the shared Details tool, not an Ads-only writer.
     Previous decision (same day): owner-typed or owner-prompted copy warned inline and did
     not write the business profile; the warning pointed the owner to Details.
     Previous decision: unsupported marketing statements blocked **ad ready to post** until
@@ -269,9 +271,10 @@ area, and the date.
     restores the previous text). Prompt text is required. Copy rewrite is per-field; optional
     selection on `POST …/rewrite` (omit = whole field). Image cleanup: first upload already
     ran a tailored default from visual-issue classification; the orb is a **different**
-    cleanup via shared media library `cleanup_image` `prompt`. Not the website assistant chat. This
-    replaces unprompted Review **Regenerate**. Record the owner prompt with reasoning,
-    output, and tool calls in `ai_generations`.
+    cleanup via `POST /v1/media-assets/{id}/image-edits` (`prompt`). Not the website assistant chat.
+    Not `POST /v1/ads/…/cleanup`. Reject is `POST /v1/media-assets/{id}/reject`.
+    This replaces unprompted Review **Regenerate**. Record the owner prompt with reasoning,
+    output, and tool calls in `ai_generations`. (2026-08-27)
     Previous decision (same day): prompt form was inline in the field, wrapping with the row.
 
 35. **Review ad format preview is Facebook and Instagram placement** (updated 2026-08-25) — The selected

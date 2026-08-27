@@ -56,9 +56,28 @@ decision + date) instead of silently rewriting history.
    is no `note` column and no Appointment note field. Logo is picked from the media library
    (`logo_media_asset_id`). Persist on click-off; no Save details. Picker look is in
    [design decision record](design-decision-record.md). (2026-08-26)
+   One Opens / Closes / Closed per weekday — do not add several ranges per day. Drop extra
+   time blocks from the mock. (2026-08-27)
 
 7. **Certification definitions and ticks are Details tables** — Global `certification_definitions`
    and tenant `business_profile_certification_selections` live in Postgres schema `details`.
    They are not `website` tables and are not named `website_certification_*`. HTTP stays
    `GET`/`PUT /v1/business-profile/certifications`. The website paints selected rows at
    website publication; ads read the same live business profile. (2026-08-26)
+
+8. **Trade is open text** — `business_profiles.trade` is not a closed enum. Certification
+   `available[]` by trade/country must not depend on a closed trade list. There is **no**
+   business-location column; service areas cover where they work. Service areas are a Google
+   Maps territory lookup; `radius_km` is for Meta when ad posting exists. Featured services
+   are the `business_profile_services` list, not a textarea. (2026-08-27)
+
+9. **Notification Revert undoes that profile-history increment** — One governed tool,
+   `update_details` ([api.md](api.md)). Website assistant, Ads generator, and later LLM
+   callers invoke **that** tool — one implementation (the same increment function as click-off
+   `PATCH /v1/business-profile`). The write is applied. **OK** keeps it. **Revert** is
+   `POST /v1/business-profile/edits/{id}/undo` (that `business_profile_edits` increment).
+   Leaving the screen without clicking keeps the write. Not website undo. Shared
+   [notification](../../../general-architecture/frontend.md). (2026-08-27)
+   Previous (same day): any governed tool that writes a detail uses the same Details writer.
+   Previous (same day): Ads may write a detail via a tool call. OK keeps it. Revert is
+   that undo route. Leaving the screen keeps the write. Not website undo.

@@ -456,6 +456,35 @@ body.is-shot .viewtabs-fab { display: none !important; }
   letter-spacing: -0.03em;
   line-height: 1.25;
 }
+.cms-home-chooser {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 28rem;
+}
+.cms-home-card {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--cms-border);
+  border-radius: var(--cms-radius-card);
+  background: #fff;
+  color: var(--cms-text);
+  text-align: left;
+  cursor: pointer;
+}
+.cms-home-card:hover { background: var(--cms-surface-active); }
+.cms-home-card b {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.cms-home-card span {
+  color: var(--cms-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
 .cms-dashboard-prompt-stack {
   display: flex;
   width: 100%;
@@ -1930,6 +1959,11 @@ body.is-shot .viewtabs-fab { display: none !important; }
   font-weight: 700;
   padding: 0 8px;
 }
+.cms-small-button.is-on {
+  background: var(--cms-accent);
+  border-color: var(--cms-accent);
+  color: var(--cms-text-on-accent);
+}
 .cms-visibility { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .cms-toggle {
   appearance: none;
@@ -2357,6 +2391,63 @@ body.is-shot .viewtabs-fab { display: none !important; }
 }
 .cms-profile-card-copy span { color: var(--cms-text-muted); font-size: 12px; }
 .cms-profile-card .button-secondary { flex: 0 0 auto; margin-left: auto; }
+.cms-territory-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 10px;
+  border: 1px solid var(--cms-border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px 12px;
+}
+.cms-territory-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 8rem;
+}
+.cms-territory-copy b { font-size: 14px; font-weight: 600; }
+.cms-territory-copy span { color: var(--cms-text-muted); font-size: 12px; }
+.cms-territory-card label {
+  display: grid;
+  gap: 4px;
+  min-width: 7rem;
+}
+.cms-territory-card label span {
+  color: var(--cms-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+.cms-item-list {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+.cms-item-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.cms-item-row .cms-careers-input { flex: 1 1 auto; }
+.cms-item-remove {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cms-text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.cms-item-remove:hover { background: var(--cms-surface-active); color: var(--cms-text); }
 .cms-certs-layout {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -2545,10 +2636,60 @@ body.is-shot .viewtabs-fab { display: none !important; }
   background-size: cover;
 }
 .cms-media-view-still {
+  position: relative;
   width: 100%;
   max-height: min(28rem, 56vh);
   margin: 0 auto;
 }
+.cms-media-crop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cms-media-view[data-crop="full"] .cms-media-crop-rect { display: none; }
+.cms-media-crop-rect {
+  position: absolute;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 9999px rgb(0 0 0 / 35%);
+  cursor: move;
+  pointer-events: auto;
+  touch-action: none;
+}
+.cms-media-crop-handle {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #fff;
+  background: var(--cms-accent);
+  cursor: nwse-resize;
+}
+.cms-media-focal {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--cms-accent);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 25%);
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+}
+.cms-media-framing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.cms-media-framing span {
+  color: var(--cms-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.cms-media-view.is-compare .cms-media-crop { display: none; }
 .cms-media-view[data-ratio="landscape"] .cms-media-view-still,
 .cms-media-view[data-ratio="landscape"] .cms-media-sweep { aspect-ratio: 3 / 2; }
 .cms-media-view[data-ratio="square"] .cms-media-view-still,

@@ -13,6 +13,10 @@ decision + date) instead of silently replacing the old entry.
    or both. A short client interview then fills the gaps. Text and voice are two writers into the same
    profile; `frontend-2` defaults to voice. Voice is also the voice agent in the CMS after website
    activation. (2026-08-17: voice is a channel, not a later add-on to the pipeline.)
+   (2026-08-27): **Onboarding client-interview voice is out.** Text 04a stays the writer. Do
+   not ship 04b as v1. **Onboarding guide assistant is in** (talk through the current screen).
+   Product voice after website activation is the website editor and Ads, not a second
+   client interview from `/cms`.
 
 3. **Online research consent is a simple ask, not a system** — a single acknowledgement before
    business research (we'll look the business up and use the public information). No per-purpose

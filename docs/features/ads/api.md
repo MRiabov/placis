@@ -17,8 +17,9 @@ Download signed URL: `string` + `maxLength`. Copy fields use platform character 
 ## Complete
 
 All mutating routes: **Auth** Clerk JWT, active tenant; **Idempotency-Key** yes. PATCH /
-rewrite / cleanup / approve send `base_updated_at` (last-seen `ads.updated_at`). Match → bump and
-return it. Mismatch → `409`; `frontend-2` re-GETs. No undo.
+rewrite / approve send `base_updated_at` (last-seen `ads.updated_at`). Match → bump and
+return it. Mismatch → `409`; `frontend-2` re-GETs. No undo. Photo cleanup is media library
+HTTP (`POST /v1/media-assets/{id}/image-edits`), then PATCH the placement.
 
 - `GET /v1/ads` — list
 - `POST /v1/ads` — create draft
@@ -29,8 +30,6 @@ return it. Mismatch → `409`; `frontend-2` re-GETs. No undo.
 - `PATCH /v1/ads/{ad_id}/variants/{variant_id}`
 - `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` — required `field` + `prompt`; optional
   selection start/end; omit selection = whole field; empty prompt is 400
-- `POST /v1/ads/{ad_id}/variants/{variant_id}/cleanup` — required `prompt`; shared media library
-  `cleanup_image`; not a photo picker
 - `POST /v1/ads/{ad_id}/approve`
 - `POST /v1/ads/{ad_id}/ad-set` — returns the ad set
 - `POST /v1/ads/{ad_id}/download` — renders; returns a signed URL for the ad-set download
@@ -45,3 +44,6 @@ future work and must not change the ad set format.
 - undo/redo
 - `package` path (the deliverable is an **ad set**)
 - `platform_refs` as a string map on first-slice DTOs
+- `POST /v1/ads/{ad_id}/variants/{variant_id}/cleanup` (use
+  `POST /v1/media-assets/{id}/image-edits`, then PATCH the placement)
+- `POST /v1/ads/…/reject` or `/accept` for a photo (use `POST /v1/media-assets/{id}/reject`)

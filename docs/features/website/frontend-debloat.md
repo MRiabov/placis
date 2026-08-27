@@ -76,9 +76,10 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   - `listEditorPosts`, `createEditorPost`, `saveEditorPost`, publish/hide/archive
     post, `runEditorPostAssistant`, `useEditorPosts`.
   - `getEditorCareers`, careers assistant, career settings, career openings CRUD.
-  - `createEditorRealtimeVoiceSession` (voice is later; not an editor surface).
   - `revertEditorAssistant` if Apply/Reject is one-way with in-memory undo + PATCH
     only ([assistant.md](assistant.md)).
+- Keep `createEditorRealtimeVoiceSession` — retarget onto `POST /v1/voice/realtime-connection`.
+  Voice is v1 on the website editor (and Ads product guide).
 - Don't say inspector: folder and symbol names (see rename).
 
 ## Do not port
@@ -101,8 +102,8 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 | Today | Constrained API |
 | --- | --- |
 | `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/website/editor/pages…`; GET may pass `publication_id` (continue editing from an owner website version, then PATCH). PATCH body is dirty keys including page `status`; response `{ edit_history_head, batch_id }` plus assigned ids |
-| `POST …/publish` | `POST /v1/website/publications` (no destination). Live website rollback: `POST /v1/website/publications/{id}/rollback`. Do not port restore-unpublished. |
-| Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; assistant start under `/v1/website/editor/pages/{page_id}/assistant`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
+| `POST …/publish` | `POST /v1/website/publications` with `website_address_id`. Live website rollback: `POST /v1/website/publications/{id}/rollback` (that host). Do not port restore-unpublished. |
+| Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; URL combobox `/v1/website/editor/urls`; assistant under `/v1/website/editor/assistant`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
 | `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
 
 Connect website address is a **modal on `/cms/website`** (no extra route). Add with

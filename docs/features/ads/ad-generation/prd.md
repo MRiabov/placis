@@ -62,8 +62,8 @@ delivered as an ad set a contractor or done-for-you can hand to an ad platform.
    expected future growth on top of the same ads service, not a website editor feature.
 3. Do not invent marketing statements on the **unprompted** first generate. No fabricated
    review counts, ratings, years in business, guarantees, certifications, insurance, pricing,
-   or results. Owner-typed or owner-prompted copy is allowed (Approve is not blocked; a
-   Details tool call writes the business profile).
+   or results. Owner-typed or owner-prompted copy is allowed (Approve is not blocked;
+   `update_details` writes the business profile).
 4. Do not create new images, and do not make substantive edits to photos as part of ad
    generation. The LLM may apply light cleanup only (remove clutter/trash, tidy backgrounds)
    through the same non-destructive image-variant system as the media library (epic D12); heavier
@@ -383,7 +383,7 @@ marketing statements conservative and source-backed:
 Anything the LLM drafts unprompted that resembles a sensitive marketing statement (reviews, ratings, guarantees, prices,
 results) is flagged **ad needs review**. If the owner types it,
 or prompts the AI orb to write it, we allow it — Approve is **not** blocked. If it includes a
-detail, a separate Details tool call writes the business profile (one
+detail, **`update_details`** writes the business profile (one
 `business_profile_edits` increment); a **notification** (OK / Revert) appears bottom-right.
 Leaving the screen keeps the write. Character limits, uploads still in flight, and failed
 uploads still block.
@@ -420,7 +420,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria).
      (about 10 seconds).
    - Unsupported marketing statements (reviews, ratings, guarantees, pricing, results) do not
      block Approve. Owner edit or owner prompt is an override. If they
-     include a detail, a Details tool call writes the business profile.
+     include a detail, `update_details` writes the business profile.
 4. **As done-for-you**, I want ads stored as their own records, so that ads can be produced
    from approved contractor content and campaign operations can build on them later.
    - Ads and variants belong to the contractor, referencing approved photos; no parallel photo library.
@@ -464,7 +464,7 @@ the overall MVP gate is the [Acceptance Criteria](#acceptance-criteria).
    deterministic rendering (cropped images for this ad's format plus a copy sheet and ad lead form
    fields) with no ad-platform credentials required.
 9. Unprompted generation does not invent unsupported marketing statements. Owner edit or
-   owner prompt is allowed — Approve is not blocked. A Details tool call writes the business
+   owner prompt is allowed — Approve is not blocked. `update_details` writes the business
    profile when copy includes a detail. An owner upload is usable once the photo is uploaded
    (about 10 seconds); captioning is background, not a gate. Uploading… is not an owner
    caption/review error.

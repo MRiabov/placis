@@ -1,6 +1,6 @@
 # CMS design tokens
 
-The CMS (sidebar + main area): New chat, website editor, Details, Ads list. Not the
+The CMS (sidebar + main area): `/cms` chooser, website editor, Details, Ads list. Not the
 contractor website look — that is [website styles](../../features/website/styles.md).
 [Design decision record](design-decision-record.md). Mock: [cms.css `:root`](../../design/cms.css).
 

@@ -28,8 +28,8 @@ against the real API + real Postgres; the LLM is faked. DB asserts name the tabl
    - UI: the ad returns for review — never `ad_ready_to_post` without approval.
    - Review AI orb: owner prompts a copy-field rewrite (prompt required); `ai_generations`
      records the owner prompt + reasoning + output + tool calls. Empty prompt does not fire.
-     Ctrl+Z restores the previous copy. A Details tool call writes the business profile when
-     copy includes a detail (`business_profile_edits`) plus a notification (OK / Revert). Approve is not blocked.
+     Ctrl+Z restores the previous copy. `update_details` writes the business profile when
+     copy includes a detail, plus a notification (OK / Revert). Approve is not blocked.
 
 4. **Approve** — the owner reviews, edits copy, approves.
    - DB: `ad_copy_variants.source=owner_edit`, `ad_variants.status=approved`,

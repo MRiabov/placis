@@ -25,9 +25,10 @@ Crop, focal, and cleanup stay on `/cms/media`.
 ## Callers (same functions)
 
 `/cms/media`, the website editor PATCH, the website assistant (`update_slot`, `cleanup_image`),
-and ads light cleanup call these same functions. The assistant does not get a second attach,
-crop, focal, or cleanup path. Ads light cleanup, when it writes a copy, calls this **AI cleanup**
-— not an ads-only cleanup.
+and the ads Review orb call these same functions. The assistant does not get a second attach,
+crop, focal, or cleanup path. Ads Review, when it writes a copy, POSTs
+`/v1/media-assets/{id}/image-edits` and then PATCHes **that** placement — not
+`POST /v1/ads/…/cleanup`.
 
 Replace and first upload take the file, so they stay on `/cms/media` / website editor drop. The
 assistant has no replace or upload tool (no file on a tool). When a later slice adds one, it
@@ -36,7 +37,7 @@ still calls this replace / upload.
 ## Processing status
 
 Photos have a processing status on the media item (`processing_status` —
-[data-model.md](data-model.md)):
+[persistence.md](persistence.md)):
 
 1. **Uploading…** — `uploading`: the file is uploading (`file_id` may still be empty). Target
    for Ads: the owner can use the photo in this ad within about **10 seconds** of starting
@@ -68,11 +69,14 @@ Processing…. Ads shows **Uploading…** only while the photo is uploading — 
 
 The full media library screen, under **Profile** (not a top-level left-nav item). Caption, crop, focal point, replace, AI cleanup.
 
-**Look.** A large **view** of the selected photo (the frame follows landscape, square, or portrait; the photo is not forced square). That same view is where they compare cleanup. Promptable AI cleanup sits in a prompt box **beside** the view on a wide screen and **under** it on a narrow screen — not the Ads Review overlay orb. Same light cleanup as ads / the website assistant `cleanup_image` (declutter, tidy background; not invent work). Empty prompt is rejected. First upload may already have run a tailored default; this prompt is a **different** cleanup. After cleanup, the view is the ads **before/after sweep** (drag the divider to clip, not resize) with **Accept** / **Reject**. Accept keeps the copy (`pending_review`). Reject drops that copy.
+**Look.** A large **view** of the selected photo (the frame follows landscape, square, or portrait; the photo is not forced square). That same view is where they compare cleanup. Promptable AI cleanup sits in a prompt box **beside** the view on a wide screen and **under** it on a narrow screen — not the Ads Review overlay orb. Same light cleanup as ads / the website assistant `cleanup_image` (declutter, tidy background; not invent work). Required overlay prompt, `maxLength` 500, on `POST …/image-edits`. Empty prompt is rejected. First upload may already have run a tailored default; this prompt is a **different** cleanup. After cleanup, the view is the ads **before/after sweep** (drag the divider to clip, not resize) with **Accept** / **Reject**. Accept keeps the copy (`pending_review`) — no Accept HTTP, not `POST …/approve`. Reject is `POST …/reject` (archives the copy).
 
 **Thumbs.** Twenty to forty photos is expected. Up to ten: **3** columns on a wide screen, **2** on a narrow screen. More than ten: **4** columns on a wide screen, **2** on a narrow screen. Tiles stay small. Landscape, square, and portrait keep their ratio.
 
 Crop / focal stay on this screen, on the selected photo in the view. It is not a second library.
+**Widget:** Crop is a rect overlay (Full vs rect). Focal is a draggable point on the large view.
+Save on click-off (`PATCH /v1/media-assets/{id}`). Ads placement crop/focal stay on
+`ad_image_placements` (framing **this ad**, inherited at attach).
 
 ## Website editor
 

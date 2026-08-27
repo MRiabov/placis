@@ -48,7 +48,9 @@ When implementing, call only:
 
 1. `GET/POST /v1/ads`
 2. `GET/PATCH/DELETE /v1/ads/{ad_id}` (delete = draft-only)
-3. variants GET/PATCH; `POST …/rewrite` (required prompt); `POST …/cleanup` (required prompt)
+3. variants GET/PATCH; `POST …/rewrite` (required prompt). Photo cleanup:
+   `POST /v1/media-assets/{id}/image-edits` (required prompt), then PATCH the placement.
+   Reject: `POST /v1/media-assets/{id}/reject`.
 4. `POST …/approve`
 5. `POST …/ad-set`
 6. `POST …/download`

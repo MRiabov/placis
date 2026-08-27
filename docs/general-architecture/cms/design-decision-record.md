@@ -63,6 +63,7 @@ one decision. **Why** is owner-written; omit it rather than inventing it.
    stays. Viewport controls stay on `/cms/website` only. (2026-08-27)
    Website editor canvas widths, workspace bottom bar, assistant default, Mobile default:
    [website design decision 16](../../features/website/design-decision-record.md).
+   (2026-08-27): Overlay rows drop New chat. Product overlay is Sites, Profile children, Ads.
 
 5. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Satoshi, body tracking `-0.01em`,
    light weights (`400` / `450` / `500` / `600`), ink `#13120a`, `--secondary` `#f4f4f5`,
@@ -85,3 +86,6 @@ one decision. **Why** is owner-written; omit it rather than inventing it.
    particle renderer bit by bit; the later `frontend-2` port can keep its cheaper orb.
    Website-editor Voice stays the canvas orb ([website design decision 18](../../features/website/design-decision-record.md)). Token table:
    [design.md](design.md). (2026-08-27)
+   (2026-08-27): Product `/cms` is two cards (**Do my website…** / **Run my ads**), not this
+   prompt. Keep the prompt-box markup in the look-export HTML for later restore.
+   Hide Paperclip, Start client interview, Upgrade shelf. Overlay rows drop New chat. Connect stays.
