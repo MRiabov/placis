@@ -71,6 +71,8 @@ instead of silently rewriting history.
    Desktop collapsed pills sit just above the bar. (2026-08-26)
    Apply / Reject sit immediately above the website assistant overlay (collapsed and
    expanded). They are not at the vertical middle of the canvas. (2026-08-27)
+   Ask first pending is the pills plus the pending outline on changed website sections.
+   Do not paint **Not applied** as copy on the website. (2026-08-27)
 
 3. **Website publication blockers are jumps** — The dropdown heading is **Website publication
    is blocked:** then one **silent** (no background) button per blocker, with a Lucide

@@ -1178,19 +1178,6 @@ body.is-shot .viewtabs-fab { display: none !important; }
 .canvas-block:hover { outline-color: rgb(19 18 10 / 25%); }
 .canvas-block.is-selected { outline-color: var(--cms-accent); }
 .canvas-block.is-pending { outline-color: var(--cms-info); }
-.cms-pending-badge {
-  display: inline-block;
-  margin-bottom: 8px;
-  border-radius: 999px;
-  background: #dbeafe;
-  color: var(--cms-info);
-  padding: 2px 8px;
-  font-family: "Satoshi", sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
 .cms-ask-pills {
   position: absolute;
   z-index: 21;

@@ -35,8 +35,9 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
   the tool name. Each line has a kind icon: pencil for writes, lightbulb for thinking.
   There is no search/grep tool.
 - Configs are **boolean switches** in the overlay. Default **plan + Ask first**.
-- Pending / Applied / Rejected must be obvious (canvas **Not applied** vs **Applied**; Apply /
-  Reject pills present only while that turn is pending).
+- Pending / Applied / Rejected must be obvious (Apply / Reject pills only while that turn is
+  pending; pending outline on changed website sections). Do not paint **Not applied** as copy
+  on the website.
 
 Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses
 these tools headless (**continuous** workflow + **instant apply**, no chat UI, no `create_page`)
