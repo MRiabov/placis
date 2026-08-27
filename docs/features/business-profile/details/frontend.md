@@ -7,7 +7,7 @@ Related docs:
 1. [Details overview](README.md)
 2. [Details ADR](ADR.md)
 3. [Details persistence](persistence.md)
-4. [Details design decision record](design-decisions.md)
+4. [Details design decision record](design-decision-record.md)
 5. [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md) — left nav, Profile, New chat
 6. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 
@@ -42,7 +42,7 @@ will pick up the **marketing phone**, not appointment copy. Shown on the contact
 Do **not** show an Appointment note field; persistence has no `note` column. Persistence is
 still one Opens / Closes / Closed per day; extra time blocks are the target look. On a
 narrow screen the day and Closed / add / copy sit on the first line; Opens and Closes chips
-sit full-width below (Google Calendar on a small screen). Look: [design decision record](design-decisions.md).
+sit full-width below (Google Calendar on a small screen). Look: [design decision record](design-decision-record.md).
 
 #### Logo picker
 

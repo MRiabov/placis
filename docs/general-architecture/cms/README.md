@@ -9,7 +9,7 @@ over the mock.
 
 - [frontend.md](frontend.md) — left nav, Profile disclosure, New chat
 - [design.md](design.md) — tokens (Satoshi, ink, hairline, outline vs `--secondary`)
-- [design decision record](design-decisions.md) — CMS-wide look (moved from website design decision record)
+- [design decision record](design-decision-record.md) — CMS-wide look (moved from website design decision record)
 - [ADR](ADR.md) — nav / Profile grouping / New chat
 - [frontend-debloat.md](../frontend-debloat.md) — left nav / New chat port notes (cross-cutting)
 
