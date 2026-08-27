@@ -159,8 +159,9 @@ The questions and review content:
    **before/after sweep viewer** — drag the divider to clip, not resize, the photo — with Accept/Reject).
    First upload already ran a tailored default cleanup from visual-issue classification
    (ranked hints on Cleanup edit). After generate, an AI orb asks for a **different**
-   cleanup (required prompt, overlay) and calls the same media library
-   `cleanup_image` as the website assistant — not a photo picker.
+   cleanup (required prompt, overlay) and POSTs
+   `/v1/media-assets/{id}/image-edits` (same as the website assistant `cleanup_image`) — not a
+   photo picker and not `POST /v1/ads/…/cleanup`. Reject is `POST /v1/media-assets/{id}/reject`.
    The sweep's size follows this ad's format: Square feed and Carousel cards are 1:1,
    Portrait feed is 4:5, Story is 9:16. The **photo strip is always shown** — the LLM
    proposes, the owner picks. Square feed, Portrait feed, and Story are **one image**:
@@ -207,8 +208,9 @@ Actions:
 - **Download** — produces the zip of the ad set (temporary step until direct transmission to
   Meta exists).
 - **AI orb (Review)** — after generate: promptable rewrite of headline, primary text, or
-  short label, and promptable cleanup of the current photo via the shared media library
-  `cleanup_image` (prompt required for a different cleanup; the upload default already ran).
+  short label, and promptable cleanup of the current photo via
+  `POST /v1/media-assets/{id}/image-edits` (prompt required for a different cleanup; the
+  upload default already ran). Reject: `POST /v1/media-assets/{id}/reject`.
   Replaces unprompted **Regenerate**. Marks **ad needs
   review**. Owner-typed or owner-prompted marketing statements are allowed. If they include a
   detail, a separate Details tool call writes the business profile; a **notification**

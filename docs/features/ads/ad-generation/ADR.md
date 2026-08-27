@@ -269,9 +269,10 @@ area, and the date.
     restores the previous text). Prompt text is required. Copy rewrite is per-field; optional
     selection on `POST …/rewrite` (omit = whole field). Image cleanup: first upload already
     ran a tailored default from visual-issue classification; the orb is a **different**
-    cleanup via shared media library `cleanup_image` `prompt`. Not the website assistant chat. This
-    replaces unprompted Review **Regenerate**. Record the owner prompt with reasoning,
-    output, and tool calls in `ai_generations`.
+    cleanup via `POST /v1/media-assets/{id}/image-edits` (`prompt`). Not the website assistant chat.
+    Not `POST /v1/ads/…/cleanup`. Reject is `POST /v1/media-assets/{id}/reject`.
+    This replaces unprompted Review **Regenerate**. Record the owner prompt with reasoning,
+    output, and tool calls in `ai_generations`. (2026-08-27)
     Previous decision (same day): prompt form was inline in the field, wrapping with the row.
 
 35. **Review ad format preview is Facebook and Instagram placement** (updated 2026-08-25) — The selected

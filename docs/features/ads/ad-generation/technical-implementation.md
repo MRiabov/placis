@@ -321,8 +321,8 @@ status:
 5. return the draft to Ads so the owner can review, edit, swap images, and adjust crops
    for this ad's format
 6. after that first unprompted draft, directed Review rewrites (`rewrite` with required
-   owner prompt, one copy field) and promptable cleanup (`cleanup` via shared
-   `cleanup_image`) record the owner prompt in `ai_generations`. Empty prompt is rejected.
+   owner prompt, one copy field) and promptable cleanup (`POST /v1/media-assets/{id}/image-edits`)
+   record the owner prompt in `ai_generations`. Empty prompt is rejected.
 
 Generation results are **cached** per input, ad format, and `prompt_id` / `prompt_version` on
 `ai_generations` (tool and skill format revisions on
@@ -423,7 +423,8 @@ Allowed AI behavior:
    reviews, ratings, years, guarantees unprompted
 6. rewrite one copy field from a required owner prompt after generate (optional selection;
    omit = whole field)
-7. apply promptable light cleanup of the current photo through shared `cleanup_image`
+7. apply promptable light cleanup of the current photo through
+   `POST /v1/media-assets/{id}/image-edits`
 8. summarize the ad set into an owner-readable explanation
 
 Blocked AI behavior:
