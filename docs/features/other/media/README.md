@@ -29,8 +29,8 @@ and ads light cleanup call these same functions. The assistant does not get a se
 crop, focal, or cleanup path. Ads light cleanup, when it writes a copy, calls this **AI cleanup**
 — not an ads-only cleanup.
 
-Replace and first upload take file bytes, so they stay on `/cms/media` / website editor drop. The
-assistant has no replace or upload tool (no bytes on a tool). When a later slice adds one, it
+Replace and first upload take the file, so they stay on `/cms/media` / website editor drop. The
+assistant has no replace or upload tool (no file on a tool). When a later slice adds one, it
 still calls this replace / upload.
 
 ## Processing status
@@ -38,9 +38,9 @@ still calls this replace / upload.
 Photos have a processing status on the media item (`processing_status` —
 [data-model.md](data-model.md)):
 
-1. **Uploading…** — `uploading`: bytes are landing (`file_id` may still be empty). Target
+1. **Uploading…** — `uploading`: the file is uploading (`file_id` may still be empty). Target
    for Ads: the owner can use the photo in this ad within about **10 seconds** of starting
-   the upload. Hover the thumb: a circle-and-cross button; click it to abort the bytes
+   the upload. Hover the thumb: a circle-and-cross button; click it to abort the upload
    request. No media library item is left. Same overlay on `/cms/media`, the website editor
    media library, and Ads — not an Ads-only control.
 2. **Processing…** — `processing`: Placis is writing the media caption and classifying visual
@@ -58,11 +58,11 @@ Photos have a processing status on the media item (`processing_status` —
 This is separate from `review_status` (pending_review / approved / rejected). A photo already
 in an ad is not shown as "still in review". The live website still requires `ready` +
 `approved`. Ads: the LLM gallery ad draft uses `ready` + `approved`; an owner-added photo in
-this ad is usable once bytes have landed (not `failed`), even if captioning is still
+this ad is usable once the photo is uploaded (not `failed`), even if captioning is still
 `processing`.
 
 Thumbs in `/cms/media` and the website editor media library may show Uploading… /
-Processing…. Ads shows **Uploading…** only while bytes land — not Processing… as a use-blocker.
+Processing…. Ads shows **Uploading…** only while the photo is uploading — not Processing… as a use-blocker.
 
 ## `/cms/media`
 
@@ -99,17 +99,17 @@ Screens: [website frontend](../../website/frontend.md). Port:
   the website. Owner approval makes them approved. Website publication
   and the live website still require `ready` + approved media.
 - **Ads** — the LLM picks from `ready` + approved media captions. A photo the owner **adds
-  to this ad** is usable once bytes have landed (about 10 seconds); captioning is
-  background, not a gate. Ads thumbs show Uploading… only while bytes land.
+  to this ad** is usable once the photo is uploaded (about 10 seconds); captioning is
+  background, not a gate. Ads thumbs show Uploading… only while the photo is uploading.
 
 ## Review
 
 Only `ready` + approved media can be used on the live website. Ads: LLM gallery drafts use
-that same pool; an owner-added photo in an ad is usable once bytes have landed. The
+that same pool; an owner-added photo in an ad is usable once the photo is uploaded. The
 unpublished website editor may attach pending-review AI images; the warning is in Content,
 not copy on the website.
 
-Bytes live in [files](../../../general-architecture/files-and-s3.md) (`media_assets.file_id`).
+Files live in [files](../../../general-architecture/files-and-s3.md) (`media_assets.file_id`).
 HTTP: [api.md](api.md) (this resource owns upload; no `/v1/files`). Tables:
 [persistence.md](persistence.md). Public-source imports (Maps photos, Facebook/Instagram
 posts): [ETL](../etl/README.md).

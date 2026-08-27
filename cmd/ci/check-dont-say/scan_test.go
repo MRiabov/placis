@@ -112,6 +112,27 @@ func TestAllowedAboveTheFold(t *testing.T) {
 	}
 }
 
+func TestAllowedGoBytesPackage(t *testing.T) {
+	tokens := []token{{phrase: "bytes", class: classAlways}}
+	compiled, err := compileTokens(tokens)
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join("testdata", "bytes.go")
+	if err := os.WriteFile(path, []byte("import \"bytes\"\nvar buf bytes.Buffer\nstore the bytes here\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Remove(path) })
+	hits, err := scanFile(path, compiled)
+	if err != nil {
+		t.Fatal(err)
+	}
+	phrases := hitPhrases(hits)
+	if len(hits) != 1 || !phrases["bytes"] {
+		t.Fatalf("expected only the bare bytes line, got %v", hits)
+	}
+}
+
 func TestCoveredSayPhrase(t *testing.T) {
 	tokens := []token{classifyToken("page (website)", "website page")}
 	compiled, err := compileTokens(tokens)
