@@ -43,7 +43,8 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
   field stays empty until **Voice**). A small close on the top-right of the orb also restores.
   In chatbot mode, empty field shows **Voice**; text in the field is Plan / Send. Apply /
   Reject sit beside the orb when the voice agent is on (same row as Restore chatbot), and
-  centered above the overlay over the chatbot. The voice agent speaks back and uses the same tools; it grants no extra
+  centered above the overlay over the chatbot. Switching to the voice agent and back is a
+  fade, not a cut. The voice agent speaks back and uses the same tools; it grants no extra
   authority. **Follow** does not snap the canvas while it is off.
 - Pending / Applied / Rejected must be obvious (Apply / Reject pills only while that turn is
   pending; pending outline on changed website sections). Do not paint **Not applied** as copy
