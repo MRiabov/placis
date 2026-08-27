@@ -18,5 +18,5 @@ owner-facing CMS screen in this slice.
 - [technical-implementation.md](technical-implementation.md)
 - [testing.md](testing.md)
 
-Business profile tables: [details persistence](../other/details/persistence.md). Onboarding 02
+Business profile tables: [details persistence](../business-profile/details/persistence.md). Onboarding 02
 only starts runs: [02](../onboarding/pipeline/02-business-research.md).

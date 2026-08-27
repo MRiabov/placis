@@ -58,19 +58,18 @@ forms tab. Top menu and
 footer are not workspace-rail items. Attach from the **media library** in Content when an
 image is selected; the full-screen library is `/cms/media`.
 
-A **Details** view edits the business details shown on the site: business name, legal name, trade,
-established year, description, marketing phone, marketing email, existing site URL, Facebook URL,
-Google Maps listing, location, service areas, featured services, company/VAT number, registered
-office, opening hours (when they pick up the marketing phone: Opens / Closes / Closed), and logo.
-
 Each **website page** is built from **website sections** (hero, services, reviews, …), and each
 website section is edited through its **website slots** — text, rich text, images, lists, and
-links. Each reviews website section has its own ordered `website_slot_reviews` from the
+links.
+
+A **Details** view edits the Business details subset of the business profile shown on the site
+([details](../business-profile/details/README.md)). **Projects** are edited at `/cms/projects`
+([projects](../business-profile/projects/README.md)). **Certifications and reviews** are edited at
+`/cms/certifications-and-reviews` ([certifications and reviews](../business-profile/certifications-and-reviews/README.md)).
+Each reviews website section has its own ordered `website_slot_reviews` from the
 pool (the LLM picks it; Content can change it). Ads use **top reviews**. A project gallery
 lists their projects.
 
-**Projects** are edited at `/cms/projects`. **Certifications and reviews** are edited at
-`/cms/certifications-and-reviews` (definition ticks + **All reviews** / **top reviews** picker).
 Website publication makes a **published website copy** of the
 site each time. Those screens update the website editor immediately; the live website changes only on
 the next website publication. **Link your Facebook** is a Details link (paste URL this

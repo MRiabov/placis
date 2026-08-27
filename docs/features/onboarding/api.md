@@ -2,7 +2,7 @@
 
 Conventions: [HTTP conventions](../../general-architecture/api.md). Business lookup, resume,
 client interview, SSE, website activation. Details after website activation:
-[details HTTP](../other/details/api.md). Applying the website template is owned by
+[details HTTP](../business-profile/details/api.md). Applying the website template is owned by
 [website](../website/api.md); this feature only enqueues it.
 
 ## Serve only types on HTTP

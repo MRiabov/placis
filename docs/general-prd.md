@@ -36,7 +36,7 @@ channel into the same tools (not a separate product). How slices land:
 - [Website activation](features/onboarding/pipeline/08-website-activation.md) — pay-and-activate (Stripe)
 - [Ads](features/ads/ad-generation/prd.md) — ad generation; terminal Ad status is **ad ready to post** (no ad posting)
 - [Leads](features/other/leads/README.md) — website form contacts
-- [Details](features/other/details/README.md) — the business profile the rest of the app reads
+- [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
 - [Media library](features/other/media/README.md)
 - [ETL](features/other/etl/README.md) — continuing public extract (Facebook posts, photos, reviews)
 - [Placis website](features/placis-website/README.md) — Placis’s own site

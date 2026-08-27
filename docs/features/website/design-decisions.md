@@ -1,8 +1,10 @@
 # Website design decisions
 
-Look and interaction for The CMS website editor (and the Details opening-hours picker).
+Look and interaction for The CMS website editor.
 Architecture stays in [ADR.md](ADR.md). Screens: [frontend.md](frontend.md). Tokens:
-[design.md](design.md). Mock: [design/cms.html](../../website/design/cms.html).
+[CMS design.md](../../general-architecture/cms/design.md). CMS nav / New chat / theme:
+[CMS design-decisions](../../general-architecture/cms/design-decisions.md). Mock:
+[cms.html](../../design/cms.html).
 
 Status: decided (2026-08-26, product owner). Update an entry (keeping the old decision + date)
 instead of silently rewriting history.
@@ -14,22 +16,9 @@ instead of silently rewriting history.
    editing panel **closed** until a website section is selected or the **Edit** handle is used.
    The three surfaces remain canvas, workspace, editing panel; they do not all sit open at once.
    Two-panel: no right column and no Edit handle; see 12. (2026-08-26)
-   Collapsed nav icons **navigate**. Only the sidebar panel control expands or collapses the
-   labels. The Profile icon goes to **Business details** (children stay a disclosure when the
-   sidebar is expanded). Navigating does not expand the rail.
-   Collapsed, the bottom of the rail is the Clerk owner photo (UserButton), not initials.
-   Nav icons: New chat is a message bubble; Profile is a person, not a house. Sites stays a
-   globe; Ads a megaphone; AI tools a sparkle.
-   (2026-08-26)
-   **Media library** (`/cms/media`) is a Profile child, not a top-level peer of Sites. Collapsed
-   Profile still goes to Business details. (2026-08-26)
-   No **AI tools** left-nav item. Image cleanup is `/cms/media` (large view of the selected
-   photo, prompt box beside or under it, dense mixed-ratio thumbs — not huge square cards).
-   The website assistant stays
-   the canvas overlay (a later cut may drop that overlay; this item still does not come
-   back). (2026-08-26)
-   On **narrow**, this left rail is gone: a full-screen overlay selector (see 16). Collapsed
-   icon rail, hover peek, and click-to-pin are **wide only**. (2026-08-27)
+   Left nav / Profile / Media library as Profile child / no AI tools item / narrow overlay:
+   [CMS design-decisions](../../general-architecture/cms/design-decisions.md) 1 (moved from this
+   entry, 2026-08-27).
 
 2. **Website assistant is a pinned composer, not a toolbar button** — No toolbar **Website
    assistant** control. The composer is always on, pinned to the bottom of the canvas. Default
@@ -88,16 +77,9 @@ instead of silently rewriting history.
    after that group, not between website addresses and New URL. The dropdown is actions,
    not a status card of labels. (2026-08-27)
 
-4. **Opening hours picker is Google Calendar-style** — Details **Opening hours**: one row per
-   weekday, Opens to Closes as a time range, Closed as the unavailable control, copy to
-   following days, add a time block. CMS palette (white, higher contrast). Hours they pick up
-   the marketing phone; no Appointment note. Persistence is still one Opens / Closes / Closed
-   per day ([details ADR](../other/details/ADR.md) 6). (2026-08-26)
-   Opening hours is not the first Details panel. Identity (name, story, logo) is first; hours
-   sit after contact, services, and legal. (2026-08-26)
-   On a narrow screen the day name and Closed / add / copy sit on the first line; Opens and
-   Closes are full-width time chips on the line below so the times stay readable (Google
-   Calendar on a small screen). Extra time blocks still stack under the day. (2026-08-27)
+4. **Opening hours picker is Google Calendar-style** — moved to
+   [details design-decisions](../business-profile/details/design-decisions.md) 1 (2026-08-27).
+   Persistence: [details ADR](../business-profile/details/ADR.md) 6. (2026-08-26)
 
 5. **Top menu and footer are Content, not workspace items** — Select the bar on the canvas;
    edit the depth-2 tree in the editing-panel **Content** tab. Look (logo, density) is
@@ -116,36 +98,19 @@ instead of silently rewriting history.
    contact** is a bar CTA like Show marketing phone / email (not a tree node). Content has no
    Add below / website-component picker and no depth-2 explainer. (2026-08-26)
 
-6. **Certifications and reviews layout is 1fr | 2fr** — Left: catalog ticks (checkbox + badge
-   + name). Right: review cards in three headings: **Top reviews**, **All reviews**, **Archive**.
-   Create owner-written is a route for now (`/cms/certifications-and-reviews/new`;
-   look TBD). Product rules stay in [ADR.md](ADR.md) 16. (2026-08-26)
-   The top reviews heading is the **ads** featured list. Pinning it does not rewrite reviews
-   website sections. Website editor reviews Content is **that website section’s** ordered
-   list (see 15). (2026-08-26)
-   Owner copy is **All reviews** (not pool). That heading excludes cards already in Top
-   reviews. Top reviews and All reviews are visually the same: plain section headings, not a
-   dashed drop well. A drop-target around Top reviews is parked (see mock CSS comment).
-   Archive is a collapsible heading (chevron down on the right), default collapsed — not a
-   toolbar button. No hairline under the page title. (2026-08-26)
-   The Undo toast sits above Archive with a gap, not flush. (2026-08-27)
-   Wide: certifications sit in a card next to reviews. Narrow (≤1100px): one column, no
-   card around certifications — **Certifications** is a section heading like **Top reviews**.
-   (2026-08-27)
+6. **Certifications and reviews layout is 1fr | 2fr** — moved to
+   [certifications-and-reviews design-decisions](../business-profile/certifications-and-reviews/design-decisions.md) 1
+   (2026-08-27). Website editor reviews Content is **that website section’s** ordered list (see 15).
+   Product: [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md).
+   (2026-08-26)
 
-7. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
-   [design/cms.html](../../website/design/cms.html) (copy-out blocked, Ask first pending,
-   pages, publication, and so on). Product destinations stay in the left nav. Hide with
-   `?shot=1`. Copy-out is an error, not always-on UI. (2026-08-26)
-   Always collapsible to a **circle in the top right**; tap to reopen. Default **collapsed on
-   mobile** (≤1100px) so it does not eat the editor; desktop starts open. `?dev=1` / `?dev=0`
-   force open / collapsed. (2026-08-26)
+7. **The yellow strip is mock-only states** — moved to
+   [CMS design-decisions](../../general-architecture/cms/design-decisions.md) 2 (2026-08-27).
+   (2026-08-26)
 
-8. **The CMS is viewport-locked, not a scrolling document** — The window never
-   scrolls. The CMS fills the viewport like a PWA: The CMS stays put, overflow is clipped at
-   the CMS. Inner regions scroll only when that surface has more content than it can show
-   (Details / Projects / Certifications and reviews, a workspace list, including Content).
-   The retired right-hand editing panel is not a scroller. (2026-08-26)
+8. **The CMS is viewport-locked, not a scrolling document** — CMS window lock and inner-region
+   scroll: [CMS design-decisions](../../general-architecture/cms/design-decisions.md) 3
+   (moved 2026-08-27). (2026-08-26)
    The website editor canvas does **not** scroll the website page: the page is clipped to the
    stage. (2026-08-26)
    The website page **does** scroll inside the canvas stage (the browser UI stays). The
@@ -225,23 +190,18 @@ instead of silently rewriting history.
 15. **Reviews Content is that website section’s ordered list** — Not the Profile top band.
     Add from all reviews, remove, reorder. Cap is the website component’s max (some layouts take
     3, others 6 or 8). Owner copy: reviews **on this website section**. Product: [ADR.md](ADR.md)
-    16. (2026-08-26)
+    16 and [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md).
+    (2026-08-26)
 
-16. **The CMS is narrow-first** — Owners use it on a small screen. A wide screen is extra width, not
-    the default story. Global nav copies placis-web `DashboardShell`. (2026-08-27)
-    **Narrow (≤1100px):** a **full-screen overlay selector** covers `main` (labels, active
-    fill, **Placis** + `PanelLeft` to close). No leftover `3rem` rail. Open destinations is
-    inline with the screen heading. Overlay rows: New chat, Sites, Business details, Projects,
-    Certifications and reviews, Media library, Ads. Profile is not a row. Workspace bottom
+16. **The CMS is narrow-first** — Nav overlay / wide sidebar / Open destinations:
+    [CMS design-decisions](../../general-architecture/cms/design-decisions.md) 4
+    (moved from this entry, 2026-08-27). (2026-08-27)
+    **Narrow (≤1100px):** Workspace bottom
     bar is **Sites only**. Website assistant default is **collapsed**. Canvas website-width
-    defaults to **Mobile**. Touch targets 44px; review grips visible without hover, with
-    compact six-dot marks inside the 44px hit.
-    Notifications sit above the workspace bar. Safe-area padding on overlay, bar, assistant.
-    **Wide (≥1101px):** sidebar stays permanently collapsible (default collapsed icon rail,
-    hover peek, click to pin). Profile icon still goes to Business details. Sites/Ads/Profile
+    defaults to **Mobile**.
+    **Wide (≥1101px):** Sites/Ads/Profile
     do not invent a second global nav. (2026-08-27)
-    Profile and Ads headings have no decorative boxed icon. Open destinations on narrow
-    stays. Viewport controls stay on `/cms/website` only. (2026-08-27)
+    Viewport controls stay on `/cms/website` only. (2026-08-27)
     Canvas widths are native: Desktop **1080**, Tablet **760**, Mobile **390**. If the stage is
     wider, Mobile and Tablet stay those widths (do not stretch). **Desktop fills the stage**
     (layout grows with the column; no 1080 card in a sea of grid). If the stage is narrower, CSS
@@ -252,27 +212,11 @@ instead of silently rewriting history.
     **Wide** canvas website-width defaults to **Desktop**. Crossing the 1100px line to wide
     restores Desktop; crossing to narrow still selects Mobile. (2026-08-27)
 
-17. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Satoshi, body tracking `-0.01em`,
-    light weights (`400` / `450` / `500` / `600`), ink `#13120a`, `--secondary` `#f4f4f5`,
-    zinc-600 idle rows, zinc-950/6% active fill, stone `#e7e5e4` hairline on the prompt box.
-    Do not invent a second palette. Source: placis-web `globals.css` + `marketingSite.ts`.
-    (2026-08-27)
-    New chat prompt is full width of the main column, max `42rem` (placis-web default
-    `PlacisPromptBox`, `w-full max-w-2xl`). Do not use the compact `19.5rem` mobile cap.
-    Wordmark + prompt are vertically centered in the main column (Open destinations stays
-    top-left on narrow). The Upgrade shelf is full width of the prompt, text centered,
-    one outline with the box (placis-web shelf). (2026-08-27)
-    New chat clones dashboard `PlacisPromptBox` controls: **Connect** (flat hairline, white
-    at rest, zinc-50 only while the Google / Meta panel is open), Paperclip (hidden under
-    640px), animated AudioLines Voice on the right (desktop only), ArrowRight send.
-    Connect is gone when Google Ads and Meta are both connected (same status as Ads; do not
-    flash the control). It is not Connect website address. Placeholders cycle. Secondary
-    controls stay outline (canvas fill, `--border`, hover zinc-50) — `--secondary` is a
-    token, not a resting chip. Voice on New chat opens a full-screen **orb** for the
-    client interview (soft glowing circle, Back). Do not port the DustOrb
-    particle renderer bit by bit; the later `frontend-2` port can keep its cheaper orb.
-    Website-editor Voice stays the canvas orb (decision 18). Token table:
-    [design.md](design.md). (2026-08-27)
+17. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Theme tokens and
+    New chat prompt: [CMS design-decisions](../../general-architecture/cms/design-decisions.md) 5
+    (moved from this entry, 2026-08-27). Token table:
+    [CMS design.md](../../general-architecture/cms/design.md). Website-editor Voice stays the
+    canvas orb (decision 18). (2026-08-27)
 
 18. **Website editor voice agent is an orb, not a full-screen takeover** — Empty composer
     turns the **voice agent** on (`/cms/website` only). The chatbot overlay is hidden so the

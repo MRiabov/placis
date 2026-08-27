@@ -7,7 +7,7 @@ Related: [PRD](prd.md), [ADR](ADR.md), [persistence](persistence.md), [HTTP](api
 ## Domain objects
 
 See [persistence.md](persistence.md). The business profile is
-[details](../other/details/persistence.md). Warehouse and extract/transform are
+[details](../business-profile/details/persistence.md). Warehouse and extract/transform are
 [ETL](../etl/persistence.md).
 
 ## Flow

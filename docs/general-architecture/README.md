@@ -16,9 +16,10 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [files-and-s3.md](files-and-s3.md) — object storage and the `files` row
 - [persistence.md](persistence.md) — conventions and index of per-feature tables
 - [frontend.md](frontend.md) — `frontend-2` loading placeholders and other UI rules that no
-  single feature owns. Tokens: [website design.md](../features/website/design.md).
+  single feature owns. Tokens: [CMS design.md](cms/design.md).
+- [cms/](cms/README.md) — The CMS (sidebar + main area): left nav, New chat, look tokens
 - [frontend-debloat.md](frontend-debloat.md) — cross-cutting `frontend-2` port (generated types,
-  leftover layout names, parity e2e). Per-feature cut lists live with the feature.
+  leftover layout names, parity e2e; left nav / New chat). Per-feature cut lists live with the feature.
 - [ci-cd.md](ci-cd.md) — delivery gates (file-size, folder fan-out), GitHub Checks, Don't-say checker
 - [testing.md](testing.md) — unit / integration / E2E tiers and the per-feature E2E rule
 

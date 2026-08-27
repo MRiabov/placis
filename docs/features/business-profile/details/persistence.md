@@ -1,11 +1,14 @@
 # Details — persistence
 
-The **business profile** — the one set of tables the rest of the application draws from.
-Onboarding builds it; this view edits it; the website shows it; ads read it.
+The live `business_profiles` row plus the list tables below **is** the business profile
+(except projects: [projects persistence](../projects/persistence.md)). Details the screen edits
+a subset; this file still owns the tables because schema `details` is not renamed yet
+([ETL ADR #9](../../etl/ADR.md)). Onboarding and ETL transform write these rows; the website
+shows them; ads read them.
 
 Conventions: [persistence conventions](../../../general-architecture/persistence.md)
-(Postgres schema `details`). Later: rename this schema to `business_profile` or `profile`
-([ETL ADR #9](../../etl/ADR.md)). Decisions: [ADR.md](ADR.md). Facebook / Instagram profile
+(Postgres schema `details`). Later: rename this schema to `business_profile` or `profile`.
+Decisions: [ADR.md](ADR.md). Facebook / Instagram profile
 and post rows live here (tenant-owned). The Google Maps listing stays in [ETL](../../etl/persistence.md).
 
 A **detail** is a column (or a row in a list table). Their existing site URL is a detail; it is not
@@ -15,9 +18,8 @@ Contact split: **marketing phone** and **marketing email** are on the website an
 (where leads call / write). **`emergency_phone`** is how we contact the owner (unpublished;
 may be the same number). The owner’s sign-in email is Clerk’s, not a profile column.
 
-The live `business_profiles` row plus the list tables **is** the business profile. Website, ads,
-and Details read it. Apply-the-website-template reads it as of `accepted_edit_id`. They do not
-replay profile history on every call.
+Website, ads, and Details read the live row. Apply-the-website-template reads it as of
+`accepted_edit_id`. They do not replay profile history on every call.
 
 - `business_profiles` — `id`, `tenant_id` fk unique (required; the unactivated tenant created at
   business lookup, same row later activated), `trade` (`roofing`/`landscaping_paving`/
@@ -118,7 +120,7 @@ ETL transform upserts these on source `external_id` unless `algorithm=human`. Ra
 fetch tables. Skip / `force` / `human`: [ETL pipeline](../../etl/pipeline/README.md).
 
 Photo classification (hero / project / service / founder / logo) is `photo_kind` on
-[`media_assets`](../media/persistence.md) used by this profile. There is no `etl.photo_classifications`
+[`media_assets`](../../other/media/persistence.md) used by this profile. There is no `etl.photo_classifications`
 table.
 
 - `certification_definitions` — global (not tenant): `id`, `name`, `short_label`,

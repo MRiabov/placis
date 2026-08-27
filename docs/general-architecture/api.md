@@ -10,8 +10,9 @@ Feature `api.md` files:
 - [Onboarding](../features/onboarding/api.md) (includes website activation; SSE
   reads [ETL](../features/etl/README.md) `etl.runs` — ETL has no public `api.md`)
 - [Website](../features/website/api.md) (unpublished website, website publication, Connect
-  website address, projects)
-- [Details](../features/other/details/api.md) (live business profile, certifications, reviews)
+  website address)
+- [Details](../features/business-profile/details/api.md) (live business profile, certifications, reviews)
+- [Projects](../features/business-profile/projects/api.md)
 - [Media library](../features/other/media/api.md)
 - [Ads](../features/ads/api.md)
 - [Leads](../features/other/leads/api.md) (website form submit)

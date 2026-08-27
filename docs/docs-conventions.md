@@ -17,11 +17,15 @@ editing a doc.
   `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
   `files-and-s3.md`, `persistence.md`
   (conventions + index of per-feature tables), `frontend.md` (`frontend-2` UI rules),
+  `cms/` (The CMS: left nav, New chat, look tokens),
   `frontend-debloat.md` (cross-cutting port), `ci-cd.md`, `testing.md`.
   Feature-owned capabilities (website
-  activation/payments, leads, media library, ETL) live under `features/`, not here.
+  activation/payments, leads, media library, ETL, business profile) live under `features/`, not here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that feature's docs in one
-  place).
+  place). `features/business-profile/` holds Details, Projects, and Certifications and reviews as
+  child view dirs. `features/other/` is auth, media library, leads.
+- `design/` — static HTML mocks (`cms.html`). Specs remain canonical. Ads mock stays with ads
+  until a later `ads.html` consolidation.
 - `planning/` — proposed, unshipped work; never the canonical source. The
   `frontend-2` port index is [planning/frontend-debloat.md](planning/frontend-debloat.md);
   per-feature cut lists live with the feature as `frontend-debloat.md`.
