@@ -168,8 +168,8 @@ Do not advertise `{website_prefix}.placis.com` as a live URL.
 **Website assistant** is a default-on **overlay** pinned to the bottom of the canvas (not a
 toolbar button, not a modal) while the **chatbot** is showing. Empty composer turns the
 **voice agent** on: overlay hidden, soft orb bottom-right (glow that falls off, no hard
-edge). The switch is a fade, not a cut. Restore chatbot as text next
-to the orb (vertically centered to it). A small close on the top-right of the orb also
+edge). The switch is a fade, not a cut. Restore chatbot is an opaque pill under Apply /
+Reject; the orb is a circle on the right spanning both rows. A small close on the top-right of the orb also
 restores. Tools and apply stay in [assistant.md](assistant.md). Two overlay switches: plan vs
 continuous, and instant apply vs Ask first (Apply / Reject). **Follow** is a third config,
 default off, not owner-turnable. Default is plan + Ask first. Composer submit is **Plan**
@@ -214,7 +214,7 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
 - **Ask first applied vs not applied** must be obvious. The overlay is **one chat-like thread**.
   Ask first **Apply / Reject is per pending turn** (the whole run’s tools in bulk), not per tool.
   Those two actions are **pills on the canvas**, always sitting immediately above the website
-  assistant overlay (chatbot) or **beside the orb** in the same row as Restore chatbot
+  assistant overlay (chatbot) or in the left stack next to the orb
   (voice agent), not inside the thread and not
   at the canvas midpoint. Each tool in the
   thread is the backend `summary` (`Updated image on Hero`),

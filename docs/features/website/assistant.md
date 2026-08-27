@@ -30,8 +30,8 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
   **expanded** (no label, no fill). Hidden while reduced.
 - The overlay is **one chat-like thread** (owner turns and assistant replies). Ask first
   **Apply / Reject is per pending turn**: one pair for the whole run’s tools, not per tool.
-  Those two actions are **pills on the canvas**, always over the chatbot (above it) or **beside
-  the orb** when the voice agent is on, not in the thread. Tool calls in the thread are muted owner lines from the backend, never
+  Those two actions are **pills on the canvas**, always over the chatbot (above it) or in the
+  left stack next to the orb when the voice agent is on, not in the thread. Tool calls in the thread are muted owner lines from the backend, never
   the tool name. Each line has a kind icon: pencil for writes, lightbulb for thinking.
   There is no search/grep tool.
 - Configs are **boolean switches** in the overlay. Default **plan + Ask first**. **Follow**
@@ -39,10 +39,11 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
 - Empty composer turns the **voice agent** on (`/cms/website`). The chatbot overlay is
   hidden. A soft orb sits bottom-right of the canvas (`min(5.5rem, 30vw)`). A glow
   falls off from the center with no hard edge. Clicks pass through except Restore chatbot
-  and close. Restore chatbot is **text** next to the orb, vertically centered to it (sticky while the
+  and close. Restore chatbot is an opaque pill under Apply / Reject; the orb is a circle on
+  the right spanning both rows (sticky while the
   field stays empty until **Voice**). A small close on the top-right of the orb also restores.
   In chatbot mode, empty field shows **Voice**; text in the field is Plan / Send. Apply /
-  Reject sit beside the orb when the voice agent is on (same row as Restore chatbot), and
+  Reject sit in that left stack when the voice agent is on, and
   centered above the overlay over the chatbot. Switching to the voice agent and back is a
   fade, not a cut. The voice agent speaks back and uses the same tools; it grants no extra
   authority. **Follow** does not snap the canvas while it is off.
@@ -118,7 +119,7 @@ editing. Default **off**. The owner cannot turn it on (no overlay switch). A req
 **Gate: instant apply vs Ask first** (whether Apply / Reject exist)
 
 - **Ask first** (`ask_first`) — **Apply** / **Reject** pills sit on the canvas over the
-  chatbot, or **beside the orb** when the voice agent is on, for the whole pending run. The
+  chatbot, or in the left stack next to the orb when the voice agent is on, for the whole pending run. The
   canvas shows the proposal in memory. Nothing is PATCHed until **Apply**. Never `on_confirm`.
 - **Instant apply** — those buttons are bypassed. In the CMS, the website editor applies each
   validated tool to the in-memory projection and PATCHes as they succeed. There is no Reject for
