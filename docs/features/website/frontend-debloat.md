@@ -5,7 +5,7 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [frontend.md](frontend.md), [editing.md](editing.md), [assistant.md](assistant.md),
-[design decision record](design-decisions.md),
+[design decision record](design-decision-record.md),
 [technical-implementation.md](technical-implementation.md), [api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 Projects: [projects frontend-debloat](../business-profile/projects/frontend-debloat.md).
@@ -48,7 +48,7 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   On narrow, the open list / Content title row is compact; the whole row hides the sheet
   (Add a website page stays its own hit).
 - Look clones the placis-web dashboard theme ([CMS design.md](../../general-architecture/cms/design.md),
-  [CMS design decision record](../../general-architecture/cms/design-decisions.md) 5). Predecessor `src/styles/cms/` tokens that fight this go (cross-cutting file).
+  [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5). Predecessor `src/styles/cms/` tokens that fight this go (cross-cutting file).
 - Canvas via the shared contractor-website component package.
 - Website assistant **overlay** pinned to the canvas (default collapsed on wide and narrow;
   wide: one-row composer — chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**;
@@ -140,4 +140,4 @@ the website Go phase (Cloudflare custom hostname + DNS rows).
 - `cms.ts` has no blog, careers, or leftover website-template-apply wrappers.
 - Don't say inspector: no leftover folder or type names in this feature.
 - Publication dropdown + blockers panel match [frontend.md](frontend.md).
-- `/cms/website` type and color match [CMS design decision record](../../general-architecture/cms/design-decisions.md) 5.
+- `/cms/website` type and color match [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5.

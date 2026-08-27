@@ -1,16 +1,20 @@
 # CMS design decision record
 
 Look and interaction for The CMS (sidebar + main area): left nav, New chat, viewport lock,
-theme. Website editor look stays in [website design decision record](../../features/website/design-decisions.md).
+theme. Website editor look stays in [website design decision record](../../features/website/design-decision-record.md).
 Tokens: [design.md](design.md). Mock: [cms.html](../../design/cms.html). Screens:
 [frontend.md](frontend.md).
 
 Status: decided (dates on each entry). Entries moved from website design decision record keep the
 old paragraphs and dates; the website file points here. Do not silently replace the old entry.
+Each live entry is **what** plus **why**.
 
 ## Decisions
 
-1. **Left nav and Profile** — Collapsed nav icons **navigate**. Only the sidebar panel control expands or collapses the
+1. **Left nav and Profile** — Why: expanding the rail on every destination is noisy, and a
+   collapsed Profile has no children to show, so the icon goes to **Business details**. A house
+   icon would read as Home. There is no **AI tools** item because cleanup is `/cms/media` and the
+   website assistant is the overlay. Collapsed nav icons **navigate**. Only the sidebar panel control expands or collapses the
    labels. The Profile icon goes to **Business details** (children stay a disclosure when the
    sidebar is expanded). Navigating does not expand the rail.
    Collapsed, the bottom of the rail is the Clerk owner photo (UserButton), not initials.
@@ -26,27 +30,31 @@ old paragraphs and dates; the website file points here. Do not silently replace 
    back). (2026-08-26)
    On **narrow**, this left rail is gone: a full-screen overlay selector (see 4). Collapsed
    icon rail, hover peek, and click-to-pin are **wide only**. (2026-08-27)
-   Website editor canvas / workspace quiet-default: [website design decision 1](../../features/website/design-decisions.md).
+   Website editor canvas / workspace quiet-default: [website design decision 1](../../features/website/design-decision-record.md).
 
-2. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
+2. **The yellow strip is mock-only states** — Why: product destinations stay in the left nav;
+   a review strip that starts open covers the CMS. Per-screen shortcuts for reviewing
    [cms.html](../../design/cms.html) (copy-out blocked, Ask first pending,
-   pages, publication, and so on). Product destinations stay in the left nav. Hide with
+   pages, publication, and so on). Hide with
    `?shot=1`. Copy-out is an error, not always-on UI. (2026-08-26; moved from website
    design decision 7, 2026-08-27)
    Always collapsible to a **circle in the top right**; tap to reopen. Default **collapsed**
    (desktop and mobile). `?dev=1` opens it; `?shot=1` hides it. (2026-08-26; default collapsed
    everywhere 2026-08-27)
 
-3. **The CMS is viewport-locked, not a scrolling document** — The window never
+3. **The CMS is viewport-locked, not a scrolling document** — Why: The CMS is the sidebar plus
+   main area, not a document; scrolling the window would move the nav and composer off screen. The window never
    scrolls. The CMS fills the viewport like a PWA: The CMS stays put, overflow is clipped at
    the CMS. Inner regions scroll only when that surface has more content than it can show
    (Details / Projects / Certifications and reviews, a workspace list, including Content).
    The retired right-hand editing panel is not a scroller. (2026-08-26; moved from website
    design decision 8, 2026-08-27)
    Website canvas scroll (website page inside the stage, assistant overlay pad): [website
-   design decision 8](../../features/website/design-decisions.md).
+   design decision 8](../../features/website/design-decision-record.md).
 
-4. **The CMS is narrow-first** — Owners use it on a small screen. A wide screen is extra width, not
+4. **The CMS is narrow-first** — Why: owners use it on a small screen; 1100px is already the CMS
+   breakpoint (do not add another). A leftover `3rem` rail on a small screen eats the main
+   area, so narrow is a full-screen overlay selector. A wide screen is extra width, not
    the default story. Global nav copies placis-web `DashboardShell`. (2026-08-27; moved from
    website design decision 16, 2026-08-27)
    **Narrow (≤1100px):** a **full-screen overlay selector** covers `main` (labels, active
@@ -62,9 +70,12 @@ old paragraphs and dates; the website file points here. Do not silently replace 
    Profile and Ads headings have no decorative boxed icon. Open destinations on narrow
    stays. Viewport controls stay on `/cms/website` only. (2026-08-27)
    Website editor canvas widths, workspace bottom bar, assistant default, Mobile default:
-   [website design decision 16](../../features/website/design-decisions.md).
+   [website design decision 16](../../features/website/design-decision-record.md).
 
-5. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Satoshi, body tracking `-0.01em`,
+5. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Why: one palette
+   with the dashboard so The CMS does not look like a second product. `--secondary` is a wash
+   token, not a resting chip; Connect hides when both ad accounts are linked so it is not a
+   stuck control. Satoshi, body tracking `-0.01em`,
    light weights (`400` / `450` / `500` / `600`), ink `#13120a`, `--secondary` `#f4f4f5`,
    zinc-600 idle rows, zinc-950/6% active fill, stone `#e7e5e4` hairline on the prompt box.
    Do not invent a second palette. Source: placis-web `globals.css` + `marketingSite.ts`.
@@ -83,5 +94,5 @@ old paragraphs and dates; the website file points here. Do not silently replace 
    token, not a resting chip. Voice on New chat opens a full-screen **orb** for the
    client interview (soft glowing circle, Back). Do not port the DustOrb
    particle renderer bit by bit; the later `frontend-2` port can keep its cheaper orb.
-   Website-editor Voice stays the canvas orb ([website design decision 18](../../features/website/design-decisions.md)). Token table:
+   Website-editor Voice stays the canvas orb ([website design decision 18](../../features/website/design-decision-record.md)). Token table:
    [design.md](design.md). (2026-08-27)

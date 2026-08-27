@@ -11,7 +11,7 @@ instead of silently replacing the old entry.
    featured-first; new pin appends as least featured. This screen is the picker for the pool
    and for pinning more into top reviews. Website editor reviews Content used to show that
    **same set**. No `/cms/proof`. Layout is in
-   [design decision record](design-decisions.md). (2026-08-20; moved from website ADR 16,
+   [design decision record](design-decision-record.md). (2026-08-20; moved from website ADR 16,
    2026-08-27)
 
    Unpin/reorder of **top reviews** used to rewrite unpublished `website_slot_reviews` from
