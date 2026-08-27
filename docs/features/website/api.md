@@ -216,7 +216,7 @@ not this CMS POST. They are never website-rollback targets.
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** poll a connected website address until `active`.
-- **Response:** hostname, type, status, DNS rows (copyable). No GoDaddy/nameserver mutation.
+- **Response:** hostname, type, status, DNS rows (type, Host, Value; copyable). No GoDaddy/nameserver mutation.
 
 ## Complete — projects
 

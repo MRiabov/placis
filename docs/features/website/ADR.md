@@ -150,9 +150,10 @@ Status: decided (2026-08-16, product owner + engineering).
 20. **Website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS **Connect website
     address** is a modal over the website editor, opened from **New URL** in the website publication
-    dropdown. Owner copy on that control is **Publish**. Shows records to paste. Do not take over the contractor’s nameservers. Apex `A`
+    dropdown. Owner copy on that control is **Publish**. Shows Host and Value as separate
+    copyable fields, with on-screen how-to. Do not take over the contractor’s nameservers. Apex `A`
     records need Apex Proxying (later, Enterprise).
-    (2026-08-21; Connect modal 2026-08-23)
+    (2026-08-21; Connect modal 2026-08-23; Host/Value copy 2026-08-27)
 
 21. **Website publication is a destination dropdown** — `{website_prefix}.preview.placis.com`,
     each connected website address, or New URL (Connect website address). Not a Worker

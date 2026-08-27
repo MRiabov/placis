@@ -994,7 +994,7 @@
   </div>
 
   <div class="cms-modal-scrim is-hidden" id="connectModal">
-    <div class="cms-modal" role="dialog" aria-labelledby="connectTitle">
+    <div class="cms-modal cms-connect-modal" role="dialog" aria-labelledby="connectTitle">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
         <h2 id="connectTitle">Connect website address</h2>
         <button type="button" id="connectClose" aria-label="Close">×</button>
@@ -1003,9 +1003,49 @@
         <span class="cms-field-label">Custom website address</span>
         <input class="cms-field-control" value="www.acme.ie" />
       </label>
-      <p class="note">Add these DNS rows at GoDaddy, Porkbun, or Squarespace — do not move nameservers to Placis.</p>
-      <div class="cms-version-card"><strong>TXT</strong><span> _cf-custom-hostname.www · waiting for DNS</span></div>
-      <div class="cms-version-card"><strong>CNAME</strong><span> www · customers.placis.com</span></div>
+      <p class="cms-dns-status" role="status">waiting for DNS</p>
+      <div class="cms-dns-howto">
+        <p>Add these records at the DNS panel where acme.ie already lives — GoDaddy, Porkbun, or Squarespace. Do not move nameservers to Placis; that hijacks mail.</p>
+        <ol>
+          <li>Copy <strong>Host</strong> into the name / host field.</li>
+          <li>Copy <strong>Value</strong> into the value / points to field.</li>
+          <li>Reopen this from New URL or the waiting host until status is active.</li>
+        </ol>
+      </div>
+      <article class="cms-dns-record">
+        <div class="cms-dns-record-head"><strong>TXT</strong></div>
+        <label class="cms-dns-field">
+          <span class="cms-field-label">Host</span>
+          <div class="cms-dns-copyrow">
+            <input class="cms-dns-value" readonly spellcheck="false" autocomplete="off" value="_cf-custom-hostname.www" aria-label="TXT host" />
+            <button class="button-secondary" type="button" data-copy>Copy</button>
+          </div>
+        </label>
+        <label class="cms-dns-field">
+          <span class="cms-field-label">Value</span>
+          <div class="cms-dns-copyrow">
+            <input class="cms-dns-value" readonly spellcheck="false" autocomplete="off" value="ca3-8f2a1c9e4b7d6035" aria-label="TXT value" />
+            <button class="button-secondary" type="button" data-copy>Copy</button>
+          </div>
+        </label>
+      </article>
+      <article class="cms-dns-record">
+        <div class="cms-dns-record-head"><strong>CNAME</strong></div>
+        <label class="cms-dns-field">
+          <span class="cms-field-label">Host</span>
+          <div class="cms-dns-copyrow">
+            <input class="cms-dns-value" readonly spellcheck="false" autocomplete="off" value="www" aria-label="CNAME host" />
+            <button class="button-secondary" type="button" data-copy>Copy</button>
+          </div>
+        </label>
+        <label class="cms-dns-field">
+          <span class="cms-field-label">Value</span>
+          <div class="cms-dns-copyrow">
+            <input class="cms-dns-value" readonly spellcheck="false" autocomplete="off" value="customers.placis.com" aria-label="CNAME value" />
+            <button class="button-secondary" type="button" data-copy>Copy</button>
+          </div>
+        </label>
+      </article>
     </div>
   </div>
 

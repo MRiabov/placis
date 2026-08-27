@@ -720,6 +720,27 @@ document.getElementById("connectClose").addEventListener("click", () => setConne
 connectModal.addEventListener("click", (event) => {
   if (event.target === connectModal) setConnect(false);
 });
+connectModal.querySelectorAll(".cms-dns-value").forEach((input) => {
+  input.addEventListener("focus", () => input.select());
+});
+connectModal.querySelectorAll("[data-copy]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const input = button.closest(".cms-dns-copyrow")?.querySelector(".cms-dns-value");
+    const value = input?.value;
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      input.select();
+      document.execCommand("copy");
+    }
+    const previous = button.textContent;
+    button.textContent = "Copied";
+    window.setTimeout(() => {
+      button.textContent = previous;
+    }, 1200);
+  });
+});
 document.getElementById("homePrompt").addEventListener("submit", (event) => {
   event.preventDefault();
   show("website");
