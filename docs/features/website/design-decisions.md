@@ -1,8 +1,8 @@
 # Website design decisions
 
 Look and interaction for The CMS website editor (and the Details opening-hours picker).
-Architecture stays in [ADR.md](ADR.md). Screens: [frontend.md](frontend.md). Mock:
-[design/cms.html](../../website/design/cms.html).
+Architecture stays in [ADR.md](ADR.md). Screens: [frontend.md](frontend.md). Tokens:
+[design.md](design.md). Mock: [design/cms.html](../../website/design/cms.html).
 
 Status: decided (2026-08-26, product owner). Update an entry (keeping the old decision + date)
 instead of silently rewriting history.
@@ -271,7 +271,8 @@ instead of silently rewriting history.
     token, not a resting chip. Voice on New chat opens a full-screen **orb** for the
     client interview (soft glowing circle, Back). Do not port the DustOrb
     particle renderer bit by bit; the later `frontend-2` port can keep its cheaper orb.
-    Website-editor Voice stays the canvas orb (decision 18). (2026-08-27)
+    Website-editor Voice stays the canvas orb (decision 18). Token table:
+    [design.md](design.md). (2026-08-27)
 
 18. **Website editor voice agent is an orb, not a full-screen takeover** — Empty composer
     turns the **voice agent** on (`/cms/website` only). The chatbot overlay is hidden so the

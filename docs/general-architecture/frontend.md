@@ -5,6 +5,7 @@ Feature screens stay in that feature’s `frontend.md`. Stack and folders:
 [frontend-stack.md](frontend-stack.md). Port instructions:
 [frontend-debloat.md](frontend-debloat.md) (index:
 [planning/frontend-debloat.md](../planning/frontend-debloat.md)).
+Tokens for the CMS (sidebar + main area): [website design.md](../features/website/design.md).
 
 ## Loading placeholders
 

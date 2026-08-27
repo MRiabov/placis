@@ -10,6 +10,7 @@ The yellow strip is mock-only **per-screen states** (copy-out blocked, assistant
 
 The mock is visual. Function is the website and details specs ([features/website](../features/website/README.md),
 [features/other/details](../features/other/details/README.md)); when they disagree, the specs win.
+Tokens: [features/website/design.md](../features/website/design.md).
 
 Layout and spacing match `frontend-2`. Visible words follow [glossary.md](../glossary.md). The canvas is a fake homepage, not the contractor website renderer.
 

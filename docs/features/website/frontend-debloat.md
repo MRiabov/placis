@@ -47,11 +47,8 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   Canvas website scroll pad clears the website assistant overlay so last sections stay reachable.
   On narrow, the open list / Content title row is compact; the whole row hides the sheet
   (Add a website page stays its own hit).
-- Look clones the placis-web dashboard theme ([design-decisions.md](design-decisions.md) 17):
-  Satoshi, body tracking `-0.01em`, weights `400` / `450` / `500` / `600`, ink `#13120a`,
-  `--secondary` `#f4f4f5`, zinc-600 idle rows, zinc-950/6% active fill, stone `#e7e5e4`
-  hairline. Source: placis-web `globals.css` + `marketingSite.ts`. Do not invent a second
-  palette. Predecessor `src/styles/cms/` tokens that fight this go (cross-cutting file).
+- Look clones the placis-web dashboard theme ([design.md](design.md),
+  [design-decisions.md](design-decisions.md) 17). Predecessor `src/styles/cms/` tokens that fight this go (cross-cutting file).
 - Canvas via the shared contractor-website component package.
 - Website assistant **overlay** pinned to the canvas (default collapsed on wide and narrow;
   wide: one-row composer — chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**;

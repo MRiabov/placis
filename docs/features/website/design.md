@@ -1,0 +1,68 @@
+# CMS design tokens
+
+The CMS (sidebar + main area): New chat, website editor, Details, Ads list. Not the
+contractor website skin — that is [styles.md](styles.md). Look decisions:
+[design-decisions.md](design-decisions.md). Mock: [cms.css `:root`](../../website/design/cms.css).
+
+Clone placis-web `globals.css` (light) + `marketingSite.ts`. Do not invent a second palette.
+Do not restyle Ads creative surfaces from this file.
+
+## Type
+
+| Token | Value |
+| --- | --- |
+| `--site-font` | Satoshi, Helvetica Neue, Arial, sans-serif |
+| Body tracking | `-0.01em` |
+| Weights | `400` / `450` / `500` / `600` |
+
+## Color
+
+Named CSS variables in the mock. Hex is the light-theme value.
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--background` | `#ffffff` | Canvas; resting fill on outline controls |
+| `--foreground` | `#27272a` | Body copy (zinc-800) |
+| `--primary` | `#13120a` | Ink: filled send, Publish, Apply |
+| `--primary-foreground` | `#ffffff` | On ink |
+| `--secondary` | `#f4f4f5` | Raised / unused wash (zinc-100). **Not** a resting button fill |
+| `--secondary-foreground` | `#27272a` | On `--secondary` |
+| `--muted` | `#f4f4f5` | Same wash as `--secondary` today |
+| `--muted-foreground` | `#71717a` | Hints, Upgrade shelf, captions (zinc-500) |
+| `--cms-surface-sunken` | `#fafafa` | zinc-50: open Connect, hover on outline / flat controls |
+| `--border` | `#e4e4e7` | Outline control stroke (zinc-200) |
+| `--hairline` | `#e7e5e4` | Stone edge: prompt box, flat Connect / Paperclip / Voice |
+| `--sidebar` | `#f7f7f7` | Nav rail |
+| `--cms-surface-active` | `rgb(9 9 11 / 6%)` | Active nav row |
+| `--ring` | `#a1a1aa` | Focus ring |
+| `--prompt-shelf` | `rgb(250 250 250 / 80%)` | Upgrade shelf |
+| `--prompt-radius` | `1.75rem` | Prompt box (28px) |
+
+Idle nav rows: zinc-600 (`#52525b`, `--cms-text-secondary`).
+
+## Radius and motion
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--radius` / `--cms-radius-control` | `0.625rem` | Fields, outline buttons |
+| `--cms-radius-pill` | `999px` | Connect, icon hits, Voice / send |
+| `--cms-ease` | `cubic-bezier(0.2, 0, 0, 1)` | UI motion |
+| `--cms-duration-fast` | `120ms` | Fast UI; hover-tap panel close uses 120ms |
+
+## Control recipes
+
+Fill comes from the tokens above. Do not paint `--secondary` on a control at rest.
+
+| Recipe | Rest | Hover / open | Stroke |
+| --- | --- | --- | --- |
+| **Ink** (send, Apply, Publish) | `--primary` | `#27272a` (`--cms-accent-hover`) | `rgb(0 0 0 / 10%)` |
+| **Outline** (Change, Copy, Reject, `.button-secondary`) | `--background` | `--cms-surface-sunken` | `--border` |
+| **Flat prompt** (Connect, Paperclip, Voice) | `--background` | `--cms-surface-sunken` only while open or `(hover: hover)` | `--hairline` |
+
+Connect zinc-50 is the **open** fill (Google / Meta panel), not a stuck `:hover`. Hide Connect when Google Ads and Meta are both connected ([design-decisions.md](design-decisions.md) 17).
+
+## Not these
+
+- Contractor website presets ([styles.md](styles.md)) — Radix scales on the live site, not The CMS.
+- `frontend-2` predecessor oklch `--secondary` and filled `bg-secondary` — out of scope until that port; this table wins.
+- A second CMS breakpoint — keep **1100px** (design-decision 16). Prompt Paperclip / Voice hide under **640px** (`sm`), not a new product breakpoint.
