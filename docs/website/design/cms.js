@@ -169,16 +169,7 @@ function setCopyOut(on) {
 
 function setAskFirst(on) {
   document.getElementById("askPills")?.classList.toggle("is-hidden", !on);
-  const hero = document.querySelector(".fake-hero");
-  hero?.classList.toggle("is-pending", on);
-  let badge = document.querySelector(".cms-pending-badge");
-  if (on && !badge && hero) {
-    badge = document.createElement("span");
-    badge.className = "cms-pending-badge";
-    badge.textContent = "Not applied";
-    hero.prepend(badge);
-  }
-  badge?.classList.toggle("is-hidden", !on);
+  document.querySelector(".fake-hero")?.classList.toggle("is-pending", on);
   stripButton("ask-first")?.classList.toggle("on", on);
   requestAnimationFrame(syncCanvasScale);
 }

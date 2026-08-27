@@ -212,8 +212,9 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
   thread is the backend `summary` (`Updated image on Hero`),
   never a tool name and never “website slot” ([assistant.md](assistant.md)). Write lines use a
   **pencil**; thinking uses a **lightbulb**. There is no search/grep tool.
-  - **Pending** — canvas paints the proposal in memory; changed website sections show
-    **Not applied**. Nothing PATCHed. Apply and Reject pills shown.
+  - **Pending** — canvas paints the proposal in memory; changed website sections use the
+    pending outline. Nothing PATCHed. Apply and Reject pills shown. Do not paint
+    **Not applied** as copy on the website.
   - **Applied** — canvas is the unpublished website; proposal overlay gone. Pills gone (one-way).
   - **Rejected** — canvas back to pre-proposal. Pills gone.
 
