@@ -71,7 +71,7 @@ decision + date) instead of silently replacing the old entry.
    and business research run at the same time; each `SELECT … FOR UPDATE`, inserts only
    what it set, and updates only those columns. The predecessor dropped populated fields in the UI under a
    write race. Same field with disagreeing values is a research conflict. See
-   [details ADR](../other/details/ADR.md).
+   [details ADR](../business-profile/details/ADR.md).
    Same day: founder and brand are columns on `business_profiles`, not jsonb. Contact was already
    columns. Remaining jsonb on onboarding is Stripe and event payloads. ETL fetch `raw` lives in
    schema `etl`. (2026-08-27.)

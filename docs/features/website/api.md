@@ -1,10 +1,11 @@
 # Website HTTP
 
 Conventions: [HTTP conventions](../../general-architecture/api.md). Unpublished website,
-website assistant, website publication, Connect website address, projects. Field authority for
+website assistant, website publication, Connect website address. Field authority for
 the website-editor PATCH body remains [editing.md](editing.md); this file locks the routes.
 
-Live business profile: [details](../other/details/api.md). Media library:
+Live business profile: [details](../business-profile/details/api.md). Projects:
+[projects](../business-profile/projects/api.md). Media library:
 [media library](../other/media/api.md). Website form submit: [leads](../other/leads/api.md).
 
 Live HTML GET on `{website_prefix}.preview.placis.com` never calls Go. **Do not create**
@@ -218,23 +219,6 @@ not this CMS POST. They are never website-rollback targets.
 - **Callers:** poll a connected website address until `active`.
 - **Response:** hostname, type, status, DNS rows (type, Host, Value; copyable). No GoDaddy/nameserver mutation.
 
-## Complete — projects
-
-Owned by the Projects screen (Profile group). Table is `website.projects`. Not nested under
-the website editor and not under the business profile.
-
-### GET /v1/projects / POST /v1/projects
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** `/cms/projects`.
-- **POST Idempotency-Key:** yes.
-- **Request (create):** title, description, cover media library item id.
-
-### GET /v1/projects/{id} / PATCH /v1/projects/{id} / DELETE /v1/projects/{id}
-
-- **Auth:** Clerk JWT, active tenant
-- **PATCH Idempotency-Key:** yes.
-
 ## Do not create
 
 - `/v1/tenants/{website_prefix}/website/…`
@@ -255,6 +239,6 @@ the website editor and not under the business profile.
 - Don't say session: `realtime-voice-session` (later)
 - `POST …/assistant/cancel` (the run ends when it finishes or fails)
 - `content-contract` as an HTTP resource (website component catalog files)
-- `/certification-selections` (certifications live on [details](../other/details/api.md))
+- `/certification-selections` (certifications live on [details](../business-profile/details/api.md))
 - `/v1/website/editor/assets`, `/v1/website/editor/files/…` (media library owns upload)
 - `/v1/website/editor/business-profile` (Details owns `/v1/business-profile`)

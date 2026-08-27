@@ -492,9 +492,8 @@ function setViewtabsCollapsed(collapsed) {
 
 function preferViewtabsCollapsed() {
   if (params.get("shot") === "1") return true;
-  if (params.get("dev") === "0") return true;
   if (params.get("dev") === "1") return false;
-  return window.matchMedia("(max-width: 1100px)").matches;
+  return true;
 }
 
 function preferAssistantExpanded() {

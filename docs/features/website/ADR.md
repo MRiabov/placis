@@ -31,7 +31,7 @@ Status: decided (2026-08-16, product owner + engineering).
    freeform JSON. Named real photo → attach first. AI cleanup is the `/cms/media` cleanup.
    `generate_image` is last resort when nothing in `media_assets[]` fits.
    Overlay look (always-on overlay, reduce-height left / trash right, Apply / Reject pills) is in
-   [design-decisions.md](design-decisions.md).
+   [design decision record](design-decision-record.md).
    (2026-08-20; assistant configs + Apply/Reject terminal 2026-08-23; Ask first 2026-08-23;
    attach-before-generate + shared media-library functions 2026-08-24; collapse + no dim
    2026-08-26)
@@ -98,13 +98,11 @@ Status: decided (2026-08-16, product owner + engineering).
     (2026-08-20; edge locked 2026-08-21; imported 2026-08-23; Worker write-thin 2026-08-23;
     token preview dropped 2026-08-25)
 
-16. **Certifications and reviews are one Profile screen** — `/cms/certifications-and-reviews`.
-    Global `website_certification_definitions`; tenant selections. Unchecking is `removed`.
-    No upload-your-badge. Reviews stay `business_profile_reviews`. **Top reviews** max 30,
-    featured-first; new pin appends as least featured. This screen is the picker for the pool
-    and for pinning more into top reviews. Website editor reviews Content used to show that
-    **same set**. No `/cms/proof`. Layout is in
-    [design-decisions.md](design-decisions.md). (2026-08-20)
+16. **Certifications and reviews picker is a Profile screen** — `/cms/certifications-and-reviews`.
+    Picker rules, top reviews, archive, and certification tables: moved to
+    [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md)
+    (2026-08-27). Layout: that directory’s [design decision record](../business-profile/certifications-and-reviews/design-decision-record.md).
+    (2026-08-20)
 
     Unpin/reorder of **top reviews** used to rewrite unpublished `website_slot_reviews` from
     the current top set. (2026-08-20)
@@ -118,11 +116,11 @@ Status: decided (2026-08-16, product owner + engineering).
     reviews does **not** rewrite website sections. Archive still drops that review from
     every website section array and from top reviews. Empty array: keep the website section
     (no fake copy; do not hide the website component). Origins, archive, and create
-    owner-written stay as above.
+    owner-written stay on the picker ADR.
 
     (2026-08-26): Certification definitions and selections are Details / business-profile
     tables (`certification_definitions`, `business_profile_certification_selections`), not
-    `website_certification_*`. See [details ADR](../other/details/ADR.md) 7.
+    `website_certification_*`. See [details ADR](../business-profile/details/ADR.md) 7.
 
 17. **`generate_image` may attach pending-review on the unpublished canvas** — always a warning;
     owner approval makes it approved; website publication still requires approved media library
@@ -164,6 +162,6 @@ Status: decided (2026-08-16, product owner + engineering).
     closed jsonb trees (page / text / URL nodes, depth 2), plus `show_phone` / `show_email`.
     Look stays on site-wide website sections (`page_id` null). No `top_menu_items` /
     `footer_items` tables. The website assistant uses `update_menus`, not `update_nav`.
-    Where the owner edits the trees is in [design-decisions.md](design-decisions.md).
+    Where the owner edits the trees is in [design decision record](design-decision-record.md).
     (2026-08-23)
     Also `show_contact` (bar CTA to the Contact website page). (2026-08-26)

@@ -4,7 +4,8 @@ Ad tables. They reference the CMS content by id — they do not copy it. Convent
 [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `ads`).
 
-Referenced, not owned here: [details](../other/details/persistence.md) (profile, services, reviews),
+Referenced, not owned here: [details](../business-profile/details/persistence.md) (profile, services, reviews),
+[projects](../business-profile/projects/persistence.md),
 [media library](../other/media/persistence.md) (`ad_image_placements.media_asset_id`),
 [leads](../other/leads/persistence.md) (attribution). LLM traces:
 [LLM layer](../../general-architecture/llm-layer.md). Sensitive mutations also write

@@ -6,7 +6,7 @@ Related docs:
 
 1. [Ad generation PRD](prd.md)
 2. [Ad generation technical implementation](technical-implementation.md)
-3. [Ad generation decision record](ADR.md)
+3. [Ad generation ADR](ADR.md)
 4. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 
 ## Purpose
@@ -99,7 +99,7 @@ containing two expandable steps, an inline loading state, and the approve block 
   — they load only after the connection-status check confirms an ad platform is unconnected, so
   the owner never sees one flash and disappear; a connected ad platform shows nothing at all, and
   the button never comes back. New chat **Connect** uses this same status: gone when Google Ads
-  and Meta are both connected ([website design-decisions](../../website/design-decisions.md) 17).
+  and Meta are both connected ([look](../../../general-architecture/cms/design-decision-record.md) 5).
 - "+ New ad" button; empty state with a one-line explanation and a start button
 
 ### 2. Ad workspace (`/cms/ads/new`, `/cms/ads/{id}`)

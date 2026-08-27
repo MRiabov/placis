@@ -16,8 +16,11 @@ or unconstrained JSON. Contractor website API cutover:
 | File | Owns |
 | --- | --- |
 | [onboarding](../features/onboarding/frontend-debloat.md) | Find → Review → client interview → progress; website preview + website activation |
-| [website](../features/website/frontend-debloat.md) | Website editor, publication dropdown, Connect website address, projects, certifications |
-| [details](../features/other/details/frontend-debloat.md) | Profile disclosure, Business details, CMS left nav |
+| [website](../features/website/frontend-debloat.md) | Website editor, publication dropdown, Connect website address |
+| [CMS](../general-architecture/frontend-debloat.md) | Left nav, New chat, CMS tokens (cross-cutting file also owns generated types) |
+| [details](../features/business-profile/details/frontend-debloat.md) | Business details |
+| [projects](../features/business-profile/projects/frontend-debloat.md) | `/cms/projects` |
+| [certifications and reviews](../features/business-profile/certifications-and-reviews/frontend-debloat.md) | `/cms/certifications-and-reviews` |
 | [ads](../features/ads/ad-generation/frontend-debloat.md) | `/cms/ads` (no UI today; do not port campaign leftovers) |
 | [media library](../features/other/media/frontend-debloat.md) | `/cms/media` + Content attach |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, one Clerk organization provision, `/me` |

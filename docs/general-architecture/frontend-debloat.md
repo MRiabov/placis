@@ -33,9 +33,17 @@ no single feature owns.
   whole-panel swap). Do not say skeleton.
 - File-size guard on `frontend-2` (&lt; 800 warn, &gt; 1200 hard error).
 - `src/shared/ui/` button + dialog as they exist; do not expand shared UI in this port.
-- Tokens for the CMS (sidebar + main area): [website design.md](../features/website/design.md)
+- Tokens for the CMS (sidebar + main area): [design.md](cms/design.md)
   (clone placis-web `globals.css` + `marketingSite.ts`). Do not invent a second palette.
-  [website design-decisions](../features/website/design-decisions.md) 17.
+  [design decision record](cms/design-decision-record.md) 5.
+- Left nav (Profile disclosure + Ads), New chat (`/cms`), Connect / Voice / placeholders:
+  [frontend](cms/frontend.md). Code today: Don't say shell:
+  `frontend-2/src/features/cms/CmsDashboardShell.tsx` — leftover flat nav (New chat, Sites,
+  Details; no AI tools). `types.ts` / `routing.ts` include `/cms/proof`. `CmsRoute.tsx` —
+  `/cms/proof` and `/cms/projects` render `PlaceholderView`. `app/router/index.tsx` registers
+  those routes. Delete `/cms/proof`, **AI tools** left-nav item, and `PlaceholderView` once
+  projects and certifications are real screens. Retarget top-level Details to Profile
+  disclosure. Ads missing from nav → left-nav **Ads**. CmsRoute / cms-parity tests follow.
 
 ## Delete
 
@@ -112,4 +120,6 @@ unconstrained blobs). Contractor website typegen is a different consumer:
 - Parity suite is gone; product e2e does not attach to the owner’s dev ports.
 - Leftover layout type names are gone from `frontend-2`.
 - CMS `src/styles/cms/` tokens match placis-web
-  ([website design-decisions](../features/website/design-decisions.md) 17).
+  ([CMS design decision record](cms/design-decision-record.md) 5).
+- Left nav matches [CMS frontend](cms/frontend.md) (Profile disclosure, Ads dest, no `/cms/proof`,
+  no **AI tools** item).

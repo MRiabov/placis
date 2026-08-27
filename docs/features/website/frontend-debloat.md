@@ -5,10 +5,11 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [frontend.md](frontend.md), [editing.md](editing.md), [assistant.md](assistant.md),
-[design-decisions.md](design-decisions.md),
+[design decision record](design-decision-record.md),
 [technical-implementation.md](technical-implementation.md), [api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
-Projects and certifications screens: [details frontend](../other/details/frontend.md).
+Projects: [projects frontend-debloat](../business-profile/projects/frontend-debloat.md).
+Certifications: [certifications-and-reviews frontend-debloat](../business-profile/certifications-and-reviews/frontend-debloat.md).
 Media library: [media library](../other/media/frontend-debloat.md).
 Contractor website API: [port-contractor-website.md](port-contractor-website.md). Remaining
 cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
@@ -27,7 +28,6 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 - Queries: `frontend-2/src/features/cms/queries.ts` (`useSaveEditorPage`,
   `useEditorPosts`, `usePublishEditorPage`).
 - Route: `/cms/website` in `routing.ts` + `app/router/index.tsx`.
-- Stubs: `/cms/projects` renders `PlaceholderView`.
 
 ## Keep
 
@@ -47,8 +47,8 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   Canvas website scroll pad clears the website assistant overlay so last sections stay reachable.
   On narrow, the open list / Content title row is compact; the whole row hides the sheet
   (Add a website page stays its own hit).
-- Look clones the placis-web dashboard theme ([design.md](design.md),
-  [design-decisions.md](design-decisions.md) 17). Predecessor `src/styles/cms/` tokens that fight this go (cross-cutting file).
+- Look clones the placis-web dashboard theme ([CMS design.md](../../general-architecture/cms/design.md),
+  [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5). Predecessor `src/styles/cms/` tokens that fight this go (cross-cutting file).
 - Canvas via the shared contractor-website component package.
 - Website assistant **overlay** pinned to the canvas (default collapsed on wide and narrow;
   wide: one-row composer — chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**;
@@ -104,8 +104,6 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 | `POST …/publish` | `POST /v1/website/publications` (no destination). Live website rollback: `POST /v1/website/publications/{id}/rollback`. Do not port restore-unpublished. |
 | Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; assistant start under `/v1/website/editor/pages/{page_id}/assistant`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
 | `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
-| Projects CRUD already in `cms.ts` | `/v1/projects` |
-| Certifications helpers already in `cms.ts` | `/v1/business-profile/certifications` |
 
 Connect website address is a **modal on `/cms/website`** (no extra route). Add with
 the website Go phase (Cloudflare custom hostname + DNS rows).
@@ -124,7 +122,7 @@ the website Go phase (Cloudflare custom hostname + DNS rows).
 - Don't say website publication on the toolbar: owner copy is **Publish**.
 - Don't say blueprint: any leftover type or route.
 - Don't say proof: `/cms/proof` is details’ delete list; certifications live at
-  `/cms/certifications-and-reviews`.
+  `/cms/certifications-and-reviews` ([certifications-and-reviews](../business-profile/certifications-and-reviews/frontend-debloat.md)).
 
 ## Tests
 
@@ -142,4 +140,4 @@ the website Go phase (Cloudflare custom hostname + DNS rows).
 - `cms.ts` has no blog, careers, or leftover website-template-apply wrappers.
 - Don't say inspector: no leftover folder or type names in this feature.
 - Publication dropdown + blockers panel match [frontend.md](frontend.md).
-- `/cms/website` type and color match [design-decisions.md](design-decisions.md) 17.
+- `/cms/website` type and color match [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5.

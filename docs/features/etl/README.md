@@ -10,7 +10,7 @@ Onboarding 02 and a Monday / Wednesday / Friday schedule both call `etl.StartRun
 chunks transform as they arrive (fast extract in about a second, then slow extract). There is no
 owner-facing CMS screen in this slice.
 
-- [ADR.md](ADR.md) — decisions
+- [ADR](ADR.md) — architectural decision record
 - [architecture.md](architecture.md) — extract vs transform, triggers, packages (`StartRun`
   orchestrates; per-source extract/transform files do the work)
 - [pipeline](pipeline/README.md) — per source (Google Maps, Facebook, Instagram, …)
@@ -18,5 +18,5 @@ owner-facing CMS screen in this slice.
 - [technical-implementation.md](technical-implementation.md)
 - [testing.md](testing.md)
 
-Business profile tables: [details persistence](../other/details/persistence.md). Onboarding 02
+Business profile tables: [details persistence](../business-profile/details/persistence.md). Onboarding 02
 only starts runs: [02](../onboarding/pipeline/02-business-research.md).

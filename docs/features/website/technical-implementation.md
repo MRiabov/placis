@@ -8,7 +8,9 @@ Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture
 ## Domain objects
 
 See [persistence.md](persistence.md). Media assets are
-[media library](../other/media/persistence.md).
+[media library](../other/media/persistence.md). Business profile:
+[details](../business-profile/details/persistence.md). Projects:
+[projects](../business-profile/projects/persistence.md).
 
 ## Website template application
 
@@ -62,7 +64,7 @@ the tables it writes.
 Routes: [api.md](api.md). Do not re-list them here. Live HTML GET never calls Go.
 Website form POST is [leads HTTP](../other/leads/api.md). Connect website address is
 `POST /v1/website/addresses` (`type=custom` only). Website rollback is owner rows only.
-Media library, Details, and website form submit are other features' `api.md` files.
+Media library, Details, Projects, and website form submit are other features' `api.md` files.
 CMS unpublished writes are editor `POST`/`PATCH` only. Reset to an owner website version is
 editor GET `publication_id`, then PATCH.
 

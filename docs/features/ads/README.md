@@ -6,7 +6,7 @@ services) into a reviewable, exportable ad set. This doc is the overview; the
 
 - [persistence.md](persistence.md) — `ads` and `ad_*` tables
 - [api.md](api.md) — HTTP (`/v1/ads`)
-- [ADR](ad-generation/ADR.md) — the decision record (why each choice was made)
+- [ADR](ad-generation/ADR.md) — architectural decision record (why each choice was made)
 - [PRD](ad-generation/prd.md) — product spec, user stories, acceptance criteria
 - [technical-implementation.md](ad-generation/technical-implementation.md) — domain objects,
   generation pipeline, validation, export

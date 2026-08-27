@@ -88,13 +88,15 @@ Distinct from: Business profile (our record of that business).
 
 ### Business profile
 
-Everything we know about the business, in one place. Onboarding builds it; Details edits it; the
-website shows it; ads read it. Each detail notes where it came from. When the contractor’s answer
-disagrees with business research, both are shown and they decide.
+Everything we know about the business, in one place. Onboarding and ETL transform write it;
+the website shows it; ads read it. Each detail notes where it came from. When the contractor’s
+answer disagrees with business research, both are shown and they decide. Details, Projects, and
+Certifications and reviews are screens on it (the media library is reached from Profile but
+lives elsewhere).
 
 Do not say “setup profile”, “facts”, or “structured facts”.
 
-Distinct from: Profile (the left-nav group).
+Distinct from: Profile (the left-nav group), Details (the Business details screen).
 
 ---
 
@@ -137,8 +139,9 @@ Distinct from: Marketing phone.
 
 ### Details
 
-The screen where the contractor edits the business profile. Editing Details changes the website
-and the next ad draft. In Profile, Details is labeled **Business details**.
+The screen where the contractor edits the Business details subset of the business profile
+(who they are, contact, hours, logo, Facebook / Maps links). Editing Details changes the
+website and the next ad draft. In Profile, Details is labeled **Business details**.
 
 Distinct from: Profile (the nav group), Business profile (the record).
 
