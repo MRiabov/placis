@@ -257,3 +257,16 @@ instead of silently rewriting history.
     Wordmark + prompt are vertically centered in the main column (Open destinations stays
     top-left on narrow). The Upgrade shelf is full width of the prompt, text centered,
     one outline with the box (placis-web shelf). (2026-08-27)
+
+18. **Website editor voice agent is an orb, not a full-screen takeover** — Empty composer
+    turns the **voice agent** on (`/cms/website` only). The chatbot overlay is hidden so the
+    website stays viewable. A circular semi-transparent orb (at most `50vw` on a narrow
+    screen; `min(11rem, 50vw)` on wide) sits bottom-right on a frosted plate. Restore
+    chatbot is a control next to the orb; restoring is sticky while the field stays empty
+    until they hit **Voice** again. In chatbot mode, empty field shows **Voice** (not Plan /
+    Send); any text is chatbot with Plan / Send. Apply / Reject sit immediately **above the
+    orb** (same as above the chatbot), centered; the orb stays to the right. The voice agent
+    speaks back and uses the same tools (plan vs continuous, Ask first). **Follow**
+    (`follow`) is a third assistant config, default **off**, not owner-turnable (no overlay
+    switch; `true` is refused). Reserved for a later cut that snaps the canvas to the
+    website slot being edited. (2026-08-27)

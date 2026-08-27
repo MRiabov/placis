@@ -166,10 +166,12 @@ attach a website address.
 Do not advertise `{website_prefix}.placis.com` as a live URL.
 
 **Website assistant** is a default-on **overlay** pinned to the bottom of the canvas (not a
-toolbar button, not a modal). Tools and apply stay in [assistant.md](assistant.md). Two configs
-as **boolean switches** on the overlay: plan vs continuous, and instant apply vs Ask
-first (Apply / Reject). Default is plan + Ask first. Composer submit is **Plan** when Plan is
-on, **Send** when Plan is off (continuous).
+toolbar button, not a modal) while the **chatbot** is showing. Empty composer turns the
+**voice agent** on: overlay hidden, circular orb bottom-right, Restore chatbot next to the
+orb. Tools and apply stay in [assistant.md](assistant.md). Two overlay switches: plan vs
+continuous, and instant apply vs Ask first (Apply / Reject). **Follow** is a third config,
+default off, not owner-turnable. Default is plan + Ask first. Composer submit is **Plan**
+when Plan is on, **Send** when Plan is off (continuous); empty chatbot field shows **Voice**.
 
 **Quiet by default.** On a **narrow** screen the canvas is the destination until they open
 destinations. The CMS is viewport-locked (PWA): the window does not
@@ -181,16 +183,17 @@ See [design-decisions.md](design-decisions.md) 8 and 16.
 narrow (≤1100px):
 Open destinations (inline with Website editor) | heading
 Desktop / Tablet / Mobile + Publish
-website (canvas) + website-assistant overlay (collapsed by default)
+website (canvas) + voice agent orb (empty composer) or website-assistant overlay
 workspace rail (bottom bar; list / Content opens above it)
 full-screen overlay selector covers all of that when open
 
 wide (≥1101px):
 nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | website (Desktop canvas)
-                                                                     | website-assistant overlay (one-row composer)
+                                                                     | voice agent orb or website-assistant overlay
 ```
 
-- **Always on** when `/cms/website` is open. There is no toolbar **Website assistant** control
+- **Always on** when `/cms/website` is open (overlay while the chatbot is showing; orb when
+  the voice agent is on). There is no toolbar **Website assistant** control
   and no overlay title. It does not open a modal. Overlay has a 12px inset from the canvas
   on the left, right, and bottom (not flush to the edges). Chevrons expand or reduce; that is
   not a hide. **Collapsed** (desktop and narrow default) is one row on a wide screen:
@@ -209,7 +212,8 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
 - **Ask first applied vs not applied** must be obvious. The overlay is **one chat-like thread**.
   Ask first **Apply / Reject is per pending turn** (the whole run’s tools in bulk), not per tool.
   Those two actions are **pills on the canvas**, always sitting immediately above the website
-  assistant overlay, not inside the thread and not at the canvas midpoint. Each tool in the
+  assistant overlay (chatbot) or **above the orb** (voice agent), not inside the thread and not
+  at the canvas midpoint. Each tool in the
   thread is the backend `summary` (`Updated image on Hero`),
   never a tool name and never “website slot” ([assistant.md](assistant.md)). Write lines use a
   **pencil**; thinking uses a **lightbulb**. There is no search/grep tool.

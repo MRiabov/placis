@@ -30,11 +30,19 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
   **expanded** (no label, no fill). Hidden while reduced.
 - The overlay is **one chat-like thread** (owner turns and assistant replies). Ask first
   **Apply / Reject is per pending turn**: one pair for the whole run’s tools, not per tool.
-  Those two actions are **pills on the canvas**, always over the chatbot (above it), not in
-  the thread. Tool calls in the thread are muted owner lines from the backend, never
+  Those two actions are **pills on the canvas**, always over the chatbot (above it) or **above
+  the orb** when the voice agent is on, not in the thread. Tool calls in the thread are muted owner lines from the backend, never
   the tool name. Each line has a kind icon: pencil for writes, lightbulb for thinking.
   There is no search/grep tool.
-- Configs are **boolean switches** in the overlay. Default **plan + Ask first**.
+- Configs are **boolean switches** in the overlay. Default **plan + Ask first**. **Follow**
+  is a third config (`follow`), default off, not shown, not owner-turnable.
+- Empty composer turns the **voice agent** on (`/cms/website`). The chatbot overlay is
+  hidden. A circular orb sits bottom-right of the canvas (at most `50vw` on a narrow screen).
+  Restore chatbot is next to the orb (sticky while the field stays empty until **Voice**).
+  In chatbot mode, empty field shows **Voice**; text in the field is Plan / Send. Apply /
+  Reject sit immediately above the orb when the voice agent is on, as they sit above the
+  chatbot. The voice agent speaks back and uses the same tools; it grants no extra
+  authority. **Follow** does not snap the canvas while it is off.
 - Pending / Applied / Rejected must be obvious (Apply / Reject pills only while that turn is
   pending; pending outline on changed website sections). Do not paint **Not applied** as copy
   on the website.
@@ -88,10 +96,14 @@ website still require approved media library items. Ads stay approved-only.
 schema of affected pages / assumptions / acceptance criteria. `assistant_plan` may summarize
 alongside the edit tools.
 
-## Two configs
+## Three configs
 
-Independent options. They combine. Default in the website editor: **plan + Ask first**. In the
-CMS they are boolean switches on the overlay.
+Independent options. They combine. Default in the website editor: **plan + Ask first**,
+**Follow** off. Plan and Ask first are boolean switches on the overlay. Follow is contract-only.
+
+**Follow** (`follow`) — when on, the canvas would snap to the website slot the agent is
+editing. Default **off**. The owner cannot turn it on (no overlay switch). A request with
+`follow: true` is refused. Reserved for a later cut.
 
 **Workflow: plan vs continuous** (how the request is scoped)
 
@@ -103,8 +115,8 @@ CMS they are boolean switches on the overlay.
 **Gate: instant apply vs Ask first** (whether Apply / Reject exist)
 
 - **Ask first** (`ask_first`) — **Apply** / **Reject** pills sit on the canvas over the
-  chatbot for the whole pending run. The canvas shows the proposal in memory. Nothing is
-  PATCHed until **Apply**. Never `on_confirm`.
+  chatbot, or **above the orb** when the voice agent is on, for the whole pending run. The
+  canvas shows the proposal in memory. Nothing is PATCHed until **Apply**. Never `on_confirm`.
 - **Instant apply** — those buttons are bypassed. In the CMS, the website editor applies each
   validated tool to the in-memory projection and PATCHes as they succeed. There is no Reject for
   that edit. Onboarding 06 writes unpublished rows headless (no `frontend-2`).
