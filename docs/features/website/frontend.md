@@ -4,7 +4,7 @@ Status: proposed frontend specification. Screens already exist under
 `frontend-2/src/features/cms/`; this doc names them against the Go contract.
 
 Related: [PRD](prd.md), [editing.md](editing.md), [assistant.md](assistant.md),
-[manifest](manifest.md), [design-decisions.md](design-decisions.md). Port: [frontend-debloat.md](frontend-debloat.md).
+[manifest](manifest.md), [design decisions](design-decisions.md). Port: [frontend-debloat.md](frontend-debloat.md).
 
 ## Purpose
 
@@ -187,7 +187,7 @@ when Plan is on, **Send** when Plan is off (continuous); empty chatbot field sho
 destinations. The CMS is viewport-locked (PWA): the window does not
 scroll. The website page scrolls inside the canvas stage; the website assistant thread scrolls.
 Last website sections can scroll clear of the website assistant overlay (and Apply / Reject).
-See [design-decisions.md](design-decisions.md) 8 and 16.
+See [design decisions](design-decisions.md) 8 and 16.
 
 ```text
 narrow (≤1100px):

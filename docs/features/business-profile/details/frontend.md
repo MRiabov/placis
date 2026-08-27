@@ -42,7 +42,7 @@ will pick up the **marketing phone**, not appointment copy. Shown on the contact
 Do **not** show an Appointment note field; persistence has no `note` column. Persistence is
 still one Opens / Closes / Closed per day; extra time blocks are the target look. On a
 narrow screen the day and Closed / add / copy sit on the first line; Opens and Closes chips
-sit full-width below (Google Calendar on a small screen). Look: [design-decisions.md](design-decisions.md).
+sit full-width below (Google Calendar on a small screen). Look: [design decisions](design-decisions.md).
 
 #### Logo picker
 

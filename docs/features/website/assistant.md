@@ -11,7 +11,7 @@ and search go through `LLMProvider` in `ai` ([LLM layer](../../general-architect
 
 Default-on overlay on the website-editor canvas. Tools and the apply path below are unchanged;
 this is the owner overlay. Details: [frontend.md](frontend.md), look:
-[design-decisions.md](design-decisions.md), architecture: [ADR](ADR.md) 6.
+[design decisions](design-decisions.md), architecture: [ADR](ADR.md) 6.
 
 - **Always on:** pinned to the canvas. **Default is collapsed** (canvas first) on wide and
   narrow. Wide collapsed is the single-line composer (one row: chevrons, field, **Plan mode**,

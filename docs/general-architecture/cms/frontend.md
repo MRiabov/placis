@@ -4,7 +4,7 @@ The CMS (sidebar + main area): left nav, Profile disclosure, New chat (`/cms`). 
 screens live with their features. Loading placeholders: every screen, per field / row — not a
 whole-panel swap ([frontend.md](../frontend.md)).
 
-Look: [design-decisions.md](design-decisions.md). Tokens: [design.md](design.md). Port:
+Look: [design decisions](design-decisions.md). Tokens: [design.md](design.md). Port:
 [frontend-debloat.md](../frontend-debloat.md). Decisions: [ADR.md](ADR.md).
 
 ## Left nav
@@ -75,7 +75,7 @@ Profile is not a route. Clicking it only expands or collapses the group.
 - **Collapsed sidebar (wide only):** only the Profile icon (person / `UserRound`, not a house). Children are hidden. The icon
   is active if a child is current (`aria-current` on the icon). Click **navigates to Business
   details**. It does not expand the sidebar. Expand or collapse labels with the sidebar panel
-  control, or hover-peek. (2026-08-27: peek + pin; see [design-decisions.md](design-decisions.md) 4.)
+  control, or hover-peek. (2026-08-27: peek + pin; see [design decisions](design-decisions.md) 4.)
 - **Narrow overlay selector:** no Profile disclosure. The four children are rows in the
   full-screen overlay (Business details, Projects, Certifications and reviews, Media library),
   with New chat, Sites, and Ads. Open destinations is inline with the screen heading.
@@ -85,7 +85,7 @@ no decorative icon. On narrow, Open destinations stays inline with the heading.
 
 ## New chat (`/cms`)
 
-The New chat prompt clones dashboard `PlacisPromptBox` (look: [design-decisions.md](design-decisions.md) 5). **Connect** links Google Ads and Meta ad accounts. It is not Connect website address and not Details Facebook / Google Maps listing. Hide Connect when both ad accounts are already connected (same status as Ads; do not paint it and then hide it). Voice is desktop-only; it opens a full-screen orb for the client interview (looks like the dashboard orb; not the website-editor canvas orb). Placeholders cycle.
+The New chat prompt clones dashboard `PlacisPromptBox` (look: [design decisions](design-decisions.md) 5). **Connect** links Google Ads and Meta ad accounts. It is not Connect website address and not Details Facebook / Google Maps listing. Hide Connect when both ad accounts are already connected (same status as Ads; do not paint it and then hide it). Voice is desktop-only; it opens a full-screen orb for the client interview (looks like the dashboard orb; not the website-editor canvas orb). Placeholders cycle.
 
 ## Out of scope
 
