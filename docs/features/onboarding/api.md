@@ -138,7 +138,7 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 - `GET /v1/onboarding-sessions/{id}/business-research-runs` (+ get by id) — debug/status.
   Progress is SSE.
 - `GET /v1/onboarding-sessions/{id}/apply-website-template-runs` (+ get/cancel) — debug/status.
-- Voice mint / events / WebSocket — deferred. First-pass client interview is text.
+- Voice realtime connection / events / WebSocket — deferred. First-pass client interview is text.
   [voice agent](../../general-architecture/voice-agent.md).
 
 ## Do not create

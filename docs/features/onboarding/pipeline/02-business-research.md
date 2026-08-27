@@ -9,7 +9,7 @@ start that work dozens of times by repeating business lookup, picking another co
 Cap it.
 
 02 only calls **`etl.StartRun(kinds, trigger=onboarding)`**. Extract and transform:
-[ETL](../../etl/README.md). One `StartRun` mints one `enqueue_id` and one ETL run
+[ETL](../../etl/README.md). One `StartRun` creates one `enqueue_id` and one ETL run
 per kind. River retries keep the same `etl.runs.id`. Count distinct `enqueue_id`, not jobs —
 otherwise one business lookup would already exceed the cap.
 
@@ -31,7 +31,7 @@ onboarding session, **and** the tenant is under the enqueue cap.
 - Own adapters, fetch tables, or the Google Maps listing (those are ETL).
 - Call Parallel’s API; use Exa, Perplexity, Tako, a model’s built-in search, `:online`, or
   OpenRouter web search.
-- Text autosave, voice mint, `end_interview`, interview field lists, set `channel`.
+- Text autosave, create a realtime connection, `end_interview`, interview field lists, set `channel`.
 - Write Review. Photo classification is ETL transform, not 04a/04b.
 - Say a miss means “this business has no profile” — a miss is “ask”.
 - Enqueue a 6th `StartRun` (`trigger=onboarding`) for the same `tenant_id` inside 30 minutes
@@ -50,7 +50,7 @@ do not call `StartRun`. Set `research_wait_until` = oldest of those five enqueue
 If the count is **0–4**, call `StartRun` with the kinds that apply (not an implicit “all
 sources”). Registry-only sessions still get the kinds they have. Pass `onboarding_session_id`.
 
-| Kind | Fold / checklist |
+| Kind | Live profile / checklist |
 | --- | --- |
 | `google_maps_listing` | Maps profile, marketing phone, website, opening hours, reviews, photos |
 | `facebook` | Facebook profile / URL / posts |
@@ -63,23 +63,23 @@ Kinds 02 may include that Monday / Wednesday / Friday does not: crawl, trade reg
 discovery. Instagram is a persisted kind (scrape).
 
 Profile deltas go through ETL transform using [build-profile](build-profile.md) (conflict rule:
-fold does not move).
+live business profile is not updated).
 
 ## Persist
 
-`etl.runs` (one per kind, shared `enqueue_id`); fetches and listing on miss/extract; fold via
-transform. `research_wait_until` is derived when the cap is hit; it is not a table. Expose it on
+`etl.runs` (one per kind, shared `enqueue_id`); fetches and listing on miss/extract; live business
+profile via transform. `research_wait_until` is derived when the cap is hit; it is not a table. Expose it on
 `GET .../profile` and the onboarding session SSE.
 
 ## Fail
 
-Retryable River jobs inside ETL. Fail leaves prior fold + `etl.runs.status=error`. In-progress
+Retryable River jobs inside ETL. Fail leaves prior live business profile + `etl.runs.status=error`. In-progress
 checklist rows clear when the job ends. Do not change onboarding session status. Job retry keeps
 the same `etl.runs.id`.
 
 Enqueue cap: not a pipeline Fail. 01 business lookup still succeeds. A later source change that
 would start a 6th enqueue in 30 minutes does not call `StartRun`; the mutating request returns
-`429` with `research_wait_until`. Prior fold and in-flight jobs stay.
+`429` with `research_wait_until`. Prior live business profile and in-flight jobs stay.
 
 ## Out
 

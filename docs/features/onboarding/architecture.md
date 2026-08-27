@@ -66,5 +66,5 @@ host (no token, no TTL). The onboarding session has no `expired` status.
 Voice is a **channel** (client interview, website assistant, and the voice agent in the CMS).
 Transport: [voice-agent.md](../../general-architecture/voice-agent.md). Client-interview tools and
 complete: [04b](pipeline/04b-voice-client-interview.md). Applying the website template consumes the
-accepted profile, never the raw transcript. Minting a client-interview realtime connection
+accepted profile, never the raw transcript. Creating a client-interview realtime connection
 includes the current profile, checklist, extra notes, and last `update_interview_plan`.

@@ -12,6 +12,18 @@ Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `inte
 - `internal/website/pages.go`: type `Slug` or column `slug` → **fail**. Same Say (or `path` / `website_prefix` once named in the glossary).
 - Backticks do not help: `` `slug` `` → **fail**.
 
+## Banned synonym (unmarked) — mint
+
+- `docs/general-architecture/voice-agent.md`: “the backend mints a secret” → **fail**. Say **create**.
+- `docs/features/etl/ADR.md`: “mints one `enqueue_id`” → **fail**. Say **create**.
+- `docs/general-architecture/testing.md`: “mint once per CI job” → **fail**. Say **create** (or **use** the testing token already created).
+
+## Banned synonym (unmarked) — fold
+
+- `docs/features/etl/ADR.md`: “same fold rules as onboarding” → **fail**. Say **live business profile** (same profile-update / conflict rules).
+- `docs/features/website/editing.md`: “GET the fold” → **fail**. Say **unpublished website**.
+- Hero copy “conversion copy above the fold” → **pass** (first viewport; extra-allowed).
+
 ## Self-understood at home — website `page`
 
 - `docs/features/website/architecture.md`: “each page has sections” → **pass** (`page (website)`).

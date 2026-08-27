@@ -24,7 +24,7 @@ internal/
     websitepreview/ #   package.go, events.go (website preview of the unpublished website during onboarding)
   etl/            # run.go (StartRun)
     extract/      #   googlemaps/, facebook/, instagram/, crawl/, photo/ with fakes
-    transform/    #   profile writes: fold, posts, photo classification
+    transform/    #   profile writes: live business profile, posts, photo classification
   profile/        # profile.go, profile_edits.go, services.go, areas.go, hours.go
   website/        # root: types.go, service.go
     pages/        #   handler.go, service.go, model.go
