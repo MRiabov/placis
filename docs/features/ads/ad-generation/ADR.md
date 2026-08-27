@@ -132,14 +132,14 @@ area, and the date.
     owner approval); no personal data in copy. If the owner types a marketing statement, or
     **prompts** the Review AI orb to write one, we allow it. Approve is not blocked. If that
     copy includes a detail (years in business vs `established_year`, and the same class of
-    Details fields), the ads generator makes a **separate tool call** that writes Details —
-    one `business_profile_edits` increment, same writer as Details / onboarding. Recorded in
+    Details fields), the ads generator calls **`update_details`** (one tool, one
+    implementation — also the website assistant; [details HTTP](../business-profile/details/api.md)).
+    Recorded in
     `ai_generations` as its own tool call. Not a side effect of the ads PATCH, Approve, or the
     copy-rewrite tool. A **notification** (OK / Revert) appears bottom-right; leaving the
     screen keeps the write. Character limits, uploads still in flight, and failed uploads
     still block.
-    (2026-08-27): that notification is the shared Details Revert, also used when the website
-    assistant writes a detail (`update_details`). Not Ads-only.
+    (2026-08-27): `update_details` is the shared Details tool, not an Ads-only writer.
     Previous decision (same day): owner-typed or owner-prompted copy warned inline and did
     not write the business profile; the warning pointed the owner to Details.
     Previous decision: unsupported marketing statements blocked **ad ready to post** until

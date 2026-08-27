@@ -4,7 +4,7 @@ The website assistant is a chat-like command surface in the website editor — n
 generator. It reads the selected website page, website sections, website slots, media assets,
 website forms, SEO, validation blockers, website publication status, and website versions, and
 turns requests into governed, reviewable website editor edits, and Details increments via
-`update_details` when copy includes a detail. Text chat, voice handoffs, and
+the shared `update_details` tool when copy includes a detail. Text chat, voice handoffs, and
 website editor assistance all share the same tool surface. The registry lives here; generation
 and search go through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
@@ -81,14 +81,15 @@ failed event.
 | `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` / `show_contact` |
 | `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
 | `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
-| `update_details` | write one Details increment (same writer as click-off PATCH and the Ads generator) |
+| `update_details` | the shared Details tool — one implementation ([details HTTP](../business-profile/details/api.md)) |
 
 **Owner action = assistant action.** Each tool is another caller of the same website-editor /
 media-library / Details execution the owner already uses (Ask first / instant apply around
 canvas tools). Text `update_slot` is the same upsert as click-off PATCH. Image attach, crop,
 focal, and AI cleanup are the same functions as the website editor PATCH and `/cms/media`.
-`update_details` is the same Details writer as `/cms/details` click-off and the Ads generator.
-There is no second assistant implementation and no public copy helper the tools call. Copy-on-write
+`update_details` is the shared Details tool (Ads generator calls it too), not a
+website-assistant copy. Click-off on `/cms/details` stays PATCH. There is no second
+assistant implementation and no public copy helper the tools call. Copy-on-write
 (`parent_media_asset_id`, parent file never replaced) stays **inside** those functions.
 
 Planner: a named real photo → **attach first** (`update_slot` + `media_asset_id`). Cleanup only
@@ -315,20 +316,10 @@ Ask first / instant apply gate as `update_slot`.
 
 ### `update_details`
 
-Same Details writer as `/cms/details` click-off and the Ads generator. Dirty keys only
-(one field or list item per call). Applied **immediately** — not held as an unpublished
-website proposal, not `edit_history`, not Ask first Apply / Reject. Then the shared
-**notification** (OK / Revert). Revert is `POST /v1/business-profile/edits/{id}/undo`.
-Leaving the screen keeps the write. Onboarding 06 does not call this (client interview
-already writes Details).
-
-```text
-update_details(
-  field,     # live business profile field or list table
-  op,        # set | clear | add | remove | update
-  value?     # typed; omit on clear / remove
-)
-```
+The shared Details tool ([details HTTP](../business-profile/details/api.md)) — one
+implementation, also invoked by the Ads generator. Not a second copy here. On this surface:
+applied immediately (not Ask first Apply / Reject, not `edit_history`). Then the shared
+notification. Onboarding 06 does not call it.
 
 Activity `summary` example: `Updated Business details`. Never a tool name.
 

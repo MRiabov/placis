@@ -19,6 +19,6 @@
 - **03** — the owner reviews, edits (including AI-orb rewrite/cleanup with a required prompt),
   approves. `ad_ready_to_post` requires tenant-owned photos that have finished uploading. A
   media caption is not a gate for a photo the owner just added to this ad (the media caption writes in
-  the background). A Details tool call writes the business profile when copy includes a detail. Approve is not blocked.
+  the background). `update_details` writes the business profile when copy includes a detail. Approve is not blocked.
 - **04** — the ad set exports deterministically (images at crop + copy sheet + ad lead form
   fields).

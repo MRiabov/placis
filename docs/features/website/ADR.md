@@ -32,9 +32,10 @@ Status: decided (2026-08-16, product owner + engineering).
    `generate_image` is last resort when nothing in `media_assets[]` fits.
    Overlay look (always-on overlay, reduce-height left / trash right, Apply / Reject pills) is in
    [design decision record](design-decision-record.md).
-   (2026-08-27): the website assistant may write a detail via `update_details` (same Details
-   writer as click-off and the Ads generator). Applied immediately; the shared notification
-   Revert undoes that increment — not website Reject / `edit_history`.
+   (2026-08-27): one `update_details` tool ([details HTTP](../business-profile/details/api.md)).
+   Website assistant and Ads generator invoke that same tool (one implementation). Applied
+   immediately; the shared notification Revert undoes that increment — not website Reject /
+   `edit_history`.
    (2026-08-20; assistant configs + Apply/Reject terminal 2026-08-23; Ask first 2026-08-23;
    attach-before-generate + shared media-library functions 2026-08-24; collapse + no dim
    2026-08-26)
