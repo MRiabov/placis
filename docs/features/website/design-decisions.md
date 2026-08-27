@@ -262,14 +262,14 @@ instead of silently rewriting history.
     turns the **voice agent** on (`/cms/website` only). The chatbot overlay is hidden so the
     website stays viewable. A soft orb (`min(5.5rem, 30vw)`) sits bottom-right. A glow
     falls off from the center with no hard edge. Clicks pass
-    through except Restore chatbot and close. Restore chatbot is **text** next to the orb,
-    vertically centered to it. A small close on the
+    through except Restore chatbot and close. Restore chatbot is an **opaque pill** under
+    Apply / Reject (same left stack, not frosted into the orb). The orb is a **circle on the
+    right** spanning both rows (right-aligned; not one row). A small close on the
     top-right of the orb also restores. Restoring is sticky while the field stays empty
     until they hit **Voice** again. In chatbot mode, empty field shows **Voice** (not Plan /
-    Send); any text is chatbot with Plan / Send. Apply / Reject sit **beside the orb** in the
-    same right-aligned row as Restore chatbot (not centered above it). Over the chatbot they
-    stay centered above the overlay. Switching to the voice agent and back is a fade, not a
-    cut. The voice agent
+    Send); any text is chatbot with Plan / Send. Apply / Reject sit in that left stack when
+    the voice agent is on. Over the chatbot they stay centered above the overlay. Switching
+    to the voice agent and back is a fade, not a cut. The voice agent
     speaks back and uses the same tools (plan vs continuous, Ask first). **Follow**
     (`follow`) is a third assistant config, default **off**, not owner-turnable (no overlay
     switch; `true` is refused). Reserved for a later cut that snaps the canvas to the
