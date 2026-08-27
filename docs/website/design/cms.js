@@ -524,6 +524,9 @@ document.querySelectorAll("#viewtabs [data-state]").forEach((button) => {
       case "connect":
         setConnect(connectModal.classList.contains("is-hidden"));
         break;
+      case "cleanup":
+        setMediaCleanup(!document.getElementById("mediaView")?.classList.contains("is-compare"));
+        break;
       case "notify":
         setNotify(document.getElementById("cmsNotification")?.classList.contains("is-hidden"));
         break;
@@ -900,4 +903,107 @@ document.getElementById("hoursPicker")?.addEventListener("click", (event) => {
 });
 document.getElementById("hoursPicker")?.addEventListener("change", () => writeHoursFromDom());
 renderHoursPicker();
+
+const mediaPhotos = ["media/hero-roof.jpg", "media/job-repair.jpg", "media/job-new-roof.jpg", "media/job-gutter.jpg"];
+const mediaRatios = ["landscape", "portrait", "square"];
+const mediaCaptions = [
+  "Rear slope after the storm",
+  "Slate repair on a terrace",
+  "New roof on a semi",
+  "Guttering on the front",
+  "Ridge line after wind",
+  "Valley flashing",
+  "Logo on the van",
+  "Fascia upgrade",
+];
+const mediaLibraryItems = Array.from({ length: 24 }, (_, index) => ({
+  src: mediaPhotos[index % mediaPhotos.length],
+  ratio: mediaRatios[index % mediaRatios.length],
+  caption: mediaCaptions[index % mediaCaptions.length],
+  by: index === 0 ? "owner" : index % 7 === 0 ? "research" : index % 11 === 0 ? "ai" : "owner",
+  status: index === 1 ? "uploading" : "approved",
+}));
+
+function mediaSrcCss(src) {
+  return `url('${src}')`;
+}
+
+function setMediaView(item) {
+  const view = document.getElementById("mediaView");
+  if (!view || !item) return;
+  view.dataset.ratio = item.ratio;
+  view.style.setProperty("--media-src", mediaSrcCss(item.src));
+  const meta = document.getElementById("mediaViewMeta");
+  if (meta) {
+    const who = item.by === "ai" ? "AI" : item.by;
+    const status = item.status === "uploading" ? "bytes landing" : item.status;
+    meta.textContent = `${item.caption} · supplied by ${who} · ${status}`;
+  }
+}
+
+function setMediaCleanup(on) {
+  const view = document.getElementById("mediaView");
+  const sweep = document.getElementById("mediaSweep");
+  const actions = document.getElementById("mediaCleanupActions");
+  view?.classList.toggle("is-compare", on);
+  sweep?.classList.toggle("is-hidden", !on);
+  actions?.classList.toggle("is-hidden", !on);
+  if (on) sweep?.style.setProperty("--split", "50%");
+  stripButton("cleanup")?.classList.toggle("on", on);
+}
+
+function bindMediaLibrary() {
+  const thumbs = document.getElementById("mediaThumbs");
+  if (!thumbs || thumbs.dataset.ready === "1") return;
+  thumbs.dataset.ready = "1";
+  thumbs.classList.toggle("is-dense", mediaLibraryItems.length > 10);
+  thumbs.innerHTML = mediaLibraryItems.map((item, index) => {
+    const selected = index === 0 ? " is-selected" : "";
+    const overlay = item.status === "uploading" ? `<span class="cms-upload-overlay">Uploading…</span>` : "";
+    return `<button class="cms-media-thumb is-${item.ratio}${selected}" type="button" data-index="${index}" style="background-image:${mediaSrcCss(item.src)}" aria-label="${esc(item.caption)}">${overlay}</button>`;
+  }).join("");
+  setMediaView(mediaLibraryItems[0]);
+  thumbs.addEventListener("click", (event) => {
+    const thumb = event.target.closest(".cms-media-thumb");
+    if (!thumb) return;
+    thumbs.querySelectorAll(".cms-media-thumb").forEach((node) => node.classList.toggle("is-selected", node === thumb));
+    setMediaView(mediaLibraryItems[Number(thumb.dataset.index)]);
+    setMediaCleanup(false);
+  });
+  const sweep = document.getElementById("mediaSweep");
+  const setSplit = (clientX) => {
+    if (!sweep) return;
+    const box = sweep.getBoundingClientRect();
+    const pct = Math.max(4, Math.min(96, ((clientX - box.left) / box.width) * 100));
+    sweep.style.setProperty("--split", `${pct}%`);
+  };
+  let sweeping = false;
+  sweep?.addEventListener("pointerdown", (event) => {
+    sweeping = true;
+    sweep.setPointerCapture(event.pointerId);
+    setSplit(event.clientX);
+  });
+  sweep?.addEventListener("pointermove", (event) => {
+    if (sweeping) setSplit(event.clientX);
+  });
+  sweep?.addEventListener("pointerup", () => { sweeping = false; });
+  sweep?.addEventListener("pointercancel", () => { sweeping = false; });
+  const prompt = document.getElementById("mediaCleanupPrompt");
+  const submit = document.getElementById("mediaCleanupSubmit");
+  const syncPrompt = () => {
+    if (submit) submit.disabled = !prompt?.value.trim();
+  };
+  prompt?.addEventListener("input", syncPrompt);
+  syncPrompt();
+  document.getElementById("mediaCleanupForm")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!prompt?.value.trim()) return;
+    setMediaCleanup(true);
+  });
+  document.getElementById("mediaCleanupReject")?.addEventListener("click", () => setMediaCleanup(false));
+  document.getElementById("mediaCleanupAccept")?.addEventListener("click", () => setMediaCleanup(false));
+}
+
+bindMediaLibrary();
+if (params.get("cleanup") === "1") setMediaCleanup(true);
 

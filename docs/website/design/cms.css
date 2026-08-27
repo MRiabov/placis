@@ -2183,8 +2183,138 @@ body.is-shot .viewtabs-fab { display: none !important; }
   font-size: 13px;
 }
 .cms-notification p { margin: 0; flex: 1 1 8rem; }
-.cms-media-meta { margin-top: 6px; color: var(--cms-text-muted); font-size: 11px; }
-.cms-media-tile-wrap { position: relative; }
+.cms-media-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);
+  gap: 16px;
+  align-items: start;
+  margin-top: 20px;
+}
+.cms-media-view {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--cms-border);
+  border-radius: 12px;
+  background: var(--cms-preview-stage);
+}
+.cms-media-view-still,
+.cms-media-sweep-after,
+.cms-media-sweep-before {
+  background-image: var(--media-src);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.cms-media-view-still {
+  width: 100%;
+  max-height: min(28rem, 56vh);
+  margin: 0 auto;
+}
+.cms-media-view[data-ratio="landscape"] .cms-media-view-still,
+.cms-media-view[data-ratio="landscape"] .cms-media-sweep { aspect-ratio: 3 / 2; }
+.cms-media-view[data-ratio="square"] .cms-media-view-still,
+.cms-media-view[data-ratio="square"] .cms-media-sweep {
+  aspect-ratio: 1 / 1;
+  max-width: min(100%, 28rem);
+}
+.cms-media-view[data-ratio="portrait"] .cms-media-view-still,
+.cms-media-view[data-ratio="portrait"] .cms-media-sweep {
+  aspect-ratio: 3 / 4;
+  max-width: min(100%, 18rem);
+}
+.cms-media-view.is-compare .cms-media-view-still { display: none; }
+.cms-media-sweep {
+  --split: 50%;
+  position: relative;
+  width: 100%;
+  max-height: min(28rem, 56vh);
+  margin: 0 auto;
+  overflow: hidden;
+  cursor: ew-resize;
+  user-select: none;
+  touch-action: none;
+}
+.cms-media-sweep-after,
+.cms-media-sweep-before { position: absolute; inset: 0; }
+.cms-media-sweep-before {
+  clip-path: inset(0 calc(100% - var(--split)) 0 0);
+  filter: grayscale(0.75) brightness(0.92) saturate(0.55);
+}
+.cms-media-sweep-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--split);
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(39 39 42 / 15%);
+  pointer-events: none;
+}
+.cms-media-sweep-divider::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--cms-border);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: var(--cms-shadow-sm);
+  transform: translate(-50%, -50%);
+  content: "";
+}
+.cms-media-sweep-label {
+  position: absolute;
+  top: 8px;
+  z-index: 1;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 88%);
+  color: var(--cms-text-muted);
+  padding: 2px 8px;
+  font-size: 11px;
+  pointer-events: none;
+}
+.cms-media-sweep-label.is-before { left: 8px; }
+.cms-media-sweep-label.is-after { right: 8px; }
+.cms-media-view-actions {
+  display: flex;
+  gap: 8px;
+}
+.cms-media-thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 8.5rem));
+  align-items: start;
+  gap: 8px;
+  margin-top: 16px;
+}
+.cms-media-thumbs.is-dense { grid-template-columns: repeat(4, minmax(0, 8.5rem)); }
+.cms-media-prompt {
+  display: grid;
+  gap: 8px;
+}
+.cms-media-prompt label {
+  color: var(--cms-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.cms-media-prompt textarea { min-height: 5.5rem; resize: vertical; }
+.cms-media-prompt-meta { margin: 0; color: var(--cms-text-muted); font-size: 12px; line-height: 1.4; }
+.cms-media-thumb {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background-color: #d4d4d8;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+}
+.cms-media-thumb.is-landscape { aspect-ratio: 3 / 2; }
+.cms-media-thumb.is-square { aspect-ratio: 1 / 1; }
+.cms-media-thumb.is-portrait { aspect-ratio: 3 / 4; }
+.cms-media-thumb.is-selected { border-color: var(--cms-accent); box-shadow: inset 0 0 0 1px var(--cms-accent); }
+.cms-media-thumb .cms-upload-overlay { border-radius: 8px; }
 .cms-upload-overlay {
   position: absolute;
   inset: 0;
@@ -2442,6 +2572,9 @@ body.is-shot .viewtabs-fab { display: none !important; }
   }
   .cms-details-form-grid,
   .cms-project-grid { grid-template-columns: 1fr; }
+  .cms-media-stage { grid-template-columns: 1fr; }
+  .cms-media-thumbs,
+  .cms-media-thumbs.is-dense { grid-template-columns: repeat(2, minmax(0, 8.5rem)); }
   .cms-certs-layout,
   .cms-review-grid { grid-template-columns: 1fr; }
   .cms-certs-layout { gap: 24px; }

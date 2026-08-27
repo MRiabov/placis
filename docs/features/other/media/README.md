@@ -68,6 +68,12 @@ Processing…. Ads shows **Uploading…** only while bytes land — not Processi
 
 The full media library screen, under **Profile** (not a top-level left-nav item). Caption, crop, focal point, replace, AI cleanup.
 
+**Look.** A large **view** of the selected photo (the frame follows landscape, square, or portrait; the photo is not forced square). That same view is where they compare cleanup. Promptable AI cleanup sits in a prompt box **beside** the view on a wide screen and **under** it on a narrow screen — not the Ads Review overlay orb. Same light cleanup as ads / the website assistant `cleanup_image` (declutter, tidy background; not invent work). Empty prompt is rejected. First upload may already have run a tailored default; this prompt is a **different** cleanup. After cleanup, the view is the ads **before/after sweep** (drag the divider to clip, not resize) with **Accept** / **Reject**. Accept keeps the copy (`pending_review`). Reject drops that copy.
+
+**Thumbs.** Twenty to forty photos is expected. Up to ten: **3** columns on a wide screen, **2** on a narrow screen. More than ten: **4** columns on a wide screen, **2** on a narrow screen. Tiles stay small. Landscape, square, and portrait keep their ratio.
+
+Crop / focal stay on this screen, on the selected photo in the view. It is not a second library.
+
 ## Website editor
 
 On `/cms/website` there is no media library rail item. Click an image on the canvas and
