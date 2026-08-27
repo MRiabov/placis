@@ -176,8 +176,9 @@ Do not advertise `{website_prefix}.placis.com` as a live URL.
 
 **Website assistant** is a default-on **overlay** pinned to the bottom of the canvas (not a
 toolbar button, not a modal) while the **chatbot** is showing. Empty composer turns the
-**voice agent** on: overlay hidden, soft orb bottom-right (glow that falls off, no hard
-edge). The switch is a fade, not a cut. Restore chatbot is an opaque pill under Apply /
+**voice agent** on: overlay hidden, soft orb bottom-right of the canvas (glow that falls
+off, no hard edge). On narrow that is just above the workspace rail, not above the hidden
+overlay. The switch is a fade, not a cut. Restore chatbot is an opaque pill under Apply /
 Reject; the orb is a circle on the right spanning both rows. A small close on the top-right of the orb also
 restores. Tools and apply stay in [assistant.md](assistant.md). Two overlay switches: plan vs
 continuous, and instant apply vs Ask first (Apply / Reject). **Follow** is a third config,

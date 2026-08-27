@@ -279,6 +279,9 @@ instead of silently rewriting history.
     (`follow`) is a third assistant config, default **off**, not owner-turnable (no overlay
     switch; `true` is refused). Reserved for a later cut that snaps the canvas to the
     website slot being edited. (2026-08-27)
+    On narrow the orb sits at the **bottom of the canvas** (just above the workspace rail),
+    not above the hidden collapsed overlay. Overlay height does not lift Apply / Reject /
+    Restore chatbot while the voice agent is on. (2026-08-27)
 
 19. **Connect website address shows copyable Host and Value** — DNS rows are not compact
     version cards. Each record is type, **Host**, and **Value** as separate large fields with
