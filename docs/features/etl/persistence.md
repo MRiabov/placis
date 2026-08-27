@@ -2,7 +2,7 @@
 
 Conventions: [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `etl`). Transformed Facebook / Instagram rows and photo classification live on
-the [business profile](../other/details/persistence.md), not here.
+the [business profile](../business-profile/details/persistence.md), not here.
 
 `jsonb` is `raw` on each fetch table only.
 

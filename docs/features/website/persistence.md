@@ -1,14 +1,14 @@
 # Website — persistence
 
 Website pages, website sections, website slots, website forms, top menu, footer, website
-publications (each row is a website version), website settings, website edit history, projects,
+publications (each row is a website version), website settings, website edit history,
 and live hostnames (`website_addresses`).
 Conventions: [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `website`).
 
 Media assets are owned by [media library](../other/media/persistence.md). The business profile the
-website templates fill is [details](../other/details/persistence.md) (including reviews and
-certifications). Website forms write [leads](../other/leads/persistence.md). The dump shape of
+website templates fill is [details](../business-profile/details/persistence.md) (including reviews and
+certifications). Projects: [projects](../business-profile/projects/persistence.md). Website forms write [leads](../other/leads/persistence.md). The dump shape of
 a website publication is
 [manifest.md](manifest.md). The reserved label on the tenant row is
 [auth](../other/auth/persistence.md) (`tenants.website_prefix`).
@@ -66,8 +66,6 @@ a website publication is
   rows stay out of that list; the API refuses them by id.
 - `website_publication_issues` — `id`, `publication_id` fk, `code`, `message`, `entity_type`
   nullable, `entity_id` nullable
-- `projects` — `id`, `tenant_id` fk, `title`, `description`, `cover_media_asset_id` nullable fk,
-  `status` (`unpublished`/`published`), timestamps
 - `website_slot_reviews` — `id`, `tenant_id` fk, `slot_id` fk, `business_profile_review_id` fk,
   `position`; unique `(slot_id, business_profile_review_id)`. One ordered array **per reviews
   website section**, from the pool, length ≤ that website component’s max (some layouts take
@@ -101,7 +99,7 @@ a website publication is
   ([editing.md](editing.md)). The database does not perform undo.
 
 Reviews on the website are these rows, not a jsonb dump in `website_slots.value`. The text
-lives on [business_profile_reviews](../other/details/persistence.md) (the **review citation** is what the
+lives on [business_profile_reviews](../business-profile/details/persistence.md) (the **review citation** is what the
 website paints; fallback `body` if the review citation is empty). A project gallery is a
 `json` / `list` website slot of project ids, not a `slot_type`.
 

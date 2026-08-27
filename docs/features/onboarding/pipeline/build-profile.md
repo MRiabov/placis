@@ -1,6 +1,6 @@
 # Build the profile (concurrent persist)
 
-Not a wait step. 01, 02, 04a, and 04b **append** [business profile](../../other/details/persistence.md)
+Not a wait step. 01, 02, 04a, and 04b **append** [business profile](../../business-profile/details/persistence.md)
 `business_profile_edits` (one increment per field or list item actually set — never a full
 profile). 05 reads the live business profile as of `accepted_edit_id` at client interview complete.
 

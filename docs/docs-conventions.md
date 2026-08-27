@@ -17,11 +17,15 @@ editing a doc.
   `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
   `files-and-s3.md`, `persistence.md`
   (conventions + index of per-feature tables), `frontend.md` (`frontend-2` UI rules),
+  `cms/` (The CMS: left nav, New chat, look tokens),
   `frontend-debloat.md` (cross-cutting port), `ci-cd.md`, `testing.md`.
   Feature-owned capabilities (website
-  activation/payments, leads, media library, ETL) live under `features/`, not here.
+  activation/payments, leads, media library, ETL, business profile) live under `features/`, not here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that feature's docs in one
-  place).
+  place). `features/business-profile/` holds Details, Projects, and Certifications and reviews as
+  child view dirs. `features/other/` is auth, media library, leads.
+- `design/` — static HTML mocks (`cms.html`). Specs remain canonical. Ads mock stays with ads
+  until a later `ads.html` consolidation.
 - `planning/` — proposed, unshipped work; never the canonical source. The
   `frontend-2` port index is [planning/frontend-debloat.md](planning/frontend-debloat.md);
   per-feature cut lists live with the feature as `frontend-debloat.md`.
@@ -34,7 +38,8 @@ A feature directory holds, as applicable:
 | --- | --- |
 | `README.md` | overview + pointers |
 | `prd.md` | business requirements, user stories, acceptance criteria (domain language) |
-| `ADR.md` | numbered decision record |
+| `ADR.md` | architectural decision record (numbered, dated; keep old entries) |
+| `design-decision-record.md` | design decision record (look and interaction, not architecture). Same numbered, dated, keep-old-entry structure as ADR.md. Each live entry is **what** plus **why** (the rejected look when it was a real choice). |
 | `architecture.md` | the logic: content/component model, flows, states (no structs) |
 | `persistence.md` | that feature's tables (columns, indexes); shared tables are linked, never copied |
 | `api.md` | Canonical HTTP routes for this feature. Routes, auth, callers, request/response fields, errors, do-not-create. Not Go structs. Conventions: [general-architecture/api.md](general-architecture/api.md). |
@@ -63,3 +68,9 @@ Not every file is needed — a feature uses only the ones it has content for. A 
   out at implementation time and are not pre-written. The **HTTP routes** are per-feature `api.md`
   (plus [general-architecture/api.md](general-architecture/api.md)); that is paths and fields, not
   huma structs.
+- **Filenames hyphenate; prose does not.** `design-decision-record.md` is the file. The document is a
+  **design decision record** — the look-and-interaction counterpart of ADR.md. Link the
+  file as `[CMS design decision record](...)` 3, not `[CMS design-decision-record]` and not bare
+  **decisions**. An entry is a design decision (like ADR 3) and must include **why**, not only
+  the look. Keep the hyphen in the path and in backticks. `ADR.md` is the **architectural
+  decision record**; do not label it **decisions** either.

@@ -1,8 +1,10 @@
 # Details
 
-The **Details** view edits the business details — the one **business profile** the rest of the
-application draws from. Onboarding builds it; the website shows it; ads reuse it. The owner
-reaches it from **Profile** → **Business details**.
+The **Details** view edits the Business details subset of the **business profile** — who they
+are, contact, hours, logo, Facebook / Maps links. Onboarding builds the record; the website
+shows it; ads reuse it. The owner reaches this screen from **Profile** → **Business details**.
+The record is larger than this screen (reviews, certifications, projects):
+[business profile](../README.md).
 
 ## What it edits
 
@@ -31,13 +33,14 @@ reaches it from **Profile** → **Business details**.
 - **Ads** read them — the business name, trade, marketing phone, marketing email, and services become the ad copy,
   and the ideal customer profile starts from the same details.
 
-One source of truth: the business profile. Editing it here changes the website and the next ad draft.
+Editing Details changes the website and the next ad draft.
 If ad copy conflicts with these details, prefer updating Details rather than leaving a second
 truth only in the ad. Ads may also write a detail here via a tool call (`business_profile_edits`);
 the owner sees a **notification** in Ads (OK keeps it; Revert undoes that increment).
 
-How the owner reaches it: [frontend.md](frontend.md). Port:
-[frontend-debloat.md](frontend-debloat.md). Decisions: [ADR.md](ADR.md). Look:
-[website design-decisions](../../website/design-decisions.md). HTTP:
+How the owner reaches it: [CMS frontend](../../../general-architecture/cms/frontend.md). This
+screen: [frontend.md](frontend.md). Port:
+[frontend-debloat.md](frontend-debloat.md). [ADR](ADR.md). Look:
+[design decision record](design-decision-record.md). HTTP:
 [api.md](api.md). Tables: [persistence.md](persistence.md). Projects:
-[website HTTP](../../website/api.md).
+[projects HTTP](../projects/api.md).

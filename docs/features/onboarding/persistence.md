@@ -5,7 +5,7 @@ Conventions: [persistence conventions](../../general-architecture/persistence.md
 (Postgres schema `onboarding`).
 
 The business profile these onboarding sessions write is owned by
-[details](../other/details/persistence.md). Extract and the Google Maps listing:
+[details](../business-profile/details/persistence.md). Extract and the Google Maps listing:
 [ETL](../etl/persistence.md). LLM traces:
 [LLM layer](../../general-architecture/llm-layer.md).
 

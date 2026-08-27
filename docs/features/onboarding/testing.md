@@ -3,7 +3,7 @@
 One full-stack E2E: find → review → client interview → apply the website template → website preview
 → website activation. Drives `frontend-2` (Playwright) against the real API + real
 Postgres; Google Maps / company registry / Facebook / crawl and the LLM are faked. DB
-asserts use [persistence.md](persistence.md) and [details](../other/details/persistence.md).
+asserts use [persistence.md](persistence.md) and [details](../business-profile/details/persistence.md).
 
 1. **Find** — country, registry and/or Google Maps, online research consent, business lookup.
    - UI: `/onboarding/find` → Review.

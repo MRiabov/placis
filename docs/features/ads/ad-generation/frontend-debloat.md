@@ -6,7 +6,7 @@ Status: planning (port instructions, not shipped UI).
 
 [frontend.md](frontend.md), [technical-implementation.md](technical-implementation.md),
 [ADR.md](ADR.md), [api.md](../api.md). Shared rules: [planning index](../../../../planning/frontend-debloat.md).
-Left nav Ads item: [details](../../other/details/frontend-debloat.md).
+Left nav Ads item: [CMS frontend-debloat](../../../general-architecture/frontend-debloat.md).
 Photos: [media library](../../other/media/frontend-debloat.md).
 
 There is **no** ads UI in `frontend-2` today. This file is mostly a do-not-port list

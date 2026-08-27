@@ -4,7 +4,7 @@ Onboarding turns a spoken or typed description of a business into a clear **busi
 that drives a website and ads.
 
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
-- [ADR](ADR.md) — decision record
+- [ADR](ADR.md) — architectural decision record
 - [architecture.md](architecture.md) — pipeline, SSE, where things stand
 - [pipeline](pipeline/README.md) — one doc per step (DAG: 01 find, 02 research, 03 Review,
   04a/04b interview, build-profile, 05–08)
@@ -20,4 +20,4 @@ the [auth feature](../other/auth/README.md). Stripe checkout lives in
 [website activation](pipeline/08-website-activation.md). HTTP: [api.md](api.md). The schema lives in
 [persistence.md](persistence.md) (onboarding sessions),
 [ETL](../etl/persistence.md) (extract), and
-[details](../other/details/persistence.md) (business profile).
+[details](../business-profile/details/persistence.md) (business profile).

@@ -18,19 +18,9 @@ decision + date) instead of silently rewriting history.
    writes; a dropped field is a `clear` or an overwrite of that field, visible in the log. Same
    field with disagreeing values is a research conflict, not a silent last-write.
 
-2. **Profile groups Details and Projects** — The left nav does not give Projects its own
-   top-level item. Details is also opened infrequently, so both sit under **Profile**:
-   **Business details** (`/cms/details`) and **Projects** (`/cms/projects`). Profile is a
-   disclosure, not a destination of its own; there is no `/cms/profile`. The Details screen stays.
-   Projects stays until a Projects view ships. (2026-08-19)
-
-   (2026-08-20): Projects is a working Projects screen in the website first slice, still under
-   Profile. **Certifications and reviews** (`/cms/certifications-and-reviews`) is a third Profile
-   child. No `/cms/proof`. Top menu and footer stay in the website editor, not Details.
-
-   (2026-08-26): **Media library** (`/cms/media`) is a fourth Profile child. It is not a
-   top-level peer of Sites. Crop / focal / cleanup stay on that screen; attach/pick from
-   Content is unchanged.
+2. **Profile groups Details and Projects** — moved to [CMS ADR](../../../general-architecture/cms/ADR.md) 1
+   (2026-08-27). The Details screen stays. Top menu and footer stay in the website editor, not
+   Details. (2026-08-19; Profile children 2026-08-20; media library child 2026-08-26)
 
 3. **Founder and brand are columns** — `founder_name` / `founder_role` / `founder_occupation` /
    `founder_nationality` / `founder_country_of_residence` / `founder_appointed_on` /
@@ -65,7 +55,7 @@ decision + date) instead of silently rewriting history.
    Closed. Shown on the contact website page. There
    is no `note` column and no Appointment note field. Logo is picked from the media library
    (`logo_media_asset_id`). Persist on click-off; no Save details. Picker look is in
-   [website design-decisions](../../website/design-decisions.md). (2026-08-26)
+   [design decision record](design-decision-record.md). (2026-08-26)
 
 7. **Certification definitions and ticks are Details tables** — Global `certification_definitions`
    and tenant `business_profile_certification_selections` live in Postgres schema `details`.
