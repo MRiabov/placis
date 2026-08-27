@@ -696,7 +696,7 @@ function renderHoursPicker() {
         .join("");
       return `
         <div class="cms-hours-row${row.closed ? " is-closed" : ""}" data-index="${index}">
-          <div class="cms-hours-day">${row.short}</div>
+          <div class="cms-hours-day">${row.day}</div>
           <div class="cms-hours-slots">
             ${slots}
             <p class="cms-hours-closed-label">Closed</p>
