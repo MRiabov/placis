@@ -239,7 +239,9 @@ Not a stub.
 ### Certifications and reviews (`/cms/certifications-and-reviews`)
 
 This screen is the **picker** for **all reviews** and for pinning **top reviews** (ads).
-Layout (function, not pixels): **1fr certifications | 2fr reviews**.
+Layout (function, not pixels): **1fr certifications | 2fr reviews**. On a wide screen
+certifications sit in a card. On a narrow screen (≤1100px) the layout is one column and
+**Certifications** is a flat heading (same level as **Top reviews**), not a card.
 
 **Left — certifications:** definition rows for this trade/country. Each row: badge (already on
 the definition; it is what the website paints) + name + checkbox. The contractor mostly ticks.

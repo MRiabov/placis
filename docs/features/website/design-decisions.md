@@ -122,6 +122,9 @@ instead of silently rewriting history.
    Archive is a collapsible heading (chevron down on the right), default collapsed — not a
    toolbar button. No hairline under the page title. (2026-08-26)
    The Undo toast sits above Archive with a gap, not flush. (2026-08-27)
+   Wide: certifications sit in a card next to reviews. Narrow (≤1100px): one column, no
+   card around certifications — **Certifications** is a section heading like **Top reviews**.
+   (2026-08-27)
 
 7. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
    [design/cms.html](../../website/design/cms.html) (copy-out blocked, Ask first pending,
