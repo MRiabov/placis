@@ -54,7 +54,9 @@ Two surfaces plus global nav, one unpublished website:
 
 - **Canvas** — the selected website page, live from its website sections. Not a website preview.
 - **Workspace** — on a **narrow** screen (≤1100px) the rail is a **bottom bar** (Sites only)
-  and the list opens above it. On a **wide** screen it is a left rail plus one list.
+  and the list opens above it. That open list (and Content) has the same reduce chevrons as
+  the website assistant, on the left of the title: hide the sheet back to the bottom bar.
+  That is not a back to Website pages. On a **wide** screen it is a left rail plus one list.
   **Workspace items** on the rail: website pages, SEO,
   website styles, website versions. Selecting one **opens** the workspace list. Default on
   `/cms/website` is rail-only (list closed). **Website versions** is pinned to the end of
@@ -196,8 +198,9 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
   control.
 - **Ask first applied vs not applied** must be obvious. The overlay is **one chat-like thread**.
   Ask first **Apply / Reject is per pending turn** (the whole run’s tools in bulk), not per tool.
-  Those two actions are **pills on the canvas**, always sitting over the chatbot (above it), not
-  inside the thread. Each tool in the thread is the backend `summary` (`Updated image on Hero`),
+  Those two actions are **pills on the canvas**, always sitting immediately above the website
+  assistant overlay, not inside the thread and not at the canvas midpoint. Each tool in the
+  thread is the backend `summary` (`Updated image on Hero`),
   never a tool name and never “website slot” ([assistant.md](assistant.md)). Write lines use a
   **pencil**; thinking uses a **lightbulb**. There is no search/grep tool.
   - **Pending** — canvas paints the proposal in memory; changed website sections show
