@@ -110,7 +110,13 @@ Look (logo, density) is **Website styles**, not Details and not a Design tab. Ow
 **Publish** is a toolbar **dropdown**, not one toolbar button and not Save. Specs still call
 the act **website publication**. There is no **Home** back control; Sites in the global nav
 is enough. **Desktop / Tablet / Mobile** and **Publish** stay on one row (the title may sit
-above that row on a narrow canvas). It is
+above that row on a narrow canvas). On narrow those three are icons (44px hits) so Publish
+fits; wide keeps the words. The canvas lays out the contractor website at native widths
+(Desktop 1080, Tablet 760, Mobile 390). If the stage is larger, Mobile and Tablet stay those
+widths. If the stage is smaller, CSS `transform: scale()` (same as scaling an iframe) shrinks
+the frame to fit; the website still lays out at the native width. Do not reflow
+(`max-width: 100%`) and do not pan the stage. Never scale up past 1.
+Publish is
 blocked while required website slots cannot resolve or media library items on the live path
 are not approved. Blockers in the dropdown are a short heading (**Publishing is blocked:**)
 plus **one silent jump per

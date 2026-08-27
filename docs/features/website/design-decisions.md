@@ -204,6 +204,8 @@ instead of silently rewriting history.
     **Publish** stay on **one row** (title can sit above on a narrow canvas). (2026-08-26)
     On narrow, **Open destinations** (`PanelLeft`) sits **inline with the heading** (left of
     **Website editor**), not an extra bar and not on the viewport/Publish row. (2026-08-27)
+    On narrow, Desktop / Tablet / Mobile are **icons** (44px hits; visible labels hidden) so
+    Publish still fits that row at 320px. Wide keeps the words. (2026-08-27)
 
 15. **Reviews Content is that website section’s ordered list** — Not the Profile top band.
     Add from all reviews, remove, reorder. Cap is the website component’s max (some layouts take
@@ -222,6 +224,11 @@ instead of silently rewriting history.
     **Wide (≥1101px):** sidebar stays permanently collapsible (default collapsed icon rail,
     hover peek, click to pin). Profile icon still goes to Business details. Sites/Ads/Profile
     do not invent a second global nav. (2026-08-27)
+    Canvas widths are native: Desktop **1080**, Tablet **760**, Mobile **390**. If the stage is
+    wider, Mobile and Tablet stay those widths (do not stretch). If the stage is narrower, CSS
+    `transform: scale()` shrinks the frame to fit; the contractor website still lays out at the
+    native width (iframe or in-process renderer, same scale). Do not reflow with
+    `width: 100%` / `max-width: 100%`. Do not pan the stage. Never scale up past 1. (2026-08-27)
 
 17. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Satoshi, body tracking `-0.01em`,
     light weights (`400` / `450` / `500` / `600`), ink `#13120a`, `--secondary` `#f4f4f5`,

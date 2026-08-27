@@ -7,6 +7,9 @@ const profileToggle = document.getElementById("profileToggle");
 const accountPopover = document.getElementById("accountPopover");
 const publicationPanel = document.getElementById("publicationPanel");
 const canvasFrame = document.getElementById("canvasFrame");
+const canvasStage = document.getElementById("canvasStage");
+const canvasScale = document.getElementById("canvasScale");
+const canvasNativeWidths = { desktop: 1080, tablet: 760, mobile: 390 };
 const editorCanvas = document.getElementById("editorCanvas");
 const connectModal = document.getElementById("connectModal");
 const sectionLabel = document.getElementById("sectionLabel");
@@ -538,11 +541,34 @@ document.getElementById("sectionVisible")?.addEventListener("click", () => {
   document.querySelector(`.canvas-block[data-section="${id}"]`)?.classList.toggle("is-section-hidden");
   syncSectionVisibleButton(id);
 });
+function canvasViewportMode() {
+  if (canvasFrame?.classList.contains("is-tablet")) return "tablet";
+  if (canvasFrame?.classList.contains("is-mobile")) return "mobile";
+  return "desktop";
+}
+
+function syncCanvasScale() {
+  if (!canvasStage || !canvasScale || !canvasFrame) return;
+  const native = canvasNativeWidths[canvasViewportMode()];
+  const stageStyle = getComputedStyle(canvasStage);
+  const availW = canvasStage.clientWidth - parseFloat(stageStyle.paddingLeft) - parseFloat(stageStyle.paddingRight);
+  const availH = canvasStage.clientHeight - parseFloat(stageStyle.paddingTop) - parseFloat(stageStyle.paddingBottom);
+  if (availW < 1 || availH < 1) return;
+  const scale = Math.min(1, availW / native);
+  canvasFrame.style.width = `${native}px`;
+  canvasFrame.style.height = `${availH / scale}px`;
+  canvasFrame.style.transform = `scale(${scale})`;
+  canvasFrame.style.transformOrigin = "top left";
+  canvasScale.style.width = `${native * scale}px`;
+  canvasScale.style.height = `${availH}px`;
+}
+
 document.querySelectorAll("[data-viewport]").forEach((button) => {
   button.addEventListener("click", () => {
     document.querySelectorAll("[data-viewport]").forEach((item) => item.classList.toggle("is-active", item === button));
     canvasFrame.classList.remove("is-desktop", "is-tablet", "is-mobile");
     canvasFrame.classList.add("is-" + button.dataset.viewport);
+    syncCanvasScale();
   });
 });
 
@@ -638,6 +664,8 @@ if (isNarrow()) {
   if (mobileBtn) mobileBtn.click();
   setNavOpen(false);
 }
+if (canvasStage) new ResizeObserver(syncCanvasScale).observe(canvasStage);
+syncCanvasScale();
 syncAssistantSubmit();
 window.matchMedia("(max-width: 1100px)").addEventListener("change", (event) => {
   setNavOpen(false);

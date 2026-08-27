@@ -169,9 +169,18 @@
               </div>
               <div class="cms-editor-header-controls">
                 <div class="cms-viewport-control" role="group" aria-label="Canvas width">
-                  <button class="is-active" data-viewport="desktop" type="button">Desktop</button>
-                  <button data-viewport="tablet" type="button">Tablet</button>
-                  <button data-viewport="mobile" type="button">Mobile</button>
+                  <button class="is-active" data-viewport="desktop" type="button" aria-label="Desktop">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    <span>Desktop</span>
+                  </button>
+                  <button data-viewport="tablet" type="button" aria-label="Tablet">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+                    <span>Tablet</span>
+                  </button>
+                  <button data-viewport="mobile" type="button" aria-label="Mobile">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+                    <span>Mobile</span>
+                  </button>
                 </div>
               </div>
               <div class="cms-editor-header-actions">
@@ -505,7 +514,8 @@
 
             <div class="cms-editor-canvas is-assistant-collapsed" id="editorCanvas">
               <p class="cms-copy-error is-hidden" id="copyOut">Copy-out has not succeeded after 10 seconds. Leaving is blocked until this succeeds or you discard.</p>
-              <div class="cms-stage-grid">
+              <div class="cms-stage-grid" id="canvasStage">
+                <div class="cms-stage-scale" id="canvasScale">
                 <div class="cms-public-preview-shell is-desktop" id="canvasFrame">
                   <div class="cms-browser-chrome">
                     <div class="cms-browser-chrome-dots"><span></span><span></span><span></span></div>
@@ -548,6 +558,7 @@
                       <div>Privacy · Terms</div>
                     </div>
                   </div>
+                </div>
                 </div>
               </div>
               <div class="cms-ask-pills" id="askPills">
