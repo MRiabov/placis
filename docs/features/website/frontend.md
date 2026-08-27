@@ -214,7 +214,8 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
 - **Ask first applied vs not applied** must be obvious. The overlay is **one chat-like thread**.
   Ask first **Apply / Reject is per pending turn** (the whole run’s tools in bulk), not per tool.
   Those two actions are **pills on the canvas**, always sitting immediately above the website
-  assistant overlay (chatbot) or **above the orb** (voice agent), not inside the thread and not
+  assistant overlay (chatbot) or **beside the orb** in the same row as Restore chatbot
+  (voice agent), not inside the thread and not
   at the canvas midpoint. Each tool in the
   thread is the backend `summary` (`Updated image on Hero`),
   never a tool name and never “website slot” ([assistant.md](assistant.md)). Write lines use a
