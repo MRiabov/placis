@@ -100,6 +100,8 @@ instead of silently rewriting history.
    rail item. (2026-08-26)
    No Design tab on the editing panel. Density owner copy is Compact / Comfortable /
    Spacious. (2026-08-26)
+   Primary, Neutral, and Accent are color pickers (the color chip). Hex is not on the field;
+   it is only inside the picker. (2026-08-27)
    Website versions joined the workspace rail (see 11); it is not an editing-panel tab.
    (2026-08-26)
    Website page nodes pick from the website pages list (a dropdown, not free text). Text is a
