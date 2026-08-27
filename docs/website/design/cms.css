@@ -457,10 +457,8 @@ body.is-shot .viewtabs-fab { display: none !important; }
   line-height: 1.25;
 }
 .cms-dashboard-prompt-stack {
-  width: min(90%, 19.5rem);
-}
-@media (min-width: 640px) {
-  .cms-dashboard-prompt-stack { width: min(100%, 36rem); }
+  width: 100%;
+  max-width: 42rem;
 }
 .cms-dashboard-prompt-shelf {
   display: block;

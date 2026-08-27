@@ -228,3 +228,6 @@ instead of silently rewriting history.
     zinc-600 idle rows, zinc-950/6% active fill, stone `#e7e5e4` hairline on the prompt box.
     Do not invent a second palette. Source: placis-web `globals.css` + `marketingSite.ts`.
     (2026-08-27)
+    New chat prompt is full width of the main column, max `42rem` (placis-web default
+    `PlacisPromptBox`, `w-full max-w-2xl`). Do not use the compact `19.5rem` mobile cap.
+    (2026-08-27)
