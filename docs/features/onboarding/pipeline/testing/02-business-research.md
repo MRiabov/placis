@@ -8,15 +8,15 @@
   `run_id` skips a second fetch; Maps path upserts `etl.google_maps_listings` (+ hours, review
   rows); `place_id` on the Maps run; each job clears in-progress on the checklist projection;
   photo classification tags found photos (`photo_kind`); profile increments go through
-  transform / build-profile (conflict does not move the fold). Enqueues 1–5 insert `etl.runs`
+  transform / build-profile (conflict does not update the live business profile). Enqueues 1–5 insert `etl.runs`
   and start extract. The 6th enqueue in 30 minutes does **not** call `StartRun`, does **not**
   call Maps / Parallel / Facebook / crawl, returns `429` with `research_wait_until` = oldest of
-  the five enqueue start times + 30 minutes; prior fold stays. After that instant,
+  the five enqueue start times + 30 minutes; prior live business profile stays. After that instant,
   `GET .../profile` and SSE include `research_wait_until`; Review shows the inline wait and
-  Continue still works. A River retry of an existing ETL run does not mint a new `enqueue_id`.
+  Continue still works. A River retry of an existing ETL run does not create a new `enqueue_id`.
   A 6th enqueue after `research_wait_until` succeeds.
 - **Fail**: job error → `etl.runs.status=error`; onboarding session stays `client_interviewing`;
-  prior fold kept. Enqueue cap is not this Fail.
+  prior live business profile kept. Enqueue cap is not this Fail.
 - **Mocked**: Google Maps Details / scrape, Vercel Parallel + extract, Facebook, Instagram,
   trade registry, photo classifier (fakes). Never Parallel’s API, Exa, Perplexity, Tako,
   `:online`, OpenRouter web search.

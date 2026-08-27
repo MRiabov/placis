@@ -2,7 +2,7 @@
 
 Not a wait step. 01, 02, 04a, and 04b **append** [business profile](../../other/details/persistence.md)
 `business_profile_edits` (one increment per field or list item actually set — never a full
-profile). 05 reads the fold as of `accepted_edit_id` at client interview complete.
+profile). 05 reads the live business profile as of `accepted_edit_id` at client interview complete.
 
 This file owns the **closed checklist**, the **status function**, and the **conflict-merge
 rule**. 03 only renders the projection. 04a/04b and complete **link** here. No `checklist.md`.
@@ -19,7 +19,7 @@ Every registry select, Maps attach, ETL transform write, and client interview wr
 ## Must not
 
 - Read the whole profile, merge in memory, and write it back.
-- Silently overwrite a disagreeing value onto the fold.
+- Silently overwrite a disagreeing value onto the live business profile.
 - Fabricate a value with no source (registry, Maps, crawl, business research, or the contractor).
 - Write `registered_office` into `business_profile_service_areas` or the reverse.
 - Use Maps listing address as a second legal address (it stays on `etl.google_maps_listings`).
@@ -28,11 +28,12 @@ Every registry select, Maps attach, ETL transform write, and client interview wr
 ## Do — merge
 
 Each writer `SELECT … FOR UPDATE` the profile row, inserts only its increments, updates only those
-fold columns.
+live profile columns.
 
-- **Conflict:** two disagreeing values for the same checklist key → status `conflict`. The fold
-  column **does not move** (keep previous value, or empty). Research must not `UPDATE` that fold
-  column while `conflict`. Contractor `confirm_conflict` or a contractor edit writes the fold and
+- **Conflict:** two disagreeing values for the same checklist key → status `conflict`. That live
+  profile column **is not updated** (keep previous value, or empty). Research must not `UPDATE` that
+  column while `conflict`. Contractor `confirm_conflict` or a contractor edit writes the live
+  business profile and
   sets `filled_by_user`. That is the only “contractor wins.”
 - **Legal identity:** registry wins `legal_name`, `company_number`, `registered_office`,
   `company_status`, `incorporation_date` even if Maps/crawl disagree; not a contractor question
@@ -47,7 +48,7 @@ fold columns.
 
 Stable keys. 03 groups them for display. ETL transform may fill; 04a/04b fill gaps.
 
-| Key | Group | Fold / list | 02 may fill | Complete |
+| Key | Group | Column / list | 02 may fill | Complete |
 | --- | --- | --- | --- | --- |
 | `display_name` | who | `display_name` | Maps | required |
 | `trade` | who | `trade` | crawl / directory | required |
@@ -77,7 +78,7 @@ Stable keys. 03 groups them for display. ETL transform may fill; 04a/04b fill ga
 `in_progress` (in-flight ETL run for that key) → `conflict` → `needs_confirmation` →
 `filled_by_user` → `filled_by_research` → `skipped` / `not_applicable` → else `empty`.
 
-Derived from fold + winning edit origin + in-flight `etl.runs` + interview-only choices.
+Derived from the live business profile + winning edit origin + in-flight `etl.runs` + interview-only choices.
 
 ## Complete gate
 
@@ -86,7 +87,7 @@ Required keys not `empty` / `in_progress` / `conflict`. `skipped` / `not_applica
 
 ## Persist
 
-`business_profiles` (fold) + `business_profile_edits` + `business_profile_services` /
+`business_profiles` (live) + `business_profile_edits` + `business_profile_services` /
 `business_profile_service_areas` / `business_profile_opening_hours` / `business_profile_reviews` /
 `facebook_profiles` / `facebook_posts` / `instagram_profiles` / `instagram_posts`.
 `last_edit_id` is the latest applied edit. 05 sets `accepted_edit_id` at complete.
@@ -99,7 +100,7 @@ contractor acts.
 ## Out
 
 SSE checklist projection. 05 reads `accepted_edit_id`. Later ETL transform writes after complete
-are new edits after that id; they must not mutate the accepted fold in place.
+are new edits after that id; they must not mutate the accepted live business profile in place.
 
 ## Invariants
 

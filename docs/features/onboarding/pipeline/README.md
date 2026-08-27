@@ -30,7 +30,7 @@ business research is already running** before the contractor sees Review.
 
 ```text
 01 business lookup
-  ├─► 02 business research ──► build-profile (fold)
+  ├─► 02 business research ──► build-profile (live business profile)
   └─► 03 Review (skip ok) ─► 04a XOR 04b ──► 05 ─► 07 ─► 08
                                       │              └─► 06 (async)
                                       └─► build-profile
@@ -73,7 +73,7 @@ token restores (same table as reload); it does not submit business lookup again.
 and retries `GET .../profile` on a loading placeholder — do not drop the pointer and do not `POST`
 a replacement.
 
-Voice minting seeds the new realtime connection from the profile fold, checklist projection, extra
+Creating a realtime connection seeds it from the live business profile, checklist projection, extra
 notes, and last `update_interview_plan`. Live audio is gone; structured answers are not. Canonical
 detail: [frontend.md](../frontend.md), [04b](04b-voice-client-interview.md).
 

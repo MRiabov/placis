@@ -12,7 +12,7 @@ start is 409.
 ## Pre
 
 - Unpublished website from 05 exists.
-- Fold as of `accepted_edit_id` at job start.
+- Live business profile as of `accepted_edit_id` at job start.
 
 ## Must not
 
@@ -34,7 +34,7 @@ start is 409.
    first** (`update_slot` + `media_asset_id`) when `media_assets[]` already has a fit;
    `generate_image` only when nothing fits (ADR 6).
 2. After 06 a hero headline is **generated prose** that may still contain detail tokens. It is
-   not a raw fold dump and not a lone `{{business_name}}` unless 06 left it. Remaining tokens
+   not a raw live-profile dump and not a lone `{{business_name}}` unless 06 left it. Remaining tokens
    resolve at website publication ([variables.md](../../website/variables.md)).
 3. Validate every tool result against website component contracts. Whole-and-valid or the batch fails.
 4. Cap steps and tool calls (predecessor: 3 steps / 12 calls / 4 website pages at a time).

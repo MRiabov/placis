@@ -22,7 +22,7 @@ decision + date) instead of silently replacing the old entry.
 
 4. **An ETL run is one source kind** — `etl.runs` is one row per kind (Google Maps extract,
    Facebook extract, Instagram extract). `StartRun(kinds, trigger, tenant)` takes an explicit
-   list (length ≥ 1), mints one `enqueue_id`, inserts one run per kind, enqueues that kind’s
+   list (length ≥ 1), creates one `enqueue_id`, inserts one run per kind, enqueues that kind’s
    River job. The onboarding cap counts distinct `enqueue_id` with
    `trigger=onboarding` (5 per tenant per rolling 30 minutes), not jobs. (2026-08-27)
 
@@ -42,7 +42,7 @@ decision + date) instead of silently replacing the old entry.
    run may reuse the newest fetch for that type’s natural key. A scheduled run does not skip
    extract. (2026-08-27)
 
-8. **Transform uses the same fold rules as onboarding** — New reviews / posts / photos land.
+8. **Transform uses the same profile-update rules as onboarding** — New reviews / posts / photos land.
    Empty fields fill. A disagreeing owner-typed value is a research conflict on Details, not a
    silent overwrite. Transform runs per kind as soon as that kind’s extract succeeds. (2026-08-27)
 

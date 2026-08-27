@@ -1,6 +1,6 @@
 # 04a — Text client interview
 
-Text writer into the same fold as 04b. Not a root mode file. Channel is XOR with 04b.
+Text writer into the same live business profile as 04b. Not a root mode file. Channel is XOR with 04b.
 
 ## Trigger
 
@@ -16,7 +16,7 @@ unsets voice as the active writer). Autosave: `PUT .../text-interview/autosave`.
 
 ## Must not
 
-- Voice mint, realtime tools, transcript replay.
+- Voice realtime connection, realtime tools, transcript replay.
 - Parallel / research jobs / photo classification (photo kinds are ETL transform).
 - `POST` a new onboarding session on Resume.
 - Complete while required checklist rows are `empty` / `in_progress` / `conflict`.

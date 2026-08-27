@@ -35,7 +35,7 @@ website rollback of onboarding rows is refused
    `trigger=onboarding` in the last 30 minutes. Five already → do not call `StartRun`; expose
    `research_wait_until` (oldest of those five + 30 minutes) on profile and SSE; a later
    source-change returns `429` with that timestamp. River retries of an existing ETL run do not
-   mint a new `enqueue_id`. See [02](pipeline/02-business-research.md).
+   create a new `enqueue_id`. See [02](pipeline/02-business-research.md).
 2. 02 calls `etl.StartRun(kinds, trigger=onboarding)`. Extract, listing upsert, and transform
    are [ETL](../etl/technical-implementation.md).
 3. Profile deltas use [build-profile](pipeline/build-profile.md).
@@ -44,7 +44,7 @@ website rollback of onboarding rows is refused
 
 1. Each client interview answer and each ETL transform write becomes one or more
    `business_profile_edits` rows (only the fields/list items that writer set) applied to the live
-   fold in the same transaction (`SELECT … FOR UPDATE`, then those columns only).
+   business profile in the same transaction (`SELECT … FOR UPDATE`, then those columns only).
 2. Surface research conflicts for the owner to review.
 3. At client interview complete, set `accepted_edit_id`; applying the website template uses the
    profile as of that edit.
