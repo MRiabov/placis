@@ -214,8 +214,8 @@ Actions:
   Replaces unprompted **Regenerate**. Marks **ad needs
   review**. Owner-typed or owner-prompted marketing statements are allowed. If they include a
   detail, a separate Details tool call writes the business profile; a **notification**
-  (OK / Revert) appears bottom-right. Approve is not blocked. Same as website
-  generation for the conservative first ad draft.
+  (OK / Revert) appears bottom-right. Approve is not blocked. Same notification as the
+  website assistant (`update_details`). Conservative first ad draft is still unprompted.
 - **Revise** — on the generate row after the first generate: unlocks the confirmed step
   (format, audience, offer, ad lead form questions). Generate again applies; a format change regenerates this ad.
 

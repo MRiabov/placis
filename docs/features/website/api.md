@@ -172,7 +172,9 @@ or fails. `POST …/assistant/cancel` stays **do not create**.
 - **Request:** plan vs continuous; Ask first vs instant apply; **Follow** (`follow`, boolean,
   default `false`). Plan text is `string` + `maxLength`. `follow: true` is refused (`4xx`);
   the owner cannot turn Follow on.
-- **Response:** named activity / tool event structs. Proposed edits, not applied rows. Each
+- **Response:** named activity / tool event structs. Proposed unpublished-website edits, not
+  applied website rows. `update_details` is the exception: it writes the live business profile
+  immediately (same Details writer), then the shared notification. Each
   tool event has `summary` (`string` + `maxLength`): the owner line, backend-constructed
   ([assistant.md](assistant.md)). The UI renders `summary` only. Never render `action` /
   tool names (`update_slot`, …). Icon is from a closed kind: write = pencil, thinking =

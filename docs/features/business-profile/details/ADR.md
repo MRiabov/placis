@@ -71,7 +71,11 @@ decision + date) instead of silently rewriting history.
    Maps territory lookup; `radius_km` is for Meta when ad posting exists. Featured services
    are the `business_profile_services` list, not a textarea. (2026-08-27)
 
-9. **Notification Revert undoes that profile-history increment** — Ads may write a detail via
-   a tool call. **OK** keeps it. **Revert** is `POST /v1/business-profile/edits/{id}/undo`
-   (that `business_profile_edits` increment). Leaving the screen without clicking keeps the
-   write. Not website undo. (2026-08-27)
+9. **Notification Revert undoes that profile-history increment** — Any governed tool that
+   writes a detail (Ads generator, website assistant, later callers) uses the same Details
+   writer. The write is applied. **OK** keeps it. **Revert** is
+   `POST /v1/business-profile/edits/{id}/undo` (that `business_profile_edits` increment).
+   Leaving the screen without clicking keeps the write. Not website undo. Shared
+   [notification](../../../general-architecture/frontend.md). (2026-08-27)
+   Previous (same day): Ads may write a detail via a tool call. OK keeps it. Revert is
+   that undo route. Leaving the screen keeps the write. Not website undo.

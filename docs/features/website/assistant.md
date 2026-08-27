@@ -3,7 +3,8 @@
 The website assistant is a chat-like command surface in the website editor — not a separate
 generator. It reads the selected website page, website sections, website slots, media assets,
 website forms, SEO, validation blockers, website publication status, and website versions, and
-turns requests into governed, reviewable website editor edits. Text chat, voice handoffs, and
+turns requests into governed, reviewable website editor edits, and Details increments via
+`update_details` when copy includes a detail. Text chat, voice handoffs, and
 website editor assistance all share the same tool surface. The registry lives here; generation
 and search go through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
@@ -80,12 +81,14 @@ failed event.
 | `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` / `show_contact` |
 | `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
 | `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
+| `update_details` | write one Details increment (same writer as click-off PATCH and the Ads generator) |
 
 **Owner action = assistant action.** Each tool is another caller of the same website-editor /
-media-library execution the owner already uses (Ask first / instant apply around it). Text
-`update_slot` is the same upsert as click-off PATCH. Image attach, crop, focal, and AI cleanup
-are the same functions as the website editor PATCH and `/cms/media`. There is no second assistant
-implementation and no public copy helper the tools call. Copy-on-write
+media-library / Details execution the owner already uses (Ask first / instant apply around
+canvas tools). Text `update_slot` is the same upsert as click-off PATCH. Image attach, crop,
+focal, and AI cleanup are the same functions as the website editor PATCH and `/cms/media`.
+`update_details` is the same Details writer as `/cms/details` click-off and the Ads generator.
+There is no second assistant implementation and no public copy helper the tools call. Copy-on-write
 (`parent_media_asset_id`, parent file never replaced) stays **inside** those functions.
 
 Planner: a named real photo → **attach first** (`update_slot` + `media_asset_id`). Cleanup only
@@ -193,7 +196,7 @@ thinking. There is no search/grep tool on the website assistant.
 
 Other tools use the same field, never the tool name, for example: `Cleaned up image on Hero`,
 `Generated image on Hero`, `Updated SEO`, `Updated website styles`, `Hid Services`,
-`Added Reviews`, `Created Contact`, `Updated top menu`.
+`Added Reviews`, `Created Contact`, `Updated top menu`, `Updated Business details`.
 
 Do not require an LLM `user_description` on the tool call. If we later want a mandatory
 owner-facing description from the model on every tool the owner sees, that can replace or
@@ -310,8 +313,28 @@ and ads keep the parent until retargeted. Cosmetic bound lives on that cleanup (
 ads: no fake results). Canvas warning until approved. Publication blocked until approved. Same
 Ask first / instant apply gate as `update_slot`.
 
+### `update_details`
+
+Same Details writer as `/cms/details` click-off and the Ads generator. Dirty keys only
+(one field or list item per call). Applied **immediately** — not held as an unpublished
+website proposal, not `edit_history`, not Ask first Apply / Reject. Then the shared
+**notification** (OK / Revert). Revert is `POST /v1/business-profile/edits/{id}/undo`.
+Leaving the screen keeps the write. Onboarding 06 does not call this (client interview
+already writes Details).
+
+```text
+update_details(
+  field,     # live business profile field or list table
+  op,        # set | clear | add | remove | update
+  value?     # typed; omit on clear / remove
+)
+```
+
+Activity `summary` example: `Updated Business details`. Never a tool name.
+
 The website assistant never does a website publication, never bypasses validation, and never writes
-arbitrary registry JSON. It does not edit Details, Projects, or Certifications and reviews (those
-are Profile screens). It does not delete or archive a website section or website page (hide
+arbitrary registry JSON. It does not edit Projects or Certifications and reviews (those
+are Profile screens). Details writes are `update_details` only — not a side effect of
+`update_slot` or website styles. It does not delete or archive a website section or website page (hide
 stays: `set_section_visibility`). It does not upload or replace the file — replace stays the
 existing replace on `/cms/media` / website editor upload.
