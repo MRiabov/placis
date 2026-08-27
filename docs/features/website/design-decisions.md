@@ -192,7 +192,9 @@ instead of silently rewriting history.
     Safe-area padding on that bar. The list/Content sheet stays a cap so the canvas remains
     visible (~45vh). (2026-08-27)
     The open list / Content has the same reduce chevrons as the website assistant, on the
-    left of the sheet title. That hides the sheet back to the bottom bar so the canvas is
+    left of the sheet title. The whole title row hides the sheet (Add a website page and
+    Content controls stay their own hits). The row is compact, in line with the list.
+    That hides the sheet back to the bottom bar so the canvas is
     not covered. (2026-08-27)
 
 13. **The website editor control is Publish** — Owner copy is the verb **Publish** (toolbar

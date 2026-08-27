@@ -56,7 +56,8 @@ Two surfaces plus global nav, one unpublished website:
 - **Workspace** — on a **narrow** screen (≤1100px) the rail is a **bottom bar** (Sites only)
   and the list opens above it. That open list (and Content) has the same reduce chevrons as
   the website assistant, on the left of the title: hide the sheet back to the bottom bar.
-  That is not a back to Website pages. On a **wide** screen it is a left rail plus one list.
+  The whole title row does that hide (Add a website page stays its own control). The row is
+  compact, not a second toolbar. That is not a back to Website pages. On a **wide** screen it is a left rail plus one list.
   **Workspace items** on the rail: website pages, SEO,
   website styles, website versions. Selecting one **opens** the workspace list. Default on
   `/cms/website` is rail-only (list closed). **Website versions** is pinned to the end of

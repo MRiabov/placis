@@ -251,6 +251,7 @@ function setWorkspaceOpen(open) {
 }
 
 document.getElementById("workspace")?.addEventListener("click", (event) => {
+  if (event.target.closest(".cms-icon-button, .cms-icon-row")) return;
   if (event.target.closest("[data-workspace=collapse]")) setWorkspaceOpen(false);
 });
 
