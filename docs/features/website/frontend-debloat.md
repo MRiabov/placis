@@ -41,6 +41,11 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
   No right-hand editing panel. No media library rail item.
   No Home crumb on the website-editor toolbar; viewport + Publish stay one row.
   On narrow, Open destinations sits inline with **Website editor**.
+- Look clones the placis-web dashboard theme ([design-decisions.md](design-decisions.md) 17):
+  Satoshi, body tracking `-0.01em`, weights `400` / `450` / `500` / `600`, ink `#13120a`,
+  `--secondary` `#f4f4f5`, zinc-600 idle rows, zinc-950/6% active fill, stone `#e7e5e4`
+  hairline. Source: placis-web `globals.css` + `marketingSite.ts`. Do not invent a second
+  palette. Predecessor `src/styles/cms/` tokens that fight this go (cross-cutting file).
 - Canvas via the shared contractor-website component package.
 - Website assistant **overlay** pinned to the canvas (default collapsed on wide and narrow;
   wide: one-row composer — chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**;
@@ -83,6 +88,8 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 - GET-after-PATCH that replaces the website editor projection (`useSaveEditorPage`
   `onSuccess` `setQueryData` of the full body).
 - `/v1/tenants/{website_prefix}/website/…` for the CMS.
+- A second CMS palette, shadcn sprawl, or predecessor dashboard CSS that fights the
+  placis-web tokens.
 
 ## Retarget
 
@@ -130,3 +137,4 @@ the website Go phase (Cloudflare custom hostname + DNS rows).
 - `cms.ts` has no blog, careers, or leftover website-template-apply wrappers.
 - Don't say inspector: no leftover folder or type names in this feature.
 - Publication dropdown + blockers panel match [frontend.md](frontend.md).
+- `/cms/website` type and color match [design-decisions.md](design-decisions.md) 17.

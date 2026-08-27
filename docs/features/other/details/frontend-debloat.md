@@ -30,6 +30,9 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
 - `/cms/details` — Business details (who they are, contact, where, services, legal,
   opening hours picker, logo picker, Facebook URL, Google Maps listing). Top menu and footer
   stay in the website editor Content tab.
+- CMS layout (sidebar + main area) copies placis-web `DashboardShell` (narrow overlay
+  selector; wide collapsed rail + hover peek + pin) and the same dashboard theme
+  ([website design-decisions](../../website/design-decisions.md) 16–17).
 - Typed Business details fields (`detailsModel.ts` `emptyForm` / `profileToForm` / `formToPatch`).
 - Per-field loading placeholders ([general frontend](../../../general-architecture/frontend.md)).
 - `GET/PATCH /v1/business-profile` ([api.md](api.md)).
@@ -102,3 +105,4 @@ Do not rename Sites here. Do not restore **AI tools**.
 - Ads is a left-nav destination (screens may still be later).
 - No **AI tools** left-nav item.
 - Business details has no Save control.
+- CMS layout type and color match [website design-decisions](../../website/design-decisions.md) 17.
