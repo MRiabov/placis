@@ -19,8 +19,9 @@ find (company registry and/or Google Maps) + online research consent
 
 Step docs: [pipeline/](pipeline/README.md). Numbers are DAG order: 02 starts before 03.
 
-At most five 02 waves per tenant per rolling 30 minutes (one wave = one enqueue of the job set, not
-one job). A 6th wave waits until the oldest of those five is 30 minutes old. Business lookup still
+At most five 02 `StartRun` enqueues per tenant per rolling 30 minutes (one enqueue = one
+`StartRun`, not one ETL run). A 6th enqueue waits until the oldest of those five is 30 minutes
+old. Business lookup still
 returns; the wait is a quiet inline note on Review, not a blocker.
 
 ## Apply the website template
@@ -50,7 +51,9 @@ Owner CMS website publication is v3+.
 From confirm through applying the website template and copy, the backend pushes onboarding session
 events over SSE (on change, not faster than ~2s). The frontend refreshes the checklist. On
 `/onboarding/preview` it rotates complete filled website sections (~2s, image fade). The stream is
-a **mirror** — Postgres is authoritative. The contractor host is not an SSE endpoint.
+a **mirror** — Postgres is authoritative. Business research progress reads `etl.runs` **and** the
+live business profile transform already wrote (fast extract results appear before slow extract finishes). The
+contractor host is not an SSE endpoint.
 
 ## Where things stand
 
@@ -64,5 +67,5 @@ host (no token, no TTL). The onboarding session has no `expired` status.
 Voice is a **channel** (client interview, website assistant, and the voice agent in the CMS).
 Transport: [voice-agent.md](../../general-architecture/voice-agent.md). Client-interview tools and
 complete: [04b](pipeline/04b-voice-client-interview.md). Applying the website template consumes the
-accepted profile, never the raw transcript. Minting a client-interview realtime connection
+accepted profile, never the raw transcript. Creating a client-interview realtime connection
 includes the current profile, checklist, extra notes, and last `update_interview_plan`.

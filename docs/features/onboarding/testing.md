@@ -12,7 +12,8 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
 
 2. **Review** — found vs missing; Continue to client interview.
    - UI: `/onboarding/review`.
-   - DB: checklist rows from 01/02 (`filled_by_research` appearing as business research fakes complete).
+   - DB: checklist rows from 01/02 (`filled_by_research` appearing as each extract chunk
+     transforms, Details before scrape finishes).
 
 3. **Client interview** — fill the gaps (text path in this E2E so it does not depend on a live voice
    service); submit. Reload mid-interview: lands on `/onboarding/interview` with autosaved answers,
@@ -21,7 +22,7 @@ asserts use [persistence.md](persistence.md) and [details](../other/details/pers
      `onboarding_sessions.interview_plan_*` when voice `update_interview_plan` ran.
 
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
-   - DB: `business_research_runs` → `business_research_sources` + `google_maps_listings` when a place was selected.
+   - DB: `etl.runs` → fetch rows + `etl.google_maps_listings` when a place was selected.
 
 5. **Apply the website template + website preview** — `/onboarding/preview` SSE carousel, then
    navigate to the preview website address when 07 has written `latest/` (copy done or

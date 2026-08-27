@@ -13,8 +13,8 @@ and minimal or no conversion copy above the fold.
 
 ## Avoid
 
-Do not use for lead-generation heroes that need service copy, proof rows, or multiple CTAs above the
-fold. Use `public.hero.image` or `public.hero.form` for those cases.
+Do not use for lead-generation heroes that need service copy, proof rows, or multiple CTAs above the fold.
+Use `public.hero.image` or `public.hero.form` for those cases.
 
 ## Key Props
 

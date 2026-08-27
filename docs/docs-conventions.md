@@ -19,7 +19,7 @@ editing a doc.
   (conventions + index of per-feature tables), `frontend.md` (`frontend-2` UI rules),
   `frontend-debloat.md` (cross-cutting port), `ci-cd.md`, `testing.md`.
   Feature-owned capabilities (website
-  activation/payments, leads, media library) live under `features/`, not here.
+  activation/payments, leads, media library, ETL) live under `features/`, not here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that feature's docs in one
   place).
 - `planning/` — proposed, unshipped work; never the canonical source. The
