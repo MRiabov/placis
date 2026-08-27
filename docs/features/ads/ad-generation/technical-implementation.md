@@ -362,7 +362,7 @@ An ad can reach `ad_ready_to_post` only when:
    that the **unprompted** LLM drafted are flagged for review (`ad_needs_review`). Owner-edited
    or owner-prompted copy is allowed and does **not** block
    `ad_ready_to_post` ([ADR 18](ADR.md)). If it includes a detail, a separate Details
-   tool call writes `business_profile_edits`. Character
+   tool call (`update_details`) writes `business_profile_edits`. Character
    limits, uploads still in flight, and failed uploads still block.
 5. this ad's format has a complete variant
 6. the ad has a suggested ad lead form (suggestions never block approval)
@@ -419,7 +419,8 @@ Allowed AI behavior:
    reviewable copies
 4. suggest an ideal customer profile from the business profile and business research,
    asynchronously and reviewable
-5. if copy includes a detail, call a Details tool (`business_profile_edits`); do not invent
+5. if copy includes a detail, call `update_details` (one shared tool; also the website
+   assistant); do not invent
    reviews, ratings, years, guarantees unprompted
 6. rewrite one copy field from a required owner prompt after generate (optional selection;
    omit = whole field)
@@ -458,7 +459,7 @@ Backend tests:
 04. copy validation enforces character limits and the allowed button-label set
 05. unprompted sensitive marketing statements set `ad_needs_review`; they do
     not block `ad_ready_to_post` once the owner kept, edited, or prompted them. A profile
-    detail writes the business profile via a tool call (`business_profile_edits`)
+    detail writes the business profile via `update_details`
 06. approval requires images and copy on this ad's format
 07. the rendered download contains this ad's format only
 08. retry of the same generate while the ad is still an Ad draft or Ad needs review returns the

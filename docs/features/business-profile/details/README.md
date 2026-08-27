@@ -35,9 +35,9 @@ The record is larger than this screen (reviews, certifications, projects):
 
 Editing Details changes the website and the next ad draft.
 If ad copy conflicts with these details, prefer updating Details rather than leaving a second
-truth only in the ad. Ads and the website assistant may also write a detail here via a
-tool call (`business_profile_edits`); the owner sees the shared **notification** (OK keeps it;
-Revert undoes that increment). Not Ads-only.
+truth only in the ad. Ads and the website assistant write a detail by calling **`update_details`**
+(one tool, one implementation — [api.md](api.md)); the owner sees the shared **notification**
+(OK keeps it; Revert undoes that increment).
 
 How the owner reaches it: [CMS frontend](../../../general-architecture/cms/frontend.md). This
 screen: [frontend.md](frontend.md). Port:

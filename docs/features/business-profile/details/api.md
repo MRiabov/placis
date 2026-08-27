@@ -28,15 +28,15 @@ Validation errors: `string[]` with `maxLength` per item.
 - **Callers:** Business details save on click-off (no Save control).
 - **Idempotency-Key:** yes.
 - **Request:** dirty keys only (scalars + list-item ops), not a full-row dump. Writes
-  `business_profile_edits` and the live business profile in one transaction.
+  `business_profile_edits` and the live business profile in one transaction. `update_details`
+  calls this same increment function; it is not a second writer.
 - **Must not:** profile-history timeline HTTP; merge-in-memory rewrite of the whole row.
 
 ### POST /v1/business-profile/edits/{id}/undo
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** notification **Revert** after a Details tool write (Ads generator, website
-  assistant, later callers). **OK** does not call this. Leaving the screen without Revert
-  keeps the write.
+- **Callers:** notification **Revert** after `update_details`. **OK** does not call
+  this. Leaving the screen without Revert keeps the write.
 - **Idempotency-Key:** yes.
 - **Behavior:** undo that `business_profile_edits` increment (replay the inverse onto the live
   row, append a compensating increment). `409` if that id is already undone or is not the
@@ -103,8 +103,29 @@ Validation errors: `string[]` with `maxLength` per item.
   does **not** truncate `body`. The review citation is filled by the onboarding extract (or later
   the same extract); empty review citation falls back to `body` until then.
 
+## `update_details` (one governed tool)
+
+Not a route. One tool, one implementation: the same increment function as
+`PATCH /v1/business-profile`. Website assistant, Ads generator, and later LLM callers
+invoke **this** tool — not a second Ads tool and not a website-assistant copy. Owner
+click-off stays PATCH (not this tool). Onboarding client interview stays its writer.
+Onboarding 06 does not call it.
+
+```text
+update_details(
+  field,     # live business profile field or list table
+  op,        # set | clear | add | remove | update
+  value?     # typed; omit on clear / remove
+)
+```
+
+One field or list item per call. Applied immediately. Then the shared
+[notification](../../../general-architecture/frontend.md). Revert is
+`POST /v1/business-profile/edits/{id}/undo`.
+
 ## Do not create
 
 - `/v1/website/editor/business-profile`
 - `/v1/certification-selections`, `/v1/certifications`
 - profile-history / replay HTTP (except `POST /v1/business-profile/edits/{id}/undo`)
+- a second Details tool or Details-write HTTP for Ads or the website assistant

@@ -114,8 +114,8 @@ is in [editing.md](editing.md). Screens: [frontend.md](frontend.md).
 The LLM edits the unpublished website through the **website assistant** — hard-typed, validated,
 parallel tool calls (`update_slot`, `update_reviews`, `cleanup_image`, `generate_image`, `update_menus`, `update_details`, website
 section/website styles/SEO/website form/website page actions). Same attach / crop / focal /
-cleanup as the owner UI. `update_details` is the same Details writer as `/cms/details`; the
-shared notification Revert undoes that increment. Default-on overlay pinned to the canvas (expand / reduce height;
+cleanup as the owner UI. `update_details` is the shared Details tool (one implementation;
+Ads generator calls it too). The shared notification Revert undoes that increment. Default-on overlay pinned to the canvas (expand / reduce height;
 no website dim); two configs as boolean switches: plan vs continuous, instant apply vs Ask first. See
 [assistant.md](assistant.md).
 

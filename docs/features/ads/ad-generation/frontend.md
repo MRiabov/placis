@@ -213,9 +213,9 @@ Actions:
   upload default already ran). Reject: `POST /v1/media-assets/{id}/reject`.
   Replaces unprompted **Regenerate**. Marks **ad needs
   review**. Owner-typed or owner-prompted marketing statements are allowed. If they include a
-  detail, a separate Details tool call writes the business profile; a **notification**
-  (OK / Revert) appears bottom-right. Approve is not blocked. Same notification as the
-  website assistant (`update_details`). Conservative first ad draft is still unprompted.
+  detail, **`update_details`** writes the business profile (one shared tool; also the website
+  assistant). A **notification**
+  (OK / Revert) appears bottom-right. Approve is not blocked. Conservative first ad draft is still unprompted.
 - **Revise** — on the generate row after the first generate: unlocks the confirmed step
   (format, audience, offer, ad lead form questions). Generate again applies; a format change regenerates this ad.
 
@@ -355,7 +355,7 @@ Mobile is a primary viewport. Ads must work on a mobile device:
   with Revise next to Generate again, step 2 lock/unlock), copy
   limits, inline validation errors, approve at the bottom, AI-orb rewrite/cleanup preserving
   other fields' manual edits (empty prompt does not fire; Ctrl+Z restores an LLM rewrite and
-  cleanup Accept; owner-prompted details write Details via a tool call and a
+  cleanup Accept; owner-prompted details call `update_details` and a
   notification, Approve is not blocked)
 - media picker scoped to this contractor's photos; new files show Uploading… until the
   photo is uploaded (hover: circle-and-cross, click to cancel); then they are usable in this ad without waiting on a media caption; cleanup drafts
