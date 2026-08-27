@@ -111,7 +111,7 @@ the website Go phase (Cloudflare custom hostname + DNS rows).
 ## Done when
 
 - No Save / Saving / Saved on `/cms/website`.
-- Projection is hydrated once; PATCH does not round-trip the fold.
+- Projection is hydrated once; PATCH does not round-trip the unpublished website.
 - `cms.ts` has no blog, careers, or leftover website-template-apply wrappers.
 - Don't say inspector: no leftover folder or type names in this feature.
 - Publication dropdown + blockers panel match [frontend.md](frontend.md).

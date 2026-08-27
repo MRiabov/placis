@@ -81,7 +81,7 @@ diagnosable from GitHub Checks, the connection mode is wrong.
   restored Vite cache. Chromium only; `playwright install chromium` without `--with-deps`.
 - Playwright workers, not `--shard`. Default workers for specs that do not hit Clerk's Frontend
   API. Clerk testing-token specs (`workers: 1`) because testing tokens are 2 requests per second:
-  mint once per job (`clerkSetup()`), then reuse `CLERK_TESTING_TOKEN`. Do not start a second
+  create once per job (`clerkSetup()`), then reuse `CLERK_TESTING_TOKEN`. Do not start a second
   Vite for missing `../frontend`. Do not `--shard` until one job with workers is still too slow.
 - Both `.github/workflows/ci.yml` and `.circleci/config.yml` live in the repo. Comment the
   unused runner's trigger lines; leave the other uncommented.

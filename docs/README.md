@@ -16,12 +16,13 @@ themselves in the CMS.
 5. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes, LLM layer, audit, jobs, files, `frontend-2` UI
 6. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization for active tenants
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building; [website activation](features/onboarding/pipeline/08-website-activation.md) is pay-and-activate
-8. [Website](features/website/README.md) — website templates, applying them, editing, website publication
-9. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)
-10. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/) (investigation, not the spec)
-11. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
-12. [CI and delivery](general-architecture/ci-cd.md) — file-size guard, folder fan-out, external API isolation, generated-code freshness
-13. [Testing](general-architecture/testing.md) — the per-feature E2E tests
+8. [ETL](features/etl/README.md) — extract and transform (Google Maps, Facebook, Instagram); Monday / Wednesday / Friday refresh
+9. [Website](features/website/README.md) — website templates, applying them, editing, website publication
+10. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)
+11. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/) (investigation, not the spec)
+12. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
+13. [CI and delivery](general-architecture/ci-cd.md) — file-size guard, folder fan-out, external API isolation, generated-code freshness
+14. [Testing](general-architecture/testing.md) — the per-feature E2E tests
 
 ## Canonical references
 
@@ -37,6 +38,7 @@ themselves in the CMS.
 | HTTP conventions + per-feature `api.md` | [general-architecture/api.md](general-architecture/api.md) |
 | LLM layer, audit, jobs, files, `frontend-2` UI | [general-architecture/](general-architecture/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
+| ETL (extract + transform) | [features/etl/README.md](features/etl/README.md) |
 | Website activation / payments | [features/onboarding/pipeline/08-website-activation.md](features/onboarding/pipeline/08-website-activation.md) |
 | Website building + editing | [features/website/README.md](features/website/README.md) |
 | Placis website (Astro static → R2) | [features/placis-website/README.md](features/placis-website/README.md) |

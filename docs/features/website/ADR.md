@@ -55,7 +55,7 @@ Status: decided (2026-08-16, product owner + engineering).
 11. **Website page status is `unpublished` / `archived`** — publication is website-level
     (`website_publications`). There is no page-level `approved` or `published`. (2026-08-20)
 
-12. **No unpublished snapshot per edit** — the fold is in-place `UPDATE` of unpublished rows.
+12. **No unpublished snapshot per edit** — the unpublished website is in-place `UPDATE` of unpublished rows.
     Website edit history (`edit_history`) is typed increments, like `business_profile_edits`,
     not a full unpublished website or website page jsonb dump. Last writer is only that log
     (no `edited_by` / `ai_generation_id` on live rows). Ctrl+Z / redo are in-memory; copy-out

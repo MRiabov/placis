@@ -26,7 +26,7 @@ visible error ([editing.md](editing.md)). If a copy-out or upload is in flight o
 leaving is blocked until it succeeds or the owner confirms discard. It does not
 accumulate unpublished documents in memory. Edits do not keep a second unpublished copy.
 Opening `/cms/website` hydrates undo/redo stacks from website edit history (last 200
-batches). Switching website page GETs the fold only. Ctrl+Z is
+batches). Switching website page GETs the unpublished website only. Ctrl+Z is
 in-memory, then the ordinary PATCH. No `/undo` or `/redo` routes. The predecessor
 `EditorHeader` Save control is dropped.
 

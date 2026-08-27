@@ -41,9 +41,10 @@ doc, `internal/website/`, an ads package), the short word is acceptable: page, s
 variant; session. Do not use the short word in a mixed or product-facing sentence where it could
 mean something else.
 
-Do not say **user**, **frozen**, bare **session**, **provider**, **instantiate**, or **population**.
+Do not say **user**, **frozen**, bare **session**, **provider**, **instantiate**, **population**, **mint**, or **fold**.
 Say contractor, owner, or website visitor; name Google Maps, the LLM, or Stripe; say apply the
-website template.
+website template; say create or use for ephemeral tokens and ids; say live business profile or
+unpublished website.
 
 ---
 
@@ -230,7 +231,26 @@ the contractor decides. A research conflict is not an error.
 
 The contractor’s Google Maps place, used to start onboarding and pre-fill what we already know.
 
-In code: `google_maps_listings` (Google’s `place_id` as the external id).
+Listing is this Google Maps term only. Never say Instagram listing or Facebook listing.
+
+In code: `etl.google_maps_listings` (Google’s `place_id` as the external id).
+
+---
+
+### Instagram profile
+
+The contractor’s Instagram account (handle / user). Distinct from: Google Maps listing, Business
+profile.
+
+In code: `instagram_profiles` on the business profile (Postgres schema `details`).
+
+---
+
+### Instagram post
+
+One post on that Instagram profile.
+
+In code: `instagram_posts` on the business profile.
 
 ---
 
@@ -319,7 +339,7 @@ Distinct from: Onboarding session (the persisted run).
 
 On Find: submit the picked company registry record and/or Google Maps listing. One command:
 insert the unactivated tenant and onboarding session, record online research consent, enqueue
-business research if under the wave cap. Distinct from typeahead search, from business research,
+business research if under the ETL enqueue cap. Distinct from typeahead search, from business research,
 from Review, from picking a research conflict. Never say Confirm for this command.
 
 In code: `POST /v1/onboarding-sessions/business-lookup`.
@@ -340,9 +360,9 @@ In code: `onboarding_sessions.online_research_consent_at`.
 
 Finding out about the business from public sources (Maps, the company registry, Facebook, their
 current website, photos of their work) after online research consent. Never say bare “research”.
+Onboarding 02 starts ETL runs; it does not own extract tables.
 
-In code: `business_research_waves`, `business_research_runs`, `business_research_events`,
-`business_research_sources`, `business_research_fetches`.
+In code: `etl.StartRun` with `trigger=onboarding`; `etl.runs`.
 
 ---
 
@@ -915,6 +935,54 @@ dependency.
 
 ---
 
+### ETL
+
+Extract **and** transform: fetch public contractor sources, persist raw in the `etl` schema, then
+apply business logic that writes the business profile (research conflicts, posts, photo
+classification). Not extract-only. Distinct from: Business research (onboarding 02, which starts
+ETL runs).
+
+In code: `internal/etl/` (`extract/` + `transform/`), Postgres schema `etl`.
+
+---
+
+#### ETL run
+
+One extract of **one source kind** for one tenant (the Google Maps extract, the Facebook extract,
+the Instagram extract). River retries are the same run. Distinct from: Business research
+(onboarding 02 starts several runs, one per kind).
+
+In code: `etl.runs`.
+
+---
+
+#### Fast extract
+
+The first cheap response for a source kind (Google Maps Details first response, or a fast crawl).
+Lands in about a second. Distinct from: Slow extract.
+
+---
+
+#### Slow extract
+
+The remainder after the fast extract (Maps scrape of further reviews and photos, or a slow
+crawl). Tens of seconds. Distinct from: Fast extract.
+
+---
+
+#### Fast crawl
+
+The first-response pass of website crawl. A fast extract for that kind. Distinct from: Slow
+crawl.
+
+---
+
+#### Slow crawl
+
+The rest of the existing site. A slow extract for website crawl. Distinct from: Fast crawl.
+
+---
+
 ### Onboarding
 
 #### Onboarding session
@@ -1058,6 +1126,8 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | frozen / frozen copy | published website copy |
 | refine / refinement | website copy generation |
 | instantiate / population | apply the website template |
+| mint / minted / minting | create or use (ephemeral tokens and ids) |
+| fold / folds | live business profile or unpublished website |
 | generate unpublished website / generate website structure | apply the website template |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (onboarding) | website preview link |
@@ -1135,6 +1205,9 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | knob / knobs | option (product); field / variable (technical) |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |
 | JsonRecord / JsonObjectPayload / `map[string]any` in domain code | typed struct; `jsonb` is persistence-only |
+| wave | ETL run |
+| Instagram listing | Instagram profile or Instagram post |
+| Facebook listing | Facebook profile or Facebook post |
 
 ## Code naming rules
 

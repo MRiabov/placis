@@ -8,8 +8,8 @@ decision + date) instead of silently rewriting history.
 1. **Profile history is typed increments, not a dump** — Each applied change is a
    `business_profile_edits` row: one field or list item, `set`/`clear`/`add`/`remove`/`update`,
    typed value columns, who, where it came from, request/job id. The live `business_profiles` row
-   is the fold. Reads load the fold; they do not replay the log. Writers `SELECT … FOR UPDATE`,
-   insert only what they set, and update only those fold columns. No writer may submit a full
+   is the current profile. Reads load that row; they do not replay the log. Writers `SELECT … FOR UPDATE`,
+   insert only what they set, and update only those live profile columns. No writer may submit a full
    profile. (2026-08-19)
 
    The predecessor stored profile history as a details blob / full merge. Under a race (client interview and
@@ -32,5 +32,6 @@ decision + date) instead of silently rewriting history.
    `founder_nationality` / `founder_country_of_residence` / `founder_appointed_on` /
    `founder_media_asset_id`, and `logo_media_asset_id` / `brand_tone` / `brand_typography` /
    `brand_primary_color` / `brand_accent_color`, live on `business_profiles`. They are ordinary
-   fold columns and ordinary `business_profile_edits.field` values. Business research extras (confidence,
-   evidence) stay on `business_research_sources`, not a founder blob. (2026-08-19)
+   live profile columns and ordinary `business_profile_edits.field` values. Business research extras (confidence,
+   evidence) stay on ETL fetch metadata / the Facebook or Instagram profile row, not a founder blob. (2026-08-19;
+   2026-08-27: `business_research_sources` removed.)

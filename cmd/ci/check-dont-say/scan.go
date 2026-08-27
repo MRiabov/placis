@@ -313,6 +313,8 @@ var extraAllowed = []string{
 	"(onboarding)",
 	"(media)",
 	"(details)",
+	"above the fold",
+	"below the fold",
 	"prompt catalog",
 	"checkout.session",
 	"openapi-fetch client",
