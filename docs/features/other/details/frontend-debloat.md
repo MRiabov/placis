@@ -56,6 +56,8 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
 - Merging Details into the website editor.
 - Renaming Sites in this pass ([frontend.md](frontend.md) out of scope).
 - Org chooser, tenant CRUD (auth file).
+- Decorative boxed heading icon on Details / Projects / Certifications and
+  reviews / Media library. Titles are eyebrow + title (+ Open destinations on narrow).
 
 ## Retarget
 

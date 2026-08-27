@@ -1555,21 +1555,11 @@ body.is-shot .viewtabs-fab { display: none !important; }
 .cms-details-content { width: 100%; max-width: 1280px; margin: 0 auto; }
 .cms-collection-header {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
   border-bottom: 1px solid var(--cms-border);
   padding: 0 0 22px;
-}
-.cms-collection-header-icon {
-  display: grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  background: transparent;
-  color: var(--muted-foreground);
 }
 .cms-collection-eyebrow {
   color: var(--muted-foreground);
