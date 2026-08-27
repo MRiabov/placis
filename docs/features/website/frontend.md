@@ -104,7 +104,8 @@ explicit apply. Top menu and footer are edited in **Content** as a **depth-2 tre
 dropdown; website page / text / URL nodes). Website page picks from website pages; URL is a
 combobox (existing or create). Bar CTAs: marketing phone, marketing email, and contact.
 Look (logo, density) is **Website styles**, not Details and not a Design tab. Owner-facing density labels are Compact, Comfortable, Spacious (API stays
-`compact` / `comfortable` / `spacious`).
+`compact` / `comfortable` / `spacious`). Primary, Neutral, and Accent are color pickers
+(the color chip). Hex is not on the field; it is only inside the picker.
 
 **Publish** is a toolbar **dropdown**, not one toolbar button and not Save. Specs still call
 the act **website publication**. There is no **Home** back control; Sites in the global nav
