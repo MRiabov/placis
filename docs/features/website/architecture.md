@@ -168,8 +168,8 @@ The onboarding wait teaser (`/onboarding/preview`) reuses website components in 
 
 ## Voice
 
-The website assistant can be driven by the **voice agent** (see
-[voice-agent.md](../../general-architecture/voice-agent.md)): the agent clarifies what to change
+The website assistant can be driven by the **voice agent**
+([voice-agent.md](../../general-architecture/voice-agent.md)): the agent clarifies what to change
 — which website page/website section, new website page vs. copy edit, attach vs. generate an
 image — then emits one structured instruction resolved through the same governed website assistant
 tools (`update_slot`, `cleanup_image`, `generate_image`, website styles changes, website section
@@ -177,6 +177,11 @@ reorder, SEO/website form updates, website page creation, website-publication-re
 modes — plan (approve a concrete plan first) and continuous (bounded direct edits) — share the
 same tool surface. Voice grants no extra authority. On `/cms/website`, empty composer turns the
 voice agent on (orb, chatbot hidden). Look: [design decision record](design-decision-record.md) 18.
+The agent cannot website-publish.
+
+The product assistant also **explains the current screen** from a small in-memory markdown
+knowledge base (website editor and Ads). Onboarding **client interview** voice is out;
+onboarding **guide** assistant (talk them through the current onboarding screen) is in.
 
 ## Where things stand
 

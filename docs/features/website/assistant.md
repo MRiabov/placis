@@ -28,7 +28,9 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
   (same as Reject those). It does not undo already-Applied batches and is not “clear selected
   website section”. Control: silent trash on the right of the overlay top row while
   **expanded** (no label, no fill). Hidden while reduced.
-- The overlay is **one chat-like thread** (owner turns and assistant replies). Ask first
+- The overlay is **one chat-like thread** (owner turns and assistant replies), **persisted**
+  (one thread per tenant). Hydrate on `/cms/website` open. Retain if last assistant edit
+  within 24 hours; else a new thread. Ask first
   **Apply / Reject is per pending turn**: one pair for the whole run’s tools, not per tool.
   Those two actions are **pills on the canvas**, always over the chatbot (above it) or in the
   left stack next to the orb when the voice agent is on, not in the thread. Tool calls in the thread are muted owner lines from the backend, never

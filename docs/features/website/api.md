@@ -64,8 +64,10 @@ Onboarding 05/06 write them in River, not via these routes.
 - **Response:** website page `*Read`: `path`, `title`, `page_type`, `status`, SEO
   columns (`seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
   `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`), `validation`,
-  website-publication-blocker count, `publication.has_unpublished_changes` (unpublished vs
-  live, even when `publication_id` is set), sections/slots with catalog-discriminated
+  unpublished `blockers[]` (`code`, `message`, jump target — website section in Content, or
+  `/cms/media`). **Compute realtime; do not persist** (not `website_publication_issues`).
+  `publication.has_unpublished_changes` (unpublished vs
+  live, even when `publication_id` is set), sections with catalog-discriminated
   `props` / `design` / `value`. Embeds tenant-scoped website styles, top menu, footer, and
   website forms so the canvas can paint. May embed display name / marketing phone for website
   placeholders; Details owns those writes. Reviews website sections include that section’s
@@ -110,7 +112,8 @@ Onboarding 05/06 write them in River, not via these routes.
 - **GET query:** optional `publication_id` (same as page GET). Same `409` / `400` as page GET.
 - **PATCH Idempotency-Key:** yes.
 - **PATCH request:** `base_edit_history_head` plus dirty named website styles (`preset_id`,
-  `primary`, `neutral`, `accent`, `radius`, `density`). Extra keys 4xx.
+  `primary`, `neutral`, `accent`, `radius`, `density`). Extra keys 4xx. Logo is not on this
+  body — `logo_media_asset_id` on Details. Publication may emit a URL only from that media library file.
 - **PATCH response:** `{ edit_history_head, batch_id }`. Same `409 edit_history_conflict` as
   the website page PATCH.
 
@@ -127,6 +130,14 @@ Onboarding 05/06 write them in River, not via these routes.
   website page PATCH.
 - **Must not:** `/top-menu` or `/footer` as peer routes; menus fields on the website page PATCH.
 
+### GET /v1/website/editor/urls / POST /v1/website/editor/urls
+
+- **Auth:** Clerk JWT, active tenant
+- **Callers:** top menu / footer URL combobox (Existing URLs / type to create).
+- **POST Idempotency-Key:** yes.
+- **Request:** `href` (URL, `maxLength` 2048), optional `label` (`maxLength` 80).
+- **Must not:** create a website page; `POST /pages` from this picker.
+
 ## Complete — website assistant
 
 One in-flight run per tenant (includes onboarding website copy generation). Tools never do
@@ -139,7 +150,20 @@ keys so `edit_history` is `edited_by=agent`). Instant apply PATCHes as tools suc
 Onboarding 06 is the exception: the River job writes unpublished rows headless (no
 `frontend-2`). While 06 is in flight, CMS PATCH and this assistant POST are `409`.
 
-### POST /v1/website/editor/pages/{page_id}/assistant
+**Thread:** one per tenant, not per website page. `GET` hydrates on `/cms/website` open.
+Retain if last **assistant edit** within 24 hours; else clear. **Clear context** = new thread
+immediately. Never return `ai_generations` blobs. In-flight run on reload: that run finishes
+or fails. `POST …/assistant/cancel` stays **do not create**.
+
+### GET /v1/website/editor/assistant
+
+- **Auth:** Clerk JWT, active tenant
+- **Callers:** `/cms/website` open (hydrate). Website versions rail may show this thread’s
+  activity next to publications (same resource). Rollback still only on publication rows.
+- **Response:** current thread turns (`owner` / `reply` / `activity` with `summary`). Empty
+  thread if none or past retention.
+
+### POST /v1/website/editor/assistant
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website assistant chat in `frontend-2`. Onboarding 06 does not call this POST
@@ -155,7 +179,13 @@ Onboarding 06 is the exception: the River job writes unpublished rows headless (
   lightbulb. There is no search/grep tool.
 - **Must not:** return `ai_generations` blobs; write unpublished rows from this POST in the CMS.
 
-### POST /v1/website/editor/pages/{page_id}/assistant/record-apply
+### POST /v1/website/editor/assistant/clear
+
+- **Auth:** Clerk JWT, active tenant
+- **Idempotency-Key:** yes.
+- **Callers:** **Clear context**. Inserts a new thread immediately.
+
+### POST /v1/website/editor/assistant/record-apply
 
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
@@ -165,7 +195,7 @@ Onboarding 06 is the exception: the River job writes unpublished rows headless (
 - **Behavior:** activity card terminal. **Must not** upsert website pages / sections / slots /
   menus and **must not** append `edit_history`. Second transition `409`. **No revert.**
 
-### POST /v1/website/editor/pages/{page_id}/assistant/record-reject
+### POST /v1/website/editor/assistant/record-reject
 
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
@@ -184,10 +214,11 @@ not this CMS POST. They are never website-rollback targets.
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website publication dropdown (whole website, not per website page).
 - **POST Idempotency-Key:** yes.
-- **POST request:** no destination body. One `latest/` tree. Purge the preview website address
-  and every `active` website address. Destinations are not independent website versions.
+- **POST request:** `website_address_id` (the host row they clicked). Writes that host’s R2
+  tree and purges **that** host. Hosts can diverge.
 - **POST:** `published_by=owner`.
-- **GET list:** metadata `*Read` (`version_number`, `status`, `active`, `published_by`, times).
+- **GET list:** metadata `*Read` (`version_number`, `status`, `active`, `published_by`,
+  `website_address_id`, times).
   **Omit** `website_manifest`. Rollback UI uses `published_by=owner` only — omit onboarding
   07/08 and 05-retry rows.
 
@@ -196,7 +227,8 @@ not this CMS POST. They are never website-rollback targets.
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
 - **Callers:** website publication dropdown — **live** website rollback.
-- **Behavior:** copy that owner website version onto `latest/`, purge. `409` if
+- **Behavior:** copy that owner website version onto **that host’s** `latest/`, purge that
+  host. `409` if
   `published_by=onboarding` or the id is not an owner row. Does not rewrite unpublished
   website rows.
 - **Response:** that publication `*Read` (`active=true`, `version_number`, times). The
@@ -219,6 +251,17 @@ not this CMS POST. They are never website-rollback targets.
 - **Callers:** poll a connected website address until `active`.
 - **Response:** hostname, type, status, DNS rows (type, Host, Value; copyable). No GoDaddy/nameserver mutation.
 
+### POST /v1/voice/realtime-connection
+
+- **Auth:** Clerk JWT, active tenant
+- **Callers:** website-editor canvas orb; Ads product guide orb. Onboarding **client interview**
+  voice is out; onboarding **guide** assistant (talk through the current onboarding screen) is
+  in — that guide uses this same short-lived secret shape.
+- **Idempotency-Key:** yes.
+- **Behavior:** short-lived realtime connection secret; audio bypasses Go
+  ([voice-agent.md](../../general-architecture/voice-agent.md)). Same governed tools as text on
+  that surface. Cannot website-publish.
+
 ## Do not create
 
 - `/v1/tenants/{website_prefix}/website/…`
@@ -236,8 +279,9 @@ not this CMS POST. They are never website-rollback targets.
 - per-website-page website publication
 - `POST …/pages/{id}/sections`, `PATCH …/sections/order`, `DELETE …/sections/{id}`,
   `POST …/slots/{key}/asset`
-- Don't say session: `realtime-voice-session` (later)
+- `POST …/pages/{page_id}/assistant` (moved to `/v1/website/editor/assistant`)
 - `POST …/assistant/cancel` (the run ends when it finishes or fails)
+- Don't say session: `realtime-voice-session` as a path name (use `/v1/voice/realtime-connection`)
 - `content-contract` as an HTTP resource (website component catalog files)
 - `/certification-selections` (certifications live on [details](../business-profile/details/api.md))
 - `/v1/website/editor/assets`, `/v1/website/editor/files/…` (media library owns upload)
