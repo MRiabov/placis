@@ -33,6 +33,7 @@ This file also owns the **CMS left nav** change (Profile disclosure + Ads).
 - CMS layout (sidebar + main area) copies placis-web `DashboardShell` (narrow overlay
   selector; wide collapsed rail + hover peek + pin) and the same dashboard theme
   ([website design-decisions](../../website/design-decisions.md) 16–17).
+  New chat prompt is full width of the main column, max `42rem` (default `PlacisPromptBox`).
 - Typed Business details fields (`detailsModel.ts` `emptyForm` / `profileToForm` / `formToPatch`).
 - Per-field loading placeholders ([general frontend](../../../general-architecture/frontend.md)).
 - `GET/PATCH /v1/business-profile` ([api.md](api.md)).
