@@ -1180,14 +1180,33 @@ body.is-shot .viewtabs-fab { display: none !important; }
 .canvas-block:hover { outline-color: rgb(19 18 10 / 25%); }
 .canvas-block.is-selected { outline-color: var(--cms-accent); }
 .canvas-block.is-pending { outline-color: var(--cms-info); }
-.cms-ask-pills {
+.cms-canvas-actions {
   position: absolute;
   z-index: 21;
   left: 50%;
   bottom: calc(12px + 50% + 8px);
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
   transform: translateX(-50%);
+  pointer-events: none;
+}
+.cms-editor-canvas.is-assistant-collapsed .cms-canvas-actions {
+  bottom: calc(12px + var(--cms-assistant-collapsed-height) + 8px);
+}
+.cms-editor-canvas.is-voice .cms-canvas-actions {
+  left: auto;
+  right: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  transform: none;
+}
+.cms-ask-pills {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  pointer-events: auto;
   opacity: 1;
 }
 .cms-ask-pills.is-hidden { display: none; }
@@ -1248,9 +1267,6 @@ body.is-shot .viewtabs-fab { display: none !important; }
 }
 .cms-editor-canvas.is-assistant-collapsed .cms-assistant-bar { border-bottom: 0; }
 .cms-editor-canvas.is-assistant-collapsed #clearContext { display: none; }
-.cms-editor-canvas.is-assistant-collapsed .cms-ask-pills {
-  bottom: calc(12px + var(--cms-assistant-collapsed-height) + 8px);
-}
 @media (min-width: 1101px) {
   .cms-editor-canvas {
     --cms-assistant-collapsed-height: 3.25rem;
@@ -1288,17 +1304,10 @@ body.is-shot .viewtabs-fab { display: none !important; }
 .cms-editor-canvas.is-voice .cms-assistant-overlay {
   display: none;
 }
-.cms-editor-canvas.is-voice .cms-ask-pills {
-  bottom: calc(12px + var(--cms-voice-orb) + 8px);
-}
 .cms-voice-dock {
   display: none;
-  position: absolute;
-  z-index: 20;
-  right: 12px;
-  bottom: 12px;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   pointer-events: none;
 }
 .cms-editor-canvas.is-voice .cms-voice-dock {
@@ -1308,7 +1317,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  max-width: min(12rem, calc(100vw - var(--cms-voice-orb) - 48px));
+  max-width: min(10rem, calc(100vw - var(--cms-voice-orb) - 11rem));
   padding: 8px 14px;
   border: 0;
   border-radius: 999px;
@@ -2290,14 +2299,18 @@ body.is-shot .viewtabs-fab { display: none !important; }
     width: 32px;
     height: 32px;
   }
-  .cms-ask-pills {
+  .cms-canvas-actions {
     bottom: calc(12px + env(safe-area-inset-bottom) + 50% + 8px);
   }
-  .cms-editor-canvas.is-assistant-collapsed .cms-ask-pills {
+  .cms-editor-canvas.is-assistant-collapsed .cms-canvas-actions {
     bottom: calc(12px + env(safe-area-inset-bottom) + var(--cms-assistant-collapsed-height) + 8px);
   }
-  .cms-editor-canvas.is-voice .cms-ask-pills {
-    bottom: calc(12px + var(--cms-voice-orb) + 8px);
+  .cms-editor-canvas.is-voice .cms-canvas-actions {
+    bottom: 12px;
+    gap: 8px;
+  }
+  .cms-editor-canvas.is-voice .cms-voice-dock {
+    gap: 8px;
   }
   .cms-assistant-overlay {
     bottom: calc(12px + env(safe-area-inset-bottom));

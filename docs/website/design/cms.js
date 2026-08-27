@@ -647,15 +647,10 @@ function syncCanvasScale() {
       const overlayRect = overlay.getBoundingClientRect();
       if (overlayRect.height > 0) coverTop = Math.min(coverTop, overlayRect.top);
     }
-    const pills = document.getElementById("askPills");
-    if (pills && !pills.classList.contains("is-hidden")) {
-      const pillsRect = pills.getBoundingClientRect();
-      if (pillsRect.height > 0) coverTop = Math.min(coverTop, pillsRect.top);
-    }
-    const dock = document.getElementById("voiceDock");
-    if (dock && editorCanvas.classList.contains("is-voice")) {
-      const dockRect = dock.getBoundingClientRect();
-      if (dockRect.height > 0) coverTop = Math.min(coverTop, dockRect.top);
+    const actions = document.getElementById("canvasActions");
+    if (actions) {
+      const actionsRect = actions.getBoundingClientRect();
+      if (actionsRect.height > 0) coverTop = Math.min(coverTop, actionsRect.top);
     }
     const visualCover = Math.max(0, canvasRect.bottom - coverTop) + 12;
     const pad = `${Math.ceil(visualCover / scale)}px`;

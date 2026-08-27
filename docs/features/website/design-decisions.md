@@ -266,8 +266,9 @@ instead of silently rewriting history.
     vertically centered to it. A small close on the
     top-right of the orb also restores. Restoring is sticky while the field stays empty
     until they hit **Voice** again. In chatbot mode, empty field shows **Voice** (not Plan /
-    Send); any text is chatbot with Plan / Send. Apply / Reject sit immediately **above the
-    orb** (same as above the chatbot), centered; the orb stays to the right. The voice agent
+    Send); any text is chatbot with Plan / Send. Apply / Reject sit **beside the orb** in the
+    same right-aligned row as Restore chatbot (not centered above it). Over the chatbot they
+    stay centered above the overlay. The voice agent
     speaks back and uses the same tools (plan vs continuous, Ask first). **Follow**
     (`follow`) is a third assistant config, default **off**, not owner-turnable (no overlay
     switch; `true` is refused). Reserved for a later cut that snaps the canvas to the
