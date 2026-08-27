@@ -97,6 +97,10 @@ Profile is not a route. Clicking it only expands or collapses the group.
 Headings on Details, Projects, Certifications and reviews, Media library, and Ads have
 no decorative icon. On narrow, Open destinations stays inline with the heading.
 
+### New chat (`/cms`)
+
+The New chat prompt clones dashboard `PlacisPromptBox` (look: [website design-decisions](../../website/design-decisions.md) 17). **Connect** links Google Ads and Meta ad accounts. It is not Connect website address and not Details Facebook / Google Maps listing. Hide Connect when both ad accounts are already connected (same status as Ads; do not paint it and then hide it). Voice is desktop-only; it opens a full-screen orb for the client interview (looks like the dashboard orb; not the website-editor canvas orb). Placeholders cycle.
+
 ### Business details (`/cms/details`)
 
 The Details view. The heading is **Business details**. Editing the business profile here

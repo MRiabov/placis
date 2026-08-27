@@ -262,6 +262,16 @@ instead of silently rewriting history.
     Wordmark + prompt are vertically centered in the main column (Open destinations stays
     top-left on narrow). The Upgrade shelf is full width of the prompt, text centered,
     one outline with the box (placis-web shelf). (2026-08-27)
+    New chat clones dashboard `PlacisPromptBox` controls: **Connect** (flat hairline, white
+    at rest, zinc-50 only while the Google / Meta panel is open), Paperclip (hidden under
+    640px), animated AudioLines Voice on the right (desktop only), ArrowRight send.
+    Connect is gone when Google Ads and Meta are both connected (same status as Ads; do not
+    flash the control). It is not Connect website address. Placeholders cycle. Secondary
+    controls stay outline (canvas fill, `--border`, hover zinc-50) — `--secondary` is a
+    token, not a resting chip. Voice on New chat opens a full-screen **orb** for the
+    client interview (soft glowing circle, Back). Do not port the DustOrb
+    particle renderer bit by bit; the later `frontend-2` port can keep its cheaper orb.
+    Website-editor Voice stays the canvas orb (decision 18). (2026-08-27)
 
 18. **Website editor voice agent is an orb, not a full-screen takeover** — Empty composer
     turns the **voice agent** on (`/cms/website` only). The chatbot overlay is hidden so the

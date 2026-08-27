@@ -98,7 +98,8 @@ containing two expandable steps, an inline loading state, and the approve block 
   "+ New ad" for each **unconnected** ad platform; the buttons are **never rendered by default**
   — they load only after the connection-status check confirms an ad platform is unconnected, so
   the owner never sees one flash and disappear; a connected ad platform shows nothing at all, and
-  the button never comes back
+  the button never comes back. New chat **Connect** uses this same status: gone when Google Ads
+  and Meta are both connected ([website design-decisions](../../website/design-decisions.md) 17).
 - "+ New ad" button; empty state with a one-line explanation and a start button
 
 ### 2. Ad workspace (`/cms/ads/new`, `/cms/ads/{id}`)
