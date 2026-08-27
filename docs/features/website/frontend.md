@@ -50,14 +50,15 @@ under Profile; attach from Content when an image is selected. See [media library
 
 ## Website editor (`/cms/website`)
 
-Two surfaces plus the global sidebar, one unpublished website:
+Two surfaces plus global nav, one unpublished website:
 
 - **Canvas** — the selected website page, live from its website sections. Not a website preview.
-- **Workspace** — left rail plus one list on desktop; on **mobile** (≤1100px) the rail is a
-  **bottom bar** and the list opens above it. **Workspace items** on the rail: website pages, SEO,
+- **Workspace** — on a **narrow** screen (≤1100px) the rail is a **bottom bar** (Sites only)
+  and the list opens above it. On a **wide** screen it is a left rail plus one list.
+  **Workspace items** on the rail: website pages, SEO,
   website styles, website versions. Selecting one **opens** the workspace list. Default on
   `/cms/website` is rail-only (list closed). **Website versions** is pinned to the end of
-  the rail (bottom on desktop, trailing on mobile). **SEO** is its own rail panel and always shows the current website page (the
+  the rail (bottom on a wide screen, trailing on a narrow screen). **SEO** is its own rail panel and always shows the current website page (the
   one on the canvas). It is not under Website pages and not a tab. There is no media library
   rail item; attach / pick / drop-on-image live in **Content** when an image is selected (same
   library as `/cms/media`). Crop / focal / cleanup and Ads / Details logo stay on `/cms/media`.
@@ -159,30 +160,32 @@ as **boolean switches** on the overlay: plan vs continuous, and instant apply vs
 first (Apply / Reject). Default is plan + Ask first. Composer submit is **Plan** when Plan is
 on, **Send** when Plan is off (continuous).
 
-**Quiet by default** on `/cms/website`: the CMS left nav collapsed to icons, workspace
-rail-only. The canvas is the wide column. Open the list from the rail; open Content from a
-website section or image on the canvas. The CMS is
-viewport-locked (PWA): the window does not scroll. The website page scrolls inside the
-canvas stage; the website assistant thread scrolls. See
-[design-decisions.md](design-decisions.md) 8.
+**Quiet by default.** On a **narrow** screen the canvas is the destination until they open
+destinations. The CMS is viewport-locked (PWA): the window does not
+scroll. The website page scrolls inside the canvas stage; the website assistant thread scrolls.
+See [design-decisions.md](design-decisions.md) 8 and 16.
 
 ```text
-nav (icons) | workspace (rail + one list) | website (wide canvas column)
-                                          | website-assistant overlay (expand / reduce height)
+narrow (≤1100px):
+Open destinations (inline with Website editor) | heading
+Desktop / Tablet / Mobile + Publish
+website (canvas) + website-assistant overlay (collapsed by default)
+workspace rail (bottom bar; list / Content opens above it)
+full-screen overlay selector covers all of that when open
 
-mobile (≤1100px):
-nav (icons) | website (wide canvas column)
-            | website-assistant overlay
-            | workspace rail (bottom bar; list opens above it)
+wide (≥1101px):
+nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | website (wide canvas)
+                                                                     | website-assistant overlay (one-row composer)
 ```
 
 - **Always on** when `/cms/website` is open. There is no toolbar **Website assistant** control
   and no overlay title. It does not open a modal. Overlay has a 12px inset from the canvas
   on the left, right, and bottom (not flush to the edges). Chevrons expand or reduce; that is
-  not a hide. **Desktop default / collapsed** is one row: chevrons, field, **Plan mode**,
-  **Ask first**, **Plan** (or **Send**). Reduced composer is **max-width 40rem**, centered;
-  expand grows it to the 12px canvas inset (180ms). **Mobile** (≤1100px) default is expanded,
-  at least half the canvas column; collapsed stays two rows (overlay bar + composer). Idle /
+  not a hide. **Collapsed** (desktop and narrow default) is one row on a wide screen:
+  chevrons, field, **Plan mode**, **Ask first**, **Plan** (or **Send**). On narrow, collapsed
+  stays two rows (overlay bar + composer). Reduced composer is **max-width 40rem**, centered;
+  expand grows it to the 12px canvas inset (180ms). **Narrow default is collapsed** (canvas
+  first). Idle /
   unfocused overlay is **40% opacity**; hover or focus-within is opaque. The overlay does
   **not** dim or black out the website; clicks on the uncovered canvas still work.
   **Apply / Reject pills never fade.**
@@ -242,8 +245,8 @@ rewrite reviews website sections.
 
 **Reorder / pin by drag-and-drop.** Six-dot grip (2×3) on hover on **every** review card (Top
 reviews and All reviews). Drop onto Top reviews to pin; drop onto All reviews to unpin. Reorder
-inside Top reviews is featured-first. Keep drag-and-drop on narrow screens (grip on
-touch/press). Look on mobile is TBD; do not fall back to up/down-only.
+inside Top reviews is featured-first. Keep drag-and-drop on narrow screens (grip always
+visible; no hover-only). Do not fall back to up/down-only.
 
 Unpin / reorder of **top reviews** updates `is_top` / `top_position` only. Live website waits
 for the next website publication. Website editor reviews Content edits **that website section’s**

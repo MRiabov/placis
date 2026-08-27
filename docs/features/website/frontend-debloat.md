@@ -32,18 +32,19 @@ cuts: [contractor-website-debloat.md](contractor-website-debloat.md).
 ## Keep
 
 - `/cms/website` two surfaces: canvas (wide by default), workspace rail (list closed until
-  a workspace item is opened or a canvas section/image is selected). On mobile the rail is a
-  bottom bar. Content is the left list
+  a workspace item is opened or a canvas section/image is selected). On a narrow screen the
+  rail is a bottom bar (Sites only). Content is the list
   after that canvas click (closed union by website component). SEO is its own rail panel,
   always the current website page. Website versions is a workspace item at the
   end of the rail. No Design tab. No Website forms
   tab. Top menu / footer trees live in Content.
   No right-hand editing panel. No media library rail item.
   No Home crumb on the website-editor toolbar; viewport + Publish stay one row.
+  On narrow, Open destinations sits inline with **Website editor**.
 - Canvas via the shared contractor-website component package.
-- Website assistant **overlay** pinned to the canvas (desktop default: one-row composer —
-  chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**; mobile ≤1100px default:
-  expanded; collapsed mobile stays two rows; expand / reduce height; no website dim;
+- Website assistant **overlay** pinned to the canvas (default collapsed on wide and narrow;
+  wide: one-row composer — chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**;
+  narrow collapsed stays two rows; expand / reduce height; no website dim;
   **Clear context** trash expanded-only).
   Apply / Reject are one-way and never transparent. Delete the assistant modal
   (`#assistantModal` / toolbar modal) and the toolbar **Website assistant** button.

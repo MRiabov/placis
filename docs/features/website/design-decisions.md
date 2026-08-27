@@ -26,6 +26,8 @@ instead of silently rewriting history.
    No **AI tools** left-nav item. Image cleanup is `/cms/media`. The website assistant stays
    the canvas overlay (a later cut may drop that overlay; this item still does not come
    back). (2026-08-26)
+   On **narrow**, this left rail is gone: a full-screen overlay selector (see 16). Collapsed
+   icon rail, hover peek, and click-to-pin are **wide only**. (2026-08-27)
 
 2. **Website assistant is a pinned composer, not a toolbar button** — No toolbar **Website
    assistant** control. The composer is always on, pinned to the bottom of the canvas. Default
@@ -55,6 +57,8 @@ instead of silently rewriting history.
    Default height: **desktop** is the single-line composer (thread reduced). **Mobile**
    (≤1100px) is the expanded overlay — that height works there. Chevron still expands or
    reduces. `?assistant=expanded` / `collapsed` still forces a shot. (2026-08-26)
+   **Narrow default is collapsed** (canvas first), same idea as desktop. Expanded is still
+   available. `?assistant=` still forces a shot. (2026-08-27)
    Reduced composer is **max-width 40rem**, centered in the canvas (sides of the website stay
    clickable). Expand (chevrons) grows it to the 12px canvas inset — **180ms**, same ease as
    other CMS motion. Idle / unfocused is **40% opacity**; hover or focus-within is fully
@@ -177,6 +181,8 @@ instead of silently rewriting history.
     copy on the website. (2026-08-26)
     **Mobile** (≤1100px): the workspace rail is a **bottom bar**. Website versions stays at
     the end. The list (and Content) opens above that bar, not beside it. (2026-08-26)
+    Safe-area padding on that bar. The list/Content sheet stays a cap so the canvas remains
+    visible (~45vh). (2026-08-27)
 
 13. **The website editor control is Publish** — Owner copy is the verb **Publish** (toolbar
     dropdown), not the noun **website publication**. Blocked heading: **Publishing is
@@ -184,10 +190,25 @@ instead of silently rewriting history.
     the act. (2026-08-26)
 
 14. **Website editor toolbar has no Home crumb** — Sites in the global nav is enough. Drop
-    the **Home** back control on desktop and mobile. **Desktop / Tablet / Mobile** and
+    the **Home** back control on desktop and mobile.    **Desktop / Tablet / Mobile** and
     **Publish** stay on **one row** (title can sit above on a narrow canvas). (2026-08-26)
+    On narrow, **Open destinations** (`PanelLeft`) sits **inline with the heading** (left of
+    **Website editor**), not an extra bar and not on the viewport/Publish row. (2026-08-27)
 
 15. **Reviews Content is that website section’s ordered list** — Not the Profile top band.
     Add from all reviews, remove, reorder. Cap is the website component’s max (some layouts take
     3, others 6 or 8). Owner copy: reviews **on this website section**. Product: [ADR.md](ADR.md)
     16. (2026-08-26)
+
+16. **The CMS is narrow-first** — Owners use it on a small screen. A wide screen is extra width, not
+    the default story. Global nav copies placis-web `DashboardShell`. (2026-08-27)
+    **Narrow (≤1100px):** a **full-screen overlay selector** covers `main` (labels, active
+    fill, **Placis** + `PanelLeft` to close). No leftover `3rem` rail. Open destinations is
+    inline with the screen heading. Overlay rows: New chat, Sites, Business details, Projects,
+    Certifications and reviews, Media library, Ads. Profile is not a row. Workspace bottom
+    bar is **Sites only**. Website assistant default is **collapsed**. Canvas website-width
+    defaults to **Mobile**. Touch targets 44px; review grips visible without hover.
+    Notifications sit above the workspace bar. Safe-area padding on overlay, bar, assistant.
+    **Wide (≥1101px):** sidebar stays permanently collapsible (default collapsed icon rail,
+    hover peek, click to pin). Profile icon still goes to Business details. Sites/Ads/Profile
+    do not invent a second global nav. (2026-08-27)

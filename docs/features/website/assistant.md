@@ -13,10 +13,11 @@ Default-on overlay on the website-editor canvas. Tools and the apply path below 
 this is the owner overlay. Details: [frontend.md](frontend.md), look:
 [design-decisions.md](design-decisions.md), architecture: [ADR](ADR.md) 6.
 
-- **Always on:** pinned to the canvas. **Desktop default** is the single-line composer
-  (one row: chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**).
-  **Mobile** (≤1100px) default is expanded (at least half the canvas column). Reduce height
-  on mobile stays two rows (overlay bar + composer). **Clear context** trash is expanded-only.
+- **Always on:** pinned to the canvas. **Default is collapsed** (canvas first) on wide and
+  narrow. Wide collapsed is the single-line composer (one row: chevrons, field, **Plan mode**,
+  **Ask first**, **Plan** / **Send**). Narrow collapsed stays two rows (overlay bar + composer).
+  Expand is at least half the canvas column. Reduce height
+  on a narrow screen stays two rows (overlay bar + composer). **Clear context** trash is expanded-only.
   Reduced composer is max-width 40rem, centered; expand fills the 12px canvas inset
   (180ms). Idle / unfocused is 40% opacity; hover or focus-within is opaque. The overlay
   does not dim or black out the website; the uncovered canvas stays clickable.
