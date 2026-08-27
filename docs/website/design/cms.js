@@ -710,7 +710,9 @@ document.getElementById("askPills")?.addEventListener("click", (event) => {
 document.getElementById("archiveHeading")?.addEventListener("click", () => {
   setArchive(document.getElementById("archiveList")?.classList.contains("is-hidden"));
 });
-document.getElementById("connectUrl").addEventListener("click", () => setConnect(true));
+document.querySelectorAll("[data-connect-url]").forEach((button) => {
+  button.addEventListener("click", () => setConnect(true));
+});
 document.getElementById("connectClose").addEventListener("click", () => setConnect(false));
 connectModal.addEventListener("click", (event) => {
   if (event.target === connectModal) setConnect(false);

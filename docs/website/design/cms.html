@@ -190,14 +190,28 @@
                 <div class="cms-publication">
                   <button class="button-primary" id="publicationToggle" type="button" aria-expanded="false">Publish</button>
                   <div class="cms-publication-panel is-hidden" id="publicationPanel">
-                    <button class="cms-publication-row" type="button">
-                      <b>acme-roofing-dublin.preview.placis.com</b>
-                      <span>Website address · last published 2 days ago</span>
-                    </button>
-                    <button class="cms-publication-row is-blocked" type="button">
-                      <b>acme.ie</b>
-                      <span>Custom website address · waiting for DNS</span>
-                    </button>
+                    <div class="cms-publication-hosts">
+                      <button class="cms-publication-row" type="button" aria-label="Open acme-roofing-dublin.preview.placis.com">
+                        <span class="cms-publication-row-copy">
+                          <b>acme-roofing-dublin.preview.placis.com</b>
+                          <span>Last published 2 days ago</span>
+                        </span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                      </button>
+                      <button class="cms-publication-row is-waiting" type="button" data-connect-url>
+                        <span class="cms-publication-row-copy">
+                          <b>acme.ie</b>
+                          <span>Waiting for DNS</span>
+                        </span>
+                      </button>
+                      <button class="cms-publication-row is-add" id="connectUrl" type="button" data-connect-url>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                        <span class="cms-publication-row-copy">
+                          <b>New URL</b>
+                          <span>Connect website address</span>
+                        </span>
+                      </button>
+                    </div>
                     <div class="cms-publication-blockers">
                       <p>Publishing is blocked:</p>
                       <ul>
@@ -215,10 +229,6 @@
                         </li>
                       </ul>
                     </div>
-                    <button class="cms-publication-row" id="connectUrl" type="button">
-                      <b>New URL</b>
-                      <span>Connect website address</span>
-                    </button>
                   </div>
                 </div>
               </div>
