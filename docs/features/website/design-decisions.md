@@ -279,3 +279,10 @@ instead of silently rewriting history.
     (`follow`) is a third assistant config, default **off**, not owner-turnable (no overlay
     switch; `true` is refused). Reserved for a later cut that snaps the canvas to the
     website slot being edited. (2026-08-27)
+
+19. **Connect website address shows copyable Host and Value** — DNS rows are not compact
+    version cards. Each record is type, **Host**, and **Value** as separate large fields with
+    Copy. Status (waiting for DNS → waiting for certificate → active) sits on the modal, not
+    inside Value. On-screen how-to: add these at GoDaddy, Porkbun, or Squarespace (where the
+    domain already lives); copy Host into name/host and Value into value/points-to; do not
+    move nameservers to Placis. (2026-08-27)

@@ -162,13 +162,15 @@ status card of labels.
 **Connect website address** is the point-their-hostname-at-us flow. It is a **modal over the
 website editor** on `/cms/website` (overlay, no new route, no left-nav item). The owner types
 `acme.ie` or `www.acme.ie`. The API creates the Cloudflare custom hostname and returns copyable
-DNS rows (type, name, value): TXT for the certificate, and CNAME (or ALIAS / later Apex Proxying
-`A`) as in [cloudflare.md](cloudflare.md). Short copy: add these at GoDaddy, Porkbun, or
-Squarespace — do not move nameservers to Placis. Status in the modal: waiting for DNS → waiting
-for certificate → active (the website editor polls Go; Go polls Cloudflare). Close returns to
-the website editor. The host then appears as row 2; it is enabled when active. Re-open the modal
-from New URL or from a still-waiting host to copy records again. Website publication does **not**
-attach a website address.
+DNS rows (type, Host, Value): TXT for the certificate, and CNAME (or ALIAS / later Apex Proxying
+`A`) as in [cloudflare.md](cloudflare.md). Each row shows Host and Value as separate large fields
+with Copy; status is not mixed into the value. On-screen how-to: add these at the DNS panel where
+the domain already lives (GoDaddy, Porkbun, or Squarespace) — copy Host into name/host and Value
+into value/points-to; do not move nameservers to Placis. Status in the modal: waiting for DNS →
+waiting for certificate → active (the website editor polls Go; Go polls Cloudflare). Close returns
+to the website editor. The host then appears as row 2; it is enabled when active. Re-open the
+modal from New URL or from a still-waiting host to copy records again. Website publication does
+**not** attach a website address.
 
 Do not advertise `{website_prefix}.placis.com` as a live URL.
 
