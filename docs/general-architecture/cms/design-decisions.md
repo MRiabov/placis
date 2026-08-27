@@ -33,9 +33,9 @@ old paragraphs and dates; the website file points here. Do not silently replace 
    pages, publication, and so on). Product destinations stay in the left nav. Hide with
    `?shot=1`. Copy-out is an error, not always-on UI. (2026-08-26; moved from website
    design-decision 7, 2026-08-27)
-   Always collapsible to a **circle in the top right**; tap to reopen. Default **collapsed on
-   mobile** (≤1100px) so it does not eat the website editor; desktop starts open. `?dev=1` / `?dev=0`
-   force open / collapsed. (2026-08-26)
+   Always collapsible to a **circle in the top right**; tap to reopen. Default **collapsed**
+   (desktop and mobile). `?dev=1` opens it; `?shot=1` hides it. (2026-08-26; default collapsed
+   everywhere 2026-08-27)
 
 3. **The CMS is viewport-locked, not a scrolling document** — The window never
    scrolls. The CMS fills the viewport like a PWA: The CMS stays put, overflow is clipped at
