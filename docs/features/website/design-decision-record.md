@@ -7,8 +7,8 @@ Architecture stays in [ADR.md](ADR.md). Screens: [frontend.md](frontend.md). Tok
 [cms.html](../../design/cms.html).
 
 Status: decided (2026-08-26, product owner). Update an entry (keeping the old decision + date)
-instead of silently rewriting history. Each live entry is **what** plus **why**. Moved
-stubs keep the pointer only.
+instead of silently rewriting history. Each live entry is **what** plus **why**.
+Vacated numbers are HTML comments so later entries keep their numbers.
 
 ## Decisions
 
@@ -18,9 +18,6 @@ stubs keep the pointer only.
    editing panel **closed** until a website section is selected or the **Edit** handle is used.
    The three surfaces remain canvas, workspace, editing panel; they do not all sit open at once.
    Two-panel: no right column and no Edit handle; see 12. (2026-08-26)
-   Left nav / Profile / Media library as Profile child / no AI tools item / narrow overlay:
-   [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 1 (moved from this
-   entry, 2026-08-27).
 
 2. **Website assistant is a pinned composer, not a toolbar button** — Why: a toolbar button hides
    the assistant; contracted default keeps the website first; the overlay does not dim so the
@@ -81,9 +78,7 @@ stubs keep the pointer only.
    after that group, not between website addresses and New URL. The dropdown is actions,
    not a status card of labels. (2026-08-27)
 
-4. **Opening hours picker is Google Calendar-style** — moved to
-   [Details design decision record](../business-profile/details/design-decision-record.md) 1 (2026-08-27).
-   Persistence: [details ADR](../business-profile/details/ADR.md) 6. (2026-08-26)
+<!-- placeholder - insert design decision 4 here -->
 
 5. **Top menu and footer are Content, not workspace items** — Why: those bars live on the
    canvas, so they are selected there; look stays **Website styles** so Content is structure,
@@ -104,21 +99,13 @@ stubs keep the pointer only.
    contact** is a bar CTA like Show marketing phone / email (not a tree node). Content has no
    Add below / website-component picker and no depth-2 explainer. (2026-08-26)
 
-6. **Certifications and reviews layout is 1fr | 2fr** — moved to
-   [Certifications and reviews design decision record](../business-profile/certifications-and-reviews/design-decision-record.md) 1
-   (2026-08-27). Website editor reviews Content is **that website section’s** ordered list (see 15).
-   Product: [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md).
-   (2026-08-26)
+<!-- placeholder - insert design decision 6 here -->
 
-7. **The yellow strip is mock-only states** — moved to
-   [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 2 (2026-08-27).
-   (2026-08-26)
+<!-- placeholder - insert design decision 7 here -->
 
-8. **The CMS is viewport-locked, not a scrolling document** — CMS window lock and inner-region
-   scroll: [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 3
-   (moved 2026-08-27). (2026-08-26)
-   Why for the website canvas: the page scrolls inside the stage so The CMS stays put;
-   pad at the bottom so last website sections are not under the assistant. The website editor canvas does **not** scroll the website page: the page is clipped to the
+8. **The website page scrolls inside the canvas stage** — Why: the page scrolls inside the stage
+   so The CMS stays put; pad at the bottom so last website sections are not under the assistant.
+   The website editor canvas does **not** scroll the website page: the page is clipped to the
    stage. (2026-08-26)
    The website page **does** scroll inside the canvas stage (the browser UI stays). The
    website assistant thread also scrolls. (2026-08-26)
@@ -208,17 +195,12 @@ stubs keep the pointer only.
     16 and [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md).
     (2026-08-26)
 
-16. **The CMS is narrow-first** — Nav overlay / wide sidebar / Open destinations:
-    [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 4
-    (moved from this entry, 2026-08-27). (2026-08-27)
-    Why for the website editor: workspace bar is Sites only; assistant starts collapsed;
-    canvas width defaults to Mobile because owners edit on a small screen. Native widths plus scale
-    so Mobile and Tablet do not reflow into a fake responsive website.
+16. **Website editor canvas is narrow-first** — Why: workspace bar is Sites only; assistant
+    starts collapsed; canvas width defaults to Mobile because owners edit on a small screen.
+    Native widths plus scale so Mobile and Tablet do not reflow into a fake responsive website.
     **Narrow (≤1100px):** Workspace bottom
     bar is **Sites only**. Website assistant default is **collapsed**. Canvas website-width
     defaults to **Mobile**.
-    **Wide (≥1101px):** Sites/Ads/Profile
-    do not invent a second global nav. (2026-08-27)
     Viewport controls stay on `/cms/website` only. (2026-08-27)
     Canvas widths are native: Desktop **1080**, Tablet **760**, Mobile **390**. If the stage is
     wider, Mobile and Tablet stay those widths (do not stretch). **Desktop fills the stage**
@@ -230,11 +212,7 @@ stubs keep the pointer only.
     **Wide** canvas website-width defaults to **Desktop**. Crossing the 1100px line to wide
     restores Desktop; crossing to narrow still selects Mobile. (2026-08-27)
 
-17. **The CMS (sidebar + main area) clones the placis-web dashboard theme** — Theme tokens and
-    New chat prompt: [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5
-    (moved from this entry, 2026-08-27). Token table:
-    [CMS design.md](../../general-architecture/cms/design.md). Website-editor Voice stays the
-    canvas orb (decision 18). (2026-08-27)
+<!-- placeholder - insert design decision 17 here -->
 
 18. **Website editor voice agent is an orb, not a full-screen takeover** — Why: they still need
     to see the website while talking; the full-screen orb is the New chat client interview,

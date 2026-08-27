@@ -5,8 +5,7 @@ theme. Website editor look stays in [website design decision record](../../featu
 Tokens: [design.md](design.md). Mock: [cms.html](../../design/cms.html). Screens:
 [frontend.md](frontend.md).
 
-Status: decided (dates on each entry). Entries moved from website design decision record keep the
-old paragraphs and dates; the website file points here. Do not silently replace the old entry.
+Status: decided (dates on each entry). Do not silently replace the old entry.
 Each live entry is **what** plus **why**.
 
 ## Decisions
