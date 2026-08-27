@@ -140,6 +140,8 @@ instead of silently rewriting history.
    stage. (2026-08-26)
    The website page **does** scroll inside the canvas stage (the browser UI stays). The
    website assistant thread also scrolls. (2026-08-26)
+   Scroll room at the bottom of the website clears the website assistant overlay and
+   Apply / Reject, so the last website sections can sit above them. (2026-08-27)
 
 9. **Website versions: Preview on live, rollback on earlier** — The live website version has
    **Preview** (opens the live website). It does not say Continue editing and has no rollback.

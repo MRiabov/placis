@@ -1093,6 +1093,7 @@ body.is-shot .viewtabs-fab { display: none !important; }
   min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
+  scroll-padding-bottom: var(--cms-canvas-scroll-pad, 0px);
   color: #1c1917;
   font-family: "Georgia", "Times New Roman", serif;
 }
