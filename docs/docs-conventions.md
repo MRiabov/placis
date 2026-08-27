@@ -39,7 +39,7 @@ A feature directory holds, as applicable:
 | `README.md` | overview + pointers |
 | `prd.md` | business requirements, user stories, acceptance criteria (domain language) |
 | `ADR.md` | architectural decision record (numbered, dated; keep old entries) |
-| `design-decision-record.md` | design decision record (look and interaction, not architecture). Same numbered, dated, keep-old-entry structure as ADR.md. Each live entry is **what** plus **why** (the rejected look when it was a real choice). |
+| `design-decision-record.md` | design decision record (look and interaction, not architecture). Same numbered, dated, keep-old-entry structure as ADR.md. One number is one decision. **Why** is owner-written; omit it rather than inventing it. |
 | `architecture.md` | the logic: content/component model, flows, states (no structs) |
 | `persistence.md` | that feature's tables (columns, indexes); shared tables are linked, never copied |
 | `api.md` | Canonical HTTP routes for this feature. Routes, auth, callers, request/response fields, errors, do-not-create. Not Go structs. Conventions: [general-architecture/api.md](general-architecture/api.md). |
@@ -71,6 +71,7 @@ Not every file is needed — a feature uses only the ones it has content for. A 
 - **Filenames hyphenate; prose does not.** `design-decision-record.md` is the file. The document is a
   **design decision record** — the look-and-interaction counterpart of ADR.md. Link the
   file as `[CMS design decision record](...)` 3, not `[CMS design-decision-record]` and not bare
-  **decisions**. An entry is a design decision (like ADR 3) and must include **why**, not only
-  the look. Keep the hyphen in the path and in backticks. `ADR.md` is the **architectural
-  decision record**; do not label it **decisions** either.
+  **decisions**. One numbered entry is one decision (do not pack a screen’s look into a single
+  blob). **Why** is owner-written; omit it when it is not known. Keep the hyphen in the path
+  and in backticks. `ADR.md` is the **architectural decision record**; do not label it
+  **decisions** either.

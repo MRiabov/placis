@@ -7,21 +7,19 @@ Architecture stays in [ADR.md](ADR.md). Screens: [frontend.md](frontend.md). Tok
 [cms.html](../../design/cms.html).
 
 Status: decided (2026-08-26, product owner). Update an entry (keeping the old decision + date)
-instead of silently rewriting history. Each live entry is **what** plus **why**.
-Vacated numbers are HTML comments so later entries keep their numbers.
+instead of silently rewriting history. One number is one decision. **Why** is owner-written;
+omit it rather than inventing it. Vacated numbers are HTML comments so later entries keep
+their numbers.
 
 ## Decisions
 
-1. **Canvas is the wide column** — Why: the website is the work; three panels open at once bury
-   it. On `/cms/website`, The CMS is quiet by default: the CMS left nav
+1. **Canvas is the wide column** — On `/cms/website`, The CMS is quiet by default: the CMS left nav
    collapsed to icons, workspace **rail-only** (list closed until a workspace item is opened),
    editing panel **closed** until a website section is selected or the **Edit** handle is used.
    The three surfaces remain canvas, workspace, editing panel; they do not all sit open at once.
    Two-panel: no right column and no Edit handle; see 12. (2026-08-26)
 
-2. **Website assistant is a pinned composer, not a toolbar button** — Why: a toolbar button hides
-   the assistant; contracted default keeps the website first; the overlay does not dim so the
-   uncovered canvas stays usable. No toolbar **Website assistant** control. The composer is always on, pinned to the bottom of the canvas. Default
+2. **Website assistant is a pinned composer, not a toolbar button** — No toolbar **Website assistant** control. The composer is always on, pinned to the bottom of the canvas. Default
    **contracted** (one-line textbox). Expanded: at least half the canvas column, dims and
    **blocks** clicks on the covered website. Contracted and idle: about **40% opacity** so it
    stays out of the way; hover or focus makes it opaque. **Apply / Reject pills never fade.**
@@ -65,8 +63,7 @@ Vacated numbers are HTML comments so later entries keep their numbers.
    Ask first pending is the pills plus the pending outline on changed website sections.
    Do not paint **Not applied** as copy on the website. (2026-08-27)
 
-3. **Website publication blockers are jumps** — Why: a status list does not get them to the
-   missing heading; a jump does. The dropdown heading is **Website publication
+3. **Website publication blockers are jumps** — The dropdown heading is **Website publication
    is blocked:** then one **silent** (no background) button per blocker, with a Lucide
    **ArrowUpRight**. A required heading, text, or image that cannot resolve jumps to that
    website section (canvas + editing panel). Owner copy does not say slot. A media library
@@ -80,9 +77,7 @@ Vacated numbers are HTML comments so later entries keep their numbers.
 
 <!-- placeholder - insert design decision 4 here -->
 
-5. **Top menu and footer are Content, not workspace items** — Why: those bars live on the
-   canvas, so they are selected there; look stays **Website styles** so Content is structure,
-   not theme. Select the bar on the canvas;
+5. **Top menu and footer are Content, not workspace items** — Select the bar on the canvas;
    edit the depth-2 tree in the editing-panel **Content** tab. Look (logo, density) is
    **Website styles**, not a Design tab. Workspace items stay website pages, media library,
    website styles. HTTP is still `PATCH /v1/website/editor/menus`. (2026-08-26)
@@ -103,27 +98,21 @@ Vacated numbers are HTML comments so later entries keep their numbers.
 
 <!-- placeholder - insert design decision 7 here -->
 
-8. **The website page scrolls inside the canvas stage** — Why: the page scrolls inside the stage
-   so The CMS stays put; pad at the bottom so last website sections are not under the assistant.
-   The website editor canvas does **not** scroll the website page: the page is clipped to the
+8. **The website page scrolls inside the canvas stage** — The website editor canvas does **not** scroll the website page: the page is clipped to the
    stage. (2026-08-26)
    The website page **does** scroll inside the canvas stage (the browser UI stays). The
    website assistant thread also scrolls. (2026-08-26)
    Scroll room at the bottom of the website clears the website assistant overlay and
    Apply / Reject, so the last website sections can sit above them. (2026-08-27)
 
-9. **Website versions: Preview on live, rollback on earlier** — Why: you cannot roll the live
-   website back onto itself; **Preview** is the live URL, not Continue editing (that is the
-   unpublished canvas). The live website version has
+9. **Website versions: Preview on live, rollback on earlier** — The live website version has
    **Preview** (opens the live website). It does not say Continue editing and has no rollback.
    Earlier owner website versions have a silent **website rollback** icon. Assistant activity
    is not a website version. (2026-08-26)
    The list is a workspace item at the bottom of the rail, not an editing-panel tab.
    (2026-08-26)
 
-10. **Content head has no website-section picker** — Why: click the canvas; a dropdown
-    duplicates selection. A hidden website section stays on the canvas so it can still be
-    selected. Click the canvas to select. The head is
+10. **Content head has no website-section picker** — Click the canvas to select. The head is
     the website section name, hide, and move up/down. No “Website section” dropdown and no
     “1 of 6” line. Up/down have browser tooltips **Move website section up** /
     **Move website section down**. (2026-08-26)
@@ -133,16 +122,14 @@ Vacated numbers are HTML comments so later entries keep their numbers.
     There is no Add below / website-component dropdown on Content. Add and pick website
     sections on the canvas. (2026-08-26)
 
-11. **Website versions sits at the bottom of the workspace rail** — Why: it is a rare, site-wide
+11. **Website versions sits at the bottom of the workspace rail** — It is a rare, site-wide
     control (website publications + website-assistant activity), not a per-website-section tab.
     Pin it to the bottom of the workspace rail, below website pages / media library /
     website styles. Selecting it opens the workspace list like any other workspace item.
     Editing-panel tabs are **Content** and **SEO**. (2026-08-26)
     Superseded as a right-hand column: see 12. (2026-08-26)
 
-12. **Two-panel website editor** — Why: the right column competed with the canvas; Content
-    replaces the list so there is one left surface. On a small screen a left rail covers the website,
-    so the rail is a bottom bar. Surfaces are the global sidebar, the workspace (rail + one
+12. **Two-panel website editor** — Surfaces are the global sidebar, the workspace (rail + one
     list), and the canvas (plus the website assistant). There is no right-hand editing panel
     and no **Edit** handle. Default is still rail-only until a workspace item or a canvas
     selection opens the list.
@@ -174,13 +161,12 @@ Vacated numbers are HTML comments so later entries keep their numbers.
     That hides the sheet back to the bottom bar so the canvas is
     not covered. (2026-08-27)
 
-13. **The website editor control is Publish** — Why: owner copy is the verb they tap, not the
-    spec noun **website publication**. Toolbar **Publish** dropdown. Blocked heading: **Publishing is
+13. **The website editor control is Publish** — Owner copy is the verb **Publish** (toolbar
+    dropdown), not the noun **website publication**. Blocked heading: **Publishing is
     blocked:**. Host status uses **Last published**. Specs still say website publication for
     the act. (2026-08-26)
 
-14. **Website editor toolbar has no Home crumb** — Why: Sites in the global nav is the way
-    back; a second Home is a duplicate. Drop
+14. **Website editor toolbar has no Home crumb** — Drop
     the **Home** back control on desktop and mobile.    **Desktop / Tablet / Mobile** and
     **Publish** stay on **one row** (title can sit above on a narrow canvas). (2026-08-26)
     On narrow, **Open destinations** (`PanelLeft`) sits **inline with the heading** (left of
@@ -188,17 +174,13 @@ Vacated numbers are HTML comments so later entries keep their numbers.
     On narrow, Desktop / Tablet / Mobile are **icons** (44px hits; visible labels hidden) so
     Publish still fits that row at 320px. Wide keeps the words. (2026-08-27)
 
-15. **Reviews Content is that website section’s ordered list** — Why: Profile **top reviews** is
-    the ads featured set; a website page can show a different ordered list. Not the Profile top band.
+15. **Reviews Content is that website section’s ordered list** — Not the Profile top band.
     Add from all reviews, remove, reorder. Cap is the website component’s max (some layouts take
     3, others 6 or 8). Owner copy: reviews **on this website section**. Product: [ADR.md](ADR.md)
     16 and [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md).
     (2026-08-26)
 
-16. **Website editor canvas is narrow-first** — Why: workspace bar is Sites only; assistant
-    starts collapsed; canvas width defaults to Mobile because owners edit on a small screen.
-    Native widths plus scale so Mobile and Tablet do not reflow into a fake responsive website.
-    **Narrow (≤1100px):** Workspace bottom
+16. **Website editor canvas is narrow-first** — **Narrow (≤1100px):** Workspace bottom
     bar is **Sites only**. Website assistant default is **collapsed**. Canvas website-width
     defaults to **Mobile**.
     Viewport controls stay on `/cms/website` only. (2026-08-27)
@@ -214,9 +196,7 @@ Vacated numbers are HTML comments so later entries keep their numbers.
 
 <!-- placeholder - insert design decision 17 here -->
 
-18. **Website editor voice agent is an orb, not a full-screen takeover** — Why: they still need
-    to see the website while talking; the full-screen orb is the New chat client interview,
-    not this screen. Empty composer
+18. **Website editor voice agent is an orb, not a full-screen takeover** — Empty composer
     turns the **voice agent** on (`/cms/website` only). The chatbot overlay is hidden so the
     website stays viewable. A soft orb (`min(5.5rem, 30vw)`) sits bottom-right. A glow
     falls off from the center with no hard edge. Clicks pass
@@ -236,8 +216,7 @@ Vacated numbers are HTML comments so later entries keep their numbers.
     not above the hidden collapsed overlay. Overlay height does not lift Apply / Reject /
     Restore chatbot while the voice agent is on. (2026-08-27)
 
-19. **Connect website address shows copyable Host and Value** — Why: they paste Host and Value
-    into GoDaddy, Porkbun, or Squarespace; compact cards hide those values. DNS rows are not compact
+19. **Connect website address shows copyable Host and Value** — DNS rows are not compact
     version cards. Each record is type, **Host**, and **Value** as separate large fields with
     Copy. Status (waiting for DNS → waiting for certificate → active) sits on the modal, not
     inside Value. On-screen how-to: add these at GoDaddy, Porkbun, or Squarespace (where the
