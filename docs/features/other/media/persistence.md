@@ -24,6 +24,9 @@ website assistant, ads light cleanup are callers — [README.md](README.md)).
   `full`), `focal_x`, `focal_y` (0–1),
   `review_status` (`pending_review`/`approved`/`rejected`),
   `processing_status` (`uploading`/`processing`/`ready`/`failed`),
+  `photo_kind` nullable (`hero` / `project` / `service` / `founder` / `logo`) — ETL transform
+  sets this on business-research photos; skip when `content_hash` already classified,
+  `content_hash` nullable,
   `clutter_severity`, `busy_background_severity`, `poor_lighting_severity`,
   `color_cast_severity`, `blur_severity`, `overlay_text_severity`,
   `subject_too_small_severity`, `low_resolution_severity`

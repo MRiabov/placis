@@ -4,8 +4,9 @@ The **business profile** — the one set of tables the rest of the application d
 Onboarding builds it; this view edits it; the website shows it; ads read it.
 
 Conventions: [persistence conventions](../../../general-architecture/persistence.md)
-(Postgres schema `details`). Decisions:
-[ADR.md](ADR.md).
+(Postgres schema `details`). Later: rename this schema to `business_profile` or `profile`
+([ETL ADR #9](../../etl/ADR.md)). Decisions: [ADR.md](ADR.md). Facebook / Instagram profile
+and post rows live here (tenant-owned). The Google Maps listing stays in [ETL](../../etl/persistence.md).
 
 A **detail** is a column (or a row in a list table). Their existing site URL is a detail; it is not
 **Website** and not **Placis website**.
@@ -45,14 +46,15 @@ ads, Details, and apply-the-website-template (when the fold has not moved past
   `founder_role`, `founder_occupation`, `founder_nationality`, `founder_country_of_residence`,
   `founder_appointed_on`, `founder_media_asset_id`, `logo_media_asset_id`, `brand_tone`,
   `brand_typography`, `brand_primary_color`, `brand_accent_color`),
-  `list` nullable (`services`/`service_areas`/`opening_hours`/`reviews` when the op is a list change),
+  `list` nullable (`services`/`service_areas`/`opening_hours`/`reviews`/`facebook_posts`/
+  `instagram_posts` when the op is a list change),
   `list_item_id` nullable,
   `text_value`, `int_value`, `date_value`, `bool_value` (check: the column that matches `field` is
   set; the others are null — not a json `value`),
   `created_by` (`business_research`/`voice`/`text`/`human`/`llm`),
   origin (where it came from: `google_maps_listing`/`company_registry_record`/`client_interview`/
-  `business_research`/`owner`),
-  `request_id`, `business_research_run_id` nullable,
+  `business_research`/`facebook`/`instagram`/`owner`),
+  `request_id`, `etl_run_id` nullable,
   `created_at`
 
 This table is the audit for profile edits. Generic `audit_events` stays for website publication /
@@ -74,7 +76,22 @@ the profile as of `accepted_edit_id` (client interview complete).
 - `business_profile_opening_hours` — `id`, `tenant_id` fk, `business_profile_id` fk, `day_of_week`,
   `opens_at`, `closes_at`, `closed`
 - `business_profile_reviews` — `id`, `tenant_id` fk, `business_profile_id` fk,
-  `google_maps_listing_review_id` nullable fk, `author_name`, `rating` (1–5), `body`,
-  `published_at` nullable, `language` nullable, `position`
+  `google_maps_listing_review_id` nullable fk → `etl.google_maps_listing_reviews`, `author_name`,
+  `rating` (1–5), `body`, `published_at` nullable, `language` nullable, `position`
 
 Website sections and ads reference `business_profile_reviews` by id. They do not copy the text.
+
+- `facebook_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique, Facebook page id /
+  URL, handle, `latest_fetch_id` nullable fk → `etl.facebook_fetches`
+- `facebook_posts` — `id`, `tenant_id` fk, `facebook_profile_id` fk, `external_id` unique per
+  profile, body / media library refs, `published_at` nullable
+- `instagram_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique, handle,
+  Instagram user, `latest_fetch_id` nullable fk → `etl.instagram_fetches`
+- `instagram_posts` — `id`, `tenant_id` fk, `instagram_profile_id` fk, `external_id` unique per
+  profile, body / media library refs, `published_at` nullable
+
+ETL transform upserts these on source `external_id`. Raw stays on the fetch tables.
+
+Photo classification (hero / project / service / founder / logo) is `photo_kind` on
+[`media_assets`](../media/persistence.md) used by this profile. There is no `etl.photo_classifications`
+table.

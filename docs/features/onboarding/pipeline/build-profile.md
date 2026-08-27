@@ -10,7 +10,7 @@ No `checklist_rows` table — derived projection.
 
 ## Trigger
 
-Every registry select, Maps attach, business research source, and client interview write.
+Every registry select, Maps attach, ETL transform write, and client interview write.
 
 ## Pre
 
@@ -22,7 +22,7 @@ Every registry select, Maps attach, business research source, and client intervi
 - Silently overwrite a disagreeing value onto the fold.
 - Fabricate a value with no source (registry, Maps, crawl, business research, or the contractor).
 - Write `registered_office` into `business_profile_service_areas` or the reverse.
-- Use Maps listing address as a second legal address (it stays on `google_maps_listings`).
+- Use Maps listing address as a second legal address (it stays on `etl.google_maps_listings`).
 - Upsert a checklist row (there is no such table).
 
 ## Do — merge
@@ -45,7 +45,7 @@ fold columns.
 
 ## Checklist
 
-Stable keys. 03 groups them for display. 02 jobs may fill; 04a/04b fill gaps.
+Stable keys. 03 groups them for display. ETL transform may fill; 04a/04b fill gaps.
 
 | Key | Group | Fold / list | 02 may fill | Complete |
 | --- | --- | --- | --- | --- |
@@ -68,16 +68,16 @@ Stable keys. 03 groups them for display. 02 jobs may fill; 04a/04b fill gaps.
 | `accreditations` | certifications | list / notes | trade registry | optional |
 | `reviews` | reviews | `business_profile_reviews` | Maps / review job | optional |
 | `facebook_profile_url` | reviews | `facebook_profile_url` | Facebook | optional |
-| `photos` | photos | media library + `photos_choice` | Maps photos + 02 classification | required choice |
+| `photos` | photos | media library + `photos_choice` | Maps photos + ETL transform classification | required choice |
 
 `photos_choice`: `use_found` / `source_from_google` / `upload_later` / `use_neutral`.
 
 ## Status function (one winner)
 
-`in_progress` (in-flight 02 run for that key) → `conflict` → `needs_confirmation` →
+`in_progress` (in-flight ETL run for that key) → `conflict` → `needs_confirmation` →
 `filled_by_user` → `filled_by_research` → `skipped` / `not_applicable` → else `empty`.
 
-Derived from fold + winning edit origin + in-flight 02 runs + interview-only choices.
+Derived from fold + winning edit origin + in-flight `etl.runs` + interview-only choices.
 
 ## Complete gate
 
@@ -87,8 +87,9 @@ Required keys not `empty` / `in_progress` / `conflict`. `skipped` / `not_applica
 ## Persist
 
 `business_profiles` (fold) + `business_profile_edits` + `business_profile_services` /
-`business_profile_service_areas` / `business_profile_opening_hours` / `business_profile_reviews`.
-`last_edit_id` is the latest applied edit. 05 snapshots `accepted_edit_id` at complete.
+`business_profile_service_areas` / `business_profile_opening_hours` / `business_profile_reviews` /
+`facebook_profiles` / `facebook_posts` / `instagram_profiles` / `instagram_posts`.
+`last_edit_id` is the latest applied edit. 05 sets `accepted_edit_id` at complete.
 
 ## Fail
 
@@ -97,8 +98,8 @@ contractor acts.
 
 ## Out
 
-SSE checklist projection. 05 reads `accepted_edit_id`. Later 02 writes after complete are new
-edits after that id; they must not mutate the accepted fold in place.
+SSE checklist projection. 05 reads `accepted_edit_id`. Later ETL transform writes after complete
+are new edits after that id; they must not mutate the accepted fold in place.
 
 ## Invariants
 

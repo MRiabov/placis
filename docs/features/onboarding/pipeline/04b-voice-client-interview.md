@@ -22,7 +22,7 @@ write the profile. `end_interview` then `POST .../interview/complete`.
 - `POST` a new onboarding session if mint fails.
 - `end_interview` while required rows are `empty` / `in_progress` / `conflict`.
 - Complete twice (XOR with 04a).
-- Specify Parallel/jobs/photo classification.
+- Specify Parallel / jobs / photo classification (photo kinds are ETL transform).
 - Sketch website-assistant / CMS voice here.
 
 ## Do
@@ -31,7 +31,7 @@ write the profile. `end_interview` then `POST .../interview/complete`.
 2. **Mint** — seed: fold, build-profile checklist projection, extra notes, last
    `update_interview_plan`. Remaining questions = required rows in `empty` | `conflict` |
    `needs_confirmation` | `in_progress`, checklist order. `in_progress` is still a remaining
-   question (02 may fill it while they talk).
+   question (ETL transform may fill it while they talk).
 3. **Tools** (same profile path as 04a): `obtained_information`, `mark_information_status`,
    `request_lookup`, `confirm_conflict`, `update_interview_plan`, `end_interview`.
    Last `update_interview_plan` lands on `onboarding_sessions` (`interview_plan_markdown`,

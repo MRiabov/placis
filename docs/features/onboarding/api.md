@@ -10,7 +10,7 @@ client interview, SSE, website activation. Details after website activation:
 | Location | Persistence | HTTP |
 | --- | --- | --- |
 | Company registry / Maps search | raw ETL cache | `*Read` (id, name, address, …). **Omit** `raw`. |
-| Business research fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
+| Business research / ETL fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
 | Stripe event body | jsonb | **Omit.** Activation-status is a closed enum + checkout URL. |
 | Client interview extra notes | text | `string` + `maxLength`. |
 | SSE events | — | Huma `sse.Register` event name → struct. Not an unconstrained `payload`. |
@@ -30,8 +30,8 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
   is this body field, not a `/research-consent` resource.
 - **Response:** `{ id, token, status, research_wait_until? }`. Token → `localStorage`. Inserts
   unactivated tenant + onboarding session + empty business profile; enqueues business research
-  if under the 5-wave cap. Over cap → still 200 with `research_wait_until` (later source change
-  that would start a wave is `429`).
+  if under the 5-enqueue cap. Over cap → still 200 with `research_wait_until` (later source change
+  that would start `StartRun` is `429`).
 - **Must not:** apply the website template; wait for business research.
 
 ### GET /v1/onboarding-sessions/company-registry/search
@@ -54,7 +54,7 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 - **Response:** onboarding session status, checklist `*Read`, research conflicts,
   preview website address when 07 has reserved it, `research_wait_until`. This is **not**
   Details.
-- **Must not:** return business-research `raw`.
+- **Must not:** return ETL fetch `raw`.
 
 ### GET /v1/onboarding-sessions/{id}/profile/checklist
 
@@ -75,10 +75,10 @@ Business lookup is **one** command. Collapse predecessor Don't say setup: `POST 
 
 - **Auth:** onboarding session token
 - **Callers:** attach/change Google Maps listing or company registry record on the **same**
-  onboarding session (new business-research wave, same cap).
+  onboarding session (new `etl.StartRun`, same cap).
 - **Idempotency-Key:** yes.
 - **Replaces:** predecessor `company-selection` / `imports` / `consents`.
-- **Errors:** `429` with `research_wait_until` when the wave cap would be exceeded.
+- **Errors:** `429` with `research_wait_until` when the enqueue cap would be exceeded.
 
 ### PUT /v1/onboarding-sessions/{id}/text-interview/autosave
 

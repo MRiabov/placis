@@ -230,7 +230,26 @@ the contractor decides. A research conflict is not an error.
 
 The contractor’s Google Maps place, used to start onboarding and pre-fill what we already know.
 
-In code: `google_maps_listings` (Google’s `place_id` as the external id).
+Listing is this Google Maps term only. Never say Instagram listing or Facebook listing.
+
+In code: `etl.google_maps_listings` (Google’s `place_id` as the external id).
+
+---
+
+### Instagram profile
+
+The contractor’s Instagram account (handle / user). Distinct from: Google Maps listing, Business
+profile.
+
+In code: `instagram_profiles` on the business profile (Postgres schema `details`).
+
+---
+
+### Instagram post
+
+One post on that Instagram profile.
+
+In code: `instagram_posts` on the business profile.
 
 ---
 
@@ -319,7 +338,7 @@ Distinct from: Onboarding session (the persisted run).
 
 On Find: submit the picked company registry record and/or Google Maps listing. One command:
 insert the unactivated tenant and onboarding session, record online research consent, enqueue
-business research if under the wave cap. Distinct from typeahead search, from business research,
+business research if under the ETL enqueue cap. Distinct from typeahead search, from business research,
 from Review, from picking a research conflict. Never say Confirm for this command.
 
 In code: `POST /v1/onboarding-sessions/business-lookup`.
@@ -340,9 +359,9 @@ In code: `onboarding_sessions.online_research_consent_at`.
 
 Finding out about the business from public sources (Maps, the company registry, Facebook, their
 current website, photos of their work) after online research consent. Never say bare “research”.
+Onboarding 02 starts ETL runs; it does not own extract tables.
 
-In code: `business_research_waves`, `business_research_runs`, `business_research_events`,
-`business_research_sources`, `business_research_fetches`.
+In code: `etl.StartRun` with `trigger=onboarding`; `etl.runs`.
 
 ---
 
@@ -915,6 +934,27 @@ dependency.
 
 ---
 
+### ETL
+
+Extract **and** transform: fetch public contractor sources, persist raw in the `etl` schema, then
+apply business logic that writes the business profile (research conflicts, posts, photo
+classification). Not extract-only. Distinct from: Business research (onboarding 02, which starts
+ETL runs).
+
+In code: `internal/etl/` (`extract/` + `transform/`), Postgres schema `etl`.
+
+---
+
+#### ETL run
+
+One extract of **one source kind** for one tenant (the Google Maps extract, the Facebook extract,
+the Instagram extract). River retries are the same run. Distinct from: Business research
+(onboarding 02 starts several runs, one per kind).
+
+In code: `etl.runs`.
+
+---
+
 ### Onboarding
 
 #### Onboarding session
@@ -1135,6 +1175,9 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 | knob / knobs | option (product); field / variable (technical) |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |
 | JsonRecord / JsonObjectPayload / `map[string]any` in domain code | typed struct; `jsonb` is persistence-only |
+| wave | ETL run |
+| Instagram listing | Instagram profile or Instagram post |
+| Facebook listing | Facebook profile or Facebook post |
 
 ## Code naming rules
 

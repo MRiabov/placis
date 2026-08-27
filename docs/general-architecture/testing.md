@@ -26,6 +26,7 @@ Each feature defines its E2E test in its own `testing.md`, spelling out the exac
 written at each step (names come from that feature's `persistence.md`):
 
 - [onboarding](../features/onboarding/testing.md)
+- [ETL](../features/etl/testing.md) — integration (no owner UI); onboarding E2E covers 02
 - [website](../features/website/testing.md)
 - [ads](../features/ads/ad-generation/testing.md)
 - [auth](../features/other/auth/testing.md)

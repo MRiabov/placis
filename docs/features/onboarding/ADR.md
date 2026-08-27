@@ -21,25 +21,24 @@ decision + date) instead of silently replacing the old entry.
    (2026-08-23: the acknowledgement is a checkbox on find (01), required on business lookup; not a
    client interview question.)
 
-4. **Business research is an interface + typed output** — Google Maps, company registry, Facebook,
-   website crawl, and photo classification sit behind one interface with fakes. Output lands in
-   typed `business_research_sources` rows with where it came from + confidence; a Google Maps listing
-   also upserts `google_maps_listings` (columns, hours, reviews). Raw fetch bodies stay on the ETL
-   cache (`google_maps_listings.raw`, `business_research_fetches.raw`, or
-   `business_research_sources.raw` for kinds with no listing or reviews table) and never leak past
-   that boundary into the profile.
+4. **Business research starts ETL** — 02 calls `etl.StartRun`. Google Maps, Facebook, Instagram,
+   and website crawl sit behind ETL extract adapters with fakes. Transform writes the business
+   profile (research conflicts, posts, photo kinds). Raw fetch bodies stay on per-type
+   `etl.*_fetches.raw` and never leak into the profile. Google Maps listing columns live in
+   `etl.google_maps_listings` (no `raw` on that row).
+   (2026-08-27: warehouse moved to ETL; onboarding 02 is the trigger only.)
 
-5. **External research is cached per business** — look up before any paid/external call. Google
-   Maps listings keyed by `place_id` (`google_maps_listings.raw`) plus `business_research_fetches`
-   keyed by kind + stable key (canonical URL, scrape query, Facebook URL, trade-registry id,
-   Parallel query). A repeat attach reuses `raw` instead of refetching. Still write a
-   `business_research_run` + `business_research_sources` row for this onboarding session. Not the
-   business profile. Company registry parquet and Find autocomplete are not this cache. No TTL.
+5. **Retry may reuse a fetch for the same ETL run; scheduled extract does not skip** — Look up
+   the newest fetch for this `run_id` before calling out. Google Maps listings keyed by
+   `place_id`. A scheduled Monday / Wednesday / Friday run extracts again. Still write `etl.runs`
+   for this enqueue. Not the business profile. Company registry parquet and Find autocomplete are
+   not this cache.
    (2026-08-16: a `google_maps_listing_cache` jsonb-only payload, described as “repeat paid
    lookups”. 2026-08-19: Google Maps Details is the free API; scrape is the fallback. Same day,
    later: that table is `google_maps_listings` (typed columns + `raw` ETL body); do not also dump
    the body onto `business_research_sources.raw`. 2026-08-23: cache is global for every external
-   kind, not Maps-only.)
+   kind, not Maps-only. 2026-08-27: no TTL for retry of the same run; no last-write unique fetch
+   table; scheduled refresh extracts again. See [ETL ADR](../etl/ADR.md).)
 
 5a. **Open web search is Parallel via the Vercel AI Gateway server tool** — Parallel is the
     search engine for our agents. When a research job must discover a URL or listing and we do not
@@ -65,8 +64,8 @@ decision + date) instead of silently replacing the old entry.
    write race. Same field with disagreeing values is a research conflict. See
    [details ADR](../other/details/ADR.md).
    Same day: founder and brand are columns on `business_profiles`, not jsonb. Contact was already
-   columns. Remaining onboarding jsonb is raw dumps — research `raw` for kinds with no listing
-   or reviews table, `google_maps_listings.raw` (ETL cache), Stripe and event payloads.)
+   columns. Remaining jsonb on onboarding is Stripe and event payloads. ETL fetch `raw` lives in
+   schema `etl`. (2026-08-27.)
 
 7. **Conflicting answers are surfaced, not resolved** — what the contractor said vs. what we found
    are shown side by side; the system never picks one silently.

@@ -1,11 +1,12 @@
 # Onboarding — persistence
 
-Onboarding session, business research, and website activation tables.
+Onboarding session, client interview, and website activation tables.
 Conventions: [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `onboarding`).
 
 The business profile these onboarding sessions write is owned by
-[details](../other/details/persistence.md). LLM traces:
+[details](../other/details/persistence.md). Extract and the Google Maps listing:
+[ETL](../etl/persistence.md). LLM traces:
 [LLM layer](../../general-architecture/llm-layer.md).
 
 ## Onboarding sessions and client interview
@@ -28,45 +29,10 @@ live here.
 
 ## Business research
 
-- `business_research_waves` — `id`, `tenant_id` fk, `onboarding_session_id` fk, `started_at`.
-  One row per 02 enqueue (business lookup or source change), not per job. Cap: 5 rows per `tenant_id` in
-  any rolling 30 minutes ([02](pipeline/02-business-research.md)). `research_wait_until` on profile
-  / SSE is derived: oldest in-window `started_at` + 30 minutes when the cap is hit.
-- `business_research_runs` — `id`, `wave_id` fk, `onboarding_session_id` fk, `place_id` nullable (Google’s
-  id on the Maps path), `kind` (`google_maps_listing`/`company_registry`/`trade_registry`/`facebook`/
-  `social_profile`/`website_crawl`/`review`/`directory`/`photo`), `status`, `started_at`,
-  `finished_at`
-- `business_research_events` — `id`, `business_research_run_id` fk, `event_type`, `payload` jsonb,
-  `created_at`
-- `business_research_sources` — `id`, `business_research_run_id` fk, `kind` (same closed set as
-  runs), `external_id`, `source_ref`, `raw` jsonb (ETL dump for kinds with no listing table;
-  null when `kind` is `google_maps_listing` or `review`; copy of the cache hit, not a second fetch),
-  `status` (`matched`/`ambiguous`/`not_found`/`not_attempted`/`blocked`/`error`), `confidence`,
-  `created_at`
-- `business_research_fetches` — `id`, `kind` (same closed set as runs, plus `web_search`),
-  `cache_key` unique with `kind` (canonical URL, scrape query, Facebook URL, trade-registry id,
-  Parallel query, or `place_id` for Maps scrape fallback), `raw` jsonb, `fetched_at`. Global ETL
-  cache: look up before any external call. Hit → reuse `raw`; do not call Google Maps Details,
-  scrape, Facebook, crawl, or Parallel again. Still write a `business_research_run` +
-  `business_research_sources` row for **this** onboarding session. Maps listings also reuse
-  `google_maps_listings` by `place_id`. Company registry parquet and Find autocomplete are not
-  this cache. No TTL.
-- `google_maps_listings` — `id`, `place_id` unique (Google’s id),
-  `fetched_from` (`google_maps_details`/`scrape`), `display_name`, `primary_type`,
-  `marketing_phone`, `website_url`, `google_maps_listing_url`, `listing_address`, `locality`,
-  `rating`, `review_count`, `raw` jsonb (last Details or scrape body; ETL cache so we do not
-  refetch), `fetched_at`
-- `google_maps_listing_opening_hours` — `id`, `listing_id` fk, `day_of_week`, `opens_at`,
-  `closes_at`, `closed`
-- `google_maps_listing_reviews` — `id`, `listing_id` fk, `external_id` (Google’s review id,
-  unique per listing when present), `author_name`, `rating` (1–5), `body`, `published_at`
-  nullable, `language` nullable
-
-The Google Maps listing is this row, not a blob and not a second copy on
-`business_research_sources`. `raw` is the ETL fetch body only. Hours and reviews are child
-rows. Photos from the listing become media library items. Profile increments
-([build-profile](pipeline/build-profile.md)) copy selected fields and review rows onto the
-business profile; the listing address stays here.
+02 calls `etl.StartRun` ([ETL](../etl/README.md); [02](pipeline/02-business-research.md)). This
+schema has no extract tables. `research_wait_until` is derived from `etl.runs` (`trigger=onboarding`,
+distinct `enqueue_id` in the last 30 minutes). SSE reads `etl.runs`. Fold via
+[build-profile](pipeline/build-profile.md).
 
 ## Website activation
 
@@ -81,6 +47,4 @@ No `website_previews` / `token_hash`. The website preview is the host reserved a
 
 ## Indexes
 
-Lookup: `(tenant_id, status, created_at)` on onboarding sessions;
-`business_research_waves` `(tenant_id, started_at)`. Unique: `stripe_events.event_id`,
-`business_research_fetches` `(kind, cache_key)`.
+Lookup: `(tenant_id, status, created_at)` on onboarding sessions. Unique: `stripe_events.event_id`.
