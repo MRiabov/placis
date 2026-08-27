@@ -86,6 +86,9 @@ instead of silently rewriting history.
    per day ([details ADR](../other/details/ADR.md) 6). (2026-08-26)
    Opening hours is not the first Details panel. Identity (name, story, logo) is first; hours
    sit after contact, services, and legal. (2026-08-26)
+   On a narrow screen the day name and Closed / add / copy sit on the first line; Opens and
+   Closes are full-width time chips on the line below so the times stay readable (Google
+   Calendar on a small screen). Extra time blocks still stack under the day. (2026-08-27)
 
 5. **Top menu and footer are Content, not workspace items** — Select the bar on the canvas;
    edit the depth-2 tree in the editing-panel **Content** tab. Look (logo, density) is

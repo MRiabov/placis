@@ -112,7 +112,9 @@ is the unavailable control on that row (not a checkbox under a day column). Copy
 day’s hours to the following days. Add a time block is part of the look. These are when they
 will pick up the **marketing phone**, not appointment copy. Shown on the contact website page.
 Do **not** show an Appointment note field; persistence has no `note` column. Persistence is
-still one Opens / Closes / Closed per day; extra time blocks are the target look.
+still one Opens / Closes / Closed per day; extra time blocks are the target look. On a
+narrow screen the day and Closed / add / copy sit on the first line; Opens and Closes chips
+sit full-width below (Google Calendar on a small screen).
 
 #### Logo picker
 
