@@ -266,7 +266,7 @@ the website component).
 
 **Archive** any review (any origin): it leaves all reviews and top reviews, and is dropped from
 every reviews website section array (then compact). Toast with **Undo**
-(unarchives). **Archive** is a collapsible heading (chevron down on the right; not a toolbar
+(unarchives), then a gap, then **Archive**. **Archive** is a collapsible heading (chevron down on the right; not a toolbar
 button). Default collapsed. Unarchive from there. Not a hard
 delete. Re-import must **not** recreate an archived imported row (keep the row, skip that
 external id until unarchived).
