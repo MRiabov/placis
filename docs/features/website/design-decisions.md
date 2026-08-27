@@ -240,4 +240,6 @@ instead of silently rewriting history.
     (2026-08-27)
     New chat prompt is full width of the main column, max `42rem` (placis-web default
     `PlacisPromptBox`, `w-full max-w-2xl`). Do not use the compact `19.5rem` mobile cap.
-    (2026-08-27)
+    Wordmark + prompt are vertically centered in the main column (Open destinations stays
+    top-left on narrow). The Upgrade shelf is full width of the prompt, text centered,
+    one outline with the box (placis-web shelf). (2026-08-27)
