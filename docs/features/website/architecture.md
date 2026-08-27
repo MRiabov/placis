@@ -165,16 +165,17 @@ and imports only the website component package (a bundle-boundary check blocks i
 The onboarding wait teaser (`/onboarding/preview`) reuses website components in `frontend-2` for
 **one complete website section** at a time. It is not this app and not the host.
 
-## Voice (later)
+## Voice
 
-The website assistant can be driven by voice (see
+The website assistant can be driven by the **voice agent** (see
 [voice-agent.md](../../general-architecture/voice-agent.md)): the agent clarifies what to change
 — which website page/website section, new website page vs. copy edit, attach vs. generate an
 image — then emits one structured instruction resolved through the same governed website assistant
 tools (`update_slot`, `cleanup_image`, `generate_image`, website styles changes, website section
 reorder, SEO/website form updates, website page creation, website-publication-readiness). Two
 modes — plan (approve a concrete plan first) and continuous (bounded direct edits) — share the
-same tool surface. Voice grants no extra authority.
+same tool surface. Voice grants no extra authority. On `/cms/website`, empty composer turns the
+voice agent on (orb, chatbot hidden). Look: [design-decisions.md](design-decisions.md) 18.
 
 ## Where things stand
 

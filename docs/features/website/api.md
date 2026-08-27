@@ -144,8 +144,9 @@ Onboarding 06 is the exception: the River job writes unpublished rows headless (
 - **Callers:** website assistant chat in `frontend-2`. Onboarding 06 does not call this POST
   (River writes unpublished rows headless).
 - **Idempotency-Key:** yes.
-- **Request:** plan vs continuous; Ask first vs instant apply. Plan text is `string` +
-  `maxLength`.
+- **Request:** plan vs continuous; Ask first vs instant apply; **Follow** (`follow`, boolean,
+  default `false`). Plan text is `string` + `maxLength`. `follow: true` is refused (`4xx`);
+  the owner cannot turn Follow on.
 - **Response:** named activity / tool event structs. Proposed edits, not applied rows. Each
   tool event has `summary` (`string` + `maxLength`): the owner line, backend-constructed
   ([assistant.md](assistant.md)). The UI renders `summary` only. Never render `action` /

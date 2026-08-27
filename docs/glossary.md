@@ -961,6 +961,15 @@ agent).
 
 ---
 
+#### Follow
+
+The canvas snapping to the website slot the voice agent is editing. Default **off**. The owner
+cannot turn it on.
+
+Distinct from: Voice agent.
+
+---
+
 ### Website
 
 #### Website placeholder
