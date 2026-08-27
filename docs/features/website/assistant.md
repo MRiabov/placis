@@ -38,7 +38,8 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
   is a third config (`follow`), default off, not shown, not owner-turnable.
 - Empty composer turns the **voice agent** on (`/cms/website`). The chatbot overlay is
   hidden. A circular orb sits bottom-right of the canvas (at most `50vw` on a narrow screen).
-  Restore chatbot is next to the orb (sticky while the field stays empty until **Voice**).
+  Restore chatbot is **text** next to the orb, vertically centered to it (sticky while the
+  field stays empty until **Voice**). A small close on the top-right of the orb also restores.
   In chatbot mode, empty field shows **Voice**; text in the field is Plan / Send. Apply /
   Reject sit immediately above the orb when the voice agent is on, as they sit above the
   chatbot. The voice agent speaks back and uses the same tools; it grants no extra

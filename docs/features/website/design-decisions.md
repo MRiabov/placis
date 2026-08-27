@@ -262,7 +262,8 @@ instead of silently rewriting history.
     turns the **voice agent** on (`/cms/website` only). The chatbot overlay is hidden so the
     website stays viewable. A circular semi-transparent orb (at most `50vw` on a narrow
     screen; `min(11rem, 50vw)` on wide) sits bottom-right on a frosted plate. Restore
-    chatbot is a control next to the orb; restoring is sticky while the field stays empty
+    chatbot is **text** next to the orb, vertically centered to it. A small close on the
+    top-right of the orb also restores. Restoring is sticky while the field stays empty
     until they hit **Voice** again. In chatbot mode, empty field shows **Voice** (not Plan /
     Send); any text is chatbot with Plan / Send. Apply / Reject sit immediately **above the
     orb** (same as above the chatbot), centered; the orb stays to the right. The voice agent

@@ -568,12 +568,15 @@
                 <button class="cms-ask-pill is-reject" type="button">Reject</button>
               </div>
               <div class="cms-voice-dock" id="voiceDock">
-                <button class="cms-voice-restore" id="restoreChatbot" type="button" aria-label="Restore chatbot" title="Restore chatbot">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-                </button>
-                <div class="cms-voice-orb is-listening" id="voiceOrb" role="img" aria-label="Voice agent">
-                  <span class="cms-voice-orb-frost"></span>
-                  <span class="cms-voice-orb-dust"></span>
+                <button class="cms-voice-restore" id="restoreChatbot" type="button">Restore chatbot</button>
+                <div class="cms-voice-orb-wrap">
+                  <button class="cms-voice-close" id="voiceClose" type="button" aria-label="Restore chatbot" title="Restore chatbot">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                  </button>
+                  <div class="cms-voice-orb is-listening" id="voiceOrb" role="img" aria-label="Voice agent">
+                    <span class="cms-voice-orb-frost"></span>
+                    <span class="cms-voice-orb-dust"></span>
+                  </div>
                 </div>
               </div>
               <div class="cms-assistant-overlay" id="assistantOverlay" tabindex="-1">
