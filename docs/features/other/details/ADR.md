@@ -56,8 +56,10 @@ decision + date) instead of silently rewriting history.
 5. **Facebook and Google Maps listing are Details links** — Business details owns
    `facebook_profile_url` and `google_maps_listing_url`. **Link your Facebook** /
    Google Maps listing when unlinked (paste a public URL this pass; type-to-search TBD);
-   URL + **Change** when linked. Same URLs feed review import on Certifications and reviews.
-   Not Ads Connect Meta, not Facebook Login, no autoposting. (2026-08-26)
+   when linked, a **card** (name, photo, rating, review count) plus **Change**, not the raw
+   URL. Same URLs feed review import on Certifications and reviews.
+   Not Ads Connect Meta, not Facebook Login, no autoposting. (2026-08-26; linked card
+   2026-08-27)
 
 6. **Opening hours are when they pick up the marketing phone** — per day: Opens / Closes /
    Closed. Shown on the contact website page. There
