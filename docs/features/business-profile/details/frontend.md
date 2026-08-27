@@ -75,6 +75,13 @@ Do not add unless asked: founder columns, brand tone / typography / colors.
 
 See [README.md](README.md) for the rest of what it edits.
 
+#### Notification after a Details tool write
+
+Not a control on this screen. Ads and the website assistant may write a detail via a tool
+call; the shared **notification** (OK / Revert) is
+[frontend.md](../../../general-architecture/frontend.md). Revert is
+`POST /v1/business-profile/edits/{id}/undo`.
+
 ## Out of scope
 
 - Renaming Sites, merging Details into the website editor, adding `/cms/profile`, restoring

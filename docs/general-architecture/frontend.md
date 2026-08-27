@@ -33,12 +33,13 @@ A shared **notification**: fixed bottom-right, above the main area. Message + **
 keep). **Revert** is optional. On a **narrow** screen (≤1100px), sit **above** the Sites
 workspace bottom bar (not under thumbs or the home indicator).
 
-First caller: Ads writes a detail to Details via a tool call — the write is applied;
-OK keeps it; Revert undoes that `business_profile_edits` increment. Leaving the screen
-without clicking keeps the write. Stay until OK / Revert (timeout later).
+Callers that write a detail via a tool call (Ads generator, website assistant, later
+callers): the write is applied; OK keeps it; Revert undoes that `business_profile_edits`
+increment. Leaving the screen without clicking keeps the write. Stay until OK / Revert
+(timeout later). Not Ads-only.
 
 Intended later callers (rare — do not spam): ad leads when they log in, an **ad lead** while they
 are in Ads, an unusually profitable or lossy campaign, a long-running or unexpected operation.
-Website editor and Ads can use the same piece. Do not invent those events in the Ads mock.
+Website editor and Ads use the same piece. Do not invent extra events in the Ads mock.
 
 Not an inline field warning. Not a modal. Specs say **notification**.

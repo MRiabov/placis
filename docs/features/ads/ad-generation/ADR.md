@@ -138,6 +138,8 @@ area, and the date.
     copy-rewrite tool. A **notification** (OK / Revert) appears bottom-right; leaving the
     screen keeps the write. Character limits, uploads still in flight, and failed uploads
     still block.
+    (2026-08-27): that notification is the shared Details Revert, also used when the website
+    assistant writes a detail (`update_details`). Not Ads-only.
     Previous decision (same day): owner-typed or owner-prompted copy warned inline and did
     not write the business profile; the warning pointed the owner to Details.
     Previous decision: unsupported marketing statements blocked **ad ready to post** until

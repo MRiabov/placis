@@ -34,13 +34,14 @@ Validation errors: `string[]` with `maxLength` per item.
 ### POST /v1/business-profile/edits/{id}/undo
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** Ads notification **Revert** after a Details tool write. **OK** does not call
-  this. Leaving the screen without Revert keeps the write.
+- **Callers:** notification **Revert** after a Details tool write (Ads generator, website
+  assistant, later callers). **OK** does not call this. Leaving the screen without Revert
+  keeps the write.
 - **Idempotency-Key:** yes.
 - **Behavior:** undo that `business_profile_edits` increment (replay the inverse onto the live
   row, append a compensating increment). `409` if that id is already undone or is not the
   increment the notification named.
-- **Must not:** website edit-history undo; a second Ads-only revert route.
+- **Must not:** website edit-history undo; a second surface-specific revert route.
 
 ### GET /v1/business-profile/certifications / PUT /v1/business-profile/certifications
 

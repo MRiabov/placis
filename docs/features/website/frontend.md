@@ -236,7 +236,10 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
   - **Rejected** — canvas back to pre-proposal. Pills gone.
 
 Apply mutates the in-memory projection, then the ordinary PATCH; **Apply** / **Reject** only
-record activity metadata. They are one-way; there is no revert-after-apply. Ctrl+Z after Apply
+record activity metadata. They are one-way; there is no revert-after-apply on the unpublished
+website. A Details tool write (`update_details`) is applied immediately and uses the shared
+**notification** Revert (`POST /v1/business-profile/edits/{id}/undo`), not these pills.
+Ctrl+Z after Apply
 is in-memory undo of that batch, then PATCH — not Apply then Reject. Pending-review AI images
 may attach on the unpublished canvas; the warning is in **Content** when that image is
 selected, not copy on the website. Owner approval makes them approved. Website publication
