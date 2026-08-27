@@ -12,6 +12,7 @@
   Collapses to a top-right circle; ?dev=1 keeps it open, ?dev=0 starts collapsed.
   Desktop and narrow assistant default collapsed. Force with
   ?assistant=collapsed or ?assistant=expanded.
+  Empty composer turns the voice agent on. Force chatbot with ?voice=0.
   Narrow (≤1100px): full-screen overlay selector; Open destinations is inline with the heading.
   Canvas is a fake homepage, not the contractor website renderer.
   Ads detail lives in docs/features/ads/ad-generation/design/ads-workspace.html.
@@ -37,6 +38,7 @@
       <button type="button" class="viewtab" data-state="page" data-page="privacy">Privacy</button>
       <button type="button" class="viewtab" data-state="copy-out">Copy-out blocked</button>
       <button type="button" class="viewtab on" data-state="ask-first">Ask first pending</button>
+      <button type="button" class="viewtab on" data-state="voice">Voice agent</button>
       <button type="button" class="viewtab on" data-state="assistant">Assistant collapsed</button>
       <button type="button" class="viewtab" data-state="publication">Publish</button>
       <button type="button" class="viewtab" data-state="connect">Connect</button>
@@ -513,7 +515,7 @@
               </div>
             </aside>
 
-            <div class="cms-editor-canvas is-assistant-collapsed" id="editorCanvas">
+            <div class="cms-editor-canvas is-assistant-collapsed is-voice" id="editorCanvas">
               <p class="cms-copy-error is-hidden" id="copyOut">Copy-out has not succeeded after 10 seconds. Leaving is blocked until this succeeds or you discard.</p>
               <div class="cms-stage-grid" id="canvasStage">
                 <div class="cms-stage-scale" id="canvasScale">
@@ -564,6 +566,15 @@
               <div class="cms-ask-pills" id="askPills">
                 <button class="cms-ask-pill is-apply" type="button">Apply</button>
                 <button class="cms-ask-pill is-reject" type="button">Reject</button>
+              </div>
+              <div class="cms-voice-dock" id="voiceDock">
+                <button class="cms-voice-restore" id="restoreChatbot" type="button" aria-label="Restore chatbot" title="Restore chatbot">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+                </button>
+                <div class="cms-voice-orb is-listening" id="voiceOrb" role="img" aria-label="Voice agent">
+                  <span class="cms-voice-orb-frost"></span>
+                  <span class="cms-voice-orb-dust"></span>
+                </div>
               </div>
               <div class="cms-assistant-overlay" id="assistantOverlay" tabindex="-1">
                   <div class="cms-assistant-bar">
@@ -617,11 +628,12 @@
                     </div>
                   </div>
                   <div class="cms-assistant-composer">
-                    <textarea class="cms-field-control" rows="1" placeholder="e.g. Make the home website page focus on emergency call-outs"></textarea>
+                    <textarea class="cms-field-control" id="assistantComposer" rows="1" placeholder="e.g. Make the home website page focus on emergency call-outs"></textarea>
                     <button class="button-primary cms-assistant-submit" id="assistantSubmit" type="button">
                       <span class="cms-assistant-submit-plan">Plan</span>
                       <span class="cms-assistant-submit-send">Send</span>
                     </button>
+                    <button class="button-primary cms-assistant-voice" id="assistantVoice" type="button">Voice</button>
                   </div>
                 </div>
             </div>
