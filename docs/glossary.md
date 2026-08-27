@@ -149,8 +149,7 @@ Distinct from: Profile (the nav group), Business profile (the record).
 
 ### Trade
 
-The main kind of work the business does (roofing, landscaping, bathroom renovation, and the other
-allowed trades).
+The main kind of work the business does. Open text (not a closed list).
 
 ---
 
@@ -162,7 +161,7 @@ A named thing the business offers, shown on the website and available as an ad f
 
 ### Service area
 
-A locality the business covers.
+A locality the business covers. The owner picks a place on Google Maps.
 
 ---
 

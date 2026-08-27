@@ -22,8 +22,8 @@ Website, ads, and Details read the live row. Apply-the-website-template reads it
 `accepted_edit_id`. They do not replay profile history on every call.
 
 - `business_profiles` — `id`, `tenant_id` fk unique (required; the unactivated tenant created at
-  business lookup, same row later activated), `trade` (`roofing`/`landscaping_paving`/
-  `bathroom_renovation`/`kitchen_installation`/`general_builder`/`property_maintenance`),
+  business lookup, same row later activated), `trade` (open text, `minLength` 1, `maxLength`
+  80 — not a closed enum),
   `display_name`, `trading_name`, `legal_name`, `legal_form`, `company_status`, `description`,
   `established_year`, `company_number`, `vat_number`, `vat_registration_status`,
   `incorporation_date`, `registered_office`, `contact_name`, `marketing_phone`, `emergency_phone`,
@@ -78,8 +78,11 @@ memory, and write it back.
 the profile as of `accepted_edit_id` (client interview complete).
 
 - `business_profile_services` — `id`, `tenant_id` fk, `business_profile_id` fk, `name`,
-  `description`, `website_page_path`
-- `business_profile_service_areas` — `id`, `tenant_id` fk, `business_profile_id` fk, `locality`
+  `description`, `website_page_path`. Featured services on Details is this list (list-item
+  PATCH), not a textarea.
+- `business_profile_service_areas` — `id`, `tenant_id` fk, `business_profile_id` fk, `locality`,
+  `radius_km` nullable (for Meta when ad posting exists; the owner picks a Google Maps
+  territory, not a free-text area list)
 - `business_profile_opening_hours` — `id`, `tenant_id` fk, `business_profile_id` fk, `day_of_week`,
   `opens_at`, `closes_at`, `closed`. Hours they pick up the marketing phone. No `note`
   column.
