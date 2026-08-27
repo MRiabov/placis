@@ -37,7 +37,8 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
 - Configs are **boolean switches** in the overlay. Default **plan + Ask first**. **Follow**
   is a third config (`follow`), default off, not shown, not owner-turnable.
 - Empty composer turns the **voice agent** on (`/cms/website`). The chatbot overlay is
-  hidden. A soft orb sits bottom-right of the canvas (`min(5.5rem, 30vw)`). A glow
+  hidden. A soft orb sits bottom-right of the canvas (`min(5.5rem, 30vw)`), just above the
+  workspace rail on narrow — not above the hidden overlay. A glow
   falls off from the center with no hard edge. Clicks pass through except Restore chatbot
   and close. Restore chatbot is an opaque pill under Apply / Reject; the orb is a circle on
   the right spanning both rows (sticky while the
