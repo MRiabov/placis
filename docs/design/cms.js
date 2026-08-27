@@ -991,8 +991,6 @@ function hoursTimeLabel(value) {
 }
 function hoursIcon(kind) {
   if (kind === "closed") return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m7.5 7.5 9 9"/></svg>';
-  if (kind === "add") return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>';
-  if (kind === "remove") return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>';
   return '<svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/></svg>';
 }
 function hoursSelect(day, bound, value) {
@@ -1006,27 +1004,20 @@ function renderHoursPicker() {
   if (!root) return;
   root.innerHTML = hoursDays
     .map((row, index) => {
-      const slots = row.slots
-        .map(
-          (slot, slotIndex) => `
-            <div class="cms-hours-slot">
-              ${hoursSelect(row.day, "opens", slot.opens)}
-              <span aria-hidden="true">–</span>
-              ${hoursSelect(row.day, "closes", slot.closes)}
-              <button class="cms-hours-remove" type="button" data-hours="remove" data-slot="${slotIndex}" aria-label="Remove ${row.day} time block">${hoursIcon("remove")}</button>
-            </div>`,
-        )
-        .join("");
+      const slot = row.slots[0] || { opens: "08:00", closes: "17:00" };
       return `
         <div class="cms-hours-row${row.closed ? " is-closed" : ""}" data-index="${index}">
           <div class="cms-hours-day">${row.day}</div>
           <div class="cms-hours-slots">
-            ${slots}
+            <div class="cms-hours-slot">
+              ${hoursSelect(row.day, "opens", slot.opens)}
+              <span aria-hidden="true">–</span>
+              ${hoursSelect(row.day, "closes", slot.closes)}
+            </div>
             <p class="cms-hours-closed-label">Closed</p>
           </div>
           <div class="cms-hours-actions">
             <button class="cms-hours-icon${row.closed ? " is-on" : ""}" type="button" data-hours="closed" aria-label="${row.closed ? `Reopen ${row.day}` : `Mark ${row.day} closed`}" title="Closed">${hoursIcon("closed")}</button>
-            <button class="cms-hours-icon" type="button" data-hours="add" aria-label="Add ${row.day} time block" title="Add a time block" ${row.closed ? "disabled" : ""}>${hoursIcon("add")}</button>
             <button class="cms-hours-icon" type="button" data-hours="copy" aria-label="Copy ${row.day} opening hours to following days" title="Copy to following days">${hoursIcon("copy")}</button>
           </div>
         </div>`;
@@ -1046,7 +1037,7 @@ function writeHoursFromDom() {
   document.querySelectorAll(".cms-hours-row").forEach((rowNode, index) => {
     const next = readHoursRow(rowNode);
     hoursDays[index].closed = next.closed;
-    hoursDays[index].slots = next.slots;
+    hoursDays[index].slots = next.slots.slice(0, 1);
   });
 }
 document.getElementById("hoursPicker")?.addEventListener("click", (event) => {
@@ -1060,18 +1051,12 @@ document.getElementById("hoursPicker")?.addEventListener("click", (event) => {
     case "closed":
       row.closed = !row.closed;
       break;
-    case "add":
-      row.closed = false;
-      row.slots.push({ opens: "13:00", closes: "17:00" });
-      break;
-    case "remove":
-      if (row.slots.length > 1) row.slots.splice(Number(button.dataset.slot), 1);
-      break;
     case "copy":
       hoursDays.forEach((item, itemIndex) => {
         if (itemIndex > index) {
+          const range = row.slots[0] || { opens: "08:00", closes: "17:00" };
           item.closed = row.closed;
-          item.slots = row.slots.map((slot) => ({ ...slot }));
+          item.slots = [{ opens: range.opens, closes: range.closes }];
         }
       });
       break;
@@ -1124,6 +1109,7 @@ function setMediaCleanup(on) {
   view?.classList.toggle("is-compare", on);
   sweep?.classList.toggle("is-hidden", !on);
   actions?.classList.toggle("is-hidden", !on);
+  document.getElementById("mediaFraming")?.classList.toggle("is-hidden", on);
   if (on) sweep?.style.setProperty("--split", "50%");
   stripButton("cleanup")?.classList.toggle("on", on);
 }
@@ -1180,6 +1166,120 @@ function bindMediaLibrary() {
   document.getElementById("mediaCleanupAccept")?.addEventListener("click", () => setMediaCleanup(false));
 }
 
+function bindServiceArea() {
+  const combo = document.getElementById("serviceAreaCombo");
+  if (!combo) return;
+  bindCombo(combo);
+  const card = document.getElementById("serviceAreaCard");
+  const radius = document.getElementById("serviceAreaRadius");
+  combo.querySelectorAll(".cms-combo-row").forEach((row) => {
+    row.addEventListener("mousedown", () => {
+      const name = row.dataset.label || row.dataset.href || "";
+      const title = card?.querySelector("b");
+      if (title) title.textContent = name;
+      if (radius && row.dataset.radius) radius.value = row.dataset.radius;
+    });
+  });
+}
+
+function bindFeaturedServices() {
+  const list = document.getElementById("featuredServices");
+  if (!list) return;
+  list.addEventListener("click", (event) => {
+    const remove = event.target.closest(".cms-item-remove");
+    if (!remove) return;
+    const row = remove.closest(".cms-item-row");
+    if (list.querySelectorAll(".cms-item-row").length > 1) row?.remove();
+  });
+  document.getElementById("addFeaturedService")?.addEventListener("click", () => {
+    const row = document.createElement("li");
+    row.className = "cms-item-row";
+    row.innerHTML = `<input class="cms-careers-input" value="" aria-label="Featured service" /><button class="cms-item-remove" type="button" aria-label="Remove service">×</button>`;
+    list.append(row);
+    row.querySelector("input")?.focus();
+  });
+}
+
+function bindMediaFraming() {
+  const still = document.getElementById("mediaViewStill");
+  const view = document.getElementById("mediaView");
+  const rect = document.getElementById("mediaCropRect");
+  const focal = document.getElementById("mediaFocal");
+  const tools = document.getElementById("mediaFraming");
+  if (!still || !view || !rect || !focal) return;
+
+  const setMode = (next) => {
+    view.dataset.crop = next;
+    tools?.querySelectorAll("[data-crop]").forEach((button) => {
+      button.classList.toggle("is-on", button.dataset.crop === next);
+    });
+  };
+  tools?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-crop]");
+    if (button) setMode(button.dataset.crop);
+  });
+
+  const trackPointer = (startEvent, onMove) => {
+    const box = still.getBoundingClientRect();
+    const move = (event) => {
+      const x = ((event.clientX - box.left) / box.width) * 100;
+      const y = ((event.clientY - box.top) / box.height) * 100;
+      onMove(Math.max(0, Math.min(100, x)), Math.max(0, Math.min(100, y)), event);
+    };
+    startEvent.target.setPointerCapture?.(startEvent.pointerId);
+    move(startEvent);
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
+  focal.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    trackPointer(event, (x, y) => {
+      focal.style.left = `${x}%`;
+      focal.style.top = `${y}%`;
+    });
+  });
+
+  rect.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("[data-handle]")) return;
+    event.preventDefault();
+    const box = still.getBoundingClientRect();
+    const start = rect.getBoundingClientRect();
+    const originX = event.clientX;
+    const originY = event.clientY;
+    const left = ((start.left - box.left) / box.width) * 100;
+    const top = ((start.top - box.top) / box.height) * 100;
+    const width = (start.width / box.width) * 100;
+    const height = (start.height / box.height) * 100;
+    trackPointer(event, (_x, _y, moveEvent) => {
+      const dx = ((moveEvent.clientX - originX) / box.width) * 100;
+      const dy = ((moveEvent.clientY - originY) / box.height) * 100;
+      rect.style.left = `${Math.max(0, Math.min(100 - width, left + dx))}%`;
+      rect.style.top = `${Math.max(0, Math.min(100 - height, top + dy))}%`;
+    });
+  });
+
+  rect.querySelector("[data-handle]")?.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const box = still.getBoundingClientRect();
+    const start = rect.getBoundingClientRect();
+    const left = ((start.left - box.left) / box.width) * 100;
+    const top = ((start.top - box.top) / box.height) * 100;
+    trackPointer(event, (x, y) => {
+      rect.style.width = `${Math.max(12, Math.min(100 - left, x - left))}%`;
+      rect.style.height = `${Math.max(12, Math.min(100 - top, y - top))}%`;
+    });
+  });
+}
+
+bindServiceArea();
+bindFeaturedServices();
 bindMediaLibrary();
+bindMediaFraming();
 if (params.get("cleanup") === "1") setMediaCleanup(true);
 

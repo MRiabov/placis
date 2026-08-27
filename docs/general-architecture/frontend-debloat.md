@@ -36,7 +36,7 @@ no single feature owns.
 - Tokens for the CMS (sidebar + main area): [design.md](cms/design.md)
   (clone placis-web `globals.css` + `marketingSite.ts`). Do not invent a second palette.
   [design decision record](cms/design-decision-record.md) 5.
-- Left nav (Profile disclosure + Ads), New chat (`/cms`), Connect / Voice / placeholders:
+- Left nav (Profile disclosure + Ads), `/cms` two-card chooser, Connect:
   [frontend](cms/frontend.md). Code today: Don't say shell:
   `frontend-2/src/features/cms/CmsDashboardShell.tsx` — leftover flat nav (New chat, Sites,
   Details; no AI tools). `types.ts` / `routing.ts` include `/cms/proof`. `CmsRoute.tsx` —

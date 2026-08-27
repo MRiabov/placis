@@ -3,7 +3,8 @@
 The website assistant is a chat-like command surface in the website editor — not a separate
 generator. It reads the selected website page, website sections, website slots, media assets,
 website forms, SEO, validation blockers, website publication status, and website versions, and
-turns requests into governed, reviewable website editor edits. Text chat, voice handoffs, and
+turns requests into governed, reviewable website editor edits, and Details increments via
+the shared `update_details` tool when copy includes a detail. Text chat, voice handoffs, and
 website editor assistance all share the same tool surface. The registry lives here; generation
 and search go through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
@@ -28,7 +29,9 @@ this is the owner overlay. Details: [frontend.md](frontend.md), look:
   (same as Reject those). It does not undo already-Applied batches and is not “clear selected
   website section”. Control: silent trash on the right of the overlay top row while
   **expanded** (no label, no fill). Hidden while reduced.
-- The overlay is **one chat-like thread** (owner turns and assistant replies). Ask first
+- The overlay is **one chat-like thread** (owner turns and assistant replies), **persisted**
+  (one thread per tenant). Hydrate on `/cms/website` open. Retain if last assistant edit
+  within 24 hours; else a new thread. Ask first
   **Apply / Reject is per pending turn**: one pair for the whole run’s tools, not per tool.
   Those two actions are **pills on the canvas**, always over the chatbot (above it) or in the
   left stack next to the orb when the voice agent is on, not in the thread. Tool calls in the thread are muted owner lines from the backend, never
@@ -78,12 +81,15 @@ failed event.
 | `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` / `show_contact` |
 | `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
 | `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
+| `update_details` | the shared Details tool — one implementation ([details HTTP](../business-profile/details/api.md)) |
 
 **Owner action = assistant action.** Each tool is another caller of the same website-editor /
-media-library execution the owner already uses (Ask first / instant apply around it). Text
-`update_slot` is the same upsert as click-off PATCH. Image attach, crop, focal, and AI cleanup
-are the same functions as the website editor PATCH and `/cms/media`. There is no second assistant
-implementation and no public copy helper the tools call. Copy-on-write
+media-library / Details execution the owner already uses (Ask first / instant apply around
+canvas tools). Text `update_slot` is the same upsert as click-off PATCH. Image attach, crop,
+focal, and AI cleanup are the same functions as the website editor PATCH and `/cms/media`.
+`update_details` is the shared Details tool (Ads generator calls it too), not a
+website-assistant copy. Click-off on `/cms/details` stays PATCH. There is no second
+assistant implementation and no public copy helper the tools call. Copy-on-write
 (`parent_media_asset_id`, parent file never replaced) stays **inside** those functions.
 
 Planner: a named real photo → **attach first** (`update_slot` + `media_asset_id`). Cleanup only
@@ -191,7 +197,7 @@ thinking. There is no search/grep tool on the website assistant.
 
 Other tools use the same field, never the tool name, for example: `Cleaned up image on Hero`,
 `Generated image on Hero`, `Updated SEO`, `Updated website styles`, `Hid Services`,
-`Added Reviews`, `Created Contact`, `Updated top menu`.
+`Added Reviews`, `Created Contact`, `Updated top menu`, `Updated Business details`.
 
 Do not require an LLM `user_description` on the tool call. If we later want a mandatory
 owner-facing description from the model on every tool the owner sees, that can replace or
@@ -308,8 +314,18 @@ and ads keep the parent until retargeted. Cosmetic bound lives on that cleanup (
 ads: no fake results). Canvas warning until approved. Publication blocked until approved. Same
 Ask first / instant apply gate as `update_slot`.
 
+### `update_details`
+
+The shared Details tool ([details HTTP](../business-profile/details/api.md)) — one
+implementation, also invoked by the Ads generator. Not a second copy here. On this surface:
+applied immediately (not Ask first Apply / Reject, not `edit_history`). Then the shared
+notification. Onboarding 06 does not call it.
+
+Activity `summary` example: `Updated Business details`. Never a tool name.
+
 The website assistant never does a website publication, never bypasses validation, and never writes
-arbitrary registry JSON. It does not edit Details, Projects, or Certifications and reviews (those
-are Profile screens). It does not delete or archive a website section or website page (hide
+arbitrary registry JSON. It does not edit Projects or Certifications and reviews (those
+are Profile screens). Details writes are `update_details` only — not a side effect of
+`update_slot` or website styles. It does not delete or archive a website section or website page (hide
 stays: `set_section_visibility`). It does not upload or replace the file — replace stays the
 existing replace on `/cms/media` / website editor upload.

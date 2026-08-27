@@ -112,9 +112,10 @@ is in [editing.md](editing.md). Screens: [frontend.md](frontend.md).
 ## Website assistant
 
 The LLM edits the unpublished website through the **website assistant** — hard-typed, validated,
-parallel tool calls (`update_slot`, `update_reviews`, `cleanup_image`, `generate_image`, `update_menus`, website
+parallel tool calls (`update_slot`, `update_reviews`, `cleanup_image`, `generate_image`, `update_menus`, `update_details`, website
 section/website styles/SEO/website form/website page actions). Same attach / crop / focal /
-cleanup as the owner UI. Default-on overlay pinned to the canvas (expand / reduce height;
+cleanup as the owner UI. `update_details` is the shared Details tool (one implementation;
+Ads generator calls it too). The shared notification Revert undoes that increment. Default-on overlay pinned to the canvas (expand / reduce height;
 no website dim); two configs as boolean switches: plan vs continuous, instant apply vs Ask first. See
 [assistant.md](assistant.md).
 
@@ -168,15 +169,20 @@ The onboarding wait teaser (`/onboarding/preview`) reuses website components in 
 
 ## Voice
 
-The website assistant can be driven by the **voice agent** (see
-[voice-agent.md](../../general-architecture/voice-agent.md)): the agent clarifies what to change
+The website assistant can be driven by the **voice agent**
+([voice-agent.md](../../general-architecture/voice-agent.md)): the agent clarifies what to change
 — which website page/website section, new website page vs. copy edit, attach vs. generate an
 image — then emits one structured instruction resolved through the same governed website assistant
-tools (`update_slot`, `cleanup_image`, `generate_image`, website styles changes, website section
+tools (`update_slot`, `cleanup_image`, `generate_image`, `update_details`, website styles changes, website section
 reorder, SEO/website form updates, website page creation, website-publication-readiness). Two
 modes — plan (approve a concrete plan first) and continuous (bounded direct edits) — share the
 same tool surface. Voice grants no extra authority. On `/cms/website`, empty composer turns the
 voice agent on (orb, chatbot hidden). Look: [design decision record](design-decision-record.md) 18.
+The agent cannot website-publish.
+
+The product assistant also **explains the current screen** from a small in-memory markdown
+knowledge base (website editor and Ads). Onboarding **client interview** voice is out;
+onboarding **guide** assistant (talk them through the current onboarding screen) is in.
 
 ## Where things stand
 
