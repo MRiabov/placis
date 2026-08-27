@@ -693,6 +693,7 @@ document.getElementById("switchPlan")?.addEventListener("change", syncAssistantS
 document.getElementById("assistantComposer")?.addEventListener("input", syncVoiceSurface);
 document.getElementById("assistantVoice")?.addEventListener("click", turnVoiceOn);
 document.getElementById("restoreChatbot")?.addEventListener("click", restoreChatbot);
+document.getElementById("voiceClose")?.addEventListener("click", restoreChatbot);
 document.getElementById("clearContext")?.addEventListener("click", () => {
   document.querySelector("#assistantThread .cms-assistant-thread-inner")?.replaceChildren();
   setAskFirst(false);
