@@ -186,6 +186,109 @@ function setConnect(open) {
   if (open) setPublication(false);
 }
 
+function canUseHover() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+
+function bindHoverTap(button, panel, { onOpen } = {}) {
+  if (!button || !panel) return { close() {}, isOpen: () => false };
+  let hover = false;
+  let tap = false;
+  let closeTimer = 0;
+  const open = () => hover || tap;
+  const sync = () => {
+    const shown = open();
+    button.classList.toggle("is-open", shown);
+    button.setAttribute("aria-expanded", String(shown));
+    panel.classList.toggle("is-open", shown);
+    panel.setAttribute("aria-hidden", String(!shown));
+    if (shown) onOpen?.();
+  };
+  const cancel = () => {
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = 0;
+    }
+  };
+  const close = () => {
+    cancel();
+    hover = false;
+    tap = false;
+    sync();
+  };
+  button.addEventListener("click", () => {
+    if (canUseHover()) return;
+    hover = false;
+    tap = !tap;
+    sync();
+  });
+  button.addEventListener("mouseenter", () => {
+    if (!canUseHover()) return;
+    cancel();
+    hover = true;
+    sync();
+  });
+  button.addEventListener("mouseleave", (event) => {
+    if (!canUseHover()) return;
+    if (panel.contains(event.relatedTarget)) return;
+    cancel();
+    closeTimer = window.setTimeout(() => {
+      closeTimer = 0;
+      hover = false;
+      sync();
+    }, 120);
+  });
+  panel.addEventListener("mouseenter", () => {
+    if (!canUseHover()) return;
+    cancel();
+    hover = true;
+    sync();
+  });
+  panel.addEventListener("mouseleave", () => {
+    if (!canUseHover()) return;
+    cancel();
+    closeTimer = window.setTimeout(() => {
+      closeTimer = 0;
+      hover = false;
+      sync();
+    }, 120);
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (!open()) return;
+    if (button.contains(event.target) || panel.contains(event.target)) return;
+    close();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") close();
+  });
+  return { close, isOpen: open };
+}
+
+const homePromptWrap = document.querySelector('[data-view="home"]');
+const homeConnectBtn = document.getElementById("homeConnect");
+const homeVoiceBtn = document.getElementById("homeVoice");
+const mcpConnectPanel = document.getElementById("mcpConnectPanel");
+const homeVoicePanel = document.getElementById("homeVoicePanel");
+const homeVoiceOverlay = document.getElementById("homeVoiceOverlay");
+let closeHomeConnect = () => {};
+let closeHomeVoicePanel = () => {};
+
+function setMcpConnected(on) {
+  homePromptWrap?.classList.toggle("is-mcp-connected", on);
+  stripButton("mcp-connected")?.classList.toggle("on", on);
+  if (on) closeHomeConnect();
+}
+
+function setHomeVoice(on) {
+  homeVoiceOverlay?.classList.toggle("is-hidden", !on);
+  homeVoiceOverlay?.setAttribute("aria-hidden", String(!on));
+  stripButton("home-voice")?.classList.toggle("on", on);
+  if (on) {
+    closeHomeConnect();
+    closeHomeVoicePanel();
+  }
+}
+
 function setArchive(open) {
   document.getElementById("archiveList")?.classList.toggle("is-hidden", !open);
   document.getElementById("archiveSection")?.classList.toggle("is-collapsed", !open);
@@ -305,6 +408,9 @@ function show(scene) {
   setNavOpen(false);
   setPublication(false);
   setConnect(false);
+  setHomeVoice(false);
+  closeHomeConnect();
+  closeHomeVoicePanel();
   accountPopover.classList.add("is-hidden");
   document.getElementById("accountToggle").setAttribute("aria-expanded", "false");
   if (scene === "website") {
@@ -524,6 +630,12 @@ document.querySelectorAll("#viewtabs [data-state]").forEach((button) => {
       case "connect":
         setConnect(connectModal.classList.contains("is-hidden"));
         break;
+      case "mcp-connected":
+        setMcpConnected(!homePromptWrap?.classList.contains("is-mcp-connected"));
+        break;
+      case "home-voice":
+        setHomeVoice(homeVoiceOverlay?.classList.contains("is-hidden"));
+        break;
       case "cleanup":
         setMediaCleanup(!document.getElementById("mediaView")?.classList.contains("is-compare"));
         break;
@@ -741,6 +853,49 @@ connectModal.querySelectorAll("[data-copy]").forEach((button) => {
     }, 1200);
   });
 });
+const homeConnectTap = bindHoverTap(homeConnectBtn, mcpConnectPanel, {
+  onOpen: () => closeHomeVoicePanel(),
+});
+const homeVoiceTap = bindHoverTap(homeVoiceBtn, homeVoicePanel, {
+  onOpen: () => closeHomeConnect(),
+});
+closeHomeConnect = homeConnectTap.close;
+closeHomeVoicePanel = homeVoiceTap.close;
+
+document.getElementById("homeStartInterview")?.addEventListener("click", () => setHomeVoice(true));
+document.getElementById("homeVoiceBack")?.addEventListener("click", () => setHomeVoice(false));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") setHomeVoice(false);
+});
+
+const homePromptPh = document.getElementById("homePromptPh");
+const homePromptField = document.querySelector(".cms-dashboard-prompt-field");
+const homePromptText = document.querySelector("#homePrompt textarea");
+const promptPlaceholders = [
+  "Describe what you want Placis to build...",
+  "Build a homepage that explains what my crew does.",
+  "Launch ads that drive quote requests in my city.",
+  "Add my service areas, hours, and phone number to a simple site.",
+  "Create a contact form that emails me and the customer.",
+];
+let promptPlaceholderIndex = 0;
+function syncPromptFilled() {
+  homePromptField?.classList.toggle("is-filled", Boolean(homePromptText?.value.trim()));
+}
+homePromptText?.addEventListener("input", syncPromptFilled);
+if (homePromptPh && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const label = homePromptPh.querySelector("span");
+  window.setInterval(() => {
+    if (homePromptField?.classList.contains("is-filled") || !label) return;
+    homePromptPh.classList.add("is-swap");
+    window.setTimeout(() => {
+      promptPlaceholderIndex = (promptPlaceholderIndex + 1) % promptPlaceholders.length;
+      label.textContent = promptPlaceholders[promptPlaceholderIndex];
+      homePromptPh.classList.remove("is-swap");
+    }, 480);
+  }, 3600);
+}
+
 document.getElementById("homePrompt").addEventListener("submit", (event) => {
   event.preventDefault();
   show("website");
@@ -784,6 +939,8 @@ setAskFirst(params.get("ask") !== "0");
 syncVoiceSurface();
 if (params.get("publication") === "1") setPublication(true);
 if (params.get("connect") === "1") setConnect(true);
+if (params.get("connected") === "1") setMcpConnected(true);
+if (params.get("homevoice") === "1") setHomeVoice(true);
 if (params.get("archive") === "1") setArchive(true);
 if (params.get("workspace") === "1") setWorkspaceOpen(true);
 if (params.get("rail")) setRail(params.get("rail"), true);

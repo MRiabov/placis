@@ -13,6 +13,7 @@
   Desktop and narrow assistant default collapsed. Force with
   ?assistant=collapsed or ?assistant=expanded.
   Empty composer turns the voice agent on. Force chatbot with ?voice=0.
+  New chat: ?connected=1 hides Connect; ?homevoice=1 opens the interview orb.
   Narrow (≤1100px): full-screen overlay selector; Open destinations is inline with the heading.
   Canvas is a fake homepage, not the contractor website renderer.
   Ads detail lives in docs/features/ads/ad-generation/design/ads-workspace.html.
@@ -27,7 +28,12 @@
     <button type="button" class="viewtabs-collapse" id="viewtabsCollapse" aria-label="Hide developer states" title="Hide developer states">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
     </button>
-    <span class="viewtabs-empty is-hidden" data-state-for="home ads">Sidebar is the nav. Open a screen for states.</span>
+    <span class="viewtabs-empty is-hidden" data-state-for="ads">Sidebar is the nav. Open a screen for states.</span>
+    <div class="viewtabs-states is-hidden" data-state-for="home">
+      <span class="viewtabs-group">New chat</span>
+      <button type="button" class="viewtab" data-state="mcp-connected">All connected</button>
+      <button type="button" class="viewtab" data-state="home-voice">Voice interview</button>
+    </div>
     <div class="viewtabs-states is-hidden" data-state-for="website">
       <span class="viewtabs-group">Website</span>
       <button type="button" class="viewtab" data-state="sidebar">Sidebar expanded</button>
@@ -141,21 +147,55 @@
           <div class="cms-dashboard-prompt-stack">
             <button class="cms-dashboard-prompt-shelf" type="button">Upgrade to Placis Pro</button>
             <form class="cms-dashboard-prompt" id="homePrompt">
-              <textarea rows="2" placeholder="Describe what you want Placis to build..." aria-label="Describe what you want Placis to build"></textarea>
+              <div class="cms-dashboard-prompt-field">
+                <div class="cms-dashboard-prompt-ph" id="homePromptPh" aria-hidden="true">
+                  <span>Describe what you want Placis to build...</span>
+                </div>
+                <textarea rows="2" aria-label="Describe what you want Placis to build"></textarea>
+              </div>
               <div class="cms-dashboard-prompt-actions">
                 <div class="cms-dashboard-prompt-left-actions">
-                  <button class="cms-dashboard-prompt-connect" type="button">Connect</button>
+                  <button class="cms-dashboard-prompt-connect" id="homeConnect" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="mcpConnectPanel">Connect</button>
                   <button class="cms-dashboard-prompt-icon" type="button" aria-label="Attach a photo">
-                    <svg viewBox="0 0 24 24"><path d="M21.4 11.4 12 20.8a6 6 0 0 1-8.5-8.5l9.4-9.4a4 4 0 0 1 5.7 5.7L9.2 17.9a2 2 0 1 1-2.8-2.8l8.5-8.5"/></svg>
-                  </button>
-                  <button class="cms-dashboard-prompt-icon" type="button" aria-label="Voice">
-                    <svg viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
                   </button>
                 </div>
                 <div class="cms-dashboard-prompt-right-actions">
-                  <button class="cms-dashboard-prompt-send" type="submit" aria-label="Send to the website assistant">
-                    <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  <button class="cms-dashboard-prompt-voice" id="homeVoice" type="button" aria-label="Voice options" aria-haspopup="true" aria-expanded="false" aria-controls="homeVoicePanel">
+                    <svg class="voice-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></svg>
                   </button>
+                  <button class="cms-dashboard-prompt-send" type="submit" aria-label="Send to the website assistant">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="cms-prompt-panel" id="mcpConnectPanel" aria-hidden="true">
+                <div class="cms-prompt-panel-clip">
+                  <div class="cms-prompt-panel-inner">
+                    <p>Link Google and Meta ad accounts to run campaigns on Placis.</p>
+                    <div class="cms-mcp-brands">
+                      <button class="cms-mcp-brand" type="button" aria-label="Connect Google Ads campaigns">
+                        <span class="cms-mcp-mark" aria-hidden="true">
+                          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                        </span>
+                        Google
+                      </button>
+                      <button class="cms-mcp-brand" type="button" aria-label="Connect Meta Ads campaigns">
+                        <span class="cms-mcp-mark" aria-hidden="true">
+                          <svg viewBox="0 0 24 24"><path fill="#0081FB" d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z"/></svg>
+                        </span>
+                        Meta
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="cms-prompt-panel" id="homeVoicePanel" aria-hidden="true">
+                <div class="cms-prompt-panel-clip">
+                  <div class="cms-prompt-panel-inner">
+                    <p>Placis interviews you and builds from your answers.</p>
+                    <button class="cms-prompt-interview" id="homeStartInterview" type="button">Start interview</button>
+                  </div>
                 </div>
               </div>
             </form>
@@ -1047,6 +1087,19 @@
         </label>
       </article>
     </div>
+  </div>
+
+  <div class="cms-dashboard-voice-overlay is-hidden" id="homeVoiceOverlay" aria-hidden="true">
+    <button class="cms-dashboard-voice-back" id="homeVoiceBack" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Back
+    </button>
+    <section>
+      <div class="cms-dashboard-voice-orb cms-voice-orb is-listening" role="img" aria-label="Voice interview">
+        <span class="cms-voice-orb-glow"></span>
+      </div>
+      <p class="cms-dashboard-voice-copy">Placis interviews you and builds from your answers.</p>
+    </section>
   </div>
 
 <script src="cms.js"></script>
