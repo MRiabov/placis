@@ -8,8 +8,8 @@
 <!--
   Function follows CMS / website / business-profile specs; this file is visual.
   Open cms.html in a browser (no build). Styles: cms.css. Scene wiring: cms.js.
-  Dev-only strip is per-screen states (not sidebar nav); hide with ?shot=1.
-  Collapses to a top-right circle; ?dev=1 keeps it open, ?dev=0 starts collapsed.
+  Dev-only strip is per-screen states (not sidebar nav); default collapsed.
+  Hide with ?shot=1. Collapses to a top-right circle; ?dev=1 opens it.
   Desktop and narrow assistant default collapsed. Force with
   ?assistant=collapsed or ?assistant=expanded.
   Empty composer turns the voice agent on. Force chatbot with ?voice=0.
@@ -23,7 +23,7 @@
 <body>
   <!-- Mock-only: per-screen states for reviewing this HTML. Not product UI.
        Hidden when ?shot=1. Product destinations are the left nav. -->
-  <div class="viewtabs" id="viewtabs" role="note" aria-label="Developer states, not part of the product">
+  <div class="viewtabs is-hidden" id="viewtabs" role="note" aria-label="Developer states, not part of the product">
     <span class="viewtabs-label">Dev only</span>
     <button type="button" class="viewtabs-collapse" id="viewtabsCollapse" aria-label="Hide developer states" title="Hide developer states">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
@@ -78,7 +78,7 @@
       <button type="button" class="viewtab" data-scene="website">Back to website</button>
     </div>
   </div>
-  <button type="button" class="viewtabs-fab is-hidden" id="viewtabsOpen" aria-label="Show developer states" title="Show developer states">Dev</button>
+  <button type="button" class="viewtabs-fab" id="viewtabsOpen" aria-label="Show developer states" title="Show developer states">Dev</button>
 
   <div class="cms-dashboard-frame" id="frame">
     <aside class="cms-dashboard-sidebar" aria-label="The CMS">

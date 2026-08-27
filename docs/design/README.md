@@ -2,7 +2,7 @@
 
 Static HTML for The CMS. Open [cms.html](cms.html) in a browser; there is no build.
 
-The yellow strip is mock-only **per-screen states** (copy-out blocked, assistant collapsed, Ask first pending, and so on). Product destinations are the left nav. Hide the strip with `?shot=1`.
+The yellow strip is mock-only **per-screen states** (copy-out blocked, assistant collapsed, Ask first pending, and so on). Product destinations are the left nav. Default **collapsed** (circle in the top right). Open with `?dev=1`. Hide entirely with `?shot=1`.
 
 - [cms.html](cms.html) — markup
 - [cms.css](cms.css) — look
