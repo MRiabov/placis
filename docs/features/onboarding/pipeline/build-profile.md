@@ -74,11 +74,12 @@ Stable keys. 03 groups them for display. ETL transform may fill; 04a/04b fill ga
 | `services` | work | `business_profile_services` | crawl | required |
 | `service_areas` | work | `business_profile_service_areas` | crawl / directory | required |
 | `accreditations` | certifications | list / notes | trade registry | optional |
+| `photos` | photos | media library | Maps / Facebook photos + ETL transform classification; owner upload | required enough photos (found + uploaded). Source from the internet / AI photo only if still short |
 | `reviews` | reviews | `business_profile_reviews` | Maps / Facebook / review job; then LLM pins **top reviews** + review citations | optional |
 | `facebook_profile_url` | reviews | `facebook_profile_url` | Facebook | optional |
-| `photos` | photos | media library + `photos_choice` | Maps photos + ETL transform classification | required choice |
 
-`photos_choice`: `use_found` / `source_from_google` / `upload_later` / `use_neutral`.
+Found photos are shown in the client interview. There is no `photos_choice` question
+(`use_found` / `source_from_google` / `upload_later` / `use_neutral`).
 
 ## Status function (one winner)
 

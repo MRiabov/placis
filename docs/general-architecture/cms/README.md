@@ -4,7 +4,7 @@ The CMS is the whole owner app (sidebar + main area): website, ads, and Profile.
 domain object and not a vertical feature. This directory owns the **CMS (sidebar + main area)** — left nav, New chat
 (`/cms`), look tokens, and the CMS-wide design decision record.
 
-Visual mock: [docs/design/](../../design/README.md) (`cms.html` / `cms.css` / `cms.js`). Specs win
+Visual mock: [docs/design/](../../design/README.md) (`tokens.css`, `cms.html` / `cms.css` / `cms.js`). Specs win
 over the mock.
 
 - [frontend.md](frontend.md) — left nav, Profile disclosure, New chat

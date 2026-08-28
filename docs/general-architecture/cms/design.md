@@ -2,7 +2,9 @@
 
 The CMS (sidebar + main area): New chat, website editor, Details, Ads list. Not the
 contractor website look — that is [website styles](../../features/website/styles.md).
-[Design decision record](design-decision-record.md). Mock: [cms.css `:root`](../../design/cms.css).
+[Design decision record](design-decision-record.md). Mock: [tokens.css](../../design/tokens.css)
+(`:root`). CMS, onboarding, and Ads look exports share this file. CMS wins when they
+disagree.
 
 Clone placis-web `globals.css` (light) + `marketingSite.ts`. Do not invent a second palette.
 Do not restyle Ads creative surfaces from this file.
@@ -36,9 +38,13 @@ Named CSS variables in the mock. Hex is the light-theme value.
 | `--cms-surface-active` | `rgb(9 9 11 / 6%)` | Active nav row |
 | `--ring` | `#a1a1aa` | Focus ring |
 | `--prompt-shelf` | `rgb(250 250 250 / 80%)` | Upgrade shelf |
+| `--prompt-icon-border` | `--hairline` | Flat prompt icon stroke |
 | `--prompt-radius` | `1.75rem` | Prompt box (28px) |
+| `--cms-error-surface` | `#fff1f0` | Error wash |
+| `--cms-warning-surface` | `#fffbeb` | Warning wash; mock-only Dev strip |
 
 Idle nav rows: zinc-600 (`#52525b`, `--cms-text-secondary`).
+Prompt / accordion title strip uses `--cms-surface-sunken`.
 
 ## Radius and motion
 
