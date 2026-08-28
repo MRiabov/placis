@@ -106,12 +106,11 @@ inventing it.
    look-export HTML for later restore. Hide Paperclip, Start client interview,
    subscription-shelf copy. Overlay rows drop New chat. Connect stays.
    (2026-08-28): Voice on `/cms` is gone. Overlay look:
-   [assistant design decision record](../../features/assistant/design-decision-record.md).
-   `/cms` cards clone the prompt-box look (hairline, prompt radius) with a
-   readable lift of the prompt shade, and carry destination logos (Sites globe,
-   Ads megaphone). Google / Meta connect lives on Ads too. The two cards sit in
-   one row on a wide screen and stack on a narrow screen so the titles stay one
-   line.
+   [assistant design decision record](../../features/assistant/design-decision-record.md). `/cms` cards clone the prompt-box look
+   (hairline, prompt radius) with a readable lift of the prompt shade, and carry
+   destination logos (Sites globe, Ads megaphone). Google / Meta connect lives
+   on Ads too. The two cards sit in one row on a wide screen and stack on a
+   narrow screen so the titles stay one line.
 
 6. **Owner field controls share one look** — Input, textarea, and select in The
    CMS, onboarding, and Ads use `.cms-field-control` (look export:
