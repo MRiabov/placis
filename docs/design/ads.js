@@ -42,7 +42,7 @@
 
   // gallery: one-image ads show the photo only — Edit is how you change it
   const galMain = document.getElementById("galMain");
-  const galBase = "../../apps/contractor-website/public/fixtures/bellfield/";
+  const galBase = "fixtures/bellfield/";
   galMain.style.backgroundImage = 'url("' + galBase + 'image1.jpeg")';
 
   // duration: remaining days in the run window; end date is the native picker
