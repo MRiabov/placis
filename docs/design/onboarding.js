@@ -1,6 +1,6 @@
 /* Mock-only scene wiring for onboarding.html. Not product UI.
-   Combo, hours picker, featured services, and service-area territories:
-   details-fields.js (loaded first). */
+   Combo, hours picker, featured services, service-area territories, and the
+   yellow strip: details-fields.js (loaded first). */
 
 const params = new URLSearchParams(location.search);
 const views = [...document.querySelectorAll("[data-view]")];
@@ -31,16 +31,6 @@ const waitProgress = document.getElementById("waitProgress");
 const waitBar = document.getElementById("waitBar");
 const waitCopy = document.getElementById("waitCopy");
 const onbFoot = document.getElementById("onbFoot");
-
-function preferViewtabsCollapsed() {
-  if (params.has("dev")) return false;
-  return true;
-}
-
-function setViewtabsCollapsed(collapsed) {
-  document.getElementById("viewtabs")?.classList.toggle("is-hidden", collapsed);
-  document.getElementById("viewtabsOpen")?.classList.toggle("is-hidden", !collapsed);
-}
 
 function matchesStateFor(node, scene) {
   return (node.dataset.stateFor || "").split(/\s+/).filter(Boolean).includes(scene);
@@ -566,11 +556,6 @@ document.querySelectorAll("#viewtabs .viewtab").forEach((tab) => {
     if (scene === "generated") setGeneratedState(state);
   });
 });
-
-document.getElementById("viewtabsCollapse")?.addEventListener("click", () => setViewtabsCollapsed(true));
-document.getElementById("viewtabsOpen")?.addEventListener("click", () => setViewtabsCollapsed(false));
-setViewtabsCollapsed(preferViewtabsCollapsed());
-if (params.has("shot")) document.body.classList.add("is-shot");
 
 const scene = params.get("scene") || "find";
 setScene(scene);

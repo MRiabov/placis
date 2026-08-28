@@ -3,6 +3,7 @@
    Do not restyle Facebook/Instagram placement surfaces from tokens. */
 
 @import url("tokens.css");
+@import url("details-fields.css");
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -69,96 +70,21 @@
   .content { flex: 1; min-width: 0; background: var(--background); }
   h1 { font-size: 21px; font-weight: 600; letter-spacing: -0.025em; margin: 0; }
   .hint { color: var(--cms-text-muted); font-size: 13px; line-height: 1.5; margin: 0 0 20px; }
+  button { cursor: pointer; }
   .field { margin-bottom: 20px; }
   .field > label {
     display: block;
-    color: var(--cms-text-muted);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
     margin-bottom: 8px;
   }
   .field .sub { color: var(--cms-text-muted); font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none; }
-  input[type=text], input[type=date], textarea, select {
-    width: 100%;
-    min-height: 44px;
-    padding: 10px 12px;
-    border: 1px solid var(--cms-border);
-    border-radius: 10px;
-    font-size: 14px;
-    line-height: 1.4;
-    background: var(--private-surface-sunken);
-    font-family: inherit;
-    resize: vertical;
-    color: var(--cms-text);
-    color-scheme: light;
-  }
-  input[type=text]::placeholder, textarea::placeholder { color: var(--cms-text-subtle); opacity: 1; }
-  input[type=text]:focus-visible, input[type=date]:focus-visible, textarea:focus-visible, select:focus-visible {
-    outline: 2px solid var(--cms-border-strong);
-    outline-offset: -3px;
-    background: var(--background);
-  }
-  input[type=date] { background: var(--background); }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 640px) { .row2 { grid-template-columns: 1fr; } }
   input:disabled, textarea:disabled { opacity: .5; background: var(--private-surface-raised); cursor: not-allowed; }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 36px;
-    padding: 0 14px;
-    border: 1px solid var(--prompt-icon-border);
-    background: var(--background);
-    border-radius: var(--cms-radius-control);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--cms-text);
-    transition: background-color 120ms ease, border-color 120ms ease;
-  }
-  .btn:hover:not(:disabled) { background: var(--cms-surface); border-color: var(--cms-text-subtle); }
-  .btn.primary { background: var(--cms-accent); border-color: var(--cms-accent); color: var(--cms-text-on-accent); }
-  .btn.primary:hover:not(:disabled) { background: var(--cms-accent-hover); border-color: var(--cms-accent-hover); }
-  .btn[disabled] { opacity: 0.5; background: var(--background); border-color: var(--prompt-icon-border); color: var(--cms-text-subtle); cursor: not-allowed; }
-  .btn.primary[disabled] { background: var(--cms-accent); border-color: var(--cms-accent); color: var(--cms-text-on-accent); opacity: 0.72; }
   .note { font-size: 12px; color: var(--cms-text-muted); line-height: 1.45; }
   .badge { display: inline-block; padding: 3px 10px; border-radius: var(--cms-radius-pill); font-size: 11px; font-weight: 600; }
   .badge.review { background: var(--cms-warning-surface); color: var(--cms-warning); }
   .badge.ready { background: var(--cms-success-surface); color: var(--cms-success); }
   .badge.draft { background: var(--private-surface-raised); color: var(--cms-text-muted); }
-  .viewtabs {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 0 0 24px;
-    padding: 8px 10px;
-    border: 1px dashed var(--cms-text-subtle);
-    border-radius: 10px;
-    background: repeating-linear-gradient(-45deg, var(--cms-surface-sunken), var(--cms-surface-sunken) 8px, var(--cms-surface-raised) 8px, var(--cms-surface-raised) 16px);
-  }
-  .viewtabs-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--cms-text-muted);
-    margin-right: 4px;
-  }
-  .viewtab {
-    border: 1px solid var(--prompt-icon-border);
-    background: var(--background);
-    padding: 6px 12px;
-    border-radius: var(--cms-radius-control);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--cms-text-muted);
-    cursor: pointer;
-  }
-  .viewtab.on { border-color: var(--cms-accent); color: var(--cms-text); font-weight: 600; background: var(--prompt-header); }
   .card {
     background: var(--background);
     border: 1px solid var(--prompt-border);
@@ -353,7 +279,6 @@
   .form.open > .sech { border-bottom: 1px solid var(--prompt-hairline); }
   .sech .ttl { flex: 1; color: var(--cms-text); font-weight: 500; font-size: 13px; }
   .sech .state { font-size: 12px; color: var(--cms-text-muted); font-weight: 400; }
-  .sech .btn { flex: none; height: 32px; }
   #f1.is-confirmed .formbody { pointer-events: none; }
   #f1.is-confirmed .formbody > :not(#generateWrap) { opacity: 0.72; }
   #f1.is-confirmed #generateWrap { pointer-events: auto; }
@@ -364,42 +289,6 @@
   .form.locked .sech { cursor: not-allowed; }
   .form.locked .sech .state { color: var(--cms-text-subtle); }
   .form.locked .sech .chev { color: var(--cms-text-subtle); }
-
-  .combo { position: relative; }
-  .combo input { width: 100%; padding: 10px 12px; border: 1px solid var(--cms-border); border-radius: 10px; font-size: 14px; background: var(--private-surface-sunken); font-family: inherit; }
-  .pop {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    right: 0;
-    background: var(--background);
-    border: 1px solid var(--prompt-border);
-    border-radius: 16px;
-    box-shadow: var(--prompt-shadow);
-    z-index: 20;
-    overflow: hidden;
-  }
-  .combo.open .pop { display: block; }
-  .pop .create { padding: 6px; }
-  .pop .crow { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; font-size: 13px; }
-  .pop .crow .plus { color: var(--cms-accent); font-weight: 700; }
-  .pop .crow .hintic { color: var(--cms-text-muted); }
-  .pop .crow.sel { background: var(--cms-surface-raised); }
-  .pop .crow.hint { color: var(--cms-text-muted); }
-  .pop .divider { height: 1px; background: var(--prompt-hairline); margin: 2px 8px; }
-  .pop .divider[hidden],
-  .pop .empty[hidden] { display: none !important; padding: 0; margin: 0; height: 0; border: 0; }
-  .pop .divider.show:not([hidden]) { display: block; }
-  .pop .group { padding: 4px 12px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--cms-text-muted); font-weight: 600; }
-  .pop .row { display: flex; align-items: center; gap: 8px; padding: 9px 12px; font-size: 13px; cursor: pointer; }
-  .pop .row:hover { background: var(--cms-surface-raised); }
-  .pop .row .ic { width: 16px; color: var(--cms-text-muted); text-align: center; }
-  .pop .row .ic.cur { color: var(--cms-accent); font-weight: 700; }
-  .pop .row .txt b { display: block; font-size: 13px; }
-  .pop .row .txt span { display: block; font-size: 11px; color: var(--cms-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pop .scroll { max-height: 180px; min-height: 0; overflow: auto; }
-  .pop .empty { padding: 10px; font-size: 13px; color: var(--cms-text-muted); }
 
   .loading {
     display: none;
@@ -581,19 +470,6 @@
   .dropper.show { display: flex; }
   .dropper span { background: var(--background); padding: 10px 18px; border-radius: var(--cms-radius-pill); font-weight: 600; box-shadow: var(--prompt-shadow); }
   .copyfield { margin-bottom: 16px; }
-  .copyfield > label,
-  .copyfield .lbl {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--cms-text-muted);
-    margin-bottom: 8px;
-  }
   .copyfield .lbl .count,
   .copyfield .lbl .sub {
     color: var(--cms-text-muted);
