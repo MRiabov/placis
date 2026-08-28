@@ -10,27 +10,29 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 
 ## Code today
 
-- In the website editor, the library: `frontend-2/src/features/cms/editor/media/MediaWorkspacePanel.tsx`
-  (~607 lines), `mediaModel.ts`.
+- In the website editor, the library:
+  `frontend-2/src/features/cms/editor/media/MediaWorkspacePanel.tsx` (~607
+  lines), `mediaModel.ts`.
 - Upload/attach handlers: `useEditorMediaHandlers.ts`.
-- API in `cms.ts`: `listEditorAssets`, create/patch asset, file upload, signed URL,
-  complete, `createEditorAssetImageEdit`, `attachEditorAssetToSlot`.
+- API in `cms.ts`: `listEditorAssets`, create/patch asset, file upload, signed
+  URL, complete, `createEditorAssetImageEdit`, `attachEditorAssetToSlot`.
 - No `/cms/media` route in `app/router/index.tsx`.
 - Unused media-modal / careers-adjacent CSS in
   `frontend-2/src/styles/cms/components-04.css`.
 
 ## Keep
 
-- One library: `/cms/media` under Profile, plus attach / pick in Content when an image is selected
-  (upload, drag onto canvas, attach to a website slot as a discrete PATCH).
+- One library: `/cms/media` under Profile, plus attach / pick in Content when an
+  image is selected (upload, drag onto canvas, attach to a website slot as a
+  discrete PATCH).
 - Media caption, focal point, crop, replace, AI cleanup that **creates a copy**
-  (`parent_media_asset_id`); parent file is never replaced. Website editor PATCH, website
-  assistant tools, and ads light cleanup call these same functions ([README.md](README.md)).
-  `/cms/media` look: large view (also where they compare cleanup), prompt box beside/under it,
-  before/after sweep on cleanup, dense thumbs (3 then 4 columns; mixed ratios). Not huge
-  square cards.
-- Leave guard covers an in-flight upload ([editing.md](../../website/editing.md)).
-  Hover the uploading thumb: a circle-and-cross button; click it to cancel (same overlay as Ads).
+  (`parent_media_asset_id`); parent file is never replaced. Website editor
+  PATCH, website assistant tools, and ads light cleanup call these same
+  functions ([README.md](README.md)). `/cms/media` look: large view (also where they
+  compare cleanup), prompt box beside/under it, before/after sweep on cleanup,
+  dense thumbs (3 then 4 columns; mixed ratios). Not huge square cards.
+- Leave guard covers an in-flight upload ([editing.md](../../website/editing.md)). Hover the uploading
+  thumb: a circle-and-cross button; click it to cancel (same overlay as Ads).
 
 ## Delete
 
@@ -73,4 +75,5 @@ file). Deep link `/cms/media` is still required.
 
 - One library: Content attach on `/cms/website` + `/cms/media`.
 - No second picker. No unused modal CSS.
-- Uploads and website-slot attach use the constrained website-editor / files API.
+- Uploads and website-slot attach use the constrained website-editor / files
+  API.

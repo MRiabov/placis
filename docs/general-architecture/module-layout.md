@@ -1,6 +1,7 @@
 # Module layout
 
-Target Go layout. `cmd/ci` exists today; `internal/` product packages are still the target.
+Target Go layout. `cmd/ci` exists today; `internal/` product packages are still
+the target.
 
 ```text
 cmd/
@@ -58,19 +59,21 @@ go.mod
 
 Rules:
 
-- **Feature-nested, not flat**: one package per feature; a leaf package starts as a single file and
-  splits only when it grows. Enforce the file-size guard (< 800 lines warning, > 1200 hard error)
-  in CI — never flat file dumps.
-- **Folder fan-out** (predecessor `check_folder_fanout`): a nested package dir may hold at most
-  **9** entries (tracked files + child dirs). `internal/` root may hold at most **15**. Split a
-  fat folder into a nested package. Scope is `internal/` (the old `backend/app`); not `docs/`,
-  `frontend-2/`, or `packages/` in this pass. See [CI and delivery](ci-cd.md).
+- **Feature-nested, not flat**: one package per feature; a leaf package starts
+  as a single file and splits only when it grows. Enforce the file-size guard (<
+  800 lines warning, > 1200 hard error) in CI — never flat file dumps.
+- **Folder fan-out** (predecessor `check_folder_fanout`): a nested package dir
+  may hold at most **9** entries (tracked files + child dirs). `internal/` root
+  may hold at most **15**. Split a fat folder into a nested package. Scope is
+  `internal/` (the old `backend/app`); not `docs/`, `frontend-2/`, or
+  `packages/` in this pass. See [CI and delivery](ci-cd.md).
 - Shared types live in exactly one package — no forked duplicates.
-- Route handlers validate input (huma) and call service functions; services own business rules and
-  transactions; models are persistence only.
-- Service functions accept `tenantID` explicitly; they never infer it from ambient request data.
+- Route handlers validate input (huma) and call service functions; services own
+  business rules and transactions; models are persistence only.
+- Service functions accept `tenantID` explicitly; they never infer it from
+  ambient request data.
 - See [CI and delivery](ci-cd.md) for the delivery gates (file-size guard, folder fan-out,
   external API isolation, generated-code freshness).
 
-`frontend-2` keeps its own feature-local structure and is not folded into `internal/`; the
-file-size guard applies to it too. Folders: [frontend stack](frontend-stack.md).
+`frontend-2` keeps its own feature-local structure and is not folded into
+`internal/`; the file-size guard applies to it too. Folders: [frontend stack](frontend-stack.md).

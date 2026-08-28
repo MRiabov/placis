@@ -1,86 +1,134 @@
 # Don't-say checker — worked examples
 
-The ban list is the `### Don't say` table in `docs/glossary.md`. This file is the pass/fail reference for `cmd/ci/check-dont-say`. The checker skips this directory, so illustrations may contain banned words.
+The ban list is the `### Don't say` table in `docs/glossary.md`. This file is
+the pass/fail reference for `cmd/ci/check-dont-say`. The checker skips this
+directory, so illustrations may contain banned words.
 
-Unmarked = nowhere (docs, Go, backticks, table names, paths). `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` = the unqualified word is allowed only in that feature’s technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`. `(website)` also covers `apps/contractor-website`. `apps/placis-website` is scanned but is not the website home. Everywhere else use the Say. `(in a PRD)` stays only for `CMS`. Leftover `(bare)` is unmarked.
+Unmarked = nowhere (docs, Go, backticks, table names, paths). `(website)` /
+`(ads)` / `(onboarding)` / `(media)` / `(details)` = the unqualified word is
+allowed only in that feature’s technical docs (not `prd.md`, not `frontend.md`)
+and later `internal/<home>/`. `(website)` also covers `apps/contractor-website`.
+`apps/placis-website` is scanned but is not the website home. Everywhere else
+use the Say. `(in a PRD)` stays only for `CMS`. Leftover `(bare)` is unmarked.
 
-Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`, `interview (onboarding)`, `CMS (in a PRD)`. Covering still applies: the Say (`website page`) does not flag the shorter Don't-say.
+Assume the table has `slug` (unmarked), `page (website)`, `posting (ads)`,
+`interview (onboarding)`, `CMS (in a PRD)`. Covering still applies: the Say
+(`website page`) does not flag the shorter Don't-say. The same covering holds
+when rumdl wrap splits the Say across adjacent lines (`website` then `page`). A
+Don't-say / do not say / never say instruction still covers the next wrapped
+line when that line is not a new list item or heading.
 
 ## Banned synonym (unmarked) — nowhere, including code
 
-- `docs/features/website/architecture.md`: “store the slug” → **fail**. Say **website prefix**.
-- `internal/website/pages.go`: type `Slug` or column `slug` → **fail**. Same Say (or `path` / `website_prefix` once named in the glossary).
+- `docs/features/website/architecture.md`: “store the slug” → **fail**. Say
+  **website prefix**.
+- `internal/website/pages.go`: type `Slug` or column `slug` → **fail**. Same Say
+  (or `path` / `website_prefix` once named in the glossary).
 - Backticks do not help: `` `slug` `` → **fail**.
 
 ## Banned synonym (unmarked) — mint
 
-- `docs/general-architecture/voice-agent.md`: “the backend mints a secret” → **fail**. Say **create**.
-- `docs/features/etl/ADR.md`: “mints one `enqueue_id`” → **fail**. Say **create**.
-- `docs/general-architecture/testing.md`: “mint once per CI job” → **fail**. Say **create** (or **use** the testing token already created).
+- `docs/general-architecture/voice-agent.md`: “the backend mints a secret” →
+  **fail**. Say **create**.
+- `docs/features/etl/ADR.md`: “mints one `enqueue_id`” → **fail**. Say
+  **create**.
+- `docs/general-architecture/testing.md`: “mint once per CI job” → **fail**. Say
+  **create** (or **use** the testing token already created).
 
 ## Banned synonym (unmarked) — fold
 
-- `docs/features/etl/ADR.md`: “same fold rules as onboarding” → **fail**. Say **live business profile** (same profile-update / conflict rules).
-- `docs/features/website/editing.md`: “GET the fold” / “the folds” → **fail**. Say **unpublished website** (or **live business profile**).
-- Hero copy “conversion copy above the fold” → **pass** (first viewport; extra-allowed).
+- `docs/features/etl/ADR.md`: “same fold rules as onboarding” → **fail**. Say
+  **live business profile** (same profile-update / conflict rules).
+- `docs/features/website/editing.md`: “GET the fold” / “the folds” → **fail**.
+  Say **unpublished website** (or **live business profile**).
+- Hero copy “conversion copy above the fold” → **pass** (first viewport;
+  extra-allowed).
 
 ## Banned synonym (unmarked) — bytes
 
-- `docs/features/other/media/README.md`: “while bytes land” → **fail**. Say **photo** / **file** (the upload).
-- `docs/features/website/api.md`: “send a media library item id, not bytes” → **fail**. Say **file**.
+- `docs/features/other/media/README.md`: “while bytes land” → **fail**. Say
+  **photo** / **file** (the upload).
+- `docs/features/website/api.md`: “send a media library item id, not bytes” →
+  **fail**. Say **file**.
 - Go `import "bytes"` / `bytes.Buffer` → **pass** (stdlib; extra-allowed).
 
 ## Self-understood at home — website `page`
 
-- `docs/features/website/architecture.md`: “each page has sections” → **pass** (`page (website)`).
-- `docs/features/website/prd.md`: “each page has sections” → **fail**. PRDs are product-facing. Say **website page**.
+- `docs/features/website/architecture.md`: “each page has sections” → **pass**
+  (`page (website)`).
+- `docs/features/website/prd.md`: “each page has sections” → **fail**. PRDs are
+  product-facing. Say **website page**.
 - `docs/features/website/frontend.md`: same as PRD → **fail**.
-- `docs/features/onboarding/pipeline/05-apply-website-template.md`: “create the page” → **fail**. Onboarding is not the website. Say **website page**.
-- `docs/features/ads/ad-generation/technical-implementation.md`: “landing page” if it matches `\bpage\b` → **fail**. Say **website page**.
+- `docs/features/onboarding/pipeline/05-apply-website-template.md`: “create the
+  page” → **fail**. Onboarding is not the website. Say **website page**.
+- `docs/features/ads/ad-generation/technical-implementation.md`: “landing page”
+  if it matches `\bpage\b` → **fail**. Say **website page**.
 - Same ads file: “website page” → **pass** (covering).
-- `docs/features/website/architecture.md`: “route `/preview/page`” → **pass** (home-scoped token inside a `/` path is skipped).
-- Later `internal/website/page.go`: `type Page struct` → **pass** (home package). `internal/ads/page.go` → **fail**.
-- `apps/contractor-website/src/middleware.ts`: “render the page” in a `.md`/`.go` file → **pass** (website home).
-- `apps/placis-website/README.md`: “the page” → **fail**. The Placis website is not the contractor website home. Say **website page**.
+- `docs/features/website/architecture.md`: “route `/preview/page`” → **pass**
+  (home-scoped token inside a `/` path is skipped).
+- Later `internal/website/page.go`: `type Page struct` → **pass** (home
+  package). `internal/ads/page.go` → **fail**.
+- `apps/contractor-website/src/middleware.ts`: “render the page” in a
+  `.md`/`.go` file → **pass** (website home).
+- `apps/placis-website/README.md`: “the page” → **fail**. The Placis website is
+  not the contractor website home. Say **website page**.
 
 ## Self-understood at home — ads `posting`
 
-- `docs/features/ads/ad-generation/technical-implementation.md`: “move the posting to needs review” → **pass**.
-- `docs/features/website/architecture.md`: “the posting” → **fail**. Say **ad posting**.
-- `docs/features/ads/ad-generation/prd.md`: “the posting” → **fail**. Say **ad posting**.
+- `docs/features/ads/ad-generation/technical-implementation.md`: “move the
+  posting to needs review” → **pass**.
+- `docs/features/website/architecture.md`: “the posting” → **fail**. Say
+  **ad posting**.
+- `docs/features/ads/ad-generation/prd.md`: “the posting” → **fail**. Say
+  **ad posting**.
 
 ## Self-understood at home — ads `preview`
 
-- `docs/features/ads/ad-generation/technical-implementation.md`: “format-accurate preview” → **pass** (`preview (website, ads)` in a technical ads doc).
-- `docs/features/ads/ad-generation/prd.md`: “the preview” → **fail**. Say **ad format preview**.
-- `docs/features/ads/ad-generation/frontend.md`: “Facebook + Instagram preview” → **fail**. Say **ad format preview**.
+- `docs/features/ads/ad-generation/technical-implementation.md`:
+  “format-accurate preview” → **pass** (`preview (website, ads)` in a technical
+  ads doc).
+- `docs/features/ads/ad-generation/prd.md`: “the preview” → **fail**. Say
+  **ad format preview**.
+- `docs/features/ads/ad-generation/frontend.md`: “Facebook + Instagram preview”
+  → **fail**. Say **ad format preview**.
 - Same frontend file: “ad format preview” → **pass** (covering).
 
 ## Self-understood at home — onboarding `interview`
 
-- `docs/features/onboarding/pipeline/01-find-business.md`: “after the interview” → **pass**.
-- `docs/features/website/editing.md`: “after the interview” → **fail**. Say **client interview**.
+- `docs/features/onboarding/pipeline/01-find-business.md`: “after the interview”
+  → **pass**.
+- `docs/features/website/editing.md`: “after the interview” → **fail**. Say
+  **client interview**.
 - `docs/README.md`: “interview” → **fail**. Say **client interview**.
 
 ## `CMS (in a PRD)` — unchanged, not a junk drawer
 
-- `docs/features/website/prd.md`: “open the CMS” → **fail**. Say website editor / Details / Media library / Ads.
+- `docs/features/website/prd.md`: “open the CMS” → **fail**. Say website editor
+  / Details / Media library / Ads.
 - `docs/features/website/architecture.md`: “the CMS is the umbrella” → **pass**.
 - Do **not** put `slug` or `idempotent` in this bucket.
 
 ## Leftover `(bare)` in the table
 
-- `slug (bare)` still in the glossary → treated as **unmarked** (fail everywhere). It does not keep today’s skip-in-code behavior.
+- `slug (bare)` still in the glossary → treated as **unmarked** (fail
+  everywhere). It does not keep today’s skip-in-code behavior.
 
 ## What a leftover rewrite looks like
 
-- Ads technical doc “crop is normalized” → “crop is stored as 0–1 coordinates” (or the Say **combine / turn into** where that is the meaning).
-- Development principles “walking skeleton” is already extra-allowed; do not write “huma skeleton”.
-- Architecture “runtime validation” → “validation when the request is handled” (do not name the contractor website a runtime; do not use `runtime` as a synonym).
+- Ads technical doc “crop is normalized” → “crop is stored as 0–1 coordinates”
+  (or the Say **combine / turn into** where that is the meaning).
+- Development principles “walking skeleton” is already extra-allowed; do not
+  write “huma skeleton”.
+- Architecture “runtime validation” → “validation when the request is handled”
+  (do not name the contractor website a runtime; do not use `runtime` as a
+  synonym).
 
 ## `setup` in testing docs
 
-The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`. Fixture headings stay **Setup** / Invoke / Assert.
+The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`.
+Fixture headings stay **Setup** / Invoke / Assert.
 
-- `docs/features/onboarding/pipeline/testing/01-find-business.md`: “**Setup**: …” → **pass**.
-- `docs/features/onboarding/technical-implementation.md`: “setup” → **fail**. Say **onboarding**.
+- `docs/features/onboarding/pipeline/testing/01-find-business.md`: “**Setup**:
+  …” → **pass**.
+- `docs/features/onboarding/technical-implementation.md`: “setup” → **fail**.
+  Say **onboarding**.

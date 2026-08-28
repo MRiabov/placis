@@ -1,11 +1,11 @@
 # Product
 
-Placis is a **done-for-you — delivered into your inbox, so you can DIY too** marketing and
-advertising service for construction companies. One loop: learn the business, apply a
-website template, edit the website, then make ads.
+Placis is a **done-for-you — delivered into your inbox, so you can DIY too**
+marketing and advertising service for construction companies. One loop: learn
+the business, apply a website template, edit the website, then make ads.
 
-Feature PRDs own the detail. This file is only the product-level loop, the boundary no feature
-owns, and pointers.
+Feature PRDs own the detail. This file is only the product-level loop, the
+boundary no feature owns, and pointers.
 
 ## The loop
 
@@ -16,14 +16,14 @@ onboard (from their Google Maps listing or company registry record)
   -> ads from the profile + approved photos
 ```
 
-Public Maps / Facebook pages keep feeding photos and reviews after website activation (same
-online research consent; not a second onboarding).
+Public Maps / Facebook pages keep feeding photos and reviews after website
+activation (same online research consent; not a second onboarding).
 
-Done-for-you + DIY: Placis can do business research, build, tweak, and suggest ads; the owner can
-do the website edits and ad creation themselves.
+Done-for-you + DIY: Placis can do business research, build, tweak, and suggest
+ads; the owner can do the website edits and ad creation themselves.
 
-Cross-cutting: Clerk identity (tenant == Clerk organization for **active** tenants), Postgres
-multitenancy, LLM + system auditability, and [voice](general-architecture/voice-agent.md) as a
+Cross-cutting: Clerk identity (tenant == Clerk organization for **active**
+tenants), Postgres multitenancy, LLM + system auditability, and [voice](general-architecture/voice-agent.md) as a
 channel into the same tools (not a separate product). How slices land:
 [development principles](development-principles.md).
 
@@ -34,7 +34,8 @@ channel into the same tools (not a separate product). How slices land:
 - [ETL](features/etl/README.md) — extract and transform; Monday / Wednesday / Friday refresh
 - [Website](features/website/prd.md) — website templates, website editor, website publication
 - [Website activation](features/onboarding/pipeline/08-website-activation.md) — pay-and-activate (Stripe)
-- [Ads](features/ads/ad-generation/prd.md) — ad generation; terminal Ad status is **ad ready to post** (no ad posting)
+- [Ads](features/ads/ad-generation/prd.md) — ad generation; terminal Ad status is **ad ready to post** (no ad
+  posting)
 - [Leads](features/other/leads/README.md) — website form contacts
 - [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
 - [Media library](features/other/media/README.md)
@@ -45,16 +46,18 @@ channel into the same tools (not a separate product). How slices land:
 
 ## Out of scope
 
-- **CRM / operations** — quotes, invoices, jobs, scheduling, crew, workflows, calendar, AI
-  receptionist. Website forms persist a minimal `leads` table for ad attribution and done-for-you
-  follow-up only.
-- **App-modification surface** — `tenant_app_configs`, `tenant_app_change_requests`, module
-  definitions, a “Modify App” flow, omission / declined-module machinery. Do not resurrect.
-- **Deprecated tenant/org management** — org chooser, selected-org cookie, `/me/orgs`,
-  `/me/tenants`, `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`, memberships
-  CRUD. See [auth](features/other/auth/README.md).
-- **Opaque freeform-JSON islands** — Don't say: `JsonRecord` / `JsonObjectPayload` wrappers. Typed structs;
-  `jsonb` is persistence-only. See [HTTP conventions](general-architecture/api.md).
+- **CRM / operations** — quotes, invoices, jobs, scheduling, crew, workflows,
+  calendar, AI receptionist. Website forms persist a minimal `leads` table for
+  ad attribution and done-for-you follow-up only.
+- **App-modification surface** — `tenant_app_configs`,
+  `tenant_app_change_requests`, module definitions, a “Modify App” flow,
+  omission / declined-module machinery. Do not resurrect.
+- **Deprecated tenant/org management** — org chooser, selected-org cookie,
+  `/me/orgs`, `/me/tenants`, `POST /v1/tenants`,
+  `PATCH /v1/tenants/{website_prefix}`, memberships CRUD. See [auth](features/other/auth/README.md).
+- **Opaque freeform-JSON islands** — Don't say: `JsonRecord` /
+  `JsonObjectPayload` wrappers. Typed structs; `jsonb` is persistence-only. See
+  [HTTP conventions](general-architecture/api.md).
 - **Blog posts and careers** — deferred; [website PRD non-goals](features/website/prd.md) and
   [website ADR #8](features/website/ADR.md).
 

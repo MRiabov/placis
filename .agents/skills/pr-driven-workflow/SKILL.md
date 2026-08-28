@@ -46,7 +46,8 @@ Before or alongside implementation, decide whether docs need to change.
 - Use `docs/migrations/` for investigations, bakeoffs, experiments, and proposed work that is not yet canonical architecture.
 - Keep docs, implementation pack names, branch names, and PR titles aligned when they are part of the same feature.
 - If code changes make existing docs inaccurate, update or explicitly mark the gap in the same PR.
-- Run `just docs-format` after substantive documentation changes when practical.
+- Pre-commit `rumdl-fmt` wraps first-party Markdown on commit; do not skip hooks. CI runs
+  `rumdl fmt --check` then `rumdl check`. Do not format `.agents/`.
 
 ## Schemas, Contracts, And Migrations
 

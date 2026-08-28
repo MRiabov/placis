@@ -1,13 +1,12 @@
 # CMS design tokens
 
-The CMS (sidebar + main area): `/cms` chooser, website editor, Details, Ads list. Not the
-contractor website look — that is [website styles](../../features/website/styles.md).
-[Design decision record](design-decision-record.md). Mock: [tokens.css](../../design/tokens.css)
-(`:root`). CMS, onboarding, and Ads look exports share this file. CMS wins when they
-disagree.
+The CMS (sidebar + main area): `/cms` chooser, website editor, Details, Ads
+list. Not the contractor website look — that is [website styles](../../features/website/styles.md).
+[Design decision record](design-decision-record.md). Mock: [tokens.css](../../design/tokens.css) (`:root`). CMS, onboarding, and Ads
+look exports share this file. CMS wins when they disagree.
 
-Clone placis-web `globals.css` (light) + `marketingSite.ts`. Do not invent a second palette.
-Do not restyle Ads creative surfaces from this file.
+Clone placis-web `globals.css` (light) + `marketingSite.ts`. Do not invent a
+second palette. Do not restyle Ads creative surfaces from this file.
 
 ## Type
 
@@ -57,7 +56,8 @@ Prompt / accordion title strip uses `--cms-surface-sunken`.
 
 ## Control recipes
 
-Fill comes from the tokens above. Do not paint `--secondary` on a control at rest.
+Fill comes from the tokens above. Do not paint `--secondary` on a control at
+rest.
 
 | Recipe | Rest | Hover / open | Stroke |
 | --- | --- | --- | --- |
@@ -65,10 +65,15 @@ Fill comes from the tokens above. Do not paint `--secondary` on a control at res
 | **Outline** (Change, Copy, Reject, `.button-secondary`) | `--background` | `--cms-surface-sunken` | `--border` |
 | **Flat prompt** (Connect, Paperclip, Voice) | `--background` | `--cms-surface-sunken` only while open or `(hover: hover)` | `--hairline` |
 
-Connect zinc-50 is the **open** fill (Google / Meta panel), not a stuck `:hover`. Hide Connect when Google Ads and Meta are both connected ([design decision record](design-decision-record.md) 5).
+Connect zinc-50 is the **open** fill (Google / Meta panel), not a stuck
+`:hover`. Hide Connect when Google Ads and Meta are both connected
+([design decision record](design-decision-record.md) 5).
 
 ## Not these
 
-- Contractor website presets ([website styles](../../features/website/styles.md)) — Radix scales on the live site, not The CMS.
-- `frontend-2` predecessor oklch `--secondary` and filled `bg-secondary` — out of scope until that port; this table wins.
-- A second CMS breakpoint — keep **1100px** ([design decision record](design-decision-record.md) 4). Prompt Paperclip / Voice hide under **640px** (`sm`), not a new product breakpoint.
+- Contractor website presets ([website styles](../../features/website/styles.md)) — Radix scales on the live site,
+  not The CMS.
+- `frontend-2` predecessor oklch `--secondary` and filled `bg-secondary` — out
+  of scope until that port; this table wins.
+- A second CMS breakpoint — keep **1100px** ([design decision record](design-decision-record.md) 4). Prompt
+  Paperclip / Voice hide under **640px** (`sm`), not a new product breakpoint.

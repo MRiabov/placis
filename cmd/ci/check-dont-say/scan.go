@@ -329,6 +329,24 @@ var extraAllowed = []string{
 	"headless chrome",
 }
 
+func inheritsDontSayContext(line string) bool {
+	trim := strings.TrimLeft(line, " \t")
+	if trim == "" || strings.HasPrefix(trim, "#") {
+		return false
+	}
+	if strings.HasPrefix(trim, "- ") || strings.HasPrefix(trim, "* ") || strings.HasPrefix(trim, "+ ") {
+		return false
+	}
+	i := 0
+	for i < len(trim) && trim[i] >= '0' && trim[i] <= '9' {
+		i++
+	}
+	if i > 0 && i+1 < len(trim) && trim[i] == '.' && trim[i+1] == ' ' {
+		return false
+	}
+	return true
+}
+
 func allowedOnLine(tok compiledToken, line string) bool {
 	lower := strings.ToLower(line)
 	if strings.Contains(lower, "never say") || strings.Contains(lower, "do not say") || strings.Contains(lower, "don't say") || strings.Contains(lower, "never \"") {
@@ -404,10 +422,19 @@ func scanFile(path string, compiled []compiledToken) ([]hit, error) {
 	if err != nil {
 		return nil, err
 	}
+	lines := strings.Split(string(data), "\n")
 	var hits []hit
-	for i, line := range strings.Split(string(data), "\n") {
+	for i, line := range lines {
+		prev, next := "", ""
+		if i > 0 {
+			prev = lines[i-1]
+		}
+		if i+1 < len(lines) {
+			next = lines[i+1]
+		}
+		window, mapSpan := coveringWindow(prev, line, next)
 		for _, tok := range compiled {
-			if !appliesTo(tok, path) || allowedOnLine(tok, line) {
+			if !appliesTo(tok, path) || allowedOnLine(tok, line) || (inheritsDontSayContext(line) && allowedOnLine(tok, prev)) {
 				continue
 			}
 			locs := tok.re.FindAllStringIndex(line, -1)
@@ -419,7 +446,8 @@ func scanFile(path string, compiled []compiledToken) ([]hit, error) {
 				if tok.class == classHome && inSlashPath(line, loc[0], loc[1]) {
 					continue
 				}
-				if coveredByAllowed(line, loc[0], loc[1], tok) {
+				wStart, wEnd, ok := mapSpan(loc[0], loc[1])
+				if ok && coveredByAllowed(window, wStart, wEnd, tok) {
 					continue
 				}
 				hitLine = true
@@ -431,4 +459,29 @@ func scanFile(path string, compiled []compiledToken) ([]hit, error) {
 		}
 	}
 	return hits, nil
+}
+
+// coveringWindow joins the previous, current, and next source lines with
+// single spaces (list/continuation indent stripped) so a covering Say split by
+// rumdl wrap still covers the Don't-say token.
+func coveringWindow(prev, line, next string) (string, func(start, end int) (int, int, bool)) {
+	lead := len(line) - len(strings.TrimLeft(line, " \t"))
+	var b strings.Builder
+	off := 0
+	if p := strings.TrimSpace(prev); p != "" {
+		b.WriteString(p)
+		b.WriteByte(' ')
+		off = b.Len()
+	}
+	b.WriteString(strings.TrimSpace(line))
+	if n := strings.TrimSpace(next); n != "" {
+		b.WriteByte(' ')
+		b.WriteString(n)
+	}
+	return b.String(), func(start, end int) (int, int, bool) {
+		if start < lead || end < lead {
+			return 0, 0, false
+		}
+		return off + (start - lead), off + (end - lead), true
+	}
 }

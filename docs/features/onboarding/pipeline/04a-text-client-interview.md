@@ -1,12 +1,14 @@
 # 04a — Text client interview
 
-Text writer into the same live business profile as 04b. Not a root mode file. Channel is XOR with 04b.
+Text writer into the same live business profile as 04b. Not a root mode file.
+Channel is XOR with 04b.
 
 ## Trigger
 
-Contractor is on `/onboarding/interview` with `onboarding_sessions.channel=text` (setting this
-unsets voice as the active writer). Autosave: `PUT .../text-interview/autosave`. Final:
-`POST .../text-interview/submissions` then `POST .../interview/complete`.
+Contractor is on `/onboarding/interview` with `onboarding_sessions.channel=text`
+(setting this unsets voice as the active writer). Autosave:
+`PUT .../text-interview/autosave`. Final: `POST .../text-interview/submissions`
+then `POST .../interview/complete`.
 
 ## Pre
 
@@ -17,9 +19,11 @@ unsets voice as the active writer). Autosave: `PUT .../text-interview/autosave`.
 ## Must not
 
 - Voice realtime connection, realtime tools, transcript replay.
-- Parallel / research jobs / photo classification (photo kinds are ETL transform).
+- Parallel / research jobs / photo classification (photo kinds are ETL
+  transform).
 - `POST` a new onboarding session on Resume.
-- Complete while required checklist rows are `empty` / `in_progress` / `conflict`.
+- Complete while required checklist rows are `empty` / `in_progress` /
+  `conflict`.
 - Run a second complete after 04b (exactly one complete → 05).
 - Repeat legal-identity fields (shown on 03).
 
@@ -27,31 +31,35 @@ unsets voice as the active writer). Autosave: `PUT .../text-interview/autosave`.
 
 1. Set `channel=text`. Switching to 04b later is allowed; do not complete twice.
 2. Autosave writes `business_profile_edits` for the fields this save set, plus
-   `client_interview_submissions` `kind=autosave` (interview-only: photo uploads, optional
-   source-from-internet / AI photo when there are not enough photos, reviews unavailable, extra
-   notes).
-3. Fields: who they are (display name, trade); contact (contact name, marketing phone, marketing
-   email, existing site URL, `emergency_phone`); services and service area (free-text services:
-   the LLM turns them into named services); opening hours; found photos in the media library
-   plus upload (source from the internet / AI photo only if there are not enough); certifications
-   (company registry pick locks that business-registry certification) / found reviews. Not
-   legal identity. Do not ask a photos-choice question.
-4. Final submission `kind=final`, then `POST .../interview/complete` iff the complete gate.
+   `client_interview_submissions` `kind=autosave` (interview-only: photo
+   uploads, optional source-from-internet / AI photo when there are not enough
+   photos, reviews unavailable, extra notes).
+3. Fields: who they are (display name, trade); contact (contact name, marketing
+   phone, marketing email, existing site URL, `emergency_phone`); services and
+   service area (free-text services: the LLM turns them into named services);
+   opening hours; found photos in the media library plus upload (source from the
+   internet / AI photo only if there are not enough); certifications (company
+   registry pick locks that business-registry certification) / found reviews.
+   Not legal identity. Do not ask a photos-choice question.
+4. Final submission `kind=final`, then `POST .../interview/complete` iff the
+   complete gate.
 5. Contractor may mark a required row `skipped` in this step, then complete.
 
 ## Persist
 
 `client_interview_submissions`; `business_profile_edits` via build-profile;
-`onboarding_sessions.channel=text`. Complete → `accepted_edit_id=last_edit_id`, status
-`applying_website_template`, enqueue 05.
+`onboarding_sessions.channel=text`. Complete → `accepted_edit_id=last_edit_id`,
+status `applying_website_template`, enqueue 05.
 
 ## Fail
 
-Autosave fail keeps the token. Complete rejected if the gate fails; stay `client_interviewing`.
+Autosave fail keeps the token. Complete rejected if the gate fails; stay
+`client_interviewing`.
 
 ## Out
 
-Gate pass → 05. 02 may still be running; later 02 writes are new edits after `accepted_edit_id`.
+Gate pass → 05. 02 may still be running; later 02 writes are new edits after
+`accepted_edit_id`.
 
 ## Invariants
 
