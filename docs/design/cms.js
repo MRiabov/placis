@@ -280,8 +280,24 @@ function setNavOpen(open) {
   });
 }
 
-function setNotify(on) {
-  document.getElementById("cmsNotification")?.classList.toggle("is-hidden", !on);
+function setNotify(on, kind) {
+  const note = document.getElementById("cmsNotification");
+  const text = note?.querySelector("p");
+  const secondary = document.getElementById("cmsNoticeSecondary");
+  const primary = document.getElementById("cmsNoticePrimary");
+  const mic = on && kind === "mic";
+  if (mic) {
+    if (text) text.textContent = "Allow microphone access in your browser to talk. You can keep typing.";
+    if (secondary) secondary.textContent = "Try again";
+    if (primary) primary.textContent = "Switch to text mode";
+    if (note) note.dataset.notice = "mic";
+  } else {
+    if (text) text.textContent = "Wrote a detail to Business details.";
+    if (secondary) secondary.textContent = "Revert";
+    if (primary) primary.textContent = "OK";
+    if (note) note.dataset.notice = "details";
+  }
+  note?.classList.toggle("is-hidden", !on);
   stripButton("notify")?.classList.toggle("on", on);
 }
 
@@ -474,7 +490,7 @@ function setAssistantExpanded(open = true) {
   editorCanvas.classList.toggle("is-assistant-collapsed", !expanded);
   const collapse = document.getElementById("assistantCollapse");
   if (collapse) {
-    const label = expanded ? "Reduce website assistant" : "Expand website assistant";
+    const label = expanded ? "Reduce assistant" : "Expand assistant";
     collapse.setAttribute("aria-label", label);
     collapse.title = label;
   }
@@ -484,7 +500,35 @@ function setAssistantExpanded(open = true) {
 
 let chatbotSticky = params.get("voice") === "0";
 const voiceOrbTokens = ["is-listening", "is-speaking", "is-tool"];
-let voiceOrbTimer = 0;
+const voiceOrbInk = "9,9,11";
+const voiceGreetingSrc = "cms-voice-greeting.mp3";
+let voiceOrbLive = false;
+let voiceDust = null;
+let voiceBounce = null;
+let voiceGreetingPlaying = false;
+
+function listenVoiceMic() {
+  if (!voiceOrbLive || !window.MockVoice) return;
+  window.MockVoice.listen({
+    onLevel: (rms) => {
+      if (!voiceOrbLive) return;
+      voiceDust?.setLevel(rms);
+      voiceBounce?.setLevel(rms);
+    },
+    onSpeaking: (on) => {
+      if (!voiceOrbLive) return;
+      if (on) applyVoiceOrbLook("is-speaking");
+      else if (!voiceGreetingPlaying) applyVoiceOrbLook("is-listening");
+    },
+    onDenied: () => {
+      if (!voiceOrbLive) return;
+      window.MockVoice.stop();
+      voiceGreetingPlaying = false;
+      applyVoiceOrbLook("is-listening");
+      setNotify(true, "mic");
+    },
+  });
+}
 
 function assistantComposerEl() {
   return document.getElementById("assistantComposer");
@@ -499,29 +543,79 @@ function websiteShowing() {
   return Boolean(view && !view.classList.contains("is-hidden"));
 }
 
-function stopVoiceOrb() {
-  if (voiceOrbTimer) {
-    clearInterval(voiceOrbTimer);
-    voiceOrbTimer = 0;
+function ensureVoiceDust() {
+  const canvas = document.getElementById("voiceOrbCanvas");
+  const host = document.getElementById("voiceOrb");
+  if (!canvas || !window.DustOrb) return;
+  if (!voiceDust) {
+    voiceDust = window.DustOrb.mount(canvas, {
+      state: "listening",
+      speaking: false,
+      inkColor: voiceOrbInk,
+    });
+    voiceBounce = window.DustOrb.bindBounce(host);
   }
+}
+
+function applyVoiceOrbLook(token) {
+  const host = document.getElementById("voiceOrb");
+  if (!host) return;
+  host.classList.remove(...voiceOrbTokens);
+  host.classList.add(token);
+  ensureVoiceDust();
+  switch (token) {
+    case "is-speaking":
+      voiceDust?.setState("listening");
+      voiceDust?.setSpeaking(true);
+      voiceBounce?.setSpeaking(true);
+      break;
+    case "is-tool":
+      voiceDust?.setState("building");
+      voiceDust?.setSpeaking(false);
+      voiceBounce?.setSpeaking(false);
+      break;
+    default:
+      voiceDust?.setState("listening");
+      voiceDust?.setSpeaking(false);
+      voiceBounce?.setSpeaking(false);
+      break;
+  }
+}
+
+function stopVoiceOrb() {
+  voiceOrbLive = false;
+  voiceGreetingPlaying = false;
+  window.MockVoice?.stop();
   const orb = document.getElementById("voiceOrb");
-  if (!orb) return;
-  orb.classList.remove(...voiceOrbTokens);
-  orb.classList.add("is-listening");
+  if (orb) {
+    orb.classList.remove(...voiceOrbTokens);
+    orb.classList.add("is-listening");
+  }
+  voiceDust?.destroy();
+  voiceBounce?.destroy();
+  voiceDust = null;
+  voiceBounce = null;
 }
 
 function startVoiceOrb() {
-  const orb = document.getElementById("voiceOrb");
-  if (!orb) return;
-  stopVoiceOrb();
-  let i = 0;
-  const tick = () => {
-    orb.classList.remove(...voiceOrbTokens);
-    orb.classList.add(voiceOrbTokens[i % voiceOrbTokens.length]);
-    i += 1;
-  };
-  tick();
-  voiceOrbTimer = setInterval(tick, 1800);
+  if (voiceOrbLive || !document.getElementById("voiceOrb")) return;
+  voiceOrbLive = true;
+  applyVoiceOrbLook("is-listening");
+  if (params.get("shot") === "1" || !window.MockVoice) return;
+  voiceGreetingPlaying = false;
+  window.MockVoice.play(voiceGreetingSrc, {
+    onStart: () => {
+      if (!voiceOrbLive) return;
+      voiceGreetingPlaying = true;
+      applyVoiceOrbLook("is-speaking");
+    },
+    onEnd: () => {
+      if (!voiceOrbLive) return;
+      voiceGreetingPlaying = false;
+      applyVoiceOrbLook("is-listening");
+    },
+  });
+  listenVoiceMic();
 }
 
 function setVoiceAgent(on) {
@@ -532,7 +626,7 @@ function setVoiceAgent(on) {
   overlay?.toggleAttribute("inert", on);
   overlay?.setAttribute("aria-hidden", on ? "true" : "false");
   if (on) {
-    if (!voiceOrbTimer) startVoiceOrb();
+    if (!voiceOrbLive) startVoiceOrb();
   } else {
     stopVoiceOrb();
   }
@@ -865,11 +959,14 @@ if (homePromptPh && !window.matchMedia("(prefers-reduced-motion: reduce)").match
   }, 3600);
 }
 
-document.getElementById("homePrompt").addEventListener("submit", (event) => {
+document.getElementById("homePrompt")?.querySelectorAll("[data-scene]")?.forEach((button) => {
+  button.addEventListener("click", () => {
+    const scene = button.dataset.scene;
+    if (scene) show(scene);
+  });
+});
+document.getElementById("homePrompt")?.addEventListener("submit", (event) => {
   event.preventDefault();
-  show("website");
-  setSidebarCollapsed(true);
-  setAssistantExpanded(preferAssistantExpanded());
 });
 document.querySelectorAll(".cms-media-tile").forEach((tile) => {
   tile.addEventListener("click", () => {
@@ -884,7 +981,16 @@ document.querySelectorAll(".cms-media-tile").forEach((tile) => {
 });
 
 document.getElementById("cmsNotification")?.addEventListener("click", (event) => {
-  if (event.target.closest("button")) setNotify(false);
+  const button = event.target.closest("button");
+  if (!button) return;
+  const mic = document.getElementById("cmsNotification")?.dataset.notice === "mic";
+  if (mic && button.id === "cmsNoticeSecondary") {
+    setNotify(false);
+    listenVoiceMic();
+    return;
+  }
+  if (mic && button.id === "cmsNoticePrimary") restoreChatbot();
+  setNotify(false);
 });
 document.getElementById("viewtabsCollapse")?.addEventListener("click", () => setViewtabsCollapsed(true));
 document.getElementById("viewtabsOpen")?.addEventListener("click", () => setViewtabsCollapsed(false));
@@ -962,7 +1068,7 @@ const mediaCaptions = [
   "Ridge line after wind",
   "Valley flashing",
   "Logo on the van",
-  "Fascia upgrade",
+  "Fascia job",
 ];
 const mediaLibraryItems = Array.from({ length: 24 }, (_, index) => ({
   src: mediaPhotos[index % mediaPhotos.length],
