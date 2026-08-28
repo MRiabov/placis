@@ -23,12 +23,15 @@ inventing it.
    not a top-level peer of Sites. Collapsed Profile still goes to Business
    details. (2026-08-26) No **AI tools** left-nav item. Image cleanup is
    `/cms/media` (large view of the selected photo, prompt box beside or under
-   it, dense mixed-ratio thumbs — not huge square cards). The assistant stays
-   the canvas overlay (a later cut may drop that overlay; this item still does
-   not come back). (2026-08-26) On **narrow**, this left rail is gone: a
-   full-screen overlay selector (see 4). Collapsed icon rail, hover peek, and
-   click-to-pin are **wide only**. (2026-08-27) Website editor canvas /
-   workspace quiet-default: [website design decision 1](../../features/website/design-decision-record.md).
+   it, dense mixed-ratio thumbs — not huge square cards). (2026-08-28) Cleanup
+   waits 5–10 seconds on that view (**Cleaning up…**, scan, filling bar) before
+   the before/after sweep; `?cleanup=1` and Dev **Cleanup compare** skip the
+   wait. The website assistant stays the canvas overlay (a later cut may drop
+   that overlay; this item still does not come back). (2026-08-26) On
+   **narrow**, this left rail is gone: a full-screen overlay selector (see 4).
+   Collapsed icon rail, hover peek, and click-to-pin are **wide only**.
+   (2026-08-27) Website editor canvas / workspace quiet-default:
+   [website design decision 1](../../features/website/design-decision-record.md).
 
 2. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
    [cms.html](../../design/cms.html) (copy-out blocked, Ask first pending, pages, publication, and so
@@ -36,7 +39,10 @@ inventing it.
    (2026-08-26; moved from website design decision 7, 2026-08-27) Always
    collapsible to a **circle in the top right**; tap to reopen. Default
    **collapsed** (desktop and mobile). `?dev=1` opens it; `?shot=1` hides it.
-   (2026-08-26; default collapsed everywhere 2026-08-27)
+   (2026-08-26; default collapsed everywhere 2026-08-27) (2026-08-28) Ads
+   destination states: **My ads** / **New ad** / **Review**. That destination
+   embeds [ads.html](../../design/ads.html) (`?embed=1`); standalone `ads.html` keeps the same
+   collapsible strip as onboarding.
 
 3. **The CMS is viewport-locked, not a scrolling document** — The window never
    scrolls. The CMS fills the viewport like a PWA: The CMS stays put, overflow
@@ -65,6 +71,12 @@ inventing it.
    (2026-08-27) Website editor canvas widths, workspace bottom bar, assistant
    default, Mobile default: [website design decision 16](../../features/website/design-decision-record.md). (2026-08-27): Overlay
    rows drop New chat. Product overlay is Sites, Profile children, Ads.
+   (2026-08-28): Overlay keeps the nested Profile object. Profile is a
+   disclosure on narrow too (Sites / Profile / Ads); Business details, Projects,
+   Certifications and reviews, and Media library stay children, not overlay
+   peers. Tapping Profile on the overlay expands or collapses the group.
+   (2026-08-28) On narrow, Ads heading is **Ads**, inline with Open
+   destinations. The list does not repeat **Your ads**.
 
 5. **The CMS (sidebar + main area) clones the placis-web dashboard theme** —
    Satoshi, body tracking `-0.01em`, light weights (`400` / `450` / `500` /
@@ -94,7 +106,11 @@ inventing it.
    look-export HTML for later restore. Hide Paperclip, Start client interview,
    subscription-shelf copy. Overlay rows drop New chat. Connect stays.
    (2026-08-28): Voice on `/cms` is gone. Overlay look:
-   [assistant design decision record](../../features/assistant/design-decision-record.md).
+   [assistant design decision record](../../features/assistant/design-decision-record.md). `/cms` cards clone the prompt-box look
+   (hairline, prompt radius) with a readable lift of the prompt shade, and carry
+   destination logos (Sites globe, Ads megaphone). Google / Meta connect lives
+   on Ads too. The two cards sit in one row on a wide screen and stack on a
+   narrow screen so the titles stay one line.
 
 6. **Owner field controls share one look** — Input, textarea, and select in The
    CMS, onboarding, and Ads use `.cms-field-control` (look export:

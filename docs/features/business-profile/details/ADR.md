@@ -88,6 +88,8 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    them with an LLM in the wait. (2026-08-28) Onboarding Details == Business
    details: same fields, same controls, same writes; do not keep a parallel
    onboarding widget for a Details field. (2026-08-28)
+   Service areas are an addable list (`business_profile_service_areas`), not one
+   field.
 
 9. **Notification Revert undoes that profile-history increment** — One governed
    tool, `update_details` ([api.md](api.md)). Website assistant, Ads generator, and

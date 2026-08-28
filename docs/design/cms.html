@@ -18,13 +18,16 @@
   Force chatbot with ?voice=0.
   `/cms` two cards. Connect: ?connected=1 hides Connect.
   Narrow (≤1100px): full-screen overlay selector; Open destinations is inline with the heading.
+  Ads on narrow: Open destinations + Ads; the iframe list does not repeat Your ads.
   Home is two cards (website + ads) plus Connect. Prompt box, New chat, Paperclip,
   and the old interview start stay out of this look — restore from git if needed.
   Canvas is a fake homepage, not the contractor website renderer.
-  Ads look export: docs/design/ads.html.
+  Ads look export: docs/design/ads.html (embedded as the Ads destination).
   Usage / billing stub: ?scene=billing (no billing.html).
   Onboarding look export: docs/design/onboarding.html.
   After website activation: ?scene=website&publication=1&from=activation (Publish open, no blockers).
+  Media cleanup waits ~7.5s on the large view, then the before/after sweep.
+  Skip the wait with ?cleanup=1 or Dev Cleanup compare.
 -->
 <link rel="stylesheet" href="cms.css" />
 </head>
@@ -36,7 +39,12 @@
     <button type="button" class="viewtabs-collapse" id="viewtabsCollapse" aria-label="Hide developer states" title="Hide developer states">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
     </button>
-    <span class="viewtabs-empty is-hidden" data-state-for="ads">Sidebar is the nav. Open a screen for states.</span>
+    <div class="viewtabs-states is-hidden" data-state-for="ads">
+      <span class="viewtabs-group">Ads</span>
+      <button type="button" class="viewtab on" data-state="ads-list" data-ads-view="list">My ads</button>
+      <button type="button" class="viewtab" data-state="ads-flow" data-ads-view="flow">New ad</button>
+      <button type="button" class="viewtab" data-state="ads-review" data-ads-view="review">Review</button>
+    </div>
     <span class="viewtabs-empty is-hidden" data-state-for="billing">Stub usage scene. Billing docs will be rewritten completely.</span>
     <div class="viewtabs-states is-hidden" data-state-for="home">
       <span class="viewtabs-group">Home</span>
@@ -106,16 +114,18 @@
             <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
             <span class="js-expanded-only">Sites</span>
           </button>
-          <button class="cms-dashboard-nav-disclosure js-wide-disclosure" id="profileToggle" type="button" aria-expanded="false" aria-label="Business details">
-            <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-            <span class="js-expanded-only">Profile</span>
-            <svg class="nav-chevron js-expanded-only" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
-          </button>
-          <div class="cms-dashboard-nav-children js-expanded-only is-hidden" id="profileChildren">
-            <button class="cms-dashboard-nav-item" data-nav="details" data-scene="details" type="button">Business details</button>
-            <button class="cms-dashboard-nav-item" data-nav="projects" data-scene="projects" type="button">Projects</button>
-            <button class="cms-dashboard-nav-item" data-nav="certifications" data-scene="certifications" type="button">Certifications and reviews</button>
-            <button class="cms-dashboard-nav-item" data-nav="media" data-scene="media" type="button">Media library</button>
+          <div class="cms-dashboard-nav-group" data-nav-group="profile">
+            <button class="cms-dashboard-nav-disclosure" id="profileToggle" type="button" aria-expanded="false" aria-controls="profileChildren" aria-label="Profile">
+              <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+              <span class="js-expanded-only">Profile</span>
+              <svg class="nav-chevron js-expanded-only" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="cms-dashboard-nav-children js-expanded-only is-hidden" id="profileChildren">
+              <button class="cms-dashboard-nav-item" data-nav="details" data-scene="details" type="button">Business details</button>
+              <button class="cms-dashboard-nav-item" data-nav="projects" data-scene="projects" type="button">Projects</button>
+              <button class="cms-dashboard-nav-item" data-nav="certifications" data-scene="certifications" type="button">Certifications and reviews</button>
+              <button class="cms-dashboard-nav-item" data-nav="media" data-scene="media" type="button">Media library</button>
+            </div>
           </div>
           <button class="cms-dashboard-nav-item" data-nav="ads" data-scene="ads" type="button" aria-label="Ads">
             <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M4 8h10l6-4v16l-6-4H4z"/></svg>
@@ -158,12 +168,22 @@
           <h1 class="cms-dashboard-wordmark">placis</h1>
           <div class="cms-home-chooser">
             <button class="cms-home-card" data-scene="website" type="button">
-              <b>Do my website…</b>
-              <span>Have Placis do your website</span>
+              <span class="cms-home-card-logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+              </span>
+              <span class="cms-home-card-copy">
+                <b>Do my website…</b>
+                <span>Have Placis do your website</span>
+              </span>
             </button>
             <button class="cms-home-card" data-scene="ads" type="button">
-              <b>Run my ads</b>
-              <span>Have Placis run your ads</span>
+              <span class="cms-home-card-logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 8h10l6-4v16l-6-4H4z"/></svg>
+              </span>
+              <span class="cms-home-card-copy">
+                <b>Run my ads</b>
+                <span>Have Placis run your ads</span>
+              </span>
             </button>
           </div>
           <div class="cms-dashboard-prompt-stack">
@@ -376,20 +396,20 @@
                       <span class="cms-field-label">Accent</span>
                       <input class="cms-color-swatch" id="styleAccent" type="color" value="#c4a574" />
                     </label>
-                    <label class="cms-field-label" for="styleRadius">Radius</label>
-                    <select class="cms-field-control" id="styleRadius" style="margin-top:6px">
-                      <option value="none">none</option>
-                      <option value="xs">xs</option>
-                      <option value="sm">sm</option>
-                      <option value="md">md</option>
-                      <option value="lg" selected>lg</option>
-                    </select>
-                    <label class="cms-field-label" for="styleDensity">Density</label>
-                    <select class="cms-field-control" id="styleDensity" style="margin-top:6px">
-                      <option>Compact</option>
-                      <option selected>Comfortable</option>
-                      <option>Spacious</option>
-                    </select>
+                    <span class="cms-field-label" id="styleRadiusLabel">Radius</span>
+                    <div class="cms-radius-picker" id="styleRadius" role="radiogroup" aria-labelledby="styleRadiusLabel">
+                      <button class="cms-radius-option" type="button" role="radio" aria-checked="false" data-radius="none"><span class="cms-radius-swatch" aria-hidden="true"></span>none</button>
+                      <button class="cms-radius-option" type="button" role="radio" aria-checked="false" data-radius="xs"><span class="cms-radius-swatch" aria-hidden="true"></span>xs</button>
+                      <button class="cms-radius-option" type="button" role="radio" aria-checked="false" data-radius="sm"><span class="cms-radius-swatch" aria-hidden="true"></span>sm</button>
+                      <button class="cms-radius-option" type="button" role="radio" aria-checked="false" data-radius="md"><span class="cms-radius-swatch" aria-hidden="true"></span>md</button>
+                      <button class="cms-radius-option" type="button" role="radio" aria-checked="true" data-radius="lg"><span class="cms-radius-swatch" aria-hidden="true"></span>lg</button>
+                    </div>
+                    <span class="cms-field-label" id="styleDensityLabel">Density</span>
+                    <div class="cms-density-picker" id="styleDensity" role="radiogroup" aria-labelledby="styleDensityLabel">
+                      <button class="cms-density-option" type="button" role="radio" aria-checked="false" data-density="compact"><span class="cms-density-swatch" aria-hidden="true"><span></span><span></span><span></span></span>Compact</button>
+                      <button class="cms-density-option" type="button" role="radio" aria-checked="true" data-density="comfortable"><span class="cms-density-swatch" aria-hidden="true"><span></span><span></span><span></span></span>Comfortable</button>
+                      <button class="cms-density-option" type="button" role="radio" aria-checked="false" data-density="spacious"><span class="cms-density-swatch" aria-hidden="true"><span></span><span></span><span></span></span>Spacious</button>
+                    </div>
                     <span class="cms-field-label" style="margin-top:10px">Logo</span>
                     <div class="cms-logo-picker">
                       <div class="cms-media-tile"></div>
@@ -468,10 +488,10 @@
                       <div class="cms-media-tile cms-content-image-current" id="contentImageCurrent" style="background-image:url('media/hero-roof.jpg')"></div>
                       <div class="cms-content-image-picker">
                         <div class="cms-media-grid">
-                          <button class="cms-media-tile is-selected" type="button" data-src="media/hero-roof.jpg" style="background-image:url('media/hero-roof.jpg')" aria-label="Job photo 1"></button>
-                          <button class="cms-media-tile" type="button" data-src="media/job-repair.jpg" style="background-image:url('media/job-repair.jpg')" aria-label="Job photo 2"></button>
-                          <button class="cms-media-tile" type="button" data-src="media/job-new-roof.jpg" style="background-image:url('media/job-new-roof.jpg')" aria-label="Job photo 3"></button>
-                          <button class="cms-media-tile" type="button" data-src="media/job-gutter.jpg" style="background-image:url('media/job-gutter.jpg')" aria-label="Job photo 4"></button>
+                          <button class="cms-media-tile is-selected" type="button" data-src="media/hero-roof.jpg" style="background-image:url('media/hero-roof.jpg')" aria-label="Rear slope after the storm"></button>
+                          <button class="cms-media-tile" type="button" data-src="media/job-repair.jpg" style="background-image:url('media/job-repair.jpg')" aria-label="Slate repair on a terrace"></button>
+                          <button class="cms-media-tile" type="button" data-src="media/job-new-roof.jpg" style="background-image:url('media/job-new-roof.jpg')" aria-label="New roof on a semi"></button>
+                          <button class="cms-media-tile" type="button" data-src="media/job-gutter.jpg" style="background-image:url('media/job-gutter.jpg')" aria-label="Guttering on the front"></button>
                         </div>
                         <div class="cms-upload">Drop files here to upload to the media library</div>
                         <p class="cms-panel-hint">Pending-review AI image — publishing still needs approved media.</p>
@@ -872,15 +892,15 @@
             </div>
             <div class="cms-project-grid">
               <article class="cms-project-card">
-                <div class="cms-project-photo"></div>
+                <div class="cms-project-photo" style="background-image:url('media/job-repair.jpg')"></div>
                 <div class="pad">
                   <h3>Storm repair, Malahide</h3>
                   <p>Replaced the rear slope after wind damage.</p>
                   <button class="cms-small-button" type="button" style="margin-top:8px">Cover from the media library</button>
                 </div>
               </article>
-              <article class="cms-project-card"><div class="cms-project-photo"></div><div class="pad"><h3>Full re-roof, Swords</h3><p>New slate, valleys, and ridge.</p></div></article>
-              <article class="cms-project-card"><div class="cms-project-photo"></div><div class="pad"><h3>Guttering, Howth</h3><p>Fascia, soffit, and gutter replacement.</p></div></article>
+              <article class="cms-project-card"><div class="cms-project-photo" style="background-image:url('media/job-crew.jpg')"></div><div class="pad"><h3>Full re-roof, Swords</h3><p>New slate, valleys, and ridge.</p></div></article>
+              <article class="cms-project-card"><div class="cms-project-photo" style="background-image:url('media/job-gutter.jpg')"></div><div class="pad"><h3>Guttering, Howth</h3><p>Fascia, soffit, and gutter replacement.</p></div></article>
             </div>
           </div>
         </section>
@@ -1047,6 +1067,11 @@
                   <span class="cms-media-sweep-label is-before">before</span>
                   <span class="cms-media-sweep-label is-after">after</span>
                 </div>
+                <div class="cms-media-wait is-hidden" id="mediaCleanupWait" role="status" aria-live="polite">
+                  <span class="cms-media-wait-scan" aria-hidden="true"></span>
+                  <span class="cms-media-wait-copy">Cleaning up…</span>
+                  <span class="cms-media-wait-bar" aria-hidden="true"><span class="cms-media-wait-fill"></span></span>
+                </div>
               </div>
               <form class="cms-media-prompt" id="mediaCleanupForm">
                 <div class="cms-media-framing" id="mediaFraming">
@@ -1068,30 +1093,16 @@
           </div>
         </section>
 
-        <section class="cms-ads-list is-hidden" data-view="ads">
-          <div class="cms-page-heading">
-            <button class="cms-nav-open" type="button" aria-label="Open destinations">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
-            </button>
-            <h1>Ads</h1>
-            <span style="flex:1"></span>
-            <button class="button-primary" type="button">+ New ad</button>
-          </div>
-          <p class="note">Ads sit in The CMS beside the website editor. The detailed Ads mock is <a href="ads.html">ads.html</a>.</p>
-          <div class="cms-adcard">
-            <div class="cms-adcard-art"></div>
-            <div>
-              <b>Gutter cleaning — summer</b>
-              <p class="note" style="margin:6px 0 0">Creative ready · Roofing</p>
+        <section class="cms-ads-embed is-hidden" data-view="ads">
+          <div class="cms-ads-embed-bar">
+            <div class="cms-page-heading">
+              <button class="cms-nav-open" type="button" aria-label="Open destinations">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+              </button>
+              <h1>Ads</h1>
             </div>
           </div>
-          <div class="cms-adcard">
-            <div class="cms-adcard-art"></div>
-            <div>
-              <b>Storm repairs</b>
-              <p class="note" style="margin:6px 0 0">Ad draft · Roofing</p>
-            </div>
-          </div>
+          <iframe class="cms-ads-frame" id="adsFrame" title="Ads"></iframe>
         </section>
         <section class="cms-ads-list is-hidden" data-view="billing">
           <div class="cms-page-heading">

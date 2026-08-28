@@ -1,6 +1,25 @@
 /* Mock-only scene wiring for ads.html. Not product UI.
    Combobox and yellow strip: details-fields.js (loaded first). */
 
+const params = new URLSearchParams(location.search);
+const embedded = params.get("embed") === "1" || window.parent !== window;
+document.documentElement.classList.toggle("is-embed", embedded);
+if (params.has("shot")) document.body.classList.add("is-shot");
+
+function preferViewtabsCollapsed() {
+  if (params.has("dev")) return false;
+  return true;
+}
+
+function setViewtabsCollapsed(collapsed) {
+  document.getElementById("viewtabs")?.classList.toggle("is-hidden", collapsed);
+  document.getElementById("viewtabsOpen")?.classList.toggle("is-hidden", !collapsed);
+}
+
+document.getElementById("viewtabsCollapse")?.addEventListener("click", () => setViewtabsCollapsed(true));
+document.getElementById("viewtabsOpen")?.addEventListener("click", () => setViewtabsCollapsed(false));
+setViewtabsCollapsed(preferViewtabsCollapsed());
+
   // view switcher: list of existing ads vs the new/edit ad flow vs ad detail
   const viewList = document.getElementById("viewList");
   const viewFlow = document.getElementById("viewFlow");
@@ -12,6 +31,9 @@
     viewList.classList.toggle("placeholder", v !== "list");
     viewFlow.classList.toggle("placeholder", !onFlow);
     viewDetail.classList.toggle("placeholder", v !== "detail");
+    if (embedded && window.parent !== window) {
+      window.parent.postMessage({ type: "ads-view", view: v }, "*");
+    }
     if (v === "review") {
       unlockReview();
       window.scrollTo({ top: 0 });
@@ -39,6 +61,12 @@
   const nameSizer = document.querySelector(".inplace-sizer");
   const fitName = () => { nameSizer.textContent = nameInput.value || " "; };
   nameInput.addEventListener("input", fitName);
+  nameInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      nameInput.blur();
+    }
+  });
   fitName();
 
   // gallery: one-image ads show the photo only — Edit is how you change it
@@ -171,6 +199,14 @@
       if (otherOrb) otherOrb.setAttribute("aria-expanded", "false");
     });
   }
+  document.addEventListener("pointerdown", (event) => {
+    if (!document.querySelector(".ai-prompt.open")) return;
+    const node = event.target;
+    if (!(node instanceof Node)) return;
+    if (node.closest(".ai-prompt.open")) return;
+    if (node.closest('.cms-ai-orb[aria-expanded="true"]')) return;
+    closeAiPrompts();
+  });
   document.querySelectorAll(".cms-ai-orb").forEach(orb => {
     const prompt = document.getElementById(orb.getAttribute("aria-controls"));
     const ta = prompt.querySelector("textarea");
@@ -187,7 +223,7 @@
     });
     go.addEventListener("click", () => {
       if (!ta.value.trim()) return;
-      const fieldId = { "prompt-headline": copyHeadline, "prompt-text": copyText, "prompt-short": copyShort }[prompt.id];
+      const fieldId = { "prompt-headline": copyHeadline, "prompt-text": copyText }[prompt.id];
       if (fieldId) pushCopyUndo(fieldId);
       if (prompt.id === "prompt-cleanup") restoreCleanupCompare();
       prompt.classList.remove("open");
@@ -196,7 +232,7 @@
       syncGo();
     });
   });
-  [copyHeadline, copyText, copyShort].forEach(field => {
+  [copyHeadline, copyText].forEach(field => {
     field.addEventListener("mouseup", () => {
       const start = field.selectionStart;
       const end = field.selectionEnd;
@@ -368,7 +404,6 @@
   });
   document.getElementById("noticeOk").addEventListener("click", () => { cmsNotice.hidden = true; });
   document.getElementById("noticeRevert").addEventListener("click", () => { cmsNotice.hidden = true; });
-  const params = new URLSearchParams(location.search);
   const scene = params.get("scene") || (location.hash || "#list").slice(1) || "list";
   if (params.has("shot")) {
     const headlinePrompt = document.getElementById("prompt-headline");
@@ -383,4 +418,8 @@
   else if (scene === "flow") show("flow");
   if (scene === "detail") show("detail");
   if (scene === "compact") { show("list"); adcards.classList.add("compact"); compactBtn.textContent = "Show large"; }
+  window.addEventListener("message", (event) => {
+    if (!embedded) return;
+    if (event.data?.type === "cms-ads-view" && event.data.view) show(event.data.view);
+  });
   window.__SCREENSHOT_READY = true;

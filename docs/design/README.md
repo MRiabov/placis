@@ -52,9 +52,12 @@ sticky at the bottom. After pay, the mock opens [cms.html](cms.html)
 
 ## Ads
 
-- [ads.html](ads.html) — markup
+- [ads.html](ads.html) — markup (also the Ads destination inside [cms.html](cms.html))
 - [ads.css](ads.css) — look
 - [ads.js](ads.js) — mock-only scene wiring (not product UI)
+
+Open `cms.html?scene=ads` to see Ads in the CMS. `ads.html` stays a
+standalone file so it can be embedded (`?embed=1`) or opened on its own.
 
 Look notes: [ad generation frontend](../features/ads/ad-generation/frontend.md). Tokens: [tokens.css](tokens.css). Owner field
 controls: [details-fields.css](details-fields.css) ([CMS design decision](../general-architecture/cms/design-decision-record.md) 6). Facebook/Instagram

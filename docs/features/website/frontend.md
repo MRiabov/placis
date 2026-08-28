@@ -122,7 +122,10 @@ emit `{{logo_url}}` only from that file — not a hotlink and not a
 `website_settings` URL. Owner-facing density labels are Compact, Comfortable,
 Spacious (API stays `compact` / `comfortable` / `spacious`). Primary, Neutral,
 and Accent are color pickers (the color chip). Hex is not on the field; it is
-only inside the picker.
+only inside the picker. Radius is a corner selector (`none` / `xs` / `sm` /
+`md` / `lg`): each option shows that corner. It is not a text dropdown. Density
+is a spacing selector (Compact / Comfortable / Spacious): each option shows that
+spacing. It is not a text dropdown.
 
 **Publish** is a toolbar **dropdown**, not one toolbar button and not Save.
 Specs still call the act **website publication**. There is no **Home** back

@@ -21,6 +21,9 @@ decision + date) instead of silently replacing the old entry.
    (2026-08-26): **Media library** (`/cms/media`) is a fourth Profile child. It
    is not a top-level peer of Sites. Crop / focal / cleanup stay on that screen;
    attach/pick from Content is unchanged.
+   (2026-08-28): The nested Profile object is the same on the narrow overlay.
+   Look-export HTML wraps Profile around its children; overlay CSS must not
+   flatten those children into Sites/Ads peers.
 
 2. **New chat is `/cms`** — Connect links Google Ads and Meta ad accounts (hide
    when both are connected). Voice is desktop-only and opens a full-screen orb
@@ -33,4 +36,6 @@ decision + date) instead of silently replacing the old entry.
    **Run my ads** (`/cms/ads`). After they pick, the rail is Sites / Profile /
    Ads. Hide New chat nav, Paperclip, Start client interview, Upgrade shelf,
    Settings, Log out; keep the mock HTML. Connect stays. No first-turn assistant
-   POST. Name under the photo is the Clerk human name.
+   POST. Name under the photo is the Clerk human name. (2026-08-28): Connect
+   does not stay on `/cms`. Cards have destination logos and the prompt-box
+   shade. Google Ads / Meta connect lives on Ads.
