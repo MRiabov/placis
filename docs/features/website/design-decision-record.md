@@ -1,7 +1,7 @@
 # Website design decision record
 
 Look and interaction for The CMS website editor. Architecture stays in [ADR.md](ADR.md).
-Screens: [frontend.md](frontend.md). Tokens: [CMS design.md](../../general-architecture/cms/design.md). CMS nav / New chat / theme:
+Screens: [frontend.md](frontend.md). Tokens: [CMS design.md](../../general-architecture/cms/design.md). CMS nav / `/cms` / theme:
 [CMS design decision record](../../general-architecture/cms/design-decision-record.md). Mock:
 [cms.html](../../design/cms.html).
 
@@ -42,16 +42,18 @@ numbers are HTML comments so later entries keep their numbers.
    canvas edges. (2026-08-26) Composer submit is **Plan** only while the Plan
    switch is on. Plan off (continuous) is **Send**. (2026-08-26) Activity lines
    have a kind icon: **pencil** for writes (`Updated heading on Hero`),
-   **lightbulb** for thinking. There is no search/grep tool on the website
-   assistant; do not use a search icon on write lines. (2026-08-26) Default
-   height: **desktop** is the single-line composer (thread reduced). **Mobile**
+   **lightbulb** for thinking. There is no search/grep tool on the assistant; do
+   not use a search icon on write lines. (2026-08-26) Default height:
+   **desktop** is the single-line composer (thread reduced). **Mobile**
    (≤1100px) is the expanded overlay — that height works there. Chevron still
    expands or reduces. `?assistant=expanded` / `collapsed` still forces a shot.
    (2026-08-26) **Narrow default is collapsed** (canvas first), same idea as
    desktop. Expanded is still available. `?assistant=` still forces a shot.
-   (2026-08-27) Reduced composer is **max-width 40rem**, centered in the canvas
-   (sides of the website stay clickable). Expand (chevrons) grows it to the 12px
-   canvas inset — **180ms**, same ease as other CMS motion. Idle / unfocused is
+   (2026-08-27) Product term is **Assistant**. Overlay look for every CMS
+   assistant screen: [assistant design decision record](../assistant/design-decision-record.md). (2026-08-28) Reduced
+   composer is **max-width 40rem**, centered in the canvas (sides of the website
+   stay clickable). Expand (chevrons) grows it to the 12px canvas inset —
+   **180ms**, same ease as other CMS motion. Idle / unfocused is
    **40% opacity**; hover or focus-within is fully opaque.
    **Apply / Reject pills never fade.** (2026-08-26)
    **Desktop collapsed is one row:** chevrons, field, **Plan mode**,
@@ -110,7 +112,8 @@ numbers are HTML comments so later entries keep their numbers.
    (the browser UI stays). The website assistant thread also scrolls.
    (2026-08-26) Scroll room at the bottom of the website clears the website
    assistant overlay and Apply / Reject, so the last website sections can sit
-   above them. (2026-08-27)
+   above them. That extra room is the canvas cell background, not a white pad.
+   (2026-08-27)
 
 9. **Website versions: Preview on live, rollback on earlier** — The live website
    version has **Preview** (opens the live website). It does not say Continue
@@ -208,27 +211,35 @@ numbers are HTML comments so later entries keep their numbers.
 
 <!-- placeholder - insert design decision 17 here -->
 
-18. **Website editor voice agent is an orb, not a full-screen takeover** — Empty
-    composer turns the **voice agent** on (`/cms/website` only). The chatbot
-    overlay is hidden so the website stays viewable. A soft orb
-    (`min(5.5rem, 30vw)`) sits bottom-right. A glow falls off from the center
-    with no hard edge. Clicks pass through except Restore chatbot and close.
-    Restore chatbot is an **opaque pill** under Apply / Reject (same left stack,
-    not frosted into the orb). The orb is a **circle on the right** spanning
-    both rows (right-aligned; not one row). A small close on the top-right of
-    the orb also restores. Restoring is sticky while the field stays empty until
-    they hit **Voice** again. In chatbot mode, empty field shows **Voice** (not
-    Plan / Send); any text is chatbot with Plan / Send. Apply / Reject sit in
-    that left stack when the voice agent is on. Over the chatbot they stay
-    centered above the overlay. Switching to the voice agent and back is a fade,
-    not a cut. The voice agent speaks back and uses the same tools (plan vs
-    continuous, Ask first). **Follow** (`follow`) is a third assistant config,
-    default **off**, not owner-turnable (no overlay switch; `true` is refused).
-    Reserved for a later cut that snaps the canvas to the website slot being
-    edited. (2026-08-27) On narrow the orb sits at the **bottom of the canvas**
-    (just above the workspace rail), not above the hidden collapsed overlay.
-    Overlay height does not lift Apply / Reject / Restore chatbot while the
-    voice agent is on. (2026-08-27)
+18. **Website editor voice agent is DustOrb, not a full-screen takeover** —
+    Empty composer turns the **voice agent** on. Geometry: orb
+    `min(5.5rem, 30vw)` bottom-right of the canvas. Clicks pass through except
+    Restore chatbot and close. Restore chatbot is an **opaque pill** under Apply
+    / Reject. Look is DustOrb (particle orb), not a soft glowing CSS circle —
+    that HTML was a stand-in. Dispatcher: [assistant](../assistant/README.md). **Follow** is default
+    **on**; the owner cannot turn it off; canvas snaps to the website slot the
+    **agent** is editing. (2026-08-27: glow mock + Follow off. 2026-08-28:
+    DustOrb; Follow on. Same day, later: [cms.html](../../design/cms.html) uses [dust-orb.js](../../design/dust-orb.js); bounce
+    on hover/tap and while speaking. Same day, later: scale matches placis-web
+    OrbDemo (`hover:scale-[1.03]`, speaking `scale-110`, 500ms); dust recycles
+    from the centre and the cursor pulls it. Same day, later: Voice asks for the
+    microphone and bounces from owner noise level. Same day, later: mock
+    greeting [cms-voice-greeting.mp3](../../design/cms-voice-greeting.mp3) when the orb comes on. Same day, later:
+    ≤480px orb **50vw** (`min(50vw, 50dvh)`); wider **30vw**
+    (`min(30vw, 24rem)`), not `min(5.5rem, 30vw)`. Same day, later: wider is
+    `min(5.5rem, 30vw)` again; ≤480px stays **50vw**. Apply / Reject over
+    Restore chatbot stay a compact cluster; the cluster does not stretch across
+    the canvas. Same day, later: desktop / tablet click target is a
+    **2.75rem circle**; particle wrap stays `min(5.5rem, 30vw)`; clicks outside
+    the circle pass through. Close and Restore chatbot still capture. ≤480px hit
+    is `min(12rem, 42vw)`. Same day, later: denied microphone restores the
+    chatbot and the shared **notification**; **Try again** and
+    **Switch to text mode** (not Revert / OK). Same day, later: the prerecorded
+    greeting plays on the first Voice start; starting Voice again more than
+    **5 seconds** after that greeting began does not replay it. Same day, later:
+    the realtime connection is created only after the microphone is granted.) On
+    narrow the orb sits at the **bottom of the canvas** (just above the
+    workspace rail). (2026-08-27)
 
 19. **Connect website address shows copyable Host and Value** — DNS rows are not
     compact version cards. Each record is type, **Host**, and **Value** as

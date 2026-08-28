@@ -5,14 +5,14 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: url("fonts/Satoshi-Variable.woff2") format("woff2");
+  src: url("../../frontend-2/public/fonts/Satoshi-Variable.woff2") format("woff2");
   font-weight: 300 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Satoshi";
-  src: url("fonts/Satoshi-VariableItalic.woff2") format("woff2");
+  src: url("../../frontend-2/public/fonts/Satoshi-VariableItalic.woff2") format("woff2");
   font-weight: 300 900;
   font-style: italic;
   font-display: swap;
@@ -118,4 +118,29 @@
   --prompt-icon-border: var(--hairline);
   --prompt-radius: 1.75rem;
   --prompt-shadow: var(--private-shadow-sm);
+}
+
+.dust-orb-host {
+  border-radius: 50%;
+  transform-origin: center center;
+  transition: transform 500ms;
+}
+.dust-orb-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .dust-orb-host:hover:not(.is-speaking) {
+    transform: scale(1.03);
+  }
+}
+.dust-orb-host.is-speaking:not(.is-level) {
+  transform: scale(1.1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dust-orb-host { transition: none; }
+  .dust-orb-host:hover:not(.is-speaking),
+  .dust-orb-host.is-speaking { transform: none; }
 }

@@ -11,8 +11,10 @@ Onboarding turns a spoken or typed description of a business into a clear
 - [persistence.md](persistence.md) — onboarding sessions, website activation
 - [api.md](api.md) — HTTP (business lookup, resume, SSE, website activation)
 - [technical-implementation.md](technical-implementation.md) — the technical plan (flow, pipeline)
-- [frontend.md](frontend.md) — the onboarding screens and fields
+- [frontend.md](frontend.md) — the onboarding screens and fields (client
+  interview Details == `/cms/details`)
 - [design.md](design.md) — look export (`docs/design/onboarding.html`)
+- [design decision record](design-decision-record.md) — onboarding look and interaction
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](testing.md) — the onboarding E2E test
 

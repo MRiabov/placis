@@ -25,3 +25,10 @@ One number is one decision.
    Calendar on a small screen). Extra time blocks still stack under the day.
    (2026-08-27) Extra time blocks dropped from the mock; one range per weekday.
    (2026-08-27)
+
+4. **Onboarding client interview uses these same field controls** — Featured
+   services, Maps territory cards, and the hours picker are shared with
+   `/onboarding/interview`. Details keeps the Details panel; onboarding keeps
+   the white card canvas. (2026-08-28) Onboarding Details == Business
+   details: same fields and controls; a Details field change applies to both
+   surfaces. (2026-08-28)

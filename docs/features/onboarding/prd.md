@@ -147,3 +147,6 @@ question.
    no TTL. Coming back mid-client-interview keeps answers, extra notes, and
    remaining questions. A new voice connection does not re-ask filled checklist
    rows.
+7. The client interview Details block is Business details: same fields, same
+   controls, same writes (`/onboarding/interview` == `/cms/details` for that
+   subset).

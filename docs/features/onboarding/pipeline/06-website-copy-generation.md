@@ -18,7 +18,8 @@ second start is 409.
 
 ## Must not
 
-- `create_page` (05 already applied the website page set).
+- `create_page` (05 already applied the website page set, including service
+  pages from named services). Do not invent the service list.
 - Block 08.
 - Wait past 07’s cap to “finish” before the host can exist.
 - Supersede the website preview (06 does not change `website_prefix` or replace

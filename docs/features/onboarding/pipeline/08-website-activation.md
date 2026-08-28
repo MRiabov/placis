@@ -1,12 +1,14 @@
 # 08 — Website activation
 
 The contractor pays on the **preview website address** (FQDN in
-[cloudflare.md](../../website/cloudflare.md)). Clerk sign-in/sign-up if needed (modal island), then Stripe
-checkout (island POSTs public checkout to `cmd/api`, CORS by `Host` /
-`website_prefix`; not `/v1/website-previews/{token}/…`; do not bake a Checkout
-Session URL into R2 HTML). Website activation **upgrades** the existing
-unactivated tenant (`status=active`); it does not insert a second tenant. Does
-**not** wait for 06.
+[cloudflare.md](../../website/cloudflare.md)). Clerk **create account** if needed (modal island); an existing
+Clerk session skips to pay. Then Stripe checkout (island POSTs public checkout
+to `cmd/api`, CORS by `Host` / `website_prefix`; not
+`/v1/website-previews/{token}/…`; do not bake a Checkout Session URL into R2
+HTML). The website-activation strip is **sticky to the bottom of the viewport**
+while the website scrolls ([frontend.md](../frontend.md), [design decision](../design-decision-record.md) 10). Website
+activation **upgrades** the existing unactivated tenant (`status=active`); it
+does not insert a second tenant. Does **not** wait for 06.
 
 Stripe (via `stripe-go`) handles this checkout only. Amount is the activation
 price (predecessor: EUR 4900). `checkout.session.completed` is accepted only
@@ -72,10 +74,11 @@ twice. A second payer after the first verified completion is refused.
 
 ## Out
 
-`/cms/website`. `/me` now returns the tenant. The preview website address stays
-up without the strip (live website, not website preview). Unpublished website
-from 05 (+ whatever 06 has written) is what they edit. First **owner** website
-publication is v3+ and the first rollback-eligible website version.
+`/cms/website` with **Publish**. `/me` now returns the tenant. The preview
+website address stays up without the strip (live website, not website preview).
+Unpublished website from 05 (+ whatever 06 has written) is what they edit. First
+**owner** website publication is v3+ and the first rollback-eligible website
+version.
 
 ## After website activation (billing)
 

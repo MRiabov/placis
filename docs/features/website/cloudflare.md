@@ -206,10 +206,12 @@ preview: static `latest/` + website-activation strip island. No
 host website preview.
 
 The strip is the website-form pattern: shared Worker static assets hydrate Clerk
-(sign-in/sign-up modal, publishable key in the shared island) and Stripe (POST
+(create-account modal, publishable key in the shared island; existing sign-in
+skips to pay) and Stripe (POST)
 public checkout to `cmd/api`; CORS by `Host` / `website_prefix` — not
 `/v1/website-previews/{token}/…`). Do not bake a Checkout Session URL into R2
-HTML. 08 rewrites without the island and purges Cache.
+HTML. The strip is sticky to the bottom of the viewport while the website
+scrolls. 08 rewrites without the island and purges Cache.
 
 `/onboarding/preview` is the wait carousel in `frontend-2`, not this host.
 

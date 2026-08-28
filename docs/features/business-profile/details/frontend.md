@@ -8,7 +8,7 @@ Related docs:
 2. [Details ADR](ADR.md)
 3. [Details persistence](persistence.md)
 4. [Details design decision record](design-decision-record.md)
-5. [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md) — left nav, Profile, New chat
+5. [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md) — left nav, Profile, `/cms`
 6. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 
 ## Purpose
@@ -24,6 +24,10 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
 
 ## Business details (`/cms/details`)
 
+Onboarding Details == this screen ([onboarding ADR](../../onboarding/ADR.md) 19): same fields, same
+controls, same writes. `/onboarding/interview` is this Details block on the
+white onboarding card canvas. A field change here is a field change there.
+
 Editing the Details subset of the business profile here still changes the
 website editor and the next ad draft; the live website changes on the next
 website publication. Persist on **click-off**. There is **no Save details** and
@@ -35,7 +39,7 @@ panel.
 
 ### Opening hours picker
 
-Google Calendar-style, same bones as the onboarding AvailabilityPicker, in the
+Google Calendar-style, same control as the onboarding client interview, in the
 CMS palette (white, higher contrast). One row per weekday: Opens, to, Closes as
 a time range. **Closed** is the unavailable control on that row (not a checkbox
 under a day column). Copy applies that day’s hours to the following days. One
@@ -48,13 +52,16 @@ chips sit full-width below (Google Calendar on a small screen). Look:
 
 #### Service areas
 
-Google Maps territory lookup, not a textarea. Owner picks a place (for example
-Dublin); the UI shows that territory. Backend stores `locality` and `radius_km`
-(for Meta when ad posting exists).
+Google Maps territory lookup, not a textarea. Owner picks places (for example
+Dublin and North County Dublin); the UI shows **one territory card per region**
+with radius. Backend stores `locality` and `radius_km` per row (for Meta when
+ad posting exists). Same control as the onboarding client interview.
 
 #### Featured services
 
-A list (`business_profile_services`), list-item PATCH, not a textarea.
+A list (`business_profile_services`), list-item PATCH, not a textarea. Paste of
+one-per-line or comma-separated **names** may split into rows (no LLM). Same
+control as the onboarding client interview.
 
 #### Logo picker
 

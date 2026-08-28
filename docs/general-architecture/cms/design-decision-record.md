@@ -1,7 +1,7 @@
 # CMS design decision record
 
-Look and interaction for The CMS (sidebar + main area): left nav, New chat,
-viewport lock, theme. Website editor look stays in
+Look and interaction for The CMS (sidebar + main area): left nav, `/cms` two
+cards, viewport lock, theme. Website editor look stays in
 [website design decision record](../../features/website/design-decision-record.md). Tokens: [design.md](design.md). Mock: [cms.html](../../design/cms.html).
 Screens:
 [frontend.md](frontend.md).
@@ -23,9 +23,9 @@ inventing it.
    not a top-level peer of Sites. Collapsed Profile still goes to Business
    details. (2026-08-26) No **AI tools** left-nav item. Image cleanup is
    `/cms/media` (large view of the selected photo, prompt box beside or under
-   it, dense mixed-ratio thumbs — not huge square cards). The website assistant
-   stays the canvas overlay (a later cut may drop that overlay; this item still
-   does not come back). (2026-08-26) On **narrow**, this left rail is gone: a
+   it, dense mixed-ratio thumbs — not huge square cards). The assistant stays
+   the canvas overlay (a later cut may drop that overlay; this item still does
+   not come back). (2026-08-26) On **narrow**, this left rail is gone: a
    full-screen overlay selector (see 4). Collapsed icon rail, hover peek, and
    click-to-pin are **wide only**. (2026-08-27) Website editor canvas /
    workspace quiet-default: [website design decision 1](../../features/website/design-decision-record.md).
@@ -75,9 +75,9 @@ inventing it.
    2026-08-27) New chat prompt is full width of the main column, max `42rem`
    (placis-web default `PlacisPromptBox`, `w-full max-w-2xl`). Do not use the
    compact `19.5rem` mobile cap. Wordmark + prompt are vertically centered in
-   the main column (Open destinations stays top-left on narrow). The Upgrade
-   shelf is full width of the prompt, text centered, one outline with the box
-   (placis-web shelf). (2026-08-27) New chat clones dashboard `PlacisPromptBox`
+   the main column (Open destinations stays top-left on narrow). Usage copy is
+   not a subscription shelf. (2026-08-27; two-card `/cms` 2026-08-28 —
+   [assistant design decision 3](../../features/assistant/design-decision-record.md).) New chat clones dashboard `PlacisPromptBox`
    controls: **Connect** (flat hairline, white at rest, zinc-50 only while the
    Google / Meta panel is open), Paperclip (hidden under 640px), animated
    AudioLines Voice on the right (desktop only), ArrowRight send. Connect is
@@ -92,4 +92,6 @@ inventing it.
    (2026-08-27): Product `/cms` is two cards (**Do my website…** /
    **Run my ads**), not this prompt. Keep the prompt-box markup in the
    look-export HTML for later restore. Hide Paperclip, Start client interview,
-   Upgrade shelf. Overlay rows drop New chat. Connect stays.
+   subscription-shelf copy. Overlay rows drop New chat. Connect stays.
+   (2026-08-28): Voice on `/cms` is gone. Overlay look:
+   [assistant design decision record](../../features/assistant/design-decision-record.md).
