@@ -23,8 +23,10 @@ One number is one decision.
    and Closed / add / copy sit on the first line; Opens and Closes are
    full-width time chips on the line below so the times stay readable (Google
    Calendar on a small screen). Extra time blocks still stack under the day.
-   (2026-08-27) Extra time blocks dropped from the mock; one range per weekday.
    (2026-08-27)
+
+   (2026-08-28): One line at every width (short day · Opens – Closes · Closed /
+   copy), like Calendar desktop. Do not stack the times under the day.
 
 4. **Onboarding client interview uses these same field controls** — Featured
    services, Maps territory cards, and the hours picker are shared with
@@ -32,3 +34,12 @@ One number is one decision.
    the white card canvas. (2026-08-28) Onboarding Details == Business
    details: same fields and controls; a Details field change applies to both
    surfaces. (2026-08-28)
+
+5. **Linked Facebook / Maps cards stay one row** — Photo, name, and Change sit
+   on one row at iPhone SE width. The name ellipsizes; Change does not wrap
+   under the copy while the row has unused width. (2026-08-28)
+
+6. **Service areas are an addable Google Maps list** — Each row is a territory
+   plus radius. **Add service area** opens the Google Maps dropdown; it does not
+   sit as a second copy of the selected name. Search existing places; no
+   free-text create. (2026-08-28)

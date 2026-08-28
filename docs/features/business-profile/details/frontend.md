@@ -45,9 +45,9 @@ a time range. **Closed** is the unavailable control on that row (not a checkbox
 under a day column). Copy applies that day’s hours to the following days. One
 range per day — no Add a time block. These are when they will pick up the
 **marketing phone**, not appointment copy. Shown on the contact website page. Do
-**not** show an Appointment note field; persistence has no `note` column. On a
-narrow screen the day and Closed / copy sit on the first line; Opens and Closes
-chips sit full-width below (Google Calendar on a small screen). Look:
+**not** show an Appointment note field; persistence has no `note` column. One
+line per weekday at every width (short day name, Opens – Closes, Closed / copy),
+like Calendar desktop. Look:
 [design decision record](design-decision-record.md).
 
 #### Service areas
@@ -56,6 +56,8 @@ Google Maps territory lookup, not a textarea. Owner picks places (for example
 Dublin and North County Dublin); the UI shows **one territory card per region**
 with radius. Backend stores `locality` and `radius_km` per row (for Meta when
 ad posting exists). Same control as the onboarding client interview.
+**Add service area** opens the Google Maps territory dropdown (search existing
+places; do not create a free-text area).
 
 #### Featured services
 
@@ -72,6 +74,8 @@ Pick from the media library (`logo_media_asset_id`).
 Show the button **only when unlinked**. This pass: paste a public Facebook
 business URL (type-to-search TBD). When linked, show that Facebook profile’s
 **name, photo, rating, and review count**, plus **Change** — not the raw URL.
+Photo, copy, and Change stay one row; the name ellipsizes. Do not wrap Change
+under the name while the row still has width.
 Writes `facebook_profile_url`. Same link as review import on Certifications and
 reviews. Not Ads Connect Meta, not Facebook Login, no autoposting. Saving a new
 URL starts a public extract of that Facebook URL (reviews, posts, images).
@@ -79,8 +83,8 @@ URL starts a public extract of that Facebook URL (reviews, posts, images).
 #### Google Maps listing
 
 Same link pattern (`google_maps_listing_url`). When linked, the same card from
-that listing (name, photo, rating, review count). Certifications and reviews
-imports from that listing.
+that listing (name, photo, rating, review count) — same one-row layout as
+Facebook. Certifications and reviews imports from that listing.
 
 Do not add unless asked: founder columns, brand tone / typography / colors.
 

@@ -227,8 +227,9 @@ Ads under `/cms/ads` should expose:
    point controls for this ad's format
 5. copy fields with headline (sized to 40 characters), primary text, short
    label, and button label, each with live character counts against ad-platform
-   limits; after generate, an AI orb on headline, primary text, and short label
-   (prompt required, overlay; highlight a span to edit that span)
+   limits; after generate, an AI orb on headline and primary text
+   (prompt required, overlay; highlight a span to edit that
+   span). Short label is typed; no orb. (2026-08-28)
 6. Facebook and Instagram mocks for this ad's format (Square feed, Portrait
    feed, Carousel, or Story)
 7. warnings shown inline next to the field they belong to (failed photo upload).

@@ -314,7 +314,8 @@ new entries with the next number, the area, and the date.
     `POST /v1/media-assets/{id}/reject`. This replaces unprompted Review
     **Regenerate**. Record the owner prompt with reasoning, output, and tool
     calls in `ai_generations`. (2026-08-27) Previous decision (same day): prompt
-    form was inline in the field, wrapping with the row.
+    form was inline in the field, wrapping with the row. (2026-08-28) Short
+    label has no AI orb.
 
 35. **Review ad format preview is Facebook and Instagram placement** (updated
     2026-08-25) — The selected format is shown as both Facebook and Instagram
@@ -322,7 +323,8 @@ new entries with the next number, the area, and the date.
     generic CMS card. Desktop shows both; narrow screens toggle. Placement type
     is Meta-like (Helvetica on Facebook, system UI on Instagram), not Satoshi.
     Meta `generatepreviews` iframes stay posting-time (need a Marketing API
-    creative; cannot update as the owner types).
+    creative; cannot update as the owner types). (2026-08-28) Narrow Facebook |
+    Instagram toggle uses the platform mark plus the name.
 
 36. **LLM actions are Ctrl+Z reversible** (2026-08-25) — All copy in Review
     fields is Ctrl+Z’able, including orb and highlight rewrites. Cleanup Accept

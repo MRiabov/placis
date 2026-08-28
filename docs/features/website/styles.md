@@ -34,7 +34,10 @@ decomposed reference sites, not hand-picked palettes.
 2. `website_manifest.website_styles` carries the preset id + bounded overrides
    (`primary`, `neutral`, `accent`, `radius`, `density`). The Website styles
    workspace edits those three colors with a color picker (hex is only inside
-   the picker, not on the field).
+   the picker, not on the field). Radius is a corner selector (`none` / `xs` /
+   `sm` / `md` / `lg`), not a text dropdown: each option shows that corner.
+   Density is a spacing selector (Compact / Comfortable / Spacious), not a text
+   dropdown: each option shows that spacing.
 3. The renderer maps the preset tokens to CSS variables; every website component
    reads those tokens, so switching the preset restyles the whole website
    without touching website section logic.

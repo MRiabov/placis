@@ -3,6 +3,8 @@
    yellow strip: details-fields.js (loaded first). */
 
 const params = new URLSearchParams(location.search);
+const adsViews = ["list", "flow", "review", "detail"];
+let adsView = adsViews.includes(params.get("ads")) ? params.get("ads") : "list";
 const frame = document.getElementById("frame");
 const profileChildren = document.getElementById("profileChildren");
 const profileToggle = document.getElementById("profileToggle");
@@ -372,6 +374,49 @@ function setPage(id, openPages = false) {
   if (openPages) setRail("pages", true);
 }
 
+function adsFrameUrl(view) {
+  const query = new URLSearchParams({ embed: "1" });
+  if (params.get("shot") === "1") query.set("shot", "1");
+  if (view && view !== "list") query.set("scene", view);
+  return `ads.html?${query}`;
+}
+
+function syncAdsStrip(view) {
+  document.querySelectorAll("#viewtabs [data-ads-view]").forEach((button) => {
+    button.classList.toggle("on", button.dataset.adsView === view || (view === "detail" && button.dataset.adsView === "list"));
+  });
+}
+
+function bindAdsFrame() {
+  const adsFrame = document.getElementById("adsFrame");
+  if (!adsFrame || adsFrame.dataset.bound === "1") return;
+  adsFrame.dataset.bound = "1";
+  adsFrame.addEventListener("load", () => {
+    adsFrame.dataset.ready = adsFrame.src.includes("ads.html") ? "1" : "0";
+  });
+  window.addEventListener("message", (event) => {
+    if (event.source !== adsFrame.contentWindow) return;
+    if (event.data?.type === "ads-view" && adsViews.includes(event.data.view)) {
+      adsView = event.data.view;
+      syncAdsStrip(adsView);
+    }
+  });
+}
+
+function setAdsView(view) {
+  bindAdsFrame();
+  adsView = adsViews.includes(view) ? view : "list";
+  syncAdsStrip(adsView);
+  const adsFrame = document.getElementById("adsFrame");
+  if (!adsFrame) return;
+  if (adsFrame.dataset.ready === "1" && adsFrame.src.includes("ads.html") && adsFrame.contentWindow) {
+    adsFrame.contentWindow.postMessage({ type: "cms-ads-view", view: adsView }, "*");
+    return;
+  }
+  adsFrame.dataset.ready = "0";
+  adsFrame.src = adsFrameUrl(adsView);
+}
+
 function show(scene) {
   const view = scene === "website" ? "website" : scene;
   views.forEach((node) => node.classList.toggle("is-hidden", node.dataset.view !== view));
@@ -396,6 +441,7 @@ function show(scene) {
   if (scene === "website") {
     setWorkspaceOpen(false);
   }
+  if (scene === "ads") setAdsView(adsView);
   syncStateGroups(scene);
   if (!params.get("shot")) history.replaceState(null, "", "#" + scene);
   syncVoiceSurface();
@@ -683,6 +729,11 @@ document.querySelectorAll("#viewtabs [data-state]").forEach((button) => {
       case "cleanup":
         setMediaCleanup(!document.getElementById("mediaView")?.classList.contains("is-compare"));
         break;
+      case "ads-list":
+      case "ads-flow":
+      case "ads-review":
+        setAdsView(button.dataset.adsView);
+        break;
       case "notify":
         setNotify(document.getElementById("cmsNotification")?.classList.contains("is-hidden"));
         break;
@@ -708,7 +759,7 @@ document.querySelectorAll("#viewtabs [data-state]").forEach((button) => {
   });
 });
 profileToggle.addEventListener("click", () => {
-  if (frame.classList.contains("is-collapsed") && !frame.classList.contains("is-peeking")) {
+  if (!isNarrow() && frame.classList.contains("is-collapsed") && !frame.classList.contains("is-peeking")) {
     show("details");
     return;
   }
@@ -1039,25 +1090,21 @@ window.matchMedia("(max-width: 1100px)").addEventListener("change", (event) => {
   syncCollapsed();
 });
 
-const mediaPhotos = ["media/hero-roof.jpg", "media/job-repair.jpg", "media/job-new-roof.jpg", "media/job-gutter.jpg"];
-const mediaRatios = ["landscape", "portrait", "square"];
-const mediaCaptions = [
-  "Rear slope after the storm",
-  "Slate repair on a terrace",
-  "New roof on a semi",
-  "Guttering on the front",
-  "Ridge line after wind",
-  "Valley flashing",
-  "Logo on the van",
-  "Fascia job",
+// Look-export job photos from Pexels (free license); files live in media/.
+const mediaLibraryItems = [
+  { src: "media/hero-roof.jpg", ratio: "landscape", caption: "Rear slope after the storm", by: "owner", status: "approved" },
+  { src: "media/job-repair.jpg", ratio: "portrait", caption: "Slate repair on a terrace", by: "owner", status: "uploading" },
+  { src: "media/job-new-roof.jpg", ratio: "landscape", caption: "New roof on a semi", by: "owner", status: "approved" },
+  { src: "media/job-gutter.jpg", ratio: "landscape", caption: "Guttering on the front", by: "owner", status: "approved" },
+  { src: "media/job-slate.jpg", ratio: "landscape", caption: "Valley flashing", by: "research", status: "approved" },
+  { src: "media/job-team.jpg", ratio: "portrait", caption: "Ridge line after wind", by: "owner", status: "approved" },
+  { src: "media/job-chimney.jpg", ratio: "portrait", caption: "Chimney flashing", by: "owner", status: "approved" },
+  { src: "media/job-battens.jpg", ratio: "portrait", caption: "Battens before the covering", by: "ai", status: "approved" },
+  { src: "media/job-crew.jpg", ratio: "landscape", caption: "Full re-roof on a semi", by: "owner", status: "approved" },
+  { src: "media/house-cottage.jpg", ratio: "landscape", caption: "Finished elevation", by: "research", status: "approved" },
+  { src: "media/job-sheets.jpg", ratio: "portrait", caption: "Sheets going on", by: "owner", status: "approved" },
+  { src: "media/house-dusk.jpg", ratio: "landscape", caption: "Front elevation after handover", by: "owner", status: "approved" },
 ];
-const mediaLibraryItems = Array.from({ length: 24 }, (_, index) => ({
-  src: mediaPhotos[index % mediaPhotos.length],
-  ratio: mediaRatios[index % mediaRatios.length],
-  caption: mediaCaptions[index % mediaCaptions.length],
-  by: index === 0 ? "owner" : index % 7 === 0 ? "research" : index % 11 === 0 ? "ai" : "owner",
-  status: index === 1 ? "uploading" : "approved",
-}));
 
 function mediaSrcCss(src) {
   return `url('${src}')`;
@@ -1075,16 +1122,68 @@ function setMediaView(item) {
   }
 }
 
-function setMediaCleanup(on) {
+const CLEANUP_WAIT_MS = 7500;
+let cleanupWaitTimer = 0;
+
+function syncMediaCleanupPrompt() {
+  const prompt = document.getElementById("mediaCleanupPrompt");
+  const submit = document.getElementById("mediaCleanupSubmit");
+  const waiting = document.getElementById("mediaView")?.classList.contains("is-waiting");
+  if (submit) submit.disabled = waiting || !prompt?.value.trim();
+}
+
+function setMediaCleanupWait(on) {
+  const view = document.getElementById("mediaView");
+  const wait = document.getElementById("mediaCleanupWait");
+  const fill = wait?.querySelector(".cms-media-wait-fill");
+  view?.classList.toggle("is-waiting", on);
+  wait?.classList.toggle("is-hidden", !on);
+  if (fill) {
+    fill.classList.remove("is-running");
+    if (on) {
+      void fill.offsetWidth;
+      fill.classList.add("is-running");
+    }
+  }
+  syncMediaCleanupPrompt();
+  syncMediaFramingHidden();
+}
+
+function syncMediaFramingHidden() {
+  const view = document.getElementById("mediaView");
+  const hide = view?.classList.contains("is-waiting") || view?.classList.contains("is-compare");
+  document.getElementById("mediaFraming")?.classList.toggle("is-hidden", hide);
+}
+
+function showCleanupCompare(on) {
   const view = document.getElementById("mediaView");
   const sweep = document.getElementById("mediaSweep");
   const actions = document.getElementById("mediaCleanupActions");
   view?.classList.toggle("is-compare", on);
   sweep?.classList.toggle("is-hidden", !on);
   actions?.classList.toggle("is-hidden", !on);
-  document.getElementById("mediaFraming")?.classList.toggle("is-hidden", on);
   if (on) sweep?.style.setProperty("--split", "50%");
   stripButton("cleanup")?.classList.toggle("on", on);
+  syncMediaFramingHidden();
+}
+
+function setMediaCleanup(on) {
+  window.clearTimeout(cleanupWaitTimer);
+  cleanupWaitTimer = 0;
+  setMediaCleanupWait(false);
+  showCleanupCompare(on);
+}
+
+function startMediaCleanup() {
+  window.clearTimeout(cleanupWaitTimer);
+  showCleanupCompare(false);
+  setMediaCleanupWait(true);
+  cleanupWaitTimer = window.setTimeout(() => {
+    cleanupWaitTimer = 0;
+    document.getElementById("mediaView")?.classList.add("is-compare");
+    setMediaCleanupWait(false);
+    showCleanupCompare(true);
+  }, CLEANUP_WAIT_MS);
 }
 
 function bindMediaLibrary() {
@@ -1124,16 +1223,12 @@ function bindMediaLibrary() {
   sweep?.addEventListener("pointerup", () => { sweeping = false; });
   sweep?.addEventListener("pointercancel", () => { sweeping = false; });
   const prompt = document.getElementById("mediaCleanupPrompt");
-  const submit = document.getElementById("mediaCleanupSubmit");
-  const syncPrompt = () => {
-    if (submit) submit.disabled = !prompt?.value.trim();
-  };
-  prompt?.addEventListener("input", syncPrompt);
-  syncPrompt();
+  prompt?.addEventListener("input", syncMediaCleanupPrompt);
+  syncMediaCleanupPrompt();
   document.getElementById("mediaCleanupForm")?.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!prompt?.value.trim()) return;
-    setMediaCleanup(true);
+    startMediaCleanup();
   });
   document.getElementById("mediaCleanupReject")?.addEventListener("click", () => setMediaCleanup(false));
   document.getElementById("mediaCleanupAccept")?.addEventListener("click", () => setMediaCleanup(false));
@@ -1216,8 +1311,44 @@ function bindMediaFraming() {
   });
 }
 
+
+function bindWebsiteStyles() {
+  const site = document.querySelector(".fake-site");
+  const radiusPicker = document.getElementById("styleRadius");
+  const densityPicker = document.getElementById("styleDensity");
+  const radiusPx = { none: "0px", xs: "2px", sm: "4px", md: "8px", lg: "12px" };
+  const densitySpace = { compact: "8px", comfortable: "16px", spacious: "24px" };
+  const setRadius = (value) => {
+    if (!radiusPicker) return;
+    const next = radiusPx[value] ? value : "lg";
+    radiusPicker.querySelectorAll(".cms-radius-option").forEach((button) => {
+      button.setAttribute("aria-checked", String(button.dataset.radius === next));
+    });
+    site?.style.setProperty("--public-radius", radiusPx[next]);
+  };
+  const setDensity = (value) => {
+    if (!densityPicker) return;
+    const next = densitySpace[value] ? value : "comfortable";
+    densityPicker.querySelectorAll(".cms-density-option").forEach((button) => {
+      button.setAttribute("aria-checked", String(button.dataset.density === next));
+    });
+    site?.style.setProperty("--public-space", densitySpace[next]);
+  };
+  radiusPicker?.addEventListener("click", (event) => {
+    const button = event.target.closest(".cms-radius-option");
+    if (button?.dataset.radius) setRadius(button.dataset.radius);
+  });
+  densityPicker?.addEventListener("click", (event) => {
+    const button = event.target.closest(".cms-density-option");
+    if (button?.dataset.density) setDensity(button.dataset.density);
+  });
+  setRadius(radiusPicker?.querySelector('.cms-radius-option[aria-checked="true"]')?.dataset.radius || "lg");
+  setDensity(densityPicker?.querySelector('.cms-density-option[aria-checked="true"]')?.dataset.density || "comfortable");
+}
+
 bindMediaLibrary();
 bindMediaFraming();
+bindWebsiteStyles();
 if (params.get("cleanup") === "1") setMediaCleanup(true);
 
 window.__SCREENSHOT_READY = true;
