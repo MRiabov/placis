@@ -43,7 +43,7 @@ internal/
     addresses/    #   website_addresses.go (live hostnames; not auth)
   ads/            # ad.go, variant.go, generate.go
   media/          # media_assets
-  billing/        # checkout.go, webhooks.go (Stripe only)
+  billing/        # checkout.go, webhooks.go, usage credit ledger
   leads/          # leads.go
 migrations/       # goose SQL migrations (greenfield)
 apps/

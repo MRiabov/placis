@@ -18,8 +18,8 @@ does not insert a second tenant. `/me` returns a tenant only when
   when known, else empty until business research fills it), `status`
   (`unactivated`/`active`/`suspended`), `subscription_status`
   (`active`/`lapsed`/`none`, optimistic cache — not Clerk Billing yet),
-  `usage_credit_usd_cents` (remaining monthly credit shown as $; check on LLM
-  calls; generation hop is priced ×5 to the owner), `created_at`, `updated_at`
+  `created_at`, `updated_at`. Do **not** store `usage_credit_usd_cents` here —
+  billing owns the ledger ([billing](../../billing/persistence.md)).
 - `tenant_memberships` — `id`, `tenant_id` fk, `clerk_user_id`, `role`,
   `created_at`; unique `(tenant_id, clerk_user_id)`
 

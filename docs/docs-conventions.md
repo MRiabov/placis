@@ -21,7 +21,8 @@ before adding or editing a doc.
   tables), `frontend.md` (`frontend-2` UI rules), `cms/` (The CMS: left nav, New
   chat, look tokens), `frontend-debloat.md` (cross-cutting port), `ci-cd.md`,
   `testing.md`. Feature-owned capabilities (website activation/payments, leads,
-  media library, ETL, business profile) live under `features/`, not here.
+  media library, ETL, business profile, billing) live under `features/`, not
+  here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that
   feature's docs in one place). `features/business-profile/` holds Details,
   Projects, and Certifications and reviews as child view dirs. `features/other/`

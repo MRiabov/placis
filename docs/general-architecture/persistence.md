@@ -61,6 +61,7 @@ one owning file — never copied into a second `persistence.md`.
 | [files](files-and-s3.md) | `files` | `files` |
 | [audit](audit.md) | `audit` | `audit_events` |
 | [LLM layer](llm-layer.md) | `llm` | `ai_generations`, `ai_generation_tool_revisions` |
+| [Billing](../features/billing/persistence.md) | billing package | usage credit ledger (stub) |
 | [jobs](jobs.md) | `jobs` | River-managed tables |
 
 `tenants` and `media_assets` stay out of `website` / `ads`. Those are the real
