@@ -3,7 +3,9 @@
 The **Details** view edits the Business details subset of the
 **business profile** — who they are, contact, hours, logo, Facebook / Maps
 links. Onboarding builds the record; the website shows it; ads reuse it. The
-owner reaches this screen from **Profile** → **Business details**. The record is
+client interview **is** this Details subset (same fields and controls;
+[onboarding ADR](../../onboarding/ADR.md) 19). The owner reaches this screen
+from **Profile** → **Business details**. The record is
 larger than this screen (reviews, certifications, projects):
 [business profile](../README.md).
 
@@ -14,9 +16,11 @@ larger than this screen (reviews, certifications, projects):
 - **Contact** — marketing phone, marketing email, existing site URL. Emergency
   phone number is how we reach the owner, not what leads use (unpublished; not
   on this screen unless asked).
-- **Where they are** — service areas (Google Maps territory lookup). Not a
-  business-location field.
-- **What they do** — featured services as a **list** (not a textarea).
+- **Where they are** — service areas (Google Maps territory lookup, one card
+  per region). Not a business-location field. Same control as the onboarding
+  client interview.
+- **What they do** — featured services as a **list** (not a textarea). Same
+  control as the onboarding client interview.
 - **Legal** — company number, VAT number, registered office.
 - **Opening hours** — Google Calendar-style picker, one row per day: Opens, to,
   Closes, Closed. One range per weekday. No extra time blocks. Hours they pick

@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
 <!--
   Function follows CMS / website / business-profile specs; this file is visual.
-  Open cms.html in a browser (no build). Styles: cms.css (tokens.css). Scene wiring: cms.js.
+  Open cms.html in a browser (no build). Styles: cms.css (tokens.css, details-fields.css). Scene wiring: details-fields.js then cms.js.
   Dev-only strip is per-screen states (not sidebar nav); default collapsed.
   Hide with ?shot=1. Collapses to a top-right circle; ?dev=1 opens it.
   Desktop and narrow assistant default collapsed. Force with
@@ -20,6 +20,7 @@
   Canvas is a fake homepage, not the contractor website renderer.
   Ads look export: docs/design/ads.html.
   Onboarding look export: docs/design/onboarding.html.
+  After website activation: ?scene=website&publication=1&from=activation (Publish open, no blockers).
 -->
 <link rel="stylesheet" href="cms.css" />
 </head>
@@ -787,33 +788,52 @@
                   <div class="cms-field">
                     <span class="cms-field-label">Service areas</span>
                     <div class="cms-combo" id="serviceAreaCombo" data-create="place">
-                      <input class="cms-field-control" value="Dublin" placeholder="Search a Google Maps territory…" aria-label="Service areas" />
+                      <input class="cms-field-control" value="" placeholder="Search a Google Maps territory…" aria-label="Service areas" />
                       <div class="cms-combo-pop">
                         <div class="cms-combo-create"><button type="button" class="cms-combo-crow is-hint">Type to search a place…</button></div>
                         <div class="cms-combo-divider is-hidden"></div>
                         <p class="cms-combo-group">Places</p>
                         <div class="cms-combo-scroll">
-                          <button type="button" class="cms-combo-row is-current" data-href="Dublin" data-label="Dublin" data-radius="25 km"><span class="cms-combo-check">✓</span><span class="cms-combo-txt"><b>Dublin</b><span>County</span></span></button>
+                          <button type="button" class="cms-combo-row" data-href="Dublin" data-label="Dublin" data-radius="25 km"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Dublin</b><span>County</span></span></button>
                           <button type="button" class="cms-combo-row" data-href="Swords" data-label="Swords" data-radius="15 km"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Swords</b><span>Town</span></span></button>
                           <button type="button" class="cms-combo-row" data-href="Malahide" data-label="Malahide" data-radius="15 km"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Malahide</b><span>Town</span></span></button>
                           <button type="button" class="cms-combo-row" data-href="North County Dublin" data-label="North County Dublin" data-radius="40 km"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>North County Dublin</b><span>Area</span></span></button>
                         </div>
                       </div>
                     </div>
-                    <div class="cms-territory-card" id="serviceAreaCard">
-                      <div class="cms-territory-copy">
-                        <b>Dublin</b>
-                        <span>Google Maps territory</span>
+                    <div class="cms-territory-list" id="serviceAreaList">
+                      <div class="cms-territory-card" data-place="Dublin">
+                        <div class="cms-territory-copy">
+                          <b>Dublin</b>
+                          <span>Google Maps territory</span>
+                        </div>
+                        <label>
+                          <span>Radius</span>
+                          <select class="cms-field-control" aria-label="Dublin radius">
+                            <option>15 km</option>
+                            <option selected>25 km</option>
+                            <option>40 km</option>
+                          </select>
+                        </label>
+                        <button class="cms-item-remove" type="button" aria-label="Remove Dublin">×</button>
                       </div>
-                      <label>
-                        <span>Radius</span>
-                        <select class="cms-field-control" id="serviceAreaRadius" aria-label="Service area radius">
-                          <option>15 km</option>
-                          <option selected>25 km</option>
-                          <option>40 km</option>
-                        </select>
-                      </label>
+                      <div class="cms-territory-card" data-place="North County Dublin">
+                        <div class="cms-territory-copy">
+                          <b>North County Dublin</b>
+                          <span>Google Maps territory</span>
+                        </div>
+                        <label>
+                          <span>Radius</span>
+                          <select class="cms-field-control" aria-label="North County Dublin radius">
+                            <option>15 km</option>
+                            <option>25 km</option>
+                            <option selected>40 km</option>
+                          </select>
+                        </label>
+                        <button class="cms-item-remove" type="button" aria-label="Remove North County Dublin">×</button>
+                      </div>
                     </div>
+                    <span class="cms-field-note">Search a place, then set how far you travel.</span>
                   </div>
                   <div class="cms-field" style="margin-top:12px">
                     <span class="cms-field-label">Featured services</span>
@@ -823,6 +843,7 @@
                       <li class="cms-item-row"><input class="cms-careers-input" value="Guttering" aria-label="Featured service" /><button class="cms-item-remove" type="button" aria-label="Remove service">×</button></li>
                     </ul>
                     <button class="button-secondary" id="addFeaturedService" type="button">Add service</button>
+                    <span class="cms-field-note">We’ll turn each name into a service page. Paste a list and we’ll split it into rows.</span>
                   </div>
                 </div>
                 <div class="cms-details-form-panel">
@@ -1166,6 +1187,7 @@
     </section>
   </div>
 
+<script src="details-fields.js"></script>
 <script src="cms.js"></script>
 
 </body>

@@ -144,6 +144,8 @@ unapproved library item not on the canvas. Each jump uses a Lucide
 `has_unpublished_changes` is false until the next edit. The POST sends
 `website_address_id`: that host’s R2 tree, then purge **that** host ([api.md](api.md),
 [cloudflare.md](cloudflare.md)). The **host row** is the Publish click. Hosts can diverge.
+After website activation (08), `/cms/website` opens with **Publish**; first
+owner website publication is v3+.
 
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that
 publication `*Read`; the dropdown and Website versions list update from the

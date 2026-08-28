@@ -7,11 +7,14 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
 <!--
   Function follows onboarding specs; this file is visual.
-  Open onboarding.html in a browser (no build). Styles: onboarding.css (tokens.css). Scene wiring: onboarding.js.
-  Screens: Find, Review, client interview, wait teaser. Website preview + website activation
-  live on the preview website address, not here.
-  Dev-only strip is per-screen states; default collapsed. Hide with ?shot=1. Open with ?dev=1.
-  Scenes: ?scene=find|review|interview|preview.
+  Open onboarding.html in a browser (no build). Styles: onboarding.css (tokens.css, details-fields.css). Scene wiring: details-fields.js then onboarding.js.
+  Screens: Find, Review, client interview, wait teaser, plus a mock of the generated website.
+  Website activation lives on the preview website address (the generated mock here).
+  The website-activation strip is sticky to the bottom; the mock site scrolls above it.
+  One screen shell: heading, cards, sticky footer. Dev strip is per-screen states; default collapsed.
+  Hide with ?shot=1. Open with ?dev=1. Scenes: ?scene=find|review|interview|preview|generated.
+  Dev skip generation: yellow strip, or ?scene=generated.
+  Paid (after website activation) opens cms.html — website editor, Publish.
 -->
 <link rel="stylesheet" href="onboarding.css" />
 </head>
@@ -53,16 +56,20 @@
       <button type="button" class="viewtab" data-state="services">Services</button>
       <button type="button" class="viewtab" data-state="reviews">Reviews</button>
     </div>
+    <div class="viewtabs-states is-hidden" data-state-for="generated">
+      <span class="viewtabs-group">Website activation</span>
+      <button type="button" class="viewtab on" data-state="unsigned">Not signed in</button>
+      <button type="button" class="viewtab" data-state="signed-in">Signed in</button>
+      <button type="button" class="viewtab" data-state="paid">Paid</button>
+    </div>
+    <button type="button" class="viewtab" id="skipGeneration" data-scene="generated">Skip generation</button>
   </div>
   <button type="button" class="viewtabs-fab" id="viewtabsOpen" aria-label="Show developer states" title="Show developer states">Dev</button>
 
   <header class="onb-header">
     <div class="onb-header-inner">
-      <button class="onb-wordmark" data-scene="find" type="button">
-        <span class="onb-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
-        </span>
-        placis
+      <button class="onb-wordmark" data-scene="find" type="button" aria-label="placis">
+        <img class="onb-mark-img" src="placis-mark.png" width="81" height="32" alt="placis" />
       </button>
       <button class="onb-back is-hidden" id="backBtn" type="button">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
@@ -75,8 +82,8 @@
     <ol>
       <li data-step="find" class="is-current"><button type="button" data-scene="find"><i></i><span>Find</span></button></li>
       <li data-step="review"><button type="button" data-scene="review"><i></i><span>Review</span></button></li>
-      <li data-step="interview"><button type="button" data-scene="interview"><i></i><span>Interview</span></button></li>
-      <li data-step="preview"><button type="button" data-scene="preview"><i></i><span>Preview</span></button></li>
+      <li data-step="interview"><button type="button" data-scene="interview"><i></i><span>Questions</span></button></li>
+      <li data-step="preview"><button type="button" data-scene="preview"><i></i><span>Website</span></button></li>
     </ol>
   </nav>
 
@@ -85,13 +92,12 @@
 
   <main class="onb-main">
     <section class="onb-view" data-view="find" id="view-find">
-      <div class="find-layout">
-        <div>
-          <p class="kicker">Onboarding</p>
+      <div class="onb-screen">
+        <div class="onb-screen-head">
           <h1>Find your business</h1>
-          <p class="lede">Choose the country, then pick the company registry record, Google Maps listing, or both when they describe the same business.</p>
+          <p class="lede">Choose the country, then pick the company on the registry, on Google Maps, or both when they are the same business.</p>
         </div>
-        <div class="panel" id="findPanel">
+        <div class="onb-card" id="findPanel">
           <div class="stack">
             <div class="field">
               <label for="country">Country</label>
@@ -108,10 +114,10 @@
             <div>
               <div class="source-head">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M6 21V8l6-4 6 4v13"/><path d="M10 21v-6h4v6"/></svg>
-                <p>Companies Registration Office <span id="registryHint">Type the corporate name and pick the company registry record.</span></p>
+                <p>Companies Registration Office <span id="registryHint">Type the company name and pick the matching record.</span></p>
               </div>
               <div class="field source-block">
-                <label for="registryQuery">Corporate name <span class="hint" id="registryName">(CRO)</span></label>
+                <label for="registryQuery">Company name <span class="hint" id="registryName">(CRO)</span></label>
                 <div class="combo search-wrap">
                   <input class="field-control" id="registryQuery" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="registryList" placeholder="Bellfield Roofing" autocomplete="off" />
                   <svg class="search-icon" id="registrySearchIcon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
@@ -141,7 +147,7 @@
             <div>
               <div class="source-head">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                <p>Google Maps listing <span>Optional. Pre-fills the display name, category, marketing phone, photos, and reviews.</span></p>
+                <p>Google Maps listing <span>Optional. We’ll use this for the name, phone, photos, and reviews.</span></p>
               </div>
               <div class="field source-block">
                 <label for="mapsQuery">Find your place on Google Maps</label>
@@ -168,14 +174,9 @@
               <input id="consent" type="checkbox" />
               <span>
                 <b>I agree that Placis can collect public information about this business to prepare the website preview.</b>
-                <span>We use this to check company registry details, public listings, and basic marketing facts before the client interview.</span>
+                <span>We use this to check company details, public listings, and basic marketing facts before we ask you questions.</span>
               </span>
             </label>
-
-            <button class="button-primary" id="lookupBtn" type="button" disabled>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M6 21V8l6-4 6 4v13"/></svg>
-              <span id="lookupLabel">Business lookup</span>
-            </button>
           </div>
         </div>
         <div class="restore is-hidden" id="findRestore">Restoring your previous onboarding…</div>
@@ -183,17 +184,12 @@
     </section>
 
     <section class="onb-view is-hidden" data-view="review" id="view-review">
-      <div class="review-layout">
-        <div>
-          <div class="review-head">
-            <span class="review-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 3 4 7v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V7z"/><path d="m9 12 2 2 4-4"/></svg>
-            </span>
-            <div>
-              <h1>Review what we found</h1>
-              <p class="lede">Found versus missing before the client interview. Continue is always available — skip is expected.</p>
-            </div>
-          </div>
+      <div class="onb-screen">
+        <div class="onb-screen-head">
+          <h1>Review what we found</h1>
+          <p class="lede">Check these details. You can continue even if some are still missing.</p>
+        </div>
+        <div class="onb-card">
           <div class="company-card">
             <p class="meta">Company registry record</p>
             <b>BELLFIELD ROOFING LIMITED</b>
@@ -210,6 +206,7 @@
             </div>
             <div class="bar"><i id="foundBar" style="width:62%"></i></div>
           </div>
+          <p class="ready-note is-hidden" id="readyNote">We have enough to start the website after a few questions.</p>
           <div class="facts" id="foundFacts">
             <div class="fact" data-fact="legal">
               <div>
@@ -277,9 +274,9 @@
             <div class="fact is-hidden" data-fact="conflict">
               <div>
                 <b>Display name</b>
-                <p>Two sources disagree. Pick one in the client interview.</p>
+                <p>Two sources disagree. Pick one when we ask you questions.</p>
                 <div class="conflict">
-                  <b>Research conflict</b>
+                  <b>These two don’t match</b>
                   <div class="pair">
                     <span>Google Maps listing: Bellfield Roofing</span>
                     <span>Current website: Bellfield Roof Repairs</span>
@@ -290,89 +287,126 @@
             </div>
           </div>
         </div>
-        <aside class="review-aside">
-          <p class="kicker">Next</p>
-          <h2>Client interview</h2>
-          <p class="lede" id="missingCopy">5 topics left before the unpublished website can be trusted.</p>
-          <div class="queue" id="missingQueue">
-            <div class="queue-row"><span class="queue-n">1</span> Contact name</div>
-            <div class="queue-row"><span class="queue-n">2</span> Marketing email</div>
-            <div class="queue-row"><span class="queue-n">3</span> Emergency phone</div>
-            <div class="queue-row"><span class="queue-n">4</span> Services</div>
-            <div class="queue-row"><span class="queue-n">5</span> Photos</div>
-          </div>
-          <div class="ready-note is-hidden" id="readyNote">Ready for the unpublished website.</div>
-          <button class="button-primary button-wide" id="continueInterview" type="button">
-            Continue
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </button>
-        </aside>
       </div>
     </section>
 
     <section class="onb-view is-hidden" data-view="interview" id="view-interview">
-      <div class="interview-layout">
-        <div>
-          <p class="kicker">Onboarding</p>
-          <h1>A few questions we still need</h1>
-          <p class="lede">Text is the default. Voice is listed and deferred. Answers write the same business profile. Legal identity stays on Review.</p>
+      <div class="onb-screen">
+        <div class="onb-screen-head">
+          <h1>A few more details</h1>
+          <p class="lede">Fill in anything we could not find. You can skip a field and come back later.</p>
         </div>
-        <div class="channel" role="tablist" aria-label="Client interview channel">
-          <button type="button" class="on" data-channel="text">Text</button>
+        <div class="channel" role="tablist" aria-label="How to answer">
+          <button type="button" class="on" data-channel="text">Write</button>
           <button type="button" data-channel="voice">Voice</button>
         </div>
 
         <form id="interviewForm">
-          <div class="form-section">
-            <h3>Who they are</h3>
-            <div class="form-grid form-grid-2">
-              <label class="field"><span>Display name</span><input class="field-control" id="displayName" value="Bellfield Roofing" /></label>
-              <label class="field"><span>Trade</span><input class="field-control" id="trade" value="Roofer" /></label>
+          <div class="onb-card">
+            <div class="onb-card-head">
+              <h3>Your business</h3>
+              <p class="section-lede">How the name and trade appear on the website.</p>
+            </div>
+            <div class="cms-details-field-grid">
+              <label><span>Display name</span><input class="cms-careers-input" id="displayName" value="Bellfield Roofing" /></label>
+              <label><span>Trade</span><input class="cms-careers-input" id="trade" value="Roofer" /></label>
             </div>
           </div>
-          <div class="form-section">
-            <h3>Contact</h3>
-            <div class="form-grid form-grid-2">
-              <label class="field"><span>Contact name</span><input class="field-control" id="contactName" placeholder="Who we should ask for" /></label>
-              <label class="field"><span>Marketing phone</span><input class="field-control" id="marketingPhone" value="01 555 0199" /></label>
-              <label class="field"><span>Marketing email</span><input class="field-control" id="marketingEmail" type="email" placeholder="hello@bellfield.ie" /></label>
-              <label class="field"><span>Existing site URL</span><input class="field-control" id="existingSite" type="url" placeholder="https://" /></label>
-              <label class="field"><span>Emergency phone</span><input class="field-control" id="emergencyPhone" placeholder="Unpublished; how we reach the owner" /></label>
+          <div class="onb-card">
+            <div class="onb-card-head">
+              <h3>Contact</h3>
+              <p class="section-lede">How people reach you.</p>
+            </div>
+            <div class="cms-details-field-grid">
+              <label><span>Contact name</span><input class="cms-careers-input" id="contactName" placeholder="Who should we ask for" /></label>
+              <label><span>Marketing phone</span><input class="cms-careers-input" id="marketingPhone" value="01 555 0199" /></label>
+              <label><span>Marketing email</span><input class="cms-careers-input" id="marketingEmail" type="email" placeholder="hello@bellfield.ie" /></label>
+              <label><span>Existing site URL</span><input class="cms-careers-input" id="existingSite" type="url" placeholder="https://" /></label>
+            </div>
+            <div class="cms-field">
+              <span class="cms-field-label">Emergency phone</span>
+              <input class="cms-careers-input" id="emergencyPhone" placeholder="How we reach you" />
+              <span class="cms-field-note">We’ll use this to reach you. It will not appear on the website.</span>
             </div>
           </div>
-          <div class="form-section">
-            <h3>Services and service area</h3>
-            <label class="field"><span>Main services</span><textarea class="field-control textarea" id="services" placeholder="One per line, or separated by commas">Roof repairs
-New roofs
-Guttering</textarea><span class="field-note">Free text is fine. The LLM turns it into named services.</span></label>
-            <label class="field"><span>Service areas</span><textarea class="field-control textarea" id="areas" placeholder="Towns, counties, or radius covered">Dublin and North County</textarea></label>
-          </div>
-          <div class="form-section">
-            <h3>Opening hours</h3>
-            <div class="hours" id="hours">
-              <div class="hour-row" data-day="Mon">
-                <div class="hour-day">Mon</div>
-                <div class="hour-times">
-                  <div class="hour-slot"><select><option>7:00am</option><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option><option>9:00pm</option></select></div>
-                  <div class="hour-slot is-hidden extra-block"><select><option selected>1:00pm</option></select><span>–</span><select><option selected>5:00pm</option></select></div>
-                </div>
-                <div class="hour-actions">
-                  <button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Monday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button>
-                  <button class="icon-btn" type="button" data-hour="add" aria-label="Add Monday time block"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
-                  <button class="icon-btn" type="button" data-hour="copy" aria-label="Copy Monday to following days"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/></svg></button>
+          <div class="onb-card">
+            <div class="onb-card-head">
+              <h3>Services and service area</h3>
+              <p class="section-lede">What you do and where you work.</p>
+            </div>
+            <div class="cms-field">
+              <span class="cms-field-label">Featured services</span>
+              <ul class="cms-item-list" id="featuredServices">
+                <li class="cms-item-row"><input class="cms-careers-input" value="Roof repairs" aria-label="Featured service" /><button class="cms-item-remove" type="button" aria-label="Remove service">×</button></li>
+                <li class="cms-item-row"><input class="cms-careers-input" value="New roofs" aria-label="Featured service" /><button class="cms-item-remove" type="button" aria-label="Remove service">×</button></li>
+                <li class="cms-item-row"><input class="cms-careers-input" value="Guttering" aria-label="Featured service" /><button class="cms-item-remove" type="button" aria-label="Remove service">×</button></li>
+              </ul>
+              <button class="button-secondary" id="addFeaturedService" type="button">Add service</button>
+              <span class="cms-field-note">We’ll turn each name into a service page. Paste a list and we’ll split it into rows.</span>
+            </div>
+            <div class="cms-field">
+              <span class="cms-field-label">Service areas</span>
+              <div class="cms-combo" id="serviceAreaCombo" data-create="place">
+                <input class="cms-field-control" value="" placeholder="Search a Google Maps territory…" aria-label="Service areas" />
+                <div class="cms-combo-pop">
+                  <div class="cms-combo-create"><button type="button" class="cms-combo-crow is-hint">Type to search a place…</button></div>
+                  <div class="cms-combo-divider is-hidden"></div>
+                  <p class="cms-combo-group">Places</p>
+                  <div class="cms-combo-scroll">
+                    <button type="button" class="cms-combo-row" data-href="Dublin" data-label="Dublin" data-radius="25 km"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Dublin</b><span>County</span></span></button>
+                    <button type="button" class="cms-combo-row" data-href="Swords" data-label="Swords" data-radius="15 km"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Swords</b><span>Town</span></span></button>
+                    <button type="button" class="cms-combo-row" data-href="Malahide" data-label="Malahide" data-radius="15 km"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Malahide</b><span>Town</span></span></button>
+                    <button type="button" class="cms-combo-row" data-href="North County Dublin" data-label="North County Dublin" data-radius="40 km"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>North County Dublin</b><span>Area</span></span></button>
+                  </div>
                 </div>
               </div>
-              <div class="hour-row" data-day="Tue"><div class="hour-day">Tue</div><div class="hour-times"><div class="hour-slot"><select><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Tuesday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
-              <div class="hour-row" data-day="Wed"><div class="hour-day">Wed</div><div class="hour-times"><div class="hour-slot"><select><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Wednesday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
-              <div class="hour-row" data-day="Thu"><div class="hour-day">Thu</div><div class="hour-times"><div class="hour-slot"><select><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Thursday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
-              <div class="hour-row" data-day="Fri"><div class="hour-day">Fri</div><div class="hour-times"><div class="hour-slot"><select><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Friday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
-              <div class="hour-row" data-day="Sat"><div class="hour-day">Sat</div><div class="hour-times"><div class="hour-slot"><select><option selected>8:00am</option></select><span>–</span><select><option selected>1:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Saturday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
-              <div class="hour-row is-closed" data-day="Sun"><div class="hour-day">Sun</div><div class="hour-times"><div class="hour-slot"><select disabled><option>Closed</option></select><span>–</span><select disabled><option>Closed</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Reopen Sunday"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
+              <div class="cms-territory-list" id="serviceAreaList">
+                <div class="cms-territory-card" data-place="Dublin">
+                  <div class="cms-territory-copy">
+                    <b>Dublin</b>
+                    <span>Google Maps territory</span>
+                  </div>
+                  <label>
+                    <span>Radius</span>
+                    <select class="cms-field-control" aria-label="Dublin radius">
+                      <option>15 km</option>
+                      <option selected>25 km</option>
+                      <option>40 km</option>
+                    </select>
+                  </label>
+                  <button class="cms-item-remove" type="button" aria-label="Remove Dublin">×</button>
+                </div>
+                <div class="cms-territory-card" data-place="North County Dublin">
+                  <div class="cms-territory-copy">
+                    <b>North County Dublin</b>
+                    <span>Google Maps territory</span>
+                  </div>
+                  <label>
+                    <span>Radius</span>
+                    <select class="cms-field-control" aria-label="North County Dublin radius">
+                      <option>15 km</option>
+                      <option>25 km</option>
+                      <option selected>40 km</option>
+                    </select>
+                  </label>
+                  <button class="cms-item-remove" type="button" aria-label="Remove North County Dublin">×</button>
+                </div>
+              </div>
+              <span class="cms-field-note">Search a place, then set how far you travel.</span>
             </div>
           </div>
-          <div class="form-section">
-            <h3>Photos</h3>
-            <p class="section-lede">Logo plus a few photos of the work.</p>
+          <div class="onb-card">
+            <div class="onb-card-head">
+              <h3>Opening hours</h3>
+              <p class="section-lede">When you take calls and jobs.</p>
+            </div>
+            <div class="cms-hours-picker" id="hoursPicker"></div>
+          </div>
+          <div class="onb-card">
+            <div class="onb-card-head">
+              <h3>Photos</h3>
+              <p class="section-lede">Logo plus a few photos of the work.</p>
+            </div>
             <div class="photo-grid" id="photoGrid">
               <figure class="photo-tile is-logo">
                 <img src="fixtures/bellfield/logo.svg" alt="Bellfield logo" />
@@ -397,13 +431,16 @@ Guttering</textarea><span class="field-note">Free text is fine. The LLM turns it
             <div class="photo-fill is-hidden" id="photoFill">
               <p class="section-lede">Not enough photos yet. Pick one, or keep uploading.</p>
               <div class="choices choices-2">
-                <button class="choice" type="button" data-photo-fill="source"><b>Source from the internet</b><span>Pull more listing photos into the media library.</span></button>
-                <button class="choice" type="button" data-photo-fill="ai"><b>AI photo</b><span>Have the LLM draft a stand-in until there is approved media.</span></button>
+                <button class="choice" type="button" data-photo-fill="source"><b>Find more online</b><span>Pull more listing photos into the media library.</span></button>
+                <button class="choice" type="button" data-photo-fill="ai"><b>Create a stand-in</b><span>Draft a photo until you upload approved ones.</span></button>
               </div>
             </div>
           </div>
-          <div class="form-section">
-            <h3>Certifications</h3>
+          <div class="onb-card">
+            <div class="onb-card-head">
+              <h3>Certifications</h3>
+              <p class="section-lede">Trade listings and badges for the website.</p>
+            </div>
             <div class="choices" id="certs">
               <button class="choice choice-cert on is-locked" type="button" data-cert="cro" aria-disabled="true">
                 <img src="certification-logos/ie-cro.svg" alt="" width="240" height="120" />
@@ -422,53 +459,91 @@ Guttering</textarea><span class="field-note">Free text is fine. The LLM turns it
                 <div class="choice-copy"><b>SEAI</b><span>SEAI contractor registration for energy upgrade grants.</span></div>
               </button>
             </div>
-            <label class="field"><span>Other certifications</span><textarea class="field-control textarea" placeholder="Insurance details, awards, guarantees, manufacturer certifications..."></textarea></label>
-            <label class="field"><span>Additional notes</span><textarea class="field-control textarea"></textarea></label>
+            <label class="field"><span>Other certifications</span><textarea class="cms-careers-textarea" placeholder="Insurance, awards, guarantees, manufacturer certifications…"></textarea></label>
           </div>
-          <div class="form-section">
-            <h3>Reviews</h3>
-            <p class="section-lede" id="reviewLede">Found on the Google Maps listing and Facebook.</p>
-            <div class="review-grid" id="reviewGrid">
-              <article class="review-card">
-                <div class="review-stars">★★★★★</div>
-                <b>Aoife K.</b>
-                <p class="cite">On the roof the next morning after the storm. Clean site, fair price.</p>
-                <span class="origin">Google Maps listing</span>
+          <div class="onb-card">
+            <div class="onb-card-head">
+              <h3>Reviews</h3>
+              <p class="section-lede" id="reviewLede">Found on Google and Facebook.</p>
+            </div>
+            <div class="g-review-list" id="reviewGrid">
+              <article class="g-review">
+                <div class="g-review-top">
+                  <img class="g-avatar" src="fixtures/bellfield/aoife.jpg" alt="" width="40" height="40" />
+                  <div class="g-review-who">
+                    <b>Aoife K.</b>
+                    <span>Local Guide · 14 reviews</span>
+                  </div>
+                  <span class="g-badge" title="Google" aria-label="Google">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                  </span>
+                </div>
+                <div class="g-review-rating">
+                  <span class="g-stars" aria-label="5 stars">★★★★★</span>
+                  <time datetime="2026-05-12">3 months ago</time>
+                </div>
+                <p>On the roof the next morning after the storm. Clean site, fair price.</p>
               </article>
-              <article class="review-card">
-                <div class="review-stars">★★★★★</div>
-                <b>Mark D.</b>
-                <p class="cite">Replaced the back slope and left the garden better than they found it.</p>
-                <span class="origin">Google Maps listing</span>
+              <article class="g-review">
+                <div class="g-review-top">
+                  <img class="g-avatar" src="fixtures/bellfield/mark.jpg" alt="" width="40" height="40" />
+                  <div class="g-review-who">
+                    <b>Mark D.</b>
+                    <span>8 reviews</span>
+                  </div>
+                  <span class="g-badge" title="Google" aria-label="Google">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                  </span>
+                </div>
+                <div class="g-review-rating">
+                  <span class="g-stars" aria-label="5 stars">★★★★★</span>
+                  <time datetime="2026-02-03">6 months ago</time>
+                </div>
+                <p>Replaced the back slope and left the garden better than they found it.</p>
               </article>
-              <article class="review-card">
-                <div class="review-stars">★★★★☆</div>
-                <b>Siobhan R.</b>
-                <p class="cite">They arrived on time, were polite, showed my husband the work they had completed.</p>
-                <span class="origin">Facebook</span>
+              <article class="g-review">
+                <div class="g-review-top">
+                  <img class="g-avatar" src="fixtures/bellfield/siobhan.jpg" alt="" width="40" height="40" />
+                  <div class="g-review-who">
+                    <b>Siobhan R.</b>
+                    <span>Facebook</span>
+                  </div>
+                  <span class="g-badge g-badge-fb" title="Facebook" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.7 4.54-4.7 1.31 0 2.69.24 2.69.24v2.97h-1.52c-1.49 0-1.96.93-1.96 1.89v2.26h3.34l-.53 3.49h-2.81V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+                  </span>
+                </div>
+                <div class="g-review-rating">
+                  <span class="g-stars" aria-label="4 stars">★★★★☆</span>
+                  <time datetime="2025-11-20">9 months ago</time>
+                </div>
+                <p>They arrived on time, were polite, showed my husband the work they had completed.</p>
               </article>
             </div>
             <label class="check-row is-hidden" id="noReviewsYet"><input type="checkbox" /> We do not have online reviews yet</label>
           </div>
-          <div class="form-foot">
-            <p class="autosave" id="autosave">Saved automatically as you type.</p>
-            <button class="button-primary" id="interviewContinue" type="submit">Continue</button>
+          <div class="onb-card">
+            <div class="onb-card-head">
+              <h3>Anything else we should know?</h3>
+              <p class="section-lede">Optional. What would help us generate you a better website or run your ads.</p>
+            </div>
+            <label class="field"><span class="is-hidden">Anything else we should know?</span><textarea class="field-control textarea" id="additionalNotes" placeholder="Add a note"></textarea></label>
           </div>
         </form>
 
-        <div class="voice-panel is-hidden" id="voicePanel">
-          <p>Voice is listed and deferred. First-pass is text: the same remaining questions, into the same business profile. Creating a realtime connection comes later; do not start a blank client interview here.</p>
-          <button class="button-secondary" type="button" disabled>Start voice client interview</button>
+        <div class="onb-card voice-panel is-hidden" id="voicePanel">
+          <p>Voice is coming later. For now, answer in writing — it is the same questions, into the same profile.</p>
+          <button class="button-secondary" type="button" disabled>Start voice</button>
         </div>
       </div>
     </section>
 
     <section class="onb-view is-hidden" data-view="preview" id="view-preview">
-      <div class="preview-layout">
-        <div class="preview-copy">
-          <p class="kicker">Wait teaser</p>
-          <h1>Complete website sections while we write the rest.</h1>
-          <p class="lede">This is not the preview website address. Whole-and-valid website sections rotate until website copy generation finishes or the wait cap, then the browser goes to the host.</p>
+      <div class="onb-screen">
+        <div class="onb-screen-head">
+          <h1>We’re putting your website together</h1>
+          <p class="lede">This usually takes about 15 seconds. Then we’ll open the site.</p>
+        </div>
+        <div class="onb-card onb-card-flush">
           <div class="carousel" aria-live="polite">
             <div class="chrome">
               <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
@@ -499,27 +574,142 @@ Guttering</textarea><span class="field-note">Free text is fine. The LLM turns it
                 <div class="fake-site">
                   <div class="fake-top-menu"><b>Bellfield Roofing</b><span>Home</span><span>Services</span><span>Contact</span></div>
                   <div class="fake-reviews">
-                    <h3>What neighbours wrote</h3>
-                    <blockquote>“On the roof the next morning after the storm. Clean site, fair price.” — Aoife K.</blockquote>
-                    <blockquote>“Replaced the back slope and left the garden better than they found it.” — Mark D.</blockquote>
+                    <div class="g-review">
+                      <div class="g-review-top">
+                        <img class="g-avatar" src="fixtures/bellfield/aoife.jpg" alt="" width="40" height="40" />
+                        <div class="g-review-who"><b>Aoife K.</b><span>Local Guide · 14 reviews</span></div>
+                      </div>
+                      <div class="g-review-rating"><span class="g-stars">★★★★★</span><time>3 months ago</time></div>
+                      <p>On the roof the next morning after the storm. Clean site, fair price.</p>
+                    </div>
+                    <div class="g-review">
+                      <div class="g-review-top">
+                        <img class="g-avatar" src="fixtures/bellfield/mark.jpg" alt="" width="40" height="40" />
+                        <div class="g-review-who"><b>Mark D.</b><span>8 reviews</span></div>
+                      </div>
+                      <div class="g-review-rating"><span class="g-stars">★★★★★</span><time>6 months ago</time></div>
+                      <p>Replaced the back slope and left the garden better than they found it.</p>
+                    </div>
                   </div>
                 </div>
               </article>
             </div>
           </div>
-        </div>
-        <aside>
           <div class="timeline">
-            <div class="time-row is-done"><i></i><div><b>Business lookup</b><span>Company registry record and Maps listing attached</span></div></div>
-            <div class="time-row is-done"><i></i><div><b>Client interview</b><span>Text answers accepted</span></div></div>
-            <div class="time-row is-done"><i></i><div><b>Apply the website template</b><span>Unpublished website pages exist</span></div></div>
-            <div class="time-row is-now"><i></i><div><b>Website copy generation</b><span>Hero, services, and reviews filling in</span></div></div>
-            <div class="time-row"><i></i><div><b>Preview website address</b><span>Opens when copy is done or the wait cap hits</span></div></div>
+            <div class="time-row is-done"><i></i><div><b>Found the business</b><span>Company and Maps listing attached</span></div></div>
+            <div class="time-row is-done"><i></i><div><b>Answered the questions</b><span>Your answers are saved</span></div></div>
+            <div class="time-row is-done"><i></i><div><b>Started the website</b><span>Pages are in place</span></div></div>
+            <div class="time-row is-now" data-wait-phase="writing"><i></i><div><b>Writing the pages</b><span>Home, services, and reviews filling in</span></div></div>
+            <div class="time-row" data-wait-phase="opening"><i></i><div><b>Opening the site</b><span>Ready when writing finishes, or after 15 seconds</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="onb-view is-hidden" data-view="generated" id="view-generated">
+      <div class="generated">
+        <div class="generated-site">
+          <header class="generated-nav">
+            <b>Bellfield Roofing</b>
+            <nav><span>Home</span><span>Services</span><span>Reviews</span><span>Contact</span></nav>
+            <a class="generated-call" href="tel:015550199">01 555 0199</a>
+          </header>
+          <section class="generated-hero">
+            <p>Dublin roofing</p>
+            <h1>Roofs that keep Irish weather out.</h1>
+            <p>Repairs, re-roofs, and emergency call-outs across Dublin and North County.</p>
+            <button class="button-primary" type="button">Get a quote</button>
+          </section>
+          <section class="generated-block">
+            <h2>Services</h2>
+            <div class="fake-services">
+              <article><h3>Roof repairs</h3><p>Slate, tile, and flat roof repairs without a full strip.</p></article>
+              <article><h3>New roofs</h3><p>Re-roofs with a workmanship guarantee on every job.</p></article>
+              <article><h3>Guttering</h3><p>Cleaning, replacement, and fascia upgrades.</p></article>
+            </div>
+          </section>
+          <section class="generated-block generated-block-muted">
+            <h2>Google reviews</h2>
+            <p class="generated-rating"><span class="g-stars">★★★★★</span> 4.9 · 86 Google reviews</p>
+            <div class="g-review-list g-review-list-wide">
+              <article class="g-review">
+                <div class="g-review-top">
+                  <img class="g-avatar" src="fixtures/bellfield/aoife.jpg" alt="" width="40" height="40" />
+                  <div class="g-review-who"><b>Aoife K.</b><span>Local Guide · 14 reviews</span></div>
+                </div>
+                <div class="g-review-rating"><span class="g-stars">★★★★★</span><time>3 months ago</time></div>
+                <p>On the roof the next morning after the storm. Clean site, fair price.</p>
+              </article>
+              <article class="g-review">
+                <div class="g-review-top">
+                  <img class="g-avatar" src="fixtures/bellfield/mark.jpg" alt="" width="40" height="40" />
+                  <div class="g-review-who"><b>Mark D.</b><span>8 reviews</span></div>
+                </div>
+                <div class="g-review-rating"><span class="g-stars">★★★★★</span><time>6 months ago</time></div>
+                <p>Replaced the back slope and left the garden better than they found it.</p>
+              </article>
+            </div>
+          </section>
+        </div>
+        <aside class="activate-strip" id="activateStrip" aria-label="Website activation">
+          <div class="activate-panel" id="activatePanel" hidden>
+            <img class="activate-mark" src="placis-mark.png" width="101" height="40" alt="placis" />
+            <div data-activate="unsigned">
+              <h2>Activate this website</h2>
+              <p>Create an account, then pay. Whoever pays becomes the owner. The website stays unpublished until you publish it later.</p>
+              <div class="activate-price"><b>EUR 4,900</b><span>one-time</span></div>
+              <p class="activate-price-note">Then about €50 / month to keep editing and hosting.</p>
+              <div class="activate-actions">
+                <button class="button-primary" id="activateSignUp" type="button">Create account</button>
+              </div>
+            </div>
+            <div class="is-hidden" data-activate="signed-in">
+              <h2>Pay to activate</h2>
+              <p>Signed in. Checkout is tied to this account.</p>
+              <div class="activate-price"><b>EUR 4,900</b><span>one-time</span></div>
+              <p class="activate-price-note">Then about €50 / month to keep editing and hosting.</p>
+              <div class="activate-actions">
+                <button class="button-primary" id="activatePay" type="button">Pay EUR 4,900</button>
+              </div>
+            </div>
+            <div class="is-hidden" data-activate="paying">
+              <h2>Opening checkout</h2>
+              <p>Stripe checkout for EUR 4,900. This mock does not charge a card.</p>
+            </div>
+            <div class="is-hidden" data-activate="activating">
+              <h2>Payment received</h2>
+              <p>Opening the website editor…</p>
+            </div>
+          </div>
+          <div class="activate-bar" id="activateBar">
+            <img class="activate-mark" src="placis-mark.png" width="101" height="40" alt="placis" />
+            <div class="activate-copy">
+              <b>This website is ready</b>
+              <span>One-time · then about €50 / month</span>
+            </div>
+            <p class="activate-bar-price" aria-hidden="true"><b>EUR 4,900</b><span>one-time</span></p>
+            <button class="button-primary" id="activateOpen" type="button">Activate this website</button>
+            <button class="button-secondary is-hidden" id="activateClose" type="button">Close</button>
           </div>
         </aside>
       </div>
     </section>
   </main>
+
+  <footer class="onb-foot" id="onbFoot">
+    <div class="onb-foot-inner">
+      <p class="onb-foot-hint" id="footHint">Saved automatically as you type.</p>
+      <div class="wait-progress is-hidden" id="waitProgress">
+        <div class="bar" aria-hidden="true"><i id="waitBar"></i></div>
+        <p id="waitCopy">Writing your website · 15 seconds left</p>
+      </div>
+      <button class="button-primary" id="primaryAction" type="button" disabled>
+        <span id="primaryLabel">Business lookup</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+  </footer>
+  <script src="details-fields.js"></script>
   <script src="onboarding.js"></script>
 </body>
 </html>

@@ -185,4 +185,28 @@ retrieved text is not fast extract.)
 17. **Whoever pays becomes the owner** — unauthenticated visitors may Clerk
     sign-in/sign-up and pay on the host. First verified Stripe
     `checkout.session.completed` wins. Later completions do not steal the
-    tenant. (2026-08-25.)
+    tenant. (2026-08-25.) The website-activation strip CTA is **Create
+    account**, not Sign in. An existing Clerk session skips to pay.
+    (2026-08-28)
+
+18. **Client interview writes structured Details fields** — services are
+    `business_profile_services` list rows (`name`, `description`,
+    `website_page_path`), not a textarea. Service areas are
+    `business_profile_service_areas` (`locality` + `radius_km`) from a Google
+    Maps territory lookup, one card per region. Opening hours use the Details
+    picker (one range per day, Closed, copy to following days). Complete has
+    those list rows before 05. 05 applies the website template from that
+    accepted profile (named services → service pages). 06 must not
+    `create_page` and must not invent the service list. Paste of one-per-line
+    or comma-separated **service names** may split into rows deterministically.
+    Do not combine those rows with an LLM in the 15s wait. (2026-08-28)
+
+19. **Onboarding Details == Business details** — `/onboarding/interview` and
+    `/cms/details` edit the same Details fields with the same controls and the
+    same `business_profile_*` writes. If Details gains, drops, or changes a
+    field, the client interview does too. Do not keep a parallel onboarding-only
+    widget for a Details field (no textarea for services, no free-text service
+    area, no second hours picker). Allowed differences only: white `.onb-card`
+    vs the Details panel; legal identity stays on Review (03) and is not
+    repeated; interview may add photos, certifications, reviews, extra notes,
+    contact name, and `emergency_phone` around that Details block. (2026-08-28)
