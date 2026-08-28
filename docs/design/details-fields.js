@@ -1,4 +1,5 @@
-/* Shared Details field wiring for cms.html and onboarding.html. Mock-only. */
+/* Shared Details widget wiring for cms.html, onboarding.html, and ads.html.
+   Field controls, combobox, hours, service list, and the mock-only yellow strip. */
 
 function detailsEsc(value) {
   return String(value).replace(/[&<>"']/g, (char) => ({
@@ -104,7 +105,7 @@ function bindServiceAreas() {
 }
 
 function serviceRowHtml(value) {
-  return `<li class="cms-item-row"><input class="cms-careers-input" value="${detailsEsc(value)}" aria-label="Featured service" /><button class="cms-item-remove" type="button" aria-label="Remove service">×</button></li>`;
+  return `<li class="cms-item-row"><input class="cms-field-control" value="${detailsEsc(value)}" aria-label="Featured service" /><button class="cms-item-remove" type="button" aria-label="Remove service">×</button></li>`;
 }
 
 function splitServiceNames(text) {
@@ -247,6 +248,28 @@ function bindHoursPicker() {
   renderHoursPicker();
 }
 
+function preferViewtabsCollapsed() {
+  const params = new URLSearchParams(location.search);
+  if (params.has("shot")) return true;
+  if (params.has("dev")) return false;
+  return true;
+}
+
+function setViewtabsCollapsed(collapsed) {
+  document.getElementById("viewtabs")?.classList.toggle("is-hidden", collapsed);
+  document.getElementById("viewtabsOpen")?.classList.toggle("is-hidden", !collapsed);
+}
+
+function bindViewtabs() {
+  const params = new URLSearchParams(location.search);
+  if (params.has("shot")) document.body.classList.add("is-shot");
+  document.getElementById("viewtabsCollapse")?.addEventListener("click", () => setViewtabsCollapsed(true));
+  document.getElementById("viewtabsOpen")?.addEventListener("click", () => setViewtabsCollapsed(false));
+  setViewtabsCollapsed(preferViewtabsCollapsed());
+}
+
+document.querySelectorAll(".cms-combo").forEach(bindCombo);
 bindServiceAreas();
 bindFeaturedServices();
 bindHoursPicker();
+bindViewtabs();

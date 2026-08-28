@@ -32,90 +32,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 }
 ::selection { background: #000; color: #fff; }
 svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.is-hidden { display: none !important; }
-
-.viewtabs {
-  position: relative;
-  z-index: 80;
-  display: flex;
-  flex: 0 0 auto;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px dashed var(--cms-border-strong);
-  background: var(--cms-warning-surface);
-  padding: 8px 44px 8px 16px;
-}
-.viewtabs-collapse {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  display: grid;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--cms-warning);
-  padding: 0;
-}
-.viewtabs-collapse svg { width: 16px; height: 16px; }
-.viewtabs-fab {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  z-index: 90;
-  display: grid;
-  width: 40px;
-  height: 40px;
-  place-items: center;
-  border: 1px dashed var(--cms-border-strong);
-  border-radius: 50%;
-  background: var(--cms-warning-surface);
-  color: var(--cms-warning);
-  box-shadow: var(--cms-shadow-sm);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-body.is-shot .viewtabs,
-body.is-shot .viewtabs-fab { display: none !important; }
-.viewtabs-label {
-  color: var(--cms-warning);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.viewtab {
-  border: 1px solid var(--cms-border);
-  border-radius: var(--cms-radius-pill);
-  background: var(--background);
-  color: var(--cms-text-muted);
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 500;
-}
-.viewtab.on {
-  border-color: var(--cms-accent);
-  background: var(--prompt-shelf);
-  color: var(--cms-text);
-  font-weight: 600;
-}
-.viewtabs-group,
-.viewtabs-hint {
-  color: var(--cms-text-muted);
-  font-size: 11px;
-  font-weight: 600;
-}
-.viewtabs-states {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
 
 .onb-header {
   flex: 0 0 auto;
@@ -254,70 +170,11 @@ body.is-generated .onb-view[data-view="generated"] {
   display: flex;
 }
 
-.button-primary,
-.button-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 14px;
-  border-radius: var(--cms-radius-control);
-  font-weight: 450;
-  font-size: 14px;
-}
-.button-primary {
-  border: 1px solid rgb(0 0 0 / 10%);
-  background: var(--primary);
-  color: var(--primary-foreground);
-}
-.button-primary:hover { background: var(--cms-accent-hover); }
-.button-primary:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-.button-secondary {
-  border: 1px solid var(--border);
-  background: var(--background);
-  color: var(--foreground);
-}
-@media (hover: hover) and (pointer: fine) {
-  .button-secondary:hover { background: var(--cms-surface-sunken); }
-}
-.button-primary svg,
-.button-secondary svg { width: 16px; height: 16px; }
-
 .field { display: grid; gap: 6px; }
-.field > span,
-.field > label {
-  color: #3f3f46;
-  font-weight: 450;
-  font-size: 13px;
-  letter-spacing: -0.01em;
-}
 .field .hint {
   color: var(--cms-text-muted);
   font-weight: 400;
 }
-.field-control,
-.select-wrap select,
-.select-trigger {
-  width: 100%;
-  height: 44px;
-  border: 1px solid var(--cms-border);
-  border-radius: var(--cms-radius-control);
-  background: var(--cms-canvas);
-  color: var(--cms-text);
-  padding: 0 12px;
-}
-.field-control:focus,
-.select-wrap select:focus,
-.select-trigger:focus-visible {
-  border-color: var(--cms-accent);
-  box-shadow: 0 0 0 4px rgb(19 18 10 / 10%);
-  outline: none;
-}
-.field-control::placeholder { color: var(--cms-text-subtle); }
 .select-wrap { position: relative; }
 .select-wrap > select {
   position: absolute;
@@ -348,14 +205,15 @@ body.is-generated .onb-view[data-view="generated"] {
 .select-menu {
   position: absolute;
   z-index: 40;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   right: 0;
   left: 0;
   margin: 0;
-  padding: 4px;
+  padding: 0;
+  overflow: hidden;
   border: 1px solid var(--cms-border);
-  border-radius: var(--cms-radius-control);
-  background: var(--cms-canvas);
+  border-radius: var(--cms-radius-panel);
+  background: var(--background);
   box-shadow: var(--cms-shadow-md);
   list-style: none;
 }
@@ -363,10 +221,9 @@ body.is-generated .onb-view[data-view="generated"] {
   display: block;
   width: 100%;
   border: 0;
-  border-radius: 6px;
   background: transparent;
   color: inherit;
-  padding: 8px 10px;
+  padding: 9px 12px;
   text-align: left;
   cursor: pointer;
 }
@@ -375,17 +232,11 @@ body.is-generated .onb-view[data-view="generated"] {
   color: var(--cms-text-on-accent);
 }
 @media (hover: hover) and (pointer: fine) {
-  .select-menu button:hover { background: var(--cms-surface-sunken); color: var(--cms-text); }
+  .select-menu button:hover { background: var(--cms-surface-active); color: var(--cms-text); }
   .select-menu button[aria-selected="true"]:hover {
     background: var(--cms-accent);
     color: var(--cms-text-on-accent);
   }
-}
-.textarea {
-  min-height: 6rem;
-  height: auto;
-  padding: 10px 12px;
-  resize: vertical;
 }
 .search-wrap { position: relative; }
 .search-wrap .field-control { padding-right: 2.5rem; }
@@ -530,33 +381,32 @@ body.is-generated .onb-view[data-view="generated"] {
 .combo { position: relative; }
 .listbox {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   right: 0;
   left: 0;
   z-index: 20;
   max-height: 18rem;
   overflow: auto;
   border: 1px solid var(--cms-border);
-  border-radius: var(--cms-radius-control);
+  border-radius: var(--cms-radius-panel);
   background: var(--background);
-  box-shadow: var(--cms-shadow-sm);
-  padding: 4px;
+  box-shadow: var(--cms-shadow-md);
+  padding: 0;
 }
 .listbox button {
   display: grid;
   width: 100%;
   gap: 2px;
   border: 0;
-  border-radius: 8px;
   background: transparent;
   color: var(--cms-text-muted);
-  padding: 10px 12px;
+  padding: 9px 12px;
   text-align: left;
   font-size: 13px;
 }
 .listbox button b { color: var(--cms-text); font-weight: 600; }
 @media (hover: hover) and (pointer: fine) {
-  .listbox button:hover { background: var(--muted); }
+  .listbox button:hover { background: var(--cms-surface-active); }
 }
 .picked {
   display: grid;
@@ -636,7 +486,7 @@ body.is-generated .onb-view[data-view="generated"] {
 }
 .fact b {
   display: block;
-  color: #3f3f46;
+  color: var(--cms-text-secondary);
   font-size: 13px;
   font-weight: 450;
   letter-spacing: -0.01em;

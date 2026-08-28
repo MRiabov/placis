@@ -1,4 +1,5 @@
-/* Mock-only scene wiring for ads.html. Not product UI. */
+/* Mock-only scene wiring for ads.html. Not product UI.
+   Combobox and yellow strip: details-fields.js (loaded first). */
 
   // view switcher: list of existing ads vs the new/edit ad flow vs ad detail
   const viewList = document.getElementById("viewList");
@@ -82,59 +83,6 @@
   window.addEventListener("drop", e => { e.preventDefault(); dragDepth = 0; dropper.classList.remove("show"); });
   const f1 = document.getElementById("f1");
   const f2 = document.getElementById("f2");
-
-  // combobox: closed by default, opens on focus; create-new is conditional
-  document.querySelectorAll(".combo").forEach(combo => {
-    const input = combo.querySelector("input");
-    const pop = combo.querySelector(".pop");
-    const create = pop.querySelector(".create");
-    const divider = pop.querySelector(".divider");
-    const empty = pop.querySelector(".empty");
-    const rows = [...pop.querySelectorAll(".row")];
-    const label = combo.dataset.create || "item";
-    const esc = s => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-    input.addEventListener("focus", () => combo.classList.add("open"));
-    input.addEventListener("blur", () => setTimeout(() => combo.classList.remove("open"), 120));
-    input.addEventListener("input", () => {
-      const q = input.value.trim().toLowerCase();
-      let any = false;
-      rows.forEach(r => {
-        const hit = r.textContent.toLowerCase().includes(q);
-        r.style.display = hit ? "" : "none";
-        if (hit) any = true;
-      });
-      if (combo.classList.contains("nocr")) {
-        if (empty) empty.hidden = !(q && !any);
-        return;
-      }
-      const row = create.querySelector(".crow");
-      if (q && !any) {
-        row.classList.remove("hint");
-        row.classList.add("sel");
-        row.innerHTML = '<span class="plus">+</span> Create new ' + esc(label) + ' "' + esc(input.value.trim()) + '"';
-        if (divider) { divider.hidden = false; divider.classList.add("show"); }
-      } else {
-        row.classList.add("hint");
-        row.classList.remove("sel");
-        row.innerHTML = '<span class="hintic">✎</span> Type to create a new ' + label + '…';
-        if (divider) { divider.hidden = true; divider.classList.remove("show"); }
-      }
-      if (empty) empty.hidden = true;
-    });
-    // selecting a row picks it (checkmark moves), fills the input, closes the dropdown
-    rows.forEach(r => r.addEventListener("click", () => {
-      rows.forEach(x => {
-        const ic = x.querySelector(".ic");
-        if (!ic) return;
-        const active = x === r;
-        ic.textContent = active ? "✓" : "◫";
-        ic.classList.toggle("cur", active);
-      });
-      const name = r.querySelector(".txt b");
-      if (name) input.value = name.textContent;
-      combo.classList.remove("open");
-    }));
-  });
 
   // '+ Add' opens the file picker (upload through the media flow)
   const addBtn = document.getElementById("addBtn");
@@ -226,7 +174,7 @@
   document.querySelectorAll(".cms-ai-orb").forEach(orb => {
     const prompt = document.getElementById(orb.getAttribute("aria-controls"));
     const ta = prompt.querySelector("textarea");
-    const go = prompt.querySelector(".btn");
+    const go = prompt.querySelector(".button-primary");
     const syncGo = () => { go.disabled = !ta.value.trim(); };
     ta.addEventListener("input", syncGo);
     orb.addEventListener("click", () => {
@@ -360,7 +308,7 @@
 
   // generate: loading, then form 1 done, form 2 unlocks and expands
   document.getElementById("generate").addEventListener("click", () => {
-    const svc = document.querySelector("#f1 .combo input");
+    const svc = document.querySelector("#f1 .cms-combo input");
     const svcErr = document.getElementById("svcErr");
     if (!svc.value.trim()) { svcErr.style.display = "flex"; svc.focus(); return; }
     svcErr.style.display = "none";
@@ -403,7 +351,7 @@
   }
   function unlockReview() {
     generatedOnce = true;
-    const svc = document.querySelector("#f1 .combo input");
+    const svc = document.querySelector("#f1 .cms-combo input");
     if (svc && !svc.value.trim()) svc.value = "Roofing replacement";
     f2.classList.remove("locked");
     f2.classList.add("open");
@@ -423,8 +371,6 @@
   const params = new URLSearchParams(location.search);
   const scene = params.get("scene") || (location.hash || "#list").slice(1) || "list";
   if (params.has("shot")) {
-    const tabs = document.querySelector(".viewtabs");
-    if (tabs) tabs.style.display = "none";
     const headlinePrompt = document.getElementById("prompt-headline");
     const headlineOrb = document.querySelector('[aria-controls="prompt-headline"]');
     if (headlinePrompt && headlineOrb) {

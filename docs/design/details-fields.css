@@ -1,26 +1,219 @@
-/* Shared Details field components. Used by cms.html and onboarding.html.
-   Tokens: tokens.css. White wells; combo, territory, service list, hours. */
+/* Shared owner controls for cms.html, onboarding.html, and ads.html.
+   Field controls, buttons, combobox, labels, mock-only yellow strip, Details
+   widgets (territory, service list, hours). Tokens: tokens.css.
+   Not the website assistant composer, New chat prompt, contractor website
+   form, Ads inplace names, or Facebook/Instagram placement. */
 
-.cms-field { display: grid; gap: 6px; }
-.cms-field-label {
-  color: #3f3f46;
+.is-hidden { display: none !important; }
+
+.cms-field-control,
+.field-control,
+.select-wrap select,
+.select-trigger {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid var(--cms-border);
+  border-radius: var(--cms-radius-control);
+  background: var(--cms-surface-sunken);
+  color: var(--cms-text);
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+}
+.cms-field-control::placeholder,
+.field-control::placeholder {
+  color: var(--cms-text-subtle);
+  opacity: 1;
+}
+.cms-field-control:focus,
+.cms-field-control:focus-visible,
+.field-control:focus,
+.field-control:focus-visible,
+.select-wrap select:focus,
+.select-wrap select:focus-visible,
+.select-trigger:focus,
+.select-trigger:focus-visible {
+  border-color: var(--cms-accent);
+  box-shadow: 0 0 0 2px var(--cms-accent-ring-color);
+  outline: none;
+}
+textarea.cms-field-control,
+textarea.field-control {
+  min-height: 6rem;
+  height: auto;
+  resize: vertical;
+}
+
+.cms-field-label,
+.cms-details-field-grid > label > span,
+.cms-details-form-panel label > span,
+.field > span,
+.field > label,
+.copyfield .lbl {
+  color: var(--cms-text-secondary);
   font-size: 13px;
   font-weight: 450;
   letter-spacing: -0.01em;
 }
-.cms-field-control,
-.cms-careers-input,
-.cms-careers-textarea {
-  width: 100%;
-  border: 1px solid var(--cms-border);
-  border-radius: 10px;
-  background: var(--cms-surface-sunken);
-  color: var(--cms-text);
-  padding: 10px 12px;
+.copyfield .lbl,
+.copyfield > label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.button-primary,
+.button-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--cms-radius-control);
+  cursor: pointer;
+  font-weight: 450;
   font-size: 14px;
 }
-.cms-careers-textarea { min-height: 88px; resize: vertical; }
+.button-primary {
+  border: 1px solid rgb(0 0 0 / 10%);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.button-primary:hover { background: var(--cms-accent-hover); }
+.button-primary:disabled,
+.button-secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.button-secondary {
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--foreground);
+}
+@media (hover: hover) and (pointer: fine) {
+  .button-secondary:hover { background: var(--cms-surface-sunken); }
+}
+.button-primary svg,
+.button-secondary svg { width: 16px; height: 16px; }
 
+.consent input[type="checkbox"],
+.check-row input[type="checkbox"],
+.cms-cert-row input[type="checkbox"],
+.qrow input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  accent-color: var(--cms-accent);
+}
+
+.viewtabs {
+  position: relative;
+  z-index: 80;
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px dashed var(--cms-border-strong);
+  background: var(--cms-warning-surface);
+  padding: 8px 44px 8px 16px;
+}
+.viewtabs-collapse {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cms-warning);
+  padding: 0;
+  cursor: pointer;
+}
+.viewtabs-collapse svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.viewtabs-fab {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 90;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px dashed var(--cms-border-strong);
+  border-radius: 50%;
+  background: var(--cms-warning-surface);
+  color: var(--cms-warning);
+  box-shadow: var(--cms-shadow-sm);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+body.is-shot .viewtabs,
+body.is-shot .viewtabs-fab { display: none !important; }
+.viewtabs-label {
+  color: var(--cms-warning);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.viewtab {
+  border: 1px solid var(--cms-border);
+  border-radius: var(--cms-radius-pill);
+  background: var(--background);
+  color: var(--cms-text-muted);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.viewtab.on {
+  border-color: var(--cms-accent);
+  background: var(--prompt-shelf);
+  color: var(--cms-text);
+  font-weight: 600;
+}
+.viewtabs-group,
+.viewtabs-hint,
+.viewtabs-empty {
+  color: var(--cms-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+.viewtabs-group {
+  margin-right: 4px;
+  color: var(--cms-warning);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.viewtabs-states {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.cms-field { display: grid; gap: 6px; }
 .cms-details-panel-heading h3 {
   margin: 0;
   font-size: 1.25rem;
@@ -41,13 +234,6 @@
 }
 .cms-details-field-grid > label,
 .cms-details-form-panel label { display: grid; gap: 6px; }
-.cms-details-field-grid > label > span,
-.cms-details-form-panel label > span {
-  color: #3f3f46;
-  font-size: 13px;
-  font-weight: 450;
-  letter-spacing: -0.01em;
-}
 .cms-field-note {
   color: var(--cms-text-muted);
   font-size: 12px;
@@ -66,7 +252,7 @@
   overflow: hidden;
   border: 1px solid var(--cms-border);
   border-radius: var(--cms-radius-panel);
-  background: #fff;
+  background: var(--background);
   box-shadow: var(--cms-shadow-md);
 }
 .cms-combo.is-open .cms-combo-pop { display: block; }
@@ -141,7 +327,7 @@
   gap: 10px 16px;
   border: 1px solid var(--cms-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--background);
   padding: 10px 12px;
 }
 .cms-territory-copy {
@@ -175,7 +361,7 @@
   gap: 8px;
   align-items: center;
 }
-.cms-item-row .cms-careers-input { flex: 1 1 auto; }
+.cms-item-row .cms-field-control { flex: 1 1 auto; }
 .cms-item-remove {
   display: grid;
   width: 32px;
@@ -293,7 +479,7 @@
   gap: 10px 12px;
   border: 1px solid var(--cms-border);
   border-radius: 12px;
-  background: #fff;
+  background: var(--background);
   padding: 10px 12px;
 }
 .cms-profile-card-photo {
