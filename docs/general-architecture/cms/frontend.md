@@ -20,18 +20,20 @@ Sites / Profile / Ads. Direct `/cms` (land or go to the URL) still shows the
 chooser.
 
 On a **narrow** screen the destinations are a **full-screen overlay selector**
-(no leftover icon rail). Profile is not a row; the four children are:
+(no leftover icon rail). Profile stays a disclosure; the four children stay
+nested under it:
 
 ```text
 Sites
-Business details
-Projects
-Certifications and reviews
-Media library
+Profile
+  Business details
+  Projects
+  Certifications and reviews
+  Media library
 Ads
 ```
 
-On a **wide** screen Profile is a disclosure:
+On a **wide** screen the same nested Profile disclosure:
 
 ```text
 Sites
@@ -60,8 +62,9 @@ infrequently. One Profile group keeps them reachable without adding another peer
 of Sites.
 
 **Hide in product; keep mock HTML:** Settings, Log out, New chat nav row,
-Paperclip, Start client interview orb, Upgrade shelf. Do not delete those nodes
-from the look-export HTML. Do **not** hide the website-editor voice orb.
+Connect (the New chat Google / Meta control), Paperclip, Start client interview
+orb, Upgrade shelf. Do not delete those nodes from the look-export HTML. Do
+**not** hide the website-editor voice orb.
 
 ## Profile disclosure
 
@@ -84,41 +87,44 @@ Profile is not a route. Clicking it only expands or collapses the group.
   **navigates to Business details**. It does not expand the sidebar. Expand or
   collapse labels with the sidebar panel control, or hover-peek. (2026-08-27:
   peek + pin; see [design decision record](design-decision-record.md) 4.)
-- **Narrow overlay selector:** no Profile disclosure. The four children are rows
-  in the full-screen overlay (Business details, Projects, Certifications and
-  reviews, Media library), with Sites and Ads. Open destinations is inline with
-  the screen heading.
+- **Narrow overlay selector:** the same nested Profile disclosure as wide
+  (expanded labels, indented children). Profile is a row; tapping it expands or
+  collapses the group. It does not navigate to Business details (that is
+  collapsed-rail only). Open destinations is inline with the screen heading.
 
 Headings on Details, Projects, Certifications and reviews, Media library, and
 Ads have no decorative icon. On narrow, Open destinations stays inline with the
-heading.
+heading. Ads on narrow is **Ads** next to Open destinations; the list does not
+repeat **Your ads**. (2026-08-28)
 
 ## `/cms` (two cards)
 
 `/cms` is a **deep-link only** chooser: land on it or go to the URL. Two cards
-under **Placis**:
+under **placis**, cloning the old prompt-box look (`--hairline`,
+`--prompt-radius`, a readable lift of `--prompt-shadow`). Wide: one row. Narrow:
+stacked, so titles stay one line.
 
-- **Do my website…** — done-for-you. Goes to `/cms/website`. Description:
-  **Have Placis do your website** (or similar).
-- **Run my ads** — the ads twin. Goes to `/cms/ads`. Ad posting is soon enough
-  that “Run” is allowed.
+- **Do my website…** — done-for-you. Goes to `/cms/website`. Logo: Sites globe.
+  Description: **Have Placis do your website** (or similar).
+- **Run my ads** — the ads twin. Goes to `/cms/ads`. Logo: Ads megaphone.
+  Description: **Have Placis run your ads**. Ad posting is soon enough that
+  “Run” is allowed.
 
 No first-turn assistant POST. No Paperclip. No Start client interview (that
 control promised a second client interview after website activation). Product
 voice is the website-editor canvas orb and the Ads product guide — not this
 screen.
 
-**Connect** stays (Google Ads and Meta ad accounts). It is not Connect website
-address and not Details Facebook / Google Maps listing. Hide Connect when both
-ad accounts are already connected (same status as Ads; do not paint it and then
-hide it). No first-slice connection HTTP in this pass. Owner copy must not say
-“run campaigns” while Ads only export.
+**Connect** is not on `/cms`. Google Ads and Meta connect live on Ads. The
+hidden prompt-box Connect control is not Connect website address and not Details
+Facebook / Google Maps listing. No first-slice connection HTTP in this pass.
+Owner copy must not say “run campaigns” while Ads only export.
 
 The old prompt-box markup stays in the look-export HTML as restorable nodes
 (look: [design decision record](design-decision-record.md) 5). Product paints the two cards instead.
 
-Ads look for `/cms/ads` is [ads-workspace.html](../../features/ads/ad-generation/design/ads-workspace.html) (list, then workspace). The
-look-export Ads pane is a pointer stub, not Ads UX.
+Ads look for `/cms/ads` is [ads.html](../../design/ads.html), embedded as the
+Ads destination (`?scene=ads`).
 
 ## Account
 

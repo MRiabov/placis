@@ -21,7 +21,8 @@ future work).
 sidebar (New chat, Sites, Profile with Business details, Projects,
 Certifications and reviews, and Media library) stays around it, and Ads is
 dashboard-ish content in the main area — My ads list, the ad workspace, and the
-ad detail all render inside that frame. The mock shows the sidebar for context.
+ad detail all render inside that main area. The look export embeds [ads.html](../../../design/ads.html)
+(`?scene=ads`).
 
 Stack: Vite + React + TanStack Router (the `/cms/*` island), generated API
 types, Tailwind + Radix, Kibo/shadcn components where they fit. Ads follows the
@@ -53,7 +54,8 @@ These principles shape every screen in this workspace:
 ## Design Mock
 
 A static HTML mock of the workspace lives at [ads.html](../../../design/ads.html) — open it in a browser
-directly (no build). It shows the current direction:
+directly (no build), or as the Ads destination (`?scene=ads`, which embeds
+`ads.html?embed=1`). It shows the current direction:
 **one accordion wrapper with two expandable steps, both visible immediately** —
 step 1 "About the ad" (open by default, all the questions), step 2 "Review"
 (visible but locked — "Complete step 1 to unlock" — and expands once step 1 is
@@ -109,6 +111,10 @@ and the approve block at the end.
   button never comes back. New chat **Connect** uses this same status: gone when
   Google Ads and Meta are both connected ([look](../../../general-architecture/cms/design-decision-record.md) 5).
 - "+ New ad" button; empty state with a one-line explanation and a start button
+- On a **wide** screen the list heading is **Your ads**. On a **narrow** screen
+  the CMS heading is **Ads** (Open destinations inline); the list does not
+  repeat a second title. Connect / compact / **+ New ad** wrap instead of
+  sharing one squeezed row. (2026-08-28)
 
 ### 2. Ad workspace (`/cms/ads/new`, `/cms/ads/{id}`)
 
@@ -185,14 +191,14 @@ The questions and review content:
    are **one image**: tapping a thumb uses that photo for the ad (single
    select). Carousel is several square cards: tapping a thumb picks which card
    the cleanup viewer shows. Crops follow the selected format automatically from
-   the **photo's stored focal point** (one anchor). Thumbnail labels are the
-   media caption (alt text) when it exists — there is no short-title guarantee,
-   so the strip truncates to two lines with the full media caption on hover.
-   Until the media caption is written, the thumb has no media caption line (not
-   an error). A newly added photo shows **Uploading…** only while the photo is
-   uploading; hover the thumb for a circle-and-cross button and click it to
-   cancel (no photo is added). If they do not cancel, it is usable in this ad
-   (about 10 seconds) — captioning continues in the background. The owner is
+   the **photo's stored focal point** (one anchor). Thumbs are the photo only —
+   no media caption overlay (alt stays on the image). (2026-08-28) Previous:
+   thumbnail labels were the media caption, two lines, full media caption on
+   hover. Until the media caption is written, the thumb has no media caption
+   line (not an error). A newly added photo shows **Uploading…** only while the
+   photo is uploading; hover the thumb for a circle-and-cross button and click
+   it to cancel (no photo is added). If they do not cancel, it is usable in this
+   ad (about 10 seconds) — captioning continues in the background. The owner is
    never asked to label it. A failed upload is a warning with an upload sign. "+
    Add" opens the file picker; dragging a file anywhere on the screen also adds
    a photo (drop overlay) — a pattern intended to extend across the website
@@ -207,12 +213,13 @@ The questions and review content:
    whole field (Ctrl+Z restores the previous text). Prompt text is required;
    submit stays disabled while blank. Optional selection on rewrite; omit means
    the whole field. Other owner edits are kept. Result is still editable. Not
-   the website assistant chat.
+   the website assistant chat. (2026-08-28) Short label has no AI orb.
 7. **Ad format preview** — the selected format, rendered from the backend
    response, as **Facebook and Instagram** placements from an existing
    dual-platform mock kit (title / image / actions; add **Sponsored** and the
    CTA if the kit is organic-post-only). Desktop shows both platforms; narrow
-   screens toggle Facebook | Instagram. Labels are owner-facing ("Square feed",
+   screens toggle Facebook | Instagram (platform mark plus the name). Labels are
+   owner-facing ("Square feed",
    "Portrait feed", "Carousel", "Story") — no ratios. Placement type is
    Meta-like, not Satoshi: Facebook is Helvetica / Helvetica Neue / Arial;
    Instagram is system UI (`-apple-system`, Segoe UI, Roboto). The card label
@@ -230,8 +237,8 @@ Actions:
   (ad posting is future work).
 - **Download** — produces the zip of the ad set (temporary step until direct
   transmission to Meta exists).
-- **AI orb (Review)** — after generate: promptable rewrite of headline, primary
-  text, or short label, and promptable cleanup of the current photo via
+- **AI orb (Review)** — after generate: promptable rewrite of headline or
+  primary text, and promptable cleanup of the current photo via
   `POST /v1/media-assets/{id}/image-edits` (prompt required for a different
   cleanup; the upload default already ran). Reject:
   `POST /v1/media-assets/{id}/reject`. Replaces unprompted **Regenerate**. Marks
@@ -254,6 +261,8 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
   no save button). The status badge sits **on the right next to the actions**:
   Ad posting (disabled until ad posting), **Download (always available on an
   existing ad — approve is a creation-flow gate, not a detail action)**, Edit.
+  On a **narrow** screen the name is a full-width row; the badge and actions
+  wrap below. They do not share one squeezed row. (2026-08-28)
   Edit is the same outline control as Download — not a filled CTA (Approve is
   the filled action, and only on the create flow). Back to the list. The badge
   is an existing-ad status — **Creative ready** (next status: **Published** once
@@ -325,8 +334,9 @@ needs it):
   cleanup)
 - CopyEditor (fields + character counts + CTA select + ad lead form title;
   headline ~40ch wide; field labels match the rest of the step — uppercase 11px
-  muted; the CMS AI orb on headline, primary text, and short label — 44px,
-  matching the field; prompt overlay, required; highlight to edit a span)
+  muted; the CMS AI orb on headline and primary text — 44px,
+  matching the field; prompt overlay, required; highlight
+  to edit a span. Short label is typed; no orb)
 - AdPreview (Facebook + Instagram placement for this ad's one format, from an
   existing mock kit; Meta-like fonts inside the placement, the CMS fonts on our
   card label; labels are owner-facing, no ratios; shows a brief empty note when
@@ -393,6 +403,7 @@ Mobile is a primary viewport. Ads must work on a mobile device:
 - the ad format preview and the bottom approve bar stay reachable
 - media picker and framing controls are modal/touch-friendly
 - character counts and blocker messages remain readable at narrow widths
+- list toolbar and detail top bar wrap; they do not overlap (2026-08-28)
 
 ## Testing
 

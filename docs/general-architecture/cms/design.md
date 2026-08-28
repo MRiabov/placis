@@ -69,8 +69,15 @@ rest.
 | **Flat prompt** (Connect, Paperclip, Voice) | `--background` | `--cms-surface-sunken` only while open or `(hover: hover)` | `--hairline` |
 
 Connect zinc-50 is the **open** fill (Google / Meta panel), not a stuck
-`:hover`. Hide Connect when Google Ads and Meta are both connected
+`:hover`. Connect is not on `/cms`; it lives on Ads. The hidden prompt-box
+control still hides when Google Ads and Meta are both connected
 ([design decision record](design-decision-record.md) 5).
+
+`/cms` chooser cards clone the prompt-box look: `--hairline`,
+`--prompt-radius`, and a readable lift of the prompt shade (`0 1px 2px / 6%`,
+`0 10px 28px / 10%` — `--prompt-shadow` is too faint on this white canvas). Each
+card has a destination logo (Sites globe, Ads megaphone) in a sunken well. The
+two cards sit in one row on a wide screen and stack on a narrow screen.
 
 ## Not these
 
