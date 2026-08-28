@@ -55,9 +55,8 @@ on the generate row), then the approve block when the ad is ad ready to post.
 The combobox is closed by default with a conditional "create new". Format pills are single-select
 (one format per ad) using owner-facing names (Square feed, Portrait feed, Carousel, Story) — no
 ratios, no ad-set jargon.
-The mock is skinned from [tokens.css](../../../design/tokens.css) (the CMS look export).
-White canvas, Satoshi, hairline prompt box, the same control radius as the CMS
-(sidebar + main area).
+The mock uses [tokens.css](../../../design/tokens.css).
+White canvas, Satoshi, hairline prompt box, control radius on fields.
 The real implementation imports the app globals and should reuse the
 dashboard prompt look rather than duplicate a palette.
 
