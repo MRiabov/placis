@@ -8,13 +8,17 @@
 <!--
   Function follows onboarding specs; this file is visual.
   Open onboarding.html in a browser (no build). Styles: onboarding.css (tokens.css, details-fields.css). Scene wiring: details-fields.js then onboarding.js.
+  DustOrb: dust-orb.js.
   Screens: Find, Review, client interview, wait teaser, plus a mock of the generated website.
   Website activation lives on the preview website address (the generated mock here).
   The website-activation strip is sticky to the bottom; the mock site scrolls above it.
   One screen shell: heading, cards, sticky footer. Dev strip is per-screen states; default collapsed.
-  Hide with ?shot=1. Open with ?dev=1. Scenes: ?scene=find|review|interview|preview|generated.
+  Hide with ?shot=1. Open with `?dev=1`. Scenes: ?scene=find|review|interview|preview|generated.
   Dev skip generation: yellow strip, or ?scene=generated.
   Paid (after website activation) opens cms.html — website editor, Publish.
+  Onboarding voice guide: DustOrb bottom-right, visible, voice off. Cue: Click to turn on voice.
+  Click plays a prerecorded intro (onboarding-guide-intro.mp3) and starts the guide. Close → Enable voice
+  guide. Hidden on the wait teaser and generated mock. ?guide=1 starts listening (no cue, no autoplay).
 -->
 <link rel="stylesheet" href="onboarding.css" />
 </head>
@@ -48,7 +52,6 @@
       <button type="button" class="viewtab" data-state="filled">Filled</button>
       <button type="button" class="viewtab" data-state="few-photos">Few photos</button>
       <button type="button" class="viewtab" data-state="no-reviews">No reviews</button>
-      <button type="button" class="viewtab" data-state="voice">Voice listed</button>
     </div>
     <div class="viewtabs-states is-hidden" data-state-for="preview">
       <span class="viewtabs-group">Wait teaser</span>
@@ -101,13 +104,21 @@
           <div class="stack">
             <div class="field">
               <label for="country">Country</label>
-              <div class="select-wrap">
-                <select id="country">
+              <div class="select-wrap" data-select-menu>
+                <select id="country" tabindex="-1" aria-hidden="true">
                   <option value="IE" selected>Ireland</option>
                   <option value="GB">United Kingdom</option>
                   <option value="US">United States</option>
                 </select>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                <button type="button" class="select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Country">
+                  <span data-select-label>Ireland</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <ul class="select-menu is-hidden" role="listbox">
+                  <li><button type="button" role="option" aria-selected="true" data-value="IE">Ireland</button></li>
+                  <li><button type="button" role="option" aria-selected="false" data-value="GB">United Kingdom</button></li>
+                  <li><button type="button" role="option" aria-selected="false" data-value="US">United States</button></li>
+                </ul>
               </div>
             </div>
 
@@ -409,17 +420,17 @@
             </div>
             <div class="photo-grid" id="photoGrid">
               <figure class="photo-tile is-logo">
-                <img src="fixtures/bellfield/logo.svg" alt="Bellfield logo" />
+                <img src="../../apps/contractor-website/public/fixtures/bellfield/logo.svg" alt="Bellfield logo" />
                 <figcaption>Logo</figcaption>
               </figure>
               <figure class="photo-tile">
-                <img src="fixtures/bellfield/image0.jpeg" alt="Roof work in Dublin" />
+                <img src="../../apps/contractor-website/public/fixtures/bellfield/image0.jpeg" alt="Roof work in Dublin" />
               </figure>
               <figure class="photo-tile" data-extra-photo>
-                <img src="fixtures/bellfield/image1.jpeg" alt="New roof" />
+                <img src="../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg" alt="New roof" />
               </figure>
               <figure class="photo-tile" data-extra-photo>
-                <img src="fixtures/bellfield/image2.jpeg" alt="Site after a repair" />
+                <img src="../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg" alt="Site after a repair" />
               </figure>
               <label class="photo-tile photo-upload">
                 <input id="photoUpload" type="file" accept="image/*" multiple />
@@ -443,7 +454,7 @@
             </div>
             <div class="choices" id="certs">
               <button class="choice choice-cert on is-locked" type="button" data-cert="cro" aria-disabled="true">
-                <img src="certification-logos/ie-cro.svg" alt="" width="240" height="120" />
+                <img src="../../apps/contractor-website/public/certification-logos/ie-cro.svg" alt="" width="240" height="120" />
                 <div class="choice-copy">
                   <b>CRO registered</b>
                   <span>Registered Irish company or business name record.</span>
@@ -451,11 +462,11 @@
                 </div>
               </button>
               <button class="choice choice-cert" type="button" data-cert="ciri">
-                <img src="certification-logos/ie-ciri.svg" alt="" width="240" height="120" />
+                <img src="../../apps/contractor-website/public/certification-logos/ie-ciri.svg" alt="" width="240" height="120" />
                 <div class="choice-copy"><b>CIRI</b><span>Construction Industry Register Ireland listing.</span></div>
               </button>
               <button class="choice choice-cert" type="button" data-cert="seai">
-                <img src="certification-logos/ie-seai.svg" alt="" width="240" height="120" />
+                <img src="../../apps/contractor-website/public/certification-logos/ie-seai.svg" alt="" width="240" height="120" />
                 <div class="choice-copy"><b>SEAI</b><span>SEAI contractor registration for energy upgrade grants.</span></div>
               </button>
             </div>
@@ -529,7 +540,6 @@
             <label class="field"><span class="is-hidden">Anything else we should know?</span><textarea class="field-control textarea" id="additionalNotes" placeholder="Add a note"></textarea></label>
           </div>
         </form>
-
         <div class="onb-card voice-panel is-hidden" id="voicePanel">
           <p>Voice is coming later. For now, answer in writing — it is the same questions, into the same profile.</p>
           <button class="button-secondary" type="button" disabled>Start voice</button>
@@ -695,7 +705,6 @@
       </div>
     </section>
   </main>
-
   <footer class="onb-foot" id="onbFoot">
     <div class="onb-foot-inner">
       <p class="onb-foot-hint" id="footHint">Saved automatically as you type.</p>
@@ -709,7 +718,27 @@
       </button>
     </div>
   </footer>
+  <div class="onb-guide" id="onboardingGuide">
+    <button type="button" class="onb-guide-orb dust-orb-host" id="onboardingGuideOrb" aria-pressed="false" aria-label="Turn on the voice guide">
+      <canvas class="dust-orb-canvas" id="onboardingGuideCanvas" aria-hidden="true"></canvas>
+    </button>
+    <button type="button" class="onb-guide-close" id="onboardingGuideClose" aria-label="Turn off the voice guide">Close</button>
+    <div class="onb-guide-cue" id="onboardingGuideCue">
+      <svg class="onb-guide-cue-arrow" viewBox="0 0 72 48" aria-hidden="true">
+        <defs>
+          <marker id="onb-cue-head" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <polygon points="0 0.4, 8 4, 0 7.6" fill="currentColor" stroke="none"/>
+          </marker>
+        </defs>
+        <path d="M8 10c18-4 38 2 50 26" marker-end="url(#onb-cue-head)"/>
+      </svg>
+      <p>Click to turn on voice</p>
+    </div>
+  </div>
+  <button type="button" class="button-secondary onb-guide-enable is-hidden" id="onboardingGuideEnable">Enable voice guide</button>
   <script src="details-fields.js"></script>
+  <script src="dust-orb.js"></script>
+  <script src="mock-voice.js"></script>
   <script src="onboarding.js"></script>
 </body>
 </html>

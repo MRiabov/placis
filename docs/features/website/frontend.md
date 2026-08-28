@@ -41,9 +41,9 @@ swapping the whole panel
 
 | Route | Purpose |
 | -- | -- |
-| `/cms/website` | Website editor (workspace, canvas, website assistant, website publication) |
+| `/cms/website` | Website editor (workspace, canvas, assistant overlay, website publication) |
 
-Left nav, New chat, `/cms/details`, `/cms/projects`,
+Left nav, `/cms` two cards, `/cms/details`, `/cms/projects`,
 `/cms/certifications-and-reviews`, `/cms/media`, `/cms/ads`:
 [The CMS (sidebar + main area)](../../general-architecture/cms/frontend.md).
 
@@ -58,7 +58,7 @@ Two surfaces plus global nav, one unpublished website:
   website preview.
 - **Workspace** — on a **narrow** screen (≤1100px) the rail is a **bottom bar**
   (Sites only) and the list opens above it. That open list (and Content) has the
-  same reduce chevrons as the website assistant, on the left of the title: hide
+  same reduce chevrons as the assistant overlay, on the left of the title: hide
   the sheet back to the bottom bar. The whole title row does that hide (Add a
   website page stays its own control). The row is compact, not a second toolbar.
   That is not a back to Website pages. On a **wide** screen it is a left rail
@@ -193,51 +193,63 @@ publication does **not** attach a website address.
 
 Do not advertise `{website_prefix}.placis.com` as a live URL.
 
-**Website assistant** is a default-on **overlay** pinned to the bottom of the
-canvas (not a toolbar button, not a modal) while the **chatbot** is showing.
-Empty composer turns the **voice agent** on: overlay hidden, soft orb
-bottom-right of the canvas (glow that falls off, no hard edge). On narrow that
-is just above the workspace rail, not above the hidden overlay. The switch is a
-fade, not a cut. Restore chatbot is an opaque pill under Apply / Reject; the orb
-is a circle on the right spanning both rows. A small close on the top-right of
-the orb also restores. Tools and apply stay in [assistant.md](assistant.md). Two overlay
+**Assistant** is a default-on **overlay** pinned to the bottom of the canvas
+(not a toolbar button, not a modal) while the **chatbot** is showing. Empty
+composer turns the **voice agent** on: overlay hidden, DustOrb bottom-right of
+the canvas. On narrow that is just above the workspace rail, not above the
+hidden overlay. The switch is a fade, not a cut. Restore chatbot is an opaque
+pill under Apply / Reject; the orb is a circle on the right spanning both rows.
+Denied microphone uses the shared **notification**
+(**Allow microphone access in your browser to talk. You can keep typing.**;
+**Try again** retries the microphone; **Switch to text mode** is Restore
+chatbot). `POST /v1/assistant/voice/realtime-connection` is not called until the
+microphone is granted. The prerecorded greeting plays on the first Voice start
+(**Voice** or empty composer). Starting Voice again more than **5 seconds**
+after that greeting began does not replay it. That cluster sits bottom-right and
+is only as wide as the pills plus the orb, not a full-width bar. Desktop /
+tablet orb is `min(5.5rem, 30vw)`; ≤480px is `min(50vw, 50dvh)`. Desktop /
+tablet **clicks** hit a **2.75rem circle**; the particle wrap stays that 5.5rem
+size, and the rest of the canvas stays clickable. A small close on the top-right
+of the orb also restores. Tools and apply stay in [assistant.md](assistant.md). Overlay look
+for every assistant screen: [assistant design decision record](../assistant/design-decision-record.md). Two overlay
 switches: plan vs continuous, and instant apply vs Ask first (Apply / Reject).
-**Follow** is a third config, default off, not owner-turnable. Default is plan +
-Ask first. Composer submit is **Plan** when Plan is on, **Send** when Plan is
-off (continuous); empty chatbot field shows **Voice**.
+**Follow** is a third config, default **on**, not owner-turnable. Default is
+plan + Ask first. Composer submit is **Plan** when Plan is on, **Send** when
+Plan is off (continuous); empty chatbot field shows **Voice**.
 
 **Quiet by default.** On a **narrow** screen the canvas is the destination until
 they open destinations. The CMS is viewport-locked (PWA): the window does not
-scroll. The website page scrolls inside the canvas stage; the website assistant
-thread scrolls. Last website sections can scroll clear of the website assistant
-overlay (and Apply / Reject). See [design decision record](design-decision-record.md) 8 and 16.
+scroll. The website page scrolls inside the canvas stage; the assistant thread
+scrolls. Last website sections can scroll clear of the assistant overlay (and
+Apply / Reject). That extra room is the canvas cell background, not a white
+pad. See [design decision record](design-decision-record.md) 8 and 16.
 
 ```text
 narrow (≤1100px):
 Open destinations (inline with Website editor) | heading
 Desktop / Tablet / Mobile + Publish
-website (canvas) + voice agent orb (empty composer) or website-assistant overlay
+website (canvas) + voice agent orb (empty composer) or assistant overlay
 workspace rail (bottom bar; list / Content opens above it)
 full-screen overlay selector covers all of that when open
 
 wide (≥1101px):
 nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | website (Desktop canvas)
-                                                                     | voice agent orb or website-assistant overlay
+                                                                     | voice agent orb or assistant overlay
 ```
 
 - **Always on** when `/cms/website` is open (overlay while the chatbot is
-  showing; orb when the voice agent is on). There is no toolbar
-  **Website assistant** control and no overlay title. It does not open a modal.
-  Overlay has a 12px inset from the canvas on the left, right, and bottom (not
-  flush to the edges). Chevrons expand or reduce; that is not a hide.
-  **Collapsed** (desktop and narrow default) is one row on a wide screen:
-  chevrons, field, **Plan mode**, **Ask first**, **Plan** (or **Send**). On
-  narrow, collapsed stays two rows (overlay bar + composer). Reduced composer is
-  **max-width 40rem**, centered; expand grows it to the 12px canvas inset
-  (180ms). **Narrow default is collapsed** (canvas first). Idle / unfocused
-  overlay is **40% opacity**; hover or focus-within is opaque. The overlay does
-  **not** dim or black out the website; clicks on the uncovered canvas still
-  work. **Apply / Reject pills never fade.**
+  showing; orb when the voice agent is on). There is no toolbar **Assistant**
+  control and no overlay title. It does not open a modal. Overlay has a 12px
+  inset from the canvas on the left, right, and bottom (not flush to the edges).
+  Chevrons expand or reduce; that is not a hide. **Collapsed** (desktop and
+  narrow default) is one row on a wide screen: chevrons, field, **Plan mode**,
+  **Ask first**, **Plan** (or **Send**). On narrow, collapsed stays two rows
+  (overlay bar + composer). Reduced composer is **max-width 40rem**, centered;
+  expand grows it to the 12px canvas inset (180ms).
+  **Narrow default is collapsed** (canvas first). Idle / unfocused overlay is
+  **40% opacity**; hover or focus-within is opaque. The overlay does **not** dim
+  or black out the website; clicks on the uncovered canvas still work.
+  **Apply / Reject pills never fade.**
 - **Clear context** — silent trash on the **right** of the overlay top row,
   **expanded only** (hidden while reduced). Starts a new thread (drops prior
   turns). Discards pending Ask-first proposals that have not been Applied (same
@@ -246,12 +258,12 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
 - **Ask first applied vs not applied** must be obvious. The overlay is
   **one chat-like thread**. Ask first **Apply / Reject is per pending turn**
   (the whole run’s tools in bulk), not per tool. Those two actions are
-  **pills on the canvas**, always sitting immediately above the website
-  assistant overlay (chatbot) or in the left stack next to the orb (voice
-  agent), not inside the thread and not at the canvas midpoint. Each tool in the
-  thread is the backend `summary` (`Updated image on Hero`), never a tool name
-  and never “website slot” ([assistant.md](assistant.md)). Write lines use a **pencil**;
-  thinking uses a **lightbulb**. There is no search/grep tool.
+  **pills on the canvas**, always sitting immediately above the assistant
+  overlay (chatbot) or in the left stack next to the orb (voice agent), not
+  inside the thread and not at the canvas midpoint. Each tool in the thread is
+  the backend `summary` (`Updated image on Hero`), never a tool name and never
+  “website slot” ([assistant.md](assistant.md)). Write lines use a **pencil**; thinking uses a
+  **lightbulb**. There is no search/grep tool.
   - **Pending** — canvas paints the proposal in memory; changed website sections
     use the pending outline. Nothing PATCHed. Apply and Reject pills shown. Do
     not paint **Not applied** as copy on the website.

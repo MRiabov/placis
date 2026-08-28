@@ -32,15 +32,18 @@ Do not say “skeleton”; the name is loading placeholder ([glossary](../glossa
 ## Notification
 
 A shared **notification**: fixed bottom-right, above the main area. Message +
-**OK** (dismiss / keep). **Revert** is optional. On a **narrow** screen
+two actions. Details `update_details`: **Revert** + **OK**. Denied microphone:
+**Try again** + **Switch to text mode**. Look in the mocks:
+[ads.html](../design/ads.html) (Saved years in business to Business details).
+On a **narrow** screen
 (≤1100px), sit **above** the Sites workspace bottom bar (not under thumbs or the
 home indicator).
 
 `update_details` ([details HTTP](../business-profile/details/api.md)): the write is applied; OK keeps it; Revert
 undoes that `business_profile_edits` increment. Website assistant, Ads
 generator, and later LLM callers invoke **that** tool (one implementation).
-Leaving the screen without clicking keeps the write. Stay until OK / Revert
-(timeout later).
+Leaving the screen without clicking keeps the write. Stay until they pick an
+action (timeout later).
 
 Intended later callers (rare — do not spam): ad leads when they log in, an
 **ad lead** while they are in Ads, an unusually profitable or lossy campaign, a

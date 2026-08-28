@@ -30,6 +30,21 @@ opens [cms.html](../../design/cms.html) (`?scene=website&publication=1&from=acti
 editor with **Publish**. Product website preview and website activation still
 live on that host, not on `/onboarding/preview`.
 
+The **onboarding assistant** (owner copy: **voice guide**) is a DustOrb bottom
+right: **visible**, voice off, cue **Click to turn on voice**. Particle orb from
+[dust-orb.js](../../design/dust-orb.js); scale matches placis-web OrbDemo (hover 1.03, speaking 1.10).
+Click plays a prerecorded intro ([onboarding-guide-intro.mp3](../../design/onboarding-guide-intro.mp3)) after the
+microphone is granted, while the connection starts, and bounces from owner noise
+level; they ask questions after. Denied microphone returns to the cue
+(**Allow microphone access in your browser**); click the orb retries. The
+realtime connection is not created. The intro plays on the first turn-on;
+turning the guide on again more than **5 seconds** after that intro began does
+not replay it. Close → **Enable voice guide**. Not on the preview website
+address / website-activation strip. Hidden on the wait teaser in this mock. See
+[assistant design decision 6](../assistant/design-decision-record.md). Denied microphone: [design decision 8](../assistant/design-decision-record.md). Greeting:
+[design decision 9](../assistant/design-decision-record.md). Realtime after microphone:
+[design decision 10](../assistant/design-decision-record.md).
+
 Visible words follow [glossary.md](../../glossary.md) and [design decision](design-decision-record.md) 6 (owner language, not
 PRD phrasing). Type: [design decision](design-decision-record.md) 9 (screen title, then a heading block per
 card, then quieter field labels). Website activation on the generated mock:

@@ -9,6 +9,14 @@ const order = ["find", "review", "interview", "preview", "generated"];
 const WAIT_MS = 15000;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const WAIT_OPENING_MS = 2000;
+let guideMode = params.get("guide") === "1" || params.get("assistant") === "1" ? "listening" : "cue";
+const GUIDE_INTRO_SRC = "onboarding-guide-intro.mp3";
+const GUIDE_INK = "9,9,11";
+const CUE_TURN_ON = "Click to turn on voice";
+const CUE_MIC_DENIED = "Allow microphone access in your browser";
+let guideDust = null;
+let guideBounce = null;
+let guideIntroGen = 0;
 
 function prefersReducedMotion() {
   return reduceMotion.matches;
@@ -66,9 +74,15 @@ function setScene(scene) {
   if (scene === "preview") {
     startCarousel();
     startWait();
+    setGuideSurface("hidden");
+  } else if (scene === "generated") {
+    stopCarousel();
+    stopWait();
+    setGuideSurface("hidden");
   } else {
     stopCarousel();
     stopWait();
+    setGuideSurface(guideMode);
   }
 }
 
@@ -246,6 +260,40 @@ country?.addEventListener("change", () => {
   registryName.textContent = copy[1];
 });
 
+document.querySelectorAll("[data-select-menu]").forEach((wrap) => {
+  const select = wrap.querySelector("select");
+  const trigger = wrap.querySelector(".select-trigger");
+  const menu = wrap.querySelector(".select-menu");
+  const label = wrap.querySelector("[data-select-label]");
+  if (!select || !trigger || !menu) return;
+
+  const setOpen = (open) => {
+    menu.classList.toggle("is-hidden", !open);
+    trigger.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+  const pick = (value) => {
+    select.value = value;
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    const option = [...menu.querySelectorAll("[data-value]")].find((node) => node.dataset.value === value);
+    menu.querySelectorAll("[role='option']").forEach((node) => {
+      node.setAttribute("aria-selected", node === option ? "true" : "false");
+    });
+    if (option && label) label.textContent = option.textContent;
+    setOpen(false);
+  };
+
+  trigger.addEventListener("click", () => setOpen(menu.classList.contains("is-hidden")));
+  menu.querySelectorAll("[data-value]").forEach((node) => {
+    node.addEventListener("click", () => pick(node.dataset.value));
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (!wrap.contains(event.target)) setOpen(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setOpen(false);
+  });
+});
+
 function setFindState(state) {
   findPanel.classList.toggle("is-hidden", state === "restoring");
   findRestore.classList.toggle("is-hidden", state !== "restoring");
@@ -301,14 +349,9 @@ function setReviewState(state) {
 }
 
 function setInterviewState(state) {
-  const voice = state === "voice";
+  if (state === "voice") state = "text";
   const fewPhotos = state === "few-photos";
   const noReviews = state === "no-reviews";
-  document.getElementById("interviewForm")?.classList.toggle("is-hidden", voice);
-  document.getElementById("voicePanel")?.classList.toggle("is-hidden", !voice);
-  document.querySelectorAll("[data-channel]").forEach((button) => {
-    button.classList.toggle("on", button.dataset.channel === (voice ? "voice" : "text"));
-  });
   document.querySelectorAll("[data-extra-photo]").forEach((tile) => {
     tile.classList.toggle("is-hidden", fewPhotos);
   });
@@ -327,10 +370,6 @@ function setInterviewState(state) {
   });
   if (currentScene() === "interview") syncFooter("interview");
 }
-
-document.querySelectorAll("[data-channel]").forEach((button) => {
-  button.addEventListener("click", () => setInterviewState(button.dataset.channel === "voice" ? "voice" : "text"));
-});
 document.querySelectorAll("[data-photo-fill]").forEach((button) => {
   button.addEventListener("click", () => {
     document.querySelectorAll("[data-photo-fill]").forEach((item) => item.classList.toggle("on", item === button));
@@ -546,3 +585,119 @@ if (scene === "preview") {
 if (scene === "generated") setGeneratedState(params.get("state") || "unsigned");
 
 window.__SCREENSHOT_READY = true;
+
+function setGuideCueCopy(text) {
+  const line = document.querySelector("#onboardingGuideCue p");
+  if (line) line.textContent = text;
+}
+
+function setGuideSpeaking(on) {
+  guideDust?.setSpeaking(on);
+  guideBounce?.setSpeaking(on);
+}
+
+function setGuideLevel(rms) {
+  guideDust?.setLevel(rms);
+  guideBounce?.setLevel(rms);
+}
+
+function stopGuideIntro() {
+  guideIntroGen += 1;
+  window.MockVoice?.stop();
+  setGuideSpeaking(false);
+}
+
+function playGuideIntro() {
+  stopGuideIntro();
+  if (params.has("shot") || !window.MockVoice) return;
+  const gen = guideIntroGen;
+  let introPlaying = false;
+  window.MockVoice.play(GUIDE_INTRO_SRC, {
+    onStart: () => {
+      if (gen !== guideIntroGen) return;
+      introPlaying = true;
+      setGuideSpeaking(true);
+    },
+    onEnd: () => {
+      if (gen !== guideIntroGen) return;
+      introPlaying = false;
+      setGuideSpeaking(false);
+    },
+  });
+  window.MockVoice.listen({
+    onLevel: (rms) => {
+      if (gen !== guideIntroGen) return;
+      setGuideLevel(rms);
+    },
+    onSpeaking: (on) => {
+      if (gen !== guideIntroGen) return;
+      if (on) setGuideSpeaking(true);
+      else if (!introPlaying) setGuideSpeaking(false);
+    },
+    onDenied: () => {
+      if (gen !== guideIntroGen) return;
+      setGuideSurface("cue");
+      setGuideCueCopy(CUE_MIC_DENIED);
+    },
+  });
+}
+
+function syncGuideOrb(listening) {
+  const canvas = document.getElementById("onboardingGuideCanvas");
+  const host = document.getElementById("onboardingGuideOrb");
+  const wrap = document.getElementById("onboardingGuide");
+  const visible = Boolean(wrap && !wrap.classList.contains("is-hidden"));
+  if (!visible) {
+    guideDust?.destroy();
+    guideBounce?.destroy();
+    guideDust = null;
+    guideBounce = null;
+    return;
+  }
+  if (!guideDust && canvas && window.DustOrb) {
+    guideDust = window.DustOrb.mount(canvas, {
+      state: listening ? "listening" : "idle",
+      speaking: false,
+      inkColor: GUIDE_INK,
+    });
+    guideBounce = window.DustOrb.bindBounce(host);
+  }
+  guideDust?.setState(listening ? "listening" : "idle");
+  if (!listening) setGuideSpeaking(false);
+}
+
+function setGuideSurface(mode) {
+  const wrap = document.getElementById("onboardingGuide");
+  const orb = document.getElementById("onboardingGuideOrb");
+  const cue = document.getElementById("onboardingGuideCue");
+  const enable = document.getElementById("onboardingGuideEnable");
+  if (currentScene() === "preview" || currentScene() === "generated") mode = "hidden";
+  if (mode !== "hidden") guideMode = mode;
+  const listening = mode === "listening";
+  const cueOn = mode === "cue";
+  const dismissed = mode === "dismissed";
+  wrap?.classList.toggle("is-hidden", mode === "hidden" || dismissed);
+  wrap?.setAttribute("aria-hidden", listening || cueOn ? "false" : "true");
+  cue?.classList.toggle("is-hidden", !cueOn);
+  enable?.classList.toggle("is-hidden", !dismissed);
+  orb?.setAttribute("aria-pressed", listening ? "true" : "false");
+  if (listening || dismissed) setGuideCueCopy(CUE_TURN_ON);
+  if (!listening) stopGuideIntro();
+  syncGuideOrb(listening);
+}
+
+document.getElementById("onboardingGuideOrb")?.addEventListener("click", () => {
+  if (document.getElementById("onboardingGuideOrb")?.getAttribute("aria-pressed") === "true") return;
+  setGuideSurface("listening");
+  playGuideIntro();
+});
+document.getElementById("onboardingGuideCue")?.addEventListener("click", () => {
+  setGuideSurface("listening");
+  playGuideIntro();
+});
+document.getElementById("onboardingGuideClose")?.addEventListener("click", () => setGuideSurface("dismissed"));
+document.getElementById("onboardingGuideEnable")?.addEventListener("click", () => {
+  setGuideSurface("listening");
+  playGuideIntro();
+});
+setGuideSurface(guideMode);

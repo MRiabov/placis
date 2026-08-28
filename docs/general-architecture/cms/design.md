@@ -1,7 +1,7 @@
 # CMS design tokens
 
-The CMS (sidebar + main area): `/cms` chooser, website editor, Details, Ads
-list. Not the contractor website look — that is [website styles](../../features/website/styles.md).
+The CMS (sidebar + main area): `/cms` two-card chooser, website editor, Details,
+Ads list. Not the contractor website look — that is [website styles](../../features/website/styles.md).
 [Design decision record](design-decision-record.md). Mock: [tokens.css](../../design/tokens.css) (`:root`). CMS, onboarding, and Ads
 look exports share this file. CMS wins when they disagree.
 
@@ -29,14 +29,14 @@ Named CSS variables in the mock. Hex is the light-theme value.
 | `--secondary` | `#f4f4f5` | Raised / unused wash (zinc-100). **Not** a resting button fill |
 | `--secondary-foreground` | `#27272a` | On `--secondary` |
 | `--muted` | `#f4f4f5` | Same wash as `--secondary` today |
-| `--muted-foreground` | `#71717a` | Hints, Upgrade shelf, captions (zinc-500) |
+| `--muted-foreground` | `#71717a` | Hints, captions (zinc-500) |
 | `--cms-surface-sunken` | `#fafafa` | zinc-50: open Connect, hover on outline / flat controls |
 | `--border` | `#e4e4e7` | Outline control stroke (zinc-200) |
 | `--hairline` | `#e7e5e4` | Stone edge: prompt box, flat Connect / Paperclip / Voice |
 | `--sidebar` | `#f7f7f7` | Nav rail |
 | `--cms-surface-active` | `rgb(9 9 11 / 6%)` | Active nav row |
 | `--ring` | `#a1a1aa` | Focus ring |
-| `--prompt-shelf` | `rgb(250 250 250 / 80%)` | Upgrade shelf |
+| `--prompt-shelf` | `rgb(250 250 250 / 80%)` | Prompt shelf (unused on `/cms` two cards) |
 | `--prompt-icon-border` | `--hairline` | Flat prompt icon stroke |
 | `--prompt-radius` | `1.75rem` | Prompt box (28px) |
 | `--cms-error-surface` | `#fff1f0` | Error wash |
