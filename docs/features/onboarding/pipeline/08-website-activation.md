@@ -83,18 +83,19 @@ version.
 ## After website activation (billing)
 
 Unpaid access to the application is **forbidden**. Copy later:
-**keep your Placis Pro subscription to continue to edit and host the website** —
-not “Upgrade.”
+**keep your Placis Pro subscription to continue to edit and host the website**.
 
 1. **One upfront pay** (this checkout; predecessor EUR 4900 stays until that
    epic).
 2. Then about **50 EUR / month**. If it lapses, the website is **unpublished**.
 3. **Do not commit to Clerk Billing yet.** Optimistic DB cache of subscription
    status; refresh when expected.
-4. Monthly **usage credit** is visible in the UI as **$**. OpenRouter (or the
-   generation hop) prices are **×5** for the owner:
-   $50 shown ⇒ they can spend **$10** of OpenRouter cost. Persist remaining
-   credit; check it on LLM calls.
+4. Monthly **usage credit** is visible in the UI as **$**. Our cost is **×5** to
+   the owner: $50 shown ⇒ they can spend **$10** of our cost.
+   **Generation hops** (text, images, ads) are token / per-image invoices.
+   **CMS Voice** is xAI **per-minute audio** (plus text-item fees), not a token
+   hop — [billing meters](../../billing/README.md). Persist remaining credit; check it on generation hops
+   and before a CMS realtime connection.
 
 Currency for the retainer is **EUR**. Usage credit display is **$**.
 

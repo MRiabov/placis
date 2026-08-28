@@ -23,14 +23,15 @@ can do the same edits and ads themselves in the CMS.
    Wednesday / Friday refresh
 9. [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
 10. [Website](features/website/README.md) — website templates, applying them, editing, website publication
-11. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)
-12. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in
+11. [Billing](features/billing/README.md) — usage credit + usage screen (stub)
+12. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)
+13. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in
     [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/)
     (investigation, not the spec)
-13. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
-14. [CI and delivery](general-architecture/ci-cd.md) — file-size guard, folder fan-out, external API isolation,
+14. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
+15. [CI and delivery](general-architecture/ci-cd.md) — file-size guard, folder fan-out, external API isolation,
     generated-code freshness
-15. [Testing](general-architecture/testing.md) — the per-feature E2E tests
+16. [Testing](general-architecture/testing.md) — the per-feature E2E tests
 
 ## Canonical references
 
@@ -50,6 +51,7 @@ can do the same edits and ads themselves in the CMS.
 | Business profile | [features/business-profile/README.md](features/business-profile/README.md) |
 | Website activation / payments | [features/onboarding/pipeline/08-website-activation.md](features/onboarding/pipeline/08-website-activation.md) |
 | Website building + editing | [features/website/README.md](features/website/README.md) |
+| Billing (usage credit; stub) | [features/billing/README.md](features/billing/README.md) |
 | Placis website (Astro static → R2) | [features/placis-website/README.md](features/placis-website/README.md) |
 | Ad generation | [features/ads/README.md](features/ads/README.md) |
 | Meta ad posting (investigation) | [features/ads/ad-application/meta](features/ads/ad-application/meta/) |
