@@ -18,10 +18,10 @@ the website editor, not the media library, and not campaign management (which is
 future work).
 
 `/cms/ads` is a **view in the CMS, not a standalone website page**: the left
-sidebar (New chat, Sites, Profile with Business details, Projects,
-Certifications and reviews, and Media library) stays around it, and Ads is
-dashboard-ish content in the main area — My ads list, the ad workspace, and the
-ad detail all render inside that main area. Look:
+sidebar (Sites, Profile with Business details, Projects, Certifications and
+reviews, and Media library) stays around it, and Ads is dashboard-ish content in
+the main area — My ads list, the ad workspace, and the ad detail all render
+inside that main area. Look:
 [`demo/`](../../../../demo/README.md) `/cms/ads`. HTML archive:
 [ads.html](../../../design/ads.html).
 
@@ -108,7 +108,7 @@ and the approve block at the end.
   are **never rendered by default** — they load only after the connection-status
   check confirms an ad platform is unconnected, so the owner never sees one
   flash and disappear; a connected ad platform shows nothing at all, and the
-  button never comes back. New chat **Connect** uses this same status: gone when
+  button never comes back. `/cms` **Connect** uses this same status: gone when
   Google Ads and Meta are both connected ([look](../../../general-architecture/cms/design-decision-record.md) 5).
 - "+ New ad" button; empty state with a one-line explanation and a start button
 - On a **wide** screen the list heading is **Your ads**. On a **narrow** screen
@@ -183,7 +183,7 @@ The questions and review content:
    default cleanup from visual-issue classification (ranked hints on Cleanup
    edit). After generate, an AI orb asks for a **different** cleanup (required
    prompt, overlay) and POSTs `/v1/media-assets/{id}/image-edits` (same as the
-   website assistant `cleanup_image`) — not a photo picker and not
+   assistant `cleanup_image`) — not a photo picker and not
    `POST /v1/ads/…/cleanup`. Reject is `POST /v1/media-assets/{id}/reject`. The
    sweep's size follows this ad's format: Square feed and Carousel cards are
    1:1, Portrait feed is 4:5, Story is 9:16. The **photo strip is always shown**
@@ -213,7 +213,7 @@ The questions and review content:
    whole field (Ctrl+Z restores the previous text). Prompt text is required;
    submit stays disabled while blank. Optional selection on rewrite; omit means
    the whole field. Other owner edits are kept. Result is still editable. Not
-   the website assistant chat. (2026-08-28) Short label has no AI orb.
+   the assistant chat. (2026-08-28) Short label has no AI orb.
 7. **Ad format preview** — the selected format, rendered from the backend
    response, as **Facebook and Instagram** placements from an existing
    dual-platform mock kit (title / image / actions; add **Sponsored** and the

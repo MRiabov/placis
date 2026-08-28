@@ -39,8 +39,8 @@ new entries with the next number, the area, and the date.
    way that changes what the photo shows, must not conceal damage or defects,
    and must not change the work displayed. It creates a new media library item
    (a copy) that inherits supplied by; the source media library item is never
-   modified. Ads call the same AI cleanup as `/cms/media` and the website
-   assistant `cleanup_image`; there is no ads-only cleanup.
+   modified. Ads call the same AI cleanup as `/cms/media` and the assistant
+   `cleanup_image`; there is no ads-only cleanup.
 
 5. **The zip download is a temporary step** — The ad set is machine-readable and
    has an ad set format number; the download exists only so a human can do ad
@@ -149,8 +149,8 @@ new entries with the next number, the area, and the date.
     statement, or **prompts** the Review AI orb to write one, we allow it.
     Approve is not blocked. If that copy includes a detail (years in business vs
     `established_year`, and the same class of Details fields), the ads generator
-    calls **`update_details`** (one tool, one implementation — also the website
-    assistant; [details HTTP](../business-profile/details/api.md)). Recorded in `ai_generations` as its own tool
+    calls **`update_details`** (one tool, one implementation — also website
+    editor tools; [details HTTP](../business-profile/details/api.md)). Recorded in `ai_generations` as its own tool
     call. Not a side effect of the ads PATCH, Approve, or the copy-rewrite tool.
     A **notification** (OK / Revert) appears bottom-right; leaving the screen
     keeps the write. Character limits, uploads still in flight, and failed
@@ -309,13 +309,12 @@ new entries with the next number, the area, and the date.
     optional selection on `POST …/rewrite` (omit = whole field). Image cleanup:
     first upload already ran a tailored default from visual-issue
     classification; the orb is a **different** cleanup via
-    `POST /v1/media-assets/{id}/image-edits` (`prompt`). Not the website
-    assistant chat. Not `POST /v1/ads/…/cleanup`. Reject is
-    `POST /v1/media-assets/{id}/reject`. This replaces unprompted Review
-    **Regenerate**. Record the owner prompt with reasoning, output, and tool
-    calls in `ai_generations`. (2026-08-27) Previous decision (same day): prompt
-    form was inline in the field, wrapping with the row. (2026-08-28) Short
-    label has no AI orb.
+    `POST /v1/media-assets/{id}/image-edits` (`prompt`). Not the assistant chat.
+    Not `POST /v1/ads/…/cleanup`. Reject is `POST /v1/media-assets/{id}/reject`.
+    This replaces unprompted Review **Regenerate**. Record the owner prompt with
+    reasoning, output, and tool calls in `ai_generations`. (2026-08-27) Previous
+    decision (same day): prompt form was inline in the field, wrapping with the
+    row. (2026-08-28) Short label has no AI orb.
 
 35. **Review ad format preview is Facebook and Instagram placement** (updated
     2026-08-25) — The selected format is shown as both Facebook and Instagram

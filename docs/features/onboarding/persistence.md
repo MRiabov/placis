@@ -4,8 +4,24 @@ Onboarding session, client interview, and website activation tables.
 Conventions: [persistence conventions](../../general-architecture/persistence.md) (Postgres schema `onboarding`).
 
 The business profile these onboarding sessions write is owned by [details](../business-profile/details/persistence.md).
-Extract and the Google Maps listing: [ETL](../etl/persistence.md). LLM traces:
-[LLM layer](../../general-architecture/llm-layer.md).
+Extract and the Google Maps listing: [ETL](../etl/persistence.md). LLM traces: [LLM layer](../../general-architecture/llm-layer.md) (schema
+`ai`). Onboarding assistant conversation: below.
+
+## Onboarding assistant (guide)
+
+Isolated from CMS `assistant.threads`. Never migrated after website activation.
+
+- `assistant_conversations` — `id`, `onboarding_session_id` fk unique,
+  `last_activity_at`, timestamps.
+- `assistant_conversation_items` — `id`, `onboarding_session_id` fk,
+  `conversation_id` fk, `kind` (`owner` / `assistant` / `tool_summary` /
+  `thinking`), `body`, `icon`, `created_at`. Index `(conversation_id,
+  created_at)`. Same shapes as CMS thread items.
+- `assistant_runs` — `id`, `onboarding_session_id` fk, `conversation_id` fk,
+  `status` (`running` / `succeeded` / `failed`), `channel` (`text` / `voice`),
+  `ai_generation_id` uuid nullable, `recording_file_id` uuid nullable fk
+  (`files`; voice only), timestamps. Unique
+  `(onboarding_session_id) WHERE status = 'running'`.
 
 ## Onboarding sessions and client interview
 
@@ -53,4 +69,6 @@ at 07 ([07](pipeline/07-website-preview.md)). Website publications live on
 ## Indexes
 
 Lookup: `(tenant_id, status, created_at)` on onboarding sessions. Unique:
-`stripe_events.event_id`.
+`stripe_events.event_id`; `assistant_conversations.onboarding_session_id`;
+`(onboarding_session_id) WHERE status = 'running'` on `assistant_runs`. Lookup:
+`(conversation_id, created_at)` on `assistant_conversation_items`.

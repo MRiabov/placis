@@ -136,9 +136,9 @@ This is independent of any contractor.
 4. Add products: Facebook Login for Business, Marketing API, Webhooks, Pages.
 5. Submit App Review for the permissions above, with a screencast of the real
    connect + apply-ad flow (can be a staging contractor).
-6. Start on **Marketing API Access Tier = Limited Access** (dev quota). Upgrade
-   to **Full Access** once the app has 500 Marketing API calls in 15 days and
-   error rate under 15% on the last 500 calls. Renamed May 2026; previously "Ads
+6. Start on **Marketing API Access Tier = Limited Access** (dev quota). Move to
+   **Full Access** once the app has 500 Marketing API calls in 15 days and error
+   rate under 15% on the last 500 calls. Renamed May 2026; previously "Ads
    Management Standard Access". Limited Access is not a production quota for
    real advertisers. Docs: [Rate limiting](https://developers.facebook.com/docs/marketing-api/overview/rate-limiting/), [changelog 2026-05-04](https://developers.facebook.com/docs/marketing-api/marketing-api-changelog/).
 

@@ -30,21 +30,22 @@ Status: decided (2026-08-16, product owner + engineering).
    business profile when website publication runs; the unpublished website keeps
    the website placeholders rather than inventing details.
 
-6. **The LLM drafts; the owner decides** — the website assistant is another
-   caller of the same website-editor / media-library execution the owner already
-   uses (`update_slot`, `cleanup_image`, `generate_image`, …), validated against
+6. **The LLM drafts; the owner decides** — the **assistant** is another caller
+   of the same website-editor / media-library execution the owner already uses
+   (`update_slot`, `cleanup_image`, `generate_image`, …), validated against
    contracts. Default is plan + Ask first (Apply / Reject, one-way). Instant
    apply still uses those tools; it does not write freeform JSON. Named real
    photo → attach first. AI cleanup is the `/cms/media` cleanup.
    `generate_image` is last resort when nothing in `media_assets[]` fits.
    Overlay look (always-on overlay, reduce-height left / trash right, Apply /
-   Reject pills) is in [design decision record](design-decision-record.md). (2026-08-27): one
-   `update_details` tool ([details HTTP](../business-profile/details/api.md)). Website assistant and Ads generator
-   invoke that same tool (one implementation). Applied immediately; the shared
-   notification Revert undoes that increment — not website Reject /
+   Reject pills): [assistant](../assistant/README.md). Placement: [design decision record](design-decision-record.md) 18.
+   (2026-08-27): one `update_details` tool ([details HTTP](../business-profile/details/api.md)). Assistant and Ads
+   generator invoke that same tool (one implementation). Applied immediately;
+   the shared notification Revert undoes that increment — not website Reject /
    `edit_history`. (2026-08-20; assistant configs + Apply/Reject terminal
    2026-08-23; Ask first 2026-08-23; attach-before-generate + shared
-   media-library functions 2026-08-24; collapse + no dim 2026-08-26)
+   media-library functions 2026-08-24; collapse + no dim 2026-08-26; CMS
+   assistant HTTP 2026-08-28)
 
 7. **Website publication is kept and can be rolled back** — website publication
    creates a `website_publications` row (a published website copy); website
@@ -126,16 +127,15 @@ Status: decided (2026-08-16, product owner + engineering).
 
     (2026-08-26): Each **reviews website section** has its own ordered
     `website_slot_reviews` from the pool. The LLM picks that list (onboarding
-    after the website template, and the website assistant). Length is the
-    website component’s max (some layouts take 3, others 6 or 8). A service
-    website page can use a different set than Home. The same review may appear
-    on more than one website section. Content edits **that** website section
-    only (add from the pool, remove, reorder). Pinning **top reviews** on
-    Certifications and reviews does **not** rewrite website sections. Archive
-    still drops that review from every website section array and from top
-    reviews. Empty array: keep the website section (no fake copy; do not hide
-    the website component). Origins, archive, and create owner-written stay on
-    the picker ADR.
+    after the website template, and the assistant). Length is the website
+    component’s max (some layouts take 3, others 6 or 8). A service website page
+    can use a different set than Home. The same review may appear on more than
+    one website section. Content edits **that** website section only (add from
+    the pool, remove, reorder). Pinning **top reviews** on Certifications and
+    reviews does **not** rewrite website sections. Archive still drops that
+    review from every website section array and from top reviews. Empty array:
+    keep the website section (no fake copy; do not hide the website component).
+    Origins, archive, and create owner-written stay on the picker ADR.
 
     (2026-08-26): Certification definitions and selections are Details /
     business-profile tables (`certification_definitions`,
@@ -191,10 +191,10 @@ Status: decided (2026-08-16, product owner + engineering).
 22. **Top menu and footer trees live on one `website.menus` row** — `top_menu`
     and `footer` are closed jsonb trees (page / text / URL nodes, depth 2), plus
     `show_phone` / `show_email`. Look stays on site-wide website sections
-    (`page_id` null). No `top_menu_items` / `footer_items` tables. The website
-    assistant uses `update_menus`, not `update_nav`. Where the owner edits the
-    trees is in [design decision record](design-decision-record.md). (2026-08-23) Also `show_contact` (bar
-   CTA to the Contact website page). (2026-08-26)
+    (`page_id` null). No `top_menu_items` / `footer_items` tables. The assistant
+    uses `update_menus`, not `update_nav`. Where the owner edits the trees is in
+    [design decision record](design-decision-record.md). (2026-08-23) Also `show_contact` (bar CTA to the
+    Contact website page). (2026-08-26)
 
 23. **Website publication requires an active subscription** — After they stop
     paying the subscription price, unpublish. `POST /publications` and live

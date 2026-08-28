@@ -99,7 +99,7 @@ Do not build "full ads manager" to post the first ad.
 | Later | Pixel / Conversions API, Advantage+ / placement customization, call/message destinations, Google Ads | Explicitly later |
 
 Company ops in parallel with phase 1: Business Verification, App Review, Full
-Access upgrade. Without those, phase 2 only works for app testers.
+Access. Without those, phase 2 only works for app testers.
 
 ## What we will not do in v1
 

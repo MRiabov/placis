@@ -21,14 +21,13 @@ children / Ads — no Usage & billing row there.
 
 ## Design mock
 
-[`demo/`](../../../demo/README.md) `/cms/billing`. Dev strip states: pool
-remaining, 20% left, out of usage credit, cancels at period end, subscription
-not active. `?shot=1` hides the strip. Codex for the look. Do not port
-auto-reload, usage-limit bars, or predecessor dashboard upgrade copy. Change
-plan uses the same three-card + Enterprise plan row as placis.com `/pricing/`
-(placis-web upgrade grid: blurb + feature list). Included usage credit is USD.
-Don't say: build credits. Do not show our cost. HTML
-archive: [cms.html](../../design/cms.html) `?scene=billing`.
+[`demo/`](../../../demo/README.md) `/cms/billing`. Dev strip states: pool remaining, 20% left, out of
+usage credit, cancels at period end, subscription not active. `?shot=1` hides
+the strip. Codex for the look. Do not port auto-reload, usage-limit bars, or
+predecessor dashboard Usage & billing copy. Change plan uses the same
+three-card + Enterprise plan row as placis.com `/pricing/` (placis-web pricing
+grid: blurb + feature list). Included usage credit is USD. Don't say: build
+credits. Do not show our cost. HTML archive: [cms.html](../../design/cms.html) `?scene=billing`.
 
 ## Fields
 

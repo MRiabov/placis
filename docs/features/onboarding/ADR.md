@@ -18,8 +18,9 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
    to the pipeline.) (2026-08-27): **Onboarding client-interview voice is out.**
    Text 04a stays the writer. Do not ship 04b as v1.
    **Onboarding guide assistant is in** (talk through the current screen).
-   Product voice after website activation is the website editor and Ads, not a
-   second client interview from `/cms`.
+   Product voice after website activation is the CMS **assistant**, not a second
+   client interview from `/cms`. (2026-08-28): Guide, not writer. Agent
+   interview tools are out. Isolated thread from the CMS assistant.
 
 3. **Online research consent is a simple ask, not a system** — a single
    acknowledgement before business research (we'll look the business up and use
@@ -106,15 +107,15 @@ retrieved text is not fast extract.)
     Same profile + same website template → same website pages, no LLM in that
     write. Choosing the website template and website styles is one bounded LLM
     call with a heuristic fallback. Copy (headlines, body, CTAs, SEO) is a
-    separate async job ([06](pipeline/06-website-copy-generation.md)) that uses the website assistant tools on that
-    unpublished website. The website assistant is in the CMS after website
-    activation. The LLM never does website publication. (2026-08-17: replaced
-    "no LLM in the loop" — predecessor/`frontend-2` pick website
-    template/website styles with one LLM call, then apply the website template
-    deterministically. Same day: website copy generation is an onboarding job,
-    not "the website assistant after website activation". 2026-08-19: do not say
-    instantiate / generate / population for this step. 2026-08-23: applying the
-    website template is 05; website copy generation is 06.)
+    separate async job ([06](pipeline/06-website-copy-generation.md)) that uses the website editor tools on that
+    unpublished website. The CMS **assistant** is after website activation. The
+    LLM never does website publication. (2026-08-17: replaced "no LLM in the
+    loop" — predecessor/`frontend-2` pick website template/website styles with
+    one LLM call, then apply the website template deterministically. Same day:
+    website copy generation is an onboarding job, not "the website assistant
+    after website activation". 2026-08-19: do not say instantiate / generate /
+    population for this step. 2026-08-23: applying the website template is 05;
+    website copy generation is 06.)
 
 11. **Progressive progress over SSE** — during onboarding the backend pushes a
     progress event on each change (not faster than ~2s) over SSE; the stream
@@ -143,20 +144,22 @@ retrieved text is not fast extract.)
     after applying the website template, a River job writes copy into existing
     website slots. 07 waits until copy finishes **or** a ~15s cap, then writes
     static HTML to R2. 08 does not wait for 06. If copy fails, the unpublished
-    website stays. Same website assistant tools as the website editor, no chat
-    UI, no `create_page`. (2026-08-25: 07 wait is a cap, not “issue the website
+    website stays. Same website editor tools as the website editor, no chat UI,
+    no `create_page`. (2026-08-25: 07 wait is a cap, not “issue the website
     preview immediately and live-render unpublished rows.”)
 
 14. **Resume is same-browser `localStorage` + the existing onboarding session
     token** — restore with `GET .../profile`. No server-side resume token. Clerk
     still starts at website activation (`clerk_user_id` stays null until then).
     Business lookup creates an onboarding session once; do not `POST` on Find
-    mount and do not replace the row. A new voice realtime connection is seeded
-    from persisted profile, checklist, extra notes, and last
-    `update_interview_plan`. Reload during the `/onboarding/preview` wait → stay
-    there, reconnect SSE, finish the **same** wait (copy done or remaining time
-    to the original cap). Reload after 07 → the host. `activated` →
-    `/cms/website`. (2026-08-23. 2026-08-25: resume during wait vs after 07.)
+    mount and do not replace the row. The onboarding assistant realtime
+    connection is seeded from current step + visible fields (guide), not
+    interview writer tools. Activated owners **403** on onboarding routes.
+    Reload during the `/onboarding/preview` wait → stay there, reconnect SSE,
+    finish the **same** wait (copy done or remaining time to the original cap).
+    Reload after 07 → the host. `activated` → `/cms/website`. (2026-08-23.
+    2026-08-25: resume during wait vs after 07. 2026-08-28: onboarding assistant
+    is a guide; do not seed a writer interview connection.)
 
 15. **The website preview is the preview website address** — `{website_prefix}`
     plus the suffix in [cloudflare.md](../website/cloudflare.md) with static R2 HTML and a

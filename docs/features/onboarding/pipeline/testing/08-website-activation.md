@@ -12,6 +12,7 @@
   `website_prefix` as 07; onboarding session `activated`; `website_publications`
   v2 without the strip, v1 archived; neither v1 nor v2 is returned by website
   rollback list; replay does not activate twice; second payer is refused;
-  in-flight 06 continues; host GET no longer includes the website-activation
+  in-flight 06 continues (not cancelled); CMS assistant POSTs are not 409
+  because 06 is running; host GET no longer includes the website-activation
   island.
 - **Mocked**: Stripe test mode (no real charge).
