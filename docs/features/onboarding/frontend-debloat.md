@@ -10,18 +10,19 @@ Status: planning (port instructions, not shipped UI).
 [api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 
-Default client interview is **text**. Voice is listed and deferred
-([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)).
+Default client interview is **text**. Voice is listed and deferred ([04a](pipeline/04a-text-client-interview.md),
+[04b](pipeline/04b-voice-client-interview.md)).
 
 ## Code today
 
-- Don't say setup: `frontend-2/src/features/setup/` (Find, Review, client interview,
-  progress, resume). Target folder: `frontend-2/src/features/onboarding/`.
-- Website preview + website activation: leftover `frontend-2/src/features/preview/`
-  (`PreviewRoute.tsx`, `TargetedPreviewView.tsx`, `PayToClaimStrip.tsx`,
-  `api/preview.ts`). Drop that folder; website preview is the contractor host
-  ([frontend stack](../../general-architecture/frontend-stack.md)).
-  The website-activation strip lives in the host HTML, not on `/onboarding/preview`.
+- Don't say setup: `frontend-2/src/features/setup/` (Find, Review, client
+  interview, progress, resume). Target folder:
+  `frontend-2/src/features/onboarding/`.
+- Website preview + website activation: leftover
+  `frontend-2/src/features/preview/` (`PreviewRoute.tsx`,
+  `TargetedPreviewView.tsx`, `PayToClaimStrip.tsx`, `api/preview.ts`). Drop that
+  folder; website preview is the contractor host ([frontend stack](../../general-architecture/frontend-stack.md)). The
+  website-activation strip lives in the host HTML, not on `/onboarding/preview`.
 - Router: `/onboarding`, `/onboarding/$step` in
   `frontend-2/src/app/router/index.tsx`. Drop `/preview/$token/$module`.
 - Don't say setup: API `frontend-2/src/features/setup/api/setup.ts`,
@@ -33,17 +34,20 @@ Default client interview is **text**. Voice is listed and deferred
 ## Keep
 
 - Screens: `/onboarding/find`, `/onboarding/review`, `/onboarding/interview`,
-  `/onboarding/preview` (SSE carousel). Website preview + pay: the preview website address.
+  `/onboarding/preview` (SSE carousel). Website preview + pay: the preview
+  website address.
 - `BusinessSourcePanel` (country, company registry, optional Google Maps, online
   research consent). Business lookup creates the onboarding session **once**.
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
 - `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist`.
-- Progress timeline (`PreviewProgressPanels` / apply-the-website-template panel): SSE carousel of
-  complete website sections (~2s). Navigate to the preview website address when 07
-  has written `latest/` (copy done or ~15s cap).
-- Drop leftover `TargetedPreviewView` and any website-activation strip on `/onboarding/preview`.
+- Progress timeline (`PreviewProgressPanels` / apply-the-website-template
+  panel): SSE carousel of complete website sections (~2s). Navigate to the
+  preview website address when 07 has written `latest/` (copy done or ~15s cap).
+- Drop leftover `TargetedPreviewView` and any website-activation strip on
+  `/onboarding/preview`.
 - Resume: `localStorage` holds the onboarding session token + last UI step;
-  `GET …/profile` restores. Restore failure does not `POST` a new onboarding session.
+  `GET …/profile` restores. Restore failure does not `POST` a new onboarding
+  session.
 
 ## Delete
 
@@ -74,24 +78,29 @@ Default client interview is **text**. Voice is listed and deferred
 | Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | public checkout / activation-status (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
 | Don't say claim: `GET …/claim/status` | activation-status |
 
-SSE drives `/onboarding/preview` only. The contractor host is static HTML; it is not an SSE
-endpoint.
+SSE drives `/onboarding/preview` only. The contractor host is static HTML; it is
+not an SSE endpoint.
 
 ## Don't say / rename
 
 - Don't say setup: folder `src/features/setup/` → `src/features/onboarding/`.
-- Don't say setup: `SetupRoute` → `OnboardingRoute`; `useSetup*` → `useOnboarding*`.
-- Don't say setup: `createGuidedSetupSession` / `getSetupProfile` → onboarding session helpers.
-- Don't say setup: `localStorage` key `placis.contractorOnboarding.setupSessionId` → onboarding session token key.
+- Don't say setup: `SetupRoute` → `OnboardingRoute`; `useSetup*` →
+  `useOnboarding*`.
+- Don't say setup: `createGuidedSetupSession` / `getSetupProfile` → onboarding
+  session helpers.
+- Don't say setup: `localStorage` key
+  `placis.contractorOnboarding.setupSessionId` → onboarding session token key.
 - Don't say shell: `OnboardingShell` → onboarding layout.
-- Don't say claim: `PayToClaimStrip` → website-activation strip on the preview website address; copy is website activation, never claim.
-- Don't say session (bare): always **onboarding session** (or sign-in / client interview).
+- Don't say claim: `PayToClaimStrip` → website-activation strip on the preview
+  website address; copy is website activation, never claim.
+- Don't say session (bare): always **onboarding session** (or sign-in / client
+  interview).
 
 ## Tests
 
-- Don't say setup: retarget `setup/api/setup.test.ts`, `eventsStream.test.ts`, `interview.test.ts`,
-  resume/onboarding model tests, `PayToClaimStrip.test.tsx` onto onboarding-session
-  routes.
+- Don't say setup: retarget `setup/api/setup.test.ts`, `eventsStream.test.ts`,
+  `interview.test.ts`, resume/onboarding model tests, `PayToClaimStrip.test.tsx`
+  onto onboarding-session routes.
 - Don't say setup: drop MSW handlers for `/api/v1/setup-sessions*`.
 - Don't say setup: `e2e/parity/onboarding-parity.spec.ts` stubs those routes —
   drop with the cross-cutting parity suite.

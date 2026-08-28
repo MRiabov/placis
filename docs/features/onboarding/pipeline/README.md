@@ -1,18 +1,20 @@
 # Onboarding — pipeline
 
-Executable spec. Each step file uses Trigger / Pre / Must not / Do / Persist / Fail / Out /
-Invariants. This README is the index: status machine, screens, Resume, business-lookup-once, DAG. It does
-not retell the steps.
+Executable spec. Each step file uses Trigger / Pre / Must not / Do / Persist /
+Fail / Out / Invariants. This README is the index: status machine, screens,
+Resume, business-lookup-once, DAG. It does not retell the steps.
 
-The contractor never waits on business research. Business lookup returns immediately; business
-research fills the checklist in the background; applying the website template starts only after
-the client interview completes. `/onboarding/preview` waits for website copy generation **or** a
-~15s cap, then 07 writes the host. 08 does not wait for 06.
+The contractor never waits on business research. Business lookup returns
+immediately; business research fills the checklist in the background; applying
+the website template starts only after the client interview completes.
+`/onboarding/preview` waits for website copy generation **or** a ~15s cap, then
+07 writes the host. 08 does not wait for 06.
 
 ## DAG
 
-Numbers follow what **starts first**, not the order of screens. 01 business lookup returns → **02
-business research is already running** before the contractor sees Review.
+Numbers follow what **starts first**, not the order of screens. 01 business
+lookup returns → **02 business research is already running** before the
+contractor sees Review.
 
 ```text
 01.  find the business + online research consent
@@ -36,26 +38,26 @@ business research is already running** before the contractor sees Review.
                                       └─► build-profile
 ```
 
-SSE (`GET /v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from business lookup through
-applying the website template and copy. Postgres is authoritative. Business research progress
-reads `etl.runs`.
+SSE (`GET /v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from
+business lookup through applying the website template and copy. Postgres is
+authoritative. Business research progress reads `etl.runs`.
 
 ## Onboarding session status
 
-`created` → `client_interviewing` (confirmed; 02 + 03 + 04a/04b) → `applying_website_template`
-(client interview complete; 05 running) → `previewing` (07 wrote `latest/`; 06 may still write
-copy) → `activated`.
-`apply_website_template_failed` if 05 throws.
-06 failing does not change onboarding session status. The preview website address has no token and
-no TTL. The onboarding session has no `expired` status. Review (03) does not get its own
+`created` → `client_interviewing` (confirmed; 02 + 03 + 04a/04b) →
+`applying_website_template` (client interview complete; 05 running) →
+`previewing` (07 wrote `latest/`; 06 may still write copy) → `activated`.
+`apply_website_template_failed` if 05 throws. 06 failing does not change
+onboarding session status. The preview website address has no token and no TTL.
+The onboarding session has no `expired` status. Review (03) does not get its own
 status.
 
 ## Resume
 
 Same browser only. `localStorage` holds the onboarding session **token**
-(`onboarding_sessions.token`) plus last UI step. Restore is `GET .../profile`. The stored step is
-a hint; status and whether `latest/` exists win. There is no second token and no server-side
-resume token.
+(`onboarding_sessions.token`) plus last UI step. Restore is `GET .../profile`.
+The stored step is a hint; status and whether `latest/` exists win. There is no
+second token and no server-side resume token.
 
 | Onboarding session | Screen |
 | --- | --- |
@@ -67,15 +69,16 @@ resume token.
 | `previewing` | the preview website address |
 | `activated` | clear storage; `/cms/website` |
 
-Business lookup creates the onboarding session **once** (01), when this browser has no token. Opening Find
-with nothing stored must not `POST` an onboarding session. Opening `/onboarding/find` with a stored
-token restores (same table as reload); it does not submit business lookup again. Restore failure keeps the token
-and retries `GET .../profile` on a loading placeholder — do not drop the pointer and do not `POST`
-a replacement.
+Business lookup creates the onboarding session **once** (01), when this browser
+has no token. Opening Find with nothing stored must not `POST` an onboarding
+session. Opening `/onboarding/find` with a stored token restores (same table as
+reload); it does not submit business lookup again. Restore failure keeps the
+token and retries `GET .../profile` on a loading placeholder — do not drop the
+pointer and do not `POST` a replacement.
 
-Creating a realtime connection seeds it from the live business profile, checklist projection, extra
-notes, and last `update_interview_plan`. Live audio is gone; structured answers are not. Canonical
-detail: [frontend.md](../frontend.md), [04b](04b-voice-client-interview.md).
+Creating a realtime connection seeds it from the live business profile,
+checklist projection, extra notes, and last `update_interview_plan`. Live audio
+is gone; structured answers are not. Canonical detail: [frontend.md](../frontend.md), [04b](04b-voice-client-interview.md).
 
 ## Steps
 

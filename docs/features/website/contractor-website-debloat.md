@@ -2,19 +2,20 @@
 
 Status: remaining cuts (first delete pass is on `main`).
 
-API/typegen process: [port-contractor-website.md](port-contractor-website.md). This file is
-the **cut list** (keep / delete / Don’t-say).
+API/typegen process: [port-contractor-website.md](port-contractor-website.md). This file is the **cut list**
+(keep / delete / Don’t-say).
 
 This is **not** the `frontend-2` call. Split the tree:
 
-- **Website component package — keep and cut.** React website components, themes, and CSS.
-  Do not rebuild the visuals.
-- **Astro Worker — write thin.** Live GET is Cache then R2; an R2 miss is 404. Website
-  preview token path is gone; 07 writes the same static `latest/` as later CMS website
-  publication.
+- **Website component package — keep and cut.** React website components,
+  themes, and CSS. Do not rebuild the visuals.
+- **Astro Worker — write thin.** Live GET is Cache then R2; an R2 miss is 404.
+  Website preview token path is gone; 07 writes the same static `latest/` as
+  later CMS website publication.
 
-Do not rewrite the registry JSX/CSS from scratch. Glue (`JsonObject` props, `asRecord` /
-`text()` helpers) retargets onto `catalog/` structs; that is plumbing, not a visual rewrite.
+Do not rewrite the registry JSX/CSS from scratch. Glue (`JsonObject` props,
+`asRecord` / `text()` helpers) retargets onto `catalog/` structs; that is
+plumbing, not a visual rewrite.
 
 ## Target
 
@@ -28,24 +29,25 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 **Astro Worker (`apps/contractor-website/src/`, ~800 lines):**
 
 - Live: `pages/[...path].astro` — 404 when R2 misses. Does not call Go.
-- Website preview: leftover `pages/preview/[previewToken]/[...path].astro` — drop.
+- Website preview: leftover `pages/preview/[previewToken]/[...path].astro` —
+  drop.
 - R2 + Cache: `middleware.ts` (skips `/preview/`).
 - One island module: Don't say public site: `PublicSiteClientBehaviors.astro`.
-- `lib/publicSiteApi.ts` — still calls predecessor `GET /v1/preview/{token}/module/website`
-  and leftover predecessor types. Leftover env names remain. Retarget in
-  [port-contractor-website.md](port-contractor-website.md).
+- `lib/publicSiteApi.ts` — still calls predecessor
+  `GET /v1/preview/{token}/module/website` and leftover predecessor types.
+  Leftover env names remain. Retarget in [port-contractor-website.md](port-contractor-website.md).
 
 **Website component package (`packages/website-components`):**
 
 - Renderer: `PublicSiteRenderer.tsx`, `registry.ts` (in-scope families).
 - `types.ts` — still `JsonObject` for `props`, `seo`, `collections`.
-- Don't say proof: `registry/proof/*` — product language is certifications / reviews /
-  projects.
--   Don't say blueprint: `src/blueprints/**` — website templates (JSON). No DESIGN.md
-  or per-folder markdown sidecars.
-- `src/styles.css` concatenates every website style catalog preset plus shared dumps
-  (`green-gold-sections.css`, `timbermill-content.css`, …). Live HTML and `frontend-2`
-  both import that one sheet.
+- Don't say proof: `registry/proof/*` — product language is certifications /
+  reviews / projects.
+- Don't say blueprint: `src/blueprints/**` — website templates (JSON). No
+  DESIGN.md or per-folder markdown sidecars.
+- `src/styles.css` concatenates every website style catalog preset plus shared
+  dumps (`green-gold-sections.css`, `timbermill-content.css`, …). Live HTML and
+  `frontend-2` both import that one sheet.
 
 ## Keep
 
@@ -68,7 +70,8 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - Website-activation strip island on unactivated hosts (Clerk + Stripe POST
   `activation/checkout`). 08 HTML has no strip.
 - Drop leftover `/preview/{token}/` and `GET /v1/public/site/resolve`.
-- Website form POST to `POST /v1/website-forms/{form_id}/submissions` (and uploads).
+- Website form POST to `POST /v1/website-forms/{form_id}/submissions` (and
+  uploads).
 - Islands for top menu / carousel **once**.
 
 ## Delete / still cut
@@ -76,13 +79,15 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - Unconstrained `JsonObject` / `[key: string]: unknown` on resolve/preview DTOs.
   `website.v1` is a closed Go struct ([manifest.md](manifest.md)).
 - Don't say shell: leftover `app_shell` types if any remain. Don't say runtime:
-  Don't say runtime: `placis:runtime` meta (bundle/shared-across-tenants flags can stay as data).
+  Don't say runtime: `placis:runtime` meta (bundle/shared-across-tenants flags
+  can stay as data).
 
 ## Do not port
 
 - CRM / quotes / invoices / jobs / workflows / crew on website preview.
-- Blog, careers, leftover website-template-apply CMS API wrappers (those are also in
-  the `frontend-2` website file). DESIGN.md and per-folder markdown sidecars (dropped).
+- Blog, careers, leftover website-template-apply CMS API wrappers (those are
+  also in the `frontend-2` website file). DESIGN.md and per-folder markdown
+  sidecars (dropped).
 - A second HTML engine or per-contractor Cloudflare deploy
   ([cloudflare.md](cloudflare.md)).
 - Predecessor OpenAPI, a full-CMS typegen, leftover predecessor types,
@@ -102,7 +107,8 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 
 ## Don't say / rename
 
-- Don't say public site / public-site: contractor website (`apps/contractor-website`).
+- Don't say public site / public-site: contractor website
+  (`apps/contractor-website`).
 - Don't say shell: `PublicSiteRenderer`, `public-site-shell`,
   Don't say public site: `PublicSiteClientBehaviors`.
 - Don't say blueprint: `src/blueprints/` → website template catalog.
@@ -111,8 +117,8 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - Don't say runtime: meta / env names that call this app a runtime.
 - Don't say setup: `setupPublicNavigation` / `setupPublicCarousels` in the
   Don't say setup: island script (rename to ordinary `bind*` helpers).
-- Don't say private app: leftover `PUBLIC_SITE_*` env names → CMS / website preview
-  origin (`frontend-2`). Default must not be old `frontend/` on 5173.
+- Don't say private app: leftover `PUBLIC_SITE_*` env names → CMS / website
+  preview origin (`frontend-2`). Default must not be old `frontend/` on 5173.
 
 ## Tests
 

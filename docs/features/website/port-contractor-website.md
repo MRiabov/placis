@@ -2,13 +2,13 @@
 
 Status: planning (port process, not shipped Worker code).
 
-How `apps/contractor-website` moves onto the Go contract. Cut list (keep / delete /
-Don’t-say): [contractor-website-debloat.md](contractor-website-debloat.md).
-`frontend-2` typegen: [planning/frontend-debloat.md](../../planning/frontend-debloat.md).
-HTTP: [website HTTP](api.md), [leads HTTP](../other/leads/api.md).
+How `apps/contractor-website` moves onto the Go contract. Cut list (keep /
+delete / Don’t-say): [contractor-website-debloat.md](contractor-website-debloat.md). `frontend-2` typegen:
+[planning/frontend-debloat.md](../../planning/frontend-debloat.md). HTTP: [website HTTP](api.md), [leads HTTP](../other/leads/api.md).
 
-Product name is **contractor website**. Predecessor OpenAPI is not a compatibility
-surface. No backward-compatible paths, operation ids, or leftover predecessor types.
+Product name is **contractor website**. Predecessor OpenAPI is not a
+compatibility surface. No backward-compatible paths, operation ids, or leftover
+predecessor types.
 
 ## Serve vs API
 
@@ -33,18 +33,18 @@ typed against predecessor paths.
 
 ## Keep vs drop (API)
 
-Keep as Go DTOs in current glossary names (fields may change): website form submit,
-activation checkout. Drop (do not alias): predecessor preview module
-path, leftover resolve, predecessor hand types, CRM/sandbox routes, unconstrained
-`additionalProperties` bags.
+Keep as Go DTOs in current glossary names (fields may change): website form
+submit, activation checkout. Drop (do not alias): predecessor preview module
+path, leftover resolve, predecessor hand types, CRM/sandbox routes,
+unconstrained `additionalProperties` bags.
 
-“Genuinely good” means the **behavior** is still in the website spec. Copy Python
-field lists only when [api.md](api.md) already says so.
+“Genuinely good” means the **behavior** is still in the website spec. Copy
+Python field lists only when [api.md](api.md) already says so.
 
 ## Done when
 
 - Live GET still never calls Go.
 - No `GET /v1/public/site/resolve`.
 - Website forms use `POST /v1/website-forms/{form_id}/submissions`.
-- No predecessor OpenAPI typegen, leftover predecessor types, or module/website path in
-  this app.
+- No predecessor OpenAPI typegen, leftover predecessor types, or module/website
+  path in this app.

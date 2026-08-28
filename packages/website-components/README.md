@@ -1,39 +1,42 @@
 # Website components
 
-`@placis/website-components` is the shared website component package. The contractor website
-application and the `frontend-2` website editor canvas both render from it. It must not import
-`frontend-2`, shadcn CMS UI, or Kibo.
+`@placis/website-components` is the shared website component package. The
+contractor website application and the `frontend-2` website editor canvas both
+render from it. It must not import `frontend-2`, shadcn CMS UI, or Kibo.
 
-Each registry folder owns a `contract.json` sidecar beside the renderer: identity, display
-name, props, website slots, design controls, and aliases. The Go backend will load those
-sidecars instead of duplicating website component schemas.
+Each registry folder owns a `contract.json` sidecar beside the renderer:
+identity, display name, props, website slots, design controls, and aliases. The
+Go backend will load those sidecars instead of duplicating website component
+schemas.
 
-Website templates live as JSON + sidecars next to this package's website page factories (home,
-service, contact, legal, plus predecessor extras). Website style catalog presets live under
-`src/themes/`. First-pass page types for the rewrite are `home` / `service` / `contact` /
-`legal`. Blog and careers are deferred and are not in this package.
+Website templates live as JSON + sidecars next to this package's website page
+factories (home, service, contact, legal, plus predecessor extras). Website
+style catalog presets live under `src/themes/`. First-pass page types for the
+rewrite are `home` / `service` / `contact` / `legal`. Blog and careers are
+deferred and are not in this package.
 
 ## Website templates
 
-Reusable website templates are backend-readable factories, not a live website and not
-tenant-owned content. The backend validates them against website component `contract.json`
-files, then applies them to create unpublished website pages, website sections, website slots,
-website forms, top menu, and footer. Website template JSON is the contract. Selection and
-visual rules live in [website architecture](../../docs/features/website/architecture.md) and
+Reusable website templates are backend-readable factories, not a live website
+and not tenant-owned content. The backend validates them against website
+component `contract.json` files, then applies them to create unpublished website
+pages, website sections, website slots, website forms, top menu, and footer.
+Website template JSON is the contract. Selection and visual rules live in
+[website architecture](../../docs/features/website/architecture.md) and
 [website styles](../../docs/features/website/styles.md).
 
-`home.stub` is skeletal on purpose. Source-backed website templates recompose a reference site
-into website page structure + website section composition, then switch content
-(`{{business_name}}`, …) and remix colors via a website style catalog preset. Trade does not
-pick the website template 1:1.
+`home.stub` is skeletal on purpose. Source-backed website templates recompose a
+reference site into website page structure + website section composition, then
+switch content (`{{business_name}}`, …) and remix colors via a website style
+catalog preset. Trade does not pick the website template 1:1.
 
-`pnpm --dir packages/website-components check` runs the style, reference-boundary, and
-website-template intent guards.
+`pnpm --dir packages/website-components check` runs the style,
+reference-boundary, and website-template intent guards.
 
 ## Website component IDs
 
-New website manifests should use family/variant IDs. Compatibility aliases keep older
-`public.*.v1` manifests renderable.
+New website manifests should use family/variant IDs. Compatibility aliases keep
+older `public.*.v1` manifests renderable.
 
 | Preferred ID | Compatibility aliases | Purpose |
 | -- | -- | -- |
@@ -80,18 +83,19 @@ New website manifests should use family/variant IDs. Compatibility aliases keep 
 
 ## Website styles
 
-Website components consume `website_styles` through CSS variables (`--public-primary`,
-`--public-accent`, `--public-background`, `--public-border`, `--public-muted`,
-`--public-radius`, `--public-text`). Renderers emit semantic class names, not source-site
-selectors.
+Website components consume `website_styles` through CSS variables
+(`--public-primary`, `--public-accent`, `--public-background`,
+`--public-border`, `--public-muted`, `--public-radius`, `--public-text`).
+Renderers emit semantic class names, not source-site selectors.
 
 Presets under `src/themes/`: `navy_cream`, `dark_serif`, `red_charcoal`,
 `institutional_mono`, `green_gold`, `navy_grid`, `timbermill_classic`. Token and
-override rules: [website styles](../../docs/features/website/styles.md). Each preset’s
-typed tokens live in that folder’s `index.ts`.
+override rules: [website styles](../../docs/features/website/styles.md). Each preset’s typed tokens live in that
+folder’s `index.ts`.
 
 ## Loading
 
-`loadPublicSiteComponents(sections)` loads only the website component modules referenced by a
-website page. The contractor website application passes those into the renderer. Prefer
-HTML first; hydrate a React island only when that website section needs it.
+`loadPublicSiteComponents(sections)` loads only the website component modules
+referenced by a website page. The contractor website application passes those
+into the renderer. Prefer HTML first; hydrate a React island only when that
+website section needs it.

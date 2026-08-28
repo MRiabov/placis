@@ -4,6 +4,13 @@
 # keeps `go run` cheap after the first compile.
 # frontend-2 is in scope but excluded until frontend work starts from the Go backend.
 repos:
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: v0.2.62
+    hooks:
+      - id: rumdl-fmt
+        exclude: ^\.agents/
+      - id: rumdl
+        exclude: ^\.agents/
   - repo: local
     hooks:
       - id: check-dont-say

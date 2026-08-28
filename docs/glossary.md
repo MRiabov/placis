@@ -2,74 +2,82 @@
 
 The **ubiquitous language** of Placis. Read this before naming anything new.
 
-> "By using the model-based language pervasively and not being satisfied until it flows, we
-> approach a model that is complete and comprehensible, made up of simple elements that combine to
-> express complex ideas." — Eric Evans, *Domain-Driven Design*
+> "By using the model-based language pervasively and not being satisfied until
+> it flows, we approach a model that is complete and comprehensible, made up of
+> simple elements that combine to express complex ideas." — Eric Evans,
+> *Domain-Driven Design*
 >
-> Domain experts object to terms that are awkward or inadequate to convey the domain; developers
-> watch for ambiguity or inconsistency that will trip up the design.
+> Domain experts object to terms that are awkward or inadequate to convey the
+> domain; developers watch for ambiguity or inconsistency that will trip up the
+> design.
 
 ## Why
 
-Bad names in a PRD become table, field, route, and UI names; once they ship they're hard to fix.
-We name each concept once, here, and reuse the same word everywhere. If a PRD invents a new word,
-it's wrong — the word should already be in this file (or be added here first).
+Bad names in a PRD become table, field, route, and UI names; once they ship
+they're hard to fix. We name each concept once, here, and reuse the same word
+everywhere. If a PRD invents a new word, it's wrong — the word should already be
+in this file (or be added here first).
 
 ## The rule
 
-**Domain** terms are the business's own words. Use them in PRDs, user stories, UI, and in code
-when they name that concept.
+**Domain** terms are the business's own words. Use them in PRDs, user stories,
+UI, and in code when they name that concept.
 
-**Enums** are closed sets of user-facing labels. They live together under Enums, not as their own
-terms.
+**Enums** are closed sets of user-facing labels. They live together under Enums,
+not as their own terms.
 
-**Internal** terms are technical names for a *different* concept — not an alias, synonym, or
-“In code” stand-in for a Domain term. Use them in technical docs and code only. If Internal and
-Domain would name the same concept, drop Internal; code snake_cases the Domain term. If they are
-different concepts, keep both, with Distinct from.
+**Internal** terms are technical names for a *different* concept — not an alias,
+synonym, or “In code” stand-in for a Domain term. Use them in technical docs and
+code only. If Internal and Domain would name the same concept, drop Internal;
+code snake_cases the Domain term. If they are different concepts, keep both,
+with Distinct from.
 
-The glossary defines what terms mean. It never prescribes — no scope, pipeline, validation rules,
-or how something is implemented. Those belong in PRDs and technical docs.
+The glossary defines what terms mean. It never prescribes — no scope, pipeline,
+validation rules, or how something is implemented. Those belong in PRDs and
+technical docs.
 
-In PRDs, user stories, and UI, a website term includes **website**. Never say page, section,
-styles, form, editor, template, draft, preview, or publish as if they were generic. Never say
-**slot** or **website slot** in PRDs or UI (Internal). **Top menu** and **footer** are named
-separately; never say header, navigation, or bare “menu”. The same idea for ads and onboarding: use
-the full glossary term when the feature is not already the context.
+In PRDs, user stories, and UI, a website term includes **website**. Never say
+page, section, styles, form, editor, template, draft, preview, or publish as if
+they were generic. Never say **slot** or **website slot** in PRDs or UI
+(Internal). **Top menu** and **footer** are named separately; never say header,
+navigation, or bare “menu”. The same idea for ads and onboarding: use the full
+glossary term when the feature is not already the context.
 
-In technical docs and code that **clearly already belong to that feature** (a website architecture
-doc, `internal/website/`, an ads package), the short word is acceptable: page, section, slot; copy,
-variant; session. Do not use the short word in a mixed or product-facing sentence where it could
-mean something else.
+In technical docs and code that **clearly already belong to that feature** (a
+website architecture doc, `internal/website/`, an ads package), the short word
+is acceptable: page, section, slot; copy, variant; session. Do not use the short
+word in a mixed or product-facing sentence where it could mean something else.
 
-Do not say **user**, **frozen**, bare **session**, **provider**, **instantiate**, **population**, **mint**, **fold**, or **bytes**.
-Say contractor, owner, or website visitor; name Google Maps, the LLM, or Stripe; say apply the
-website template; say create or use for ephemeral tokens and ids; say live business profile or
-unpublished website; say photo, image, file, or binary.
+Do not say **user**, **frozen**, bare **session**, **provider**,
+**instantiate**, **population**, **mint**, **fold**, or **bytes**. Say
+contractor, owner, or website visitor; name Google Maps, the LLM, or Stripe; say
+apply the website template; say create or use for ephemeral tokens and ids; say
+live business profile or unpublished website; say photo, image, file, or binary.
 
 ---
 
 ## Domain
 
-Product and user-facing language. Use these words in PRDs, UI, and in code when they name that
-concept.
+Product and user-facing language. Use these words in PRDs, UI, and in code when
+they name that concept.
 
 ### Contractor
 
-The customer: a construction business that Placis researches, builds a website for, and makes ads
-for.
+The customer: a construction business that Placis researches, builds a website
+for, and makes ads for.
 
-Use this exact term in user stories (“As a contractor”) and product prose. Do not say “user”,
-“client”, or “customer”.
+Use this exact term in user stories (“As a contractor”) and product prose. Do
+not say “user”, “client”, or “customer”.
 
-Distinct from: Owner (the person who activated), Website visitor (someone on the live website).
+Distinct from: Owner (the person who activated), Website visitor (someone on the
+live website).
 
 ---
 
 ### Owner
 
-The person who completed website activation. They can edit the website and ads, and they decide
-research conflicts during onboarding.
+The person who completed website activation. They can edit the website and ads,
+and they decide research conflicts during onboarding.
 
 “Owner” is the person, not a synonym for the business.
 
@@ -79,8 +87,8 @@ Distinct from: Contractor (the business).
 
 ### Business
 
-The construction company we are learning about — name, trade, services, areas, contact,
-certifications, reviews, photos.
+The construction company we are learning about — name, trade, services, areas,
+contact, certifications, reviews, photos.
 
 Distinct from: Business profile (our record of that business).
 
@@ -88,23 +96,25 @@ Distinct from: Business profile (our record of that business).
 
 ### Business profile
 
-Everything we know about the business, in one place. Onboarding and ETL transform write it;
-the website shows it; ads read it. Each detail notes where it came from. When the contractor’s
-answer disagrees with business research, both are shown and they decide. Details, Projects, and
-Certifications and reviews are screens on it (the media library is reached from Profile but
-lives elsewhere).
+Everything we know about the business, in one place. Onboarding and ETL
+transform write it; the website shows it; ads read it. Each detail notes where
+it came from. When the contractor’s answer disagrees with business research,
+both are shown and they decide. Details, Projects, and Certifications and
+reviews are screens on it (the media library is reached from Profile but lives
+elsewhere).
 
 Do not say “setup profile”, “facts”, or “structured facts”.
 
-Distinct from: Profile (the left-nav group), Details (the Business details screen).
+Distinct from: Profile (the left-nav group), Details (the Business details
+screen).
 
 ---
 
 ### Detail
 
-One piece of information in the business profile (a name, a phone number, a service), including
-where it came from (the Google Maps listing, the company registry record, the client interview, or
-business research).
+One piece of information in the business profile (a name, a phone number, a
+service), including where it came from (the Google Maps listing, the company
+registry record, the client interview, or business research).
 
 Do not say “fact”.
 
@@ -124,14 +134,15 @@ Distinct from: Emergency phone (how we reach the owner).
 
 ### Marketing email
 
-The email on the website and in ads. Never say “website email”. Not the Clerk account email
-(identity; not a profile detail).
+The email on the website and in ads. Never say “website email”. Not the Clerk
+account email (identity; not a profile detail).
 
 ---
 
 ### Emergency phone
 
-How we contact the owner. Unpublished; may be the same number as marketing phone.
+How we contact the owner. Unpublished; may be the same number as marketing
+phone.
 
 Distinct from: Marketing phone.
 
@@ -139,9 +150,10 @@ Distinct from: Marketing phone.
 
 ### Details
 
-The screen where the contractor edits the Business details subset of the business profile
-(who they are, contact, hours, logo, Facebook / Maps links). Editing Details changes the
-website and the next ad draft. In Profile, Details is labeled **Business details**.
+The screen where the contractor edits the Business details subset of the
+business profile (who they are, contact, hours, logo, Facebook / Maps links).
+Editing Details changes the website and the next ad draft. In Profile, Details
+is labeled **Business details**.
 
 Distinct from: Profile (the nav group), Business profile (the record).
 
@@ -155,7 +167,8 @@ The main kind of work the business does. Open text (not a closed list).
 
 ### Service
 
-A named thing the business offers, shown on the website and available as an ad focus.
+A named thing the business offers, shown on the website and available as an ad
+focus.
 
 ---
 
@@ -175,8 +188,8 @@ Distinct from: Projects (photos of their work).
 
 ### Projects
 
-The contractor’s work shown on the website — jobs with photos — edited separately from website
-sections. Reached from Profile.
+The contractor’s work shown on the website — jobs with photos — edited
+separately from website sections. Reached from Profile.
 
 Use “projects” in product docs and UI. Do not say “portfolio”.
 
@@ -184,46 +197,48 @@ Use “projects” in product docs and UI. Do not say “portfolio”.
 
 ### Reviews
 
-What people wrote about the business: who wrote it, the rating, and the text. Origins: the
-Google Maps listing, a Facebook business page, or the owner. Filled during onboarding and
-edited on Certifications and reviews (headings: **Top reviews**, **All reviews**, **Archive**).
-**All reviews** is the non-top `in_pool` cards. Each **reviews website section** shows its own
-ordered list from `in_pool` reviews (the review citation, not the full body when those differ).
-Ads use **top reviews**.
+What people wrote about the business: who wrote it, the rating, and the text.
+Origins: the Google Maps listing, a Facebook business page, or the owner. Filled
+during onboarding and edited on Certifications and reviews (headings:
+**Top reviews**, **All reviews**, **Archive**). **All reviews** is the non-top
+`in_pool` cards. Each **reviews website section** shows its own ordered list
+from `in_pool` reviews (the review citation, not the full body when those
+differ). Ads use **top reviews**.
 
-Distinct from: Ad needs review (an Ad state), Website preview, Top reviews (the ads featured
-list), Review citation (the short text shown from a review).
+Distinct from: Ad needs review (an Ad state), Website preview, Top reviews (the
+ads featured list), Review citation (the short text shown from a review).
 
 ---
 
 ### Top reviews
 
-The ordered list of reviews the owner pinned on Certifications and reviews. Earlier in the
-order is more featured. Ads use this list. It is **not** what every reviews website section
-shows.
+The ordered list of reviews the owner pinned on Certifications and reviews.
+Earlier in the order is more featured. Ads use this list. It is **not** what
+every reviews website section shows.
 
-Distinct from: Reviews (**All reviews** on Certifications and reviews), the ordered reviews on
-one reviews website section.
+Distinct from: Reviews (**All reviews** on Certifications and reviews), the
+ordered reviews on one reviews website section.
 
 ---
 
 ### Review citation
 
-The short text taken from a review for cards, the website, and ads — not a paraphrase of the
-body. Never say bare “citation” for this.
+The short text taken from a review for cards, the website, and ads — not a
+paraphrase of the body. Never say bare “citation” for this.
 
-Distinct from: where it came from (a detail’s origin). Distinct from Reviews (the full body)
-and Top reviews (the ads featured list) or the reviews on one website section.
+Distinct from: where it came from (a detail’s origin). Distinct from Reviews
+(the full body) and Top reviews (the ads featured list) or the reviews on one
+website section.
 
 ---
 
 ### Profile
 
-The left-nav group in The CMS that holds Details, Projects, Certifications and reviews, and the
-media library. It is not a page and not a record.
+The left-nav group in The CMS that holds Details, Projects, Certifications and
+reviews, and the media library. It is not a page and not a record.
 
-Distinct from: Business profile (the data), Details (the Business details screen), Profile
-history (how the business profile changed).
+Distinct from: Business profile (the data), Details (the Business details
+screen), Profile history (how the business profile changed).
 
 ---
 
@@ -231,31 +246,33 @@ history (how the business profile changed).
 
 The kept record of how the business profile changed.
 
-Do not say “version”, “versioned”, or “snapshot” for this. Distinct from: Profile (the nav
-group), Website version (published checkpoints of the website), Website edit history
-(unpublished website edits).
+Do not say “version”, “versioned”, or “snapshot” for this. Distinct from:
+Profile (the nav group), Website version (published checkpoints of the website),
+Website edit history (unpublished website edits).
 
 ---
 
 ### Research conflict
 
-When the contractor’s answer disagrees with business research, both are shown side by side and
-the contractor decides. A research conflict is not an error.
+When the contractor’s answer disagrees with business research, both are shown
+side by side and the contractor decides. A research conflict is not an error.
 
 ---
 
 ### Google Maps listing
 
-The contractor’s Google Maps place, used to start onboarding and pre-fill what we already know.
+The contractor’s Google Maps place, used to start onboarding and pre-fill what
+we already know.
 
-Listing is this Google Maps term only. Never say Instagram listing or Facebook listing.
+Listing is this Google Maps term only. Never say Instagram listing or Facebook
+listing.
 
 ---
 
 ### Instagram profile
 
-The contractor’s Instagram account (handle / user). Distinct from: Google Maps listing, Business
-profile.
+The contractor’s Instagram account (handle / user). Distinct from: Google Maps
+listing, Business profile.
 
 ---
 
@@ -267,15 +284,17 @@ One post on that Instagram profile.
 
 ### Company registry record
 
-The contractor’s entry in a company registry (Companies House, CRO, or a US state registry),
-used to start onboarding and pre-fill legal details. Never say bare “registry record”.
+The contractor’s entry in a company registry (Companies House, CRO, or a US
+state registry), used to start onboarding and pre-fill legal details. Never say
+bare “registry record”.
 
 ---
 
 ### Media library
 
-The photo library: the contractor’s work, logos, and documents. Never say bare “media” for this
-library. Reached from Profile. The website editor attaches from the same library.
+The photo library: the contractor’s work, logos, and documents. Never say bare
+“media” for this library. Reached from Profile. The website editor attaches from
+the same library.
 
 Internal: Media asset, File. Do not say bare “asset” in product docs.
 
@@ -303,20 +322,22 @@ Distinct from: Source refs (where a detail came from). Never say “provenance�
 
 ### Copy
 
-The words we write for the contractor — headlines, body, calls to action — on the website or in
-an ad.
+The words we write for the contractor — headlines, body, calls to action — on
+the website or in an ad.
 
-Distinct from: Marketing statement (an assertion in those words that must be backed by a detail).
+Distinct from: Marketing statement (an assertion in those words that must be
+backed by a detail).
 
 ---
 
 ### Marketing statement
 
-An assertion we make in marketing (on the website or in an ad) that must be backed by a detail —
-reviews, ratings, guarantees, prices, years in business, and the like.
+An assertion we make in marketing (on the website or in an ad) that must be
+backed by a detail — reviews, ratings, guarantees, prices, years in business,
+and the like.
 
-Distinct from: Copy (the words), Website activation (never “website claim”), sign-in identity
-claims (auth only).
+Distinct from: Copy (the words), Website activation (never “website claim”),
+sign-in identity claims (auth only).
 
 Never say “marketing claim”, “advertising claim”, or bare “claim” for this.
 
@@ -324,18 +345,20 @@ Never say “marketing claim”, “advertising claim”, or bare “claim” fo
 
 ### Placis website
 
-Placis’s own site. Never say “our site”, “our website”, or “public site” for this.
+Placis’s own site. Never say “our site”, “our website”, or “public site” for
+this.
 
-Distinct from: Website (the contractor website). Say contractor website when the contrast is needed.
+Distinct from: Website (the contractor website). Say contractor website when the
+contrast is needed.
 
 ---
 
 ### Onboarding
 
-Learning about the business and building its profile: start from a Google Maps listing or
-company registry record, online research consent, client interview, business research, one
-business profile, then an unpublished website and a website preview. It ends at website activation
-(paid). Never call this “setup”.
+Learning about the business and building its profile: start from a Google Maps
+listing or company registry record, online research consent, client interview,
+business research, one business profile, then an unpublished website and a
+website preview. It ends at website activation (paid). Never call this “setup”.
 
 Distinct from: Onboarding session (the persisted run).
 
@@ -343,32 +366,33 @@ Distinct from: Onboarding session (the persisted run).
 
 #### Business lookup
 
-On Find: submit the picked company registry record and/or Google Maps listing to start
-onboarding. Distinct from typeahead search, from business research, from Review, from picking
-a research conflict. Never say Confirm for this command.
+On Find: submit the picked company registry record and/or Google Maps listing to
+start onboarding. Distinct from typeahead search, from business research, from
+Review, from picking a research conflict. Never say Confirm for this command.
 
 ---
 
 #### Online research consent
 
-The one acknowledgement, on find at business lookup, that Placis may collect public information
-about the business to prepare the website preview. Not a client interview question. Never say
-bare “consent”.
+The one acknowledgement, on find at business lookup, that Placis may collect
+public information about the business to prepare the website preview. Not a
+client interview question. Never say bare “consent”.
 
 ---
 
 #### Business research
 
-Finding out about the business from public sources (Maps, the company registry, Facebook, their
-current website, photos of their work) after online research consent. Never say bare “research”.
-Onboarding 02 starts ETL runs; it does not own extract tables.
+Finding out about the business from public sources (Maps, the company registry,
+Facebook, their current website, photos of their work) after online research
+consent. Never say bare “research”. Onboarding 02 starts ETL runs; it does not
+own extract tables.
 
 ---
 
 #### Sign up
 
-Create the contractor’s account. Happens around website activation if they are not already signed in.
-Sign up is identity, not payment.
+Create the contractor’s account. Happens around website activation if they are
+not already signed in. Sign up is identity, not payment.
 
 Distinct from: Website activation.
 
@@ -384,32 +408,36 @@ Distinct from: Sign up, Website publication. Never say “website claim”.
 
 #### Website preview
 
-A stage in our sales process where they choose to buy the website or not. Never say bare
-“preview”. Do not use this word for the website editor canvas or for ad format mocks.
+A stage in our sales process where they choose to buy the website or not. Never
+say bare “preview”. Do not use this word for the website editor canvas or for ad
+format mocks.
 
-The sales surface is the **preview website address** until website activation. After website
-activation that same host is the live website — never call it website preview then.
+The sales surface is the **preview website address** until website activation.
+After website activation that same host is the live website — never call it
+website preview then.
 
-Distinct from: Unpublished website, Website activation, Website preview link, Live website
-(the same host after they pay), Preview website address (the host).
+Distinct from: Unpublished website, Website activation, Website preview link,
+Live website (the same host after they pay), Preview website address (the host).
 
 ---
 
 #### Website preview link
 
 The shareable URL of the website preview: the preview website address
-(`{website_prefix}.preview.placis.com`). Anyone who has it can open the host. Never say
-“signed website preview”.
+(`{website_prefix}.preview.placis.com`). Anyone who has it can open the host.
+Never say “signed website preview”.
 
-Distinct from: Website preview (the sales stage), Preview website address (the host), Signed URL.
+Distinct from: Website preview (the sales stage), Preview website address (the
+host), Signed URL.
 
 ---
 
 ### Website
 
-The contractor’s site: website pages, website sections, website forms, top menu, footer, website
-styles, built from a website template and the business profile, edited in the website editor, shown
-to website visitors only after website publication.
+The contractor’s site: website pages, website sections, website forms, top menu,
+footer, website styles, built from a website template and the business profile,
+edited in the website editor, shown to website visitors only after website
+publication.
 
 Say **contractor website** when you need to tell it apart from Placis website.
 
@@ -419,40 +447,44 @@ Distinct from: Placis website.
 
 #### Unpublished website
 
-The website after applying the website template, before website publication. Website visitors do
-not see it.
+The website after applying the website template, before website publication.
+Website visitors do not see it.
 
-Do not say bare “draft”. An ad in draft is an Ad states value; say “ad draft” if you must.
+Do not say bare “draft”. An ad in draft is an Ad states value; say “ad draft” if
+you must.
 
-Distinct from: Website preview (the sales stage where they choose to buy), Live website.
+Distinct from: Website preview (the sales stage where they choose to buy), Live
+website.
 
 ---
 
 #### Live website
 
-What website visitors see: the currently published website. Distinct from the unpublished website,
-Published website copy (the content), and Placis website (whose site is still the contractor’s).
+What website visitors see: the currently published website. Distinct from the
+unpublished website, Published website copy (the content), and Placis website
+(whose site is still the contractor’s).
 
 ---
 
 #### Website template
 
-The starting point for a website: the website pages and website sections a typical site of that
-trade needs. Never say bare “template” or “blueprint”.
+The starting point for a website: the website pages and website sections a
+typical site of that trade needs. Never say bare “template” or “blueprint”.
 
 ---
 
 #### Website page
 
-One page of the website (home, a service page, contact, legal), with a website page path, title,
-and an ordered list of website sections. Never say bare “page” in PRDs or UI.
+One page of the website (home, a service page, contact, legal), with a website
+page path, title, and an ordered list of website sections. Never say bare “page”
+in PRDs or UI.
 
 ---
 
 #### Website page path
 
-The URL-safe path of a website page (for example a service page). Never say `slug` or bare “page
-path” in PRDs or UI.
+The URL-safe path of a website page (for example a service page). Never say
+`slug` or bare “page path” in PRDs or UI.
 
 Distinct from: Website address, Website prefix.
 
@@ -460,26 +492,29 @@ Distinct from: Website address, Website prefix.
 
 #### Website section
 
-A block on a website page (hero, services, reviews, …). Never say bare “section” in PRDs or UI.
+A block on a website page (hero, services, reviews, …). Never say bare “section”
+in PRDs or UI.
 
-Internal: Website component (a website component catalog building block a website section is an
-instance of), Website slot (a named editable value on that website section).
+Internal: Website component (a website component catalog building block a
+website section is an instance of), Website slot (a named editable value on that
+website section).
 
 ---
 
 #### Website style
 
-One look of the website: one website style catalog preset, or the currently applied look.
-Never say bare “style” or “theme” in PRDs or UI.
+One look of the website: one website style catalog preset, or the currently
+applied look. Never say bare “style” or “theme” in PRDs or UI.
 
-Distinct from: Website styles (more than one, or the list of looks in the website editor).
+Distinct from: Website styles (more than one, or the list of looks in the
+website editor).
 
 ---
 
 #### Website styles
 
-More than one website style, or the list of looks in the website editor. Never say bare
-“styles” or “design system” in PRDs or UI.
+More than one website style, or the list of looks in the website editor. Never
+say bare “styles” or “design system” in PRDs or UI.
 
 Internal: Website style catalog.
 
@@ -487,8 +522,8 @@ Internal: Website style catalog.
 
 #### Website form
 
-A form on the website a website visitor can submit. A submission creates a Website lead. Never
-say bare “form” in PRDs or UI.
+A form on the website a website visitor can submit. A submission creates a
+Website lead. Never say bare “form” in PRDs or UI.
 
 Distinct from: Ad lead form (suggested Meta fields on an ad).
 
@@ -496,36 +531,39 @@ Distinct from: Ad lead form (suggested Meta fields on an ad).
 
 #### Website editor
 
-The screen where the owner edits the unpublished website. Never say bare “editor” in PRDs or UI.
+The screen where the owner edits the unpublished website. Never say bare
+“editor” in PRDs or UI.
 
-Details, Projects, Certifications and reviews, the media library, and Ads are not this screen.
+Details, Projects, Certifications and reviews, the media library, and Ads are
+not this screen.
 
 ---
 
 #### Editing panel
 
-Retired. Do not use for the current website editor. **Content** is the workspace list that
-opens when the owner clicks a website section or image on the canvas. Never say inspector.
+Retired. Do not use for the current website editor. **Content** is the workspace
+list that opens when the owner clicks a website section or image on the canvas.
+Never say inspector.
 
-Distinct from: Canvas (the website page), Workspace (website pages / SEO / website styles /
-website versions).
+Distinct from: Canvas (the website page), Workspace (website pages / SEO /
+website styles / website versions).
 
 ---
 
 #### Top menu
 
-The bar at the top of the website. Never say header, navigation, or bare “menu”. Edited in the
-website editor, not Details.
+The bar at the top of the website. Never say header, navigation, or bare “menu”.
+Edited in the website editor, not Details.
 
-Distinct from: Footer, Website section. Top menu is not a website page. Distinct from the
-Placis website.
+Distinct from: Footer, Website section. Top menu is not a website page. Distinct
+from the Placis website.
 
 ---
 
 #### Footer
 
-The footer of the website. Never say navigation or menu for this. Edited in the website editor,
-not Details.
+The footer of the website. Never say navigation or menu for this. Edited in the
+website editor, not Details.
 
 Distinct from: Top menu, Website section. Distinct from the Placis website.
 
@@ -533,9 +571,9 @@ Distinct from: Top menu, Website section. Distinct from the Placis website.
 
 #### Website assistant
 
-The chat (and the voice agent) that proposes website edits. It can plan first or apply
-continuously, and it can apply instantly or **Ask first**. It drafts; the owner decides except
-in instant apply.
+The chat (and the voice agent) that proposes website edits. It can plan first or
+apply continuously, and it can apply instantly or **Ask first**. It drafts; the
+owner decides except in instant apply.
 
 Distinct from: Website copy generation, Website assistant plan.
 
@@ -543,20 +581,22 @@ Distinct from: Website copy generation, Website assistant plan.
 
 #### Website assistant plan
 
-Text the website assistant shows before it continuously applies. Confirmation text, like
-asking Cursor for a plan. Nothing is written until the owner accepts that text (then Apply /
-Reject still follow Ask first or Instant apply).
+Text the website assistant shows before it continuously applies. Confirmation
+text, like asking Cursor for a plan. Nothing is written until the owner accepts
+that text (then Apply / Reject still follow Ask first or Instant apply).
 
 Never say “live markdown plan” or “handoff boundary”.
 
-Distinct from: Website assistant (the chat), continuous workflow (no plan text), instant apply
-(no Apply / Reject), Ask first (Apply / Reject), Website copy generation (continuous + instant apply, no chat).
+Distinct from: Website assistant (the chat), continuous workflow (no plan text),
+instant apply (no Apply / Reject), Ask first (Apply / Reject), Website copy
+generation (continuous + instant apply, no chat).
 
 ---
 
 #### Ask first
 
-The website assistant shows Apply / Reject before an edit lands. Opposite of Instant apply.
+The website assistant shows Apply / Reject before an edit lands. Opposite of
+Instant apply.
 
 Distinct from: Instant apply, Website assistant plan.
 
@@ -564,52 +604,60 @@ Distinct from: Instant apply, Website assistant plan.
 
 #### Apply the website template
 
-Write unpublished website pages and website sections from a website template and the business
-profile. Website placeholders stay. Never say instantiate, population, or generate for this.
+Write unpublished website pages and website sections from a website template and
+the business profile. Website placeholders stay. Never say instantiate,
+population, or generate for this.
 
-Distinct from: Website copy generation (the words), Website template (the starting point).
+Distinct from: Website copy generation (the words), Website template (the
+starting point).
 
 ---
 
 #### Website copy generation
 
-Writing website copy into the unpublished website from the business profile. Do not call this
-“refinement” in onboarding. Never say generate without “website copy”.
+Writing website copy into the unpublished website from the business profile. Do
+not call this “refinement” in onboarding. Never say generate without “website
+copy”.
 
-Distinct from: Website assistant, Apply the website template (the unpublished website structure).
+Distinct from: Website assistant, Apply the website template (the unpublished
+website structure).
 
 ---
 
 #### Website publication
 
-Putting the website on the internet. Distinct from: Unpublished website, Published website copy
-(the content), Live website (what visitors see), Ad states.
+Putting the website on the internet. Distinct from: Unpublished website,
+Published website copy (the content), Live website (what visitors see), Ad
+states.
 
-Owner UI is the verb **Publish**. Specs still say website publication. Never say “go live”.
+Owner UI is the verb **Publish**. Specs still say website publication. Never say
+“go live”.
 
 ---
 
 #### Website version
 
-One kept checkpoint of the whole website. Website versions are the history of the website.
-Website publication makes a website version the live website. Website rollback makes an earlier
-website version live.
+One kept checkpoint of the whole website. Website versions are the history of
+the website. Website publication makes a website version the live website.
+Website rollback makes an earlier website version live.
 
-Distinct from: Profile history (the business profile), Website edit history (unpublished
-website edits), Unpublished website (what the editor mutates), Website publication (the act),
-Published website copy (the content of the live website version), Live website.
+Distinct from: Profile history (the business profile), Website edit history
+(unpublished website edits), Unpublished website (what the editor mutates),
+Website publication (the act), Published website copy (the content of the live
+website version), Live website.
 
-Do not say “website history”, “website page version”, or “website page history”. Never say bare
-“version” for the business profile.
+Do not say “website history”, “website page version”, or “website page history”.
+Never say bare “version” for the business profile.
 
 ---
 
 #### Website edit history
 
-The kept record of how the unpublished website changed, not published checkpoints.
+The kept record of how the unpublished website changed, not published
+checkpoints.
 
-Distinct from: Website version (published checkpoints of the whole website), Profile history
-(the business profile), audit events.
+Distinct from: Website version (published checkpoints of the whole website),
+Profile history (the business profile), audit events.
 
 Do not say “website history”.
 
@@ -617,7 +665,8 @@ Do not say “website history”.
 
 #### Website rollback
 
-Make an earlier website version the live website again, without deleting profile history.
+Make an earlier website version the live website again, without deleting profile
+history.
 
 Distinct from: Website edit history.
 
@@ -625,29 +674,31 @@ Distinct from: Website edit history.
 
 #### Website address
 
-The hostname they supply (`acme.ie`), which we publish under. Never say “custom domain” or
-“custom website address”.
+The hostname they supply (`acme.ie`), which we publish under. Never say “custom
+domain” or “custom website address”.
 
-Distinct from: Preview website address (our `preview.placis.com` host), Website prefix,
-Website page path.
+Distinct from: Preview website address (our `preview.placis.com` host), Website
+prefix, Website page path.
 
 ---
 
 #### Preview website address
 
-Our host for their site: `{website_prefix}.preview.placis.com`. While they have not paid, this
-host is the website preview (sales stage). After website activation it is still a preview
-website address and the live default until they attach a website address. Never call the host
-“website preview” after they pay. Never say “website preview host”.
+Our host for their site: `{website_prefix}.preview.placis.com`. While they have
+not paid, this host is the website preview (sales stage). After website
+activation it is still a preview website address and the live default until they
+attach a website address. Never call the host “website preview” after they pay.
+Never say “website preview host”.
 
-Distinct from: Website address (`acme.ie`), Website prefix, Website preview (the sales stage).
+Distinct from: Website address (`acme.ie`), Website prefix, Website preview (the
+sales stage).
 
 ---
 
 #### Website prefix
 
-The reserved DNS label for their site (`acme-roofing-dublin`). Not a URL. Never renamed. Never
-say `slug` or `website-prefix`.
+The reserved DNS label for their site (`acme-roofing-dublin`). Not a URL. Never
+renamed. Never say `slug` or `website-prefix`.
 
 Distinct from: Website address, Preview website address, Website page path.
 
@@ -655,8 +706,8 @@ Distinct from: Website address, Preview website address, Website page path.
 
 #### Website visitor
 
-An unauthenticated person looking at the contractor’s live website. A website visitor who
-submits a website form becomes a Website lead.
+An unauthenticated person looking at the contractor’s live website. A website
+visitor who submits a website form becomes a Website lead.
 
 Distinct from: Contractor, Owner.
 
@@ -674,14 +725,15 @@ Distinct from: Ad lead.
 
 What the owner calls one offer or marketing goal in one ad format.
 
-Distinct from: Creative set (images + text), Ad posting (running a paid ad), Ad set (the
-deliverable). Never say “creative set” in product docs or UI.
+Distinct from: Creative set (images + text), Ad posting (running a paid ad), Ad
+set (the deliverable). Never say “creative set” in product docs or UI.
 
 ---
 
 #### Ad destination
 
-An existing published website page owned by that contractor, that the ad can send people to.
+An existing published website page owned by that contractor, that the ad can
+send people to.
 
 ---
 
@@ -695,8 +747,8 @@ Do not abbreviate to “ICP” in product docs.
 
 #### Ad lead form
 
-Suggested title and questions for a Meta lead form, carried on the ad. Distinct from Website
-form.
+Suggested title and questions for a Meta lead form, carried on the ad. Distinct
+from Website form.
 
 ---
 
@@ -711,8 +763,9 @@ Distinct from: Creative set (images + text), Website preview.
 
 #### Ad format preview
 
-Facebook and Instagram placement mocks of this ad’s one format, shown in Review as the owner
-types. Distinct from: Website preview. Not the preview an ad platform shows at ad posting time.
+Facebook and Instagram placement mocks of this ad’s one format, shown in Review
+as the owner types. Distinct from: Website preview. Not the preview an ad
+platform shows at ad posting time.
 
 ---
 
@@ -720,8 +773,8 @@ types. Distinct from: Website preview. Not the preview an ad platform shows at a
 
 Sending an ad to an ad platform (Facebook / Meta first) — a running paid ad.
 
-Distinct from: Creative set, Ad states (ad ready to post), Website publication. Never say bare
-“posting”.
+Distinct from: Creative set, Ad states (ad ready to post), Website publication.
+Never say bare “posting”.
 
 ---
 
@@ -741,8 +794,8 @@ Distinct from: Website lead.
 
 ## Enums
 
-Closed sets of user-facing labels. Name the set; the values live only here — never as their own
-terms.
+Closed sets of user-facing labels. Name the set; the values live only here —
+never as their own terms.
 
 ### Ad
 
@@ -753,15 +806,18 @@ Where an ad stands. Two closed sets of labels:
 While creating the ad:
 
 - **Ad draft** — being created or edited.
-- **Ad needs review** — AI-generated or compliance-sensitive content waiting for the owner.
-- **Ad ready to post** — the owner accepted it; it can be handed to an ad platform or downloaded.
+- **Ad needs review** — AI-generated or compliance-sensitive content waiting for
+  the owner.
+- **Ad ready to post** — the owner accepted it; it can be handed to an ad
+  platform or downloaded.
 - **Archived** — no longer offered, kept as a past ad.
 
 On an existing ad:
 
 - **Draft**
 - **Creative ready** — the ad is done.
-- **Published** — used once ad posting exists. Distinct from Website publication.
+- **Published** — used once ad posting exists. Distinct from Website
+  publication.
 - **Archived**
 
 Never say bare “draft”, “needs review”, or “ready to post”.
@@ -777,32 +833,35 @@ A standard size an ad is produced in.
 - **Carousel**
 - **Story**
 
-Square feed, Portrait feed, and Carousel are **posts**. Story is **stories**. One ad is
-one format — a single creative is a single ad. Feed is one photo; a carousel is several
-cards; a story is almost always one image.
+Square feed, Portrait feed, and Carousel are **posts**. Story is **stories**.
+One ad is one format — a single creative is a single ad. Feed is one photo; a
+carousel is several cards; a story is almost always one image.
 
 ---
 
 ## Internal
 
-Technical names for concepts that are **not** a Domain term. Never in product docs or UI. If Internal
-and Domain would name the same concept, drop Internal; code snake_cases the Domain term.
+Technical names for concepts that are **not** a Domain term. Never in product
+docs or UI. If Internal and Domain would name the same concept, drop Internal;
+code snake_cases the Domain term.
 
 ### Tenant
 
-Placis’s tenancy record for one contractor. Created at business lookup as an **unactivated**
-tenant; website activation makes it an **activated** tenant. One **activated** tenant maps to
-one Clerk organization. The tenant name is the business. Never in PRDs.
+Placis’s tenancy record for one contractor. Created at business lookup as an
+**unactivated** tenant; website activation makes it an **activated** tenant. One
+**activated** tenant maps to one Clerk organization. The tenant name is the
+business. Never in PRDs.
 
-Domain: (none — never in PRDs). Distinct from: Business profile, Clerk organization.
+Domain: (none — never in PRDs). Distinct from: Business profile, Clerk
+organization.
 
 ---
 
 ### Clerk organization
 
-The Clerk organization, 1-1 with an **activated** tenant, named after the person (the account
-owner), not the business. Never say bare “organization”. Unactivated tenants have no Clerk
-organization yet.
+The Clerk organization, 1-1 with an **activated** tenant, named after the person
+(the account owner), not the business. Never say bare “organization”.
+Unactivated tenants have no Clerk organization yet.
 
 Domain: (none — never in PRDs as a synonym for the contractor).
 
@@ -810,32 +869,33 @@ Domain: (none — never in PRDs as a synonym for the contractor).
 
 ### Signed URL
 
-A time-limited file download URL. Distinct from: Website preview link. Never call a website
-preview signed.
+A time-limited file download URL. Distinct from: Website preview link. Never
+call a website preview signed.
 
 ---
 
 ### The CMS
 
-The app where the owner edits marketing: website, ads, and Profile (Details, Projects,
-Certifications and reviews, Media library). Umbrella name, not a synonym for the website editor.
-Never in PRDs as if it were a domain object.
+The app where the owner edits marketing: website, ads, and Profile (Details,
+Projects, Certifications and reviews, Media library). Umbrella name, not a
+synonym for the website editor. Never in PRDs as if it were a domain object.
 
 ---
 
 ### Loading placeholder
 
-The shaped stand-in shown **in** a field, row, or slot while that value is still loading. Same
-layout as the loaded UI. Not a spinner that replaces a whole card, panel, canvas, or screen.
-Not the unpublished website (never say “skeleton” for either). Distinct from: Website placeholder
-(`{{…}}` in unpublished copy).
+The shaped stand-in shown **in** a field, row, or slot while that value is still
+loading. Same layout as the loaded UI. Not a spinner that replaces a whole card,
+panel, canvas, or screen. Not the unpublished website (never say “skeleton” for
+either). Distinct from: Website placeholder (`{{…}}` in unpublished copy).
 
 ---
 
 ### Done-for-you / DIY
 
-**Done-for-you:** Placis researches, builds, tweaks, and runs ads for the contractor, delivered
-into their inbox. **DIY:** the owner can do the same website edits and ad creation themselves.
+**Done-for-you:** Placis researches, builds, tweaks, and runs ads for the
+contractor, delivered into their inbox. **DIY:** the owner can do the same
+website edits and ad creation themselves.
 
 Positioning, not a domain object.
 
@@ -843,38 +903,40 @@ Positioning, not a domain object.
 
 ### Media asset
 
-One item in the media library. Never say bare “asset” (a website is not this). Distinct from: Media
-library (the library), File (the stored photo or document), Supplied by (who originated the picture).
+One item in the media library. Never say bare “asset” (a website is not this).
+Distinct from: Media library (the library), File (the stored photo or document),
+Supplied by (who originated the picture).
 
 ---
 
 ### File
 
-The stored photo or document. Distinct from: Media asset (the media library item).
+The stored photo or document. Distinct from: Media asset (the media library
+item).
 
 ---
 
 ### Source refs
 
-Where a detail came from (for example marked as their Google Maps listing). Distinct from: Detail
-(the information itself), Supplied by (who originated a picture). Never say `source_refs` in
-product docs.
+Where a detail came from (for example marked as their Google Maps listing).
+Distinct from: Detail (the information itself), Supplied by (who originated a
+picture). Never say `source_refs` in product docs.
 
 ---
 
 ### Provider
 
-Not a term. Name Google Maps, the LLM, Stripe, or fakes in tests. Never use this word for a
-dependency.
+Not a term. Name Google Maps, the LLM, Stripe, or fakes in tests. Never use this
+word for a dependency.
 
 ---
 
 ### ETL
 
-Extract **and** transform: fetch public contractor sources, persist raw in the `etl` schema, then
-apply business logic that writes the business profile (research conflicts, posts, photo
-classification). Not extract-only. Distinct from: Business research (onboarding 02, which starts
-ETL runs).
+Extract **and** transform: fetch public contractor sources, persist raw in the
+`etl` schema, then apply business logic that writes the business profile
+(research conflicts, posts, photo classification). Not extract-only. Distinct
+from: Business research (onboarding 02, which starts ETL runs).
 
 In code: `internal/etl/` (`extract/` + `transform/`), Postgres schema `etl`.
 
@@ -882,9 +944,10 @@ In code: `internal/etl/` (`extract/` + `transform/`), Postgres schema `etl`.
 
 #### ETL run
 
-One extract of **one source kind** for one tenant (the Google Maps extract, the Facebook extract,
-the Instagram extract). River retries are the same run. Distinct from: Business research
-(onboarding 02 starts several runs, one per kind).
+One extract of **one source kind** for one tenant (the Google Maps extract, the
+Facebook extract, the Instagram extract). River retries are the same run.
+Distinct from: Business research (onboarding 02 starts several runs, one per
+kind).
 
 In code: `etl.runs`.
 
@@ -892,28 +955,29 @@ In code: `etl.runs`.
 
 #### Fast extract
 
-The first cheap response for a source kind (Google Maps Details first response, or a fast crawl).
-Lands in about a second. Distinct from: Slow extract.
+The first cheap response for a source kind (Google Maps Details first response,
+or a fast crawl). Lands in about a second. Distinct from: Slow extract.
 
 ---
 
 #### Slow extract
 
-The remainder after the fast extract (Maps scrape of further reviews and photos, or a slow
-crawl). Tens of seconds. Distinct from: Fast extract.
+The remainder after the fast extract (Maps scrape of further reviews and photos,
+or a slow crawl). Tens of seconds. Distinct from: Fast extract.
 
 ---
 
 #### Fast crawl
 
-The first-response pass of website crawl. A fast extract for that kind. Distinct from: Slow
-crawl.
+The first-response pass of website crawl. A fast extract for that kind. Distinct
+from: Slow crawl.
 
 ---
 
 #### Slow crawl
 
-The rest of the existing site. A slow extract for website crawl. Distinct from: Fast crawl.
+The rest of the existing site. A slow extract for website crawl. Distinct from:
+Fast crawl.
 
 ---
 
@@ -921,14 +985,15 @@ The rest of the existing site. A slow extract for website crawl. Distinct from: 
 
 #### Onboarding session
 
-The persisted onboarding run. Distinct from: Onboarding (the process), Resume. Do not say
-“session” in product docs.
+The persisted onboarding run. Distinct from: Onboarding (the process), Resume.
+Do not say “session” in product docs.
 
 ---
 
 #### Resume
 
-Continuing an in-progress onboarding session on the same browser. Never say “resume token”.
+Continuing an in-progress onboarding session on the same browser. Never say
+“resume token”.
 
 Distinct from: Onboarding session (the persisted run), Website preview link.
 
@@ -936,19 +1001,19 @@ Distinct from: Onboarding session (the persisted run), Website preview link.
 
 #### Client interview
 
-The questions we ask the contractor to fill gaps the Google Maps listing and company registry
-record do not cover. Text and voice are two channels into the same business profile. Never say
-bare “interview”.
+The questions we ask the contractor to fill gaps the Google Maps listing and
+company registry record do not cover. Text and voice are two channels into the
+same business profile. Never say bare “interview”.
 
-Domain: (internal — use this name in technical docs; onboarding copy may describe the
-questions).
+Domain: (internal — use this name in technical docs; onboarding copy may
+describe the questions).
 
 ---
 
 #### Voice
 
-A channel: answer the client interview, drive the website assistant, and use the voice agent in
-the CMS. Not a separate product and not a separate profile.
+A channel: answer the client interview, drive the website assistant, and use the
+voice agent in the CMS. Not a separate product and not a separate profile.
 
 Distinct from: Voice agent.
 
@@ -958,15 +1023,15 @@ Distinct from: Voice agent.
 
 The realtime agent the owner can turn on in the application.
 
-Distinct from: Voice (the channel), Website activation (never say “activate” for the voice
-agent).
+Distinct from: Voice (the channel), Website activation (never say “activate” for
+the voice agent).
 
 ---
 
 #### Follow
 
-The canvas snapping to the website slot the voice agent is editing. Default **off**. The owner
-cannot turn it on.
+The canvas snapping to the website slot the voice agent is editing. Default
+**off**. The owner cannot turn it on.
 
 Distinct from: Voice agent.
 
@@ -976,25 +1041,27 @@ Distinct from: Voice agent.
 
 #### Website placeholder
 
-A blank in the unpublished website that stands for a business detail (`{{business_name}}`,
-`{{marketing_phone}}`, …). Never say bare “placeholder”. Distinct from: Loading placeholder
-(UI while a field loads).
+A blank in the unpublished website that stands for a business detail
+(`{{business_name}}`, `{{marketing_phone}}`, …). Never say bare “placeholder”.
+Distinct from: Loading placeholder (UI while a field loads).
 
 ---
 
 #### Website component
 
-A named building block of a website section, with a contract for what that block can hold.
-Never say bare “component”.
+A named building block of a website section, with a contract for what that block
+can hold. Never say bare “component”.
 
-Domain: Website section (a website section is an instance of a website component).
+Domain: Website section (a website section is an instance of a website
+component).
 
 ---
 
 #### Website slot
 
-A named editable value inside a website section (text, image, list, and the like). Never in
-product docs or UI — owners see the kind (heading, text, or image) on a website section.
+A named editable value inside a website section (text, image, list, and the
+like). Never in product docs or UI — owners see the kind (heading, text, or
+image) on a website section.
 
 Domain: Website section.
 
@@ -1022,8 +1089,8 @@ Where website style presets live. Never say bare “catalog”.
 
 The content of the live website: text, images, and arrangement.
 
-Distinct from: Website publication (the act), Website version (the kept checkpoint), Live website
-(what they see).
+Distinct from: Website publication (the act), Website version (the kept
+checkpoint), Live website (what they see).
 
 Never say “frozen”, “materialize”, “snapshot”, or bare “published copy”.
 
@@ -1031,8 +1098,8 @@ Never say “frozen”, “materialize”, “snapshot”, or bare “published 
 
 #### Website manifest
 
-The published website as pages, website sections, and their values. Distinct from: Website
-publication, Published website copy. Never say “site manifest”.
+The published website as pages, website sections, and their values. Distinct
+from: Website publication, Published website copy. Never say “site manifest”.
 
 ---
 
@@ -1040,15 +1107,24 @@ publication, Published website copy. Never say “site manifest”.
 
 #### Creative set
 
-A marketing set: images + text. Distinct from: Ad (an offer or marketing goal), Ad set (the
-owner-facing deliverable), Ad posting (running a paid ad). Never say “creative set” in product docs
-or UI.
+A marketing set: images + text. Distinct from: Ad (an offer or marketing goal),
+Ad set (the owner-facing deliverable), Ad posting (running a paid ad). Never say
+“creative set” in product docs or UI.
 
 ---
 
 ### Don't say
 
-Never in product/user-facing text, PRD prose, technical docs, or code, unless a home marker says the unqualified word is self-understood there. `cmd/ci/check-dont-say` reads this table: keep the `Don't say | Say` header, separator, data rows, and end the section at the next `## ` heading. Unmarked = nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` = unqualified only in that feature’s technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`; `(website)` also covers `apps/contractor-website`. Other features use the Say. `(in a PRD)` is only for `CMS`. Leftover `(bare)` is unmarked. Worked examples: `cmd/ci/check-dont-say/ref.md`.
+Never in product/user-facing text, PRD prose, technical docs, or code, unless a
+home marker says the unqualified word is self-understood there.
+`cmd/ci/check-dont-say` reads this table: keep the `Don't say | Say` header,
+separator, data rows, and end the section at the next `##` heading. Unmarked =
+nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` =
+unqualified only in that feature’s technical docs (not `prd.md`, not
+`frontend.md`) and later `internal/<home>/`; `(website)` also covers
+`apps/contractor-website`. Other features use the Say. `(in a PRD)` is only for
+`CMS`. Leftover `(bare)` is unmarked. Worked examples:
+`cmd/ci/check-dont-say/ref.md`.
 
 | Don't say | Say |
 | --- | --- |
@@ -1144,16 +1220,19 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a 
 
 ## Code naming rules
 
-- Domain words in PRDs, UI, **and in code** when they name that concept. Internal names only
-  for a different concept (technical docs and code).
-- Unqualified Domain words (`page`, `section`) only in that feature’s technical docs and
-  package. Other features use the Say (`website page`). Internal `slot` / website slot only in
-  website technical docs and code — never owner copy or PRDs. Banned
-  synonyms (`slug`, `skeleton`, `blueprint`) appear nowhere, including code.
-- Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned row, `*_id`
-  foreign keys, `snake_case` enum values.
-- Go: feature-nested packages (`internal/<domain>/<feature>/`), no package stutter
-  (`website/pages`, not `website/websitepages`); the file-size guard applies (see `general-architecture/ci-cd.md`).
-- API: `/v1/<domain>/...`, domain nouns in paths, `Create/Update/Get/List/Delete` verbs, one
-  `*Read` response suffix. Conventions: `docs/general-architecture/api.md`.
+- Domain words in PRDs, UI, **and in code** when they name that concept.
+  Internal names only for a different concept (technical docs and code).
+- Unqualified Domain words (`page`, `section`) only in that feature’s technical
+  docs and package. Other features use the Say (`website page`). Internal `slot`
+  / website slot only in website technical docs and code — never owner copy or
+  PRDs. Banned synonyms (`slug`, `skeleton`, `blueprint`) appear nowhere,
+  including code.
+- Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned
+  row, `*_id` foreign keys, `snake_case` enum values.
+- Go: feature-nested packages (`internal/<domain>/<feature>/`), no package
+  stutter (`website/pages`, not `website/websitepages`); the file-size guard
+  applies (see `general-architecture/ci-cd.md`).
+- API: `/v1/<domain>/...`, domain nouns in paths,
+  `Create/Update/Get/List/Delete` verbs, one `*Read` response suffix.
+  Conventions: `docs/general-architecture/api.md`.
 - New terms are added to this glossary first; a PRD never invents a synonym.

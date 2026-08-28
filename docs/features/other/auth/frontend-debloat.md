@@ -15,14 +15,18 @@ Website activation Clerk + Stripe is owned by
 
 - `frontend-2/src/shared/auth/` — `AuthGate.tsx`, `AuthProvider.tsx`,
   `LoginPage.tsx`, `OrgProvisionStep.tsx`, `authRoutes.ts`.
-- Don't say organization: `frontend-2/src/shared/api/org.ts` — `POST /api/v1/me/organization`.
-- Don't say client: `openapi-fetch` helper in `frontend-2/src/shared/api/client.ts` + Clerk Bearer +
+- Don't say organization: `frontend-2/src/shared/api/org.ts` —
+  `POST /api/v1/me/organization`.
+- Don't say client: `openapi-fetch` helper in
+  `frontend-2/src/shared/api/client.ts` + Clerk Bearer +
   `credentials: "include"`.
 - `getCurrentCmsSession` → `GET /v1/me` in `cms.ts`.
 - `CmsRoute` redirects to `/onboarding` unless `/me` tenant status is `active`.
-- `CmsAccountMenu` opens the Clerk organization profile (settings, not a switcher).
+- `CmsAccountMenu` opens the Clerk organization profile (settings, not a
+  switcher).
 - Login path: `/login/$` (`app/router/index.tsx`).
-- Don't say setup: e2e `e2e/auth/clerk-auth.spec.ts`, `clerk-auth.setup.ts`, `cms-auth.setup.ts`.
+- Don't say setup: e2e `e2e/auth/clerk-auth.spec.ts`, `clerk-auth.setup.ts`,
+  `cms-auth.setup.ts`.
 
 ## Keep
 
@@ -37,9 +41,10 @@ Website activation Clerk + Stripe is owned by
 
 ## Delete
 
-- Don't say organization: comments or copy that treat Clerk’s choose-organization task as a product
-  chooser. Don't say organization: `/login/create/tasks/choose-organization` is Clerk plumbing, not a
-  Placis org switcher.
+- Don't say organization: comments or copy that treat Clerk’s
+  choose-organization task as a product chooser. Don't say organization:
+  `/login/create/tasks/choose-organization` is Clerk plumbing, not a Placis org
+  switcher.
 - Any selected-org cookie helper.
 
 ## Do not port
@@ -67,8 +72,9 @@ Website activation Clerk + Stripe is owned by
 ## Tests
 
 - Keep `AuthGate.test.tsx`, `OrgProvisionStep.test.tsx`.
-- `e2e/auth/clerk-auth.spec.ts` — assert the chooser does **not** appear; retarget
-  stubs off predecessor `website/editor/business-profile` if the path changes.
+- `e2e/auth/clerk-auth.spec.ts` — assert the chooser does **not** appear;
+  retarget stubs off predecessor `website/editor/business-profile` if the path
+  changes.
 - Local e2e uses a **fresh port**.
 
 ## Done when

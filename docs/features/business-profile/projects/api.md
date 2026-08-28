@@ -1,8 +1,7 @@
 # Projects HTTP
 
-Conventions: [HTTP conventions](../../../general-architecture/api.md). Owned by the Projects
-screen (Profile group). Table is `business_profile.projects`. Not nested under the
-website editor.
+Conventions: [HTTP conventions](../../../general-architecture/api.md). Owned by the Projects screen (Profile group).
+Table is `business_profile.projects`. Not nested under the website editor.
 
 Live business profile scalars: [details HTTP](../details/api.md). Media library cover pick:
 [media library](../../other/media/api.md).

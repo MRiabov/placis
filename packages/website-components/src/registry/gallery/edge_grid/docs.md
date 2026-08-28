@@ -2,7 +2,8 @@
 
 ## Purpose
 
-Use this component for an edge-to-edge project gallery with image-first cards and project metadata.
+Use this component for an edge-to-edge project gallery with image-first cards
+and project metadata.
 
 ## Best Fit
 
@@ -14,8 +15,10 @@ Avoid it on simple lead-gen pages where a compact gallery is enough.
 
 ## Key Props
 
-Use project items with image, title, category, description, location, date, and alt text.
+Use project items with image, title, category, description, location, date, and
+alt text.
 
 ## Style And Composition
 
-The style preset should control image scale, grid edge behavior, captions, and metadata hierarchy. Pair it with story or review sections.
+The style preset should control image scale, grid edge behavior, captions, and
+metadata hierarchy. Pair it with story or review sections.

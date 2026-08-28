@@ -10,18 +10,21 @@ Status: planning (port instructions, not shipped UI).
 
 ## Code today
 
-- `frontend-2/src/features/cms/CmsRoute.tsx` — `/cms/projects` renders `PlaceholderView`.
+- `frontend-2/src/features/cms/CmsRoute.tsx` — `/cms/projects` renders
+  `PlaceholderView`.
 - `app/router/index.tsx` registers `/cms/projects`.
 - Projects CRUD already in `cms.ts`.
 
 ## Keep
 
-- Working Projects screen: title, description, cover photo from the media library.
+- Working Projects screen: title, description, cover photo from the media
+  library.
 - `GET/POST/PATCH/DELETE /v1/projects`.
 
 ## Delete
 
-- `PlaceholderView` once this screen is real (do not leave “next CMS port batch” copy).
+- `PlaceholderView` once this screen is real (do not leave “next CMS port batch”
+  copy).
 
 ## Do not port
 
