@@ -7,8 +7,10 @@ open with a pointer here and do not restate these rules.
 Feature `api.md` files:
 
 - [Auth](../features/other/auth/api.md)
-- [Onboarding](../features/onboarding/api.md) (includes website activation; SSE reads [ETL](../features/etl/README.md) `etl.runs` — ETL
-  has no public `api.md`)
+- [Onboarding](../features/onboarding/api.md) (includes website activation and `/v1/onboarding/assistant/…`;
+  SSE reads [ETL](../features/etl/README.md) `etl.runs` — ETL has no public `api.md`)
+- [Assistant](../features/assistant/api.md) (CMS `/v1/assistant/…`; voice under
+  `/v1/assistant/voice/`; text `GET /v1/assistant/thread/ws`)
 - [Billing](../features/billing/api.md) (usage credit, Usage & billing)
 - [Website](../features/website/api.md) (unpublished website, website publication, Connect website address)
 - [Details](../features/business-profile/details/api.md) (live business profile, certifications, reviews)
@@ -92,7 +94,7 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 | Company registry / Maps search | raw ETL cache | `*Read` (id, name, address, …). **Omit** `raw`. |
 | Business research / ETL fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
 | Stripe event body | jsonb | **Omit** from `frontend-2`. Activation-status is a closed enum + checkout URL. |
-| LLM traces (`ai_generations`) | jsonb | **Omit.** Website assistant activity cards are named event structs. Each tool event has `summary` (`string` + `maxLength`) for owner copy. Never render tool names. |
+| LLM traces (`ai_generations`) | jsonb | **Omit.** Assistant activity is named event structs. Each tool event has `summary` (`string` + `maxLength`) for owner copy. Never render tool names. |
 | Audit `before`/`after` | jsonb | **Omit** from `frontend-2`. |
 | Website form website visitor POST | — | Named fields matching that website form’s `fields[]`. Extra keys 4xx. |
 | Upload signed URL | string | URL `maxLength`. |
@@ -139,9 +141,14 @@ union and are not on `GET /v1/me` as a dump.
 
 Named fields: `code`, `message`, optional `retry_after`.
 
-- `402 usage_credit_exhausted` — billed work when usage credit is exhausted.
-  Not 409 (conflict). Named on billed assistant HTTP in
-  [billing](../features/billing/api.md).
+- `402 usage_credit_exhausted` — billed work when usage credit is exhausted. Not
+  409 (conflict). Named on billed assistant HTTP in [billing](../features/billing/api.md). CMS assistant:
+  `GET /v1/assistant/thread/ws` text send,
+  `POST /v1/assistant/voice/realtime-connection`, and
+  `POST /v1/assistant/voice/tool-calls` when that tool is a billed LLM or image
+  call. Not 403 (lifecycle) and not 409 (in-flight lock / allowed-set /
+  Ask-first). Usage settlement (`POST /v1/assistant/voice/transcripts`) stays
+  `200` so the debit can land.
 - `402 subscription_canceled` — website publication or live website rollback
   when the subscription is not active (`subscription_status=canceled`). Not
   `usage_credit_exhausted`. Named on
@@ -150,7 +157,8 @@ Named fields: `code`, `message`, optional `retry_after`.
   `base_edit_history_head` is stale. `frontend-2` re-GETs with
   `include_edit_history=true`.
 - `409` ads — `base_updated_at` mismatch. `frontend-2` re-GETs.
-- `413` — oversize PATCH (website editor body cap 64 KB).
+- `413` — oversize PATCH (website editor body cap 64 KB). Oversize voice
+  recording (`byte_size` over the cap on `POST …/voice/recordings`).
 - `429` — onboarding ETL enqueue cap or over-chatty PATCH. `Retry-After` /
   `research_wait_until`.
 

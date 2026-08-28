@@ -1,7 +1,7 @@
 # 04a — Text client interview
 
-Text writer into the same live business profile as 04b. Not a root mode file.
-Channel is XOR with 04b.
+v1 writer into the live business profile. Channel is `text`. Voice writer
+([04b](04b-voice-client-interview.md)) is **out** — do not implement it this pass.
 
 ## Trigger
 
@@ -24,7 +24,7 @@ then `POST .../interview/complete`.
 - `POST` a new onboarding session on Resume.
 - Complete while required checklist rows are `empty` / `in_progress` /
   `conflict`.
-- Run a second complete after 04b (exactly one complete → 05).
+- Run a second complete (exactly one complete → 05).
 - Repeat legal-identity fields (shown on 03).
 - A parallel onboarding-only widget for a Details field (services textarea,
   free-text service area, a second hours picker). Onboarding Details ==
@@ -34,7 +34,8 @@ then `POST .../interview/complete`.
 
 ## Do
 
-1. Set `channel=text`. Switching to 04b later is allowed; do not complete twice.
+1. Set `channel=text`. Do not switch to a voice writer this pass; do not
+   complete twice.
 2. Autosave writes `business_profile_edits` for the fields this save set, plus
    `client_interview_submissions` `kind=autosave` (interview-only: photo
    uploads, optional source-from-internet / AI photo when there are not enough
@@ -71,7 +72,7 @@ Gate pass → 05. 02 may still be running; later 02 writes are new edits after
 ## Invariants
 
 - Skip 03 does not relax the complete gate.
-- Same complete path as 04b.
+- Complete path is `POST .../interview/complete` ([build-profile](build-profile.md)).
 - Applying the website template never reads a transcript.
 - Services and service areas are structured Details rows at complete; the wait
   does not combine them with an LLM.

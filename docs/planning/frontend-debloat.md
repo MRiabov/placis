@@ -18,7 +18,7 @@ old paths, operation ids, or unconstrained JSON. Contractor website API cutover:
 | --- | --- |
 | [onboarding](../features/onboarding/frontend-debloat.md) | Find → Review → client interview → progress; website preview + website activation |
 | [website](../features/website/frontend-debloat.md) | Website editor, publication dropdown, Connect website address |
-| [CMS](../general-architecture/frontend-debloat.md) | Left nav, New chat, CMS tokens (cross-cutting file also owns generated types) |
+| [CMS](../general-architecture/frontend-debloat.md) | Left nav, `/cms` two cards, CMS tokens (cross-cutting file also owns generated types) |
 | [details](../features/business-profile/details/frontend-debloat.md) | Business details |
 | [projects](../features/business-profile/projects/frontend-debloat.md) | `/cms/projects` |
 | [certifications and reviews](../features/business-profile/certifications-and-reviews/frontend-debloat.md) | `/cms/certifications-and-reviews` |

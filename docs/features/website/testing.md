@@ -1,11 +1,11 @@
 # Website — E2E test
 
-One full-stack E2E test: edit → website assistant → website publication → live
-HTML (fake R2 + fake purge) → website rollback → website form. Drives
-`frontend-2` (Playwright) against the real API + real Postgres; the LLM is
-faked. Cloudflare is faked (Custom Hostnames, `purge_cache`, R2). Apply the
-website template is the [onboarding E2E](../onboarding/testing.md). DB asserts name the tables from
-[persistence.md](persistence.md) (and [leads](../other/leads/persistence.md) for the website form).
+One full-stack E2E test: edit → assistant → website publication → live HTML
+(fake R2 + fake purge) → website rollback → website form. Drives `frontend-2`
+(Playwright) against the real API + real Postgres; the LLM is faked. Cloudflare
+is faked (Custom Hostnames, `purge_cache`, R2). Apply the website template is
+the [onboarding E2E](../onboarding/testing.md). DB asserts name the tables from [persistence.md](persistence.md) (and
+[leads](../other/leads/persistence.md) for the website form).
 
 1. **Open the website editor** — the owner opens the website editor.
    - UI: the website page list renders.
@@ -22,8 +22,7 @@ website template is the [onboarding E2E](../onboarding/testing.md). DB asserts n
 3. **Validate** — saving an invalid prop is rejected.
    - UI: inline error next to the field.
 
-4. **Website assistant** — the owner asks the website assistant to improve copy
-   (LLM faked).
+4. **Assistant** — the owner asks the assistant to improve copy (LLM faked).
    - UI: proposal on the canvas; **Apply** PATCHes dirty keys then
      `record-apply`.
    - DB: a website slot value changes through that PATCH; `ai_generations`

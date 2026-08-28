@@ -113,7 +113,7 @@ or another website page, so the log is not a per-page slice. Extra fields:
 batch: `batch_id`, `edited_by`, `ai_generation_id`, rows of target / `op` /
 `before` / `after`).
 
-**Website page switch:** the same GET with the query off. Unpublished website
+Switching website page: the same GET with the query off. Unpublished website
 only. Do not re-download `edit_history`.
 
 Reset to an owner website version: `publication_id` on this GET (same `*Read`).
@@ -168,9 +168,9 @@ Coalesce means the **dirty keys since the last successful copy-out**, not the
 full draft. Do not send sibling website slots, `media_assets[]`, the website
 manifest, or the file. Image website slots send a `media_asset_id` (and crop /
 focal point if those changed). That PATCH is the same **attach**, **crop**, and
-**focal** the website assistant calls (`update_slot`; [assistant.md](assistant.md)). Attach
-only retargets the slot. Crop / focal run that function, then the slot points at
-the returned item (copy-on-write stays inside that function; [media library](../other/media/README.md)).
+**focal** the assistant calls (`update_slot`; [assistant.md](assistant.md)). Attach only
+retargets the slot. Crop / focal run that function, then the slot points at the
+returned item (copy-on-write stays inside that function; [media library](../other/media/README.md)).
 Photos go through the media-library upload, not this PATCH. File replace is that
 upload / replace, not this body.
 
@@ -205,9 +205,9 @@ second unpublished website copy. Website publication still writes one
 frontend rehydrates once with `include_edit_history=true` for the selected
 website page. Do not merge by hand. Do not keep painting a stale stack. Website
 assistant Apply is the same PATCH (dirty keys plus `ai_generation_id`);
-`record-apply` is activity metadata only. While onboarding 06 is in flight,
-PATCH is `409`. A CMS website-assistant run does not block PATCH — that is the
-apply path.
+`record-apply` is activity metadata only. Onboarding 06 does not 409 CMS PATCH.
+Same website-slot overlap is `edit_history_conflict`. A CMS website-assistant
+run does not block PATCH — that is the apply path.
 
 Do not periodically hash the unpublished website or the undo log. Equality is
 only the acked `edit_history_head`. The frontend is ahead when it has dirty or
@@ -217,11 +217,11 @@ long hide still carries `base_edit_history_head`.
 
 The API allows **30** website-editor PATCH requests per tenant per
 **10 seconds**. Above that: `429` and `Retry-After`. That cap is a backstop
-(second tab, website-assistant burst). A single website editor must not hit it:
-the 500ms safety timer tops out around 20 sends / 10s. On `429` the website
-editor backs off and retries; it does not spin. Website assistant copy-out
-([assistant.md](assistant.md)) uses this same PATCH (or `/menus`) and the same cap. Streaming
-model tokens never write jsonb.
+(second tab, assistant burst). A single website editor must not hit it: the
+500ms safety timer tops out around 20 sends / 10s. On `429` the website editor
+backs off and retries; it does not spin. Assistant copy-out ([assistant.md](assistant.md))
+uses this same PATCH (or `/menus`) and the same cap. Streaming model tokens
+never write jsonb.
 
 ### Leave guard
 

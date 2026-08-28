@@ -4,7 +4,7 @@ Status: planning (port instructions, not shipped UI).
 
 ## Target
 
-[frontend.md](frontend.md), [README.md](README.md), [persistence.md](persistence.md), [api.md](api.md). Left nav / New chat:
+[frontend.md](frontend.md), [README.md](README.md), [persistence.md](persistence.md), [api.md](api.md). Left nav / `/cms`:
 [CMS frontend](../../../general-architecture/cms/frontend.md) and [CMS frontend-debloat](../../../general-architecture/frontend-debloat.md). Projects:
 [projects frontend-debloat](../projects/frontend-debloat.md). Certifications:
 [certifications-and-reviews frontend-debloat](../certifications-and-reviews/frontend-debloat.md). Shared rules: [planning index](../../../../planning/frontend-debloat.md).

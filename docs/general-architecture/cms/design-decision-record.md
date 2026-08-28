@@ -88,7 +88,7 @@ inventing it.
    (placis-web default `PlacisPromptBox`, `w-full max-w-2xl`). Do not use the
    compact `19.5rem` mobile cap. Wordmark + prompt are vertically centered in
    the main column (Open destinations stays top-left on narrow). Usage copy is
-   not predecessor dashboard upgrade copy. (2026-08-27; two-card `/cms`
+   not predecessor dashboard Usage & billing copy. (2026-08-27; two-card `/cms`
    2026-08-28 — [assistant design decision 3](../../features/assistant/design-decision-record.md).) New chat clones dashboard
    `PlacisPromptBox` controls: **Connect** (flat hairline, white at rest,
    zinc-50 only while the Google / Meta panel is open), Paperclip (hidden under
@@ -104,8 +104,8 @@ inventing it.
    (2026-08-27) (2026-08-27): Product `/cms` is two cards (**Do my website…** /
    **Run my ads**), not this prompt. Keep the prompt-box markup in the
    look-export HTML for later restore. Hide Paperclip, Start client interview,
-   predecessor dashboard upgrade copy. Overlay rows drop New chat. Connect
-   stays. (2026-08-28): Voice on `/cms` is gone. Overlay look:
+   predecessor dashboard Usage & billing copy. Overlay rows drop New chat.
+   Connect stays. (2026-08-28): Voice on `/cms` is gone. Overlay look:
    [assistant design decision record](../../features/assistant/design-decision-record.md). `/cms` cards clone the prompt-box look
    (hairline, prompt radius) with a readable lift of the prompt shade, and carry
    destination logos (Sites globe, Ads megaphone). Google / Meta connect lives

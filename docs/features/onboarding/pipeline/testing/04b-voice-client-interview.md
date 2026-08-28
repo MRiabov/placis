@@ -1,5 +1,8 @@
 # 04b — Voice client interview (integration test)
 
+**Do not run as v1 E2E.** 04b is **out**. Keep this file as the writer-design
+test; do not implement or schedule it this pass.
+
 - **Setup**: 01 done; 03 skipped or dwelled; 02 may still be running.
 - **Invoke**: create a realtime connection; tool calls (`obtained_information` /
   `mark_information_status` / `request_lookup` / `confirm_conflict` /

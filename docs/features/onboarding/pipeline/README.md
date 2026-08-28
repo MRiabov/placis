@@ -19,10 +19,10 @@ contractor sees Review.
 ```text
 01.  find the business + online research consent
      → unactivated tenant + onboarding session; 02 starts; UI → 03
-02.  business research (async) — overlaps 03 and 04a/04b
+02.  business research (async) — overlaps 03 and 04a
 03.  Review (frontend noop, skip expected) — extra seconds for 02 before 04
-04a. text client interview
-04b. voice client interview
+04a. text client interview (v1 writer)
+04b. voice client interview — **out**; do not implement
      build the profile — concurrent persist, not a wait
 05.  apply the website template (after client interview complete)
 06.  website copy generation (async; 07 waits copy-done or cap; does not block 08)
@@ -33,7 +33,7 @@ contractor sees Review.
 ```text
 01 business lookup
   ├─► 02 business research ──► build-profile (live business profile)
-  └─► 03 Review (skip ok) ─► 04a XOR 04b ──► 05 ─► 07 ─► 08
+  └─► 03 Review (skip ok) ─► 04a ──► 05 ─► 07 ─► 08
                                       │              └─► 06 (async)
                                       └─► build-profile
 ```
@@ -44,7 +44,7 @@ authoritative. Business research progress reads `etl.runs`.
 
 ## Onboarding session status
 
-`created` → `client_interviewing` (confirmed; 02 + 03 + 04a/04b) →
+`created` → `client_interviewing` (confirmed; 02 + 03 + 04a) →
 `applying_website_template` (client interview complete; 05 running) →
 `previewing` (07 wrote `latest/`; 06 may still write copy) → `activated`.
 `apply_website_template_failed` if 05 throws. 06 failing does not change
@@ -76,9 +76,10 @@ reload); it does not submit business lookup again. Restore failure keeps the
 token and retries `GET .../profile` on a loading placeholder — do not drop the
 pointer and do not `POST` a replacement.
 
-Creating a realtime connection seeds it from the live business profile,
-checklist projection, extra notes, and last `update_interview_plan`. Live audio
-is gone; structured answers are not. Canonical detail: [frontend.md](../frontend.md), [04b](04b-voice-client-interview.md).
+Creating a realtime connection seeds the **onboarding assistant guide** from
+current step + visible fields. Live audio is the guide, not a profile writer.
+Canonical detail: [frontend.md](../frontend.md), [onboarding assistant](../assistant.md). 04b writer: [04b](04b-voice-client-interview.md)
+(**out**).
 
 ## Steps
 

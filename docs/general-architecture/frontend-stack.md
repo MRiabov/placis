@@ -29,6 +29,6 @@ The file-size guard applies to `frontend-2` too ([CI and delivery](ci-cd.md)).
 Same policy as the [backend stack](backend-stack.md): latest stable of Vite, React, TanStack,
 Clerk, typegen, and the rest of this app’s packages. Greenfield — do not freeze
 an older major in these docs. Do not add Dependabot, Renovate, or other
-automated upgrade PRs. Bump `frontend-2` (and shared JS:
+automated dependency PRs. Bump `frontend-2` (and shared JS:
 `packages/website-components`, contractor website, Placis website) about every
 two weeks as a deliberate pass.

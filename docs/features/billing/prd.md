@@ -46,9 +46,8 @@ the Placis website has no Pricing.
 2. Do not commit to Clerk Billing.
 3. Do not put checkout on the Placis website.
 4. Do not bill onboarding or the onboarding guide.
-5. Do not show our cost. Do not port predecessor dashboard upgrade copy, Codex
-   5-hour /
-   weekly caps, or auto-reload.
+5. Do not show our cost. Do not port predecessor dashboard Usage & billing copy,
+   Codex 5-hour / weekly caps, or auto-reload.
 
 ## Provisional catalogue
 
@@ -63,7 +62,7 @@ currency is **USD**.
 | Enterprise plan | Contact sales | Contact sales | Contact sales |
 
 Yearly is about 20% off. Pricing cards use a blurb and a feature list (same
-card layout as the placis-web upgrade grid). Included usage credit is USD.
+card layout as the placis-web pricing grid). Included usage credit is USD.
 Don't say: build credits.
 
 Website activation remains a one-time pay in 08. 08’s “~50 EUR / month” is

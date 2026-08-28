@@ -6,7 +6,7 @@ an item is never replaced in place; edits copy (`parent_media_asset_id`).
 
 Cleanup is this resource. Ads placements and website slots **reference** a
 `media_asset_id`; they do not own a second cleanup HTTP. The ads Review orb and
-the website assistant `cleanup_image` are callers of these routes, then they
+the website editor `cleanup_image` are callers of these routes, then they
 retarget **that** placement or website-section image.
 
 ## Serve only types on HTTP
@@ -65,9 +65,8 @@ Crop/focal are bounded numbers (0–1). Media caption is `string` + `maxLength`
 ### POST /v1/media-assets/{id}/image-edits
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** `/cms/media` promptable cleanup; website assistant
-  `cleanup_image`; ads Review orb (then PATCH the placement). Same function; not
-  an ads verb.
+- **Callers:** `/cms/media` promptable cleanup; assistant `cleanup_image`; ads
+  Review orb (then PATCH the placement). Same function; not an ads verb.
 - **Idempotency-Key:** yes.
 - **Request:** `prompt` (`string`, `minLength` 1, `maxLength` 500). Empty prompt
   is `400`.
