@@ -12,6 +12,7 @@ that drives a website and ads.
 - [api.md](api.md) — HTTP (business lookup, resume, SSE, website activation)
 - [technical-implementation.md](technical-implementation.md) — the technical plan (flow, pipeline)
 - [frontend.md](frontend.md) — the onboarding screens and fields
+- [design.md](design.md) — look export (`docs/design/onboarding.html`)
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](testing.md) — the onboarding E2E test
 

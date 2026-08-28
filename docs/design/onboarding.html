@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Onboarding — current design (look export)</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
+<!--
+  Function follows onboarding specs; this file is visual.
+  Open onboarding.html in a browser (no build). Styles: onboarding.css (tokens.css). Scene wiring: onboarding.js.
+  Screens: Find, Review, client interview, wait teaser. Website preview + website activation
+  live on the preview website address, not here.
+  Dev-only strip is per-screen states; default collapsed. Hide with ?shot=1. Open with ?dev=1.
+  Scenes: ?scene=find|review|interview|preview.
+-->
+<link rel="stylesheet" href="onboarding.css" />
+</head>
+<body>
+  <div class="viewtabs is-hidden" id="viewtabs" role="note" aria-label="Developer states, not part of the product">
+    <span class="viewtabs-label">Dev only</span>
+    <button type="button" class="viewtabs-collapse" id="viewtabsCollapse" aria-label="Hide developer states" title="Hide developer states">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+    </button>
+    <div class="viewtabs-states is-hidden" data-state-for="find">
+      <span class="viewtabs-group">Find</span>
+      <button type="button" class="viewtab on" data-state="empty">Empty</button>
+      <button type="button" class="viewtab" data-state="results">Registry results</button>
+      <button type="button" class="viewtab" data-state="selected">Record picked</button>
+      <button type="button" class="viewtab" data-state="maps">Maps listing</button>
+      <button type="button" class="viewtab" data-state="ready">Consent on</button>
+      <button type="button" class="viewtab" data-state="looking-up">Business lookup</button>
+      <button type="button" class="viewtab" data-state="restoring">Resume</button>
+    </div>
+    <div class="viewtabs-states is-hidden" data-state-for="review">
+      <span class="viewtabs-group">Review</span>
+      <button type="button" class="viewtab" data-state="filling">Still filling</button>
+      <button type="button" class="viewtab on" data-state="ready">Found vs missing</button>
+      <button type="button" class="viewtab" data-state="wait">Research wait</button>
+      <button type="button" class="viewtab" data-state="conflict">Research conflict</button>
+      <button type="button" class="viewtab" data-state="complete">Ready</button>
+    </div>
+    <div class="viewtabs-states is-hidden" data-state-for="interview">
+      <span class="viewtabs-group">Client interview</span>
+      <button type="button" class="viewtab on" data-state="text">Text</button>
+      <button type="button" class="viewtab" data-state="filled">Filled</button>
+      <button type="button" class="viewtab" data-state="few-photos">Few photos</button>
+      <button type="button" class="viewtab" data-state="no-reviews">No reviews</button>
+      <button type="button" class="viewtab" data-state="voice">Voice listed</button>
+    </div>
+    <div class="viewtabs-states is-hidden" data-state-for="preview">
+      <span class="viewtabs-group">Wait teaser</span>
+      <button type="button" class="viewtab on" data-state="hero">Hero</button>
+      <button type="button" class="viewtab" data-state="services">Services</button>
+      <button type="button" class="viewtab" data-state="reviews">Reviews</button>
+    </div>
+  </div>
+  <button type="button" class="viewtabs-fab" id="viewtabsOpen" aria-label="Show developer states" title="Show developer states">Dev</button>
+
+  <header class="onb-header">
+    <div class="onb-header-inner">
+      <button class="onb-wordmark" data-scene="find" type="button">
+        <span class="onb-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+        </span>
+        placis
+      </button>
+      <button class="onb-back is-hidden" id="backBtn" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        Back
+      </button>
+    </div>
+  </header>
+
+  <nav class="onb-steps" aria-label="Onboarding progress">
+    <ol>
+      <li data-step="find" class="is-current"><button type="button" data-scene="find"><i></i><span>Find</span></button></li>
+      <li data-step="review"><button type="button" data-scene="review"><i></i><span>Review</span></button></li>
+      <li data-step="interview"><button type="button" data-scene="interview"><i></i><span>Interview</span></button></li>
+      <li data-step="preview"><button type="button" data-scene="preview"><i></i><span>Preview</span></button></li>
+    </ol>
+  </nav>
+
+  <p class="onb-notice is-wait is-hidden" id="waitNotice">We’ll look the business up again in a few minutes.</p>
+  <p class="onb-notice is-hidden" id="restoreNotice">Restoring your previous onboarding…</p>
+
+  <main class="onb-main">
+    <section class="onb-view" data-view="find" id="view-find">
+      <div class="find-layout">
+        <div>
+          <p class="kicker">Onboarding</p>
+          <h1>Find your business</h1>
+          <p class="lede">Choose the country, then pick the company registry record, Google Maps listing, or both when they describe the same business.</p>
+        </div>
+        <div class="panel" id="findPanel">
+          <div class="stack">
+            <div class="field">
+              <label for="country">Country</label>
+              <div class="select-wrap">
+                <select id="country">
+                  <option value="IE" selected>Ireland</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="US">United States</option>
+                </select>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+            </div>
+
+            <div>
+              <div class="source-head">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M6 21V8l6-4 6 4v13"/><path d="M10 21v-6h4v6"/></svg>
+                <p>Companies Registration Office <span id="registryHint">Type the corporate name and pick the company registry record.</span></p>
+              </div>
+              <div class="field source-block">
+                <label for="registryQuery">Corporate name <span class="hint" id="registryName">(CRO)</span></label>
+                <div class="combo search-wrap">
+                  <input class="field-control" id="registryQuery" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="registryList" placeholder="Bellfield Roofing" autocomplete="off" />
+                  <svg class="search-icon" id="registrySearchIcon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                  <svg class="spin is-hidden" id="registrySpin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/></svg>
+                  <div class="listbox is-hidden" id="registryList" role="listbox">
+                    <button type="button" role="option" data-pick="registry" data-id="cro-1">
+                      <b>BELLFIELD ROOFING LIMITED</b>
+                      623184 · Normal · 14 Bellfield Park, Dublin 12
+                    </button>
+                    <button type="button" role="option" data-pick="registry" data-id="cro-2">
+                      <b>BELLFIELD HOLDINGS LIMITED</b>
+                      441902 · Normal · 8 Harcourt Street, Dublin 2
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="picked is-hidden" id="registryPicked">
+                <span class="meta">Selected company registry record</span>
+                <b>BELLFIELD ROOFING LIMITED</b>
+                <span class="meta">623184 · Normal · 14 Bellfield Park, Dublin 12</span>
+                <button class="change" id="registryChange" type="button">Change</button>
+              </div>
+            </div>
+
+            <div class="or-rule">Optional Maps match</div>
+
+            <div>
+              <div class="source-head">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                <p>Google Maps listing <span>Optional. Pre-fills the display name, category, marketing phone, photos, and reviews.</span></p>
+              </div>
+              <div class="field source-block">
+                <label for="mapsQuery">Find your place on Google Maps</label>
+                <div class="combo search-wrap">
+                  <input class="field-control" id="mapsQuery" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="mapsList" placeholder="Bellfield Roofing Dublin" autocomplete="off" />
+                  <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+                  <div class="listbox is-hidden" id="mapsList" role="listbox">
+                    <button type="button" role="option" data-pick="maps" data-id="maps-1">
+                      <b>Bellfield Roofing</b>
+                      Roofing contractor · Dublin 12 · 4.9 (86)
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="picked is-hidden" id="mapsPicked">
+                <span class="meta">Selected Google Maps listing</span>
+                <b>Bellfield Roofing</b>
+                <span class="meta">Roofing contractor · Dublin 12 · 01 555 0199</span>
+                <button class="change" id="mapsChange" type="button">Change</button>
+              </div>
+            </div>
+
+            <label class="consent">
+              <input id="consent" type="checkbox" />
+              <span>
+                <b>I agree that Placis can collect public information about this business to prepare the website preview.</b>
+                <span>We use this to check company registry details, public listings, and basic marketing facts before the client interview.</span>
+              </span>
+            </label>
+
+            <button class="button-primary" id="lookupBtn" type="button" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M6 21V8l6-4 6 4v13"/></svg>
+              <span id="lookupLabel">Business lookup</span>
+            </button>
+          </div>
+        </div>
+        <div class="restore is-hidden" id="findRestore">Restoring your previous onboarding…</div>
+      </div>
+    </section>
+
+    <section class="onb-view is-hidden" data-view="review" id="view-review">
+      <div class="review-layout">
+        <div>
+          <div class="review-head">
+            <span class="review-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 4 7v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V7z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <div>
+              <h1>Review what we found</h1>
+              <p class="lede">Found versus missing before the client interview. Continue is always available — skip is expected.</p>
+            </div>
+          </div>
+          <div class="company-card">
+            <p class="meta">Company registry record</p>
+            <b>BELLFIELD ROOFING LIMITED</b>
+            <div class="badges">
+              <span class="badge">623184</span>
+              <span class="badge">Normal</span>
+              <span class="badge">Ireland</span>
+            </div>
+          </div>
+          <div class="progress-card">
+            <div class="row">
+              <span><b id="foundCount">8 details found</b></span>
+              <span id="foundPct">62%</span>
+            </div>
+            <div class="bar"><i id="foundBar" style="width:62%"></i></div>
+          </div>
+          <div class="facts" id="foundFacts">
+            <div class="fact" data-fact="legal">
+              <div>
+                <b>Legal name</b>
+                <p>BELLFIELD ROOFING LIMITED</p>
+              </div>
+              <span class="chip chip-found"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Company registry</span>
+            </div>
+            <div class="fact" data-fact="number">
+              <div>
+                <b>Company number</b>
+                <p>623184</p>
+              </div>
+              <span class="chip chip-found"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Company registry</span>
+            </div>
+            <div class="fact" data-fact="office">
+              <div>
+                <b>Registered office</b>
+                <p>14 Bellfield Park, Dublin 12</p>
+              </div>
+              <span class="chip chip-found"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Company registry</span>
+            </div>
+            <div class="fact" data-fact="display">
+              <div>
+                <b>Display name</b>
+                <p>Bellfield Roofing</p>
+              </div>
+              <span class="chip chip-found"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Google Maps listing</span>
+            </div>
+            <div class="fact" data-fact="phone">
+              <div>
+                <b>Marketing phone</b>
+                <p>01 555 0199</p>
+              </div>
+              <span class="chip chip-found"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Google Maps listing</span>
+            </div>
+            <div class="fact" data-fact="trade">
+              <div>
+                <b>Trade</b>
+                <p>Roofing contractor</p>
+              </div>
+              <span class="chip chip-found"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Google Maps listing</span>
+            </div>
+            <div class="fact" data-fact="hours">
+              <div>
+                <b>Opening hours</b>
+                <p>Mon–Fri 07:00–18:00</p>
+              </div>
+              <span class="chip chip-found"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Google Maps listing</span>
+            </div>
+            <div class="fact" data-fact="reviews">
+              <div>
+                <b>Reviews</b>
+                <p>86 Google reviews, 4.9</p>
+              </div>
+              <span class="chip chip-found"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Google Maps listing</span>
+            </div>
+            <div class="fact is-hidden" data-fact="email-filling">
+              <div>
+                <b>Marketing email</b>
+                <p>Looking this up from the current website…</p>
+              </div>
+              <span class="chip chip-progress">In progress</span>
+            </div>
+            <div class="fact is-hidden" data-fact="conflict">
+              <div>
+                <b>Display name</b>
+                <p>Two sources disagree. Pick one in the client interview.</p>
+                <div class="conflict">
+                  <b>Research conflict</b>
+                  <div class="pair">
+                    <span>Google Maps listing: Bellfield Roofing</span>
+                    <span>Current website: Bellfield Roof Repairs</span>
+                  </div>
+                </div>
+              </div>
+              <span class="chip chip-conflict">Conflict</span>
+            </div>
+          </div>
+        </div>
+        <aside class="review-aside">
+          <p class="kicker">Next</p>
+          <h2>Client interview</h2>
+          <p class="lede" id="missingCopy">5 topics left before the unpublished website can be trusted.</p>
+          <div class="queue" id="missingQueue">
+            <div class="queue-row"><span class="queue-n">1</span> Contact name</div>
+            <div class="queue-row"><span class="queue-n">2</span> Marketing email</div>
+            <div class="queue-row"><span class="queue-n">3</span> Emergency phone</div>
+            <div class="queue-row"><span class="queue-n">4</span> Services</div>
+            <div class="queue-row"><span class="queue-n">5</span> Photos</div>
+          </div>
+          <div class="ready-note is-hidden" id="readyNote">Ready for the unpublished website.</div>
+          <button class="button-primary button-wide" id="continueInterview" type="button">
+            Continue
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </aside>
+      </div>
+    </section>
+
+    <section class="onb-view is-hidden" data-view="interview" id="view-interview">
+      <div class="interview-layout">
+        <div>
+          <p class="kicker">Onboarding</p>
+          <h1>A few questions we still need</h1>
+          <p class="lede">Text is the default. Voice is listed and deferred. Answers write the same business profile. Legal identity stays on Review.</p>
+        </div>
+        <div class="channel" role="tablist" aria-label="Client interview channel">
+          <button type="button" class="on" data-channel="text">Text</button>
+          <button type="button" data-channel="voice">Voice</button>
+        </div>
+
+        <form id="interviewForm">
+          <div class="form-section">
+            <h3>Who they are</h3>
+            <div class="form-grid form-grid-2">
+              <label class="field"><span>Display name</span><input class="field-control" id="displayName" value="Bellfield Roofing" /></label>
+              <label class="field"><span>Trade</span><input class="field-control" id="trade" value="Roofer" /></label>
+            </div>
+          </div>
+          <div class="form-section">
+            <h3>Contact</h3>
+            <div class="form-grid form-grid-2">
+              <label class="field"><span>Contact name</span><input class="field-control" id="contactName" placeholder="Who we should ask for" /></label>
+              <label class="field"><span>Marketing phone</span><input class="field-control" id="marketingPhone" value="01 555 0199" /></label>
+              <label class="field"><span>Marketing email</span><input class="field-control" id="marketingEmail" type="email" placeholder="hello@bellfield.ie" /></label>
+              <label class="field"><span>Existing site URL</span><input class="field-control" id="existingSite" type="url" placeholder="https://" /></label>
+              <label class="field"><span>Emergency phone</span><input class="field-control" id="emergencyPhone" placeholder="Unpublished; how we reach the owner" /></label>
+            </div>
+          </div>
+          <div class="form-section">
+            <h3>Services and service area</h3>
+            <label class="field"><span>Main services</span><textarea class="field-control textarea" id="services" placeholder="One per line, or separated by commas">Roof repairs
+New roofs
+Guttering</textarea><span class="field-note">Free text is fine. The LLM turns it into named services.</span></label>
+            <label class="field"><span>Service areas</span><textarea class="field-control textarea" id="areas" placeholder="Towns, counties, or radius covered">Dublin and North County</textarea></label>
+          </div>
+          <div class="form-section">
+            <h3>Opening hours</h3>
+            <div class="hours" id="hours">
+              <div class="hour-row" data-day="Mon">
+                <div class="hour-day">Mon</div>
+                <div class="hour-times">
+                  <div class="hour-slot"><select><option>7:00am</option><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option><option>9:00pm</option></select></div>
+                  <div class="hour-slot is-hidden extra-block"><select><option selected>1:00pm</option></select><span>–</span><select><option selected>5:00pm</option></select></div>
+                </div>
+                <div class="hour-actions">
+                  <button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Monday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button>
+                  <button class="icon-btn" type="button" data-hour="add" aria-label="Add Monday time block"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+                  <button class="icon-btn" type="button" data-hour="copy" aria-label="Copy Monday to following days"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/></svg></button>
+                </div>
+              </div>
+              <div class="hour-row" data-day="Tue"><div class="hour-day">Tue</div><div class="hour-times"><div class="hour-slot"><select><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Tuesday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
+              <div class="hour-row" data-day="Wed"><div class="hour-day">Wed</div><div class="hour-times"><div class="hour-slot"><select><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Wednesday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
+              <div class="hour-row" data-day="Thu"><div class="hour-day">Thu</div><div class="hour-times"><div class="hour-slot"><select><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Thursday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
+              <div class="hour-row" data-day="Fri"><div class="hour-day">Fri</div><div class="hour-times"><div class="hour-slot"><select><option selected>6:30am</option></select><span>–</span><select><option selected>6:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Friday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
+              <div class="hour-row" data-day="Sat"><div class="hour-day">Sat</div><div class="hour-times"><div class="hour-slot"><select><option selected>8:00am</option></select><span>–</span><select><option selected>1:00pm</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Mark Saturday unavailable"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
+              <div class="hour-row is-closed" data-day="Sun"><div class="hour-day">Sun</div><div class="hour-times"><div class="hour-slot"><select disabled><option>Closed</option></select><span>–</span><select disabled><option>Closed</option></select></div></div><div class="hour-actions"><button class="icon-btn" type="button" data-hour="closed" aria-label="Reopen Sunday"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 8 8 8"/></svg></button></div></div>
+            </div>
+          </div>
+          <div class="form-section">
+            <h3>Photos</h3>
+            <p class="section-lede">Logo plus a few photos of the work.</p>
+            <div class="photo-grid" id="photoGrid">
+              <figure class="photo-tile is-logo">
+                <img src="../../apps/contractor-website/public/fixtures/bellfield/logo.svg" alt="Bellfield logo" />
+                <figcaption>Logo</figcaption>
+              </figure>
+              <figure class="photo-tile">
+                <img src="../../apps/contractor-website/public/fixtures/bellfield/image0.jpeg" alt="Roof work in Dublin" />
+              </figure>
+              <figure class="photo-tile" data-extra-photo>
+                <img src="../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg" alt="New roof" />
+              </figure>
+              <figure class="photo-tile" data-extra-photo>
+                <img src="../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg" alt="Site after a repair" />
+              </figure>
+              <label class="photo-tile photo-upload">
+                <input id="photoUpload" type="file" accept="image/*" multiple />
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                <b>Upload photos</b>
+                <span>Add more from this device</span>
+              </label>
+            </div>
+            <div class="photo-fill is-hidden" id="photoFill">
+              <p class="section-lede">Not enough photos yet. Pick one, or keep uploading.</p>
+              <div class="choices choices-2">
+                <button class="choice" type="button" data-photo-fill="source"><b>Source from the internet</b><span>Pull more listing photos into the media library.</span></button>
+                <button class="choice" type="button" data-photo-fill="ai"><b>AI photo</b><span>Have the LLM draft a stand-in until there is approved media.</span></button>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <h3>Certifications</h3>
+            <div class="choices" id="certs">
+              <button class="choice choice-cert on is-locked" type="button" data-cert="cro" aria-disabled="true">
+                <img src="../../apps/contractor-website/public/certification-logos/ie-cro.svg" alt="" width="240" height="120" />
+                <div class="choice-copy">
+                  <b>CRO registered</b>
+                  <span>Registered Irish company or business name record.</span>
+                  <span class="choice-lock"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> From the company registry record</span>
+                </div>
+              </button>
+              <button class="choice choice-cert" type="button" data-cert="ciri">
+                <img src="../../apps/contractor-website/public/certification-logos/ie-ciri.svg" alt="" width="240" height="120" />
+                <div class="choice-copy"><b>CIRI</b><span>Construction Industry Register Ireland listing.</span></div>
+              </button>
+              <button class="choice choice-cert" type="button" data-cert="seai">
+                <img src="../../apps/contractor-website/public/certification-logos/ie-seai.svg" alt="" width="240" height="120" />
+                <div class="choice-copy"><b>SEAI</b><span>SEAI contractor registration for energy upgrade grants.</span></div>
+              </button>
+            </div>
+            <label class="field"><span>Other certifications</span><textarea class="field-control textarea" placeholder="Insurance details, awards, guarantees, manufacturer certifications..."></textarea></label>
+            <label class="field"><span>Additional notes</span><textarea class="field-control textarea"></textarea></label>
+          </div>
+          <div class="form-section">
+            <h3>Reviews</h3>
+            <p class="section-lede" id="reviewLede">Found on the Google Maps listing and Facebook.</p>
+            <div class="review-grid" id="reviewGrid">
+              <article class="review-card">
+                <div class="review-stars">★★★★★</div>
+                <b>Aoife K.</b>
+                <p class="cite">On the roof the next morning after the storm. Clean site, fair price.</p>
+                <span class="origin">Google Maps listing</span>
+              </article>
+              <article class="review-card">
+                <div class="review-stars">★★★★★</div>
+                <b>Mark D.</b>
+                <p class="cite">Replaced the back slope and left the garden better than they found it.</p>
+                <span class="origin">Google Maps listing</span>
+              </article>
+              <article class="review-card">
+                <div class="review-stars">★★★★☆</div>
+                <b>Siobhan R.</b>
+                <p class="cite">They arrived on time, were polite, showed my husband the work they had completed.</p>
+                <span class="origin">Facebook</span>
+              </article>
+            </div>
+            <label class="check-row is-hidden" id="noReviewsYet"><input type="checkbox" /> We do not have online reviews yet</label>
+          </div>
+          <div class="form-foot">
+            <p class="autosave" id="autosave">Saved automatically as you type.</p>
+            <button class="button-primary" id="interviewContinue" type="submit">Continue</button>
+          </div>
+        </form>
+
+        <div class="voice-panel is-hidden" id="voicePanel">
+          <p>Voice is listed and deferred. First-pass is text: the same remaining questions, into the same business profile. Creating a realtime connection comes later; do not start a blank client interview here.</p>
+          <button class="button-secondary" type="button" disabled>Start voice client interview</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="onb-view is-hidden" data-view="preview" id="view-preview">
+      <div class="preview-layout">
+        <div class="preview-copy">
+          <p class="kicker">Wait teaser</p>
+          <h1>Complete website sections while we write the rest.</h1>
+          <p class="lede">This is not the preview website address. Whole-and-valid website sections rotate until website copy generation finishes or the wait cap, then the browser goes to the host.</p>
+          <div class="carousel" aria-live="polite">
+            <div class="chrome">
+              <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="chrome-url">bellfield-roofing-dublin.preview.placis.com</div>
+            </div>
+            <div class="slides" id="slides">
+              <article class="slide on" data-slide="hero">
+                <div class="fake-site">
+                  <div class="fake-top-menu"><b>Bellfield Roofing</b><span>Home</span><span>Services</span><span>Contact</span></div>
+                  <div class="fake-hero">
+                    <p>Dublin roofing</p>
+                    <h2>Roofs that keep Irish weather out.</h2>
+                    <p class="lede">Repairs, re-roofs, and emergency call-outs across Dublin and North County.</p>
+                  </div>
+                </div>
+              </article>
+              <article class="slide" data-slide="services">
+                <div class="fake-site">
+                  <div class="fake-top-menu"><b>Bellfield Roofing</b><span>Home</span><span>Services</span><span>Contact</span></div>
+                  <div class="fake-services">
+                    <article><h3>Roof repairs</h3><p>Slate, tile, and flat roof repairs without a full strip.</p></article>
+                    <article><h3>New roofs</h3><p>Re-roofs with a workmanship guarantee on every job.</p></article>
+                    <article><h3>Guttering</h3><p>Cleaning, replacement, and fascia upgrades.</p></article>
+                  </div>
+                </div>
+              </article>
+              <article class="slide" data-slide="reviews">
+                <div class="fake-site">
+                  <div class="fake-top-menu"><b>Bellfield Roofing</b><span>Home</span><span>Services</span><span>Contact</span></div>
+                  <div class="fake-reviews">
+                    <h3>What neighbours wrote</h3>
+                    <blockquote>“On the roof the next morning after the storm. Clean site, fair price.” — Aoife K.</blockquote>
+                    <blockquote>“Replaced the back slope and left the garden better than they found it.” — Mark D.</blockquote>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <aside>
+          <div class="timeline">
+            <div class="time-row is-done"><i></i><div><b>Business lookup</b><span>Company registry record and Maps listing attached</span></div></div>
+            <div class="time-row is-done"><i></i><div><b>Client interview</b><span>Text answers accepted</span></div></div>
+            <div class="time-row is-done"><i></i><div><b>Apply the website template</b><span>Unpublished website pages exist</span></div></div>
+            <div class="time-row is-now"><i></i><div><b>Website copy generation</b><span>Hero, services, and reviews filling in</span></div></div>
+            <div class="time-row"><i></i><div><b>Preview website address</b><span>Opens when copy is done or the wait cap hits</span></div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <script src="onboarding.js"></script>
+</body>
+</html>

@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
 <!--
   Function follows CMS / website / business-profile specs; this file is visual.
-  Open cms.html in a browser (no build). Styles: cms.css. Scene wiring: cms.js.
+  Open cms.html in a browser (no build). Styles: cms.css (tokens.css). Scene wiring: cms.js.
   Dev-only strip is per-screen states (not sidebar nav); default collapsed.
   Hide with ?shot=1. Collapses to a top-right circle; ?dev=1 opens it.
   Desktop and narrow assistant default collapsed. Force with
@@ -18,7 +18,8 @@
   Home is two cards (website + ads). Prompt box, New chat, Paperclip, Upgrade,
   and Start interview stay in this file, hidden, so they can be restored.
   Canvas is a fake homepage, not the contractor website renderer.
-  Ads detail lives in docs/features/ads/ad-generation/design/ads-workspace.html.
+  Ads look export: docs/design/ads.html.
+  Onboarding look export: docs/design/onboarding.html.
 -->
 <link rel="stylesheet" href="cms.css" />
 </head>
@@ -1071,7 +1072,7 @@
             <span style="flex:1"></span>
             <button class="button-primary" type="button">+ New ad</button>
           </div>
-          <p class="note">Ads sit in The CMS beside the website editor. The detailed Ads mock is <a href="../features/ads/ad-generation/design/ads-workspace.html">ads-workspace.html</a>.</p>
+          <p class="note">Ads sit in The CMS beside the website editor. The detailed Ads mock is <a href="ads.html">ads.html</a>.</p>
           <div class="cms-adcard">
             <div class="cms-adcard-art"></div>
             <div>
