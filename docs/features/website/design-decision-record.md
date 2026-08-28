@@ -100,7 +100,10 @@ numbers are HTML comments so later entries keep their numbers.
    label. URL is an ads-style combobox: pick an existing URL or type to create
    one. **Show contact** is a bar CTA like Show marketing phone / email (not a
    tree node). Content has no Add below / website-component picker and no
-   depth-2 explainer. (2026-08-26)
+   depth-2 explainer. (2026-08-26) Radius is a corner selector (`none` / `xs` /
+   `sm` / `md` / `lg`), not a text dropdown. Each option shows that corner.
+   Density is a spacing selector (Compact / Comfortable / Spacious), not a text
+   dropdown. Each option shows that spacing. (2026-08-28)
 
 <!-- placeholder - insert design decision 6 here -->
 

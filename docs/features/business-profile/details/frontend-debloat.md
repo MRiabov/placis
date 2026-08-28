@@ -18,9 +18,10 @@ Status: planning (port instructions, not shipped UI).
 
 ## Keep
 
-- `/cms/details` — Business details (who they are, contact, where, services,
-  legal, opening hours picker, logo picker, Facebook and Google Maps listing as
-  linked cards). Top menu and footer stay in the website editor Content tab.
+- `/cms/details` — Business details (who they are, contact, where as an addable
+  Google Maps service-area list, services, legal, opening hours picker, logo
+  picker, Facebook and Google Maps listing as linked cards). Top menu and footer
+  stay in the website editor Content tab.
 - Typed Business details fields (`detailsModel.ts` `emptyForm` / `profileToForm`
   / `formToPatch`).
 - Per-field loading placeholders ([general frontend](../../../general-architecture/frontend.md)).

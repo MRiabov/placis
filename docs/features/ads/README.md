@@ -13,7 +13,8 @@ the overview; the **single authority** for the feature is [`ad-generation/`](ad-
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
 - [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](ad-generation/testing.md) — the ads E2E test
-- [ads.html](../../design/ads.html) — static design mock
+- [ads.html](../../design/ads.html) — static design mock (also embedded at
+  [cms.html](../../design/cms.html)?scene=ads)
 - [ad-application/meta](ad-application/meta/) — investigation for future ad posting to Meta (not the
   spec)
 

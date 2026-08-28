@@ -17,8 +17,8 @@ larger than this screen (reviews, certifications, projects):
   phone number is how we reach the owner, not what leads use (unpublished; not
   on this screen unless asked).
 - **Where they are** — service areas (Google Maps territory lookup, one card
-  per region). Not a business-location field. Same control as the onboarding
-  client interview.
+  per region, plus radius). Not a business-location field. Same control as the
+  onboarding client interview.
 - **What they do** — featured services as a **list** (not a textarea). Same
   control as the onboarding client interview.
 - **Legal** — company number, VAT number, registered office.

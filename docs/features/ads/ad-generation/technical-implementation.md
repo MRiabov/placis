@@ -435,8 +435,9 @@ Add Ads under `/cms/ads` in the CMS (`frontend-2`):
 4. the media library, scoped to approved tenant media assets, with framing
    controls
 5. copy fields with live character counts, headline sized to 40 characters,
-   button-label select, and a CMS AI orb on headline / primary text / short
-   label (required prompt, overlay)
+   button-label select, and a CMS AI orb on headline and primary text
+   (required prompt, overlay). Short label is typed; no
+   orb.
 6. Facebook + Instagram placement for this ad's format, from an existing mock
    kit, live as copy/image change; Meta-like fonts inside the placement; not
    Meta `generatepreviews`

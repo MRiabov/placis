@@ -83,7 +83,9 @@ overlay orb. Same light cleanup as ads / the website assistant `cleanup_image`
 (declutter, tidy background; not invent work). Required overlay prompt,
 `maxLength` 500, on `POST …/image-edits`. Empty prompt is rejected. First upload
 may already have run a tailored default; this prompt is a **different** cleanup.
-After cleanup, the view is the ads **before/after sweep** (drag the divider to
+Cleanup takes **5–10 seconds**. The large view stays on the photo with
+**Cleaning up…**, a scan across the photo, and a filling bar. Then the view is
+the ads **before/after sweep** (drag the divider to
 clip, not resize) with **Accept** / **Reject**. Accept keeps the copy
 (`pending_review`) — no Accept HTTP, not `POST …/approve`. Reject is
 `POST …/reject` (archives the copy).
