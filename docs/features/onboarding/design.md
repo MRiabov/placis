@@ -13,8 +13,8 @@ preview. Wait teaser is `?scene=preview` (not a website preview);
 - [onboarding.html](../../design/onboarding.html) — markup
 - [onboarding.css](../../design/onboarding.css) — look
 - [onboarding.js](../../design/onboarding.js) — mock-only scene wiring (not product UI)
-- [details-fields.css](../../design/details-fields.css) / [details-fields.js](../../design/details-fields.js) — shared Details field controls
-  (also cms.html)
+- [details-fields.css](../../design/details-fields.css) / [details-fields.js](../../design/details-fields.js) — owner field controls plus Details
+  widgets (also cms.html and ads.html)
 - [tokens.css](../../design/tokens.css) — shared CMS tokens
 - [placis-mark.png](../../design/placis-mark.png) — orb lockup in the wordmark and on the website-activation
   strip

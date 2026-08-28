@@ -20,9 +20,9 @@ The yellow strip is mock-only **per-screen states**. Default **collapsed**
   editor)
 - [cms.css](cms.css) — look
 - [cms.js](cms.js) — mock-only scene wiring (not product UI)
-- [details-fields.css](details-fields.css) / [details-fields.js](details-fields.js) — shared Details field components
-  (combo, territory cards, service list, hours picker) used by cms.html and
-  onboarding.html
+- [details-fields.css](details-fields.css) / [details-fields.js](details-fields.js) — owner field controls, buttons,
+  combobox, labels, yellow strip, plus Details widgets (territory cards, service
+  list, hours picker). cms.html, onboarding.html, and ads.html.
 
 The mock is visual. Function is the specs ([CMS](../general-architecture/cms/README.md),
 [website](../features/website/README.md),
@@ -56,5 +56,6 @@ sticky at the bottom. After pay, the mock opens [cms.html](cms.html)
 - [ads.css](ads.css) — look
 - [ads.js](ads.js) — mock-only scene wiring (not product UI)
 
-Look notes: [ad generation frontend](../features/ads/ad-generation/frontend.md). Tokens: [tokens.css](tokens.css). Facebook/Instagram
+Look notes: [ad generation frontend](../features/ads/ad-generation/frontend.md). Tokens: [tokens.css](tokens.css). Owner field
+controls: [details-fields.css](details-fields.css) ([CMS design decision](../general-architecture/cms/design-decision-record.md) 6). Facebook/Instagram
 placement colors stay platform-native.

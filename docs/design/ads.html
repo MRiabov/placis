@@ -7,13 +7,26 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
 <!--
   Function follows ads specs; this file is visual.
-  Open ads.html in a browser (no build). Styles: ads.css (tokens.css). Scene wiring: ads.js.
+  Open ads.html in a browser (no build). Styles: ads.css (tokens.css, details-fields.css).
+  Scene wiring: details-fields.js then ads.js.
   Ads sit in The CMS. My ads / New ad / Review in the yellow strip are mock-only.
-  Hide with ?shot=1.
+  Hide with ?shot=1. Collapses to a top-right circle; ?dev=1 opens it.
 -->
 <link rel="stylesheet" href="ads.css" />
 </head>
 <body>
+  <div class="viewtabs is-hidden" id="viewtabs" role="note" aria-label="Developer scene switcher, not part of the product">
+    <span class="viewtabs-label">Dev only</span>
+    <button type="button" class="viewtabs-collapse" id="viewtabsCollapse" aria-label="Hide developer states" title="Hide developer states">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+    </button>
+    <div class="viewtabs-states">
+      <button type="button" class="viewtab on" data-v="list">My ads</button>
+      <button type="button" class="viewtab" data-v="flow">New ad</button>
+      <button type="button" class="viewtab" data-v="review">Review</button>
+    </div>
+  </div>
+  <button type="button" class="viewtabs-fab" id="viewtabsOpen" aria-label="Show developer states" title="Show developer states">Dev</button>
 <div class="topbar">
   <span class="brand">Placis</span>
   <span class="crumb"><b>Ads</b></span>
@@ -33,26 +46,17 @@
   </aside>
   <div class="content">
     <div class="wrap">
-  <!-- mock-only: scene switcher for reviewing this HTML. Not product UI.
-       Hidden when ?shot=1. Real navigation is the list (+ New ad) and the accordion. -->
-  <div class="viewtabs" role="note" aria-label="Developer scene switcher, not part of the product">
-    <span class="viewtabs-label">Dev only</span>
-    <button type="button" class="viewtab on" data-v="list">My ads</button>
-    <button type="button" class="viewtab" data-v="flow">New ad</button>
-    <button type="button" class="viewtab" data-v="review">Review</button>
-  </div>
-
   <!-- ===== list of existing ads ===== -->
   <div id="viewList">
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px; flex-wrap:wrap">
       <b style="font-size:21px; font-weight:600; letter-spacing:-0.025em">Your ads</b>
       <span class="spacer"></span>
-      <button class="btn connbtn" id="connectGoogle" type="button">
+      <button class="button-secondary connbtn" id="connectGoogle" type="button">
         <img class="gads-icon" src="google-ads-icon.svg" alt="" width="18" height="18" />
         Connect Google Ads
       </button>
-      <button class="btn" id="compactBtn">Show compact</button>
-      <button class="btn primary" id="newAdBtn">+ New ad</button>
+      <button class="button-secondary" id="compactBtn">Show compact</button>
+      <button class="button-primary" id="newAdBtn">+ New ad</button>
     </div>
     <p class="note" style="margin:0 0 20px">Ads usually run 6 at a time, so cards are large; more than 6 compress automatically. Sorted: active first, then newest.</p>
     <div class="adcards">
@@ -124,20 +128,17 @@
       <div class="formbody">
         <div class="q">What are you promoting?</div>
         <div class="field">
-          <div class="combo">
-            <input type="text" value="" placeholder="Select or type to create a new service…" />
-            <div class="pop">
-              <div class="create">
-                <div class="crow hint"><span class="hintic">✎</span> Type to create a new service…</div>
+          <div class="cms-combo" data-create="service">
+            <input class="cms-field-control" type="text" value="" placeholder="Select or type to create a new service…" />
+            <div class="cms-combo-pop">
+              <div class="cms-combo-create"><button type="button" class="cms-combo-crow is-hint">Type to create a new service…</button></div>
+              <div class="cms-combo-divider is-hidden"></div>
+              <p class="cms-combo-group">Your services</p>
+              <div class="cms-combo-scroll">
+                <button type="button" class="cms-combo-row is-current" data-href="Roofing replacement"><span class="cms-combo-check">✓</span><span class="cms-combo-txt"><b>Roofing replacement</b><span>roofing • Kildare</span></span></button>
+                <button type="button" class="cms-combo-row" data-href="Roof repair"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Roof repair</b><span>roofing • Kildare</span></span></button>
+                <button type="button" class="cms-combo-row" data-href="Gutter cleaning"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Gutter cleaning</b><span>guttering • Kildare</span></span></button>
               </div>
-              <div class="divider" hidden></div>
-              <div class="group">Your services</div>
-              <div class="scroll">
-                <div class="row"><span class="ic cur">✓</span><span class="txt"><b>Roofing replacement</b><span>roofing • Kildare</span></span></div>
-                <div class="row"><span class="ic">◫</span><span class="txt"><b>Roof repair</b><span>roofing • Kildare</span></span></div>
-                <div class="row"><span class="ic">◫</span><span class="txt"><b>Gutter cleaning</b><span>guttering • Kildare</span></span></div>
-              </div>
-              <div class="empty" hidden>No matches — type to create a new service.</div>
             </div>
           </div>
           <div class="ferr" id="svcErr" style="display:none; margin-top:8px">Choose the service you're promoting</div>
@@ -147,39 +148,33 @@
         <div class="row2">
           <div class="field" style="margin-bottom:0">
             <label>Ideal customer profile</label>
-            <div class="combo" data-create="profile">
-              <input type="text" value="Married couples, 30–40" placeholder="Select or type to create a new profile…" />
-              <div class="pop">
-                <div class="create">
-                  <div class="crow hint"><span class="hintic">✎</span> Type to create a new profile…</div>
+            <div class="cms-combo" data-create="profile">
+              <input class="cms-field-control" type="text" value="Married couples, 30–40" placeholder="Select or type to create a new profile…" />
+              <div class="cms-combo-pop">
+                <div class="cms-combo-create"><button type="button" class="cms-combo-crow is-hint">Type to create a new profile…</button></div>
+                <div class="cms-combo-divider is-hidden"></div>
+                <p class="cms-combo-group">Common profiles</p>
+                <div class="cms-combo-scroll">
+                  <button type="button" class="cms-combo-row is-current" data-href="Married couples, 30–40"><span class="cms-combo-check">✓</span><span class="cms-combo-txt"><b>Married couples, 30–40</b><span>most contractors</span></span></button>
+                  <button type="button" class="cms-combo-row" data-href="Homeowners, 40–55"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Homeowners, 40–55</b><span>repairs and upgrades</span></span></button>
+                  <button type="button" class="cms-combo-row" data-href="Newlyweds, 25–35"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Newlyweds, 25–35</b><span>first home</span></span></button>
                 </div>
-                <div class="divider" hidden></div>
-                <div class="group">Common profiles</div>
-                <div class="scroll">
-                  <div class="row"><span class="ic cur">✓</span><span class="txt"><b>Married couples, 30–40</b><span>most contractors</span></span></div>
-                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Homeowners, 40–55</b><span>repairs and upgrades</span></span></div>
-                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Newlyweds, 25–35</b><span>first home</span></span></div>
-                </div>
-                <div class="empty" hidden>No matches — type to create a new profile.</div>
               </div>
             </div>
           </div>
           <div class="field" style="margin-bottom:0">
             <label>Where they are</label>
-            <div class="combo" data-create="area">
-              <input type="text" value="Kildare area" placeholder="Select or type to create a new area…" />
-              <div class="pop">
-                <div class="create">
-                  <div class="crow hint"><span class="hintic">✎</span> Type to create a new area…</div>
+            <div class="cms-combo" data-create="area">
+              <input class="cms-field-control" type="text" value="Kildare area" placeholder="Select or type to create a new area…" />
+              <div class="cms-combo-pop">
+                <div class="cms-combo-create"><button type="button" class="cms-combo-crow is-hint">Type to create a new area…</button></div>
+                <div class="cms-combo-divider is-hidden"></div>
+                <p class="cms-combo-group">Your service area</p>
+                <div class="cms-combo-scroll">
+                  <button type="button" class="cms-combo-row is-current" data-href="Kildare area"><span class="cms-combo-check">✓</span><span class="cms-combo-txt"><b>Kildare area</b><span>your service area</span></span></button>
+                  <button type="button" class="cms-combo-row" data-href="West Dublin"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>West Dublin</b><span>nearby</span></span></button>
+                  <button type="button" class="cms-combo-row" data-href="Newbridge &amp; Naas"><span class="cms-combo-check"></span><span class="cms-combo-txt"><b>Newbridge &amp; Naas</b><span>nearby</span></span></button>
                 </div>
-                <div class="divider" hidden></div>
-                <div class="group">Your service area</div>
-                <div class="scroll">
-                  <div class="row"><span class="ic cur">✓</span><span class="txt"><b>Kildare area</b><span>your service area</span></span></div>
-                  <div class="row"><span class="ic">◫</span><span class="txt"><b>West Dublin</b><span>nearby</span></span></div>
-                  <div class="row"><span class="ic">◫</span><span class="txt"><b>Newbridge &amp; Naas</b><span>nearby</span></span></div>
-                </div>
-                <div class="empty" hidden>No matches — type to create a new area.</div>
               </div>
             </div>
           </div>
@@ -210,8 +205,8 @@
         <div class="ferr" id="fmtErr" style="display:none">Pick a format</div>
 
         <div id="generateWrap" style="margin-top:22px; display:flex; justify-content:flex-end; gap:8px">
-          <button type="button" class="btn" id="reviseBtn" hidden>Revise</button>
-          <button class="btn primary" id="generate">Create ad and generate</button>
+          <button type="button" class="button-secondary" id="reviseBtn" hidden>Revise</button>
+          <button class="button-primary" id="generate">Create ad and generate</button>
         </div>
       </div>
     </div>
@@ -263,8 +258,8 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
             </button>
             <div class="ai-prompt" id="prompt-cleanup">
-              <textarea rows="2" placeholder="How should this photo be cleaned up?"></textarea>
-              <div class="ai-prompt-actions"><button type="button" class="btn primary" disabled>Generate</button></div>
+              <textarea class="cms-field-control" rows="2" placeholder="How should this photo be cleaned up?"></textarea>
+              <div class="ai-prompt-actions"><button type="button" class="button-primary" disabled>Generate</button></div>
             </div>
           </div>
           <div class="cleanup-hints">
@@ -291,44 +286,44 @@
         <div class="copyfield">
           <div class="lbl"><span>Headline</span><span class="count">21 / 40</span></div>
           <div class="copy-row">
-            <input type="text" class="headline-input" id="copyHeadline" value="New roof, done right" data-limit="40" maxlength="40" />
+            <input type="text" class="headline-input cms-field-control" id="copyHeadline" value="New roof, done right" data-limit="40" maxlength="40" />
             <button type="button" class="cms-ai-orb" aria-expanded="false" aria-controls="prompt-headline" aria-label="Prompt headline">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
             </button>
             <div class="ai-prompt" id="prompt-headline">
-              <textarea rows="2" placeholder="How should this headline change?"></textarea>
-              <div class="ai-prompt-actions"><button type="button" class="btn primary" disabled>Generate</button></div>
+              <textarea class="cms-field-control" rows="2" placeholder="How should this headline change?"></textarea>
+              <div class="ai-prompt-actions"><button type="button" class="button-primary" disabled>Generate</button></div>
             </div>
           </div>
         </div>
         <div class="copyfield">
           <div class="lbl"><span>Text</span><span class="count">96 / 5000</span></div>
           <div class="copy-row">
-            <textarea rows="3" id="copyText" data-limit="5000">We replace and repair roofs across Kildare. Free quotes, 10+ years experience. Get yours this week.</textarea>
+            <textarea class="cms-field-control" rows="3" id="copyText" data-limit="5000">We replace and repair roofs across Kildare. Free quotes, 10+ years experience. Get yours this week.</textarea>
             <button type="button" class="cms-ai-orb" aria-expanded="false" aria-controls="prompt-text" aria-label="Prompt text">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
             </button>
             <div class="ai-prompt" id="prompt-text">
-              <textarea rows="2" placeholder="How should this text change?"></textarea>
-              <div class="ai-prompt-actions"><button type="button" class="btn primary" disabled>Generate</button></div>
+              <textarea class="cms-field-control" rows="2" placeholder="How should this text change?"></textarea>
+              <div class="ai-prompt-actions"><button type="button" class="button-primary" disabled>Generate</button></div>
             </div>
           </div>
         </div>
         <div class="row2">
           <div class="copyfield" style="margin-bottom:0">
             <div class="lbl"><span>Button</span></div>
-            <select id="copyCta"><option>Get Quote</option><option>Learn More</option><option>Call Now</option></select>
+            <select class="cms-field-control" id="copyCta"><option>Get Quote</option><option>Learn More</option><option>Call Now</option></select>
           </div>
           <div class="copyfield" style="margin-bottom:0">
             <div class="lbl"><span>Short label <span class="sub">— optional</span></span><span class="count">11 / 30</span></div>
             <div class="copy-row">
-              <input type="text" id="copyShort" value="Free quotes" data-limit="30" maxlength="30" />
+              <input class="cms-field-control" type="text" id="copyShort" value="Free quotes" data-limit="30" maxlength="30" />
               <button type="button" class="cms-ai-orb" aria-expanded="false" aria-controls="prompt-short" aria-label="Prompt short label">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
               </button>
               <div class="ai-prompt" id="prompt-short">
-                <textarea rows="2" placeholder="How should this short label change?"></textarea>
-                <div class="ai-prompt-actions"><button type="button" class="btn primary" disabled>Generate</button></div>
+                <textarea class="cms-field-control" rows="2" placeholder="How should this short label change?"></textarea>
+                <div class="ai-prompt-actions"><button type="button" class="button-primary" disabled>Generate</button></div>
               </div>
             </div>
           </div>
@@ -336,7 +331,7 @@
 
         <div class="copyfield">
           <div class="lbl"><span>Ad lead form title</span></div>
-          <input type="text" id="leadFormTitle" value="Get a free roof quote" />
+          <input class="cms-field-control" type="text" id="leadFormTitle" value="Get a free roof quote" />
         </div>
 
         <!-- this format on Facebook and Instagram -->
@@ -418,9 +413,9 @@
       <b style="font-size:14px; font-weight:600">Ready?</b>
       <p class="note" style="margin:8px 0 16px">Fix the errors shown inside the forms above, then approve.</p>
       <div class="actionbar right">
-        <span class="tipwrap" data-tip="Publish is not available yet — ad posting to Meta is coming"><button class="btn" disabled>Publish</button></span>
-        <span class="tipwrap" data-tip="Approve the ad first" id="dlWrap"><button class="btn" disabled id="dlBtn">Download</button></span>
-        <button class="btn primary" id="apprBtn">Approve</button>
+        <span class="tipwrap" data-tip="Publish is not available yet — ad posting to Meta is coming"><button class="button-secondary" disabled>Publish</button></span>
+        <span class="tipwrap" data-tip="Approve the ad first" id="dlWrap"><button class="button-secondary" disabled id="dlBtn">Download</button></span>
+        <button class="button-primary" id="apprBtn">Approve</button>
       </div>
     </div>
   </div>
@@ -428,7 +423,7 @@
 
   <!-- ===== existing ad detail view (one single card) ===== -->
   <div id="viewDetail" class="placeholder">
-    <button class="btn" id="backBtn" style="margin-bottom:16px">← My ads</button>
+    <button class="button-secondary" id="backBtn" style="margin-bottom:16px">← My ads</button>
     <div class="card" style="padding:0">
       <div class="dhead">
         <div class="dhead-name">
@@ -437,9 +432,9 @@
         </div>
         <div class="dhead-actions">
           <span class="badge ready">Creative ready</span>
-          <span class="tipwrap" data-tip="Publish is not available yet — ad posting to Meta is coming"><button class="btn" disabled>Publish</button></span>
-          <button class="btn">Download</button>
-          <button class="btn" id="editBtn">Edit</button>
+          <span class="tipwrap" data-tip="Publish is not available yet — ad posting to Meta is coming"><button class="button-secondary" disabled>Publish</button></span>
+          <button class="button-secondary">Download</button>
+          <button class="button-secondary" id="editBtn">Edit</button>
         </div>
       </div>
 
@@ -454,10 +449,10 @@
               <b style="font-size:14px">Budget</b>
               <p class="hint">Disabled until ad posting is connected.</p>
               <div class="row2">
-                <div class="field" style="margin-bottom:0"><label>Daily budget</label><input type="text" value="€15" disabled /></div>
+                <div class="field" style="margin-bottom:0"><label>Daily budget</label><input class="cms-field-control" type="text" value="€15" disabled /></div>
                 <div class="field" style="margin-bottom:0">
                   <label>Duration</label>
-                  <input type="date" id="durEnd" value="2026-08-29" min="2026-08-15" lang="en-IE" aria-label="End date" disabled />
+                  <input class="cms-field-control" type="date" id="durEnd" value="2026-08-29" min="2026-08-15" lang="en-IE" aria-label="End date" disabled />
                   <p class="dur-summary"><b id="durLeft">4 days left</b> <span class="dur-range">(<span id="durStart">15 Aug</span> to <span id="durEndLabel">29 Aug</span>)</span></p>
                 </div>
               </div>
@@ -507,13 +502,14 @@
   <div class="cms-notice" id="cmsNotice" hidden>
     <p>Saved years in business to Business details</p>
     <div class="cms-notice-actions">
-      <button type="button" class="btn" id="noticeRevert">Revert</button>
-      <button type="button" class="btn primary" id="noticeOk">OK</button>
+      <button type="button" class="button-secondary" id="noticeRevert">Revert</button>
+      <button type="button" class="button-primary" id="noticeOk">OK</button>
     </div>
   </div>
     </div>
   </div>
 </div>
+<script src="details-fields.js"></script>
 <script src="ads.js"></script>
 </body>
 </html>
