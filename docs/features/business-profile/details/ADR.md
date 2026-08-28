@@ -82,7 +82,12 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    trade list. There is **no** business-location column; service areas cover
    where they work. Service areas are a Google Maps territory lookup;
    `radius_km` is for Meta when ad posting exists. Featured services are the
-   `business_profile_services` list, not a textarea. (2026-08-27)
+   `business_profile_services` list, not a textarea. (2026-08-27) Onboarding
+   client interview writes the same controls (list rows, Maps territories,
+   hours picker). Paste of service names may split into rows; do not combine
+   them with an LLM in the wait. (2026-08-28) Onboarding Details == Business
+   details: same fields, same controls, same writes; do not keep a parallel
+   onboarding widget for a Details field. (2026-08-28)
 
 9. **Notification Revert undoes that profile-history increment** — One governed
    tool, `update_details` ([api.md](api.md)). Website assistant, Ads generator, and

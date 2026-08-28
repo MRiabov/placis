@@ -26,6 +26,11 @@ then `POST .../interview/complete`.
   `conflict`.
 - Run a second complete after 04b (exactly one complete → 05).
 - Repeat legal-identity fields (shown on 03).
+- A parallel onboarding-only widget for a Details field (services textarea,
+  free-text service area, a second hours picker). Onboarding Details ==
+  `/cms/details`.
+- Combine services or service areas with an LLM in the wait after Continue. 06
+  does not invent the service list.
 
 ## Do
 
@@ -34,15 +39,17 @@ then `POST .../interview/complete`.
    `client_interview_submissions` `kind=autosave` (interview-only: photo
    uploads, optional source-from-internet / AI photo when there are not enough
    photos, reviews unavailable, extra notes).
-3. Fields: who they are (display name, trade); contact (contact name, marketing
-   phone, marketing email, existing site URL, `emergency_phone`); services and
-   service area (free-text services: the LLM turns them into named services);
-   opening hours; found photos in the media library plus upload (source from the
-   internet / AI photo only if there are not enough); certifications (company
-   registry pick locks that business-registry certification) / found reviews.
-   Not legal identity. Do not ask a photos-choice question.
+3. Fields: **Details == `/cms/details`** (identity, contact and presence,
+   services, service areas, opening hours — same controls and writes). Do not
+   repeat legal identity from 03. Plus interview-only: contact name,
+   `emergency_phone`; found photos in the media library plus upload (source from
+   the internet / AI photo only if there are not enough); certifications
+   (company registry pick locks that business-registry certification) / found
+   reviews; extra notes. Paste of one-per-line or comma-separated **service
+   names** may split into rows deterministically (no LLM). Do not ask a
+   photos-choice question.
 4. Final submission `kind=final`, then `POST .../interview/complete` iff the
-   complete gate.
+   complete gate (service and service-area list rows present, or skipped).
 5. Contractor may mark a required row `skipped` in this step, then complete.
 
 ## Persist
@@ -66,3 +73,6 @@ Gate pass → 05. 02 may still be running; later 02 writes are new edits after
 - Skip 03 does not relax the complete gate.
 - Same complete path as 04b.
 - Applying the website template never reads a transcript.
+- Services and service areas are structured Details rows at complete; the wait
+  does not combine them with an LLM.
+- Onboarding Details == `/cms/details` for those fields.

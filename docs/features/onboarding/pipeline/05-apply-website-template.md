@@ -38,6 +38,7 @@ onboarding session’s `tenant_id` (unactivated tenant from 01).
 3. Deterministic apply: profile + website template → unpublished `website_pages`
    / `website_sections` / `website_slots`, one `website.menus` row (top menu +
    footer trees), and the two site-wide look website sections (`page_id` null).
+   Named services on the accepted profile become service pages in that write.
    Reviews sections attach `website_slot_reviews` to `business_profile_reviews`.
    Placeholders (`{{business_name}}`, `{{marketing_phone}}`, …) **stay**. Same
    profile + same website template → same website pages.
