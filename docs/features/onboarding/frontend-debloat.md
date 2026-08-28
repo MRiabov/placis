@@ -39,7 +39,8 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 - `BusinessSourcePanel` (country, company registry, optional Google Maps, online
   research consent). Business lookup creates the onboarding session **once**.
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
-- `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist`.
+- `TextInterviewForm` / `AccreditationChecklist`. Onboarding Details ==
+  `/cms/details` (same field controls; not a separate AvailabilityPicker).
 - Progress timeline (`PreviewProgressPanels` / apply-the-website-template
   panel): SSE carousel of complete website sections (~2s). Navigate to the
   preview website address when 07 has written `latest/` (copy done or ~15s cap).

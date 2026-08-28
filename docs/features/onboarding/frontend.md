@@ -3,7 +3,8 @@
 The contractor-facing onboarding in `frontend-2`. Screens and
 fields match the implemented app (copied from the predecessor). Port:
 [frontend-debloat.md](frontend-debloat.md). Look export:
-[onboarding.html](../../design/onboarding.html) ([design.md](design.md)).
+[onboarding.html](../../design/onboarding.html) ([design.md](design.md),
+[design decision record](design-decision-record.md)).
 
 Related: [PRD](prd.md), [ADR](ADR.md), [pipeline](pipeline/README.md).
 
@@ -12,6 +13,13 @@ redirects here.
 
 Loading placeholders: every screen, per field / row — not a whole-panel swap
 ([frontend.md](../../general-architecture/frontend.md)).
+
+Find, Review, client interview, and the wait teaser share one screen layout
+([design decision](design-decision-record.md) 1): heading and lede, card wells, sticky footer with the
+primary action in the same place. Visible copy is owner language, not PRD or
+pipeline phrasing ([design decision](design-decision-record.md) 6). The wordmark is the Placis orb lockup
+([design decision](design-decision-record.md) 3). Each card opens with a heading block that is visibly
+larger than field labels ([design decision](design-decision-record.md) 9).
 
 ## Screens
 
@@ -33,7 +41,8 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
 
 Found vs missing checklist (who they are, legal, contact, services, service
 area, certifications and reviews, photos). Business research may still be
-filling rows (SSE). **Continue**.
+filling rows (SSE). **Continue** in the shared footer. No missing-topics queue
+or “next: client interview” aside ([design decision](design-decision-record.md) 2).
 
 When `research_wait_until` is in the future, a quiet inline wait on this screen
 (and on the client interview if they Continue): “We’ll look the business up
@@ -42,26 +51,47 @@ enabled. Same field on `GET .../profile` and SSE.
 
 ### 3. Client interview — `/onboarding/interview`
 
-Default surface is **text**. Voice is listed and deferred ([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)). Text
-submit completes the client interview, then 05 apply the website template. Port:
+**Onboarding Details == Business details** ([ADR](ADR.md) 19). The Details
+block on this screen is `/cms/details`: same fields, same controls, same
+writes. If Details changes, this screen changes. Legal identity stays on
+Review. Client-interview-only extras wrap that block (photos, certifications,
+reviews, extra notes, contact name, `emergency_phone`). Look: white `.onb-card`,
+not the Details panel ([design decision](design-decision-record.md) 12).
+
+Default surface is **text** (owner: **Write**). Voice is listed and deferred
+([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)); owner copy is that voice is coming later, not pipeline phrasing.
+Text submit completes the client interview, then 05 apply the website template.
+Port:
 [frontend-debloat.md](frontend-debloat.md).
 
-- **Who they are / contact / opening hours** — same fields as today. Legal
-  identity stays on Review.
-- **Services and service area** — free text is allowed. The LLM turns services
-  into named services.
+- **Your business / contact / opening hours** — Details identity, contact, and
+  hours, same controls as `/cms/details`. Legal identity stays on Review.
+  Hours: one range per day, Closed, copy to following days; no extra time
+  block ([design decision](design-decision-record.md) 12).
+- **Services and service area** — featured services as a list
+  (`business_profile_services`), not a textarea. Paste of one-per-line or
+  comma-separated **names** splits into rows (no LLM). Service areas: Google
+  Maps territory lookup, one card per region (`locality` + `radius_km`). Owner
+  copy: we’ll turn each name into a website page; search a place, then set how
+  far you travel. Complete has those list rows before 05
+  ([ADR](ADR.md) 18).
 - **Photos** — show what business research already put in the media library
   (logo plus a few photos). Do not label a photo with the Google Maps listing or
   Facebook. **Upload photos** is always available. Do not ask a photos-choice
-  question. **Source from the internet** and **AI photo** only when there are
+  question. **Find more online** and **Create a stand-in** only when there are
   not enough photos yet.
 - **Certifications** — trade accreditations with the definition badge, plus
   other certifications. Do not say proof. If they picked the company registry
   record on Find, the matching business-registry certification (CRO in Ireland)
   is selected and not deselectable.
-- **Reviews** — present the reviews already found (who wrote it, the rating, the
-  review citation, and where it came from). Not a blank notes box.
+- **Reviews** — present the reviews already found, looking like Google reviews
+  (profile photo when we have one, else the initial; name, source mark, stars,
+  relative date, review citation)
+  ([design decision](design-decision-record.md) 4). Not a blank notes box.
   **We do not have online reviews yet** only when none were found.
+- **Anything else we should know?** — extra notes (`additional_notes`).
+  Optional. Helper: what would help us generate a better website or run ads
+  ([design decision](design-decision-record.md) 5).
 
 ### 4. Wait teaser — `/onboarding/preview`
 
@@ -73,16 +103,33 @@ interval ~2s, smooth phase in/out especially images. Reuse
 website pages, not the website editor path.
 
 Wait until **website copy generation finishes** or the **~15s cap**, whichever
-first. Then 07 writes `latest/` and the browser **navigates** to the preview
-website address. Do not paint full website pages here. Do not put the
-website-activation strip on this route (it lives in the host HTML).
+first. The footer shows a progress bar for that cap, painted every animation
+frame ([design decision](design-decision-record.md) 7). Then 07 writes `latest/` and the browser
+**navigates** to the preview website address. Do not paint full website pages
+here. Do not put the website-activation strip on this route (it lives in the
+host HTML). The wait-teaser hero uses the same job-site photo as the site they
+will open. The wait timeline moves to “Opening the site” as the cap ends
+([design decision](design-decision-record.md) 11). `prefers-reduced-motion` stops the carousel loop and
+jumps the bar in second steps.
+
+The look export’s **Skip generation** and `?scene=generated` are mock-only
+([design decision](design-decision-record.md) 8). That mock includes the sticky
+website-activation strip ([design decision](design-decision-record.md) 10).
+Paid (the Paid tab) opens the website editor look export with **Publish**
+(`?scene=website&publication=1&from=activation`).
 
 ### 5. Website preview + website activation — preview website address
 
 Static R2 HTML (Cache then R2). Website-activation strip is a Clerk/Stripe
-**island** in that HTML ([07](pipeline/07-website-preview.md), [cloudflare.md](../website/cloudflare.md)). Copy still running after they
-land is not a live update. Success (08) → `/cms/website`. Anyone with the URL
-may sign in and pay.
+**island** in that HTML ([07](pipeline/07-website-preview.md), [cloudflare.md](../website/cloudflare.md)). It is
+**sticky to the bottom of the viewport** while the website scrolls
+([design decision](design-decision-record.md) 10). The strip is a white bar with the Placis orb lockup
+(`placis-mark.png`), headline, EUR 4,900, and the activate CTA. Create an
+account, then pay. An existing Clerk session skips to pay. Copy still running
+after they land is not a live update. Success (08) → `/cms/website` (website
+editor, **Publish**). Anyone with the URL may create an account and pay. The
+look export’s paid mock opens the website editor with **Publish**
+(`?scene=website&publication=1&from=activation`).
 
 ## Resume
 
@@ -102,10 +149,14 @@ retries; it does not `POST` a new onboarding session.
 
 - `BusinessSourcePanel` — country, registry, optional Maps, online research
   consent.
-- `FoundInformationReview` — found vs missing.
-- `TextInterviewForm` / `AvailabilityPicker` / `AccreditationChecklist` — text
-  client interview.
+- `FoundInformationReview` — found vs missing; no missing-topics aside.
+- `TextInterviewForm` — Details block == `/cms/details` (same field controls:
+  featured-service list, Maps territory cards, hours picker) plus
+  client-interview extras. Extra notes owner copy: Anything else we should know?
+  Helper: what would help us generate a better website or run ads.
+- `AccreditationChecklist` — trade certifications plus other certifications.
 - `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — SSE carousel of
-  complete website sections.
+  complete website sections; 15s wait progress in the shared footer, painted
+  every animation frame.
 - Leftover `src/features/preview/` is predecessor code to drop (no
   `/preview/{token}/` in this app).

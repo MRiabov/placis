@@ -1,4 +1,6 @@
-/* Mock-only scene wiring for cms.html. Not product UI. */
+/* Mock-only scene wiring for cms.html. Not product UI.
+   Combo, hours picker, featured services, and service-area territories:
+   details-fields.js (loaded first). */
 
 const params = new URLSearchParams(location.search);
 const frame = document.getElementById("frame");
@@ -81,48 +83,6 @@ function navValueHtml(row) {
   return pageSelectHtml(row.dataset.page || "home");
 }
 
-function bindCombo(combo) {
-  const input = combo.querySelector("input");
-  const pop = combo.querySelector(".cms-combo-pop");
-  const create = pop.querySelector(".cms-combo-crow");
-  const divider = pop.querySelector(".cms-combo-divider");
-  const rows = [...pop.querySelectorAll(".cms-combo-row")];
-  const label = combo.dataset.create || "item";
-  const close = () => combo.classList.remove("is-open");
-  input.addEventListener("focus", () => combo.classList.add("is-open"));
-  input.addEventListener("blur", () => setTimeout(close, 120));
-  input.addEventListener("input", () => {
-    const query = input.value.trim().toLowerCase();
-    let any = false;
-    rows.forEach((row) => {
-      const hit = row.textContent.toLowerCase().includes(query);
-      row.classList.toggle("is-hidden", Boolean(query) && !hit);
-      if (hit || !query) any = true;
-    });
-    const creating = Boolean(query) && !any;
-    create.classList.toggle("is-hint", !creating);
-    create.classList.toggle("is-create", creating);
-    create.innerHTML = creating
-      ? `<span class="cms-combo-plus">+</span> Create new ${esc(label)} “${esc(input.value.trim())}”`
-      : `Type to create a new ${esc(label)}…`;
-    divider.classList.toggle("is-hidden", !creating);
-  });
-  rows.forEach((row) => row.addEventListener("mousedown", (event) => {
-    event.preventDefault();
-    rows.forEach((item) => {
-      item.classList.toggle("is-current", item === row);
-      const check = item.querySelector(".cms-combo-check");
-      if (check) check.textContent = item === row ? "✓" : "";
-    });
-    input.value = row.dataset.href || "";
-    close();
-  }));
-  create.addEventListener("mousedown", (event) => {
-    event.preventDefault();
-    close();
-  });
-}
-
 function hydrateNavRow(row) {
   const kind = row.dataset.kind || "page";
   row.innerHTML = `<select class="cms-field-control cms-nav-kind" aria-label="Kind"><option value="page"${kind === "page" ? " selected" : ""}>Website page</option><option value="text"${kind === "text" ? " selected" : ""}>Text</option><option value="url"${kind === "url" ? " selected" : ""}>URL</option></select><div class="cms-nav-value">${navValueHtml(row)}</div>`;
@@ -178,6 +138,10 @@ function setPublication(open) {
   publicationPanel.classList.toggle("is-hidden", !open);
   document.getElementById("publicationToggle")?.setAttribute("aria-expanded", String(open));
   stripButton("publication")?.classList.toggle("on", open);
+}
+
+function publicationHostRow() {
+  return document.querySelector(".cms-publication-hosts .cms-publication-row:not(.is-add):not(.is-waiting)");
 }
 
 function setConnect(open) {
@@ -788,6 +752,12 @@ document.querySelectorAll("[data-viewport]").forEach((button) => {
 document.getElementById("publicationToggle").addEventListener("click", () => {
   setPublication(publicationPanel.classList.contains("is-hidden"));
 });
+publicationHostRow()?.addEventListener("click", () => {
+  const blockers = document.querySelector(".cms-publication-blockers");
+  if (blockers && !blockers.classList.contains("is-hidden")) return;
+  const status = publicationHostRow()?.querySelector(".cms-publication-row-copy span");
+  if (status) status.textContent = "Last published just now";
+});
 document.querySelectorAll("[data-blocker]").forEach((button) => {
   button.addEventListener("click", () => {
     setPublication(false);
@@ -937,6 +907,20 @@ setCopyOut(params.get("copyout") === "1");
 setAskFirst(params.get("ask") !== "0");
 syncVoiceSurface();
 if (params.get("publication") === "1") setPublication(true);
+if (params.get("from") === "activation") {
+  const host = publicationHostRow();
+  const title = host?.querySelector("b");
+  const status = host?.querySelector(".cms-publication-row-copy span");
+  const chrome = document.querySelector(".cms-browser-chrome-url");
+  const prefix = "bellfield-roofing-dublin.preview.placis.com";
+  if (title) title.textContent = prefix;
+  if (status) status.textContent = "Not published yet";
+  if (host) host.setAttribute("aria-label", `Publish to ${prefix}`);
+  if (chrome) chrome.textContent = prefix;
+  document.querySelector(".cms-publication-row.is-waiting")?.classList.add("is-hidden");
+  document.querySelector(".cms-publication-blockers")?.classList.add("is-hidden");
+  setPublication(true);
+}
 if (params.get("connect") === "1") setConnect(true);
 if (params.get("connected") === "1") setMcpConnected(true);
 if (params.get("homevoice") === "1") setHomeVoice(true);
@@ -967,104 +951,6 @@ window.matchMedia("(max-width: 1100px)").addEventListener("change", (event) => {
   }
   syncCollapsed();
 });
-
-const hoursDays = [
-  { day: "Monday", short: "Mon", closed: false, slots: [{ opens: "08:00", closes: "17:00" }] },
-  { day: "Tuesday", short: "Tue", closed: false, slots: [{ opens: "08:00", closes: "17:00" }] },
-  { day: "Wednesday", short: "Wed", closed: false, slots: [{ opens: "08:00", closes: "17:00" }] },
-  { day: "Thursday", short: "Thu", closed: false, slots: [{ opens: "08:00", closes: "17:00" }] },
-  { day: "Friday", short: "Fri", closed: false, slots: [{ opens: "08:00", closes: "16:00" }] },
-  { day: "Saturday", short: "Sat", closed: true, slots: [{ opens: "08:00", closes: "17:00" }] },
-  { day: "Sunday", short: "Sun", closed: true, slots: [{ opens: "08:00", closes: "17:00" }] },
-];
-const hoursTimeValues = Array.from({ length: 48 }, (_, index) => {
-  const hour = Math.floor(index / 2);
-  const minute = index % 2 === 0 ? "00" : "30";
-  return `${String(hour).padStart(2, "0")}:${minute}`;
-});
-function hoursTimeLabel(value) {
-  const [rawHour, rawMinute] = value.split(":");
-  const hour = Number(rawHour);
-  if (!Number.isFinite(hour)) return value;
-  const suffix = hour >= 12 ? "pm" : "am";
-  return `${hour % 12 || 12}:${rawMinute}${suffix}`;
-}
-function hoursIcon(kind) {
-  if (kind === "closed") return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m7.5 7.5 9 9"/></svg>';
-  return '<svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/></svg>';
-}
-function hoursSelect(day, bound, value) {
-  const options = hoursTimeValues
-    .map((time) => `<option value="${time}" ${time === value ? "selected" : ""}>${hoursTimeLabel(time)}</option>`)
-    .join("");
-  return `<select class="cms-hours-time" data-bound="${bound}" aria-label="${day} ${bound === "opens" ? "Opens" : "Closes"}">${options}</select>`;
-}
-function renderHoursPicker() {
-  const root = document.getElementById("hoursPicker");
-  if (!root) return;
-  root.innerHTML = hoursDays
-    .map((row, index) => {
-      const slot = row.slots[0] || { opens: "08:00", closes: "17:00" };
-      return `
-        <div class="cms-hours-row${row.closed ? " is-closed" : ""}" data-index="${index}">
-          <div class="cms-hours-day">${row.day}</div>
-          <div class="cms-hours-slots">
-            <div class="cms-hours-slot">
-              ${hoursSelect(row.day, "opens", slot.opens)}
-              <span aria-hidden="true">–</span>
-              ${hoursSelect(row.day, "closes", slot.closes)}
-            </div>
-            <p class="cms-hours-closed-label">Closed</p>
-          </div>
-          <div class="cms-hours-actions">
-            <button class="cms-hours-icon${row.closed ? " is-on" : ""}" type="button" data-hours="closed" aria-label="${row.closed ? `Reopen ${row.day}` : `Mark ${row.day} closed`}" title="Closed">${hoursIcon("closed")}</button>
-            <button class="cms-hours-icon" type="button" data-hours="copy" aria-label="Copy ${row.day} opening hours to following days" title="Copy to following days">${hoursIcon("copy")}</button>
-          </div>
-        </div>`;
-    })
-    .join("");
-}
-function readHoursRow(rowNode) {
-  return {
-    closed: rowNode.classList.contains("is-closed"),
-    slots: [...rowNode.querySelectorAll(".cms-hours-slot")].map((slot) => ({
-      opens: slot.querySelector('[data-bound="opens"]').value,
-      closes: slot.querySelector('[data-bound="closes"]').value,
-    })),
-  };
-}
-function writeHoursFromDom() {
-  document.querySelectorAll(".cms-hours-row").forEach((rowNode, index) => {
-    const next = readHoursRow(rowNode);
-    hoursDays[index].closed = next.closed;
-    hoursDays[index].slots = next.slots.slice(0, 1);
-  });
-}
-document.getElementById("hoursPicker")?.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-hours]");
-  if (!button || button.disabled) return;
-  const rowNode = button.closest(".cms-hours-row");
-  const index = Number(rowNode.dataset.index);
-  writeHoursFromDom();
-  const row = hoursDays[index];
-  switch (button.dataset.hours) {
-    case "closed":
-      row.closed = !row.closed;
-      break;
-    case "copy":
-      hoursDays.forEach((item, itemIndex) => {
-        if (itemIndex > index) {
-          const range = row.slots[0] || { opens: "08:00", closes: "17:00" };
-          item.closed = row.closed;
-          item.slots = [{ opens: range.opens, closes: range.closes }];
-        }
-      });
-      break;
-  }
-  renderHoursPicker();
-});
-document.getElementById("hoursPicker")?.addEventListener("change", () => writeHoursFromDom());
-renderHoursPicker();
 
 const mediaPhotos = ["media/hero-roof.jpg", "media/job-repair.jpg", "media/job-new-roof.jpg", "media/job-gutter.jpg"];
 const mediaRatios = ["landscape", "portrait", "square"];
@@ -1166,40 +1052,6 @@ function bindMediaLibrary() {
   document.getElementById("mediaCleanupAccept")?.addEventListener("click", () => setMediaCleanup(false));
 }
 
-function bindServiceArea() {
-  const combo = document.getElementById("serviceAreaCombo");
-  if (!combo) return;
-  bindCombo(combo);
-  const card = document.getElementById("serviceAreaCard");
-  const radius = document.getElementById("serviceAreaRadius");
-  combo.querySelectorAll(".cms-combo-row").forEach((row) => {
-    row.addEventListener("mousedown", () => {
-      const name = row.dataset.label || row.dataset.href || "";
-      const title = card?.querySelector("b");
-      if (title) title.textContent = name;
-      if (radius && row.dataset.radius) radius.value = row.dataset.radius;
-    });
-  });
-}
-
-function bindFeaturedServices() {
-  const list = document.getElementById("featuredServices");
-  if (!list) return;
-  list.addEventListener("click", (event) => {
-    const remove = event.target.closest(".cms-item-remove");
-    if (!remove) return;
-    const row = remove.closest(".cms-item-row");
-    if (list.querySelectorAll(".cms-item-row").length > 1) row?.remove();
-  });
-  document.getElementById("addFeaturedService")?.addEventListener("click", () => {
-    const row = document.createElement("li");
-    row.className = "cms-item-row";
-    row.innerHTML = `<input class="cms-careers-input" value="" aria-label="Featured service" /><button class="cms-item-remove" type="button" aria-label="Remove service">×</button>`;
-    list.append(row);
-    row.querySelector("input")?.focus();
-  });
-}
-
 function bindMediaFraming() {
   const still = document.getElementById("mediaViewStill");
   const view = document.getElementById("mediaView");
@@ -1277,8 +1129,6 @@ function bindMediaFraming() {
   });
 }
 
-bindServiceArea();
-bindFeaturedServices();
 bindMediaLibrary();
 bindMediaFraming();
 if (params.get("cleanup") === "1") setMediaCleanup(true);

@@ -52,12 +52,13 @@ gate passed.
    the Worker. FQDN: [cloudflare.md](../../website/cloudflare.md).
 3. Build `website.v1` from current unpublished rows and insert
    **`website_publications` v1**: `published_by=onboarding`, HTML **with** the
-   website-activation strip (Clerk/Stripe island), `active`. Same write as CMS
-   website publication ([cloudflare.md](../../website/cloudflare.md)): run the already-built website
-   component catalog on the JSON, PUT `{version_number}/` then copy onto
-   `latest/`, purge. Not per-request Astro. On 05 retry, archive the previous
-   onboarding website version and write a new row on the same prefix (strip
-   still on if unpaid).
+   website-activation strip (Clerk/Stripe island, sticky to the bottom of the
+   viewport while the website scrolls; Placis orb lockup on the strip),
+   `active`. Same write as CMS website publication ([cloudflare.md](../../website/cloudflare.md)): run the
+   already-built website component catalog on the JSON, PUT `{version_number}/`
+   then copy onto `latest/`, purge. Not per-request Astro. On 05 retry, archive
+   the previous onboarding website version and write a new row on the same
+   prefix (strip still on if unpaid).
 4. Onboarding session → `previewing`. Empty details show as website
    placeholders.
 
