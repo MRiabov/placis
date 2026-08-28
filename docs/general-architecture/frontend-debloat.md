@@ -4,8 +4,8 @@ Status: planning (port instructions, not shipped UI).
 
 ## Target
 
-[frontend.md](frontend.md) (loading placeholders), [frontend-stack.md](frontend-stack.md),
-[glossary Don't say](../glossary.md). Shared rules:
+[frontend.md](frontend.md) (loading placeholders), [frontend-stack.md](frontend-stack.md), [glossary Don't say](../glossary.md).
+Shared rules:
 [planning index](../planning/frontend-debloat.md).
 
 Feature screens stay in that feature’s instruction file. This file is only what
@@ -16,15 +16,17 @@ no single feature owns.
 - `frontend-2/src/generated/api-types.ts` (~18 064 lines) — predecessor OpenAPI,
   including unconstrained JSON blobs and CRM sandbox types the app never
   calls.
-- Don't say shell: `frontend-2/src/app/shell/index.tsx` (`AppShell` = `<Outlet />`).
-- Don't say client: typed `openapi-fetch` helper in `frontend-2/src/shared/api/client.ts` (keep).
+- Don't say shell: `frontend-2/src/app/shell/index.tsx` (`AppShell` =
+  `<Outlet />`).
+- Don't say client: typed `openapi-fetch` helper in
+  `frontend-2/src/shared/api/client.ts` (keep).
 - `frontend-2/src/styles/cms/` — copied predecessor CSS (`components-01.css` …
   `05`, `dashboard.css`, `details.css`; `components-04.css` is 1134 lines).
-- `frontend-2/e2e/parity/` — onboarding / CMS / details parity vs old `frontend/`
-  on 5173.
-- `playwright.config.ts` — `reuseExistingServer: !CI`; starts frontend-2 (5174). Starts
-  `../frontend` (5173) for parity only when that tree exists. Clerk testing-token specs
-  use `playwright.auth.config.ts` with `workers: 1`.
+- `frontend-2/e2e/parity/` — onboarding / CMS / details parity vs old
+  `frontend/` on 5173.
+- `playwright.config.ts` — `reuseExistingServer: !CI`; starts frontend-2 (5174).
+  Starts `../frontend` (5173) for parity only when that tree exists. Clerk
+  testing-token specs use `playwright.auth.config.ts` with `workers: 1`.
 
 ## Keep
 
@@ -32,18 +34,21 @@ no single feature owns.
 - Per-field / per-row / per-website-slot **loading placeholders** (never a
   whole-panel swap). Do not say skeleton.
 - File-size guard on `frontend-2` (&lt; 800 warn, &gt; 1200 hard error).
-- `src/shared/ui/` button + dialog as they exist; do not expand shared UI in this port.
-- Tokens for the CMS (sidebar + main area): [design.md](cms/design.md)
-  (clone placis-web `globals.css` + `marketingSite.ts`). Do not invent a second palette.
+- `src/shared/ui/` button + dialog as they exist; do not expand shared UI in
+  this port.
+- Tokens for the CMS (sidebar + main area): [design.md](cms/design.md) (clone placis-web
+  `globals.css` + `marketingSite.ts`). Do not invent a second palette.
   [design decision record](cms/design-decision-record.md) 5.
 - Left nav (Profile disclosure + Ads), `/cms` two-card chooser, Connect:
   [frontend](cms/frontend.md). Code today: Don't say shell:
-  `frontend-2/src/features/cms/CmsDashboardShell.tsx` — leftover flat nav (New chat, Sites,
-  Details; no AI tools). `types.ts` / `routing.ts` include `/cms/proof`. `CmsRoute.tsx` —
-  `/cms/proof` and `/cms/projects` render `PlaceholderView`. `app/router/index.tsx` registers
-  those routes. Delete `/cms/proof`, **AI tools** left-nav item, and `PlaceholderView` once
-  projects and certifications are real screens. Retarget top-level Details to Profile
-  disclosure. Ads missing from nav → left-nav **Ads**. CmsRoute / cms-parity tests follow.
+  `frontend-2/src/features/cms/CmsDashboardShell.tsx` — leftover flat nav (New
+  chat, Sites, Details; no AI tools). `types.ts` / `routing.ts` include
+  `/cms/proof`. `CmsRoute.tsx` — `/cms/proof` and `/cms/projects` render
+  `PlaceholderView`. `app/router/index.tsx` registers those routes. Delete
+  `/cms/proof`, **AI tools** left-nav item, and `PlaceholderView` once projects
+  and certifications are real screens. Retarget top-level Details to Profile
+  disclosure. Ads missing from nav → left-nav **Ads**. CmsRoute / cms-parity
+  tests follow.
 
 ## Delete
 
@@ -56,16 +61,20 @@ no single feature owns.
   predecessor routes.
 - Careers and unused modal CSS (coordinate with details + media library files).
 - Predecessor `src/styles/cms/` rules that fight the placis-web dashboard theme
-  (coordinate with website + details). Replace tokens; do not add a second palette.
-- Don't say setup: `src/test/fixtures/setupProfile.ts` name (onboarding fixture).
+  (coordinate with website + details). Replace tokens; do not add a second
+  palette.
+- Don't say setup: `src/test/fixtures/setupProfile.ts` name (onboarding
+  fixture).
 
 ## Do not port
 
 - CRM / operations UI (quotes, invoices, jobs, workflows, calendar, crew).
 - Org chooser (auth file).
-- Blog, careers, leftover website-template-apply CMS API wrappers (website file).
+- Blog, careers, leftover website-template-apply CMS API wrappers (website
+  file).
 - Voice-first onboarding (onboarding file).
-- Rebuilding a new design system or adding shadcn sprawl. Cloning placis-web is the keep.
+- Rebuilding a new design system or adding shadcn sprawl. Cloning placis-web is
+  the keep.
 
 ## Cutover
 
@@ -75,8 +84,8 @@ checked in as a second schema.
 
 Unported `api/*.ts` and MSW stubs are deleted or retargeted in the same slice
 that adds the Go routes. Screens with no Go route yet stay unwired, not typed
-against old paths. No shims, no `as any`, no mapping layer
-(predecessor types → `onboarding-sessions`), no leftover `predecessor-api-types.ts`.
+against old paths. No shims, no `as any`, no mapping layer (predecessor types →
+`onboarding-sessions`), no leftover `predecessor-api-types.ts`.
 
 Do not wait until Go has “enough” routes. The generated file must not
 reintroduce predecessor-only paths (CRM sandbox, tenant-scoped website CRUD,
@@ -95,20 +104,23 @@ unconstrained blobs). Contractor website typegen is a different consumer:
 ## Don't say / rename
 
 - Don't say shell: `AppShell`, `CmsDashboardShell`, `OnboardingShell`, CSS
-  `cms-dashboard-shell`. Don't say shell in e2e comments that call the CMS a shell.
+  `cms-dashboard-shell`. Don't say shell in e2e comments that call the CMS a
+  shell.
 - Don't say inspector: leftover editing-panel names (website file).
 - Don't say setup: leftover folder, API, fixture, and copy (onboarding file).
-- Don't say private app / private Vite app: the CMS, onboarding, or website preview (`frontend-2`).
+- Don't say private app / private Vite app: the CMS, onboarding, or website
+  preview (`frontend-2`).
 - Don't say skeleton: loading placeholder or unpublished website, depending on
   meaning.
-- Don't say runtime: do not name `frontend-2` or the contractor website a runtime.
+- Don't say runtime: do not name `frontend-2` or the contractor website a
+  runtime.
 
 ## Tests
 
 - Drop `e2e/parity/onboarding-parity.spec.ts`, `cms-parity.spec.ts`,
   `details-parity.spec.ts` at port cutover.
-- Keep product e2e: website editor, media-library upload, website-preview visual, clerk-auth — retargeted
-  per feature files.
+- Keep product e2e: website editor, media-library upload, website-preview
+  visual, clerk-auth — retargeted per feature files.
 - Vitest MSW in `src/test/msw/server.ts` must not keep predecessor onboarding
   routes after the onboarding port.
 
@@ -121,5 +133,5 @@ unconstrained blobs). Contractor website typegen is a different consumer:
 - Leftover layout type names are gone from `frontend-2`.
 - CMS `src/styles/cms/` tokens match placis-web
   ([CMS design decision record](cms/design-decision-record.md) 5).
-- Left nav matches [CMS frontend](cms/frontend.md) (Profile disclosure, Ads dest, no `/cms/proof`,
-  no **AI tools** item).
+- Left nav matches [CMS frontend](cms/frontend.md) (Profile disclosure, Ads dest, no
+  `/cms/proof`, no **AI tools** item).

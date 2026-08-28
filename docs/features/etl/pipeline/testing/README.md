@@ -1,6 +1,7 @@
 # ETL pipeline — tests
 
-Integration (real Postgres, adapters faked). One file per source / operation group.
+Integration (real Postgres, adapters faked). One file per source / operation
+group.
 
 - [Google Maps](google-maps.md)
 - [Facebook](facebook.md)
