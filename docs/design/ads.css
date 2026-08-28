@@ -528,7 +528,7 @@
   .sweep-before {
     position: absolute;
     inset: 0;
-    background-image: url("../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg");
+    background-image: url("fixtures/bellfield/image1.jpeg");
     background-size: cover;
     background-position: 50% 32%;
   }
@@ -678,7 +678,7 @@
   .fb-head, .ig-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
   .fb-ava, .ig-ava {
     width: 40px; height: 40px; border-radius: var(--cms-radius-pill); flex: none;
-    background: url("../../apps/contractor-website/public/fixtures/bellfield/image0.jpeg") center / cover;
+    background: url("fixtures/bellfield/image0.jpeg") center / cover;
   }
   .ig-ava { width: 32px; height: 32px; box-shadow: 0 0 0 2px #fff, 0 0 0 3px #e1306c; }
   .fb-who b, .ig-who b { display: block; font-size: 14px; font-weight: 600; line-height: 1.2; }
@@ -687,14 +687,14 @@
   .fb-more, .ig-more { margin-left: auto; color: #65676b; font-size: 18px; line-height: 1; }
   .fb-msg { margin: 0; padding: 0 12px 10px; font-size: 15px; line-height: 1.33; color: #050505; }
   .feed-media {
-    aspect-ratio: 1 / 1; background: url("../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg") 50% 32% / cover;
+    aspect-ratio: 1 / 1; background: url("fixtures/bellfield/image1.jpeg") 50% 32% / cover;
   }
-  .previews.fmt-feed_portrait .feed-media { aspect-ratio: 4 / 5; background-image: url("../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg"); }
+  .previews.fmt-feed_portrait .feed-media { aspect-ratio: 4 / 5; background-image: url("fixtures/bellfield/image2.jpeg"); }
   .car-media { display: none; gap: 4px; padding: 0; overflow: hidden; }
   .car-media div { flex: 1; aspect-ratio: 1; background-size: cover; background-position: 50% 32%; }
-  .car-media div:nth-child(1) { background-image: url("../../apps/contractor-website/public/fixtures/bellfield/image0.jpeg"); }
-  .car-media div:nth-child(2) { background-image: url("../../apps/contractor-website/public/fixtures/bellfield/image1.jpeg"); }
-  .car-media div:nth-child(3) { background-image: url("../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg"); }
+  .car-media div:nth-child(1) { background-image: url("fixtures/bellfield/image0.jpeg"); }
+  .car-media div:nth-child(2) { background-image: url("fixtures/bellfield/image1.jpeg"); }
+  .car-media div:nth-child(3) { background-image: url("fixtures/bellfield/image2.jpeg"); }
   .previews.fmt-carousel .feed-media { display: none; }
   .previews.fmt-carousel .car-media { display: flex; }
   .fb-link {
@@ -717,12 +717,12 @@
   .story-frame {
     display: none; position: relative; width: min(100%, 220px); margin: 12px auto;
     aspect-ratio: 9 / 16; border-radius: 16px; overflow: hidden;
-    background: url("../../apps/contractor-website/public/fixtures/bellfield/image2.jpeg") 50% 32% / cover;
+    background: url("fixtures/bellfield/image2.jpeg") 50% 32% / cover;
   }
   .story-top { position: absolute; inset: 10px 10px auto; display: flex; align-items: center; gap: 8px; color: #fff; text-shadow: 0 1px 4px rgb(0 0 0 / 50%); }
   .story-bars { position: absolute; top: 8px; left: 10px; right: 10px; height: 3px; background: rgb(255 255 255 / 35%); border-radius: 2px; }
   .story-bars::after { content: ""; display: block; width: 38%; height: 100%; background: #fff; border-radius: 2px; }
-  .story-ava { width: 28px; height: 28px; border-radius: var(--cms-radius-pill); background: url("../../apps/contractor-website/public/fixtures/bellfield/image0.jpeg") center / cover; flex: none; }
+  .story-ava { width: 28px; height: 28px; border-radius: var(--cms-radius-pill); background: url("fixtures/bellfield/image0.jpeg") center / cover; flex: none; }
   .story-top b { font-size: 12px; }
   .story-top span { display: block; font-size: 10px; opacity: .85; }
   .story-hl { position: absolute; left: 12px; right: 12px; bottom: 64px; color: #fff; font-size: 18px; font-weight: 700; text-shadow: 0 1px 8px rgb(0 0 0 / 55%); }

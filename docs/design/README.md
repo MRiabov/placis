@@ -1,6 +1,7 @@
 # Design mocks
 
-Static HTML. Open the HTML in a browser; there is no build.
+This folder is self-contained. Copy or zip `docs/design` and open the HTML in a
+browser; there is no build. Fonts, photos, and badges live in this folder.
 
 Shared tokens: [tokens.css](tokens.css). CMS is the source of truth; onboarding and Ads
 import this file and do not keep a second palette.

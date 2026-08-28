@@ -26,8 +26,9 @@ before adding or editing a doc.
   feature's docs in one place). `features/business-profile/` holds Details,
   Projects, and Certifications and reviews as child view dirs. `features/other/`
   is auth, media library, leads.
-- `design/` — static HTML mocks (`tokens.css`, `cms.html`, `onboarding.html`,
-  `ads.html`). Specs remain canonical. CMS is the token source of truth.
+- `design/` — self-contained static HTML mocks (`tokens.css`, `cms.html`,
+  `onboarding.html`, `ads.html`, plus fonts / fixtures / photos). Specs remain
+  canonical. CMS is the token source of truth.
 - `planning/` — proposed, unshipped work; never the canonical source. The
   `frontend-2` port index is [planning/frontend-debloat.md](planning/frontend-debloat.md); per-feature cut
   lists live with the feature as `frontend-debloat.md`.
