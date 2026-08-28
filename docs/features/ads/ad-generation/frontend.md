@@ -46,8 +46,8 @@ These principles shape every screen in this workspace:
 
 ## Design Mock
 
-A static HTML mock of the workspace lives at `design/ads-workspace.html` — open it in a browser
-directly (no build). It shows the current direction: **one accordion wrapper with two
+A static HTML mock of the workspace lives at [ads.html](../../../design/ads.html) — open it in a
+browser directly (no build). It shows the current direction: **one accordion wrapper with two
 expandable steps, both visible immediately** — step 1 "About the ad" (open by default, all the
 questions), step 2 "Review" (visible but locked — "Complete step 1 to unlock" — and
 expands once step 1 is complete; after generate, About the ad is confirmed until **Revise**
@@ -55,12 +55,10 @@ on the generate row), then the approve block when the ad is ad ready to post.
 The combobox is closed by default with a conditional "create new". Format pills are single-select
 (one format per ad) using owner-facing names (Square feed, Portrait feed, Carousel, Story) — no
 ratios, no ad-set jargon.
-The mock is skinned to match the CMS home composer in
-`frontend-2`: **white canvas**, Satoshi / Helvetica Neue / Arial, `#e1e1e1` hairlines,
-`#fafafa` titles (not a blue-gray wizard look), 28px composer radius and the
-prompt's soft shadow on the accordion and ad cards, sunken 10px fields, 36px controls
-(8px control radius — same as the rest of the CMS). Pills are only for format selection and
-status badges, not for actions. The real implementation imports the app globals and should reuse the
+The mock is skinned from [tokens.css](../../../design/tokens.css) (the CMS look export).
+White canvas, Satoshi, hairline prompt box, the same control radius as the CMS
+(sidebar + main area).
+The real implementation imports the app globals and should reuse the
 dashboard prompt look rather than duplicate a palette.
 
 **My ads / New ad / Review** at the top of the mock are a **developer scene switcher only**

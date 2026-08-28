@@ -27,12 +27,15 @@ unsets voice as the active writer). Autosave: `PUT .../text-interview/autosave`.
 
 1. Set `channel=text`. Switching to 04b later is allowed; do not complete twice.
 2. Autosave writes `business_profile_edits` for the fields this save set, plus
-   `client_interview_submissions` `kind=autosave` (interview-only choices: photos, Maps listing,
-   reviews unavailable, extra notes).
+   `client_interview_submissions` `kind=autosave` (interview-only: photo uploads, optional
+   source-from-internet / AI photo when there are not enough photos, reviews unavailable, extra
+   notes).
 3. Fields: who they are (display name, trade); contact (contact name, marketing phone, marketing
-   email, existing site URL, `emergency_phone`); services and service area; opening hours; photos
-   choice (`use_found` / `source_from_google` / `upload_later` / `use_neutral`); accreditations /
-   review notes. Not legal identity.
+   email, existing site URL, `emergency_phone`); services and service area (free-text services:
+   the LLM turns them into named services); opening hours; found photos in the media library
+   plus upload (source from the internet / AI photo only if there are not enough); certifications
+   (company registry pick locks that business-registry certification) / found reviews. Not
+   legal identity. Do not ask a photos-choice question.
 4. Final submission `kind=final`, then `POST .../interview/complete` iff the complete gate.
 5. Contractor may mark a required row `skipped` in this step, then complete.
 

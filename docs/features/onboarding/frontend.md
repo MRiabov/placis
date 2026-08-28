@@ -2,7 +2,8 @@
 
 The contractor-facing onboarding in `frontend-2`. Screens and
 fields match the implemented app (copied from the predecessor). Port:
-[frontend-debloat.md](frontend-debloat.md).
+[frontend-debloat.md](frontend-debloat.md). Look export:
+[onboarding.html](../../design/onboarding.html) ([design.md](design.md)).
 
 Related: [PRD](prd.md), [ADR](ADR.md), [pipeline](pipeline/README.md).
 
@@ -40,6 +41,20 @@ Default surface is **text**. Voice is listed and deferred
 ([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)).
 Text submit completes the client interview, then 05 apply the website template.
 Port: [frontend-debloat.md](frontend-debloat.md).
+
+- **Who they are / contact / opening hours** — same fields as today. Legal identity stays on Review.
+- **Services and service area** — free text is allowed. The LLM turns services into named
+  services.
+- **Photos** — show what business research already put in the media library (logo plus a few
+  photos). Do not label a photo with the Google Maps listing or Facebook. **Upload photos** is
+  always available. Do not ask a photos-choice question. **Source from the internet** and **AI
+  photo** only when there are not enough photos yet.
+- **Certifications** — trade accreditations with the definition badge, plus other
+  certifications. Do not say proof. If they picked the company registry record on Find, the
+  matching business-registry certification (CRO in Ireland) is selected and not deselectable.
+- **Reviews** — present the reviews already found (who wrote it, the rating, the review citation,
+  and where it came from). Not a blank notes box. **We do not have online reviews yet** only when
+  none were found.
 
 ### 4. Wait teaser — `/onboarding/preview`
 

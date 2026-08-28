@@ -19,13 +19,13 @@ The business profile these onboarding sessions write is owned by
   `interview_plan_markdown` nullable, `interview_plan_completed` text[] nullable,
   `interview_plan_next_questions` text[] nullable, timestamps
 - `client_interview_submissions` — `id`, `onboarding_session_id` fk, `kind` (`autosave`/`final`),
-  `photos_choice` (`use_found`/`source_from_google`/`upload_later`/`use_neutral`),
-  `google_maps_listing_choice` (`use_found`/`lookup`/`no_profile`/`add_later`),
+  `photos_fill` nullable (`source_from_internet`/`ai`) only when found + uploaded photos are not
+  enough, `google_maps_listing_choice` (`use_found`/`lookup`/`no_profile`/`add_later`),
   `reviews_unavailable`, `additional_notes`, `created_at`
 
 Profile answers from the client interview are `business_profile_edits`, not a payload dump on
-this row. Interview-only choices (photos, Google Maps listing, reviews unavailable, extra notes)
-live here.
+this row. Interview-only fields (photo fill when short, Google Maps listing, reviews unavailable,
+extra notes) live here. Found photos live in the media library; the owner may upload more.
 
 ## Business research
 
