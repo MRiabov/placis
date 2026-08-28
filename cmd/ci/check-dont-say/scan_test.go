@@ -437,6 +437,65 @@ func TestSetupAllowedInTestingDocs(t *testing.T) {
 	}
 }
 
+func TestCoveringAcrossLineWrap(t *testing.T) {
+	compiled, err := compileTokens([]token{
+		{phrase: "media", class: classAlways, covers: []string{"media library"}},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join("testdata", "wrap.md")
+	write := func(body string) []hit {
+		t.Helper()
+		if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() { _ = os.Remove(path) })
+		hits, err := scanFile(path, compiled)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return hits
+	}
+	if hits := write("approved contractor content (business profile, media\nlibrary item).\n"); len(hits) != 0 {
+		t.Fatalf("covering phrase split by wrap should pass, got %v", hits)
+	}
+	if hits := write("- stay in the media\n  library item.\n"); len(hits) != 0 {
+		t.Fatalf("covering phrase split onto an indented continuation should pass, got %v", hits)
+	}
+	if hits := write("the media\nis missing\n"); len(hits) == 0 {
+		t.Fatal("uncovered media on its own line should fail")
+	}
+}
+
+func TestDontSayContextWrapsWithLine(t *testing.T) {
+	compiled, err := compileTokens([]token{
+		{phrase: "setup", class: classAlways},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join("testdata", "dont-say-wrap.md")
+	write := func(body string) []hit {
+		t.Helper()
+		if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() { _ = os.Remove(path) })
+		hits, err := scanFile(path, compiled)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return hits
+	}
+	if hits := write("Collapse predecessor Don't say setup:\n`POST /setup-sessions` and more.\n"); len(hits) != 0 {
+		t.Fatalf("don't-say instruction wrapped onto the next paragraph line should pass, got %v", hits)
+	}
+	if hits := write("- Don't say setup: keep the old name.\n- Then the setup path stays.\n"); len(hits) == 0 {
+		t.Fatal("a new list item after a don't-say bullet should still flag setup")
+	}
+}
+
 func hitPhrases(hits []hit) map[string]bool {
 	out := map[string]bool{}
 	for _, h := range hits {

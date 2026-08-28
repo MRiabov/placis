@@ -1,7 +1,7 @@
 # Trade registry
 
-`kind=trade_registry`. First-run only (onboarding 02). Not on Monday / Wednesday / Friday.
-Shared extract / transform rules: [pipeline README](README.md).
+`kind=trade_registry`. First-run only (onboarding 02). Not on Monday / Wednesday
+/ Friday. Shared extract / transform rules: [pipeline README](README.md).
 
 Accreditations. A later official registry API is its own fetch table.
 
@@ -23,27 +23,30 @@ Accreditations. A later official registry API is its own fetch table.
 
 ## Do — extract
 
-Set `status=extracting`. Trade-registry lookup. Insert `etl.trade_registry_fetches` (UUID,
-registry id, `raw`, `run_id`, `fetched_at`). Retry of this `run_id` does not insert a second
-fetch for a registry id that already landed. Transform as soon as that fetch exists.
+Set `status=extracting`. Trade-registry lookup. Insert
+`etl.trade_registry_fetches` (UUID, registry id, `raw`, `run_id`, `fetched_at`).
+Retry of this `run_id` does not insert a second fetch for a registry id that
+already landed. Transform as soon as that fetch exists.
 
 ## Do — transform
 
-`status=transforming`. Write accreditation list / notes. Trade registry wins the same way
-registry wins legal identity ([build-profile](../../onboarding/pipeline/build-profile.md)).
+`status=transforming`. Write accreditation list / notes. Trade registry wins the
+same way registry wins legal identity ([build-profile](../../onboarding/pipeline/build-profile.md)).
 
 ## Persist
 
-`etl.trade_registry_fetches`; `business_profile_edits` + accreditation live profile / list.
-`etl.runs.status=succeeded`.
+`etl.trade_registry_fetches`; `business_profile_edits` + accreditation live
+profile / list. `etl.runs.status=succeeded`.
 
 ## Fail
 
-Retryable. Prior live business profile stays. `status=error` when retries exhaust.
+Retryable. Prior live business profile stays. `status=error` when retries
+exhaust.
 
 ## Out
 
-Onboarding SSE mirrors Postgres on change (`etl.runs` and the live business profile).
+Onboarding SSE mirrors Postgres on change (`etl.runs` and the live business
+profile).
 
 ## Invariants
 

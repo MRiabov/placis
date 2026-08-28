@@ -1,17 +1,17 @@
 # Website HTTP
 
-Conventions: [HTTP conventions](../../general-architecture/api.md). Unpublished website,
-website assistant, website publication, Connect website address. Field authority for
-the website-editor PATCH body remains [editing.md](editing.md); this file locks the routes.
+Conventions: [HTTP conventions](../../general-architecture/api.md). Unpublished website, website assistant, website
+publication, Connect website address. Field authority for the website-editor
+PATCH body remains [editing.md](editing.md); this file locks the routes.
 
-Live business profile: [details](../business-profile/details/api.md). Projects:
-[projects](../business-profile/projects/api.md). Media library:
+Live business profile: [details](../business-profile/details/api.md). Projects: [projects](../business-profile/projects/api.md). Media library:
 [media library](../other/media/api.md). Website form submit: [leads](../other/leads/api.md).
 
-Live HTML GET on `{website_prefix}.preview.placis.com` never calls Go. **Do not create**
-`/v1/public/site/…` (including leftover resolve). Website publication writes R2 through an
-authenticated internal render (not public OpenAPI) — that is not a live GET and not leftover
-`/preview/{token}/`. Website form POST is [leads](../other/leads/api.md).
+Live HTML GET on `{website_prefix}.preview.placis.com` never calls Go.
+**Do not create** `/v1/public/site/…` (including leftover resolve). Website
+publication writes R2 through an authenticated internal render (not public
+OpenAPI) — that is not a live GET and not leftover `/preview/{token}/`. Website
+form POST is [leads](../other/leads/api.md).
 
 ## Serve only types on HTTP
 
@@ -29,19 +29,21 @@ authenticated internal render (not public OpenAPI) — that is not a live GET an
 
 ## Complete — unpublished website
 
-CMS unpublished `website_*` / `website.menus` / `website_settings` writes are only `POST` /
-`PATCH` on `/v1/website/editor/…` from `frontend-2`. No other `/v1` route upserts those rows.
-Onboarding 05/06 write them in River, not via these routes.
+CMS unpublished `website_*` / `website.menus` / `website_settings` writes are
+only `POST` / `PATCH` on `/v1/website/editor/…` from `frontend-2`. No other
+`/v1` route upserts those rows. Onboarding 05/06 write them in River, not via
+these routes.
 
 ### GET /v1/website/editor/pages
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** website editor workspace (website page list).
-- **Query:** optional `publication_id` (`website_publications` id from the dropdown). Omitted:
-  unpublished list (`status=unpublished`). Set: that owner website version’s page summaries.
-  `409` if `published_by=onboarding` or the id is not an owner row.
-- **Response:** list of website page `*Read` summaries (id, path, title, `page_type`,
-  status).
+- **Query:** optional `publication_id` (`website_publications` id from the
+  dropdown). Omitted: unpublished list (`status=unpublished`). Set: that owner
+  website version’s page summaries. `409` if `published_by=onboarding` or the id
+  is not an owner row.
+- **Response:** list of website page `*Read` summaries (id, path, title,
+  `page_type`, status).
 
 ### POST /v1/website/editor/pages
 
@@ -53,42 +55,46 @@ Onboarding 05/06 write them in River, not via these routes.
 ### GET /v1/website/editor/pages/{page_id}
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** canvas hydrate (once per website page select / reload). Reset to an owner
-  website version: same GET, then PATCH dirty keys ([editing.md](editing.md)).
-- **Query:** optional `publication_id` (`website_publications` id). Omitted: unpublished
-  `*Read`. Set: that owner website version’s `*Read`. `409` if `published_by=onboarding` or
-  the id is not an owner row. `404` if `page_id` is not in that website version. Do not send
-  `include_edit_history` with `publication_id` (`400`). `include_edit_history=true` only on
-  unpublished open hydrate or after `409 edit_history_conflict`. Switching website page: both
+- **Callers:** canvas hydrate (once per website page select / reload). Reset to
+  an owner website version: same GET, then PATCH dirty keys ([editing.md](editing.md)).
+- **Query:** optional `publication_id` (`website_publications` id). Omitted:
+  unpublished `*Read`. Set: that owner website version’s `*Read`. `409` if
+  `published_by=onboarding` or the id is not an owner row. `404` if `page_id` is
+  not in that website version. Do not send `include_edit_history` with
+  `publication_id` (`400`). `include_edit_history=true` only on unpublished open
+  hydrate or after `409 edit_history_conflict`. Switching website page: both
   queries off.
-- **Response:** website page `*Read`: `path`, `title`, `page_type`, `status`, SEO
-  columns (`seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
-  `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`), `validation`,
-  unpublished `blockers[]` (`code`, `message`, jump target — website section in Content, or
-  `/cms/media`). **Compute realtime; do not persist** (not `website_publication_issues`).
-  `publication.has_unpublished_changes` (unpublished vs
-  live, even when `publication_id` is set), sections with catalog-discriminated
-  `props` / `design` / `value`. Embeds tenant-scoped website styles, top menu, footer, and
-  website forms so the canvas can paint. May embed display name / marketing phone for website
-  placeholders; Details owns those writes. Reviews website sections include that section’s
-  ordered pool ids (`website_slot_reviews`), not the ads **top reviews** list. Pool cards for
-  Content “add from the pool” come from Details `GET /v1/business-profile/reviews`.
+- **Response:** website page `*Read`: `path`, `title`, `page_type`, `status`,
+  SEO columns (`seo_title`, `seo_description`, `seo_og_title`,
+  `seo_og_description`, `seo_canonical_url`, `seo_noindex`,
+  `seo_primary_keyword`), `validation`, unpublished `blockers[]` (`code`,
+  `message`, jump target — website section in Content, or `/cms/media`).
+  **Compute realtime; do not persist** (not `website_publication_issues`).
+  `publication.has_unpublished_changes` (unpublished vs live, even when
+  `publication_id` is set), sections with catalog-discriminated `props` /
+  `design` / `value`. Embeds tenant-scoped website styles, top menu, footer, and
+  website forms so the canvas can paint. May embed display name / marketing
+  phone for website placeholders; Details owns those writes. Reviews website
+  sections include that section’s ordered pool ids (`website_slot_reviews`), not
+  the ads **top reviews** list. Pool cards for Content “add from the pool” come
+  from Details `GET /v1/business-profile/reviews`.
 - **Must not:** `/pages/{id}/seo` as a separate route; `slot_type=json`; return
   `website_manifest`.
 
 ### PATCH /v1/website/editor/pages/{page_id}
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** website editor. At most one PATCH in flight; 500ms coalesce of save-on-click-off
-  and discrete actions ([editing.md](editing.md)).
+- **Callers:** website editor. At most one PATCH in flight; 500ms coalesce of
+  save-on-click-off and discrete actions ([editing.md](editing.md)).
 - **Idempotency-Key:** yes.
-- **Request:** `base_edit_history_head` plus **dirty keys only** — per-section / per-slot, dirty
-  page metadata (title, path, SEO, `status` `unpublished`/`archived`), website form patches,
-  section create/swap/visibility/design, `ordered_section_ids[]`, and a reviews website
-  section’s ordered `review_ids[]` (from the pool, length ≤ that website component’s max;
-  over max is `400`). Archive of a website page strips that page node from `website.menus`
-  ([persistence.md](persistence.md)). Body cap 64 KB. Image website
-  slots send a media library item id, not the file. Example:
+- **Request:** `base_edit_history_head` plus **dirty keys only** — per-section /
+  per-slot, dirty page metadata (title, path, SEO, `status`
+  `unpublished`/`archived`), website form patches, section
+  create/swap/visibility/design, `ordered_section_ids[]`, and a reviews website
+  section’s ordered `review_ids[]` (from the pool, length ≤ that website
+  component’s max; over max is `400`). Archive of a website page strips that
+  page node from `website.menus` ([persistence.md](persistence.md)). Body cap 64 KB. Image
+  website slots send a media library item id, not the file. Example:
 
 ```json
 { "base_edit_history_head": "<uuid>", "sections": [
@@ -98,88 +104,101 @@ Onboarding 05/06 write them in River, not via these routes.
 ] }
 ```
 
-- **Response:** `{ edit_history_head, batch_id }` plus assigned ids on create. No GET-after-PATCH.
-  Do not round-trip the `*Read`.
+- **Response:** `{ edit_history_head, batch_id }` plus assigned ids on create.
+  No GET-after-PATCH. Do not round-trip the `*Read`.
 - **Errors:** `409 edit_history_conflict`, `413`, `429` with `Retry-After`.
-- **Must not:** predecessor `POST …/sections`, `PATCH …/sections/order`, `DELETE …/sections/{id}`,
-  `POST …/slots/{key}/asset` — those edits are fields on this body. Top menu / footer are
-  `/menus`, not this body.
+- **Must not:** predecessor `POST …/sections`, `PATCH …/sections/order`,
+  `DELETE …/sections/{id}`, `POST …/slots/{key}/asset` — those edits are fields
+  on this body. Top menu / footer are `/menus`, not this body.
 
 ### GET /v1/website/editor/settings / PATCH /v1/website/editor/settings
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** website styles workspace. **Explicit apply**, not save on click-off.
-- **GET query:** optional `publication_id` (same as page GET). Same `409` / `400` as page GET.
+- **Callers:** website styles workspace. **Explicit apply**, not save on
+  click-off.
+- **GET query:** optional `publication_id` (same as page GET). Same `409` /
+  `400` as page GET.
 - **PATCH Idempotency-Key:** yes.
-- **PATCH request:** `base_edit_history_head` plus dirty named website styles (`preset_id`,
-  `primary`, `neutral`, `accent`, `radius`, `density`). Extra keys 4xx. Logo is not on this
-  body — `logo_media_asset_id` on Details. Publication may emit a URL only from that media library file.
-- **PATCH response:** `{ edit_history_head, batch_id }`. Same `409 edit_history_conflict` as
-  the website page PATCH.
+- **PATCH request:** `base_edit_history_head` plus dirty named website styles
+  (`preset_id`, `primary`, `neutral`, `accent`, `radius`, `density`). Extra keys
+  4xx. Logo is not on this body — `logo_media_asset_id` on Details. Publication
+  may emit a URL only from that media library file.
+- **PATCH response:** `{ edit_history_head, batch_id }`. Same
+  `409 edit_history_conflict` as the website page PATCH.
 
 ### GET /v1/website/editor/menus / PATCH /v1/website/editor/menus
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** top menu and footer tree editors. One resource — one `website.menus` row
-  (`top_menu`, `footer`, `show_phone`, `show_email`, `show_contact`).
-- **GET query:** optional `publication_id` (same as page GET). Same `409` / `400` as page GET.
+- **Callers:** top menu and footer tree editors. One resource — one
+  `website.menus` row (`top_menu`, `footer`, `show_phone`, `show_email`,
+  `show_contact`).
+- **GET query:** optional `publication_id` (same as page GET). Same `409` /
+  `400` as page GET.
 - **PATCH Idempotency-Key:** yes.
-- **Request:** `base_edit_history_head` plus dirty keys only (`top_menu` and/or `footer`
-  and/or `show_phone` / `show_email` / `show_contact`). Extra keys 4xx.
-- **Response:** `{ edit_history_head, batch_id }`. Same `409 edit_history_conflict` as the
+- **Request:** `base_edit_history_head` plus dirty keys only (`top_menu` and/or
+  `footer` and/or `show_phone` / `show_email` / `show_contact`). Extra keys 4xx.
+- **Response:** `{ edit_history_head, batch_id }`. Same
+  `409 edit_history_conflict` as the website page PATCH.
+- **Must not:** `/top-menu` or `/footer` as peer routes; menus fields on the
   website page PATCH.
-- **Must not:** `/top-menu` or `/footer` as peer routes; menus fields on the website page PATCH.
 
 ### GET /v1/website/editor/urls / POST /v1/website/editor/urls
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** top menu / footer URL combobox (Existing URLs / type to create).
 - **POST Idempotency-Key:** yes.
-- **Request:** `href` (URL, `maxLength` 2048), optional `label` (`maxLength` 80).
+- **Request:** `href` (URL, `maxLength` 2048), optional `label` (`maxLength`
+  80).
 - **Must not:** create a website page; `POST /pages` from this picker.
 
 ## Complete — website assistant
 
-One in-flight run per tenant (includes onboarding website copy generation). Tools never do
-website publication. CMS unpublished writes are the existing website page PATCH and `/menus`
-— not a second apply path. The website editor owns the working copy: Apply mutates the
-in-memory projection, then copy-out is the ordinary PATCH (`ai_generation_id` on those dirty
-keys so `edit_history` is `edited_by=agent`). Instant apply PATCHes as tools succeed. Ask first
-**Apply** / **Reject** only `record-apply` / `record-reject` (activity metadata).
+One in-flight run per tenant (includes onboarding website copy generation).
+Tools never do website publication. CMS unpublished writes are the existing
+website page PATCH and `/menus` — not a second apply path. The website editor
+owns the working copy: Apply mutates the in-memory projection, then copy-out is
+the ordinary PATCH (`ai_generation_id` on those dirty keys so `edit_history` is
+`edited_by=agent`). Instant apply PATCHes as tools succeed. Ask first **Apply**
+/ **Reject** only `record-apply` / `record-reject` (activity metadata).
 
-Onboarding 06 is the exception: the River job writes unpublished rows headless (no
-`frontend-2`). While 06 is in flight, CMS PATCH and this assistant POST are `409`.
+Onboarding 06 is the exception: the River job writes unpublished rows headless
+(no `frontend-2`). While 06 is in flight, CMS PATCH and this assistant POST are
+`409`.
 
-**Thread:** one per tenant, not per website page. `GET` hydrates on `/cms/website` open.
-Retain if last **assistant edit** within 24 hours; else clear. **Clear context** = new thread
-immediately. Never return `ai_generations` blobs. In-flight run on reload: that run finishes
-or fails. `POST …/assistant/cancel` stays **do not create**.
+**Thread:** one per tenant, not per website page. `GET` hydrates on
+`/cms/website` open. Retain if last **assistant edit** within 24 hours; else
+clear. **Clear context** = new thread immediately. Never return `ai_generations`
+blobs. In-flight run on reload: that run finishes or fails.
+`POST …/assistant/cancel` stays **do not create**.
 
 ### GET /v1/website/editor/assistant
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** `/cms/website` open (hydrate). Website versions rail may show this thread’s
-  activity next to publications (same resource). Rollback still only on publication rows.
-- **Response:** current thread turns (`owner` / `reply` / `activity` with `summary`). Empty
-  thread if none or past retention.
+- **Callers:** `/cms/website` open (hydrate). Website versions rail may show
+  this thread’s activity next to publications (same resource). Rollback still
+  only on publication rows.
+- **Response:** current thread turns (`owner` / `reply` / `activity` with
+  `summary`). Empty thread if none or past retention.
 
 ### POST /v1/website/editor/assistant
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** website assistant chat in `frontend-2`. Onboarding 06 does not call this POST
-  (River writes unpublished rows headless).
+- **Callers:** website assistant chat in `frontend-2`. Onboarding 06 does not
+  call this POST (River writes unpublished rows headless).
 - **Idempotency-Key:** yes.
-- **Request:** plan vs continuous; Ask first vs instant apply; **Follow** (`follow`, boolean,
-  default `false`). Plan text is `string` + `maxLength`. `follow: true` is refused (`4xx`);
-  the owner cannot turn Follow on.
-- **Response:** named activity / tool event structs. Proposed unpublished-website edits, not
-  applied website rows. `update_details` is the exception: it writes the live business profile
-  immediately (`update_details` — one shared tool), then the shared notification. Each
-  tool event has `summary` (`string` + `maxLength`): the owner line, backend-constructed
-  ([assistant.md](assistant.md)). The UI renders `summary` only. Never render `action` /
-  tool names (`update_slot`, …). Icon is from a closed kind: write = pencil, thinking =
-  lightbulb. There is no search/grep tool.
-- **Must not:** return `ai_generations` blobs; write unpublished rows from this POST in the CMS.
+- **Request:** plan vs continuous; Ask first vs instant apply; **Follow**
+  (`follow`, boolean, default `false`). Plan text is `string` + `maxLength`.
+  `follow: true` is refused (`4xx`); the owner cannot turn Follow on.
+- **Response:** named activity / tool event structs. Proposed
+  unpublished-website edits, not applied website rows. `update_details` is the
+  exception: it writes the live business profile immediately (`update_details` —
+  one shared tool), then the shared notification. Each tool event has `summary`
+  (`string` + `maxLength`): the owner line, backend-constructed
+  ([assistant.md](assistant.md)). The UI renders `summary` only. Never render `action` / tool
+  names (`update_slot`, …). Icon is from a closed kind: write = pencil,
+  thinking = lightbulb. There is no search/grep tool.
+- **Must not:** return `ai_generations` blobs; write unpublished rows from this
+  POST in the CMS.
 
 ### POST /v1/website/editor/assistant/clear
 
@@ -191,78 +210,86 @@ or fails. `POST …/assistant/cancel` stays **do not create**.
 
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
-- **Callers:** Ask first **Apply** after the website editor PATCHed (or queued) the dirty keys.
-- **Request:** metadata only (`ai_generation_id` of the pending batch). No unpublished payload,
-  no `base_edit_history_head` — the PATCH already took the head.
-- **Behavior:** activity card terminal. **Must not** upsert website pages / sections / slots /
-  menus and **must not** append `edit_history`. Second transition `409`. **No revert.**
+- **Callers:** Ask first **Apply** after the website editor PATCHed (or queued)
+  the dirty keys.
+- **Request:** metadata only (`ai_generation_id` of the pending batch). No
+  unpublished payload, no `base_edit_history_head` — the PATCH already took the
+  head.
+- **Behavior:** activity card terminal. **Must not** upsert website pages /
+  sections / slots / menus and **must not** append `edit_history`. Second
+  transition `409`. **No revert.**
 
 ### POST /v1/website/editor/assistant/record-reject
 
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
-- **Callers:** Ask first **Reject**. The website editor drops pending edits in memory; no PATCH.
+- **Callers:** Ask first **Reject**. The website editor drops pending edits in
+  memory; no PATCH.
 - **Request:** metadata only (`ai_generation_id`).
-- **Behavior:** activity card terminal. **Must not** write unpublished rows or `edit_history`.
-  Second transition `409`.
+- **Behavior:** activity card terminal. **Must not** write unpublished rows or
+  `edit_history`. Second transition `409`.
 
 ## Complete — website publication and Connect website address
 
-Onboarding 07/08 also write `website_publications` (`published_by=onboarding`). Those rows are
-not this CMS POST. They are never website-rollback targets.
+Onboarding 07/08 also write `website_publications` (`published_by=onboarding`).
+Those rows are not this CMS POST. They are never website-rollback targets.
 
 ### GET /v1/website/publications / POST /v1/website/publications
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** website publication dropdown (whole website, not per website page).
+- **Callers:** website publication dropdown (whole website, not per website
+  page).
 - **POST Idempotency-Key:** yes.
-- **POST request:** `website_address_id` (the host row they clicked). Writes that host’s R2
-  tree and purges **that** host. Hosts can diverge.
+- **POST request:** `website_address_id` (the host row they clicked). Writes
+  that host’s R2 tree and purges **that** host. Hosts can diverge.
 - **POST:** `published_by=owner`.
-- **GET list:** metadata `*Read` (`version_number`, `status`, `active`, `published_by`,
-  `website_address_id`, times).
-  **Omit** `website_manifest`. Rollback UI uses `published_by=owner` only — omit onboarding
-  07/08 and 05-retry rows.
+- **GET list:** metadata `*Read` (`version_number`, `status`, `active`,
+  `published_by`, `website_address_id`, times). **Omit** `website_manifest`.
+  Rollback UI uses `published_by=owner` only — omit onboarding 07/08 and
+  05-retry rows.
 
 ### POST /v1/website/publications/{id}/rollback
 
 - **Auth:** Clerk JWT, active tenant
 - **Idempotency-Key:** yes.
 - **Callers:** website publication dropdown — **live** website rollback.
-- **Behavior:** copy that owner website version onto **that host’s** `latest/`, purge that
-  host. `409` if
-  `published_by=onboarding` or the id is not an owner row. Does not rewrite unpublished
-  website rows.
-- **Response:** that publication `*Read` (`active=true`, `version_number`, times). The
-  dropdown updates from this body — no extra GET required.
+- **Behavior:** copy that owner website version onto **that host’s** `latest/`,
+  purge that host. `409` if `published_by=onboarding` or the id is not an owner
+  row. Does not rewrite unpublished website rows.
+- **Response:** that publication `*Read` (`active=true`, `version_number`,
+  times). The dropdown updates from this body — no extra GET required.
 
 ### GET /v1/website/addresses / POST /v1/website/addresses
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** publication dropdown (list hosts) and Connect website address modal.
-- **GET:** `type=subdomain` (preview website address; reserved at onboarding 07 — this GET does
-  not create it) and `type=custom` (website addresses they connected).
-- **POST:** Connect website address only (`type=custom`, hostname they supply, e.g. `acme.ie`).
-  Does not reserve `tenants.website_prefix` or insert `type=subdomain`. Website publication
-  does not attach a website address.
+- **Callers:** publication dropdown (list hosts) and Connect website address
+  modal.
+- **GET:** `type=subdomain` (preview website address; reserved at onboarding 07
+  — this GET does not create it) and `type=custom` (website addresses they
+  connected).
+- **POST:** Connect website address only (`type=custom`, hostname they supply,
+  e.g. `acme.ie`). Does not reserve `tenants.website_prefix` or insert
+  `type=subdomain`. Website publication does not attach a website address.
 - **POST Idempotency-Key:** yes.
 
 ### GET /v1/website/addresses/{id}
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** poll a connected website address until `active`.
-- **Response:** hostname, type, status, DNS rows (type, Host, Value; copyable). No GoDaddy/nameserver mutation.
+- **Response:** hostname, type, status, DNS rows (type, Host, Value; copyable).
+  No GoDaddy/nameserver mutation.
 
 ### POST /v1/voice/realtime-connection
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** website-editor canvas orb; Ads product guide orb. Onboarding **client interview**
-  voice is out; onboarding **guide** assistant (talk through the current onboarding screen) is
-  in — that guide uses this same short-lived secret shape.
+- **Callers:** website-editor canvas orb; Ads product guide orb. Onboarding
+  **client interview** voice is out; onboarding **guide** assistant (talk
+  through the current onboarding screen) is in — that guide uses this same
+  short-lived secret shape.
 - **Idempotency-Key:** yes.
 - **Behavior:** short-lived realtime connection secret; audio bypasses Go
-  ([voice-agent.md](../../general-architecture/voice-agent.md)). Same governed tools as text on
-  that surface. Cannot website-publish.
+  ([voice-agent.md](../../general-architecture/voice-agent.md)). Same governed tools as text on that surface. Cannot
+  website-publish.
 
 ## Do not create
 
@@ -272,19 +299,22 @@ not this CMS POST. They are never website-rollback targets.
 - `POST /v1/website/addresses` with `type=subdomain` (reserved at 07)
 - blueprints, posts, careers
 - `/undo` `/redo` `/edit-history`
-- `POST /v1/website/publications/{id}/restore-unpublished` (editor GET `publication_id`, then PATCH)
+- `POST /v1/website/publications/{id}/restore-unpublished` (editor GET
+  `publication_id`, then PATCH)
 - `GET /v1/website/publications/{id}/pages` (use editor GET `publication_id`)
 - `/v1/website/editor/top-menu`, `/v1/website/editor/footer` (use `/menus`)
-- `assistant/apply`, `assistant/reject` that write unpublished rows (use `record-apply` /
-  `record-reject` + PATCH)
+- `assistant/apply`, `assistant/reject` that write unpublished rows (use
+  `record-apply` / `record-reject` + PATCH)
 - assistant/revert
 - per-website-page website publication
-- `POST …/pages/{id}/sections`, `PATCH …/sections/order`, `DELETE …/sections/{id}`,
-  `POST …/slots/{key}/asset`
+- `POST …/pages/{id}/sections`, `PATCH …/sections/order`,
+  `DELETE …/sections/{id}`, `POST …/slots/{key}/asset`
 - `POST …/pages/{page_id}/assistant` (moved to `/v1/website/editor/assistant`)
 - `POST …/assistant/cancel` (the run ends when it finishes or fails)
-- Don't say session: `realtime-voice-session` as a path name (use `/v1/voice/realtime-connection`)
+- Don't say session: `realtime-voice-session` as a path name (use
+  `/v1/voice/realtime-connection`)
 - `content-contract` as an HTTP resource (website component catalog files)
 - `/certification-selections` (certifications live on [details](../business-profile/details/api.md))
-- `/v1/website/editor/assets`, `/v1/website/editor/files/…` (media library owns upload)
+- `/v1/website/editor/assets`, `/v1/website/editor/files/…` (media library owns
+  upload)
 - `/v1/website/editor/business-profile` (Details owns `/v1/business-profile`)

@@ -2,13 +2,13 @@
 
 ## Purpose
 
-Use for image-led leadership or team proof sections where individual people need portraits, roles,
-and short biographies.
+Use for image-led leadership or team proof sections where individual people need
+portraits, roles, and short biographies.
 
 ## Best Fit
 
-About pages, founder pages, leadership profiles, advisory teams, and partner rosters with sourced
-headshots.
+About pages, founder pages, leadership profiles, advisory teams, and partner
+rosters with sourced headshots.
 
 ## Avoid
 

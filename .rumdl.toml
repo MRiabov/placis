@@ -1,0 +1,20 @@
+[global]
+flavor = "standard"
+line-length = 80
+exclude = [".agents/**", "**/testdata/**"]
+extend-enable = ["MD060"]
+# Relative-link existence (MD057) is off: many first-party docs have pre-existing
+# wrong `../` depths. Re-enable when those links are fixed.
+disable = ["MD057"]
+
+[MD013]
+line-length = 80
+reflow = true
+reflow-mode = "default"
+code-blocks = false
+tables = false
+reflow-length-exemptions = true
+
+[MD060]
+style = "compact"
+aligned-delimiter = false
