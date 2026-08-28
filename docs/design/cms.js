@@ -1,6 +1,6 @@
 /* Mock-only scene wiring for cms.html. Not product UI.
-   Combo, hours picker, featured services, and service-area territories:
-   details-fields.js (loaded first). */
+   Combo, hours picker, featured services, service-area territories, and the
+   yellow strip: details-fields.js (loaded first). */
 
 const params = new URLSearchParams(location.search);
 const frame = document.getElementById("frame");
@@ -461,19 +461,6 @@ function syncCollapsed() {
   if (!collapsed && profileToggle.getAttribute("aria-expanded") === "true") {
     profileChildren.classList.remove("is-hidden");
   }
-}
-
-function setViewtabsCollapsed(collapsed) {
-  const tabs = document.getElementById("viewtabs");
-  const open = document.getElementById("viewtabsOpen");
-  tabs?.classList.toggle("is-hidden", collapsed);
-  open?.classList.toggle("is-hidden", !collapsed);
-}
-
-function preferViewtabsCollapsed() {
-  if (params.get("shot") === "1") return true;
-  if (params.get("dev") === "1") return false;
-  return true;
 }
 
 function preferAssistantExpanded() {
@@ -992,13 +979,7 @@ document.getElementById("cmsNotification")?.addEventListener("click", (event) =>
   if (mic && button.id === "cmsNoticePrimary") restoreChatbot();
   setNotify(false);
 });
-document.getElementById("viewtabsCollapse")?.addEventListener("click", () => setViewtabsCollapsed(true));
-document.getElementById("viewtabsOpen")?.addEventListener("click", () => setViewtabsCollapsed(false));
 
-if (params.get("shot") === "1") {
-  document.body.classList.add("is-shot");
-}
-setViewtabsCollapsed(preferViewtabsCollapsed());
 ensureHiddenMarks();
 ensureToolIcons();
 document.querySelectorAll(".cms-nav-link-row[data-kind]").forEach(hydrateNavRow);
@@ -1238,4 +1219,6 @@ function bindMediaFraming() {
 bindMediaLibrary();
 bindMediaFraming();
 if (params.get("cleanup") === "1") setMediaCleanup(true);
+
+window.__SCREENSHOT_READY = true;
 
