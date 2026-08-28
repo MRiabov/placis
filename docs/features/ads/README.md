@@ -13,7 +13,7 @@ services) into a reviewable, exportable ad set. This doc is the overview; the
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
 - [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](ad-generation/testing.md) — the ads E2E test
-- [design/ads-workspace.html](ad-generation/design/ads-workspace.html) — static design mock
+- [ads.html](../../design/ads.html) — static design mock
 - [ad-application/meta](ad-application/meta/) — investigation for future ad posting to Meta (not the spec)
 
 ## Positioning (done-for-you + DIY)
