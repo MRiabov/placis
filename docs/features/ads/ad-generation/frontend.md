@@ -296,7 +296,9 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
   spend, we expect X more ad leads in the next 30 days."
 - **Ad leads** — ad leads from this ad's ad lead form submissions: name,
   contact, service; **uncontacted ad leads are clearly labelled in urgent red**;
-  contacted ones are muted. This is in scope, not deferred.
+  contacted ones are muted. Dividers between rows only — the last ad lead has
+  no bottom line ([look](design-decision-record.md) 2). This is in scope, not
+  deferred.
 - **Audience** — the ideal customer profile with the "steers tone/imagery,
   targeting comes with ad posting" note. Audience-match detection ("are we
   hitting the right audience?") is **disabled/deferred**.

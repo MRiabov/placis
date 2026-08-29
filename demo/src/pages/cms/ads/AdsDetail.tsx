@@ -205,7 +205,7 @@ export function AdsDetail(): ReactNode {
                   ["Declan Byrne", "085 999 8877 · Gutter cleaning", true],
                 ].map(([who, meta, uncontacted]) => (
                   <div
-                    className="flex items-center justify-between gap-2 border-b border-border py-2 text-sm"
+                    className="flex items-center justify-between gap-2 border-b border-border py-2 text-sm last:border-b-0"
                     key={String(who)}
                   >
                     <span>
