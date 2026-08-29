@@ -4,7 +4,6 @@ import { type ReactNode, useState } from "react";
 import { DevStrip } from "@/dev/DevStrip";
 import { cn } from "@/lib/cn";
 import {
-  demoFlags,
   listSearch,
   projectRows,
   projectSearch,
@@ -122,7 +121,7 @@ export function ProjectsPage(): ReactNode {
               className="ml-auto"
               onClick={() => {
                 void navigate({
-                  search: demoFlags(search),
+                  search: projectSearch({}, search),
                   to: "/cms/projects/new",
                 });
               }}

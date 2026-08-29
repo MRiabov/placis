@@ -147,27 +147,44 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
         <div className="mt-6 grid max-w-xl gap-5">
           <Field label="Cover">
             <div className="grid max-w-md gap-2.5">
-              <div className="h-44 overflow-hidden rounded-[18px] bg-zinc-100">
-                {cover ? (
+              {cover ? (
+                <button
+                  aria-expanded={picker}
+                  aria-label={caption || "Cover"}
+                  className="h-44 overflow-hidden rounded-[18px] bg-zinc-100"
+                  onClick={() => setPicker((value) => !value)}
+                  type="button"
+                >
                   <img
                     alt=""
                     className="size-full object-cover object-[50%_32%]"
                     src={cover}
                   />
-                ) : null}
-              </div>
+                </button>
+              ) : (
+                <button
+                  aria-expanded={picker}
+                  className="grid h-44 place-items-center rounded-[18px] border border-dashed border-stone-300 px-4 text-sm text-muted-foreground"
+                  onClick={() => setPicker((value) => !value)}
+                  type="button"
+                >
+                  Pick from the media library
+                </button>
+              )}
               {caption ? (
                 <p className="text-[11px] leading-snug text-muted-foreground">
                   {caption}
                 </p>
               ) : null}
-              <Button
-                className="justify-self-start"
-                onClick={() => setPicker((value) => !value)}
-                variant="outline"
-              >
-                Pick from the media library
-              </Button>
+              {cover ? (
+                <Button
+                  className="justify-self-start"
+                  onClick={() => setPicker((value) => !value)}
+                  variant="outline"
+                >
+                  Pick from the media library
+                </Button>
+              ) : null}
               {picker ? (
                 <div className="grid grid-cols-2 gap-2">
                   <button
@@ -198,6 +215,7 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
                       onClick={() => {
                         setCover(item.src);
                         setCaption(item.caption);
+                        setPicker(false);
                       }}
                       style={{ backgroundImage: `url(${item.src})` }}
                       type="button"
@@ -210,6 +228,7 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
                       const file = event.target.files?.[0];
                       if (file) {
                         addCoverFile(file);
+                        setPicker(false);
                       }
                       event.target.value = "";
                     }}
