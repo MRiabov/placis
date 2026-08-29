@@ -42,6 +42,10 @@ One number is one decision.
    on one row at iPhone SE width. The name ellipsizes; Change does not wrap
    under the copy while the row has unused width. (2026-08-28)
 
+   (2026-08-29): Rating is Google-style: score, stars, then the review count in
+   parentheses. If that line is too long, the count nests under the stars. It
+   does not wrap word-by-word beside them.
+
 6. **Service areas are an addable Google Maps list** — Each row is a territory
    plus radius. **Add service area** opens the Google Maps dropdown; it does not
    sit as a second copy of the selected name. Search existing places; no
