@@ -112,121 +112,135 @@ export function AdsDetail(): ReactNode {
               </span>
             </div>
           </div>
-          <div className="grid gap-6 pt-4 min-[801px]:grid-cols-2 min-[801px]:p-4">
-            <div className="grid gap-4">
-              <div>
-                <b className="text-sm">Images</b>
-                <p className="mb-2 text-xs text-muted-foreground">
-                  This ad uses one photo. Edit to pick a different one.
-                </p>
-                <div
-                  className="h-[200px] rounded-xl bg-cover bg-[position:50%_32%] min-[721px]:h-[280px]"
-                  style={{ backgroundImage: `url("${ad.image}")` }}
-                />
-              </div>
-              <div>
-                <b className="text-sm">Budget</b>
-                <p className="mb-2 text-xs text-muted-foreground">
-                  Disabled until ad posting is connected.
-                </p>
-                <div className="grid items-start gap-3 sm:grid-cols-2">
-                  <Field label="Daily budget">
-                    <TextInput className="h-11" disabled value="€15" />
-                  </Field>
-                  <Field label="Duration">
-                    <TextInput
-                      className="h-11 py-0"
-                      disabled
-                      lang="en-IE"
-                      min={startIso}
-                      onChange={(event) => setEndIso(event.target.value)}
-                      type="date"
-                      value={endIso}
-                    />
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      <b className="text-foreground">{left}</b> (
-                      {monthDay(startIso)} to {monthDay(endIso)})
-                    </p>
-                  </Field>
+          <div className="grid gap-6 pt-4 min-[801px]:p-4">
+            <div className="grid gap-6 min-[801px]:grid-cols-2">
+              <div className="grid gap-4">
+                <div>
+                  <b className="text-sm">Images</b>
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    This ad uses one photo. Edit to pick a different one.
+                  </p>
+                  <div
+                    className="h-[200px] rounded-xl bg-cover bg-[position:50%_32%] min-[721px]:h-[280px]"
+                    style={{ backgroundImage: `url("${ad.image}")` }}
+                  />
+                </div>
+                <div>
+                  <b className="text-sm">Budget</b>
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    Disabled until ad posting is connected.
+                  </p>
+                  <div className="grid items-start gap-3 sm:grid-cols-2">
+                    <Field label="Daily budget">
+                      <TextInput className="h-11" disabled value="€15" />
+                    </Field>
+                    <Field label="Duration">
+                      <TextInput
+                        className="h-11 py-0"
+                        disabled
+                        lang="en-IE"
+                        min={startIso}
+                        onChange={(event) => setEndIso(event.target.value)}
+                        type="date"
+                        value={endIso}
+                      />
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        <b className="text-foreground">{left}</b> (
+                        {monthDay(startIso)} to {monthDay(endIso)})
+                      </p>
+                    </Field>
+                  </div>
+                </div>
+                <div>
+                  <b className="text-sm">Audience</b>
+                  <p className="text-xs text-muted-foreground">
+                    Not editable yet.
+                  </p>
+                  <p className="text-sm">Married couples, 30–40</p>
+                </div>
+                <div>
+                  <b className="text-sm">Area</b>
+                  <p className="text-xs text-muted-foreground">
+                    Not editable yet.
+                  </p>
+                  <p className="text-sm">Kildare area</p>
                 </div>
               </div>
-              <div>
-                <b className="text-sm">Audience</b>
-                <p className="text-xs text-muted-foreground">
-                  Not editable yet.
-                </p>
-                <p className="text-sm">Married couples, 30–40</p>
-              </div>
-              <div>
-                <b className="text-sm">Area</b>
-                <p className="text-xs text-muted-foreground">
-                  Not editable yet.
-                </p>
-                <p className="text-sm">Kildare area</p>
-              </div>
-            </div>
-            <div className="grid gap-4">
-              <div>
-                <b className="text-sm">Performance</b>
-                <p className="mb-2 text-xs text-muted-foreground">
-                  Appears once ad posting is connected.
-                </p>
-                <div className="flex flex-wrap gap-6 grayscale opacity-45">
+              <div className="grid gap-4">
+                <div>
+                  <b className="text-sm">Performance</b>
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    Appears once ad posting is connected.
+                  </p>
+                  <div className="flex flex-wrap gap-6 grayscale opacity-45">
+                    {[
+                      "Impressions",
+                      "Clicks",
+                      "Spend",
+                      "Results",
+                      "Cost per ad lead",
+                    ].map((label) => (
+                      <div key={label}>
+                        <span className="block text-xs text-muted-foreground">
+                          {label}
+                        </span>
+                        <b className="block text-lg font-semibold tracking-tight">
+                          —
+                        </b>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    At this spend, we expect <b>—</b> more ad leads in the next
+                    30 days.
+                  </p>
+                </div>
+                <div>
+                  <b className="text-sm">Ad leads</b>
+                  <p className="mb-2 text-xs text-muted-foreground">
+                    Ad leads from this ad — uncontacted ones are marked.
+                  </p>
                   {[
-                    "Impressions",
-                    "Clicks",
-                    "Spend",
-                    "Results",
-                    "Cost per ad lead",
-                  ].map((label) => (
-                    <div key={label}>
-                      <span className="block text-xs text-muted-foreground">
-                        {label}
+                    ["John Murphy", "087 123 4567 · Roofing replacement", true],
+                    ["Anne Doyle", "086 222 3344 · Roof repair", false],
+                    ["Declan Byrne", "085 999 8877 · Gutter cleaning", true],
+                  ].map(([who, meta, uncontacted]) => (
+                    <div
+                      className="flex items-center justify-between gap-2 border-b border-border py-2 text-sm last:border-b-0"
+                      key={String(who)}
+                    >
+                      <span>
+                        <b className="block">{who}</b>
+                        <span className="text-xs text-muted-foreground">
+                          {meta}
+                        </span>
                       </span>
-                      <b className="block text-lg font-semibold tracking-tight">
-                        —
-                      </b>
+                      <span
+                        className={
+                          uncontacted
+                            ? "rounded-lg border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs text-amber-800"
+                            : "rounded-lg border border-border px-2 py-0.5 text-xs"
+                        }
+                      >
+                        {uncontacted ? "Uncontacted" : "Contacted"}
+                      </span>
                     </div>
                   ))}
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  At this spend, we expect <b>—</b> more ad leads in the next 30
-                  days.
-                </p>
-              </div>
-              <div>
-                <b className="text-sm">Ad leads</b>
-                <p className="mb-2 text-xs text-muted-foreground">
-                  Ad leads from this ad — uncontacted ones are marked.
-                </p>
-                {[
-                  ["John Murphy", "087 123 4567 · Roofing replacement", true],
-                  ["Anne Doyle", "086 222 3344 · Roof repair", false],
-                  ["Declan Byrne", "085 999 8877 · Gutter cleaning", true],
-                ].map(([who, meta, uncontacted]) => (
-                  <div
-                    className="flex items-center justify-between gap-2 border-b border-border py-2 text-sm last:border-b-0"
-                    key={String(who)}
-                  >
-                    <span>
-                      <b className="block">{who}</b>
-                      <span className="text-xs text-muted-foreground">
-                        {meta}
-                      </span>
-                    </span>
-                    <span
-                      className={
-                        uncontacted
-                          ? "rounded-lg border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs text-amber-800"
-                          : "rounded-lg border border-border px-2 py-0.5 text-xs"
-                      }
-                    >
-                      {uncontacted ? "Uncontacted" : "Contacted"}
-                    </span>
-                  </div>
-                ))}
               </div>
             </div>
+            <Button
+              className="justify-self-start"
+              onClick={() =>
+                void navigate({
+                  search: adsSearch({ archived: adId }),
+                  to: "/cms/ads",
+                })
+              }
+              variant="danger"
+            >
+              Archive
+            </Button>
           </div>
         </div>
       </div>

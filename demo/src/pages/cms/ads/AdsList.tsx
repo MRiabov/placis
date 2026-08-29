@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Archive as ArchiveIcon } from "lucide-react";
-import { type MouseEvent, type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
@@ -106,11 +105,6 @@ export function AdsList({
     return row.archived || row.id === hiddenId;
   });
 
-  function archiveAd(id: string): void {
-    setHiddenId(id);
-    setToast(true);
-  }
-
   return (
     <div className="min-h-0 flex-1 overflow-auto">
       <div className="mx-auto w-full max-w-[960px] px-7 pt-8 pb-14 max-[1023px]:px-4 max-[1023px]:pt-6 max-[1023px]:pb-12">
@@ -166,7 +160,7 @@ export function AdsList({
             {active.map((ad) => (
               <Link
                 className={card(
-                  "relative rounded-prompt border-hairline p-2.5 text-left shadow-prompt hover:bg-wash",
+                  "rounded-prompt border-hairline p-2.5 text-left shadow-prompt hover:bg-wash",
                   compact ? "flex items-center gap-3" : "block",
                 )}
                 key={ad.id}
@@ -174,37 +168,17 @@ export function AdsList({
                 search={adsSearch()}
                 to="/cms/ads/$adId"
               >
-                <span
-                  className={cn("relative", compact ? "shrink-0" : "block")}
-                >
-                  <img
-                    alt=""
-                    className={cn(
-                      "pointer-events-none block object-cover object-[50%_32%] transition-[width,height,border-radius] duration-200 ease-out",
-                      compact
-                        ? "aspect-square h-[84px] w-[84px] max-h-[84px] max-w-[84px] flex-none self-center rounded-xl"
-                        : "h-44 w-full rounded-[18px]",
-                    )}
-                    draggable={false}
-                    src={ad.image}
-                  />
-                  <button
-                    aria-label="Archive"
-                    className="absolute top-1.5 right-1.5 z-10 grid size-7 place-items-center rounded-lg bg-white/90 text-red-700 hover:bg-red-50"
-                    onClick={(event: MouseEvent<HTMLButtonElement>) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      archiveAd(ad.id);
-                    }}
-                    type="button"
-                  >
-                    <ArchiveIcon
-                      aria-hidden="true"
-                      className="size-4"
-                      strokeWidth={1.6}
-                    />
-                  </button>
-                </span>
+                <img
+                  alt=""
+                  className={cn(
+                    "pointer-events-none block object-cover object-[50%_32%] transition-[width,height,border-radius] duration-200 ease-out",
+                    compact
+                      ? "aspect-square h-[84px] w-[84px] max-h-[84px] max-w-[84px] flex-none self-center rounded-xl"
+                      : "h-44 w-full rounded-[18px]",
+                  )}
+                  draggable={false}
+                  src={ad.image}
+                />
                 <span
                   className={cn(
                     compact ? "min-w-0 py-1" : "block px-2 pt-3 pb-2",
