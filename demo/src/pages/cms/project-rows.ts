@@ -98,12 +98,5 @@ export const projectRows: ProjectRow[] = [
   },
 ];
 
-export const coverLibrary = [
-  { src: photo(0), caption: "Rear slope after the storm" },
-  { src: photo(1), caption: "Full re-roof on a semi" },
-  { src: photo(2), caption: "Guttering on the front" },
-  { src: photo(3), caption: "New roof on a semi" },
-] as const;
-
 export const composedDescription =
   "Replaced the rear slope and flashing after wind damage. New slate on the valley. Completed before the next storm.";

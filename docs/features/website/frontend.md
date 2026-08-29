@@ -103,8 +103,10 @@ Two surfaces plus global nav, one unpublished website:
   - **Projects** — the project gallery for that website section. Title /
     description / cover stay at `/cms/projects` ([projects frontend](../business-profile/projects/frontend.md)).
   - Everything else — website slots.
-  Click an image on the canvas: Content focused on that image (thumb, pick from
-  the media library, upload/drop). SEO stays website-page-level in its own rail
+  Click an image on the canvas: Content focused on that image (current thumb,
+  pick from the media library, **Upload**). Drop onto **Upload** still uploads;
+  the prompt is not drag-and-drop. Thumbs match `/cms/media` (mixed ratio,
+  dozens). SEO stays website-page-level in its own rail
   panel. Website versions is a workspace item (bottom of the rail): website
   publications and website-assistant activity, not unpublished checkpoints per
   website page. Undo/redo stacks are in RAM, seeded from website edit history on

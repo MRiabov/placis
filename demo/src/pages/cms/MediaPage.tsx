@@ -9,89 +9,15 @@ import {
 import { DevStrip } from "@/dev/DevStrip";
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
-import { photo } from "@/lib/fixtures";
+import { mediaLibraryItems } from "@/lib/media-library";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { Field, TextArea } from "@/ui/Field";
+import { MediaThumbs } from "@/ui/MediaThumbs";
 import { PageHeading } from "@/ui/PageHeading";
 import { Sweep } from "@/ui/Sweep";
 
 const CLEANUP_WAIT_MS = 7500;
-
-const mediaLibraryItems = [
-  {
-    caption: "Rear slope after the storm",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Slate repair on a terrace",
-    by: "owner",
-    status: "uploading",
-    ratio: "portrait",
-  },
-  {
-    caption: "New roof on a semi",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Guttering on the front",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Valley flashing",
-    by: "research",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Ridge line after wind",
-    by: "owner",
-    status: "approved",
-    ratio: "portrait",
-  },
-  {
-    caption: "Chimney flashing",
-    by: "owner",
-    status: "approved",
-    ratio: "portrait",
-  },
-  {
-    caption: "Battens before the covering",
-    by: "ai",
-    status: "approved",
-    ratio: "portrait",
-  },
-  {
-    caption: "Full re-roof on a semi",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Finished elevation",
-    by: "research",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Sheets going on",
-    by: "owner",
-    status: "approved",
-    ratio: "portrait",
-  },
-  {
-    caption: "Front elevation after handover",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-].map((item, index) => ({ ...item, src: photo(index) }));
 
 type CropRect = { left: number; top: number; width: number; height: number };
 
@@ -296,29 +222,21 @@ export function MediaPage(): ReactNode {
             )}
           </form>
         </div>
-        <div className="mt-4 flex gap-2 overflow-x-auto">
-          {mediaLibraryItems.map((thumb, thumbIndex) => (
-            <button
-              aria-label={thumb.caption}
-              className={cn(
-                "relative size-16 shrink-0 overflow-hidden rounded-lg border object-cover",
-                index === thumbIndex ? "border-primary" : "border-border",
-              )}
-              key={thumb.caption}
-              onClick={() => {
-                setIndex(thumbIndex);
-                resetCleanup();
-              }}
-              type="button"
-            >
-              <img alt="" className="size-full object-cover" src={thumb.src} />
-              {thumb.status === "uploading" ? (
-                <span className="absolute inset-0 grid place-items-center bg-white/80 text-[9px]">
-                  Uploading…
-                </span>
-              ) : null}
-            </button>
-          ))}
+        <div className="mt-4">
+          <MediaThumbs
+            items={mediaLibraryItems}
+            onPick={(thumb) => {
+              const next = mediaLibraryItems.findIndex(
+                (entry) => entry.id === thumb.id,
+              );
+              if (next < 0) {
+                return;
+              }
+              setIndex(next);
+              resetCleanup();
+            }}
+            selectedId={item.id}
+          />
         </div>
       </div>
     </>

@@ -1,17 +1,17 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import { type ReactNode, useRef, useState } from "react";
+import { type ReactNode, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
 import { useCmsLayout } from "@/layout/CmsLayout";
-import { cn } from "@/lib/cn";
+import { type MediaLibraryItem, mediaLibraryItems } from "@/lib/media-library";
 import {
   composedDescription,
-  coverLibrary,
   listSearch,
   projectRows,
 } from "@/pages/cms/project-rows";
 import { Button } from "@/ui/Button";
 import { Field, TextArea, TextInput } from "@/ui/Field";
+import { MediaThumbs } from "@/ui/MediaThumbs";
 import { PageHeading } from "@/ui/PageHeading";
 import { PromptOrb } from "@/ui/PromptOrb";
 
@@ -34,19 +34,25 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
   );
   const [cover, setCover] = useState(isNew ? null : (row?.image ?? null));
   const [caption, setCaption] = useState(isNew ? "" : (row?.caption ?? ""));
-  const [library, setLibrary] = useState<{ src: string; caption: string }[]>(
-    () =>
-      coverLibrary.map((item) => ({ src: item.src, caption: item.caption })),
+  const [library, setLibrary] = useState<MediaLibraryItem[]>(
+    () => mediaLibraryItems,
   );
   const [picker, setPicker] = useState(search.picker === "1");
   const [diff, setDiff] = useState(search.diff === "1");
   const [prompt, setPrompt] = useState<"title" | "description" | null>(null);
   const [promptText, setPromptText] = useState("");
-  const fileRef = useRef<HTMLInputElement>(null);
 
   function addCoverFile(file: File): void {
     const src = URL.createObjectURL(file);
-    setLibrary((current) => [...current, { src, caption: "" }]);
+    const item: MediaLibraryItem = {
+      by: "owner",
+      caption: "",
+      id: src,
+      ratio: "landscape",
+      src,
+      status: "approved",
+    };
+    setLibrary((current) => [item, ...current]);
     setCover(src);
     setCaption("");
   }
@@ -184,56 +190,25 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
                   </Button>
                 ) : null}
                 {picker ? (
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      className="grid aspect-square place-items-center rounded-[10px] border border-dashed border-stone-300 text-sm text-muted-foreground"
-                      onClick={() => fileRef.current?.click()}
-                      onDragOver={(event) => event.preventDefault()}
-                      onDrop={(event) => {
-                        event.preventDefault();
-                        const file = event.dataTransfer.files[0];
-                        if (file) {
-                          addCoverFile(file);
-                        }
-                      }}
-                      type="button"
-                    >
-                      Upload
-                    </button>
-                    {library.map((item) => (
-                      <button
-                        aria-label={item.caption || "Cover"}
-                        className={cn(
-                          "aspect-square overflow-hidden rounded-[10px] bg-cover bg-center",
-                          cover === item.src
-                            ? "ring-2 ring-primary ring-offset-1"
-                            : "border border-transparent",
-                        )}
-                        key={item.src}
-                        onClick={() => {
-                          setCover(item.src);
-                          setCaption(item.caption);
-                          setPicker(false);
-                        }}
-                        style={{ backgroundImage: `url(${item.src})` }}
-                        type="button"
-                      />
-                    ))}
-                    <input
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(event) => {
-                        const file = event.target.files?.[0];
-                        if (file) {
-                          addCoverFile(file);
-                          setPicker(false);
-                        }
-                        event.target.value = "";
-                      }}
-                      ref={fileRef}
-                      type="file"
-                    />
-                  </div>
+                  <MediaThumbs
+                    items={library}
+                    onPick={(item) => {
+                      setCover(item.src);
+                      setCaption(item.caption);
+                      setPicker(false);
+                    }}
+                    onUpload={(file) => {
+                      addCoverFile(file);
+                      setPicker(false);
+                    }}
+                    selectedId={
+                      library.find(
+                        (item) =>
+                          item.src.split("?")[0] ===
+                          (cover ?? "").split("?")[0],
+                      )?.id ?? null
+                    }
+                  />
                 ) : null}
               </div>
             </Field>
