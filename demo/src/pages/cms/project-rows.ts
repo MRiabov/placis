@@ -1,0 +1,108 @@
+import { photo } from "@/lib/fixtures";
+
+export type DemoFlags = {
+  dev?: string;
+  shot?: string;
+};
+
+export type ListSearch = DemoFlags & {
+  empty: string | undefined;
+  archive: string | undefined;
+  archived: string | undefined;
+};
+
+export type ProjectSearch = DemoFlags & {
+  picker: string | undefined;
+  diff: string | undefined;
+};
+
+function flagOn(value: unknown): boolean {
+  return value === "1" || value === 1 || value === true || value === "true";
+}
+
+export function demoFlags(from?: Record<string, unknown>): DemoFlags {
+  const source =
+    from ??
+    Object.fromEntries(new URLSearchParams(window.location.search).entries());
+  return {
+    ...(flagOn(source.dev) ? { dev: "1" } : {}),
+    ...(flagOn(source.shot) ? { shot: "1" } : {}),
+  };
+}
+
+export function listSearch(
+  extra: Partial<Pick<ListSearch, "empty" | "archive" | "archived">> = {},
+  from?: Record<string, unknown>,
+): ListSearch {
+  return {
+    empty: extra.empty,
+    archive: extra.archive,
+    archived: extra.archived,
+    ...demoFlags(from),
+  };
+}
+
+export function projectSearch(
+  extra: Partial<Pick<ProjectSearch, "picker" | "diff">> = {},
+  from?: Record<string, unknown>,
+): ProjectSearch {
+  return {
+    picker: extra.picker,
+    diff: extra.diff,
+    ...demoFlags(from),
+  };
+}
+
+export type ProjectRow = {
+  id: string;
+  title: string;
+  description: string;
+  image: string | null;
+  caption: string;
+  archived: boolean;
+};
+
+export const projectRows: ProjectRow[] = [
+  {
+    id: "storm",
+    title: "Storm repair, Malahide",
+    description: "Replaced the rear slope after wind damage.",
+    image: photo(0),
+    caption: "Rear slope after the storm",
+    archived: false,
+  },
+  {
+    id: "reroof",
+    title: "Full re-roof, Swords",
+    description: "New slate, valleys, and ridge.",
+    image: photo(1),
+    caption: "Full re-roof on a semi",
+    archived: false,
+  },
+  {
+    id: "gutter",
+    title: "Guttering, Howth",
+    description: "Fascia, soffit, and gutter replacement.",
+    image: null,
+    caption: "",
+    archived: false,
+  },
+  {
+    id: "garage",
+    title: "Garage conversion, Swords",
+    description: "Converted the garage and made good the roof line.",
+    image: photo(3),
+    caption: "Finished elevation",
+    archived: true,
+  },
+];
+
+export const coverLibrary = [
+  { src: photo(0), caption: "Rear slope after the storm" },
+  { src: photo(1), caption: "Full re-roof on a semi" },
+  { src: photo(2), caption: "Guttering on the front" },
+  { src: photo(3), caption: "New roof on a semi" },
+] as const;
+
+export const composedDescription =
+  "Replaced the rear slope and flashing after wind damage. New slate on the valley. Completed before the next storm.";

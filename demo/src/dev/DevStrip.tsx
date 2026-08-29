@@ -1,3 +1,4 @@
+import { useRouterState } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 
@@ -19,24 +20,22 @@ type DevStripProps = {
   groups: DevGroup[];
 };
 
+function isOn(value: unknown): boolean {
+  return value === "1" || value === 1 || value === true;
+}
+
 export function DevStrip({ groups }: DevStripProps): ReactNode {
-  const [params, setParams] = useState(
-    () => new URLSearchParams(window.location.search),
-  );
-  const shot = params.get("shot") === "1";
-  const [open, setOpen] = useState(params.get("dev") === "1");
+  const search = useRouterState({
+    select: (state) => state.location.search as Record<string, unknown>,
+  });
+  const shot = isOn(search.shot);
+  const [open, setOpen] = useState(() => isOn(search.dev));
 
   useEffect(() => {
-    function sync(): void {
-      const next = new URLSearchParams(window.location.search);
-      setParams(next);
-      if (next.get("dev") === "1") {
-        setOpen(true);
-      }
+    if (isOn(search.dev)) {
+      setOpen(true);
     }
-    window.addEventListener("popstate", sync);
-    return () => window.removeEventListener("popstate", sync);
-  }, []);
+  }, [search.dev]);
 
   if (shot) {
     return null;

@@ -27,4 +27,6 @@ Static HTML. Open in a browser; there is no build. Shared tokens:
 
 Look notes: [CMS design.md](../general-architecture/cms/design.md),
 [onboarding design.md](../features/onboarding/design.md),
-[ad generation frontend](../features/ads/ad-generation/frontend.md).
+[ad generation frontend](../features/ads/ad-generation/frontend.md),
+[Projects look](../features/business-profile/projects/design.md) (`demo/`
+`/cms/projects`).

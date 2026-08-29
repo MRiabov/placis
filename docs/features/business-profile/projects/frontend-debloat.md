@@ -13,30 +13,34 @@ Status: planning (port instructions, not shipped UI).
 - `frontend-2/src/features/cms/CmsRoute.tsx` — `/cms/projects` renders
   `PlaceholderView`.
 - `app/router/index.tsx` registers `/cms/projects`.
-- Projects CRUD already in `cms.ts`.
+- Projects CRUD already in `cms.ts` (still includes owner-facing DELETE).
 
 ## Keep
 
-- Working Projects screen: title, description, cover photo from the media
-  library.
-- `GET/POST/PATCH/DELETE /v1/projects`.
+- Working Projects screen: list plus `/cms/projects/new` and
+  `/cms/projects/{id}` (title, description, cover from the media library). Ads
+  AI orbs on title and description. Archive / Unarchive.
+- `GET/POST/PATCH /v1/projects` and archive / unarchive.
 
 ## Delete
 
 - `PlaceholderView` once this screen is real (do not leave “next CMS port batch”
   copy).
+- Owner-facing `DELETE /v1/projects/{id}`.
 
 ## Do not port
 
 - A top-level Projects left-nav item (Profile child).
 - Decorative boxed heading icon.
+- Voice as the writing UI.
+- Website-assistant overlay as the writing UI.
 
 ## Retarget
 
 | Today | Target |
 | --- | --- |
-| `/cms/projects` stub | working Projects screen (title, description, cover photo) |
-| Projects CRUD already in `cms.ts` | `/v1/projects` |
+| `/cms/projects` stub | list plus `/cms/projects/{id}` in [frontend.md](frontend.md) |
+| Projects CRUD already in `cms.ts` | `/v1/projects` POST/PATCH + archive |
 
 ## Done when
 

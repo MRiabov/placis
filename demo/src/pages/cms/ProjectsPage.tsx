@@ -1,66 +1,248 @@
-import type { ReactNode } from "react";
+import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { type ReactNode, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
+import { cn } from "@/lib/cn";
+import {
+  listSearch,
+  projectRows,
+  projectSearch,
+} from "@/pages/cms/project-rows";
 import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
 import { PageHeading } from "@/ui/PageHeading";
 
-const projects = [
-  {
-    title: "Storm repair, Malahide",
-    copy: "Replaced the rear slope after wind damage.",
-    image: "/fixtures/bellfield/image0.jpeg",
-  },
-  {
-    title: "Full re-roof, Swords",
-    copy: "New slate, valleys, and ridge.",
-    image: "/fixtures/bellfield/image1.jpeg",
-  },
-  {
-    title: "Guttering, Howth",
-    copy: "Fascia, soffit, and gutter replacement.",
-    image: "/fixtures/bellfield/image2.jpeg",
-  },
-];
-
 export function ProjectsPage(): ReactNode {
   const { openDestinations } = useCmsLayout();
+  const navigate = useNavigate();
+  const search = useSearch({ strict: false });
+  const empty = search.empty === "1";
+  const archivedId =
+    typeof search.archived === "string" ? search.archived : undefined;
+  const [archiveOpen, setArchiveOpen] = useState(search.archive === "1");
+  const [toast, setToast] = useState(Boolean(archivedId));
+  const [hiddenId, setHiddenId] = useState<string | null>(archivedId ?? null);
+  const [releasedIds, setReleasedIds] = useState<string[]>([]);
+
+  const active = projectRows.filter((row) => {
+    if (releasedIds.includes(row.id)) {
+      return true;
+    }
+    return !row.archived && row.id !== hiddenId;
+  });
+  const archived = projectRows.filter((row) => {
+    if (releasedIds.includes(row.id)) {
+      return false;
+    }
+    return row.archived || row.id === hiddenId;
+  });
 
   return (
     <>
-      <DevStrip groups={[{ title: "Projects", tabs: [] }]} />
+      <DevStrip
+        groups={[
+          {
+            title: "Projects",
+            tabs: [
+              {
+                id: "list",
+                label: "Populated",
+                on: !empty,
+                onSelect: () => {
+                  void navigate({
+                    search: listSearch({}, search),
+                    to: "/cms/projects",
+                  });
+                },
+              },
+              {
+                id: "empty",
+                label: "Empty",
+                on: empty,
+                onSelect: () => {
+                  void navigate({
+                    search: listSearch({ empty: "1" }, search),
+                    to: "/cms/projects",
+                  });
+                },
+              },
+              {
+                id: "project",
+                label: "Project",
+                onSelect: () => {
+                  void navigate({
+                    params: { projectId: "storm" },
+                    search: projectSearch({}, search),
+                    to: "/cms/projects/$projectId",
+                  });
+                },
+              },
+              {
+                id: "picker",
+                label: "Cover picker",
+                onSelect: () => {
+                  void navigate({
+                    params: { projectId: "storm" },
+                    search: projectSearch({ picker: "1" }, search),
+                    to: "/cms/projects/$projectId",
+                  });
+                },
+              },
+              {
+                id: "archive",
+                label: "Archive",
+                on: archiveOpen && !empty,
+                onSelect: () => {
+                  void navigate({
+                    search: listSearch({ archive: "1" }, search),
+                    to: "/cms/projects",
+                  });
+                },
+              },
+              {
+                id: "diff",
+                label: "Description diffs",
+                onSelect: () => {
+                  void navigate({
+                    params: { projectId: "storm" },
+                    search: projectSearch({ diff: "1" }, search),
+                    to: "/cms/projects/$projectId",
+                  });
+                },
+              },
+            ],
+          },
+        ]}
+      />
       <div className="min-h-0 flex-1 overflow-auto p-6">
-        <p className="text-xs tracking-wide text-muted-foreground uppercase">
-          Profile
-        </p>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <PageHeading onOpenDestinations={openDestinations} title="Projects" />
-          <Button>Add project</Button>
-        </div>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <PageHeading
+          actions={
+            <Button
+              className="ml-auto"
+              onClick={() => {
+                void navigate({
+                  search: projectSearch({}, search),
+                  to: "/cms/projects/new",
+                });
+              }}
+            >
+              Add project
+            </Button>
+          }
+          onOpenDestinations={openDestinations}
+          title="Projects"
+        />
+        <p className="mt-1 text-sm text-muted-foreground">
           Jobs with photos shown on the website. Edited here, not in the website
           editor.
         </p>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <article
-              className="overflow-hidden rounded-xl border border-border bg-white"
-              key={project.title}
-            >
-              <div
-                className="h-36 bg-cover bg-center"
-                style={{ backgroundImage: `url(${project.image})` }}
-              />
-              <div className="p-3">
-                <h3 className="text-sm font-semibold">{project.title}</h3>
-                <p className="text-sm text-muted-foreground">{project.copy}</p>
-                <Button className="mt-2" variant="outline">
-                  Cover from the media library
-                </Button>
+        {empty ? null : (
+          <div className="mt-6 max-w-[29.375rem] min-[1101px]:max-w-[960px]">
+            <div className="grid grid-cols-1 gap-5 min-[1101px]:grid-cols-2">
+              {active.map((project) => (
+                <Link
+                  className={cn(
+                    "block rounded-[28px] border border-stone-200 bg-white",
+                    "p-2.5 text-left shadow-sm hover:bg-zinc-50",
+                  )}
+                  key={project.id}
+                  params={{ projectId: project.id }}
+                  search={projectSearch({}, search)}
+                  to="/cms/projects/$projectId"
+                >
+                  {project.image ? (
+                    <img
+                      alt=""
+                      className="h-44 w-full rounded-[18px] bg-zinc-100 object-cover object-[50%_32%]"
+                      src={project.image}
+                    />
+                  ) : (
+                    <span className="block h-44 rounded-[18px] bg-zinc-100" />
+                  )}
+                  <span className="grid gap-1.5 px-2 pt-3 pb-2">
+                    <b className="text-[15px] font-semibold tracking-tight">
+                      {project.title}
+                    </b>
+                    <span className="text-[13px] leading-snug text-muted-foreground">
+                      {project.description}
+                    </span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+            {toast ? (
+              <div className="mt-3 rounded-lg border border-border bg-zinc-50 px-3 py-2 text-sm">
+                Archived a project.{" "}
+                <button
+                  className="underline"
+                  onClick={() => {
+                    setHiddenId(null);
+                    setToast(false);
+                  }}
+                  type="button"
+                >
+                  Undo
+                </button>
               </div>
-            </article>
-          ))}
-        </div>
+            ) : null}
+            <div className="mt-7">
+              <button
+                aria-controls="archiveList"
+                aria-expanded={archiveOpen}
+                className="flex w-full items-center justify-between rounded-lg py-1 text-left text-sm font-medium"
+                onClick={() => setArchiveOpen((value) => !value)}
+                type="button"
+              >
+                Archive
+                <span className="text-muted-foreground">
+                  {archiveOpen ? "▴" : "▾"}
+                </span>
+              </button>
+              {archiveOpen ? (
+                <div
+                  className="mt-2.5 grid max-w-[29.375rem] gap-2"
+                  id="archiveList"
+                >
+                  {archived.map((project) => (
+                    <div
+                      className="rounded-[28px] border border-stone-200 bg-white p-2.5 shadow-sm"
+                      key={project.id}
+                    >
+                      {project.image ? (
+                        <img
+                          alt=""
+                          className="h-44 w-full rounded-[18px] bg-zinc-100 object-cover object-[50%_32%]"
+                          src={project.image}
+                        />
+                      ) : (
+                        <span className="block h-44 rounded-[18px] bg-zinc-100" />
+                      )}
+                      <div className="grid gap-1.5 px-2 pt-3 pb-2">
+                        <b className="text-[15px] font-semibold tracking-tight">
+                          {project.title}
+                        </b>
+                        <span className="text-[13px] leading-snug text-muted-foreground">
+                          {project.description}
+                        </span>
+                      </div>
+                      <Button
+                        className="mt-1"
+                        onClick={() => {
+                          setReleasedIds((ids) => [...ids, project.id]);
+                          setHiddenId((id) => (id === project.id ? null : id));
+                          setToast(false);
+                        }}
+                        variant="outline"
+                      >
+                        Unarchive
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
