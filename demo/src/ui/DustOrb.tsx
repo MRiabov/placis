@@ -6,6 +6,7 @@ import {
 } from "react";
 
 import { cn } from "@/lib/cn";
+import { voiceLevel } from "@/lib/mock-voice";
 
 /** Canvas renderer copied from placis-web `frontend/src/components/public-website/DustOrb.tsx`. */
 
@@ -21,8 +22,9 @@ const MODE_ENERGY: Record<OrbMode, number> = {
   done: 0.24,
 };
 
-const MAX_PARTICLES = 4200;
-const START_PARTICLES = 3200;
+const PARTICLE_POOL = 8000;
+const REST_PARTICLES = 3200;
+const REST_CAP = 4200;
 const GROW_EVERY_MS = 5000;
 const GROW_BY = 220;
 const MAX_DIST = 1.4;
@@ -86,18 +88,11 @@ type Buckets = {
   count: Int32Array;
 };
 
-function targetAmplitude(
-  t: number,
-  listening: boolean,
-  speaking: boolean,
-): number {
+function targetAmplitude(t: number, listening: boolean, voiceT: number): number {
   const noise =
     Math.sin(t * 9) * 0.5 + Math.sin(t * 19.3) * 0.3 + Math.sin(t * 2.7) * 0.2;
-  if (listening && speaking) {
-    return 0.5 + Math.abs(noise) * 0.4;
-  }
   if (listening) {
-    return 0.14 + Math.abs(noise) * 0.08;
+    return 0.14 + Math.abs(noise) * 0.08 + voiceT * 0.25;
   }
   return 0.08;
 }
@@ -180,6 +175,10 @@ function simulateParticles(
   const cx = width / 2;
   const cy = height / 2;
   const maxR = Math.min(width, height) * 0.5;
+  context.save();
+  context.beginPath();
+  context.arc(cx, cy, maxR, 0, TAU);
+  context.clip();
   const invTwoSigmaSq = 1 / (2 * (maxR * 0.4) * (maxR * 0.4));
   const influence = maxR * 0.95;
   const flow = 0.5 + energy * 0.9;
@@ -221,6 +220,7 @@ function simulateParticles(
     }
     pushBucket(buckets, inkAlpha, x, y, particle.size);
   }
+  context.restore();
 }
 
 function flushBuckets(
@@ -250,19 +250,15 @@ function flushBuckets(
 
 function DustCanvas({
   mode,
-  speaking = false,
   className,
 }: {
   mode: OrbMode;
-  speaking?: boolean;
   className?: string;
 }): ReactNode {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const modeRef = useRef<OrbMode>(mode);
-  const speakingRef = useRef<boolean>(speaking);
 
   modeRef.current = mode;
-  speakingRef.current = speaking;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -289,21 +285,22 @@ function DustCanvas({
     ).matches;
 
     const particles: Particle[] = [];
-    for (let i = 0; i < MAX_PARTICLES; i += 1) {
+    for (let i = 0; i < PARTICLE_POOL; i += 1) {
       particles.push(makeParticle(false));
     }
-    let activeCount = START_PARTICLES;
+    let restCount = REST_PARTICLES;
+    let activeCount = REST_PARTICLES;
     const growTimer = window.setInterval(() => {
-      activeCount = Math.min(MAX_PARTICLES, activeCount + GROW_BY);
+      restCount = Math.min(REST_CAP, restCount + GROW_BY);
     }, GROW_EVERY_MS);
 
     const bucketX: Float32Array[] = [];
     const bucketY: Float32Array[] = [];
     const bucketS: Float32Array[] = [];
     for (let i = 0; i < BUCKETS; i += 1) {
-      bucketX.push(new Float32Array(MAX_PARTICLES));
-      bucketY.push(new Float32Array(MAX_PARTICLES));
-      bucketS.push(new Float32Array(MAX_PARTICLES));
+      bucketX.push(new Float32Array(PARTICLE_POOL));
+      bucketY.push(new Float32Array(PARTICLE_POOL));
+      bucketS.push(new Float32Array(PARTICLE_POOL));
     }
     const bucketCount = new Int32Array(BUCKETS);
 
@@ -366,13 +363,24 @@ function DustCanvas({
       t += 0.016;
       energy = ease(energy, MODE_ENERGY[modeRef.current], 0.04);
       colorMix = ease(colorMix, modeRef.current === "building" ? 1 : 0, 0.09);
+      const listening = modeRef.current === "listening";
+      const voice = reduceMotion ? 0 : Math.max(0, voiceLevel());
+      const voiceT = listening
+        ? Math.min(1, Math.max(0, (voice - 0.018) / 0.14))
+        : 0;
+      const targetCount = restCount + voiceT * (PARTICLE_POOL - restCount);
+      if (targetCount > activeCount) {
+        const from = activeCount | 0;
+        const to = Math.min(PARTICLE_POOL, Math.ceil(targetCount));
+        for (let i = from; i < to; i += 1) {
+          particles[i] = makeParticle(true);
+        }
+      }
+      activeCount = ease(activeCount, targetCount, 0.22);
+      const drawCount = activeCount | 0;
       amplitude = ease(
         amplitude,
-        targetAmplitude(
-          t,
-          modeRef.current === "listening",
-          speakingRef.current,
-        ),
+        targetAmplitude(t, listening, voiceT),
         0.15,
       );
       context.clearRect(0, 0, width, height);
@@ -380,7 +388,7 @@ function DustCanvas({
       simulateParticles(
         context,
         particles,
-        activeCount,
+        drawCount,
         t,
         energy,
         amplitude,
@@ -416,7 +424,7 @@ function DustCanvas({
 
 type DustOrbProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   speaking?: boolean;
-  level?: number;
+  live?: boolean;
   size?: number;
   canvasClassName?: string;
 };
@@ -425,7 +433,7 @@ export function DustOrb({
   className,
   canvasClassName,
   speaking = false,
-  level: _level = 0,
+  live = false,
   size,
   style,
   ...props
@@ -434,8 +442,7 @@ export function DustOrb({
     <button
       aria-label="Voice"
       className={cn(
-        "relative grid cursor-pointer place-items-center overflow-visible rounded-full border-0 bg-transparent p-0 shadow-none outline-none transition-transform duration-500 select-none motion-reduce:transition-none",
-        speaking ? "scale-110" : "hover:scale-[1.03]",
+        "relative grid cursor-pointer appearance-none place-items-center overflow-visible rounded-full border-0 bg-transparent p-0 shadow-none outline-none transition-transform duration-500 select-none hover:scale-[1.03] motion-reduce:scale-100 motion-reduce:transition-none",
         className,
       )}
       style={{
@@ -446,9 +453,8 @@ export function DustOrb({
       {...props}
     >
       <DustCanvas
-        className={cn("size-full", canvasClassName)}
-        speaking={speaking}
-        mode={speaking ? "listening" : "idle"}
+        className={cn("block", canvasClassName ?? "size-full")}
+        mode={live || speaking ? "listening" : "idle"}
       />
     </button>
   );

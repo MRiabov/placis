@@ -32,7 +32,9 @@ owner-written; omit it rather than inventing it.
    (`hover:scale-[1.03]`, speaking `scale-110`, 500ms round transform). Dust
    recycles from the centre; the cursor pulls it. Not a bounce squash. Same day,
    later: Voice asks for the microphone and bounces the orb from owner noise
-   level (skip `?shot=1`). (2026-08-28)
+   level (skip `?shot=1`). (2026-08-28) Same day, later: owner speech grows more
+   particles from the centre. The control does not scale up. Hover / tap still
+   `scale-[1.03]`. (2026-08-29)
 
 3. **`/cms` is two cards** — **Do my website…** → `/cms/website`, **Run my ads**
    → `/cms/ads`. New chat / prompt home is gone. Not a composer, not Voice, not

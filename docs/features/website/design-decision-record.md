@@ -233,23 +233,24 @@ numbers are HTML comments so later entries keep their numbers.
     on hover/tap and while speaking. Same day, later: scale matches placis-web
     OrbDemo (`hover:scale-[1.03]`, speaking `scale-110`, 500ms); dust recycles
     from the centre and the cursor pulls it. Same day, later: Voice asks for the
-    microphone and bounces from owner noise level. Same day, later: mock
-    greeting [cms-voice-greeting.mp3](../../design/cms-voice-greeting.mp3) when the orb comes on. Same day, later:
-    ≤480px orb **50vw** (`min(50vw, 50dvh)`); wider **30vw**
-    (`min(30vw, 24rem)`), not `min(5.5rem, 30vw)`. Same day, later: wider is
-    `min(5.5rem, 30vw)` again; ≤480px stays **50vw**. Apply / Reject over
-    Restore chatbot stay a compact cluster; the cluster does not stretch across
-    the canvas. Same day, later: desktop / tablet click target is a
-    **2.75rem circle**; particle wrap stays `min(5.5rem, 30vw)`; clicks outside
-    the circle pass through. Close and Restore chatbot still capture. ≤480px hit
-    is `min(12rem, 42vw)`. Same day, later: denied microphone restores the
-    chatbot and the shared **notification**; **Try again** and
-    **Switch to text mode** (not Revert / OK). Same day, later: the prerecorded
-    greeting plays on the first Voice start; starting Voice again more than
-    **5 seconds** after that greeting began does not replay it. Same day, later:
-    the realtime connection is created only after the microphone is granted.) On
-    narrow the orb sits at the **bottom of the canvas** (just above the
-    workspace rail). (2026-08-27)
+    microphone and bounces from owner noise level. (2026-08-29): owner speech
+    grows more particles from the centre; the control does not scale up. Hover /
+    tap still `scale-[1.03]`. Same day, later: mock greeting
+    [cms-voice-greeting.mp3](../../design/cms-voice-greeting.mp3) when the orb comes on. Same day, later: ≤480px orb
+    **50vw** (`min(50vw, 50dvh)`); wider **30vw** (`min(30vw, 24rem)`), not
+    `min(5.5rem, 30vw)`. Same day, later: wider is `min(5.5rem, 30vw)` again;
+    ≤480px stays **50vw**. Apply / Reject over Restore chatbot stay a compact
+    cluster; the cluster does not stretch across the canvas. Same day, later:
+    desktop / tablet click target is a **2.75rem circle**; particle wrap stays
+    `min(5.5rem, 30vw)`; clicks outside the circle pass through. Close and
+    Restore chatbot still capture. ≤480px hit is `min(12rem, 42vw)`. Same day,
+    later: denied microphone restores the chatbot and the shared
+    **notification**; **Try again** and **Switch to text mode** (not Revert /
+    OK). Same day, later: the prerecorded greeting plays on the first Voice
+    start; starting Voice again more than **5 seconds** after that greeting
+    began does not replay it. Same day, later: the realtime connection is
+    created only after the microphone is granted.) On narrow the orb sits at the
+    **bottom of the canvas** (just above the workspace rail). (2026-08-27)
 
 19. **Connect website address shows copyable Host and Value** — DNS rows are not
     compact version cards. Each record is type, **Host**, and **Value** as

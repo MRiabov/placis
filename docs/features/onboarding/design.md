@@ -32,10 +32,10 @@ website preview and website activation still live on that host, not on
 
 The **onboarding assistant** (owner copy: **voice guide**) is a DustOrb bottom
 right: **visible**, voice off, cue **Click to turn on voice**. Particle orb from
-[dust-orb.js](../../design/dust-orb.js); scale matches placis-web OrbDemo (hover 1.03, speaking 1.10).
-Click plays a prerecorded intro ([onboarding-guide-intro.mp3](../../design/onboarding-guide-intro.mp3)) after the
-microphone is granted, while the connection starts, and bounces from owner noise
-level; they ask questions after. Denied microphone returns to the cue
+[dust-orb.js](../../design/dust-orb.js); hover / tap scale 1.03. Click plays a prerecorded intro
+([onboarding-guide-intro.mp3](../../design/onboarding-guide-intro.mp3)) after the microphone is granted, while the
+connection starts, and grows more particles from owner noise; they ask questions
+after. Denied microphone returns to the cue
 (**Allow microphone access in your browser**); click the orb retries. The
 realtime connection is not created. The intro plays on the first turn-on;
 turning the guide on again more than **5 seconds** after that intro began does
