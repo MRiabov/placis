@@ -88,7 +88,11 @@ type Buckets = {
   count: Int32Array;
 };
 
-function targetAmplitude(t: number, listening: boolean, voiceT: number): number {
+function targetAmplitude(
+  t: number,
+  listening: boolean,
+  voiceT: number,
+): number {
   const noise =
     Math.sin(t * 9) * 0.5 + Math.sin(t * 19.3) * 0.3 + Math.sin(t * 2.7) * 0.2;
   if (listening) {
@@ -378,11 +382,7 @@ function DustCanvas({
       }
       activeCount = ease(activeCount, targetCount, 0.22);
       const drawCount = activeCount | 0;
-      amplitude = ease(
-        amplitude,
-        targetAmplitude(t, listening, voiceT),
-        0.15,
-      );
+      amplitude = ease(amplitude, targetAmplitude(t, listening, voiceT), 0.15);
       context.clearRect(0, 0, width, height);
       bucketCount.fill(0);
       simulateParticles(

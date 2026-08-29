@@ -64,7 +64,13 @@ export function ContentPanel({
   onToggleHidden,
 }: ContentPanelProps): ReactNode {
   const [library, setLibrary] = useState(mediaLibraryItems);
-  const [image, setImage] = useState(library[0]);
+  const [image, setImage] = useState(() => {
+    const item = mediaLibraryItems[0];
+    if (!item) {
+      throw new Error("media library is empty");
+    }
+    return item;
+  });
 
   return (
     <div className="grid">

@@ -45,6 +45,9 @@ export function AdsDetail(): ReactNode {
   const navigate = useNavigate();
   const { adId } = useParams({ from: "/cms/ads/$adId" });
   const ad = ads.find((item) => item.id === adId) ?? ads[1];
+  if (!ad) {
+    throw new Error("ads fixture is empty");
+  }
   const [name, setName] = useState<string>(ad.title);
   const [endIso, setEndIso] = useState("2026-08-29");
   const left = useMemo(() => daysLeft(endIso), [endIso]);
