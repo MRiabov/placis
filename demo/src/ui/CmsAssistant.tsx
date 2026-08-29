@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -43,7 +44,6 @@ export type CmsAssistant = {
   open: boolean;
   voiceOn: boolean;
   speaking: boolean;
-  level: number;
   planMode: boolean;
   notice: boolean;
   callAssistant: () => void;
@@ -75,9 +75,14 @@ export function CmsAssistantProvider({
   const [open, setOpen] = useState(start.open);
   const [voiceOn, setVoiceOn] = useState(start.voiceOn);
   const [speaking, setSpeaking] = useState(false);
-  const [level, setLevel] = useState(0);
   const [planMode, setPlanMode] = useState(true);
   const [notice, setNotice] = useState(false);
+  const greetingRef = useRef(false);
+  const ownerRef = useRef(false);
+
+  function syncSpeaking(): void {
+    setSpeaking(greetingRef.current || ownerRef.current);
+  }
 
   function startVoice(): void {
     setOpen(true);
@@ -87,15 +92,25 @@ export function CmsAssistantProvider({
       return;
     }
     play("/cms-voice-greeting.mp3", {
-      onStart: () => setSpeaking(true),
-      onEnd: () => setSpeaking(false),
-      onLevel: setLevel,
+      onStart: () => {
+        greetingRef.current = true;
+        syncSpeaking();
+      },
+      onEnd: () => {
+        greetingRef.current = false;
+        syncSpeaking();
+      },
     });
     listen({
-      onSpeaking: setSpeaking,
-      onLevel: setLevel,
+      onSpeaking: (on) => {
+        ownerRef.current = on;
+        syncSpeaking();
+      },
       onDenied: () => {
         stop();
+        greetingRef.current = false;
+        ownerRef.current = false;
+        setSpeaking(false);
         setNotice(true);
       },
     });
@@ -107,6 +122,8 @@ export function CmsAssistantProvider({
 
   function closeAssistant(): void {
     stop();
+    greetingRef.current = false;
+    ownerRef.current = false;
     setOpen(false);
     setVoiceOn(true);
     setSpeaking(false);
@@ -115,6 +132,8 @@ export function CmsAssistantProvider({
 
   function restoreChatbot(): void {
     stop();
+    greetingRef.current = false;
+    ownerRef.current = false;
     setOpen(true);
     setVoiceOn(false);
     setSpeaking(false);
@@ -127,6 +146,8 @@ export function CmsAssistantProvider({
         return;
       }
       stop();
+      greetingRef.current = false;
+      ownerRef.current = false;
       setOpen(false);
       setVoiceOn(true);
       setSpeaking(false);
@@ -140,7 +161,6 @@ export function CmsAssistantProvider({
     open,
     voiceOn,
     speaking,
-    level,
     planMode,
     notice,
     callAssistant,
@@ -229,7 +249,6 @@ export function AssistantSession({
     open,
     voiceOn,
     speaking,
-    level,
     planMode,
     setPlanMode,
     closeAssistant,
@@ -312,7 +331,7 @@ export function AssistantSession({
                 aria-label="Voice agent"
                 canvasClassName="absolute top-1/2 left-1/2 size-[var(--voice-orb)] -translate-x-1/2 -translate-y-1/2 bg-transparent"
                 className="relative size-[var(--voice-orb-hit)] overflow-visible bg-transparent pointer-events-auto"
-                level={level}
+                live
                 onClick={startVoice}
                 speaking={speaking}
               />

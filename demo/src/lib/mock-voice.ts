@@ -25,6 +25,8 @@ let micStream: MediaStream | null = null;
 let micSource: MediaStreamAudioSourceNode | null = null;
 let micAnalyser: AnalyserNode | null = null;
 let micUnlock: ((event: PointerEvent) => void) | null = null;
+let playLevel = 0;
+let micLevel = 0;
 
 function clearUnlock(): void {
   if (!unlock) {
@@ -44,10 +46,12 @@ function clearMicUnlock(): void {
 
 function stopMeter(): void {
   if (!raf) {
+    playLevel = 0;
     return;
   }
   window.cancelAnimationFrame(raf);
   raf = 0;
+  playLevel = 0;
 }
 
 function ensureCtx(): AudioContext | null {
@@ -66,6 +70,10 @@ function ensureCtx(): AudioContext | null {
   return ctx;
 }
 
+export function voiceLevel(): number {
+  return Math.max(playLevel, micLevel);
+}
+
 function rmsFrom(buf: Uint8Array<ArrayBuffer>, node: AnalyserNode): number {
   node.getByteTimeDomainData(buf);
   let sum = 0;
@@ -78,7 +86,7 @@ function rmsFrom(buf: Uint8Array<ArrayBuffer>, node: AnalyserNode): number {
 
 function attachMeter(
   el: HTMLAudioElement,
-  onLevel: (rms: number) => void,
+  onLevel: ((rms: number) => void) | undefined,
   thisGen: number,
 ): void {
   const ctx = ensureCtx();
@@ -100,7 +108,8 @@ function attachMeter(
     if (thisGen !== gen || !analyser) {
       return;
     }
-    onLevel(rmsFrom(levelBuf, analyser));
+    playLevel = rmsFrom(levelBuf, analyser);
+    onLevel?.(voiceLevel());
     raf = window.requestAnimationFrame(tick);
   };
   raf = window.requestAnimationFrame(tick);
@@ -126,6 +135,7 @@ function stopMic(): void {
     window.cancelAnimationFrame(micRaf);
   }
   micRaf = 0;
+  micLevel = 0;
   micSource?.disconnect();
   micSource = null;
   micAnalyser = null;
@@ -167,9 +177,9 @@ export function play(src: string, hooks?: VoiceHooks): void {
       return;
     }
     hooks?.onStart?.();
-    if (hooks?.onLevel && !metered && audio) {
+    if (!metered && audio) {
       metered = true;
-      attachMeter(audio, hooks.onLevel, thisGen);
+      attachMeter(audio, hooks?.onLevel, thisGen);
     }
   });
   audio.addEventListener("ended", onEnd);
@@ -214,6 +224,7 @@ function startMicMeter(
       return;
     }
     const rms = rmsFrom(micBuf, micAnalyser);
+    micLevel = rms;
     if (rms > 0.035) {
       if (!talking) {
         talking = true;
@@ -223,7 +234,7 @@ function startMicMeter(
       talking = false;
       hooks?.onSpeaking?.(false);
     }
-    hooks?.onLevel?.(rms);
+    hooks?.onLevel?.(voiceLevel());
     micRaf = window.requestAnimationFrame(tick);
   };
   micRaf = window.requestAnimationFrame(tick);
@@ -290,14 +301,5 @@ export function listen(hooks?: VoiceHooks): void {
         });
       });
   };
-  void permissionState().then((perm) => {
-    if (thisGen !== micGen) {
-      return;
-    }
-    if (perm === "denied") {
-      denied();
-      return;
-    }
-    ask(false);
-  });
+  ask(false);
 }
