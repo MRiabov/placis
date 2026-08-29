@@ -20,8 +20,8 @@ website forms, top menu, and footer — then website publication.
    click-off; there is no Save and no Saving / Saved indicator. If the copy has
    not succeeded after 10 seconds, show a visible error; leaving stays blocked
    while it is uncopied.
-3. **Improve** it with the website assistant — it suggests copy and images, but
-   the owner decides.
+3. **Improve** it with the assistant — it suggests copy and images, but the
+   owner decides.
 4. **Publish** — put it on the internet (dropdown: preview website address, a
    connected website address, or New URL), with website rollback if a
    publication is wrong. Owner copy is the verb **Publish**; the act is website
@@ -89,8 +89,8 @@ only on the next website publication. **Link your Facebook** is a Details link
    editor, so I can keep it correct without code. Text persists when I click off
    the field; I do not click Save. If I leave while edits are still being
    copied, I am asked first.
-3. **As a contractor**, I want the website assistant to improve the copy and
-   suggest images, so I get better content faster.
+3. **As a contractor**, I want the assistant to improve the copy and suggest
+   images, so I get better content faster.
 4. **As a contractor**, I want website publication and website rollback, so I'm
    never stuck with a broken live website. I choose the preview website address
    or my website address, or I connect a new URL.
@@ -107,7 +107,7 @@ only on the next website publication. **Link your Facebook** is a Details link
 4. The unpublished website is validated before it becomes the live website.
    Website publication also requires an active subscription (pay gate in
    [billing](../billing/prd.md)).
-5. One end-to-end test covers edit → website assistant → website publication →
-   live HTML (fake R2 + fake purge) → website rollback → website form, with
-   outside services faked in tests but the core logic real. Apply the website
-   template is the onboarding E2E.
+5. One end-to-end test covers edit → assistant → website publication → live HTML
+   (fake R2 + fake purge) → website rollback → website form, with outside
+   services faked in tests but the core logic real. Apply the website template
+   is the onboarding E2E.

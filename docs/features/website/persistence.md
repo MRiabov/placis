@@ -82,10 +82,10 @@ is [manifest.md](manifest.md). The reserved label on the tenant row is [auth](..
   `(slot_id, business_profile_review_id)`. One ordered array
   **per reviews website section**, from the pool, length ≤ that website
   component’s max (some layouts take 3, others 6 or 8). The LLM fills it after
-  the website template (and the website assistant / Content can rewrite it).
-  Pinning **top reviews** does **not** rewrite these rows. Archive of a review
-  drops that id from every section array, then compact. Empty array: keep the
-  website section. Live website waits for the next website publication.
+  the website template (and the assistant / Content can rewrite it). Pinning
+  **top reviews** does **not** rewrite these rows. Archive of a review drops
+  that id from every section array, then compact. Empty array: keep the website
+  section. Live website waits for the next website publication.
 - `edit_history` — Website edit history. Append-only typed increments, same
   pattern as `business_profile_edits`. Never a full website page or
   unpublished-website jsonb dump. One row is one field or structure change (a
@@ -103,7 +103,7 @@ is [manifest.md](manifest.md). The reserved label on the tenant row is [auth](..
   jsonb nullable, `created_at`.
 
   **Batch** = one successful copy-out (not a server undo step): owner PATCH
-  (click-off or coalesced discrete actions) = one `batch_id`; website assistant
+  (click-off or coalesced discrete actions) = one `batch_id`; assistant
   **Ask first Apply** = one `batch_id` for the whole Apply; **instant apply** =
   one validated tool = one `batch_id`. Pending Ask first edits are not in this
   table. Reject never writes a row.
@@ -173,18 +173,13 @@ There is no unpublished snapshot per edit and no per-page version table. The
 unpublished website is in-place `UPDATE`. Website edit history is typed
 increments, like `business_profile_edits`.
 
+Do **not** keep leftover `website_assistant_threads` /
+`website_assistant_turns`. Thread tables: [assistant persistence](../assistant/persistence.md).
+
 - `website_urls` — reusable URL list for top menu / footer `kind: url` nodes.
   `id`, `tenant_id` fk, `href` (`string`, URL, `maxLength` 2048), `label`
   (`string`, `maxLength` 80), timestamps. Unique `(tenant_id, href)`. Typing a
   new URL in the combobox inserts a row. Does not create a website page.
-- `website_assistant_threads` — one per tenant. `id`, `tenant_id` fk unique,
-  `created_at`, `last_assistant_edit_at` nullable. Retain if last
-  **assistant edit** is within 24 hours; else the next open starts a new thread.
-  **Clear context** inserts a new row immediately.
-- `website_assistant_turns` — `id`, `thread_id` fk, `tenant_id` fk, `kind`
-  (`owner` / `reply` / `activity`), `body` (`string` + `maxLength`, markdown for
-  reply), `summary` (`string` + `maxLength`, owner-visible activity line),
-  `created_at`. Never store `ai_generations` blobs here.
 
 Logo on Website styles is `business_profiles.logo_media_asset_id` (Details). Do
 not add a logo URL column on `website_settings`. Website publication may emit

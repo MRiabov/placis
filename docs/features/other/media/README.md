@@ -25,7 +25,7 @@ an image is selected on the canvas (same rows). Crop, focal, and cleanup stay on
 
 ## Callers (same functions)
 
-`/cms/media`, the website editor PATCH, the website assistant (`update_slot`,
+`/cms/media`, the website editor PATCH, the assistant (`update_slot`,
 `cleanup_image`), and the ads Review orb call these same functions. The
 assistant does not get a second attach, crop, focal, or cleanup path. Ads
 Review, when it writes a copy, POSTs `/v1/media-assets/{id}/image-edits` and
@@ -79,7 +79,7 @@ item). Caption, crop, focal point, replace, AI cleanup.
 square, or portrait; the photo is not forced square). That same view is where
 they compare cleanup. Promptable AI cleanup sits in a prompt box **beside** the
 view on a wide screen and **under** it on a narrow screen — not the Ads Review
-overlay orb. Same light cleanup as ads / the website assistant `cleanup_image`
+overlay orb. Same light cleanup as ads / the assistant `cleanup_image`
 (declutter, tidy background; not invent work). Required overlay prompt,
 `maxLength` 500, on `POST …/image-edits`. Empty prompt is rejected. First upload
 may already have run a tailored default; this prompt is a **different** cleanup.

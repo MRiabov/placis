@@ -1,72 +1,17 @@
-# Website assistant
+# Website editor tools
 
-The website assistant is a chat-like command surface in the website editor — not
-a separate generator. It reads the selected website page, website sections,
-website slots, media assets, website forms, SEO, validation blockers, website
-publication status, and website versions, and turns requests into governed,
-reviewable website editor edits, and Details increments via the shared
-`update_details` tool when copy includes a detail. Text chat, voice handoffs,
-and website editor assistance all share the same tool surface. The registry
-lives here; generation and search go through `LLMProvider` in `ai`
-([LLM layer](../../general-architecture/llm-layer.md)).
+Hard-typed website editor tools the **assistant** (and onboarding 06) may call.
+Overlay, thread, and HTTP: [assistant](../assistant/README.md). Plan vs continuous and Ask first vs
+instant apply stay **website editor only** (below). Generation and search go
+through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
-## Owner surface
-
-Default-on overlay on the website-editor canvas. Tools and the apply path below
-are unchanged; this is the owner overlay. Details: [frontend.md](frontend.md), look:
-[design decision record](design-decision-record.md), architecture: [ADR](ADR.md) 6.
-
-- **Always on:** pinned to the canvas. **Default is collapsed** (canvas first)
-  on wide and narrow. Wide collapsed is the single-line composer (one row:
-  chevrons, field, **Plan mode**, **Ask first**, **Plan** / **Send**). Narrow
-  collapsed stays two rows (overlay bar + composer). Expand is at least half the
-  canvas column. Reduce height on a narrow screen stays two rows (overlay bar +
-  composer). **Clear context** trash is expanded-only. Reduced composer is
-  max-width 40rem, centered; expand fills the 12px canvas inset (180ms). Idle /
-  unfocused is 40% opacity; hover or focus-within is opaque. The overlay does
-  not dim or black out the website; the uncovered canvas stays clickable.
-- No **Website assistant** label or toolbar button — the overlay is the chatbot.
-- Composer submit is **Plan** while **Plan mode** is on, **Send** when it is off
-  (continuous).
-- **Apply / Reject pills never fade.**
-- **Clear context** starts a new thread and discards pending unapplied Ask-first
-  proposals (same as Reject those). It does not undo already-Applied batches and
-  is not “clear selected website section”. Control: silent trash on the right of
-  the overlay top row while **expanded** (no label, no fill). Hidden while
-  reduced.
-- The overlay is **one chat-like thread** (owner turns and assistant replies),
-  **persisted** (one thread per tenant). Hydrate on `/cms/website` open. Retain
-  if last assistant edit within 24 hours; else a new thread. Ask first
-  **Apply / Reject is per pending turn**: one pair for the whole run’s tools,
-  not per tool. Those two actions are **pills on the canvas**, always over the
-  chatbot (above it) or in the left stack next to the orb when the voice agent
-  is on, not in the thread. Tool calls in the thread are muted owner lines from
-  the backend, never the tool name. Each line has a kind icon: pencil for
-  writes, lightbulb for thinking. There is no search/grep tool.
-- Configs are **boolean switches** in the overlay. Default **plan + Ask first**.
-  **Follow** is a third config (`follow`), default off, not shown, not
-  owner-turnable.
-- Empty composer turns the **voice agent** on (`/cms/website`). The chatbot
-  overlay is hidden. A soft orb sits bottom-right of the canvas
-  (`min(5.5rem, 30vw)`), just above the workspace rail on narrow — not above the
-  hidden overlay. A glow falls off from the center with no hard edge. Clicks
-  pass through except Restore chatbot and close. Restore chatbot is an opaque
-  pill under Apply / Reject; the orb is a circle on the right spanning both rows
-  (sticky while the field stays empty until **Voice**). A small close on the
-  top-right of the orb also restores. In chatbot mode, empty field shows
-  **Voice**; text in the field is Plan / Send. Apply / Reject sit in that left
-  stack when the voice agent is on, and centered above the overlay over the
-  chatbot. Switching to the voice agent and back is a fade, not a cut. The voice
-  agent speaks back and uses the same tools; it grants no extra authority.
-  **Follow** does not snap the canvas while it is off.
-- Pending / Applied / Rejected must be obvious (Apply / Reject pills only while
-  that turn is pending; pending outline on changed website sections). Do not
-  paint **Not applied** as copy on the website.
-
-Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses these tools headless (**continuous**
-workflow + **instant apply**, no chat UI, no `create_page`) after the website
-template is applied. That job is website copy generation, not this website
+Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses these tools headless
+(**continuous** + **instant apply**, no chat UI, no `create_page`) after the
+website template is applied. That job is website copy generation, not the CMS
 assistant.
+
+Overlay look: [assistant design decision record](../assistant/design-decision-record.md), website placement:
+[design decision 18](design-decision-record.md). Architecture: [website ADR](ADR.md) 6.
 
 ## Tools (hard-typed, validated, parallel)
 
@@ -97,18 +42,179 @@ into a planned / applied / skipped / failed event.
 | `archive_project` | same archive HTTP as the editor |
 | `unarchive_project` | same unarchive HTTP as the list |
 
+Argument lists below match existing website PATCH / menus / media-library HTTP
+— not new product. `update_reviews`, `update_menus`, image `update_slot`,
+`cleanup_image`, and `update_details` are spelled out in later sections.
+
+### `update_slot` (text / rich_text / link / list)
+
+```text
+update_slot(
+  section_id,
+  slot_key,
+  value            # typed to that slot; image fields are the image form below
+)
+```
+
+Same Ask first / instant apply gate as image `update_slot`.
+
+### `update_seo`
+
+Same PATCH SEO columns as the website editor.
+
+```text
+update_seo(
+  seo_title?,
+  seo_description?,
+  seo_og_title?,
+  seo_og_description?,
+  seo_canonical_url?,
+  seo_noindex?,
+  seo_primary_keyword?
+)
+```
+
+Omitted fields are no-ops. Current website page only.
+
+### `update_form`
+
+Same PATCH as Content website-form dirty keys.
+
+```text
+update_form(
+  website_form_id,
+  title?,
+  submit_action?,
+  fields[]?,
+  privacy_notice?
+)
+```
+
+### `update_website_styles`
+
+Same `PATCH /v1/website/editor/settings` named fields.
+
+```text
+update_website_styles(
+  preset_id?,
+  primary?,
+  neutral?,
+  accent?,
+  radius?,
+  density?
+)
+```
+
+Tenant-scoped, not per website page. Extra keys 4xx.
+
+### `set_section_visibility`
+
+```text
+set_section_visibility(
+  section_id,
+  visible: bool
+)
+```
+
+Does not delete or archive.
+
+### `update_section_design`
+
+```text
+update_section_design(
+  section_id,
+  design    # named design-control fields from that website component; extra keys 4xx
+)
+```
+
+### `reorder_sections`
+
+```text
+reorder_sections(
+  ordered_section_ids[]   # full ordered list for the current website page
+)
+```
+
+### `create_section`
+
+Same create keys as the website editor PATCH.
+
+```text
+create_section(
+  component_id,
+  component_version,
+  position,
+  props?,
+  design?,
+  origin?
+)
+```
+
+Approved website component only.
+
+### `create_page`
+
+Same as `POST /v1/website/editor/pages`. Also appends a top-level page node on
+the footer, and on the top menu unless legal or cap.
+
+```text
+create_page(
+  path,
+  title,
+  page_type,
+  seo_title?,
+  seo_description?,
+  seo_og_title?,
+  seo_og_description?,
+  seo_canonical_url?,
+  seo_noindex?,
+  seo_primary_keyword?
+)
+```
+
+Onboarding 06 does not call this tool.
+
+### `generate_image`
+
+Last resort when nothing in GET `media_assets[]` fits. Writes `media_library`
+immediately (`supplied_by=ai`, pending review). Canvas attach still follows Ask
+first vs instant apply.
+
+```text
+generate_image(
+  prompt,              # minLength 1
+  media_caption,       # minLength 1, maxLength 500
+  section_id?,         # attach that new item
+  slot_key?
+)
+```
+
+Does not attach an existing library photo — that is `update_slot`. Stays
+website-editor unless a later pass says otherwise.
+
 **Owner action = assistant action.** Each tool is another caller of the same
 website-editor / media-library / Details / Projects execution the owner already
 uses (Ask first / instant apply around canvas tools). Text `update_slot` is the
 same upsert as click-off PATCH. Image attach, crop, focal, and AI cleanup are
 the same functions as the website editor PATCH and `/cms/media`.
 `update_details` is the shared Details tool (Ads generator calls it too), not a
-website-assistant copy. Click-off on `/cms/details` stays PATCH. Projects tools
-call the same `POST` / `PATCH` / archive HTTP as `/cms/projects`
+second copy of that Details tool. Click-off on `/cms/details` stays PATCH.
+Projects tools call the same `POST` / `PATCH` / archive HTTP as `/cms/projects`
 ([projects HTTP](../business-profile/projects/api.md)). There is no second
 assistant implementation and no public copy helper the tools call.
 Copy-on-write (`parent_media_asset_id`, parent file never replaced) stays
 **inside** those functions.
+
+**Write-path ownership.** The CMS dispatcher (text in-process on
+`GET /v1/assistant/thread/ws`; voice `POST /v1/assistant/voice/tool-calls`)
+returns events only. It does **not** upsert unpublished website rows. Frontend
+mutates the in-memory projection and PATCHes (and `/menus`). Onboarding 06
+writes unpublished rows in River SQL (no `frontend-2`). `generate_image` /
+`cleanup_image` write `media_library` immediately (same as today’s media-library
+HTTP); canvas attach still follows Ask first vs instant apply. Every agent edit
+is Ctrl+Z’able. `cleanup_image` is also allowed on Ads (same media-library
+function, then ads placement PATCH — not a website slot). Ads generate / revise
+/ rewrite are **not** these tools.
 
 Planner: a named real photo → **attach first** (`update_slot` +
 `media_asset_id`). Cleanup only when they ask to tidy that photo.
@@ -131,18 +237,17 @@ criteria. `assistant_plan` may summarize alongside the edit tools.
 ## Three configs
 
 Independent options. They combine. Default in the website editor:
-**plan + Ask first**, **Follow** off. Plan and Ask first are boolean switches on
-the overlay. Follow is contract-only.
+**plan + Ask first**, **Follow** on. Plan and Ask first are boolean switches on
+the overlay. Follow is not owner-turnable.
 
-**Follow** (`follow`) — when on, the canvas would snap to the website slot the
-agent is editing. Default **off**. The owner cannot turn it on (no overlay
-switch). A request with `follow: true` is refused. Reserved for a later cut.
+**Follow** (`follow`) — the canvas snaps to the website slot the **agent** is
+editing. Default **on**. The owner cannot turn it off (no overlay switch). A
+request with `follow: false` is refused. Dispatcher: [assistant](../assistant/architecture.md).
 
 **Workflow: plan vs continuous** (how the request is scoped)
 
 - **Plan** — plan in text first (Cursor-style). Only after the owner accepts
-  that text does the website assistant continuously apply. For larger or
-  ambiguous work.
+  that text does the assistant continuously apply. For larger or ambiguous work.
 - **Continuous** — no plan text. Start applying. For a small ask like “make the
   about us section a bit clearer”.
 
@@ -176,9 +281,9 @@ website editor mutates the in-memory projection, then the ordinary PATCH (and
 `edited_by=agent`. `record-apply` / `record-reject` are activity metadata only.
 After Apply, the owner does not Reject that edit. Changing the canvas later is a
 **new** human edit (PATCH / typing). That is not Reject. There is no “revert
-last website-assistant batch” via Reject. Activity cards show what happened;
-they are not an undo control. After Apply, Ctrl+Z undoes that **batch in RAM**,
-then PATCHes like any owner edit. The Apply row in `edit_history` keeps
+last assistant batch” via Reject. Activity cards show what happened; they are
+not an undo control. After Apply, Ctrl+Z undoes that **batch in RAM**, then
+PATCHes like any owner edit. The Apply row in `edit_history` keeps
 `edited_by=agent`; the copy-out of the undo is a later human batch.
 Instant-apply tools undo one tool at a time in RAM. Live website rollback is a
 different surface ([api.md](api.md)).
@@ -196,11 +301,13 @@ set). Pending Ask first edits are not in the table. Reject never writes a row.
 already did. Success / `409` `edit_history_conflict` match any other PATCH
 ([editing.md](editing.md)).
 
-**One in-flight website-assistant run per tenant** (includes onboarding 06). A
-second start is `409` until the current run finishes or fails. There is no
-cancel HTTP. Two tabs, voice + text, or 06 + the website editor must not both
-start a run. While 06 is in flight, CMS PATCH is `409`. While a CMS run is in
-flight, PATCH is allowed — that is the apply path.
+**One in-flight CMS assistant run per tenant** (`assistant.runs`). See
+[assistant](../assistant/architecture.md). A second CMS start is `409` until the current run finishes or
+fails. There is no cancel HTTP. Two tabs or voice + text must not both start a
+CMS run. Onboarding 06 is a separate River `tenant_id` lock — it does **not**
+409 CMS PATCH or CMS assistant HTTP. Same website-slot overlap after pay is
+last-write / `edit_history_conflict`. While a CMS run is in flight, PATCH is
+allowed — that is the apply path.
 
 ## Output
 
@@ -219,7 +326,7 @@ target. The owner-facing kind on `update_slot` is a closed union: **heading**,
 **text**, or **image**. The place is the website section’s owner-facing name
 (Hero, Services), not an id. The thread icon is from a closed union: **write**
 (pencil) for tool summaries, **think** (lightbulb) for thinking. There is no
-search/grep tool on the website assistant.
+search/grep tool.
 
 - `slot_type=image` → `Updated image on {Section}`
 - `slot_key` `heading` / `headline` / `title` → `Updated heading on {Section}`
@@ -360,6 +467,12 @@ that cleanup (same as ads: no fake results). Canvas warning until approved.
 Publication blocked until approved. Same Ask first / instant apply gate as
 `update_slot`.
 
+On **Ads**, the same function is `POST /v1/media-assets/{id}/image-edits`
+(`media_asset_id` + `prompt`; no website `section_id`). Then PATCH that
+placement on the existing ads caller path. Highlight / agent-edited notice;
+Ctrl+Z’able. No `POST /v1/ads/…/cleanup`. Ordinary ads owner PATCH still has no
+undo.
+
 ### `update_details`
 
 The shared Details tool ([details HTTP](../business-profile/details/api.md)) — one implementation, also invoked by
@@ -384,10 +497,10 @@ description as a tool arg, overlapping pending hunks.
 Activity `summary` examples: `Updated description on {title}`, `Added to
 description on {title}`, `Wrote description on {title}`. Never a tool name.
 
-The website assistant never does a website publication, never bypasses
-validation, and never writes arbitrary registry JSON. Projects writes are the
-tools above — one implementation. It does not edit Certifications and reviews.
-Details writes are `update_details` only — not a side effect of `update_slot` or
-website styles. It does not delete or archive a website section or website page
-(hide stays: `set_section_visibility`). It does not upload or replace the file —
-replace stays the existing replace on `/cms/media` / website editor upload.
+These tools never do a website publication, never bypass validation, and never
+write arbitrary registry JSON. Projects writes are the tools above — one
+implementation. It does not edit Certifications and reviews. Details writes are
+`update_details` only — not a side effect of `update_slot` or website styles. It
+does not delete or archive a website section or website page (hide stays:
+`set_section_visibility`). It does not upload or replace the file — replace
+stays the existing replace on `/cms/media` / website editor upload.

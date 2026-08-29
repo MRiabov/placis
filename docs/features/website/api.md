@@ -1,8 +1,8 @@
 # Website HTTP
 
-Conventions: [HTTP conventions](../../general-architecture/api.md). Unpublished website, website assistant, website
-publication, Connect website address. Field authority for the website-editor
-PATCH body remains [editing.md](editing.md); this file locks the routes.
+Conventions: [HTTP conventions](../../general-architecture/api.md). Unpublished website, website editor tools,
+website publication, Connect website address. Field authority for the
+website-editor PATCH body remains [editing.md](editing.md); this file locks the routes.
 
 Live business profile: [details](../business-profile/details/api.md). Projects: [projects](../business-profile/projects/api.md). Media library:
 [media library](../other/media/api.md). Website form submit: [leads](../other/leads/api.md).
@@ -151,83 +151,34 @@ these routes.
   80).
 - **Must not:** create a website page; `POST /pages` from this picker.
 
-## Complete — website assistant
+## Complete — website editor tools (via the assistant)
 
-One in-flight run per tenant (includes onboarding website copy generation).
-Tools never do website publication. CMS unpublished writes are the existing
-website page PATCH and `/menus` — not a second apply path. The website editor
-owns the working copy: Apply mutates the in-memory projection, then copy-out is
-the ordinary PATCH (`ai_generation_id` on those dirty keys so `edit_history` is
-`edited_by=agent`). Instant apply PATCHes as tools succeed. Ask first **Apply**
-/ **Reject** only `record-apply` / `record-reject` (activity metadata).
-
-Onboarding 06 is the exception: the River job writes unpublished rows headless
-(no `frontend-2`). While 06 is in flight, CMS PATCH and this assistant POST are
-`409`.
-
-**Thread:** one per tenant, not per website page. `GET` hydrates on
-`/cms/website` open. Retain if last **assistant edit** within 24 hours; else
-clear. **Clear context** = new thread immediately. Never return `ai_generations`
-blobs. In-flight run on reload: that run finishes or fails.
-`POST …/assistant/cancel` stays **do not create**.
+Website editor tools never do website publication. CMS unpublished writes stay
+on website page PATCH and `/menus`. Assistant HTTP: [assistant HTTP](../assistant/api.md). Apply path
+and 06: [assistant architecture](../assistant/architecture.md), [assistant.md](assistant.md).
 
 ### GET /v1/website/editor/assistant
 
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** `/cms/website` open (hydrate). Website versions rail may show
-  this thread’s activity next to publications (same resource). Rollback still
-  only on publication rows.
-- **Response:** current thread turns (`owner` / `reply` / `activity` with
-  `summary`). Empty thread if none or past retention.
+**Do not create.** Use [GET /v1/assistant/thread](../assistant/api.md).
 
 ### POST /v1/website/editor/assistant
 
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** website assistant chat in `frontend-2`. Onboarding 06 does not
-  call this POST (River writes unpublished rows headless).
-- **Idempotency-Key:** yes.
-- **Request:** plan vs continuous; Ask first vs instant apply; **Follow**
-  (`follow`, boolean, default `false`). Plan text is `string` + `maxLength`.
-  `follow: true` is refused (`4xx`); the owner cannot turn Follow on.
-- **Response:** named activity / tool event structs. Proposed
-  unpublished-website edits, not applied website rows. `update_details` is the
-  exception: it writes the live business profile immediately (`update_details` —
-  one shared tool), then the shared notification. Each tool event has `summary`
-  (`string` + `maxLength`): the owner line, backend-constructed
-  ([assistant.md](assistant.md)). The UI renders `summary` only. Never render `action` / tool
-  names (`update_slot`, …). Icon is from a closed kind: write = pencil,
-  thinking = lightbulb. There is no search/grep tool.
-- **Must not:** return `ai_generations` blobs; write unpublished rows from this
-  POST in the CMS.
+**Do not create.** Use [GET /v1/assistant/thread/ws](../assistant/api.md). Page-scoped and
+`/v1/website/editor/assistant` HTTP is retired. `update_details` still writes
+the live business profile immediately (shared Details tool), then the shared
+notification.
 
 ### POST /v1/website/editor/assistant/clear
 
-- **Auth:** Clerk JWT, active tenant
-- **Idempotency-Key:** yes.
-- **Callers:** **Clear context**. Inserts a new thread immediately.
+**Do not create.** Use [POST /v1/assistant/thread/new](../assistant/api.md).
 
 ### POST /v1/website/editor/assistant/record-apply
 
-- **Auth:** Clerk JWT, active tenant
-- **Idempotency-Key:** yes.
-- **Callers:** Ask first **Apply** after the website editor PATCHed (or queued)
-  the dirty keys.
-- **Request:** metadata only (`ai_generation_id` of the pending batch). No
-  unpublished payload, no `base_edit_history_head` — the PATCH already took the
-  head.
-- **Behavior:** activity card terminal. **Must not** upsert website pages /
-  sections / slots / menus and **must not** append `edit_history`. Second
-  transition `409`. **No revert.**
+**Do not create.** Use [POST /v1/assistant/record-apply](../assistant/api.md).
 
 ### POST /v1/website/editor/assistant/record-reject
 
-- **Auth:** Clerk JWT, active tenant
-- **Idempotency-Key:** yes.
-- **Callers:** Ask first **Reject**. The website editor drops pending edits in
-  memory; no PATCH.
-- **Request:** metadata only (`ai_generation_id`).
-- **Behavior:** activity card terminal. **Must not** write unpublished rows or
-  `edit_history`. Second transition `409`.
+**Do not create.** Use [POST /v1/assistant/record-reject](../assistant/api.md).
 
 ## Complete — website publication and Connect website address
 
@@ -285,17 +236,8 @@ Those rows are not this CMS POST. They are never website-rollback targets.
 - **Response:** hostname, type, status, DNS rows (type, Host, Value; copyable).
   No GoDaddy/nameserver mutation.
 
-### POST /v1/voice/realtime-connection
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** website-editor canvas orb; Ads product guide orb. Onboarding
-  **client interview** voice is out; onboarding **guide** assistant (talk
-  through the current onboarding screen) is in — that guide uses this same
-  short-lived secret shape.
-- **Idempotency-Key:** yes.
-- **Behavior:** short-lived realtime connection secret; audio bypasses Go
-  ([voice-agent.md](../../general-architecture/voice-agent.md)). Same governed tools as text on that surface. Cannot
-  website-publish.
+CMS voice realtime connection: [POST /v1/assistant/voice/realtime-connection](../assistant/api.md).
+Onboarding guide: [POST /v1/onboarding/assistant/voice/realtime-connection](../onboarding/api.md).
 
 ## Do not create
 
@@ -309,16 +251,16 @@ Those rows are not this CMS POST. They are never website-rollback targets.
   `publication_id`, then PATCH)
 - `GET /v1/website/publications/{id}/pages` (use editor GET `publication_id`)
 - `/v1/website/editor/top-menu`, `/v1/website/editor/footer` (use `/menus`)
-- `assistant/apply`, `assistant/reject` that write unpublished rows (use
-  `record-apply` / `record-reject` + PATCH)
-- assistant/revert
+- `/v1/website/editor/pages/{page_id}/assistant` and `…/record-apply` /
+  `…/record-reject` (use [assistant HTTP](../assistant/api.md))
+- `/v1/website/editor/assistant` and `…/clear` (use [assistant HTTP](../assistant/api.md))
 - per-website-page website publication
 - `POST …/pages/{id}/sections`, `PATCH …/sections/order`,
   `DELETE …/sections/{id}`, `POST …/slots/{key}/asset`
-- `POST …/pages/{page_id}/assistant` (moved to `/v1/website/editor/assistant`)
+- `POST …/pages/{page_id}/assistant` (use `/v1/assistant/thread/ws`)
 - `POST …/assistant/cancel` (the run ends when it finishes or fails)
 - Don't say session: `realtime-voice-session` as a path name (use
-  `/v1/voice/realtime-connection`)
+  `/v1/assistant/voice/realtime-connection`)
 - `content-contract` as an HTTP resource (website component catalog files)
 - `/certification-selections` (certifications live on [details](../business-profile/details/api.md))
 - `/v1/website/editor/assets`, `/v1/website/editor/files/…` (media library owns

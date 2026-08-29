@@ -13,3 +13,15 @@ ETL: onboarding 02 and a Monday / Wednesday / Friday schedule both call
 Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/08-website-activation.md). Onboarding
 [website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md) is a River job after applying the website template; it
 must not block the website preview link.
+
+## Assistant thread compaction
+
+River job. Trigger: `assistant.threads.last_activity_at` older than
+**12 hours**. Keep the last **3 owner** and last **3 assistant** `thread_items`
+(plus `tool_summary` / `thinking` in that tail). Older items become **one**
+`assistant` summary in place; `compacted_through_item_id` advances. Summarize
+with a cheap flash model (DeepSeek V4 Flash or current Qwen Flash —
+**pin a dated id**, not `*-latest`). Write a new `ai_generations` row for that
+call (`thread_id` set). Does **not** debit usage credit (maintenance, not an
+owner turn). Does not rewrite existing `ai_generations` rows. Distinct from 24h
+overlay discard ([assistant persistence](../features/assistant/persistence.md)).

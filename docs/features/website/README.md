@@ -24,8 +24,9 @@ and website publication. Ads live in [../ads/](../ads/README.md). Together they 
 - [contractor-website-debloat.md](contractor-website-debloat.md) — keep the website component catalog; write a
   thin Worker
 - [variables.md](variables.md) — the `{{var}}` website placeholders and how they resolve
-- [assistant.md](assistant.md) — the website assistant: tools, plan vs continuous, instant
-  apply vs Ask first
+- [assistant.md](assistant.md) — website editor tools: plan vs continuous, Ask first vs
+  instant apply
+- [Assistant](../assistant/README.md) — overlay, thread, HTTP
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density,
   motion
 - [technical-implementation.md](technical-implementation.md) — website template application, website

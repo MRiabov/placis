@@ -27,7 +27,7 @@ Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). T
 4. Create tenant-owned `website_*` records as an unpublished website; never
    write a live website from this step.
 
-## Website assistant (the LLM drafts; the owner decides)
+## Assistant (the LLM drafts; the owner decides)
 
 - Tool calls: see [assistant.md](assistant.md) (`update_slot`, `cleanup_image`, `update_form`,
   `update_website_styles`, `update_menus`, `generate_image`, `update_details`,
@@ -92,9 +92,9 @@ Do not create `/v1/public/site/…`, leftover `/preview/{token}/`, or
   rows are refused.
 - Website template application rejects unknown website component ids / invalid
   props before writing.
-- One E2E: edit → website assistant → website publication → live R2 keys + fake
-  purge → website rollback → website form (LLM faked, core logic unmocked).
-  Apply the website template is the onboarding E2E.
+- One E2E: edit → assistant → website publication → live R2 keys + fake purge →
+  website rollback → website form (LLM faked, core logic unmocked). Apply the
+  website template is the onboarding E2E.
 
 ## Frontend
 

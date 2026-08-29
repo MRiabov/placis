@@ -58,8 +58,10 @@ in-flight checkout that already lost.
    `published_by=onboarding`, `active`. Archive v1. Same R2 write as 07 / CMS
    website publication; purge Cache so v1-with-strip does not linger. Host stays
    up. Website address is a later CMS modal.
-6. In-flight 06 **continues** on the same `tenant_id`. CMS website assistant 409
-   until that run ends.
+6. In-flight 06 **continues** on the same `tenant_id`. Do not cancel it. CMS
+   assistant / PATCH are not 409-blocked for leftover 06. Host HTML stays the
+   07/08 R2 `latest/` (06 does not live-update R2 after 07). Same website-slot
+   overlap: last-write / `edit_history_conflict`.
 
 ## Persist
 
@@ -69,8 +71,8 @@ without the strip.
 
 ## Fail
 
-Signature/metadata mismatch → ignore / 4xx; no upgrade. Replay does not activate
-twice. A second payer after the first verified completion is refused.
+Signature/metadata mismatch → ignore / 4xx; do not activate. Replay does not
+activate twice. A second payer after the first verified completion is refused.
 
 ## Out
 

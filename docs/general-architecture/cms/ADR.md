@@ -34,11 +34,13 @@ decision + date) instead of silently replacing the old entry.
    (2026-08-27): **`/cms` is a two-card chooser**, not a prompt Send and not a
    sidebar destination. Cards: **Do my website…** (`/cms/website`) and
    **Run my ads** (`/cms/ads`). After they pick, the rail is Sites / Profile /
-   Ads. Hide New chat nav, Paperclip, Start client interview, Upgrade shelf,
-   Settings, Log out; keep the mock HTML. Connect stays. No first-turn assistant
-   POST. Name under the photo is the Clerk human name. (2026-08-28): Connect
-   does not stay on `/cms`. Cards have destination logos and the prompt-box
-   shade. Google Ads / Meta connect lives on Ads.
+   Ads. Hide New chat nav, Paperclip, Start client interview, leftover Usage &
+   billing mock, Settings, Log out; keep the mock HTML. Connect stays. No
+   first-turn assistant POST. Name under the photo is the Clerk human name.
+   Look: [assistant design decision 3](../../features/assistant/design-decision-record.md). (2026-08-28): Connect does not stay on
+   `/cms`. Cards have destination logos and the prompt-box shade. Google Ads /
+   Meta connect lives on Ads. Voice on `/cms` is gone; overlay is the CMS
+   assistant.
 
 3. **Usage & billing is on the account menu** — Not a left-nav peer of Sites /
    Ads. Hide the leftover Usage rail item. Settings / Log out stay hidden.

@@ -1,19 +1,20 @@
 # Left nav and `/cms`
 
-The CMS (sidebar + main area): left nav, Profile disclosure, `/cms` chooser.
-Destination screens live with their features. Loading placeholders: every
-screen, per field / row — not a whole-panel swap ([frontend.md](../frontend.md)).
+The CMS (sidebar + main area): left nav, Profile disclosure, `/cms` two-card
+chooser. Destination screens live with their features. Loading placeholders:
+every screen, per field / row — not a whole-panel swap ([frontend.md](../frontend.md)).
 
 Look: [design decision record](design-decision-record.md). Tokens: [design.md](design.md). Port:
-[frontend-debloat.md](../frontend-debloat.md). [ADR](ADR.md).
+[frontend-debloat.md](../frontend-debloat.md). [ADR](ADR.md). Assistant overlay:
+[assistant](../../features/assistant/README.md).
 
 ## Left nav
 
 The CMS left nav lives in `frontend-2/src/features/cms/` (layout module; names
 in [frontend-debloat.md](../frontend-debloat.md)). Profile replaces the current top-level Details item.
 Sites (the website editor entry) stays where it is. There is no **AI tools**
-item: image cleanup is `/cms/media`; the website assistant is the canvas
-overlay. Ads is a destination (screens: [ads frontend](../../features/ads/ad-generation/frontend.md)).
+item: image cleanup is `/cms/media`; the assistant is the canvas overlay. Ads is
+a destination (screens: [ads frontend](../../features/ads/ad-generation/frontend.md)).
 
 `/cms` is **not** a sidebar destination. After they pick a card, the rail is
 Sites / Profile / Ads. Direct `/cms` (land or go to the URL) still shows the
@@ -63,8 +64,9 @@ of Sites.
 
 **Hide in product; keep mock HTML:** Settings, Log out, New chat nav row,
 Connect (the New chat Google / Meta control), Paperclip, Start client interview
-orb, Upgrade shelf, leftover Usage rail item. Do not delete those nodes from
-the look-export HTML. Do **not** hide the website-editor voice orb.
+orb, leftover Usage & billing mock, leftover Usage rail item. Do not delete
+those nodes from the look-export HTML. Do **not** hide the website-editor voice
+orb.
 
 ## Profile disclosure
 
@@ -112,8 +114,8 @@ stacked, so titles stay one line.
 
 No first-turn assistant POST. No Paperclip. No Start client interview (that
 control promised a second client interview after website activation). Product
-voice is the website-editor canvas orb and the Ads product guide — not this
-screen.
+voice is the assistant overlay / canvas orb, not this screen. Look:
+[assistant design decision 3](../../features/assistant/design-decision-record.md).
 
 **Connect** is not on `/cms`. Google Ads and Meta connect live on Ads. The
 hidden prompt-box Connect control is not Connect website address and not Details
