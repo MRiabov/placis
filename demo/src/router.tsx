@@ -112,7 +112,11 @@ const projectNewRoute = createRoute({
   component: function ProjectNewPage() {
     return <ProjectPage projectId={null} />;
   },
-  validateSearch: (search: Record<string, unknown>) => demoSearch(search),
+  validateSearch: (search: Record<string, unknown>) => ({
+    ...demoSearch(search),
+    picker: searchFlag(search.picker),
+    diff: searchFlag(search.diff),
+  }),
 });
 
 const projectIdRoute = createRoute({
