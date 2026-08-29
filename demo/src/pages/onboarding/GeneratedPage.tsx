@@ -4,13 +4,14 @@ import { photo } from "@/lib/fixtures";
 import { siteHero, siteReviews, siteServices } from "@/lib/site-copy";
 import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 
 type GeneratedState = "unsigned" | "signed" | "paying" | "activating" | "paid";
 
 export function GeneratedPage(): ReactNode {
   const { setExtraGroups } = useOnboardingDev();
   const [state, setState] = useState<GeneratedState>("unsigned");
-  const [panelOpen, setPanelOpen] = useState(true);
+  const [panelOpen, setPanelOpen] = useState(false);
 
   useEffect(() => {
     setExtraGroups([
@@ -23,7 +24,7 @@ export function GeneratedPage(): ReactNode {
             on: state === "unsigned",
             onSelect: () => {
               setState("unsigned");
-              setPanelOpen(true);
+              setPanelOpen(false);
             },
           },
           {
@@ -93,10 +94,7 @@ export function GeneratedPage(): ReactNode {
           </p>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             {siteReviews.slice(0, 2).map((review) => (
-              <article
-                className="rounded-xl border border-border bg-white p-4"
-                key={review.name}
-              >
+              <article className={card("p-4")} key={review.name}>
                 <div className="flex items-center gap-2">
                   <img
                     alt=""
@@ -120,111 +118,174 @@ export function GeneratedPage(): ReactNode {
         </section>
       </div>
       {state === "paid" ? null : (
-        <div className="border-t border-border bg-white px-4 py-3">
+        <aside
+          aria-label="Website activation"
+          className="z-40 shrink-0 border-t border-stone-200 bg-white shadow-[0_-18px_48px_rgb(19_18_10/10%)]"
+        >
           {panelOpen ? (
-            <div className="mb-3 grid gap-2 rounded-xl border border-border p-4">
+            <div className="mx-auto grid w-[min(36rem,calc(100%-2.5rem))] max-h-[min(58vh,28rem)] gap-4 overflow-auto pt-5">
               <img
                 alt="placis"
-                className="h-8 w-auto justify-self-start"
+                className="h-10 w-[101px]"
+                height={40}
                 src="/placis-mark.png"
+                width={101}
               />
               {state === "unsigned" ? (
                 <>
-                  <h2 className="text-lg font-semibold">
-                    Activate this website
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Create an account, then pay. Whoever pays becomes the owner.
-                    The website stays unpublished until you publish it later.
-                  </p>
-                  <p>
-                    <b>EUR 4,900</b> <span className="text-sm">one-time</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Then about €50 / month to keep editing and hosting.
-                  </p>
-                  <Button
-                    className="justify-self-start"
-                    onClick={() => setState("signed")}
-                  >
-                    Create account
-                  </Button>
+                  <div>
+                    <h2 className="m-0 text-xl font-semibold tracking-tight">
+                      Activate this website
+                    </h2>
+                    <p className="mt-2 text-sm leading-normal text-zinc-600">
+                      Create an account, then pay. Whoever pays becomes the
+                      owner. The website stays unpublished until you publish it
+                      later.
+                    </p>
+                    <div
+                      className={card(
+                        "mt-3.5 flex items-baseline justify-between gap-3 bg-zinc-50 px-4 py-3.5",
+                      )}
+                    >
+                      <b className="text-2xl font-semibold tracking-tight">
+                        EUR 4,900
+                      </b>
+                      <span className="text-[13px] text-muted-foreground">
+                        one-time
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-zinc-600">
+                      Then about €50 / month to keep editing and hosting.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      className="h-11 px-[18px]"
+                      onClick={() => setState("signed")}
+                    >
+                      Create account
+                    </Button>
+                  </div>
                 </>
               ) : null}
               {state === "signed" ? (
                 <>
-                  <h2 className="text-lg font-semibold">Pay to activate</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Signed in. Checkout is tied to this account.
-                  </p>
-                  <p>
-                    <b>EUR 4,900</b> <span className="text-sm">one-time</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Then about €50 / month to keep editing and hosting.
-                  </p>
-                  <Button
-                    className="justify-self-start"
-                    onClick={() => {
-                      setState("paying");
-                      window.setTimeout(() => {
-                        setState("activating");
+                  <div>
+                    <h2 className="m-0 text-xl font-semibold tracking-tight">
+                      Pay to activate
+                    </h2>
+                    <p className="mt-2 text-sm leading-normal text-zinc-600">
+                      Signed in. Checkout is tied to this account.
+                    </p>
+                    <div
+                      className={card(
+                        "mt-3.5 flex items-baseline justify-between gap-3 bg-zinc-50 px-4 py-3.5",
+                      )}
+                    >
+                      <b className="text-2xl font-semibold tracking-tight">
+                        EUR 4,900
+                      </b>
+                      <span className="text-[13px] text-muted-foreground">
+                        one-time
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-zinc-600">
+                      Then about €50 / month to keep editing and hosting.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      className="h-11 px-[18px]"
+                      onClick={() => {
+                        setState("paying");
                         window.setTimeout(() => {
-                          window.location.assign(
-                            "/cms/website?publication=1&from=activation",
-                          );
+                          setState("activating");
+                          window.setTimeout(() => {
+                            window.location.assign(
+                              "/cms/website?publication=1&from=activation",
+                            );
+                          }, 900);
                         }, 900);
-                      }, 900);
-                    }}
-                  >
-                    Pay EUR 4,900
-                  </Button>
+                      }}
+                    >
+                      Pay EUR 4,900
+                    </Button>
+                  </div>
                 </>
               ) : null}
               {state === "paying" ? (
-                <>
-                  <h2 className="text-lg font-semibold">Opening checkout</h2>
-                  <p className="text-sm text-muted-foreground">
+                <div>
+                  <h2 className="m-0 text-xl font-semibold tracking-tight">
+                    Opening checkout
+                  </h2>
+                  <p className="mt-2 text-sm leading-normal text-zinc-600">
                     Stripe checkout for EUR 4,900. This mock does not charge a
                     card.
                   </p>
-                </>
+                </div>
               ) : null}
               {state === "activating" ? (
-                <>
-                  <h2 className="text-lg font-semibold">Payment received</h2>
-                  <p className="text-sm text-muted-foreground">
+                <div>
+                  <h2 className="m-0 text-xl font-semibold tracking-tight">
+                    Payment received
+                  </h2>
+                  <p className="mt-2 text-sm leading-normal text-zinc-600">
                     Opening the website editor…
                   </p>
-                </>
+                </div>
               ) : null}
             </div>
           ) : null}
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <img alt="placis" className="h-8" src="/placis-mark.png" />
-              <div>
-                <p className="text-sm font-medium">This website is ready</p>
-                <p className="text-xs text-muted-foreground">
-                  One-time · then about €50 / month
-                </p>
-              </div>
+          <div
+            className={
+              panelOpen
+                ? "mx-auto grid w-[min(72rem,calc(100%-2.5rem))] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-5 gap-y-4 py-3.5"
+                : "mx-auto grid w-[min(72rem,calc(100%-2.5rem))] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-5 gap-y-4 py-3.5"
+            }
+          >
+            {panelOpen ? null : (
+              <img
+                alt="placis"
+                className="h-10 w-[101px]"
+                height={40}
+                src="/placis-mark.png"
+                width={101}
+              />
+            )}
+            <div className="grid min-w-0 gap-0.5">
+              <b className="text-[15px] font-semibold tracking-tight">
+                This website is ready
+              </b>
+              <span className="text-[13px] text-muted-foreground">
+                One-time · then about €50 / month
+              </span>
             </div>
-            <p className="text-sm">
-              <b>EUR 4,900</b>{" "}
-              <span className="text-muted-foreground">one-time</span>
-            </p>
+            {panelOpen ? null : (
+              <p className="m-0 grid gap-px text-right">
+                <b className="text-lg font-semibold tracking-tight">
+                  EUR 4,900
+                </b>
+                <span className="text-xs text-muted-foreground">one-time</span>
+              </p>
+            )}
             {panelOpen ? (
-              <Button onClick={() => setPanelOpen(false)} variant="outline">
+              <Button
+                className="h-11 w-max justify-self-end px-[18px]"
+                onClick={() => setPanelOpen(false)}
+                variant="outline"
+              >
                 Close
               </Button>
             ) : (
-              <Button onClick={() => setPanelOpen(true)}>
+              <Button
+                className="h-11 w-max justify-self-end px-[18px]"
+                onClick={() => setPanelOpen(true)}
+              >
                 Activate this website
               </Button>
             )}
           </div>
-        </div>
+        </aside>
       )}
     </div>
   );

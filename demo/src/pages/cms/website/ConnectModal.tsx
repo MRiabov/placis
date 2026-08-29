@@ -1,6 +1,7 @@
 import { type ReactNode, useState } from "react";
 
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 import { Field, TextInput } from "@/ui/Field";
 
 type ConnectModalProps = {
@@ -33,7 +34,7 @@ export function ConnectModal({ onClose }: ConnectModalProps): ReactNode {
       }}
       role="dialog"
     >
-      <div className="w-full max-w-lg rounded-xl border border-border bg-white p-4 shadow-md">
+      <div className={card("w-full max-w-lg p-5 shadow-card")}>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold" id="connect-title">
             Connect website address

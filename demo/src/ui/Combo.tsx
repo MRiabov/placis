@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/cn";
+import { card } from "@/ui/card";
 import { controlClass } from "@/ui/Field";
 
 export type ComboOption = {
@@ -18,6 +19,7 @@ type ComboProps = {
   groupLabel?: string;
   ariaLabel?: string;
   forceOpen?: boolean;
+  searchIcon?: boolean;
 };
 
 export function Combo({
@@ -25,10 +27,11 @@ export function Combo({
   onChange,
   options,
   placeholder,
-  createKind = "item",
+  createKind,
   groupLabel,
   ariaLabel,
   forceOpen = false,
+  searchIcon = false,
 }: ComboProps): ReactNode {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState(value);
@@ -36,6 +39,7 @@ export function Combo({
     setQuery(value);
   }, [value]);
   const mapsPlace = createKind === "place";
+  const canCreate = Boolean(createKind) && !mapsPlace;
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) {
@@ -45,14 +49,17 @@ export function Combo({
       `${option.title} ${option.hint ?? ""}`.toLowerCase().includes(needle),
     );
   }, [options, query]);
-  const creating = Boolean(query.trim()) && filtered.length === 0 && !mapsPlace;
+  const creating = canCreate && Boolean(query.trim()) && filtered.length === 0;
+  const shown = open || forceOpen;
+  const hasMenu =
+    filtered.length > 0 || creating || (mapsPlace && shown) || canCreate;
 
   return (
-    <div className="relative">
+    <div className="relative w-full min-w-0">
       <input
-        aria-expanded={open || forceOpen}
+        aria-expanded={shown && hasMenu}
         aria-label={ariaLabel}
-        className={controlClass}
+        className={cn(controlClass, searchIcon ? "pr-10" : "")}
         role="combobox"
         onBlur={() => {
           window.setTimeout(() => setOpen(false), 120);
@@ -66,29 +73,48 @@ export function Combo({
         placeholder={placeholder}
         value={query}
       />
-      {open || forceOpen ? (
-        <div className="absolute top-[calc(100%+6px)] right-0 left-0 z-30 overflow-hidden rounded-xl border border-border bg-white shadow-md">
-          <div className="p-1.5">
-            <p
-              className={cn(
-                "flex w-full items-center gap-2 rounded-[10px] px-2.5 py-2 text-left text-[13px]",
-                creating
-                  ? "bg-black/5 text-foreground"
-                  : "text-muted-foreground",
-              )}
-            >
-              {creating ? (
-                <>
-                  <span className="font-bold">+</span>
-                  Create new {createKind} “{query.trim()}”
-                </>
-              ) : mapsPlace ? (
-                "Type to search a place…"
-              ) : (
-                `Type to create a new ${createKind}…`
-              )}
-            </p>
-          </div>
+      {searchIcon ? (
+        <svg
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3-3" />
+        </svg>
+      ) : null}
+      {shown && hasMenu ? (
+        <div
+          className={card(
+            "absolute top-[calc(100%+6px)] right-0 left-0 z-30 overflow-hidden shadow-card",
+          )}
+        >
+          {canCreate || mapsPlace ? (
+            <div className="p-1.5">
+              <p
+                className={cn(
+                  "flex w-full items-center gap-2 rounded-[10px] px-2.5 py-2 text-left text-[13px]",
+                  creating
+                    ? "bg-black/5 text-foreground"
+                    : "text-muted-foreground",
+                )}
+              >
+                {creating ? (
+                  <>
+                    <span className="font-bold">+</span>
+                    Create new {createKind} “{query.trim()}”
+                  </>
+                ) : mapsPlace ? (
+                  "Type to search a place…"
+                ) : (
+                  `Type to create a new ${createKind}…`
+                )}
+              </p>
+            </div>
+          ) : null}
           {creating ? <div className="mx-2 h-px bg-border" /> : null}
           {groupLabel ? (
             <p className="px-3 py-1 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">

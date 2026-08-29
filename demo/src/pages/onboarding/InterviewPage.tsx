@@ -6,10 +6,12 @@ import { photo } from "@/lib/fixtures";
 import { siteReviews } from "@/lib/site-copy";
 import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 import { FeaturedServices } from "@/ui/FeaturedServices";
 import { Field, Panel, TextArea, TextInput } from "@/ui/Field";
 import { HoursPicker } from "@/ui/HoursPicker";
 import { ServiceAreas } from "@/ui/ServiceAreas";
+import { VoiceInterviewOverlay } from "@/ui/VoiceInterviewOverlay";
 
 type InterviewState = "text" | "filled" | "few" | "noreviews";
 type Channel = "text" | "voice";
@@ -71,7 +73,7 @@ export function InterviewPage(): ReactNode {
       </p>
       <div
         aria-label="How to answer"
-        className="mt-6 flex gap-1 rounded-lg border border-border p-1"
+        className="mt-6 flex w-fit gap-1 rounded-full border border-border bg-zinc-50 p-[3px]"
         role="tablist"
       >
         {(
@@ -83,9 +85,9 @@ export function InterviewPage(): ReactNode {
           <button
             aria-selected={channel === id}
             className={cn(
-              "flex-1 rounded-md px-3 py-1.5 text-sm",
+              "rounded-full px-3 py-1.5 text-[13px] font-medium",
               channel === id
-                ? "bg-zinc-50 font-medium"
+                ? "bg-muted font-semibold text-foreground"
                 : "text-muted-foreground",
             )}
             key={id}
@@ -98,15 +100,7 @@ export function InterviewPage(): ReactNode {
         ))}
       </div>
       {channel === "voice" ? (
-        <div className="mt-6 grid gap-3 rounded-xl border border-border bg-white p-4">
-          <p className="text-sm">
-            Voice is coming later. For now, answer in writing — it is the same
-            questions, into the same profile.
-          </p>
-          <Button className="justify-self-start" disabled variant="outline">
-            Start voice
-          </Button>
-        </div>
+        <VoiceInterviewOverlay onBack={() => setChannel("text")} />
       ) : (
         <form className="mt-6 grid gap-5">
           <Panel
@@ -196,19 +190,13 @@ export function InterviewPage(): ReactNode {
                   Not enough photos yet. Pick one, or keep uploading.
                 </p>
                 <div className="grid gap-2 sm:grid-cols-2">
-                  <button
-                    className="rounded-xl border border-border p-3 text-left"
-                    type="button"
-                  >
+                  <button className={card("p-3 text-left")} type="button">
                     <b className="block text-sm">Find more online</b>
                     <span className="text-xs text-muted-foreground">
                       Pull more listing photos into the media library.
                     </span>
                   </button>
-                  <button
-                    className="rounded-xl border border-border p-3 text-left"
-                    type="button"
-                  >
+                  <button className={card("p-3 text-left")} type="button">
                     <b className="block text-sm">Create a stand-in</b>
                     <span className="text-xs text-muted-foreground">
                       Draft a photo until you upload approved ones.
@@ -224,7 +212,9 @@ export function InterviewPage(): ReactNode {
           >
             <button
               aria-disabled="true"
-              className="flex items-start gap-3 rounded-xl border border-border bg-zinc-50 p-3 text-left"
+              className={card(
+                "flex items-start gap-3 bg-zinc-50 p-3 text-left",
+              )}
               disabled
               type="button"
             >
@@ -273,10 +263,7 @@ export function InterviewPage(): ReactNode {
             ) : (
               <div className="grid gap-3">
                 {siteReviews.map((review) => (
-                  <article
-                    className="rounded-xl border border-border p-3"
-                    key={review.name}
-                  >
+                  <article className={card("p-3")} key={review.name}>
                     <div className="flex items-center gap-2">
                       <img
                         alt=""
@@ -349,7 +336,7 @@ function CertChoice({
   return (
     <button
       className={cn(
-        "flex items-start gap-3 rounded-xl border p-3 text-left",
+        card("flex items-start gap-3 p-3 text-left"),
         on ? "border-primary bg-zinc-50" : "border-border",
       )}
       onClick={onToggle}

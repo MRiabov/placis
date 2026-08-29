@@ -4,6 +4,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 
 type ReviewState = "found" | "filling" | "wait" | "conflict" | "ready";
 
@@ -120,7 +121,7 @@ export function ReviewPage(): ReactNode {
           We’ll look the business up again in a few minutes.
         </p>
       ) : null}
-      <div className="mt-6 grid gap-4 rounded-xl border border-border bg-white p-4">
+      <div className={card("mt-6 grid gap-4 p-5")}>
         <div>
           <p className="text-xs text-muted-foreground">
             Company registry record
@@ -173,7 +174,11 @@ export function ReviewPage(): ReactNode {
             />
           ) : null}
           {state === "conflict" ? (
-            <div className="grid gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm">
+            <div
+              className={card(
+                "grid gap-2 border-amber-200 bg-amber-50 p-3 text-sm",
+              )}
+            >
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <b>Display name</b>
@@ -230,14 +235,38 @@ function Fact({
     return null;
   }
   return (
-    <div className="flex items-start justify-between gap-3 text-sm">
+    <div className={card("flex items-start justify-between gap-3 p-3 text-sm")}>
       <div>
-        <b>{label}</b>
-        <p className={cn("mt-0.5", pending ? "text-muted-foreground" : "")}>
+        <b className="block text-[13px] font-normal tracking-tight text-zinc-600">
+          {label}
+        </b>
+        <p
+          className={cn(
+            "mt-1 text-[15px] font-medium",
+            pending ? "text-muted-foreground" : "",
+          )}
+        >
           {value}
         </p>
       </div>
-      <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-xs">
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium",
+          pending ? "bg-sky-50 text-sky-800" : "bg-emerald-50 text-emerald-800",
+        )}
+      >
+        {pending ? null : (
+          <svg
+            aria-hidden="true"
+            className="size-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            viewBox="0 0 24 24"
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        )}
         {chip}
       </span>
     </div>
