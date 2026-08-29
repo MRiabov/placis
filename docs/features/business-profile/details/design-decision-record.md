@@ -28,6 +28,9 @@ One number is one decision.
    (2026-08-28): One line at every width (short day · Opens – Closes · Closed /
    copy), like Calendar desktop. Do not stack the times under the day.
 
+   (2026-08-29): On a narrow screen the day is Mo / Tu / We / Th / Fr / Sa / Su
+   and the row uses a tight gap so Opens – Closes stay on one line.
+
 4. **Onboarding client interview uses these same field controls** — Featured
    services, Maps territory cards, and the hours picker are shared with
    `/onboarding/interview`. Details keeps the Details panel; onboarding keeps
