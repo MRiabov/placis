@@ -11,7 +11,7 @@ loop under Placis names.
 find (company registry and/or Google Maps) + online research consent
   → business research starts immediately (async)
   → Review (skippable; extra seconds for research)
-  → client interview (text XOR voice)
+  → client interview (text, 04a; voice writer 04b is **out**)
   → profile history accumulates as sources and answers arrive
   → client interview complete → apply the website template (LLM picks website template/website styles; write is deterministic)
   → website copy generation starts (async; `/onboarding/preview` waits copy-done or ~15s cap)
@@ -38,10 +38,10 @@ generation.
 tools as the website editor (`update_slot`, `update_seo`, …), no chat UI,
 writing into the existing unpublished website. 07 writes the host after copy
 finishes or the wait cap; copy that lands later does not SSE the host. If copy
-fails, the unpublished website stays. The website assistant
-([website/assistant.md](../website/assistant.md)) is still in the CMS **after** website activation. The
-LLM never does website publication (07/08 call the same HTML write as CMS
-website publication).
+fails, the unpublished website stays. The CMS **assistant** ([assistant](../assistant/README.md)) is
+after website activation. Website editor tools: [website/assistant.md](../website/assistant.md). The LLM
+never does website publication (07/08 call the same HTML write as CMS website
+publication).
 
 ## End of onboarding: paid, host stays up
 
@@ -71,8 +71,7 @@ status.
 
 ## Voice
 
-Voice is a **channel** (client interview, website assistant, and the voice agent
-in the CMS). Transport: [voice-agent.md](../../general-architecture/voice-agent.md). Client-interview tools and complete:
-[04b](pipeline/04b-voice-client-interview.md). Applying the website template consumes the accepted profile, never the
-raw transcript. Creating a client-interview realtime connection includes the
-current profile, checklist, extra notes, and last `update_interview_plan`.
+Voice is a **channel** (onboarding assistant, CMS assistant). Transport:
+[voice-agent.md](../../general-architecture/voice-agent.md). Client-interview **data entry** is [04a](pipeline/04a-text-client-interview.md); the agent writer
+([04b](pipeline/04b-voice-client-interview.md)) is out. Applying the website template consumes the accepted profile,
+never the raw transcript.

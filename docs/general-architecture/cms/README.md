@@ -2,8 +2,8 @@
 
 The CMS is the whole owner app (sidebar + main area): website, ads, and Profile.
 It is not a domain object and not a vertical feature. This directory owns the
-**CMS (sidebar + main area)** — left nav, `/cms` chooser, look tokens, and the
-CMS-wide design decision record.
+**CMS (sidebar + main area)** — left nav, `/cms` two-card chooser, look tokens,
+and the CMS-wide design decision record.
 
 Visual mock: [`demo/`](../../../demo/README.md) (`cd demo && pnpm install && pnpm dev`). HTML archive:
 [docs/design/](../../design/README.md). Specs win over the mock.
@@ -12,12 +12,13 @@ Visual mock: [`demo/`](../../../demo/README.md) (`cd demo && pnpm install && pnp
 - [design.md](design.md) — tokens (Satoshi, ink, hairline, outline vs `--secondary`)
 - [design decision record](design-decision-record.md) — CMS-wide look (moved from website design decision
   record)
-- [ADR](ADR.md) — nav / Profile grouping / New chat
-- [frontend-debloat.md](../frontend-debloat.md) — left nav / New chat port notes (cross-cutting)
+- [ADR](ADR.md) — nav / Profile grouping / `/cms`
+- [frontend-debloat.md](../frontend-debloat.md) — left nav / `/cms` port notes (cross-cutting)
 
 Destinations:
 
 - [Website editor](../../features/website/README.md)
+- [Assistant](../../features/assistant/README.md)
 - [Ads](../../features/ads/README.md)
 - [Business profile](../../features/business-profile/README.md) — Details, Projects, Certifications and reviews
 - [Media library](../../features/other/media/README.md) — Profile child; not under business-profile/

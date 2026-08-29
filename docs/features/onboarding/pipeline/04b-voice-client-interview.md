@@ -1,8 +1,14 @@
-# 04b — Voice client interview
+# 04b — Voice client interview (out)
+
+**Out.** The onboarding assistant is a **guide**, not a profile writer. Data
+entry stays [04a](04a-text-client-interview.md). Guide: [onboarding assistant](../assistant.md).
+
+The rest of this file is kept as the writer design; do not implement it this
+pass.
 
 Voice writer into the same live business profile as 04a. Listed; first-pass is
-text (04a). Client interview only — website assistant / CMS voice stay in
-[voice-agent.md](../../../general-architecture/voice-agent.md) (transport) and website docs.
+text (04a). Client interview only — assistant / CMS voice stay in
+[voice-agent.md](../../../general-architecture/voice-agent.md) (transport) and [assistant](../../assistant/README.md).
 
 ## Trigger
 

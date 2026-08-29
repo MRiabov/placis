@@ -44,20 +44,19 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
   fits. Canvas native widths Desktop 1080 / Tablet 760 / Mobile 390; scale down
   to fit the stage (`transform: scale`, never above 1). Do not reflow the
   contractor website to the CMS width. Canvas website scroll pad clears the
-  website assistant overlay so last sections stay reachable. On narrow, the open
-  list / Content title row is compact; the whole row hides the sheet (Add a
-  website page stays its own hit).
+  assistant overlay so last sections stay reachable. On narrow, the open list /
+  Content title row is compact; the whole row hides the sheet (Add a website
+  page stays its own hit).
 - Look clones the placis-web dashboard theme ([CMS design.md](../../general-architecture/cms/design.md),
   [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5). Predecessor `src/styles/cms/` tokens that
   fight this go (cross-cutting file).
 - Canvas via the shared contractor-website component package.
-- Website assistant **overlay** pinned to the canvas (default collapsed on wide
-  and narrow; wide: one-row composer — chevrons, field, **Plan mode**,
+- Assistant **overlay** pinned to the canvas (default collapsed on wide and
+  narrow; wide: one-row composer — chevrons, field, **Plan mode**,
   **Ask first**, **Plan** / **Send**; narrow collapsed stays two rows; expand /
   reduce height; no website dim; **Clear context** trash expanded-only). Apply /
   Reject are one-way and never transparent. Delete the assistant modal
-  (`#assistantModal` / toolbar modal) and the toolbar **Website assistant**
-  button.
+  (`#assistantModal` / toolbar modal) and the toolbar **Assistant** button.
 - Media library at `/cms/media` under Profile. Attach / pick from Content when
   an image is selected.
 - `PagesWorkspacePanel`, `StylesWorkspacePanel`, `EditorCanvas`,
@@ -66,8 +65,7 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
 
 ## Delete
 
-- Website assistant toolbar modal / `#assistantModal` — overlay in
-  [frontend.md](frontend.md).
+- Assistant toolbar modal / `#assistantModal` — overlay in [frontend.md](frontend.md).
 - `EditorHeader` **Save** / Saving control (and e2e that clicks Save).
 - Single **Publish** toolbar button — replace with the website publication
   **dropdown** in [frontend.md](frontend.md).
@@ -84,8 +82,8 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
   - `revertEditorAssistant` if Apply/Reject is one-way with in-memory undo +
     PATCH only ([assistant.md](assistant.md)).
 - Keep `createEditorRealtimeVoiceSession` — retarget onto
-  `POST /v1/voice/realtime-connection`. Voice is v1 on the website editor (and
-  Ads product guide).
+  `POST /v1/assistant/voice/realtime-connection`. Voice is v1 on the website
+  editor (and Ads product guide).
 - Don't say inspector: folder and symbol names (see rename).
 
 ## Do not port
@@ -110,7 +108,7 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
 | --- | --- |
 | `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/website/editor/pages…`; GET may pass `publication_id` (continue editing from an owner website version, then PATCH). PATCH body is dirty keys including page `status`; response `{ edit_history_head, batch_id }` plus assigned ids |
 | `POST …/publish` | `POST /v1/website/publications` with `website_address_id`. **402** `subscription_canceled` when the subscription is not active. Live website rollback: `POST /v1/website/publications/{id}/rollback` (that host; same 402). Do not port restore-unpublished. |
-| Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; URL combobox `/v1/website/editor/urls`; assistant under `/v1/website/editor/assistant`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
+| Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; URL combobox `/v1/website/editor/urls`; assistant under `/v1/assistant/…`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
 | `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
 
 Connect website address is a **modal on `/cms/website`** (no extra route). Add
@@ -141,8 +139,8 @@ with the website Go phase (Cloudflare custom hostname + DNS rows).
 - `SlotControls.test.tsx`, `inspectorModel.test.ts` — follow the editing-panel
   rename.
 - `useEditorPosts` tests (if any) go with the delete.
-- One E2E ([testing.md](testing.md)): edit → website assistant → website publication → live
-  R2 keys + fake purge → website rollback → website form.
+- One E2E ([testing.md](testing.md)): edit → assistant → website publication
+  → live R2 keys + fake purge → website rollback → website form.
 
 ## Done when
 

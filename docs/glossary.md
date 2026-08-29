@@ -85,6 +85,48 @@ Distinct from: Contractor (the business).
 
 ---
 
+### Assistant
+
+The chat and voice agent in the CMS after website activation. Product guide and
+doer.
+
+Do not say **Website assistant**.
+
+Distinct from: Onboarding assistant, Website copy generation.
+
+---
+
+### Onboarding assistant
+
+The guide on onboarding screens. Distinct from the CMS assistant and from client
+interview (the field-filling step, not an agent writer). Owner-facing copy on
+onboarding is **guide** / **voice guide**, never **Assistant**.
+
+---
+
+### Assistant thread
+
+One persisted CMS conversation per tenant. The onboarding assistant has its own
+conversation; do not call that the CMS thread. Never say **session** for this.
+
+---
+
+### Assistant screen context
+
+The complete loaded state of one assistant screen (a CMS screen or an onboarding
+step’s screen). Never say **destination context**.
+
+---
+
+### Assistant screen switch
+
+The owner moved to another assistant screen relative to the last **owner**
+request. Clicks during an in-flight run do not interrupt speech; the model is
+told on the next owner turn, with the screen they ended on. Never say
+**page switch** or **destination switch**.
+
+---
+
 ### Business
 
 The construction company we are learning about — name, trade, services, areas,
@@ -571,32 +613,30 @@ Distinct from: Top menu, Website section. Distinct from the Placis website.
 
 #### Website assistant
 
-The chat (and the voice agent) that proposes website edits. It can plan first or
-apply continuously, and it can apply instantly or **Ask first**. It drafts; the
-owner decides except in instant apply.
-
-Distinct from: Website copy generation, Website assistant plan.
+Retired. Do not use. The product term is **Assistant**. Website-editor tool
+names live under Internal (**website editor tools**).
 
 ---
 
 #### Website assistant plan
 
-Text the website assistant shows before it continuously applies. Confirmation
-text, like asking Cursor for a plan. Nothing is written until the owner accepts
-that text (then Apply / Reject still follow Ask first or Instant apply).
+Text the assistant shows on the website editor before it continuously applies.
+Confirmation text, like asking Cursor for a plan. Nothing is written until the
+owner accepts that text (then Apply / Reject still follow Ask first or Instant
+apply).
 
 Never say “live markdown plan” or “handoff boundary”.
 
-Distinct from: Website assistant (the chat), continuous workflow (no plan text),
-instant apply (no Apply / Reject), Ask first (Apply / Reject), Website copy
-generation (continuous + instant apply, no chat).
+Distinct from: Assistant (the chat), continuous workflow (no plan text), instant
+apply (no Apply / Reject), Ask first (Apply / Reject), Website copy generation
+(continuous + instant apply, no chat).
 
 ---
 
 #### Ask first
 
-The website assistant shows Apply / Reject before an edit lands. Opposite of
-Instant apply.
+The assistant shows Apply / Reject before an edit lands. Opposite of Instant
+apply.
 
 Distinct from: Instant apply, Website assistant plan.
 
@@ -619,8 +659,8 @@ Writing website copy into the unpublished website from the business profile. Do
 not call this “refinement” in onboarding. Never say generate without “website
 copy”.
 
-Distinct from: Website assistant, Apply the website template (the unpublished
-website structure).
+Distinct from: Assistant, Apply the website template (the unpublished website
+structure).
 
 ---
 
@@ -1008,6 +1048,36 @@ In code: `ai_use_ledger`.
 
 ---
 
+### Knowledge base registry
+
+The YAML that names which owner-facing markdown files belong to one assistant’s
+knowledge base (`cms_knowledge_base_registry.yaml` /
+`onboarding_knowledge_base_registry.yaml`). Never in PRDs or UI. Never say
+**catalog** for this YAML.
+
+Distinct from: Assistant screen context; website style catalog.
+
+---
+
+### Website editor tools
+
+The named tool registry for the website editor assistant screen. Not a product
+term. Not “website assistant.”
+
+---
+
+### Ads tools
+
+The named tool registry for the Ads assistant screen. Not a product term.
+
+---
+
+### Per-screen tools
+
+Internal. The named tool registry for that assistant screen.
+
+---
+
 ### Signed URL
 
 A time-limited file download URL. Distinct from: Website preview link. Never
@@ -1144,8 +1214,9 @@ Distinct from: Onboarding session (the persisted run), Website preview link.
 #### Client interview
 
 The questions we ask the contractor to fill gaps the Google Maps listing and
-company registry record do not cover. Text and voice are two channels into the
-same business profile. Never say bare “interview”.
+company registry record do not cover. Text (04a) is the v1 writer into the
+business profile. Voice is not a v1 writer into the profile (04b is out). Never
+say bare “interview”.
 
 Domain: (internal — use this name in technical docs; onboarding copy may
 describe the questions).
@@ -1154,8 +1225,8 @@ describe the questions).
 
 #### Voice
 
-A channel: answer the client interview, drive the website assistant, and use the
-voice agent in the CMS. Not a separate product and not a separate profile.
+A channel: the assistant (CMS and onboarding) and the voice agent. Not a
+separate product and not a separate profile.
 
 Distinct from: Voice agent.
 
@@ -1172,8 +1243,9 @@ the voice agent).
 
 #### Follow
 
-The canvas snapping to the website slot the voice agent is editing. Default
-**off**. The owner cannot turn it on.
+The canvas snapping to the website slot the agent is editing (website editor),
+or a distinct agent-edited field notice on form-like screens. Default **on**.
+The owner cannot turn it off.
 
 Distinct from: Voice agent.
 
@@ -1283,6 +1355,10 @@ not `frontend.md`) and later `internal/<home>/`; `(website)` also covers
 | signed (onboarding) | website preview link |
 | live markdown plan | website assistant plan |
 | handoff boundary | the owner approves the plan, then the assistant applies it |
+| knowledge catalog | knowledge base registry |
+| page switch / destination switch | assistant screen switch |
+| destination context | assistant screen context |
+| Upgrade | usage (billing) |
 | website email | marketing email |
 | phone | marketing phone |
 | fact (details) / structured facts | detail / information |

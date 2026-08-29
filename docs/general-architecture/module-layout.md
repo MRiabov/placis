@@ -13,7 +13,7 @@ internal/
   httpapi/        # router, middleware, error mapping, huma API registration
   auth/           # Clerk SDK (clerk-sdk-go) verification -> Principal
   store/          # pgx pool + sqlc-generated queries (queries/*.sql split by domain)
-  ai/             # LLMProvider + traces (no feature tool registries)
+  ai/             # LLMProvider + traces (schema `ai`; no feature tool registries)
   files/          # object storage, signed URLs
   jobs/           # River job args + workers
   audit/          # audit events
@@ -23,6 +23,7 @@ internal/
   tenancy/        # tenants.go, memberships.go
   onboarding/     # onboarding.go, client_interview.go, orchestrate.go, activation.go
     websitepreview/ #   package.go, events.go (website preview of the unpublished website during onboarding)
+    assistant/    #   onboarding guide (isolated conversation + knowledge)
   etl/            # run.go (StartRun: cap, enqueue_id, insert etl.runs, enqueue jobs only)
     extract/      #   googlemaps/, facebook/, instagram/, crawl/, traderegistry/,
                   #   websearch/ — each with fakes; worker calls these, does not inline
@@ -41,6 +42,7 @@ internal/
     templates/
     assistant/    #   governed website-editor tools (Ask first / instant apply)
     addresses/    #   website_addresses.go (live hostnames; not auth)
+  assistant/      # CMS thread, dispatcher, /v1/assistant HTTP, knowledge YAML
   ads/            # ad.go, variant.go, generate.go
   media/          # media_assets
   billing/        # AI use ledger, Usage & billing HTTP

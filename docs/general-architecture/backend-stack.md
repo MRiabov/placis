@@ -42,10 +42,10 @@ HTTP conventions (prefix, serve only types on HTTP, auth modes, errors,
 The rewrite is greenfield. Default to the **latest stable** of each chosen
 library and of the Go toolchain. Names in this file (`huma`, `pgx`, `chi`,
 `River`, Clerk, Stripe, …) identify the library, not a pinned major or minor.
-When a new stable major lands, take it on the next upgrade pass; do not keep an
-old import path in these docs as policy.
+When a new stable major lands, take it on the next bump pass; do not keep an old
+import path in these docs as policy.
 
-Do **not** add Dependabot, Renovate, or other automated upgrade PRs. Upgrade on
+Do **not** add Dependabot, Renovate, or other automated dependency PRs. Bump on
 a regular cadence — about every two weeks — as a deliberate pass
 (`go get -u ./...`, toolchain bump, lockfile refresh). Goose SQL migrations stay
 manual and reviewed; this cadence is for dependencies, not schema automigration.

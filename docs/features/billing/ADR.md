@@ -63,6 +63,6 @@ new entries with the next number, the area, and the date.
     & billing. Status enum is `canceled`. (2026-08-29)
 
 12. **Change plan and cancel are Usage & billing** — Not the placis.com Pricing
-    grid and not predecessor dashboard upgrade copy. Cancel is
+    grid and not predecessor dashboard Usage & billing copy. Cancel is
     `cancel_at_period_end`; Keep subscription undoes it. Pay-again after
     `canceled` is Change plan checkout. (2026-08-29)

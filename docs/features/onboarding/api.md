@@ -139,14 +139,98 @@ collection `POST /v1/onboarding-sessions`.
 - **Behavior:** verify, persist event, enqueue website activation, return. Never
   trust the browser success URL.
 
+## Complete — onboarding assistant (guide)
+
+Auth is the onboarding session token, not Clerk `/me.tenant`. Activated owner:
+**403** on all `/v1/onboarding/assistant/…`. Onboarding session
+`GET /v1/onboarding-sessions/{id}/events/stream` is **SSE** (pipeline progress),
+not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.md).
+
+### POST /v1/onboarding/assistant/voice/realtime-connection
+
+- **Auth:** onboarding session token
+- **Callers:** contractor turns the **voice guide** on (not Find mount).
+- **Idempotency-Key:** yes.
+- **Request:** current onboarding step + visible fields. No unpublished website
+  working copy.
+- **Response:** browser-safe secret + expiry. Audio is browser ↔ voice service,
+  not this socket.
+- **Errors:** **403** if the tenant is already activated; **409** if a guide run
+  is already `running` for this onboarding session.
+- **Must not:** return the long-lived voice API key.
+
+### POST /v1/onboarding/assistant/voice/transcripts
+
+- **Auth:** onboarding session token
+- **Callers:** committed utterances onto the one thread; usage-only when Voice
+  turns off.
+- **Idempotency-Key:** yes.
+- **Request:** same shape as CMS transcripts (owner / assistant visible text
+  `maxLength` 5000; optional reasoning; audio seconds + `billed_text_item_count`
+  when present). **Omit** PCM.
+- **Errors:** **403** if activated. Settlement stays **200**.
+- **Must not:** accept PCM, ASR/TTS deltas, or the recording file.
+
+### POST /v1/onboarding/assistant/voice/recordings
+
+- **Auth:** onboarding session token
+- **Callers:** browser after Voice turns off (including idle stop).
+- **Idempotency-Key:** yes.
+- **Request:** `run_id`; `content_type` (`audio/webm` | `audio/mp4`);
+  `byte_size` (int, `> 0`, maximum 33554432).
+- **Response:** `id` (`files` id) + signed URL (`string` + `maxLength`) +
+  expiry. Browser **PUT**s the object to that URL. Completes via
+  `…/recordings/{id}/complete`.
+- **Errors:** **403** if activated; `404` if `run_id` is missing or not a voice
+  run for this onboarding session; `409` if that run already has a recording;
+  `413` if `byte_size` is over the maximum.
+- **Must not:** accept the recording file on this POST.
+
+### POST /v1/onboarding/assistant/voice/recordings/{id}/complete
+
+- **Auth:** onboarding session token
+- **Callers:** browser after the PUT to the signed URL succeeds.
+- **Idempotency-Key:** yes.
+- **Errors:** **403** if activated; `404` if the `files` row is not this
+  onboarding session’s voice recording.
+- **Must not:** accept the recording file.
+
+### GET /v1/onboarding/assistant/thread
+
+- **Auth:** onboarding session token
+- **Callers:** reload, resume, later text backup.
+- **Response:** the one conversation `*Read` + ordered `items` (`kind`, `body`,
+  `icon`, `created_at`). Empty is `200` with `items: []`.
+- **Errors:** **403** if activated.
+- **Must not:** return `thread_items` as the field name; return runs, audit
+  blobs, or recording URLs.
+
+### GET /v1/onboarding/assistant/thread/ws
+
+- **Auth:** onboarding session token
+- **Callers:** voice → text backup on the same conversation. Look TBD. Default
+  launcher stays the orb.
+- **Transport:** Go text WebSocket (not a second voice socket). Owner `body`
+  `maxLength` 4000; server tokens / thinking / errors (same event union idea as
+  CMS).
+- **Errors:** **403** if activated.
+- **Must not:** hydrate, transcripts, recordings, or realtime-connection on this
+  socket.
+
 ## Listed
 
 - `GET /v1/onboarding-sessions/{id}/business-research-runs` (+ get by id) —
   debug/status. Progress is SSE.
 - `GET /v1/onboarding-sessions/{id}/apply-website-template-runs` (+ get/cancel)
   — debug/status.
-- Voice realtime connection / events / WebSocket — deferred. First-pass client
-  interview is text. [voice agent](../../general-architecture/voice-agent.md).
+- Voice realtime connection — **onboarding assistant (guide):**
+  `POST /v1/onboarding/assistant/voice/realtime-connection`. Created when they
+  turn the **voice guide** on and the microphone is granted, not on Find mount.
+  A prerecorded intro file plays after that grant; live audio after.
+  [onboarding assistant](assistant.md). Activated
+  owners **403**. First-pass client interview **data entry** is still text
+  ([04a](pipeline/04a-text-client-interview.md)). Agent writer
+  ([04b](pipeline/04b-voice-client-interview.md)) is out.
 
 ## Do not create
 
@@ -160,4 +244,13 @@ collection `POST /v1/onboarding-sessions`.
 - `/v1/preview/{token}/…` and `/v1/website-previews/{token}/…` (pay is Host /
   `website_prefix` on `/v1/website-activations/…`)
 - `/v1/onboarding-sessions/confirm` (use `…/business-lookup`)
-- bare `POST /v1/onboarding-sessions`
+- `/v1/onboarding/assistant/…` after website activation (403)
+- leftover `/v1/onboarding-sessions/…` with an onboarding session token after
+  website activation (403)
+- `POST /v1/onboarding/assistant/thread/new` (CMS only)
+- `POST /v1/onboarding/assistant/tool-calls`
+- `POST /v1/onboarding/assistant/voice/tool-calls` this pass (`tools=[]`)
+- `POST /v1/onboarding/assistant/turns`
+- `POST /v1/onboarding/assistant/thread/clear`
+- unprefixed `POST /v1/onboarding/assistant/realtime-connection` /
+  `…/transcripts` / `…/recordings`

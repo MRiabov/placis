@@ -1,9 +1,9 @@
 # Billing design decision record
 
 Look and interaction for Usage & billing and Pricing. Architecture belongs in
-[ADR.md](ADR.md). The mock is [`demo/`](../../../demo/README.md) `/cms/billing`.
-HTML archive: [cms.html](../../design/cms.html) `?scene=billing`. Public Pricing
-look is the placis-web upgrade grid (not predecessor dashboard upgrade copy).
+[ADR.md](ADR.md). The mock is [`demo/`](../../../demo/README.md) `/cms/billing`. HTML archive: [cms.html](../../design/cms.html)
+`?scene=billing`. Public Pricing look is the placis-web pricing grid (not
+predecessor dashboard Usage & billing copy).
 
 Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
 
@@ -20,11 +20,11 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    period. Filled segments colored Voice / Image / text edits. Unfilled is
    remaining. No pie. No line items. Not our cost. (2026-08-29)
 
-3. **Pricing clones the placis-web upgrade grid** — Three self-serve cards plus
+3. **Pricing clones the placis-web pricing grid** — Three self-serve cards plus
    an Enterprise plan row. Month / year toggle. Blurb + feature list. Included
    usage credit is USD (`$100` / `$400` / `$1,500` a month). Choose goes to
    `app.placis.com`. Contact sales goes to `/support/`. No Stripe on
-   `placis.com`. Do not port predecessor dashboard upgrade copy.
+   `placis.com`. Do not port predecessor dashboard Usage & billing copy.
    Don't say: build credits. (2026-08-29) Previous (2026-08-29):
    included usage credit only, as a unitless count, no feature list.
 
@@ -38,7 +38,7 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
 
 6. **Change plan is the Pricing card grid; cancel is quiet** — Under extra
    usage credit: month / year, three self-serve cards, Enterprise plan row.
-   Same card layout as placis.com `/pricing/` and the placis-web upgrade grid
+   Same card layout as placis.com `/pricing/` and the placis-web pricing grid
    (blurb + feature list; included usage credit in USD). Current is marked.
    Checkout stays on this screen. **Cancel subscription** is secondary.
    While cancel is scheduled: **Keep subscription**. (2026-08-29) Previous

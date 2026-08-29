@@ -8,8 +8,8 @@ no chat UI. Does not block 08. 07 waits copy-done or the wait cap, not the full
 ## Trigger
 
 05 succeeded. One River job. Lock key: `tenant_id` (unactivated tenant already
-exists). One in-flight website-assistant run per tenant ([assistant.md](../../website/assistant.md)). A
-second start is 409.
+exists). Lock is this River job’s `tenant_id`, **not** `assistant.runs`. A
+second 06 start is 409 on that River key.
 
 ## Pre
 
@@ -30,7 +30,9 @@ second start is 409.
 - Bake raw detail values into copy that should stay a token
   (`{{business_name}}`, `{{marketing_phone}}`, …).
 - Wait for pay / 08. After 08 the same job **continues** on the same
-  `tenant_id`. CMS website assistant 409 while this run is in flight.
+  `tenant_id`. Do not cancel 06 at pay. CMS PATCH / assistant HTTP are **not**
+  409 because this job is running. Same website-slot overlap after pay is
+  last-write / `edit_history_conflict`.
 - Run at business lookup. Not on every later 02 event.
 
 ## Do

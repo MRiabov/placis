@@ -24,16 +24,21 @@ Package ownership. Workflows live in the feature docs this list points at.
    trigger: [05 — Apply the website template](../features/onboarding/pipeline/05-apply-website-template.md). `website/assistant` owns the
    governed website-editor tools, plan vs continuous, and Ask first vs instant
    apply. Tools never do website publication. Onboarding 06 calls those tools
-   headless. [Website assistant](../features/website/assistant.md), [website ADR #6](../features/website/ADR.md).
-5. `ads` is a standalone service (the `/cms/ads` workspace is one owner). It
+   headless. [Website editor tools](../features/website/assistant.md), [website ADR #6](../features/website/ADR.md).
+5. `assistant` owns the CMS thread, dispatcher, allowed set, and
+   `/v1/assistant/…` HTTP. `onboarding/assistant` owns the onboarding
+   conversation and `/v1/onboarding/assistant/…`. Knowledge YAML lives in those
+   packages (`go:embed`). [Assistant](../features/assistant/README.md).
+6. `ads` is a standalone service (the `/cms/ads` workspace is one owner). It
    reads the profile + approved media library items, proposes copy + image
    galleries, and exports `ad ready to post` ad sets — never does ad posting.
    Ads tools stay in `ads`. [Ads](../features/ads/README.md).
-6. `ai` is the `LLMProvider` interface (and the one implementation behind it):
+7. `ai` is the `LLMProvider` interface (and the one implementation behind it):
    generate, open-web search, traces / `ai_generations`. No website or ads
-   business rules, and no tool registries that mutate product rows. [LLM layer](llm-layer.md).
-7. `billing` owns the AI use ledger and Usage & billing. Stripe website
+   business rules, and no tool registries that mutate product rows. Postgres
+   schema `ai`. [LLM layer](llm-layer.md).
+8. `billing` owns the AI use ledger and Usage & billing. Stripe website
    activation checkout stays in onboarding. Extra usage credit checkout may live
    here when that slice lands. [Billing](../features/billing/README.md).
-8. Integrations (ETL adapters, LLM, storage, Stripe, email/SMS) are behind
+9. Integrations (ETL adapters, LLM, storage, Stripe, email/SMS) are behind
    interfaces so tests run without network calls. [CI and delivery](ci-cd.md).
