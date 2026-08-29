@@ -141,9 +141,6 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
           onOpenDestinations={openDestinations}
           title={heading}
         />
-        <p className="mt-1 text-sm text-muted-foreground">
-          Title, description, and cover. Persist on click-off.
-        </p>
         <div className="mt-6 grid max-w-xl gap-5">
           <Field label="Cover">
             <div className="grid max-w-md gap-2.5">
