@@ -53,6 +53,7 @@ packages/
   website-components/  # website templates, website component renderers + contract.json, website style catalog presets
 catalog/          # later: typed structs dumped to JSON; first-pass JSON sidecars live in packages/website-components
 frontend-2/       # CMS + onboarding (Vite); website preview is apps/contractor-website
+demo/             # Standalone look app (Vite + Tailwind). Copyable; not a workspace member. Run from demo/: pnpm install && pnpm dev
 docs/
 go.mod
 ```

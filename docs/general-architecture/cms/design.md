@@ -2,11 +2,10 @@
 
 The CMS (sidebar + main area): `/cms` two-card chooser, website editor, Details,
 Ads list. Not the contractor website look — that is [website styles](../../features/website/styles.md).
-[Design decision record](design-decision-record.md). Mock: [tokens.css](../../design/tokens.css) (`:root`). CMS, onboarding, and Ads
-look exports share this file. CMS wins when they disagree. Owner field controls,
-buttons, combobox, labels, and the mock-only yellow strip live in
-[details-fields.css](../../design/details-fields.css)
-([design decision](design-decision-record.md) 6).
+[Design decision record](design-decision-record.md). Editable look: [`demo/`](../../../demo/README.md) (`src/styles/theme.css`).
+HTML archive tokens: [tokens.css](../../design/tokens.css) (`:root`). CMS wins when they disagree. Owner
+field controls, buttons, combobox, labels, and the mock-only yellow strip in the
+archive live in [details-fields.css](../../design/details-fields.css) ([design decision](design-decision-record.md) 6).
 
 Clone placis-web `globals.css` (light) + `marketingSite.ts`. Do not invent a
 second palette. Do not restyle Ads creative surfaces from this file.
