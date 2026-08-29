@@ -109,7 +109,7 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
 | Today | Constrained API |
 | --- | --- |
 | `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/website/editor/pages…`; GET may pass `publication_id` (continue editing from an owner website version, then PATCH). PATCH body is dirty keys including page `status`; response `{ edit_history_head, batch_id }` plus assigned ids |
-| `POST …/publish` | `POST /v1/website/publications` with `website_address_id`. Live website rollback: `POST /v1/website/publications/{id}/rollback` (that host). Do not port restore-unpublished. |
+| `POST …/publish` | `POST /v1/website/publications` with `website_address_id`. **402** `subscription_canceled` when the subscription is not active. Live website rollback: `POST /v1/website/publications/{id}/rollback` (that host; same 402). Do not port restore-unpublished. |
 | Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; URL combobox `/v1/website/editor/urls`; assistant under `/v1/website/editor/assistant`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
 | `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
 

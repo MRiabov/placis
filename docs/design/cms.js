@@ -287,20 +287,89 @@ function setNotify(on, kind) {
   const text = note?.querySelector("p");
   const secondary = document.getElementById("cmsNoticeSecondary");
   const primary = document.getElementById("cmsNoticePrimary");
-  const mic = on && kind === "mic";
-  if (mic) {
+  const noticeKind = on ? (kind || "details") : "details";
+  if (noticeKind === "mic") {
     if (text) text.textContent = "Allow microphone access in your browser to talk. You can keep typing.";
     if (secondary) secondary.textContent = "Try again";
     if (primary) primary.textContent = "Switch to text mode";
-    if (note) note.dataset.notice = "mic";
+  } else if (noticeKind === "usage-warn") {
+    if (text) text.textContent = "You're running out of usage credit.";
+    if (secondary) secondary.textContent = "Dismiss";
+    if (primary) primary.textContent = "Usage & billing";
+  } else if (noticeKind === "usage-empty") {
+    if (text) text.textContent = "You are out of usage credit.";
+    if (secondary) secondary.textContent = "Dismiss";
+    if (primary) primary.textContent = "Usage & billing";
   } else {
     if (text) text.textContent = "Wrote a detail to Business details.";
     if (secondary) secondary.textContent = "Revert";
     if (primary) primary.textContent = "OK";
-    if (note) note.dataset.notice = "details";
   }
+  if (note) note.dataset.notice = on ? noticeKind : "details";
   note?.classList.toggle("is-hidden", !on);
-  stripButton("notify")?.classList.toggle("on", on);
+  stripButton("notify")?.classList.toggle("on", on && noticeKind === "details");
+}
+
+let billingKind = "ok";
+const billingPlanPrices = { pro: "$599 / mo", "pro-plus": "$799 / mo", "pro-max": "$1,099 / mo" };
+
+function markBillingPlan(planId) {
+  document.querySelectorAll(".cms-billing-plan[data-plan]").forEach((button) => {
+    const current = billingKind !== "canceled" && button.dataset.plan === planId;
+    button.classList.toggle("is-current", current);
+    const price = button.querySelector("span:last-child");
+    if (!price || button.dataset.plan === "enterprise") return;
+    const base = billingPlanPrices[button.dataset.plan];
+    price.textContent = current ? `${base} · Current` : base;
+  });
+}
+
+function setBillingPool(kind) {
+  billingKind = kind;
+  const remaining = document.getElementById("billingRemaining");
+  const voice = document.getElementById("billingVoice");
+  const image = document.getElementById("billingImage");
+  const textSeg = document.getElementById("billingText");
+  const left = document.getElementById("billingLeft");
+  const tier = document.getElementById("billingTier");
+  const cancel = document.getElementById("billingCancel");
+  const keep = document.getElementById("billingKeep");
+  const pools = {
+    ok: { remaining: "$80 remaining", voice: "18%", image: "16%", text: "11%", left: "55%", tier: "Placis Pro plan · $599 / mo" },
+    warn: { remaining: "$20 remaining", voice: "32%", image: "28%", text: "20%", left: "20%", tier: "Placis Pro plan · $599 / mo" },
+    empty: { remaining: "$0 remaining", voice: "40%", image: "35%", text: "25%", left: "0%", tier: "Placis Pro plan · $599 / mo" },
+    ending: { remaining: "$80 remaining", voice: "18%", image: "16%", text: "11%", left: "55%", tier: "Placis Pro plan · cancels on 29 Sep" },
+    canceled: { remaining: "$80 remaining", voice: "18%", image: "16%", text: "11%", left: "55%", tier: "Placis Pro plan · subscription is not active" },
+  };
+  const pool = pools[kind] || pools.ok;
+  if (remaining) remaining.textContent = pool.remaining;
+  if (voice) voice.style.width = pool.voice;
+  if (image) image.style.width = pool.image;
+  if (textSeg) textSeg.style.width = pool.text;
+  if (left) left.style.width = pool.left;
+  if (tier) tier.textContent = pool.tier;
+  cancel?.classList.toggle("is-hidden", kind === "canceled" || kind === "ending");
+  keep?.classList.toggle("is-hidden", kind !== "ending");
+  markBillingPlan("pro");
+  document.querySelectorAll('#viewtabs [data-state^="billing-"]').forEach((button) => {
+    button.classList.toggle("on", button.dataset.state === `billing-${kind}`);
+  });
+  if (kind === "warn") setNotify(true, "usage-warn");
+  else if (kind === "empty") setNotify(true, "usage-empty");
+  else if (document.getElementById("cmsNotification")?.dataset.notice?.startsWith("usage-")) {
+    setNotify(false);
+  }
+}
+
+function setSubscriptionPublishBlocked(on) {
+  const blockers = document.querySelector(".cms-publication-blockers");
+  blockers?.classList.toggle("is-hidden", false);
+  document.querySelectorAll("[data-blocker-kind]").forEach((item) => {
+    const isPay = item.dataset.blockerKind === "subscription";
+    item.classList.toggle("is-hidden", on ? !isPay : isPay);
+  });
+  stripButton("subscription")?.classList.toggle("on", on);
+  if (on) setPublication(true);
 }
 
 function setPeeking(on) {
@@ -442,6 +511,7 @@ function show(scene) {
     setWorkspaceOpen(false);
   }
   if (scene === "ads") setAdsView(adsView);
+  if (scene === "billing") setBillingPool("ok");
   syncStateGroups(scene);
   if (!params.get("shot")) history.replaceState(null, "", "#" + scene);
   syncVoiceSurface();
@@ -737,6 +807,24 @@ document.querySelectorAll("#viewtabs [data-state]").forEach((button) => {
       case "notify":
         setNotify(document.getElementById("cmsNotification")?.classList.contains("is-hidden"));
         break;
+      case "billing-ok":
+        setBillingPool("ok");
+        break;
+      case "billing-warn":
+        setBillingPool("warn");
+        break;
+      case "billing-empty":
+        setBillingPool("empty");
+        break;
+      case "billing-canceled":
+        setBillingPool("canceled");
+        break;
+      case "billing-ending":
+        setBillingPool("ending");
+        break;
+      case "subscription":
+        setSubscriptionPublishBlocked(!stripButton("subscription")?.classList.contains("on"));
+        break;
       case "section":
         selectSection(button.dataset.section);
         break;
@@ -894,6 +982,7 @@ document.querySelectorAll("[data-blocker]").forEach((button) => {
   button.addEventListener("click", () => {
     setPublication(false);
     if (button.dataset.blocker === "slot") selectSection("hero", true, true);
+    else if (button.dataset.blocker === "billing") show("billing");
     else show("media");
   });
 });
@@ -1028,6 +1117,12 @@ document.getElementById("cmsNotification")?.addEventListener("click", (event) =>
     return;
   }
   if (mic && button.id === "cmsNoticePrimary") restoreChatbot();
+  const usage = document.getElementById("cmsNotification")?.dataset.notice?.startsWith("usage-");
+  if (usage && button.id === "cmsNoticePrimary") {
+    setNotify(false);
+    show("billing");
+    return;
+  }
   setNotify(false);
 });
 
@@ -1036,6 +1131,21 @@ ensureToolIcons();
 document.querySelectorAll(".cms-nav-link-row[data-kind]").forEach(hydrateNavRow);
 const initial = params.get("scene") || (location.hash || "#home").slice(1) || "home";
 show(initial);
+if (initial === "billing") {
+  const billingState = params.get("billing");
+  if (billingState === "warn" || billingState === "empty" || billingState === "canceled" || billingState === "ending") {
+    setBillingPool(billingState);
+  } else setBillingPool("ok");
+}
+document.getElementById("billingCancel")?.addEventListener("click", () => setBillingPool("ending"));
+document.getElementById("billingKeep")?.addEventListener("click", () => setBillingPool("ok"));
+document.querySelectorAll(".cms-billing-plan[data-plan]").forEach((button) => {
+  button.addEventListener("click", () => {
+    if (button.dataset.plan === "enterprise") return;
+    if (billingKind === "canceled" || billingKind === "ending") setBillingPool("ok");
+    markBillingPlan(button.dataset.plan);
+  });
+});
 syncCollapsed();
 const sectionParam = params.get("section");
 selectSection(sectionParam || "hero", Boolean(sectionParam));
@@ -1045,6 +1155,7 @@ setCopyOut(params.get("copyout") === "1");
 setAskFirst(params.get("ask") !== "0");
 syncVoiceSurface();
 if (params.get("publication") === "1") setPublication(true);
+if (params.get("subscription") === "canceled") setSubscriptionPublishBlocked(true);
 if (params.get("from") === "activation") {
   const host = publicationHostRow();
   const title = host?.querySelector("b");

@@ -217,7 +217,9 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	case strings.Contains(slash, "/.agents/") || strings.HasPrefix(slash, ".agents/"):
 		return true
-	case strings.Contains(slash, "node_modules/"):
+	case strings.Contains(slash, "/dist/") || strings.HasPrefix(slash, "dist/"):
+		return true
+	case strings.Contains(slash, "/.astro/") || strings.HasPrefix(slash, ".astro/"):
 		return true
 	case strings.Contains(slash, "cmd/ci/check-dont-say/"):
 		return true
@@ -233,6 +235,22 @@ func shouldSkipPath(path string, frontend bool) bool {
 var extraAllowed = []string{
 	"the cms",
 	"/cms",
+	"ai use ledger",
+	"usage credit",
+	"usage credits",
+	"extra usage credit",
+	"extra usage credits",
+	"enterprise add-on",
+	"later, enterprise",
+	"agency credit line",
+	"account menu",
+	"user icon",
+	"cms.html",
+	"placis pro plus plan",
+	"placis pro max plan",
+	"placis pro plan",
+	"/v1/me/organization",
+	"credit / finance",
 	"apps/contractor-website",
 	"/cms/proof",
 	"site_manifest.v1",
@@ -315,6 +333,7 @@ var extraAllowed = []string{
 	"(onboarding)",
 	"(media)",
 	"(details)",
+	"(billing)",
 	"above the fold",
 	"below the fold",
 	`"bytes"`,

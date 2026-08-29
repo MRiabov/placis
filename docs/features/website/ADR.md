@@ -194,4 +194,10 @@ Status: decided (2026-08-16, product owner + engineering).
     (`page_id` null). No `top_menu_items` / `footer_items` tables. The website
     assistant uses `update_menus`, not `update_nav`. Where the owner edits the
     trees is in [design decision record](design-decision-record.md). (2026-08-23) Also `show_contact` (bar
-    CTA to the Contact website page). (2026-08-26)
+   CTA to the Contact website page). (2026-08-26)
+
+23. **Website publication requires an active subscription** — After they stop
+    paying the subscription price, unpublish. `POST /publications` and live
+    website rollback are **402** `subscription_canceled` until
+    `subscription_status=active`. Not `usage_credit_exhausted`. CMS edit stays
+    open. (2026-08-29)

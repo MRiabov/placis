@@ -63,8 +63,8 @@ of Sites.
 
 **Hide in product; keep mock HTML:** Settings, Log out, New chat nav row,
 Connect (the New chat Google / Meta control), Paperclip, Start client interview
-orb, Upgrade shelf. Do not delete those nodes from the look-export HTML. Do
-**not** hide the website-editor voice orb.
+orb, Upgrade shelf, leftover Usage rail item. Do not delete those nodes from
+the look-export HTML. Do **not** hide the website-editor voice orb.
 
 ## Profile disclosure
 
@@ -130,8 +130,11 @@ Ads look for `/cms/ads` is [`demo/`](../../../demo/README.md). HTML archive:
 
 Clerk UserButton photo. Name under it is the **Clerk human name** (the person),
 not the business / `tenant.name` and not the Clerk organization string. Never an
-org chooser; never owner copy “Clerk organization”. Settings is Clerk account
+org chooser; never owner copy “Clerk organization”. **Usage & billing** is a
+visible account-menu row ([billing frontend](../../features/billing/frontend.md)). Settings is Clerk account
 handling — hide the tab. No log out for now. Keep that markup in the mock.
+Overlay selector rows stay Sites / Profile children / Ads (no Usage & billing
+row).
 
 ## Out of scope
 

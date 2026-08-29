@@ -40,6 +40,9 @@ website template is the [onboarding E2E](../onboarding/testing.md). DB asserts n
    - UI: the live website is shown when a website address is `active`; otherwise
      the owner still uses the preview website address.
 
+   Canceled-subscription Publish is the billing E2E
+   ([billing testing](../billing/testing.md)), not this happy path.
+
 6. **Live website** — the published website copy is the files in `latest/`, not
    a Go resolve.
    - Assert: fake R2 objects for the edited website page; live GET does not call
