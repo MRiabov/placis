@@ -1,3 +1,4 @@
+import { Archive as ArchiveIcon } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
@@ -82,6 +83,10 @@ export function CertificationsPage(): ReactNode {
     new URLSearchParams(window.location.search).get("archive") === "1";
   const [creating, setCreating] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(startArchive);
+  const [toast, setToast] = useState<{
+    id: string;
+    from: Exclude<ReviewList, "archive">;
+  } | null>(null);
   const [reviews, setReviews] = useState(initialReviews);
   const [certs, setCerts] = useState({
     GUARANTEE: true,
@@ -93,6 +98,23 @@ export function CertificationsPage(): ReactNode {
     setReviews((current) =>
       current.map((item) => (item.id === id ? { ...item, list } : item)),
     );
+  }
+
+  function archiveReview(id: string): void {
+    const item = reviews.find((review) => review.id === id);
+    if (!item || item.list === "archive") {
+      return;
+    }
+    setToast({ from: item.list, id });
+    setList(id, "archive");
+  }
+
+  function undoArchive(): void {
+    if (!toast) {
+      return;
+    }
+    setList(toast.id, toast.from);
+    setToast(null);
   }
 
   const top = reviews.filter((item) => item.list === "top");
@@ -236,6 +258,7 @@ export function CertificationsPage(): ReactNode {
                     {top.map((review) => (
                       <ReviewCard
                         key={review.id}
+                        onArchive={() => archiveReview(review.id)}
                         onTopChange={(on) =>
                           setList(review.id, on ? "top" : "all")
                         }
@@ -254,6 +277,7 @@ export function CertificationsPage(): ReactNode {
                     {all.map((review) => (
                       <ReviewCard
                         key={review.id}
+                        onArchive={() => archiveReview(review.id)}
                         onTopChange={(on) =>
                           setList(review.id, on ? "top" : "all")
                         }
@@ -262,16 +286,18 @@ export function CertificationsPage(): ReactNode {
                     ))}
                   </div>
                 </div>
-                <div className={card("bg-zinc-50 px-3 py-2 text-sm")}>
-                  Archived a review.{" "}
-                  <button
-                    className="underline"
-                    onClick={() => setList("anon", "all")}
-                    type="button"
-                  >
-                    Undo
-                  </button>
-                </div>
+                {toast ? (
+                  <div className={card("bg-zinc-50 px-3 py-2 text-sm")}>
+                    Archived a review.{" "}
+                    <button
+                      className="underline"
+                      onClick={undoArchive}
+                      type="button"
+                    >
+                      Undo
+                    </button>
+                  </div>
+                ) : null}
                 <div>
                   <button
                     aria-controls="archiveList"
@@ -322,14 +348,24 @@ function ReviewCard({
   review,
   top = false,
   onTopChange,
+  onArchive,
 }: {
   review: Review;
   top?: boolean;
   onTopChange: (on: boolean) => void;
+  onArchive: () => void;
 }): ReactNode {
   return (
-    <article className={card("p-4")}>
-      <div className="text-amber-700">{stars(review.stars)}</div>
+    <article className={card("relative p-4")}>
+      <button
+        aria-label="Archive"
+        className="absolute top-1.5 right-1.5 grid size-7 place-items-center rounded-lg text-red-700 hover:bg-red-50"
+        onClick={onArchive}
+        type="button"
+      >
+        <ArchiveIcon aria-hidden="true" className="size-4" strokeWidth={1.6} />
+      </button>
+      <div className="pr-8 text-amber-700">{stars(review.stars)}</div>
       <b>{review.author}</b>
       <p className="text-sm">{review.quote}</p>
       <p className="text-xs text-muted-foreground">{review.origin}</p>
