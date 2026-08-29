@@ -1,4 +1,6 @@
 export type AdsSearch = {
+  archive: string | undefined;
+  archived: string | undefined;
   compact: string | undefined;
   connected: string | undefined;
   dev: string | undefined;
@@ -17,6 +19,8 @@ export function adsSearch(overrides: Partial<AdsSearch> = {}): AdsSearch {
     return params.get(key) ?? undefined;
   };
   return {
+    archive: read("archive"),
+    archived: read("archived"),
     compact: read("compact"),
     connected: read("connected"),
     dev: read("dev"),

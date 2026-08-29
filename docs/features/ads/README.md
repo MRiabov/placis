@@ -11,6 +11,7 @@ the overview; the **single authority** for the feature is [`ad-generation/`](ad-
 - [technical-implementation.md](ad-generation/technical-implementation.md) — domain objects, generation pipeline,
   validation, export
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
+- [design-decision-record.md](ad-generation/design-decision-record.md) — list Archive look
 - [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](ad-generation/testing.md) — the ads E2E test
 - [ads look](../../../demo/README.md) — `/cms/ads` in the look app
