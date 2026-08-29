@@ -51,9 +51,10 @@ Onboarding seed is current step + visible fields. `tools=[]`. No canvas.
 ## Assistant screen context
 
 Frontend reports the current assistant screen. **CMS v1 closed enum:**
-`website_editor` | `ads` | `details` | `projects` |
+`cms` | `website_editor` | `ads` | `details` | `projects` |
 `certifications_and_reviews` | `media_library` | `billing`.
-`/cms` (two cards) and Connect (ad accounts) are **not** assistant screens.
+`cms` is `/cms` (two cards), guide-only. Connect (ad accounts) is **not** an
+assistant screen.
 
 Write tools: website editor + Ads `cleanup_image`. `update_details` is always
 allowed. Other enum values are guide.
@@ -87,7 +88,7 @@ does not navigate and does not authorize that screen’s write tools.
 - **Website editor:** working copy is already on the turn / voice create; do
   not dump the whole unpublished website again.
 - **Details:** notification only.
-- **Guide screens:** no write context.
+- **`cms` and other guide screens:** no write context.
 
 `get_ad(ad_id)` is a separate fat read. It is **not** screen-gated (the model
 does not know ad ids unless the ads list or this peek gave them). Unknown /

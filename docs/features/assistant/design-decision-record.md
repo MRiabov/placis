@@ -17,7 +17,9 @@ owner-written; omit it rather than inventing it.
    assistant screen’s main area. Plan / Ask first switches are
    **website editor only**. Placement: bottom-right of the canvas / overlay
    (website design decision 18 geometry), not a full-screen takeover.
-   (2026-08-28)
+   (2026-08-28) (2026-08-29): The **call** is the top-right **Assistant**
+   button (design decision 11), not hunting for this overlay. Orb / chatbot look
+   stays this overlay once they have called. Closed until they call.
 
 2. **Look is DustOrb** — Empty field fades to the particle orb. Not website
    design decision 18’s “soft glowing circle” HTML stand-in. Not the 44px Ads
@@ -93,3 +95,12 @@ owner-written; omit it rather than inventing it.
 10. **Realtime connection waits for the microphone** — Create
     `POST …/voice/realtime-connection` only after the microphone is granted.
     Denied microphone never POSTs it. (2026-08-28)
+
+11. **CMS assistant is called from the top-right of the main pane** — Every
+    screen in The CMS, including `/cms`, has a pinned top-right **Assistant**
+    button on the main pane (not a left-nav item). Click calls Voice (DustOrb +
+    Restore chatbot). Switch to text is Restore chatbot / **Voice** in the
+    composer. Close returns to the button. Not the onboarding bottom-right
+    voice guide. Website-editor Plan / Ask first stay on `/cms/website` only,
+    and only while the chatbot is showing. Architecture: [ADR](ADR.md) 10.
+    (2026-08-29)

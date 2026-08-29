@@ -46,7 +46,7 @@ export function DevStrip({ groups }: DevStripProps): ReactNode {
     return (
       <button
         aria-label="Show developer states"
-        className="fixed top-3 right-3 z-[80] grid size-9 place-items-center rounded-full border border-dashed border-amber-600 bg-amber-50 text-xs font-medium text-amber-700"
+        className="fixed top-14 right-3 z-[80] grid size-9 place-items-center rounded-full border border-dashed border-amber-600 bg-amber-50 text-xs font-medium text-amber-700"
         onClick={() => setOpen(true)}
         title="Show developer states"
         type="button"
