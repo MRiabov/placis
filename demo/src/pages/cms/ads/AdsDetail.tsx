@@ -4,7 +4,6 @@ import { useCmsLayout } from "@/layout/CmsLayout";
 import { ads } from "@/pages/cms/ads/AdsList";
 import { adsSearch } from "@/pages/cms/ads/search";
 import { Button } from "@/ui/Button";
-import { card } from "@/ui/card";
 import { Field, TextInput } from "@/ui/Field";
 import { PageHeading } from "@/ui/PageHeading";
 
@@ -61,13 +60,9 @@ export function AdsDetail(): ReactNode {
         >
           ← My ads
         </Button>
-        <div
-          className={card(
-            "overflow-hidden rounded-prompt border-hairline shadow-prompt",
-          )}
-        >
-          <div className="flex min-w-0 items-center gap-4 border-b border-hairline px-5 py-4 max-[720px]:flex-wrap max-[720px]:items-start max-[720px]:gap-3 max-[720px]:p-4">
-            <div className="grid min-w-0 flex-1 justify-items-stretch max-[720px]:w-full max-[720px]:flex-none">
+        <div className="overflow-hidden min-[801px]:rounded-prompt min-[801px]:border min-[801px]:border-hairline min-[801px]:bg-white min-[801px]:shadow-prompt">
+          <div className="flex min-w-0 flex-wrap items-start gap-3 border-b border-hairline pb-4 min-[721px]:flex-nowrap min-[721px]:items-center min-[721px]:gap-4 min-[801px]:px-5 min-[801px]:py-4">
+            <div className="grid min-w-0 w-full flex-none justify-items-stretch min-[721px]:w-auto min-[721px]:flex-1">
               <span
                 aria-hidden="true"
                 className="invisible pointer-events-none col-start-1 row-start-1 min-w-[8ch] overflow-hidden px-1 pt-0.5 pb-2 text-[21px] leading-[1.25] font-semibold tracking-[-0.025em] whitespace-pre max-[720px]:min-w-0 max-[720px]:overflow-wrap-anywhere max-[720px]:whitespace-pre-wrap"
@@ -88,7 +83,7 @@ export function AdsDetail(): ReactNode {
                 value={name}
               />
             </div>
-            <div className="flex min-w-0 shrink-0 flex-wrap items-center gap-2 max-[720px]:w-full">
+            <div className="flex min-w-0 w-full shrink-0 flex-wrap items-center gap-2 min-[721px]:w-auto">
               <div className="flex min-w-0 flex-nowrap items-center gap-2">
                 <span
                   className="group relative inline-flex after:pointer-events-none after:absolute after:bottom-[calc(100%+6px)] after:left-1/2 after:z-10 after:-translate-x-1/2 after:rounded-[10px] after:bg-foreground after:px-2.5 after:py-1.5 after:text-xs after:whitespace-nowrap after:text-primary-foreground after:opacity-0 after:shadow-prompt after:transition-opacity after:content-[attr(data-tip)] hover:after:opacity-100 focus-within:after:opacity-100 max-[720px]:after:max-w-[min(280px,calc(100vw-32px))] max-[720px]:after:whitespace-normal"
@@ -117,7 +112,7 @@ export function AdsDetail(): ReactNode {
               </span>
             </div>
           </div>
-          <div className="grid gap-6 p-4 lg:grid-cols-2">
+          <div className="grid gap-6 pt-4 min-[801px]:grid-cols-2 min-[801px]:p-4">
             <div className="grid gap-4">
               <div>
                 <b className="text-sm">Images</b>
@@ -125,7 +120,7 @@ export function AdsDetail(): ReactNode {
                   This ad uses one photo. Edit to pick a different one.
                 </p>
                 <div
-                  className="h-[280px] rounded-xl border border-hairline bg-cover bg-[position:50%_32%]"
+                  className="h-[200px] rounded-xl bg-cover bg-[position:50%_32%] min-[721px]:h-[280px]"
                   style={{ backgroundImage: `url("${ad.image}")` }}
                 />
               </div>
@@ -176,7 +171,7 @@ export function AdsDetail(): ReactNode {
                 <p className="mb-2 text-xs text-muted-foreground">
                   Appears once ad posting is connected.
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-wrap gap-6 grayscale opacity-45">
                   {[
                     "Impressions",
                     "Clicks",
@@ -184,9 +179,13 @@ export function AdsDetail(): ReactNode {
                     "Results",
                     "Cost per ad lead",
                   ].map((label) => (
-                    <div className={card("px-3 py-2 text-sm")} key={label}>
-                      <span className="text-muted-foreground">{label}</span>
-                      <b className="block">—</b>
+                    <div key={label}>
+                      <span className="block text-xs text-muted-foreground">
+                        {label}
+                      </span>
+                      <b className="block text-lg font-semibold tracking-tight">
+                        —
+                      </b>
                     </div>
                   ))}
                 </div>

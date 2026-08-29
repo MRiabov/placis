@@ -270,9 +270,11 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
   the filled action, and only on the create flow). Back to the list. The badge
   is an existing-ad status — **Creative ready** (next status: **Published** once
   ad posting exists).
-- **One single card, two columns — inputs left, outputs right** — the whole
-  detail view is one card (no per-format cards). The top bar, then a two-column
-  area:
+- **One card on a wide screen, two columns — inputs left, outputs right** —
+  on a **wide** screen the whole detail is one card (no per-format cards).
+  The top bar, then a two-column area. On a **narrow** screen the same
+  blocks sit on the canvas — no wrapping card (that would nest the photo
+  and the rest). The photo is the image, not a nested frame. (2026-08-29)
   - **Left (inputs)**: Images — a **one-image ad** shows that photo, not a
     thumbnail gallery (changing the photo is **Edit**, in the workspace strip).
     A **carousel** shows the cards as viewable thumbs. Then **Budget** (disabled
