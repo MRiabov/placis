@@ -2,8 +2,8 @@
 
 Look and interaction for The CMS (sidebar + main area): left nav, `/cms` two
 cards, viewport lock, theme. Website editor look stays in
-[website design decision record](../../features/website/design-decision-record.md). Tokens: [design.md](design.md). Mock: [cms.html](../../design/cms.html).
-Screens:
+[website design decision record](../../features/website/design-decision-record.md). Tokens: [design.md](design.md). Look: [`demo/`](../../../demo/README.md). HTML
+archive: [cms.html](../../design/cms.html). Screens:
 [frontend.md](frontend.md).
 
 Status: decided (dates on each entry). Do not silently replace the old entry.
