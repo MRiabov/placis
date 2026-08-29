@@ -1,9 +1,11 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
+import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
 import type { SiteSection } from "@/pages/cms/website/FakeSite";
-import { Button } from "@/ui/Button";
-import { Field, TextArea, TextInput } from "@/ui/Field";
+import { Combo } from "@/ui/Combo";
+import { panel } from "@/ui/card";
+import { Field, Select, TextArea, TextInput } from "@/ui/Field";
 
 type ContentPanelProps = {
   section: SiteSection;
@@ -20,91 +22,336 @@ const labels: Record<SiteSection, string> = {
   footer: "Footer",
 };
 
+const navPages = [
+  { id: "home", title: "Home" },
+  { id: "services", title: "Roof repairs" },
+  { id: "contact", title: "Contact" },
+  { id: "privacy", title: "Privacy" },
+  { id: "terms", title: "Terms" },
+];
+
+const menuUrls = [
+  {
+    id: "https://bellfield.ie/emergency",
+    title: "Emergency",
+    hint: "https://bellfield.ie/emergency",
+  },
+  {
+    id: "https://www.facebook.com/bellfieldroofing",
+    title: "Facebook",
+    hint: "https://www.facebook.com/bellfieldroofing",
+  },
+];
+
+const reviews = [
+  {
+    name: "Aoife K.",
+    cite: "On the roof the next morning after the storm. Clean site, fair price.",
+  },
+  {
+    name: "Mark D.",
+    cite: "Replaced the back slope and left the garden better than they found it.",
+  },
+];
+
+const iconButtonClass =
+  "grid size-[34px] place-items-center rounded-lg border border-zinc-300 bg-white text-foreground hover:bg-zinc-50";
+
 export function ContentPanel({
   section,
   hidden,
   onToggleHidden,
 }: ContentPanelProps): ReactNode {
+  const [image, setImage] = useState(0);
+
   return (
-    <div className="grid gap-3">
-      <div className="flex items-center justify-between">
-        <p className="font-medium">{labels[section]}</p>
-        <div className="flex gap-1">
+    <div className="grid">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <p className="text-[13px]">{labels[section]}</p>
+        <div className="flex items-center gap-1.5">
           <button
             aria-checked={!hidden}
-            className="rounded-lg px-2 py-1 text-xs hover:bg-black/5"
+            aria-label={
+              hidden ? "Show website section" : "Hide website section"
+            }
+            className={cn(
+              iconButtonClass,
+              hidden ? "text-muted-foreground" : "",
+            )}
             onClick={onToggleHidden}
             role="switch"
+            title={hidden ? "Show website section" : "Hide website section"}
             type="button"
           >
-            {hidden ? "Show" : "Hide"}
+            {hidden ? (
+              <svg
+                aria-hidden="true"
+                className="size-4 fill-none stroke-current stroke-[1.6]"
+                viewBox="0 0 24 24"
+              >
+                <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
+                <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
+                <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
+                <path d="m2 2 20 20" />
+              </svg>
+            ) : (
+              <svg
+                aria-hidden="true"
+                className="size-4 fill-none stroke-current stroke-[1.6]"
+                viewBox="0 0 24 24"
+              >
+                <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
           </button>
           <button
             aria-label="Move website section up"
-            className="rounded-lg px-2 py-1 text-xs hover:bg-black/5"
+            className={iconButtonClass}
+            title="Move website section up"
             type="button"
           >
-            ↑
+            <svg
+              aria-hidden="true"
+              className="size-4 fill-none stroke-current stroke-[1.6]"
+              viewBox="0 0 24 24"
+            >
+              <path d="m18 15-6-6-6 6" />
+            </svg>
           </button>
           <button
             aria-label="Move website section down"
-            className="rounded-lg px-2 py-1 text-xs hover:bg-black/5"
+            className={iconButtonClass}
+            title="Move website section down"
             type="button"
           >
-            ↓
+            <svg
+              aria-hidden="true"
+              className="size-4 fill-none stroke-current stroke-[1.6]"
+              viewBox="0 0 24 24"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
           </button>
         </div>
       </div>
       {section === "hero" || section === "services" ? (
         <>
-          <Field label="Headline">
+          <Field className="mb-3.5" label="Headline">
             <TextInput defaultValue="Roofs that keep Irish weather out." />
           </Field>
-          <Field label="Body">
-            <TextArea defaultValue="Repairs, re-roofs, and emergency call-outs across Dublin and North County." />
+          <Field className="mb-3.5" label="Body">
+            <TextArea defaultValue="Repairs, re-roofs, and emergency call-outs across Dublin and North County. {{marketing_phone}}" />
           </Field>
-          <div className="grid grid-cols-4 gap-2">
-            {[0, 1, 2, 3].map((index) => (
-              <button
-                aria-label="Pick image"
-                className="h-14 rounded-lg bg-cover bg-center"
-                key={index}
-                style={{ backgroundImage: `url(${photo(index)})` }}
-                type="button"
-              />
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground">Drop files here…</p>
+          <Field className="mb-3.5" label="Image">
+            <div
+              className="min-h-[88px] rounded-[10px] bg-[#d4d4d8] bg-cover bg-center"
+              style={{ backgroundImage: `url(${photo(image)})` }}
+            />
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              {[0, 1, 2, 3].map((index) => (
+                <button
+                  aria-label={
+                    [
+                      "Rear slope after the storm",
+                      "Slate repair on a terrace",
+                      "New roof on a semi",
+                      "Guttering on the front",
+                    ][index]
+                  }
+                  className={cn(
+                    "min-h-[72px] rounded-[10px] bg-cover bg-center",
+                    image === index
+                      ? "shadow-[inset_0_0_0_2px_#13120a]"
+                      : "border border-transparent",
+                  )}
+                  key={index}
+                  onClick={() => setImage(index)}
+                  style={{ backgroundImage: `url(${photo(index)})` }}
+                  type="button"
+                />
+              ))}
+            </div>
+            <p className="mt-2.5 rounded-[10px] border border-dashed border-zinc-300 px-3 py-3 text-center text-xs text-muted-foreground">
+              Drop files here to upload to the media library
+            </p>
+            <p className="mt-3 text-[11px] leading-snug text-muted-foreground">
+              Pending-review AI image — publishing still needs approved media.
+            </p>
+          </Field>
         </>
       ) : null}
       {section === "reviews" ? (
-        <label className="flex items-center gap-2 text-sm">
-          <input defaultChecked type="checkbox" /> On this website section
-        </label>
+        <div className="grid gap-2">
+          {reviews.map((review) => (
+            <article
+              className={panel(
+                "relative grid gap-1.5 p-3 shadow-[inset_0_0_0_1px_#13120a]",
+              )}
+              key={review.name}
+            >
+              <span
+                aria-hidden="true"
+                className="absolute top-2 right-2 grid grid-cols-2 grid-rows-3 gap-0.5 opacity-45"
+              >
+                <i className="size-[3px] rounded-full bg-muted-foreground" />
+                <i className="size-[3px] rounded-full bg-muted-foreground" />
+                <i className="size-[3px] rounded-full bg-muted-foreground" />
+                <i className="size-[3px] rounded-full bg-muted-foreground" />
+                <i className="size-[3px] rounded-full bg-muted-foreground" />
+                <i className="size-[3px] rounded-full bg-muted-foreground" />
+              </span>
+              <div className="text-[13px] tracking-wide text-yellow-500">
+                ★★★★★
+              </div>
+              <b className="text-[13px] font-semibold">{review.name}</b>
+              <p className="text-xs leading-snug">{review.cite}</p>
+              <p className="text-[11px] text-muted-foreground">
+                Google Maps listing
+              </p>
+              <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                <input defaultChecked type="checkbox" /> On this website section
+              </label>
+            </article>
+          ))}
+        </div>
       ) : null}
-      {section === "top-menu" || section === "footer" ? (
+      {section === "top-menu" ? (
         <>
-          <label className="flex items-center gap-2 text-sm">
-            <input defaultChecked type="checkbox" /> Show marketing phone
-          </label>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" /> Show marketing email
-          </label>
+          <div className="mb-4 grid gap-2">
+            <NavRow kind="page" page="home" />
+            <NavRow kind="text" text="Services" />
+            <div className="ml-3.5 grid gap-2 border-l border-border pl-2.5">
+              <NavRow kind="page" page="services" />
+              <NavRow
+                href="https://bellfield.ie/emergency"
+                kind="url"
+                label="Emergency"
+              />
+            </div>
+            <NavRow kind="page" page="contact" />
+          </div>
+          <VisibilityRow checked label="Show marketing phone" />
+          <VisibilityRow label="Show marketing email" />
+          <VisibilityRow checked label="Show contact" />
+        </>
+      ) : null}
+      {section === "footer" ? (
+        <>
+          <div className="mb-4 grid gap-2">
+            <NavRow kind="page" page="privacy" />
+            <NavRow kind="page" page="terms" />
+          </div>
+          <VisibilityRow checked label="Show marketing phone" />
+          <VisibilityRow checked label="Show marketing email" />
+          <VisibilityRow checked label="Show contact" />
         </>
       ) : null}
       {section === "form" ? (
         <>
-          <Field label="Website form title">
+          <Field className="mb-3.5" label="Website form title">
             <TextInput defaultValue="Request a call back" />
           </Field>
-          <Field label="Privacy notice">
+          <Field className="mb-3.5" label="Typed fields">
+            <TextInput defaultValue="Name" />
+            <TextInput className="mt-2" defaultValue="Marketing phone" />
+          </Field>
+          <Field className="mb-3.5" label="Privacy notice">
             <TextArea defaultValue="We use this to call you back about the job." />
+          </Field>
+          <Field className="mb-3.5" label="submit_action">
+            <TextInput defaultValue="create_website_lead" />
           </Field>
         </>
       ) : null}
-      <Button className="justify-self-start" variant="outline">
-        Ask first
-      </Button>
+    </div>
+  );
+}
+
+function NavRow({
+  kind: initialKind,
+  page = "home",
+  text = "",
+  href = "https://bellfield.ie/emergency",
+  label = "Emergency",
+}: {
+  kind: "page" | "text" | "url";
+  page?: string;
+  text?: string;
+  href?: string;
+  label?: string;
+}): ReactNode {
+  const [kind, setKind] = useState(initialKind);
+  const [url, setUrl] = useState(href);
+
+  return (
+    <div className="grid gap-1.5">
+      <Select
+        aria-label="Kind"
+        onChange={(event) =>
+          setKind(event.target.value as "page" | "text" | "url")
+        }
+        value={kind}
+      >
+        <option value="page">Website page</option>
+        <option value="text">Text</option>
+        <option value="url">URL</option>
+      </Select>
+      {kind === "page" ? (
+        <Select aria-label="Website page" defaultValue={page}>
+          {navPages.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.title}
+            </option>
+          ))}
+        </Select>
+      ) : null}
+      {kind === "text" ? (
+        <TextInput aria-label="Text" defaultValue={text} />
+      ) : null}
+      {kind === "url" ? (
+        <Combo
+          createKind="URL"
+          groupLabel="Existing URLs"
+          onChange={(value, option) => setUrl(option?.id ?? value)}
+          options={menuUrls}
+          placeholder="Select or type to create a new URL…"
+          value={url || label}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function VisibilityRow({
+  label,
+  checked: initial = false,
+}: {
+  label: string;
+  checked?: boolean;
+}): ReactNode {
+  const [on, setOn] = useState(initial);
+  return (
+    <div className="mb-4 flex items-center justify-between gap-2">
+      <span className="text-[13px] tracking-tight text-zinc-600">{label}</span>
+      <button
+        aria-checked={on}
+        aria-label={label}
+        className={cn(
+          "relative h-6 w-10 min-w-10 overflow-hidden rounded-full border border-zinc-300 max-[1100px]:min-w-11",
+          on ? "bg-[#166534]" : "bg-zinc-300",
+        )}
+        onClick={() => setOn((value) => !value)}
+        role="switch"
+        type="button"
+      >
+        <span
+          className={cn(
+            "absolute top-[3px] block size-4 rounded-full bg-white shadow-[0_0_0_1px_rgb(0_0_0_/_10%),0_1px_2px_rgb(0_0_0_/_16%)]",
+            on ? "left-[19px]" : "left-[3px]",
+          )}
+        />
+      </button>
     </div>
   );
 }

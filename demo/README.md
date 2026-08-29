@@ -23,7 +23,10 @@ pnpm preview
 - `/cms` — home chooser
 - `/cms/website` — website editor
 - `/cms/details` `/cms/projects` `/cms/certifications` `/cms/media`
-- `/cms/ads`
+- `/cms/ads` — ad list
+- `/cms/ads/new` — new ad workspace (`?review=1` opens Review)
+- `/cms/ads/:id` — existing ad detail
+- `/cms/ads/:id/edit` — edit workspace
 - `/cms/billing` — Usage & billing (account menu; not left nav)
 - `/cms/website?subscription=canceled` — Publish blocked until they pay
 - `/onboarding/find` → review → interview → preview → generated

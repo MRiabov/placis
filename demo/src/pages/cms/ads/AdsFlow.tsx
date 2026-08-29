@@ -98,137 +98,159 @@ export function AdsFlow({
   }
 
   return (
-    <div className="relative mx-auto mt-6 max-w-[960px] overflow-hidden rounded-[28px] border border-stone-200 bg-white shadow-sm">
-      <section className="border-b border-stone-200">
-        <div className="flex items-center justify-between bg-zinc-50 px-4 py-3">
-          <span className="font-medium">About the ad</span>
-          <span className="text-sm text-muted-foreground">
-            {confirmed ? "Confirmed" : "Open"}
-          </span>
-        </div>
-        <div className="grid gap-4 p-4">
-          <Field label="What are you promoting?">
-            <Combo
-              ariaLabel="Service"
-              createKind="service"
-              groupLabel="Your services"
-              onChange={(value) => {
-                onService(value);
-                setSvcErr(false);
-              }}
-              options={[...serviceOptions]}
-              placeholder="Select or type to create a new service…"
-              value={service}
-            />
-            {svcErr ? (
-              <p className="text-xs text-red-700">
-                Choose the service you&apos;re promoting
+    <div className="grid gap-5">
+      <div className="overflow-hidden rounded-prompt border border-hairline bg-white shadow-prompt">
+        <section className="border-b border-hairline">
+          <div className="bg-[#fafafa] px-5 py-3.5 max-[720px]:px-4">
+            <span className="text-[13px] font-medium text-foreground">
+              About the ad
+            </span>
+          </div>
+          <div className="grid gap-4 px-[22px] pt-5 pb-6 max-[720px]:p-4">
+            <Field label="What are you promoting?">
+              <Combo
+                ariaLabel="Service"
+                createKind="service"
+                groupLabel="Your services"
+                onChange={(value) => {
+                  onService(value);
+                  setSvcErr(false);
+                }}
+                options={[...serviceOptions]}
+                placeholder="Select or type to create a new service…"
+                value={service}
+              />
+              {svcErr ? (
+                <p className="text-xs text-red-700">
+                  Choose the service you&apos;re promoting
+                </p>
+              ) : null}
+            </Field>
+            <p className="text-[13px] text-zinc-600">Who it&apos;s for</p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label="Ideal customer profile">
+                <Combo
+                  createKind="profile"
+                  groupLabel="Common profiles"
+                  onChange={setProfile}
+                  options={[...profileOptions]}
+                  placeholder="Select or type to create a new profile…"
+                  value={profile}
+                />
+              </Field>
+              <Field label="Where they are">
+                <Combo
+                  createKind="area"
+                  groupLabel="Your service area"
+                  onChange={setArea}
+                  options={[...areaOptions]}
+                  placeholder="Select or type to create a new area…"
+                  value={area}
+                />
+              </Field>
+            </div>
+            <div>
+              <p className="mb-2 text-[13px] text-zinc-600">
+                How people get in touch
               </p>
-            ) : null}
-          </Field>
-          <p className="text-[13px] text-zinc-600">Who it&apos;s for</p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="Ideal customer profile">
-              <Combo
-                createKind="profile"
-                groupLabel="Common profiles"
-                onChange={setProfile}
-                options={[...profileOptions]}
-                placeholder="Select or type to create a new profile…"
-                value={profile}
-              />
-            </Field>
-            <Field label="Where they are">
-              <Combo
-                createKind="area"
-                groupLabel="Your service area"
-                onChange={setArea}
-                options={[...areaOptions]}
-                placeholder="Select or type to create a new area…"
-                value={area}
-              />
-            </Field>
-          </div>
-          <div>
-            <p className="mb-2 text-[13px] text-zinc-600">
-              How people get in touch
-            </p>
-            <p className="mb-2 text-[13px] text-zinc-600">Questions</p>
-            <div className="grid gap-1">
-              {["Phone", "Full name", "Postcode", "Email"].map(
-                (item, index) => (
-                  <label className="flex items-center gap-2 text-sm" key={item}>
-                    <input defaultChecked={index < 3} type="checkbox" />
-                    {item}
-                  </label>
-                ),
-              )}
+              <p className="mb-2 text-[13px] text-zinc-600">Questions</p>
+              <div className="grid gap-1">
+                {["Phone", "Full name", "Postcode", "Email"].map(
+                  (item, index) => (
+                    <label
+                      className="flex items-center gap-2 text-sm"
+                      key={item}
+                    >
+                      <input defaultChecked={index < 3} type="checkbox" />
+                      {item}
+                    </label>
+                  ),
+                )}
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                People answer right in Facebook — no website page needed.
+              </p>
             </div>
-            <p className="mt-2 text-xs text-muted-foreground">
-              People answer right in Facebook — no website page needed.
-            </p>
-          </div>
-          <div>
-            <p className="mb-2 text-[13px] text-zinc-600">Ad format</p>
-            <div className="flex flex-wrap gap-2">
-              {formats.map(([id, label]) => (
-                <button
-                  className={cn(
-                    "rounded-full border px-3 py-1.5 text-sm",
-                    format === id
-                      ? "border-primary bg-zinc-50"
-                      : "border-stone-200",
-                    confirmed && "opacity-60",
-                  )}
-                  disabled={confirmed}
-                  key={id}
-                  onClick={() => {
-                    onFormat(id);
-                    setFmtErr(false);
-                  }}
-                  type="button"
-                >
-                  {label}
-                </button>
-              ))}
+            <div>
+              <p className="mb-2 text-[13px] text-zinc-600">Ad format</p>
+              <div className="flex flex-wrap gap-2">
+                {formats.map(([id, label]) => (
+                  <button
+                    className={cn(
+                      "rounded-full border px-3 py-1.5 text-sm",
+                      format === id
+                        ? "border-primary bg-zinc-50"
+                        : "border-hairline",
+                      confirmed && "opacity-60",
+                    )}
+                    disabled={confirmed}
+                    key={id}
+                    onClick={() => {
+                      onFormat(id);
+                      setFmtErr(false);
+                    }}
+                    type="button"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              {fmtErr ? (
+                <p className="mt-1 text-xs text-red-700">Pick a format</p>
+              ) : null}
             </div>
-            {fmtErr ? (
-              <p className="mt-1 text-xs text-red-700">Pick a format</p>
-            ) : null}
-          </div>
-          <div className="flex justify-end gap-2">
-            {generatedOnce ? (
-              <Button onClick={onRevise} variant="outline">
-                Revise
+            <div className="flex justify-end gap-2">
+              {generatedOnce ? (
+                <Button onClick={onRevise} variant="outline">
+                  Revise
+                </Button>
+              ) : null}
+              <Button onClick={generate}>
+                {generatedOnce ? "Generate again" : "Create ad and generate"}
               </Button>
-            ) : null}
-            <Button onClick={generate}>
-              {generatedOnce ? "Generate again" : "Create ad and generate"}
-            </Button>
+            </div>
           </div>
-        </div>
-      </section>
-      <section>
-        <button
-          className="flex w-full items-center justify-between px-4 py-3 text-left disabled:opacity-50"
-          disabled={!reviewUnlocked}
-          onClick={onToggleReview}
-          type="button"
+        </section>
+        <section>
+          <button
+            className="flex w-full items-center justify-between bg-[#fafafa] px-5 py-3.5 text-left text-[13px] font-medium max-[720px]:px-4 disabled:cursor-not-allowed"
+            disabled={!reviewUnlocked}
+            onClick={onToggleReview}
+            type="button"
+          >
+            <span className="text-foreground">Review</span>
+            <span className="text-xs font-normal text-muted-foreground">
+              {reviewUnlocked
+                ? reviewOpen
+                  ? "Open"
+                  : "Closed"
+                : "Complete step 1 to unlock"}
+            </span>
+          </button>
+          {reviewUnlocked && reviewOpen ? (
+            <div className="px-[22px] pt-5 pb-6 max-[720px]:p-4">
+              <AdsReview format={format} shot={shot} />
+            </div>
+          ) : null}
+        </section>
+      </div>
+      {generating ? (
+        <div
+          aria-live="polite"
+          className="flex items-center gap-3 rounded-2xl border border-hairline bg-white px-[18px] py-3.5 text-[13px] text-muted-foreground shadow-prompt"
+          role="status"
         >
-          <span className="font-medium">Review</span>
-          <span className="text-sm text-muted-foreground">
-            {reviewUnlocked
-              ? reviewOpen
-                ? "Open"
-                : "Closed"
-              : "Complete step 1 to unlock"}
+          <span
+            aria-hidden="true"
+            className="size-[18px] shrink-0 rounded-full border-2 border-stone-300 border-t-primary animate-spin"
+          />
+          <span>
+            Drafting your ad… AI is picking photos and writing your text. This
+            takes a moment — you can leave and come back.
           </span>
-        </button>
-        {reviewUnlocked && reviewOpen ? (
-          <AdsReview format={format} shot={shot} />
-        ) : null}
-      </section>
-      <div className="border-t border-stone-200 p-5">
+        </div>
+      ) : null}
+      <div className="overflow-hidden rounded-prompt border border-hairline bg-white px-[22px] pt-5 pb-6 shadow-prompt max-[720px]:p-4">
         <b className="text-sm">Ready?</b>
         <p className="mt-1 mb-3 text-xs text-muted-foreground">
           Fix the errors shown inside the forms above, then approve.
@@ -255,14 +277,6 @@ export function AdsFlow({
           </Button>
         </div>
       </div>
-      {generating ? (
-        <div className="absolute inset-0 z-10 grid place-items-center bg-white/85 p-6 text-center text-sm">
-          <p>
-            Drafting your ad… AI is picking photos and writing your text. This
-            takes a moment — you can leave and come back.
-          </p>
-        </div>
-      ) : null}
     </div>
   );
 }

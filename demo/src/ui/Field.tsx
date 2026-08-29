@@ -6,9 +6,10 @@ import type {
 } from "react";
 
 import { cn } from "@/lib/cn";
+import { card, onbCard } from "@/ui/card";
 
 const controlClass =
-  "w-full min-w-0 rounded-lg border border-border bg-zinc-50 px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20";
+  "w-full min-w-0 min-h-11 rounded-lg border border-border bg-zinc-50 px-3 py-2.5 text-sm leading-[1.4] text-foreground outline-none placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20";
 
 type FieldProps = {
   label: string;
@@ -70,11 +71,29 @@ type PanelProps = {
 
 export function Panel({ title, hint, children }: PanelProps): ReactNode {
   return (
-    <section className="grid gap-4 rounded-xl border border-border bg-white p-4">
+    <section className={card("grid gap-[18px] p-5")}>
       <div>
         <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
         {hint ? (
           <p className="mt-0.5 text-[13px] leading-snug text-muted-foreground">
+            {hint}
+          </p>
+        ) : null}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+export function OnbPanel({ title, hint, children }: PanelProps): ReactNode {
+  return (
+    <section className={onbCard()}>
+      <div className="grid gap-0.5">
+        <h3 className="text-xl leading-[1.2] font-semibold tracking-tight">
+          {title}
+        </h3>
+        {hint ? (
+          <p className="m-0 text-[13px] leading-normal text-muted-foreground">
             {hint}
           </p>
         ) : null}

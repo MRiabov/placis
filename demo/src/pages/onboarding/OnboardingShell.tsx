@@ -21,6 +21,9 @@ const steps = [
   { id: "preview", label: "Website", to: "/onboarding/preview" },
 ] as const;
 
+const cueTurnOn = "Click to turn on voice";
+const cueMicDenied = "Allow microphone access in your browser";
+
 export function OnboardingShell(): ReactNode {
   return (
     <OnboardingDevProvider>
@@ -36,12 +39,20 @@ function OnboardingShellInner(): ReactNode {
     select: (state) => state.location.pathname,
   });
   const step = pathname.split("/").at(-1) ?? "find";
-  const hideOrb = step === "preview" || step === "generated";
-  const [guide, setGuide] = useState<"cue" | "listening" | "denied">("cue");
+  const generated = step === "generated";
+  const hideOrb = step === "preview" || generated;
+  const [guide, setGuide] = useState<"cue" | "listening" | "dismissed">("cue");
+  const [cueCopy, setCueCopy] = useState(cueTurnOn);
   const [speaking, setSpeaking] = useState(false);
   const [level, setLevel] = useState(0);
 
   useEffect(() => () => stop(), []);
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("guide") === "1") {
+      setGuide("listening");
+    }
+  }, []);
 
   const groups: DevGroup[] = [
     {
@@ -58,7 +69,7 @@ function OnboardingShellInner(): ReactNode {
         {
           id: "generated",
           label: "Skip generation",
-          on: step === "generated",
+          on: generated,
           onSelect: () => {
             void navigate({ to: "/onboarding/generated" });
           },
@@ -72,6 +83,7 @@ function OnboardingShellInner(): ReactNode {
     const shot =
       new URLSearchParams(window.location.search).get("shot") === "1";
     setGuide("listening");
+    setCueCopy(cueTurnOn);
     if (shot) {
       return;
     }
@@ -85,61 +97,87 @@ function OnboardingShellInner(): ReactNode {
       onLevel: setLevel,
       onDenied: () => {
         stop();
-        setGuide("denied");
+        setGuide("cue");
+        setCueCopy(cueMicDenied);
         setSpeaking(false);
         setLevel(0);
       },
     });
   }
 
+  function stopGuide(): void {
+    stop();
+    setGuide("dismissed");
+    setSpeaking(false);
+    setLevel(0);
+  }
+
+  const currentIndex = steps.findIndex((entry) => entry.id === step);
+  const showBack = !generated && step !== "find";
+
   return (
     <div className="flex h-full flex-col bg-background">
       <DevStrip groups={groups} />
-      <header className="flex h-14 shrink-0 items-center border-b border-border px-4">
-        <Link aria-label="placis" to="/onboarding/find">
-          <img
-            alt="placis"
-            className="h-8 w-auto"
-            height={32}
-            src="/placis-mark.png"
-            width={81}
-          />
-        </Link>
-      </header>
-      {step !== "generated" ? (
+      {generated ? null : (
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-border">
+          <div className="mx-auto flex h-14 w-[min(72rem,calc(100%-2.5rem))] items-center justify-between">
+            <Link aria-label="placis" to="/onboarding/find">
+              <img
+                alt="placis"
+                className="block h-8 w-[81px]"
+                height={32}
+                src="/placis-mark.png"
+                width={81}
+              />
+            </Link>
+            {showBack ? (
+              <button
+                className="inline-flex h-9 items-center gap-1 rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-zinc-50"
+                onClick={() => {
+                  const previous = steps[Math.max(0, currentIndex - 1)];
+                  void navigate({ to: previous.to });
+                }}
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="size-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                Back
+              </button>
+            ) : null}
+          </div>
+        </header>
+      )}
+      {generated ? null : (
         <nav
           aria-label="Onboarding progress"
-          className="border-b border-border px-4 py-3"
+          className="mx-auto w-[min(72rem,calc(100%-2.5rem))] pt-4"
         >
-          <ol className="mx-auto flex max-w-3xl justify-between gap-2">
+          <ol className="m-0 grid list-none grid-cols-4 gap-2 p-0">
             {steps.map((item, index) => {
-              const currentIndex = steps.findIndex(
-                (entry) => entry.id === step,
-              );
-              const done =
-                step === "generated" ||
-                (currentIndex >= 0 && index < currentIndex);
+              const done = currentIndex >= 0 && index < currentIndex;
               const current = item.id === step;
               return (
                 <li key={item.id}>
-                  <Link
-                    className="flex items-center gap-2 text-sm"
-                    to={item.to}
-                  >
+                  <Link className="grid w-full gap-2 text-left" to={item.to}>
                     <i
                       className={cn(
-                        "grid size-5 place-items-center rounded-full text-[10px]",
-                        current || done
-                          ? "bg-primary text-primary-foreground"
-                          : "border border-border text-muted-foreground",
+                        "block h-[3px] rounded-full",
+                        current || done ? "bg-primary" : "bg-border",
                       )}
-                    >
-                      {index + 1}
-                    </i>
+                    />
                     <span
-                      className={
-                        current ? "text-foreground" : "text-muted-foreground"
-                      }
+                      className={cn(
+                        "block overflow-hidden text-[11px] font-medium tracking-wide text-ellipsis whitespace-nowrap",
+                        current ? "text-foreground" : "text-muted-foreground",
+                      )}
                     >
                       {item.label}
                     </span>
@@ -149,44 +187,97 @@ function OnboardingShellInner(): ReactNode {
             })}
           </ol>
         </nav>
-      ) : null}
-      <main className="relative min-h-0 flex-1 overflow-auto">
-        <Outlet />
-        {hideOrb ? null : (
-          <div className="absolute right-4 bottom-4 flex flex-col items-end gap-2">
-            {guide === "cue" || guide === "denied" ? (
-              <button
-                className="rounded-full border border-stone-200 bg-white px-3 py-1 text-xs shadow-sm"
-                onClick={startGuide}
-                type="button"
-              >
-                {guide === "denied"
-                  ? "Allow microphone access in your browser"
-                  : "Click to turn on voice"}
-              </button>
-            ) : (
-              <button
-                className="text-xs text-muted-foreground underline"
-                onClick={() => {
-                  stop();
-                  setGuide("cue");
-                  setSpeaking(false);
-                  setLevel(0);
-                }}
-                type="button"
-              >
-                Enable voice guide
-              </button>
-            )}
-            <DustOrb
-              level={level}
-              onClick={startGuide}
-              size={64}
-              speaking={speaking}
-            />
-          </div>
+      )}
+      <main
+        className={cn(
+          "relative min-h-0 flex-1 overflow-auto",
+          generated
+            ? "flex flex-col overflow-hidden p-0"
+            : hideOrb
+              ? "pt-5"
+              : "pt-5 pb-[max(8rem,calc(5.5rem+2.5rem))]",
         )}
+      >
+        <Outlet />
       </main>
+      {hideOrb || guide === "dismissed" ? null : (
+        <div className="fixed right-4 bottom-4 z-50 h-[min(5.5rem,30vw)] w-[min(5.5rem,30vw)] overflow-visible">
+          <DustOrb
+            aria-label={
+              guide === "listening"
+                ? "Voice guide on"
+                : "Turn on the voice guide"
+            }
+            aria-pressed={guide === "listening"}
+            className="size-full"
+            level={level}
+            onClick={() => {
+              if (guide === "listening") {
+                return;
+              }
+              startGuide();
+            }}
+            speaking={speaking}
+          />
+          <button
+            aria-label="Turn off the voice guide"
+            className="absolute -top-[0.35rem] -left-[0.35rem] z-[1] grid size-6 place-items-center rounded-full border border-border bg-white text-[14px] leading-none"
+            onClick={stopGuide}
+            type="button"
+          >
+            ×
+          </button>
+          {guide === "cue" ? (
+            <button
+              className="absolute right-[calc(100%+0.5rem)] bottom-[0.85rem] grid w-max max-w-[12.5rem] justify-items-end gap-0.5 rounded-[0.55rem] bg-white px-2.5 pt-1.5 pb-2 text-right shadow-[0_1px_2px_rgb(0_0_0/4%),0_4px_16px_rgb(0_0_0/5%)]"
+              onClick={startGuide}
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                className="-mr-0.5 h-10 w-[3.75rem] overflow-visible text-foreground"
+                viewBox="0 0 72 48"
+              >
+                <defs>
+                  <marker
+                    id="onb-cue-head"
+                    markerHeight="8"
+                    markerWidth="8"
+                    orient="auto"
+                    refX="6"
+                    refY="4"
+                  >
+                    <polygon
+                      fill="currentColor"
+                      points="0 0.4, 8 4, 0 7.6"
+                      stroke="none"
+                    />
+                  </marker>
+                </defs>
+                <path
+                  d="M8 10c18-4 38 2 50 26"
+                  fill="none"
+                  markerEnd="url(#onb-cue-head)"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                />
+              </svg>
+              <p className="m-0 text-[13px] font-medium leading-tight">
+                {cueCopy}
+              </p>
+            </button>
+          ) : null}
+        </div>
+      )}
+      {hideOrb || guide !== "dismissed" ? null : (
+        <button
+          className="fixed right-4 bottom-4 z-50 h-9 rounded-lg border border-border bg-background px-3.5 text-sm"
+          onClick={startGuide}
+          type="button"
+        >
+          Enable voice guide
+        </button>
+      )}
     </div>
   );
 }
