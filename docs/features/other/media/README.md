@@ -2,8 +2,8 @@
 
 The photo library and image editing. One library: full screen at `/cms/media`
 under **Profile**. In the website editor, attach and pick from **Content** when
-an image is selected on the canvas (same rows). Crop, focal, and cleanup stay on
-`/cms/media`.
+an image is selected on the canvas (same rows). Crop, focal point, and cleanup
+stay on `/cms/media`.
 
 ## What it is
 
@@ -97,10 +97,11 @@ portrait keep their ratio. The same thumbs are the cover overlay on
 `/cms/projects/{id}` and the image pick in website editor Content.
 
 Crop / focal stay on this screen, on the selected photo in the view. It is not a
-second library. **Widget:** Crop is a rect overlay (Full vs rect). Focal is a
-draggable point on the large view. Save on click-off
-(`PATCH /v1/media-assets/{id}`). Ads placement crop/focal stay on
-`ad_image_placements` (framing **this ad**, inherited at attach).
+second library. **Widget:** Crop is a rect overlay (Full vs rect). Focal point
+is a labelled pin on the large view; the owner drags it to the part that should
+stay in view. Save on click-off (`PATCH /v1/media-assets/{id}`). Ads placement
+crop/focal stay on `ad_image_placements` (framing **this ad**, inherited at
+attach).
 
 ## Website editor
 

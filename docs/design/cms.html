@@ -1072,7 +1072,7 @@
                   </button>
                   <h2>Media library</h2>
                 </div>
-                <p>Photos of their work, logos, and documents. Crop, focal, and cleanup live here. Attach a photo from Content when an image is selected on the canvas.</p>
+                <p>Photos of their work, logos, and documents. Crop, focal point, and cleanup live here. Attach a photo from Content when an image is selected on the canvas.</p>
               </div>
               <div class="cms-collection-header-actions">
                 <button class="button-primary" type="button">Upload</button>
@@ -1085,7 +1085,7 @@
                     <div class="cms-media-crop-rect" id="mediaCropRect" style="left:8%;top:10%;width:84%;height:78%">
                       <button class="cms-media-crop-handle" type="button" data-handle="se" aria-label="Resize crop"></button>
                     </div>
-                    <button class="cms-media-focal" id="mediaFocal" type="button" aria-label="Focal point" style="left:52%;top:38%"></button>
+                    <button class="cms-media-focal" id="mediaFocal" type="button" aria-label="Focal point. Drag to the part that should stay in view." style="left:52%;top:38%"><span class="cms-media-focal-label">Focal point</span></button>
                   </div>
                 </div>
                 <div class="cms-media-sweep is-hidden" id="mediaSweep">
@@ -1106,6 +1106,7 @@
                   <span>Crop</span>
                   <button class="cms-small-button is-on" type="button" data-crop="full">Full</button>
                   <button class="cms-small-button" type="button" data-crop="rect">Rect</button>
+                  <p class="cms-media-focal-hint">Drag the Focal point pin on the photo to the part that should stay in view.</p>
                 </div>
                 <label for="mediaCleanupPrompt">Cleanup</label>
                 <textarea class="cms-field-control" id="mediaCleanupPrompt" rows="3" maxlength="500" placeholder="How should this photo be cleaned up?"></textarea>

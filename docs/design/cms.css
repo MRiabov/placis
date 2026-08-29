@@ -2487,6 +2487,28 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round
   cursor: grab;
   touch-action: none;
 }
+.cms-media-focal-label {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgb(0 0 0 / 72%);
+  color: #fff;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.cms-media-focal-hint {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--cms-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
 .cms-media-framing {
   display: flex;
   flex-wrap: wrap;
