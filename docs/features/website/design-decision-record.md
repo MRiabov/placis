@@ -253,3 +253,8 @@ numbers are HTML comments so later entries keep their numbers.
     add these at GoDaddy, Porkbun, or Squarespace (where the domain already
     lives); copy Host into name/host and Value into value/points-to; do not move
     nameservers to Placis. (2026-08-27)
+
+20. **Content image pick is Upload, not Drop files here** — Owner copy is pick
+    from the media library and **Upload**. Drop onto Upload still uploads.
+    Thumbs keep landscape / square / portrait ratio; dozens of photos. Same
+    thumbs as `/cms/media` and the project cover overlay. (2026-08-29)

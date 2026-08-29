@@ -1,11 +1,12 @@
 import { type ReactNode, useState } from "react";
 
 import { cn } from "@/lib/cn";
-import { photo } from "@/lib/fixtures";
+import { type MediaLibraryItem, mediaLibraryItems } from "@/lib/media-library";
 import type { SiteSection } from "@/pages/cms/website/FakeSite";
 import { Combo } from "@/ui/Combo";
 import { panel } from "@/ui/card";
 import { Field, Select, TextArea, TextInput } from "@/ui/Field";
+import { MediaThumbs } from "@/ui/MediaThumbs";
 
 type ContentPanelProps = {
   section: SiteSection;
@@ -62,7 +63,8 @@ export function ContentPanel({
   hidden,
   onToggleHidden,
 }: ContentPanelProps): ReactNode {
-  const [image, setImage] = useState(0);
+  const [library, setLibrary] = useState(mediaLibraryItems);
+  const [image, setImage] = useState(library[0]);
 
   return (
     <div className="grid">
@@ -146,35 +148,28 @@ export function ContentPanel({
           <Field className="mb-3.5" label="Image">
             <div
               className="min-h-[88px] rounded-[10px] bg-placeholder bg-cover bg-center"
-              style={{ backgroundImage: `url(${photo(image)})` }}
+              style={{ backgroundImage: `url(${image.src})` }}
             />
-            <div className="mt-2 grid grid-cols-2 gap-2">
-              {[0, 1, 2, 3].map((index) => (
-                <button
-                  aria-label={
-                    [
-                      "Rear slope after the storm",
-                      "Slate repair on a terrace",
-                      "New roof on a semi",
-                      "Guttering on the front",
-                    ][index]
-                  }
-                  className={cn(
-                    "min-h-[72px] rounded-[10px] bg-cover bg-center",
-                    image === index
-                      ? "shadow-[inset_0_0_0_2px_var(--color-primary)]"
-                      : "border border-transparent",
-                  )}
-                  key={index}
-                  onClick={() => setImage(index)}
-                  style={{ backgroundImage: `url(${photo(index)})` }}
-                  type="button"
-                />
-              ))}
+            <div className="mt-2">
+              <MediaThumbs
+                items={library}
+                onPick={setImage}
+                onUpload={(file) => {
+                  const src = URL.createObjectURL(file);
+                  const item: MediaLibraryItem = {
+                    by: "owner",
+                    caption: "",
+                    id: src,
+                    ratio: "landscape",
+                    src,
+                    status: "approved",
+                  };
+                  setLibrary((current) => [item, ...current]);
+                  setImage(item);
+                }}
+                selectedId={image.id}
+              />
             </div>
-            <p className="mt-2.5 rounded-[10px] border border-dashed border-zinc-300 px-3 py-3 text-center text-xs text-muted-foreground">
-              Drop files here to upload to the media library
-            </p>
             <p className="mt-3 text-[11px] leading-snug text-muted-foreground">
               Pending-review AI image — publishing still needs approved media.
             </p>

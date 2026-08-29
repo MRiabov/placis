@@ -1095,17 +1095,6 @@ document.getElementById("homePrompt")?.querySelectorAll("[data-scene]")?.forEach
 document.getElementById("homePrompt")?.addEventListener("submit", (event) => {
   event.preventDefault();
 });
-document.querySelectorAll(".cms-media-tile").forEach((tile) => {
-  tile.addEventListener("click", () => {
-    tile.parentElement?.querySelectorAll(".cms-media-tile").forEach((item) => item.classList.remove("is-selected"));
-    tile.classList.add("is-selected");
-    const src = tile.dataset.src;
-    if (!src) return;
-    const current = document.getElementById("contentImageCurrent");
-    if (current) current.style.backgroundImage = `url("${src}")`;
-    document.querySelector(".fake-hero")?.style.setProperty("--hero-photo", `url("${src}")`);
-  });
-});
 
 document.getElementById("cmsNotification")?.addEventListener("click", (event) => {
   const button = event.target.closest("button");
@@ -1215,10 +1204,47 @@ const mediaLibraryItems = [
   { src: "media/house-cottage.jpg", ratio: "landscape", caption: "Finished elevation", by: "research", status: "approved" },
   { src: "media/job-sheets.jpg", ratio: "portrait", caption: "Sheets going on", by: "owner", status: "approved" },
   { src: "media/house-dusk.jpg", ratio: "landscape", caption: "Front elevation after handover", by: "owner", status: "approved" },
+  { src: "media/job-repair.jpg", ratio: "portrait", caption: "Scaffold on the gable", by: "owner", status: "approved" },
+  { src: "media/job-slate.jpg", ratio: "square", caption: "Leadwork at the chimney", by: "owner", status: "approved" },
+  { src: "media/job-gutter.jpg", ratio: "landscape", caption: "Fascia after the rain", by: "research", status: "approved" },
+  { src: "media/hero-roof.jpg", ratio: "landscape", caption: "Emergency tarp on the ridge", by: "owner", status: "approved" },
+  { src: "media/job-chimney.jpg", ratio: "portrait", caption: "Velux flashing", by: "owner", status: "approved" },
+  { src: "media/job-battens.jpg", ratio: "square", caption: "Slate stack in the yard", by: "ai", status: "approved" },
+  { src: "media/job-crew.jpg", ratio: "landscape", caption: "Hip tiles before bedding", by: "owner", status: "approved" },
+  { src: "media/job-team.jpg", ratio: "portrait", caption: "Underfelt on the rafters", by: "owner", status: "approved" },
+  { src: "media/job-sheets.jpg", ratio: "portrait", caption: "Dormer cheeks", by: "research", status: "approved" },
+  { src: "media/house-cottage.jpg", ratio: "landscape", caption: "Eaves after the fascia", by: "owner", status: "approved" },
+  { src: "media/job-new-roof.jpg", ratio: "square", caption: "Valley boards", by: "owner", status: "approved" },
+  { src: "media/house-dusk.jpg", ratio: "landscape", caption: "Finished porch roof", by: "owner", status: "approved" },
 ];
 
 function mediaSrcCss(src) {
   return `url('${src}')`;
+}
+
+function bindContentImagePicker() {
+  const grid = document.getElementById("contentImageGrid");
+  if (!grid || grid.dataset.ready === "1") return;
+  grid.dataset.ready = "1";
+  grid.classList.toggle("is-dense", mediaLibraryItems.length > 10);
+  const upload = `<button class="cms-media-tile is-upload" type="button">Upload</button>`;
+  const tiles = mediaLibraryItems.map((item, index) => {
+    const selected = index === 0 ? " is-selected" : "";
+    return `<button class="cms-media-tile is-${item.ratio}${selected}" type="button" data-src="${esc(item.src)}" style="background-image:${mediaSrcCss(item.src)}" aria-label="${esc(item.caption)}"></button>`;
+  }).join("");
+  grid.innerHTML = upload + tiles;
+  grid.addEventListener("click", (event) => {
+    const tile = event.target.closest(".cms-media-tile");
+    if (!tile || tile.classList.contains("is-upload")) return;
+    grid.querySelectorAll(".cms-media-tile").forEach((node) => {
+      node.classList.toggle("is-selected", node === tile);
+    });
+    const src = tile.dataset.src;
+    if (!src) return;
+    const current = document.getElementById("contentImageCurrent");
+    if (current) current.style.backgroundImage = `url("${src}")`;
+    document.querySelector(".fake-hero")?.style.setProperty("--hero-photo", `url("${src}")`);
+  });
 }
 
 function setMediaView(item) {
@@ -1458,6 +1484,7 @@ function bindWebsiteStyles() {
 }
 
 bindMediaLibrary();
+bindContentImagePicker();
 bindMediaFraming();
 bindWebsiteStyles();
 if (params.get("cleanup") === "1") setMediaCleanup(true);

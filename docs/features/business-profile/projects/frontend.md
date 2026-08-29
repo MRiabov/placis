@@ -68,9 +68,12 @@ Back to the list. Heading is the project title, or **New project**. Shared
 field controls:
 
 - **Cover** — current photo or empty well + **Pick from the media library**.
-  Overlay of media-library thumbs (media caption when present; the owner never
-  labels). Upload in that overlay lands in the media library, then becomes the
-  cover. Crop / cleanup stay `/cms/media`.
+  Overlay of thumbs from the media library (media caption when present; the
+  owner never labels). Landscape, square, and portrait keep their ratio. Two
+  columns on a narrow screen; three on a wide screen, four when there are more
+  than ten. Twenty to forty photos is expected. **Upload** in that overlay
+  lands in the media library, then becomes the cover. Crop / cleanup stay
+  `/cms/media`.
 - **Title** (1–80)
 - **Description** (1–2000)
 - **Archive** — red outline, after the fields, not ink. Hidden until there is a

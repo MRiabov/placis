@@ -39,3 +39,8 @@ inventing it.
 7. **Description patches are Ask first** — Inline diff of **all** unapproved
    hunks (red deletion, green insertion) until **Apply** / **Reject**. A further
    orb adds a hunk. Do not paint **Not applied**. (2026-08-29)
+
+8. **Cover overlay thumbs keep their ratio** — Same thumbs as `/cms/media`:
+   landscape, square, and portrait; 2 columns on a narrow screen; 3 then 4 on a
+   wide screen when there are more than ten. Dozens of photos. **Upload** is the
+   tile, not a drop prompt. (2026-08-29)
