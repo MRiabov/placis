@@ -7,7 +7,8 @@ Related docs:
 1. [Ad generation PRD](prd.md)
 2. [Ad generation technical implementation](technical-implementation.md)
 3. [Ad generation ADR](ADR.md)
-4. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
+4. [design decision record](design-decision-record.md)
+5. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 
 ## Purpose
 
@@ -93,15 +94,20 @@ and the approve block at the end.
 - large cards, one per ad: the ad's image, name/offer, status badge, last
   updated, and a performance strip (impressions / clicks / spend) that is
   **grayed out as a stub** until ad posting is connected and real metrics exist
+- **Archive** is a red archive icon on the card (not a labelled button; it does
+  not add a row). Toast with **Undo** (unarchives). Collapsed **Archive**
+  heading under the cards (chevron down on the right; default collapsed).
+  Unarchive from there. Not a hard delete. Same look as Certifications and
+  reviews Archive. (2026-08-29)
 - cards are **large by default** — contractors rarely run more than 6 ads at
   once, and 6 cards fill most of the screen; when more than 6 ads exist the list
   **compresses to dense rows**
 - **default sort: active ads first, then newest** (by created time); spend-based
   sorting replaces this once performance exists
 - status badges: **Ad draft**, **Creative ready** (the ad is done),
-  **Published** (the next status once ad posting exists), archived. "Ad needs
-  review" and "Ad ready to post" are creation-flow labels and are not used on
-  existing ads.
+  **Published** (the next status once ad posting exists). Archived ads are not
+  on this grid; they sit under **Archive**. "Ad needs review" and "Ad ready to
+  post" are creation-flow labels and are not used on existing ads.
 - filter by status, search by name
 - ad-platform connection: a **"Connect Meta" / "Connect Google Ads"** button
   appears next to "+ New ad" for each **unconnected** ad platform; the buttons
