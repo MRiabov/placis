@@ -42,3 +42,8 @@ One number is one decision.
    sit in a card next to reviews. Narrow (≤1100px): one column, no card around
    certifications — **Certifications** is a heading like **Top reviews**.
    (2026-08-27)
+
+10. **Archive is on the card** — Red outline **Archive** after **In top
+    reviews**. The heading is the archived list, not the control that archives.
+    (2026-08-29) Same day, later: a red archive icon on the card, not a labelled
+    button, and it does not add a row of height. (2026-08-29)
