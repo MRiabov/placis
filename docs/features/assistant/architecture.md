@@ -168,17 +168,16 @@ rows.
 
 When the owner leaves Voice, the thread already has utterances and muted tool
 `summary` lines. Frontend POSTs any committed-but-unsent transcripts. Next text
-send assembles thread items from **this thread**, not from the voice service
-and not from `ai_generations`. Voice → text is always a backup on the same
-conversation (CMS: Restore chatbot). If the browser refuses the microphone,
-Voice cannot hear: CMS shows the shared **notification**
-([frontend](../../general-architecture/frontend.md); same Ads/Details notice as
-[ads.html](../../design/ads.html)): **Try again** (retry the microphone) and
-**Switch to text mode** (Restore chatbot). Copy: **Allow microphone access in
-your browser to talk. You can keep typing.** Onboarding returns to the cue
-(**Allow microphone access in your browser**); click retries. Do not create the
-realtime connection until the microphone is granted (denied microphone never
-POSTs `…/realtime-connection`).
+send assembles thread items from **this thread**, not from the voice service and
+not from `ai_generations`. Voice → text is always a backup on the same
+conversation (CMS: **Switch to text mode**). If the browser refuses the
+microphone, Voice cannot hear: CMS shows the shared **notification**
+([frontend](../../general-architecture/frontend.md); same Ads/Details notice as [ads.html](../../design/ads.html)): **Try again** (retry the
+microphone) and **Switch to text mode**. Copy:
+**Allow microphone access in your browser to talk. You can keep typing.**
+Onboarding returns to the cue (**Allow microphone access in your browser**);
+click retries. Do not create the realtime connection until the microphone is
+granted (denied microphone never POSTs `…/realtime-connection`).
 
 **Voice idle:** frontend-owned. If the owner does not speak for **30 seconds**
 (named constant, asserted in tests), stop the conversation (existing close

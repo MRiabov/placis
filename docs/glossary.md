@@ -1365,6 +1365,7 @@ not `frontend.md`) and later `internal/<home>/`; `(website)` also covers
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (onboarding) | website preview link |
 | live markdown plan | website assistant plan |
+| chatbot | Assistant, composer, or text |
 | handoff boundary | the owner approves the plan, then the assistant applies it |
 | knowledge catalog | knowledge base registry |
 | page switch / destination switch | assistant screen switch |

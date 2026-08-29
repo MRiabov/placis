@@ -102,12 +102,11 @@ instead of silently replacing it.
 10. **Every screen in The CMS can call the assistant** — The owner calls the
     assistant from a top-right **Assistant** button on every screen in The CMS,
     including `/cms`. Default channel is **Voice**. Text is a switch on the same
-    thread (Restore chatbot / Voice in the composer), not a second assistant.
-    Closed until they call; do not leave the orb or overlay always on. Hydrate
-    when they call (open **Assistant**). `/cms` is a guide-only assistant
-    screen (`cms` in the CMS v1 enum). Connect (ad accounts) is still not an
-    assistant screen. Plan / Ask first stay website editor only. Do not clone
-    this button onto onboarding (onboarding stays the bottom-right voice guide).
-    Not an **AI tools** left-nav item. Look:
-    [design decision 11](design-decision-record.md). (2026-08-29) Same day,
-    later: the call is bottom-right of the main pane.
+    thread (**Switch to text mode** / Voice in the composer), not a second
+    assistant. Closed until they call; do not leave the orb or overlay always
+    on. Hydrate when they call (open **Assistant**). `/cms` is a guide-only
+    assistant screen (`cms` in the CMS v1 enum). Connect (ad accounts) is still
+    not an assistant screen. Plan / Ask first stay website editor only. Do not
+    clone this button onto onboarding (onboarding stays the bottom-right voice
+    guide). Not an **AI tools** left-nav item. Look: [design decision 11](design-decision-record.md).
+    (2026-08-29) Same day, later: the call is bottom-right of the main pane.

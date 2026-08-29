@@ -205,27 +205,28 @@ Do not advertise `{website_prefix}.placis.com` as a live URL.
 **Assistant** is called from the bottom-right **Assistant** button (every screen
 in The CMS, including this one). Default is **closed**. Click calls **Voice**:
 DustOrb bottom-right of the canvas. On narrow that is just above the workspace
-rail. Switch to text is Restore chatbot / **Voice** in the composer. The chatbot
-overlay is pinned to the bottom of the canvas (not a modal). The switch is a
-fade, not a cut. Restore chatbot is an opaque pill under Apply / Reject; the orb
-is a circle on the right spanning both rows. Denied microphone uses the shared
-**notification**
+rail. Switch to text is **Switch to text mode** / **Voice** in the composer. The
+composer overlay is pinned to the bottom of the canvas (not a modal). The switch
+is a fade, not a cut. **Switch to text mode** is an opaque pill under Apply /
+Reject; the orb is a circle on the right spanning both rows. Denied microphone
+uses the shared **notification**
 (**Allow microphone access in your browser to talk. You can keep typing.**;
-**Try again** retries the microphone; **Switch to text mode** is Restore
-chatbot). `POST /v1/assistant/voice/realtime-connection` is not called until the
-microphone is granted. The prerecorded greeting plays on the first Voice start
-(**Assistant**, **Voice**, or empty composer). Starting Voice again more than
-**5 seconds** after that greeting began does not replay it. That cluster sits
-bottom-right and is only as wide as the pills plus the orb, not a full-width
-bar. Desktop / tablet orb is `min(5.5rem, 30vw)`; ≤480px is `min(50vw, 50dvh)`.
-Desktop / tablet **clicks** hit a **2.75rem circle**; the particle wrap stays
-that 5.5rem size, and the rest of the canvas stays clickable. A small close on
-the top-right of the orb also restores. Tools and apply stay in [assistant.md](assistant.md).
-Overlay look for every assistant screen: [assistant design decision record](../assistant/design-decision-record.md). Two
-overlay switches: plan vs continuous, and instant apply vs Ask first (Apply /
-Reject). **Follow** is a third config, default **on**, not owner-turnable.
-Default is plan + Ask first. Composer submit is **Plan** when Plan is on,
-**Send** when Plan is off (continuous); empty chatbot field shows **Voice**.
+**Try again** retries the microphone; **Switch to text mode** opens the
+composer). `POST /v1/assistant/voice/realtime-connection` is not called until
+the microphone is granted. The prerecorded greeting plays on the first Voice
+start (**Assistant**, **Voice**, or empty composer). Starting Voice again more
+than **5 seconds** after that greeting began does not replay it. That cluster
+sits bottom-right and is only as wide as the pills plus the orb, not a
+full-width bar. Desktop / tablet orb is `min(5.5rem, 30vw)`; ≤480px is
+`min(50vw, 50dvh)`. Desktop / tablet **clicks** hit a **2.75rem circle**; the
+particle wrap stays that 5.5rem size, and the rest of the canvas stays
+clickable. A small close on the top-right of the orb also restores. Tools and
+apply stay in [assistant.md](assistant.md). Overlay look for every assistant screen:
+[assistant design decision record](../assistant/design-decision-record.md). Two overlay switches: plan vs continuous,
+and instant apply vs Ask first (Apply / Reject). **Follow** is a third config,
+default **on**, not owner-turnable. Default is plan + Ask first. Composer submit
+is **Plan** when Plan is on, **Send** when Plan is off (continuous); empty
+composer field shows **Voice**.
 
 **Quiet by default.** On a **narrow** screen the canvas is the destination until
 they open destinations. The CMS is viewport-locked (PWA): the window does not
@@ -248,10 +249,10 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
 ```
 
 - **Closed until they call.** Bottom-right **Assistant** is the call. After
-  they call: overlay while the chatbot is showing; orb when Voice is on. Close
+  they call: overlay while the composer is showing; orb when Voice is on. Close
   returns to the button. Overlay has a 12px inset from the canvas on the left,
   right, and bottom (not flush to the edges). Chevrons expand or reduce; that
-  is not a hide. **Collapsed** (desktop and narrow default while the chatbot is
+  is not a hide. **Collapsed** (desktop and narrow default while the composer is
   showing) is one row on a wide screen: chevrons, field, **Plan mode**,
   **Ask first**, **Plan** (or **Send**). On narrow, collapsed stays two rows
   (overlay bar + composer). Reduced composer is **max-width 40rem**, centered;
@@ -268,7 +269,7 @@ nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | 
   **one chat-like thread**. Ask first **Apply / Reject is per pending turn**
   (the whole run’s tools in bulk), not per tool. Those two actions are
   **pills on the canvas**, always sitting immediately above the assistant
-  overlay (chatbot) or in the left stack next to the orb (voice agent), not
+  overlay (composer) or in the left stack next to the orb (voice agent), not
   inside the thread and not at the canvas midpoint. Each tool in the thread is
   the backend `summary` (`Updated image on Hero`), never a tool name and never
   “website slot” ([assistant.md](assistant.md)). Write lines use a **pencil**; thinking uses a
