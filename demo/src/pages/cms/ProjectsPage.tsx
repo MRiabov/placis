@@ -138,8 +138,8 @@ export function ProjectsPage(): ReactNode {
           editor.
         </p>
         {empty ? null : (
-          <>
-            <div className="mt-6 grid grid-cols-1 gap-5 min-[1101px]:grid-cols-2">
+          <div className="mt-6 max-w-[29.375rem] min-[1101px]:max-w-[960px]">
+            <div className="grid grid-cols-1 gap-5 min-[1101px]:grid-cols-2">
               {active.map((project) => (
                 <Link
                   className={cn(
@@ -200,7 +200,10 @@ export function ProjectsPage(): ReactNode {
                 </span>
               </button>
               {archiveOpen ? (
-                <div className="mt-2.5 grid max-w-xl gap-2" id="archiveList">
+                <div
+                  className="mt-2.5 grid max-w-[29.375rem] gap-2"
+                  id="archiveList"
+                >
                   {archived.map((project) => (
                     <div
                       className="rounded-[28px] border border-stone-200 bg-white p-2.5 shadow-sm"
@@ -239,7 +242,7 @@ export function ProjectsPage(): ReactNode {
                 </div>
               ) : null}
             </div>
-          </>
+          </div>
         )}
       </div>
     </>
