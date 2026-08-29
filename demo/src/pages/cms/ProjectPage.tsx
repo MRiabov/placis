@@ -122,239 +122,244 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
           },
         ]}
       />
-      <div className="min-h-0 flex-1 overflow-auto p-6">
-        <PageHeading
-          actions={
-            <Button
-              className="ml-auto"
-              onClick={() => {
-                void navigate({
-                  search: listSearch({}, search),
-                  to: "/cms/projects",
-                });
-              }}
-              variant="outline"
-            >
-              Back
-            </Button>
-          }
-          onOpenDestinations={openDestinations}
-          title={heading}
-        />
-        <div className="mt-6 grid max-w-xl gap-5">
-          <Field label="Cover">
-            <div className="grid max-w-md gap-2.5">
-              {cover ? (
-                <button
-                  aria-expanded={picker}
-                  aria-label={caption || "Cover"}
-                  className="h-44 overflow-hidden rounded-[18px] bg-zinc-100"
-                  onClick={() => setPicker((value) => !value)}
-                  type="button"
-                >
-                  <img
-                    alt=""
-                    className="size-full object-cover object-[50%_32%]"
-                    src={cover}
-                  />
-                </button>
-              ) : (
-                <button
-                  aria-expanded={picker}
-                  className="grid h-44 place-items-center rounded-[18px] border border-dashed border-stone-300 px-4 text-sm text-muted-foreground"
-                  onClick={() => setPicker((value) => !value)}
-                  type="button"
-                >
-                  Pick from the media library
-                </button>
-              )}
-              {caption ? (
-                <p className="text-[11px] leading-snug text-muted-foreground">
-                  {caption}
-                </p>
-              ) : null}
-              {cover ? (
-                <Button
-                  className="justify-self-start"
-                  onClick={() => setPicker((value) => !value)}
-                  variant="outline"
-                >
-                  Pick from the media library
-                </Button>
-              ) : null}
-              {picker ? (
-                <div className="grid grid-cols-2 gap-2">
+      <div className="min-h-0 flex-1 overflow-auto">
+        <div className="mx-auto w-full max-w-[960px] px-7 pt-8 pb-14 max-[1023px]:px-4 max-[1023px]:pt-6 max-[1023px]:pb-12">
+          <PageHeading
+            actions={
+              <Button
+                className="ml-auto"
+                onClick={() => {
+                  void navigate({
+                    search: listSearch({}, search),
+                    to: "/cms/projects",
+                  });
+                }}
+                variant="outline"
+              >
+                Back
+              </Button>
+            }
+            onOpenDestinations={openDestinations}
+            title={heading}
+          />
+          <div className="mt-6 grid max-w-xl gap-5">
+            <Field label="Cover">
+              <div className="grid max-w-md gap-2.5">
+                {cover ? (
                   <button
-                    className="grid aspect-square place-items-center rounded-[10px] border border-dashed border-stone-300 text-sm text-muted-foreground"
-                    onClick={() => fileRef.current?.click()}
-                    onDragOver={(event) => event.preventDefault()}
-                    onDrop={(event) => {
-                      event.preventDefault();
-                      const file = event.dataTransfer.files[0];
-                      if (file) {
-                        addCoverFile(file);
-                      }
-                    }}
+                    aria-expanded={picker}
+                    aria-label={caption || "Cover"}
+                    className="h-44 overflow-hidden rounded-[18px] bg-zinc-100"
+                    onClick={() => setPicker((value) => !value)}
                     type="button"
                   >
-                    Upload
-                  </button>
-                  {library.map((item) => (
-                    <button
-                      aria-label={item.caption || "Cover"}
-                      className={cn(
-                        "aspect-square overflow-hidden rounded-[10px] bg-cover bg-center",
-                        cover === item.src
-                          ? "ring-2 ring-primary ring-offset-1"
-                          : "border border-transparent",
-                      )}
-                      key={item.src}
-                      onClick={() => {
-                        setCover(item.src);
-                        setCaption(item.caption);
-                        setPicker(false);
-                      }}
-                      style={{ backgroundImage: `url(${item.src})` }}
-                      type="button"
+                    <img
+                      alt=""
+                      className="size-full object-cover object-[50%_32%]"
+                      src={cover}
                     />
-                  ))}
-                  <input
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0];
-                      if (file) {
-                        addCoverFile(file);
-                        setPicker(false);
-                      }
-                      event.target.value = "";
-                    }}
-                    ref={fileRef}
-                    type="file"
-                  />
-                </div>
-              ) : null}
-            </div>
-          </Field>
-          <Field label="Title">
-            <div className="flex items-start gap-2">
-              <TextInput
-                className="flex-1"
-                maxLength={80}
-                onChange={(event) => setTitle(event.target.value)}
-                onKeyDown={(event) => {
-                  if (!(event.ctrlKey || event.metaKey) || event.key !== "z") {
-                    return;
-                  }
-                  if (!titleUndo || title === titleUndo) {
-                    return;
-                  }
-                  setTitle(titleUndo);
-                  event.preventDefault();
-                }}
-                value={title}
-              />
-              <PromptOrb
-                onGenerate={() => {
-                  setTitleUndo(title);
-                  setTitle("Storm repair in Malahide");
-                }}
-                open={prompt === "title"}
-                placeholder="How should this title change?"
-                promptText={promptText}
-                setOpen={(open) => setPrompt(open ? "title" : null)}
-                setPromptText={setPromptText}
-              />
-            </div>
-          </Field>
-          <div className="grid gap-2">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-[13px] font-normal tracking-tight text-zinc-600">
-                Description
-              </span>
-              {diff ? (
-                <span className="flex gap-2">
+                  </button>
+                ) : (
                   <button
-                    className="h-8 rounded-full bg-primary px-3.5 text-[13px] font-semibold text-primary-foreground"
-                    onClick={() => {
-                      setDescription(composedDescription);
-                      setDiff(false);
-                    }}
+                    aria-expanded={picker}
+                    className="grid h-44 place-items-center rounded-[18px] border border-dashed border-stone-300 px-4 text-sm text-muted-foreground"
+                    onClick={() => setPicker((value) => !value)}
                     type="button"
                   >
-                    Apply
+                    Pick from the media library
                   </button>
-                  <button
-                    className="h-8 rounded-full border border-border bg-white px-3.5 text-[13px] font-semibold"
-                    onClick={() => {
-                      setDescription(
-                        row?.description ??
-                          "Replaced the rear slope after wind damage.",
-                      );
-                      setDiff(false);
-                    }}
-                    type="button"
+                )}
+                {caption ? (
+                  <p className="text-[11px] leading-snug text-muted-foreground">
+                    {caption}
+                  </p>
+                ) : null}
+                {cover ? (
+                  <Button
+                    className="justify-self-start"
+                    onClick={() => setPicker((value) => !value)}
+                    variant="outline"
                   >
-                    Reject
-                  </button>
-                </span>
-              ) : null}
-            </div>
-            <div className="flex items-start gap-2">
-              {diff ? (
-                <p className="min-h-24 flex-1 rounded-lg border border-border bg-white px-3 py-2.5 text-sm leading-relaxed">
-                  Replaced the{" "}
-                  <del className="bg-red-50 text-red-800">rear slope</del>
-                  <ins className="bg-emerald-50 text-emerald-800 no-underline">
-                    rear slope and flashing
-                  </ins>{" "}
-                  after wind damage. New slate on the valley.
-                  <ins className="bg-emerald-50 text-emerald-800 no-underline">
-                    {" "}
-                    Completed before the next storm.
-                  </ins>
-                </p>
-              ) : (
-                <TextArea
+                    Pick from the media library
+                  </Button>
+                ) : null}
+                {picker ? (
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="grid aspect-square place-items-center rounded-[10px] border border-dashed border-stone-300 text-sm text-muted-foreground"
+                      onClick={() => fileRef.current?.click()}
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={(event) => {
+                        event.preventDefault();
+                        const file = event.dataTransfer.files[0];
+                        if (file) {
+                          addCoverFile(file);
+                        }
+                      }}
+                      type="button"
+                    >
+                      Upload
+                    </button>
+                    {library.map((item) => (
+                      <button
+                        aria-label={item.caption || "Cover"}
+                        className={cn(
+                          "aspect-square overflow-hidden rounded-[10px] bg-cover bg-center",
+                          cover === item.src
+                            ? "ring-2 ring-primary ring-offset-1"
+                            : "border border-transparent",
+                        )}
+                        key={item.src}
+                        onClick={() => {
+                          setCover(item.src);
+                          setCaption(item.caption);
+                          setPicker(false);
+                        }}
+                        style={{ backgroundImage: `url(${item.src})` }}
+                        type="button"
+                      />
+                    ))}
+                    <input
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(event) => {
+                        const file = event.target.files?.[0];
+                        if (file) {
+                          addCoverFile(file);
+                          setPicker(false);
+                        }
+                        event.target.value = "";
+                      }}
+                      ref={fileRef}
+                      type="file"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </Field>
+            <Field label="Title">
+              <div className="flex items-start gap-2">
+                <TextInput
                   className="flex-1"
-                  maxLength={2000}
-                  onChange={(event) => setDescription(event.target.value)}
-                  rows={4}
-                  value={description}
+                  maxLength={80}
+                  onChange={(event) => setTitle(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (
+                      !(event.ctrlKey || event.metaKey) ||
+                      event.key !== "z"
+                    ) {
+                      return;
+                    }
+                    if (!titleUndo || title === titleUndo) {
+                      return;
+                    }
+                    setTitle(titleUndo);
+                    event.preventDefault();
+                  }}
+                  value={title}
                 />
-              )}
-              <PromptOrb
-                onGenerate={() => {
-                  setDescription(composedDescription);
-                  setDiff(true);
-                }}
-                open={prompt === "description"}
-                placeholder="How should this description change?"
-                promptText={promptText}
-                setOpen={(open) => setPrompt(open ? "description" : null)}
-                setPromptText={setPromptText}
-              />
+                <PromptOrb
+                  onGenerate={() => {
+                    setTitleUndo(title);
+                    setTitle("Storm repair in Malahide");
+                  }}
+                  open={prompt === "title"}
+                  placeholder="How should this title change?"
+                  promptText={promptText}
+                  setOpen={(open) => setPrompt(open ? "title" : null)}
+                  setPromptText={setPromptText}
+                />
+              </div>
+            </Field>
+            <div className="grid gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="text-[13px] font-normal tracking-tight text-zinc-600">
+                  Description
+                </span>
+                {diff ? (
+                  <span className="flex gap-2">
+                    <button
+                      className="h-8 rounded-full bg-primary px-3.5 text-[13px] font-semibold text-primary-foreground"
+                      onClick={() => {
+                        setDescription(composedDescription);
+                        setDiff(false);
+                      }}
+                      type="button"
+                    >
+                      Apply
+                    </button>
+                    <button
+                      className="h-8 rounded-full border border-border bg-white px-3.5 text-[13px] font-semibold"
+                      onClick={() => {
+                        setDescription(
+                          row?.description ??
+                            "Replaced the rear slope after wind damage.",
+                        );
+                        setDiff(false);
+                      }}
+                      type="button"
+                    >
+                      Reject
+                    </button>
+                  </span>
+                ) : null}
+              </div>
+              <div className="flex items-start gap-2">
+                {diff ? (
+                  <p className="min-h-24 flex-1 rounded-lg border border-border bg-white px-3 py-2.5 text-sm leading-relaxed">
+                    Replaced the{" "}
+                    <del className="bg-red-50 text-red-800">rear slope</del>
+                    <ins className="bg-emerald-50 text-emerald-800 no-underline">
+                      rear slope and flashing
+                    </ins>{" "}
+                    after wind damage. New slate on the valley.
+                    <ins className="bg-emerald-50 text-emerald-800 no-underline">
+                      {" "}
+                      Completed before the next storm.
+                    </ins>
+                  </p>
+                ) : (
+                  <TextArea
+                    className="flex-1"
+                    maxLength={2000}
+                    onChange={(event) => setDescription(event.target.value)}
+                    rows={4}
+                    value={description}
+                  />
+                )}
+                <PromptOrb
+                  onGenerate={() => {
+                    setDescription(composedDescription);
+                    setDiff(true);
+                  }}
+                  open={prompt === "description"}
+                  placeholder="How should this description change?"
+                  promptText={promptText}
+                  setOpen={(open) => setPrompt(open ? "description" : null)}
+                  setPromptText={setPromptText}
+                />
+              </div>
             </div>
+            {isNew ? null : (
+              <Button
+                className="justify-self-start"
+                onClick={() => {
+                  void navigate({
+                    search: listSearch(
+                      {
+                        archived: projectId ?? undefined,
+                      },
+                      search,
+                    ),
+                    to: "/cms/projects",
+                  });
+                }}
+                variant="danger"
+              >
+                Archive
+              </Button>
+            )}
           </div>
-          {isNew ? null : (
-            <Button
-              className="justify-self-start"
-              onClick={() => {
-                void navigate({
-                  search: listSearch(
-                    {
-                      archived: projectId ?? undefined,
-                    },
-                    search,
-                  ),
-                  to: "/cms/projects",
-                });
-              }}
-              variant="danger"
-            >
-              Archive
-            </Button>
-          )}
         </div>
       </div>
     </>

@@ -15,7 +15,8 @@ inventing it.
 1. **List cards clone My ads look** — Prompt-box radius, hairline, shadow,
    large inset photo, 2-up on a wide screen, one column on narrow (1100px). Copy
    is website title + description, not ads meta or performance. The whole card
-   is the hit. No controls on the card. (2026-08-29)
+   is the hit. No controls on the card. The list uses the same centered 960px
+   column as Ads. (2026-08-29)
 
 2. **Edits live on `/cms/projects/new` and `/cms/projects/{id}`** — Cover pick,
    title, description, Archive. **Add project** in the list heading opens

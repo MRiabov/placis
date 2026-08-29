@@ -31,7 +31,8 @@ whole-panel swap
 Cards clone My ads look: `--prompt-radius`, `--prompt-border`,
 `--prompt-shadow`, 10px pad, inset photo (`height: 176px`, `border-radius:
 18px`). Wide: **2 columns**, `gap: 20px`. Narrow (≤1100px): 1 column, 44px
-hits. Large by default. No compact rows.
+hits. Large by default. No compact rows. The list sits in the same centered
+960px column as Ads.
 
 Each card is cover, **title** (15px / 600), then a short **description**
 paragraph. No status badge, no “Updated …”, no performance strip, no category /
