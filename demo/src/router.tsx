@@ -3,10 +3,14 @@ import {
   createRoute,
   createRouter,
   Outlet,
+  parseSearchWith,
   redirect,
+  stringifySearchWith,
 } from "@tanstack/react-router";
 
-import { AdsPage } from "@/pages/cms/AdsPage";
+import { AdsListPage, AdsPage } from "@/pages/cms/AdsPage";
+import { AdsDetail } from "@/pages/cms/ads/AdsDetail";
+import { AdsWorkspacePage } from "@/pages/cms/ads/AdsWorkspace";
 import { BillingPage } from "@/pages/cms/BillingPage";
 import { CertificationsPage } from "@/pages/cms/CertificationsPage";
 import { DetailsPage } from "@/pages/cms/DetailsPage";
@@ -149,6 +153,43 @@ const adsRoute = createRoute({
   getParentRoute: () => cmsRoute,
   path: "ads",
   component: AdsPage,
+  validateSearch: (search: Record<string, unknown>) => {
+    const str = (key: string): string | undefined =>
+      typeof search[key] === "string" ? search[key] : undefined;
+    return {
+      compact: str("compact"),
+      connected: str("connected"),
+      dev: str("dev"),
+      review: str("review"),
+      scene: str("scene"),
+      shot: str("shot"),
+      view: str("view"),
+    };
+  },
+});
+
+const adsIndexRoute = createRoute({
+  getParentRoute: () => adsRoute,
+  path: "/",
+  component: AdsListPage,
+});
+
+const adsNewRoute = createRoute({
+  getParentRoute: () => adsRoute,
+  path: "new",
+  component: AdsWorkspacePage,
+});
+
+const adsEditRoute = createRoute({
+  getParentRoute: () => adsRoute,
+  path: "$adId/edit",
+  component: AdsWorkspacePage,
+});
+
+const adsDetailRoute = createRoute({
+  getParentRoute: () => adsRoute,
+  path: "$adId",
+  component: AdsDetail,
 });
 
 const billingRoute = createRoute({
@@ -214,7 +255,12 @@ const routeTree = rootRoute.addChildren([
     ]),
     certificationsRoute,
     mediaRoute,
-    adsRoute,
+    adsRoute.addChildren([
+      adsIndexRoute,
+      adsNewRoute,
+      adsEditRoute,
+      adsDetailRoute,
+    ]),
     billingRoute,
   ]),
   onboardingRoute.addChildren([
@@ -230,6 +276,8 @@ const routeTree = rootRoute.addChildren([
 export const router = createRouter({
   routeTree,
   defaultPreload: "intent",
+  parseSearch: parseSearchWith((value) => value),
+  stringifySearch: stringifySearchWith((value) => String(value)),
 });
 
 declare module "@tanstack/react-router" {

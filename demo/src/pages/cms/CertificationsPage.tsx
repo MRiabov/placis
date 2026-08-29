@@ -3,6 +3,7 @@ import { type ReactNode, useState } from "react";
 import { DevStrip } from "@/dev/DevStrip";
 import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 import { Field, Select, TextArea, TextInput } from "@/ui/Field";
 import { PageHeading } from "@/ui/PageHeading";
 
@@ -143,7 +144,7 @@ export function CertificationsPage(): ReactNode {
             <p className="mt-1 text-sm text-muted-foreground">
               Owner-written. Lands in all reviews. Route for now.
             </p>
-            <div className="mt-6 grid max-w-xl gap-3 rounded-xl border border-border bg-white p-4">
+            <div className={card("mt-6 grid max-w-xl gap-3 p-5")}>
               <Field label="Author name">
                 <TextInput />
               </Field>
@@ -184,7 +185,7 @@ export function CertificationsPage(): ReactNode {
               Each reviews website section picks its own set.
             </p>
             <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,16rem)_1fr]">
-              <section className="grid content-start gap-2 rounded-xl border border-border bg-white p-4">
+              <section className={card("grid content-start gap-2 p-5")}>
                 <h3 className="text-base font-medium">Certifications</h3>
                 <p className="text-[13px] text-muted-foreground">
                   Catalog for this trade and country. Unchecking is removed.
@@ -261,7 +262,7 @@ export function CertificationsPage(): ReactNode {
                     ))}
                   </div>
                 </div>
-                <div className="rounded-lg border border-border bg-zinc-50 px-3 py-2 text-sm">
+                <div className={card("bg-zinc-50 px-3 py-2 text-sm")}>
                   Archived a review.{" "}
                   <button
                     className="underline"
@@ -287,10 +288,7 @@ export function CertificationsPage(): ReactNode {
                   {archiveOpen ? (
                     <div className="mt-2 grid gap-3" id="archiveList">
                       {archived.map((review) => (
-                        <article
-                          className="rounded-xl border border-border bg-white p-4"
-                          key={review.id}
-                        >
+                        <article className={card("p-4")} key={review.id}>
                           <div className="text-amber-700">
                             {stars(review.stars)}
                           </div>
@@ -330,7 +328,7 @@ function ReviewCard({
   onTopChange: (on: boolean) => void;
 }): ReactNode {
   return (
-    <article className="rounded-xl border border-border bg-white p-4">
+    <article className={card("p-4")}>
       <div className="text-amber-700">{stars(review.stars)}</div>
       <b>{review.author}</b>
       <p className="text-sm">{review.quote}</p>

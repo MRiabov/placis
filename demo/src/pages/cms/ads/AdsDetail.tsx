@@ -1,7 +1,11 @@
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { type ReactNode, useMemo, useState } from "react";
 
-import { photo } from "@/lib/fixtures";
+import { ads } from "@/pages/cms/ads/AdsList";
+import { adsSearch } from "@/pages/cms/ads/search";
+import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 import { Field, TextInput } from "@/ui/Field";
 import { PageHeading } from "@/ui/PageHeading";
 
@@ -35,52 +39,73 @@ function daysLeft(endIso: string): string {
   return "Ended";
 }
 
-type AdsDetailProps = {
-  onOpenDestinations: () => void;
-  onBack: () => void;
-  onEdit: () => void;
-};
-
-export function AdsDetail({
-  onOpenDestinations,
-  onBack,
-  onEdit,
-}: AdsDetailProps): ReactNode {
-  const [name, setName] = useState("Roofing replacement — spring push");
+export function AdsDetail(): ReactNode {
+  const { openDestinations } = useCmsLayout();
+  const navigate = useNavigate();
+  const { adId } = useParams({ from: "/cms/ads/$adId" });
+  const ad = ads.find((item) => item.id === adId) ?? ads[1];
+  const [name, setName] = useState<string>(ad.title);
   const [endIso, setEndIso] = useState("2026-08-29");
   const left = useMemo(() => daysLeft(endIso), [endIso]);
 
   return (
-    <div className="min-h-0 flex-1 overflow-auto p-6">
-      <PageHeading onOpenDestinations={onOpenDestinations} title="Ads" />
-      <div className="mx-auto mt-6 max-w-[960px]">
-        <Button className="mb-4" onClick={onBack} variant="outline">
+    <div className="min-h-0 flex-1 overflow-auto">
+      <div className="mx-auto w-full max-w-[960px] px-7 pt-8 pb-14 max-[1023px]:px-4 max-[1023px]:pt-6 max-[1023px]:pb-12">
+        <PageHeading onOpenDestinations={openDestinations} title="Ads" />
+        <Button
+          className="mt-6 mb-4"
+          onClick={() => void navigate({ search: adsSearch(), to: "/cms/ads" })}
+          variant="outline"
+        >
           ← My ads
         </Button>
-        <div className="overflow-hidden rounded-[28px] border border-stone-200 bg-white shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-3 border-b border-stone-200 p-4">
-            <textarea
-              aria-label="Ad name"
-              className="min-h-8 min-w-48 flex-1 resize-none border-0 bg-transparent text-lg font-semibold outline-none"
-              onChange={(event) => setName(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  event.currentTarget.blur();
-                }
-              }}
-              rows={1}
-              value={name}
-            />
-            <div className="flex flex-wrap gap-2">
-              <span className="rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs text-emerald-800">
+        <div
+          className={card(
+            "overflow-hidden rounded-prompt border-hairline shadow-prompt",
+          )}
+        >
+          <div className="dhead">
+            <div className="dhead-name">
+              <span aria-hidden="true" className="inplace-sizer">
+                {name || " "}
+              </span>
+              <textarea
+                aria-label="Ad name"
+                className="inplace"
+                onChange={(event) => setName(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    event.currentTarget.blur();
+                  }
+                }}
+                rows={1}
+                value={name}
+              />
+            </div>
+            <div className="dhead-actions">
+              <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">
                 Creative ready
               </span>
-              <Button disabled variant="outline">
-                Publish
-              </Button>
+              <span
+                className="tipwrap"
+                data-tip="Publish is not available yet — ad posting to Meta is coming"
+              >
+                <Button disabled variant="outline">
+                  Publish
+                </Button>
+              </span>
               <Button variant="outline">Download</Button>
-              <Button onClick={onEdit} variant="outline">
+              <Button
+                onClick={() =>
+                  void navigate({
+                    params: { adId },
+                    search: adsSearch(),
+                    to: "/cms/ads/$adId/edit",
+                  })
+                }
+                variant="outline"
+              >
                 Edit
               </Button>
             </div>
@@ -93,8 +118,8 @@ export function AdsDetail({
                   This ad uses one photo. Edit to pick a different one.
                 </p>
                 <div
-                  className="h-56 rounded-xl bg-cover bg-center"
-                  style={{ backgroundImage: `url("${photo(1)}")` }}
+                  className="h-[280px] rounded-xl border border-hairline bg-cover bg-[position:50%_32%]"
+                  style={{ backgroundImage: `url("${ad.image}")` }}
                 />
               </div>
               <div>
@@ -151,10 +176,7 @@ export function AdsDetail({
                     "Results",
                     "Cost per ad lead",
                   ].map((label) => (
-                    <div
-                      className="rounded-lg border border-stone-200 px-3 py-2 text-sm"
-                      key={label}
-                    >
+                    <div className={card("px-3 py-2 text-sm")} key={label}>
                       <span className="text-muted-foreground">{label}</span>
                       <b className="block">—</b>
                     </div>
@@ -176,7 +198,7 @@ export function AdsDetail({
                   ["Declan Byrne", "085 999 8877 · Gutter cleaning", true],
                 ].map(([who, meta, uncontacted]) => (
                   <div
-                    className="flex items-center justify-between gap-2 border-b border-stone-100 py-2 text-sm"
+                    className="flex items-center justify-between gap-2 border-b border-border py-2 text-sm"
                     key={String(who)}
                   >
                     <span>
@@ -189,7 +211,7 @@ export function AdsDetail({
                       className={
                         uncontacted
                           ? "rounded-lg border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs text-amber-800"
-                          : "rounded-lg border border-stone-200 px-2 py-0.5 text-xs"
+                          : "rounded-lg border border-border px-2 py-0.5 text-xs"
                       }
                     >
                       {uncontacted ? "Uncontacted" : "Contacted"}

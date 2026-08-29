@@ -4,10 +4,12 @@ import { DevStrip } from "@/dev/DevStrip";
 import { photo } from "@/lib/fixtures";
 import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 import { FeaturedServices } from "@/ui/FeaturedServices";
 import { Field, Panel, TextArea, TextInput } from "@/ui/Field";
 import { HoursPicker } from "@/ui/HoursPicker";
 import { PageHeading } from "@/ui/PageHeading";
+import { RatingStars } from "@/ui/RatingStars";
 import { ServiceAreas } from "@/ui/ServiceAreas";
 
 export function DetailsPage(): ReactNode {
@@ -96,13 +98,15 @@ export function DetailsPage(): ReactNode {
             </Field>
             <ListingCard
               label="Facebook"
-              meta="4.6 · 38 reviews"
               photo={photo(0)}
+              rating={4.6}
+              reviews={38}
             />
             <ListingCard
               label="Google Maps listing"
-              meta="4.8 · 214 reviews"
               photo={photo(1)}
+              rating={4.8}
+              reviews={214}
             />
           </Panel>
           <Panel
@@ -145,24 +149,30 @@ export function DetailsPage(): ReactNode {
 
 function ListingCard({
   label,
-  meta,
+  rating,
+  reviews,
   photo: src,
 }: {
   label: string;
-  meta: string;
+  rating: number;
+  reviews: number;
   photo: string;
 }): ReactNode {
+  const meta = `${rating} · ${reviews} reviews`;
   return (
     <div className="grid gap-2">
       <span className="text-[13px] tracking-tight text-zinc-600">{label}</span>
-      <div className="flex items-center gap-3 rounded-xl border border-border p-2">
+      <div className={card("flex items-center gap-3 p-2")}>
         <span
           className="size-12 rounded-lg bg-cover bg-center"
           style={{ backgroundImage: `url(${src})` }}
         />
         <span className="min-w-0 flex-1">
           <b className="block text-sm">Bellfield Roofing</b>
-          <span className="text-xs text-muted-foreground">{meta}</span>
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <RatingStars rating={rating} />
+            <span>{meta}</span>
+          </span>
         </span>
         <Button variant="outline">Change</Button>
       </div>

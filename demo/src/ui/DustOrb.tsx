@@ -16,13 +16,16 @@ type DustOrbProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   speaking?: boolean;
   level?: number;
   size?: number;
+  canvasClassName?: string;
 };
 
 export function DustOrb({
   className,
+  canvasClassName,
   speaking = false,
   level = 0,
-  size = 72,
+  size,
+  style,
   ...props
 }: DustOrbProps): ReactNode {
   const hostRef = useRef<HTMLButtonElement>(null);
@@ -62,15 +65,22 @@ export function DustOrb({
     <button
       aria-label="Voice"
       className={cn(
-        "dust-orb-host overflow-hidden border border-stone-200 bg-white",
+        "dust-orb-host appearance-none border-0 bg-transparent p-0 shadow-none",
         className,
       )}
       ref={hostRef}
-      style={{ width: size, height: size }}
+      style={{
+        background: "transparent",
+        ...(size ? { width: size, height: size } : {}),
+        ...style,
+      }}
       type="button"
       {...props}
     >
-      <canvas className="dust-orb-canvas" ref={canvasRef} />
+      <canvas
+        className={cn("dust-orb-canvas", canvasClassName)}
+        ref={canvasRef}
+      />
     </button>
   );
 }

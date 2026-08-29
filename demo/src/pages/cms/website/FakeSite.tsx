@@ -19,7 +19,6 @@ type FakeSiteProps = {
   selected: SiteSection | null;
   hidden: Partial<Record<SiteSection, boolean>>;
   pending: boolean;
-  copyout: boolean;
   onSelect: (section: SiteSection) => void;
 };
 
@@ -44,7 +43,6 @@ export function FakeSite({
   selected,
   hidden,
   pending,
-  copyout,
   onSelect,
 }: FakeSiteProps): ReactNode {
   const titles: Record<string, string> = {
@@ -57,123 +55,119 @@ export function FakeSite({
 
   return (
     <div
-      className="overflow-hidden border border-border bg-white shadow-sm"
+      className="fake-site"
       style={{
-        borderRadius: radii[radius] ?? "16px",
+        ["--public-radius" as string]: radii[radius] ?? "16px",
         ["--site-space" as string]: space[density] ?? "1.5rem",
       }}
     >
-      {copyout ? (
-        <p className="bg-red-50 px-4 py-2 text-xs text-red-700">
-          Copy-out has not succeeded after 10 seconds…
-        </p>
-      ) : null}
-      <p className="bg-zinc-100 px-4 py-1 text-xs text-muted-foreground">
-        acme-roofing-dublin.preview.placis.com
-      </p>
-      <Block
-        hidden={hidden["top-menu"]}
-        onSelect={() => onSelect("top-menu")}
-        selected={selected === "top-menu"}
-      >
-        <div className="flex flex-wrap items-center justify-between gap-2 px-6 py-3 text-sm">
-          <span className="font-medium">Bellfield Roofing</span>
-          <span className="text-muted-foreground">
-            <span>Home</span>
-            <span> · </span>
-            <span>Services</span>
-            <span> · </span>
-            <span>Contact</span>
-          </span>
-          <span>01 555 0199 · Contact</span>
-        </div>
-      </Block>
-      <Block
-        className="bg-[#1f2933] px-8 py-16 text-[#f5f1ea]"
-        hidden={hidden.hero}
-        onSelect={() => onSelect("hero")}
-        pending={pending}
-        selected={selected === "hero"}
-      >
-        <p className="text-xs tracking-[0.12em] uppercase">{siteHero.kicker}</p>
-        <h2 className="mt-2 text-3xl font-semibold">
-          {page === "home" ? (
-            <>
-              {siteHero.headline}{" "}
-              <span className="rounded-full border border-white/30 px-2 py-0.5 text-xs font-normal">
-                {"{{trade}}"}
-              </span>
-            </>
-          ) : (
-            (titles[page] ?? titles.home)
-          )}
-        </h2>
-        <p className="mt-3 max-w-md text-sm opacity-80">{siteHero.lede}</p>
-      </Block>
-      <Block
-        hidden={hidden.services}
-        onSelect={() => onSelect("services")}
-        selected={selected === "services"}
-      >
-        <div className="grid gap-6 p-8 sm:grid-cols-3">
-          {siteServices.map((item, index) => (
-            <div key={item.title}>
-              <div
-                className="h-24 bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${photo(index)})`,
-                  borderRadius: radii[radius] ?? "16px",
-                }}
-              />
-              <h3 className="mt-2 text-sm font-medium">{item.title}</h3>
-              <p className="text-xs text-muted-foreground">{item.blurb}</p>
-            </div>
-          ))}
-        </div>
-      </Block>
-      <Block
-        hidden={hidden.reviews}
-        onSelect={() => onSelect("reviews")}
-        selected={selected === "reviews"}
-      >
-        <div className="p-8">
-          <h3 className="text-sm font-medium">What neighbours wrote</h3>
-          {siteNeighbourQuotes.map((quote) => (
-            <blockquote
-              className="mt-3 text-sm text-muted-foreground"
-              key={quote}
-            >
-              {quote}
-            </blockquote>
-          ))}
-        </div>
-      </Block>
-      <Block
-        hidden={hidden.form}
-        onSelect={() => onSelect("form")}
-        selected={selected === "form"}
-      >
-        <div className="p-8">
-          <h3 className="text-sm font-medium">Request a call back</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Name, marketing phone, and a privacy notice on this website form.
+      <div className="fake-site-page">
+        <Block
+          hidden={hidden["top-menu"]}
+          onSelect={() => onSelect("top-menu")}
+          selected={selected === "top-menu"}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2 px-6 py-3 text-sm">
+            <span className="font-medium">Bellfield Roofing</span>
+            <span className="text-muted-foreground">
+              <span>Home</span>
+              <span> · </span>
+              <span>Services</span>
+              <span> · </span>
+              <span>Contact</span>
+            </span>
+            <span>01 555 0199 · Contact</span>
+          </div>
+        </Block>
+        <Block
+          className="bg-[#1f2933] px-8 py-16 text-[#f5f1ea]"
+          hidden={hidden.hero}
+          onSelect={() => onSelect("hero")}
+          pending={pending}
+          selected={selected === "hero"}
+        >
+          <p className="text-xs tracking-[0.12em] uppercase">
+            {siteHero.kicker}
           </p>
-        </div>
-      </Block>
-      <Block
-        hidden={hidden.footer}
-        onSelect={() => onSelect("footer")}
-        selected={selected === "footer"}
-      >
-        <div className="flex flex-wrap justify-between gap-2 border-t border-border px-8 py-4 text-xs text-muted-foreground">
-          <span>
-            Bellfield Roofing · Dublin
-            <br />
-            01 555 0199 · hello@acme.ie
-          </span>
-          <span>Privacy · Terms</span>
-        </div>
-      </Block>
+          <h2 className="mt-2 text-3xl font-semibold">
+            {page === "home" ? (
+              <>
+                {siteHero.headline}{" "}
+                <span className="rounded-full border border-white/30 px-2 py-0.5 text-xs font-normal">
+                  {"{{trade}}"}
+                </span>
+              </>
+            ) : (
+              (titles[page] ?? titles.home)
+            )}
+          </h2>
+          <p className="mt-3 max-w-md text-sm opacity-80">{siteHero.lede}</p>
+        </Block>
+        <Block
+          hidden={hidden.services}
+          onSelect={() => onSelect("services")}
+          selected={selected === "services"}
+        >
+          <div className="grid gap-6 p-8 sm:grid-cols-3">
+            {siteServices.map((item, index) => (
+              <div key={item.title}>
+                <div
+                  className="h-24 bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${photo(index)})`,
+                    borderRadius: radii[radius] ?? "16px",
+                  }}
+                />
+                <h3 className="mt-2 text-sm font-medium">{item.title}</h3>
+                <p className="text-xs text-muted-foreground">{item.blurb}</p>
+              </div>
+            ))}
+          </div>
+        </Block>
+        <Block
+          hidden={hidden.reviews}
+          onSelect={() => onSelect("reviews")}
+          selected={selected === "reviews"}
+        >
+          <div className="p-8">
+            <h3 className="text-sm font-medium">What neighbours wrote</h3>
+            {siteNeighbourQuotes.map((quote) => (
+              <blockquote
+                className="mt-3 text-sm text-muted-foreground"
+                key={quote}
+              >
+                {quote}
+              </blockquote>
+            ))}
+          </div>
+        </Block>
+        <Block
+          hidden={hidden.form}
+          onSelect={() => onSelect("form")}
+          selected={selected === "form"}
+        >
+          <div className="p-8">
+            <h3 className="text-sm font-medium">Request a call back</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Name, marketing phone, and a privacy notice on this website form.
+            </p>
+          </div>
+        </Block>
+        <Block
+          hidden={hidden.footer}
+          onSelect={() => onSelect("footer")}
+          selected={selected === "footer"}
+        >
+          <div className="flex flex-wrap justify-between gap-2 border-t border-border px-8 py-4 text-xs text-muted-foreground">
+            <span>
+              Bellfield Roofing · Dublin
+              <br />
+              01 555 0199 · hello@acme.ie
+            </span>
+            <span>Privacy · Terms</span>
+          </div>
+        </Block>
+      </div>
     </div>
   );
 }

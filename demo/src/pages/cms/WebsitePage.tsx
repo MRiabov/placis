@@ -5,12 +5,17 @@ import { DevStrip } from "@/dev/DevStrip";
 import { cn } from "@/lib/cn";
 import { listen, play, stop } from "@/lib/mock-voice";
 import { ConnectModal } from "@/pages/cms/website/ConnectModal";
-import { ContentPanel } from "@/pages/cms/website/ContentPanel";
-import { FakeSite, type SiteSection } from "@/pages/cms/website/FakeSite";
+import {
+  type EditorRail,
+  EditorWorkspace,
+} from "@/pages/cms/website/EditorWorkspace";
+import type { SiteSection } from "@/pages/cms/website/FakeSite";
+import { PreviewCanvas } from "@/pages/cms/website/PreviewCanvas";
 import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 import { DustOrb } from "@/ui/DustOrb";
-import { Field, TextArea, TextInput } from "@/ui/Field";
+import { TextArea } from "@/ui/Field";
 import { Notice } from "@/ui/Notice";
 import { PageHeading } from "@/ui/PageHeading";
 
@@ -27,25 +32,22 @@ const pages = [
   { id: "terms", label: "Terms", path: "/terms", title: "Terms" },
 ];
 
-type Rail = "pages" | "seo" | "styles" | "versions" | "content";
-
 export function WebsitePage(): ReactNode {
   const { openDestinations } = useCmsLayout();
   const navigate = useNavigate();
   const params = useMemo(() => new URLSearchParams(window.location.search), []);
   const fromActivation = params.get("from") === "activation";
-  const [rail, setRail] = useState<Rail>("pages");
+  const [rail, setRail] = useState<EditorRail>("pages");
+  const [workspaceOpen, setWorkspaceOpen] = useState(
+    params.get("workspace") === "1",
+  );
   const [page, setPage] = useState("home");
   const [section, setSection] = useState<SiteSection | null>("hero");
   const [hidden, setHidden] = useState<Partial<Record<SiteSection, boolean>>>(
     {},
   );
   const [publishOpen, setPublishOpen] = useState(
-    params.get("publication") === "1" ||
-      params.get("subscription") === "canceled",
-  );
-  const [payBlocked, setPayBlocked] = useState(
-    params.get("subscription") === "canceled",
+    params.get("publication") === "1",
   );
   const [connectOpen, setConnectOpen] = useState(params.get("connect") === "1");
   const [assistantOpen, setAssistantOpen] = useState(
@@ -59,7 +61,8 @@ export function WebsitePage(): ReactNode {
   const [notice, setNotice] = useState(false);
   const [planMode, setPlanMode] = useState(true);
   const [viewport, setViewport] = useState<"desktop" | "tablet" | "mobile">(
-    "desktop",
+    () =>
+      window.matchMedia("(max-width: 1100px)").matches ? "mobile" : "desktop",
   );
   const [radius, setRadius] = useState("lg");
   const [density, setDensity] = useState("comfortable");
@@ -68,6 +71,16 @@ export function WebsitePage(): ReactNode {
   function openContent(next: SiteSection): void {
     setSection(next);
     setRail("content");
+    setWorkspaceOpen(true);
+  }
+
+  function selectRail(next: Exclude<EditorRail, "content">): void {
+    if (rail === next && workspaceOpen) {
+      setWorkspaceOpen(false);
+      return;
+    }
+    setRail(next);
+    setWorkspaceOpen(true);
   }
 
   function startVoice(): void {
@@ -106,15 +119,6 @@ export function WebsitePage(): ReactNode {
                 onSelect: () => setPublishOpen(true),
               },
               {
-                id: "subscription",
-                label: "Subscription not active",
-                on: payBlocked,
-                onSelect: () => {
-                  setPayBlocked(true);
-                  setPublishOpen(true);
-                },
-              },
-              {
                 id: "connect",
                 label: "Connect",
                 on: connectOpen,
@@ -151,10 +155,58 @@ export function WebsitePage(): ReactNode {
                 onSelect: () => setNotice(true),
               },
               {
+                id: "workspace",
+                label: "Pages list",
+                on: workspaceOpen && rail === "pages",
+                onSelect: () => selectRail("pages"),
+              },
+              {
                 id: "hero",
                 label: "Hero",
-                on: section === "hero",
+                on: section === "hero" && rail === "content",
                 onSelect: () => openContent("hero"),
+              },
+              {
+                id: "reviews",
+                label: "Reviews",
+                on: section === "reviews" && rail === "content",
+                onSelect: () => openContent("reviews"),
+              },
+              {
+                id: "top-menu",
+                label: "Top menu",
+                on: section === "top-menu" && rail === "content",
+                onSelect: () => openContent("top-menu"),
+              },
+              {
+                id: "footer",
+                label: "Footer",
+                on: section === "footer" && rail === "content",
+                onSelect: () => openContent("footer"),
+              },
+              {
+                id: "form",
+                label: "Website form",
+                on: section === "form" && rail === "content",
+                onSelect: () => openContent("form"),
+              },
+              {
+                id: "seo",
+                label: "SEO",
+                on: workspaceOpen && rail === "seo",
+                onSelect: () => selectRail("seo"),
+              },
+              {
+                id: "styles",
+                label: "Styles",
+                on: workspaceOpen && rail === "styles",
+                onSelect: () => selectRail("styles"),
+              },
+              {
+                id: "versions",
+                label: "Website versions",
+                on: workspaceOpen && rail === "versions",
+                onSelect: () => selectRail("versions"),
               },
               {
                 id: "home-page",
@@ -167,297 +219,210 @@ export function WebsitePage(): ReactNode {
         ]}
       />
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
-          <PageHeading
-            onOpenDestinations={openDestinations}
-            title="Website editor"
-          />
-          <div className="flex rounded-lg border border-border">
-            {(["desktop", "tablet", "mobile"] as const).map((item) => (
+        <header className="z-30 bg-white px-4 py-3">
+          <div className="mx-auto grid min-h-[52px] max-w-[1580px] items-center gap-3 min-[1101px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] max-[1100px]:grid-cols-[minmax(0,1fr)_auto]">
+            <div className="min-w-0 max-[1100px]:col-span-2">
+              <PageHeading
+                onOpenDestinations={openDestinations}
+                title="Website editor"
+                titleClassName="text-[1.125rem] font-medium tracking-[-0.02em]"
+              />
+            </div>
+            <fieldset className="cms-viewport-control m-0 min-w-0 max-[1100px]:justify-self-start">
+              <legend className="sr-only">Canvas width</legend>
               <button
-                className={cn(
-                  "px-3 py-1.5 text-xs capitalize",
-                  viewport === item
-                    ? "bg-zinc-50 font-medium"
-                    : "text-muted-foreground",
-                )}
-                key={item}
-                onClick={() => setViewport(item)}
+                aria-label="Desktop"
+                aria-pressed={viewport === "desktop"}
+                className={viewport === "desktop" ? "is-active" : ""}
+                onClick={() => setViewport("desktop")}
                 type="button"
               >
-                {item}
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <rect height="14" rx="2" width="20" x="2" y="3" />
+                  <path d="M8 21h8M12 17v4" />
+                </svg>
+                <span>Desktop</span>
               </button>
-            ))}
-          </div>
-          <div className="relative">
-            <Button onClick={() => setPublishOpen((value) => !value)}>
-              Publish
-            </Button>
-            {publishOpen ? (
-              <div className="absolute right-0 z-20 mt-2 w-80 rounded-xl border border-border bg-white p-3 shadow-sm">
-                <button
-                  className="flex w-full items-start justify-between gap-2 rounded-lg p-2 text-left hover:bg-zinc-50"
-                  type="button"
+              <button
+                aria-label="Tablet"
+                aria-pressed={viewport === "tablet"}
+                className={viewport === "tablet" ? "is-active" : ""}
+                onClick={() => setViewport("tablet")}
+                type="button"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <rect height="20" rx="2" width="16" x="4" y="2" />
+                  <path d="M12 18h.01" />
+                </svg>
+                <span>Tablet</span>
+              </button>
+              <button
+                aria-label="Mobile"
+                aria-pressed={viewport === "mobile"}
+                className={viewport === "mobile" ? "is-active" : ""}
+                onClick={() => setViewport("mobile")}
+                type="button"
+              >
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <rect height="20" rx="2" width="14" x="5" y="2" />
+                  <path d="M12 18h.01" />
+                </svg>
+                <span>Mobile</span>
+              </button>
+            </fieldset>
+            <div className="relative justify-self-end">
+              <Button onClick={() => setPublishOpen((value) => !value)}>
+                Publish
+              </Button>
+              {publishOpen ? (
+                <div
+                  className={card(
+                    "absolute right-0 z-20 mt-2 w-80 p-3 shadow-card",
+                  )}
                 >
-                  <span>
-                    <b className="block text-sm">
-                      {fromActivation
-                        ? "bellfield-roofing-dublin.preview.placis.com"
-                        : "acme-roofing-dublin.preview.placis.com"}
-                    </b>
-                    <span className="text-xs text-muted-foreground">
-                      {fromActivation
-                        ? "Not published yet"
-                        : "Last published 2 days ago"}
+                  <button
+                    className="flex w-full items-start justify-between gap-2 rounded-lg p-2 text-left hover:bg-zinc-50"
+                    type="button"
+                  >
+                    <span>
+                      <b className="block text-sm">
+                        {fromActivation
+                          ? "bellfield-roofing-dublin.preview.placis.com"
+                          : "acme-roofing-dublin.preview.placis.com"}
+                      </b>
+                      <span className="text-xs text-muted-foreground">
+                        {fromActivation
+                          ? "Not published yet"
+                          : "Last published 2 days ago"}
+                      </span>
                     </span>
-                  </span>
-                </button>
-                {fromActivation ? null : (
-                  <>
-                    <button
-                      className="mt-1 w-full rounded-lg p-2 text-left text-sm hover:bg-zinc-50"
-                      onClick={() => setConnectOpen(true)}
-                      type="button"
-                    >
-                      acme.ie · Waiting for DNS
-                    </button>
-                    <button
-                      className="w-full rounded-lg p-2 text-left text-sm hover:bg-zinc-50"
-                      onClick={() => setConnectOpen(true)}
-                      type="button"
-                    >
-                      New URL · Connect website address
-                    </button>
-                    <p className="mt-2 text-xs text-red-700">
-                      Publishing is blocked:
-                    </p>
-                    <ul className="list-disc pl-4 text-xs text-zinc-600">
-                      {payBlocked ? (
+                  </button>
+                  {fromActivation ? null : (
+                    <>
+                      <button
+                        className="mt-1 w-full rounded-lg p-2 text-left text-sm hover:bg-zinc-50"
+                        onClick={() => setConnectOpen(true)}
+                        type="button"
+                      >
+                        acme.ie · Waiting for DNS
+                      </button>
+                      <button
+                        className="w-full rounded-lg p-2 text-left text-sm hover:bg-zinc-50"
+                        onClick={() => setConnectOpen(true)}
+                        type="button"
+                      >
+                        New URL · Connect website address
+                      </button>
+                      <p className="mt-2 text-xs text-red-700">
+                        Publishing is blocked:
+                      </p>
+                      <ul className="list-disc pl-4 text-xs text-zinc-600">
+                        <li>
+                          <button
+                            className="underline"
+                            onClick={() => openContent("hero")}
+                            type="button"
+                          >
+                            A required image on Hero cannot resolve
+                          </button>
+                        </li>
                         <li>
                           <button
                             className="underline"
                             onClick={() => {
-                              void navigate({ to: "/cms/billing" });
+                              void navigate({ to: "/cms/media" });
                             }}
                             type="button"
                           >
-                            Pay the subscription price to Publish
+                            One media library item on the live path is not
+                            approved.
                           </button>
                         </li>
-                      ) : (
-                        <>
-                          <li>
-                            <button
-                              className="underline"
-                              onClick={() => openContent("hero")}
-                              type="button"
-                            >
-                              A required image on Hero cannot resolve
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="underline"
-                              onClick={() => {
-                                void navigate({ to: "/cms/media" });
-                              }}
-                              type="button"
-                            >
-                              One media library item on the live path is not
-                              approved.
-                            </button>
-                          </li>
-                        </>
-                      )}
-                    </ul>
-                  </>
-                )}
-              </div>
-            ) : null}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              ) : null}
+            </div>
           </div>
         </header>
-        <div className="flex min-h-0 flex-1">
-          <aside className="flex w-64 shrink-0 flex-col border-r border-border bg-secondary max-sm:hidden">
-            <div className="flex border-b border-border">
-              {(
-                [
-                  ["pages", "Website pages"],
-                  ["seo", "SEO"],
-                  ["styles", "Website styles"],
-                  ["versions", "Website versions"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  className={cn(
-                    "flex-1 px-1 py-2 text-[10px] leading-tight",
-                    rail === id
-                      ? "bg-white font-medium"
-                      : "text-muted-foreground",
-                  )}
-                  key={id}
-                  onClick={() => setRail(rail === id ? "pages" : id)}
-                  type="button"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            <div className="min-h-0 flex-1 overflow-auto p-3">
-              {rail === "pages" ? (
-                <div className="grid gap-1">
-                  {pages.map((item) => (
-                    <button
-                      className={cn(
-                        "flex items-baseline justify-between rounded-lg px-2 py-1.5 text-left text-sm",
-                        page === item.id ? "bg-white" : "hover:bg-white/60",
-                      )}
-                      key={item.id}
-                      onClick={() => setPage(item.id)}
-                      type="button"
-                    >
-                      {item.label}
-                      <small className="text-zinc-400">{item.path}</small>
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-              {rail === "seo" ? (
-                <div className="grid gap-3">
-                  <Field label="Website page title">
-                    <TextInput defaultValue={current.title} key={current.id} />
-                  </Field>
-                  <Field label="Website page path">
-                    <TextInput
-                      defaultValue={current.path}
-                      key={`${current.id}-path`}
-                    />
-                  </Field>
-                  <Field label="Description">
-                    <TextArea defaultValue="Dublin roofing repairs, re-roofs, and guttering." />
-                  </Field>
-                </div>
-              ) : null}
-              {rail === "styles" ? (
-                <div className="grid gap-3">
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-white p-3">
-                    <div>
-                      <strong className="text-sm">Navy &amp; Cream</strong>
-                      <div className="mt-1 flex gap-1">
-                        <span className="size-4 rounded-full bg-[#1f2933]" />
-                        <span className="size-4 rounded-full bg-[#f5f1ea]" />
-                        <span className="size-4 rounded-full bg-[#c4a574]" />
-                      </div>
-                    </div>
-                    <Button disabled variant="outline">
-                      Applied
-                    </Button>
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-white p-3">
-                    <strong className="text-sm">Timbermill Classic</strong>
-                    <Button variant="outline">Apply</Button>
-                  </div>
-                  <p className="text-[13px] text-zinc-600">Radius</p>
-                  <div className="flex flex-wrap gap-1">
-                    {["none", "xs", "sm", "md", "lg"].map((item) => (
-                      <button
-                        className={cn(
-                          "rounded-full border px-2 py-1 text-xs",
-                          radius === item ? "border-primary" : "border-border",
-                        )}
-                        key={item}
-                        onClick={() => setRadius(item)}
-                        type="button"
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-[13px] text-zinc-600">Density</p>
-                  <div className="flex flex-wrap gap-1">
-                    {["compact", "comfortable", "spacious"].map((item) => (
-                      <button
-                        className={cn(
-                          "rounded-full border px-2 py-1 text-xs",
-                          density === item ? "border-primary" : "border-border",
-                        )}
-                        key={item}
-                        onClick={() => setDensity(item)}
-                        type="button"
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-              {rail === "versions" ? (
-                <div className="grid gap-2 text-sm">
-                  <p>
-                    <b>Website version 3</b> · Live
-                  </p>
-                  <p className="text-muted-foreground">Website version 2</p>
-                  <p className="text-muted-foreground">Website version 1</p>
-                </div>
-              ) : null}
-              {rail === "content" && section ? (
-                <ContentPanel
-                  hidden={Boolean(hidden[section])}
-                  onToggleHidden={() =>
-                    setHidden((currentHidden) => ({
-                      ...currentHidden,
-                      [section]: !currentHidden[section],
-                    }))
-                  }
-                  section={section}
-                />
-              ) : null}
-            </div>
-          </aside>
-          <div className="relative min-w-0 flex-1 overflow-auto bg-[image:linear-gradient(rgb(39_39_42_/_4.5%)_1px,transparent_1px),linear-gradient(90deg,rgb(39_39_42_/_4.5%)_1px,transparent_1px)] bg-[size:24px_24px] p-6">
-            <div
-              className="mx-auto"
-              style={{
-                maxWidth:
-                  viewport === "desktop"
-                    ? 1080
-                    : viewport === "tablet"
-                      ? 760
-                      : 390,
-              }}
-            >
-              <FakeSite
-                copyout={copyout}
-                density={density}
-                hidden={hidden}
-                onSelect={openContent}
-                page={page}
-                pending={askPending}
-                radius={radius}
-                selected={section}
-              />
-            </div>
-            {askPending ? (
-              <div className="absolute top-4 right-4 flex gap-2">
-                <Button onClick={() => setAskPending(false)}>Apply</Button>
-                <Button onClick={() => setAskPending(false)} variant="outline">
-                  Reject
-                </Button>
-              </div>
-            ) : null}
-            <DustOrb
-              className="absolute right-4 bottom-4"
+        <div className="grid min-h-0 flex-1 min-[1101px]:grid-cols-[auto_minmax(0,1fr)] max-[1100px]:grid-cols-1 max-[1100px]:grid-rows-[minmax(0,1fr)_auto]">
+          <EditorWorkspace
+            current={current}
+            density={density}
+            hidden={hidden}
+            onCollapse={() => setWorkspaceOpen(false)}
+            onDensity={setDensity}
+            onPage={setPage}
+            onRadius={setRadius}
+            onRail={selectRail}
+            onToggleHidden={() => {
+              if (!section) {
+                return;
+              }
+              setHidden((currentHidden) => ({
+                ...currentHidden,
+                [section]: !currentHidden[section],
+              }));
+            }}
+            open={workspaceOpen}
+            page={page}
+            pages={pages}
+            radius={radius}
+            rail={rail}
+            section={section}
+          />
+          <div
+            className={cn(
+              "cms-editor-canvas relative flex min-h-0 min-w-0 flex-col overflow-hidden max-[1100px]:row-start-1",
+              voiceOn ? "is-voice" : "",
+              !assistantOpen || voiceOn ? "is-assistant-collapsed" : "",
+            )}
+          >
+            <PreviewCanvas
+              assistantOpen={assistantOpen && !voiceOn}
+              copyout={copyout}
+              density={density}
+              hidden={hidden}
+              host={
+                fromActivation
+                  ? "bellfield-roofing-dublin.preview.placis.com"
+                  : "acme-roofing-dublin.preview.placis.com"
+              }
+              onSelect={openContent}
+              page={page}
+              pending={askPending}
+              radius={radius}
+              selected={section}
+              viewport={viewport}
+              voiceOn={voiceOn}
+            />
+            <CanvasActions
+              askPending={askPending}
               level={level}
-              onClick={() => {
+              onAsk={() => setAskPending(false)}
+              onRestore={() => {
+                stop();
+                setVoiceOn(false);
+                setSpeaking(false);
+                setAssistantOpen(true);
+              }}
+              onVoice={() => {
                 setAssistantOpen(true);
                 if (!voiceOn) {
                   startVoice();
                 }
               }}
-              size={56}
               speaking={speaking}
+              voiceOn={voiceOn}
             />
             {assistantOpen && !voiceOn ? (
-              <div className="absolute inset-x-4 bottom-4 mx-auto max-w-lg rounded-xl border border-border bg-white p-4 shadow-sm">
+              <div
+                className={card(
+                  "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card",
+                )}
+                id="assistantOverlay"
+              >
                 <div className="mb-2 flex items-center justify-between">
                   <b className="text-sm">Assistant</b>
                   <button onClick={() => setAssistantOpen(false)} type="button">
@@ -484,19 +449,6 @@ export function WebsitePage(): ReactNode {
                 </div>
               </div>
             ) : null}
-            {voiceOn ? (
-              <button
-                className="absolute right-20 bottom-6 text-xs underline"
-                onClick={() => {
-                  stop();
-                  setVoiceOn(false);
-                  setSpeaking(false);
-                }}
-                type="button"
-              >
-                Restore chatbot
-              </button>
-            ) : null}
           </div>
         </div>
       </div>
@@ -513,5 +465,79 @@ export function WebsitePage(): ReactNode {
         />
       ) : null}
     </>
+  );
+}
+
+const pillClass = "cms-ask-pill";
+
+function CanvasActions({
+  askPending,
+  voiceOn,
+  speaking,
+  level,
+  onAsk,
+  onRestore,
+  onVoice,
+}: {
+  askPending: boolean;
+  voiceOn: boolean;
+  speaking: boolean;
+  level: number;
+  onAsk: () => void;
+  onRestore: () => void;
+  onVoice: () => void;
+}): ReactNode {
+  return (
+    <div className="cms-canvas-actions" id="canvasActions">
+      {askPending ? (
+        <div className="cms-ask-pills">
+          <button
+            className={`${pillClass} is-apply`}
+            onClick={onAsk}
+            type="button"
+          >
+            Apply
+          </button>
+          <button
+            className={`${pillClass} is-reject`}
+            onClick={onAsk}
+            type="button"
+          >
+            Reject
+          </button>
+        </div>
+      ) : null}
+      {voiceOn ? (
+        <>
+          <button
+            className="cms-voice-restore"
+            onClick={onRestore}
+            type="button"
+          >
+            Restore chatbot
+          </button>
+          <div className="cms-voice-orb-wrap">
+            <button
+              aria-label="Restore chatbot"
+              className="cms-voice-close"
+              onClick={onRestore}
+              title="Restore chatbot"
+              type="button"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+            <DustOrb
+              aria-label="Voice agent"
+              className={cn("cms-voice-orb", speaking ? "is-speaking" : "")}
+              level={level}
+              onClick={onVoice}
+              speaking={speaking}
+            />
+          </div>
+        </>
+      ) : null}
+    </div>
   );
 }

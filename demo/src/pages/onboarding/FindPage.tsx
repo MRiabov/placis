@@ -3,6 +3,7 @@ import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
 import { Button } from "@/ui/Button";
 import { Combo } from "@/ui/Combo";
+import { card } from "@/ui/card";
 import { Field, Select } from "@/ui/Field";
 
 const registryOptions = [
@@ -142,7 +143,7 @@ export function FindPage(): ReactNode {
           Restoring your previous onboarding…
         </p>
       ) : (
-        <div className="mt-6 grid gap-4 rounded-xl border border-border bg-white p-4 shadow-sm">
+        <div className={card("mt-6 grid gap-4 p-5")}>
           <Field label="Country">
             <Select
               onChange={(event) => setCountry(event.target.value)}
@@ -153,73 +154,106 @@ export function FindPage(): ReactNode {
               <option value="US">United States</option>
             </Select>
           </Field>
-          <p className="text-sm">
-            Companies Registration Office{" "}
-            <span className="text-muted-foreground">
-              {registryCopy[country]?.hint}
-            </span>
-          </p>
-          {registryPicked ? (
-            <Picked
-              label="Selected company registry record"
-              title={registryPicked}
-              meta="623184 · Normal · 14 Bellfield Park, Dublin 12"
-              onChange={() => setRegistryPicked(null)}
-            />
-          ) : (
-            <Field
-              label={`Company name ${registryCopy[country]?.suffix ?? ""}`.trim()}
-            >
-              <Combo
-                createKind="company"
-                forceOpen={registryQuery.trim().length >= 2}
-                onChange={(value, option) => {
-                  setRegistryQuery(value);
-                  if (option) {
-                    setRegistryPicked(option.title);
-                  }
-                }}
-                options={
-                  registryQuery.trim().length >= 2 ? registryOptions : []
-                }
-                placeholder="Bellfield Roofing"
-                value={registryQuery}
+          <div>
+            <div className="flex items-start gap-2.5">
+              <svg
+                aria-hidden="true"
+                className="mt-1 size-5 shrink-0 text-muted-foreground"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                viewBox="0 0 24 24"
+              >
+                <path d="M3 21h18" />
+                <path d="M6 21V8l6-4 6 4v13" />
+                <path d="M10 21v-6h4v6" />
+              </svg>
+              <p className="m-0 text-xl font-semibold tracking-tight">
+                Companies Registration Office{" "}
+                <span className="mt-1.5 block text-sm font-normal tracking-normal text-muted-foreground">
+                  {registryCopy[country]?.hint}
+                </span>
+              </p>
+            </div>
+            {registryPicked ? (
+              <Picked
+                label="Selected company registry record"
+                title={registryPicked}
+                meta="623184 · Normal · 14 Bellfield Park, Dublin 12"
+                onChange={() => setRegistryPicked(null)}
               />
-            </Field>
-          )}
-          <p className="text-center text-xs tracking-wide text-muted-foreground uppercase">
+            ) : (
+              <Field
+                className="mt-3"
+                label={`Company name ${registryCopy[country]?.suffix ?? ""}`.trim()}
+              >
+                <Combo
+                  forceOpen={registryQuery.trim().length >= 2}
+                  onChange={(value, option) => {
+                    setRegistryQuery(value);
+                    if (option) {
+                      setRegistryPicked(option.title);
+                    }
+                  }}
+                  options={
+                    registryQuery.trim().length >= 2 ? registryOptions : []
+                  }
+                  placeholder="Bellfield Roofing"
+                  searchIcon
+                  value={registryQuery}
+                />
+              </Field>
+            )}
+          </div>
+          <p className="flex items-center gap-3 text-[11px] font-semibold tracking-[0.06em] text-muted-foreground uppercase before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
             Optional Maps match
           </p>
-          <p className="text-sm">
-            Google Maps listing{" "}
-            <span className="text-muted-foreground">
-              Optional. We’ll use this for the name, phone, photos, and reviews.
-            </span>
-          </p>
-          {mapsPicked ? (
-            <Picked
-              label="Selected Google Maps listing"
-              title={mapsPicked}
-              meta="Roofing contractor · Dublin 12 · 01 555 0199"
-              onChange={() => setMapsPicked(null)}
-            />
-          ) : (
-            <Field label="Find your place on Google Maps">
-              <Combo
-                createKind="place"
-                forceOpen={mapsQuery.trim().length >= 2}
-                onChange={(value, option) => {
-                  setMapsQuery(value);
-                  if (option) {
-                    setMapsPicked(option.title);
-                  }
-                }}
-                options={mapsQuery.trim().length >= 2 ? mapsOptions : []}
-                placeholder="Bellfield Roofing Dublin"
-                value={mapsQuery}
+          <div>
+            <div className="flex items-start gap-2.5">
+              <svg
+                aria-hidden="true"
+                className="mt-1 size-5 shrink-0 text-muted-foreground"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              <p className="m-0 text-xl font-semibold tracking-tight">
+                Google Maps listing{" "}
+                <span className="mt-1.5 block text-sm font-normal tracking-normal text-muted-foreground">
+                  Optional. We’ll use this for the name, phone, photos, and
+                  reviews.
+                </span>
+              </p>
+            </div>
+            {mapsPicked ? (
+              <Picked
+                label="Selected Google Maps listing"
+                title={mapsPicked}
+                meta="Roofing contractor · Dublin 12 · 01 555 0199"
+                onChange={() => setMapsPicked(null)}
               />
-            </Field>
-          )}
+            ) : (
+              <Field className="mt-3" label="Find your place on Google Maps">
+                <Combo
+                  forceOpen={mapsQuery.trim().length >= 2}
+                  onChange={(value, option) => {
+                    setMapsQuery(value);
+                    if (option) {
+                      setMapsPicked(option.title);
+                    }
+                  }}
+                  options={mapsQuery.trim().length >= 2 ? mapsOptions : []}
+                  placeholder="Bellfield Roofing Dublin"
+                  searchIcon
+                  value={mapsQuery}
+                />
+              </Field>
+            )}
+          </div>
           <label className="flex items-start gap-2 text-sm">
             <input
               checked={consent}
@@ -271,7 +305,7 @@ function Picked({
   onChange: () => void;
 }): ReactNode {
   return (
-    <div className="grid gap-1 rounded-xl border border-border bg-zinc-50 p-3">
+    <div className={card("grid gap-1 bg-zinc-50 p-3")}>
       <span className="text-xs text-muted-foreground">{label}</span>
       <b className="text-sm">{title}</b>
       <span className="text-xs text-muted-foreground">{meta}</span>
