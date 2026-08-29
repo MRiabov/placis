@@ -9,89 +9,15 @@ import {
 import { DevStrip } from "@/dev/DevStrip";
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
-import { photo } from "@/lib/fixtures";
+import { mediaLibraryItems } from "@/lib/media-library";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { Field, TextArea } from "@/ui/Field";
+import { MediaThumbs } from "@/ui/MediaThumbs";
 import { PageHeading } from "@/ui/PageHeading";
 import { Sweep } from "@/ui/Sweep";
 
 const CLEANUP_WAIT_MS = 7500;
-
-const mediaLibraryItems = [
-  {
-    caption: "Rear slope after the storm",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Slate repair on a terrace",
-    by: "owner",
-    status: "uploading",
-    ratio: "portrait",
-  },
-  {
-    caption: "New roof on a semi",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Guttering on the front",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Valley flashing",
-    by: "research",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Ridge line after wind",
-    by: "owner",
-    status: "approved",
-    ratio: "portrait",
-  },
-  {
-    caption: "Chimney flashing",
-    by: "owner",
-    status: "approved",
-    ratio: "portrait",
-  },
-  {
-    caption: "Battens before the covering",
-    by: "ai",
-    status: "approved",
-    ratio: "portrait",
-  },
-  {
-    caption: "Full re-roof on a semi",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Finished elevation",
-    by: "research",
-    status: "approved",
-    ratio: "landscape",
-  },
-  {
-    caption: "Sheets going on",
-    by: "owner",
-    status: "approved",
-    ratio: "portrait",
-  },
-  {
-    caption: "Front elevation after handover",
-    by: "owner",
-    status: "approved",
-    ratio: "landscape",
-  },
-].map((item, index) => ({ ...item, src: photo(index) }));
 
 type CropRect = { left: number; top: number; width: number; height: number };
 
@@ -178,17 +104,15 @@ export function MediaPage(): ReactNode {
         ]}
       />
       <div className="min-h-0 flex-1 overflow-auto p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <PageHeading
-            onOpenDestinations={openDestinations}
-            title="Media library"
-          />
-          <Button>Upload</Button>
-        </div>
+        <PageHeading
+          actions={<Button className="ml-auto">Upload</Button>}
+          onOpenDestinations={openDestinations}
+          title="Media library"
+        />
         <p className="mt-2 text-sm text-muted-foreground">
-          Photos of their work, logos, and documents. Crop, focal, and cleanup
-          live here. Attach a photo from Content when an image is selected on
-          the canvas.
+          Photos of their work, logos, and documents. Crop, focal point, and
+          cleanup live here. Attach a photo from Content when an image is
+          selected on the canvas.
         </p>
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_16rem]">
           <div
@@ -244,29 +168,35 @@ export function MediaPage(): ReactNode {
             }}
           >
             {framingHidden ? null : (
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-zinc-600">Crop</span>
-                <button
-                  className={cn(
-                    "rounded-lg border px-2 py-1 text-xs",
-                    crop === "full" ? "border-primary" : "border-border",
-                  )}
-                  onClick={() => setCrop("full")}
-                  type="button"
-                >
-                  Full
-                </button>
-                <button
-                  className={cn(
-                    "rounded-lg border px-2 py-1 text-xs",
-                    crop === "rect" ? "border-primary" : "border-border",
-                  )}
-                  onClick={() => setCrop("rect")}
-                  type="button"
-                >
-                  Rect
-                </button>
-              </div>
+              <>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-zinc-600">Crop</span>
+                  <button
+                    className={cn(
+                      "rounded-lg border px-2 py-1 text-xs",
+                      crop === "full" ? "border-primary" : "border-border",
+                    )}
+                    onClick={() => setCrop("full")}
+                    type="button"
+                  >
+                    Full
+                  </button>
+                  <button
+                    className={cn(
+                      "rounded-lg border px-2 py-1 text-xs",
+                      crop === "rect" ? "border-primary" : "border-border",
+                    )}
+                    onClick={() => setCrop("rect")}
+                    type="button"
+                  >
+                    Rect
+                  </button>
+                </div>
+                <p className="text-xs leading-snug text-muted-foreground">
+                  Drag the Focal point pin on the photo to the part that should
+                  stay in view.
+                </p>
+              </>
             )}
             <Field label="Cleanup">
               <TextArea
@@ -296,29 +226,21 @@ export function MediaPage(): ReactNode {
             )}
           </form>
         </div>
-        <div className="mt-4 flex gap-2 overflow-x-auto">
-          {mediaLibraryItems.map((thumb, thumbIndex) => (
-            <button
-              aria-label={thumb.caption}
-              className={cn(
-                "relative size-16 shrink-0 overflow-hidden rounded-lg border object-cover",
-                index === thumbIndex ? "border-primary" : "border-border",
-              )}
-              key={thumb.caption}
-              onClick={() => {
-                setIndex(thumbIndex);
-                resetCleanup();
-              }}
-              type="button"
-            >
-              <img alt="" className="size-full object-cover" src={thumb.src} />
-              {thumb.status === "uploading" ? (
-                <span className="absolute inset-0 grid place-items-center bg-white/80 text-[9px]">
-                  Uploading…
-                </span>
-              ) : null}
-            </button>
-          ))}
+        <div className="mt-4">
+          <MediaThumbs
+            items={mediaLibraryItems}
+            onPick={(thumb) => {
+              const next = mediaLibraryItems.findIndex(
+                (entry) => entry.id === thumb.id,
+              );
+              if (next < 0) {
+                return;
+              }
+              setIndex(next);
+              resetCleanup();
+            }}
+            selectedId={item.id}
+          />
         </div>
       </div>
     </>
@@ -354,8 +276,8 @@ function FocalPin({
 
   return (
     <button
-      aria-label="Focal point"
-      className="absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-primary shadow"
+      aria-label="Focal point. Drag to the part that should stay in view."
+      className="absolute z-[1] -translate-x-1/2 -translate-y-1/2 bg-transparent p-0"
       onPointerDown={(event) => {
         event.preventDefault();
         event.currentTarget.setPointerCapture(event.pointerId);
@@ -368,7 +290,15 @@ function FocalPin({
       }}
       style={{ left: `${x}%`, top: `${y}%` }}
       type="button"
-    />
+    >
+      <span
+        aria-hidden="true"
+        className="block size-4 rounded-full border-2 border-white bg-primary shadow"
+      />
+      <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-black/70 px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-white">
+        Focal point
+      </span>
+    </button>
   );
 }
 

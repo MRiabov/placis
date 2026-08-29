@@ -152,6 +152,22 @@ export function AdsPage(): ReactNode {
                     setMetaConnected(true);
                   },
                 },
+                {
+                  id: "archive",
+                  label: "Archive",
+                  on: adsSearch().archive === "1",
+                  onSelect: () => {
+                    void navigate({
+                      search: adsSearch({
+                        archive: "1",
+                        review: undefined,
+                        view: undefined,
+                        scene: undefined,
+                      }),
+                      to: "/cms/ads",
+                    });
+                  },
+                },
               ],
             },
           ]}

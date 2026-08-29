@@ -9,9 +9,11 @@ TBD (do not assert UI). Go does not enforce idle.
 
 ## CMS
 
-1. **Hydrate** — Overlay on website editor / Ads / Details returns the current
-   thread (`items`, not `thread_items`). Empty is `items: []`. `/cms` does not
-   hydrate. Hydrate does not return `runs` and does not join `ai_generations`.
+1. **Hydrate** — Calling the assistant (bottom-right **Assistant**) on website
+   editor / Ads / Details / `/cms` returns the current thread (`items`, not
+   `thread_items`). Empty is `items: []`. Visiting `/cms` without calling does
+   not hydrate. Hydrate does not return `runs` and does not join
+   `ai_generations`.
 2. **Assistant screen switch** — Owner moves website editor → Details during
    speech; speech continues; next owner turn carries one switch notification for
    Details.
@@ -62,7 +64,7 @@ TBD (do not assert UI). Go does not enforce idle.
     running.
 16. **Denied microphone** — Shared **notification** **Allow microphone access
     in your browser to talk. You can keep typing.** **Try again** retries
-    getUserMedia; **Switch to text mode** restores the chatbot. Overlay is not
+    getUserMedia; **Switch to text mode** opens the composer. Overlay is not
     restored until Switch to text mode. `POST …/realtime-connection` was not
     called.
 17. **Greeting once** — First Voice start plays the prerecorded greeting.

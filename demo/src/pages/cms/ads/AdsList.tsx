@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
@@ -8,7 +8,17 @@ import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { PageHeading } from "@/ui/PageHeading";
 
-export const ads = [
+export type AdRow = {
+  id: string;
+  title: string;
+  status: string;
+  ready: boolean;
+  image: string;
+  meta: string;
+  archived: boolean;
+};
+
+export const ads: AdRow[] = [
   {
     id: "gutter-cleaning-summer",
     title: "Gutter cleaning — summer",
@@ -16,6 +26,7 @@ export const ads = [
     ready: true,
     image: photo(0),
     meta: "Updated yesterday · Guttering",
+    archived: false,
   },
   {
     id: "roofing-replacement-spring",
@@ -24,6 +35,7 @@ export const ads = [
     ready: true,
     image: photo(1),
     meta: "Updated today · Roofing",
+    archived: false,
   },
   {
     id: "roof-repair-winter",
@@ -32,6 +44,7 @@ export const ads = [
     ready: false,
     image: photo(2),
     meta: "Updated 3 days ago · Roofing",
+    archived: false,
   },
   {
     id: "garage-conversions",
@@ -40,8 +53,9 @@ export const ads = [
     ready: false,
     image: photo(3),
     meta: "Updated last week · Conversions",
+    archived: true,
   },
-] as const;
+];
 
 type AdsListProps = {
   compact: boolean;
@@ -63,6 +77,34 @@ export function AdsList({
   onToggleCompact,
 }: AdsListProps): ReactNode {
   const navigate = useNavigate();
+  const search = adsSearch();
+  const archivedId =
+    typeof search.archived === "string" ? search.archived : undefined;
+  const startArchive = search.archive === "1";
+  const [archiveOpen, setArchiveOpen] = useState(startArchive);
+  const [toast, setToast] = useState(Boolean(archivedId));
+  const [hiddenId, setHiddenId] = useState<string | null>(archivedId ?? null);
+  const [releasedIds, setReleasedIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (startArchive) {
+      setArchiveOpen(true);
+    }
+  }, [startArchive]);
+
+  const active = ads.filter((row) => {
+    if (releasedIds.includes(row.id)) {
+      return true;
+    }
+    return !row.archived && row.id !== hiddenId;
+  });
+  const archived = ads.filter((row) => {
+    if (releasedIds.includes(row.id)) {
+      return false;
+    }
+    return row.archived || row.id === hiddenId;
+  });
+
   return (
     <div className="min-h-0 flex-1 overflow-auto">
       <div className="mx-auto w-full max-w-[960px] px-7 pt-8 pb-14 max-[1023px]:px-4 max-[1023px]:pt-6 max-[1023px]:pb-12">
@@ -115,7 +157,7 @@ export function AdsList({
             compress automatically. Sorted: active first, then newest.
           </p>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {ads.map((ad) => (
+            {active.map((ad) => (
               <Link
                 className={card(
                   "rounded-prompt border-hairline p-2.5 text-left shadow-prompt hover:bg-wash",
@@ -186,6 +228,75 @@ export function AdsList({
                 </span>
               </Link>
             ))}
+          </div>
+          {toast ? (
+            <div className="mt-3 rounded-lg border border-border bg-zinc-50 px-3 py-2 text-sm">
+              Archived an ad.{" "}
+              <button
+                className="underline"
+                onClick={() => {
+                  setHiddenId(null);
+                  setToast(false);
+                }}
+                type="button"
+              >
+                Undo
+              </button>
+            </div>
+          ) : null}
+          <div className="mt-7">
+            <button
+              aria-controls="archiveList"
+              aria-expanded={archiveOpen}
+              className="flex w-full items-center justify-between rounded-lg py-1 text-left text-sm font-medium"
+              onClick={() => setArchiveOpen((value) => !value)}
+              type="button"
+            >
+              Archive
+              <span className="text-muted-foreground">
+                {archiveOpen ? "▴" : "▾"}
+              </span>
+            </button>
+            {archiveOpen ? (
+              <div
+                className="mt-2.5 grid grid-cols-1 gap-5 sm:grid-cols-2"
+                id="archiveList"
+              >
+                {archived.map((ad) => (
+                  <div
+                    className={card(
+                      "rounded-prompt border-hairline p-2.5 shadow-prompt",
+                    )}
+                    key={ad.id}
+                  >
+                    <img
+                      alt=""
+                      className="h-44 w-full rounded-[18px] object-cover object-[50%_32%]"
+                      src={ad.image}
+                    />
+                    <div className="px-2 pt-3 pb-2">
+                      <b className="block text-[15px] font-semibold tracking-tight">
+                        {ad.title}
+                      </b>
+                      <span className="mt-2 block truncate text-xs text-muted-foreground">
+                        {ad.meta}
+                      </span>
+                      <Button
+                        className="mt-3"
+                        onClick={() => {
+                          setReleasedIds((ids) => [...ids, ad.id]);
+                          setHiddenId((id) => (id === ad.id ? null : id));
+                          setToast(false);
+                        }}
+                        variant="outline"
+                      >
+                        Unarchive
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

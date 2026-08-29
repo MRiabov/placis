@@ -35,15 +35,15 @@ export function DetailsPage(): ReactNode {
         <p className="text-xs tracking-wide text-muted-foreground uppercase">
           Website foundations
         </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <PageHeading
-            onOpenDestinations={openDestinations}
-            title="Business details"
-          />
-          <span className="rounded-full border border-border px-2 py-0.5 text-xs">
-            Profile active
-          </span>
-        </div>
+        <PageHeading
+          actions={
+            <span className="rounded-full border border-border px-2 py-0.5 text-xs">
+              Profile active
+            </span>
+          }
+          onOpenDestinations={openDestinations}
+          title="Business details"
+        />
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           Keep the details that power the website, website forms, SEO, and legal
           copy in one place. Persist on click-off; there is no Save.
@@ -158,7 +158,6 @@ function ListingCard({
   reviews: number;
   photo: string;
 }): ReactNode {
-  const meta = `${rating} · ${reviews} reviews`;
   return (
     <div className="grid gap-2">
       <span className="text-[13px] tracking-tight text-zinc-600">{label}</span>
@@ -168,10 +167,13 @@ function ListingCard({
           style={{ backgroundImage: `url(${src})` }}
         />
         <span className="min-w-0 flex-1">
-          <b className="block text-sm">Bellfield Roofing</b>
-          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <RatingStars rating={rating} />
-            <span>{meta}</span>
+          <b className="block truncate text-sm">Bellfield Roofing</b>
+          <span className="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-0.5 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1">
+              <span>{rating}</span>
+              <RatingStars rating={rating} />
+            </span>
+            <span>({reviews})</span>
           </span>
         </span>
         <Button variant="outline">Change</Button>

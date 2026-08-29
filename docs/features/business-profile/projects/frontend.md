@@ -6,8 +6,17 @@ from the media library. Not a stub.
 
 Editing this screen updates the unpublished website / website editor
 immediately; the live website changes only on the next website publication. Ads
-read the same live rows. Archive drops the project from every project-gallery
-website section (then compact).
+read the same live rows.
+
+**TODO:** Save on click-off must follow the same split as the website editor:
+unpublished website / ad draft only, not the live website or a Published ad.
+Canonical:
+[HTTP conventions](../../../general-architecture/api.md). Today Projects PATCH
+is the live `business_profile.projects` row ads and website publication also
+read.
+
+Archive drops the project from every project-gallery website section (then
+compact).
 
 Left nav: [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md). HTTP: [api.md](api.md). Table:
 [persistence.md](persistence.md). Product: [ADR](ADR.md). Look: [design.md](design.md), [design decision record](design-decision-record.md).
@@ -31,7 +40,8 @@ whole-panel swap
 Cards clone My ads look: `--prompt-radius`, `--prompt-border`,
 `--prompt-shadow`, 10px pad, inset photo (`height: 176px`, `border-radius:
 18px`). Wide: **2 columns**, `gap: 20px`. Narrow (≤1100px): 1 column, 44px
-hits. Large by default. No compact rows.
+hits. Large by default. No compact rows. The list sits in the same centered
+960px column as Ads.
 
 Each card is cover, **title** (15px / 600), then a short **description**
 paragraph. No status badge, no “Updated …”, no performance strip, no category /
@@ -58,9 +68,12 @@ Back to the list. Heading is the project title, or **New project**. Shared
 field controls:
 
 - **Cover** — current photo or empty well + **Pick from the media library**.
-  Overlay of media-library thumbs (media caption when present; the owner never
-  labels). Upload in that overlay lands in the media library, then becomes the
-  cover. Crop / cleanup stay `/cms/media`.
+  Overlay of thumbs from the media library (media caption when present; the
+  owner never labels). Landscape, square, and portrait keep their ratio. Two
+  columns on a narrow screen; three on a wide screen, four when there are more
+  than ten. Twenty to forty photos is expected. **Upload** in that overlay
+  lands in the media library, then becomes the cover. Crop / cleanup stay
+  `/cms/media`.
 - **Title** (1–80)
 - **Description** (1–2000)
 - **Archive** — red outline, after the fields, not ink. Hidden until there is a

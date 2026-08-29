@@ -237,7 +237,9 @@ new entries with the next number, the area, and the date.
     display **Draft / Creative ready / Published / Archived**. "Ad needs review"
     and "Ad ready to post" are creation-flow labels and are invalid on existing
     ads; an existing ad with a complete ad is **Creative ready**, and the next
-    status is **Published** once ad posting exists.
+    status is **Published** once ad posting exists. (2026-08-29): Archived ads
+    leave the grid and sit under **Archive**. They are not a badge on the
+    active cards.
 
 29. **Detail panel: inputs left, outputs right** — The existing-ad detail is a
     two-column panel. **Left (inputs)**: Images, then **Budget**, then
@@ -348,3 +350,10 @@ new entries with the next number, the area, and the date.
     postcode, email). Generate still writes a suggested title; the owner edits
     it after generate. Previous decision: the title sat in About the ad under
     How people get in touch.
+
+39. **Archive is not delete** — `POST /v1/ads/{id}/archive` sets
+    `status=archived`. `POST …/unarchive` restores `draft` when the ad has no
+    approved variant, otherwise `ad_ready_to_post` (Creative ready). Archived
+    ads leave the list. Unarchive returns the row to the list. Toast Undo is
+    unarchive. `DELETE /v1/ads/{id}` stays ad draft only. Look: [design
+    decision 1](design-decision-record.md). (2026-08-29)

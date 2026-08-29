@@ -202,7 +202,7 @@ The assistant can be driven by the **voice agent** (see [voice-agent.md](../../g
 never hits Go; the browser relays `function_call` as typed HTTP; Go dispatches
 the same governed website editor tools (including `update_details`). Voice
 grants no extra authority. On `/cms/website`, empty composer turns the voice
-agent on (orb, chatbot hidden). Look: [design decision record](design-decision-record.md) 18. Dispatcher:
+agent on (orb, composer hidden). Look: [design decision record](design-decision-record.md) 18. Dispatcher:
 [assistant](../assistant/README.md). The agent cannot website-publish.
 
 The product assistant also **explains the current screen** from a small

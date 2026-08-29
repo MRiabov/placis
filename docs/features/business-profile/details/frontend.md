@@ -47,8 +47,9 @@ range per day — no Add a time block. These are when they will pick up the
 **marketing phone**, not appointment copy. Shown on the contact website page. Do
 **not** show an Appointment note field; persistence has no `note` column. One
 line per weekday at every width (short day name, Opens – Closes, Closed / copy),
-like Calendar desktop. Look:
-[design decision record](design-decision-record.md).
+like Calendar desktop. On a narrow screen the day is Mo / Tu / We / Th / Fr /
+Sa / Su and the gap after it is tight so the times are not clipped
+([look](design-decision-record.md) 3).
 
 #### Service areas
 
@@ -75,7 +76,9 @@ Show the button **only when unlinked**. This pass: paste a public Facebook
 business URL (type-to-search TBD). When linked, show that Facebook profile’s
 **name, photo, rating, and review count**, plus **Change** — not the raw URL.
 Photo, copy, and Change stay one row; the name ellipsizes. Do not wrap Change
-under the name while the row still has width.
+under the name while the row still has width. Rating is score, stars, then
+`(count)` — Google-style. If that line is too long, the count nests under the
+stars ([look](design-decision-record.md) 5).
 Writes `facebook_profile_url`. Same link as review import on Certifications and
 reviews. Not Ads Connect Meta, not Facebook Login, no autoposting. Saving a new
 URL starts a public extract of that Facebook URL (reviews, posts, images).

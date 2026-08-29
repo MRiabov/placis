@@ -18,6 +18,10 @@ yes.
 
 - **Callers:** `/cms/projects`. Ads and website publication read the same rows.
   `GET` lists `active` rows. Archived only when listing Archive.
+  **TODO:** this live-row share is the Projects gap vs save on click-off
+  (unpublished website / ad draft only — not the live website or a Published
+  ad). Canonical:
+  [HTTP conventions](../../../general-architecture/api.md).
 - **POST** is `create_project` and first click-off on **New project**.
 - **Request (create):** `title` (`minLength` 1, `maxLength` 80), `description`
   (`minLength` 1, `maxLength` 2000), optional `cover_media_asset_id`.
