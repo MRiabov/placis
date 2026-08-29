@@ -118,11 +118,13 @@ inventing it.
    not paint the leftover Connect bar. Keep that markup in the look-export HTML
    as a restorable node (`is-hidden`). Nav glyphs are the archive strokes (1.6),
    not Lucide defaults. Wordmark weight matches placis-web (`font-semibold`,
-   16px / 14px on a wide rail).
+   16px / 14px from `sm`, same as the placis-web rail).
 
    (2026-08-29): `/cms` **placis** is the placis-web dashboard new-chat
    wordmark: `text-4xl`, `leading-tight`, tracking `-0.03em`. Type weights stay
-   the placis-web map (`400` / `450` / `500` / `600`).
+   the placis-web map (`400` / `450` / `500` / `600`). Sidebar **Placis** uses
+   the same class as placis-web (`text-[16px] sm:text-[14px]`), not the 1100px
+   CMS breakpoint.
 
 6. **Owner field controls share one look** — Input, textarea, and select in The
    CMS, onboarding, and Ads use `.cms-field-control` (look export:
