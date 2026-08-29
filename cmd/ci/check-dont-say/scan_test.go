@@ -381,6 +381,30 @@ func TestEnabledTrees(t *testing.T) {
 	if inEnabledTree("packages/website-components/src/registry/hero/type_first/docs.md", false) {
 		t.Fatal("packages markdown is outside enabled trees")
 	}
+	if !inEnabledTree("demo/src/layout/CmsLayout.tsx", false) {
+		t.Fatal("demo should be enabled")
+	}
+	if !inHome("demo/src/pages/cms/WebsitePage.tsx", []string{"website"}) {
+		t.Fatal("look app is website home")
+	}
+	if !inHome("src/pages/cms/WebsitePage.tsx", []string{"ads"}) {
+		t.Fatal("exported look src is every feature home")
+	}
+	if !scanExt("demo/src/layout/CmsLayout.tsx", false) {
+		t.Fatal("demo .tsx should be scanned")
+	}
+	if scanExt("apps/placis-website/src/components/TopBar.tsx", false) {
+		t.Fatal("non-look .tsx stays off until --frontend")
+	}
+	if !scanExt("frontend-2/src/x.tsx", true) {
+		t.Fatal("--frontend should scan frontend-2 .tsx")
+	}
+	if !inEnabledTree("src/layout/CmsLayout.tsx", false) {
+		t.Fatal("top-level src should be enabled for the look export")
+	}
+	if !shouldSkipPath("src/glossary.md", false) {
+		t.Fatal("look-export glossary.md under src should be skipped")
+	}
 	if inEnabledTree("frontend-2/src/x.md", false) {
 		t.Fatal("frontend-2 stays off until --frontend")
 	}

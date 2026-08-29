@@ -4,7 +4,63 @@ import { FakeSite, type SiteSection } from "@/pages/cms/website/FakeSite";
 
 const nativeWidths = { desktop: 1080, tablet: 760, mobile: 390 } as const;
 
-export type PreviewViewport = keyof typeof nativeWidths;
+type PreviewViewport = keyof typeof nativeWidths;
+
+function applyFrameScale(
+  stage: HTMLElement,
+  scaleEl: HTMLElement,
+  frame: HTMLElement,
+  viewport: PreviewViewport,
+): number | null {
+  const native = nativeWidths[viewport];
+  const stageStyle = getComputedStyle(stage);
+  const availW =
+    stage.clientWidth -
+    Number.parseFloat(stageStyle.paddingLeft) -
+    Number.parseFloat(stageStyle.paddingRight);
+  const availH =
+    stage.clientHeight -
+    Number.parseFloat(stageStyle.paddingTop) -
+    Number.parseFloat(stageStyle.paddingBottom);
+  if (availW < 1 || availH < 1) {
+    return null;
+  }
+  const layoutW = viewport === "desktop" ? Math.max(native, availW) : native;
+  const scale = Math.min(1, availW / layoutW);
+  frame.style.width = `${layoutW}px`;
+  frame.style.height = `${availH / scale}px`;
+  frame.style.transform = `scale(${scale})`;
+  scaleEl.style.width = `${layoutW * scale}px`;
+  scaleEl.style.height = `${availH}px`;
+  return scale;
+}
+
+function applySiteCover(
+  canvas: HTMLElement,
+  site: HTMLElement,
+  scale: number,
+): void {
+  const canvasRect = canvas.getBoundingClientRect();
+  let coverTop = canvasRect.bottom;
+  const overlay = document.getElementById("assistantOverlay");
+  if (overlay && !canvas.classList.contains("is-voice")) {
+    const overlayRect = overlay.getBoundingClientRect();
+    if (overlayRect.height > 0) {
+      coverTop = Math.min(coverTop, overlayRect.top);
+    }
+  }
+  const actions = document.getElementById("canvasActions");
+  if (actions) {
+    const actionsRect = actions.getBoundingClientRect();
+    if (actionsRect.height > 0) {
+      coverTop = Math.min(coverTop, actionsRect.top);
+    }
+  }
+  const visualCover = Math.max(0, canvasRect.bottom - coverTop) + 12;
+  const pad = `${Math.ceil(visualCover / scale)}px`;
+  site.style.paddingBottom = pad;
+  site.style.scrollPaddingBottom = pad;
+}
 
 type PreviewCanvasProps = {
   viewport: PreviewViewport;
@@ -40,81 +96,45 @@ export function PreviewCanvas({
   const frameRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) {
+    const stageEl = stageRef.current;
+    if (!stageEl) {
       return;
     }
 
-    function sync(): void {
+    function sync(stage: HTMLElement): void {
       const scaleEl = scaleRef.current;
       const frame = frameRef.current;
-      const canvas = stage?.closest("[data-editor-canvas]");
-      if (!stage || !scaleEl || !frame || !(canvas instanceof HTMLElement)) {
+      const canvas = stage.closest("[data-editor-canvas]");
+      if (!scaleEl || !frame || !(canvas instanceof HTMLElement)) {
         return;
       }
-      const native = nativeWidths[viewport];
-      const stageStyle = getComputedStyle(stage);
-      const availW =
-        stage.clientWidth -
-        Number.parseFloat(stageStyle.paddingLeft) -
-        Number.parseFloat(stageStyle.paddingRight);
-      const availH =
-        stage.clientHeight -
-        Number.parseFloat(stageStyle.paddingTop) -
-        Number.parseFloat(stageStyle.paddingBottom);
-      if (availW < 1 || availH < 1) {
+      const scale = applyFrameScale(stage, scaleEl, frame, viewport);
+      if (scale === null) {
         return;
       }
-      const layoutW =
-        viewport === "desktop" ? Math.max(native, availW) : native;
-      const scale = Math.min(1, availW / layoutW);
-      frame.style.width = `${layoutW}px`;
-      frame.style.height = `${availH / scale}px`;
-      frame.style.transform = `scale(${scale})`;
-      scaleEl.style.width = `${layoutW * scale}px`;
-      scaleEl.style.height = `${availH}px`;
       const site = frame.querySelector("[data-fake-site]");
       if (!(site instanceof HTMLElement)) {
         return;
       }
-      const canvasRect = canvas.getBoundingClientRect();
-      let coverTop = canvasRect.bottom;
-      const overlay = document.getElementById("assistantOverlay");
-      if (overlay && !canvas.classList.contains("is-voice")) {
-        const overlayRect = overlay.getBoundingClientRect();
-        if (overlayRect.height > 0) {
-          coverTop = Math.min(coverTop, overlayRect.top);
-        }
-      }
-      const actions = document.getElementById("canvasActions");
-      if (actions) {
-        const actionsRect = actions.getBoundingClientRect();
-        if (actionsRect.height > 0) {
-          coverTop = Math.min(coverTop, actionsRect.top);
-        }
-      }
-      const visualCover = Math.max(0, canvasRect.bottom - coverTop) + 12;
-      const pad = `${Math.ceil(visualCover / scale)}px`;
-      site.style.paddingBottom = pad;
-      site.style.scrollPaddingBottom = pad;
+      applySiteCover(canvas, site, scale);
     }
 
-    const observer = new ResizeObserver(sync);
-    observer.observe(stage);
+    const observer = new ResizeObserver(() => sync(stageEl));
+    observer.observe(stageEl);
     if (assistantOpen && !voiceOn) {
       const overlay = document.getElementById("assistantOverlay");
       if (overlay) {
         observer.observe(overlay);
       }
     }
-    sync();
+    sync(stageEl);
     return () => observer.disconnect();
   }, [assistantOpen, viewport, voiceOn]);
 
   return (
     <>
       {copyout ? (
-        <p className="relative z-[25] mx-4 mt-3 shrink-0 rounded-lg border border-[#b42318] bg-[#fef2f2] px-3 py-2 text-xs text-[#b42318]">
+        <p className="relative z-[25] mx-4 mt-3 shrink-0 rounded-lg border border-danger bg-danger-bg px-3 py-2 text-xs text-danger">
           Copy-out has not succeeded after 10 seconds. Leaving is blocked until
           this succeeds or you discard.
         </p>

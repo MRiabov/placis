@@ -1,6 +1,6 @@
 # Glossary
 
-### Don't say
+## Don't say
 
 | Don't say | Say |
 | --- | --- |

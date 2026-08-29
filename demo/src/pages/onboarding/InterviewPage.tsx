@@ -8,7 +8,7 @@ import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { FeaturedServices } from "@/ui/FeaturedServices";
-import { Field, Panel, TextArea, TextInput } from "@/ui/Field";
+import { Field, OnbPanel, TextArea, TextInput } from "@/ui/Field";
 import { HoursPicker } from "@/ui/HoursPicker";
 import { ServiceAreas } from "@/ui/ServiceAreas";
 import { VoiceInterviewOverlay } from "@/ui/VoiceInterviewOverlay";
@@ -19,13 +19,13 @@ type Channel = "text" | "voice";
 export function InterviewPage(): ReactNode {
   const navigate = useNavigate();
   const { setExtraGroups } = useOnboardingDev();
-  const [state, setState] = useState<InterviewState>("text");
+  const [scene, setScene] = useState<InterviewState>("text");
   const [channel, setChannel] = useState<Channel>("text");
   const [ciri, setCiri] = useState(false);
   const [seai, setSeai] = useState(false);
-  const filled = state === "filled";
-  const fewPhotos = state === "few";
-  const noReviews = state === "noreviews";
+  const filled = scene === "filled";
+  const fewPhotos = scene === "few";
+  const noReviews = scene === "noreviews";
 
   useEffect(() => {
     setExtraGroups([
@@ -35,32 +35,32 @@ export function InterviewPage(): ReactNode {
           {
             id: "text",
             label: "Text",
-            on: state === "text",
-            onSelect: () => setState("text"),
+            on: scene === "text",
+            onSelect: () => setScene("text"),
           },
           {
             id: "filled",
             label: "Filled",
             on: filled,
-            onSelect: () => setState("filled"),
+            onSelect: () => setScene("filled"),
           },
           {
             id: "few",
             label: "Few photos",
             on: fewPhotos,
-            onSelect: () => setState("few"),
+            onSelect: () => setScene("few"),
           },
           {
             id: "noreviews",
             label: "No reviews",
             on: noReviews,
-            onSelect: () => setState("noreviews"),
+            onSelect: () => setScene("noreviews"),
           },
         ],
       },
     ]);
     return () => setExtraGroups([]);
-  }, [setExtraGroups, state, filled, fewPhotos, noReviews]);
+  }, [setExtraGroups, scene, filled, fewPhotos, noReviews]);
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8">
@@ -103,7 +103,7 @@ export function InterviewPage(): ReactNode {
         <VoiceInterviewOverlay onBack={() => setChannel("text")} />
       ) : (
         <form className="mt-6 grid gap-5">
-          <Panel
+          <OnbPanel
             hint="How the name and trade appear on the website."
             title="Your business"
           >
@@ -113,8 +113,8 @@ export function InterviewPage(): ReactNode {
             <Field label="Trade">
               <TextInput defaultValue="Roofer" />
             </Field>
-          </Panel>
-          <Panel hint="How people reach you." title="Contact">
+          </OnbPanel>
+          <OnbPanel hint="How people reach you." title="Contact">
             <Field label="Contact name">
               <TextInput
                 defaultValue={filled ? "Aoife Bell" : ""}
@@ -139,7 +139,7 @@ export function InterviewPage(): ReactNode {
               />
             </Field>
             <Field
-              label="Emergency phone"
+              label="Emergency marketing phone"
               note="We’ll use this to reach you. It will not appear on the website."
             >
               <TextInput
@@ -147,18 +147,18 @@ export function InterviewPage(): ReactNode {
                 placeholder="How we reach you"
               />
             </Field>
-          </Panel>
-          <Panel
+          </OnbPanel>
+          <OnbPanel
             hint="What you do and where you work."
             title="Services and service area"
           >
             <FeaturedServices />
             <ServiceAreas />
-          </Panel>
-          <Panel hint="When you take calls and jobs." title="Opening hours">
+          </OnbPanel>
+          <OnbPanel hint="When you take calls and jobs." title="Opening hours">
             <HoursPicker />
-          </Panel>
-          <Panel hint="Logo plus a few photos of the work." title="Photos">
+          </OnbPanel>
+          <OnbPanel hint="Logo plus a few photos of the work." title="Photos">
             <div className="flex flex-wrap gap-2">
               <figure className="grid size-20 place-items-center overflow-hidden rounded-lg border border-border bg-white">
                 <img
@@ -205,8 +205,8 @@ export function InterviewPage(): ReactNode {
                 </div>
               </div>
             ) : null}
-          </Panel>
-          <Panel
+          </OnbPanel>
+          <OnbPanel
             hint="Trade listings and badges for the website."
             title="Certifications"
           >
@@ -241,7 +241,7 @@ export function InterviewPage(): ReactNode {
               title="CIRI"
             />
             <CertChoice
-              blurb="SEAI contractor registration for energy upgrade grants."
+              blurb="SEAI contractor registration for energy grants."
               logo="/certification-logos/ie-seai.svg"
               on={seai}
               onToggle={() => setSeai((value) => !value)}
@@ -250,9 +250,9 @@ export function InterviewPage(): ReactNode {
             <Field label="Other certifications">
               <TextArea placeholder="Insurance, awards, guarantees, manufacturer certifications…" />
             </Field>
-          </Panel>
-          <Panel
-            hint={noReviews ? undefined : "Found on Google and Facebook."}
+          </OnbPanel>
+          <OnbPanel
+            {...(noReviews ? {} : { hint: "Found on Google and Facebook." })}
             title="Reviews"
           >
             {noReviews ? (
@@ -285,13 +285,13 @@ export function InterviewPage(): ReactNode {
                 ))}
               </div>
             )}
-          </Panel>
-          <Panel
+          </OnbPanel>
+          <OnbPanel
             hint="Optional. What would help us generate you a better website or run your ads."
             title="Anything else we should know?"
           >
             <TextArea placeholder="Add a note" />
-          </Panel>
+          </OnbPanel>
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
               Saved automatically as you type.

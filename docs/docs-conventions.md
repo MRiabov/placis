@@ -7,9 +7,9 @@ before adding or editing a doc.
 
 - `README.md` — the router (reading order + canonical references).
 - `glossary.md` — the ubiquitous language (`## Domain` / `## Enums` /
-  `## Internal`; parent terms as `###`, children as `####` under Website, Ad,
-  Onboarding; closed label sets live under Enums); the only place names are
-  coined.
+  `## Internal` / `## Don't say`; parent terms as `###`, children as `####`
+  under Website, Ad, Onboarding; closed label sets live under Enums); the
+  only place names are coined. Designers get this file whole.
 - `development-principles.md` — how work is sliced and reviewed.
 - `general-prd.md` — product-level loop and in/out of scope (pointers to feature
   PRDs).

@@ -3,13 +3,14 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { ContentPanel } from "@/pages/cms/website/ContentPanel";
 import type { SiteSection } from "@/pages/cms/website/FakeSite";
+import { siteAccentHex, siteHeroFgHex, siteHeroHex } from "@/styles/palette";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { Field, TextArea, TextInput } from "@/ui/Field";
 
 export type EditorRail = "pages" | "seo" | "styles" | "versions" | "content";
 
-export type EditorPage = {
+type EditorPage = {
   id: string;
   label: string;
   path: string;
@@ -330,9 +331,9 @@ function StylesPanel({
         <div>
           <strong className="text-[13px]">Navy &amp; Cream</strong>
           <div className="mt-1.5 flex items-center gap-1">
-            <span className="size-3 rounded-full border border-black/20 bg-[#1f2933]" />
-            <span className="size-3 rounded-full border border-black/20 bg-[#f5f1ea]" />
-            <span className="size-3 rounded-full border border-black/20 bg-[#c4a574]" />
+            <span className="size-3 rounded-full border border-black/20 bg-site-hero" />
+            <span className="size-3 rounded-full border border-black/20 bg-site-hero-fg" />
+            <span className="size-3 rounded-full border border-black/20 bg-site-accent" />
           </div>
         </div>
         <Button disabled variant="outline">
@@ -345,9 +346,9 @@ function StylesPanel({
         <div>
           <strong className="text-[13px]">Timbermill Classic</strong>
           <div className="mt-1.5 flex items-center gap-1">
-            <span className="size-3 rounded-full border border-black/20 bg-[#3f2e1f]" />
-            <span className="size-3 rounded-full border border-black/20 bg-[#efe6d6]" />
-            <span className="size-3 rounded-full border border-black/20 bg-[#b45309]" />
+            <span className="size-3 rounded-full border border-black/20 bg-site-hero-alt" />
+            <span className="size-3 rounded-full border border-black/20 bg-site-cream" />
+            <span className="size-3 rounded-full border border-black/20 bg-site-amber" />
           </div>
         </div>
         <Button variant="outline">Apply</Button>
@@ -359,7 +360,7 @@ function StylesPanel({
         <input
           aria-label="Primary"
           className="h-11 w-full cursor-pointer rounded-[10px] border border-border bg-transparent p-[3px]"
-          defaultValue="#1f2933"
+          defaultValue={siteHeroHex}
           type="color"
         />
       </Field>
@@ -367,7 +368,7 @@ function StylesPanel({
         <input
           aria-label="Neutral"
           className="h-11 w-full cursor-pointer rounded-[10px] border border-border bg-transparent p-[3px]"
-          defaultValue="#f5f1ea"
+          defaultValue={siteHeroFgHex}
           type="color"
         />
       </Field>
@@ -375,7 +376,7 @@ function StylesPanel({
         <input
           aria-label="Accent"
           className="h-11 w-full cursor-pointer rounded-[10px] border border-border bg-transparent p-[3px]"
-          defaultValue="#c4a574"
+          defaultValue={siteAccentHex}
           type="color"
         />
       </Field>
@@ -432,7 +433,7 @@ function StylesPanel({
         ))}
       </div>
       <p className="mt-2.5 text-[13px] tracking-tight text-zinc-600">Logo</p>
-      <div className="size-[72px] rounded-[10px] bg-[#d4d4d8]" />
+      <div className="size-[72px] rounded-[10px] bg-placeholder" />
     </div>
   );
 }

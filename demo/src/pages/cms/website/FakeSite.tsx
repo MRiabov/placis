@@ -45,7 +45,7 @@ export function FakeSite({
   pending,
   onSelect,
 }: FakeSiteProps): ReactNode {
-  const titles: Record<string, string> = {
+  const titles = {
     home: siteHero.headline,
     services: "Roof repairs",
     contact: "Contact",
@@ -55,7 +55,7 @@ export function FakeSite({
 
   return (
     <div
-      className="min-h-0 overflow-auto overscroll-contain bg-white font-[Georgia,'Times_New_Roman',serif] text-[#1c1917]"
+      className="min-h-0 overflow-auto overscroll-contain bg-white font-[Georgia,'Times_New_Roman',serif] text-site-ink"
       data-fake-site
       style={{
         ["--public-radius" as string]: radii[radius] ?? "16px",
@@ -64,7 +64,7 @@ export function FakeSite({
     >
       <div className="min-h-full bg-white">
         <Block
-          hidden={hidden["top-menu"]}
+          hidden={hidden["top-menu"] === true}
           onSelect={() => onSelect("top-menu")}
           selected={selected === "top-menu"}
         >
@@ -81,8 +81,8 @@ export function FakeSite({
           </div>
         </Block>
         <Block
-          className="bg-[#1f2933] px-8 py-16 text-[#f5f1ea]"
-          hidden={hidden.hero}
+          className="bg-site-hero px-8 py-16 text-site-hero-fg"
+          hidden={hidden.hero === true}
           onSelect={() => onSelect("hero")}
           pending={pending}
           selected={selected === "hero"}
@@ -98,14 +98,16 @@ export function FakeSite({
                   {"{{trade}}"}
                 </span>
               </>
+            ) : page in titles ? (
+              titles[page as keyof typeof titles]
             ) : (
-              (titles[page] ?? titles.home)
+              titles.home
             )}
           </h2>
           <p className="mt-3 max-w-md text-sm opacity-80">{siteHero.lede}</p>
         </Block>
         <Block
-          hidden={hidden.services}
+          hidden={hidden.services === true}
           onSelect={() => onSelect("services")}
           selected={selected === "services"}
         >
@@ -126,7 +128,7 @@ export function FakeSite({
           </div>
         </Block>
         <Block
-          hidden={hidden.reviews}
+          hidden={hidden.reviews === true}
           onSelect={() => onSelect("reviews")}
           selected={selected === "reviews"}
         >
@@ -143,7 +145,7 @@ export function FakeSite({
           </div>
         </Block>
         <Block
-          hidden={hidden.form}
+          hidden={hidden.form === true}
           onSelect={() => onSelect("form")}
           selected={selected === "form"}
         >
@@ -155,7 +157,7 @@ export function FakeSite({
           </div>
         </Block>
         <Block
-          hidden={hidden.footer}
+          hidden={hidden.footer === true}
           onSelect={() => onSelect("footer")}
           selected={selected === "footer"}
         >

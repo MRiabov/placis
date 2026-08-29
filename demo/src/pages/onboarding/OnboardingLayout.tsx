@@ -24,19 +24,19 @@ const steps = [
 const cueTurnOn = "Click to turn on voice";
 const cueMicDenied = "Allow microphone access in your browser";
 
-export function OnboardingShell(): ReactNode {
+export function OnboardingLayout(): ReactNode {
   return (
     <OnboardingDevProvider>
-      <OnboardingShellInner />
+      <OnboardingLayoutInner />
     </OnboardingDevProvider>
   );
 }
 
-function OnboardingShellInner(): ReactNode {
+function OnboardingLayoutInner(): ReactNode {
   const navigate = useNavigate();
   const { extraGroups } = useOnboardingDev();
   const pathname = useRouterState({
-    select: (state) => state.location.pathname,
+    select: (route) => route.location.pathname,
   });
   const step = pathname.split("/").at(-1) ?? "find";
   const generated = step === "generated";
@@ -135,6 +135,9 @@ function OnboardingShellInner(): ReactNode {
                 className="inline-flex h-9 items-center gap-1 rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-zinc-50"
                 onClick={() => {
                   const previous = steps[Math.max(0, currentIndex - 1)];
+                  if (!previous) {
+                    return;
+                  }
                   void navigate({ to: previous.to });
                 }}
                 type="button"

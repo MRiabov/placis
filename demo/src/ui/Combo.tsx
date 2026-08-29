@@ -87,72 +87,129 @@ export function Combo({
         </svg>
       ) : null}
       {shown && hasMenu ? (
-        <div
-          className={card(
-            "absolute top-[calc(100%+6px)] right-0 left-0 z-30 overflow-hidden shadow-card",
-          )}
-        >
-          {canCreate || mapsPlace ? (
-            <div className="p-1.5">
-              <p
-                className={cn(
-                  "flex w-full items-center gap-2 rounded-[10px] px-2.5 py-2 text-left text-[13px]",
-                  creating
-                    ? "bg-black/5 text-foreground"
-                    : "text-muted-foreground",
-                )}
-              >
-                {creating ? (
-                  <>
-                    <span className="font-bold">+</span>
-                    Create new {createKind} “{query.trim()}”
-                  </>
-                ) : mapsPlace ? (
-                  "Type to search a place…"
-                ) : (
-                  `Type to create a new ${createKind}…`
-                )}
-              </p>
-            </div>
-          ) : null}
-          {creating ? <div className="mx-2 h-px bg-border" /> : null}
-          {groupLabel ? (
-            <p className="px-3 py-1 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
-              {groupLabel}
-            </p>
-          ) : null}
-          <div className="max-h-44 overflow-auto">
-            {filtered.map((option) => {
-              const current = option.title === value || option.id === value;
-              return (
-                <button
-                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] hover:bg-black/5"
-                  key={option.id}
-                  onMouseDown={(event) => {
-                    event.preventDefault();
-                    setQuery(mapsPlace ? "" : option.title);
-                    onChange(option.title, option);
-                    setOpen(false);
-                  }}
-                  type="button"
-                >
-                  <span className="w-4 font-bold text-muted-foreground">
-                    {current ? "✓" : ""}
-                  </span>
-                  <span className="min-w-0">
-                    <b className="block text-[13px]">{option.title}</b>
-                    {option.hint ? (
-                      <span className="block truncate text-[11px] text-muted-foreground">
-                        {option.hint}
-                      </span>
-                    ) : null}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+        <ComboMenu
+          canCreate={canCreate}
+          createKind={createKind}
+          creating={creating}
+          filtered={filtered}
+          groupLabel={groupLabel}
+          mapsPlace={mapsPlace}
+          onChange={onChange}
+          query={query}
+          setOpen={setOpen}
+          setQuery={setQuery}
+          value={value}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function createHint(
+  creating: boolean,
+  mapsPlace: boolean,
+  createKind: string,
+): ReactNode {
+  if (creating) {
+    return (
+      <>
+        <span className="font-bold">+</span>
+        Create new {createKind}
+      </>
+    );
+  }
+  if (mapsPlace) {
+    return "Type to search a place…";
+  }
+  return `Type to create a new ${createKind}…`;
+}
+
+function ComboMenu({
+  canCreate,
+  createKind,
+  creating,
+  filtered,
+  groupLabel,
+  mapsPlace,
+  onChange,
+  query,
+  setOpen,
+  setQuery,
+  value,
+}: {
+  canCreate: boolean;
+  createKind: string | undefined;
+  creating: boolean;
+  filtered: ComboOption[];
+  groupLabel: string | undefined;
+  mapsPlace: boolean;
+  onChange: (value: string, option?: ComboOption) => void;
+  query: string;
+  setOpen: (open: boolean) => void;
+  setQuery: (query: string) => void;
+  value: string;
+}): ReactNode {
+  const kind = createKind ?? "item";
+  return (
+    <div
+      className={card(
+        "absolute top-[calc(100%+6px)] right-0 left-0 z-30 overflow-hidden shadow-card",
+      )}
+    >
+      {canCreate || mapsPlace ? (
+        <div className="p-1.5">
+          <p
+            className={cn(
+              "flex w-full items-center gap-2 rounded-[10px] px-2.5 py-2 text-left text-[13px]",
+              creating ? "bg-black/5 text-foreground" : "text-muted-foreground",
+            )}
+          >
+            {creating ? (
+              <>
+                {createHint(true, mapsPlace, kind)} “{query.trim()}”
+              </>
+            ) : (
+              createHint(false, mapsPlace, kind)
+            )}
+          </p>
         </div>
       ) : null}
+      {creating ? <div className="mx-2 h-px bg-border" /> : null}
+      {groupLabel ? (
+        <p className="px-3 py-1 text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
+          {groupLabel}
+        </p>
+      ) : null}
+      <div className="max-h-44 overflow-auto">
+        {filtered.map((option) => {
+          const current = option.title === value || option.id === value;
+          return (
+            <button
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] hover:bg-black/5"
+              key={option.id}
+              onMouseDown={(event) => {
+                event.preventDefault();
+                setQuery(mapsPlace ? "" : option.title);
+                onChange(option.title, option);
+                setOpen(false);
+              }}
+              type="button"
+            >
+              <span className="w-4 font-bold text-muted-foreground">
+                {current ? "✓" : ""}
+              </span>
+              <span className="min-w-0">
+                <b className="block text-[13px]">{option.title}</b>
+                {option.hint ? (
+                  <span className="block truncate text-[11px] text-muted-foreground">
+                    {option.hint}
+                  </span>
+                ) : null}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

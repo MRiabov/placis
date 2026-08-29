@@ -38,10 +38,10 @@ Output is gitignored:
 | `design-decision-record.md` | `api.md`, `persistence.md`, `technical-implementation.md` |
 | `frontend.md` (not `frontend-debloat.md`) | `architecture.md`, `pipeline/`, testing, Cloudflare/ops |
 | `design.md`, website `styles.md` | `frontend-debloat.md`, `frontend-stack.md`, `planning/` |
-| Glossary Domain + Enums | Glossary Internal + code-naming rules |
+| Whole `docs/glossary.md` | — |
 
-The cover `README.md` in the zip must say they can change the mocks, PRDs, and
-design decision records. Engineering follows their call.
+The cover `README.md` in the zip must say they can change the mocks, PRDs,
+design decision records, and the glossary. Engineering follows their call.
 
 ## After the script
 
@@ -75,5 +75,5 @@ stripped or retargeted from a feature `README.md` onto that feature's `prd.md`
 
 - Put backend files in the zip “for context”
 - Commit `docs/design/exported-docs/`
-- Point the designer at `frontend-2/` or `internal/`
-- Send an unsanitized `docs/` tree
+- Point the designer at `frontend-2/` or Go `internal/` packages
+- Send an unsanitized `docs/` tree (the exporter still strips omitted-file links)

@@ -9,11 +9,11 @@ import { cn } from "@/lib/cn";
 
 /** Canvas renderer copied from placis-web `frontend/src/components/public-website/DustOrb.tsx`. */
 
-export type OrbState = "idle" | "listening" | "fetching" | "building" | "done";
+type OrbMode = "idle" | "listening" | "fetching" | "building" | "done";
 
 const TAU = Math.PI * 2;
 
-const STATE_ENERGY: Record<OrbState, number> = {
+const MODE_ENERGY: Record<OrbMode, number> = {
   idle: 0.16,
   listening: 0.4,
   fetching: 0.75,
@@ -68,20 +68,200 @@ function makeParticle(nearCentre: boolean): Particle {
   };
 }
 
+function ease(from: number, to: number, k: number): number {
+  return from + (to - from) * k;
+}
+
+type Pointer = {
+  x: number;
+  y: number;
+  active: boolean;
+  strength: number;
+};
+
+type Buckets = {
+  x: Float32Array[];
+  y: Float32Array[];
+  s: Float32Array[];
+  count: Int32Array;
+};
+
+function targetAmplitude(
+  t: number,
+  listening: boolean,
+  speaking: boolean,
+): number {
+  const noise =
+    Math.sin(t * 9) * 0.5 + Math.sin(t * 19.3) * 0.3 + Math.sin(t * 2.7) * 0.2;
+  if (listening && speaking) {
+    return 0.5 + Math.abs(noise) * 0.4;
+  }
+  if (listening) {
+    return 0.14 + Math.abs(noise) * 0.08;
+  }
+  return 0.08;
+}
+
+function pointerPull(
+  pointer: Pointer,
+  baseX: number,
+  baseY: number,
+  influence: number,
+): { dx: number; dy: number } {
+  if (!pointer.active) {
+    return { dx: 0, dy: 0 };
+  }
+  const vx = pointer.x - baseX;
+  const vy = pointer.y - baseY;
+  const d = Math.hypot(vx, vy);
+  if (d >= influence) {
+    return { dx: 0, dy: 0 };
+  }
+  const pull = (1 - d / influence) * 0.8 * pointer.strength;
+  return { dx: vx * pull, dy: vy * pull };
+}
+
+function stampTinted(
+  context: CanvasRenderingContext2D,
+  particle: Particle,
+  x: number,
+  y: number,
+  alpha: number,
+  colorMix: number,
+): number {
+  if (particle.tint < 0 || colorMix <= 0.02) {
+    return alpha;
+  }
+  const colorA = Math.min(0.95, alpha * colorMix * 2.6);
+  const size = particle.size + 0.7;
+  context.fillStyle = `rgba(${BUILD_COLORS[particle.tint]},${colorA})`;
+  context.fillRect(x, y, size, size);
+  return alpha * (1 - colorMix);
+}
+
+function pushBucket(
+  buckets: Buckets,
+  inkAlpha: number,
+  x: number,
+  y: number,
+  size: number,
+): void {
+  const bucketScale = BUCKETS / MAX_ALPHA;
+  let bi = (inkAlpha * bucketScale) | 0;
+  if (bi >= BUCKETS) {
+    bi = BUCKETS - 1;
+  }
+  const c = buckets.count[bi];
+  const xs = buckets.x[bi];
+  const ys = buckets.y[bi];
+  const ss = buckets.s[bi];
+  if (c === undefined || !xs || !ys || !ss) {
+    return;
+  }
+  xs[c] = x;
+  ys[c] = y;
+  ss[c] = size;
+  buckets.count[bi] = c + 1;
+}
+
+function simulateParticles(
+  context: CanvasRenderingContext2D,
+  particles: Particle[],
+  activeCount: number,
+  t: number,
+  energy: number,
+  amplitude: number,
+  colorMix: number,
+  width: number,
+  height: number,
+  pointer: Pointer,
+  buckets: Buckets,
+): void {
+  const cx = width / 2;
+  const cy = height / 2;
+  const maxR = Math.min(width, height) * 0.5;
+  const invTwoSigmaSq = 1 / (2 * (maxR * 0.4) * (maxR * 0.4));
+  const influence = maxR * 0.95;
+  const flow = 0.5 + energy * 0.9;
+  const baseAlpha = pointer.active ? 0.62 : 0.42;
+  const energyBoost = 0.6 + energy * 0.5;
+
+  for (let i = 0; i < activeCount; i += 1) {
+    const particle = particles[i];
+    if (!particle) {
+      continue;
+    }
+    particle.dist += particle.speed * flow + amplitude * 0.0012;
+    if (particle.dist > MAX_DIST) {
+      const fresh = makeParticle(true);
+      fresh.dx = particle.dx;
+      fresh.dy = particle.dy;
+      particles[i] = fresh;
+      continue;
+    }
+
+    const wobble = Math.sin(t * particle.wob + particle.phase) * 0.03;
+    const ang = particle.angle + wobble;
+    const radius = particle.dist * maxR * (1 + amplitude * 0.1 * particle.wob);
+    const baseX = cx + Math.cos(ang) * radius;
+    const baseY = cy + Math.sin(ang) * radius;
+    const pull = pointerPull(pointer, baseX, baseY, influence);
+    particle.dx = ease(particle.dx, pull.dx, 0.5);
+    particle.dy = ease(particle.dy, pull.dy, 0.5);
+    const x = baseX + particle.dx;
+    const y = baseY + particle.dy;
+    const fade = Math.exp(-(radius * radius) * invTwoSigmaSq);
+    const alpha = baseAlpha * fade * energyBoost;
+    if (alpha <= 0.006) {
+      continue;
+    }
+    const inkAlpha = stampTinted(context, particle, x, y, alpha, colorMix);
+    if (inkAlpha <= 0.006) {
+      continue;
+    }
+    pushBucket(buckets, inkAlpha, x, y, particle.size);
+  }
+}
+
+function flushBuckets(
+  context: CanvasRenderingContext2D,
+  ink: string,
+  buckets: Buckets,
+): void {
+  for (let bi = 0; bi < BUCKETS; bi += 1) {
+    const n = buckets.count[bi];
+    if (n === undefined || n === 0) {
+      continue;
+    }
+    const a = ((bi + 0.5) / BUCKETS) * MAX_ALPHA;
+    context.fillStyle = `rgba(${ink},${a})`;
+    const xs = buckets.x[bi];
+    const ys = buckets.y[bi];
+    const ss = buckets.s[bi];
+    if (!xs || !ys || !ss) {
+      continue;
+    }
+    for (let j = 0; j < n; j += 1) {
+      const size = ss[j];
+      context.fillRect(xs[j] ?? 0, ys[j] ?? 0, size ?? 0, size ?? 0);
+    }
+  }
+}
+
 function DustCanvas({
-  state,
+  mode,
   speaking = false,
   className,
 }: {
-  state: OrbState;
+  mode: OrbMode;
   speaking?: boolean;
   className?: string;
 }): ReactNode {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const stateRef = useRef<OrbState>(state);
+  const modeRef = useRef<OrbMode>(mode);
   const speakingRef = useRef<boolean>(speaking);
 
-  stateRef.current = state;
+  modeRef.current = mode;
   speakingRef.current = speaking;
 
   useEffect(() => {
@@ -172,123 +352,45 @@ function DustCanvas({
 
     let raf = 0;
     let t = 0;
-    let energy = STATE_ENERGY.idle;
+    let energy = MODE_ENERGY.idle;
     let amplitude = 0;
     let colorMix = 0;
-
-    const ease = (from: number, to: number, k: number) =>
-      from + (to - from) * k;
+    const buckets: Buckets = {
+      x: bucketX,
+      y: bucketY,
+      s: bucketS,
+      count: bucketCount,
+    };
 
     const render = () => {
       t += 0.016;
-      energy = ease(energy, STATE_ENERGY[stateRef.current], 0.04);
-      const building = stateRef.current === "building";
-      colorMix = ease(colorMix, building ? 1 : 0, 0.09);
-
-      const listening = stateRef.current === "listening";
-      const noise =
-        Math.sin(t * 9) * 0.5 +
-        Math.sin(t * 19.3) * 0.3 +
-        Math.sin(t * 2.7) * 0.2;
-      const targetAmp =
-        listening && speakingRef.current
-          ? 0.5 + Math.abs(noise) * 0.4
-          : listening
-            ? 0.14 + Math.abs(noise) * 0.08
-            : 0.08;
-      amplitude = ease(amplitude, targetAmp, 0.15);
-
-      const cx = width / 2;
-      const cy = height / 2;
-      const maxR = Math.min(width, height) * 0.5;
-      const invTwoSigmaSq = 1 / (2 * (maxR * 0.4) * (maxR * 0.4));
-      const influence = maxR * 0.95;
-      const flow = 0.5 + energy * 0.9;
-      const baseAlpha = pointer.active ? 0.62 : 0.42;
-      const energyBoost = 0.6 + energy * 0.5;
-      const bucketScale = BUCKETS / MAX_ALPHA;
-
+      energy = ease(energy, MODE_ENERGY[modeRef.current], 0.04);
+      colorMix = ease(colorMix, modeRef.current === "building" ? 1 : 0, 0.09);
+      amplitude = ease(
+        amplitude,
+        targetAmplitude(
+          t,
+          modeRef.current === "listening",
+          speakingRef.current,
+        ),
+        0.15,
+      );
       context.clearRect(0, 0, width, height);
       bucketCount.fill(0);
-
-      for (let i = 0; i < activeCount; i += 1) {
-        const p = particles[i];
-        p.dist += p.speed * flow + amplitude * 0.0012;
-        if (p.dist > MAX_DIST) {
-          const fresh = makeParticle(true);
-          fresh.dx = p.dx;
-          fresh.dy = p.dy;
-          particles[i] = fresh;
-          continue;
-        }
-
-        const wobble = Math.sin(t * p.wob + p.phase) * 0.03;
-        const ang = p.angle + wobble;
-        const radius = p.dist * maxR * (1 + amplitude * 0.1 * p.wob);
-        const baseX = cx + Math.cos(ang) * radius;
-        const baseY = cy + Math.sin(ang) * radius;
-
-        let targetDx = 0;
-        let targetDy = 0;
-        if (pointer.active) {
-          const vx = pointer.x - baseX;
-          const vy = pointer.y - baseY;
-          const d = Math.hypot(vx, vy);
-          if (d < influence) {
-            const pull = (1 - d / influence) * 0.8 * pointer.strength;
-            targetDx = vx * pull;
-            targetDy = vy * pull;
-          }
-        }
-        p.dx = ease(p.dx, targetDx, 0.5);
-        p.dy = ease(p.dy, targetDy, 0.5);
-
-        const x = baseX + p.dx;
-        const y = baseY + p.dy;
-
-        const fade = Math.exp(-(radius * radius) * invTwoSigmaSq);
-        const alpha = baseAlpha * fade * energyBoost;
-        if (alpha <= 0.006) {
-          continue;
-        }
-        let inkAlpha = alpha;
-        if (p.tint >= 0 && colorMix > 0.02) {
-          const colorA = Math.min(0.95, alpha * colorMix * 2.6);
-          const s = p.size + 0.7;
-          context.fillStyle = `rgba(${BUILD_COLORS[p.tint]},${colorA})`;
-          context.fillRect(x, y, s, s);
-          inkAlpha = alpha * (1 - colorMix);
-          if (inkAlpha <= 0.006) {
-            continue;
-          }
-        }
-        let bi = (inkAlpha * bucketScale) | 0;
-        if (bi >= BUCKETS) {
-          bi = BUCKETS - 1;
-        }
-        const c = bucketCount[bi];
-        bucketX[bi][c] = x;
-        bucketY[bi][c] = y;
-        bucketS[bi][c] = p.size;
-        bucketCount[bi] = c + 1;
-      }
-
-      for (let bi = 0; bi < BUCKETS; bi += 1) {
-        const n = bucketCount[bi];
-        if (n === 0) {
-          continue;
-        }
-        const a = ((bi + 0.5) / BUCKETS) * MAX_ALPHA;
-        context.fillStyle = `rgba(${ink},${a})`;
-        const xs = bucketX[bi];
-        const ys = bucketY[bi];
-        const ss = bucketS[bi];
-        for (let j = 0; j < n; j += 1) {
-          const s = ss[j];
-          context.fillRect(xs[j], ys[j], s, s);
-        }
-      }
-
+      simulateParticles(
+        context,
+        particles,
+        activeCount,
+        t,
+        energy,
+        amplitude,
+        colorMix,
+        width,
+        height,
+        pointer,
+        buckets,
+      );
+      flushBuckets(context, ink, buckets);
       if (!reduceMotion) {
         raf = window.requestAnimationFrame(render);
       }
@@ -346,7 +448,7 @@ export function DustOrb({
       <DustCanvas
         className={cn("size-full", canvasClassName)}
         speaking={speaking}
-        state={speaking ? "listening" : "idle"}
+        mode={speaking ? "listening" : "idle"}
       />
     </button>
   );

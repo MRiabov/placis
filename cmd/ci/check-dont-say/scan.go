@@ -18,6 +18,8 @@ var defaultRoots = []string{
 	"apps/contractor-website",
 	"apps/placis-website",
 	"scripts",
+	"demo",
+	"src",
 }
 
 type compiledToken struct {
@@ -126,6 +128,12 @@ func homePrefixes(home string) []string {
 	}
 }
 
+func isLookApp(slash string) bool {
+	slash = strings.TrimPrefix(slash, "./")
+	return slash == "demo" || strings.HasPrefix(slash, "demo/") ||
+		slash == "src" || strings.HasPrefix(slash, "src/")
+}
+
 func pathUnder(slash, folder string) bool {
 	return slash == folder || strings.HasPrefix(slash, folder+"/") || strings.Contains(slash, "/"+folder+"/")
 }
@@ -135,6 +143,9 @@ func inHome(path string, homes []string) bool {
 		return false
 	}
 	slash := filepath.ToSlash(path)
+	if isLookApp(slash) {
+		return true
+	}
 	for _, home := range homes {
 		for _, folder := range homePrefixes(home) {
 			if pathUnder(slash, folder) {
@@ -201,7 +212,7 @@ func scanExt(path string, frontend bool) bool {
 	case ".md", ".go", ".mjs", ".js":
 		return true
 	case ".ts", ".tsx":
-		return frontend
+		return frontend || isLookApp(filepath.ToSlash(path))
 	default:
 		return false
 	}
@@ -212,16 +223,21 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	}
 	slash := filepath.ToSlash(path)
+	base := filepath.Base(slash)
 	switch {
 	case slash == "docs/glossary.md" || strings.HasSuffix(slash, "/docs/glossary.md"):
+		return true
+	case base == "glossary.md":
 		return true
 	case strings.Contains(slash, "/.agents/") || strings.HasPrefix(slash, ".agents/"):
 		return true
 	case strings.Contains(slash, "/dist/") || strings.HasPrefix(slash, "dist/"):
 		return true
+	case strings.Contains(slash, "/node_modules/") || strings.HasPrefix(slash, "node_modules/"):
+		return true
 	case strings.Contains(slash, "/.astro/") || strings.HasPrefix(slash, ".astro/"):
 		return true
-	case strings.Contains(slash, "cmd/ci/check-dont-say/"):
+	case strings.Contains(slash, "cmd/ci/check-dont-say/") || strings.Contains(slash, "ci/check-dont-say/"):
 		return true
 	case slash == "docs/design" || strings.HasPrefix(slash, "docs/design/") || strings.Contains(slash, "/docs/design/"):
 		return true
@@ -299,6 +315,7 @@ var extraAllowed = []string{
 	"media items",
 	"ad states",
 	"ad state",
+	"state registry",
 	"us state",
 	"onboarding session",
 	"preview website address",
@@ -306,7 +323,10 @@ var extraAllowed = []string{
 	"online research consent",
 	"research conflict",
 	"research conflicts",
-	"react client",
+	"react-dom/client",
+	"vite/client",
+	"sessionstorage",
+	"session storage",
 	"go client",
 	"http client",
 	"api client",
@@ -376,7 +396,19 @@ func allowedOnLine(tok compiledToken, line string) bool {
 			return true
 		}
 	}
+	if tok.phrase == "state" && strings.Contains(line, ".state") {
+		return true
+	}
+	if tok.phrase == "provider" && strings.Contains(line, ".Provider") {
+		return true
+	}
 	if tok.phrase == "shell" && (strings.Contains(lower, "unix") || strings.Contains(lower, "railway") || strings.Contains(lower, "database")) {
+		return true
+	}
+	if tok.phrase == "client" && (strings.Contains(lower, "vite/client") || strings.Contains(lower, "react-dom/client")) {
+		return true
+	}
+	if tok.phrase == "header" && (strings.Contains(lower, "<header") || strings.Contains(lower, "</header>")) {
 		return true
 	}
 	if tok.phrase == "chrome" && (strings.Contains(lower, "google") || strings.Contains(lower, "devtools") || strings.Contains(lower, "playwright") || strings.Contains(lower, "desktop chrome")) {
