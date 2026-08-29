@@ -2,6 +2,7 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import { type ReactNode, useRef, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
 import {
   composedDescription,
@@ -9,7 +10,6 @@ import {
   listSearch,
   projectRows,
 } from "@/pages/cms/project-rows";
-import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
 import { Field, TextArea, TextInput } from "@/ui/Field";
 import { PageHeading } from "@/ui/PageHeading";

@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	dontSayHeading = "### Don't say"
+	dontSayHeading = "## Don't say"
 	headerDontSay  = "don't say"
 	headerSay      = "say"
 )
@@ -32,8 +32,20 @@ type token struct {
 	covers []string
 }
 
+func dontSaySectionStart(src string) int {
+	if strings.HasPrefix(src, dontSayHeading+"\n") || strings.HasPrefix(src, dontSayHeading+"\r\n") {
+		return 0
+	}
+	for _, needle := range []string{"\n" + dontSayHeading + "\n", "\n" + dontSayHeading + "\r\n"} {
+		if idx := strings.Index(src, needle); idx >= 0 {
+			return idx + 1
+		}
+	}
+	return -1
+}
+
 func parseDontSayTable(src string) ([]token, error) {
-	start := strings.Index(src, dontSayHeading)
+	start := dontSaySectionStart(src)
 	if start < 0 {
 		return nil, fmt.Errorf("glossary is missing %q", dontSayHeading)
 	}

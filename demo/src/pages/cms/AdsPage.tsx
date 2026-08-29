@@ -8,39 +8,39 @@ import {
 } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { AdsList } from "@/pages/cms/ads/AdsList";
 import { adsSearch } from "@/pages/cms/ads/search";
-import { useCmsLayout } from "@/shell/CmsShell";
 
 const defaultDetailId = "roofing-replacement-spring";
 
-type AdsSession = {
+type AdsConnect = {
   googleConnected: boolean;
   metaConnected: boolean;
   onConnectGoogle: () => void;
   onConnectMeta: () => void;
 };
 
-const AdsSessionContext = createContext<AdsSession | null>(null);
+const AdsConnectContext = createContext<AdsConnect | null>(null);
 
-function useAdsSession(): AdsSession {
-  const value = useContext(AdsSessionContext);
+function useAdsConnect(): AdsConnect {
+  const value = useContext(AdsConnectContext);
   if (!value) {
-    throw new Error("useAdsSession must be used inside AdsPage");
+    throw new Error("useAdsConnect must be used inside AdsPage");
   }
   return value;
 }
 
 export function AdsPage(): ReactNode {
   const pathname = useRouterState({
-    select: (state) => state.location.pathname,
+    select: (route) => route.location.pathname,
   });
   const navigate = useNavigate();
   const startConnected = adsSearch().connected === "1";
   const [googleConnected, setGoogleConnected] = useState(startConnected);
   const [metaConnected, setMetaConnected] = useState(startConnected);
   const searchReview = useRouterState({
-    select: (state) => state.location.search.review,
+    select: (route) => route.location.search.review,
   });
   const reviewOn = pathname === "/cms/ads/new" && searchReview === "1";
 
@@ -92,7 +92,7 @@ export function AdsPage(): ReactNode {
   }, [navigate, pathname]);
 
   return (
-    <AdsSessionContext.Provider
+    <AdsConnectContext.Provider
       value={{
         googleConnected,
         metaConnected,
@@ -158,22 +158,22 @@ export function AdsPage(): ReactNode {
         />
         <Outlet />
       </div>
-    </AdsSessionContext.Provider>
+    </AdsConnectContext.Provider>
   );
 }
 
 export function AdsListPage(): ReactNode {
   const { openDestinations } = useCmsLayout();
-  const session = useAdsSession();
+  const ads = useAdsConnect();
   const [compact, setCompact] = useState(adsSearch().compact === "1");
 
   return (
     <AdsList
       compact={compact}
-      googleConnected={session.googleConnected}
-      metaConnected={session.metaConnected}
-      onConnectGoogle={session.onConnectGoogle}
-      onConnectMeta={session.onConnectMeta}
+      googleConnected={ads.googleConnected}
+      metaConnected={ads.metaConnected}
+      onConnectGoogle={ads.onConnectGoogle}
+      onConnectMeta={ads.onConnectMeta}
       onOpenDestinations={openDestinations}
       onToggleCompact={() => setCompact((value) => !value)}
     />

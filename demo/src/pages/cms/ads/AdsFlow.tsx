@@ -101,7 +101,7 @@ export function AdsFlow({
     <div className="grid gap-5">
       <div className="overflow-hidden rounded-prompt border border-hairline bg-white shadow-prompt">
         <section className="border-b border-hairline">
-          <div className="bg-[#fafafa] px-5 py-3.5 max-[720px]:px-4">
+          <div className="bg-wash px-5 py-3.5 max-[720px]:px-4">
             <span className="text-[13px] font-medium text-foreground">
               About the ad
             </span>
@@ -155,7 +155,7 @@ export function AdsFlow({
               </p>
               <p className="mb-2 text-[13px] text-zinc-600">Questions</p>
               <div className="grid gap-1">
-                {["Phone", "Full name", "Postcode", "Email"].map(
+                {["Marketing phone", "Full name", "Postcode", "Email"].map(
                   (item, index) => (
                     <label
                       className="flex items-center gap-2 text-sm"
@@ -213,7 +213,7 @@ export function AdsFlow({
         </section>
         <section>
           <button
-            className="flex w-full items-center justify-between bg-[#fafafa] px-5 py-3.5 text-left text-[13px] font-medium max-[720px]:px-4 disabled:cursor-not-allowed"
+            className="flex w-full items-center justify-between bg-wash px-5 py-3.5 text-left text-[13px] font-medium max-[720px]:px-4 disabled:cursor-not-allowed"
             disabled={!reviewUnlocked}
             onClick={onToggleReview}
             type="button"

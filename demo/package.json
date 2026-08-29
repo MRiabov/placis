@@ -7,7 +7,7 @@
     "dev": "vite --host 0.0.0.0 --port 5176",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0 --port 5176",
-    "check": "biome check . && tsc --noEmit",
+    "check": "biome check . && tsc --noEmit && knip && node scripts/check-files.mjs && node scripts/check-tokens.mjs && bash scripts/check-dont-say.sh",
     "deploy": "pnpm build && wrangler pages deploy dist --project-name placis-demo"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react": "^6.1.0",
+    "knip": "^6.32.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vite": "^8.2.2",

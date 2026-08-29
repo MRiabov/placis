@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useState } from "react";
 
 import { cn } from "@/lib/cn";
 
-export type DevTab = {
+type DevTab = {
   id: string;
   label: string;
   on?: boolean;
@@ -26,7 +26,8 @@ function isOn(value: unknown): boolean {
 
 export function DevStrip({ groups }: DevStripProps): ReactNode {
   const search = useRouterState({
-    select: (state) => state.location.search as Record<string, unknown>,
+    select: (route) =>
+      route.location.search as { dev?: unknown; shot?: unknown },
   });
   const shot = isOn(search.shot);
   const [open, setOpen] = useState(() => isOn(search.dev));

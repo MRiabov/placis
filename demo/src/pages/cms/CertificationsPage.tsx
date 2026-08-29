@@ -1,7 +1,7 @@
 import { type ReactNode, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
-import { useCmsLayout } from "@/shell/CmsShell";
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { Field, Select, TextArea, TextInput } from "@/ui/Field";

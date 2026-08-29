@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { photo } from "@/lib/fixtures";
-import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { FeaturedServices } from "@/ui/FeaturedServices";

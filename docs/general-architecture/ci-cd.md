@@ -36,9 +36,11 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
 
 1. **File-size guard** — files must stay < 800 lines (warning) and < 1200 (hard
    error), except `docs/glossary.md` (one ubiquitous-language file; do not split
-   it). Enforced by a `just check-files` recipe over `internal/`, `cmd/`,
-   `migrations/`, `catalog/`, `docs/`. Prefer splitting a feature into its own
-   package over allowing a file to creep past 800.
+   it). The look app (`demo/src`) hard-fails above 800 via
+   `demo/scripts/check-files.mjs` (travels with the export). Repo-wide 1200 for
+   `internal/`, `cmd/`, `migrations/`, `catalog/`, `docs/` is still a later
+   `cmd/ci` check. Prefer splitting a feature into its own package over allowing
+   a file to creep past 800.
 2. **Folder fan-out** — a nested dir under `internal/` may hold at most **9**
    entries (tracked files + child dirs). `internal/` root may hold at most
    **15**. Split a fat folder into a nested package; that is why `templates` and
@@ -48,9 +50,12 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    Documented as a later `cmd/ci` check; this file does not implement the
    checker. Layout: [module layout](module-layout.md).
 3. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`,
-   `golangci-lint` (non-mutating); `frontend-2` TypeScript check + Biome
-   (non-mutating); **rumdl** `fmt --check` then `check` on first-party Markdown
-   (non-mutating). See Pre-commit below.
+   `golangci-lint` (non-mutating); look app (`demo/`) TypeScript check + Biome
+   (non-mutating) via `pnpm check`; **rumdl** `fmt --check` then `check` on
+   first-party Markdown (non-mutating). See Pre-commit below. Look CI:
+   `.github/workflows/frontend-quality.yml` (and the copied
+   `demo/.github/workflows/check.yml` on `demo.placis.com`). `frontend-2`
+   TypeScript + Biome is the same contract once that app is enabled.
 4. **Build + test** — `go build ./...` and `go test ./...` with **no**
    `-count=1` (Testcontainers Postgres; CircleCI uses the machine executor when
    it is live); `frontend-2` typecheck + `vitest run --changed origin/main` +
@@ -163,11 +168,11 @@ persistence-only"). Required for DTOs when Go exists; see [HTTP conventions](api
 
 ### Don't-say checker
 
-The ban list is the `### Don't say` table in `docs/glossary.md`. Do not
+The ban list is the `## Don't say` table in `docs/glossary.md`. Do not
 duplicate it. The checker fails if that heading is missing or the table is
 unparseable.
 
-**Table shape (contract):** the section starts at `### Don't say` and runs until
+**Table shape (contract):** the section starts at `## Don't say` and runs until
 the next `##` heading. It must contain a `| Don't say | Say |` title row, a
 separator row, and at least one `| left | right |` data row. Split left cells on
 ` / `. Parentheticals are stripped from the matched phrase. Unmarked tokens are
@@ -205,11 +210,14 @@ list). Worked examples:
   `.git/hooks`.
 - Pre-commit: `.pre-commit-config.yaml` runs `go run ./cmd/ci/check-dont-say` on
   staged files under `docs/`, `internal/`, `cmd/`, `migrations/`, `catalog/`,
-  `apps/contractor-website`, `apps/placis-website`, and `scripts/` (Go's build
-  cache keeps this cheap). Markdown, Go, and `scripts/` JavaScript (`.js` /
-  `.mjs`) are scanned. `frontend-2` is excluded. If `docs/glossary.md` is
-  staged, the checker scans those trees in full. Paths outside those trees
-  (including `packages/`) are ignored even when filenames are passed in.
+  `apps/contractor-website`, `apps/placis-website`, `scripts/`, and `demo/`
+  (Go's build cache keeps this cheap). Markdown, Go, and JavaScript (`.js` /
+  `.mjs`) are scanned in those trees. TypeScript (`.ts` / `.tsx`) is scanned
+  in the look app (`demo/`, exported `src/`) only; `frontend-2` stays off
+  until `--frontend`. If `docs/glossary.md` is staged, the checker scans those
+  trees in full. Paths outside those trees (including `packages/`) are ignored
+  even when filenames are passed in. A copied look checkout (`demo.placis.com`)
+  uses the same checker with `--glossary glossary.md` over `src/`.
 - CI: `.github/workflows/check-dont-say.yml` runs
   `go test ./cmd/ci/check-dont-say` then `go run ./cmd/ci/check-dont-say --all`
   on pull requests (not via `just`). `--frontend` stays off until frontend work

@@ -37,7 +37,7 @@ const registryCopy: Record<string, { hint: string; suffix: string }> = {
     suffix: "(Companies House)",
   },
   US: {
-    hint: "Type the company name and pick the state registry record.",
+    hint: "Type the company name and pick the company registry record.",
     suffix: "(state registry)",
   },
 };
@@ -64,17 +64,17 @@ export function FindPage(): ReactNode {
   const [resume, setResume] = useState(false);
   const ready = consent && Boolean(registryPicked || mapsPicked);
 
-  const applyState = useCallback((state: FindState): void => {
-    setResume(state === "resume");
-    setBusy(state === "lookup");
-    setRegistryQuery(state === "results" || state === "empty" ? "Be" : "");
-    if (state === "empty") {
+  const applyScene = useCallback((scene: FindState): void => {
+    setResume(scene === "resume");
+    setBusy(scene === "lookup");
+    setRegistryQuery(scene === "results" || scene === "empty" ? "Be" : "");
+    if (scene === "empty") {
       setRegistryPicked(null);
       setMapsPicked(null);
       setConsent(false);
       return;
     }
-    if (state === "results") {
+    if (scene === "results") {
       setRegistryPicked(null);
       setMapsPicked(null);
       setConsent(false);
@@ -82,9 +82,9 @@ export function FindPage(): ReactNode {
     }
     setRegistryPicked("BELLFIELD ROOFING LIMITED");
     setMapsPicked(
-      state === "maps" || state === "consent" ? "Bellfield Roofing" : null,
+      scene === "maps" || scene === "consent" ? "Bellfield Roofing" : null,
     );
-    setConsent(state === "consent" || state === "lookup" || state === "picked");
+    setConsent(scene === "consent" || scene === "lookup" || scene === "picked");
   }, []);
 
   useEffect(() => {
@@ -92,42 +92,42 @@ export function FindPage(): ReactNode {
       {
         title: "Find",
         tabs: [
-          { id: "empty", label: "Empty", onSelect: () => applyState("empty") },
+          { id: "empty", label: "Empty", onSelect: () => applyScene("empty") },
           {
             id: "results",
             label: "Registry results",
-            onSelect: () => applyState("results"),
+            onSelect: () => applyScene("results"),
           },
           {
             id: "picked",
             label: "Record picked",
-            onSelect: () => applyState("picked"),
+            onSelect: () => applyScene("picked"),
           },
           {
             id: "maps",
             label: "Maps listing",
-            onSelect: () => applyState("maps"),
+            onSelect: () => applyScene("maps"),
           },
           {
             id: "consent",
             label: "Consent on",
-            onSelect: () => applyState("consent"),
+            onSelect: () => applyScene("consent"),
           },
           {
             id: "lookup",
             label: "Business lookup",
-            onSelect: () => applyState("lookup"),
+            onSelect: () => applyScene("lookup"),
           },
           {
             id: "resume",
             label: "Resume",
-            onSelect: () => applyState("resume"),
+            onSelect: () => applyScene("resume"),
           },
         ],
       },
     ]);
     return () => setExtraGroups([]);
-  }, [applyState, setExtraGroups]);
+  }, [applyScene, setExtraGroups]);
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8">
@@ -224,8 +224,8 @@ export function FindPage(): ReactNode {
               <p className="m-0 text-xl font-semibold tracking-tight">
                 Google Maps listing{" "}
                 <span className="mt-1.5 block text-sm font-normal tracking-normal text-muted-foreground">
-                  Optional. We’ll use this for the name, phone, photos, and
-                  reviews.
+                  Optional. We’ll use this for the name, marketing phone,
+                  photos, and reviews.
                 </span>
               </p>
             </div>

@@ -18,12 +18,26 @@
     "enabled": true,
     "rules": {
       "preset": "recommended",
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": {
+            "maxAllowedComplexity": 20
+          }
+        }
+      },
       "suspicious": {
         "noExplicitAny": "error",
-        "noConsole": "error"
+        "noImplicitAnyLet": "error",
+        "noArrayIndexKey": "error",
+        "noConsole": "error",
+        "noLeakedRender": "error"
       },
       "style": {
         "noNonNullAssertion": "error"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "error"
       }
     }
   },

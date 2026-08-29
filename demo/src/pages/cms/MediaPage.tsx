@@ -7,9 +7,9 @@ import {
 } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
-import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { Field, TextArea } from "@/ui/Field";
@@ -115,7 +115,10 @@ export function MediaPage(): ReactNode {
   });
   const waitTimer = useRef(0);
   const stillRef = useRef<HTMLDivElement>(null);
-  const item = mediaLibraryItems[index];
+  const item = mediaLibraryItems[index] ?? mediaLibraryItems[0];
+  if (!item) {
+    throw new Error("media library is empty");
+  }
   const who = item.by === "ai" ? "AI" : item.by;
   const framingHidden = waiting || compare;
 

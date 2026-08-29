@@ -1,4 +1,4 @@
-export const photos = [
+const photos = [
   "/fixtures/bellfield/image0.jpeg",
   "/fixtures/bellfield/image1.jpeg",
   "/fixtures/bellfield/image2.jpeg",
@@ -9,7 +9,7 @@ export const photos = [
 ] as const;
 
 export function photo(index: number): string {
-  return photos[index % photos.length];
+  return photos[index % photos.length] ?? "/fixtures/bellfield/image0.jpeg";
 }
 
 export const placeOptions = [
@@ -22,10 +22,4 @@ export const placeOptions = [
     hint: "Area",
     radius: "40 km",
   },
-] as const;
-
-export const serviceOptions = [
-  { id: "roofing-replacement", title: "Roofing replacement", hint: "Current" },
-  { id: "roof-repair", title: "Roof repair" },
-  { id: "gutter-cleaning", title: "Gutter cleaning" },
 ] as const;
