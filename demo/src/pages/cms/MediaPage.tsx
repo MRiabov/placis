@@ -104,13 +104,11 @@ export function MediaPage(): ReactNode {
         ]}
       />
       <div className="min-h-0 flex-1 overflow-auto p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <PageHeading
-            onOpenDestinations={openDestinations}
-            title="Media library"
-          />
-          <Button>Upload</Button>
-        </div>
+        <PageHeading
+          actions={<Button className="ml-auto">Upload</Button>}
+          onOpenDestinations={openDestinations}
+          title="Media library"
+        />
         <p className="mt-2 text-sm text-muted-foreground">
           Photos of their work, logos, and documents. Crop, focal point, and
           cleanup live here. Attach a photo from Content when an image is

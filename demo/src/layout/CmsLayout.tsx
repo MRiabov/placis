@@ -8,6 +8,11 @@ import { Globe2, Megaphone, PanelLeft, UserRound } from "lucide-react";
 import { createContext, type ReactNode, useContext, useState } from "react";
 
 import { cn } from "@/lib/cn";
+import {
+  AssistantLaunch,
+  CmsAssistantLayer,
+  CmsAssistantProvider,
+} from "@/ui/CmsAssistant";
 
 export type CmsLayoutApi = {
   openDestinations: () => void;
@@ -165,14 +170,18 @@ export function CmsLayout(): ReactNode {
         />
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <CmsLayoutContext.Provider
-          value={{
-            openDestinations: () => setOverlayOpen(true),
-          }}
-        >
-          <Outlet />
-        </CmsLayoutContext.Provider>
+      <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+        <CmsAssistantProvider>
+          <CmsLayoutContext.Provider
+            value={{
+              openDestinations: () => setOverlayOpen(true),
+            }}
+          >
+            <Outlet />
+            <AssistantLaunch className="absolute top-3 right-3 z-30" />
+            <CmsAssistantLayer />
+          </CmsLayoutContext.Provider>
+        </CmsAssistantProvider>
       </div>
     </div>
   );

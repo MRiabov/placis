@@ -9,9 +9,11 @@ TBD (do not assert UI). Go does not enforce idle.
 
 ## CMS
 
-1. **Hydrate** — Overlay on website editor / Ads / Details returns the current
-   thread (`items`, not `thread_items`). Empty is `items: []`. `/cms` does not
-   hydrate. Hydrate does not return `runs` and does not join `ai_generations`.
+1. **Hydrate** — Calling the assistant (top-right **Assistant**) on website
+   editor / Ads / Details / `/cms` returns the current thread (`items`, not
+   `thread_items`). Empty is `items: []`. Visiting `/cms` without calling does
+   not hydrate. Hydrate does not return `runs` and does not join
+   `ai_generations`.
 2. **Assistant screen switch** — Owner moves website editor → Details during
    speech; speech continues; next owner turn carries one switch notification for
    Details.

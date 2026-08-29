@@ -13,8 +13,9 @@ Look: [design decision record](design-decision-record.md). Tokens: [design.md](d
 The CMS left nav lives in `frontend-2/src/features/cms/` (layout module; names
 in [frontend-debloat.md](../frontend-debloat.md)). Profile replaces the current top-level Details item.
 Sites (the website editor entry) stays where it is. There is no **AI tools**
-item: image cleanup is `/cms/media`; the assistant is the canvas overlay. Ads is
-a destination (screens: [ads frontend](../../features/ads/ad-generation/frontend.md)).
+item: image cleanup is `/cms/media`; the assistant is called from the top-right
+**Assistant** button on every screen in The CMS. Ads is a destination (screens:
+[ads frontend](../../features/ads/ad-generation/frontend.md)).
 
 `/cms` is **not** a sidebar destination. After they pick a card, the rail is
 Sites / Profile / Ads. Direct `/cms` (land or go to the URL) still shows the
@@ -99,8 +100,10 @@ Profile is not a route. Clicking it only expands or collapses the group.
 
 Headings on Details, Projects, Certifications and reviews, Media library, and
 Ads have no decorative icon. On narrow, Open destinations stays inline with the
-heading. Ads on narrow is **Ads** next to Open destinations; the list does not
-repeat **Your ads**. (2026-08-28)
+heading. The top-right **Assistant** button is pinned on the main pane on every
+screen in The CMS, including `/cms`. Ads on narrow is **Ads** next to Open
+destinations; the list does not repeat **Your ads**. (2026-08-28) Assistant
+button: (2026-08-29).
 
 ## `/cms` (two cards)
 
@@ -117,8 +120,10 @@ stacked, so titles stay one line.
 
 No first-turn assistant POST. No Paperclip. No Start client interview (that
 control promised a second client interview after website activation). Product
-voice is the assistant overlay / canvas orb, not this screen. Look:
-[assistant design decision 3](../../features/assistant/design-decision-record.md).
+voice is the assistant, called from the top-right **Assistant** button on this
+screen too. Look:
+[assistant design decision 3](../../features/assistant/design-decision-record.md)
+and [design decision 11](../../features/assistant/design-decision-record.md).
 
 **Connect** is not on `/cms`. Google Ads and Meta connect live on Ads. The
 hidden prompt-box Connect control is not Connect website address and not Details

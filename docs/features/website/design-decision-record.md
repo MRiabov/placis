@@ -67,7 +67,10 @@ numbers are HTML comments so later entries keep their numbers.
    overlay (collapsed and expanded). They are not at the vertical middle of the
    canvas. (2026-08-27) Ask first pending is the pills plus the pending outline
    on changed website sections. Do not paint **Not applied** as copy on the
-   website. (2026-08-27)
+   website. (2026-08-27) (2026-08-29): The call is the top-right **Assistant**
+   button ([assistant design decision 11](../assistant/design-decision-record.md)), not a pinned-always composer.
+   Default is closed. Overlay / Voice orb still use this canvas geometry after
+   they call.
 
 3. **Website publication blockers are jumps** — The dropdown heading is
    **Website publication is blocked:** then one **silent** (no background)
@@ -198,7 +201,9 @@ numbers are HTML comments so later entries keep their numbers.
     [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md). (2026-08-26)
 
 16. **Website editor canvas is narrow-first** — **Narrow (≤1100px):** Workspace
-    bottom bar is **Sites only**. Website assistant default is **collapsed**.
+    bottom bar is **Sites only**. Website assistant default is **closed** (call
+    from top-right **Assistant**). (2026-08-29; previously **collapsed**
+    2026-08-27)
     Canvas website-width defaults to **Mobile**. Viewport controls stay on
     `/cms/website` only. (2026-08-27) Canvas widths are native: Desktop
     **1080**, Tablet **760**, Mobile **390**. If the stage is wider, Mobile and

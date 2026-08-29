@@ -9,9 +9,9 @@ screen context, Assistant screen switch).
 
 ## Stories
 
-1. **As an owner**, I talk or type to one assistant that can explain the product
-   and change the unpublished website or ads, so I do not hunt for a separate
-   chatbot per screen.
+1. **As an owner**, I call one assistant from any screen in The CMS (top-right
+   **Assistant**) and talk or type so I do not hunt for a separate chatbot per
+   screen. Default is Voice; I can switch to text.
 2. **As an owner**, I move between the website editor, Ads, Details, and other
    screens without losing the assistant thread or interrupting speech.
 3. **As an owner**, when I leave Voice and open the thread, I see what was said
@@ -25,8 +25,9 @@ screen context, Assistant screen switch).
 
 ## In
 
-- One assistant thread per activated tenant. Hydrate on overlay assistant
-  screens, not on `/cms`.
+- One assistant thread per activated tenant. Hydrate when they **call** the
+  assistant (top-right **Assistant**), including `/cms`. Visiting `/cms` without
+  calling does not hydrate.
 - Voice and text share that thread. Tool lines land as they run.
 - Website editor: plan vs continuous, Ask first vs instant apply, Follow (canvas
   snap).
@@ -36,8 +37,9 @@ screen context, Assistant screen switch).
   agent-edited; Ctrl+Z’able. Not Ask first.
 - Details: `update_details` is general; Follow on that screen; notification (OK
   / Revert) elsewhere.
-- Guide-only overlay on Projects, Certifications and reviews, media library,
-  billing (usage).
+- Guide-only on `/cms`, Projects, Certifications and reviews, media library,
+  billing (usage). Called from the same top-right **Assistant**. Default Voice;
+  switch to text.
 - Onboarding assistant: isolated, read-only this pass, not billed.
 - Assistant debit of billing usage credit (**×5** on our cost). Billed work is
   a text LLM call, image generate/cleanup, or ads generate. Voice is xAI
@@ -59,8 +61,9 @@ screen context, Assistant screen switch).
 
 ## Acceptance
 
-- Hydrate on website editor / Ads / Details (and other overlay screens) returns
-  the same thread after Voice, including muted tool lines.
+- Hydrate after calling the assistant on website editor / Ads / Details / `/cms`
+  (and other screens in The CMS) returns the same thread after Voice, including
+  muted tool lines.
 - `switch_assistant_screen` navigates; `get_context_about_screen` does not.
   Wrong-screen website/ads tools are refused.
 - Activated owners cannot call onboarding routes. Unactivated contractors cannot

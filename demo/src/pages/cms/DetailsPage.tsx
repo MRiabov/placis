@@ -35,15 +35,15 @@ export function DetailsPage(): ReactNode {
         <p className="text-xs tracking-wide text-muted-foreground uppercase">
           Website foundations
         </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <PageHeading
-            onOpenDestinations={openDestinations}
-            title="Business details"
-          />
-          <span className="rounded-full border border-border px-2 py-0.5 text-xs">
-            Profile active
-          </span>
-        </div>
+        <PageHeading
+          actions={
+            <span className="rounded-full border border-border px-2 py-0.5 text-xs">
+              Profile active
+            </span>
+          }
+          onOpenDestinations={openDestinations}
+          title="Business details"
+        />
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           Keep the details that power the website, website forms, SEO, and legal
           copy in one place. Persist on click-off; there is no Save.

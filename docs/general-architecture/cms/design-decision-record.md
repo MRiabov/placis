@@ -26,8 +26,9 @@ inventing it.
    it, dense mixed-ratio thumbs — not huge square cards). (2026-08-28) Cleanup
    waits 5–10 seconds on that view (**Cleaning up…**, scan, filling bar) before
    the before/after sweep; `?cleanup=1` and Dev **Cleanup compare** skip the
-   wait. The website assistant stays the canvas overlay (a later cut may drop
-   that overlay; this item still does not come back). (2026-08-26) On
+   wait. The website assistant is called from the top-right **Assistant**
+   button; the orb / overlay is what they see after they call (a later cut may
+   drop that overlay; this item still does not come back). (2026-08-26) On
    **narrow**, this left rail is gone: a full-screen overlay selector (see 4).
    Collapsed icon rail, hover peek, and click-to-pin are **wide only**.
    (2026-08-27) Website editor canvas / workspace quiet-default:

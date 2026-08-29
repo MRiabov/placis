@@ -41,6 +41,9 @@ instead of silently replacing it.
    Distinct from discarding the thread at 24h. (2026-08-28) Same day, later:
    new thread is `POST /v1/assistant/thread/new`; previous `status=completed`
    (not `cleared`). Unique `(tenant_id) WHERE status = 'current'`. (2026-08-28)
+   (2026-08-29): Hydrate when they **call** the assistant (top-right
+   **Assistant**), including `/cms`. Visiting `/cms` without calling does not
+   hydrate. Overlay-mount hydrate is the old trigger.
 
 5. **Thread is standalone persistence** — Schema `assistant`. Hydrate, overlay,
    voice→text, and the next text turn read **only** thread rows.
@@ -95,3 +98,15 @@ instead of silently replacing it.
    enable xAI server-side search / MCP tools. Same day, later: exhausted usage
    credit on billed CMS assistant HTTP is **402** (`usage_credit_exhausted`),
    not 403. Transcripts settlement stays 200.
+
+10. **Every screen in The CMS can call the assistant** — The owner calls the
+    assistant from a top-right **Assistant** button on every screen in The CMS,
+    including `/cms`. Default channel is **Voice**. Text is a switch on the same
+    thread (Restore chatbot / Voice in the composer), not a second assistant.
+    Closed until they call; do not leave the orb or overlay always on. Hydrate
+    when they call (open **Assistant**). `/cms` is a guide-only assistant
+    screen (`cms` in the CMS v1 enum). Connect (ad accounts) is still not an
+    assistant screen. Plan / Ask first stay website editor only. Do not clone
+    this button onto onboarding (onboarding stays the bottom-right voice guide).
+    Not an **AI tools** left-nav item. Look:
+    [design decision 11](design-decision-record.md). (2026-08-29)
