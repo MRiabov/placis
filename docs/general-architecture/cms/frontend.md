@@ -108,7 +108,8 @@ button: (2026-08-29).
 ## `/cms` (two cards)
 
 `/cms` is a **deep-link only** chooser: land on it or go to the URL. Two cards
-under **placis**, cloning the old prompt-box look (`--hairline`,
+under **placis** (placis-web dashboard new-chat wordmark: `text-4xl`, tracking
+`-0.03em` — [look](design-decision-record.md) 5), cloning the old prompt-box look (`--hairline`,
 `--prompt-radius`, a readable lift of `--prompt-shadow`). Wide: one row. Narrow:
 stacked, so titles stay one line.
 
