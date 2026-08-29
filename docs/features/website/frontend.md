@@ -202,8 +202,8 @@ publication does **not** attach a website address.
 
 Do not advertise `{website_prefix}.placis.com` as a live URL.
 
-**Assistant** is called from the top-right **Assistant** button (every screen in
-The CMS, including this one). Default is **closed**. Click calls **Voice**:
+**Assistant** is called from the bottom-right **Assistant** button (every screen
+in The CMS, including this one). Default is **closed**. Click calls **Voice**:
 DustOrb bottom-right of the canvas. On narrow that is just above the workspace
 rail. Switch to text is Restore chatbot / **Voice** in the composer. The chatbot
 overlay is pinned to the bottom of the canvas (not a modal). The switch is a
@@ -244,10 +244,10 @@ full-screen overlay selector covers all of that when open
 
 wide (≥1101px):
 nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | website (Desktop canvas)
-                                                                     | Assistant (top-right) + orb or overlay after they call
+                                                                     | Assistant (bottom-right) + orb or overlay after they call
 ```
 
-- **Closed until they call.** Top-right **Assistant** is the call. After
+- **Closed until they call.** Bottom-right **Assistant** is the call. After
   they call: overlay while the chatbot is showing; orb when Voice is on. Close
   returns to the button. Overlay has a 12px inset from the canvas on the left,
   right, and bottom (not flush to the edges). Chevrons expand or reduce; that

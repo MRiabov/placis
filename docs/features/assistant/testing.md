@@ -9,7 +9,7 @@ TBD (do not assert UI). Go does not enforce idle.
 
 ## CMS
 
-1. **Hydrate** — Calling the assistant (top-right **Assistant**) on website
+1. **Hydrate** — Calling the assistant (bottom-right **Assistant**) on website
    editor / Ads / Details / `/cms` returns the current thread (`items`, not
    `thread_items`). Empty is `items: []`. Visiting `/cms` without calling does
    not hydrate. Hydrate does not return `runs` and does not join

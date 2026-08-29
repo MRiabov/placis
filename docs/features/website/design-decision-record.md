@@ -70,7 +70,7 @@ numbers are HTML comments so later entries keep their numbers.
    website. (2026-08-27) (2026-08-29): The call is the top-right **Assistant**
    button ([assistant design decision 11](../assistant/design-decision-record.md)), not a pinned-always composer.
    Default is closed. Overlay / Voice orb still use this canvas geometry after
-   they call.
+   they call. Same day, later: the call is bottom-right of the main pane.
 
 3. **Website publication blockers are jumps** — The dropdown heading is
    **Website publication is blocked:** then one **silent** (no background)
@@ -202,7 +202,7 @@ numbers are HTML comments so later entries keep their numbers.
 
 16. **Website editor canvas is narrow-first** — **Narrow (≤1100px):** Workspace
     bottom bar is **Sites only**. Website assistant default is **closed** (call
-    from top-right **Assistant**). (2026-08-29; previously **collapsed**
+    from bottom-right **Assistant**). (2026-08-29; previously **collapsed**
     2026-08-27)
     Canvas website-width defaults to **Mobile**. Viewport controls stay on
     `/cms/website` only. (2026-08-27) Canvas widths are native: Desktop

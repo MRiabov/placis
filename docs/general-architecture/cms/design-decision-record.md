@@ -26,7 +26,7 @@ inventing it.
    it, dense mixed-ratio thumbs — not huge square cards). (2026-08-28) Cleanup
    waits 5–10 seconds on that view (**Cleaning up…**, scan, filling bar) before
    the before/after sweep; `?cleanup=1` and Dev **Cleanup compare** skip the
-   wait. The website assistant is called from the top-right **Assistant**
+   wait. The website assistant is called from the bottom-right **Assistant**
    button; the orb / overlay is what they see after they call (a later cut may
    drop that overlay; this item still does not come back). (2026-08-26) On
    **narrow**, this left rail is gone: a full-screen overlay selector (see 4).

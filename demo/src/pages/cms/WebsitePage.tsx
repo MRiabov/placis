@@ -216,18 +216,12 @@ export function WebsitePage(): ReactNode {
             <div className="min-w-0 max-[1100px]:col-span-2">
               <PageHeading
                 onOpenDestinations={openDestinations}
-                reserveAssistant={false}
                 title="Website editor"
                 titleClassName="text-[1.125rem] font-medium tracking-[-0.02em]"
               />
             </div>
             <ViewportSwitcher viewport={viewport} onViewport={setViewport} />
-            <div
-              className={cn(
-                "relative flex items-center justify-end gap-2 justify-self-end",
-                assistantOpen ? "" : "pr-[7.5rem]",
-              )}
-            >
+            <div className="relative flex items-center justify-end gap-2 justify-self-end">
               <Button onClick={() => setPublishOpen((value) => !value)}>
                 Publish
               </Button>

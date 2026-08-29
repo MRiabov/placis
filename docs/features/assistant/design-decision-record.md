@@ -17,9 +17,10 @@ owner-written; omit it rather than inventing it.
    assistant screen’s main area. Plan / Ask first switches are
    **website editor only**. Placement: bottom-right of the canvas / overlay
    (website design decision 18 geometry), not a full-screen takeover.
-   (2026-08-28) (2026-08-29): The **call** is the top-right **Assistant**
+   (2026-08-28) (2026-08-29): The **call** is the **Assistant**
    button (design decision 11), not hunting for this overlay. Orb / chatbot look
-   stays this overlay once they have called. Closed until they call.
+   stays this overlay once they have called. Closed until they call. Same day,
+   later: that button is bottom-right of the main pane, not top-right.
 
 2. **Look is DustOrb** — Empty field fades to the particle orb. Not website
    design decision 18’s “soft glowing circle” HTML stand-in. Not the 44px Ads
@@ -103,4 +104,5 @@ owner-written; omit it rather than inventing it.
     composer. Close returns to the button. Not the onboarding bottom-right
     voice guide. Website-editor Plan / Ask first stay on `/cms/website` only,
     and only while the chatbot is showing. Architecture: [ADR](ADR.md) 10.
-    (2026-08-29)
+    (2026-08-29) Same day, later: **bottom-right** of the main pane, not
+    top-right. On a narrow website editor it sits above the workspace bar.

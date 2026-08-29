@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/cn";
-import { useCmsAssistant } from "@/ui/CmsAssistant";
 
 type PageHeadingProps = {
   title: string;
@@ -9,7 +8,6 @@ type PageHeadingProps = {
   titleClassName?: string;
   onOpenDestinations: () => void;
   actions?: ReactNode;
-  reserveAssistant?: boolean;
 };
 
 export function PageHeading({
@@ -18,16 +16,9 @@ export function PageHeading({
   titleClassName,
   onOpenDestinations,
   actions,
-  reserveAssistant = true,
 }: PageHeadingProps): ReactNode {
-  const { open } = useCmsAssistant();
   return (
-    <div
-      className={cn(
-        "flex flex-wrap items-center gap-2",
-        reserveAssistant && !open ? "pr-[7.5rem]" : "",
-      )}
-    >
+    <div className="flex flex-wrap items-center gap-2">
       <button
         aria-label="Open destinations"
         className="grid size-9 place-items-center rounded-lg text-foreground min-[1101px]:hidden"
