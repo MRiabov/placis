@@ -25,7 +25,9 @@ then PATCH the placement.
 - `GET /v1/ads` — list
 - `POST /v1/ads` — create draft
 - `GET /v1/ads/{ad_id}`
-- `PATCH /v1/ads/{ad_id}`
+- `PATCH /v1/ads/{ad_id}` — ad draft (Creative ready until ad posting). Save
+  on click-off does not write a Published ad. Canonical:
+  [HTTP conventions](../../general-architecture/api.md).
 - `DELETE /v1/ads/{ad_id}` — ad draft only
 - `GET /v1/ads/{ad_id}/variants`
 - `PATCH /v1/ads/{ad_id}/variants/{variant_id}`

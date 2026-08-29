@@ -6,8 +6,17 @@ from the media library. Not a stub.
 
 Editing this screen updates the unpublished website / website editor
 immediately; the live website changes only on the next website publication. Ads
-read the same live rows. Archive drops the project from every project-gallery
-website section (then compact).
+read the same live rows.
+
+**TODO:** Save on click-off must follow the same split as the website editor:
+unpublished website / ad draft only, not the live website or a Published ad.
+Canonical:
+[HTTP conventions](../../../general-architecture/api.md). Today Projects PATCH
+is the live `business_profile.projects` row ads and website publication also
+read.
+
+Archive drops the project from every project-gallery website section (then
+compact).
 
 Left nav: [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md). HTTP: [api.md](api.md). Table:
 [persistence.md](persistence.md). Product: [ADR](ADR.md). Look: [design.md](design.md), [design decision record](design-decision-record.md).
