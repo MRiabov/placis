@@ -2,6 +2,7 @@ import { type ReactNode, useState } from "react";
 
 import { placeOptions } from "@/lib/fixtures";
 import { Combo, type ComboOption } from "@/ui/Combo";
+import { card } from "@/ui/card";
 import { Select } from "@/ui/Field";
 
 type Territory = {
@@ -62,7 +63,9 @@ export function ServiceAreas({
       <div className="mt-1 grid gap-2">
         {areas.map((area) => (
           <div
-            className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border border-border bg-white px-3 py-2.5"
+            className={card(
+              "flex flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2.5",
+            )}
             key={area.name}
           >
             <div className="grid min-w-32 flex-1 gap-0.5">

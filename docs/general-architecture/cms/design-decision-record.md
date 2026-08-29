@@ -32,6 +32,9 @@ inventing it.
    Collapsed icon rail, hover peek, and click-to-pin are **wide only**.
    (2026-08-27) Website editor canvas / workspace quiet-default:
    [website design decision 1](../../features/website/design-decision-record.md).
+   (2026-08-29) Profile and its nested children default **expanded** whenever
+   labels are visible. The owner may still collapse the group. Collapsed icon
+   rail still hides children.
 
 2. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
    [cms.html](../../design/cms.html) (copy-out blocked, Ask first pending, pages, publication, and so

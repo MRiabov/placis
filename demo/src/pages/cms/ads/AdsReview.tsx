@@ -1,9 +1,9 @@
-import { Sparkles } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 import { Field, Select, TextArea, TextInput } from "@/ui/Field";
 import { Sweep } from "@/ui/Sweep";
 
@@ -26,6 +26,8 @@ type Thumb = {
   src: string;
   busy?: boolean;
 };
+
+const uploadReadyMs = 10_000;
 
 const initialThumbs: Thumb[] = [
   { id: "0", src: photo(3) },
@@ -69,6 +71,25 @@ export function AdsReview({ format, shot }: AdsReviewProps): ReactNode {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
+  useEffect(() => {
+    const timers = initialThumbs
+      .filter((thumb) => thumb.busy)
+      .map((thumb) =>
+        window.setTimeout(() => {
+          setThumbs((current) =>
+            current.map((item) =>
+              item.id === thumb.id ? { ...item, busy: false } : item,
+            ),
+          );
+        }, uploadReadyMs),
+      );
+    return () => {
+      for (const timer of timers) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, []);
+
   function restoreCleanup(): void {
     setAccepted(false);
     setSplit(50);
@@ -76,7 +97,7 @@ export function AdsReview({ format, shot }: AdsReviewProps): ReactNode {
   }
 
   return (
-    <div className="grid gap-4 p-4">
+    <div className="grid gap-4">
       <div>
         <p className="mb-2 text-[13px] text-zinc-600">Photos</p>
         <div className="flex flex-wrap gap-2">
@@ -84,7 +105,7 @@ export function AdsReview({ format, shot }: AdsReviewProps): ReactNode {
             thumb.busy ? (
               <div
                 aria-busy="true"
-                className="relative size-20 overflow-hidden rounded-lg border border-stone-200"
+                className="relative size-20 overflow-hidden rounded-lg border border-border"
                 key={thumb.id}
               >
                 <img
@@ -110,24 +131,31 @@ export function AdsReview({ format, shot }: AdsReviewProps): ReactNode {
               </div>
             ) : (
               <button
+                aria-pressed={selected === thumb.id}
                 className={cn(
-                  "relative size-20 overflow-hidden rounded-lg border",
-                  selected === thumb.id ? "border-primary" : "border-stone-200",
+                  "relative h-[88px] w-[88px] overflow-hidden rounded-xl border p-0",
+                  selected === thumb.id
+                    ? "border-primary shadow-[0_0_0_2px_var(--color-primary)]"
+                    : "border-hairline",
                 )}
                 key={thumb.id}
-                onClick={() => setSelected(thumb.id)}
+                onClick={() => {
+                  setSelected(thumb.id);
+                  restoreCleanup();
+                }}
                 type="button"
               >
                 <img
                   alt=""
-                  className="size-full object-cover"
+                  className="pointer-events-none size-full object-cover object-[50%_32%]"
+                  draggable={false}
                   src={thumb.src}
                 />
               </button>
             ),
           )}
           <button
-            className="grid size-20 place-items-center rounded-lg border border-dashed border-stone-300 text-sm text-muted-foreground"
+            className="grid h-[88px] w-[88px] place-items-center rounded-xl border border-dashed border-stone-300 text-sm font-semibold text-foreground"
             onClick={() => fileRef.current?.click()}
             type="button"
           >
@@ -147,6 +175,13 @@ export function AdsReview({ format, shot }: AdsReviewProps): ReactNode {
               ...current,
               { id, src: URL.createObjectURL(file), busy: true },
             ]);
+            window.setTimeout(() => {
+              setThumbs((current) =>
+                current.map((item) =>
+                  item.id === id ? { ...item, busy: false } : item,
+                ),
+              );
+            }, uploadReadyMs);
             event.target.value = "";
           }}
           ref={fileRef}
@@ -350,14 +385,31 @@ function PromptOrb({
       <button
         aria-expanded={open}
         aria-label="Prompt"
-        className="grid size-8 place-items-center rounded-full border border-stone-200 bg-white"
+        className="grid size-11 place-items-center rounded-[10px] border border-stone-300 bg-zinc-50 text-foreground"
         onClick={() => setOpen(!open)}
         type="button"
       >
-        <Sparkles className="size-3.5" />
+        <svg
+          aria-hidden="true"
+          className="size-[18px]"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+          viewBox="0 0 24 24"
+        >
+          <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+          <path d="M20 3v4" />
+          <path d="M22 5h-4" />
+          <path d="M4 17v2" />
+          <path d="M5 18H3" />
+        </svg>
       </button>
       {open ? (
-        <div className="absolute top-9 right-0 z-20 w-64 rounded-xl border border-border bg-white p-2 shadow-md">
+        <div
+          className={card("absolute top-9 right-0 z-20 w-64 p-2 shadow-card")}
+        >
           <TextArea
             onChange={(event) => setPromptText(event.target.value)}
             placeholder={placeholder}

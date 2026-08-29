@@ -74,8 +74,11 @@ Profile is not a route. Clicking it only expands or collapses the group.
   ([details frontend](../../features/business-profile/details/frontend.md)). Projects: [projects frontend](../../features/business-profile/projects/frontend.md). Certifications and
   reviews: [certifications and reviews frontend](../../features/business-profile/certifications-and-reviews/frontend.md). Media library is `/cms/media`
   ([media library](../../features/other/media/README.md)).
-- **Default expansion:** expanded when the current view is a Profile child;
-  otherwise collapsed. The owner may toggle it while staying on another view.
+- **Default expansion:** expanded whenever sidebar labels are visible
+  (expanded rail, hover-peek, or narrow overlay). Nested Profile children
+  (Business details, Projects, Certifications and reviews, Media library) are
+  shown with that. The owner may still collapse the group. Collapsed icon rail
+  still hides children.
 - **Current route:** `aria-current` on the child. Profile gets a visual active
   style when a child is current, but is not itself `aria-current` when the
   sidebar is expanded.

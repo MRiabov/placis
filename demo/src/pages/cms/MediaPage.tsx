@@ -11,6 +11,7 @@ import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
 import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
+import { card } from "@/ui/card";
 import { Field, TextArea } from "@/ui/Field";
 import { PageHeading } from "@/ui/PageHeading";
 import { Sweep } from "@/ui/Sweep";
@@ -188,9 +189,9 @@ export function MediaPage(): ReactNode {
         </p>
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_16rem]">
           <div
-            className={cn(
-              "relative min-h-80 overflow-hidden rounded-xl border border-border bg-zinc-50",
-              item.ratio === "portrait" ? "max-h-[32rem]" : "",
+            className={card(
+              "relative min-h-80 overflow-hidden bg-zinc-50",
+              item.ratio === "portrait" && "max-h-[32rem]",
             )}
           >
             {compare ? (

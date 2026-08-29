@@ -5,17 +5,19 @@ import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
 import { siteHero, siteReviews, siteServices } from "@/lib/site-copy";
 import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
-import { Button } from "@/ui/Button";
 
 const slides = ["hero", "services", "reviews"] as const;
+const waitMs = 15000;
 
 export function PreviewPage(): ReactNode {
   const navigate = useNavigate();
   const { setExtraGroups } = useOnboardingDev();
   const shot = new URLSearchParams(window.location.search).get("shot") === "1";
   const [slide, setSlide] = useState<(typeof slides)[number]>("hero");
-  const [seconds, setSeconds] = useState(15);
+  const [elapsed, setElapsed] = useState(0);
+  const seconds = Math.max(0, Math.ceil((waitMs - elapsed) / 1000));
   const opening = seconds <= 2;
+  const ratio = Math.min(1, elapsed / waitMs);
 
   useEffect(() => {
     setExtraGroups([
@@ -39,6 +41,7 @@ export function PreviewPage(): ReactNode {
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const started = performance.now();
     const carousel = window.setInterval(() => {
       if (reduce) {
         return;
@@ -47,20 +50,22 @@ export function PreviewPage(): ReactNode {
         (current) => slides[(slides.indexOf(current) + 1) % slides.length],
       );
     }, 2000);
-    const tick = window.setInterval(() => {
-      setSeconds((value) => {
-        if (value <= 1) {
-          window.clearInterval(tick);
-          window.clearInterval(carousel);
-          void navigate({ to: "/onboarding/generated" });
-          return 0;
-        }
-        return value - 1;
-      });
-    }, 1000);
+    let frame = 0;
+    const tick = (now: number): void => {
+      const next = Math.min(waitMs, now - started);
+      setElapsed(
+        reduce ? Math.ceil((next / waitMs) * 15) * (waitMs / 15) : next,
+      );
+      if (next >= waitMs) {
+        void navigate({ to: "/onboarding/generated" });
+        return;
+      }
+      frame = window.requestAnimationFrame(tick);
+    };
+    frame = window.requestAnimationFrame(tick);
     return () => {
       window.clearInterval(carousel);
-      window.clearInterval(tick);
+      window.cancelAnimationFrame(frame);
     };
   }, [navigate, shot]);
 
@@ -188,19 +193,21 @@ export function PreviewPage(): ReactNode {
           />
         </ol>
       </div>
-      <div className="flex items-center justify-between border-t border-border bg-white p-3">
-        <span className="text-sm text-muted-foreground">
-          {opening
-            ? "Opening your website…"
-            : `Writing your website · ${seconds} seconds left`}
-        </span>
-        <Button
-          onClick={() => {
-            void navigate({ to: "/onboarding/generated" });
-          }}
-        >
-          Skip generation
-        </Button>
+      <div className="border-t border-border bg-zinc-50">
+        <div className="mx-auto grid w-[min(48rem,calc(100%-2.5rem))] gap-2 py-3">
+          <div className="h-2 overflow-hidden rounded-full bg-border">
+            <i
+              aria-hidden="true"
+              className="block h-full w-full origin-left rounded-full bg-primary"
+              style={{ transform: `scaleX(${ratio})` }}
+            />
+          </div>
+          <p className="m-0 text-[13px] text-muted-foreground">
+            {opening
+              ? "Opening your website…"
+              : `Writing your website · ${seconds} second${seconds === 1 ? "" : "s"} left`}
+          </p>
+        </div>
       </div>
     </div>
   );
