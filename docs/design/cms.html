@@ -16,10 +16,10 @@
   Empty composer turns the voice agent on (prerecorded greeting: cms-voice-greeting.mp3).
   Greeting plays on the first Voice start; starting again more than 5s later does not replay it.
   Force chatbot with ?voice=0.
-  `/cms` two cards. Connect: ?connected=1 hides Connect.
+  `/cms` two cards. Google Ads / Meta connect lives on Ads, not this screen.
   Narrow (≤1100px): full-screen overlay selector; Open destinations is inline with the heading.
   Ads on narrow: Open destinations + Ads; the iframe list does not repeat Your ads.
-  Home is two cards (website + ads) plus Connect. Prompt box, New chat, Paperclip,
+  Home is two cards (website + ads). Prompt box, New chat, Paperclip, Connect,
   and the old interview start stay out of this look — restore from git if needed.
   Canvas is a fake homepage, not the contractor website renderer.
   Ads look export: docs/design/ads.html (embedded as the Ads destination).
@@ -199,7 +199,7 @@
               </span>
             </button>
           </div>
-          <div class="cms-dashboard-prompt-stack">
+          <div class="cms-dashboard-prompt-stack is-hidden">
             <form class="cms-dashboard-prompt" id="homePrompt">
               <div class="cms-dashboard-prompt-actions">
                 <div class="cms-dashboard-prompt-left-actions">
