@@ -1,6 +1,6 @@
 ---
 name: export-designer-docs
-description: Copies every sanitized Placis product, design, and frontend decision doc into the look-demo git repo (demo.placis.com) for the designer cofounder. No backend docs, no HTML mock archive, no zip. Use when asked to export design docs, copy designer docs into the demo repo, send product/look docs to a designer, or repeat the designer/cofounder docs extraction.
+description: Copies every sanitized Placis product, design, and frontend decision doc into the look-demo git repo (demo.placis.com) for the designer cofounder. On invocation: pull from latest, resolve if there are any conflicts, merge, and notify if there were changes while the user wasn't looking. No backend docs, no HTML mock archive, no zip. Use when asked to export design docs, copy designer docs into the demo repo, send product/look docs to a designer, or repeat the designer/cofounder docs extraction.
 ---
 
 # Export designer docs
@@ -13,6 +13,45 @@ The destination is the **same git repo** as the Vite look app
 (`demo.placis.com`). Git is the send channel. There is no zip.
 
 Do not invent a new tree layout. Run the committed exporter.
+
+## On invocation (do this first)
+
+Do these four steps in dest (`demo.placis.com`) **before** `export_designer_docs.py`
+or `sync-look-demo.sh`. Dest is a separate git repo with `origin`
+`https://github.com/MRiabov/demo.placis.com.git`. Default path is the sibling
+of the **main** Placis checkout. Record `HEAD` and `git status --porcelain`
+before touching anything.
+
+### 1. pull from latest
+
+`git fetch origin`, then pull the tracked branch (usually `origin/main`). If
+dest has no remote, stop this step and tell the user.
+
+### 2. resolve if there are any conflicts
+
+If the pull stops on conflicts, resolve them. Do not abort and do not leave
+dest mid-merge. Prefer keeping dest `docs/` and look-app edits when they are
+the designer's; cover `docs/README.md` / `docs/SANITIZATION.md` from a prior
+export can be regenerated later.
+
+### 3. merge
+
+Finish the merge so dest matches latest origin (complete `git pull` / `git
+merge`). Do not commit dest or push dest unless asked.
+
+### 4. notify me if there were changes while I wasn't looking
+
+Tell the user, in the reply, whether dest moved. Incoming `origin` commits,
+uncommitted dest files (especially `docs/` and the Vite app), and anything
+that would be destroyed by `rsync --delete` all count. Summarize paths. If
+nothing changed, say that.
+
+If dest `docs/` changed, copy those files back onto the same paths under
+Placis `docs/` **before** exporting (`rsync --delete` on dest `docs/` would
+wipe them). If the Vite app changed, do not run `sync-look-demo.sh` until
+those edits are copied back onto Placis `demo/` or the user says to overwrite.
+
+Then run the exporter (and sync only if dest look files are safe to replace).
 
 ## Run
 
@@ -38,8 +77,8 @@ README, SANITIZATION.md, product/look Markdown). It does **not** overwrite the
 Vite app or the dest root `README.md`.
 
 Do not commit `demo.placis.com` unless asked. Re-running the exporter replaces
-`dest/docs/` (`rsync --delete`). Do not hand-edit dest and expect the next
-export to keep those edits — copy them back into Placis first, or they vanish.
+`dest/docs/` (`rsync --delete`). That is why On invocation pulls dest and
+copies designer `docs/` back into Placis first when dest changed.
 
 `SANITIZATION.md` in `dest/docs/` records export time and source commit.
 
@@ -124,4 +163,8 @@ Only Markdown is copied (omitted links stripped or retargeted from a feature
 - Point the designer at `frontend-2/` or Go `internal/` packages
 - Send an unsanitized `docs/` tree (the exporter still strips omitted-file links)
 - Overwrite the Vite app or dest-root `README.md`
+- Run the exporter or `sync-look-demo.sh` before On invocation (pull / resolve /
+  merge / notify)
+- Overwrite dest `docs/` or the Vite app when dest has incoming or uncommitted
+  designer edits
 - Treat a cover table that lists only onboarding/website/ads as complete
