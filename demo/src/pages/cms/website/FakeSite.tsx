@@ -55,13 +55,14 @@ export function FakeSite({
 
   return (
     <div
-      className="fake-site"
+      className="min-h-0 overflow-auto overscroll-contain bg-white font-[Georgia,'Times_New_Roman',serif] text-[#1c1917]"
+      data-fake-site
       style={{
         ["--public-radius" as string]: radii[radius] ?? "16px",
         ["--site-space" as string]: space[density] ?? "1.5rem",
       }}
     >
-      <div className="fake-site-page">
+      <div className="min-h-full bg-white">
         <Block
           hidden={hidden["top-menu"]}
           onSelect={() => onSelect("top-menu")}
