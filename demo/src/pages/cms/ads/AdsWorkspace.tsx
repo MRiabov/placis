@@ -1,9 +1,8 @@
 import { useNavigate, useParams, useRouterState } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useRef, useState } from "react";
-
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { AdsFlow } from "@/pages/cms/ads/AdsFlow";
 import { adsSearch } from "@/pages/cms/ads/search";
-import { useCmsLayout } from "@/shell/CmsShell";
 import { Notice } from "@/ui/Notice";
 import { PageHeading } from "@/ui/PageHeading";
 
@@ -16,7 +15,7 @@ export function AdsWorkspacePage(): ReactNode {
   const navigate = useNavigate();
   const params = useParams({ strict: false });
   const shot = searchFlag("shot");
-  const href = useRouterState({ select: (state) => state.location.href });
+  const href = useRouterState({ select: (route) => route.location.href });
   const [format, setFormat] = useState("feed_square");
   const [service, setService] = useState("");
   const [reviewUnlocked, setReviewUnlocked] = useState(false);

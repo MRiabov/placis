@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { type ReactNode, useMemo, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
 import { listen, play, stop } from "@/lib/mock-voice";
 import { ConnectModal } from "@/pages/cms/website/ConnectModal";
@@ -11,7 +12,6 @@ import {
 } from "@/pages/cms/website/EditorWorkspace";
 import type { SiteSection } from "@/pages/cms/website/FakeSite";
 import { PreviewCanvas } from "@/pages/cms/website/PreviewCanvas";
-import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { DustOrb } from "@/ui/DustOrb";
@@ -70,7 +70,11 @@ export function WebsitePage(): ReactNode {
   );
   const [radius, setRadius] = useState("lg");
   const [density, setDensity] = useState("comfortable");
-  const current = pages.find((item) => item.id === page) ?? pages[0];
+  const home = pages[0];
+  if (!home) {
+    throw new Error("website pages are empty");
+  }
+  const current = pages.find((item) => item.id === page) ?? home;
 
   function openContent(next: SiteSection): void {
     setSection(next);
@@ -241,134 +245,24 @@ export function WebsitePage(): ReactNode {
                 titleClassName="text-[1.125rem] font-medium tracking-[-0.02em]"
               />
             </div>
-            <fieldset className="m-0 flex min-w-0 items-center gap-0.5 rounded-full border border-border bg-zinc-50 p-[3px] max-[1100px]:justify-self-start">
-              <legend className="sr-only">Canvas width</legend>
-              {(
-                [
-                  ["desktop", "Desktop", "M8 21h8M12 17v4", [2, 3, 20, 14]],
-                  ["tablet", "Tablet", "M12 18h.01", [4, 2, 16, 20]],
-                  ["mobile", "Mobile", "M12 18h.01", [5, 2, 14, 20]],
-                ] as const
-              ).map(([id, label, path, box]) => (
-                <button
-                  aria-label={label}
-                  aria-pressed={viewport === id}
-                  className={cn(
-                    "relative inline-flex items-center gap-1.5 rounded-full border-0 bg-transparent px-3 py-1.5 text-[12.5px] font-[450] text-muted-foreground max-[1100px]:size-11 max-[1100px]:min-w-11 max-[1100px]:justify-center max-[1100px]:gap-0 max-[1100px]:p-0",
-                    viewport === id
-                      ? "bg-secondary text-foreground shadow-[0_0_0_1px_var(--color-border)]"
-                      : "",
-                  )}
-                  key={id}
-                  onClick={() => setViewport(id)}
-                  type="button"
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="block size-4 shrink-0 fill-none stroke-current stroke-[1.6] max-[1100px]:size-[18px]"
-                    viewBox="0 0 24 24"
-                  >
-                    <rect
-                      height={box[3]}
-                      rx="2"
-                      width={box[2]}
-                      x={box[0]}
-                      y={box[1]}
-                    />
-                    <path d={path} />
-                  </svg>
-                  <span className="max-[1100px]:sr-only">{label}</span>
-                </button>
-              ))}
-            </fieldset>
+            <ViewportSwitcher viewport={viewport} onViewport={setViewport} />
             <div className="relative justify-self-end">
               <Button onClick={() => setPublishOpen((value) => !value)}>
                 Publish
               </Button>
               {publishOpen ? (
-                <div
-                  className={card(
-                    "absolute right-0 z-20 mt-2 w-80 p-3 shadow-card",
-                  )}
-                >
-                  <button
-                    className="flex w-full items-start justify-between gap-2 rounded-lg p-2 text-left hover:bg-zinc-50"
-                    type="button"
-                  >
-                    <span>
-                      <b className="block text-sm">
-                        {fromActivation
-                          ? "bellfield-roofing-dublin.preview.placis.com"
-                          : "acme-roofing-dublin.preview.placis.com"}
-                      </b>
-                      <span className="text-xs text-muted-foreground">
-                        {fromActivation
-                          ? "Not published yet"
-                          : "Last published 2 days ago"}
-                      </span>
-                    </span>
-                  </button>
-                  {fromActivation ? null : (
-                    <>
-                      <button
-                        className="mt-1 w-full rounded-lg p-2 text-left text-sm hover:bg-zinc-50"
-                        onClick={() => setConnectOpen(true)}
-                        type="button"
-                      >
-                        acme.ie · Waiting for DNS
-                      </button>
-                      <button
-                        className="w-full rounded-lg p-2 text-left text-sm hover:bg-zinc-50"
-                        onClick={() => setConnectOpen(true)}
-                        type="button"
-                      >
-                        New URL · Connect website address
-                      </button>
-                      <p className="mt-2 text-xs text-red-700">
-                        Publishing is blocked:
-                      </p>
-                      <ul className="list-disc pl-4 text-xs text-zinc-600">
-                        {payBlocked ? (
-                          <li>
-                            <button
-                              className="underline"
-                              onClick={() => {
-                                void navigate({ to: "/cms/billing" });
-                              }}
-                              type="button"
-                            >
-                              Pay the subscription price to Publish
-                            </button>
-                          </li>
-                        ) : (
-                          <>
-                            <li>
-                              <button
-                                className="underline"
-                                onClick={() => openContent("hero")}
-                                type="button"
-                              >
-                                A required image on Hero cannot resolve
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="underline"
-                                onClick={() => {
-                                  void navigate({ to: "/cms/media" });
-                                }}
-                                type="button"
-                              >
-                                One media library item on the live path is not
-                                approved.
-                              </button>
-                            </li>
-                          </>
-                        )}
-                      </ul>
-                    </>
-                  )}
-                </div>
+                <PublishMenu
+                  fromActivation={fromActivation}
+                  onBilling={() => {
+                    void navigate({ to: "/cms/billing" });
+                  }}
+                  onConnect={() => setConnectOpen(true)}
+                  onHero={() => openContent("hero")}
+                  onMedia={() => {
+                    void navigate({ to: "/cms/media" });
+                  }}
+                  payBlocked={payBlocked}
+                />
               ) : null}
             </div>
           </div>
@@ -446,37 +340,12 @@ export function WebsitePage(): ReactNode {
               voiceOn={voiceOn}
             />
             {assistantOpen && !voiceOn ? (
-              <div
-                className={card(
-                  "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card",
-                )}
-                id="assistantOverlay"
-              >
-                <div className="mb-2 flex items-center justify-between">
-                  <b className="text-sm">Assistant</b>
-                  <button onClick={() => setAssistantOpen(false)} type="button">
-                    Close
-                  </button>
-                </div>
-                <label className="mr-3 text-xs">
-                  <input
-                    checked={planMode}
-                    onChange={(event) => setPlanMode(event.target.checked)}
-                    type="checkbox"
-                  />{" "}
-                  Plan mode
-                </label>
-                <TextArea
-                  placeholder="e.g. Make the home website page focus on emergency call-outs"
-                  rows={2}
-                />
-                <div className="mt-2 flex justify-end gap-2">
-                  <Button onClick={startVoice} variant="outline">
-                    Voice
-                  </Button>
-                  <Button>{planMode ? "Plan" : "Send"}</Button>
-                </div>
-              </div>
+              <AssistantPanel
+                planMode={planMode}
+                onClose={() => setAssistantOpen(false)}
+                onPlanMode={setPlanMode}
+                onVoice={startVoice}
+              />
             ) : null}
           </div>
         </div>
@@ -494,6 +363,198 @@ export function WebsitePage(): ReactNode {
         />
       ) : null}
     </>
+  );
+}
+
+const viewportOptions = [
+  ["desktop", "Desktop", "M8 21h8M12 17v4", [2, 3, 20, 14]],
+  ["tablet", "Tablet", "M12 18h.01", [4, 2, 16, 20]],
+  ["mobile", "Mobile", "M12 18h.01", [5, 2, 14, 20]],
+] as const;
+
+function ViewportSwitcher({
+  viewport,
+  onViewport,
+}: {
+  viewport: "desktop" | "tablet" | "mobile";
+  onViewport: (value: "desktop" | "tablet" | "mobile") => void;
+}): ReactNode {
+  return (
+    <fieldset className="m-0 flex min-w-0 items-center gap-0.5 rounded-full border border-border bg-zinc-50 p-[3px] max-[1100px]:justify-self-start">
+      <legend className="sr-only">Canvas width</legend>
+      {viewportOptions.map(([id, label, path, box]) => (
+        <button
+          aria-label={label}
+          aria-pressed={viewport === id}
+          className={cn(
+            "relative inline-flex items-center gap-1.5 rounded-full border-0 bg-transparent px-3 py-1.5 text-[12.5px] font-[450] text-muted-foreground max-[1100px]:size-11 max-[1100px]:min-w-11 max-[1100px]:justify-center max-[1100px]:gap-0 max-[1100px]:p-0",
+            viewport === id
+              ? "bg-secondary text-foreground shadow-[0_0_0_1px_var(--color-border)]"
+              : "",
+          )}
+          key={id}
+          onClick={() => onViewport(id)}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="block size-4 shrink-0 fill-none stroke-current stroke-[1.6] max-[1100px]:size-[18px]"
+            viewBox="0 0 24 24"
+          >
+            <rect height={box[3]} rx="2" width={box[2]} x={box[0]} y={box[1]} />
+            <path d={path} />
+          </svg>
+          <span className="max-[1100px]:sr-only">{label}</span>
+        </button>
+      ))}
+    </fieldset>
+  );
+}
+
+function PublishMenu({
+  fromActivation,
+  payBlocked,
+  onBilling,
+  onConnect,
+  onHero,
+  onMedia,
+}: {
+  fromActivation: boolean;
+  payBlocked: boolean;
+  onBilling: () => void;
+  onConnect: () => void;
+  onHero: () => void;
+  onMedia: () => void;
+}): ReactNode {
+  return (
+    <div className={card("absolute right-0 z-20 mt-2 w-80 p-3 shadow-card")}>
+      <button
+        className="flex w-full items-start justify-between gap-2 rounded-lg p-2 text-left hover:bg-zinc-50"
+        type="button"
+      >
+        <span>
+          <b className="block text-sm">
+            {fromActivation
+              ? "bellfield-roofing-dublin.preview.placis.com"
+              : "acme-roofing-dublin.preview.placis.com"}
+          </b>
+          <span className="text-xs text-muted-foreground">
+            {fromActivation ? "Not published yet" : "Last published 2 days ago"}
+          </span>
+        </span>
+      </button>
+      {fromActivation ? null : (
+        <PublishBlockers
+          onBilling={onBilling}
+          onConnect={onConnect}
+          onHero={onHero}
+          onMedia={onMedia}
+          payBlocked={payBlocked}
+        />
+      )}
+    </div>
+  );
+}
+
+function PublishBlockers({
+  payBlocked,
+  onBilling,
+  onConnect,
+  onHero,
+  onMedia,
+}: {
+  payBlocked: boolean;
+  onBilling: () => void;
+  onConnect: () => void;
+  onHero: () => void;
+  onMedia: () => void;
+}): ReactNode {
+  return (
+    <>
+      <button
+        className="mt-1 w-full rounded-lg p-2 text-left text-sm hover:bg-zinc-50"
+        onClick={onConnect}
+        type="button"
+      >
+        acme.ie · Waiting for DNS
+      </button>
+      <button
+        className="w-full rounded-lg p-2 text-left text-sm hover:bg-zinc-50"
+        onClick={onConnect}
+        type="button"
+      >
+        New URL · Connect website address
+      </button>
+      <p className="mt-2 text-xs text-red-700">Publishing is blocked:</p>
+      <ul className="list-disc pl-4 text-xs text-zinc-600">
+        {payBlocked ? (
+          <li>
+            <button className="underline" onClick={onBilling} type="button">
+              Pay the subscription price to Publish
+            </button>
+          </li>
+        ) : (
+          <>
+            <li>
+              <button className="underline" onClick={onHero} type="button">
+                A required image on Hero cannot resolve
+              </button>
+            </li>
+            <li>
+              <button className="underline" onClick={onMedia} type="button">
+                One media library item on the live path is not approved.
+              </button>
+            </li>
+          </>
+        )}
+      </ul>
+    </>
+  );
+}
+
+function AssistantPanel({
+  planMode,
+  onClose,
+  onPlanMode,
+  onVoice,
+}: {
+  planMode: boolean;
+  onClose: () => void;
+  onPlanMode: (value: boolean) => void;
+  onVoice: () => void;
+}): ReactNode {
+  return (
+    <div
+      className={card(
+        "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card",
+      )}
+      id="assistantOverlay"
+    >
+      <div className="mb-2 flex items-center justify-between">
+        <b className="text-sm">Assistant</b>
+        <button onClick={onClose} type="button">
+          Close
+        </button>
+      </div>
+      <label className="mr-3 text-xs">
+        <input
+          checked={planMode}
+          onChange={(event) => onPlanMode(event.target.checked)}
+          type="checkbox"
+        />{" "}
+        Plan mode
+      </label>
+      <TextArea
+        placeholder="e.g. Make the home website page focus on emergency call-outs"
+        rows={2}
+      />
+      <div className="mt-2 flex justify-end gap-2">
+        <Button onClick={onVoice} variant="outline">
+          Voice
+        </Button>
+        <Button>{planMode ? "Plan" : "Send"}</Button>
+      </div>
+    </div>
   );
 }
 

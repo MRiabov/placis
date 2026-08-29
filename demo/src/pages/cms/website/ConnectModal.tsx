@@ -43,7 +43,7 @@ export function ConnectModal({ onClose }: ConnectModalProps): ReactNode {
             ×
           </button>
         </div>
-        <Field label="Custom website address">
+        <Field label="Website address">
           <TextInput defaultValue="www.acme.ie" />
         </Field>
         <p className="mt-2 text-xs text-muted-foreground" role="status">

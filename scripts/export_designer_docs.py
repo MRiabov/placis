@@ -240,15 +240,6 @@ def tidy_prose(text: str) -> str:
 
 
 def sanitize_markdown(src: Path, text: str, included: set[Path]) -> str:
-    if src.name == "glossary.md":
-        cut = text.find("\n## Internal\n")
-        if cut != -1:
-            text = (
-                text[:cut].rstrip()
-                + "\n\nInternal (engineering) names and code-naming "
-                "rules were omitted from this package.\n"
-            )
-
     def replace_link(match: re.Match[str]) -> str:
         label, href = match.group(1), match.group(2)
         href_stripped = href.strip()
@@ -288,8 +279,9 @@ def write_readme(snapshot: Path, stamp: str, commit: str, subject: str) -> None:
 This folder is for **look and product**. You can change anything in it.
 
 You have a complete say over the product. Edit the HTML mocks, the design
-decision records, and the PRDs. Engineering follows your call. Backend code and
-backend docs were left out on purpose so they do not constrain you.
+decision records, the PRDs, and the glossary. Engineering follows your call.
+Backend code and backend docs were left out on purpose so they do not
+constrain you.
 
 Exported `{stamp}` from local commit `{commit}` (`{subject}`). See
 [SANITIZATION.md](SANITIZATION.md) for what was included and stripped.
@@ -322,7 +314,7 @@ More mock notes: [docs/design/README.md](docs/design/README.md).
 | What | File |
 | --- | --- |
 | Product loop and in/out of scope | [docs/general-prd.md](docs/general-prd.md) |
-| Words to use in UI and PRDs | [docs/glossary.md](docs/glossary.md) (Domain + Enums) |
+| Words to use in UI, PRDs, and code | [docs/glossary.md](docs/glossary.md) (whole file) |
 | Onboarding | [docs/features/onboarding/prd.md](docs/features/onboarding/prd.md) |
 | Website | [docs/features/website/prd.md](docs/features/website/prd.md) |
 | Ads | [docs/features/ads/ad-generation/prd.md](docs/features/ads/ad-generation/prd.md) |
@@ -391,9 +383,9 @@ def write_sanitization(
 {dirty_block}
 ```
 
-Markdown was copied, then links to omitted files were stripped. Glossary
-Internal names and code-naming rules were cut. HTML, CSS, JS, fonts, photos,
-and audio were copied as-is.
+Markdown was copied, then links to omitted files were stripped. The glossary
+is copied whole (Domain, Enums, Internal, Don't say, code-naming rules).
+HTML, CSS, JS, fonts, photos, and audio were copied as-is.
 
 Not copied: backend code, `ADR.md`, `api.md`, `persistence.md`,
 `technical-implementation.md`, `architecture.md`, pipeline docs, testing,

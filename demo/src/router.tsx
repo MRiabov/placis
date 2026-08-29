@@ -7,7 +7,7 @@ import {
   redirect,
   stringifySearchWith,
 } from "@tanstack/react-router";
-
+import { CmsLayout } from "@/layout/CmsLayout";
 import { AdsListPage, AdsPage } from "@/pages/cms/AdsPage";
 import { AdsDetail } from "@/pages/cms/ads/AdsDetail";
 import { AdsWorkspacePage } from "@/pages/cms/ads/AdsWorkspace";
@@ -22,10 +22,9 @@ import { WebsitePage } from "@/pages/cms/WebsitePage";
 import { FindPage } from "@/pages/onboarding/FindPage";
 import { GeneratedPage } from "@/pages/onboarding/GeneratedPage";
 import { InterviewPage } from "@/pages/onboarding/InterviewPage";
-import { OnboardingShell } from "@/pages/onboarding/OnboardingShell";
+import { OnboardingLayout } from "@/pages/onboarding/OnboardingLayout";
 import { PreviewPage } from "@/pages/onboarding/PreviewPage";
 import { ReviewPage } from "@/pages/onboarding/ReviewPage";
-import { CmsShell } from "@/shell/CmsShell";
 
 function searchFlag(value: unknown): string | undefined {
   if (typeof value === "string") {
@@ -37,14 +36,31 @@ function searchFlag(value: unknown): string | undefined {
   return undefined;
 }
 
+type RawSearch = {
+  dev?: unknown;
+  shot?: unknown;
+  empty?: unknown;
+  archive?: unknown;
+  archived?: unknown;
+  picker?: unknown;
+  diff?: unknown;
+};
+
 function demoSearch(search: Record<string, unknown>): {
   dev?: string;
   shot?: string;
 } {
-  return {
-    dev: searchFlag(search.dev),
-    shot: searchFlag(search.shot),
-  };
+  const raw = search as RawSearch;
+  const next: { dev?: string; shot?: string } = {};
+  const dev = searchFlag(raw.dev);
+  const shot = searchFlag(raw.shot);
+  if (dev !== undefined) {
+    next.dev = dev;
+  }
+  if (shot !== undefined) {
+    next.shot = shot;
+  }
+  return next;
 }
 
 const rootRoute = createRootRoute({
@@ -68,7 +84,7 @@ const indexRoute = createRoute({
 const cmsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/cms",
-  component: CmsShell,
+  component: CmsLayout,
   validateSearch: (search: Record<string, unknown>) => demoSearch(search),
 });
 
@@ -102,12 +118,15 @@ const projectsIndexRoute = createRoute({
   getParentRoute: () => projectsRoute,
   path: "/",
   component: ProjectsPage,
-  validateSearch: (search: Record<string, unknown>) => ({
-    ...demoSearch(search),
-    empty: searchFlag(search.empty),
-    archive: searchFlag(search.archive),
-    archived: searchFlag(search.archived),
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = search as RawSearch;
+    return {
+      ...demoSearch(search),
+      empty: searchFlag(raw.empty),
+      archive: searchFlag(raw.archive),
+      archived: searchFlag(raw.archived),
+    };
+  },
 });
 
 const projectNewRoute = createRoute({
@@ -116,11 +135,14 @@ const projectNewRoute = createRoute({
   component: function ProjectNewPage() {
     return <ProjectPage projectId={null} />;
   },
-  validateSearch: (search: Record<string, unknown>) => ({
-    ...demoSearch(search),
-    picker: searchFlag(search.picker),
-    diff: searchFlag(search.diff),
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = search as RawSearch;
+    return {
+      ...demoSearch(search),
+      picker: searchFlag(raw.picker),
+      diff: searchFlag(raw.diff),
+    };
+  },
 });
 
 const projectIdRoute = createRoute({
@@ -130,11 +152,14 @@ const projectIdRoute = createRoute({
     const { projectId } = projectIdRoute.useParams();
     return <ProjectPage projectId={projectId} />;
   },
-  validateSearch: (search: Record<string, unknown>) => ({
-    ...demoSearch(search),
-    picker: searchFlag(search.picker),
-    diff: searchFlag(search.diff),
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = search as RawSearch;
+    return {
+      ...demoSearch(search),
+      picker: searchFlag(raw.picker),
+      diff: searchFlag(raw.diff),
+    };
+  },
 });
 
 const certificationsRoute = createRoute({
@@ -201,7 +226,7 @@ const billingRoute = createRoute({
 const onboardingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/onboarding",
-  component: OnboardingShell,
+  component: OnboardingLayout,
 });
 
 const onboardingIndexRoute = createRoute({

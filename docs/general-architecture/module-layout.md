@@ -6,7 +6,7 @@ the target.
 ```text
 cmd/
   api/            # HTTP API server + in-process River
-  ci/             # CI/dev checks (not deployed); check-dont-say, later file-size + folder fan-out, …
+  ci/             # CI/dev checks (not deployed); check-dont-say, later folder fan-out, …
 internal/
   # shared / cross-cutting (small, few files each)
   config/         # typed config from env
@@ -55,7 +55,7 @@ packages/
   website-components/  # website templates, website component renderers + contract.json, website style catalog presets
 catalog/          # later: typed structs dumped to JSON; first-pass JSON sidecars live in packages/website-components
 frontend-2/       # CMS + onboarding (Vite); website preview is apps/contractor-website
-demo/             # Standalone look app (Vite + Tailwind). Copyable; not a workspace member. Run from demo/: pnpm install && pnpm dev
+demo/             # Standalone look app (Vite + Tailwind). Copyable; not a workspace member. Quality lives in this folder (Biome, tsc, Knip, file-size, tokens). Sync: scripts/sync-look-demo.sh. Run from demo/: pnpm install && pnpm dev
 docs/
 go.mod
 ```

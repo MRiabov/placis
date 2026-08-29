@@ -145,7 +145,7 @@ export function ContentPanel({
           </Field>
           <Field className="mb-3.5" label="Image">
             <div
-              className="min-h-[88px] rounded-[10px] bg-[#d4d4d8] bg-cover bg-center"
+              className="min-h-[88px] rounded-[10px] bg-placeholder bg-cover bg-center"
               style={{ backgroundImage: `url(${photo(image)})` }}
             />
             <div className="mt-2 grid grid-cols-2 gap-2">
@@ -162,7 +162,7 @@ export function ContentPanel({
                   className={cn(
                     "min-h-[72px] rounded-[10px] bg-cover bg-center",
                     image === index
-                      ? "shadow-[inset_0_0_0_2px_#13120a]"
+                      ? "shadow-[inset_0_0_0_2px_var(--color-primary)]"
                       : "border border-transparent",
                   )}
                   key={index}
@@ -186,7 +186,7 @@ export function ContentPanel({
           {reviews.map((review) => (
             <article
               className={panel(
-                "relative grid gap-1.5 p-3 shadow-[inset_0_0_0_1px_#13120a]",
+                "relative grid gap-1.5 p-3 shadow-[inset_0_0_0_1px_var(--color-primary)]",
               )}
               key={review.name}
             >
@@ -339,7 +339,7 @@ function VisibilityRow({
         aria-label={label}
         className={cn(
           "relative h-6 w-10 min-w-10 overflow-hidden rounded-full border border-zinc-300 max-[1100px]:min-w-11",
-          on ? "bg-[#166534]" : "bg-zinc-300",
+          on ? "bg-usage-text" : "bg-zinc-300",
         )}
         onClick={() => setOn((value) => !value)}
         role="switch"

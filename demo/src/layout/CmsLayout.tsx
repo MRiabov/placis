@@ -9,16 +9,16 @@ import { createContext, type ReactNode, useContext, useState } from "react";
 
 import { cn } from "@/lib/cn";
 
-export type CmsLayout = {
+export type CmsLayoutApi = {
   openDestinations: () => void;
 };
 
-const CmsLayoutContext = createContext<CmsLayout | null>(null);
+const CmsLayoutContext = createContext<CmsLayoutApi | null>(null);
 
-export function useCmsLayout(): CmsLayout {
+export function useCmsLayout(): CmsLayoutApi {
   const value = useContext(CmsLayoutContext);
   if (!value) {
-    throw new Error("useCmsLayout must be used inside CmsShell");
+    throw new Error("useCmsLayout must be used inside CmsLayout");
   }
   return value;
 }
@@ -47,10 +47,10 @@ function isDesktop(): boolean {
 const navRowClass =
   "flex w-full min-h-8 items-center overflow-hidden rounded-lg text-[13px] font-medium tracking-[-0.01em]";
 
-export function CmsShell(): ReactNode {
+export function CmsLayout(): ReactNode {
   const navigate = useNavigate();
   const pathname = useRouterState({
-    select: (state) => state.location.pathname,
+    select: (route) => route.location.pathname,
   });
   const [expanded, setExpanded] = useState(false);
   const [peek, setPeek] = useState(false);
@@ -137,72 +137,16 @@ export function CmsShell(): ReactNode {
             to="/cms/website"
             onNavigate={closeOverlay}
           />
-          <div>
-            <button
-              aria-expanded={labelsVisible ? profileOpen : undefined}
-              aria-label="Profile"
-              className={cn(
-                navRowClass,
-                iconOnly ? "justify-center px-0" : "gap-2.5 px-2 py-1.5",
-                profileActive
-                  ? "bg-black/[0.06] text-foreground"
-                  : "text-zinc-600 hover:bg-black/5 hover:text-foreground",
-              )}
-              onClick={() => {
-                if (iconOnly) {
-                  void navigate({ to: "/cms/details" });
-                  return;
-                }
-                setProfileOpen((value) => !value);
-              }}
-              type="button"
-            >
-              {iconOnly ? <UserRound className="size-4 shrink-0" /> : null}
-              {labelsVisible ? (
-                <>
-                  <span className="flex-1 text-left">Profile</span>
-                  <span
-                    className={cn(
-                      "text-[10px] transition-transform duration-150",
-                      profileOpen ? "rotate-180" : "",
-                    )}
-                  >
-                    ▾
-                  </span>
-                </>
-              ) : (
-                <span className="sr-only">Profile</span>
-              )}
-            </button>
-            {profileOpen && labelsVisible ? (
-              <div className="grid gap-px py-1 pl-2">
-                <ChildLink
-                  active={pathname === "/cms/details"}
-                  label="Business details"
-                  to="/cms/details"
-                  onNavigate={closeOverlay}
-                />
-                <ChildLink
-                  active={pathname.startsWith("/cms/projects")}
-                  label="Projects"
-                  to="/cms/projects"
-                  onNavigate={closeOverlay}
-                />
-                <ChildLink
-                  active={pathname.startsWith("/cms/certifications")}
-                  label="Certifications and reviews"
-                  to="/cms/certifications"
-                  onNavigate={closeOverlay}
-                />
-                <ChildLink
-                  active={pathname === "/cms/media"}
-                  label="Media library"
-                  to="/cms/media"
-                  onNavigate={closeOverlay}
-                />
-              </div>
-            ) : null}
-          </div>
+          <ProfileNav
+            closeOverlay={closeOverlay}
+            iconOnly={iconOnly}
+            labelsVisible={labelsVisible}
+            navigate={navigate}
+            pathname={pathname}
+            profileActive={profileActive}
+            profileOpen={profileOpen}
+            setProfileOpen={setProfileOpen}
+          />
           <NavLink
             active={pathname.startsWith("/cms/ads")}
             icon={<Megaphone className="size-4" />}
@@ -212,62 +156,13 @@ export function CmsShell(): ReactNode {
             onNavigate={closeOverlay}
           />
         </nav>
-        <div
-          className={cn(
-            "relative mt-auto p-2",
-            iconOnly ? "" : "border-t border-border pt-2.5",
-          )}
-        >
-          {accountOpen ? (
-            <div
-              className={cn(
-                "absolute z-[80] rounded-xl border border-border bg-white p-1.5 shadow-sm",
-                labelsVisible
-                  ? "right-2 bottom-14 left-2"
-                  : "bottom-1 left-full ml-2 w-52",
-              )}
-            >
-              <Link
-                className="flex min-h-8 items-center rounded-lg px-2.5 text-xs text-zinc-600 hover:bg-zinc-50"
-                onClick={() => {
-                  setAccountOpen(false);
-                  closeOverlay();
-                }}
-                to="/cms/billing"
-              >
-                Usage & billing
-              </Link>
-            </div>
-          ) : null}
-          <button
-            aria-expanded={accountOpen}
-            aria-label="Open account menu"
-            className={cn(
-              "flex w-full items-center rounded-lg text-left hover:bg-black/5",
-              iconOnly ? "justify-center p-1" : "gap-2 px-1 py-1",
-            )}
-            onClick={() => setAccountOpen((value) => !value)}
-            type="button"
-          >
-            <img
-              alt=""
-              className="size-7 rounded-full object-cover"
-              height={28}
-              src="/owner-avatar.jpg"
-              width={28}
-            />
-            {labelsVisible ? (
-              <span className="min-w-0">
-                <span className="block truncate text-[13px] text-foreground">
-                  Aoife Byrne
-                </span>
-                <span className="block text-xs text-muted-foreground">
-                  Owner
-                </span>
-              </span>
-            ) : null}
-          </button>
-        </div>
+        <AccountMenu
+          accountOpen={accountOpen}
+          closeOverlay={closeOverlay}
+          iconOnly={iconOnly}
+          labelsVisible={labelsVisible}
+          setAccountOpen={setAccountOpen}
+        />
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
@@ -279,6 +174,166 @@ export function CmsShell(): ReactNode {
           <Outlet />
         </CmsLayoutContext.Provider>
       </div>
+    </div>
+  );
+}
+
+function ProfileNav({
+  closeOverlay,
+  iconOnly,
+  labelsVisible,
+  navigate,
+  pathname,
+  profileActive,
+  profileOpen,
+  setProfileOpen,
+}: {
+  closeOverlay: () => void;
+  iconOnly: boolean;
+  labelsVisible: boolean;
+  navigate: ReturnType<typeof useNavigate>;
+  pathname: string;
+  profileActive: boolean;
+  profileOpen: boolean;
+  setProfileOpen: (update: (value: boolean) => boolean) => void;
+}): ReactNode {
+  return (
+    <div>
+      <button
+        aria-expanded={labelsVisible ? profileOpen : undefined}
+        aria-label="Profile"
+        className={cn(
+          navRowClass,
+          iconOnly ? "justify-center px-0" : "gap-2.5 px-2 py-1.5",
+          profileActive
+            ? "bg-black/[0.06] text-foreground"
+            : "text-zinc-600 hover:bg-black/5 hover:text-foreground",
+        )}
+        onClick={() => {
+          if (iconOnly) {
+            void navigate({ to: "/cms/details" });
+            return;
+          }
+          setProfileOpen((value) => !value);
+        }}
+        type="button"
+      >
+        {iconOnly ? <UserRound className="size-4 shrink-0" /> : null}
+        {labelsVisible ? (
+          <>
+            <span className="flex-1 text-left">Profile</span>
+            <span
+              className={cn(
+                "text-[10px] transition-transform duration-150",
+                profileOpen ? "rotate-180" : "",
+              )}
+            >
+              ▾
+            </span>
+          </>
+        ) : (
+          <span className="sr-only">Profile</span>
+        )}
+      </button>
+      {profileOpen && labelsVisible ? (
+        <div className="grid gap-px py-1 pl-2">
+          <ChildLink
+            active={pathname === "/cms/details"}
+            label="Business details"
+            to="/cms/details"
+            onNavigate={closeOverlay}
+          />
+          <ChildLink
+            active={pathname.startsWith("/cms/projects")}
+            label="Projects"
+            to="/cms/projects"
+            onNavigate={closeOverlay}
+          />
+          <ChildLink
+            active={pathname.startsWith("/cms/certifications")}
+            label="Certifications and reviews"
+            to="/cms/certifications"
+            onNavigate={closeOverlay}
+          />
+          <ChildLink
+            active={pathname === "/cms/media"}
+            label="Media library"
+            to="/cms/media"
+            onNavigate={closeOverlay}
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function AccountMenu({
+  accountOpen,
+  closeOverlay,
+  iconOnly,
+  labelsVisible,
+  setAccountOpen,
+}: {
+  accountOpen: boolean;
+  closeOverlay: () => void;
+  iconOnly: boolean;
+  labelsVisible: boolean;
+  setAccountOpen: (update: (value: boolean) => boolean) => void;
+}): ReactNode {
+  return (
+    <div
+      className={cn(
+        "relative mt-auto p-2",
+        iconOnly ? "" : "border-t border-border pt-2.5",
+      )}
+    >
+      {accountOpen ? (
+        <div
+          className={cn(
+            "absolute z-[80] rounded-xl border border-border bg-white p-1.5 shadow-sm",
+            labelsVisible
+              ? "right-2 bottom-14 left-2"
+              : "bottom-1 left-full ml-2 w-52",
+          )}
+        >
+          <Link
+            className="flex min-h-8 items-center rounded-lg px-2.5 text-xs text-zinc-600 hover:bg-zinc-50"
+            onClick={() => {
+              setAccountOpen(() => false);
+              closeOverlay();
+            }}
+            to="/cms/billing"
+          >
+            Usage & billing
+          </Link>
+        </div>
+      ) : null}
+      <button
+        aria-expanded={accountOpen}
+        aria-label="Open account menu"
+        className={cn(
+          "flex w-full items-center rounded-lg text-left hover:bg-black/5",
+          iconOnly ? "justify-center p-1" : "gap-2 px-1 py-1",
+        )}
+        onClick={() => setAccountOpen((value) => !value)}
+        type="button"
+      >
+        <img
+          alt=""
+          className="size-7 rounded-full object-cover"
+          height={28}
+          src="/owner-avatar.jpg"
+          width={28}
+        />
+        {labelsVisible ? (
+          <span className="min-w-0">
+            <span className="block truncate text-[13px] text-foreground">
+              Aoife Byrne
+            </span>
+            <span className="block text-xs text-muted-foreground">Owner</span>
+          </span>
+        ) : null}
+      </button>
     </div>
   );
 }
@@ -313,7 +368,11 @@ function NavLink({
       to={to}
     >
       {iconOnly ? icon : null}
-      {iconOnly ? <span className="sr-only">{label}</span> : label}
+      {iconOnly ? (
+        <span className="sr-only">{label}</span>
+      ) : (
+        <span>{label}</span>
+      )}
     </Link>
   );
 }

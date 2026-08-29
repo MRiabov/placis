@@ -34,7 +34,7 @@ const facts = [
     chip: "Google Maps listing",
   },
   {
-    id: "phone",
+    id: "marketing-phone",
     label: "Marketing phone",
     value: "01 555 0199",
     chip: "Google Maps listing",
@@ -62,7 +62,7 @@ const facts = [
 export function ReviewPage(): ReactNode {
   const navigate = useNavigate();
   const { setExtraGroups } = useOnboardingDev();
-  const [state, setState] = useState<ReviewState>("found");
+  const [scene, setScene] = useState<ReviewState>("found");
 
   useEffect(() => {
     setExtraGroups([
@@ -72,41 +72,41 @@ export function ReviewPage(): ReactNode {
           {
             id: "filling",
             label: "Still filling",
-            on: state === "filling",
-            onSelect: () => setState("filling"),
+            on: scene === "filling",
+            onSelect: () => setScene("filling"),
           },
           {
             id: "found",
             label: "Found vs missing",
-            on: state === "found",
-            onSelect: () => setState("found"),
+            on: scene === "found",
+            onSelect: () => setScene("found"),
           },
           {
             id: "wait",
             label: "Research wait",
-            on: state === "wait",
-            onSelect: () => setState("wait"),
+            on: scene === "wait",
+            onSelect: () => setScene("wait"),
           },
           {
             id: "conflict",
             label: "Research conflict",
-            on: state === "conflict",
-            onSelect: () => setState("conflict"),
+            on: scene === "conflict",
+            onSelect: () => setScene("conflict"),
           },
           {
             id: "ready",
             label: "Ready",
-            on: state === "ready",
-            onSelect: () => setState("ready"),
+            on: scene === "ready",
+            onSelect: () => setScene("ready"),
           },
         ],
       },
     ]);
     return () => setExtraGroups([]);
-  }, [setExtraGroups, state]);
+  }, [setExtraGroups, scene]);
 
-  const found = state === "ready" ? 12 : 8;
-  const percent = state === "ready" ? 100 : 62;
+  const found = scene === "ready" ? 12 : 8;
+  const percent = scene === "ready" ? 100 : 62;
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8">
@@ -116,7 +116,7 @@ export function ReviewPage(): ReactNode {
       <p className="mt-2 text-sm text-muted-foreground">
         Check these details. You can continue even if some are still missing.
       </p>
-      {state === "wait" ? (
+      {scene === "wait" ? (
         <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
           We’ll look the business up again in a few minutes.
         </p>
@@ -150,7 +150,7 @@ export function ReviewPage(): ReactNode {
             />
           </div>
         </div>
-        {state === "ready" ? (
+        {scene === "ready" ? (
           <p className="text-sm text-muted-foreground">
             We have enough to start the website after a few questions.
           </p>
@@ -159,13 +159,13 @@ export function ReviewPage(): ReactNode {
           {facts.map((fact) => (
             <Fact
               chip={fact.chip}
-              hidden={state === "conflict" && fact.id === "display"}
+              hidden={scene === "conflict" && fact.id === "display"}
               key={fact.id}
               label={fact.label}
               value={fact.value}
             />
           ))}
-          {state === "filling" ? (
+          {scene === "filling" ? (
             <Fact
               chip="In progress"
               label="Marketing email"
@@ -173,7 +173,7 @@ export function ReviewPage(): ReactNode {
               value="Looking this up from the current website…"
             />
           ) : null}
-          {state === "conflict" ? (
+          {scene === "conflict" ? (
             <div
               className={card(
                 "grid gap-2 border-amber-200 bg-amber-50 p-3 text-sm",

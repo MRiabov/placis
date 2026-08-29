@@ -25,7 +25,7 @@ export function PreviewPage(): ReactNode {
         title: "Wait",
         tabs: slides.map((item) => ({
           id: item,
-          label: item[0].toUpperCase() + item.slice(1),
+          label: item.charAt(0).toUpperCase() + item.slice(1),
           on: slide === item,
           onSelect: () => setSlide(item),
         })),
@@ -46,9 +46,10 @@ export function PreviewPage(): ReactNode {
       if (reduce) {
         return;
       }
-      setSlide(
-        (current) => slides[(slides.indexOf(current) + 1) % slides.length],
-      );
+      setSlide((current) => {
+        const next = slides[(slides.indexOf(current) + 1) % slides.length];
+        return next ?? current;
+      });
     }, 2000);
     let frame = 0;
     const tick = (now: number): void => {
@@ -80,7 +81,7 @@ export function PreviewPage(): ReactNode {
             This usually takes about 15 seconds. Then we’ll open the site.
           </p>
         </div>
-        <div className="mx-auto max-w-3xl overflow-hidden rounded-xl bg-[#1f2933] text-[#f5f1ea] shadow-sm">
+        <div className="mx-auto max-w-3xl overflow-hidden rounded-xl bg-site-hero text-site-hero-fg shadow-sm">
           <p className="px-4 pt-3 text-xs text-white/60">
             bellfield-roofing-dublin.preview.placis.com
           </p>
