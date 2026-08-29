@@ -83,7 +83,10 @@ export function AdsDetail(): ReactNode {
                 value={name}
               />
             </div>
-            <div className="flex min-w-0 w-full shrink-0 flex-wrap items-center gap-2 min-[721px]:w-auto">
+            <div className="flex min-w-0 w-full shrink-0 flex-wrap items-center gap-2 min-[721px]:w-auto min-[721px]:flex-nowrap">
+              <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 max-[720px]:order-last">
+                Creative ready
+              </span>
               <div className="flex min-w-0 flex-nowrap items-center gap-2">
                 <span
                   className="group relative inline-flex after:pointer-events-none after:absolute after:bottom-[calc(100%+6px)] after:left-1/2 after:z-10 after:-translate-x-1/2 after:rounded-[10px] after:bg-foreground after:px-2.5 after:py-1.5 after:text-xs after:whitespace-nowrap after:text-primary-foreground after:opacity-0 after:shadow-prompt after:transition-opacity after:content-[attr(data-tip)] hover:after:opacity-100 focus-within:after:opacity-100 max-[720px]:after:max-w-[min(280px,calc(100vw-32px))] max-[720px]:after:whitespace-normal"
@@ -107,9 +110,6 @@ export function AdsDetail(): ReactNode {
                   Edit
                 </Button>
               </div>
-              <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">
-                Creative ready
-              </span>
             </div>
           </div>
           <div className="grid gap-6 pt-4 min-[801px]:p-4">
