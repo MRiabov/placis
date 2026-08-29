@@ -47,3 +47,7 @@ One number is one decision.
     reviews**. The heading is the archived list, not the control that archives.
     (2026-08-29) Same day, later: a red archive icon on the card, not a labelled
     button, and it does not add a row of height. (2026-08-29)
+
+11. **Origin shows the platform mark** — Google Maps pin next to **Google Maps
+    listing**, Facebook mark next to **Facebook**. **Owner** is words only.
+    (2026-08-29)

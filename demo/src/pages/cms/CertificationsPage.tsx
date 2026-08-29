@@ -7,6 +7,7 @@ import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { Field, Select, TextArea, TextInput } from "@/ui/Field";
 import { PageHeading } from "@/ui/PageHeading";
+import { ReviewOrigin } from "@/ui/ReviewOrigin";
 
 type ReviewList = "top" | "all" | "archive";
 
@@ -320,9 +321,7 @@ export function CertificationsPage(): ReactNode {
                           </div>
                           <b>{review.author}</b>
                           <p className="text-sm">{review.quote}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {review.origin}
-                          </p>
+                          <ReviewOrigin origin={review.origin} />
                           <Button
                             className="mt-2"
                             onClick={() => setList(review.id, "all")}
@@ -368,7 +367,7 @@ function ReviewCard({
       <div className="pr-8 text-amber-700">{stars(review.stars)}</div>
       <b>{review.author}</b>
       <p className="text-sm">{review.quote}</p>
-      <p className="text-xs text-muted-foreground">{review.origin}</p>
+      <ReviewOrigin origin={review.origin} />
       <label className="mt-2 flex items-center gap-2 text-sm">
         <input
           checked={top}
