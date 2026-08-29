@@ -258,11 +258,12 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
 
 - **Top bar (upper block)** — the ad name is an **invisible silent-edit field**
   (plain heading text, adaptive width, hairline on focus only; blur/Enter saves,
-  no save button). The status badge sits **on the right next to the actions**:
-  Ad posting (disabled until ad posting), **Download (always available on an
-  existing ad — approve is a creation-flow gate, not a detail action)**, Edit.
-  On a **narrow** screen the name is a full-width row; the badge and actions
-  wrap below. They do not share one squeezed row. (2026-08-28)
+  no save button). The actions sit on the right: Ad posting (disabled until ad
+  posting), **Download (always available on an existing ad — approve is a
+  creation-flow gate, not a detail action)**, Edit, then the status badge.
+  On a **narrow** screen the name is a full-width row; Publish / Download /
+  Edit stay one row; the badge comes last (wraps after the buttons, never
+  between them). (2026-08-28; badge last 2026-08-29)
   Edit is the same outline control as Download — not a filled CTA (Approve is
   the filled action, and only on the create flow). Back to the list. The badge
   is an existing-ad status — **Creative ready** (next status: **Published** once

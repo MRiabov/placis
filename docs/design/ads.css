@@ -245,6 +245,13 @@
     flex-wrap: wrap;
     min-width: 0;
   }
+  .dhead-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
   .dsec {
     border-top: 1px solid var(--prompt-hairline);
     padding: 20px 22px 24px;
@@ -756,6 +763,7 @@
       width: 100%;
     }
     .dhead-actions { width: 100%; }
+    .dhead-buttons { flex: 1 1 auto; }
     .dsec { padding: 16px; }
     .formbody { padding: 16px; }
     .sech { padding: 14px 16px; }
