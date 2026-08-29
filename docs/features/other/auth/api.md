@@ -7,8 +7,9 @@ Clerk organization, tenant on `/v1/me`. Health is
 ## Serve only types on HTTP
 
 None of these fields are `jsonb`. `TenantRead` fields: id, website prefix, name,
-status. Clerk ids are not on these responses; the Clerk SDK verifies the
-sign-in.
+status, `subscription_status` (`active` / `canceled` / `none`). Clerk ids are
+not on these responses; the Clerk SDK verifies the sign-in. The website editor
+uses `subscription_status` to block Publish without a billing GET.
 
 ## Complete
 

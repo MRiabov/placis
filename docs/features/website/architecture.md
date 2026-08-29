@@ -155,6 +155,12 @@ workspace item and the publication dropdown), not on the live website version.
 unpublished canvas (`GET` with `publication_id`, then PATCH) is not a Website
 versions control in this UI ([api.md](api.md)). That is not website rollback.
 
+Website publication and live website rollback require
+`tenants.subscription_status=active`. If they stopped paying, the live website
+is already unpublished; POST is **402** `subscription_canceled`. Website
+editor PATCH still works. Usage & billing is how they pay again
+([billing architecture](../billing/architecture.md)).
+
 Edits to Details, Projects, certifications and reviews, website styles, or the
 unpublished website do not change the live website until the next website
 publication.

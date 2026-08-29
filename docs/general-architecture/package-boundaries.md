@@ -32,7 +32,8 @@ Package ownership. Workflows live in the feature docs this list points at.
 6. `ai` is the `LLMProvider` interface (and the one implementation behind it):
    generate, open-web search, traces / `ai_generations`. No website or ads
    business rules, and no tool registries that mutate product rows. [LLM layer](llm-layer.md).
-7. `billing` owns the usage credit ledger and CMS usage screen. Stripe checkout
-   may still be triggered from website activation. [Billing](../features/billing/README.md).
+7. `billing` owns the AI use ledger and Usage & billing. Stripe website
+   activation checkout stays in onboarding. Extra usage credit checkout may live
+   here when that slice lands. [Billing](../features/billing/README.md).
 8. Integrations (ETL adapters, LLM, storage, Stripe, email/SMS) are behind
    interfaces so tests run without network calls. [CI and delivery](ci-cd.md).

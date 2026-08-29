@@ -17,9 +17,9 @@ does not insert a second tenant. `/me` returns a tenant only when
   `website_addresses` row; null until 07), `name` (business display/legal name
   when known, else empty until business research fills it), `status`
   (`unactivated`/`active`/`suspended`), `subscription_status`
-  (`active`/`lapsed`/`none`, optimistic cache — not Clerk Billing yet),
-  `created_at`, `updated_at`. Do **not** store `usage_credit_usd_cents` here —
-  billing owns the ledger ([billing](../../billing/persistence.md)).
+  (`active`/`canceled`/`none`, optimistic cache — not Clerk Billing yet),
+  `created_at`, `updated_at`. Do **not** store remaining usage credit here —
+  billing owns the AI use ledger ([billing](../../billing/persistence.md)).
 - `tenant_memberships` — `id`, `tenant_id` fk, `clerk_user_id`, `role`,
   `created_at`; unique `(tenant_id, clerk_user_id)`
 

@@ -25,6 +25,17 @@ test("home, contact, and support are the static Placis website", async ({
   await expect(
     page.getByRole("link", { name: /Email help@placis.com/ }),
   ).toHaveAttribute("href", "mailto:help@placis.com");
+
+  await page.goto("/pricing/");
+  await expect(page.getByRole("heading", { name: "Pricing" })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Choose Placis Pro plan" }).first(),
+  ).toHaveAttribute("href", /\/onboarding\/find$/);
+  await expect(page.getByRole("link", { name: "Contact sales" })).toHaveAttribute(
+    "href",
+    "/support/",
+  );
+  await expect(page.getByText("$100 usage credit a month")).toBeVisible();
 });
 
 test("prompt submit goes to onboarding with the typed prompt", async ({

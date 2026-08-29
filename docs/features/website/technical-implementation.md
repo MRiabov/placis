@@ -60,6 +60,9 @@ Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). T
 6. Website publication is not a Cloudflare deploy. River asks the contractor
    website Worker to render HTML into R2 and purge; live GET is Cache then R2.
    Details: [cloudflare.md](cloudflare.md).
+7. Website publication and live website rollback require an active
+   subscription. Otherwise **402** `subscription_canceled`
+   ([billing](../billing/architecture.md)).
 
 ## Where things stand
 

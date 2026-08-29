@@ -4,7 +4,7 @@ import {
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
-import { Globe2, Megaphone, PanelLeft, UserRound, Wallet } from "lucide-react";
+import { Globe2, Megaphone, PanelLeft, UserRound } from "lucide-react";
 import { createContext, type ReactNode, useContext, useState } from "react";
 
 import { cn } from "@/lib/cn";
@@ -50,7 +50,9 @@ export function CmsShell(): ReactNode {
   const [profileOpen, setProfileOpen] = useState(
     profilePaths.some((path) => pathname.startsWith(path)),
   );
+  const [accountOpen, setAccountOpen] = useState(false);
   const profileActive = profilePaths.some((path) => pathname.startsWith(path));
+  const labelsOpen = expanded || overlayOpen;
 
   return (
     <div className="flex min-h-0 min-w-80 flex-1 overflow-hidden bg-background">
@@ -173,19 +175,34 @@ export function CmsShell(): ReactNode {
             to="/cms/ads"
             onNavigate={() => setOverlayOpen(false)}
           />
-          <NavLink
-            active={pathname.startsWith("/cms/billing")}
-            expanded={expanded || overlayOpen}
-            icon={<Wallet className="size-4" />}
-            label="Usage"
-            to="/cms/billing"
-            onNavigate={() => setOverlayOpen(false)}
-          />
         </nav>
-        <div className="mt-auto border-t border-border p-2">
+        <div className="relative mt-auto border-t border-border p-2">
+          {accountOpen ? (
+            <div
+              className={cn(
+                "absolute z-[80] rounded-xl border border-border bg-white p-1.5 shadow-sm",
+                labelsOpen
+                  ? "right-2 bottom-14 left-2"
+                  : "bottom-1 left-full ml-2 w-52",
+              )}
+            >
+              <Link
+                className="flex min-h-8 items-center rounded-lg px-2.5 text-xs text-zinc-600 hover:bg-zinc-50"
+                onClick={() => {
+                  setAccountOpen(false);
+                  setOverlayOpen(false);
+                }}
+                to="/cms/billing"
+              >
+                Usage & billing
+              </Link>
+            </div>
+          ) : null}
           <button
+            aria-expanded={accountOpen}
             aria-label="Open account menu"
             className="flex w-full items-center gap-2 rounded-lg px-1 py-1 text-left hover:bg-black/5"
+            onClick={() => setAccountOpen((value) => !value)}
             type="button"
           >
             <img
@@ -195,7 +212,7 @@ export function CmsShell(): ReactNode {
               src="/owner-avatar.jpg"
               width={32}
             />
-            {expanded || overlayOpen ? (
+            {labelsOpen ? (
               <span className="min-w-0">
                 <span className="block truncate text-sm text-foreground">
                   Aoife Byrne

@@ -25,8 +25,9 @@ Dictation / manual ASR / TTS is **not kept**: it's legacy, dropped for latency.
 - **Onboarding client-interview voice: out.** Text 04a stays the writer. Do not
   ship 04b as v1. `/cms` Start client interview stays hidden.
 
-`/cms` two-card home is not a voice surface. Details / Media library / billing
-can be explained from the knowledge base; they are not the main v1 tool surface.
+`/cms` two-card home is not a voice surface. Details / Media library / Usage &
+billing can be explained from the knowledge base; they are not the main v1 tool
+surface.
 
 ## Knowledge base
 
