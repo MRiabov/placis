@@ -147,7 +147,7 @@ export function CmsShell(): ReactNode {
                   onNavigate={() => setOverlayOpen(false)}
                 />
                 <ChildLink
-                  active={pathname === "/cms/projects"}
+                  active={pathname.startsWith("/cms/projects")}
                   label="Projects"
                   to="/cms/projects"
                   onNavigate={() => setOverlayOpen(false)}

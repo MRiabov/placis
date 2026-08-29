@@ -90,17 +90,25 @@ into a planned / applied / skipped / failed event.
 | `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
 | `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
 | `update_details` | the shared Details tool — one implementation ([details HTTP](../business-profile/details/api.md)) |
+| `create_project` | create a project (same `POST /v1/projects` as first click-off on **New project**) |
+| `set_project_title` | PATCH the project title (immediate) |
+| `set_project_cover` | PATCH cover to an existing media library item, or clear it |
+| `patch_project_description` | queue one Ask-first description hunk; **Apply** PATCHes the resulting `description` |
+| `archive_project` | same archive HTTP as the editor |
+| `unarchive_project` | same unarchive HTTP as the list |
 
 **Owner action = assistant action.** Each tool is another caller of the same
-website-editor / media-library / Details execution the owner already uses (Ask
-first / instant apply around canvas tools). Text `update_slot` is the same
-upsert as click-off PATCH. Image attach, crop, focal, and AI cleanup are the
-same functions as the website editor PATCH and `/cms/media`. `update_details` is
-the shared Details tool (Ads generator calls it too), not a website-assistant
-copy. Click-off on `/cms/details` stays PATCH. There is no second assistant
-implementation and no public copy helper the tools call. Copy-on-write
-(`parent_media_asset_id`, parent file never replaced) stays **inside** those
-functions.
+website-editor / media-library / Details / Projects execution the owner already
+uses (Ask first / instant apply around canvas tools). Text `update_slot` is the
+same upsert as click-off PATCH. Image attach, crop, focal, and AI cleanup are
+the same functions as the website editor PATCH and `/cms/media`.
+`update_details` is the shared Details tool (Ads generator calls it too), not a
+website-assistant copy. Click-off on `/cms/details` stays PATCH. Projects tools
+call the same `POST` / `PATCH` / archive HTTP as `/cms/projects`
+([projects HTTP](../business-profile/projects/api.md)). There is no second
+assistant implementation and no public copy helper the tools call.
+Copy-on-write (`parent_media_asset_id`, parent file never replaced) stays
+**inside** those functions.
 
 Planner: a named real photo → **attach first** (`update_slot` +
 `media_asset_id`). Cleanup only when they ask to tidy that photo.
@@ -361,10 +369,25 @@ notification. Onboarding 06 does not call it.
 
 Activity `summary` example: `Updated Business details`. Never a tool name.
 
+### Projects tools
+
+Same HTTP as `/cms/projects` ([projects HTTP](../business-profile/projects/api.md), [projects ADR](../business-profile/projects/ADR.md) 4). Writing on
+`/cms/projects/{id}` is Ads AI orbs, not this overlay. Description hunks are
+**Ask first** (pending in memory; **Apply** PATCHes). Title and cover PATCH
+immediately. Cover is an existing media library item or null — never
+`generate_image`, never an invented photo. Archive only if the owner asked.
+`patch` is a closed union: `span` (UTF-8 code points, exclusive end), `quote`
+(find exactly once), `append`, `fill` (empty description only). Refuse empty
+find, 0 or >1 quote matches, out-of-range span, fill when non-empty, a whole new
+description as a tool arg, overlapping pending hunks.
+
+Activity `summary` examples: `Updated description on {title}`, `Added to
+description on {title}`, `Wrote description on {title}`. Never a tool name.
+
 The website assistant never does a website publication, never bypasses
-validation, and never writes arbitrary registry JSON. It does not edit Projects
-or Certifications and reviews (those are Profile screens). Details writes are
-`update_details` only — not a side effect of `update_slot` or website styles. It
-does not delete or archive a website section or website page (hide stays:
-`set_section_visibility`). It does not upload or replace the file — replace
-stays the existing replace on `/cms/media` / website editor upload.
+validation, and never writes arbitrary registry JSON. Projects writes are the
+tools above — one implementation. It does not edit Certifications and reviews.
+Details writes are `update_details` only — not a side effect of `update_slot` or
+website styles. It does not delete or archive a website section or website page
+(hide stays: `set_section_visibility`). It does not upload or replace the file —
+replace stays the existing replace on `/cms/media` / website editor upload.
