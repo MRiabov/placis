@@ -45,17 +45,25 @@ export function HoursPicker(): ReactNode {
     <div className="grid max-w-xl gap-0">
       {rows.map((row, index) => (
         <div
-          className="grid grid-cols-[5.75rem_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2 py-1.5"
+          className={cn(
+            "grid grid-cols-[5.75rem_minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2 py-1.5",
+            "max-[720px]:grid-cols-[auto_minmax(0,1fr)_auto] max-[720px]:gap-x-1",
+          )}
           key={row.day}
         >
-          <div className="pt-3 text-sm tracking-tight">{row.day}</div>
+          <div className="pt-3 text-sm tracking-tight">
+            <span className="max-[720px]:hidden">{row.day}</span>
+            <span className="hidden max-[720px]:inline">
+              {row.day.slice(0, 2)}
+            </span>
+          </div>
           <div>
             {row.closed ? (
               <p className="flex min-h-11 items-center text-sm text-muted-foreground">
                 Closed
               </p>
             ) : (
-              <div className="grid grid-cols-[minmax(6.5rem,1fr)_20px_minmax(6.5rem,1fr)] items-center gap-2.5">
+              <div className="grid grid-cols-[minmax(6.5rem,1fr)_20px_minmax(6.5rem,1fr)] items-center gap-2.5 max-[720px]:grid-cols-[minmax(0,1fr)_12px_minmax(0,1fr)] max-[720px]:gap-1">
                 <TimeSelect
                   day={row.day}
                   label="Opens"
@@ -185,7 +193,7 @@ function TimeSelect({
   return (
     <select
       aria-label={`${day} ${label}`}
-      className="h-11 w-full min-w-[6.5rem] appearance-none rounded-lg border-0 bg-secondary bg-[url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%2371717a%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E')] bg-[length:12px] bg-[position:right_10px_center] bg-no-repeat pr-7 pl-3 text-sm tracking-tight"
+      className="h-11 w-full min-w-[6.5rem] appearance-none rounded-lg border-0 bg-secondary bg-[url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%2371717a%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E')] bg-[length:12px] bg-[position:right_10px_center] bg-no-repeat pr-7 pl-3 text-sm tracking-tight max-[720px]:min-w-0 max-[720px]:bg-[position:right_6px_center] max-[720px]:pr-5 max-[720px]:pl-2"
       onChange={(event) => onChange(event.target.value)}
       value={value}
     >

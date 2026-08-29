@@ -47,8 +47,9 @@ range per day — no Add a time block. These are when they will pick up the
 **marketing phone**, not appointment copy. Shown on the contact website page. Do
 **not** show an Appointment note field; persistence has no `note` column. One
 line per weekday at every width (short day name, Opens – Closes, Closed / copy),
-like Calendar desktop. Look:
-[design decision record](design-decision-record.md).
+like Calendar desktop. On a narrow screen the day is Mo / Tu / We / Th / Fr /
+Sa / Su and the gap after it is tight so the times are not clipped
+([look](design-decision-record.md) 3).
 
 #### Service areas
 
