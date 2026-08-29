@@ -2,8 +2,9 @@
 
 **Stub.** These billing docs are a stub and will be rewritten completely. Keep
 the meters and 402 rules below; do not treat this pack as Complete HTTP /
-persistence. The CMS usage mock is `cms.html?scene=billing` (not a
-`billing.html`). Left-nav place stays unset until that rewrite.
+persistence. The CMS usage mock is [`demo/`](../../../demo/README.md)
+`/cms/billing` (not a `billing.html`). Left-nav place stays unset until that
+rewrite.
 
 Usage credit and the CMS **usage** screen (the **$** credit). Stripe retainer /
 website activation checkout is still triggered from [08](../onboarding/pipeline/08-website-activation.md); this feature owns the

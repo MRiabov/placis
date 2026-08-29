@@ -34,8 +34,10 @@ and website publication. Ads live in [../ads/](../ads/README.md). Together they 
   screens; website page content edited there)
 - [media library](../other/media/README.md) — the media library + image editing
 - [testing.md](testing.md) — the website E2E test
-- [cms.html](../../design/cms.html) — static design mock of The CMS (open in a browser; `cms.css` /
-  `cms.js` sit beside it). Owned by [CMS](../../general-architecture/cms/README.md). Visual only; function is these specs.
+- [look app](../../../demo/README.md) — `/cms/website` in `demo/`
+- [cms.html](../../design/cms.html) — HTML archive of The CMS. Owned by
+  [CMS](../../general-architecture/cms/README.md). Visual only; function is
+  these specs.
 
 Profile screens (Details, Projects, Certifications and reviews, media library)
 sit beside the website editor. Each reviews website section’s ordered list is
