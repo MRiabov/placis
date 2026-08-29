@@ -64,7 +64,7 @@ TBD (do not assert UI). Go does not enforce idle.
     running.
 16. **Denied microphone** — Shared **notification** **Allow microphone access
     in your browser to talk. You can keep typing.** **Try again** retries
-    getUserMedia; **Switch to text mode** restores the chatbot. Overlay is not
+    getUserMedia; **Switch to text mode** opens the composer. Overlay is not
     restored until Switch to text mode. `POST …/realtime-connection` was not
     called.
 17. **Greeting once** — First Voice start plays the prerecorded greeting.

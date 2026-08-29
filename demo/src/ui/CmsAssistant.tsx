@@ -48,7 +48,6 @@ export type CmsAssistant = {
   notice: boolean;
   callAssistant: () => void;
   closeAssistant: () => void;
-  restoreChatbot: () => void;
   startVoice: () => void;
   setPlanMode: (value: boolean) => void;
   retryMicrophone: () => void;
@@ -130,7 +129,7 @@ export function CmsAssistantProvider({
     setNotice(false);
   }
 
-  function restoreChatbot(): void {
+  function switchToText(): void {
     stop();
     greetingRef.current = false;
     ownerRef.current = false;
@@ -165,11 +164,10 @@ export function CmsAssistantProvider({
     notice,
     callAssistant,
     closeAssistant,
-    restoreChatbot,
     startVoice,
     setPlanMode,
     retryMicrophone: startVoice,
-    switchToText: restoreChatbot,
+    switchToText,
     setNotice,
   };
 
@@ -179,7 +177,7 @@ export function CmsAssistantProvider({
       {notice ? (
         <Notice
           message="Allow microphone access in your browser to talk. You can keep typing."
-          onPrimary={restoreChatbot}
+          onPrimary={switchToText}
           onSecondary={startVoice}
           primary="Switch to text mode"
           secondary="Try again"
@@ -252,7 +250,7 @@ export function AssistantSession({
     planMode,
     setPlanMode,
     closeAssistant,
-    restoreChatbot,
+    switchToText,
     startVoice,
   } = useCmsAssistant();
   if (!open) {
@@ -306,17 +304,17 @@ export function AssistantSession({
                 pillClass,
                 "col-start-1 row-start-2 justify-self-start border border-border bg-white text-foreground",
               )}
-              onClick={restoreChatbot}
+              onClick={switchToText}
               type="button"
             >
-              Restore chatbot
+              Switch to text mode
             </button>
             <div className="relative col-start-2 row-start-1 row-span-2 grid size-[var(--voice-orb)] place-items-center justify-self-end self-center overflow-visible pointer-events-none isolation-isolate">
               <button
-                aria-label="Restore chatbot"
+                aria-label="Switch to text mode"
                 className="absolute top-0 right-0 z-[2] grid size-8 place-items-center rounded-full border-0 bg-transparent p-0 text-muted-foreground pointer-events-auto hover:text-foreground"
-                onClick={restoreChatbot}
-                title="Restore chatbot"
+                onClick={switchToText}
+                title="Switch to text mode"
                 type="button"
               >
                 <svg

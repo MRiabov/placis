@@ -11,7 +11,7 @@ screen context, Assistant screen switch).
 
 1. **As an owner**, I call one assistant from any screen in The CMS
    (bottom-right **Assistant**) and talk or type so I do not hunt for a separate
-   chatbot per screen. Default is Voice; I can switch to text.
+   assistant per screen. Default is Voice; I can switch to text.
 2. **As an owner**, I move between the website editor, Ads, Details, and other
    screens without losing the assistant thread or interrupting speech.
 3. **As an owner**, when I leave Voice and open the thread, I see what was said

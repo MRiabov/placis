@@ -17,10 +17,10 @@ owner-written; omit it rather than inventing it.
    assistant screen’s main area. Plan / Ask first switches are
    **website editor only**. Placement: bottom-right of the canvas / overlay
    (website design decision 18 geometry), not a full-screen takeover.
-   (2026-08-28) (2026-08-29): The **call** is the **Assistant**
-   button (design decision 11), not hunting for this overlay. Orb / chatbot look
-   stays this overlay once they have called. Closed until they call. Same day,
-   later: that button is bottom-right of the main pane, not top-right.
+   (2026-08-28) (2026-08-29): The **call** is the **Assistant** button (design
+   decision 11), not hunting for this overlay. Orb / composer look stays this
+   overlay once they have called. Closed until they call. Same day, later: that
+   button is bottom-right of the main pane, not top-right.
 
 2. **Look is DustOrb** — Empty field fades to the particle orb. Not website
    design decision 18’s “soft glowing circle” HTML stand-in. Not the 44px Ads
@@ -69,24 +69,24 @@ owner-written; omit it rather than inventing it.
    as the CMS voice orb. Native button paint is stripped so a click does not
    flash a browser control. Cue sits to the left of the orb. (2026-08-28)
 
-7. **Website-editor orb size and click target** — Website-editor orb is
-   **50vw** at ≤480px (`min(50vw, 50dvh)`), **30vw** on wider viewports
+7. **Website-editor orb size and click target** — Website-editor orb is **50vw**
+   at ≤480px (`min(50vw, 50dvh)`), **30vw** on wider viewports
    (`min(30vw, 24rem)`). (2026-08-28) Same day, later: wider viewports are
    `min(5.5rem, 30vw)` again (same size as the onboarding guide). ≤480px stays
-   **50vw**. Voice Apply / Reject / Restore chatbot stay a compact cluster to
-   the left of the orb; they do not stretch across the canvas. Same day, later:
-   desktop / tablet **click** target is a **2.75rem circle** (particle wrap
-   stays `min(5.5rem, 30vw)`); clicks outside that circle pass through to the
-   canvas. Close and Restore chatbot still capture. ≤480px hit is
+   **50vw**. Voice Apply / Reject / Switch to text mode stay a compact cluster
+   to the left of the orb; they do not stretch across the canvas. Same day,
+   later: desktop / tablet **click** target is a **2.75rem circle** (particle
+   wrap stays `min(5.5rem, 30vw)`); clicks outside that circle pass through to
+   the canvas. Close and Switch to text mode still capture. ≤480px hit is
    `min(12rem, 42vw)`. (2026-08-28)
 
-8. **Denied microphone uses the shared notification** — CMS: restore the
-   chatbot and the Ads/Details **notification** (**Allow microphone access in
+8. **Denied microphone uses the shared notification** — CMS: open the
+   composer and the Ads/Details **notification** (**Allow microphone access in
    your browser to talk. You can keep typing.**). Revert is hidden (nothing to
    undo). Onboarding: return to the cue (**Allow microphone access in your
    browser**); click the orb retries. (2026-08-28) Same day, later: CMS stays
    on Voice until they pick. Buttons are **Try again** (retry the microphone)
-   and **Switch to text mode** (Restore chatbot). Not Revert / OK. Onboarding
+   and **Switch to text mode**. Not Revert / OK. Onboarding
    cue is unchanged. (2026-08-28)
 
 9. **Prerecorded greeting / intro plays once** — HTML mocks:
@@ -102,9 +102,10 @@ owner-written; omit it rather than inventing it.
 11. **CMS assistant is called from the top-right of the main pane** — Every
     screen in The CMS, including `/cms`, has a pinned top-right **Assistant**
     button on the main pane (not a left-nav item). Click calls Voice (DustOrb +
-    Restore chatbot). Switch to text is Restore chatbot / **Voice** in the
-    composer. Close returns to the button. Not the onboarding bottom-right
-    voice guide. Website-editor Plan / Ask first stay on `/cms/website` only,
-    and only while the chatbot is showing. Architecture: [ADR](ADR.md) 10.
-    (2026-08-29) Same day, later: **bottom-right** of the main pane, not
-    top-right. On a narrow website editor it sits above the workspace bar.
+    Switch to text mode). Switch to text is **Switch to text mode** / **Voice**
+    in the composer. Close returns to the button. Not the onboarding
+    bottom-right voice guide. Website-editor Plan / Ask first stay on
+    `/cms/website` only, and only while the composer is showing. Architecture:
+    [ADR](ADR.md) 10. (2026-08-29) Same day, later: **bottom-right** of the main pane,
+    not top-right. On a narrow website editor it sits above the workspace bar.
+    Same day, later: the Voice pill is **Switch to text mode**. (2026-08-29)

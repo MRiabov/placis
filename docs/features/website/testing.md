@@ -28,7 +28,7 @@ the [onboarding E2E](../onboarding/testing.md). DB asserts name the tables from 
    - DB: a website slot value changes through that PATCH; `ai_generations`
      records the batch; `edit_history` has an agent batch.
    - UI: muted tool-call rows in the thread. Apply / Reject pills on the canvas
-     over the chatbot if Ask first; no revert-after-apply.
+     over the composer if Ask first; no revert-after-apply.
 
 5. **Website publication** — the owner does a website publication.
    - DB: `website_publications` (status=`published`, `active=true`,
