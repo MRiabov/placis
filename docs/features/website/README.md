@@ -35,7 +35,7 @@ and website publication. Ads live in [../ads/](../ads/README.md). Together they 
   screens; website page content edited there)
 - [media library](../other/media/README.md) — the media library + image editing
 - [testing.md](testing.md) — the website E2E test
-- [look app](../../../demo/README.md) — `/cms/website` in `demo/`
+- [look app](../../../apps/demo/README.md) — `/cms/website` in `apps/demo/`
 - [cms.html](../../design/cms.html) — HTML archive of The CMS. Owned by
   [CMS](../../general-architecture/cms/README.md). Visual only; function is
   these specs.

@@ -37,8 +37,8 @@ apps/placis-website/playwright-report/
 packages/*/dist/
 openapi.json
 frontend-2/dist/
-demo/dist/
-demo/.wrangler/
+apps/demo/dist/
+apps/demo/.wrangler/
 
 # Agent runtime state
 .reasonix/

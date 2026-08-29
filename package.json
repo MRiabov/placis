@@ -22,7 +22,10 @@
     "placis-website:build": "pnpm --dir apps/placis-website build",
     "placis-website:check": "pnpm --dir apps/placis-website check",
     "placis-website:test": "pnpm --dir apps/placis-website test",
-    "placis-website:test:e2e": "pnpm --dir apps/placis-website test:e2e"
+    "placis-website:test:e2e": "pnpm --dir apps/placis-website test:e2e",
+    "demo:dev": "pnpm --dir apps/demo dev",
+    "demo:build": "pnpm --dir apps/demo build",
+    "demo:check": "pnpm --dir apps/demo check"
   },
   "devDependencies": {
     "@types/node": "^26.3.0",

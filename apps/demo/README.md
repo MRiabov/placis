@@ -12,7 +12,7 @@ remain canonical. From the Placis repo root:
   dest `docs/` (PRDs, design decision records, glossary). No HTML mocks; this
   Vite app superseded them. No zip — git is the send channel.
 
-Copy-back: rsync this app onto `demo/`, then copy `glossary.md` onto
+Copy-back: rsync this app onto Placis `apps/demo/`, then copy `glossary.md` onto
 `docs/glossary.md`. Product-doc edits in dest `docs/` copy back onto the same
 paths under Placis `docs/`.
 
@@ -58,7 +58,8 @@ deploys `dist/` to Cloudflare Pages (`placis-demo`). A `pages.dev` URL works
 until the custom hostname is attached.
 
 This folder has its own `pnpm-workspace.yaml` so install here does not join
-the parent Placis workspace. Do not add this folder to the repo-root
+the parent Placis workspace. The repo-root workspace matches `apps/*` and
+excludes `apps/demo`. Do not add this folder to the repo-root
 `pnpm-workspace.yaml`.
 
 ## Check
