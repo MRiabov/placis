@@ -3,7 +3,8 @@
 Look and interaction for `/cms/projects`. Product: [ADR.md](ADR.md). Screen:
 [frontend.md](frontend.md). Theme:
 [CMS design decision record](../../../general-architecture/cms/design-decision-record.md).
-Mock: [cms.html](../../../design/cms.html) (`?scene=projects`).
+Mock: [`demo/`](../../../../demo/README.md) `/cms/projects`. HTML archive:
+[cms.html](../../../design/cms.html).
 
 Status: decided (dates on each entry). Do not silently replace the old entry.
 One number is one decision. **Why** is owner-written; omit it rather than
