@@ -9,9 +9,9 @@ screen context, Assistant screen switch).
 
 ## Stories
 
-1. **As an owner**, I call one assistant from any screen in The CMS (top-right
-   **Assistant**) and talk or type so I do not hunt for a separate chatbot per
-   screen. Default is Voice; I can switch to text.
+1. **As an owner**, I call one assistant from any screen in The CMS
+   (bottom-right **Assistant**) and talk or type so I do not hunt for a separate
+   chatbot per screen. Default is Voice; I can switch to text.
 2. **As an owner**, I move between the website editor, Ads, Details, and other
    screens without losing the assistant thread or interrupting speech.
 3. **As an owner**, when I leave Voice and open the thread, I see what was said
@@ -26,8 +26,8 @@ screen context, Assistant screen switch).
 ## In
 
 - One assistant thread per activated tenant. Hydrate when they **call** the
-  assistant (top-right **Assistant**), including `/cms`. Visiting `/cms` without
-  calling does not hydrate.
+  assistant (bottom-right **Assistant**), including `/cms`. Visiting `/cms`
+  without calling does not hydrate.
 - Voice and text share that thread. Tool lines land as they run.
 - Website editor: plan vs continuous, Ask first vs instant apply, Follow (canvas
   snap).
@@ -38,8 +38,8 @@ screen context, Assistant screen switch).
 - Details: `update_details` is general; Follow on that screen; notification (OK
   / Revert) elsewhere.
 - Guide-only on `/cms`, Projects, Certifications and reviews, media library,
-  billing (usage). Called from the same top-right **Assistant**. Default Voice;
-  switch to text.
+  billing (usage). Called from the same bottom-right **Assistant**. Default
+  Voice; switch to text.
 - Onboarding assistant: isolated, read-only this pass, not billed.
 - Assistant debit of billing usage credit (**×5** on our cost). Billed work is
   a text LLM call, image generate/cleanup, or ads generate. Voice is xAI

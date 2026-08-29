@@ -178,7 +178,13 @@ export function CmsLayout(): ReactNode {
             }}
           >
             <Outlet />
-            <AssistantLaunch className="absolute top-3 right-3 z-30" />
+            <AssistantLaunch
+              className={cn(
+                "absolute right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] z-30",
+                pathname.startsWith("/cms/website") &&
+                  "max-[1100px]:bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))]",
+              )}
+            />
             <CmsAssistantLayer />
           </CmsLayoutContext.Provider>
         </CmsAssistantProvider>

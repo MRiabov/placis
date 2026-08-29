@@ -41,7 +41,7 @@ instead of silently replacing it.
    Distinct from discarding the thread at 24h. (2026-08-28) Same day, later:
    new thread is `POST /v1/assistant/thread/new`; previous `status=completed`
    (not `cleared`). Unique `(tenant_id) WHERE status = 'current'`. (2026-08-28)
-   (2026-08-29): Hydrate when they **call** the assistant (top-right
+   (2026-08-29): Hydrate when they **call** the assistant (bottom-right
    **Assistant**), including `/cms`. Visiting `/cms` without calling does not
    hydrate. Overlay-mount hydrate is the old trigger.
 
@@ -109,4 +109,5 @@ instead of silently replacing it.
     assistant screen. Plan / Ask first stay website editor only. Do not clone
     this button onto onboarding (onboarding stays the bottom-right voice guide).
     Not an **AI tools** left-nav item. Look:
-    [design decision 11](design-decision-record.md). (2026-08-29)
+    [design decision 11](design-decision-record.md). (2026-08-29) Same day,
+    later: the call is bottom-right of the main pane.

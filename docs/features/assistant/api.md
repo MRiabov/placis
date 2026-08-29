@@ -59,8 +59,8 @@ socket; event structs still land in `/openapi.json` for typegen.
 ### GET /v1/assistant/thread
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** top-right **Assistant** on an assistant screen, including `/cms`.
-  Visiting `/cms` without calling does not hydrate.
+- **Callers:** bottom-right **Assistant** on an assistant screen, including
+  `/cms`. Visiting `/cms` without calling does not hydrate.
 - **Response:** current thread `*Read` (`id`, `status`, `last_activity_at`) +
   ordered `items` (`kind`, `body`, `icon`, `created_at`). Empty thread is `200`
   with `items: []`.
