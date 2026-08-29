@@ -43,3 +43,6 @@ frontend-2/dist/
 
 # Test runner output
 **/test-results/
+
+# Sanitized designer packages (HTML mocks + product/look docs; local only)
+docs/design/exported-docs/
