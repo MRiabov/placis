@@ -94,11 +94,14 @@ and the approve block at the end.
 - large cards, one per ad: the ad's image, name/offer, status badge, last
   updated, and a performance strip (impressions / clicks / spend) that is
   **grayed out as a stub** until ad posting is connected and real metrics exist
-- **Archive** is a red archive icon on the card (not a labelled button; it does
-  not add a row). Toast with **Undo** (unarchives). Collapsed **Archive**
+- **The whole card is the hit.** No Archive control on the card. Click opens
+  `/cms/ads/{id}`.
+- **Archive** is a red outline button on `/cms/ads/{id}` after the two-column
+  body, not in the Publish / Download / Edit row. Same as projects. Toast with
+  **Undo** (unarchives) after returning to the list. Collapsed **Archive**
   heading under the cards (chevron down on the right; default collapsed).
-  Unarchive from there. Not a hard delete. Same look as Certifications and
-  reviews Archive. (2026-08-29)
+  Unarchive from there. Not a hard delete. The disclosure matches
+  Certifications and reviews Archive. (2026-08-29)
 - cards are **large by default** — contractors rarely run more than 6 ads at
   once, and 6 cards fill most of the screen; when more than 6 ads exist the list
   **compresses to dense rows**
@@ -291,6 +294,8 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
     (read-only, not editable yet, below the images).
   - **Right (outputs)**: Performance with Ad leads directly under it (stacks to
     one column on narrow screens).
+- **Archive** — red outline, after the two-column body, not ink. Same as
+  projects. Returns to the list with toast Undo. (2026-08-29)
 - **Performance** — impressions, clicks, spend, results, cost per ad lead
   (grayed stub until ad posting connects) plus the projection line: "At this
   spend, we expect X more ad leads in the next 30 days."

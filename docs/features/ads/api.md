@@ -29,7 +29,7 @@ then PATCH the placement.
   on click-off does not write a Published ad. Canonical:
   [HTTP conventions](../../general-architecture/api.md).
 - `DELETE /v1/ads/{ad_id}` — ad draft only
-- `POST /v1/ads/{ad_id}/archive` — **Archive** on the list card. Sets
+- `POST /v1/ads/{ad_id}/archive` — **Archive** on `/cms/ads/{id}`. Sets
   `status=archived`. Leaves the list.
 - `POST /v1/ads/{ad_id}/unarchive` — **Unarchive** on the Archive list, toast
   Undo. Restores `draft` when the ad has no approved variant, otherwise

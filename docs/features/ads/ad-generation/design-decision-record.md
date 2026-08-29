@@ -14,7 +14,12 @@ inventing it.
    labelled button, and it does not add a row. Toast with **Undo** after
    archive. Collapsed **Archive** heading under the cards (chevron down on the
    right; default collapsed). Unarchive is a labelled outline button on that
-   list. Same look as Certifications and reviews Archive. (2026-08-29)
+   list. Same look as Certifications and reviews Archive. (2026-08-29) Same
+   day, later: ads Archive is the project pattern, not the reviews icon. The
+   whole list card is the hit; no controls on the card. **Archive** is a red
+   outline button on `/cms/ads/{id}` after the two-column body, not in the
+   Publish / Download / Edit row. List toast Undo and collapsed Archive /
+   Unarchive stay. (2026-08-29)
 
 2. **Last ad lead has no divider** — Dividers sit between ad leads only. The
    last row has no bottom line: on a narrow screen it sits on the canvas, and
