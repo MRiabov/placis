@@ -51,6 +51,18 @@ Every DTO field is constrained: strings `minLength`/`maxLength`, numbers
 **save on click-off** (no Save control). Website styles use **explicit apply**,
 not save on click-off.
 
+**TODO:** Save on click-off writes the unpublished website or an ad draft. It
+does not write the live website, a published website copy, or a Published ad.
+The website editor already does this
+([website editing](../features/website/editing.md)). Ads stay on the ad draft
+until ad posting. Projects should follow the same split; today click-off
+PATCHes the live `business_profile.projects` row that website publication and
+ads also read
+([projects HTTP](../features/business-profile/projects/api.md)). A media
+library item already used on the live website is not mutated in place on
+click-off
+([media library](../features/other/media/persistence.md)).
+
 Verbs: `Create` / `Update` / `Get` / `List` / `Delete`. Domain nouns in paths.
 Do not say `slug` in paths or fields (website prefix / website page path).
 

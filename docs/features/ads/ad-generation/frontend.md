@@ -257,9 +257,11 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
 (the accordion).
 
 - **Top bar (upper block)** — the ad name is an **invisible silent-edit field**
-  (plain heading text, adaptive width, hairline on focus only; blur/Enter saves,
-  no save button). The actions sit on the right: Ad posting (disabled until ad
-  posting), **Download (always available on an existing ad — approve is a
+  (plain heading text, adaptive width, hairline on focus only; blur/Enter is
+  save on click-off of the ad draft, no save button). Canonical:
+  [HTTP conventions](../../../general-architecture/api.md). The actions sit
+  on the right: Ad posting (disabled until ad posting),
+  **Download (always available on an existing ad — approve is a
   creation-flow gate, not a detail action)**, Edit, then the status badge.
   On a **narrow** screen the name is a full-width row; Publish / Download /
   Edit stay one row; the badge comes last (wraps after the buttons, never
