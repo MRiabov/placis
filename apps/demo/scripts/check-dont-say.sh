@@ -3,11 +3,14 @@ set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 demo="$(cd "$here/.." && pwd)"
 
-if [[ -d "$demo/../cmd/ci/check-dont-say" && -f "$demo/../docs/glossary.md" ]]; then
-  repo="$(cd "$demo/.." && pwd)"
-  cd "$repo"
-  exec go run ./cmd/ci/check-dont-say --all --glossary docs/glossary.md --roots demo
-fi
+root="$demo"
+while [[ "$root" != "/" ]]; do
+  if [[ -d "$root/cmd/ci/check-dont-say" && -f "$root/docs/glossary.md" ]]; then
+    cd "$root"
+    exec go run ./cmd/ci/check-dont-say --all --glossary docs/glossary.md --roots apps/demo
+  fi
+  root="$(cd "$root/.." && pwd)"
+done
 
 if [[ -d "$demo/ci/check-dont-say" && -f "$demo/glossary.md" ]]; then
   cd "$demo"

@@ -1,8 +1,8 @@
 # Design look
 
-Editable look lives in [`demo/`](../../demo/README.md) (Vite + React + Tailwind). From that folder:
-`pnpm install && pnpm dev` — <http://localhost:5176>. `?dev=1` opens the yellow
-developer strip; `?shot=1` hides it.
+Editable look lives in [`apps/demo/`](../../apps/demo/README.md) (Vite + React + Tailwind). From that
+folder: `pnpm install && pnpm dev` — <http://localhost:5176>. `?dev=1` opens the
+yellow developer strip; `?shot=1` hides it.
 
 The HTML in this directory is an **archive**. Do not start new look work
 here. Specs still win when they disagree with the look
@@ -28,5 +28,5 @@ Static HTML. Open in a browser; there is no build. Shared tokens:
 Look notes: [CMS design.md](../general-architecture/cms/design.md),
 [onboarding design.md](../features/onboarding/design.md),
 [ad generation frontend](../features/ads/ad-generation/frontend.md),
-[Projects look](../features/business-profile/projects/design.md) (`demo/`
+[Projects look](../features/business-profile/projects/design.md) (`apps/demo/`
 `/cms/projects`).

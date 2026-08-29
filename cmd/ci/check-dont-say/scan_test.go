@@ -381,16 +381,19 @@ func TestEnabledTrees(t *testing.T) {
 	if inEnabledTree("packages/website-components/src/registry/hero/type_first/docs.md", false) {
 		t.Fatal("packages markdown is outside enabled trees")
 	}
-	if !inEnabledTree("demo/src/layout/CmsLayout.tsx", false) {
+	if inEnabledTree("demo/src/layout/CmsLayout.tsx", false) {
+		t.Fatal("root demo/ is no longer the look app")
+	}
+	if !inEnabledTree("apps/demo/src/layout/CmsLayout.tsx", false) {
 		t.Fatal("demo should be enabled")
 	}
-	if !inHome("demo/src/pages/cms/WebsitePage.tsx", []string{"website"}) {
+	if !inHome("apps/demo/src/pages/cms/WebsitePage.tsx", []string{"website"}) {
 		t.Fatal("look app is website home")
 	}
 	if !inHome("src/pages/cms/WebsitePage.tsx", []string{"ads"}) {
 		t.Fatal("exported look src is every feature home")
 	}
-	if !scanExt("demo/src/layout/CmsLayout.tsx", false) {
+	if !scanExt("apps/demo/src/layout/CmsLayout.tsx", false) {
 		t.Fatal("demo .tsx should be scanned")
 	}
 	if scanExt("apps/placis-website/src/components/TopBar.tsx", false) {

@@ -33,12 +33,11 @@ Do not say “skeleton”; the name is loading placeholder ([glossary](../glossa
 
 A shared **notification**: fixed bottom-right, above the main area. Message +
 two actions. Details `update_details`: **Revert** + **OK**. Denied microphone:
-**Try again** + **Switch to text mode**. Usage credit 20% / empty: **Usage &
-billing** + **Dismiss** ([billing frontend](../features/billing/frontend.md)).
-Look in [`demo/`](../../demo/README.md) `/cms/ads` and the HTML archive
-[ads.html](../design/ads.html) (Saved years in business to Business details).
-On a **narrow** screen (≤1100px), sit **above** the Sites workspace bottom bar
-(not under thumbs or the home indicator).
+**Try again** + **Switch to text mode**. Usage credit 20% / empty:
+**Usage & billing** + **Dismiss** ([billing frontend](../features/billing/frontend.md)). Look in [`apps/demo/`](../../apps/demo/README.md)
+`/cms/ads` and the HTML archive [ads.html](../design/ads.html) (Saved years in business to Business
+details). On a **narrow** screen (≤1100px), sit **above** the Sites workspace
+bottom bar (not under thumbs or the home indicator).
 
 `update_details` ([details HTTP](../business-profile/details/api.md)): the write is applied; OK keeps it; Revert
 undoes that `business_profile_edits` increment. Website assistant, Ads

@@ -49,7 +49,7 @@ nothing changed, say that.
 If dest `docs/` changed, copy those files back onto the same paths under
 Placis `docs/` **before** exporting (`rsync --delete` on dest `docs/` would
 wipe them). If the Vite app changed, do not run `sync-look-demo.sh` until
-those edits are copied back onto Placis `demo/` or the user says to overwrite.
+those edits are copied back onto Placis `apps/demo/` or the user says to overwrite.
 
 Then run the exporter (and sync only if dest look files are safe to replace).
 

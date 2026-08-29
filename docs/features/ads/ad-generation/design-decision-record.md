@@ -1,7 +1,7 @@
 # Ads design decision record
 
 Look and interaction for Ads. Architecture: [ADR.md](ADR.md). Screens: [frontend.md](frontend.md).
-Tokens: [CMS design.md](../../../general-architecture/cms/design.md). Look: [`demo/`](../../../../demo/README.md) `/cms/ads`. HTML archive:
+Tokens: [CMS design.md](../../../general-architecture/cms/design.md). Look: [`apps/demo/`](../../../../apps/demo/README.md) `/cms/ads`. HTML archive:
 [ads.html](../../../design/ads.html).
 
 Status: decided (dates on each entry). Do not silently replace the old entry.
