@@ -350,7 +350,7 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
                   to: "/cms/projects",
                 });
               }}
-              variant="outline"
+              variant="danger"
             >
               Archive
             </Button>

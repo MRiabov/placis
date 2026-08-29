@@ -63,7 +63,7 @@ field controls:
   cover. Crop / cleanup stay `/cms/media`.
 - **Title** (1–80)
 - **Description** (1–2000)
-- **Archive** — outline, after the fields, not ink. Hidden until there is a
+- **Archive** — red outline, after the fields, not ink. Hidden until there is a
   row.
 
 Persist on **click-off**. No Save. New project: first click-off on title

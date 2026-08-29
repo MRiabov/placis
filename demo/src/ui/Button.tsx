@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 import { cn } from "@/lib/cn";
 
-type ButtonVariant = "ink" | "outline";
+type ButtonVariant = "ink" | "outline" | "danger";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
@@ -11,6 +11,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 const variants: Record<ButtonVariant, string> = {
   ink: "border-black/10 bg-primary text-primary-foreground hover:bg-zinc-800",
   outline: "border-border bg-background text-foreground hover:bg-zinc-50",
+  danger: "border-red-500 bg-background text-red-700 hover:bg-red-50",
 };
 
 export function Button({
