@@ -1,18 +1,18 @@
 import { cn } from "@/lib/cn";
 
 /** HTML `--cms-radius-panel` and hardcoded 12px: onboarding cards, reviews, combo. */
-export const panelClass = "rounded-panel border border-border bg-white";
+const panelClass = "rounded-panel border border-border bg-white";
 
 /** HTML `.cms-home-card`: 28px, hairline, heavier shadow than ads. */
-export const chooserCardClass =
+const chooserCardClass =
   "rounded-prompt border border-hairline bg-white shadow-chooser";
 
 /** HTML `.cms-notice`: 16px, hairline, prompt shadow. */
-export const noticeClass =
+const noticeClass =
   "rounded-[16px] border border-hairline bg-white shadow-prompt";
 
 /** HTML `.onb-card`: panel radius, 20px 24px padding, 10px gap. */
-export const onbCardClass = `${panelClass} grid gap-2.5 px-6 py-5`;
+const onbCardClass = `${panelClass} grid gap-2.5 px-6 py-5`;
 
 /** HTML `--cms-radius-card`. Ads pass `rounded-prompt border-hairline shadow-prompt`. */
 export function card(

@@ -62,7 +62,9 @@ export function FeaturedServices({
                 event.preventDefault();
                 setRows((current) => [
                   ...current.map((item) =>
-                    item.id === row.id ? { ...item, name: names[0] } : item,
+                    item.id === row.id
+                      ? { ...item, name: names[0] ?? item.name }
+                      : item,
                   ),
                   ...names.slice(1).map((name) => ({
                     id: nextRowId(),

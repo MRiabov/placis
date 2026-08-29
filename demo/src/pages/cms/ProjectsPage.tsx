@@ -2,13 +2,13 @@ import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
 import {
   listSearch,
   projectRows,
   projectSearch,
 } from "@/pages/cms/project-rows";
-import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
 import { PageHeading } from "@/ui/PageHeading";
 

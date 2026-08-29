@@ -25,7 +25,7 @@ export function OnboardingDevProvider({
 export function useOnboardingDev(): OnboardingDev {
   const value = useContext(OnboardingDevContext);
   if (!value) {
-    throw new Error("useOnboardingDev must be used inside OnboardingShell");
+    throw new Error("useOnboardingDev must be used inside OnboardingLayout");
   }
   return value;
 }

@@ -1,6 +1,6 @@
 # Don't-say checker — worked examples
 
-The ban list is the `### Don't say` table in `docs/glossary.md`. This file is
+The ban list is the `## Don't say` table in `docs/glossary.md`. This file is
 the pass/fail reference for `cmd/ci/check-dont-say`. The checker skips this
 directory, so illustrations may contain banned words.
 

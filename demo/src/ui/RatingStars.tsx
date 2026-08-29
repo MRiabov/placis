@@ -10,10 +10,7 @@ const slots = [0, 1, 2, 3, 4] as const;
 export function RatingStars({ rating }: RatingStarsProps): ReactNode {
   const clamped = Math.min(5, Math.max(0, rating));
   return (
-    <span
-      aria-hidden="true"
-      className="inline-flex items-center text-[#fbbc04]"
-    >
+    <span aria-hidden="true" className="inline-flex items-center text-star">
       {slots.map((slot) => {
         const fill = Math.min(1, Math.max(0, clamped - slot));
         return (
@@ -23,7 +20,7 @@ export function RatingStars({ rating }: RatingStarsProps): ReactNode {
               className="absolute inset-0 overflow-hidden"
               style={{ width: `${fill * 100}%` }}
             >
-              <Star className="size-3 fill-current text-[#fbbc04]" />
+              <Star className="size-3 fill-current text-star" />
             </span>
           </span>
         );

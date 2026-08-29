@@ -21,8 +21,16 @@ func run(args []string) error {
 	all := flags.Bool("all", false, "scan enabled trees instead of listed files")
 	frontend := flags.Bool("frontend", false, "include frontend-2")
 	glossaryPath := flags.String("glossary", "docs/glossary.md", "path to glossary.md")
+	rootsFlag := flags.String("roots", "", "comma-separated scan roots (default: built-in list)")
 	if err := flags.Parse(args); err != nil {
 		return err
+	}
+
+	overrideRoots := splitRoots(*rootsFlag)
+	if overrideRoots != nil {
+		prev := defaultRoots
+		defaultRoots = overrideRoots
+		defer func() { defaultRoots = prev }()
 	}
 
 	src, err := os.ReadFile(*glossaryPath)
@@ -72,6 +80,20 @@ func run(args []string) error {
 		fmt.Fprintf(os.Stderr, "%s:%d: don't say %q (say %s)\n  %s\n", h.path, h.line, h.tok.phrase, h.tok.say, h.text)
 	}
 	return fmt.Errorf("%d Don't-say hit(s)", len(hits))
+}
+
+func splitRoots(raw string) []string {
+	if strings.TrimSpace(raw) == "" {
+		return nil
+	}
+	var roots []string
+	for _, part := range strings.Split(raw, ",") {
+		part = strings.TrimSpace(part)
+		if part != "" {
+			roots = append(roots, part)
+		}
+	}
+	return roots
 }
 
 func glossaryStaged(files []string, glossaryPath string) bool {

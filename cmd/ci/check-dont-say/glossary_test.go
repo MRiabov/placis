@@ -62,7 +62,7 @@ func TestParseDontSayTableMissingHeading(t *testing.T) {
 }
 
 func TestParseDontSayTableMissingHeader(t *testing.T) {
-	src := "### Don't say\n\n| left | right |\n| --- | --- |\n| foo | bar |\n\n## Code naming rules\n"
+	src := "## Don't say\n\n| left | right |\n| --- | --- |\n| foo | bar |\n\n## Internal\n"
 	_, err := parseDontSayTable(src)
 	if err == nil {
 		t.Fatal("expected missing Don't say | Say header to fail")
@@ -70,7 +70,7 @@ func TestParseDontSayTableMissingHeader(t *testing.T) {
 }
 
 func TestParseDontSayTableMissingSeparator(t *testing.T) {
-	src := "### Don't say\n\n| Don't say | Say |\n| foo | bar |\n\n## Code naming rules\n"
+	src := "## Don't say\n\n| Don't say | Say |\n| foo | bar |\n\n## Internal\n"
 	_, err := parseDontSayTable(src)
 	if err == nil {
 		t.Fatal("expected missing separator to fail")
@@ -78,7 +78,7 @@ func TestParseDontSayTableMissingSeparator(t *testing.T) {
 }
 
 func TestParseDontSayTableNoRows(t *testing.T) {
-	src := "### Don't say\n\n| Don't say | Say |\n| --- | --- |\n\n## Code naming rules\n"
+	src := "## Don't say\n\n| Don't say | Say |\n| --- | --- |\n\n## Internal\n"
 	_, err := parseDontSayTable(src)
 	if err == nil {
 		t.Fatal("expected empty table to fail")
@@ -86,7 +86,7 @@ func TestParseDontSayTableNoRows(t *testing.T) {
 }
 
 func TestParseDontSayTableMissingSectionEnd(t *testing.T) {
-	src := "### Don't say\n\n| Don't say | Say |\n| --- | --- |\n| foo | bar |\n"
+	src := "## Don't say\n\n| Don't say | Say |\n| --- | --- |\n| foo | bar |\n"
 	_, err := parseDontSayTable(src)
 	if err == nil {
 		t.Fatal("expected missing ## end to fail")

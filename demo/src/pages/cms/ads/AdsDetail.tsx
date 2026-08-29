@@ -1,9 +1,8 @@
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { type ReactNode, useMemo, useState } from "react";
-
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { ads } from "@/pages/cms/ads/AdsList";
 import { adsSearch } from "@/pages/cms/ads/search";
-import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { Field, TextInput } from "@/ui/Field";
@@ -13,6 +12,9 @@ const startIso = "2026-08-15";
 
 function parseIso(iso: string): Date {
   const [year, month, day] = iso.split("-").map(Number);
+  if (year === undefined || month === undefined || day === undefined) {
+    return new Date(NaN);
+  }
   return new Date(year, month - 1, day);
 }
 

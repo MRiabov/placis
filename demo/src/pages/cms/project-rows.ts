@@ -1,6 +1,6 @@
 import { photo } from "@/lib/fixtures";
 
-export type DemoFlags = {
+type DemoFlags = {
   dev?: string;
   shot?: string;
 };
@@ -20,10 +20,11 @@ function flagOn(value: unknown): boolean {
   return value === "1" || value === 1 || value === true || value === "true";
 }
 
-export function demoFlags(from?: Record<string, unknown>): DemoFlags {
-  const source =
-    from ??
-    Object.fromEntries(new URLSearchParams(window.location.search).entries());
+function demoFlags(from?: Record<string, unknown>): DemoFlags {
+  const source = (from ??
+    Object.fromEntries(
+      new URLSearchParams(window.location.search).entries(),
+    )) as { dev?: unknown; shot?: unknown };
   return {
     ...(flagOn(source.dev) ? { dev: "1" } : {}),
     ...(flagOn(source.shot) ? { shot: "1" } : {}),

@@ -1327,12 +1327,13 @@ Ad set (the owner-facing deliverable), Ad posting (running a paid ad). Never say
 
 ---
 
-### Don't say
+## Don't say
 
 Never in product/user-facing text, PRD prose, technical docs, or code, unless a
 home marker says the unqualified word is self-understood there.
-`cmd/ci/check-dont-say` reads this table: keep the `Don't say | Say` header,
-separator, data rows, and end the section at the next `##` heading. Unmarked =
+`cmd/ci/check-dont-say` reads this `## Don't say` table: keep the
+`Don't say | Say` header, separator, data rows, and end the section at the
+next `##` heading. Unmarked =
 nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` /
 `(billing)` = unqualified only in that feature’s technical docs (not `prd.md`,
 not `frontend.md`) and later `internal/<home>/`; `(website)` also covers

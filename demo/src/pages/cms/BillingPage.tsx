@@ -2,8 +2,8 @@ import { Check } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
+import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
-import { useCmsLayout } from "@/shell/CmsShell";
 import { Button } from "@/ui/Button";
 import { Notice } from "@/ui/Notice";
 import { PageHeading } from "@/ui/PageHeading";
@@ -190,23 +190,23 @@ export function BillingPage(): ReactNode {
             >
               <div className="flex h-full">
                 <span
-                  className="block h-full bg-[#1d4ed8]"
+                  className="block h-full bg-usage-voice"
                   style={{ width: pool.voice }}
                 />
                 <span
-                  className="block h-full bg-[#a16207]"
+                  className="block h-full bg-usage-image"
                   style={{ width: pool.image }}
                 />
                 <span
-                  className="block h-full bg-[#166534]"
+                  className="block h-full bg-usage-text"
                   style={{ width: pool.text }}
                 />
               </div>
             </div>
             <ul className="mt-3 flex flex-wrap gap-1.5 text-xs text-muted-foreground">
-              <Legend color="bg-[#1d4ed8]" label="Voice" />
-              <Legend color="bg-[#a16207]" label="Image" />
-              <Legend color="bg-[#166534]" label="Text edits" />
+              <Legend color="bg-usage-voice" label="Voice" />
+              <Legend color="bg-usage-image" label="Image" />
+              <Legend color="bg-usage-text" label="Text edits" />
               <Legend bordered color="bg-zinc-100" label="Remaining" />
             </ul>
             {kind === "canceled" ? (
