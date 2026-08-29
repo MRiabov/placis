@@ -76,7 +76,9 @@ Show the button **only when unlinked**. This pass: paste a public Facebook
 business URL (type-to-search TBD). When linked, show that Facebook profile’s
 **name, photo, rating, and review count**, plus **Change** — not the raw URL.
 Photo, copy, and Change stay one row; the name ellipsizes. Do not wrap Change
-under the name while the row still has width.
+under the name while the row still has width. Rating is score, stars, then
+`(count)` — Google-style. If that line is too long, the count nests under the
+stars ([look](design-decision-record.md) 5).
 Writes `facebook_profile_url`. Same link as review import on Certifications and
 reviews. Not Ads Connect Meta, not Facebook Login, no autoposting. Saving a new
 URL starts a public extract of that Facebook URL (reviews, posts, images).
