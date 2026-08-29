@@ -113,7 +113,11 @@ inventing it.
    (hairline, prompt radius) with a readable lift of the prompt shade, and carry
    destination logos (Sites globe, Ads megaphone). Google / Meta connect lives
    on Ads too. The two cards sit in one row on a wide screen and stack on a
-   narrow screen so the titles stay one line.
+   narrow screen so the titles stay one line. (2026-08-29): Product `/cms` does
+   not paint the leftover Connect bar. Keep that markup in the look-export HTML
+   as a restorable node (`is-hidden`). Nav glyphs are the archive strokes (1.6),
+   not Lucide defaults. Wordmark weight matches placis-web (`font-semibold`,
+   16px / 14px on a wide rail).
 
 6. **Owner field controls share one look** — Input, textarea, and select in The
    CMS, onboarding, and Ads use `.cms-field-control` (look export:
