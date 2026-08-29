@@ -274,7 +274,9 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
   creation-flow gate, not a detail action)**, Edit, then the status badge.
   On a **narrow** screen the name is a full-width row; Publish / Download /
   Edit stay one row; the badge comes last (wraps after the buttons, never
-  between them). (2026-08-28; badge last 2026-08-29)
+  between them). (2026-08-28; badge last 2026-08-29) On a **wide** screen the
+  status sits left of Publish / Download / Edit; the badge-last order is
+  narrow only. (2026-08-29)
   Edit is the same outline control as Download — not a filled CTA (Approve is
   the filled action, and only on the create flow). Back to the list. The badge
   is an existing-ad status — **Creative ready** (next status: **Published** once
