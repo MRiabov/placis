@@ -23,7 +23,7 @@ sidebar (Sites, Profile with Business details, Projects, Certifications and
 reviews, and Media library) stays around it, and Ads is dashboard-ish content in
 the main area — My ads list, the ad workspace, and the ad detail all render
 inside that main area. Look:
-[`demo/`](../../../../demo/README.md) `/cms/ads`. HTML archive:
+[`apps/demo/`](../../../../apps/demo/README.md) `/cms/ads`. HTML archive:
 [ads.html](../../../design/ads.html).
 
 Stack: Vite + React + TanStack Router (the `/cms/*` island), generated API
@@ -55,8 +55,8 @@ These principles shape every screen in this workspace:
 
 ## Design Mock
 
-Editable look is [`demo/`](../../../../demo/README.md) `/cms/ads`. The HTML archive is [ads.html](../../../design/ads.html). It shows
-the current direction:
+Editable look is [`apps/demo/`](../../../../apps/demo/README.md) `/cms/ads`. The HTML archive is [ads.html](../../../design/ads.html). It
+shows the current direction:
 **one accordion wrapper with two expandable steps, both visible immediately** —
 step 1 "About the ad" (open by default, all the questions), step 2 "Review"
 (visible but locked — "Complete step 1 to unlock" — and expands once step 1 is

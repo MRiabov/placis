@@ -5,8 +5,8 @@ It is not a domain object and not a vertical feature. This directory owns the
 **CMS (sidebar + main area)** — left nav, `/cms` two-card chooser, look tokens,
 and the CMS-wide design decision record.
 
-Visual mock: [`demo/`](../../../demo/README.md) (`cd demo && pnpm install && pnpm dev`). HTML archive:
-[docs/design/](../../design/README.md). Specs win over the mock.
+Visual mock: [`apps/demo/`](../../../apps/demo/README.md) (`cd apps/demo && pnpm install && pnpm dev`). HTML
+archive: [docs/design/](../../design/README.md). Specs win over the mock.
 
 - [frontend.md](frontend.md) — left nav, Profile disclosure, `/cms` two-card chooser
 - [design.md](design.md) — tokens (Satoshi, ink, hairline, outline vs `--secondary`)

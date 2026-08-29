@@ -36,9 +36,9 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
 
 1. **File-size guard** — files must stay < 800 lines (warning) and < 1200 (hard
    error), except `docs/glossary.md` (one ubiquitous-language file; do not split
-   it). The look app (`demo/src`) hard-fails above 800 via
-   `demo/scripts/check-files.mjs` (travels with the export). Repo-wide 1200 for
-   `internal/`, `cmd/`, `migrations/`, `catalog/`, `docs/` is still a later
+   it). The look app (`apps/demo/src`) hard-fails above 800 via
+   `apps/demo/scripts/check-files.mjs` (travels with the export). Repo-wide 1200
+   for `internal/`, `cmd/`, `migrations/`, `catalog/`, `docs/` is still a later
    `cmd/ci` check. Prefer splitting a feature into its own package over allowing
    a file to creep past 800.
 2. **Folder fan-out** — a nested dir under `internal/` may hold at most **9**
@@ -50,11 +50,11 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    Documented as a later `cmd/ci` check; this file does not implement the
    checker. Layout: [module layout](module-layout.md).
 3. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`,
-   `golangci-lint` (non-mutating); look app (`demo/`) TypeScript check + Biome
-   (non-mutating) via `pnpm check`; **rumdl** `fmt --check` then `check` on
-   first-party Markdown (non-mutating). See Pre-commit below. Look CI:
+   `golangci-lint` (non-mutating); look app (`apps/demo/`) TypeScript check +
+   Biome (non-mutating) via `pnpm check`; **rumdl** `fmt --check` then `check`
+   on first-party Markdown (non-mutating). See Pre-commit below. Look CI:
    `.github/workflows/frontend-quality.yml` (and the copied
-   `demo/.github/workflows/check.yml` on `demo.placis.com`). `frontend-2`
+   `apps/demo/.github/workflows/check.yml` on `demo.placis.com`). `frontend-2`
    TypeScript + Biome is the same contract once that app is enabled.
 4. **Build + test** — `go build ./...` and `go test ./...` with **no**
    `-count=1` (Testcontainers Postgres; CircleCI uses the machine executor when
@@ -210,10 +210,10 @@ list). Worked examples:
   `.git/hooks`.
 - Pre-commit: `.pre-commit-config.yaml` runs `go run ./cmd/ci/check-dont-say` on
   staged files under `docs/`, `internal/`, `cmd/`, `migrations/`, `catalog/`,
-  `apps/contractor-website`, `apps/placis-website`, `scripts/`, and `demo/`
+  `apps/contractor-website`, `apps/placis-website`, `scripts/`, and `apps/demo/`
   (Go's build cache keeps this cheap). Markdown, Go, and JavaScript (`.js` /
   `.mjs`) are scanned in those trees. TypeScript (`.ts` / `.tsx`) is scanned
-  in the look app (`demo/`, exported `src/`) only; `frontend-2` stays off
+  in the look app (`apps/demo/`, exported `src/`) only; `frontend-2` stays off
   until `--frontend`. If `docs/glossary.md` is staged, the checker scans those
   trees in full. Paths outside those trees (including `packages/`) are ignored
   even when filenames are passed in. A copied look checkout (`demo.placis.com`)

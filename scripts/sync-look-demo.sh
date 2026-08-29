@@ -27,7 +27,7 @@ rsync -a --delete \
   --exclude .git \
   --exclude docs \
   --exclude SANITIZATION.md \
-  "$repo/demo/" "$dest/"
+  "$repo/apps/demo/" "$dest/"
 
 cp "$repo/docs/glossary.md" "$dest/glossary.md"
 mkdir -p "$dest/ci/check-dont-say"

@@ -18,7 +18,7 @@ var defaultRoots = []string{
 	"apps/contractor-website",
 	"apps/placis-website",
 	"scripts",
-	"demo",
+	"apps/demo",
 	"src",
 }
 
@@ -130,7 +130,7 @@ func homePrefixes(home string) []string {
 
 func isLookApp(slash string) bool {
 	slash = strings.TrimPrefix(slash, "./")
-	return slash == "demo" || strings.HasPrefix(slash, "demo/") ||
+	return slash == "apps/demo" || strings.HasPrefix(slash, "apps/demo/") ||
 		slash == "src" || strings.HasPrefix(slash, "src/")
 }
 
