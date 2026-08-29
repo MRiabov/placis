@@ -171,7 +171,8 @@ unparseable.
 the next `##` heading. It must contain a `| Don't say | Say |` title row, a
 separator row, and at least one `| left | right |` data row. Split left cells on
 ` / `. Parentheticals are stripped from the matched phrase. Unmarked tokens are
-always-ban. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` are
+always-ban. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` /
+`(billing)` are
 unqualified only in that feature’s technical docs (not `prd.md`, not
 `frontend.md`) and later `internal/<home>/`. `(website)` also covers
 `apps/contractor-website`. `apps/placis-website` is scanned and is not website

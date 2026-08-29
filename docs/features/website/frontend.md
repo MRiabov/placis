@@ -138,12 +138,15 @@ those widths; **Desktop fills the stage**. If the stage is smaller, CSS
 `transform: scale()` (same as scaling an iframe) shrinks the frame to fit; the
 website still lays out at the native width. Do not reflow Mobile or Tablet
 (`max-width: 100%`) and do not pan the stage. Never scale Mobile or Tablet up
-past 1. Publish is blocked while required website slots cannot resolve or media
-library items on the live path are not approved. Blockers in the dropdown are a
-short heading (**Publishing is blocked:**) plus **one silent jump per blocker**
-(no background): the website section in Content, or `/cms/media` for an
-unapproved library item not on the canvas. Each jump uses a Lucide
-**ArrowUpRight**. After a successful website publication,
+past 1. Publish is blocked while required website slots cannot resolve, media
+library items on the live path are not approved, or the subscription is not
+`active`. Blockers in the dropdown are a short heading
+(**Publishing is blocked:**) plus **one silent jump per blocker** (no
+background): the website section in Content, `/cms/media` for an unapproved
+library item not on the canvas, or **Usage & billing** when they must pay the
+subscription price again. Each jump uses a Lucide **ArrowUpRight**. Subscription
+copy: **Pay the subscription price to Publish**. Do not send them to extra usage
+credit for this blocker. After a successful website publication,
 `has_unpublished_changes` is false until the next edit. The POST sends
 `website_address_id`: that host’s R2 tree, then purge **that** host ([api.md](api.md),
 [cloudflare.md](cloudflare.md)). The **host row** is the Publish click. Hosts can diverge.
@@ -153,11 +156,12 @@ owner website publication is v3+.
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that
 publication `*Read`; the dropdown and Website versions list update from the
 body. Rollback is on **earlier owner website versions**, not the live one.
-**Preview** on the live website version opens the live website in a new tab. Do
-not label that **Continue editing**, and do not call it a website preview (that
-is the sales stage). Loading an owner website version into the unpublished
-canvas (`GET` with `publication_id`, then PATCH) is not a Website versions
-control in this UI.
+The same subscription pay gate as Publish: **402** `subscription_canceled` and
+the Usage & billing jump. **Preview** on the live website version opens the
+live website in a new tab. Do not label that **Continue editing**, and do not
+call it a website preview (that is the sales stage). Loading an owner website
+version into the unpublished canvas (`GET` with `publication_id`, then PATCH)
+is not a Website versions control in this UI.
 
 Rows:
 

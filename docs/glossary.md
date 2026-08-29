@@ -792,6 +792,115 @@ Distinct from: Website lead.
 
 ---
 
+### Billing
+
+Usage credit, subscription price, and the Usage & billing screen. The owner
+spends usage credit on billed work in the website editor, Ads, and Voice.
+
+Distinct from: Website activation (the one-time pay).
+
+---
+
+#### Usage credit
+
+The credit the owner spends on billed work (assistant text, image
+generate/cleanup, ads generate, Voice). Shown in **USD** (their cost), not a
+unitless count. The subscription includes a monthly amount; they may also buy
+**extra usage credit**. One pool. When it is empty they are out of usage
+credit.
+
+Do not say “generation hop”, “hop”, “AI credit”, or bare “credit”.
+
+Distinct from: Extra usage credit (a purchase that adds to this pool),
+Subscription price (the monthly fee), Website activation (the one-time pay).
+
+In code: `usage_credit` (error `usage_credit_exhausted`).
+
+---
+
+#### Extra usage credit
+
+Usage credit the owner buys in addition to the amount included in the
+subscription. It adds to the same usage credit pool.
+
+Distinct from: Usage credit (the pool), Subscription price.
+
+---
+
+#### Subscription price
+
+The monthly amount for the current subscription tier. The subscription includes
+usage credit. If they stop paying, the website is unpublished and they cannot
+Publish until they pay again.
+
+Do not say “retainer”. Never say “subscription shelf”.
+
+Distinct from: Website activation (one-time pay), Usage credit, Extra usage
+credit, Placis Pro plan / Placis Pro Plus plan / Placis Pro Max plan /
+Enterprise plan (the tiers).
+
+---
+
+#### Placis Pro plan
+
+The basic self-serve subscription tier. Never say bare **Placis Pro** or
+**Pro**.
+
+Distinct from: Placis Pro Plus plan, Placis Pro Max plan, Enterprise plan,
+Subscription price, Usage & billing.
+
+---
+
+#### Placis Pro Plus plan
+
+The middle self-serve subscription tier. Never say bare **Placis Pro Plus** or
+**Pro Plus**.
+
+Distinct from: Placis Pro plan, Placis Pro Max plan, Enterprise plan.
+
+---
+
+#### Placis Pro Max plan
+
+The highest self-serve subscription tier. Never say bare **Placis Pro Max** or
+**Pro Max**.
+
+Distinct from: Placis Pro plan, Placis Pro Plus plan, Enterprise plan.
+
+---
+
+#### Enterprise plan
+
+The sales-led subscription tier for teams. Not chosen on the self-serve grid;
+contact sales. Never say bare **Enterprise**.
+
+Distinct from: Placis Pro plan, Placis Pro Plus plan, Placis Pro Max plan.
+
+---
+
+#### Usage & billing
+
+The screen that shows the current subscription tier, subscription price,
+remaining usage credit, buying extra usage credit, **Change plan**, **Cancel
+subscription**, and **one bar** of this period’s usage credit (spent vs
+remaining; spent colored Voice / Image / text edits). Not public marketing
+pricing. Reached from the account menu (user icon), not from the left nav.
+
+Distinct from: Website activation (the pay-and-activate step), Profile (the
+left-nav group), Pricing (the Placis website page).
+
+---
+
+#### Pricing
+
+The Placis website page that shows subscription tiers and subscription prices.
+Not Usage & billing. Not website activation.
+
+Distinct from: Usage & billing (the screen in the application), Placis website
+(the whole site).
+
+---
+
 ## Enums
 
 Closed sets of user-facing labels. Name the set; the values live only here —
@@ -839,6 +948,29 @@ carousel is several cards; a story is almost always one image.
 
 ---
 
+### Billing
+
+#### Subscription tier
+
+Closed owner-facing labels: **Placis Pro plan**, **Placis Pro Plus plan**,
+**Placis Pro Max plan**, **Enterprise plan**.
+
+In code: `pro`, `pro-plus`, `pro-max`. Enterprise plan is not a self-serve plan
+id.
+
+---
+
+#### Usage category
+
+How usage credit spend is shown on Usage & billing: **one bar**. The bar is the
+period total; filled is spent (their cost); filled segments are Voice / Image /
+Text by color. Owner copy for Text is **text edits**. Not our cost.
+
+In code: `voice`, `image`, `text`. Nested image/ads work during Voice counts as
+Image or Text, not Voice.
+
+---
+
 ## Internal
 
 Technical names for concepts that are **not** a Domain term. Never in product
@@ -867,6 +999,15 @@ Domain: (none — never in PRDs as a synonym for the contractor).
 
 ---
 
+### AI use ledger
+
+The record of usage credit granted, purchased, and spent on billed work. Never
+in PRDs. Domain: (none). Distinct from: Usage credit, Extra usage credit.
+
+In code: `ai_use_ledger`.
+
+---
+
 ### Signed URL
 
 A time-limited file download URL. Distinct from: Website preview link. Never
@@ -876,9 +1017,10 @@ call a website preview signed.
 
 ### The CMS
 
-The app where the owner edits marketing: website, ads, and Profile (Details,
-Projects, Certifications and reviews, Media library). Umbrella name, not a
-synonym for the website editor. Never in PRDs as if it were a domain object.
+The app where the owner edits marketing: website, ads, Profile (Details,
+Projects, Certifications and reviews, Media library), and Usage & billing
+(account menu). Umbrella name, not a synonym for the website editor. Never in
+PRDs as if it were a domain object.
 
 ---
 
@@ -1119,9 +1261,9 @@ Never in product/user-facing text, PRD prose, technical docs, or code, unless a
 home marker says the unqualified word is self-understood there.
 `cmd/ci/check-dont-say` reads this table: keep the `Don't say | Say` header,
 separator, data rows, and end the section at the next `##` heading. Unmarked =
-nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` =
-unqualified only in that feature’s technical docs (not `prd.md`, not
-`frontend.md`) and later `internal/<home>/`; `(website)` also covers
+nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` /
+`(billing)` = unqualified only in that feature’s technical docs (not `prd.md`,
+not `frontend.md`) and later `internal/<home>/`; `(website)` also covers
 `apps/contractor-website`. Other features use the Say. `(in a PRD)` is only for
 `CMS`. Leftover `(bare)` is unmarked. Worked examples:
 `cmd/ci/check-dont-say/ref.md`.
@@ -1217,6 +1359,18 @@ unqualified only in that feature’s technical docs (not `prd.md`, not
 | wave | ETL run |
 | Instagram listing | Instagram profile or Instagram post |
 | Facebook listing | Facebook profile or Facebook post |
+| generation hop | usage credit, or name the work |
+| AI credit / AI credits | usage credit |
+| credit (billing) | usage credit |
+| build credits | usage credit |
+| retainer | subscription price |
+| subscription shelf / subscription-shelf | Usage & billing |
+| ledger | AI use ledger |
+| usage credit ledger | AI use ledger |
+| lapsed | they stopped paying / subscription is not active (`canceled`) |
+| Pro Plus (billing) / Pro Max (billing) / Placis Pro Plus (billing) / Placis Pro Max (billing) | Placis Pro Plus plan / Placis Pro Max plan |
+| Placis Pro (billing) / Pro (billing) | Placis Pro plan |
+| Enterprise (billing) | Enterprise plan |
 
 ## Code naming rules
 

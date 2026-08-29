@@ -5,9 +5,10 @@ the pass/fail reference for `cmd/ci/check-dont-say`. The checker skips this
 directory, so illustrations may contain banned words.
 
 Unmarked = nowhere (docs, Go, backticks, table names, paths). `(website)` /
-`(ads)` / `(onboarding)` / `(media)` / `(details)` = the unqualified word is
-allowed only in that feature’s technical docs (not `prd.md`, not `frontend.md`)
-and later `internal/<home>/`. `(website)` also covers `apps/contractor-website`.
+`(ads)` / `(onboarding)` / `(media)` / `(details)` / `(billing)` = the
+unqualified word is allowed only in that feature’s technical docs (not
+`prd.md`, not `frontend.md`) and later `internal/<home>/`. `(website)` also
+covers `apps/contractor-website`.
 `apps/placis-website` is scanned but is not the website home. Everywhere else
 use the Say. `(in a PRD)` stays only for `CMS`. Leftover `(bare)` is unmarked.
 

@@ -9,4 +9,8 @@ built files served locally. It does not drive `frontend-2`.
    onboarding with `?prompt=`.
 2. **Contact** — `/contact/` shows Send a message (mailto, no Go write).
 3. **Support** — `/support/` is `mailto:help@placis.com`.
-4. **Unknown path** — `404.html` from the same build.
+4. **Pricing** — `/pricing/` shows Placis Pro plan / Placis Pro Plus plan /
+   Placis Pro Max plan / Enterprise plan. Included usage credit is USD.
+   Choose → `app.placis.com`. Contact
+   sales → `/support/`. No Stripe on this origin.
+5. **Unknown path** — `404.html` from the same build.

@@ -41,7 +41,11 @@ export function WebsitePage(): ReactNode {
     {},
   );
   const [publishOpen, setPublishOpen] = useState(
-    params.get("publication") === "1",
+    params.get("publication") === "1" ||
+      params.get("subscription") === "canceled",
+  );
+  const [payBlocked, setPayBlocked] = useState(
+    params.get("subscription") === "canceled",
   );
   const [connectOpen, setConnectOpen] = useState(params.get("connect") === "1");
   const [assistantOpen, setAssistantOpen] = useState(
@@ -100,6 +104,15 @@ export function WebsitePage(): ReactNode {
                 label: "Publish",
                 on: publishOpen,
                 onSelect: () => setPublishOpen(true),
+              },
+              {
+                id: "subscription",
+                label: "Subscription not active",
+                on: payBlocked,
+                onSelect: () => {
+                  setPayBlocked(true);
+                  setPublishOpen(true);
+                },
               },
               {
                 id: "connect",
@@ -219,27 +232,43 @@ export function WebsitePage(): ReactNode {
                       Publishing is blocked:
                     </p>
                     <ul className="list-disc pl-4 text-xs text-zinc-600">
-                      <li>
-                        <button
-                          className="underline"
-                          onClick={() => openContent("hero")}
-                          type="button"
-                        >
-                          A required image on Hero cannot resolve
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          className="underline"
-                          onClick={() => {
-                            void navigate({ to: "/cms/media" });
-                          }}
-                          type="button"
-                        >
-                          One media library item on the live path is not
-                          approved.
-                        </button>
-                      </li>
+                      {payBlocked ? (
+                        <li>
+                          <button
+                            className="underline"
+                            onClick={() => {
+                              void navigate({ to: "/cms/billing" });
+                            }}
+                            type="button"
+                          >
+                            Pay the subscription price to Publish
+                          </button>
+                        </li>
+                      ) : (
+                        <>
+                          <li>
+                            <button
+                              className="underline"
+                              onClick={() => openContent("hero")}
+                              type="button"
+                            >
+                              A required image on Hero cannot resolve
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              className="underline"
+                              onClick={() => {
+                                void navigate({ to: "/cms/media" });
+                              }}
+                              type="button"
+                            >
+                              One media library item on the live path is not
+                              approved.
+                            </button>
+                          </li>
+                        </>
+                      )}
                     </ul>
                   </>
                 )}

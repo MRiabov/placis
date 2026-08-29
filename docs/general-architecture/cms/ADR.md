@@ -39,3 +39,7 @@ decision + date) instead of silently replacing the old entry.
    POST. Name under the photo is the Clerk human name. (2026-08-28): Connect
    does not stay on `/cms`. Cards have destination logos and the prompt-box
    shade. Google Ads / Meta connect lives on Ads.
+
+3. **Usage & billing is on the account menu** — Not a left-nav peer of Sites /
+   Ads. Hide the leftover Usage rail item. Settings / Log out stay hidden.
+   Overlay destinations unchanged. (2026-08-29)

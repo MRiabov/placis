@@ -105,6 +105,8 @@ only on the next website publication. **Link your Facebook** is a Details link
 3. Website visitors see the live website; the owner edits the unpublished
    website in the website editor.
 4. The unpublished website is validated before it becomes the live website.
+   Website publication also requires an active subscription (pay gate in
+   [billing](../billing/prd.md)).
 5. One end-to-end test covers edit → website assistant → website publication →
    live HTML (fake R2 + fake purge) → website rollback → website form, with
    outside services faked in tests but the core logic real. Apply the website

@@ -242,7 +242,11 @@ Those rows are not this CMS POST. They are never website-rollback targets.
 - **POST Idempotency-Key:** yes.
 - **POST request:** `website_address_id` (the host row they clicked). Writes
   that host’s R2 tree and purges **that** host. Hosts can diverge.
-- **POST:** `published_by=owner`.
+- **POST:** `published_by=owner`. **402** `subscription_canceled` when
+  `tenants.subscription_status` is not `active`. Not
+  `usage_credit_exhausted`. Website slot and media library blockers stay 4xx
+  from validation; this is the pay gate. Website editor PATCH is not this
+  code.
 - **GET list:** metadata `*Read` (`version_number`, `status`, `active`,
   `published_by`, `website_address_id`, times). **Omit** `website_manifest`.
   Rollback UI uses `published_by=owner` only — omit onboarding 07/08 and
@@ -254,8 +258,10 @@ Those rows are not this CMS POST. They are never website-rollback targets.
 - **Idempotency-Key:** yes.
 - **Callers:** website publication dropdown — **live** website rollback.
 - **Behavior:** copy that owner website version onto **that host’s** `latest/`,
-  purge that host. `409` if `published_by=onboarding` or the id is not an owner
-  row. Does not rewrite unpublished website rows.
+  purge that host. **402** `subscription_canceled` when the subscription is not
+  `active` (same pay gate as POST publications). `409` if
+  `published_by=onboarding` or the id is not an owner row. Does not rewrite
+  unpublished website rows.
 - **Response:** that publication `*Read` (`active=true`, `version_number`,
   times). The dropdown updates from this body — no extra GET required.
 

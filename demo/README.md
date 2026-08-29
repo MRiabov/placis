@@ -24,7 +24,8 @@ pnpm preview
 - `/cms/website` — website editor
 - `/cms/details` `/cms/projects` `/cms/certifications` `/cms/media`
 - `/cms/ads`
-- `/cms/billing` — stub
+- `/cms/billing` — Usage & billing (account menu; not left nav)
+- `/cms/website?subscription=canceled` — Publish blocked until they pay
 - `/onboarding/find` → review → interview → preview → generated
 
 ## Customer look host
