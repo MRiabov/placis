@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Build a designer package: HTML mocks + product/look docs, no backend."""
+"""Copy sanitized product/look docs into the look-demo git repo."""
 
 from __future__ import annotations
 
 import datetime as dt
 import os
 import re
-import shutil
-import stat
 import subprocess
-import zipfile
+import sys
+import tempfile
 from pathlib import Path
+
 
 def repo_root() -> Path:
     start = Path(__file__).resolve().parent
@@ -22,7 +22,6 @@ def repo_root() -> Path:
 
 REPO = repo_root()
 DOCS = REPO / "docs"
-EXPORT_ROOT = DOCS / "design" / "exported-docs"
 
 BACKEND_NAMES = {
     "ADR.md",
@@ -79,32 +78,42 @@ def run_git(*args: str) -> str:
     return subprocess.check_output(["git", *args], cwd=REPO, text=True).strip()
 
 
+def placis_main_checkout(repo: Path) -> Path:
+    parts = list(repo.resolve().parts)
+    if ".worktrees" in parts:
+        return Path(*parts[: parts.index(".worktrees")])
+    return repo.resolve()
+
+
+def default_demo_dest(repo: Path) -> Path:
+    return (placis_main_checkout(repo) / ".." / "demo.placis.com").resolve()
+
+
+INCLUDED_MD_NAMES = {
+    "design-decision-record.md",
+    "prd.md",
+    "design.md",
+    "frontend.md",
+    "general-prd.md",
+    "glossary.md",
+    "styles.md",
+}
+
+
 def collect_sources() -> list[Path]:
     files: list[Path] = []
-    for path in (DOCS / "design").rglob("*"):
-        if not path.is_file():
-            continue
-        if "exported-docs" in path.parts:
-            continue
-        files.append(path)
+    design_root = (DOCS / "design").resolve()
     for path in DOCS.rglob("*"):
         if not path.is_file() or path.suffix.lower() != ".md":
             continue
         if "exported-docs" in path.parts:
             continue
-        name = path.name
-        if name in {
-            "design-decision-record.md",
-            "prd.md",
-            "design.md",
-            "frontend.md",
-            "general-prd.md",
-            "glossary.md",
-            "styles.md",
-        }:
+        resolved = path.resolve()
+        if resolved == design_root or design_root in resolved.parents:
+            continue
+        if path.name in INCLUDED_MD_NAMES:
             files.append(path)
-    unique = sorted({path.resolve() for path in files})
-    return unique
+    return sorted({path.resolve() for path in files})
 
 
 def dest_for(src: Path, snapshot: Path) -> Path:
@@ -222,6 +231,11 @@ def tidy_prose(text: str) -> str:
     )
     text = re.sub(r" How slices land:[^\n]*", "", text)
     text = re.sub(r"`frontend-2` is[^.\n]*, not rebuilt\.\n?", "", text)
+    text = re.sub(
+        r"; the\s+later `frontend-2` port can keep its cheaper orb\.",
+        ".",
+        text,
+    )
     text = re.sub(r"(?m)^\d+\.\s+—\s.*\n", "", text)
     text = re.sub(r"(?m)^\d+\.\s*$", "", text)
     text = re.sub(r"(?m)^[-*]\s*$", "", text)
@@ -272,54 +286,63 @@ def sanitize_markdown(src: Path, text: str, included: set[Path]) -> str:
     return tidy_prose(text).strip() + "\n"
 
 
-def write_readme(snapshot: Path, stamp: str, commit: str, subject: str) -> None:
-    (snapshot / "README.md").write_text(
-        f"""# Placis — design and product package
+def write_readme(docs_root: Path, stamp: str, commit: str, subject: str) -> None:
+    (docs_root / "README.md").write_text(
+        f"""# Placis — design and product
 
 This folder is for **look and product**. You can change anything in it.
 
-You have a complete say over the product. Edit the HTML mocks, the design
-decision records, the PRDs, and the glossary. Engineering follows your call.
-Backend code and backend docs were left out on purpose so they do not
-constrain you.
+You have a complete say over the product. Edit the design decision records,
+the PRDs, and the glossary. Engineering follows your call. Backend code and
+backend docs were left out on purpose so they do not constrain you.
 
-Exported `{stamp}` from local commit `{commit}` (`{subject}`). See
+The live look is the Vite app at the repo root (`pnpm dev`). This `docs/`
+tree is the product package (PRDs, look decisions, glossary). The old HTML
+mocks are not here; the Vite app superseded them.
+
+Copied `{stamp}` from Placis commit `{commit}` (`{subject}`). See
 [SANITIZATION.md](SANITIZATION.md) for what was included and stripped.
 
-## Open the mocks
+## Look app
 
-No build. Open these in a browser:
+```bash
+pnpm install
+pnpm dev
+```
 
-| Screen | File |
+Open <http://localhost:5176>. `?dev=1` opens the yellow developer strip.
+`?shot=1` hides it.
+
+| Screen | Route |
 | --- | --- |
-| The CMS (website editor, Profile, Ads embed) | [docs/design/cms.html](docs/design/cms.html) |
-| Onboarding | [docs/design/onboarding.html](docs/design/onboarding.html) |
-| Ads (standalone; also embedded in the CMS) | [docs/design/ads.html](docs/design/ads.html) |
-
-Shared tokens live in [docs/design/tokens.css](docs/design/tokens.css). CMS is
-the source of truth; onboarding and Ads import that file.
-
-The yellow strip is mock-only **per-screen states**. Default **collapsed**
-(circle, top right). Open with `?dev=1`. Hide entirely with `?shot=1`.
-
-Onboarding: `?scene=generated` mocks the generated website with the
-website-activation strip. After pay, the mock opens the CMS website editor
-(`cms.html?scene=website&publication=1&from=activation`). Ads in the CMS:
-`cms.html?scene=ads`.
-
-More mock notes: [docs/design/README.md](docs/design/README.md).
+| The CMS (home chooser) | `/cms` |
+| Website editor | `/cms/website` |
+| Profile | `/cms/details` `/cms/projects` `/cms/certifications` `/cms/media` |
+| Ads | `/cms/ads` |
+| Usage & billing | `/cms/billing` |
+| Onboarding | `/onboarding/find` → review → questions → website → generated |
 
 ## Product (yours to change)
 
+Every `prd.md` and `general-prd.md` from Placis is here. There is no
+business-profile PRD (Details / Projects / Certifications product lives in
+those screens' frontend docs).
+
 | What | File |
 | --- | --- |
-| Product loop and in/out of scope | [docs/general-prd.md](docs/general-prd.md) |
-| Words to use in UI, PRDs, and code | [docs/glossary.md](docs/glossary.md) (whole file) |
-| Onboarding | [docs/features/onboarding/prd.md](docs/features/onboarding/prd.md) |
-| Website | [docs/features/website/prd.md](docs/features/website/prd.md) |
-| Ads | [docs/features/ads/ad-generation/prd.md](docs/features/ads/ad-generation/prd.md) |
+| Product loop and in/out of scope | [general-prd.md](general-prd.md) |
+| Words to use in UI, PRDs, and code | [glossary.md](glossary.md) (whole file) |
+| Onboarding | [features/onboarding/prd.md](features/onboarding/prd.md) |
+| Website | [features/website/prd.md](features/website/prd.md) |
+| Ads | [features/ads/ad-generation/prd.md](features/ads/ad-generation/prd.md) |
+| Assistant | [features/assistant/prd.md](features/assistant/prd.md) |
+| Billing / usage | [features/billing/prd.md](features/billing/prd.md) |
 
 ## Look and interaction (yours to change)
+
+Every `frontend.md`, `design-decision-record.md`, `design.md`, and `styles.md`
+from Placis is here. Assistant has no `frontend.md` in Placis (look is the
+design decision record). Ads look decisions live on the CMS record (5–6).
 
 Design decision records use the same numbered, dated, keep-old-entry shape as
 an architecture log, but they are **look and interaction**, not architecture.
@@ -329,21 +352,21 @@ rewriting history.
 
 | Surface | Screens | Look decisions | Tokens / notes |
 | --- | --- | --- | --- |
-| Cross-cutting UI | [frontend.md](docs/general-architecture/frontend.md) | | |
-| The CMS | [frontend.md](docs/general-architecture/cms/frontend.md) | [design decision record](docs/general-architecture/cms/design-decision-record.md) | [design.md](docs/general-architecture/cms/design.md) |
-| Onboarding | [frontend.md](docs/features/onboarding/frontend.md) | [design decision record](docs/features/onboarding/design-decision-record.md) | [design.md](docs/features/onboarding/design.md) |
-| Website editor | [frontend.md](docs/features/website/frontend.md) | [design decision record](docs/features/website/design-decision-record.md) | [website styles](docs/features/website/styles.md) |
-| Ads | [frontend.md](docs/features/ads/ad-generation/frontend.md) | CMS record, decision 5–6 | |
-| Business details | [frontend.md](docs/features/business-profile/details/frontend.md) | [design decision record](docs/features/business-profile/details/design-decision-record.md) | |
-| Projects | [frontend.md](docs/features/business-profile/projects/frontend.md) | | |
-| Certifications and reviews | [frontend.md](docs/features/business-profile/certifications-and-reviews/frontend.md) | [design decision record](docs/features/business-profile/certifications-and-reviews/design-decision-record.md) | |
-| Assistant overlay | | [design decision record](docs/features/assistant/design-decision-record.md) | |
-| Billing / usage (stub) | `cms.html?scene=billing` | [design decision record](docs/features/billing/design-decision-record.md) | |
+| Cross-cutting UI | [frontend.md](general-architecture/frontend.md) | | |
+| The CMS | [frontend.md](general-architecture/cms/frontend.md) | [design decision record](general-architecture/cms/design-decision-record.md) | [design.md](general-architecture/cms/design.md) |
+| Onboarding | [frontend.md](features/onboarding/frontend.md) | [design decision record](features/onboarding/design-decision-record.md) | [design.md](features/onboarding/design.md) |
+| Website editor | [frontend.md](features/website/frontend.md) | [design decision record](features/website/design-decision-record.md) | [website styles](features/website/styles.md) |
+| Ads | [frontend.md](features/ads/ad-generation/frontend.md) | CMS record, decision 5–6 | |
+| Business details | [frontend.md](features/business-profile/details/frontend.md) | [design decision record](features/business-profile/details/design-decision-record.md) | |
+| Projects | [frontend.md](features/business-profile/projects/frontend.md) | [design decision record](features/business-profile/projects/design-decision-record.md) | [design.md](features/business-profile/projects/design.md) |
+| Certifications and reviews | [frontend.md](features/business-profile/certifications-and-reviews/frontend.md) | [design decision record](features/business-profile/certifications-and-reviews/design-decision-record.md) | |
+| Assistant overlay | | [design decision record](features/assistant/design-decision-record.md) | |
+| Billing / usage (stub) | [frontend.md](features/billing/frontend.md) | [design decision record](features/billing/design-decision-record.md) | |
 
 ## How to send work back
 
-Edit files in place. Zip this folder (or send the files you changed). Keep the
-same paths so we can fold the work back into the repo.
+Edit files in place. Commit and push this git repo. Keep the same paths so we
+can copy the work back into Placis.
 
 If you add a design decision, give it the next number, date it, and leave older
 entries in place.
@@ -351,16 +374,16 @@ entries in place.
 ## What is not here
 
 Backend code, HTTP/persistence docs, architectural decision records, pipeline
-runbooks, and port/debloat notes were omitted by agreement. Some leftover
-engineering filenames in prose were stripped; if a sentence reads oddly, that
-is why.
+runbooks, port/debloat notes, and the old HTML mock archive were omitted by
+agreement. Some leftover engineering filenames in prose were stripped; if a
+sentence reads oddly, that is why.
 """,
         encoding="utf-8",
     )
 
 
 def write_sanitization(
-    snapshot: Path,
+    docs_root: Path,
     stamp: str,
     commit: str,
     commit_date: str,
@@ -370,7 +393,7 @@ def write_sanitization(
 ) -> None:
     rels = "\n".join(f"- `{path.relative_to(REPO).as_posix()}`" for path in included_files)
     dirty_block = dirty.strip() or "(clean working tree)"
-    (snapshot / "SANITIZATION.md").write_text(
+    (docs_root / "SANITIZATION.md").write_text(
         f"""# Sanitization provenance
 
 - **Export timestamp (local):** {stamp}
@@ -385,28 +408,18 @@ def write_sanitization(
 
 Markdown was copied, then links to omitted files were stripped. The glossary
 is copied whole (Domain, Enums, Internal, Don't say, code-naming rules).
-HTML, CSS, JS, fonts, photos, and audio were copied as-is.
 
-Not copied: backend code, `ADR.md`, `api.md`, `persistence.md`,
-`technical-implementation.md`, `architecture.md`, pipeline docs, testing,
-Cloudflare/ops, frontend-debloat / stack notes, and other engineering docs.
+Not copied: the HTML mock archive (`docs/design/`), backend code, `ADR.md`,
+`api.md`, `persistence.md`, `technical-implementation.md`, `architecture.md`,
+pipeline docs, testing, Cloudflare/ops, frontend-debloat / stack notes, and
+other engineering docs. The live look is the Vite app at the repo root.
 
-## Files in this snapshot
+## Files copied
 
 {rels}
 """,
         encoding="utf-8",
     )
-
-
-def zip_snapshot(snapshot: Path, zip_path: Path) -> None:
-    if zip_path.exists():
-        zip_path.unlink()
-    with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
-        for path in sorted(snapshot.rglob("*")):
-            if not path.is_file():
-                continue
-            zf.write(path, arcname=str(Path(snapshot.name) / path.relative_to(snapshot)))
 
 
 LEFTOVER = re.compile(
@@ -456,64 +469,74 @@ def check_links(snapshot: Path) -> list[str]:
     return broken
 
 
-def clean_previous_exports() -> None:
-    if not EXPORT_ROOT.exists():
-        return
-    for child in EXPORT_ROOT.iterdir():
-        if child.is_dir():
-            shutil.rmtree(child)
-        else:
-            child.unlink()
+def require_git_dest(dest: Path) -> Path:
+    dest = dest.expanduser().resolve()
+    if not dest.is_dir():
+        raise SystemExit(f"destination does not exist: {dest}")
+    if not (dest / ".git").exists():
+        raise SystemExit(f"destination is not a git repo: {dest}")
+    return dest
+
+
+def publish_docs(snapshot: Path, dest: Path) -> None:
+    source = snapshot / "docs"
+    target = dest / "docs"
+    target.mkdir(parents=True, exist_ok=True)
+    subprocess.check_call(["rsync", "-a", "--delete", f"{source}/", f"{target}/"])
 
 
 def main() -> None:
-    EXPORT_ROOT.mkdir(parents=True, exist_ok=True)
-    clean_previous_exports()
+    dest = require_git_dest(
+        Path(sys.argv[1]) if len(sys.argv) > 1 else default_demo_dest(REPO)
+    )
     now = dt.datetime.now().astimezone()
     stamp = now.strftime("%Y-%m-%dT%H%M%z")
     commit = run_git("rev-parse", "HEAD")
-    short = commit[:8]
     commit_date = run_git("log", "-1", "--format=%ci")
     subject = run_git("log", "-1", "--format=%s")
     dirty = run_git("status", "--porcelain")
-    folder = f"placis-design-and-product_{stamp}_{short}"
-    snapshot = EXPORT_ROOT / folder
-    snapshot.mkdir(parents=True)
 
-    sources = collect_sources()
-    included = set(sources)
-    copied: list[Path] = []
-    for src in sources:
-        dest = dest_for(src, snapshot)
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        if src.suffix.lower() == ".md":
-            dest.write_text(
+    with tempfile.TemporaryDirectory(prefix="placis-designer-docs-") as tmp:
+        snapshot = Path(tmp)
+        sources = collect_sources()
+        included = set(sources)
+        copied: list[Path] = []
+        for src in sources:
+            out = dest_for(src, snapshot)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(
                 sanitize_markdown(src, src.read_text(encoding="utf-8"), included),
                 encoding="utf-8",
             )
-        else:
-            shutil.copy2(src, dest)
-        copied.append(src)
+            copied.append(src)
 
-    write_readme(snapshot, stamp, commit, subject)
-    write_sanitization(snapshot, stamp, commit, commit_date, subject, dirty, copied)
-    leftovers = check_leftovers(snapshot)
-    broken = check_links(snapshot)
-    zip_path = EXPORT_ROOT / f"{folder}.zip"
-    zip_snapshot(snapshot, zip_path)
-    zip_path.chmod(zip_path.stat().st_mode | stat.S_IRGRP | stat.S_IROTH)
-    print(f"snapshot={snapshot}")
-    print(f"zip={zip_path}")
+        docs_root = snapshot / "docs"
+        docs_root.mkdir(parents=True, exist_ok=True)
+        write_readme(docs_root, stamp, commit, subject)
+        write_sanitization(
+            docs_root, stamp, commit, commit_date, subject, dirty, copied
+        )
+        leftovers = check_leftovers(snapshot)
+        broken = check_links(snapshot)
+        if leftovers:
+            print("leftovers:")
+            print("\n".join(leftovers))
+        if broken:
+            print("broken_links:")
+            print("\n".join(broken))
+        if leftovers or broken:
+            raise SystemExit(1)
+        publish_docs(snapshot, dest)
+
+    counts = {name: 0 for name in sorted(INCLUDED_MD_NAMES)}
+    for src in copied:
+        counts[src.name] += 1
+    print(f"dest={dest}")
+    print(f"docs={dest / 'docs'}")
     print(f"files={len(copied)}")
     print(f"commit={commit}")
-    if leftovers:
-        print("leftovers:")
-        print("\n".join(leftovers))
-    if broken:
-        print("broken_links:")
-        print("\n".join(broken))
-    if leftovers or broken:
-        raise SystemExit(1)
+    for name, count in counts.items():
+        print(f"copied_{name}={count}")
 
 
 if __name__ == "__main__":
