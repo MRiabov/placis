@@ -46,6 +46,13 @@ textarea.field-control {
   height: auto;
   resize: vertical;
 }
+input[type="date"].cms-field-control,
+input[type="date"].field-control {
+  height: 44px;
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+}
 
 .cms-field-label,
 .cms-details-field-grid > label > span,

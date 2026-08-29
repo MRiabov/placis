@@ -89,30 +89,32 @@ export function AdsDetail(): ReactNode {
               />
             </div>
             <div className="flex min-w-0 shrink-0 flex-wrap items-center gap-2 max-[720px]:w-full">
+              <div className="flex min-w-0 flex-nowrap items-center gap-2">
+                <span
+                  className="group relative inline-flex after:pointer-events-none after:absolute after:bottom-[calc(100%+6px)] after:left-1/2 after:z-10 after:-translate-x-1/2 after:rounded-[10px] after:bg-foreground after:px-2.5 after:py-1.5 after:text-xs after:whitespace-nowrap after:text-primary-foreground after:opacity-0 after:shadow-prompt after:transition-opacity after:content-[attr(data-tip)] hover:after:opacity-100 focus-within:after:opacity-100 max-[720px]:after:max-w-[min(280px,calc(100vw-32px))] max-[720px]:after:whitespace-normal"
+                  data-tip="Publish is not available yet — ad posting to Meta is coming"
+                >
+                  <Button disabled variant="outline">
+                    Publish
+                  </Button>
+                </span>
+                <Button variant="outline">Download</Button>
+                <Button
+                  onClick={() =>
+                    void navigate({
+                      params: { adId },
+                      search: adsSearch(),
+                      to: "/cms/ads/$adId/edit",
+                    })
+                  }
+                  variant="outline"
+                >
+                  Edit
+                </Button>
+              </div>
               <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">
                 Creative ready
               </span>
-              <span
-                className="group relative inline-flex after:pointer-events-none after:absolute after:bottom-[calc(100%+6px)] after:left-1/2 after:z-10 after:-translate-x-1/2 after:rounded-[10px] after:bg-foreground after:px-2.5 after:py-1.5 after:text-xs after:whitespace-nowrap after:text-primary-foreground after:opacity-0 after:shadow-prompt after:transition-opacity after:content-[attr(data-tip)] hover:after:opacity-100 focus-within:after:opacity-100 max-[720px]:after:max-w-[min(280px,calc(100vw-32px))] max-[720px]:after:whitespace-normal"
-                data-tip="Publish is not available yet — ad posting to Meta is coming"
-              >
-                <Button disabled variant="outline">
-                  Publish
-                </Button>
-              </span>
-              <Button variant="outline">Download</Button>
-              <Button
-                onClick={() =>
-                  void navigate({
-                    params: { adId },
-                    search: adsSearch(),
-                    to: "/cms/ads/$adId/edit",
-                  })
-                }
-                variant="outline"
-              >
-                Edit
-              </Button>
             </div>
           </div>
           <div className="grid gap-6 p-4 lg:grid-cols-2">
@@ -132,12 +134,13 @@ export function AdsDetail(): ReactNode {
                 <p className="mb-2 text-xs text-muted-foreground">
                   Disabled until ad posting is connected.
                 </p>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid items-start gap-3 sm:grid-cols-2">
                   <Field label="Daily budget">
-                    <TextInput disabled value="€15" />
+                    <TextInput className="h-11" disabled value="€15" />
                   </Field>
                   <Field label="Duration">
                     <TextInput
+                      className="h-11 py-0"
                       disabled
                       lang="en-IE"
                       min={startIso}
