@@ -4,10 +4,17 @@ Near-production look for The CMS, Ads, and onboarding. Mock data only. No
 auth, no API.
 
 Look work happens here and in the copied checkout `demo.placis.com`. Specs
-remain canonical. Sync with `scripts/sync-look-demo.sh` from the Placis repo
-root (copies this folder, `docs/glossary.md`, and the Don't-say checker).
+remain canonical. From the Placis repo root:
+
+- `scripts/sync-look-demo.sh` copies this folder, `docs/glossary.md`, and the
+  Don't-say checker (skips dest `docs/` so the product package stays).
+- `scripts/export_designer_docs.py` copies sanitized product/look Markdown into
+  dest `docs/` (PRDs, design decision records, glossary). No HTML mocks; this
+  Vite app superseded them. No zip — git is the send channel.
+
 Copy-back: rsync this app onto `demo/`, then copy `glossary.md` onto
-`docs/glossary.md`.
+`docs/glossary.md`. Product-doc edits in dest `docs/` copy back onto the same
+paths under Placis `docs/`.
 
 ## Run
 
