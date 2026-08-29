@@ -46,5 +46,5 @@ demo/.wrangler/
 # Test runner output
 **/test-results/
 
-# Sanitized designer packages (HTML mocks + product/look docs; local only)
+# Leftover local designer zips (export now writes into demo.placis.com)
 docs/design/exported-docs/
