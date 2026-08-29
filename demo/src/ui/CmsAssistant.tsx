@@ -220,7 +220,7 @@ export function AssistantLaunch({
 
 export function CmsAssistantLayer(): ReactNode {
   const pathname = useRouterState({
-    select: (state) => state.location.pathname,
+    select: (route) => route.location.pathname,
   });
   if (pathname.startsWith("/cms/website")) {
     return null;
