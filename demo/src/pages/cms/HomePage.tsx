@@ -46,7 +46,9 @@ export function HomePage(): ReactNode {
         >
           <DestinationsGlyph />
         </button>
-        <h1 className="text-4xl font-normal tracking-tight">placis</h1>
+        <h1 className="text-4xl leading-tight tracking-[-0.03em] text-foreground whitespace-nowrap pb-px">
+          placis
+        </h1>
         <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
           <ChooserCard
             hint="Have Placis do your website"

@@ -120,6 +120,10 @@ inventing it.
    not Lucide defaults. Wordmark weight matches placis-web (`font-semibold`,
    16px / 14px on a wide rail).
 
+   (2026-08-29): `/cms` **placis** is the placis-web dashboard new-chat
+   wordmark: `text-4xl`, `leading-tight`, tracking `-0.03em`. Type weights stay
+   the placis-web map (`400` / `450` / `500` / `600`).
+
 6. **Owner field controls share one look** — Input, textarea, and select in The
    CMS, onboarding, and Ads use `.cms-field-control` (look export:
    [details-fields.css](../../design/details-fields.css)). Same sunken fill,

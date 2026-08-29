@@ -108,7 +108,7 @@ export function CmsLayout(): ReactNode {
         >
           {labelsVisible ? (
             <Link
-              className="px-1 text-base font-medium tracking-tight"
+              className="px-1 text-[16px] font-semibold tracking-tight text-foreground min-[1101px]:text-[14px]"
               to="/cms"
             >
               Placis

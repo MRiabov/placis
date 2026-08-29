@@ -10,14 +10,7 @@ const slots = [0, 1, 2, 3, 4] as const;
 export function RatingStars({ rating }: RatingStarsProps): ReactNode {
   const clamped = Math.min(5, Math.max(0, rating));
   return (
-<<<<<<< HEAD
-    <span aria-hidden="true" className="inline-flex items-center text-star">
-=======
-    <span
-      aria-hidden="true"
-      className="inline-flex shrink-0 items-center text-[#fbbc04]"
-    >
->>>>>>> 2179f5f (Show listing ratings as score, stars, and a count that can nest under.)
+    <span aria-hidden="true" className="inline-flex shrink-0 items-center text-star">
       {slots.map((slot) => {
         const fill = Math.min(1, Math.max(0, clamped - slot));
         return (
