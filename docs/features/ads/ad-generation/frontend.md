@@ -7,7 +7,8 @@ Related docs:
 1. [Ad generation PRD](prd.md)
 2. [Ad generation technical implementation](technical-implementation.md)
 3. [Ad generation ADR](ADR.md)
-4. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
+4. [design decision record](design-decision-record.md)
+5. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 
 ## Purpose
 
@@ -93,15 +94,23 @@ and the approve block at the end.
 - large cards, one per ad: the ad's image, name/offer, status badge, last
   updated, and a performance strip (impressions / clicks / spend) that is
   **grayed out as a stub** until ad posting is connected and real metrics exist
+- **The whole card is the hit.** No Archive control on the card. Click opens
+  `/cms/ads/{id}`.
+- **Archive** is a red outline button on `/cms/ads/{id}` after the two-column
+  body, not in the Publish / Download / Edit row. Same as projects. Toast with
+  **Undo** (unarchives) after returning to the list. Collapsed **Archive**
+  heading under the cards (chevron down on the right; default collapsed).
+  Unarchive from there. Not a hard delete. The disclosure matches
+  Certifications and reviews Archive. (2026-08-29)
 - cards are **large by default** — contractors rarely run more than 6 ads at
   once, and 6 cards fill most of the screen; when more than 6 ads exist the list
   **compresses to dense rows**
 - **default sort: active ads first, then newest** (by created time); spend-based
   sorting replaces this once performance exists
 - status badges: **Ad draft**, **Creative ready** (the ad is done),
-  **Published** (the next status once ad posting exists), archived. "Ad needs
-  review" and "Ad ready to post" are creation-flow labels and are not used on
-  existing ads.
+  **Published** (the next status once ad posting exists). Archived ads are not
+  on this grid; they sit under **Archive**. "Ad needs review" and "Ad ready to
+  post" are creation-flow labels and are not used on existing ads.
 - filter by status, search by name
 - ad-platform connection: a **"Connect Meta" / "Connect Google Ads"** button
   appears next to "+ New ad" for each **unconnected** ad platform; the buttons
@@ -257,19 +266,26 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
 (the accordion).
 
 - **Top bar (upper block)** — the ad name is an **invisible silent-edit field**
-  (plain heading text, adaptive width, hairline on focus only; blur/Enter saves,
-  no save button). The status badge sits **on the right next to the actions**:
-  Ad posting (disabled until ad posting), **Download (always available on an
-  existing ad — approve is a creation-flow gate, not a detail action)**, Edit.
-  On a **narrow** screen the name is a full-width row; the badge and actions
-  wrap below. They do not share one squeezed row. (2026-08-28)
+  (plain heading text, adaptive width, hairline on focus only; blur/Enter is
+  save on click-off of the ad draft, no save button). Canonical:
+  [HTTP conventions](../../../general-architecture/api.md). The actions sit
+  on the right: Ad posting (disabled until ad posting),
+  **Download (always available on an existing ad — approve is a
+  creation-flow gate, not a detail action)**, Edit, then the status badge.
+  On a **narrow** screen the name is a full-width row; Publish / Download /
+  Edit stay one row; the badge comes last (wraps after the buttons, never
+  between them). (2026-08-28; badge last 2026-08-29) On a **wide** screen the
+  status sits left of Publish / Download / Edit; the badge-last order is
+  narrow only. (2026-08-29)
   Edit is the same outline control as Download — not a filled CTA (Approve is
   the filled action, and only on the create flow). Back to the list. The badge
   is an existing-ad status — **Creative ready** (next status: **Published** once
   ad posting exists).
-- **One single card, two columns — inputs left, outputs right** — the whole
-  detail view is one card (no per-format cards). The top bar, then a two-column
-  area:
+- **One card on a wide screen, two columns — inputs left, outputs right** —
+  on a **wide** screen the whole detail is one card (no per-format cards).
+  The top bar, then a two-column area. On a **narrow** screen the same
+  blocks sit on the canvas — no wrapping card (that would nest the photo
+  and the rest). The photo is the image, not a nested frame. (2026-08-29)
   - **Left (inputs)**: Images — a **one-image ad** shows that photo, not a
     thumbnail gallery (changing the photo is **Edit**, in the workspace strip).
     A **carousel** shows the cards as viewable thumbs. Then **Budget** (disabled
@@ -280,12 +296,16 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
     (read-only, not editable yet, below the images).
   - **Right (outputs)**: Performance with Ad leads directly under it (stacks to
     one column on narrow screens).
+- **Archive** — red outline, after the two-column body, not ink. Same as
+  projects. Returns to the list with toast Undo. (2026-08-29)
 - **Performance** — impressions, clicks, spend, results, cost per ad lead
   (grayed stub until ad posting connects) plus the projection line: "At this
   spend, we expect X more ad leads in the next 30 days."
 - **Ad leads** — ad leads from this ad's ad lead form submissions: name,
   contact, service; **uncontacted ad leads are clearly labelled in urgent red**;
-  contacted ones are muted. This is in scope, not deferred.
+  contacted ones are muted. Dividers between rows only — the last ad lead has
+  no bottom line ([look](design-decision-record.md) 2). This is in scope, not
+  deferred.
 - **Audience** — the ideal customer profile with the "steers tone/imagery,
   targeting comes with ad posting" note. Audience-match detection ("are we
   hitting the right audience?") is **disabled/deferred**.

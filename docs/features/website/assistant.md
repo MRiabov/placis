@@ -254,8 +254,8 @@ request with `follow: false` is refused. Dispatcher: [assistant](../assistant/ar
 **Gate: instant apply vs Ask first** (whether Apply / Reject exist)
 
 - **Ask first** (`ask_first`) — **Apply** / **Reject** pills sit on the canvas
-  over the chatbot, or in the left stack next to the orb when the voice agent is
-  on, for the whole pending run. The canvas shows the proposal in memory.
+  over the composer, or in the left stack next to the orb when the voice agent
+  is on, for the whole pending run. The canvas shows the proposal in memory.
   Nothing is PATCHed until **Apply**. Never `on_confirm`.
 - **Instant apply** — those buttons are bypassed. In the CMS, the website editor
   applies each validated tool to the in-memory projection and PATCHes as they
@@ -318,7 +318,7 @@ bordered card per tool. The frontend never renders a tool name (`update_slot`,
 targets and a before/after, and selecting it focuses the canvas and Content.
 Execution events still exist (`Edited 2 website sections`,
 `Created 1 website page`, `Updated SEO`, `Changed colors`, `Failed to apply`).
-Ask first Apply / Reject is a pair of **pills on the canvas** over the chatbot,
+Ask first Apply / Reject is a pair of **pills on the canvas** over the composer,
 not in the thread and not on each tool.
 
 `summary` is **deterministic**, built by the backend from the validated tool +

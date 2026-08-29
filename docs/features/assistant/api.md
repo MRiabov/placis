@@ -34,7 +34,8 @@ socket; event structs still land in `/openapi.json` for typegen.
 ### GET /v1/assistant/thread/ws
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** CMS overlay text composer after hydrate. Not `/cms`. Not Voice.
+- **Callers:** CMS overlay text composer after hydrate (including `/cms` once
+  they have called the assistant). Not Voice.
 - **Transport:** WebSocket. Query/`Authorization` as other Clerk sockets; not a
   POST body.
 - **Owner → Go (closed union):**
@@ -58,7 +59,8 @@ socket; event structs still land in `/openapi.json` for typegen.
 ### GET /v1/assistant/thread
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** overlay mount on a CMS assistant screen. Not `/cms`.
+- **Callers:** bottom-right **Assistant** on an assistant screen, including
+  `/cms`. Visiting `/cms` without calling does not hydrate.
 - **Response:** current thread `*Read` (`id`, `status`, `last_activity_at`) +
   ordered `items` (`kind`, `body`, `icon`, `created_at`). Empty thread is `200`
   with `items: []`.

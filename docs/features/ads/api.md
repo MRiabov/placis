@@ -22,11 +22,18 @@ Match → bump and return it. Mismatch → `409`; `frontend-2` re-GETs. No undo.
 Photo cleanup is media library HTTP (`POST /v1/media-assets/{id}/image-edits`),
 then PATCH the placement.
 
-- `GET /v1/ads` — list
+- `GET /v1/ads` — list. Non-archived rows. Archived only when listing Archive.
 - `POST /v1/ads` — create draft
 - `GET /v1/ads/{ad_id}`
-- `PATCH /v1/ads/{ad_id}`
+- `PATCH /v1/ads/{ad_id}` — ad draft (Creative ready until ad posting). Save
+  on click-off does not write a Published ad. Canonical:
+  [HTTP conventions](../../general-architecture/api.md).
 - `DELETE /v1/ads/{ad_id}` — ad draft only
+- `POST /v1/ads/{ad_id}/archive` — **Archive** on `/cms/ads/{id}`. Sets
+  `status=archived`. Leaves the list.
+- `POST /v1/ads/{ad_id}/unarchive` — **Unarchive** on the Archive list, toast
+  Undo. Restores `draft` when the ad has no approved variant, otherwise
+  `ad_ready_to_post`. Returns the row to the list.
 - `GET /v1/ads/{ad_id}/variants`
 - `PATCH /v1/ads/{ad_id}/variants/{variant_id}`
 - `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` — required `field` +

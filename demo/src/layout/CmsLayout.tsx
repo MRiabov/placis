@@ -8,6 +8,11 @@ import { Globe2, Megaphone, PanelLeft, UserRound } from "lucide-react";
 import { createContext, type ReactNode, useContext, useState } from "react";
 
 import { cn } from "@/lib/cn";
+import {
+  AssistantLaunch,
+  CmsAssistantLayer,
+  CmsAssistantProvider,
+} from "@/ui/CmsAssistant";
 
 export type CmsLayoutApi = {
   openDestinations: () => void;
@@ -103,7 +108,7 @@ export function CmsLayout(): ReactNode {
         >
           {labelsVisible ? (
             <Link
-              className="px-1 text-base font-medium tracking-tight"
+              className="px-1 text-[16px] font-semibold tracking-tight text-foreground sm:text-[14px]"
               to="/cms"
             >
               Placis
@@ -165,14 +170,24 @@ export function CmsLayout(): ReactNode {
         />
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <CmsLayoutContext.Provider
-          value={{
-            openDestinations: () => setOverlayOpen(true),
-          }}
-        >
-          <Outlet />
-        </CmsLayoutContext.Provider>
+      <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+        <CmsAssistantProvider>
+          <CmsLayoutContext.Provider
+            value={{
+              openDestinations: () => setOverlayOpen(true),
+            }}
+          >
+            <Outlet />
+            <AssistantLaunch
+              className={cn(
+                "absolute right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] z-30",
+                pathname.startsWith("/cms/website") &&
+                  "max-[1100px]:bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))]",
+              )}
+            />
+            <CmsAssistantLayer />
+          </CmsLayoutContext.Provider>
+        </CmsAssistantProvider>
       </div>
     </div>
   );

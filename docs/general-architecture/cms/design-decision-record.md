@@ -26,8 +26,9 @@ inventing it.
    it, dense mixed-ratio thumbs — not huge square cards). (2026-08-28) Cleanup
    waits 5–10 seconds on that view (**Cleaning up…**, scan, filling bar) before
    the before/after sweep; `?cleanup=1` and Dev **Cleanup compare** skip the
-   wait. The website assistant stays the canvas overlay (a later cut may drop
-   that overlay; this item still does not come back). (2026-08-26) On
+   wait. The website assistant is called from the bottom-right **Assistant**
+   button; the orb / overlay is what they see after they call (a later cut may
+   drop that overlay; this item still does not come back). (2026-08-26) On
    **narrow**, this left rail is gone: a full-screen overlay selector (see 4).
    Collapsed icon rail, hover peek, and click-to-pin are **wide only**.
    (2026-08-27) Website editor canvas / workspace quiet-default:
@@ -113,7 +114,17 @@ inventing it.
    (hairline, prompt radius) with a readable lift of the prompt shade, and carry
    destination logos (Sites globe, Ads megaphone). Google / Meta connect lives
    on Ads too. The two cards sit in one row on a wide screen and stack on a
-   narrow screen so the titles stay one line.
+   narrow screen so the titles stay one line. (2026-08-29): Product `/cms` does
+   not paint the leftover Connect bar. Keep that markup in the look-export HTML
+   as a restorable node (`is-hidden`). Nav glyphs are the archive strokes (1.6),
+   not Lucide defaults. Wordmark weight matches placis-web (`font-semibold`,
+   16px / 14px from `sm`, same as the placis-web rail).
+
+   (2026-08-29): `/cms` **placis** is the placis-web dashboard new-chat
+   wordmark: `text-4xl`, `leading-tight`, tracking `-0.03em`. Type weights stay
+   the placis-web map (`400` / `450` / `500` / `600`). Sidebar **Placis** uses
+   the same class as placis-web (`text-[16px] sm:text-[14px]`), not the 1100px
+   CMS breakpoint.
 
 6. **Owner field controls share one look** — Input, textarea, and select in The
    CMS, onboarding, and Ads use `.cms-field-control` (look export:

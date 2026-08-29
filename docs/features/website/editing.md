@@ -73,7 +73,10 @@ Website publication is always a separate, explicit action. Do not write a
 per-page version table. The website editor has no Save; unpublished rows are
 written on click-off (and discrete actions), paced by the safety timer. Explicit
 actions that remain: website publication, Connect website address, and apply
-website styles.
+website styles. Other CMS screens should use this same split (save on click-off
+→ unpublished website or ad draft, not the live website or a Published ad).
+Projects still share a live row; that gap is the TODO on
+[HTTP conventions](../../general-architecture/api.md).
 
 ## Models
 

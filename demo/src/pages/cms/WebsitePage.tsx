@@ -4,7 +4,6 @@ import { type ReactNode, useMemo, useState } from "react";
 import { DevStrip } from "@/dev/DevStrip";
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
-import { listen, play, stop } from "@/lib/mock-voice";
 import { ConnectModal } from "@/pages/cms/website/ConnectModal";
 import {
   type EditorRail,
@@ -13,10 +12,8 @@ import {
 import type { SiteSection } from "@/pages/cms/website/FakeSite";
 import { PreviewCanvas } from "@/pages/cms/website/PreviewCanvas";
 import { Button } from "@/ui/Button";
+import { AssistantSession, useCmsAssistant } from "@/ui/CmsAssistant";
 import { card } from "@/ui/card";
-import { DustOrb } from "@/ui/DustOrb";
-import { TextArea } from "@/ui/Field";
-import { Notice } from "@/ui/Notice";
 import { PageHeading } from "@/ui/PageHeading";
 
 const pages = [
@@ -34,6 +31,14 @@ const pages = [
 
 export function WebsitePage(): ReactNode {
   const { openDestinations } = useCmsLayout();
+  const {
+    open: assistantOpen,
+    voiceOn,
+    callAssistant,
+    closeAssistant,
+    notice,
+    setNotice,
+  } = useCmsAssistant();
   const navigate = useNavigate();
   const params = useMemo(() => new URLSearchParams(window.location.search), []);
   const fromActivation = params.get("from") === "activation";
@@ -54,16 +59,8 @@ export function WebsitePage(): ReactNode {
     params.get("subscription") === "canceled",
   );
   const [connectOpen, setConnectOpen] = useState(params.get("connect") === "1");
-  const [assistantOpen, setAssistantOpen] = useState(
-    params.get("assistant") !== "collapsed",
-  );
-  const [voiceOn, setVoiceOn] = useState(true);
-  const [speaking, setSpeaking] = useState(false);
-  const [level, setLevel] = useState(0);
-  const [askPending, setAskPending] = useState(params.get("ask") !== "0");
+  const [askPending, setAskPending] = useState(params.get("ask") === "1");
   const [copyout, setCopyout] = useState(params.get("copyout") === "1");
-  const [notice, setNotice] = useState(false);
-  const [planMode, setPlanMode] = useState(true);
   const [viewport, setViewport] = useState<"desktop" | "tablet" | "mobile">(
     () =>
       window.matchMedia("(max-width: 1100px)").matches ? "mobile" : "desktop",
@@ -89,28 +86,6 @@ export function WebsitePage(): ReactNode {
     }
     setRail(next);
     setWorkspaceOpen(true);
-  }
-
-  function startVoice(): void {
-    if (params.get("shot") === "1") {
-      setVoiceOn(true);
-      return;
-    }
-    setVoiceOn(true);
-    play("/cms-voice-greeting.mp3", {
-      onStart: () => setSpeaking(true),
-      onEnd: () => setSpeaking(false),
-      onLevel: setLevel,
-    });
-    listen({
-      onSpeaking: setSpeaking,
-      onLevel: setLevel,
-      onDenied: () => {
-        stop();
-        setVoiceOn(false);
-        setNotice(true);
-      },
-    });
   }
 
   return (
@@ -143,15 +118,15 @@ export function WebsitePage(): ReactNode {
               },
               {
                 id: "assistant",
-                label: "Assistant collapsed",
+                label: "Assistant closed",
                 on: !assistantOpen,
-                onSelect: () => setAssistantOpen(false),
+                onSelect: closeAssistant,
               },
               {
                 id: "voice",
                 label: "Voice agent",
-                on: voiceOn,
-                onSelect: startVoice,
+                on: assistantOpen && voiceOn,
+                onSelect: callAssistant,
               },
               {
                 id: "ask",
@@ -246,7 +221,7 @@ export function WebsitePage(): ReactNode {
               />
             </div>
             <ViewportSwitcher viewport={viewport} onViewport={setViewport} />
-            <div className="relative justify-self-end">
+            <div className="relative flex items-center justify-end gap-2 justify-self-end">
               <Button onClick={() => setPublishOpen((value) => !value)}>
                 Publish
               </Button>
@@ -298,6 +273,7 @@ export function WebsitePage(): ReactNode {
               "relative flex min-h-0 min-w-0 flex-col overflow-hidden max-[1100px]:row-start-1",
               "[--assistant-h:7rem] [--voice-orb:min(5.5rem,30vw)] [--voice-orb-hit:2.75rem]",
               "min-[1101px]:[--assistant-h:3.25rem] max-[480px]:[--voice-orb:min(50vw,50dvh)] max-[480px]:[--voice-orb-hit:min(12rem,42vw)]",
+              voiceOn && assistantOpen ? "is-voice" : "",
             )}
             data-editor-canvas
           >
@@ -317,50 +293,18 @@ export function WebsitePage(): ReactNode {
               radius={radius}
               selected={section}
               viewport={viewport}
-              voiceOn={voiceOn}
+              voiceOn={assistantOpen && voiceOn}
             />
-            <CanvasActions
+            <AssistantSession
               askPending={askPending}
-              assistantOpen={assistantOpen}
-              level={level}
               onAsk={() => setAskPending(false)}
-              onRestore={() => {
-                stop();
-                setVoiceOn(false);
-                setSpeaking(false);
-                setAssistantOpen(true);
-              }}
-              onVoice={() => {
-                setAssistantOpen(true);
-                if (!voiceOn) {
-                  startVoice();
-                }
-              }}
-              speaking={speaking}
-              voiceOn={voiceOn}
+              website
             />
-            {assistantOpen && !voiceOn ? (
-              <AssistantPanel
-                planMode={planMode}
-                onClose={() => setAssistantOpen(false)}
-                onPlanMode={setPlanMode}
-                onVoice={startVoice}
-              />
-            ) : null}
           </div>
         </div>
       </div>
       {connectOpen ? (
         <ConnectModal onClose={() => setConnectOpen(false)} />
-      ) : null}
-      {notice ? (
-        <Notice
-          message="Allow microphone access in your browser"
-          onPrimary={() => setNotice(false)}
-          onSecondary={startVoice}
-          primary="Switch to text mode"
-          secondary="Try again"
-        />
       ) : null}
     </>
   );
@@ -509,161 +453,5 @@ function PublishBlockers({
         )}
       </ul>
     </>
-  );
-}
-
-function AssistantPanel({
-  planMode,
-  onClose,
-  onPlanMode,
-  onVoice,
-}: {
-  planMode: boolean;
-  onClose: () => void;
-  onPlanMode: (value: boolean) => void;
-  onVoice: () => void;
-}): ReactNode {
-  return (
-    <div
-      className={card(
-        "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card",
-      )}
-      id="assistantOverlay"
-    >
-      <div className="mb-2 flex items-center justify-between">
-        <b className="text-sm">Assistant</b>
-        <button onClick={onClose} type="button">
-          Close
-        </button>
-      </div>
-      <label className="mr-3 text-xs">
-        <input
-          checked={planMode}
-          onChange={(event) => onPlanMode(event.target.checked)}
-          type="checkbox"
-        />{" "}
-        Plan mode
-      </label>
-      <TextArea
-        placeholder="e.g. Make the home website page focus on emergency call-outs"
-        rows={2}
-      />
-      <div className="mt-2 flex justify-end gap-2">
-        <Button onClick={onVoice} variant="outline">
-          Voice
-        </Button>
-        <Button>{planMode ? "Plan" : "Send"}</Button>
-      </div>
-    </div>
-  );
-}
-
-const pillClass =
-  "pointer-events-auto inline-flex h-8 items-center rounded-full px-3.5 text-[13px] font-semibold shadow-prompt";
-
-function CanvasActions({
-  askPending,
-  assistantOpen,
-  voiceOn,
-  speaking,
-  level,
-  onAsk,
-  onRestore,
-  onVoice,
-}: {
-  askPending: boolean;
-  assistantOpen: boolean;
-  voiceOn: boolean;
-  speaking: boolean;
-  level: number;
-  onAsk: () => void;
-  onRestore: () => void;
-  onVoice: () => void;
-}): ReactNode {
-  const collapsed = !assistantOpen || voiceOn;
-  return (
-    <div
-      className={cn(
-        "pointer-events-none absolute z-[21] max-w-[calc(100%-24px)] items-center whitespace-nowrap",
-        voiceOn
-          ? "right-3 bottom-3 left-auto grid w-max grid-cols-[max-content_var(--voice-orb)] grid-rows-2 items-center gap-x-3 gap-y-2 isolation-isolate max-[1100px]:bottom-[calc(12px+env(safe-area-inset-bottom))] max-[1100px]:gap-x-5 max-[1100px]:gap-y-1.5"
-          : cn(
-              "left-1/2 flex -translate-x-1/2 gap-2.5",
-              collapsed
-                ? "bottom-[calc(20px+var(--assistant-h))]"
-                : "bottom-[calc(20px+50%)]",
-            ),
-      )}
-      id="canvasActions"
-    >
-      {askPending ? (
-        <div
-          className={cn(
-            "flex shrink-0 gap-2",
-            voiceOn ? "col-start-1 row-start-1 justify-self-start" : "",
-          )}
-        >
-          <button
-            className={cn(
-              pillClass,
-              "border-0 bg-primary text-primary-foreground",
-            )}
-            onClick={onAsk}
-            type="button"
-          >
-            Apply
-          </button>
-          <button
-            className={cn(
-              pillClass,
-              "border border-border bg-white text-foreground",
-            )}
-            onClick={onAsk}
-            type="button"
-          >
-            Reject
-          </button>
-        </div>
-      ) : null}
-      {voiceOn ? (
-        <>
-          <button
-            className={cn(
-              pillClass,
-              "col-start-1 row-start-2 justify-self-start border border-border bg-white text-foreground",
-            )}
-            onClick={onRestore}
-            type="button"
-          >
-            Restore chatbot
-          </button>
-          <div className="relative col-start-2 row-start-1 row-span-2 grid size-[var(--voice-orb)] place-items-center justify-self-end self-center overflow-visible pointer-events-none isolation-isolate">
-            <button
-              aria-label="Restore chatbot"
-              className="absolute top-0 right-0 z-[2] grid size-8 place-items-center rounded-full border-0 bg-transparent p-0 text-muted-foreground pointer-events-auto hover:text-foreground"
-              onClick={onRestore}
-              title="Restore chatbot"
-              type="button"
-            >
-              <svg
-                aria-hidden="true"
-                className="size-3.5 fill-none stroke-current stroke-[1.6]"
-                viewBox="0 0 24 24"
-              >
-                <path d="M18 6 6 18M6 6l12 12" />
-              </svg>
-            </button>
-            <DustOrb
-              aria-label="Voice agent"
-              canvasClassName="absolute top-1/2 left-1/2 size-[var(--voice-orb)] -translate-x-1/2 -translate-y-1/2 bg-transparent"
-              className="relative size-[var(--voice-orb-hit)] overflow-visible bg-transparent pointer-events-auto"
-              level={level}
-              onClick={onVoice}
-              speaking={speaking}
-            />
-          </div>
-        </>
-      ) : null}
-    </div>
   );
 }

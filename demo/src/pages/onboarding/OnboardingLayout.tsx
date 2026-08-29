@@ -4,7 +4,7 @@ import {
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { type DevGroup, DevStrip } from "@/dev/DevStrip";
 import { cn } from "@/lib/cn";
 import { listen, play, stop } from "@/lib/mock-voice";
@@ -44,7 +44,12 @@ function OnboardingLayoutInner(): ReactNode {
   const [guide, setGuide] = useState<"cue" | "listening" | "dismissed">("cue");
   const [cueCopy, setCueCopy] = useState(cueTurnOn);
   const [speaking, setSpeaking] = useState(false);
-  const [level, setLevel] = useState(0);
+  const greetingRef = useRef(false);
+  const ownerRef = useRef(false);
+
+  function syncSpeaking(): void {
+    setSpeaking(greetingRef.current || ownerRef.current);
+  }
 
   useEffect(() => () => stop(), []);
 
@@ -88,28 +93,37 @@ function OnboardingLayoutInner(): ReactNode {
       return;
     }
     play("/onboarding-guide-intro.mp3", {
-      onStart: () => setSpeaking(true),
-      onEnd: () => setSpeaking(false),
-      onLevel: setLevel,
+      onStart: () => {
+        greetingRef.current = true;
+        syncSpeaking();
+      },
+      onEnd: () => {
+        greetingRef.current = false;
+        syncSpeaking();
+      },
     });
     listen({
-      onSpeaking: setSpeaking,
-      onLevel: setLevel,
+      onSpeaking: (on) => {
+        ownerRef.current = on;
+        syncSpeaking();
+      },
       onDenied: () => {
         stop();
+        greetingRef.current = false;
+        ownerRef.current = false;
         setGuide("cue");
         setCueCopy(cueMicDenied);
         setSpeaking(false);
-        setLevel(0);
       },
     });
   }
 
   function stopGuide(): void {
     stop();
+    greetingRef.current = false;
+    ownerRef.current = false;
     setGuide("dismissed");
     setSpeaking(false);
-    setLevel(0);
   }
 
   const currentIndex = steps.findIndex((entry) => entry.id === step);
@@ -213,7 +227,7 @@ function OnboardingLayoutInner(): ReactNode {
             }
             aria-pressed={guide === "listening"}
             className="size-full"
-            level={level}
+            live={guide === "listening"}
             onClick={() => {
               if (guide === "listening") {
                 return;

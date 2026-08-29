@@ -182,6 +182,8 @@ const adsRoute = createRoute({
     const str = (key: string): string | undefined =>
       typeof search[key] === "string" ? search[key] : undefined;
     return {
+      archive: str("archive"),
+      archived: str("archived"),
       compact: str("compact"),
       connected: str("connected"),
       dev: str("dev"),

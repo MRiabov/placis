@@ -22,14 +22,14 @@ checkbox. The contractor mostly ticks. No upload-your-badge. Unchecking is
 `available[]`.
 
 **Right — reviews:** Google-style cards in a 3–4 column grid (stars, author,
-review citation, origin). Three headings, same look: **Top reviews**,
-**All reviews**, **Archive**. Top reviews and All reviews are ordinary sections
-(not a dashed drop well). **Top reviews** sit first, featured-first (the first
-cards in that heading are what **ads** start with). Cap **30**. Checking an
-extra card when 30 are already top is refused (visible error). A newly pinned
-card **appends** (least featured). **All reviews** is `in_pool` and not top (the
-heading excludes cards already under Top reviews). Pinning or reordering Top
-reviews does **not** rewrite reviews website sections.
+review citation, origin with the platform mark). Three headings, same look:
+**Top reviews**, **All reviews**, **Archive**. Top reviews and All reviews are
+ordinary sections (not a dashed drop well). **Top reviews** sit first,
+featured-first (the first cards in that heading are what **ads** start with).
+Cap **30**. Checking an extra card when 30 are already top is refused (visible
+error). A newly pinned card **appends** (least featured). **All reviews** is
+`in_pool` and not top (the heading excludes cards already under Top reviews).
+Pinning or reordering Top reviews does **not** rewrite reviews website sections.
 
 **Reorder / pin by drag-and-drop.** Six-dot grip (2×3) on hover on **every**
 review card (Top reviews and All reviews). Drop onto Top reviews to pin; drop
@@ -43,13 +43,14 @@ edits **that website section’s** ordered list (add from all reviews, remove,
 reorder; cap from the website component). If a reviews website section has zero
 reviews: keep it **empty** (no fake copy; do not hide the website component).
 
-**Archive** any review (any origin): it leaves all reviews and top reviews, and
-is dropped from every reviews website section array (then compact). Toast with
-**Undo** (unarchives), then a gap, then **Archive**. **Archive** is a
-collapsible heading (chevron down on the right; not a toolbar button). Default
-collapsed. Unarchive from there. Not a hard delete. Re-import must **not**
-recreate an archived imported row (keep the row, skip that external id until
-unarchived).
+**Archive** is a red archive icon on the card (not a labelled button; it does
+not add a row). It takes that review off Top reviews and All reviews, and
+drops it from every reviews website section array (then compact). Toast
+with **Undo** (unarchives), then a gap, then the **Archive** heading. That
+heading is a collapsible list (chevron down on the right; not a toolbar
+button). Default collapsed. Unarchive from there. Not a hard delete.
+Re-import must **not** recreate an archived imported row (keep the row, skip
+that external id until unarchived).
 
 Toolbar: import from the Google Maps listing on Business details;
 **Link your Facebook** (paste URL this pass; type-to-search TBD) only when

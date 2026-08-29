@@ -16,10 +16,10 @@
   Empty composer turns the voice agent on (prerecorded greeting: cms-voice-greeting.mp3).
   Greeting plays on the first Voice start; starting again more than 5s later does not replay it.
   Force chatbot with ?voice=0.
-  `/cms` two cards. Connect: ?connected=1 hides Connect.
+  `/cms` two cards. Google Ads / Meta connect lives on Ads, not this screen.
   Narrow (≤1100px): full-screen overlay selector; Open destinations is inline with the heading.
   Ads on narrow: Open destinations + Ads; the iframe list does not repeat Your ads.
-  Home is two cards (website + ads) plus Connect. Prompt box, New chat, Paperclip,
+  Home is two cards (website + ads). Prompt box, New chat, Paperclip, Connect,
   and the old interview start stay out of this look — restore from git if needed.
   Canvas is a fake homepage, not the contractor website renderer.
   Ads look export: docs/design/ads.html (embedded as the Ads destination).
@@ -199,7 +199,7 @@
               </span>
             </button>
           </div>
-          <div class="cms-dashboard-prompt-stack">
+          <div class="cms-dashboard-prompt-stack is-hidden">
             <form class="cms-dashboard-prompt" id="homePrompt">
               <div class="cms-dashboard-prompt-actions">
                 <div class="cms-dashboard-prompt-left-actions">
@@ -506,13 +506,7 @@
                       <span class="cms-field-label">Image</span>
                       <div class="cms-media-tile cms-content-image-current" id="contentImageCurrent" style="background-image:url('media/hero-roof.jpg')"></div>
                       <div class="cms-content-image-picker">
-                        <div class="cms-media-grid">
-                          <button class="cms-media-tile is-selected" type="button" data-src="media/hero-roof.jpg" style="background-image:url('media/hero-roof.jpg')" aria-label="Rear slope after the storm"></button>
-                          <button class="cms-media-tile" type="button" data-src="media/job-repair.jpg" style="background-image:url('media/job-repair.jpg')" aria-label="Slate repair on a terrace"></button>
-                          <button class="cms-media-tile" type="button" data-src="media/job-new-roof.jpg" style="background-image:url('media/job-new-roof.jpg')" aria-label="New roof on a semi"></button>
-                          <button class="cms-media-tile" type="button" data-src="media/job-gutter.jpg" style="background-image:url('media/job-gutter.jpg')" aria-label="Guttering on the front"></button>
-                        </div>
-                        <div class="cms-upload">Drop files here to upload to the media library</div>
+                        <div class="cms-media-grid" id="contentImageGrid"></div>
                         <p class="cms-panel-hint">Pending-review AI image — publishing still needs approved media.</p>
                       </div>
                     </div>
@@ -524,7 +518,7 @@
                       <div class="cms-review-stars">★★★★★</div>
                       <b>Aoife K.</b>
                       <div class="cite">On the roof the next morning after the storm. Clean site, fair price.</div>
-                      <div class="origin">Google Maps listing</div>
+                      <div class="origin"><svg class="cms-origin-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25A7.52 7.52 0 0 0 4.5 9.77c0 5.28 6.63 11.26 7.1 11.68a.6.6 0 0 0 .8 0c.47-.42 7.1-6.4 7.1-11.68A7.52 7.52 0 0 0 12 2.25z" fill="#EA4335"/><path d="M6.9 4.45A7.48 7.48 0 0 0 4.5 9.77c0 2.1 1.05 4.3 2.33 6.22l5.17-5.17-5.1-6.37z" fill="#34A853"/><path d="M17.1 4.45 12 10.82l5.17 5.17c1.28-1.92 2.33-4.12 2.33-6.22a7.48 7.48 0 0 0-2.4-5.32z" fill="#4285F4"/><path d="M6.9 4.45 12 10.82l5.1-6.37A7.46 7.46 0 0 0 12 2.25a7.46 7.46 0 0 0-5.1 2.2z" fill="#FBBC04"/><circle cx="12" cy="9.75" fill="#fff" r="2.35"/></svg>Google Maps listing</div>
                       <label><input type="checkbox" checked /> On this website section</label>
                     </div>
                     <div class="cms-review-card is-top" style="margin-top:8px">
@@ -532,7 +526,7 @@
                       <div class="cms-review-stars">★★★★★</div>
                       <b>Mark D.</b>
                       <div class="cite">Replaced the back slope and left the garden better than they found it.</div>
-                      <div class="origin">Google Maps listing</div>
+                      <div class="origin"><svg class="cms-origin-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25A7.52 7.52 0 0 0 4.5 9.77c0 5.28 6.63 11.26 7.1 11.68a.6.6 0 0 0 .8 0c.47-.42 7.1-6.4 7.1-11.68A7.52 7.52 0 0 0 12 2.25z" fill="#EA4335"/><path d="M6.9 4.45A7.48 7.48 0 0 0 4.5 9.77c0 2.1 1.05 4.3 2.33 6.22l5.17-5.17-5.1-6.37z" fill="#34A853"/><path d="M17.1 4.45 12 10.82l5.17 5.17c1.28-1.92 2.33-4.12 2.33-6.22a7.48 7.48 0 0 0-2.4-5.32z" fill="#4285F4"/><path d="M6.9 4.45 12 10.82l5.1-6.37A7.46 7.46 0 0 0 12 2.25a7.46 7.46 0 0 0-5.1 2.2z" fill="#FBBC04"/><circle cx="12" cy="9.75" fill="#fff" r="2.35"/></svg>Google Maps listing</div>
                       <label><input type="checkbox" checked /> On this website section</label>
                     </div>
                   </div>
@@ -960,24 +954,33 @@
                       <div class="cms-review-stars">★★★★★</div>
                       <b>Aoife K.</b>
                       <div class="cite">On the roof the next morning after the storm. Clean site, fair price.</div>
-                      <div class="origin">Google Maps listing</div>
+                      <div class="origin"><svg class="cms-origin-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25A7.52 7.52 0 0 0 4.5 9.77c0 5.28 6.63 11.26 7.1 11.68a.6.6 0 0 0 .8 0c.47-.42 7.1-6.4 7.1-11.68A7.52 7.52 0 0 0 12 2.25z" fill="#EA4335"/><path d="M6.9 4.45A7.48 7.48 0 0 0 4.5 9.77c0 2.1 1.05 4.3 2.33 6.22l5.17-5.17-5.1-6.37z" fill="#34A853"/><path d="M17.1 4.45 12 10.82l5.17 5.17c1.28-1.92 2.33-4.12 2.33-6.22a7.48 7.48 0 0 0-2.4-5.32z" fill="#4285F4"/><path d="M6.9 4.45 12 10.82l5.1-6.37A7.46 7.46 0 0 0 12 2.25a7.46 7.46 0 0 0-5.1 2.2z" fill="#FBBC04"/><circle cx="12" cy="9.75" fill="#fff" r="2.35"/></svg>Google Maps listing</div>
                       <label><input type="checkbox" checked /> In top reviews</label>
+                      <button class="cms-review-archive" type="button" aria-label="Archive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+                      </button>
                     </article>
                     <article class="cms-review-card is-top">
                       <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
                       <div class="cms-review-stars">★★★★★</div>
                       <b>Mark D.</b>
                       <div class="cite">Replaced the back slope and left the garden better than they found it.</div>
-                      <div class="origin">Google Maps listing</div>
+                      <div class="origin"><svg class="cms-origin-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25A7.52 7.52 0 0 0 4.5 9.77c0 5.28 6.63 11.26 7.1 11.68a.6.6 0 0 0 .8 0c.47-.42 7.1-6.4 7.1-11.68A7.52 7.52 0 0 0 12 2.25z" fill="#EA4335"/><path d="M6.9 4.45A7.48 7.48 0 0 0 4.5 9.77c0 2.1 1.05 4.3 2.33 6.22l5.17-5.17-5.1-6.37z" fill="#34A853"/><path d="M17.1 4.45 12 10.82l5.17 5.17c1.28-1.92 2.33-4.12 2.33-6.22a7.48 7.48 0 0 0-2.4-5.32z" fill="#4285F4"/><path d="M6.9 4.45 12 10.82l5.1-6.37A7.46 7.46 0 0 0 12 2.25a7.46 7.46 0 0 0-5.1 2.2z" fill="#FBBC04"/><circle cx="12" cy="9.75" fill="#fff" r="2.35"/></svg>Google Maps listing</div>
                       <label><input type="checkbox" checked /> In top reviews</label>
+                      <button class="cms-review-archive" type="button" aria-label="Archive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+                      </button>
                     </article>
                     <article class="cms-review-card is-top">
                       <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
                       <div class="cms-review-stars">★★★★☆</div>
                       <b>Siobhan R.</b>
                       <div class="cite">They arrived on time, were polite, showed my husband the work they had completed.</div>
-                      <div class="origin">Facebook</div>
+                      <div class="origin"><svg class="cms-origin-mark" viewBox="0 0 24 24" aria-hidden="true"><rect fill="#1877F2" height="24" rx="4" width="24"/><path d="M15.86 13.5l.38-2.95h-2.82V8.66c0-.86.24-1.44 1.43-1.44h1.47V4.58c-.7-.1-1.42-.15-2.13-.15-2.1 0-3.55 1.28-3.55 3.62v2.5H8.25v2.95h2.39V20h2.78v-6.5h2.44z" fill="#fff"/></svg>Facebook</div>
                       <label><input type="checkbox" checked /> In top reviews</label>
+                      <button class="cms-review-archive" type="button" aria-label="Archive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+                      </button>
                     </article>
                   </div>
                 </div>
@@ -992,14 +995,20 @@
                       <div class="cite">I would certainly recommend them to anyone. Thank you John &amp; Team!</div>
                       <div class="origin">Owner</div>
                       <label><input type="checkbox" /> In top reviews</label>
+                      <button class="cms-review-archive" type="button" aria-label="Archive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+                      </button>
                     </article>
                     <article class="cms-review-card">
                       <span class="cms-grip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
                       <div class="cms-review-stars">★★★★★</div>
                       <b>Padraig N.</b>
                       <div class="cite">Quoted fairly and finished before the rain came in.</div>
-                      <div class="origin">Google Maps listing</div>
+                      <div class="origin"><svg class="cms-origin-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25A7.52 7.52 0 0 0 4.5 9.77c0 5.28 6.63 11.26 7.1 11.68a.6.6 0 0 0 .8 0c.47-.42 7.1-6.4 7.1-11.68A7.52 7.52 0 0 0 12 2.25z" fill="#EA4335"/><path d="M6.9 4.45A7.48 7.48 0 0 0 4.5 9.77c0 2.1 1.05 4.3 2.33 6.22l5.17-5.17-5.1-6.37z" fill="#34A853"/><path d="M17.1 4.45 12 10.82l5.17 5.17c1.28-1.92 2.33-4.12 2.33-6.22a7.48 7.48 0 0 0-2.4-5.32z" fill="#4285F4"/><path d="M6.9 4.45 12 10.82l5.1-6.37A7.46 7.46 0 0 0 12 2.25a7.46 7.46 0 0 0-5.1 2.2z" fill="#FBBC04"/><circle cx="12" cy="9.75" fill="#fff" r="2.35"/></svg>Google Maps listing</div>
                       <label><input type="checkbox" /> In top reviews</label>
+                      <button class="cms-review-archive" type="button" aria-label="Archive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+                      </button>
                     </article>
                   </div>
                 </div>
@@ -1014,7 +1023,7 @@
                       <div class="cms-review-stars">★★★☆☆</div>
                       <b>Anonymous</b>
                       <div class="cite">Took a little longer than promised.</div>
-                      <div class="origin">Google Maps listing</div>
+                      <div class="origin"><svg class="cms-origin-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25A7.52 7.52 0 0 0 4.5 9.77c0 5.28 6.63 11.26 7.1 11.68a.6.6 0 0 0 .8 0c.47-.42 7.1-6.4 7.1-11.68A7.52 7.52 0 0 0 12 2.25z" fill="#EA4335"/><path d="M6.9 4.45A7.48 7.48 0 0 0 4.5 9.77c0 2.1 1.05 4.3 2.33 6.22l5.17-5.17-5.1-6.37z" fill="#34A853"/><path d="M17.1 4.45 12 10.82l5.17 5.17c1.28-1.92 2.33-4.12 2.33-6.22a7.48 7.48 0 0 0-2.4-5.32z" fill="#4285F4"/><path d="M6.9 4.45 12 10.82l5.1-6.37A7.46 7.46 0 0 0 12 2.25a7.46 7.46 0 0 0-5.1 2.2z" fill="#FBBC04"/><circle cx="12" cy="9.75" fill="#fff" r="2.35"/></svg>Google Maps listing</div>
                       <button class="cms-small-button" type="button">Unarchive</button>
                     </article>
                   </div>
@@ -1063,7 +1072,7 @@
                   </button>
                   <h2>Media library</h2>
                 </div>
-                <p>Photos of their work, logos, and documents. Crop, focal, and cleanup live here. Attach a photo from Content when an image is selected on the canvas.</p>
+                <p>Photos of their work, logos, and documents. Crop, focal point, and cleanup live here. Attach a photo from Content when an image is selected on the canvas.</p>
               </div>
               <div class="cms-collection-header-actions">
                 <button class="button-primary" type="button">Upload</button>
@@ -1076,7 +1085,7 @@
                     <div class="cms-media-crop-rect" id="mediaCropRect" style="left:8%;top:10%;width:84%;height:78%">
                       <button class="cms-media-crop-handle" type="button" data-handle="se" aria-label="Resize crop"></button>
                     </div>
-                    <button class="cms-media-focal" id="mediaFocal" type="button" aria-label="Focal point" style="left:52%;top:38%"></button>
+                    <button class="cms-media-focal" id="mediaFocal" type="button" aria-label="Focal point. Drag to the part that should stay in view." style="left:52%;top:38%"><span class="cms-media-focal-label">Focal point</span></button>
                   </div>
                 </div>
                 <div class="cms-media-sweep is-hidden" id="mediaSweep">
@@ -1097,6 +1106,7 @@
                   <span>Crop</span>
                   <button class="cms-small-button is-on" type="button" data-crop="full">Full</button>
                   <button class="cms-small-button" type="button" data-crop="rect">Rect</button>
+                  <p class="cms-media-focal-hint">Drag the Focal point pin on the photo to the part that should stay in view.</p>
                 </div>
                 <label for="mediaCleanupPrompt">Cleanup</label>
                 <textarea class="cms-field-control" id="mediaCleanupPrompt" rows="3" maxlength="500" placeholder="How should this photo be cleaned up?"></textarea>

@@ -348,6 +348,16 @@ The alt text on a media item. Never say bare “caption”.
 
 ---
 
+### Focal point
+
+The pin on a photo in the media library that marks the part that should stay in
+view when the photo is cropped. Owner copy is **Focal point**, not bare
+“focal”.
+
+Distinct from: Crop (the rectangle).
+
+---
+
 ### Approved media
 
 A media item the owner has accepted for use.
@@ -1355,6 +1365,7 @@ not `frontend.md`) and later `internal/<home>/`; `(website)` also covers
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (onboarding) | website preview link |
 | live markdown plan | website assistant plan |
+| chatbot | Assistant, composer, or text |
 | handoff boundary | the owner approves the plan, then the assistant applies it |
 | knowledge catalog | knowledge base registry |
 | page switch / destination switch | assistant screen switch |

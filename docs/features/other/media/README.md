@@ -2,8 +2,8 @@
 
 The photo library and image editing. One library: full screen at `/cms/media`
 under **Profile**. In the website editor, attach and pick from **Content** when
-an image is selected on the canvas (same rows). Crop, focal, and cleanup stay on
-`/cms/media`.
+an image is selected on the canvas (same rows). Crop, focal point, and cleanup
+stay on `/cms/media`.
 
 ## What it is
 
@@ -93,13 +93,15 @@ clip, not resize) with **Accept** / **Reject**. Accept keeps the copy
 **Thumbs.** Twenty to forty photos is expected. Up to ten: **3** columns on a
 wide screen, **2** on a narrow screen. More than ten: **4** columns on a wide
 screen, **2** on a narrow screen. Tiles stay small. Landscape, square, and
-portrait keep their ratio.
+portrait keep their ratio. The same thumbs are the cover overlay on
+`/cms/projects/{id}` and the image pick in website editor Content.
 
 Crop / focal stay on this screen, on the selected photo in the view. It is not a
-second library. **Widget:** Crop is a rect overlay (Full vs rect). Focal is a
-draggable point on the large view. Save on click-off
-(`PATCH /v1/media-assets/{id}`). Ads placement crop/focal stay on
-`ad_image_placements` (framing **this ad**, inherited at attach).
+second library. **Widget:** Crop is a rect overlay (Full vs rect). Focal point
+is a labelled pin on the large view; the owner drags it to the part that should
+stay in view. Save on click-off (`PATCH /v1/media-assets/{id}`). Ads placement
+crop/focal stay on `ad_image_placements` (framing **this ad**, inherited at
+attach).
 
 ## Website editor
 
@@ -107,8 +109,8 @@ On `/cms/website` there is no media library rail item. Click an image on the
 canvas and **Content** shows the same rows as `/cms/media` for attach, pick, and
 upload. Crop / focal / cleanup stay on `/cms/media`. It is not a second library.
 
-- Drop image files onto that image Content to upload. A file picker does the
-  same. Ads’ “drop a photo anywhere” pattern is the same upload flow.
+- **Upload** is the tile / file picker in Content. Drop onto that tile still
+  uploads; the prompt is not drag-and-drop.
 - Drag a media library item onto an image on the canvas to attach it to that
   website slot (discrete PATCH, not text click-off).
 - Drop an image file onto the canvas: upload into the media library, then attach

@@ -39,9 +39,20 @@ export function Field({
 
 export function TextInput({
   className,
+  type,
   ...props
 }: InputHTMLAttributes<HTMLInputElement>): ReactNode {
-  return <input className={cn(controlClass, className)} {...props} />;
+  return (
+    <input
+      className={cn(
+        controlClass,
+        type === "date" ? "h-11 py-0" : null,
+        className,
+      )}
+      type={type}
+      {...props}
+    />
+  );
 }
 
 export function TextArea({
