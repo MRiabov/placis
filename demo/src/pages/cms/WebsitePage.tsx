@@ -228,47 +228,45 @@ export function WebsitePage(): ReactNode {
                 titleClassName="text-[1.125rem] font-medium tracking-[-0.02em]"
               />
             </div>
-            <fieldset className="cms-viewport-control m-0 min-w-0 max-[1100px]:justify-self-start">
+            <fieldset className="m-0 flex min-w-0 items-center gap-0.5 rounded-full border border-border bg-zinc-50 p-[3px] max-[1100px]:justify-self-start">
               <legend className="sr-only">Canvas width</legend>
-              <button
-                aria-label="Desktop"
-                aria-pressed={viewport === "desktop"}
-                className={viewport === "desktop" ? "is-active" : ""}
-                onClick={() => setViewport("desktop")}
-                type="button"
-              >
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <rect height="14" rx="2" width="20" x="2" y="3" />
-                  <path d="M8 21h8M12 17v4" />
-                </svg>
-                <span>Desktop</span>
-              </button>
-              <button
-                aria-label="Tablet"
-                aria-pressed={viewport === "tablet"}
-                className={viewport === "tablet" ? "is-active" : ""}
-                onClick={() => setViewport("tablet")}
-                type="button"
-              >
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <rect height="20" rx="2" width="16" x="4" y="2" />
-                  <path d="M12 18h.01" />
-                </svg>
-                <span>Tablet</span>
-              </button>
-              <button
-                aria-label="Mobile"
-                aria-pressed={viewport === "mobile"}
-                className={viewport === "mobile" ? "is-active" : ""}
-                onClick={() => setViewport("mobile")}
-                type="button"
-              >
-                <svg aria-hidden="true" viewBox="0 0 24 24">
-                  <rect height="20" rx="2" width="14" x="5" y="2" />
-                  <path d="M12 18h.01" />
-                </svg>
-                <span>Mobile</span>
-              </button>
+              {(
+                [
+                  ["desktop", "Desktop", "M8 21h8M12 17v4", [2, 3, 20, 14]],
+                  ["tablet", "Tablet", "M12 18h.01", [4, 2, 16, 20]],
+                  ["mobile", "Mobile", "M12 18h.01", [5, 2, 14, 20]],
+                ] as const
+              ).map(([id, label, path, box]) => (
+                <button
+                  aria-label={label}
+                  aria-pressed={viewport === id}
+                  className={cn(
+                    "relative inline-flex items-center gap-1.5 rounded-full border-0 bg-transparent px-3 py-1.5 text-[12.5px] font-[450] text-muted-foreground max-[1100px]:size-11 max-[1100px]:min-w-11 max-[1100px]:justify-center max-[1100px]:gap-0 max-[1100px]:p-0",
+                    viewport === id
+                      ? "bg-secondary text-foreground shadow-[0_0_0_1px_var(--color-border)]"
+                      : "",
+                  )}
+                  key={id}
+                  onClick={() => setViewport(id)}
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="block size-4 shrink-0 fill-none stroke-current stroke-[1.6] max-[1100px]:size-[18px]"
+                    viewBox="0 0 24 24"
+                  >
+                    <rect
+                      height={box[3]}
+                      rx="2"
+                      width={box[2]}
+                      x={box[0]}
+                      y={box[1]}
+                    />
+                    <path d={path} />
+                  </svg>
+                  <span className="max-[1100px]:sr-only">{label}</span>
+                </button>
+              ))}
             </fieldset>
             <div className="relative justify-self-end">
               <Button onClick={() => setPublishOpen((value) => !value)}>
@@ -374,10 +372,11 @@ export function WebsitePage(): ReactNode {
           />
           <div
             className={cn(
-              "cms-editor-canvas relative flex min-h-0 min-w-0 flex-col overflow-hidden max-[1100px]:row-start-1",
-              voiceOn ? "is-voice" : "",
-              !assistantOpen || voiceOn ? "is-assistant-collapsed" : "",
+              "relative flex min-h-0 min-w-0 flex-col overflow-hidden max-[1100px]:row-start-1",
+              "[--assistant-h:7rem] [--voice-orb:min(5.5rem,30vw)] [--voice-orb-hit:2.75rem]",
+              "min-[1101px]:[--assistant-h:3.25rem] max-[480px]:[--voice-orb:min(50vw,50dvh)] max-[480px]:[--voice-orb-hit:min(12rem,42vw)]",
             )}
+            data-editor-canvas
           >
             <PreviewCanvas
               assistantOpen={assistantOpen && !voiceOn}
@@ -399,6 +398,7 @@ export function WebsitePage(): ReactNode {
             />
             <CanvasActions
               askPending={askPending}
+              assistantOpen={assistantOpen}
               level={level}
               onAsk={() => setAskPending(false)}
               onRestore={() => {
@@ -468,10 +468,12 @@ export function WebsitePage(): ReactNode {
   );
 }
 
-const pillClass = "cms-ask-pill";
+const pillClass =
+  "pointer-events-auto inline-flex h-8 items-center rounded-full px-3.5 text-[13px] font-semibold shadow-prompt";
 
 function CanvasActions({
   askPending,
+  assistantOpen,
   voiceOn,
   speaking,
   level,
@@ -480,6 +482,7 @@ function CanvasActions({
   onVoice,
 }: {
   askPending: boolean;
+  assistantOpen: boolean;
   voiceOn: boolean;
   speaking: boolean;
   level: number;
@@ -487,19 +490,44 @@ function CanvasActions({
   onRestore: () => void;
   onVoice: () => void;
 }): ReactNode {
+  const collapsed = !assistantOpen || voiceOn;
   return (
-    <div className="cms-canvas-actions" id="canvasActions">
+    <div
+      className={cn(
+        "pointer-events-none absolute z-[21] max-w-[calc(100%-24px)] items-center whitespace-nowrap",
+        voiceOn
+          ? "right-3 bottom-3 left-auto grid w-max grid-cols-[max-content_var(--voice-orb)] grid-rows-2 items-center gap-x-3 gap-y-2 isolation-isolate max-[1100px]:bottom-[calc(12px+env(safe-area-inset-bottom))] max-[1100px]:gap-x-5 max-[1100px]:gap-y-1.5"
+          : cn(
+              "left-1/2 flex -translate-x-1/2 gap-2.5",
+              collapsed
+                ? "bottom-[calc(20px+var(--assistant-h))]"
+                : "bottom-[calc(20px+50%)]",
+            ),
+      )}
+      id="canvasActions"
+    >
       {askPending ? (
-        <div className="cms-ask-pills">
+        <div
+          className={cn(
+            "flex shrink-0 gap-2",
+            voiceOn ? "col-start-1 row-start-1 justify-self-start" : "",
+          )}
+        >
           <button
-            className={`${pillClass} is-apply`}
+            className={cn(
+              pillClass,
+              "border-0 bg-primary text-primary-foreground",
+            )}
             onClick={onAsk}
             type="button"
           >
             Apply
           </button>
           <button
-            className={`${pillClass} is-reject`}
+            className={cn(
+              pillClass,
+              "border border-border bg-white text-foreground",
+            )}
             onClick={onAsk}
             type="button"
           >
@@ -510,27 +538,35 @@ function CanvasActions({
       {voiceOn ? (
         <>
           <button
-            className="cms-voice-restore"
+            className={cn(
+              pillClass,
+              "col-start-1 row-start-2 justify-self-start border border-border bg-white text-foreground",
+            )}
             onClick={onRestore}
             type="button"
           >
             Restore chatbot
           </button>
-          <div className="cms-voice-orb-wrap">
+          <div className="relative col-start-2 row-start-1 row-span-2 grid size-[var(--voice-orb)] place-items-center justify-self-end self-center overflow-visible pointer-events-none isolation-isolate">
             <button
               aria-label="Restore chatbot"
-              className="cms-voice-close"
+              className="absolute top-0 right-0 z-[2] grid size-8 place-items-center rounded-full border-0 bg-transparent p-0 text-muted-foreground pointer-events-auto hover:text-foreground"
               onClick={onRestore}
               title="Restore chatbot"
               type="button"
             >
-              <svg aria-hidden="true" viewBox="0 0 24 24">
+              <svg
+                aria-hidden="true"
+                className="size-3.5 fill-none stroke-current stroke-[1.6]"
+                viewBox="0 0 24 24"
+              >
                 <path d="M18 6 6 18M6 6l12 12" />
               </svg>
             </button>
             <DustOrb
               aria-label="Voice agent"
-              className={cn("cms-voice-orb", speaking ? "is-speaking" : "")}
+              canvasClassName="absolute top-1/2 left-1/2 size-[var(--voice-orb)] -translate-x-1/2 -translate-y-1/2 bg-transparent"
+              className="relative size-[var(--voice-orb-hit)] overflow-visible bg-transparent pointer-events-auto"
               level={level}
               onClick={onVoice}
               speaking={speaking}

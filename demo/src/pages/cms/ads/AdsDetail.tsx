@@ -64,14 +64,17 @@ export function AdsDetail(): ReactNode {
             "overflow-hidden rounded-prompt border-hairline shadow-prompt",
           )}
         >
-          <div className="dhead">
-            <div className="dhead-name">
-              <span aria-hidden="true" className="inplace-sizer">
+          <div className="flex min-w-0 items-center gap-4 border-b border-hairline px-5 py-4 max-[720px]:flex-wrap max-[720px]:items-start max-[720px]:gap-3 max-[720px]:p-4">
+            <div className="grid min-w-0 flex-1 justify-items-stretch max-[720px]:w-full max-[720px]:flex-none">
+              <span
+                aria-hidden="true"
+                className="invisible pointer-events-none col-start-1 row-start-1 min-w-[8ch] overflow-hidden px-1 pt-0.5 pb-2 text-[21px] leading-[1.25] font-semibold tracking-[-0.025em] whitespace-pre max-[720px]:min-w-0 max-[720px]:overflow-wrap-anywhere max-[720px]:whitespace-pre-wrap"
+              >
                 {name || " "}
               </span>
               <textarea
                 aria-label="Ad name"
-                className="inplace"
+                className="col-start-1 row-start-1 m-0 h-full min-h-0 w-full min-w-0 resize-none appearance-none overflow-hidden border-0 border-b border-transparent bg-transparent px-1 pt-0.5 pb-2 text-[21px] leading-[1.25] font-semibold tracking-[-0.025em] shadow-none focus:border-foreground focus:outline-none max-[720px]:overflow-wrap-anywhere max-[720px]:whitespace-pre-wrap"
                 onChange={(event) => setName(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
@@ -83,12 +86,12 @@ export function AdsDetail(): ReactNode {
                 value={name}
               />
             </div>
-            <div className="dhead-actions">
+            <div className="flex min-w-0 shrink-0 flex-wrap items-center gap-2 max-[720px]:w-full">
               <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800">
                 Creative ready
               </span>
               <span
-                className="tipwrap"
+                className="group relative inline-flex after:pointer-events-none after:absolute after:bottom-[calc(100%+6px)] after:left-1/2 after:z-10 after:-translate-x-1/2 after:rounded-[10px] after:bg-foreground after:px-2.5 after:py-1.5 after:text-xs after:whitespace-nowrap after:text-primary-foreground after:opacity-0 after:shadow-prompt after:transition-opacity after:content-[attr(data-tip)] hover:after:opacity-100 focus-within:after:opacity-100 max-[720px]:after:max-w-[min(280px,calc(100vw-32px))] max-[720px]:after:whitespace-normal"
                 data-tip="Publish is not available yet — ad posting to Meta is coming"
               >
                 <Button disabled variant="outline">

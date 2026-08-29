@@ -48,7 +48,7 @@ export function PreviewCanvas({
     function sync(): void {
       const scaleEl = scaleRef.current;
       const frame = frameRef.current;
-      const canvas = stage?.closest(".cms-editor-canvas");
+      const canvas = stage?.closest("[data-editor-canvas]");
       if (!stage || !scaleEl || !frame || !(canvas instanceof HTMLElement)) {
         return;
       }
@@ -73,7 +73,7 @@ export function PreviewCanvas({
       frame.style.transform = `scale(${scale})`;
       scaleEl.style.width = `${layoutW * scale}px`;
       scaleEl.style.height = `${availH}px`;
-      const site = frame.querySelector(".fake-site");
+      const site = frame.querySelector("[data-fake-site]");
       if (!(site instanceof HTMLElement)) {
         return;
       }
@@ -95,8 +95,8 @@ export function PreviewCanvas({
       }
       const visualCover = Math.max(0, canvasRect.bottom - coverTop) + 12;
       const pad = `${Math.ceil(visualCover / scale)}px`;
-      site.style.setProperty("--cms-canvas-scroll-pad", pad);
       site.style.paddingBottom = pad;
+      site.style.scrollPaddingBottom = pad;
     }
 
     const observer = new ResizeObserver(sync);
@@ -114,24 +114,32 @@ export function PreviewCanvas({
   return (
     <>
       {copyout ? (
-        <p className="cms-copy-error">
+        <p className="relative z-[25] mx-4 mt-3 shrink-0 rounded-lg border border-[#b42318] bg-[#fef2f2] px-3 py-2 text-xs text-[#b42318]">
           Copy-out has not succeeded after 10 seconds. Leaving is blocked until
           this succeeds or you discard.
         </p>
       ) : null}
-      <div className="cms-stage-grid" ref={stageRef}>
-        <div className="cms-stage-scale" ref={scaleRef}>
+      <div
+        className="relative z-0 flex min-h-0 flex-1 items-stretch justify-center overflow-hidden bg-white bg-[linear-gradient(rgb(39_39_42/4.5%)_1px,transparent_1px),linear-gradient(90deg,rgb(39_39_42/4.5%)_1px,transparent_1px)] bg-[size:24px_24px] p-6 max-[1100px]:p-3"
+        ref={stageRef}
+      >
+        <div
+          className="relative min-h-0 min-w-0 shrink-0 overflow-hidden"
+          ref={scaleRef}
+        >
           <div
-            className={`cms-public-preview-shell is-${viewport}`}
+            className="absolute top-0 left-0 grid min-h-0 origin-top-left overflow-hidden rounded-panel bg-white bg-[linear-gradient(rgb(39_39_42/4.5%)_1px,transparent_1px),linear-gradient(90deg,rgb(39_39_42/4.5%)_1px,transparent_1px)] bg-[size:24px_24px] shadow-prompt [grid-template-rows:auto_minmax(0,1fr)]"
             ref={frameRef}
           >
-            <div className="cms-browser-chrome">
-              <div aria-hidden="true" className="cms-browser-chrome-dots">
-                <span />
-                <span />
-                <span />
+            <div className="flex items-center gap-2.5 border-b border-border bg-secondary px-3.5 py-[9px]">
+              <div aria-hidden="true" className="flex gap-1.5">
+                <span className="size-2 rounded-full bg-hairline" />
+                <span className="size-2 rounded-full bg-hairline" />
+                <span className="size-2 rounded-full bg-hairline" />
               </div>
-              <div className="cms-browser-chrome-url">{host}</div>
+              <div className="flex-1 overflow-hidden rounded-full border border-border bg-white px-3 py-[5px] text-center text-[11px] text-ellipsis whitespace-nowrap text-muted-foreground">
+                {host}
+              </div>
             </div>
             <FakeSite
               density={density}
