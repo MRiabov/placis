@@ -112,9 +112,9 @@ export function MediaPage(): ReactNode {
           <Button>Upload</Button>
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
-          Photos of their work, logos, and documents. Crop, focal, and cleanup
-          live here. Attach a photo from Content when an image is selected on
-          the canvas.
+          Photos of their work, logos, and documents. Crop, focal point, and
+          cleanup live here. Attach a photo from Content when an image is
+          selected on the canvas.
         </p>
         <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_16rem]">
           <div
@@ -170,29 +170,35 @@ export function MediaPage(): ReactNode {
             }}
           >
             {framingHidden ? null : (
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-zinc-600">Crop</span>
-                <button
-                  className={cn(
-                    "rounded-lg border px-2 py-1 text-xs",
-                    crop === "full" ? "border-primary" : "border-border",
-                  )}
-                  onClick={() => setCrop("full")}
-                  type="button"
-                >
-                  Full
-                </button>
-                <button
-                  className={cn(
-                    "rounded-lg border px-2 py-1 text-xs",
-                    crop === "rect" ? "border-primary" : "border-border",
-                  )}
-                  onClick={() => setCrop("rect")}
-                  type="button"
-                >
-                  Rect
-                </button>
-              </div>
+              <>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-zinc-600">Crop</span>
+                  <button
+                    className={cn(
+                      "rounded-lg border px-2 py-1 text-xs",
+                      crop === "full" ? "border-primary" : "border-border",
+                    )}
+                    onClick={() => setCrop("full")}
+                    type="button"
+                  >
+                    Full
+                  </button>
+                  <button
+                    className={cn(
+                      "rounded-lg border px-2 py-1 text-xs",
+                      crop === "rect" ? "border-primary" : "border-border",
+                    )}
+                    onClick={() => setCrop("rect")}
+                    type="button"
+                  >
+                    Rect
+                  </button>
+                </div>
+                <p className="text-xs leading-snug text-muted-foreground">
+                  Drag the Focal point pin on the photo to the part that should
+                  stay in view.
+                </p>
+              </>
             )}
             <Field label="Cleanup">
               <TextArea
@@ -272,8 +278,8 @@ function FocalPin({
 
   return (
     <button
-      aria-label="Focal point"
-      className="absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-primary shadow"
+      aria-label="Focal point. Drag to the part that should stay in view."
+      className="absolute z-[1] -translate-x-1/2 -translate-y-1/2 bg-transparent p-0"
       onPointerDown={(event) => {
         event.preventDefault();
         event.currentTarget.setPointerCapture(event.pointerId);
@@ -286,7 +292,15 @@ function FocalPin({
       }}
       style={{ left: `${x}%`, top: `${y}%` }}
       type="button"
-    />
+    >
+      <span
+        aria-hidden="true"
+        className="block size-4 rounded-full border-2 border-white bg-primary shadow"
+      />
+      <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-black/70 px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-white">
+        Focal point
+      </span>
+    </button>
   );
 }
 
