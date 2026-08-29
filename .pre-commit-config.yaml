@@ -16,12 +16,12 @@ repos:
       - id: demo-check
         name: demo biome and typecheck
         language: system
-        entry: bash -lc 'cd demo && pnpm check'
+        entry: bash -lc 'cd apps/demo && pnpm check'
         pass_filenames: false
-        files: ^demo/
+        files: ^apps/demo/
       - id: check-dont-say
         name: Don't-say glossary check
         language: system
         entry: go run ./cmd/ci/check-dont-say
         pass_filenames: true
-        files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$|^(demo|src)/.*\.(md|go|mjs|js|ts|tsx)$'
+        files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$|^(apps/demo|src)/.*\.(md|go|mjs|js|ts|tsx)$'

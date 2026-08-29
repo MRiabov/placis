@@ -6,7 +6,7 @@ Related docs:
 
 1. [Billing PRD](prd.md)
 2. [Billing ADR](ADR.md)
-3. [Look export](../../../demo/README.md) (`/cms/billing`)
+3. [Look export](../../../apps/demo/README.md) (`/cms/billing`)
 
 ## Purpose
 
@@ -21,8 +21,8 @@ children / Ads — no Usage & billing row there.
 
 ## Design mock
 
-[`demo/`](../../../demo/README.md) `/cms/billing`. Dev strip states: pool remaining, 20% left, out of
-usage credit, cancels at period end, subscription not active. `?shot=1` hides
+[`apps/demo/`](../../../apps/demo/README.md) `/cms/billing`. Dev strip states: pool remaining, 20% left, out
+of usage credit, cancels at period end, subscription not active. `?shot=1` hides
 the strip. Codex for the look. Do not port auto-reload, usage-limit bars, or
 predecessor dashboard Usage & billing copy. Change plan uses the same
 three-card + Enterprise plan row as placis.com `/pricing/` (placis-web pricing

@@ -3,7 +3,7 @@ name: frontend-quality
 on:
   pull_request:
     paths:
-      - "demo/**"
+      - "apps/demo/**"
       - ".github/workflows/frontend-quality.yml"
       - "cmd/ci/check-dont-say/**"
       - "docs/glossary.md"
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: demo
+        working-directory: apps/demo
     steps:
       - uses: actions/checkout@v4
 
@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: demo/pnpm-lock.yaml
+          cache-dependency-path: apps/demo/pnpm-lock.yaml
 
       - uses: actions/setup-go@v5
         with:

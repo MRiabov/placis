@@ -14,7 +14,7 @@ the overview; the **single authority** for the feature is [`ad-generation/`](ad-
 - [design-decision-record.md](ad-generation/design-decision-record.md) — Archive look (same as projects)
 - [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](ad-generation/testing.md) — the ads E2E test
-- [ads look](../../../demo/README.md) — `/cms/ads` in the look app
+- [ads look](../../../apps/demo/README.md) — `/cms/ads` in the look app
 - [ads.html](../../design/ads.html) — HTML archive (also was embedded at
   [cms.html](../../design/cms.html)?scene=ads)
 - [ad-application/meta](ad-application/meta/) — investigation for future ad posting to Meta (not the

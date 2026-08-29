@@ -1,6 +1,6 @@
 # Onboarding look
 
-Editable look: [`demo/`](../../../demo/README.md) `/onboarding/*`. HTML archive:
+Editable look: [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*`. HTML archive:
 [onboarding.html](../../design/onboarding.html).
 
 [Design decision record](design-decision-record.md). The yellow strip is
@@ -26,7 +26,7 @@ not invent a second palette.
 Screens in the mock: Find, Review, client interview, wait teaser. The generated
 scene is a mock of the [preview website address](pipeline/07-website-preview.md) (website-activation strip
 sticky at the bottom), so Skip generation has somewhere to land. After pay it
-opens [`demo/`](../../../demo/README.md) `/cms/website` — website editor with **Publish**. Product
+opens [`apps/demo/`](../../../apps/demo/README.md) `/cms/website` — website editor with **Publish**. Product
 website preview and website activation still live on that host, not on
 `/onboarding/preview`.
 

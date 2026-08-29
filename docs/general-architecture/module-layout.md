@@ -51,11 +51,11 @@ migrations/       # goose SQL migrations (greenfield)
 apps/
   contractor-website/  # Astro + React islands (Cloudflare Workers); one Worker for every tenant
   placis-website/      # Astro static; R2 origin for placis.com
+  demo/                # Look app (Vite + Tailwind). Own lockfile; not a workspace member. Run from apps/demo. Sync: scripts/sync-look-demo.sh
 packages/
   website-components/  # website templates, website component renderers + contract.json, website style catalog presets
 catalog/          # later: typed structs dumped to JSON; first-pass JSON sidecars live in packages/website-components
 frontend-2/       # CMS + onboarding (Vite); website preview is apps/contractor-website
-demo/             # Standalone look app (Vite + Tailwind). Copyable; not a workspace member. Quality lives in this folder (Biome, tsc, Knip, file-size, tokens). Sync: scripts/sync-look-demo.sh. Run from demo/: pnpm install && pnpm dev
 docs/
 go.mod
 ```

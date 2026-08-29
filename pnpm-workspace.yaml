@@ -1,5 +1,6 @@
 packages:
   - apps/*
+  - '!apps/demo' # look app: own lockfile, copied to demo.placis.com
   - frontend-2
   - packages/*
 allowBuilds:
