@@ -88,24 +88,24 @@ inventing it.
    (placis-web default `PlacisPromptBox`, `w-full max-w-2xl`). Do not use the
    compact `19.5rem` mobile cap. Wordmark + prompt are vertically centered in
    the main column (Open destinations stays top-left on narrow). Usage copy is
-   not a subscription shelf. (2026-08-27; two-card `/cms` 2026-08-28 —
-   [assistant design decision 3](../../features/assistant/design-decision-record.md).) New chat clones dashboard `PlacisPromptBox`
-   controls: **Connect** (flat hairline, white at rest, zinc-50 only while the
-   Google / Meta panel is open), Paperclip (hidden under 640px), animated
-   AudioLines Voice on the right (desktop only), ArrowRight send. Connect is
-   gone when Google Ads and Meta are both connected (same status as Ads; do not
-   flash the control). It is not Connect website address. Placeholders cycle.
-   Secondary controls stay outline (canvas fill, `--border`, hover zinc-50) —
-   `--secondary` is a token, not a resting chip. Voice on New chat opens a
-   full-screen **orb** for the client interview (soft glowing circle, Back). Do
-   not port the DustOrb particle renderer bit by bit; the later `frontend-2`
-   port can keep its cheaper orb. Website-editor Voice stays the canvas orb
-   ([website design decision 18](../../features/website/design-decision-record.md)). Token table: [design.md](design.md). (2026-08-27)
-   (2026-08-27): Product `/cms` is two cards (**Do my website…** /
+   not predecessor dashboard upgrade copy. (2026-08-27; two-card `/cms`
+   2026-08-28 — [assistant design decision 3](../../features/assistant/design-decision-record.md).) New chat clones dashboard
+   `PlacisPromptBox` controls: **Connect** (flat hairline, white at rest,
+   zinc-50 only while the Google / Meta panel is open), Paperclip (hidden under
+   640px), animated AudioLines Voice on the right (desktop only), ArrowRight
+   send. Connect is gone when Google Ads and Meta are both connected (same
+   status as Ads; do not flash the control). It is not Connect website address.
+   Placeholders cycle. Secondary controls stay outline (canvas fill, `--border`,
+   hover zinc-50) — `--secondary` is a token, not a resting chip. Voice on New
+   chat opens a full-screen **orb** for the client interview (soft glowing
+   circle, Back). Do not port the DustOrb particle renderer bit by bit; the
+   later `frontend-2` port can keep its cheaper orb. Website-editor Voice stays
+   the canvas orb ([website design decision 18](../../features/website/design-decision-record.md)). Token table: [design.md](design.md).
+   (2026-08-27) (2026-08-27): Product `/cms` is two cards (**Do my website…** /
    **Run my ads**), not this prompt. Keep the prompt-box markup in the
    look-export HTML for later restore. Hide Paperclip, Start client interview,
-   subscription-shelf copy. Overlay rows drop New chat. Connect stays.
-   (2026-08-28): Voice on `/cms` is gone. Overlay look:
+   predecessor dashboard upgrade copy. Overlay rows drop New chat. Connect
+   stays. (2026-08-28): Voice on `/cms` is gone. Overlay look:
    [assistant design decision record](../../features/assistant/design-decision-record.md). `/cms` cards clone the prompt-box look
    (hairline, prompt radius) with a readable lift of the prompt shade, and carry
    destination logos (Sites globe, Ads megaphone). Google / Meta connect lives

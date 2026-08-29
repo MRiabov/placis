@@ -9,7 +9,7 @@ Feature `api.md` files:
 - [Auth](../features/other/auth/api.md)
 - [Onboarding](../features/onboarding/api.md) (includes website activation; SSE reads [ETL](../features/etl/README.md) `etl.runs` — ETL
   has no public `api.md`)
-- [Billing](../features/billing/api.md) (usage credit; stub)
+- [Billing](../features/billing/api.md) (usage credit, Usage & billing)
 - [Website](../features/website/api.md) (unpublished website, website publication, Connect website address)
 - [Details](../features/business-profile/details/api.md) (live business profile, certifications, reviews)
 - [Projects](../features/business-profile/projects/api.md)
@@ -140,8 +140,12 @@ union and are not on `GET /v1/me` as a dump.
 Named fields: `code`, `message`, optional `retry_after`.
 
 - `402 usage_credit_exhausted` — billed work when usage credit is exhausted.
-  Not 403 (lifecycle) and not 409 (conflict). Named on billed assistant HTTP
-  in [billing](../features/billing/api.md).
+  Not 409 (conflict). Named on billed assistant HTTP in
+  [billing](../features/billing/api.md).
+- `402 subscription_canceled` — website publication or live website rollback
+  when the subscription is not active (`subscription_status=canceled`). Not
+  `usage_credit_exhausted`. Named on
+  [website publication](../features/website/api.md).
 - `409 edit_history_conflict` — unpublished website PATCH when
   `base_edit_history_head` is stale. `frontend-2` re-GETs with
   `include_edit_history=true`.

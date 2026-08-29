@@ -81,7 +81,9 @@ numbers are HTML comments so later entries keep their numbers.
    (see 13). (2026-08-26) Host rows and New URL stay one group of actions (open
    a host, Connect). Blockers sit after that group, not between website
    addresses and New URL. The dropdown is actions, not a status card of labels.
-   (2026-08-27)
+   (2026-08-27) (2026-08-29) When the subscription is not active, a third jump:
+   **Pay the subscription price to Publish** → Usage & billing. Not extra usage
+   credit. Live website rollback uses the same jump.
 
 <!-- placeholder - insert design decision 4 here -->
 

@@ -2225,6 +2225,98 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round
 .cms-notice.is-hidden { display: none !important; }
 .cms-notice p { margin: 0 0 12px; font-size: 13px; line-height: 1.4; }
 .cms-notice-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+.cms-billing {
+  padding: 20px 24px 32px;
+  max-width: 40rem;
+}
+.cms-billing-body { margin-top: 20px; }
+.cms-billing-tier {
+  margin: 0;
+  font-size: 13px;
+  color: var(--cms-text-muted);
+}
+.cms-billing-remaining {
+  margin: 8px 0 16px;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.cms-billing-bar {
+  display: flex;
+  overflow: hidden;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--cms-surface-sunken);
+}
+.cms-billing-seg { display: block; height: 100%; min-width: 0; }
+.cms-billing-seg.is-voice { background: var(--cms-info); }
+.cms-billing-seg.is-image { background: var(--cms-warning); }
+.cms-billing-seg.is-text { background: var(--cms-success); }
+.cms-billing-seg.is-left { background: var(--cms-surface-active); }
+.cms-billing-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin: 12px 0 20px;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: var(--cms-text-muted);
+}
+.cms-billing-legend i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 99px;
+  background: var(--cms-surface-active);
+}
+.cms-billing-legend i.is-voice { background: var(--cms-info); }
+.cms-billing-legend i.is-image { background: var(--cms-warning); }
+.cms-billing-legend i.is-text { background: var(--cms-success); }
+.cms-billing-plans {
+  margin: 28px 0 16px;
+}
+.cms-billing-plans h2 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.cms-billing-plans ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--cms-radius-control);
+  overflow: hidden;
+}
+.cms-billing-plans li + li {
+  border-top: 1px solid var(--border);
+}
+.cms-billing-plan {
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+}
+.cms-billing-plan span:last-child {
+  color: var(--cms-text-muted);
+  white-space: nowrap;
+}
+.cms-billing-plan.is-current span:first-child { font-weight: 500; }
+@media (hover: hover) and (pointer: fine) {
+  .cms-billing-plan:hover { background: var(--cms-surface-sunken); }
+}
+#billingCancel,
+#billingKeep { margin-top: 4px; }
 .cms-media-stage {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem);

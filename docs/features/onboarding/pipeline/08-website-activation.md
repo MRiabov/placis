@@ -82,22 +82,32 @@ version.
 
 ## After website activation (billing)
 
-Unpaid access to the application is **forbidden**. Copy later:
-**keep your Placis Pro subscription to continue to edit and host the website**.
+Unpaid access to the application (never website-activated) is **forbidden**.
+After activation, stopping the subscription price unpublishes the website and
+blocks Publish; they can still edit. Copy later: **keep your Placis Pro plan
+subscription to host the website**.
 
 1. **One upfront pay** (this checkout; predecessor EUR 4900 stays until that
    epic).
-2. Then about **50 EUR / month**. If it lapses, the website is **unpublished**.
+2. Then a **subscription price** on a **subscription tier** (provisional
+   catalogue: [billing PRD](../../billing/prd.md)). If they stop paying, the
+   website is **unpublished** and they cannot **Publish** until the
+   subscription is active again ([billing](../../billing/architecture.md)).
+   CMS edit stays open (`tenants.status=active`).
 3. **Do not commit to Clerk Billing yet.** Optimistic DB cache of subscription
    status; refresh when expected.
-4. Monthly **usage credit** is visible in the UI as **$**. Our cost is **×5** to
-   the owner: $50 shown ⇒ they can spend **$10** of our cost.
-   **Generation hops** (text, images, ads) are token / per-image invoices.
-   **CMS Voice** is xAI **per-minute audio** (plus text-item fees), not a token
-   hop — [billing meters](../../billing/README.md). Persist remaining credit; check it on generation hops
-   and before a CMS realtime connection.
+4. Monthly **usage credit** is visible on **Usage & billing** as **$**. Unused
+   usage credit carries over. Our cost is **×5** to the owner: $50 shown ⇒ they
+   can spend **$10** of our cost. Token / per-image invoices and **Voice** (xAI
+   per-minute audio plus text-item fees) debit the same pool —
+   [billing architecture](../../billing/architecture.md). Persist remaining
+   usage credit on the AI use ledger; check it before billed work and before a
+   billed realtime connection.
 
-Currency for the retainer is **EUR**. Usage credit display is **$**.
+Currency for the website-activation pay stays as 08 specifies until that epic.
+Usage credit display is **$** (provisional USD catalogue).
+
+See [billing](../../billing/README.md).
 
 ## Invariants
 

@@ -23,7 +23,10 @@
   and the old interview start stay out of this look — restore from git if needed.
   Canvas is a fake homepage, not the contractor website renderer.
   Ads look export: docs/design/ads.html (embedded as the Ads destination).
-  Usage / billing stub: ?scene=billing (no billing.html).
+  Usage & billing: ?scene=billing (no billing.html). Open from the account menu.
+  Subscription not active: ?scene=billing&billing=canceled or
+  ?scene=website&publication=1&subscription=canceled (Publish blocked).
+  Cancels at period end: ?scene=billing&billing=ending.
   Onboarding look export: docs/design/onboarding.html.
   After website activation: ?scene=website&publication=1&from=activation (Publish open, no blockers).
   Media cleanup waits ~7.5s on the large view, then the before/after sweep.
@@ -45,7 +48,15 @@
       <button type="button" class="viewtab" data-state="ads-flow" data-ads-view="flow">New ad</button>
       <button type="button" class="viewtab" data-state="ads-review" data-ads-view="review">Review</button>
     </div>
-    <span class="viewtabs-empty is-hidden" data-state-for="billing">Stub usage scene. Billing docs will be rewritten completely.</span>
+    <span class="viewtabs-empty is-hidden" data-state-for="billing">Usage & billing. Open from the account menu.</span>
+    <div class="viewtabs-states is-hidden" data-state-for="billing">
+      <span class="viewtabs-group">Usage & billing</span>
+      <button type="button" class="viewtab on" data-state="billing-ok">Pool remaining</button>
+      <button type="button" class="viewtab" data-state="billing-warn">20% left</button>
+      <button type="button" class="viewtab" data-state="billing-empty">Out of usage credit</button>
+      <button type="button" class="viewtab" data-state="billing-canceled">Subscription not active</button>
+      <button type="button" class="viewtab" data-state="billing-ending">Cancels at period end</button>
+    </div>
     <div class="viewtabs-states is-hidden" data-state-for="home">
       <span class="viewtabs-group">Home</span>
       <button type="button" class="viewtab" data-state="mcp-connected">All connected</button>
@@ -63,6 +74,7 @@
       <button type="button" class="viewtab on" data-state="voice">Voice agent</button>
       <button type="button" class="viewtab on" data-state="assistant">Assistant collapsed</button>
       <button type="button" class="viewtab" data-state="publication">Publish</button>
+      <button type="button" class="viewtab" data-state="subscription">Subscription not active</button>
       <button type="button" class="viewtab" data-state="connect">Connect</button>
       <button type="button" class="viewtab" data-state="notify">Notification</button>
       <button type="button" class="viewtab on" data-state="section" data-section="hero">Hero</button>
@@ -131,9 +143,9 @@
             <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M4 8h10l6-4v16l-6-4H4z"/></svg>
             <span class="js-expanded-only">Ads</span>
           </button>
-          <button class="cms-dashboard-nav-item" data-nav="billing" data-scene="billing" type="button" aria-label="Usage">
+          <button class="cms-dashboard-nav-item is-hidden" data-nav="billing" data-scene="billing" type="button" aria-label="Usage & billing">
             <svg class="js-collapsed-only is-hidden" viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            <span class="js-expanded-only">Usage</span>
+            <span class="js-expanded-only">Usage & billing</span>
           </button>
         </nav>
         <div class="cms-dashboard-sidebar-spacer"></div>
@@ -148,6 +160,7 @@
               </span>
             </button>
             <div class="cms-account-popover is-hidden" id="accountPopover">
+              <button type="button" data-scene="billing">Usage & billing</button>
               <button type="button" class="is-hidden">Settings</button>
               <button type="button" class="is-hidden">Clerk organization</button>
               <div class="cms-account-sep is-hidden"></div>
@@ -272,15 +285,21 @@
                     <div class="cms-publication-blockers">
                       <p>Publishing is blocked:</p>
                       <ul>
-                        <li>
+                        <li data-blocker-kind="slot">
                           <button type="button" class="cms-blocker-link" data-blocker="slot">
                             <span>A required image on Hero cannot resolve</span>
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                           </button>
                         </li>
-                        <li>
+                        <li data-blocker-kind="media">
                           <button type="button" class="cms-blocker-link" data-blocker="media">
                             <span>One media library item on the live path is not approved.</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                          </button>
+                        </li>
+                        <li class="is-hidden" data-blocker-kind="subscription">
+                          <button type="button" class="cms-blocker-link" data-blocker="billing">
+                            <span>Pay the subscription price to Publish</span>
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
                           </button>
                         </li>
@@ -1104,14 +1123,61 @@
           </div>
           <iframe class="cms-ads-frame" id="adsFrame" title="Ads"></iframe>
         </section>
-        <section class="cms-ads-list is-hidden" data-view="billing">
+        <section class="cms-billing is-hidden" data-view="billing">
           <div class="cms-page-heading">
             <button class="cms-nav-open" type="button" aria-label="Open destinations">
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
             </button>
-            <h1>Usage</h1>
+            <h1>Usage & billing</h1>
           </div>
-          <p class="note">The billing docs are a stub and will be rewritten completely. This scene is not a finished usage screen. Left-nav place (top-level vs Profile child) is unset until that rewrite. Do not port placis-web subscription-shelf. There is no billing.html.</p>
+          <div class="cms-billing-body">
+            <p class="cms-billing-tier" id="billingTier">Placis Pro plan · $599 / mo</p>
+            <p class="cms-billing-remaining" id="billingRemaining">$80 remaining</p>
+            <div class="cms-billing-bar" id="billingBar" aria-label="Usage credit this period">
+              <span class="cms-billing-seg is-voice" id="billingVoice" style="width:18%"></span>
+              <span class="cms-billing-seg is-image" id="billingImage" style="width:16%"></span>
+              <span class="cms-billing-seg is-text" id="billingText" style="width:11%"></span>
+              <span class="cms-billing-seg is-left" id="billingLeft" style="width:55%"></span>
+            </div>
+            <ul class="cms-billing-legend">
+              <li><i class="is-voice"></i> Voice</li>
+              <li><i class="is-image"></i> Image</li>
+              <li><i class="is-text"></i> Text edits</li>
+              <li><i class="is-left"></i> Remaining</li>
+            </ul>
+            <button class="button-primary" id="billingExtra" type="button">Buy extra usage credit</button>
+            <div class="cms-billing-plans">
+              <h2>Change plan</h2>
+              <ul>
+                <li>
+                  <button class="cms-billing-plan is-current" data-plan="pro" type="button">
+                    <span>Placis Pro plan</span>
+                    <span>$599 / mo · Current</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="cms-billing-plan" data-plan="pro-plus" type="button">
+                    <span>Placis Pro Plus plan</span>
+                    <span>$799 / mo</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="cms-billing-plan" data-plan="pro-max" type="button">
+                    <span>Placis Pro Max plan</span>
+                    <span>$1,099 / mo</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="cms-billing-plan" data-plan="enterprise" type="button">
+                    <span>Enterprise plan</span>
+                    <span>Contact sales</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <button class="button-secondary" id="billingCancel" type="button">Cancel subscription</button>
+            <button class="button-secondary is-hidden" id="billingKeep" type="button">Keep subscription</button>
+          </div>
         </section>
         <div class="cms-notice is-hidden" id="cmsNotification" role="status" data-notice="details">
           <p>Wrote a detail to Business details.</p>

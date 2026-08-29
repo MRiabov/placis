@@ -30,7 +30,10 @@ paid / CMS closed" signal is still `tenant: null`).
   Clerk organization claim.
 - `/me` returns `{owner, platform_role, tenant}` — a single `TenantRead` or
   `null`. Authenticated but not activated → `tenant: null` even if an
-  unactivated tenant exists for the onboarding session.
+  unactivated tenant exists for the onboarding session. After activation, a
+  canceled subscription still returns the tenant (`status=active`,
+  `subscription_status=canceled`). That is not `tenant: null`. They can edit;
+  they cannot Publish until they pay again.
 - Website activation (08) attaches the Clerk organization to the **existing**
   unactivated tenant and sets `status=active`. `POST /v1/me/clerk-organization`
   creates that org if needed; it does not skip pay. The frontend then calls
