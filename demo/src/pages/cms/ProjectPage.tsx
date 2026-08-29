@@ -1,5 +1,5 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
 import { cn } from "@/lib/cn";
@@ -34,10 +34,22 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
   );
   const [cover, setCover] = useState(isNew ? null : (row?.image ?? null));
   const [caption, setCaption] = useState(isNew ? "" : (row?.caption ?? ""));
+  const [library, setLibrary] = useState<{ src: string; caption: string }[]>(
+    () =>
+      coverLibrary.map((item) => ({ src: item.src, caption: item.caption })),
+  );
   const [picker, setPicker] = useState(search.picker === "1");
   const [diff, setDiff] = useState(search.diff === "1");
   const [prompt, setPrompt] = useState<"title" | "description" | null>(null);
   const [promptText, setPromptText] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  function addCoverFile(file: File): void {
+    const src = URL.createObjectURL(file);
+    setLibrary((current) => [...current, { src, caption: "" }]);
+    setCover(src);
+    setCaption("");
+  }
 
   const heading = title.trim() || "New project";
 
@@ -135,41 +147,13 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
         <div className="mt-6 grid max-w-xl gap-5">
           <Field label="Cover">
             <div className="grid max-w-md gap-2.5">
-              <div className="relative h-44 overflow-hidden rounded-[18px] bg-zinc-100">
+              <div className="h-44 overflow-hidden rounded-[18px] bg-zinc-100">
                 {cover ? (
                   <img
                     alt=""
-                    className={cn(
-                      "size-full object-cover object-[50%_32%]",
-                      picker ? "opacity-40" : "",
-                    )}
+                    className="size-full object-cover object-[50%_32%]"
                     src={cover}
                   />
-                ) : null}
-                {picker ? (
-                  <div className="absolute inset-0 z-10 grid grid-cols-2 gap-2 overflow-auto bg-white/90 p-2">
-                    {coverLibrary.map((item) => (
-                      <button
-                        aria-label={item.caption}
-                        className={cn(
-                          "min-h-[4.5rem] overflow-hidden rounded-[10px] bg-cover bg-center",
-                          cover === item.src
-                            ? "ring-2 ring-primary ring-offset-1"
-                            : "border border-transparent",
-                        )}
-                        key={item.src}
-                        onClick={() => {
-                          setCover(item.src);
-                          setCaption(item.caption);
-                        }}
-                        style={{ backgroundImage: `url(${item.src})` }}
-                        type="button"
-                      />
-                    ))}
-                    <div className="col-span-2 rounded-[10px] border border-dashed border-stone-300 px-3 py-3 text-center text-xs text-muted-foreground">
-                      Drop files here to upload to the media library
-                    </div>
-                  </div>
                 ) : null}
               </div>
               {caption ? (
@@ -184,6 +168,56 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
               >
                 Pick from the media library
               </Button>
+              {picker ? (
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    className="grid aspect-square place-items-center rounded-[10px] border border-dashed border-stone-300 text-sm text-muted-foreground"
+                    onClick={() => fileRef.current?.click()}
+                    onDragOver={(event) => event.preventDefault()}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      const file = event.dataTransfer.files[0];
+                      if (file) {
+                        addCoverFile(file);
+                      }
+                    }}
+                    type="button"
+                  >
+                    Upload
+                  </button>
+                  {library.map((item) => (
+                    <button
+                      aria-label={item.caption || "Cover"}
+                      className={cn(
+                        "aspect-square overflow-hidden rounded-[10px] bg-cover bg-center",
+                        cover === item.src
+                          ? "ring-2 ring-primary ring-offset-1"
+                          : "border border-transparent",
+                      )}
+                      key={item.src}
+                      onClick={() => {
+                        setCover(item.src);
+                        setCaption(item.caption);
+                      }}
+                      style={{ backgroundImage: `url(${item.src})` }}
+                      type="button"
+                    />
+                  ))}
+                  <input
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) {
+                        addCoverFile(file);
+                      }
+                      event.target.value = "";
+                    }}
+                    ref={fileRef}
+                    type="file"
+                  />
+                </div>
+              ) : null}
             </div>
           </Field>
           <Field label="Title">
