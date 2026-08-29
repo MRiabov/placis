@@ -1,7 +1,8 @@
 # Billing design decision record
 
 **Stub.** These billing docs are a stub and will be rewritten completely. The
-CMS usage mock is `cms.html?scene=billing`. Do not port placis-web
+CMS usage mock is [`demo/`](../../../demo/README.md) `/cms/billing`. Do not
+port placis-web
 subscription-shelf. A designed pricing look in placis-web (recover from git if
 it is not on HEAD) is a look reference for that rewrite, not for this stub. The
 CMS **usage** screen is the **$** credit, not public marketing pricing.

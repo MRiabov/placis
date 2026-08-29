@@ -13,6 +13,12 @@ repos:
         exclude: ^\.agents/
   - repo: local
     hooks:
+      - id: demo-check
+        name: demo biome and typecheck
+        language: system
+        entry: bash -lc 'cd demo && pnpm check'
+        pass_filenames: false
+        files: ^demo/
       - id: check-dont-say
         name: Don't-say glossary check
         language: system

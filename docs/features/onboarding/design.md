@@ -1,7 +1,7 @@
 # Onboarding look
 
-Static HTML for onboarding. Open [onboarding.html](../../design/onboarding.html) in a browser; there is no
-build.
+Editable look: [`demo/`](../../../demo/README.md) `/onboarding/*`. HTML archive:
+[onboarding.html](../../design/onboarding.html).
 
 [Design decision record](design-decision-record.md). The yellow strip is
 mock-only **per-screen states**. Default **collapsed** (circle in the top
@@ -26,9 +26,9 @@ not invent a second palette.
 Screens in the mock: Find, Review, client interview, wait teaser. The generated
 scene is a mock of the [preview website address](pipeline/07-website-preview.md) (website-activation strip
 sticky at the bottom), so Skip generation has somewhere to land. After pay it
-opens [cms.html](../../design/cms.html) (`?scene=website&publication=1&from=activation`) — website
-editor with **Publish**. Product website preview and website activation still
-live on that host, not on `/onboarding/preview`.
+opens [`demo/`](../../../demo/README.md) `/cms/website` — website editor with **Publish**. Product
+website preview and website activation still live on that host, not on
+`/onboarding/preview`.
 
 The **onboarding assistant** (owner copy: **voice guide**) is a DustOrb bottom
 right: **visible**, voice off, cue **Click to turn on voice**. Particle orb from

@@ -123,8 +123,8 @@ Owner copy must not say “run campaigns” while Ads only export.
 The old prompt-box markup stays in the look-export HTML as restorable nodes
 (look: [design decision record](design-decision-record.md) 5). Product paints the two cards instead.
 
-Ads look for `/cms/ads` is [ads.html](../../design/ads.html), embedded as the
-Ads destination (`?scene=ads`).
+Ads look for `/cms/ads` is [`demo/`](../../../demo/README.md). HTML archive:
+[ads.html](../../design/ads.html).
 
 ## Account
 
