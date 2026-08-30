@@ -12,7 +12,7 @@ boundary no feature owns, and pointers.
 ```text
 onboard (from their Google Maps listing or company registry record)
   -> a few questions -> business research -> business profile
-  -> website (website template + website copy generation) -> edit in the website editor -> website publication
+  -> website (website template + automatic website copy generation) -> edit in the website editor -> website publication
   -> ads from the profile + approved photos
 ```
 

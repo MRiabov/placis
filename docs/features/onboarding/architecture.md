@@ -34,8 +34,8 @@ Client-interview-complete enqueues this step (05).
 **Applying the website template is deterministic**: accepted profile + chosen
 website template → the same unpublished website, website placeholders kept.
 **Choosing** the website template and website styles is one bounded LLM call
-with a heuristic fallback — not website-page-by-website-page website copy
-generation.
+with a heuristic fallback — not website-page-by-website-page automatic website
+copy generation.
 
 **Automatic website copy generation** (06) is a separate River job after that:
 the same tools as the website editor (`update_slot`, `update_seo`, …), writing

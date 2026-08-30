@@ -69,7 +69,7 @@ One product, one loop:
 ```text
 onboard (from their Google Maps listing or company registry record)
   -> a few questions -> business research -> business profile
-  -> website (website template + website copy generation) -> edit in the CMS -> website publication
+  -> website (website template + automatic website copy generation) -> edit in the CMS -> website publication
   -> ads from the profile + approved photos
 ```
 

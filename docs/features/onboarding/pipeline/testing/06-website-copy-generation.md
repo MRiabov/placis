@@ -18,4 +18,4 @@
 - **Failure path**: fake the LLM to throw — unpublished website from 05
   unchanged, onboarding session still `applying_website_template` or
   `previewing`, website activation still allowed.
-- **Mocked**: the website copy generation LLM only.
+- **Mocked**: the automatic website copy generation LLM only.

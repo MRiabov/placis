@@ -739,9 +739,9 @@ starting point).
 
 #### Website copy generation
 
-Writing website copy into the unpublished website from the business profile. Do
-not call this “refinement” in onboarding. Never say generate without “website
-copy”.
+Automatic writing of website copy into the unpublished website from the
+business profile. Do not call this “refinement” in onboarding. Never say
+generate without “website copy”.
 
 Distinct from: Assistant, Apply the website template (the unpublished website
 structure).

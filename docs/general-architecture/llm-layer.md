@@ -112,10 +112,10 @@ above still applies; this is the persistence for a further agentic retry.
 
 ## `ai_generations`
 
-Shared by website copy generation, the CMS assistant, the onboarding assistant,
-ads, and ETL post-text extract. One table, not copied into feature persistence
-docs. Postgres schema **`ai`** (not `llm`). Go package `internal/ai/`. Image
-**files** stay in `files` / `media_library`.
+Shared by automatic website copy generation, the CMS assistant, the onboarding
+assistant, ads, and ETL post-text extract. One table, not copied into feature
+persistence docs. Postgres schema **`ai`** (not `llm`). Go package
+`internal/ai/`. Image **files** stay in `files` / `media_library`.
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `thread_id` required fk →
   `ai.threads` (hydrate never joins), `trace_type` (`prod`/`eval`),

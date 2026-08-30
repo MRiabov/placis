@@ -117,15 +117,15 @@ research does not write them).
 ### 4. Wait teaser — `/onboarding/preview`
 
 Wait teaser, not the shareable host. Timeline from the onboarding session SSE
-(05 apply the website template, then 06 copy filling in). Rotate **complete**
-filled website sections (whole-and-valid, not website placeholders), named
-interval ~2s, smooth phase in/out especially images. Reuse
+(05 apply the website template, then 06 automatic website copy generation).
+Rotate **complete** filled website sections (whole-and-valid, not website
+placeholders), named interval ~2s, smooth phase in/out especially images. Reuse
 **website components** for that one website section — not Astro, not full
 website pages, not the website editor path.
 
-Wait until **website copy generation finishes** or the **~15s cap**, whichever
-first. The footer shows a progress bar for that cap, painted every animation
-frame ([design decision](design-decision-record.md) 7). Then the browser **navigates** to
+Wait until **automatic website copy generation finishes** or the **~15s cap**,
+whichever first. The footer shows a progress bar for that cap, painted every
+animation frame ([design decision](design-decision-record.md) 7). Then the browser **navigates** to
 `/onboarding/preview-and-edit/`. Do not paint full website pages here. Do not
 put the website-activation strip on this route (it lives in the host HTML after
 Share). The wait-teaser hero uses the same job-site photo as the site they will

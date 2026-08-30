@@ -61,8 +61,8 @@ publication; website rollback of onboarding rows is refused
   (see [ci-cd.md](../../general-architecture/ci-cd.md)).
 - One E2E: find → review → client interview → apply the website template →
   website preview → website activation (Google / LLM / Stripe faked, core logic
-  unmocked). The website preview can be activated before website copy generation
-  finishes.
+  unmocked). The website preview can be activated before automatic website copy
+  generation finishes.
 
 ## Frontend
 

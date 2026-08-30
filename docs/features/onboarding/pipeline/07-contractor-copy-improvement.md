@@ -24,7 +24,7 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
 
 ## Must not
 
-- Call this website copy generation (that is 06).
+- Call this automatic website copy generation (that is 06).
 - Start a second 06 job.
 - Live-update R2 (08 rewrites `latest/` on Share; 09 on pay).
 - Use CMS `/v1/assistant/…`.
