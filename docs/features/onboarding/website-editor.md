@@ -160,11 +160,11 @@ redirect to `/cms/website`.
 Look: custom top-left nested control (this website preview only, titles list —
 Services nests website pages; not the CMS Website pages rail). Website page list
 and **Share** float on the canvas. Pay is the sticky website-activation strip.
-Assistant starts as text (compact docked composer, in front of the
-website-activation strip’s lift shadow); **Voice** is a switch in that
-composer. Send and Voice need **Sign up with Google**. No owner Plan
-switch. Instant apply. After Sign up, Send and Voice on the look demo snap the
-canvas to the website page being edited (Follow) and apply copy. Reuse CMS
+Assistant starts as text (compact docked composer, max-width 32rem on a wide
+pane, in front of the website-activation strip’s lift shadow); **Voice** is a
+switch in that composer. Send and Voice need **Sign up with Google**. No owner
+Plan switch. Instant apply. After Sign up, Send and Voice on the look demo snap
+the canvas to the website page being edited (Follow) and apply copy. Reuse CMS
 Assistant tokens.
 
 **Preview website address** — after Share (or after 08 if they paid without

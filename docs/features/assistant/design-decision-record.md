@@ -126,4 +126,6 @@ owner-written; omit it rather than inventing it.
     float on the canvas. Send and Voice need **Sign up with Google**. The field
     is a compact docked composer, not the CMS card. (2026-08-30) Same day,
     later: that composer stacks above the website-activation strip’s lift
-    shadow. (2026-08-30)
+    shadow. (2026-08-30) Same day, later: on a wide pane the composer is
+    **max-width 32rem**, centered; on a narrow pane it still docks nearly full
+    width. (2026-08-30)

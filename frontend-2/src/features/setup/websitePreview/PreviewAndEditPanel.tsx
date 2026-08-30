@@ -106,7 +106,7 @@ export function PreviewAndEditPanel({
             Canvas follows website copy generation over onboarding SSE. Send and
             Voice need Sign up with Google, then website-editor PATCH.
           </p>
-          <div className="mt-4 flex flex-col gap-2 rounded-lg border border-border bg-background p-2">
+          <div className="mx-auto mt-4 flex w-full max-w-lg flex-col gap-2 rounded-lg border border-border bg-background p-2">
             <p className="text-xs font-medium">Assistant</p>
             <input
               className="h-11 w-full rounded-md border border-border bg-muted px-3 text-sm"

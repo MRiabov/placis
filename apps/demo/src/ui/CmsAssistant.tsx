@@ -429,7 +429,7 @@ function AssistantComposer({
     <div
       className={card(
         unpaid
-          ? "absolute inset-x-2 bottom-2 z-20 flex flex-col gap-1.5 p-2 shadow-card pointer-events-auto"
+          ? "absolute bottom-2 left-1/2 z-20 flex w-[min(32rem,calc(100%-1rem))] -translate-x-1/2 flex-col gap-1.5 p-2 shadow-card pointer-events-auto"
           : "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card pointer-events-auto",
       )}
       id="assistantOverlay"

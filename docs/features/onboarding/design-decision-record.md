@@ -146,4 +146,5 @@ inventing it.
     strip is **Sign up with Google**. After Sign up, Send and Voice snap the
     canvas to the website page being edited and apply copy (Follow, instant
     apply). (2026-08-30) Same day, later: unpaid Assistant stacks above the
-    website-activation strip’s lift shadow. (2026-08-30)
+    website-activation strip’s lift shadow. (2026-08-30) Same day, later: on a
+    wide pane the composer is max-width 32rem, centered. (2026-08-30)
