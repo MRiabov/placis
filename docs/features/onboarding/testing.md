@@ -27,7 +27,9 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
      `created_by=text`; `onboarding_sessions.interview_plan_*` when voice
      `update_interview_plan` ran. If Maps Details fakes include a review usable
      as a Project, the client interview shows Project cards; Archive uses the
-     onboarding-session route.
+     onboarding-session route. While 02 is still running, reviews / photos /
+     Projects / empty Details controls appear on `/onboarding/interview`
+     without reload; a field they already typed is not rewritten.
 
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
    - DB: `etl.runs` → fetch rows + `etl.google_maps_listings` when a place was

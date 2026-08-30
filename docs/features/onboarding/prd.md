@@ -109,7 +109,9 @@ question.
 1. **As a contractor**, I want to start from my Google Maps listing or company
    registry record, so I don't have to re-type what's already known.
    - Searching my place or my company registry record pre-fills the name,
-     category, and contact details.
+     category, and contact details. Gaps I have not typed yet, and lists that
+     can grow (reviews, photos, Projects, services), fill on the client
+     interview as business research lands — I do not re-type them.
 2. **As a contractor**, I want to answer a few questions to fill in the gaps, so
    the profile is complete and correct.
    - My answers and the researched information are shown together, each tagged

@@ -41,7 +41,8 @@ connection. Tools write the profile. `end_interview` then
    `update_interview_plan`. Remaining questions = required rows in `empty` |
    `conflict` | `needs_confirmation` | `in_progress`, checklist order.
    `in_progress` is still a remaining question (ETL transform may fill it while
-   they talk).
+   they talk — same live-fill rules as [04a](04a-text-client-interview.md):
+   untouched / enrichable only; do not overwrite a value they already gave).
 3. **Tools** (same profile path as 04a): `obtained_information`,
    `mark_information_status`, `request_lookup`, `confirm_conflict`,
    `update_interview_plan`, `end_interview`. Last `update_interview_plan` lands

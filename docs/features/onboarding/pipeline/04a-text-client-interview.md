@@ -34,6 +34,9 @@ then `POST .../interview/complete`.
   `/cms/details`.
 - Combine services or service areas with an LLM in the wait after Continue. 06
   does not invent the service list.
+- Overwrite a control the contractor is editing or has already saved
+  (`algorithm=human`, or dirty on this visit and not yet autosaved). Live fill
+  is empty / enrich only ([Do — live fill](#do--live-fill-while-02-runs)).
 
 ## Do
 
@@ -56,9 +59,34 @@ then `POST .../interview/complete`.
    Cards may appear / reorder over SSE while 02 is still running. Extra notes.
    Paste of one-per-line or comma-separated **service names** may split into
    rows deterministically (no LLM). Do not ask a photos-choice question.
-4. Final submission `kind=final`, then `POST .../interview/complete` iff the
+4. While they stay on this screen, apply [live fill](#do--live-fill-while-02-runs) from the onboarding session
+   SSE (Postgres is authoritative).
+5. Final submission `kind=final`, then `POST .../interview/complete` iff the
    complete gate (service and service-area list rows present, or skipped).
-5. Contractor may mark a required row `skipped` in this step, then complete.
+6. Contractor may mark a required row `skipped` in this step, then complete.
+
+## Do — live fill (while 02 runs)
+
+Business research writes the live business profile as chunks land
+([02](02-business-research.md), [build-profile](build-profile.md)). The client
+interview **shows** those writes so they do not fill a gap research already
+closed. Same SSE as Review; this screen is also a consumer.
+
+- **Untouched scalar / whole control** (trade, description, marketing phone,
+  marketing email, existing site URL, founder, hours they have not
+  edited): if empty and winning `algorithm` is not `human`, paint the live
+  value. A control they typed into this visit (dirty, even before autosave)
+  or already autosaved as `human` does not change.
+- **Enrichable lists** — insert new rows; do not delete contractor rows; do
+  not rewrite a row they edited:
+  services and service areas (new names / localities they have not entered);
+  opening-hours days still empty; certifications they did not `removed`;
+  reviews; media library photos; Projects (ranked top 4, Archive stays
+  archived). Duplicate source keys do not add a second row (ETL skip).
+- Extra notes and `emergency_phone` are contractor-only. Business research
+  does not write them.
+- Research conflict on a field they already saved stays a conflict (show
+  both); do not silently take the research value.
 
 ## Persist
 
@@ -73,8 +101,9 @@ Autosave fail keeps the token. Complete rejected if the gate fails; stay
 
 ## Out
 
-Gate pass → 05. 02 may still be running; later 02 writes are new edits after
-`accepted_edit_id`.
+Gate pass → 05. 02 may still be running on this screen; live fill continues
+until complete. After complete, later 02 writes are new edits after
+`accepted_edit_id` (they do not rewrite the 05 gallery).
 
 ## Invariants
 
@@ -84,3 +113,4 @@ Gate pass → 05. 02 may still be running; later 02 writes are new edits after
 - Services and service areas are structured Details rows at complete; the wait
   does not combine them with an LLM.
 - Onboarding Details == `/cms/details` for those fields.
+- Live fill never overwrites a dirty or `human` control; lists only enrich.

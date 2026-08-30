@@ -98,7 +98,9 @@ live business profile and in-flight jobs stay.
 ## Out
 
 SSE on the onboarding session stream (mirrors `etl.runs` and the live business
-profile as chunks arrive). 03 and/or 04a/04b may already be open. Do not wait
+profile as chunks arrive). 03 and/or 04a/04b may already be open; the client
+interview live-fills untouched controls and enriches lists
+([04a](04a-text-client-interview.md)). Do not wait
 for a kind’s `status=succeeded` to show fast extract results.
 
 ## Invariants

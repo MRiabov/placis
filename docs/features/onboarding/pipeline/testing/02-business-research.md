@@ -29,4 +29,6 @@
   Extract HTTP, Facebook, Instagram, trade registry, photo classifier /
   project-from-source (fakes). Never Parallel **Search** API, Exa, Perplexity,
   Tako, `:online`, OpenRouter web search. Maps Details reviews usable as a
-  Project appear as client interview cards (paid Maps/LLM faked).
+  Project appear as client interview cards (paid Maps/LLM faked). Open
+  `/onboarding/interview` before scrape finishes: empty marketing phone fills;
+  scrape reviews land on the reviews list without reload.
