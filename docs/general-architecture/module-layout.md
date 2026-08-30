@@ -14,6 +14,7 @@ internal/
   auth/           # Clerk SDK (clerk-sdk-go) verification -> Principal
   store/          # pgx pool + sqlc-generated queries (queries/*.sql split by domain)
   ai/             # LLMProvider + traces (schema `ai`; no feature tool registries)
+  knowledge/      # shared product glossary + Voice pronunciation (listed by both assistants)
   files/          # object storage, signed URLs
   jobs/           # River job args + workers
   audit/          # audit events
@@ -71,6 +72,9 @@ Rules:
   `internal/` (the old `backend/app`); not `docs/`, `frontend-2/`, or
   `packages/` in this pass. See [CI and delivery](ci-cd.md).
 - Shared types live in exactly one package — no forked duplicates.
+- Each feature that calls the LLM owns `prompts.yaml` in that package, not
+  prompt strings in Go. Variables are `{{var}}` and dotted `{{aaa.bbb}}`.
+  [LLM layer](llm-layer.md).
 - Route handlers validate input (huma) and call service functions; services own
   business rules and transactions; models are persistence only.
 - Service functions accept `tenantID` explicitly; they never infer it from

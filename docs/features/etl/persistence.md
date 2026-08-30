@@ -49,7 +49,9 @@ extracts again.
 - `google_maps_listings` — `id`, `place_id` unique, `fetched_from`
   (`google_maps_details` / `scrape`), `latest_fetch_id` fk, `display_name`,
   `primary_type`, `marketing_phone`, `website_url`, `google_maps_listing_url`,
-  `listing_address`, `locality`, `rating`, `review_count`, `fetched_at`
+  `listing_address`, `locality`, `country` (`ie` / `gb` / `us` nullable; Places
+  address country, not parsed from `listing_address`), `rating`, `review_count`,
+  `fetched_at`
 - `google_maps_listing_opening_hours` — `id`, `listing_id` fk, `day_of_week`,
   `opens_at`, `closes_at`, `closed`
 - `google_maps_listing_reviews` — `id`, `listing_id` fk, `external_id` (Google’s

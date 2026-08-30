@@ -19,25 +19,34 @@ onboarding-specific isolation. HTTP: [api.md](api.md). Tables:
 - After website activation those routes **403**. Do not migrate the conversation
   onto the CMS thread.
 - Knowledge:
-  `internal/onboarding/assistant/knowledge/onboarding_knowledge_base_registry.yaml`.
-  Must not import `internal/assistant`. Seed **instructions**: knowledge +
-  current step + visible fields. `tools=[]`. No unpublished website working
-  copy. No CMS `tools=`.
+  `internal/onboarding/assistant/knowledge/onboarding_knowledge_base_registry.yaml`
+  (includes the shared product glossary). Must not import `internal/assistant`.
+  Seed **instructions**: knowledge + current step + visible fields. `tools=[]`.
+  No unpublished website working copy. No CMS `tools=`.
 - No `obtained_information` / `end_interview`. Client-interview writer tools are
   not in this registry.
 - **Not billed.** No 402. Still write `ai_generations` (`conversation_id`).
   Usage on transcripts is recorded, not debited.
 - In-flight lock is `onboarding.assistant_runs`, unique running per
   `onboarding_session_id` (not `tenant_id`). Voice lock starts at
-  realtime-connection create and ends on close / crash. No cancel HTTP. Hydrate
-  does not return runs and does not join `ai_generations`.
-- Text backup: same conversation on `GET /v1/onboarding/assistant/thread/ws`.
-  `tools=[]` — no tool dispatch. Look TBD. Default launcher stays the orb.
-- Persist utterances on `POST /v1/onboarding/assistant/voice/transcripts`. After
-  Voice ends, recording upload (signed URL) is the same pattern as CMS
-  ([assistant architecture](../assistant/architecture.md)): object storage, not
-  a Postgres binary, not overlay. Do not invent a second text dump route.
-  Frontend posts leftover transcripts on close, then the recording if any.
+  realtime-connection create and ends on close / crash. A second
+  realtime-connection create while running is **409** `in_flight_run`. No
+  cancel HTTP. Hydrate does not return runs and does not join `ai_generations`.
+- **No text backup.** There is no `GET /v1/onboarding/assistant/thread/ws`.
+  `GET /v1/onboarding/assistant/thread` may hydrate for a later Voice turn.
+  Default launcher stays DustOrb.
+- Persist utterances on `POST /v1/onboarding/assistant/voice/transcripts`:
+  committed owner and assistant **text**, plus **`offset_seconds`** from that
+  Voice run’s start (browser audio clock). Reconstruct
+  `[m:ss owner]` / `[m:ss assistant]` + `body` (never say user). `created_at`
+  is the row insert time. Do **not** store
+  the Voice recording (no signed-URL PUT, no `files` row, no
+  `recording_file_id`). Do not invent a second text dump route. Frontend posts
+  leftover transcripts on close. Live audio is browser ↔ the xAI region for
+  the business country
+  ([voice agent](../../general-architecture/voice-agent.md)) and is not kept by
+  us. Knowledge includes the product glossary; Voice create sets keyterms and
+  `replace` (Placis → **Play-sis**).
 - Launcher: DustOrb bottom right, **visible**, voice off until they click. Cue
   **Click to turn on voice**; close → **Enable voice guide**. Prerecorded intro
   on click, then live Q&A. The intro does not replay if they turn the guide on

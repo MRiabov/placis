@@ -316,7 +316,9 @@ new entries with the next number, the area, and the date.
     This replaces unprompted Review **Regenerate**. Record the owner prompt with
     reasoning, output, and tool calls in `ai_generations`. (2026-08-27) Previous
     decision (same day): prompt form was inline in the field, wrapping with the
-    row. (2026-08-28) Short label has no AI orb.
+    row. (2026-08-28) Short label has no AI orb. (2026-08-30) Same day, later:
+    say **inline AI assistance**; **select to edit inline AI assistance** is the
+    span path. Click with no selection stays the whole field.
 
 35. **Review ad format preview is Facebook and Instagram placement** (updated
     2026-08-25) — The selected format is shown as both Facebook and Instagram

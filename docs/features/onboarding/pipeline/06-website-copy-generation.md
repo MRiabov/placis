@@ -1,7 +1,7 @@
 # 06 — Website copy generation
 
 Async. After 05. Writes headlines, body, CTAs, SEO into **existing** website
-slots. Same website assistant tools as the CMS, **continuous + instant apply**,
+slots. Same website editor tools as the CMS, **continuous + instant apply**,
 no chat UI. Does not block 08. 07 waits copy-done or the wait cap, not the full
 06 job if the cap hits first.
 
@@ -47,8 +47,8 @@ second 06 start is 409 on that River key.
    ([variables.md](../../website/variables.md)).
 3. Validate every tool result against website component contracts.
    Whole-and-valid or the batch fails.
-4. Cap steps and tool calls (predecessor: 3 steps / 12 calls / 4 website pages
-   at a time).
+4. Cap steps and tool calls (**3 steps / 12 calls / 4 website pages** at a
+   time). Distinct from the CMS agent’s 20 model turns.
 
 ## Persist
 

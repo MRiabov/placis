@@ -141,4 +141,4 @@ One field or list item per call. Applied immediately. Then the shared
 - `/v1/certification-selections`, `/v1/certifications`
 - profile-history / replay HTTP (except
   `POST /v1/business-profile/edits/{id}/undo`)
-- a second Details tool or Details-write HTTP for Ads or the website assistant
+- a second Details tool or Details-write HTTP for Ads or the Assistant

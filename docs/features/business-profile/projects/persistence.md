@@ -10,8 +10,9 @@ Schema `details` still holds `business_profiles` and the other list tables until
 - `projects` — qualified `business_profile.projects`. `id`, `tenant_id` fk,
   `title` (`minLength` 1, `maxLength` 80), `description` (`minLength` 1,
   `maxLength` 2000), `cover_media_asset_id` nullable fk, `status`
-  (`active` / `archived`), timestamps
+  (`draft` / `active` / `archived`), timestamps
 
 Pending Ask-first description hunks are not a table. They live on
 `/cms/projects/{id}` until **Apply** PATCHes `description`. Archive is not
-delete: archived rows stay so the owner can Unarchive.
+delete: archived rows stay so the owner can Unarchive. No dual `published_*`
+columns. No `project_drafts` table. Website publication bakes **active** only.

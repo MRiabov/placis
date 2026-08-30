@@ -8,8 +8,8 @@ UI; on Ads the assistant write tool is media-library `cleanup_image`.
 
 - [PRD](prd.md)
 - [ADR](ADR.md) — architectural decision record
-- [design decision record](design-decision-record.md) — bottom-right **Assistant**, overlay, DustOrb,
-  `/cms` two cards, onboarding launcher
+- [design decision record](design-decision-record.md) — bottom-right **Assistant** (call), DustOrb, `/cms`
+  two cards, onboarding launcher
 - [architecture.md](architecture.md) — logic (context, allowed set, text vs voice, apply, locks).
   HTTP contract stays in [api.md](api.md); tables in [persistence.md](persistence.md).
 - [persistence.md](persistence.md) — schema `assistant` thread tables

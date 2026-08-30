@@ -40,10 +40,10 @@ details). On a **narrow** screen (≤1100px), sit **above** the Sites workspace
 bottom bar (not under thumbs or the home indicator).
 
 `update_details` ([details HTTP](../business-profile/details/api.md)): the write is applied; OK keeps it; Revert
-undoes that `business_profile_edits` increment. Website assistant, Ads
-generator, and later LLM callers invoke **that** tool (one implementation).
-Leaving the screen without clicking keeps the write. Stay until they pick an
-action (timeout later).
+undoes that `business_profile_edits` increment. The Assistant, Ads generator,
+and later LLM callers invoke **that** tool (one implementation). Leaving the
+screen without clicking keeps the write. Stay until they pick an action (timeout
+later).
 
 Intended later callers (rare — do not spam): ad leads when they log in, an
 **ad lead** while they are in Ads, an unusually profitable or lossy campaign, a

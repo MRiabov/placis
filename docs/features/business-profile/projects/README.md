@@ -11,4 +11,4 @@ How the owner reaches it: [CMS frontend](../../../general-architecture/cms/front
 
 A project gallery on a website section is a `json` / `list` website slot of
 project ids, not this table’s dump. Slim `projects[]` in the website manifest is
-baked at website publication.
+baked at website publication from **active** rows only (skip `draft`).

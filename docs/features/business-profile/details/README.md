@@ -47,7 +47,7 @@ larger than this screen (reviews, certifications, projects):
 
 Editing Details changes the website and the next ad draft. If ad copy conflicts
 with these details, prefer updating Details rather than leaving a second truth
-only in the ad. Ads and the website assistant write a detail by calling
+only in the ad. Ads and the Assistant write a detail by calling
 **`update_details`** (one tool, one implementation — [api.md](api.md)); the owner sees
 the shared **notification** (OK keeps it; Revert undoes that increment).
 

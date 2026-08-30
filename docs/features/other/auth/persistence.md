@@ -18,8 +18,9 @@ does not insert a second tenant. `/me` returns a tenant only when
   when known, else empty until business research fills it), `status`
   (`unactivated`/`active`/`suspended`), `subscription_status`
   (`active`/`canceled`/`none`, optimistic cache — not Clerk Billing yet),
-  `created_at`, `updated_at`. Do **not** store remaining usage credit here —
-  billing owns the AI use ledger ([billing](../../billing/persistence.md)).
+  `country` (`ie` / `gb` / `us`; Find country at business lookup; Voice region
+  fallback), `created_at`, `updated_at`. Do **not** store remaining usage credit
+  here — billing owns the AI use ledger ([billing](../../billing/persistence.md)).
 - `tenant_memberships` — `id`, `tenant_id` fk, `clerk_user_id`, `role`,
   `created_at`; unique `(tenant_id, clerk_user_id)`
 

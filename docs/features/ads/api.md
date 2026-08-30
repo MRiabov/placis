@@ -37,8 +37,8 @@ then PATCH the placement.
 - `GET /v1/ads/{ad_id}/variants`
 - `PATCH /v1/ads/{ad_id}/variants/{variant_id}`
 - `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` — required `field` +
-  `prompt`; optional selection start/end; omit selection = whole field; empty
-  prompt is 400
+  `prompt`; optional selection start/end (**select to edit inline AI
+  assistance**); omit selection = whole field; empty prompt is 400
 - `POST /v1/ads/{ad_id}/approve`
 - `POST /v1/ads/{ad_id}/ad-set` — returns the ad set
 - `POST /v1/ads/{ad_id}/download` — renders; returns a signed URL for the ad-set

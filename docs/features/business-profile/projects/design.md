@@ -14,4 +14,5 @@ The mock is visual. Function is the specs ([frontend.md](frontend.md),
 Visible words follow [glossary.md](../../../glossary.md). Don't say portfolio,
 gallery (except website **project gallery** in Content), form, page, Remove, or
 Delete. Writing is Ads AI orbs on `/cms/projects/{id}`, not Voice and not the
-website assistant overlay.
+website assistant overlay. Same day, later (2026-08-29): writing is **inline AI
+assistance**. Cover is pick. Create is a **project draft**; Approve before bake.

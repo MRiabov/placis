@@ -58,8 +58,8 @@ Two surfaces plus global nav, one unpublished website:
   website preview.
 - **Workspace** — on a **narrow** screen (≤1100px) the rail is a **bottom bar**
   (Sites only) and the list opens above it. That open list (and Content) has the
-  same reduce chevrons as the assistant overlay, on the left of the title: hide
-  the sheet back to the bottom bar. The whole title row does that hide (Add a
+  same reduce chevrons as the Assistant, on the left of the title: hide the
+  sheet back to the bottom bar. The whole title row does that hide (Add a
   website page stays its own control). The row is compact, not a second toolbar.
   That is not a back to Website pages. On a **wide** screen it is a left rail
   plus one list. **Workspace items** on the rail: website pages, SEO, website
@@ -206,32 +206,33 @@ Do not advertise `{website_prefix}.placis.com` as a live URL.
 in The CMS, including this one). Default is **closed**. Click calls **Voice**:
 DustOrb bottom-right of the canvas. On narrow that is just above the workspace
 rail. Switch to text is **Switch to text mode** / **Voice** in the composer. The
-composer overlay is pinned to the bottom of the canvas (not a modal). The switch
-is a fade, not a cut. **Switch to text mode** is an opaque pill under Apply /
-Reject; the orb is a circle on the right spanning both rows. Denied microphone
-uses the shared **notification**
+composer is pinned to the bottom of the canvas (not a modal). The switch is a
+fade, not a cut. **Switch to text mode** is an opaque pill under Apply / Reject;
+DustOrb is a circle on the right spanning both rows. Denied microphone uses the
+shared **notification**
 (**Allow microphone access in your browser to talk. You can keep typing.**;
 **Try again** retries the microphone; **Switch to text mode** opens the
 composer). `POST /v1/assistant/voice/realtime-connection` is not called until
 the microphone is granted. The prerecorded greeting plays on the first Voice
 start (**Assistant**, **Voice**, or empty composer). Starting Voice again more
 than **5 seconds** after that greeting began does not replay it. That cluster
-sits bottom-right and is only as wide as the pills plus the orb, not a
-full-width bar. Desktop / tablet orb is `min(5.5rem, 30vw)`; ≤480px is
+sits bottom-right and is only as wide as the pills plus DustOrb, not a
+full-width bar. Desktop / tablet DustOrb is `min(5.5rem, 30vw)`; ≤480px is
 `min(50vw, 50dvh)`. Desktop / tablet **clicks** hit a **2.75rem circle**; the
 particle wrap stays that 5.5rem size, and the rest of the canvas stays
-clickable. A small close on the top-right of the orb also restores. Tools and
-apply stay in [assistant.md](assistant.md). Overlay look for every assistant screen:
-[assistant design decision record](../assistant/design-decision-record.md). Two overlay switches: plan vs continuous,
-and instant apply vs Ask first (Apply / Reject). **Follow** is a third config,
-default **on**, not owner-turnable. Default is plan + Ask first. Composer submit
-is **Plan** when Plan is on, **Send** when Plan is off (continuous); empty
-composer field shows **Voice**.
+clickable. A small close on the top-right of DustOrb also restores. Tools and
+apply stay in [assistant.md](assistant.md). Assistant look for every assistant screen:
+[assistant design decision record](../assistant/design-decision-record.md). Two switches on **text**: plan vs
+continuous, and instant apply vs Ask first (Apply / Reject). Voice is always Ask
+first; no owner Plan switch. **Follow** is always **on**, not owner-turnable,
+not a request field. Default text is plan + Ask first. Composer submit is
+**Plan** when Plan is on, **Send** when Plan is off (continuous); empty composer
+field shows **Voice**.
 
 **Quiet by default.** On a **narrow** screen the canvas is the destination until
 they open destinations. The CMS is viewport-locked (PWA): the window does not
 scroll. The website page scrolls inside the canvas stage; the assistant thread
-scrolls. Last website sections can scroll clear of the assistant overlay (and
+scrolls. Last website sections can scroll clear of the Assistant (and
 Apply / Reject). That extra room is the canvas cell background, not a white
 pad. See [design decision record](design-decision-record.md) 8 and 16.
 
@@ -239,45 +240,45 @@ pad. See [design decision record](design-decision-record.md) 8 and 16.
 narrow (≤1100px):
 Open destinations (inline with Website editor) | heading | Assistant
 Desktop / Tablet / Mobile + Publish
-website (canvas) + voice agent orb or assistant overlay (after they call)
+website (canvas) + DustOrb or Assistant (after they call)
 workspace rail (bottom bar; list / Content opens above it)
 full-screen overlay selector covers all of that when open
 
 wide (≥1101px):
 nav (collapsed icons, hover peek, click to pin) | workspace (rail + one list) | website (Desktop canvas)
-                                                                     | Assistant (bottom-right) + orb or overlay after they call
+                                                                     | Assistant (bottom-right) after they call
 ```
 
 - **Closed until they call.** Bottom-right **Assistant** is the call. After
-  they call: overlay while the composer is showing; orb when Voice is on. Close
-  returns to the button. Overlay has a 12px inset from the canvas on the left,
-  right, and bottom (not flush to the edges). Chevrons expand or reduce; that
-  is not a hide. **Collapsed** (desktop and narrow default while the composer is
-  showing) is one row on a wide screen: chevrons, field, **Plan mode**,
-  **Ask first**, **Plan** (or **Send**). On narrow, collapsed stays two rows
-  (overlay bar + composer). Reduced composer is **max-width 40rem**, centered;
-  expand grows it to the 12px canvas inset (180ms).
-  Idle / unfocused overlay is **40% opacity**; hover or focus-within is opaque.
-  The overlay does **not** dim or black out the website; clicks on the
-  uncovered canvas still work. **Apply / Reject pills never fade.**
-- **Clear context** — silent trash on the **right** of the overlay top row,
+  they call: composer while text is showing; DustOrb when Voice is on. Close
+  returns to the button. The Assistant has a 12px inset from the canvas on the
+  left, right, and bottom (not flush to the edges). Chevrons expand or reduce;
+  that is not a hide. **Collapsed** (desktop and narrow default while the
+  composer is showing) is one row on a wide screen: chevrons, field,
+  **Plan mode**, **Ask first**, **Plan** (or **Send**). On narrow, collapsed
+  stays two rows (bar + composer). Reduced composer is **max-width 40rem**,
+  centered; expand grows it to the 12px canvas inset (180ms).
+  Idle / unfocused Assistant is **40% opacity**; hover or focus-within is
+  opaque. The Assistant does **not** dim or black out the website; clicks on
+  the uncovered canvas still work. **Apply / Reject pills never fade.**
+- **Clear context** — silent trash on the **right** of the Assistant top row,
   **expanded only** (hidden while reduced). Starts a new thread (drops prior
   turns). Discards pending Ask-first proposals that have not been Applied (same
   as Reject those). Does **not** undo already-Applied batches. Not a glossary
   term; it is a control.
-- **Ask first applied vs not applied** must be obvious. The overlay is
+- **Ask first applied vs not applied** must be obvious. The Assistant is
   **one chat-like thread**. Ask first **Apply / Reject is per pending turn**
   (the whole run’s tools in bulk), not per tool. Those two actions are
-  **pills on the canvas**, always sitting immediately above the assistant
-  overlay (composer) or in the left stack next to the orb (voice agent), not
-  inside the thread and not at the canvas midpoint. Each tool in the thread is
-  the backend `summary` (`Updated image on Hero`), never a tool name and never
-  “website slot” ([assistant.md](assistant.md)). Write lines use a **pencil**; thinking uses a
-  **lightbulb**. There is no search/grep tool.
+  **pills on the canvas**, always sitting immediately above the composer or in
+  the left stack next to DustOrb (Voice), not inside the thread and not at the
+  canvas midpoint. Each tool in the thread is the backend `summary`
+  (`Updated image on Hero`), never a tool name and never “website slot”
+  ([assistant.md](assistant.md)). Write lines use a **pencil**; thinking uses a **lightbulb**.
+  There is no search/grep tool.
   - **Pending** — canvas paints the proposal in memory; changed website sections
     use the pending outline. Nothing PATCHed. Apply and Reject pills shown. Do
     not paint **Not applied** as copy on the website.
-  - **Applied** — canvas is the unpublished website; proposal overlay gone.
+  - **Applied** — canvas is the unpublished website; proposal gone.
     Pills gone (one-way).
   - **Rejected** — canvas back to pre-proposal. Pills gone.
 

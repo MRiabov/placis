@@ -9,20 +9,25 @@ Unactivated tenant: **403** `tenant_unactivated` on every `/v1/assistant/…`
 route (HTTP and the text WebSocket). Activated owner: **403** on all
 `/v1/onboarding/assistant/…` routes.
 
-String caps (characters, not tokens): owner **input** `maxLength` **4000**.
-Model **output** on `ai_generations` **16000**. Owner-facing thread `body`, plan
-markdown, `summary`, and overlay `thinking` **5000**.
+Caps are mixed. **Owner input is characters:** composer `owner_message.body`
+`maxLength` **4000**; owner Voice utterance **5000**. **Text agent back and
+forth is tokens:** assembled context **128K** and generation **12K** per model
+turn ([architecture.md](architecture.md)) — thinking, assistant `body`, and
+tool `summary` persist that generation. Do **not** use a 5000-character
+`maxLength` as generation. **Voice:** no Go token cap on the live connection;
+do not treat a character cap as Voice generation. HTTP still puts a storage
+`maxLength` on those strings (OpenAPI). Do **not** add `agent_turn_limit` 409.
 
 ## Serve only types on HTTP
 
 | Location | Persistence | HTTP |
 | --- | --- | --- |
 | Thread | columns | `*Read` (`id`, `status` `current`/`completed`, `last_activity_at`). |
-| Thread items | columns | `*Read` (`kind` enum, `body` string + `maxLength` 5000, `icon` enum, `created_at`). Field name is **`items`**, not `thread_items`. **Omit** `ai_generations` and `runs`. |
+| Thread items | columns | `*Read` (`kind` enum, `body` string + `maxLength`, `icon` enum, `offset_seconds` int nullable, `created_at`). Owner `body` is **4000** (text) or **5000** (owner Voice utterance) **characters**. Assistant / `thinking` / `tool_summary` `body` storage `maxLength` is not generation — text generation is **12K tokens**. Field name is **`items`**, not `thread_items`. **Omit** `ai_generations` and `runs`. |
 | Assistant screen context | — | Closed per-screen structs, not a JSON bag. |
 | Voice tool-calls body | — | Closed union of CMS tool structs (name + the same types the LLM loop validates). |
-| Voice transcripts | — | Committed visible text + optional reasoning/usage. **Omit** PCM, ASR/TTS deltas, and the recording file. |
-| Voice recording upload | `files` | Signed URL (`string` + `maxLength`). **Omit** from GET thread. Browser PUT to that URL. |
+| Voice transcripts | — | Committed visible text + `offset_seconds` + optional reasoning/usage. **Omit** PCM, ASR/TTS deltas, and the recording file. |
+| Voice realtime connection | — | Browser-safe secret + expiry + realtime URL (`string` + `maxLength`, `wss://…`). Region is Go-picked; **omit** a browser region field. |
 | Text WebSocket events | — | Closed `oneOf` event names (same rule as SSE: no unconstrained `payload`). |
 
 ## Complete — Go WebSocket (text chat only)
@@ -34,8 +39,8 @@ socket; event structs still land in `/openapi.json` for typegen.
 ### GET /v1/assistant/thread/ws
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** CMS overlay text composer after hydrate (including `/cms` once
-  they have called the assistant). Not Voice.
+- **Callers:** CMS Assistant text composer after hydrate (including `/cms`
+  once they have called the assistant). Not Voice.
 - **Transport:** WebSocket. Query/`Authorization` as other Clerk sockets; not a
   POST body.
 - **Owner → Go (closed union):**
@@ -43,10 +48,12 @@ socket; event structs still land in `/openapi.json` for typegen.
     enum); `plan` / `ask_first` booleans when `assistant_screen` is
     `website_editor` (omit on other screens); unpublished website working copy
     when `website_editor`; assistant screen switch notification when the screen
-    changed since the last **owner** request.
-- **Go → owner (closed union):** token deltas; `thinking` (`body` `maxLength`
-  5000); tool activity (`planned` / `applied` / `skipped` / `failed` +
-  `summary` `maxLength` 5000 + `icon`); terminal `error` (`code`, `message`).
+    changed since the last **owner** request. **Follow** is not a field;
+    `follow: false` → **400**.
+- **Go → owner (closed union):** token deltas; `thinking` (`body` storage
+  `maxLength`, generation is **12K tokens**); tool activity (`planned` /
+  `applied` / `skipped` / `failed` + `summary` storage `maxLength`, generation
+  is **12K tokens**, + `icon`); terminal `error` (`code`, `message`).
   **Must not** dump `ai_generations` or debug traces on this socket.
 - **Errors:** `403` `tenant_unactivated`; `402` `usage_credit_exhausted`;
   `409` `in_flight_run`; `409` `allowed_set_rejected` (failed activity event on
@@ -62,8 +69,9 @@ socket; event structs still land in `/openapi.json` for typegen.
 - **Callers:** bottom-right **Assistant** on an assistant screen, including
   `/cms`. Visiting `/cms` without calling does not hydrate.
 - **Response:** current thread `*Read` (`id`, `status`, `last_activity_at`) +
-  ordered `items` (`kind`, `body`, `icon`, `created_at`). Empty thread is `200`
-  with `items: []`.
+  ordered `items` (`kind`, `body`, `icon`, `offset_seconds` nullable,
+  `created_at`). No `current` → insert
+  empty `current`. Empty thread is `200` with `items: []`.
 - **Errors:** `403` `tenant_unactivated`.
 - **Must not:** return `thread_items` as the field name; return `runs`, audit
   blobs, or recording URLs.
@@ -71,7 +79,8 @@ socket; event structs still land in `/openapi.json` for typegen.
 ### POST /v1/assistant/thread/new
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** overlay **New thread** / clear context.
+- **Callers:** Assistant **New thread** / clear context. Does **not** preempt a
+  running text or Voice run (`409` `in_flight_run`). Does **not** drop Voice.
 - **Idempotency-Key:** yes.
 - **Request:** empty body.
 - **Response:** new thread `*Read` + `items: []`. Previous thread is
@@ -98,22 +107,28 @@ socket; event structs still land in `/openapi.json` for typegen.
 - **Idempotency-Key:** yes.
 - **Request:** metadata only (`run_id`).
 - **Errors:** `403` `tenant_unactivated`; **409** `ask_first_not_pending`.
-- **Must not:** upsert or delete unpublished website rows.
+- **Must not:** upsert or delete unpublished website rows; call the LLM (not
+  402). **Does** append a muted thread item (edits did not land) for the next
+  **model** turn’s reject notice.
 
 ### POST /v1/assistant/voice/realtime-connection
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** CMS overlay when Voice turns on, after the microphone is
+- **Callers:** CMS Assistant when Voice turns on, after the microphone is
   granted.
 - **Idempotency-Key:** yes.
 - **Request:** `assistant_screen` (CMS v1 enum); unpublished website working
   copy when `assistant_screen` is `website_editor` (omit that blob on other
-  screens).
-- **Response:** browser-safe secret + expiry. **Not** a Go WebSocket. Audio is
-  browser ↔ voice service.
+  screens). No `plan` / `ask_first` / `follow`. Always Ask first on the run
+  row.
+- **Response:** browser-safe secret + expiry + **realtime URL** (`string` +
+  `maxLength`, `wss://…` for the xAI region Go picked). **Not** a Go
+  WebSocket. Audio is browser ↔ that URL. Go picks the region from the
+  business country ([voice agent](../../general-architecture/voice-agent.md)).
 - **Errors:** `403` `tenant_unactivated`; `402` `usage_credit_exhausted`;
   `409` `in_flight_run`.
-- **Must not:** return the long-lived voice API key.
+- **Must not:** return the long-lived voice API key; accept a browser-chosen
+  region or host.
 
 Onboarding uses
 [POST /v1/onboarding/assistant/voice/realtime-connection](../onboarding/api.md).
@@ -130,10 +145,12 @@ Onboarding uses
 - **Response:** HTTP JSON events (`planned` / `applied` / `skipped` / `failed`
   - `summary` / `icon`). Go does **not** push these on any WebSocket.
 - **Errors:** `403` `tenant_unactivated`; `402` `usage_credit_exhausted`;
-  `409` `in_flight_run`; `409` `allowed_set_rejected`.
+  `409` `in_flight_run` (a **second** start, not the current voice run);
+  `409` `allowed_set_rejected`.
 - **Must not:** accept freeform JSON as a tool registry; wait on
   `GET /v1/assistant/thread/ws` for these events; upsert unpublished website
-  rows.
+  rows. After **20** tool-using rounds on this run, do not execute more tools
+  (`function_call_output` that the budget is done).
 
 ### POST /v1/assistant/voice/transcripts
 
@@ -141,15 +158,22 @@ Onboarding uses
 - **Callers:** browser after committed voice utterances, and usage-only when
   Voice turns off.
 - **Idempotency-Key:** yes.
-- **Request:** committed owner utterance + assistant utterance (visible text,
-  each `maxLength` 5000), either of which may be omitted on a **usage-only**
-  POST. Reasoning if the voice service emitted it (`internal_reasoning`; empty
-  string if omitted — do not invent). **Usage** (required when debiting):
+- **Request:** committed owner utterance (`maxLength` **5000 characters**) +
+  assistant utterance (visible text; storage `maxLength`, not a 5000-character
+  generation cap). Each utterance includes **`offset_seconds`** (int, `>= 0`,
+  maximum 7200): seconds from this Voice run’s realtime-connection start
+  (browser audio clock). Reconstruct `[m:ss owner]` / `[m:ss assistant]`.
+  Never say user. Either utterance may be omitted on a **usage-only** POST.
+  Reasoning if
+  the voice service emitted it (`internal_reasoning`; empty string if omitted —
+  do not invent). **Usage** (required when debiting):
   `audio_seconds_sent` (number), `audio_seconds_received` (number),
   `billed_text_item_count` (int). Optional typed xAI usage struct when present
   (named fields, not a JSON bag).
 - **Errors:** `403` `tenant_unactivated`. Settlement stays **200** (not 402).
-- **Must not:** accept PCM, ASR/TTS deltas, or the recording file.
+  `409` `in_flight_run` is only a **second** start, not the current voice run.
+- **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
+  `created_at` as the conversation clock; accept a browser wall-clock.
 
 ### POST /v1/assistant/voice/recordings
 
@@ -163,7 +187,8 @@ Onboarding uses
   `…/recordings/{id}/complete`.
 - **Errors:** `403` `tenant_unactivated`; `404` if `run_id` is missing or not a
   voice run for this tenant; `409` if that run already has a recording;
-  `413` if `byte_size` is over the maximum.
+  `413` if `byte_size` is over the maximum. `409` `in_flight_run` is only a
+  **second** start, not the current voice run.
 - **Must not:** accept the recording file on this POST; use
   `/v1/media-assets` for this.
 
@@ -173,7 +198,8 @@ Onboarding uses
 - **Callers:** browser after the PUT to the signed URL succeeds.
 - **Idempotency-Key:** yes.
 - **Errors:** `403` `tenant_unactivated`; `404` if the `files` row is not this
-  tenant’s voice recording.
+  tenant’s voice recording. `409` `in_flight_run` is only a **second** start,
+  not the current voice run.
 - **Must not:** accept the recording file.
 
 ## Named codes (this feature)
