@@ -29,8 +29,8 @@ at the HTTP boundary. Clerk's own ids (`clerk_org_id`, `clerk_user_id`,
 not UUIDs.
 
 Use DB check constraints for stable enums; transition tests before production
-use. Do not use Postgres `CREATE TYPE … AS ENUM` (no `DROP VALUE`; retiring a
-label means rebuilding the type).
+use. Do not use Postgres `CREATE TYPE … AS ENUM`
+([ADR 1](ADR.md)).
 
 ## Postgres schemas (namespaces)
 
