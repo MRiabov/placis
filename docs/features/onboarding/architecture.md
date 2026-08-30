@@ -55,11 +55,13 @@ publication is v3+.
 
 From confirm through applying the website template and copy, the backend pushes
 onboarding session events over SSE (on change, not faster than ~2s). The
-frontend refreshes the checklist. On `/onboarding/preview` it rotates complete
-filled website sections (~2s, image fade). The stream is a **mirror** — Postgres
-is authoritative. Business research progress reads `etl.runs` **and** the live
-business profile transform already wrote (fast extract results appear before
-slow extract finishes). The contractor host is not an SSE endpoint.
+frontend refreshes the Review checklist **and** live-fills the client interview
+(untouched controls; enrichable lists — [04a](pipeline/04a-text-client-interview.md)). On `/onboarding/preview` it
+rotates complete filled website sections (~2s, image fade). The stream is a
+**mirror** — Postgres is authoritative. Business research progress reads
+`etl.runs` **and** the live business profile transform already wrote (fast
+extract results appear before slow extract finishes). The contractor host is not
+an SSE endpoint.
 
 ## Where things stand
 

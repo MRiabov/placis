@@ -34,25 +34,41 @@ calls `StartRun`.
 - Transform reads fetch / listing rows and writes the business profile. It must
   not call source networks.
 - Retry of **this** `run_id` reuses a fetch that already landed for that chunk
-  (`fetched_from`, canonical URL). It does not skip remaining slow extract
-  chunks. `trigger=scheduled` extracts again.
+  (`fetched_from`, canonical URL + `fetched_from` for crawl). It does not skip
+  remaining slow extract chunks. `trigger=scheduled` extracts again.
 - Scheduled with no key (`place_id`, Facebook URL / handle, Instagram handle) →
   `status=skipped`, no transform.
 - Dump `raw` only on the fetch row. Never on listing / profile / post live rows.
-- Open web search is Parallel through Vercel AI Gateway only ([web-search](web-search.md)).
+- Open web **search** is Parallel through Vercel AI Gateway only
+  ([web-search](web-search.md)). Known-URL crawl **text** is Parallel Extract
+  (`PARALLEL_API_KEY`) from [website crawl](website-crawl.md). Do not call
+  Parallel Search HTTP from crawl.
 - **`algorithm` and `schema_revision` on every transform schema** — each live
-  profile increment, Facebook / Instagram profile or post, and `photo_kind`
-  stores both. Skip when `algorithm` matches, `schema_revision` matches, and
-  `force` is false. A **new algorithm** does not auto-rerun (cost) until
-  `force=true`. A **bumped `schema_revision`** (new fields on that schema)
-  **extracts by default** on the next run — do not reuse an older fetch for that
-  kind. `force=true` rewrites rows whose stored algorithm is stale and **not**
-  `human`. Onboarding 02 and Monday / Wednesday / Friday pass `force=false`.
-  `force` does not refetch when only the algorithm changed.
+  profile increment, Facebook / Instagram profile or post, `photo_kind`, and
+  `etl.llm_source_to_project_classifications` store both. Skip when
+  `algorithm` matches, `schema_revision` matches, and `force` is false. A
+  **new algorithm** does not auto-rerun (cost) until `force=true`. A **bumped
+  `schema_revision`** (new fields on that schema) **extracts by default** on
+  the next run — do not reuse an older fetch for that kind. `force=true`
+  rewrites rows whose stored algorithm is stale and **not** `human`. Onboarding
+  02 and Monday / Wednesday / Friday pass `force=false`. `force` does not
+  refetch when only the algorithm changed. Project skip is the verdict table,
+  not columns on posts / reviews / crawl HTML URLs.
 - **`algorithm=human`** — owner / client interview / `confirm_conflict` /
   Details wrote this value. ETL transform must not overwrite it, including when
   `force=true` or `schema_revision` bumped (empty new fields may still fill). A
   later override is a **manual transform**, not the schedule.
+- **Cheap multimodal default** — usable-as-a-Project classify, photo
+  classification, and parse of crawl markdown into trade/services/etc. use
+  **`glm-5.3-flash`** (dated gateway id; do not ride `*-latest`). Same model
+  when input is text-only. Image on `input` when a depicting photo exists.
+  Record reasoning, owner-visible output, and tool calls. CMS Assistant /
+  Voice / onboarding 06 are unchanged.
+- **ETL writes cite `etl.sources`** — insert identity rows for blobs this spec
+  cites. Each ETL `business_profile_edits` increment inserts ≥1
+  `business_profile_edit_sources`. ETL Projects insert ≥1 `project_sources`.
+  Imported files insert ≥1 `imported_media_sources`. Never a nullable
+  `source_id` column. Client interview / owner writes have no junction rows.
 
 ## Sources
 
@@ -60,7 +76,11 @@ calls `StartRun`.
   Wed / Fri + 02)
 - [Facebook](facebook.md) — profile and posts (Mon / Wed / Fri + 02)
 - [Instagram](instagram.md) — profile and posts (Mon / Wed / Fri + 02)
-- [Website crawl](website-crawl.md) — fast crawl then slow crawl / directory (02 only)
+- [Website crawl](website-crawl.md) — homepage fast then parallel remainder /
+  directory (02 only)
+- [Projects from source](projects.md) — after FB / IG / crawl / Maps review
+  transform (not a StartRun kind); skip on
+  `etl.llm_source_to_project_classifications`
 - [Trade registry](trade-registry.md) — accreditations (02 only)
-- [Web search](web-search.md) — Parallel discovery (02 only)
+- [Web search](web-search.md) — Parallel **Search** discovery (02 only)
 - [Photo classification](photo-classification.md) — photo kinds on media library items

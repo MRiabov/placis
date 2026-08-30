@@ -29,7 +29,11 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    metadata (Instagram handle / Instagram user, Facebook page / handle, Maps
    `place_id`) plus `raw` jsonb. No single mixed `etl.fetches` dump. No `raw` on
    listing / profile / post live rows. A unifying `{id, type}` pointer table is
-   not in this slice. (2026-08-27)
+   not in this slice. (2026-08-27) (2026-08-30: `etl.sources` is live extract
+   **identity** — `kind` + natural key — not mixed fetches and not `raw`.
+   Fetches stay one table per extract type. Live blob rows fk `source_id`.
+   Project skip is `etl.llm_source_to_project_classifications`, not this
+   table.)
 
 4. **An ETL run is one source kind** — `etl.runs` is one row per kind (Google
    Maps extract, Facebook extract, Instagram extract).
@@ -94,4 +98,23 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     about half of that kind’s checklist from the fast extract, then more as slow
     extract runs. Web search is not instant; the first discovered key unblocks
     Maps / crawl in the same enqueue. Fast / slow live in the per-source
-    package, not `StartRun`. (2026-08-27)
+    package, not `StartRun`. (2026-08-27) (2026-08-30: website crawl slow
+    extract is a parallel remainder extract after the homepage, not a serial
+    tens-of-seconds walk. Maps scrape remainder is unchanged.)
+
+12. **Crawl fetches record `fetched_from`; live HTML URLs hold photos** —
+    Parallel Extract, HTML GET, Apify, robots, and sitemaps are separate
+    append-only fetch rows. Depicting photos live on
+    `etl.website_crawl_pages`, not fetches. Extract markdown and goquery
+    visible text are two `etl.sources` (`website_crawl_extract` /
+    `website_crawl_html`). Apify stands in for the HTML blob when GET fails.
+    Project skip lives on `etl.llm_source_to_project_classifications`, not on
+    crawl HTML URLs. (2026-08-30; same day, later: two crawl sources; Project
+    skip off the HTML URL row.)
+
+13. **Written rows cite extract blobs through typed junctions** — `source_id` is
+    never a nullable column. ETL-produced edits, Projects, and imported files
+    cite **at least one** `etl.sources` id (`business_profile_edit_sources`,
+    `project_sources`, `imported_media_sources`). Owner / client interview
+    writes have no junction rows. Do not use a generic `table.column` field map.
+    `origin` stays the product kind. (2026-08-30)

@@ -48,3 +48,22 @@ decision + date) instead of silently replacing the old entry.
    `active`. Archive still `POST …/archive` (`draft` or `active` → `archived`).
    Onboarding / already-`active` rows stay `active`. GET list default is
    non-archived (`draft` + `active`). (2026-08-29)
+
+6. **ETL insert is `active` from a source usable as a Project** — Facebook /
+   Instagram posts, crawled URLs that are a past named job, and reviews usable
+   as a Project insert `status=active`, matching decision 5 (onboarding /
+   already-`active` stay `active`). Not a project draft. No Approve in the
+   client interview. Client interview Archive (`POST
+   /v1/onboarding-sessions/{id}/projects/{projectId}/archive`) is the same
+   persist as CMS Archive (`active` → `archived`, `algorithm=human`). CMS
+   `POST /v1/projects` still inserts a project draft. (2026-08-30)
+
+7. **The Project cites sources; sources do not own Projects** — Drop
+   `facebook_post_id` / `instagram_post_id` / crawl URL /
+   `business_profile_review_id` on `projects`. ETL Projects cite ≥1
+   `etl.sources` id via `project_sources`. Owner drafts have zero cites.
+   Classify skip / yes/no lives on
+   `etl.llm_source_to_project_classifications` (required `source_id`;
+   `project_id` only when yes). Same crawl URL, Extract + HTML both usable as
+   a Project → one Project, two cites. Text under 200 characters is verdict
+   no, no LLM. (2026-08-30)

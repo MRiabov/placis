@@ -59,19 +59,24 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
 Parallel is the search engine for our agents. When a research job must discover
 a URL or listing and we do not already have `place_id` or a known website URL,
 call Parallel through Vercel AI Gateway (`gateway.tools.parallelSearch()`, any
-model). Do not call Parallel’s API directly. Do not use Exa, Perplexity, Tako, a
-model's built-in search, `:online`, or OpenRouter web search. A generation call
-over retrieved text (no search tools) may classify that text; it is not Maps /
-crawl fast extract. Parallel is not instant: the first discovered key unblocks
-Maps / crawl in the same enqueue. Known-URL crawl, Maps Details, scrape, and
-Facebook stay typed adapters. (2026-08-23: Parallel named, and OpenRouter web
-tools wrongly forbidden. Same day, later: Parallel is a search engine on
-OpenRouter; we use OpenRouter for both search and extract. Predecessor used
-Perplexity Sonar via OpenRouter and Exa for Facebook discovery. 2026-08-24:
-Vercel AI Gateway exposes Parallel as a server tool; OpenRouter is no longer the
+model). Do not call Parallel’s **Search** API directly. Do not use Exa,
+Perplexity, Tako, a model's built-in search, `:online`, or OpenRouter web
+search. A generation call over retrieved text (no search tools) may classify
+that text; it is not Maps / crawl extract. Parallel is not instant: the first
+discovered key unblocks Maps / crawl in the same enqueue. Known-URL crawl
+**text** is Parallel **Extract** (`PARALLEL_API_KEY` against
+`https://api.parallel.ai/v1/extract`, up to 20 URLs per request) plus own HTTP
+GET for HTML/images ([website crawl](../etl/pipeline/website-crawl.md)). Direct
+Extract HTTP is allowed; Search HTTP is not. Maps Details, scrape, and Facebook
+stay typed adapters. (2026-08-23: Parallel named, and OpenRouter web tools
+wrongly forbidden. Same day, later: Parallel is a search engine on OpenRouter;
+we use OpenRouter for both search and extract. Predecessor used Perplexity
+Sonar via OpenRouter and Exa for Facebook discovery. 2026-08-24: Vercel AI
+Gateway exposes Parallel as a server tool; OpenRouter is no longer the
 search/extract hop — generation and search stay on Vercel. 2026-08-27: Parallel
 is not instant; first discovered key unblocks Maps / crawl; generation over
-retrieved text is not fast extract.)
+retrieved text is not fast extract. 2026-08-30: Search vs Extract split;
+Extract is known-URL crawl text, not a Projects-only hop.)
 
 6. **The business profile keeps profile history and every detail is
    attributable** — each change is a new `business_profile_history` row with
@@ -127,7 +132,10 @@ retrieved text is not fast extract.)
     full website pages. Not SSE on the preview website address. (2026-08-25:
     carousel + host navigate; earlier: 2–10s re-render so the website builds up.
     2026-08-27: fast extract live business profile appears before slow extract
-    finishes.)
+    finishes. 2026-08-30: the client interview is also an SSE consumer —
+    untouched controls fill and enrichable lists (reviews, photos, Projects,
+    services, service areas, empty hours days, certifications) grow while 02
+    runs; dirty / `human` controls are not rewritten.)
 
 12. **Website activation writes the strip-off website publication** — 07 already
     wrote `website_publications` **v1** (static HTML on the host,

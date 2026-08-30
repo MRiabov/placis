@@ -34,19 +34,23 @@ landed. A later run after a `schema_revision` bump extracts again.
 
 ## Do — transform
 
-`status=transforming`. Upsert `facebook_profiles` on this contractor’s Facebook
-page id unless `algorithm=human`. Upsert `facebook_posts` on `external_id`
-(insert only ids we do not already have; skip existing rows whose `algorithm`
-matches **and** `schema_revision` matches, or is `human`). Fill empty
-`facebook_profile_url`. Attach new photos into the media library; then
-[photo classification](photo-classification.md). Write `algorithm` and `schema_revision` on rows this
-transform set.
+`status=transforming`. Ensure `etl.sources` for the Facebook profile and each
+post. Upsert `facebook_profiles` on this contractor’s Facebook page id unless
+`algorithm=human` (`source_id` required). Upsert `facebook_posts` on
+`external_id` (insert only ids we do not already have; skip existing rows whose
+`algorithm` matches **and** `schema_revision` matches, or is `human`). Fill
+empty `facebook_profile_url` (cite the profile `source_id` on that increment).
+Attach new photos into the media library (`imported_media_sources` → post
+`source_id`); then [photo classification](photo-classification.md); then
+[projects.md](projects.md) for posts that are a past named job (depicting photo
+required). Write `algorithm` and `schema_revision` on rows this transform set.
 
 ## Persist
 
-`etl.facebook_fetches`; `facebook_profiles` / `facebook_posts`;
-`business_profile_edits` when a live profile URL / photo increment is set.
-`etl.runs.status=succeeded`.
+`etl.facebook_fetches`; `etl.sources`; `facebook_profiles` / `facebook_posts`;
+`business_profile_edits` + `business_profile_edit_sources` when a live profile
+URL / photo increment is set; `imported_media_sources`; Projects when a post
+is usable as a Project. `etl.runs.status=succeeded`.
 
 ## Fail
 

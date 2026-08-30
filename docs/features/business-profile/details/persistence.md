@@ -54,31 +54,43 @@ as of `accepted_edit_id`. They do not replay profile history on every call.
   `brand_typography`, `brand_primary_color`, `brand_accent_color`), `list`
   nullable
   (`services`/`service_areas`/`opening_hours`/`reviews`/`certifications`/
-  `facebook_posts`/`instagram_posts` when the op is a list change),
+  `facebook_posts`/`instagram_posts`/`projects` when the op is a list change),
   `list_item_id` nullable, `text_value`, `int_value`, `date_value`, `bool_value`
   (check: the column that matches `field` is set; the others are null — not a
   json `value`), `created_by`
   (`business_research`/`voice`/`text`/`human`/`llm`), origin (where it came
   from: `google_maps_listing`/`company_registry_record`/`client_interview`/
-  `business_research`/`facebook`/`instagram`/`owner`), `algorithm` (ETL
-  transform identity, or `human` when the contractor wrote it),
+  `business_research`/`facebook`/`instagram`/`website_crawl`/`owner`),
+  `algorithm` (ETL transform identity, or `human` when the contractor wrote it),
   `schema_revision` (integer; bump when that schema gains fields — next extract
   runs by default), `request_id`, `etl_run_id` nullable, `created_at`
 
-This table is the audit for profile edits. Generic `audit_events` stays for
-website publication / website activation / etc.
+  No `source_id` column on this table.
+
+- `business_profile_edit_sources` — `edit_id` fk, `source_id` fk →
+  `etl.sources`, `tenant_id` fk. Unique `(edit_id, source_id)`. Every **ETL**
+  increment has **at least one** cite (Maps listing for marketing phone; both
+  crawl blobs when both dumps informed trade / services; listing-review for a
+  review add). Client interview / Details / `confirm_conflict` increments have
+  **no** junction rows (they were not generated from extract blobs). Keep
+  `origin` for product copy (the kind); the junction is the blob list.
+  `etl_run_id` is which run. `ai_generations` is the LLM call if any.
+
+This table is the audit for profile edits (the increment row, not the junction).
+Generic `audit_events` stays for website publication / website activation /
+etc.
 
 **Write:** `SELECT … FOR UPDATE` the profile row, insert one increment per field
 or list item the writer actually set (never the whole profile), `UPDATE` only
 those live profile columns or list rows in the same transaction. Client
 interview writes `algorithm=human`; ETL transform writes the current transform
-`algorithm` and `schema_revision`. ETL must not `UPDATE` a live profile column
-whose winning edit is `algorithm=human` (empty new fields after a
-`schema_revision` bump may still fill). Client interview and business research
-run at the same time; the row lock serializes them. Different fields both
-persist. Same field: both edits stay in the log; if the values disagree, that is
-a research conflict (show both). Do not read the whole profile, merge in memory,
-and write it back.
+`algorithm` and `schema_revision` **and** ≥1 `business_profile_edit_sources`.
+ETL must not `UPDATE` a live profile column whose winning edit is
+`algorithm=human` (empty new fields after a `schema_revision` bump may still
+fill). Client interview and business research run at the same time; the row
+lock serializes them. Different fields both persist. Same field: both edits
+stay in the log; if the values disagree, that is a research conflict (show
+both). Do not read the whole profile, merge in memory, and write it back.
 
 **Replay** the edit list only to rebuild a damaged live business profile, to
 show Profile history, or to reconstruct the profile as of `accepted_edit_id`
@@ -121,15 +133,19 @@ id from every website section array. Profile-history list ops for `reviews`
 include `update` for top pin/reorder.
 
 - `facebook_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique,
+  `source_id` fk required → `etl.sources` (`kind=facebook_profile`),
   Facebook page id / URL, handle, `algorithm`, `schema_revision`,
   `latest_fetch_id` nullable fk → `etl.facebook_fetches`
 - `facebook_posts` — `id`, `tenant_id` fk, `facebook_profile_id` fk,
+  `source_id` fk required → `etl.sources` (`kind=facebook_post`),
   `external_id` unique per profile, body / media library refs, `published_at`
   nullable, `algorithm`, `schema_revision`
 - `instagram_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique,
+  `source_id` fk required → `etl.sources` (`kind=instagram_profile`),
   handle, Instagram user, `algorithm`, `schema_revision`, `latest_fetch_id`
   nullable fk → `etl.instagram_fetches`
 - `instagram_posts` — `id`, `tenant_id` fk, `instagram_profile_id` fk,
+  `source_id` fk required → `etl.sources` (`kind=instagram_post`),
   `external_id` unique per profile, body / media library refs, `published_at`
   nullable, `algorithm`, `schema_revision`
 

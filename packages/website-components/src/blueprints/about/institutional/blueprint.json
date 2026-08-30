@@ -104,7 +104,7 @@
               {
                 "heading": "{{business_name}}'s Story",
                 "paragraphs": [
-                  "{{business_name}}'s company history, leadership, and source-backed milestones should be reviewed before publication. Add confirmed founding, established, or incorporation details only when the tenant or a cited source supports the claim."
+                  "{{business_name}}'s company history, leadership, and milestones backed by a detail should be reviewed before publication. Add confirmed founding, established, or incorporation details only when the tenant or a cited source supports the claim."
                 ]
               },
               {
@@ -125,7 +125,7 @@
             {
               "url": "https://www.harperconstruction.com/about",
               "section": "our_story",
-              "note": "Source narrative includes the Our Story heading and three subheaded text blocks about the source company's milestone, teamwork, and long-tenured staff. Tenant drafts must replace source-specific age claims with source-backed tenant facts."
+              "note": "Source narrative includes the Our Story heading and three subheaded text blocks about the source company's milestone, teamwork, and long-tenured staff. Tenant drafts must replace source-specific age claims with tenant facts backed by a detail."
             }
           ]
         },

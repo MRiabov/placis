@@ -142,6 +142,8 @@ list (not automatically back onto website sections). Toast with **Undo**
 
 - Website editor project-gallery Content (ordered project ids on that website
   section).
-- Onboarding creating project rows from photos of their work.
+- Onboarding creating project rows from unlabeled photos of their work.
+  Business-research assembled Projects from posts / crawled URLs / reviews
+  usable as a Project are onboarding’s client interview cards, not this screen.
 - Voice as the writing UI.
 - The Assistant as the writing UI on `/cms/projects/{id}`.

@@ -79,8 +79,8 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 | Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | public checkout / activation-status (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
 | Don't say claim: `GET …/claim/status` | activation-status |
 
-SSE drives `/onboarding/preview` only. The contractor host is static HTML; it is
-not an SSE endpoint.
+SSE drives Review, the client interview (live fill), and `/onboarding/preview`.
+The contractor host is static HTML; it is not an SSE endpoint.
 
 ## Don't say / rename
 

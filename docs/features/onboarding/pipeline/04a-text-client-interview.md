@@ -20,7 +20,10 @@ then `POST .../interview/complete`.
 
 - Voice realtime connection, realtime tools, transcript replay.
 - Parallel / research jobs / photo classification (photo kinds are ETL
-  transform).
+  transform). The onboarding **guide** does not Archive or edit Project cards
+  (`tools=[]`).
+- Edit title / description / cover on interview Project cards. No Approve.
+  Archive is the contractor click below, not `/v1/projects/{id}/archive`.
 - `POST` a new onboarding session on Resume.
 - Complete while required checklist rows are `empty` / `in_progress` /
   `conflict`.
@@ -31,6 +34,9 @@ then `POST .../interview/complete`.
   `/cms/details`.
 - Combine services or service areas with an LLM in the wait after Continue. 06
   does not invent the service list.
+- Overwrite a control the contractor is editing or has already saved
+  (`algorithm=human`, or dirty on this visit and not yet autosaved). Live fill
+  is empty / enrich only ([Do — live fill](#do--live-fill-while-02-runs)).
 
 ## Do
 
@@ -46,18 +52,48 @@ then `POST .../interview/complete`.
    `emergency_phone`; found photos in the media library plus upload (source from
    the internet / AI photo only if there are not enough); certifications
    (company registry pick locks that business-registry certification) / found
-   reviews; extra notes. Paste of one-per-line or comma-separated **service
-   names** may split into rows deterministically (no LLM). Do not ask a
-   photos-choice question.
-4. Final submission `kind=final`, then `POST .../interview/complete` iff the
+   reviews; **Projects** if any `active` business research origin rows exist —
+   up to four cards, current completeness rank ([build-profile](build-profile.md)), same look as
+   `/cms/projects` (cover, title, description), no Project draft badge, not
+   editable, **Archive** on the card. Zero `active` → omit the whole block.
+   Cards may appear / reorder over SSE while 02 is still running. Extra notes.
+   Paste of one-per-line or comma-separated **service names** may split into
+   rows deterministically (no LLM). Do not ask a photos-choice question.
+4. While they stay on this screen, apply [live fill](#do--live-fill-while-02-runs) from the onboarding session
+   SSE (Postgres is authoritative).
+5. Final submission `kind=final`, then `POST .../interview/complete` iff the
    complete gate (service and service-area list rows present, or skipped).
-5. Contractor may mark a required row `skipped` in this step, then complete.
+6. Contractor may mark a required row `skipped` in this step, then complete.
+
+## Do — live fill (while 02 runs)
+
+Business research writes the live business profile as chunks land
+([02](02-business-research.md), [build-profile](build-profile.md)). The client
+interview **shows** those writes so they do not fill a gap research already
+closed. Same SSE as Review; this screen is also a consumer.
+
+- **Untouched scalar / whole control** (trade, description, marketing phone,
+  marketing email, existing site URL, founder, hours they have not
+  edited): if empty and winning `algorithm` is not `human`, paint the live
+  value. A control they typed into this visit (dirty, even before autosave)
+  or already autosaved as `human` does not change.
+- **Enrichable lists** — insert new rows; do not delete contractor rows; do
+  not rewrite a row they edited:
+  services and service areas (new names / localities they have not entered);
+  opening-hours days still empty; certifications they did not `removed`;
+  reviews; media library photos; Projects (ranked top 4, Archive stays
+  archived). A `source_id` that already has a yes verdict does not add a
+  second Project (ETL skip).
+- Extra notes and `emergency_phone` are contractor-only. Business research
+  does not write them.
+- Research conflict on a field they already saved stays a conflict (show
+  both); do not silently take the research value.
 
 ## Persist
 
 `client_interview_submissions`; `business_profile_edits` via build-profile;
-`onboarding_sessions.channel=text`. Complete → `accepted_edit_id=last_edit_id`,
-status `applying_website_template`, enqueue 05.
+`onboarding_sessions.channel=text`; interview Archive on Projects. Complete →
+`accepted_edit_id=last_edit_id`, status `applying_website_template`, enqueue 05.
 
 ## Fail
 
@@ -66,8 +102,9 @@ Autosave fail keeps the token. Complete rejected if the gate fails; stay
 
 ## Out
 
-Gate pass → 05. 02 may still be running; later 02 writes are new edits after
-`accepted_edit_id`.
+Gate pass → 05. 02 may still be running on this screen; live fill continues
+until complete. After complete, later 02 writes are new edits after
+`accepted_edit_id` (they do not rewrite the 05 gallery).
 
 ## Invariants
 
@@ -77,3 +114,4 @@ Gate pass → 05. 02 may still be running; later 02 writes are new edits after
 - Services and service areas are structured Details rows at complete; the wait
   does not combine them with an LLM.
 - Onboarding Details == `/cms/details` for those fields.
+- Live fill never overwrites a dirty or `human` control; lists only enrich.

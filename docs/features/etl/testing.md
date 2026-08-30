@@ -6,10 +6,11 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
 
 1. **Bootstrap** — `StartRun` with `trigger=onboarding`, kinds including Google
    Maps, Facebook, Instagram. Assert `etl.runs` (one per kind, shared
-   `enqueue_id`), fetch rows, Maps listing, profile posts / reviews / media
-   library photo kinds. Assert Details transform (hours / marketing phone /
-   first reviews) lands while scrape is still in flight; scrape then adds
-   further reviews / photos.
+   `enqueue_id`), `etl.sources`, fetch rows, Maps listing, profile posts /
+   reviews / media library photo kinds. Assert Details transform (hours /
+   marketing phone / first reviews) lands while scrape is still in flight;
+   scrape then adds further reviews / photos. ETL increments have
+   `business_profile_edit_sources`.
 2. **Scheduled increment** — second `StartRun` with `trigger=scheduled` and a
    new review, a new Instagram post, a new photo, and a different marketing
    phone than the owner typed. Assert new review / post / photo on the business

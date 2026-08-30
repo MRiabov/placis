@@ -38,7 +38,7 @@ export function FoundInformationReview({
               Review what we found
             </p>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground leading-6">
-              Confirm the source-backed details before the short interview.
+              Confirm the details we found before the short interview.
             </p>
           </div>
         </div>
