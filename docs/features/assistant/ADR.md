@@ -167,7 +167,9 @@ instead of silently replacing it.
     Voice-connection clock on those events, int seconds) and persists the
     forwarded JSON as `provider_event` jsonb. Reconstruct `[m:ss owner]` /
     `[m:ss assistant]` from those columns — typed; never bake into `body`.
-    Never say **user**. If xAI did not emit a committed transcript for that
+    Never say **user**. There is no `kind=system` and no `[m:ss system]`.
+    xAI instructions / `role=system` stay the Voice-connection seed, not a
+    thread item. If xAI did not emit a committed transcript for that
     utterance, skip the row. Do not `POST /v1/stt`, do not open
     `wss://…/v1/stt`, do not transcribe the recording. (2026-08-30)
 

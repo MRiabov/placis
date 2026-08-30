@@ -117,7 +117,8 @@ reorder):
 Plus wrap-up when 3 tool-using turns remain (text only).
 
 Each **CMS voice-connection seed** concatenates **instructions** in this order
-(one blob, not billed `conversation.item.create`):
+(one blob, not billed `conversation.item.create`, not a `kind=system` thread
+item):
 
 1. Knowledge base (includes the product glossary)
 2. Live business profile
