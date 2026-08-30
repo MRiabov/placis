@@ -111,7 +111,7 @@ describe("resume", () => {
     ).toBe(OnboardingStep.Review);
   });
 
-  it("restores the generating step when a preview package exists", () => {
+  it("keeps the stored step even when a leftover preview package exists", () => {
     const profileWithPreview = {
       ...setupProfileFixture,
       active_preview_package: {
@@ -123,6 +123,15 @@ describe("resume", () => {
     };
     expect(
       restoredStepForProfile(OnboardingStep.Interview, profileWithPreview),
-    ).toBe(OnboardingStep.Generating);
+    ).toBe(OnboardingStep.Interview);
+  });
+
+  it("restores the website preview after wait-end", () => {
+    expect(
+      restoredStepForProfile(
+        OnboardingStep.PreviewAndEdit,
+        setupProfileFixture,
+      ),
+    ).toBe(OnboardingStep.PreviewAndEdit);
   });
 });

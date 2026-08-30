@@ -22,6 +22,9 @@ rewrite stay Ads UI; on Ads the assistant write tool is media-library
   `/v1/assistant/voice/`)
 - [testing.md](testing.md)
 
-Onboarding guide: [onboarding assistant](../onboarding/assistant.md). Unpaid website preview:
-[onboarding website editor](../onboarding/website-editor.md). Usage credit: [billing](../billing/README.md). LLM traces: [LLM layer](../../general-architecture/llm-layer.md)
-(schema `ai`). Voice transport: [voice agent](../../general-architecture/voice-agent.md).
+Onboarding guide: [onboarding assistant](../onboarding/assistant.md). Unpaid
+website preview:
+[onboarding website editor](../onboarding/website-editor.md). Usage credit:
+[billing](../billing/README.md). LLM traces:
+[LLM layer](../../general-architecture/llm-layer.md) (schema `ai`). Voice
+transport: [voice agent](../../general-architecture/voice-agent.md).

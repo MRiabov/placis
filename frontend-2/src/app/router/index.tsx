@@ -88,7 +88,8 @@ const onboardingRoute = createRoute({
   ),
 });
 
-// The setup step lives in the URL (/onboarding/find|review|interview|preview)
+// The setup step lives in the URL
+// (/onboarding/find|review|interview|preview|preview-and-edit)
 // and is synced by the controller; this route keeps /onboarding/{step} matching.
 const onboardingStepRoute = createRoute({
   getParentRoute: () => rootRoute,

@@ -7,7 +7,7 @@ const sessionState = vi.hoisted(() => ({
   session: null as {
     user: { id: string; name: string };
     platform_role: string | null;
-    tenant: { slug: string; status: "active" | "draft" } | null;
+    tenant: { slug: string; status: "active" | "draft" | "unactivated" } | null;
   } | null,
   isPending: false,
 }));
@@ -48,6 +48,20 @@ describe("CmsRoute tenant gate", () => {
       user: { id: "local_user", name: "Local User" },
       platform_role: "platform_admin",
       tenant: null,
+    };
+    sessionState.isPending = false;
+
+    render(<CmsRoute />);
+
+    expect(redirectTo).toHaveBeenCalledTimes(1);
+    expect(redirectTo).toHaveBeenCalledWith("/onboarding");
+  });
+
+  it("redirects to /onboarding when the tenant is unactivated", () => {
+    sessionState.session = {
+      user: { id: "local_user", name: "Local User" },
+      platform_role: "platform_admin",
+      tenant: { slug: "bellfield", status: "unactivated" },
     };
     sessionState.isPending = false;
 

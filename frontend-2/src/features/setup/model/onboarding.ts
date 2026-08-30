@@ -11,6 +11,7 @@ export class OnboardingStep extends StrEnum {
   static readonly Review = new OnboardingStep("review");
   static readonly Interview = new OnboardingStep("interview");
   static readonly Generating = new OnboardingStep("generating");
+  static readonly PreviewAndEdit = new OnboardingStep("preview-and-edit");
 }
 
 export class InterviewMode extends StrEnum {
@@ -33,6 +34,7 @@ export function onboardingStepFromValue(value: string): OnboardingStep | null {
     OnboardingStep.Review,
     OnboardingStep.Interview,
     OnboardingStep.Generating,
+    OnboardingStep.PreviewAndEdit,
   ];
   return matches.find((step) => step.equals(value)) ?? null;
 }

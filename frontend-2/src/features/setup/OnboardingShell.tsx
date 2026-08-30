@@ -1,5 +1,5 @@
 import { ChevronLeft, Globe2 } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 import {
   createSetupTextInterviewSubmission,
   saveSetupTextInterviewDraft,
@@ -12,15 +12,21 @@ import {
 } from "./model/onboarding";
 import { useSetupOnboarding } from "./model/useSetupOnboarding";
 import { GenerationPanel } from "./research/PreviewProgressPanels";
+import {
+  waitTeaserBlocked,
+  waitTeaserShouldOpenPreview,
+} from "./research/waitTeaser";
 import { BusinessSourcePanel } from "./sources/BusinessSourcePanel";
 import type { SetupSources } from "./sources/useSetupSources";
 import { useSetupSources } from "./sources/useSetupSources";
 import { TextInterviewForm } from "./textInterview/TextInterviewForm";
 import type { SetupVoiceInterview } from "./voice/useSetupVoiceInterview";
 import { useSetupVoiceInterview } from "./voice/useSetupVoiceInterview";
+import { PreviewAndEditPanel } from "./websitePreview/PreviewAndEditPanel";
 
 export function OnboardingShell(): ReactNode {
   const { actions, dispatch, state } = useSetupOnboarding();
+  const waitStartedRef = useRef<number | null>(null);
   const voice = useSetupVoiceInterview({
     onApplyEventResponse: (response) => {
       dispatch({ type: "profile_refreshed", profile: response.profile });
@@ -49,6 +55,66 @@ export function OnboardingShell(): ReactNode {
     resetSessionState: () => dispatch({ type: "session_reset" }),
     startVoiceInterview: voice.actions.startVoiceInterview,
   });
+
+  useEffect(() => {
+    if (!state.step.equals(OnboardingStep.Generating)) {
+      waitStartedRef.current = null;
+      return;
+    }
+    if (waitTeaserBlocked(state.progressEvents)) {
+      return;
+    }
+    if (waitStartedRef.current === null) {
+      waitStartedRef.current = performance.now();
+    }
+    const tryOpen = (now: number): boolean => {
+      const elapsed = now - (waitStartedRef.current ?? now);
+      if (!waitTeaserShouldOpenPreview(state.progressEvents, elapsed)) {
+        return false;
+      }
+      actions.changeStep(OnboardingStep.PreviewAndEdit);
+      return true;
+    };
+    if (tryOpen(performance.now())) {
+      return;
+    }
+    let frame = 0;
+    const tick = (now: number): void => {
+      if (tryOpen(now)) {
+        return;
+      }
+      frame = window.requestAnimationFrame(tick);
+    };
+    frame = window.requestAnimationFrame(tick);
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, [actions.changeStep, state.progressEvents, state.step]);
+
+  if (state.step.equals(OnboardingStep.PreviewAndEdit)) {
+    return (
+      <main className="min-h-screen bg-background text-foreground">
+        {state.notice ? (
+          <p className="border-b border-border bg-muted px-6 py-3 text-sm text-muted-foreground">
+            {state.notice}
+          </p>
+        ) : null}
+        {state.error ? (
+          <p className="border-b border-destructive/30 bg-destructive/5 px-6 py-3 text-sm text-destructive">
+            {state.error}
+          </p>
+        ) : null}
+        <PreviewAndEditPanel
+          onPay={() =>
+            actions.showNotice("Pay to activate opens checkout after sign-in.")
+          }
+          onShare={() =>
+            actions.showNotice("Share writes the preview website address.")
+          }
+        />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background text-foreground">

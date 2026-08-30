@@ -23,11 +23,16 @@ describe("onboarding step routing", () => {
     expect(onboardingPathForStep(OnboardingStep.Generating)).toBe(
       "/onboarding/preview",
     );
+    expect(onboardingPathForStep(OnboardingStep.PreviewAndEdit)).toBe(
+      "/onboarding/preview-and-edit",
+    );
   });
 
   it("reads the step back from the location segment", () => {
     window.history.pushState(null, "", "/onboarding/preview");
     expect(onboardingStepFromLocation()).toBe(OnboardingStep.Generating);
+    window.history.pushState(null, "", "/onboarding/preview-and-edit");
+    expect(onboardingStepFromLocation()).toBe(OnboardingStep.PreviewAndEdit);
     window.history.pushState(null, "", "/onboarding/interview");
     expect(onboardingStepFromLocation()).toBe(OnboardingStep.Interview);
     window.history.pushState(null, "", "/onboarding/review");
