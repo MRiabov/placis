@@ -54,7 +54,7 @@ function pageTitle(page: PreviewPageId): string {
 
 export function PreviewAndEditPage(): ReactNode {
   return (
-    <CmsAssistantProvider>
+    <CmsAssistantProvider startText>
       <PreviewAndEditInner />
     </CmsAssistantProvider>
   );
@@ -65,7 +65,7 @@ function PreviewAndEditInner(): ReactNode {
   const { open: assistantOpen, voiceOn } = useCmsAssistant();
   const [page, setPage] = useState<PreviewPageId>("home");
   const [listOpen, setListOpen] = useState(false);
-  const [scene, setScene] = useState<ActivationScene>("signed");
+  const [scene, setScene] = useState<ActivationScene>("unsigned");
   const [panelOpen, setPanelOpen] = useState(false);
   const [shared, setShared] = useState(false);
 
@@ -113,25 +113,6 @@ function PreviewAndEditInner(): ReactNode {
 
   return (
     <div className="relative flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-background px-3 py-2">
-        <PageList
-          listOpen={listOpen}
-          page={page}
-          onOpen={setListOpen}
-          onPage={(next) => {
-            setPage(next);
-            setListOpen(false);
-          }}
-        />
-        <Button onClick={() => setShared(true)} type="button" variant="outline">
-          Share
-        </Button>
-      </div>
-      {shared ? (
-        <p className="shrink-0 border-b border-border bg-zinc-50 px-3 py-2 text-sm">
-          Shared to {shareHost}
-        </p>
-      ) : null}
       <div
         className={cn(
           "relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
@@ -141,8 +122,38 @@ function PreviewAndEditInner(): ReactNode {
         data-editor-canvas
       >
         <UnpaidCanvas page={page} onPage={setPage} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-3 p-3">
+          <div className="pointer-events-auto">
+            <PageList
+              listOpen={listOpen}
+              page={page}
+              onOpen={setListOpen}
+              onPage={(next) => {
+                setPage(next);
+                setListOpen(false);
+              }}
+            />
+          </div>
+          <Button
+            className="pointer-events-auto shadow-prompt"
+            onClick={() => setShared(true)}
+            type="button"
+            variant="outline"
+          >
+            Share
+          </Button>
+        </div>
+        {shared ? (
+          <p className="pointer-events-none absolute inset-x-3 top-14 z-30 rounded-lg border border-border bg-background/95 px-3 py-2 text-sm shadow-prompt">
+            Shared to {shareHost}
+          </p>
+        ) : null}
         <AssistantLaunch className="absolute right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] z-30" />
-        <AssistantSession website />
+        <AssistantSession
+          onSignIn={() => setScene("signed")}
+          signedIn={scene !== "unsigned"}
+          unpaid
+        />
       </div>
       <ActivationStrip
         panelOpen={panelOpen}
@@ -182,6 +193,7 @@ function PageList({
       <Button
         aria-expanded={listOpen}
         aria-haspopup="true"
+        className="shadow-prompt"
         onClick={() => onOpen((open) => !open)}
         type="button"
         variant="outline"
@@ -199,7 +211,7 @@ function PageList({
         </svg>
       </Button>
       {listOpen ? (
-        <ul className="absolute top-full left-0 z-30 mt-1 min-w-52 rounded-lg border border-border bg-background py-1 shadow-sm">
+        <ul className="absolute top-full left-0 z-40 mt-1 min-w-52 rounded-lg border border-border bg-background py-1 shadow-sm">
           {pageTree.map((node) => (
             <li key={node.id}>
               <button
@@ -246,8 +258,8 @@ function UnpaidCanvas({
 }): ReactNode {
   const service = siteServices.find((item) => page === `service:${item.title}`);
   return (
-    <div className="relative z-0 min-h-0 flex-1 overflow-auto bg-white">
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-site-hero px-8 py-4 text-site-hero-fg">
+    <div className="relative z-0 min-h-0 flex-1 overflow-auto bg-white pb-28">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-site-hero px-8 pt-16 pb-4 text-site-hero-fg">
         <b>Bellfield Roofing</b>
         <nav className="flex flex-wrap gap-3 text-sm">
           {pageTree
