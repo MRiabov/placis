@@ -94,4 +94,11 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     about half of that kind’s checklist from the fast extract, then more as slow
     extract runs. Web search is not instant; the first discovered key unblocks
     Maps / crawl in the same enqueue. Fast / slow live in the per-source
-    package, not `StartRun`. (2026-08-27)
+    package, not `StartRun`. (2026-08-27) (2026-08-30: website crawl slow
+    extract is a parallel remainder extract after the homepage, not a serial
+    tens-of-seconds walk. Maps scrape remainder is unchanged.)
+
+12. **Crawl fetches record `fetched_from`; live HTML URLs hold skip keys** —
+    Parallel Extract, HTML GET, Apify, robots, and sitemaps are separate
+    append-only fetch rows. Skip keys and depicting photos live on
+    `etl.website_crawl_pages`, not fetches. (2026-08-30)

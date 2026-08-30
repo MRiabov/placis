@@ -51,12 +51,12 @@ enabled. Same field on `GET .../profile` and SSE.
 
 ### 3. Client interview — `/onboarding/interview`
 
-**Onboarding Details == Business details** ([ADR](ADR.md) 19). The Details
-block on this screen is `/cms/details`: same fields, same controls, same
-writes. If Details changes, this screen changes. Legal identity stays on
-Review. Client-interview-only extras wrap that block (photos, certifications,
-reviews, extra notes, contact name, `emergency_phone`). Look: white `.onb-card`,
-not the Details panel ([design decision](design-decision-record.md) 12).
+**Onboarding Details == Business details** ([ADR](ADR.md) 19). The Details block on this
+screen is `/cms/details`: same fields, same controls, same writes. If Details
+changes, this screen changes. Legal identity stays on Review.
+Client-interview-only extras wrap that block (photos, certifications, reviews,
+Projects, extra notes, contact name, `emergency_phone`). Look: white
+`.onb-card`, not the Details panel ([design decision](design-decision-record.md) 12).
 
 Default surface is **text** (owner: **Write**). Voice is listed and deferred
 ([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)); owner copy is that voice is coming later, not pipeline phrasing.
@@ -89,6 +89,13 @@ Port:
   relative date, review citation)
   ([design decision](design-decision-record.md) 4). Not a blank notes box.
   **We do not have online reviews yet** only when none were found.
+- **Projects** — if business research has `active` business research origin
+  Projects, show up to four cards (current completeness rank: cover, then text
+  length). Same card look as `/cms/projects` (cover, title, description). No
+  Project draft badge. Not editable. **Archive** on the card (onboarding session
+  token; [api](api.md)). Zero `active` → omit the whole block. Cards may appear or
+  reorder while business research is still running. The onboarding guide does
+  not Archive these cards.
 - **Anything else we should know?** — extra notes (`additional_notes`).
   Optional. Helper: what would help us generate a better website or run ads
   ([design decision](design-decision-record.md) 5).

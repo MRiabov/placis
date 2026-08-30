@@ -1,8 +1,9 @@
 # Photo classification
 
 Shared operation group after photos land from [Google Maps](google-maps.md), [Facebook](facebook.md),
-[Instagram](instagram.md), or `kind=photo`. Not a client interview step. Shared extract /
-transform rules: [pipeline README](README.md).
+[Instagram](instagram.md), [website crawl](website-crawl.md), or `kind=photo`. Not a client interview step.
+Shared extract / transform rules: [pipeline README](README.md). Classifier model:
+**`glm-5.3-flash`** (dated id; same cheap multimodal default as [projects.md](projects.md)).
 
 Labels: hero / project / service / founder / logo. Written as `photo_kind` on
 the business profile’s media library items. Captioning and visual-issue tools
@@ -22,7 +23,7 @@ is never overwritten by ETL, including `force=true` or a schema bump. Onboarding
 Transform for a kind that attached new photos, or `StartRun` included
 `kind=photo` (further photo fetch on onboarding 02). `force` is the shared
 transform job arg (default false). It does not refetch Maps / Facebook /
-Instagram.
+Instagram / crawl.
 
 ## Pre
 
@@ -32,8 +33,8 @@ Instagram.
 
 ## Must not
 
-- Call Maps / Facebook / Instagram networks (read fetch / listing / media
-  library rows only).
+- Call Maps / Facebook / Instagram / crawl networks (read fetch / listing /
+  HTML URL / media library rows only).
 - Reclassify when `photo_kind` is set, `schema_revision` is current, and `force`
   is false — including when the current `algorithm` string differs from
   `photo_kind_algorithm`.

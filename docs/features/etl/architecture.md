@@ -11,7 +11,7 @@ StartRun(kinds, trigger, tenant)
   → extract/<kind> chunk          # not inlined in StartRun
   → transform/<kind> that chunk   # as it arrives; do not wait for slow extract
   → repeat until that kind has no more chunks
-       → live business profile / Facebook and Instagram posts / photo classification
+       → live business profile / Facebook and Instagram posts / Projects / photo classification
 ```
 
 `StartRun` (in `internal/etl/run.go`) is orchestration only. It must not contain

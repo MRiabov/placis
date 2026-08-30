@@ -18,7 +18,7 @@ viewport.
 ## Key Props
 
 Use `headline`, `subheadline`, `primary_cta`, `secondary_cta`, `actions`,
-`media`, and optional proof text. Keep hero claims source-backed when they
+`media`, and optional proof text. Keep hero claims backed by a detail when they
 mention ratings, guarantees, response time, or years in business.
 
 ## Style And Composition

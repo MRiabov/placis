@@ -18,7 +18,7 @@ story components instead.
 ## Key Props
 
 Use `eyebrow`, `title`, and `paragraphs`. Keep paragraphs short and
-source-backed when factual claims are made.
+backed by a detail when factual claims are made.
 
 ## Style And Composition
 

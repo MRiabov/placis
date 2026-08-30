@@ -5,7 +5,8 @@
 Use this component for compact proof rows near a hero, service summary, or CTA.
 
 The first fixture is decomposed from Bellfield's hero stats. Treat numbers,
-accreditations, ratings, guarantees, and certification claims as source-backed
+accreditations, ratings, guarantees, and certification claims as content
+backed by a detail
 content. If they are imported from a site without verified sources, keep
 `reviewRequired` true until a contractor or operator approves them.
 
