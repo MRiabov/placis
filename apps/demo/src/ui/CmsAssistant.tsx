@@ -259,7 +259,7 @@ type AssistantSessionProps = {
   unpaid?: boolean;
   signedIn?: boolean;
   onSignUp?: () => void;
-  onSend?: () => void;
+  onSend?: (prompt?: string) => void;
   askPending?: boolean;
   onAsk?: () => void;
   inFlight?: boolean;
@@ -483,12 +483,24 @@ function UnpaidComposer({
   closeAssistant: () => void;
   inFlight: boolean;
   items: AssistantThreadItem[];
-  onSend: (() => void) | undefined;
+  onSend: ((prompt?: string) => void) | undefined;
   onSignUp: (() => void) | undefined;
   signedIn: boolean;
   startVoice: () => void;
 }): ReactNode {
   const [threadOpen, setThreadOpen] = useState(true);
+  const [prompt, setPrompt] = useState("");
+
+  function send(): void {
+    if (inFlight) {
+      return;
+    }
+    const body =
+      prompt.trim() || "Focus this website page on emergency call-outs";
+    setPrompt("");
+    setThreadOpen(true);
+    onSend?.(body);
+  }
   return (
     <div
       className={card(
@@ -526,7 +538,23 @@ function UnpaidComposer({
         </button>
       </div>
       {threadOpen ? <AssistantThread items={items} /> : null}
-      <TextInput placeholder="e.g. Focus this website page on emergency call-outs" />
+      <TextInput
+        disabled={inFlight}
+        onChange={(event) => setPrompt(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key !== "Enter" || event.shiftKey) {
+            return;
+          }
+          event.preventDefault();
+          if (!signedIn) {
+            onSignUp?.();
+            return;
+          }
+          send();
+        }}
+        placeholder="e.g. Focus this website page on emergency call-outs"
+        value={prompt}
+      />
       <div className="flex gap-2 justify-stretch">
         {signedIn ? (
           <>
@@ -538,22 +566,13 @@ function UnpaidComposer({
                   return;
                 }
                 startVoice();
-                window.setTimeout(() => onSend?.(), 1400);
+                window.setTimeout(() => send(), 1400);
               }}
               variant="outline"
             >
               Voice
             </Button>
-            <Button
-              className="h-11 flex-1"
-              disabled={inFlight}
-              onClick={() => {
-                if (inFlight) {
-                  return;
-                }
-                onSend?.();
-              }}
-            >
+            <Button className="h-11 flex-1" disabled={inFlight} onClick={send}>
               Send
             </Button>
           </>

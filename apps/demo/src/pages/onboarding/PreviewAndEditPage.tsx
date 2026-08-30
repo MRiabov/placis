@@ -79,20 +79,49 @@ const servicesFollow = {
   ],
 };
 
-const followBeats: Array<{
+const ownerFollowBeats: Array<{
+  summary: string;
   page: PreviewPageId;
   slot: FollowSlot;
   hero?: typeof siteHero;
   services?: ServiceRow[];
   contact?: string;
 }> = [
-  homeFollow,
-  servicesFollow,
   {
+    summary: "Updated text on Services",
+    page: "services",
+    slot: "services",
+    services: [
+      {
+        title: "Roof repairs",
+        blurb: "Emergency leak stops after Irish weather. Same-day call-outs.",
+      },
+      {
+        title: "New roofs",
+        blurb: "Re-roofs with a workmanship guarantee on every job.",
+      },
+      {
+        title: "Guttering",
+        blurb: "Cleaning, replacement, and fascia upgrades.",
+      },
+    ],
+  },
+  {
+    summary: "Updated text on Contact",
     page: "contact",
     slot: "contact",
     contact:
       "Call 01 555 0199 for emergency roof repairs. We answer evenings and weekends.",
+  },
+  {
+    summary: "Updated heading on Hero",
+    page: "home",
+    slot: "hero",
+    hero: {
+      kicker: "Dublin emergency roofing",
+      headline: "Storm leaks? We're on the way.",
+      lede: "Same-day roof repairs across Dublin — call 01 555 0199.",
+    },
   },
 ];
 
@@ -201,12 +230,28 @@ function PreviewAndEditInner(): ReactNode {
     }, 1600);
   }, []);
 
-  function applyFollowBeat(): void {
-    const beat = followBeats[beatRef.current % followBeats.length];
+  function applyOwnerPrompt(prompt?: string): void {
+    if (copyRunning) {
+      return;
+    }
+    const beat = ownerFollowBeats[beatRef.current % ownerFollowBeats.length];
     if (!beat) {
       return;
     }
     beatRef.current += 1;
+    const body =
+      prompt?.trim() || "Focus this website page on emergency call-outs";
+    const id = `owner-${beatRef.current}`;
+    setItems((current) => [
+      ...current,
+      { id: `${id}-o`, kind: "owner", body, icon: null },
+      {
+        id: `${id}-t`,
+        kind: "tool_summary",
+        body: beat.summary,
+        icon: "write",
+      },
+    ]);
     if (beat.hero) {
       setHero(beat.hero);
     }
@@ -361,7 +406,7 @@ function PreviewAndEditInner(): ReactNode {
           <AssistantSession
             inFlight={copyRunning}
             items={items}
-            onSend={applyFollowBeat}
+            onSend={applyOwnerPrompt}
             onSignUp={() => setScene("signed")}
             signedIn={scene !== "unsigned"}
             unpaid
