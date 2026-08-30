@@ -99,6 +99,8 @@ inventing it.
     (2026-08-28) Unsigned strip has **Create account**, not Sign in. An
     existing Clerk session skips to pay. **Why:** sign in obviously shouldn't
     be here.
+    (2026-08-28) Later (2026-08-30): unsigned **Sign up with Google** on this
+    strip and on unpaid Assistant.
     (2026-08-28) After pay the browser goes to `/cms/website` with **Publish**
     (website publication). The strip is gone on the host. **Why:** one has
     paid, so it should transfer us to the website editor with the option
@@ -139,5 +141,6 @@ inventing it.
     mock stays `/onboarding/generated`. (2026-08-30) Same day, later: website
     page list and Share float on the canvas (not a separate bar). Assistant
     starts as text; **Voice** is in the composer. Send and Voice need **Sign
-    in**. The website-activation strip stacks on a narrow pane: copy and price,
-    then the activate control. (2026-08-30)
+    up with Google**. The website-activation strip stacks on a narrow pane: copy
+    and price, then the activate control. Unsigned identity on Assistant and the
+    strip is **Sign up with Google**. (2026-08-30)

@@ -104,7 +104,7 @@ export function PreviewAndEditPanel({
           <h1 className="mt-2 text-2xl font-semibold">{titleFor(pageId)}</h1>
           <p className="mt-2 max-w-lg text-sm text-muted-foreground">
             Canvas follows website copy generation over onboarding SSE. Send and
-            Voice need sign-in, then website-editor PATCH.
+            Voice need Sign up with Google, then website-editor PATCH.
           </p>
           <div className="mt-4 flex flex-col gap-2 rounded-lg border border-border bg-background p-2">
             <p className="text-xs font-medium">Assistant</p>
@@ -117,7 +117,7 @@ export function PreviewAndEditPanel({
               className="inline-flex h-11 items-center justify-center rounded-md bg-foreground px-3 text-sm font-medium text-background"
               type="button"
             >
-              Sign in
+              Sign up with Google
             </button>
           </div>
         </div>

@@ -151,18 +151,18 @@ Voice create still loads `internal/knowledge/voice_pronunciation.yaml`.
 
 **`/onboarding/preview-and-edit/`** — wait-teaser landing. Signed-out: view the
 canvas from the onboarding session token; switch website pages (custom top-left
-control); compact text composer visible; send and Voice need **Sign in**.
-Signed-in unpaid: live canvas, nested website page list + canvas top-menu/footer
-website page clicks stay on this route, compact text composer (**Voice**
-switch), sticky website-activation strip, **Share**. After **08**, redirect to
-`/cms/website`.
+control); compact text composer visible; send and Voice need **Sign up with
+Google**. Signed-in unpaid: live canvas, nested website page list + canvas
+top-menu/footer website page clicks stay on this route, compact text composer
+(**Voice** switch), sticky website-activation strip, **Share**. After **08**,
+redirect to `/cms/website`.
 
 Look: custom top-left nested control (this website preview only, titles list —
 Services nests website pages; not the CMS Website pages rail). Website page list
 and **Share** float on the canvas. Pay is the sticky website-activation strip.
 Assistant starts as text (compact docked composer); **Voice** is a switch in
-that composer. Send and Voice need **Sign in**. No owner Plan switch. Instant
-apply. Reuse CMS Assistant tokens.
+that composer. Send and Voice need **Sign up with Google**. No owner Plan
+switch. Instant apply. Reuse CMS Assistant tokens.
 
 **Preview website address** — after Share (or after 08 if they paid without
 sharing). Cache then R2 + strip. No website preview, no Assistant, no SPA. Pay

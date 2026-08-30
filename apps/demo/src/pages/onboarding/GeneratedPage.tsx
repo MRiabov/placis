@@ -135,7 +135,7 @@ export function GeneratedPage(): ReactNode {
             }, 900);
           }, 900);
         }}
-        onSignIn={() => setScene("signed")}
+        onSignUp={() => setScene("signed")}
       />
     </div>
   );

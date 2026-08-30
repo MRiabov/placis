@@ -150,7 +150,7 @@ function PreviewAndEditInner(): ReactNode {
         ) : null}
         <AssistantLaunch className="absolute right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] z-30" />
         <AssistantSession
-          onSignIn={() => setScene("signed")}
+          onSignUp={() => setScene("signed")}
           signedIn={scene !== "unsigned"}
           unpaid
         />
@@ -171,7 +171,7 @@ function PreviewAndEditInner(): ReactNode {
             }, 900);
           }, 900);
         }}
-        onSignIn={() => setScene("signed")}
+        onSignUp={() => setScene("signed")}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
+import { GoogleSignUpButton } from "@/ui/GoogleSignUpButton";
 
 export type ActivationScene =
   | "unsigned"
@@ -16,14 +17,14 @@ export function ActivationStrip({
   onClose,
   onOpen,
   onPay,
-  onSignIn,
+  onSignUp,
 }: {
   panelOpen: boolean;
   scene: ActivationScene;
   onClose: () => void;
   onOpen: () => void;
   onPay: () => void;
-  onSignIn: () => void;
+  onSignUp: () => void;
 }): ReactNode {
   if (scene === "paid") {
     return null;
@@ -42,7 +43,7 @@ export function ActivationStrip({
             src="/placis-mark.png"
             width={101}
           />
-          <ActivationCopy onPay={onPay} onSignIn={onSignIn} scene={scene} />
+          <ActivationCopy onPay={onPay} onSignUp={onSignUp} scene={scene} />
         </div>
       ) : null}
       <div
@@ -120,11 +121,11 @@ function PriceCard(): ReactNode {
 function ActivationCopy({
   scene,
   onPay,
-  onSignIn,
+  onSignUp,
 }: {
   scene: ActivationScene;
   onPay: () => void;
-  onSignIn: () => void;
+  onSignUp: () => void;
 }): ReactNode {
   switch (scene) {
     case "unsigned":
@@ -135,15 +136,13 @@ function ActivationCopy({
               Activate this website
             </h2>
             <p className="mt-2 text-sm leading-normal text-zinc-600">
-              Create an account, then pay. Whoever pays becomes the owner. The
-              website stays unpublished until you publish it later.
+              Create an account with Google, then pay. Whoever pays becomes the
+              owner. The website stays unpublished until you publish it later.
             </p>
             <PriceCard />
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button className="h-11 px-[18px]" onClick={onSignIn}>
-              Create account
-            </Button>
+            <GoogleSignUpButton onClick={onSignUp} />
           </div>
         </>
       );
