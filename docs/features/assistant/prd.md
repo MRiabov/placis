@@ -57,7 +57,7 @@ Onboarding website editor, Assistant thread).
   **Assistant**. Persist utterance **text** and **`offset_seconds`**; do not
   store the Voice recording.
 - Onboarding website editor: five unpaid prompts, instant apply, not billed,
-  same `ai.threads` (`kind=cms_assistant`) until 08 completes `current`.
+  same `ai.threads` (`kind=cms_assistant`) until 09 completes `current`.
 - Assistant debit of billing usage credit (**×5** **their cost** on **our
   cost**). Billed work is a text LLM call, image generate/cleanup, or ads
   generate (**AI vendor cost**). Voice is **AI voice vendor cost** (xAI audio

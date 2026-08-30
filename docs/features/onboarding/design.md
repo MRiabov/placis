@@ -25,7 +25,7 @@ not invent a second palette.
 
 Screens in the mock: Find, Review, client interview, wait teaser, unpaid website
 preview (`/onboarding/preview-and-edit`). The generated scene is a mock of the
-[preview website address](pipeline/07-website-preview.md) (website-activation strip sticky at the bottom). After
+[preview website address](pipeline/08-preview-website-address.md) (website-activation strip sticky at the bottom). After
 pay it opens [`apps/demo/`](../../../apps/demo/README.md) `/cms/website` — website editor with **Publish**.
 
 The **onboarding assistant** (owner copy: **Assistant**) is a DustOrb bottom

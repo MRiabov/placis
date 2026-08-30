@@ -36,7 +36,7 @@ channel into the same tools (not a separate product). How slices land:
 - [Billing](features/billing/prd.md) — usage credit, Usage & billing, Pricing
 - [ETL](features/etl/README.md) — extract and transform; Monday / Wednesday / Friday refresh
 - [Website](features/website/prd.md) — website templates, website editor, website publication
-- [Website activation](features/onboarding/pipeline/08-website-activation.md) — pay-and-activate (Stripe)
+- [Website activation](features/onboarding/pipeline/09-website-activation.md) — pay-and-activate (Stripe)
 - [Ads](features/ads/ad-generation/prd.md) — ad generation; terminal Ad status is **ad ready to post** (no ad
   posting)
 - [Leads](features/other/leads/README.md) — website form contacts

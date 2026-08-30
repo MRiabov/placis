@@ -1,10 +1,10 @@
-# 08 — Website activation (integration test)
+# 09 — Website activation (integration test)
 
 - **Setup**: unpublished website from 05; wait-end on
-  `/onboarding/preview-and-edit/`. 07 share is **optional**. A Clerk
-  testing-token contractor (Clerk organization may be missing). Website copy
-  generation may still be running, or may have failed — neither blocks website
-  activation.
+  `/onboarding/preview-and-edit/`. 08 share is **optional**. A Clerk
+  testing-token contractor (Clerk organization may be missing). Automatic
+  website copy generation may still be running, or may have failed — neither
+  blocks website activation.
 - **Invoke**: public checkout POST (app origin **or** CORS by `Host` /
   `website_prefix` if they shared); deliver `checkout.session.completed`
   (Stripe SDK signature against a test key); replay it; attempt a second payer

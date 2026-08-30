@@ -34,7 +34,7 @@ DB asserts name the tables from
      **programmatically from the known name** and **upgrades** that unactivated
      tenant; the contractor is not asked to type the name again.
    - UI: `/me` returns `TenantRead` `status=unactivated` after
-     `POST /v1/me/clerk-organization`; CMS stays closed. After 08 it returns
+     `POST /v1/me/clerk-organization`; CMS stays closed. After 09 it returns
      the **same** tenant id with `status=active`.
    - DB: the existing `tenants` row gets `clerk_org_id` and `status=active`;
      `tenant_memberships` (`owner`) is written; no second tenant row.

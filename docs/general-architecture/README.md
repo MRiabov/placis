@@ -30,7 +30,6 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
   Don't-say checker
 - [testing.md](testing.md) — unit / integration / E2E tiers and the per-feature E2E rule
 
-Payments live with [website activation](../features/onboarding/pipeline/08-website-activation.md). Website leads live in
-[features/other/leads](../features/other/leads/README.md). Public-source extract: [ETL](../features/other/etl/README.md). Website preview progress
-events:
-[07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md).
+Payments live with [website activation](../features/onboarding/pipeline/09-website-activation.md). Website leads live in
+[features/other/leads](../features/other/leads/README.md). Public-source extract: [ETL](../features/other/etl/README.md). Onboarding session
+progress events: [pipeline README](../features/onboarding/pipeline/README.md).

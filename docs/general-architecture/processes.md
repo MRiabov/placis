@@ -25,11 +25,11 @@ to the API. The Placis website is a separate static origin and does not call Go.
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw
 payload saved, the work enqueued, and the request returned — see
-[website activation](../features/onboarding/pipeline/08-website-activation.md). Every background job can be retried safely (an explicit
+[website activation](../features/onboarding/pipeline/09-website-activation.md). Every background job can be retried safely (an explicit
 key) — see [jobs](jobs.md).
 
-Onboarding session progress events stream over SSE — see [07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md)
-and [onboarding frontend](../features/onboarding/frontend.md). Anyone with the host URL opens the preview website
+Onboarding session progress events stream over SSE — see [pipeline README](../features/onboarding/pipeline/README.md) and
+[onboarding frontend](../features/onboarding/frontend.md). Anyone with the host URL opens the preview website
 address (Cache then R2). The contractor host is not an SSE endpoint.
 
 HTTP conventions: [api.md](api.md). Huma vs streaming: [backend stack](backend-stack.md).

@@ -22,7 +22,7 @@ uses `subscription_status` to block Publish without a billing GET.
 - **Response:** `{ owner, platform_role, tenant }`. `tenant` is `TenantRead`
   when a Clerk org is attached. After sign-in but no org → `tenant: null`.
   After `POST /v1/me/clerk-organization` on an unactivated tenant →
-  `TenantRead` with `status=unactivated`. After 08 → `status=active`.
+  `TenantRead` with `status=unactivated`. After 09 → `status=active`.
 - **Must not:** return an org chooser list; treat `/me.tenant` non-null as CMS
   open.
 
@@ -30,7 +30,7 @@ uses `subscription_status` to block Publish without a billing GET.
 
 - **Auth:** Clerk JWT (the person after sign-in). Not an org chooser.
 - **Callers:** `frontend-2` `OrgProvisionStep` after sign-in on the
-  website-activation strip (so checkout can attach a Clerk subject) and after 08
+  website-activation strip (so checkout can attach a Clerk subject) and after 09
   so `clerk.setActive` has an org. [README.md](README.md).
 - **Idempotency-Key:** yes.
 - **Behavior:** create the **one** Clerk organization (`Organizations().Create`)

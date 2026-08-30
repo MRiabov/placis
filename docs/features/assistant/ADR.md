@@ -252,7 +252,7 @@ instead of silently replacing it.
     `tenants.status=unactivated`. **No compaction** on that `current` (12h,
     128K overflow, or Voice compact-before-seed would drop `kind=owner` items
     and refill the five unpaid prompts). If text assembly would exceed 128K or
-    Voice instructions would not fit, that turn / Voice create fails. 08
+    Voice instructions would not fit, that turn / Voice create fails. 09
     completes `current` and ends `running` in the **same transaction** as
     `status=active`. CMS GET lazy-creates a new empty `current`. Five unpaid
     prompts = count `kind=owner` items on that unpaid `current` (06 does not
@@ -263,7 +263,7 @@ instead of silently replacing it.
     `assistant.runs` `running` (`channel=text`) and appends `tool_summary`.
     The website preview follows 06 via onboarding SSE + unpublished GET, not the
     Assistant text socket. Owner send is **409** `in_flight_run` until 06 is
-    idle. After 08, leftover 06 is River-only (`tenant_id` lock, no
+    idle. After 09, leftover 06 is River-only (`tenant_id` lock, no
     `assistant.runs`, no new thread items). CMS Assistant / PATCH stay not 409
     because 06 is running (testing §15). 06 cap stays 3 / 12 / 4. 06 still must
     not `create_page`. (2026-08-30)
@@ -283,7 +283,7 @@ instead of silently replacing it.
 
 29. **Wait teaser lands on the website preview** — `/onboarding/preview` then
     `/onboarding/preview-and-edit/`, not `{website_prefix}.preview.placis.com`.
-    Share is optional on-demand 07 (R2 + strip). 08 does **not** require a
-    prior share: if they never shared, 08 reserves the prefix if needed and
+    Share is optional on-demand 08 (R2 + strip). 09 does **not** require a
+    prior share: if they never shared, 09 reserves the prefix if needed and
     writes the first live R2 without strip. Apex `preview.placis.com` is not a
     tenant site (404). (2026-08-30)

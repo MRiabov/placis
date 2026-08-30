@@ -94,7 +94,7 @@ Callers do not invent strings at the call site.
 **`cms_assistant`** — CMS overlay conversation. Unique current per tenant.
 Compaction (skip while `tenants.status=unactivated`). GET `/v1/assistant/thread`
 hydrate (items, not generations). Unpaid onboarding website editor reuses this
-`current` until 08 completes it; CMS GET then lazy-creates a new empty
+`current` until 09 completes it; CMS GET then lazy-creates a new empty
 `current`. Compaction writes a new generation on **this** thread (not its own
 kind).
 

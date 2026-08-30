@@ -10,7 +10,7 @@ This is **not** the `frontend-2` call. Split the tree:
 - **Website component package — keep and cut.** React website components,
   themes, and CSS. Do not rebuild the visuals.
 - **Astro Worker — write thin.** Live GET is Cache then R2; an R2 miss is 404.
-  Website preview token path is gone; 07 writes the same static `latest/` as
+  Website preview token path is gone; 08 writes the same static `latest/` as
   later CMS website publication.
 
 Do not rewrite the registry JSX/CSS from scratch. Glue (`JsonObject` props,

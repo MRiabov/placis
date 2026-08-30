@@ -1,10 +1,11 @@
-# 07 — Website preview share
+# 08 — Preview website address
 
 Optional. A **share** from `/onboarding/preview-and-edit/` writes the
 **preview website address** (`{website_prefix}` plus the suffix in
 [cloudflare.md](../../website/cloudflare.md)) with static HTML in R2 `latest/`
 and a website-activation strip. It is not the website editor. It is not
-`/onboarding/preview` (that route is the wait teaser). There is no leftover
+contractor copy improvement ([07](07-contractor-copy-improvement.md)). It is
+not `/onboarding/preview` (that route is the wait teaser). There is no leftover
 token.
 
 After website activation that same host is the **live website** — never call it
@@ -86,9 +87,9 @@ Issue failure: no `latest/` (or previous `latest/` kept). Retry the share (same
 
 ## Out
 
-Anyone with the host URL can open the site and pay (08) while 06 may still run.
+Anyone with the host URL can open the site and pay (09) while 06 may still run.
 Later 06 completion and Assistant PATCHes do **not** live-update the host until
-they share again (or 08).
+they share again (or 09).
 
 ## Invariants
 
@@ -96,4 +97,4 @@ they share again (or 08).
 - 06 does not supersede.
 - `website_prefix` never renamed after this step.
 - v1 is never a website-rollback target.
-- 08 does not require this step.
+- 09 does not require this step.
