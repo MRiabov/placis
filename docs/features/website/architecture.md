@@ -133,8 +133,8 @@ validated, parallel tool calls (`update_slot`, `update_reviews`,
 section/website styles/SEO/website form/website page actions). Same attach /
 crop / focal / cleanup as the owner UI. `update_details` is the shared Details
 tool (one implementation; Ads generator calls it too). The shared notification
-Revert undoes that increment. Overlay and HTTP: [assistant](../assistant/README.md). Tool registry and
-plan / Ask first: [assistant.md](assistant.md).
+Revert undoes that increment. Assistant look and HTTP: [assistant](../assistant/README.md). Tool
+registry and plan / Ask first: [assistant.md](assistant.md).
 
 ## Website publication
 
@@ -161,7 +161,9 @@ editor PATCH still works. Usage & billing is how they pay again
 
 Edits to Details, Projects, certifications and reviews, website styles, or the
 unpublished website do not change the live website until the next website
-publication.
+publication. Website publication bakes only **active** projects into
+`website_manifest.projects[]` and `{{projects.*}}` (skip `draft`; omit draft
+ids from published galleries — no 409).
 
 Website publication is not a Cloudflare deploy. One shared contractor-website
 application serves every tenant. The **Publish** dropdown lists hosts
@@ -202,8 +204,8 @@ The assistant can be driven by the **voice agent** (see [voice-agent.md](../../g
 never hits Go; the browser relays `function_call` as typed HTTP; Go dispatches
 the same governed website editor tools (including `update_details`). Voice
 grants no extra authority. On `/cms/website`, empty composer turns the voice
-agent on (orb, composer hidden). Look: [design decision record](design-decision-record.md) 18. Dispatcher:
-[assistant](../assistant/README.md). The agent cannot website-publish.
+agent on (DustOrb, composer hidden). Look: [design decision record](design-decision-record.md) 18.
+Dispatcher: [assistant](../assistant/README.md). The agent cannot website-publish.
 
 The product assistant also **explains the current screen** from a small
 in-memory markdown knowledge base. Onboarding **client interview** voice is out;

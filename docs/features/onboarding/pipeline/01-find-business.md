@@ -30,7 +30,8 @@ token.
 ## Do
 
 1. Insert [unactivated tenant](../../other/auth/persistence.md): `tenants.status=unactivated`, `clerk_org_id`
-   null, `website_prefix` null, `name` = known legal/display name or empty.
+   null, `website_prefix` null, `name` = known legal/display name or empty,
+   `country` = Find country (`ie` / `gb` / `us`).
 2. Insert `onboarding_sessions`: `status=created` then immediately
    `client_interviewing`; unique `token`; `tenant_id` that tenant;
    `clerk_user_id` null; `channel` unset; `started_from` = `company_registry` /
@@ -49,13 +50,14 @@ token.
    (`/onboarding/review`) either way. Attaching or changing sources on this
    onboarding session later is a new `StartRun` (same cap).
 
-Lookups are debounced (no request per keystroke). Country is a search parameter,
-not an onboarding session column.
+Lookups are debounced (no request per keystroke). Country is a search parameter
+**and** is persisted on `tenants.country` (Voice region fallback after website
+activation). Not an onboarding session column.
 
 ## Persist
 
-`tenants` (`status=unactivated`); `onboarding_sessions` (`token`, `tenant_id`,
-`online_research_consent_at`, `status=client_interviewing`); empty
+`tenants` (`status=unactivated`, `country`); `onboarding_sessions` (`token`,
+`tenant_id`, `online_research_consent_at`, `status=client_interviewing`); empty
 `business_profiles` (same `tenant_id`); registry/Maps attach rows; profile
 increments via [build-profile](build-profile.md).
 

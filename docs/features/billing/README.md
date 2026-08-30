@@ -16,10 +16,11 @@ Usage & billing copy. Do not say **ledger**; the Internal name is
 Owner markup is **×5** on **our cost**. Onboarding, including the onboarding
 guide, is **not** billed (we still record `ai_generations`). Assistant:
 [assistant](../assistant/README.md). Voice transport:
-[voice agent](../../general-architecture/voice-agent.md). Meters and 402:
-[architecture](architecture.md). If they stop paying, unpublish and block
-Publish ([website](../website/frontend.md)). Change plan and Cancel
-subscription are on Usage & billing.
+[voice agent](../../general-architecture/voice-agent.md). **AI vendor cost**,
+**AI voice vendor cost**, and 402: [architecture](architecture.md) (Voice
+settles on `POST /v1/assistant/voice/transcripts`). If they stop paying,
+unpublish and block Publish ([website](../website/frontend.md)). Change plan
+and Cancel subscription are on Usage & billing.
 
 - [prd.md](prd.md)
 - [ADR.md](ADR.md)

@@ -29,7 +29,8 @@ collection `POST /v1/onboarding-sessions`.
 - **Request:** country (`ie` / `gb` / `us`; default Ireland),
   **online research consent** (required boolean), company registry record
   candidate and/or Google Maps `place_id`. Consent is this body field, not a
-  `/research-consent` resource.
+  `/research-consent` resource. Country is persisted on `tenants.country`
+  (Voice region fallback).
 - **Response:** `{ id, token, status, research_wait_until? }`. Token →
   `localStorage`. Inserts unactivated tenant + onboarding session + empty
   business profile; enqueues business research if under the 5-enqueue cap. Over
@@ -153,11 +154,15 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
 - **Idempotency-Key:** yes.
 - **Request:** current onboarding step + visible fields. No unpublished website
   working copy.
-- **Response:** browser-safe secret + expiry. Audio is browser ↔ voice service,
-  not this socket.
-- **Errors:** **403** if the tenant is already activated; **409** if a guide run
-  is already `running` for this onboarding session.
-- **Must not:** return the long-lived voice API key.
+- **Response:** browser-safe secret + expiry + **realtime URL** (`string` +
+  `maxLength`, `wss://…` for the xAI region Go picked). Audio is browser ↔
+  that URL, not this socket. Go picks the region from the business country
+  ([voice agent](../../general-architecture/voice-agent.md)).
+- **Errors:** **403** if the tenant is already activated; **409**
+  `in_flight_run` if a guide run is already `running` for this onboarding
+  session.
+- **Must not:** return the long-lived voice API key; accept a browser-chosen
+  region or host.
 
 ### POST /v1/onboarding/assistant/voice/transcripts
 
@@ -165,57 +170,25 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
 - **Callers:** committed utterances onto the one thread; usage-only when Voice
   turns off.
 - **Idempotency-Key:** yes.
-- **Request:** same shape as CMS transcripts (owner / assistant visible text
-  `maxLength` 5000; optional reasoning; audio seconds + `billed_text_item_count`
-  when present). **Omit** PCM.
+- **Request:** same shape as CMS transcripts (owner visible text `maxLength`
+  **5000 characters**; assistant visible text storage `maxLength`, not a
+  5000-character generation cap; **`offset_seconds`** per utterance; optional
+  reasoning; audio seconds + `billed_text_item_count` when present). Go sets
+  `created_at` on insert (row time). **Omit** PCM.
 - **Errors:** **403** if activated. Settlement stays **200**.
-- **Must not:** accept PCM, ASR/TTS deltas, or the recording file.
-
-### POST /v1/onboarding/assistant/voice/recordings
-
-- **Auth:** onboarding session token
-- **Callers:** browser after Voice turns off (including idle stop).
-- **Idempotency-Key:** yes.
-- **Request:** `run_id`; `content_type` (`audio/webm` | `audio/mp4`);
-  `byte_size` (int, `> 0`, maximum 33554432).
-- **Response:** `id` (`files` id) + signed URL (`string` + `maxLength`) +
-  expiry. Browser **PUT**s the object to that URL. Completes via
-  `…/recordings/{id}/complete`.
-- **Errors:** **403** if activated; `404` if `run_id` is missing or not a voice
-  run for this onboarding session; `409` if that run already has a recording;
-  `413` if `byte_size` is over the maximum.
-- **Must not:** accept the recording file on this POST.
-
-### POST /v1/onboarding/assistant/voice/recordings/{id}/complete
-
-- **Auth:** onboarding session token
-- **Callers:** browser after the PUT to the signed URL succeeds.
-- **Idempotency-Key:** yes.
-- **Errors:** **403** if activated; `404` if the `files` row is not this
-  onboarding session’s voice recording.
-- **Must not:** accept the recording file.
+- **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
+  `created_at` as the conversation clock.
 
 ### GET /v1/onboarding/assistant/thread
 
 - **Auth:** onboarding session token
-- **Callers:** reload, resume, later text backup.
+- **Callers:** reload, resume, later Voice turn.
 - **Response:** the one conversation `*Read` + ordered `items` (`kind`, `body`,
-  `icon`, `created_at`). Empty is `200` with `items: []`.
+  `icon`, `offset_seconds`, `created_at`). Empty is `200`
+  with `items: []`.
 - **Errors:** **403** if activated.
 - **Must not:** return `thread_items` as the field name; return runs, audit
   blobs, or recording URLs.
-
-### GET /v1/onboarding/assistant/thread/ws
-
-- **Auth:** onboarding session token
-- **Callers:** voice → text backup on the same conversation. Look TBD. Default
-  launcher stays the orb.
-- **Transport:** Go text WebSocket (not a second voice socket). Owner `body`
-  `maxLength` 4000; server tokens / thinking / errors (same event union idea as
-  CMS).
-- **Errors:** **403** if activated.
-- **Must not:** hydrate, transcripts, recordings, or realtime-connection on this
-  socket.
 
 ## Listed
 
@@ -252,5 +225,8 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
 - `POST /v1/onboarding/assistant/voice/tool-calls` this pass (`tools=[]`)
 - `POST /v1/onboarding/assistant/turns`
 - `POST /v1/onboarding/assistant/thread/clear`
+- `GET /v1/onboarding/assistant/thread/ws` (no text backup)
+- `POST /v1/onboarding/assistant/voice/recordings` and
+  `…/recordings/{id}/complete` (onboarding does not store Voice recordings)
 - unprefixed `POST /v1/onboarding/assistant/realtime-connection` /
   `…/transcripts` / `…/recordings`

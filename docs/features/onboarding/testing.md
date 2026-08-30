@@ -9,10 +9,10 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
 1. **Find** — country, registry and/or Google Maps, online research consent,
    business lookup.
    - UI: `/onboarding/find` → Review.
-   - DB: `tenants` (`status=unactivated`); `onboarding_sessions`
-     (`status=client_interviewing`, token, `online_research_consent_at`,
-     `tenant_id` set); `business_profiles.tenant_id` matches the onboarding
-     session.
+   - DB: `tenants` (`status=unactivated`, `country` from Find);
+     `onboarding_sessions` (`status=client_interviewing`, token,
+     `online_research_consent_at`, `tenant_id` set);
+     `business_profiles.tenant_id` matches the onboarding session.
 
 2. **Review** — found vs missing; Continue to client interview.
    - UI: `/onboarding/review`.

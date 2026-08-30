@@ -46,7 +46,7 @@ categories), and certifications.
 | `{{established_year}}`, `{{incorporation_date}}` | dates |
 | `{{logo_url}}` | logo URL emitted at website publication **only from** `logo_media_asset_id` (our media library file). Not a hotlink and not a `website_settings` URL |
 | `{{services.featured}}`, `{{services.marquee}}`, `{{services.footer_links}}`, `{{services.project_types}}` | services |
-| `{{projects.featured}}`, `{{projects.recent}}`, `{{projects.home_gallery}}`, `{{projects.categories}}` | projects |
+| `{{projects.featured}}`, `{{projects.recent}}`, `{{projects.home_gallery}}`, `{{projects.categories}}` | projects (**active** rows only; skip `draft`) |
 | `{{certifications}}` | certifications |
 | `{{images.*}}`, `{{about.intro_paragraphs}}`, `{{about.feature_paragraphs}}` | images / about copy |
 
