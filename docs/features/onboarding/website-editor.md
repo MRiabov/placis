@@ -180,7 +180,9 @@ sticky website-activation strip, **Share**. After **08**, redirect to
 
 Look: custom top-left nested control (this website preview only, titles list —
 Services nests website pages; not the CMS Website pages rail). Website page list
-and **Share** float on the canvas. Pay is the sticky website-activation strip.
+and **Share** sit on the canvas corners (no reserved top row). No Find / Review
+/ Questions progress, no onboarding Back, no Find/Review Assistant. Pay is the
+sticky website-activation strip.
 Assistant starts as text (compact docked composer, max-width 32rem on a wide
 pane, in front of the website-activation strip’s lift shadow) with the CMS
 Assistant thread above it (expand / reduce; no Plan / Ask first / Clear

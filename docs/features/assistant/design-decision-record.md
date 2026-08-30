@@ -130,4 +130,7 @@ owner-written; omit it rather than inventing it.
     **max-width 32rem**, centered; on a narrow pane it still docks nearly full
     width. (2026-08-30) Same day, later: the composer shows the CMS Assistant
     thread (expand / reduce; no Plan / Ask first / Clear context). Default
-    expanded so 06 `tool_summary` is visible on land. (2026-08-30)
+    expanded so 06 `tool_summary` is visible on land. (2026-08-30) Same day,
+    later: website page list and Share sit on the canvas corners; this route has
+    no Find / Review / Questions progress and no Find/Review Assistant.
+    (2026-08-30)

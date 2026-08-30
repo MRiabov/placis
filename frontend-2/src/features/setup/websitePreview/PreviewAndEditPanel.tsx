@@ -99,7 +99,7 @@ export function PreviewAndEditPanel({
             Share
           </button>
         </div>
-        <div className="flex min-h-0 flex-1 flex-col justify-end p-3 pt-16">
+        <div className="flex min-h-0 flex-1 flex-col justify-end p-3">
           <p className="text-sm text-muted-foreground">Unpublished website</p>
           <h1 className="mt-2 text-2xl font-semibold">{titleFor(pageId)}</h1>
           <p className="mt-2 max-w-lg text-sm text-muted-foreground">

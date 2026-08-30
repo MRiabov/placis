@@ -145,9 +145,11 @@ Wait teaser `/onboarding/preview` (SSE carousel, ~15s cap) then **navigates to
 `/onboarding/preview-and-edit/`**. Live unpublished canvas. Custom top-left
 nested control to switch website pages (titles list, Services nested; not the
 CMS Website pages rail). Canvas top-menu/footer website page clicks stay on
-this route. Website page list and **Share** float on the canvas. Pay is the
-sticky website-activation strip (same bar as the host mock; on a narrow pane the
-copy and price sit on one row and the activate control is full width). Assistant
+this route. Website page list and **Share** sit on the canvas corners (no
+reserved top row). No Find / Review / Questions progress, no onboarding Back, no
+Find/Review Assistant. Pay is the sticky website-activation strip (same bar as
+the host mock; on a narrow pane the copy and price sit on one row and the
+activate control is full width). Assistant
 starts as text (compact docked composer, max-width 32rem on a wide pane, in
 front of the website-activation strip’s lift shadow) with the CMS Assistant
 thread above it (expand / reduce; no Plan / Ask first / Clear context; default
