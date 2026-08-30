@@ -10,9 +10,12 @@
   fields only; `channel=text`; complete rejected until the build-profile gate;
   skip 03 does not relax the gate; marking a required row `skipped` then
   complete succeeds; complete sets `accepted_edit_id` and enqueues 05; no second
-  tenant; services and service areas are list rows (not a textarea blob); no
-  LLM combine of services after complete. Zero `active` business research origin
+  tenant; services and service areas are list rows (not a textarea blob); no LLM
+  combine of services after complete. Zero `active` business research origin
   Projects → no Projects block. Archive sets `archived` + `algorithm=human`;
-  next-ranked `active` may appear. No Clerk `/v1/projects/{id}/archive`.
+  next-ranked `active` may appear. No Clerk `/v1/projects/{id}/archive`. While
+  02 is still running: an empty marketing-phone control fills when Details
+  transform lands; a marketing phone they already typed is unchanged; scrape
+  reviews and Projects appear on the screen without a reload.
 - **Fail**: invalid complete keeps `client_interviewing`.
 - **Mocked**: none required for text path.

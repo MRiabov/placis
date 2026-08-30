@@ -64,31 +64,45 @@ Text submit completes the client interview, then 05 apply the website template.
 Port:
 [frontend-debloat.md](frontend-debloat.md).
 
+02 may still be running. SSE applies the live business profile onto this
+screen so they do not re-type what business research finds
+([04a](pipeline/04a-text-client-interview.md) live fill). A control they have
+not edited this visit, and whose winning `algorithm` is not `human`, takes the
+new value. Lists that can grow (services, service areas, hours on empty days,
+certifications they did not remove, reviews, photos, Projects) **enrich**: new
+rows appear; existing contractor rows stay. Do not replace a control they are
+editing or have already saved. Extra notes are contractor-only (business
+research does not write them).
+
 - **Your business / contact / opening hours** — Details identity, contact, and
   hours, same controls as `/cms/details`. Legal identity stays on Review.
   Hours: one range per day, Closed, copy to following days; no extra time
-  block ([design decision](design-decision-record.md) 12).
+  block ([design decision](design-decision-record.md) 12). Untouched hours fill
+  from Maps; a day they edited is not rewritten.
 - **Services and service area** — featured services as a list
   (`business_profile_services`), not a textarea. Paste of one-per-line or
   comma-separated **names** splits into rows (no LLM). Service areas: Google
   Maps territory lookup, one card per region (`locality` + `radius_km`). Owner
   copy: we’ll turn each name into a website page; search a place, then set how
   far you travel. Complete has those list rows before 05
-  ([ADR](ADR.md) 18).
-- **Photos** — show what business research already put in the media library
-  (logo plus a few photos). Do not label a photo with the Google Maps listing or
-  Facebook. **Upload photos** is always available. Do not ask a photos-choice
-  question. **Find more online** and **Create a stand-in** only when there are
-  not enough photos yet.
+  ([ADR](ADR.md) 18). Crawl may add rows they have not already entered.
+- **Photos** — media library items business research has attached so far
+  (logo plus a few photos). New items appear as extract chunks land. Do not
+  label a photo with the Google Maps listing or Facebook. **Upload photos** is
+  always available. Do not ask a photos-choice question. **Find more online**
+  and **Create a stand-in** only when there are not enough photos yet.
 - **Certifications** — trade accreditations with the definition badge, plus
   other certifications. Do not say proof. If they picked the company registry
   record on Find, the matching business-registry certification (CRO in Ireland)
-  is selected and not deselectable.
-- **Reviews** — present the reviews already found, looking like Google reviews
+  is selected and not deselectable. Newly found accreditations may select;
+  a certification they unmarked stays `removed`.
+- **Reviews** — reviews on the live profile, looking like Google reviews
   (profile photo when we have one, else the initial; name, source mark, stars,
   relative date, review citation)
   ([design decision](design-decision-record.md) 4). Not a blank notes box.
-  **We do not have online reviews yet** only when none were found.
+  The list grows as scrape / transform inserts. **We do not have online
+  reviews yet** only while the pool is still empty (hide that line once the
+  first review lands).
 - **Projects** — if business research has `active` business research origin
   Projects, show up to four cards (current completeness rank: cover, then text
   length). Same card look as `/cms/projects` (cover, title, description). No
@@ -159,8 +173,10 @@ retries; it does not `POST` a new onboarding session.
 - `FoundInformationReview` — found vs missing; no missing-topics aside.
 - `TextInterviewForm` — Details block == `/cms/details` (same field controls:
   featured-service list, Maps territory cards, hours picker) plus
-  client-interview extras. Extra notes owner copy: Anything else we should know?
-  Helper: what would help us generate a better website or run ads.
+  client-interview extras. SSE live-fills untouched controls and enriches
+  lists (reviews, photos, Projects, services) while 02 runs. Extra notes
+  owner copy: Anything else we should know? Helper: what would help us
+  generate a better website or run ads.
 - `AccreditationChecklist` — trade certifications plus other certifications.
 - `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — SSE carousel of
   complete website sections; 15s wait progress in the shared footer, painted

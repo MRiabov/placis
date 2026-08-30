@@ -132,7 +132,10 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     full website pages. Not SSE on the preview website address. (2026-08-25:
     carousel + host navigate; earlier: 2–10s re-render so the website builds up.
     2026-08-27: fast extract live business profile appears before slow extract
-    finishes.)
+    finishes. 2026-08-30: the client interview is also an SSE consumer —
+    untouched controls fill and enrichable lists (reviews, photos, Projects,
+    services, service areas, empty hours days, certifications) grow while 02
+    runs; dirty / `human` controls are not rewritten.)
 
 12. **Website activation writes the strip-off website publication** — 07 already
     wrote `website_publications` **v1** (static HTML on the host,
