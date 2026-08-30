@@ -15,6 +15,7 @@ import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { DustOrb } from "@/ui/DustOrb";
 import { TextArea, TextInput } from "@/ui/Field";
+import { GoogleSignUpButton } from "@/ui/GoogleSignUpButton";
 import { Notice } from "@/ui/Notice";
 
 export const assistantOrbVars =
@@ -250,7 +251,7 @@ type AssistantSessionProps = {
   website?: boolean;
   unpaid?: boolean;
   signedIn?: boolean;
-  onSignIn?: () => void;
+  onSignUp?: () => void;
   askPending?: boolean;
   onAsk?: () => void;
 };
@@ -259,7 +260,7 @@ export function AssistantSession({
   website = false,
   unpaid = false,
   signedIn = true,
-  onSignIn,
+  onSignUp,
   askPending = false,
   onAsk,
 }: AssistantSessionProps): ReactNode {
@@ -290,7 +291,7 @@ export function AssistantSession({
       {voiceOn ? null : (
         <AssistantComposer
           closeAssistant={closeAssistant}
-          onSignIn={onSignIn}
+          onSignUp={onSignUp}
           planMode={planMode}
           setPlanMode={setPlanMode}
           signedIn={signedIn}
@@ -402,7 +403,7 @@ function CanvasActions({
 
 function AssistantComposer({
   closeAssistant,
-  onSignIn,
+  onSignUp,
   planMode,
   setPlanMode,
   signedIn,
@@ -411,7 +412,7 @@ function AssistantComposer({
   website,
 }: {
   closeAssistant: () => void;
-  onSignIn: (() => void) | undefined;
+  onSignUp: (() => void) | undefined;
   planMode: boolean;
   setPlanMode: (value: boolean) => void;
   signedIn: boolean;
@@ -468,9 +469,7 @@ function AssistantComposer({
         )}
       >
         {unpaid && !signedIn ? (
-          <Button className="h-11 flex-1" onClick={onSignIn}>
-            Sign in
-          </Button>
+          <GoogleSignUpButton className="flex-1" onClick={onSignUp} />
         ) : (
           <>
             <Button
