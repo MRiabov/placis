@@ -128,4 +128,6 @@ owner-written; omit it rather than inventing it.
     later: that composer stacks above the website-activation strip’s lift
     shadow. (2026-08-30) Same day, later: on a wide pane the composer is
     **max-width 32rem**, centered; on a narrow pane it still docks nearly full
-    width. (2026-08-30)
+    width. (2026-08-30) Same day, later: the composer shows the CMS Assistant
+    thread (expand / reduce; no Plan / Ask first / Clear context). Default
+    expanded so 06 `tool_summary` is visible on land. (2026-08-30)

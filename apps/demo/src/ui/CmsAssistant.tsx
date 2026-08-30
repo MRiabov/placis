@@ -247,6 +247,13 @@ export function CmsAssistantLayer(): ReactNode {
   );
 }
 
+export type AssistantThreadItem = {
+  id: string;
+  kind: "owner" | "assistant" | "tool_summary" | "thinking";
+  body: string;
+  icon: "write" | "think" | null;
+};
+
 type AssistantSessionProps = {
   website?: boolean;
   unpaid?: boolean;
@@ -255,6 +262,8 @@ type AssistantSessionProps = {
   onSend?: () => void;
   askPending?: boolean;
   onAsk?: () => void;
+  inFlight?: boolean;
+  items?: AssistantThreadItem[];
 };
 
 export function AssistantSession({
@@ -265,6 +274,8 @@ export function AssistantSession({
   onSend,
   askPending = false,
   onAsk,
+  inFlight = false,
+  items = [],
 }: AssistantSessionProps): ReactNode {
   const {
     open,
@@ -290,16 +301,23 @@ export function AssistantSession({
         switchToText={switchToText}
         voiceOn={voiceOn}
       />
-      {voiceOn ? null : (
+      {voiceOn ? null : unpaid ? (
+        <UnpaidComposer
+          closeAssistant={closeAssistant}
+          inFlight={inFlight}
+          items={items}
+          onSend={onSend}
+          onSignUp={onSignUp}
+          signedIn={signedIn}
+          startVoice={startVoice}
+        />
+      ) : (
         <AssistantComposer
           closeAssistant={closeAssistant}
-          onSignUp={onSignUp}
           onSend={onSend}
           planMode={planMode}
           setPlanMode={setPlanMode}
-          signedIn={signedIn}
           startVoice={startVoice}
-          unpaid={unpaid}
           website={website}
         />
       )}
@@ -404,52 +422,178 @@ function CanvasActions({
   );
 }
 
-function AssistantComposer({
+function AssistantThread({
+  items,
+}: {
+  items: AssistantThreadItem[];
+}): ReactNode {
+  return (
+    <ol
+      className="grid max-h-40 gap-2 overflow-y-auto py-1"
+      ref={(node) => {
+        node?.scrollTo({ top: node.scrollHeight });
+      }}
+    >
+      {items.map((item) => (
+        <li
+          className="flex items-start gap-2 text-xs leading-snug text-muted-foreground"
+          key={item.id}
+        >
+          {item.icon === "write" ? (
+            <svg
+              aria-hidden="true"
+              className="mt-0.5 size-3.5 shrink-0 stroke-current stroke-[1.6] fill-none"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>
+          ) : null}
+          {item.icon === "think" ? (
+            <svg
+              aria-hidden="true"
+              className="mt-0.5 size-3.5 shrink-0 stroke-current stroke-[1.6] fill-none"
+              viewBox="0 0 24 24"
+            >
+              <path d="M9 18h6" />
+              <path d="M10 22h4" />
+              <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z" />
+            </svg>
+          ) : null}
+          <span
+            className={item.kind === "owner" ? "text-foreground" : undefined}
+          >
+            {item.body}
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function UnpaidComposer({
   closeAssistant,
-  onSignUp,
+  inFlight,
+  items,
   onSend,
-  planMode,
-  setPlanMode,
+  onSignUp,
   signedIn,
   startVoice,
-  unpaid,
-  website,
 }: {
   closeAssistant: () => void;
-  onSignUp: (() => void) | undefined;
+  inFlight: boolean;
+  items: AssistantThreadItem[];
   onSend: (() => void) | undefined;
-  planMode: boolean;
-  setPlanMode: (value: boolean) => void;
+  onSignUp: (() => void) | undefined;
   signedIn: boolean;
   startVoice: () => void;
-  unpaid: boolean;
-  website: boolean;
 }): ReactNode {
+  const [threadOpen, setThreadOpen] = useState(true);
   return (
     <div
       className={card(
-        unpaid
-          ? "absolute bottom-2 left-1/2 z-20 flex w-[min(32rem,calc(100%-1rem))] -translate-x-1/2 flex-col gap-1.5 p-2 shadow-card pointer-events-auto"
-          : "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card pointer-events-auto",
+        "absolute bottom-2 left-1/2 z-20 flex w-[min(32rem,calc(100%-1rem))] -translate-x-1/2 flex-col gap-1.5 p-2 shadow-card pointer-events-auto",
       )}
       id="assistantOverlay"
     >
-      <div
-        className={cn(
-          "flex items-center justify-between",
-          unpaid ? "px-0.5" : "mb-2",
-        )}
-      >
-        <b className={unpaid ? "text-xs font-medium" : "text-sm"}>Assistant</b>
+      <div className="flex items-center gap-1 px-0.5">
         <button
-          className={unpaid ? "text-xs text-muted-foreground" : undefined}
+          aria-expanded={threadOpen}
+          aria-label={threadOpen ? "Reduce" : "Expand"}
+          className="grid size-7 shrink-0 place-items-center text-muted-foreground"
+          onClick={() => setThreadOpen((open) => !open)}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="size-4 fill-none stroke-current stroke-[1.6]"
+            viewBox="0 0 24 24"
+          >
+            {threadOpen ? (
+              <path d="m6 9 6 6 6-6" />
+            ) : (
+              <path d="m18 15-6-6-6 6" />
+            )}
+          </svg>
+        </button>
+        <b className="text-xs font-medium">Assistant</b>
+        <button
+          className="ml-auto text-xs text-muted-foreground"
           onClick={closeAssistant}
           type="button"
         >
           Close
         </button>
       </div>
-      {website && !unpaid ? (
+      {threadOpen ? <AssistantThread items={items} /> : null}
+      <TextInput placeholder="e.g. Focus this website page on emergency call-outs" />
+      <div className="flex gap-2 justify-stretch">
+        {signedIn ? (
+          <>
+            <Button
+              className="h-11 flex-1"
+              disabled={inFlight}
+              onClick={() => {
+                if (inFlight) {
+                  return;
+                }
+                startVoice();
+                window.setTimeout(() => onSend?.(), 1400);
+              }}
+              variant="outline"
+            >
+              Voice
+            </Button>
+            <Button
+              className="h-11 flex-1"
+              disabled={inFlight}
+              onClick={() => {
+                if (inFlight) {
+                  return;
+                }
+                onSend?.();
+              }}
+            >
+              Send
+            </Button>
+          </>
+        ) : (
+          <GoogleSignUpButton className="flex-1" onClick={onSignUp} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AssistantComposer({
+  closeAssistant,
+  onSend,
+  planMode,
+  setPlanMode,
+  startVoice,
+  website,
+}: {
+  closeAssistant: () => void;
+  onSend: (() => void) | undefined;
+  planMode: boolean;
+  setPlanMode: (value: boolean) => void;
+  startVoice: () => void;
+  website: boolean;
+}): ReactNode {
+  return (
+    <div
+      className={card(
+        "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card pointer-events-auto",
+      )}
+      id="assistantOverlay"
+    >
+      <div className="mb-2 flex items-center justify-between gap-1">
+        <b className="text-sm">Assistant</b>
+        <button onClick={closeAssistant} type="button">
+          Close
+        </button>
+      </div>
+      {website ? (
         <label className="mr-3 text-xs">
           <input
             checked={planMode}
@@ -459,44 +603,17 @@ function AssistantComposer({
           Plan mode
         </label>
       ) : null}
-      {unpaid ? (
-        <TextInput placeholder="e.g. Focus this website page on emergency call-outs" />
-      ) : (
-        <TextArea
-          placeholder="e.g. Make the home website page focus on emergency call-outs"
-          rows={2}
-        />
-      )}
-      <div
-        className={cn(
-          "flex gap-2",
-          unpaid ? "justify-stretch" : "mt-2 justify-end",
-        )}
-      >
-        {unpaid && !signedIn ? (
-          <GoogleSignUpButton className="flex-1" onClick={onSignUp} />
-        ) : (
-          <>
-            <Button
-              className={unpaid ? "h-11 flex-1" : undefined}
-              onClick={() => {
-                startVoice();
-                if (unpaid) {
-                  window.setTimeout(() => onSend?.(), 1400);
-                }
-              }}
-              variant="outline"
-            >
-              Voice
-            </Button>
-            <Button
-              className={unpaid ? "h-11 flex-1" : undefined}
-              onClick={onSend}
-            >
-              {website && planMode ? "Plan" : "Send"}
-            </Button>
-          </>
-        )}
+      <TextArea
+        placeholder="e.g. Make the home website page focus on emergency call-outs"
+        rows={2}
+      />
+      <div className="mt-2 flex justify-end gap-2">
+        <Button onClick={startVoice} variant="outline">
+          Voice
+        </Button>
+        <Button onClick={() => onSend?.()}>
+          {website && planMode ? "Plan" : "Send"}
+        </Button>
       </div>
     </div>
   );

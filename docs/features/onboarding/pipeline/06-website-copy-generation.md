@@ -69,8 +69,10 @@ Updates to existing `website_slots` and website page SEO columns;
 Onboarding session status is `applying_website_template` until wait-end
 (copy done or cap), then `previewing`. Progress events on the onboarding
 session stream (complete website sections join the `/onboarding/preview`
-carousel). The website preview reloads unpublished GET from those events.
-After they share (07), further 06 writes do **not** live-update R2.
+carousel). The website preview reloads unpublished GET from those events, and
+hydrates 06 `tool_summary` with `GET …/website-editor/assistant/thread`
+(onboarding session token or Clerk). After they share (07), further 06 writes
+do **not** live-update R2.
 
 ## Fail
 

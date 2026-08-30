@@ -230,8 +230,9 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
   ([04b](pipeline/04b-voice-client-interview.md)) is out.
 - Onboarding website editor Assistant —
   `/v1/onboarding/website-editor/assistant/…` (seven routes).
-  [website-editor.md](website-editor.md). Not `/v1/assistant/…`. Not
-  `/v1/onboarding/assistant/…`.
+  [website-editor.md](website-editor.md). GET `…/thread` allows onboarding
+  session token (hydrate) or Clerk. Send / Voice / PATCH stay Clerk. Not
+  `/v1/assistant/…`. Not `/v1/onboarding/assistant/…`.
 
 ## Do not create
 

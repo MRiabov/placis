@@ -146,7 +146,8 @@ Named once here. Feature `api.md` files name the mode, they do not redefine it.
 Clerk JWT + unactivated tenant on the **app** origin (unpublished GET/PATCH,
 `/v1/onboarding/website-editor/assistant/…` send/Voice) is the same Clerk
 verification as mode 3 without the active gate. Not a sixth mode. Onboarding
-session token (mode 2) may GET unpublished website; it must not PATCH and must
+session token (mode 2) may GET unpublished website and GET
+`/v1/onboarding/website-editor/assistant/thread`; it must not PATCH and must
 not send.
 
 Contractor website `Host` is CORS for website form POST and website activation

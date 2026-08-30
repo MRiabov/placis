@@ -149,9 +149,12 @@ this route. Website page list and **Share** float on the canvas. Pay is the
 sticky website-activation strip (same bar as the host mock; on a narrow pane the
 copy and price sit on one row and the activate control is full width). Assistant
 starts as text (compact docked composer, max-width 32rem on a wide pane, in
-front of the website-activation strip’s lift shadow); **Voice** is a switch in
-that composer. No Content, no website styles rail, no click-to-edit, no design
-controls. Signed-out: view + switch website pages; prompt box visible; send and
+front of the website-activation strip’s lift shadow) with the CMS Assistant
+thread above it (expand / reduce; no Plan / Ask first / Clear context; default
+expanded). **Voice** is a switch in that composer. 06 `tool_summary` fills the
+thread on land (`GET …/thread` with the onboarding session token). No Content,
+no website styles rail, no click-to-edit, no design controls. Signed-out: view
+and switch website pages; hydrate the thread; prompt box visible; send and
 Voice need **Sign up with Google**.
 
 **Share** (optional) runs [07](pipeline/07-website-preview.md): preview website
@@ -193,5 +196,7 @@ retries; it does not `POST` a new onboarding session.
 - `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — SSE carousel of
   complete website sections; 15s wait progress in the shared footer, painted
   every animation frame.
+- `PreviewAndEditPanel` — unpaid website preview after the wait teaser.
+  Assistant thread stub shows muted 06 `tool_summary` lines above the field.
 - Leftover `src/features/preview/` is predecessor code to drop (no
   `/preview/{token}/` in this app).

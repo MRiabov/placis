@@ -38,7 +38,7 @@ function OnboardingLayoutInner(): ReactNode {
   const pathname = useRouterState({
     select: (route) => route.location.pathname,
   });
-  const step = pathname.split("/").at(-1) ?? "find";
+  const step = pathname.split("/").filter(Boolean).at(-1) ?? "find";
   const generated = step === "generated";
   const previewAndEdit = step === "preview-and-edit";
   const canvas = generated || previewAndEdit;

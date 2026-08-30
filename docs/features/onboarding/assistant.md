@@ -10,6 +10,9 @@ CMS dispatcher, allowed set, and voice transport: [assistant](../assistant/READM
 onboarding-specific isolation. HTTP: [api.md](api.md). Tables:
 [persistence.md](persistence.md).
 
+Website preview on `/onboarding/preview-and-edit/` is **not** this assistant.
+That surface is the [onboarding website editor](website-editor.md).
+
 ## Isolation
 
 - Conversation is **onboarding-session-scoped** (the onboarding session token),
