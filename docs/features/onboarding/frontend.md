@@ -145,11 +145,13 @@ Wait teaser `/onboarding/preview` (SSE carousel, ~15s cap) then **navigates to
 `/onboarding/preview-and-edit/`**. Live unpublished canvas. Custom top-left
 nested control to switch website pages (titles list, Services nested; not the
 CMS Website pages rail). Canvas top-menu/footer website page clicks stay on
-this route. Top-right: **Share**. Pay is the sticky website-activation strip
-(same bar as the host mock). Assistant is the CMS canvas Assistant
-(bottom-right of the pane, text composer + DustOrb). No Content, no website
-styles rail, no click-to-edit, no design controls. Signed-out: view + switch
-website pages; send/Voice require sign-in.
+this route. Website page list and **Share** float on the canvas. Pay is the
+sticky website-activation strip (same bar as the host mock; on a narrow pane the
+copy and price sit on one row and the activate control is full width). Assistant
+starts as text (compact docked composer); **Voice** is a switch in that
+composer. No Content, no website styles rail, no click-to-edit, no design
+controls. Signed-out: view + switch website pages; prompt box visible; send and
+Voice need **Sign in**.
 
 **Share** (optional) runs [07](pipeline/07-website-preview.md): preview website
 address with website-activation strip. Pay on the website preview **or** on

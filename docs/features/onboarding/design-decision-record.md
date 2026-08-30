@@ -136,4 +136,8 @@ inventing it.
     preview website address). Assistant is the CMS canvas Assistant
     (bottom-right of the pane, DustOrb / composer). Canvas top-menu/footer
     clicks stay on this route. No Content / website styles rail. Static host
-    mock stays `/onboarding/generated`. (2026-08-30)
+    mock stays `/onboarding/generated`. (2026-08-30) Same day, later: website
+    page list and Share float on the canvas (not a separate bar). Assistant
+    starts as text; **Voice** is in the composer. Send and Voice need **Sign
+    in**. The website-activation strip stacks on a narrow pane: copy and price,
+    then the activate control. (2026-08-30)

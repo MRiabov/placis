@@ -14,7 +14,7 @@ import { listen, play, stop } from "@/lib/mock-voice";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { DustOrb } from "@/ui/DustOrb";
-import { TextArea } from "@/ui/Field";
+import { TextArea, TextInput } from "@/ui/Field";
 import { Notice } from "@/ui/Notice";
 
 export const assistantOrbVars =
@@ -27,7 +27,7 @@ function shotMode(): boolean {
   return new URLSearchParams(window.location.search).get("shot") === "1";
 }
 
-function initialCall(): { open: boolean; voiceOn: boolean } {
+function urlCall(): { open: boolean; voiceOn: boolean } | null {
   const params = new URLSearchParams(window.location.search);
   const assistant = params.get("assistant");
   const voice = params.get("voice");
@@ -37,7 +37,7 @@ function initialCall(): { open: boolean; voiceOn: boolean } {
   if (assistant === "1" || assistant === "expanded" || voice === "1") {
     return { open: true, voiceOn: true };
   }
-  return { open: false, voiceOn: true };
+  return null;
 }
 
 export type CmsAssistant = {
@@ -67,10 +67,19 @@ export function useCmsAssistant(): CmsAssistant {
 
 export function CmsAssistantProvider({
   children,
+  startText = false,
 }: {
   children: ReactNode;
+  startText?: boolean;
 }): ReactNode {
-  const start = useMemo(initialCall, []);
+  const start = useMemo(
+    () =>
+      urlCall() ??
+      (startText
+        ? { open: true, voiceOn: false }
+        : { open: false, voiceOn: true }),
+    [startText],
+  );
   const [open, setOpen] = useState(start.open);
   const [voiceOn, setVoiceOn] = useState(start.voiceOn);
   const [speaking, setSpeaking] = useState(false);
@@ -239,12 +248,18 @@ export function CmsAssistantLayer(): ReactNode {
 
 type AssistantSessionProps = {
   website?: boolean;
+  unpaid?: boolean;
+  signedIn?: boolean;
+  onSignIn?: () => void;
   askPending?: boolean;
   onAsk?: () => void;
 };
 
 export function AssistantSession({
   website = false,
+  unpaid = false,
+  signedIn = true,
+  onSignIn,
   askPending = false,
   onAsk,
 }: AssistantSessionProps): ReactNode {
@@ -264,119 +279,213 @@ export function AssistantSession({
 
   return (
     <>
-      <div
-        className={cn(
-          "pointer-events-none absolute z-[21] max-w-[calc(100%-24px)] items-center whitespace-nowrap",
-          voiceOn
-            ? "right-3 bottom-3 left-auto grid w-max grid-cols-[max-content_var(--voice-orb)] grid-rows-2 items-center gap-x-3 gap-y-2 isolation-isolate max-[1100px]:bottom-[calc(12px+env(safe-area-inset-bottom))] max-[1100px]:gap-x-5 max-[1100px]:gap-y-1.5"
-            : "left-1/2 flex -translate-x-1/2 gap-2.5 bottom-[calc(20px+var(--assistant-h))]",
-        )}
-        id="canvasActions"
-      >
-        {askPending ? (
-          <div
-            className={cn(
-              "flex shrink-0 gap-2",
-              voiceOn ? "col-start-1 row-start-1 justify-self-start" : "",
-            )}
-          >
-            <button
-              className={cn(
-                pillClass,
-                "border-0 bg-primary text-primary-foreground",
-              )}
-              onClick={onAsk}
-              type="button"
-            >
-              Apply
-            </button>
-            <button
-              className={cn(
-                pillClass,
-                "border border-border bg-white text-foreground",
-              )}
-              onClick={onAsk}
-              type="button"
-            >
-              Reject
-            </button>
-          </div>
-        ) : null}
-        {voiceOn ? (
-          <>
-            <button
-              className={cn(
-                pillClass,
-                "col-start-1 row-start-2 justify-self-start border border-border bg-white text-foreground",
-              )}
-              onClick={switchToText}
-              type="button"
-            >
-              Switch to text mode
-            </button>
-            <div className="relative col-start-2 row-start-1 row-span-2 grid size-[var(--voice-orb)] place-items-center justify-self-end self-center overflow-visible pointer-events-none isolation-isolate">
-              <button
-                aria-label="Switch to text mode"
-                className="absolute top-0 right-0 z-[2] grid size-8 place-items-center rounded-full border-0 bg-transparent p-0 text-muted-foreground pointer-events-auto hover:text-foreground"
-                onClick={switchToText}
-                title="Switch to text mode"
-                type="button"
-              >
-                <svg
-                  aria-hidden="true"
-                  className="size-3.5 fill-none stroke-current stroke-[1.6]"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </button>
-              <DustOrb
-                aria-label="Voice agent"
-                canvasClassName="absolute top-1/2 left-1/2 size-[var(--voice-orb)] -translate-x-1/2 -translate-y-1/2 bg-transparent"
-                className="relative size-[var(--voice-orb-hit)] overflow-visible bg-transparent pointer-events-auto"
-                live
-                onClick={startVoice}
-                speaking={speaking}
-              />
-            </div>
-          </>
-        ) : null}
-      </div>
+      <CanvasActions
+        askPending={askPending}
+        onAsk={onAsk}
+        speaking={speaking}
+        startVoice={startVoice}
+        switchToText={switchToText}
+        voiceOn={voiceOn}
+      />
       {voiceOn ? null : (
-        <div
-          className={card(
-            "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card pointer-events-auto",
-          )}
-          id="assistantOverlay"
-        >
-          <div className="mb-2 flex items-center justify-between">
-            <b className="text-sm">Assistant</b>
-            <button onClick={closeAssistant} type="button">
-              Close
-            </button>
-          </div>
-          {website ? (
-            <label className="mr-3 text-xs">
-              <input
-                checked={planMode}
-                onChange={(event) => setPlanMode(event.target.checked)}
-                type="checkbox"
-              />{" "}
-              Plan mode
-            </label>
-          ) : null}
-          <TextArea
-            placeholder="e.g. Make the home website page focus on emergency call-outs"
-            rows={2}
-          />
-          <div className="mt-2 flex justify-end gap-2">
-            <Button onClick={startVoice} variant="outline">
-              Voice
-            </Button>
-            <Button>{website && planMode ? "Plan" : "Send"}</Button>
-          </div>
-        </div>
+        <AssistantComposer
+          closeAssistant={closeAssistant}
+          onSignIn={onSignIn}
+          planMode={planMode}
+          setPlanMode={setPlanMode}
+          signedIn={signedIn}
+          startVoice={startVoice}
+          unpaid={unpaid}
+          website={website}
+        />
       )}
     </>
+  );
+}
+
+function CanvasActions({
+  askPending,
+  onAsk,
+  speaking,
+  startVoice,
+  switchToText,
+  voiceOn,
+}: {
+  askPending: boolean;
+  onAsk: (() => void) | undefined;
+  speaking: boolean;
+  startVoice: () => void;
+  switchToText: () => void;
+  voiceOn: boolean;
+}): ReactNode {
+  return (
+    <div
+      className={cn(
+        "pointer-events-none absolute z-[21] max-w-[calc(100%-24px)] items-center whitespace-nowrap",
+        voiceOn
+          ? "right-3 bottom-3 left-auto grid w-max grid-cols-[max-content_var(--voice-orb)] grid-rows-2 items-center gap-x-3 gap-y-2 isolation-isolate max-[1100px]:bottom-[calc(12px+env(safe-area-inset-bottom))] max-[1100px]:gap-x-5 max-[1100px]:gap-y-1.5"
+          : "left-1/2 flex -translate-x-1/2 gap-2.5 bottom-[calc(20px+var(--assistant-h))]",
+      )}
+      id="canvasActions"
+    >
+      {askPending ? (
+        <div
+          className={cn(
+            "flex shrink-0 gap-2",
+            voiceOn ? "col-start-1 row-start-1 justify-self-start" : "",
+          )}
+        >
+          <button
+            className={cn(
+              pillClass,
+              "border-0 bg-primary text-primary-foreground",
+            )}
+            onClick={onAsk}
+            type="button"
+          >
+            Apply
+          </button>
+          <button
+            className={cn(
+              pillClass,
+              "border border-border bg-white text-foreground",
+            )}
+            onClick={onAsk}
+            type="button"
+          >
+            Reject
+          </button>
+        </div>
+      ) : null}
+      {voiceOn ? (
+        <>
+          <button
+            className={cn(
+              pillClass,
+              "col-start-1 row-start-2 justify-self-start border border-border bg-white text-foreground",
+            )}
+            onClick={switchToText}
+            type="button"
+          >
+            Switch to text mode
+          </button>
+          <div className="relative col-start-2 row-start-1 row-span-2 grid size-[var(--voice-orb)] place-items-center justify-self-end self-center overflow-visible pointer-events-none isolation-isolate">
+            <button
+              aria-label="Switch to text mode"
+              className="absolute top-0 right-0 z-[2] grid size-8 place-items-center rounded-full border-0 bg-transparent p-0 text-muted-foreground pointer-events-auto hover:text-foreground"
+              onClick={switchToText}
+              title="Switch to text mode"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                className="size-3.5 fill-none stroke-current stroke-[1.6]"
+                viewBox="0 0 24 24"
+              >
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+            <DustOrb
+              aria-label="Voice agent"
+              canvasClassName="absolute top-1/2 left-1/2 size-[var(--voice-orb)] -translate-x-1/2 -translate-y-1/2 bg-transparent"
+              className="relative size-[var(--voice-orb-hit)] overflow-visible bg-transparent pointer-events-auto"
+              live
+              onClick={startVoice}
+              speaking={speaking}
+            />
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+function AssistantComposer({
+  closeAssistant,
+  onSignIn,
+  planMode,
+  setPlanMode,
+  signedIn,
+  startVoice,
+  unpaid,
+  website,
+}: {
+  closeAssistant: () => void;
+  onSignIn: (() => void) | undefined;
+  planMode: boolean;
+  setPlanMode: (value: boolean) => void;
+  signedIn: boolean;
+  startVoice: () => void;
+  unpaid: boolean;
+  website: boolean;
+}): ReactNode {
+  return (
+    <div
+      className={card(
+        unpaid
+          ? "absolute inset-x-2 bottom-2 z-20 flex flex-col gap-1.5 p-2 shadow-card pointer-events-auto"
+          : "absolute inset-x-3 bottom-3 z-20 mx-auto max-w-lg p-4 shadow-card pointer-events-auto",
+      )}
+      id="assistantOverlay"
+    >
+      <div
+        className={cn(
+          "flex items-center justify-between",
+          unpaid ? "px-0.5" : "mb-2",
+        )}
+      >
+        <b className={unpaid ? "text-xs font-medium" : "text-sm"}>Assistant</b>
+        <button
+          className={unpaid ? "text-xs text-muted-foreground" : undefined}
+          onClick={closeAssistant}
+          type="button"
+        >
+          Close
+        </button>
+      </div>
+      {website && !unpaid ? (
+        <label className="mr-3 text-xs">
+          <input
+            checked={planMode}
+            onChange={(event) => setPlanMode(event.target.checked)}
+            type="checkbox"
+          />{" "}
+          Plan mode
+        </label>
+      ) : null}
+      {unpaid ? (
+        <TextInput placeholder="e.g. Focus this website page on emergency call-outs" />
+      ) : (
+        <TextArea
+          placeholder="e.g. Make the home website page focus on emergency call-outs"
+          rows={2}
+        />
+      )}
+      <div
+        className={cn(
+          "flex gap-2",
+          unpaid ? "justify-stretch" : "mt-2 justify-end",
+        )}
+      >
+        {unpaid && !signedIn ? (
+          <Button className="h-11 flex-1" onClick={onSignIn}>
+            Sign in
+          </Button>
+        ) : (
+          <>
+            <Button
+              className={unpaid ? "h-11 flex-1" : undefined}
+              onClick={startVoice}
+              variant="outline"
+            >
+              Voice
+            </Button>
+            <Button className={unpaid ? "h-11 flex-1" : undefined}>
+              {website && planMode ? "Plan" : "Send"}
+            </Button>
+          </>
+        )}
+      </div>
+    </div>
   );
 }

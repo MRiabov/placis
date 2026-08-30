@@ -31,7 +31,7 @@ export function ActivationStrip({
   return (
     <aside
       aria-label="Website activation"
-      className="z-40 shrink-0 border-t border-stone-200 bg-white shadow-[0_-18px_48px_rgb(19_18_10/10%)]"
+      className="z-40 shrink-0 border-t border-stone-200 bg-white px-3 shadow-[0_-18px_48px_rgb(19_18_10/10%)]"
     >
       {panelOpen ? (
         <div className="mx-auto grid w-[min(36rem,calc(100%-2.5rem))] max-h-[min(58vh,28rem)] gap-4 overflow-auto pt-5">
@@ -48,49 +48,52 @@ export function ActivationStrip({
       <div
         className={
           panelOpen
-            ? "mx-auto grid w-[min(72rem,calc(100%-2.5rem))] grid-cols-[minmax(0,1fr)_auto] items-center gap-x-5 gap-y-4 py-3.5"
-            : "mx-auto grid w-[min(72rem,calc(100%-2.5rem))] grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-5 gap-y-4 py-3.5"
+            ? "mx-auto flex w-[min(72rem,calc(100%-1.5rem))] justify-end py-3"
+            : "mx-auto flex w-[min(72rem,calc(100%-1.5rem))] flex-col gap-3 py-3 min-[640px]:grid min-[640px]:grid-cols-[auto_minmax(0,1fr)_auto_auto] min-[640px]:items-center min-[640px]:gap-x-5"
         }
       >
         {panelOpen ? null : (
-          <img
-            alt="placis"
-            className="h-10 w-[101px]"
-            height={40}
-            src="/placis-mark.png"
-            width={101}
-          />
-        )}
-        <div className="grid min-w-0 gap-0.5">
-          <b className="text-[15px] font-semibold tracking-tight">
-            This website is ready
-          </b>
-          <span className="text-[13px] text-muted-foreground">
-            One-time · then about €50 / month
-          </span>
-        </div>
-        {panelOpen ? null : (
-          <p className="m-0 grid gap-px text-right">
-            <b className="text-lg font-semibold tracking-tight">EUR 4,900</b>
-            <span className="text-xs text-muted-foreground">one-time</span>
-          </p>
+          <>
+            <div className="flex min-w-0 items-start gap-3 min-[640px]:contents">
+              <img
+                alt="placis"
+                className="hidden h-10 w-[101px] shrink-0 min-[640px]:block"
+                height={40}
+                src="/placis-mark.png"
+                width={101}
+              />
+              <div className="grid min-w-0 flex-1 gap-0.5">
+                <b className="text-[15px] font-semibold tracking-tight">
+                  This website is ready
+                </b>
+                <span className="text-[13px] text-muted-foreground">
+                  One-time · then about €50 / month
+                </span>
+              </div>
+              <p className="m-0 shrink-0 grid gap-px text-right">
+                <b className="text-lg font-semibold tracking-tight">
+                  EUR 4,900
+                </b>
+                <span className="text-xs text-muted-foreground">one-time</span>
+              </p>
+            </div>
+            <Button
+              className="h-11 w-full px-[18px] min-[640px]:w-max min-[640px]:justify-self-end"
+              onClick={onOpen}
+            >
+              Activate this website
+            </Button>
+          </>
         )}
         {panelOpen ? (
           <Button
-            className="h-11 w-max justify-self-end px-[18px]"
+            className="h-11 w-full px-[18px] min-[640px]:w-max"
             onClick={onClose}
             variant="outline"
           >
             Close
           </Button>
-        ) : (
-          <Button
-            className="h-11 w-max justify-self-end px-[18px]"
-            onClick={onOpen}
-          >
-            Activate this website
-          </Button>
-        )}
+        ) : null}
       </div>
     </aside>
   );

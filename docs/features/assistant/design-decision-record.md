@@ -121,4 +121,7 @@ owner-written; omit it rather than inventing it.
     Assistant (bottom-right **Assistant** call, then DustOrb / composer).
     Present on `/onboarding/preview-and-edit/`. Top-right is **Share** only. Pay
     is the sticky website-activation strip. No owner Plan switch. Instant apply.
-    Hidden on wait teaser. (2026-08-30)
+    Hidden on wait teaser. (2026-08-30) Same day, later: the composer is **on**
+    as text; **Voice** is a switch in that composer. Website page list and Share
+    float on the canvas. Send and Voice need **Sign in**. The field is a compact
+    docked composer, not the CMS card. (2026-08-30)
