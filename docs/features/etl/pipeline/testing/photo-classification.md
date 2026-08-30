@@ -7,7 +7,8 @@
   `schema_revision` classifies without `force`; `force=true` reclassifies only
   items whose stored algorithm differs and is not `human`; `algorithm=human` is
   not overwritten when `force=true` or `schema_revision` is bumped; a classifier
-  output that fails the schema is retried up to 3 times (repair then
+  output that fails the schema is retried up to 3 times on the same
+  `etl_photo_classify` thread (repair then
   re-validate) and is not skipped; after 3 failures `photo_kind` stays unset;
   04a / 04b do not set `photo_kind`; no `etl.photo_classifications` table;
   photos attached from the Details chunk are classified before scrape photos

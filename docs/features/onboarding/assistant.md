@@ -26,7 +26,8 @@ onboarding-specific isolation. HTTP: [api.md](api.md). Tables:
   No unpublished website working copy. No CMS `tools=`.
 - No `obtained_information` / `end_interview`. Client-interview writer tools are
   not in this registry.
-- **Not billed.** No 402. Still write `ai_generations` (`conversation_id`).
+- **Not billed.** No 402. Still write `ai_generations` (`thread_id` on the
+  `onboarding_assistant` thread).
   Usage on transcripts is recorded, not debited.
 - In-flight lock is `onboarding.assistant_runs`, unique running per
   `onboarding_session_id` (not `tenant_id`). Voice lock starts at

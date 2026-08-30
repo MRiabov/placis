@@ -26,7 +26,8 @@ the [onboarding E2E](../onboarding/testing.md). DB asserts name the tables from 
    - UI: proposal on the canvas; **Apply** PATCHes dirty keys then
      `record-apply`.
    - DB: a website slot value changes through that PATCH; `ai_generations`
-     records the batch; `edit_history` has an agent batch.
+     records the batch (`cms_assistant` thread); `edit_history` has an agent
+     batch.
    - UI: muted tool-call rows in the thread. Apply / Reject pills on the canvas
      over the composer if Ask first; no revert-after-apply.
 

@@ -334,11 +334,12 @@ never approved status:
    tooling, with the deterministic no-key fallback used by projects): feed is
    one photo and feed-length copy; carousel is a card sequence (2–10 images);
    story is overlay-short copy and a single 9:16 image.
-3. record the call through `ai_generations` tracing: reasoning, user-visible
-   copy output, tool calls, usage, and cost, plus the standard inference
-   metadata (model, `prompt_id`, `prompt_version`, tenant scope, actor context).
-   See [LLM layer](../../../general-architecture/llm-layer.md). Cache hits record the same metadata so a call can still be
-   reconstructed.
+3. record the call through `ai_generations` tracing on an `ads_generate` thread
+   (insert before the first generate; schema-repair retries reuse it):
+   reasoning, user-visible copy output, tool calls, usage, and cost, plus the
+   standard inference metadata (model, `prompt_id`, `prompt_version`, tenant
+   scope, actor context). See [LLM layer](../../../general-architecture/llm-layer.md). Cache hits record the same metadata
+   so a call can still be reconstructed.
 4. create `draft`/`ad_needs_review` copy variants, proposed image galleries
    referencing approved media assets, and proposed light cleanup edits as
    derived image variants; never write approved status
@@ -347,7 +348,8 @@ never approved status:
 6. after that first unprompted draft, directed Review rewrites (`rewrite` with
    required owner prompt, one copy field) and promptable cleanup
    (`POST /v1/media-assets/{id}/image-edits`) record the owner prompt in
-   `ai_generations`. Empty prompt is rejected.
+   `ai_generations` (`kind=ads_inline_assistance` for Review rewrite;
+   `kind=media_cleanup` for cleanup). Empty prompt is rejected.
 
 Generation results are **cached** per input, ad format, and `prompt_id` /
 `prompt_version` on `ai_generations` (tool and skill format revisions on

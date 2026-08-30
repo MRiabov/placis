@@ -53,7 +53,14 @@ instead of silently replacing it.
    `ai.ai_generations` is audit only (no FK from thread). Website
    `edit_history.ai_generation_id` stays last-writer on website edits.
    Onboarding conversation tables stay under schema `onboarding`. Shared `ai` is
-   `LLMProvider` + traces; features own product rows. (2026-08-28)
+   `LLMProvider` + traces; features own product rows. (2026-08-28) Same day,
+   later (2026-08-30): Thread **identity** moves to `ai.threads`. Every
+   `ai_generations` row has a required `thread_id` FK (CMS
+   `kind=cms_assistant`, onboarding `kind=onboarding_assistant`, headless
+   factories their own enum value). Schema `assistant` keeps `thread_items` and
+   `runs` only. Onboarding drops `assistant_conversations`; items/runs FK
+   `ai.threads`. Hydrate still reads overlay items only (never joins
+   `ai_generations`). No FK from thread items to generations.
 
 6. **Voice is typed HTTP of finals** — No Go WebSocket for audio, VAD, playback,
    or transcript deltas. `POST …/tool-calls` and `POST …/transcripts` append the
@@ -129,7 +136,8 @@ instead of silently replacing it.
     to send (do not wait 12h). Not a live-xAI context trim. Compaction prompt
     includes the Voice STT caveat when the thread has a `channel=voice` run. It
     does **not** treat a pending Ask-first reject notice as a special case.
-    (2026-08-29)
+    (2026-08-29) Later (2026-08-30): `last_activity_at` is on `ai.threads`
+    (`kind=cms_assistant`).
 
 12. **No 24h discard** — Aging is compaction only. Do not discard the thread at
     24h on `last_assistant_edit_at`. That column is written when tool events
