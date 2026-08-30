@@ -152,14 +152,14 @@ Voice create still loads `internal/knowledge/voice_pronunciation.yaml`.
 **`/onboarding/preview-and-edit/`** — wait-teaser landing. Signed-out: view the
 canvas from the onboarding session token; switch website pages (custom top-left
 control); prompt box visible; send requires sign-in. Signed-in unpaid: live
-canvas, custom top-left website page list + canvas top-menu/footer website page
-clicks stay on this route, text composer, DustOrb Voice, pay CTA, **Share**.
-After **08**, redirect to `/cms/website`.
+canvas, nested website page list + canvas top-menu/footer website page clicks
+stay on this route, CMS canvas Assistant, sticky website-activation strip,
+**Share**. After **08**, redirect to `/cms/website`.
 
-Look: custom top-left control (this website preview only, titles list — not the
-CMS Website pages rail). Top-right stays pay / Share / Assistant. Reuse CMS
-Assistant tokens. Not the CMS “call Assistant” button — Assistant is present on
-the canvas.
+Look: custom top-left nested control (this website preview only, titles list —
+Services nests website pages; not the CMS Website pages rail). Top-right is
+**Share**. Pay is the sticky website-activation strip. Assistant is the CMS
+canvas Assistant (bottom-right of the pane). Reuse CMS Assistant tokens.
 
 **Preview website address** — after Share (or after 08 if they paid without
 sharing). Cache then R2 + strip. No website preview, no Assistant, no SPA. Pay

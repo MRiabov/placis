@@ -130,7 +130,10 @@ inventing it.
     (2026-08-28)
 
 13. **Wait teaser lands on the website preview** — `/onboarding/preview` then
-    `/onboarding/preview-and-edit/`. Custom top-left website page list (this
-    website preview only). Top-right: pay, Share, Assistant. Canvas
-    top-menu/footer clicks stay on this route. No Content / website styles
-    rail. Static host mock stays `/onboarding/generated`. (2026-08-30)
+    `/onboarding/preview-and-edit/`. Custom top-left nested website page list
+    (this website preview only; Services nests website pages). Top-right:
+    **Share**. Pay is the sticky website-activation strip (same bar as the
+    preview website address). Assistant is the CMS canvas Assistant
+    (bottom-right of the pane, DustOrb / composer). Canvas top-menu/footer
+    clicks stay on this route. No Content / website styles rail. Static host
+    mock stays `/onboarding/generated`. (2026-08-30)

@@ -3,6 +3,10 @@ import { type ReactNode, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
 import { siteHero, siteReviews, siteServices } from "@/lib/site-copy";
+import {
+  type ActivationScene,
+  ActivationStrip,
+} from "@/pages/onboarding/ActivationStrip";
 import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
 import { Button } from "@/ui/Button";
 import {
@@ -12,18 +16,39 @@ import {
 } from "@/ui/CmsAssistant";
 import { card } from "@/ui/card";
 
-const pages = [
+const pageTree = [
   { id: "home", title: "Home" },
-  { id: "services", title: "Services" },
+  {
+    id: "services",
+    title: "Services",
+    children: siteServices.map((item) => ({
+      id: `service:${item.title}`,
+      title: item.title,
+    })),
+  },
   { id: "contact", title: "Contact" },
   { id: "privacy", title: "Privacy" },
   { id: "terms", title: "Terms" },
 ] as const;
 
-type PreviewPageId = (typeof pages)[number]["id"];
-type AuthScene = "unsigned" | "signed" | "paid";
+type PreviewPageId = string;
 
 const shareHost = "bellfield-roofing-dublin.preview.placis.com";
+
+function pageTitle(page: PreviewPageId): string {
+  for (const node of pageTree) {
+    if (node.id === page) {
+      return node.title;
+    }
+    if ("children" in node) {
+      const child = node.children.find((item) => item.id === page);
+      if (child) {
+        return child.title;
+      }
+    }
+  }
+  return "Home";
+}
 
 export function PreviewAndEditPage(): ReactNode {
   return (
@@ -37,10 +62,9 @@ function PreviewAndEditInner(): ReactNode {
   const { setExtraGroups } = useOnboardingDev();
   const [page, setPage] = useState<PreviewPageId>("home");
   const [listOpen, setListOpen] = useState(false);
-  const [scene, setScene] = useState<AuthScene>("signed");
+  const [scene, setScene] = useState<ActivationScene>("signed");
+  const [panelOpen, setPanelOpen] = useState(false);
   const [shared, setShared] = useState(false);
-  const [paying, setPaying] = useState(false);
-  const current = pages.find((item) => item.id === page) ?? pages[0];
 
   useEffect(() => {
     setExtraGroups([
@@ -51,13 +75,22 @@ function PreviewAndEditInner(): ReactNode {
             id: "unsigned",
             label: "Not signed in",
             on: scene === "unsigned",
-            onSelect: () => setScene("unsigned"),
+            onSelect: () => {
+              setScene("unsigned");
+              setPanelOpen(false);
+            },
           },
           {
             id: "signed",
             label: "Signed in",
-            on: scene === "signed",
-            onSelect: () => setScene("signed"),
+            on:
+              scene === "signed" ||
+              scene === "paying" ||
+              scene === "activating",
+            onSelect: () => {
+              setScene("signed");
+              setPanelOpen(true);
+            },
           },
           {
             id: "paid",
@@ -75,96 +108,127 @@ function PreviewAndEditInner(): ReactNode {
     return () => setExtraGroups([]);
   }, [scene, setExtraGroups]);
 
-  function pay(): void {
-    if (scene === "unsigned") {
-      setScene("signed");
-      return;
-    }
-    setPaying(true);
-    window.setTimeout(() => {
-      window.location.assign("/cms/website?publication=1&from=activation");
-    }, 900);
-  }
-
   return (
     <div className="relative flex h-full min-h-0 flex-col">
       <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-background px-3 py-2">
-        <div className="relative">
-          <Button
-            aria-expanded={listOpen}
-            aria-haspopup="listbox"
-            onClick={() => setListOpen((open) => !open)}
-            type="button"
-            variant="outline"
-          >
-            {current.title}
-            <svg
-              aria-hidden="true"
-              className="size-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              viewBox="0 0 24 24"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </Button>
-          {listOpen ? (
-            <ul className="absolute top-full left-0 z-30 mt-1 min-w-44 rounded-lg border border-border bg-background py-1 shadow-sm">
-              {pages.map((item) => (
-                <li key={item.id}>
-                  <button
-                    className={cn(
-                      "block w-full px-3 py-1.5 text-left text-sm hover:bg-zinc-50",
-                      item.id === page ? "font-semibold" : "",
-                    )}
-                    onClick={() => {
-                      setPage(item.id);
-                      setListOpen(false);
-                    }}
-                    type="button"
-                  >
-                    {item.title}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
-        <div className="flex items-center gap-2">
-          {paying ? (
-            <span className="text-sm text-muted-foreground">
-              Opening checkout…
-            </span>
-          ) : (
-            <Button onClick={pay}>
-              {scene === "unsigned" ? "Sign in to pay" : "Pay to activate"}
-            </Button>
-          )}
-          <Button
-            onClick={() => setShared(true)}
-            type="button"
-            variant="outline"
-          >
-            Share
-          </Button>
-          <AssistantLaunch />
-        </div>
+        <PageList
+          listOpen={listOpen}
+          page={page}
+          onOpen={setListOpen}
+          onPage={(next) => {
+            setPage(next);
+            setListOpen(false);
+          }}
+        />
+        <Button onClick={() => setShared(true)} type="button" variant="outline">
+          Share
+        </Button>
       </div>
       {shared ? (
         <p className="shrink-0 border-b border-border bg-zinc-50 px-3 py-2 text-sm">
           Shared to {shareHost}
         </p>
       ) : null}
-      {scene === "unsigned" ? (
-        <p className="shrink-0 border-b border-border bg-zinc-50 px-3 py-2 text-sm text-muted-foreground">
-          You can look around. Sign in to send to Assistant or use Voice.
-        </p>
-      ) : null}
-      <div className="relative min-h-0 flex-1 overflow-hidden">
+      <div
+        className={cn(
+          "relative min-h-0 flex-1 overflow-hidden",
+          "[--assistant-h:7rem] [--voice-orb:min(5.5rem,30vw)] [--voice-orb-hit:2.75rem]",
+          "min-[1101px]:[--assistant-h:3.25rem] max-[480px]:[--voice-orb:min(50vw,50dvh)] max-[480px]:[--voice-orb-hit:min(12rem,42vw)]",
+        )}
+      >
         <UnpaidCanvas page={page} onPage={setPage} />
+        <AssistantLaunch className="absolute right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] z-30" />
         <AssistantSession />
       </div>
+      <ActivationStrip
+        panelOpen={panelOpen}
+        scene={scene}
+        onClose={() => setPanelOpen(false)}
+        onOpen={() => setPanelOpen(true)}
+        onPay={() => {
+          setScene("paying");
+          window.setTimeout(() => {
+            setScene("activating");
+            window.setTimeout(() => {
+              window.location.assign(
+                "/cms/website?publication=1&from=activation",
+              );
+            }, 900);
+          }, 900);
+        }}
+        onSignIn={() => setScene("signed")}
+      />
+    </div>
+  );
+}
+
+function PageList({
+  listOpen,
+  page,
+  onOpen,
+  onPage,
+}: {
+  listOpen: boolean;
+  page: PreviewPageId;
+  onOpen: (open: boolean | ((value: boolean) => boolean)) => void;
+  onPage: (id: PreviewPageId) => void;
+}): ReactNode {
+  return (
+    <div className="relative">
+      <Button
+        aria-expanded={listOpen}
+        aria-haspopup="true"
+        onClick={() => onOpen((open) => !open)}
+        type="button"
+        variant="outline"
+      >
+        {pageTitle(page)}
+        <svg
+          aria-hidden="true"
+          className="size-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          viewBox="0 0 24 24"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </Button>
+      {listOpen ? (
+        <ul className="absolute top-full left-0 z-30 mt-1 min-w-52 rounded-lg border border-border bg-background py-1 shadow-sm">
+          {pageTree.map((node) => (
+            <li key={node.id}>
+              <button
+                className={cn(
+                  "block w-full px-3 py-1.5 text-left text-sm hover:bg-zinc-50",
+                  node.id === page ? "font-semibold" : "",
+                )}
+                onClick={() => onPage(node.id)}
+                type="button"
+              >
+                {node.title}
+              </button>
+              {"children" in node
+                ? node.children.map((child) => (
+                    <button
+                      className={cn(
+                        "block w-full px-3 py-1.5 pl-7 text-left text-sm text-muted-foreground hover:bg-zinc-50 hover:text-foreground",
+                        child.id === page
+                          ? "font-semibold text-foreground"
+                          : "",
+                      )}
+                      key={child.id}
+                      onClick={() => onPage(child.id)}
+                      type="button"
+                    >
+                      {child.title}
+                    </button>
+                  ))
+                : null}
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
@@ -176,18 +240,22 @@ function UnpaidCanvas({
   page: PreviewPageId;
   onPage: (id: PreviewPageId) => void;
 }): ReactNode {
+  const service = siteServices.find((item) => page === `service:${item.title}`);
   return (
     <div className="h-full min-h-0 overflow-auto bg-white">
       <div className="flex flex-wrap items-center justify-between gap-3 bg-site-hero px-8 py-4 text-site-hero-fg">
         <b>Bellfield Roofing</b>
         <nav className="flex flex-wrap gap-3 text-sm">
-          {pages
+          {pageTree
             .filter((item) => item.id !== "privacy" && item.id !== "terms")
             .map((item) => (
               <button
                 className={cn(
                   "underline-offset-4 hover:underline",
-                  item.id === page ? "underline" : "",
+                  item.id === page ||
+                    (item.id === "services" && page.startsWith("service:"))
+                    ? "underline"
+                    : "",
                 )}
                 key={item.id}
                 onClick={() => onPage(item.id)}
@@ -201,6 +269,7 @@ function UnpaidCanvas({
       </div>
       {page === "home" ? <HomeBody /> : null}
       {page === "services" ? <ServicesBody /> : null}
+      {service ? <ServiceBody service={service} /> : null}
       {page === "contact" ? <SimpleBody title="Contact" /> : null}
       {page === "privacy" ? <SimpleBody title="Privacy" /> : null}
       {page === "terms" ? <SimpleBody title="Terms" /> : null}
@@ -268,6 +337,27 @@ function ServicesBody(): ReactNode {
           </article>
         ))}
       </div>
+    </section>
+  );
+}
+
+function ServiceBody({
+  service,
+}: {
+  service: (typeof siteServices)[number];
+}): ReactNode {
+  const index = siteServices.indexOf(service);
+  return (
+    <section className="p-8">
+      <h1 className="text-2xl font-semibold">{service.title}</h1>
+      <img
+        alt=""
+        className="mt-4 h-48 w-full max-w-xl rounded-lg object-cover"
+        src={photo(index)}
+      />
+      <p className="mt-3 max-w-lg text-sm text-muted-foreground">
+        {service.blurb}
+      </p>
     </section>
   );
 }

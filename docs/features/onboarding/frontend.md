@@ -143,9 +143,11 @@ Paid (the Paid tab) opens the website editor look export with **Publish**
 
 Wait teaser `/onboarding/preview` (SSE carousel, ~15s cap) then **navigates to
 `/onboarding/preview-and-edit/`**. Live unpublished canvas. Custom top-left
-control to switch website pages (titles list; not the CMS Website pages rail).
-Canvas top-menu/footer website page clicks stay on this route. Top-right: pay,
-**Share**, **Assistant** (text composer + DustOrb). No Content, no website
+nested control to switch website pages (titles list, Services nested; not the
+CMS Website pages rail). Canvas top-menu/footer website page clicks stay on
+this route. Top-right: **Share**. Pay is the sticky website-activation strip
+(same bar as the host mock). Assistant is the CMS canvas Assistant
+(bottom-right of the pane, text composer + DustOrb). No Content, no website
 styles rail, no click-to-edit, no design controls. Signed-out: view + switch
 website pages; send/Voice require sign-in.
 
