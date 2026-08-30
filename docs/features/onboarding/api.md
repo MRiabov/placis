@@ -194,14 +194,18 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
 - **Callers:** committed utterances onto the one thread; usage-only when Voice
   turns off.
 - **Idempotency-Key:** yes.
-- **Request:** same shape as CMS transcripts (owner visible text `maxLength`
+- **Request:** same shape as CMS transcripts (closed union of committed xAI
+  Voice events; owner visible text `maxLength`
   **5000 characters**; assistant visible text storage `maxLength`, not a
-  5000-character generation cap; **`offset_seconds`** per utterance; optional
+  5000-character generation cap; **`offset_seconds`** from the xAI Voice
+  connection clock; `provider_event` jsonb persisted, omitted from GET; optional
   reasoning; audio seconds + `billed_text_item_count` when present). Go sets
-  `created_at` on insert (row time). **Omit** PCM.
+  `created_at` on insert (row time). **Omit** PCM. If xAI did not emit a
+  committed transcript, omit that utterance.
 - **Errors:** **403** if activated. Settlement stays **200**.
 - **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
-  `created_at` as the conversation clock.
+  `created_at` or a browser clock as the conversation clock; call
+  `POST /v1/stt` or transcribe a recording.
 
 ### GET /v1/onboarding/assistant/thread
 
@@ -212,7 +216,7 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
   with `items: []`.
 - **Errors:** **403** if activated.
 - **Must not:** return `thread_items` as the field name; return runs, audit
-  blobs, or recording URLs.
+  blobs, `provider_event`, or recording URLs.
 
 ## Listed
 
@@ -259,3 +263,4 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
   `…/recordings/{id}/complete` (onboarding does not store Voice recordings)
 - unprefixed `POST /v1/onboarding/assistant/realtime-connection` /
   `…/transcripts` / `…/recordings`
+- `POST /v1/stt` and `wss://…/v1/stt` (use live Voice transcripts)

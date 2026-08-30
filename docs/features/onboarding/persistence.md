@@ -17,9 +17,10 @@ as an identity table.
 - `assistant_conversation_items` — `id`, `onboarding_session_id` fk,
   `thread_id` fk → `ai.threads`, `kind` (`owner` / `assistant` /
   `tool_summary` / `thinking`), `body`, `icon`, `offset_seconds` int nullable
-  (`>= 0`; Voice utterances; seconds from that Voice run’s start; null if none),
-  `created_at` (row insert). Index `(thread_id, created_at)`. Same shapes as CMS
-  thread items.
+  (`>= 0`; Voice utterances; seconds from the xAI Voice connection clock on the
+  committed transcript events; null if none), `provider_event` jsonb nullable
+  (forwarded xAI JSON; Voice only; omit from GET), `created_at` (row insert).
+  Index `(thread_id, created_at)`. Same shapes as CMS thread items.
 - `assistant_runs` — `id`, `onboarding_session_id` fk, `thread_id` fk →
   `ai.threads`, `status` (`running` / `succeeded` / `failed`), `channel`
   (`text` / `voice`), `ai_generation_id` uuid nullable, timestamps. Unique

@@ -68,7 +68,9 @@ The adapter (not the browser) is responsible for:
 4. Pass the full CMS `tools=` list (onboarding: `tools=[]`).
 5. On connection create, set xAI `audio.input.transcription.keyterms` and
    `replace` from `internal/knowledge/voice_pronunciation.yaml` (same create
-   payload as instructions). Do not `session.update` those mid-call.
+   payload as instructions). Do not `session.update` those mid-call. That live
+   Voice connection is the STT: committed transcript events go to
+   `POST …/voice/transcripts`. Do not call `POST /v1/stt`.
 6. Close / drop the connection on CMS **402** `usage_credit_exhausted`.
 
 ## xAI region (business country)
@@ -178,19 +180,19 @@ server-side search / MCP tools (extra per-call fees). Do not use provisioned
 phone numbers. Live Voice uses the xAI region for the **business country**
 ([voice agent](voice-agent.md)).
 
-Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor
-cost**). CMS only. Onboarding guide is not billed
-to the contractor. Go never sees PCM (live audio or the debug recording PUT).
-xAI does not document a token-style usage object on `response.done`; the browser
-measures audio sent + received (and billed text items) and posts that on
-`POST /v1/assistant/voice/transcripts` (onboarding twin under
-`/v1/onboarding/assistant/voice/transcripts`), including a usage-only POST when
-Voice turns off. After CMS Voice ends, the browser PUTs the recording to object
-storage via a signed URL
-([assistant architecture](../features/assistant/architecture.md)). Onboarding
-does **not** PUT a recording; leftover transcripts (text + `offset_seconds`)
-only. Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`. Never say user.
-`created_at` is the row insert time.
+Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor cost**). CMS only. Onboarding
+guide is not billed to the contractor. Go never sees PCM (live audio or the
+debug recording PUT). xAI does not document a token-style usage object on
+`response.done`; the browser measures audio sent + received (and billed text
+items) and posts that on `POST /v1/assistant/voice/transcripts` (onboarding twin
+under `/v1/onboarding/assistant/voice/transcripts`), including a usage-only POST
+when Voice turns off. After CMS Voice ends, the browser PUTs the recording to
+object storage via a signed URL ([assistant architecture](../features/assistant/architecture.md)). Onboarding does
+**not** PUT a recording; leftover transcripts (committed xAI events →
+`offset_seconds`; `provider_event` jsonb) only. Reconstruct `[m:ss owner]` /
+`[m:ss assistant]` from typed `kind` + `offset_seconds` + `body`. Never say
+user. Do not call `POST /v1/stt` or open a second STT socket. `created_at` is
+the row insert time.
 
 Seed knowledge in connection **instructions**. Do not replay the assistant
 thread as billed text items. Nested image/cleanup from a voice tool is another
