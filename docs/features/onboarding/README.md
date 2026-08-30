@@ -17,7 +17,8 @@ Onboarding turns a spoken or typed description of a business into a clear
   `docs/design/onboarding.html`)
 - [design decision record](design-decision-record.md) — onboarding look and interaction
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
-- [assistant.md](assistant.md) — onboarding guide (isolated conversation)
+- [assistant.md](assistant.md) — Find / Review / interview Assistant
+- [website-editor.md](website-editor.md) — unpaid website preview Assistant
 - [testing.md](testing.md) — the onboarding E2E test
 
 Auth is interleaved with onboarding (website activation), but auth and tenancy

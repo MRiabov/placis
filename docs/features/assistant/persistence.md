@@ -44,8 +44,9 @@ as an identity table.
 
 `ai.threads`, `ai.ai_generations`, and `ai.ai_generation_tool_revisions` — see
 [LLM layer](../../general-architecture/llm-layer.md). CMS assistant rows use
-the tenant’s current `cms_assistant` thread (`thread_id` required). Onboarding
-rows use an `onboarding_assistant` thread. Voice: `generation_type` voice;
+the tenant’s current `cms_assistant` thread (`thread_id` required). Unpaid
+onboarding website editor uses that same `current` while unactivated. Onboarding
+guide rows use an `onboarding_assistant` thread. Voice: `generation_type` voice;
 `internal_reasoning` empty if the voice service did not emit it; `output` is
 visible text; `cost_amount` from xAI usage (audio minutes + text-item fees);
 `input_tokens` / `output_tokens` stay null. Record `knowledge_id` +

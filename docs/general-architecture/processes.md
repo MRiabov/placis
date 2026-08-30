@@ -16,9 +16,9 @@ to the API. The Placis website is a separate static origin and does not call Go.
    tenants (no per-tenant build). The website component package is keep-and-cut;
    the Worker is write-thin (live GET never calls Go). Remaining cuts:
    [contractor-website-debloat.md](../features/website/contractor-website-debloat.md). API cutover: [port-contractor-website.md](../features/website/port-contractor-website.md).
-   Website preview is this host while unactivated (FQDN in [website Cloudflare](../features/website/cloudflare.md),
-   strip on). After website activation the same host stays up without the strip.
-   Locked serve path: [website Cloudflare](../features/website/cloudflare.md).
+   The preview website address is this host after share, while unactivated (FQDN
+   in [website Cloudflare](../features/website/cloudflare.md), strip on). After website activation the same host
+   stays up without the strip. Locked serve path: [website Cloudflare](../features/website/cloudflare.md).
 4. **Placis website** (`apps/placis-website`) — Astro static build uploaded to
    R2; hostname `placis.com`. No Worker. Locked serve path:
    [Placis website Cloudflare](../features/placis-website/cloudflare.md).

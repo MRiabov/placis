@@ -123,17 +123,29 @@ collection `POST /v1/onboarding-sessions`.
 
 - **Auth:** onboarding session token
 - **Callers:** `/onboarding/preview` in `frontend-2` (and Review while 02 runs).
-  Not the contractor host.
+  Not the contractor host. Also `/onboarding/preview-and-edit/` while 06 runs.
 - **Transport:** Huma `sse.Register`. Named event structs, for example:
   `checklist_row`, `timeline_step`, `research_wait_until`,
   `website_preview_ready`.
 - **Must not:** unconstrained `payload` object; unknown events parsed as `any`
   (`frontend-2` drops them).
 
+### POST /v1/onboarding-sessions/{id}/preview-website-address
+
+- **Auth:** onboarding session token or Clerk JWT unactivated tenant
+- **Callers:** **Share** on `/onboarding/preview-and-edit/`.
+- **Idempotency-Key:** yes.
+- **Behavior:** [07](pipeline/07-website-preview.md) — reserve prefix if needed,
+  write R2 `latest/` with website-activation strip.
+- **Response:** preview website address URL (`string` + `maxLength`).
+- **Must not:** require website activation; auto-run at wait-end.
+
 ### POST /v1/website-activations/checkout
 
-- **Auth:** Clerk JWT, Host / `website_prefix` (unactivated allowed).
-- **Callers:** website-activation strip island on the preview website address.
+- **Auth:** Clerk JWT, Host / `website_prefix` (unactivated allowed) **or**
+  Clerk JWT unactivated tenant on the **app** origin.
+- **Callers:** website-activation strip island on the preview website address;
+  pay CTA on `/onboarding/preview-and-edit/`.
 - **Idempotency-Key:** yes.
 - **Response:** checkout URL. **Omit** Stripe bodies.
 - **Must not:** website publication; browser Stripe success URL as the source of
@@ -208,14 +220,18 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
   debug/status. Progress is SSE.
 - `GET /v1/onboarding-sessions/{id}/apply-website-template-runs` (+ get/cancel)
   — debug/status.
-- Voice realtime connection — **onboarding assistant (guide):**
+- Voice realtime connection — **onboarding assistant:**
   `POST /v1/onboarding/assistant/voice/realtime-connection`. Created when they
-  turn the **voice guide** on and the microphone is granted, not on Find mount.
+  turn **Assistant** on and the microphone is granted, not on Find mount.
   A prerecorded intro file plays after that grant; live audio after.
   [onboarding assistant](assistant.md). Activated
   owners **403**. First-pass client interview **data entry** is still text
   ([04a](pipeline/04a-text-client-interview.md)). Agent writer
   ([04b](pipeline/04b-voice-client-interview.md)) is out.
+- Onboarding website editor Assistant —
+  `/v1/onboarding/website-editor/assistant/…` (seven routes).
+  [website-editor.md](website-editor.md). Not `/v1/assistant/…`. Not
+  `/v1/onboarding/assistant/…`.
 
 ## Do not create
 

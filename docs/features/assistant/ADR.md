@@ -235,3 +235,54 @@ instead of silently replacing it.
     (STT bias) and `replace` (spoken wording; transcript text unchanged).
     **Placis** is a keyterm; `replace` speaks it **Play-sis**. Do not
     `session.update` those mid-call. (2026-08-30)
+
+25. **Three Assistant implementations, one contractor name** — CMS
+    `/v1/assistant/…` after website activation. Find, Review, and client
+    interview `/v1/onboarding/assistant/…` (Voice only, `tools=[]`). Onboarding
+    website editor `/v1/onboarding/website-editor/assistant/…` on
+    `/onboarding/preview-and-edit/` only (policy wrapper in
+    `internal/onboarding/websiteeditor`). Contractor copy is **Assistant** on
+    all three. Do not relax unactivated **403** `tenant_unactivated` on
+    `/v1/assistant/…`. Do not add `/v1/website/editor/assistant`. CMS HTTP must
+    not import `onboarding/websiteeditor`. (2026-08-30)
+
+26. **Onboarding website editor reuses `ai.threads` (`kind=cms_assistant`)** —
+    Same overlay `thread_items` / `runs`. No `website_editor_*` tables. OpenAPI
+    grows paths, not persistence models. Unpaid `current` while
+    `tenants.status=unactivated`. **No compaction** on that `current` (12h,
+    128K overflow, or Voice compact-before-seed would drop `kind=owner` items
+    and refill the five unpaid prompts). If text assembly would exceed 128K or
+    Voice instructions would not fit, that turn / Voice create fails. 08
+    completes `current` and ends `running` in the **same transaction** as
+    `status=active`. CMS GET lazy-creates a new empty `current`. Five unpaid
+    prompts = count `kind=owner` items on that unpaid `current` (06 does not
+    write owner items). Over cap is pay CTA, not 402. 06 LLM traces stay on a
+    `website_copy_generation` thread. (2026-08-30)
+
+27. **06 is the first unpaid website-preview run** — While unactivated, 06 holds
+    `assistant.runs` `running` (`channel=text`) and appends `tool_summary`.
+    The website preview follows 06 via onboarding SSE + unpublished GET, not the
+    Assistant text socket. Owner send is **409** `in_flight_run` until 06 is
+    idle. After 08, leftover 06 is River-only (`tenant_id` lock, no
+    `assistant.runs`, no new thread items). CMS Assistant / PATCH stay not 409
+    because 06 is running (testing §15). 06 cap stays 3 / 12 / 4. 06 still must
+    not `create_page`. (2026-08-30)
+
+28. **Unpaid instant apply via website PATCH** — Text and Voice on the
+    onboarding website editor force instant apply (ignore `ask_first` / `plan`
+    on the wire). Exception to decision 17 (Voice always Ask first is CMS).
+    No `record-apply` / `record-reject` / `/thread/new` on this tree. Go does
+    not upsert unpublished rows on that turn. Signed-in unactivated **PATCH**
+    on the app origin is the apply path (not a human-vs-Assistant 403).
+    Onboarding session token may GET unpublished website; it must not PATCH and
+    must not send. The preview website address never calls this agent or PATCH.
+    Voice → text STT caveat (decision 22) **does** apply here; “not onboarding”
+    there means Find / Review. Recordings use `assistant_voice` on
+    `assistant.runs`. (2026-08-30)
+
+29. **Wait teaser lands on the website preview** — `/onboarding/preview` then
+    `/onboarding/preview-and-edit/`, not `{website_prefix}.preview.placis.com`.
+    Share is optional on-demand 07 (R2 + strip). 08 does **not** require a
+    prior share: if they never shared, 08 reserves the prefix if needed and
+    writes the first live R2 without strip. Apex `preview.placis.com` is not a
+    tenant site (404). (2026-08-30)

@@ -34,16 +34,25 @@ only `POST` / `PATCH` on `/v1/website/editor/…` from `frontend-2`. No other
 `/v1` route upserts those rows. Onboarding 05/06 write them in River, not via
 these routes.
 
+**Unactivated (app origin only):** unpublished **GET** (pages list, page by id,
+menus) allows onboarding session token or Clerk. **PATCH** (pages, menus)
+allows Clerk + unactivated tenant only (Assistant apply). Onboarding session
+token must not PATCH. Settings / styles / publication stay **active tenant**.
+Preview website address: no website-editor GET/PATCH.
+
 ### GET /v1/website/editor/pages
 
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** website editor workspace (website page list).
+- **Auth:** Clerk JWT, active tenant **or** (app origin) onboarding session
+  token / Clerk JWT unactivated tenant
+- **Callers:** CMS website editor workspace; unpaid website preview
+  (`/onboarding/preview-and-edit/`).
 - **Query:** optional `publication_id` (`website_publications` id from the
   dropdown). Omitted: unpublished list (`status=unpublished`). Set: that owner
   website version’s page summaries. `409` if `published_by=onboarding` or the id
-  is not an owner row.
+  is not an owner row. Unactivated callers omit `publication_id`.
 - **Response:** list of website page `*Read` summaries (id, path, title,
   `page_type`, status).
+- **Must not:** allow this GET on `{website_prefix}.preview.placis.com`.
 
 ### POST /v1/website/editor/pages
 
@@ -54,7 +63,8 @@ these routes.
 
 ### GET /v1/website/editor/pages/{page_id}
 
-- **Auth:** Clerk JWT, active tenant
+- **Auth:** Clerk JWT, active tenant **or** (app origin) onboarding session
+  token / Clerk JWT unactivated tenant
 - **Callers:** canvas hydrate (once per website page select / reload). Reset to
   an owner website version: same GET, then PATCH dirty keys ([editing.md](editing.md)).
 - **Query:** optional `publication_id` (`website_publications` id). Omitted:
@@ -83,7 +93,8 @@ these routes.
 
 ### PATCH /v1/website/editor/pages/{page_id}
 
-- **Auth:** Clerk JWT, active tenant
+- **Auth:** Clerk JWT, active tenant **or** (app origin) Clerk JWT unactivated
+  tenant. Onboarding session token **403**. Preview website address **403**.
 - **Callers:** website editor. At most one PATCH in flight; 500ms coalesce of
   save-on-click-off and discrete actions ([editing.md](editing.md)).
 - **Idempotency-Key:** yes.

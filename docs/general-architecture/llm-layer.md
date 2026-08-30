@@ -92,8 +92,11 @@ Callers do not invent strings at the call site.
   'onboarding_assistant'`.
 
 **`cms_assistant`** — CMS overlay conversation. Unique current per tenant.
-Compaction. GET `/v1/assistant/thread` hydrate (items, not generations).
-Compaction writes a new generation on **this** thread (not its own kind).
+Compaction (skip while `tenants.status=unactivated`). GET `/v1/assistant/thread`
+hydrate (items, not generations). Unpaid onboarding website editor reuses this
+`current` until 08 completes it; CMS GET then lazy-creates a new empty
+`current`. Compaction writes a new generation on **this** thread (not its own
+kind).
 
 **`onboarding_assistant`** — onboarding guide. Unique per onboarding session.
 Onboarding hydrate. Never migrated onto `cms_assistant` after website

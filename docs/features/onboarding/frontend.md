@@ -125,11 +125,11 @@ website pages, not the website editor path.
 
 Wait until **website copy generation finishes** or the **~15s cap**, whichever
 first. The footer shows a progress bar for that cap, painted every animation
-frame ([design decision](design-decision-record.md) 7). Then 07 writes `latest/` and the browser
-**navigates** to the preview website address. Do not paint full website pages
-here. Do not put the website-activation strip on this route (it lives in the
-host HTML). The wait-teaser hero uses the same job-site photo as the site they
-will open. The wait timeline moves to “Opening the site” as the cap ends
+frame ([design decision](design-decision-record.md) 7). Then the browser **navigates** to
+`/onboarding/preview-and-edit/`. Do not paint full website pages here. Do not
+put the website-activation strip on this route (it lives in the host HTML after
+Share). The wait-teaser hero uses the same job-site photo as the site they will
+open. The wait timeline moves to “Opening the site” as the cap ends
 ([design decision](design-decision-record.md) 11). `prefers-reduced-motion` stops the carousel loop and
 jumps the bar in second steps.
 
@@ -139,18 +139,24 @@ website-activation strip ([design decision](design-decision-record.md) 10).
 Paid (the Paid tab) opens the website editor look export with **Publish**
 (`?scene=website&publication=1&from=activation`).
 
-### 5. Website preview + website activation — preview website address
+### 5. Website preview + website activation — `/onboarding/preview-and-edit/`
 
-Static R2 HTML (Cache then R2). Website-activation strip is a Clerk/Stripe
-**island** in that HTML ([07](pipeline/07-website-preview.md), [cloudflare.md](../website/cloudflare.md)). It is
-**sticky to the bottom of the viewport** while the website scrolls
-([design decision](design-decision-record.md) 10). The strip is a white bar with the Placis orb lockup
-(`placis-mark.png`), headline, EUR 4,900, and the activate CTA. Create an
-account, then pay. An existing Clerk session skips to pay. Copy still running
-after they land is not a live update. Success (08) → `/cms/website` (website
-editor, **Publish**). Anyone with the URL may create an account and pay. The
-look export’s paid mock opens the website editor with **Publish**
-(`?scene=website&publication=1&from=activation`).
+Wait teaser `/onboarding/preview` (SSE carousel, ~15s cap) then **navigates to
+`/onboarding/preview-and-edit/`**. Live unpublished canvas. Custom top-left
+control to switch website pages (titles list; not the CMS Website pages rail).
+Canvas top-menu/footer website page clicks stay on this route. Top-right: pay,
+**Share**, **Assistant** (text composer + DustOrb). No Content, no website
+styles rail, no click-to-edit, no design controls. Signed-out: view + switch
+website pages; send/Voice require sign-in.
+
+**Share** (optional) runs [07](pipeline/07-website-preview.md): preview website
+address with website-activation strip. Pay on the website preview **or** on
+that strip ([08](pipeline/08-website-activation.md)). After 08 this route
+redirects to `/cms/website` (website editor, **Publish**).
+
+The look export’s unpaid website preview is `apps/demo/`
+`/onboarding/preview-and-edit`. The static host mock stays `GeneratedPage`
+(`/onboarding/generated`).
 
 ## Resume
 
@@ -160,8 +166,9 @@ session status and whether `latest/` exists win. Screen map: [pipeline README](p
 
 Reload during the wait → stay on `/onboarding/preview`, reconnect SSE, keep
 rotating complete sections, finish the **same** wait (copy done or remaining
-time to the original cap — not a new 15s). Reload after 07 → the host.
-`activated` → `/cms/website`. The host opens without `localStorage`.
+time to the original cap — not a new 15s). Reload after wait-end →
+`/onboarding/preview-and-edit/`. `activated` → `/cms/website`. The preview
+website address (after share) opens without `localStorage`.
 
 Restore failure keeps the token and
 retries; it does not `POST` a new onboarding session.

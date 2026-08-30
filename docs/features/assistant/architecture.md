@@ -395,9 +395,11 @@ text send, second Voice create → 409. Same Voice connection may continue.
 `run_id` + dirty keys in tenant+thread `localStorage`. GET thread still omits
 `runs`.
 
-Onboarding 06 is **not** this table. 06 is River with a `tenant_id` lock. CMS
-is not 409-blocked while 06 finishes. Same website-slot overlap after pay is
-last-write / website PATCH `edit_history_conflict`.
+Onboarding 06 while unactivated **does** hold this table’s unique `running` on
+the unpaid website-preview thread. After 08 leftover 06 is River with a
+`tenant_id` lock only. CMS is not 409-blocked while leftover 06 finishes. Same
+website-slot overlap after pay is last-write / website PATCH
+`edit_history_conflict`.
 
 Onboarding assistant lock is per onboarding session (not `tenant_id`) — see
 [onboarding assistant](../onboarding/assistant.md). Name in-flight 409 on
@@ -427,13 +429,16 @@ so Apply can PATCH. They are not how Go knows a proposal exists. Missing
 `409` `edit_history_conflict`. Apply in one tab: other tabs drop localStorage
 when they see terminal.
 
-Onboarding 06 writes unpublished rows headless (River, no chat UI, no
-`frontend-2`). Do not reparent 06 into the CMS Assistant.
+Onboarding 06 writes unpublished rows headless (River) and, while unactivated,
+appends `tool_summary` on the unpaid thread. The website preview follows
+via onboarding SSE + unpublished GET. Do not reparent 06 into the CMS Assistant
+HTTP. After 08 it must not append thread items.
 
-Ask first vs Instant apply: **website editor text** only. Voice always Ask
-first. Ads: highlight / agent-edited notice on `cleanup_image`; Review **inline
-AI assistance** stays. Details screen: Follow. `update_details` off Details:
-notification (OK / Revert). No owner Plan switch on Voice.
+Ask first vs Instant apply: **CMS website editor text** only. CMS Voice always
+Ask first. Unpaid website preview forces instant apply on text **and** Voice
+([website editor](../onboarding/website-editor.md)). Ads: highlight / agent-edited notice on `cleanup_image`;
+Review **inline AI assistance** stays. Details screen: Follow. `update_details`
+off Details: notification (OK / Revert). No owner Plan switch on Voice.
 
 ## Compaction
 
@@ -449,13 +454,15 @@ thread `id`. Clear context is `POST /v1/assistant/thread/new`, not compaction.
 
 The **same function** runs when text prompt assembly would exceed 128K tokens,
 or when Voice **instructions** would be too large to send (do not wait 12h).
-Not a live-xAI context trim. There is **no 24h discard job**.
+Not a live-xAI context trim. There is **no 24h discard job**. Compaction
+**skips** threads whose tenant is `status=unactivated` (onboarding website
+editor unpaid `current` must not compact).
 
 ## Error map
 
 | `code` | Keys off |
 | --- | --- |
-| `tenant_unactivated` | `tenants.status` not active / `/me.tenant` null |
+| `tenant_unactivated` | `tenants.status` not active |
 | `usage_credit_exhausted` | billing AI use ledger |
 | `in_flight_run` | `assistant.runs` unique running |
 | `allowed_set_rejected` | run `assistant_screen` vs that tool’s screen gate |
@@ -467,6 +474,7 @@ plain **400**, not a named code.
 
 ## Lifecycle
 
-Activated owner: **403** on all onboarding routes. Unactivated: **403**
-`tenant_unactivated` on `/v1/assistant/…`. Do not migrate the onboarding
-conversation onto the CMS thread after website activation.
+Activated owner: **403** on all onboarding routes (Find / Review and onboarding
+website editor). Unactivated: **403** `tenant_unactivated` on `/v1/assistant/…`.
+Unpaid website preview: [onboarding website editor](../onboarding/website-editor.md). 08 completes unpaid
+`current`; do not migrate items onto the CMS thread.

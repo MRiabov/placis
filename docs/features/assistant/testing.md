@@ -70,7 +70,8 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
     `function_call_output` still reaches the voice-service socket. Exhausted
     usage credit drops the CMS realtime connection. Transcripts settlement stays
     `200`.
-12. **Unactivated** — **403** `tenant_unactivated` on `/v1/assistant/…`.
+12. **Unactivated** — **403** `tenant_unactivated` on `/v1/assistant/…`. Unpaid
+    website preview uses `/v1/onboarding/website-editor/assistant/…`.
 13. **Voice idle** — After 30s with no owner speech, frontend closes (leftover
     transcripts with `offset_seconds` + usage posted; CMS recording upload
     (signed URL); realtime connection dropped). Onboarding idle skips the
@@ -82,7 +83,8 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 15. **06 overlap** — Activate (08) while 06 is still writing a website slot; CMS
     PATCH of that website slot is last-write / `edit_history_conflict`, not
     assistant `in_flight_run`. CMS assistant POSTs are not 409 because 06 is
-    running.
+    running. 08 completed unpaid `current` and ended `running` in the same
+    transaction as `status=active`; CMS GET is a new empty `current`.
 16. **Denied microphone** — Shared **notification** **Allow microphone access
     in your browser to talk. You can keep typing.** **Try again** retries
     getUserMedia; **Switch to text mode** opens the composer. Assistant is not
@@ -122,10 +124,24 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
    turn (`offset_seconds` set).
 5. **No `/thread/new`** — That route does not exist on onboarding.
 6. **403 after website activation** — Activated owner cannot call
-   `/v1/onboarding/assistant/…` (or leftover onboarding session routes).
+   `/v1/onboarding/assistant/…` or
+   `/v1/onboarding/website-editor/assistant/…` (or leftover onboarding session
+   routes).
 7. **Voice idle** — Same 30s frontend stop as CMS. Not billed (no 402). Leftover
    transcripts (text + `offset_seconds`) posted; **no** recording upload
    (onboarding does not store Voice recordings).
 8. **Denied microphone** — Cue **Allow microphone access in your browser**.
    Click DustOrb retries. Voice does not stay on. `POST …/realtime-connection`
    was not called.
+
+## Onboarding website editor
+
+One E2E. [website-editor.md](../onboarding/website-editor.md).
+
+1. **Wait → website preview → prompt → pay** — Wait teaser `/onboarding/preview`
+   then
+   `/onboarding/preview-and-edit/`. One signed-in owner prompt. Canvas updates
+   via website-editor PATCH (instant apply). Pay (08). `/cms/website` shows the
+   unpublished change. CMS `GET /v1/assistant/thread` is a new empty `current`
+   (unpaid thread completed). `/v1/assistant/…` was 403 `tenant_unactivated`
+   before pay. Sixth unpaid prompt is out of this story (pay CTA, not 402).

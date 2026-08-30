@@ -234,3 +234,27 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     wall-clock as the conversation clock. Reconstruct
     `[m:ss owner]` / `[m:ss assistant]`. Glossary in knowledge + Voice
     keyterms / `replace`: assistant ADR 23.
+
+21. **Wait teaser lands on the website preview** — `/onboarding/preview` (SSE
+    carousel, ~15s cap) then navigates to `/onboarding/preview-and-edit/`,
+    not the preview website address. Onboarding session `previewing` means the
+    website preview, not that 07 wrote `latest/`. 07 is on-demand **share** from
+    that website preview (strip on). 08 may run with no prior 07: reserve prefix
+    if needed, first live R2 without strip. If they already shared, 08 archives
+    strip HTML and writes live v2. (2026-08-30)
+
+22. **`/me` returns unactivated `TenantRead` after Clerk org attach** —
+    `POST /v1/me/clerk-organization` may attach `tenants.clerk_org_id` without
+    `status=active`. `/me.tenant` is then `TenantRead` with
+    `status=unactivated`. CMS still requires `status=active`. Auth mode 3
+    (active tenant) keys off `tenants.status`, not `/me.tenant` non-null.
+    Unpaid website-preview PATCH and onboarding website-editor Assistant
+    send/Voice are Clerk JWT + unactivated tenant on the app origin (not a
+    sixth auth mode). Onboarding session token may GET unpublished website; it
+    must not PATCH. (2026-08-30)
+
+23. **08 completes the unpaid Assistant thread** — In the same transaction as
+    `tenants.status=active`, complete `ai.threads` `kind=cms_assistant`
+    `current` and end `running`. CMS GET lazy-creates a new empty `current`. Do
+    not migrate unpaid items onto CMS. Leftover 06 continues as River-only.
+    (2026-08-30)

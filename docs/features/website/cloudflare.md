@@ -40,18 +40,18 @@ publication into R2.
 
 - **Website address** — the hostname they supply (`acme.ie`). Live for website
   visitors once DNS and the certificate are ready.
-- **Preview website address** — `{website_prefix}.preview.placis.com`. While
-  unactivated that host is the website preview (static `latest/` +
-  website-activation strip). After 08 it is still a preview website address
-  (same zone) and the live default (strip gone) — never call it website preview
-  then.
+- **Preview website address** — `{website_prefix}.preview.placis.com`. Optional
+  while unpaid (after share, or after 08 if they paid without sharing). Static
+  `latest/` + website-activation strip until 08. After 08 it is still a preview
+  website address (same zone) and the live default (strip gone) — never call it
+  website preview. Apex `preview.placis.com` (no prefix) is **404**.
 - **Website prefix** — `tenants.website_prefix`, the reserved DNS label and R2
-  key, **fixed at 07** from `display_name`. Not a URL.
+  key, **fixed at first 07 share or at 08** from `display_name`. Not a URL.
 - **Website publication** — writes `website_publications` + HTML files. Not a
-  Worker deploy. Onboarding 07/08 call this write (v1 strip on, v2 strip off).
-  Owner CMS publish is v3+.
-- **Website preview** — the sales stage on that host until website activation.
-  Not a token path. Not a per-request render.
+  Worker deploy. Onboarding 07 share / 08 call this write (strip on, then strip
+  off). Owner CMS publish is later versions.
+- **Website preview** — the unpaid editor `/onboarding/preview-and-edit/`. Not
+  the R2 host. Not a token path. Not a per-request render.
 
 SaaS **target** here means the hostname contractors CNAME to (for example
 `customers.placis.com`). That name is a proxied record on our `placis.com` zone
