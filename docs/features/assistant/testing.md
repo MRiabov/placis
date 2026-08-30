@@ -140,8 +140,11 @@ One E2E. [website-editor.md](../onboarding/website-editor.md).
 
 1. **Wait → website preview → prompt → pay** — Wait teaser `/onboarding/preview`
    then
-   `/onboarding/preview-and-edit/`. One signed-in owner prompt. Canvas updates
-   via website-editor PATCH (instant apply). Pay (08). `/cms/website` shows the
-   unpublished change. CMS `GET /v1/assistant/thread` is a new empty `current`
-   (unpaid thread completed). `/v1/assistant/…` was 403 `tenant_unactivated`
-   before pay. Sixth unpaid prompt is out of this story (pay CTA, not 402).
+   `/onboarding/preview-and-edit/`. Unsigned land hydrates `GET …/thread`
+   (onboarding session token) and shows 06 `tool_summary` while copy is still
+   running. Sign up.
+   One signed-in owner prompt after 06 idle. Canvas updates via website-editor
+   PATCH (instant apply). Pay (08). `/cms/website` shows the unpublished change.
+   CMS `GET /v1/assistant/thread` is a new empty `current` (unpaid thread
+   completed). `/v1/assistant/…` was 403 `tenant_unactivated` before pay. Sixth
+   unpaid prompt is out of this story (pay CTA, not 402).

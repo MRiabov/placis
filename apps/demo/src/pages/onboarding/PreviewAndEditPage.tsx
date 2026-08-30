@@ -1,6 +1,7 @@
 import {
   type ReactNode,
   type RefObject,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -8,7 +9,7 @@ import {
 
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
-import { siteHero, siteReviews, siteServices } from "@/lib/site-copy";
+import { type siteHero, siteReviews, siteServices } from "@/lib/site-copy";
 import {
   type ActivationScene,
   ActivationStrip,
@@ -18,6 +19,7 @@ import { Button } from "@/ui/Button";
 import {
   AssistantLaunch,
   AssistantSession,
+  type AssistantThreadItem,
   assistantOrbVars,
   CmsAssistantProvider,
   useCmsAssistant,
@@ -47,6 +49,36 @@ type ServiceRow = { title: string; blurb: string };
 
 type FollowSlot = "hero" | "services" | "contact";
 
+const homeFollow = {
+  page: "home" as PreviewPageId,
+  slot: "hero" as FollowSlot,
+  hero: {
+    kicker: "Dublin emergency roofing",
+    headline: "Emergency roof repairs, same day.",
+    lede: "Storm damage and leaks across Dublin — call 01 555 0199.",
+  },
+};
+
+const servicesFollow = {
+  page: "services" as PreviewPageId,
+  slot: "services" as FollowSlot,
+  services: [
+    {
+      title: "Roof repairs",
+      blurb:
+        "Same-day leak stops after Irish weather. No full strip unless you need one.",
+    },
+    {
+      title: "New roofs",
+      blurb: "Re-roofs with a workmanship guarantee on every job.",
+    },
+    {
+      title: "Guttering",
+      blurb: "Cleaning, replacement, and fascia upgrades.",
+    },
+  ],
+};
+
 const followBeats: Array<{
   page: PreviewPageId;
   slot: FollowSlot;
@@ -54,40 +86,53 @@ const followBeats: Array<{
   services?: ServiceRow[];
   contact?: string;
 }> = [
-  {
-    page: "home",
-    slot: "hero",
-    hero: {
-      kicker: "Dublin emergency roofing",
-      headline: "Emergency roof repairs, same day.",
-      lede: "Storm damage and leaks across Dublin — call 01 555 0199.",
-    },
-  },
-  {
-    page: "services",
-    slot: "services",
-    services: [
-      {
-        title: "Roof repairs",
-        blurb:
-          "Same-day leak stops after Irish weather. No full strip unless you need one.",
-      },
-      {
-        title: "New roofs",
-        blurb: "Re-roofs with a workmanship guarantee on every job.",
-      },
-      {
-        title: "Guttering",
-        blurb: "Cleaning, replacement, and fascia upgrades.",
-      },
-    ],
-  },
+  homeFollow,
+  servicesFollow,
   {
     page: "contact",
     slot: "contact",
     contact:
       "Call 01 555 0199 for emergency roof repairs. We answer evenings and weekends.",
   },
+];
+
+const copyGenBeats: Array<{
+  summary: string;
+  icon?: "write" | "think";
+  page?: PreviewPageId;
+  slot?: FollowSlot;
+  hero?: typeof siteHero;
+  services?: ServiceRow[];
+}> = [
+  {
+    summary: "Updated heading on Hero",
+    page: "home",
+    slot: "hero",
+    hero: homeFollow.hero,
+  },
+  {
+    summary: "Updated text on Hero",
+    page: "home",
+    slot: "hero",
+  },
+  {
+    summary: "Generated image on Hero",
+    page: "home",
+    slot: "hero",
+  },
+  { summary: "Writing Services copy", icon: "think" },
+  {
+    summary: "Updated text on Services",
+    page: "services",
+    slot: "services",
+    services: servicesFollow.services,
+  },
+  {
+    summary: "Updated reviews on Home",
+    page: "home",
+    slot: "hero",
+  },
+  { summary: "Updated SEO" },
 ];
 
 const followFlash =
@@ -124,7 +169,7 @@ function PreviewAndEditInner(): ReactNode {
   const [scene, setScene] = useState<ActivationScene>("unsigned");
   const [panelOpen, setPanelOpen] = useState(false);
   const [shared, setShared] = useState(false);
-  const [hero, setHero] = useState(siteHero);
+  const [hero, setHero] = useState(homeFollow.hero);
   const [services, setServices] = useState<ServiceRow[]>(() =>
     siteServices.map((item) => ({ title: item.title, blurb: item.blurb })),
   );
@@ -132,9 +177,29 @@ function PreviewAndEditInner(): ReactNode {
     "Unpublished website page. Assistant can open this page even when it is not in the top menu.",
   );
   const [followSlot, setFollowSlot] = useState<FollowSlot | null>(null);
+  const [copyRunning, setCopyRunning] = useState(true);
+  const [items, setItems] = useState<AssistantThreadItem[]>(() => [
+    {
+      id: "copy-0",
+      kind: "tool_summary",
+      body: copyGenBeats[0]?.summary ?? "Updated heading on Hero",
+      icon: "write",
+    },
+  ]);
   const beatRef = useRef(0);
+  const copyRef = useRef(1);
   const followTimer = useRef(0);
   const canvasRef = useRef<HTMLDivElement>(null);
+
+  const flashSlot = useCallback((slot: FollowSlot, nextPage: PreviewPageId) => {
+    setPage(nextPage);
+    setFollowSlot(slot);
+    canvasRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    window.clearTimeout(followTimer.current);
+    followTimer.current = window.setTimeout(() => {
+      setFollowSlot(null);
+    }, 1600);
+  }, []);
 
   function applyFollowBeat(): void {
     const beat = followBeats[beatRef.current % followBeats.length];
@@ -142,7 +207,6 @@ function PreviewAndEditInner(): ReactNode {
       return;
     }
     beatRef.current += 1;
-    setPage(beat.page);
     if (beat.hero) {
       setHero(beat.hero);
     }
@@ -152,17 +216,50 @@ function PreviewAndEditInner(): ReactNode {
     if (beat.contact) {
       setContact(beat.contact);
     }
-    setFollowSlot(beat.slot);
-    canvasRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-    window.clearTimeout(followTimer.current);
-    followTimer.current = window.setTimeout(() => {
-      setFollowSlot(null);
-    }, 1600);
+    flashSlot(beat.slot, beat.page);
   }
 
   useEffect(() => {
     return () => window.clearTimeout(followTimer.current);
   }, []);
+
+  useEffect(() => {
+    if (!copyRunning) {
+      return;
+    }
+    const tick = window.setInterval(() => {
+      const beat = copyGenBeats[copyRef.current];
+      if (!beat) {
+        setCopyRunning(false);
+        window.clearInterval(tick);
+        return;
+      }
+      copyRef.current += 1;
+      setItems((current) => [
+        ...current,
+        {
+          id: `copy-${copyRef.current}`,
+          kind: beat.icon === "think" ? "thinking" : "tool_summary",
+          body: beat.summary,
+          icon: beat.icon ?? "write",
+        },
+      ]);
+      if (beat.hero) {
+        setHero(beat.hero);
+      }
+      if (beat.services) {
+        setServices(beat.services);
+      }
+      if (beat.slot && beat.page) {
+        flashSlot(beat.slot, beat.page);
+      }
+      if (!copyGenBeats[copyRef.current]) {
+        setCopyRunning(false);
+        window.clearInterval(tick);
+      }
+    }, 1400);
+    return () => window.clearInterval(tick);
+  }, [copyRunning, flashSlot]);
 
   useEffect(() => {
     setExtraGroups([
@@ -262,6 +359,8 @@ function PreviewAndEditInner(): ReactNode {
         >
           <AssistantLaunch className="pointer-events-auto absolute right-3 bottom-2" />
           <AssistantSession
+            inFlight={copyRunning}
+            items={items}
             onSend={applyFollowBeat}
             onSignUp={() => setScene("signed")}
             signedIn={scene !== "unsigned"}
@@ -385,7 +484,7 @@ function UnpaidCanvas({
 
   return (
     <div
-      className="relative z-0 min-h-0 flex-1 overflow-auto bg-white pb-28"
+      className="relative z-0 min-h-0 flex-1 overflow-auto bg-white pb-56"
       ref={canvasRef}
     >
       <div className="flex flex-wrap items-center justify-between gap-3 bg-site-hero px-8 pt-16 pb-4 text-site-hero-fg">

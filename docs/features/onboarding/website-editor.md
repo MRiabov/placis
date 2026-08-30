@@ -50,7 +50,10 @@ text assembly would exceed 128K or Voice instructions would not fit, that turn
 Prefix `/v1/onboarding/website-editor/assistant`. Same event shapes as CMS.
 Seven routes:
 
-- `GET …/thread` — hydrate; lazy-create empty `current` if needed; omits `runs`
+- `GET …/thread` — hydrate; lazy-create empty `current` if needed; omits
+  `runs`. Onboarding session token **or** Clerk + unactivated (same as
+  unpublished GET). That hydrate is how they see 06 `tool_summary` on first
+  land, still unsigned.
 - `GET …/thread/ws` — text chat
 - `POST …/voice/realtime-connection`
 - `POST …/voice/tool-calls`
@@ -60,8 +63,10 @@ Seven routes:
 
 **Do not add** `thread/new`, `record-apply`, `record-reject`.
 
-Auth: Clerk JWT; tenant from the attached Clerk org; `status=unactivated`; app
-origin. Onboarding session token must **not** call these routes.
+Auth: **GET `…/thread`** allows the onboarding session token or Clerk +
+unactivated tenant (app origin). Send, text `…/thread/ws`, and Voice are
+**Clerk JWT** only; tenant from the attached Clerk org; `status=unactivated`;
+app origin. Onboarding session token must **not** send, PATCH, or call Voice.
 `status=active` → **403** (use `/v1/assistant/…`). The preview website address
 never calls this tree. Activated owners **403**. Unactivated **403**
 `tenant_unactivated` on `/v1/assistant/…`.
@@ -74,10 +79,11 @@ items). After pay, CMS Assistant uses usage credit.
 `in_flight_run` on Voice `tool-calls` must **not** apply to the current voice
 run (same as CMS).
 
-Owner input caps inherit CMS: text **4000** characters, utterance **5000**.
-Follow always on (`follow: false` → 400). 20 tool-using turns; text wrap-up on
-turns 18–20; 21st text inference `tools=[]` plaintext summary then `succeeded`.
-128K / 12K are text `LLMProvider` tokens, not a Voice Go cap.
+Owner input caps inherit CMS: text **4000** characters, utterance **5000**,
+thread items **5000**. Follow always on (`follow: false` → 400). 20 tool-using
+turns; text wrap-up on turns 18–20; 21st text inference `tools=[]` plaintext
+summary then `succeeded`. 128K / 12K are text `LLMProvider` tokens, not a Voice
+Go cap.
 
 ## Allowed tools
 
@@ -94,6 +100,18 @@ tools, `open_ad`. Peek (`get_website_styles`, `get_context_about_screen`): omit.
 the canvas follows `open_website_page` (or the same path the website editor
 uses). `generate_image` in the five is **not billed**. `update_details` allowed;
 whoever pays owns those profile rows.
+
+## Thread
+
+Same chat-like Assistant thread as CMS website editor
+([website frontend](../website/frontend.md)): one list of `thread_items`. Each
+tool is the backend `summary` (`Updated heading on Hero`), pencil for
+`tool_summary`, lightbulb for `thinking`. Never a tool name. Chevrons
+**expand / reduce** the thread (not a hide). **Close** returns to the
+**Assistant** call. No Plan, no Ask first, no Clear context, no Apply / Reject
+pills. Default **expanded** on land so 06 `tool_summary` is visible (wait-end
+is ~15s; copy generation is usually still running). Canvas Follow still snaps
+to the website section being edited.
 
 ## Instant apply
 
@@ -125,8 +143,10 @@ an owner prompt is **409** `in_flight_run` until idle.
 
 The website preview follows 06 via **existing onboarding SSE** (same stream as
 the wait teaser) plus unpublished **GET** (`edit_history_head` from that GET).
-Do not invent `run_status` on hydrate. Do not use the Assistant text socket as
-the 06 progress bus.
+**GET `…/thread`** (onboarding session token or Clerk) hydrates `tool_summary`
+items as they land — that is the in-flight copy UI. Do not invent `run_status`
+on hydrate. Do not use the Assistant text socket as the 06 progress bus. Owner
+send is **409** `in_flight_run` until 06 is idle.
 
 After 08, leftover 06 continues as River-only: lock `tenant_id`, not
 `assistant.runs`. It must not append thread items. CMS assistant / PATCH stay
@@ -151,21 +171,24 @@ Voice create still loads `internal/knowledge/voice_pronunciation.yaml`.
 
 **`/onboarding/preview-and-edit/`** — wait-teaser landing. Signed-out: view the
 canvas from the onboarding session token; switch website pages (custom top-left
-control); compact text composer visible; send and Voice need **Sign up with
-Google**. Signed-in unpaid: live canvas, nested website page list + canvas
-top-menu/footer website page clicks stay on this route, compact text composer
-(**Voice** switch), sticky website-activation strip, **Share**. After **08**,
-redirect to `/cms/website`.
+control); hydrate the Assistant thread (`GET …/thread`); compact text composer
+visible; send and Voice need **Sign up with Google**. Signed-in unpaid: live
+canvas, nested website page list + canvas top-menu/footer website page clicks
+stay on this route, Assistant thread + compact text composer (**Voice** switch),
+sticky website-activation strip, **Share**. After **08**, redirect to
+`/cms/website`.
 
 Look: custom top-left nested control (this website preview only, titles list —
 Services nests website pages; not the CMS Website pages rail). Website page list
 and **Share** float on the canvas. Pay is the sticky website-activation strip.
 Assistant starts as text (compact docked composer, max-width 32rem on a wide
-pane, in front of the website-activation strip’s lift shadow); **Voice** is a
-switch in that composer. Send and Voice need **Sign up with Google**. No owner
-Plan switch. Instant apply. After Sign up, Send and Voice on the look demo snap
-the canvas to the website page being edited (Follow) and apply copy. Reuse CMS
-Assistant tokens.
+pane, in front of the website-activation strip’s lift shadow) with the CMS
+Assistant thread above it (expand / reduce; no Plan / Ask first / Clear
+context). **Voice** is a switch in that composer. Send and Voice need **Sign up
+with Google**. No owner Plan switch. Instant apply. 06 `tool_summary` fills the
+thread on land. After Sign up, Send and Voice on the look demo snap the canvas
+to the website page being edited (Follow) and apply copy. Reuse CMS Assistant
+tokens.
 
 **Preview website address** — after Share (or after 08 if they paid without
 sharing). Cache then R2 + strip. No website preview, no Assistant, no SPA. Pay

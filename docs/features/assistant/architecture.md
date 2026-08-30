@@ -431,7 +431,9 @@ when they see terminal.
 
 Onboarding 06 writes unpublished rows headless (River) and, while unactivated,
 appends `tool_summary` on the unpaid thread. The website preview follows
-via onboarding SSE + unpublished GET. Do not reparent 06 into the CMS Assistant
+via onboarding SSE + unpublished GET, and hydrates those items with
+`GET …/website-editor/assistant/thread` (onboarding session token or Clerk).
+That thread is the in-flight copy UI. Do not reparent 06 into the CMS Assistant
 HTTP. After 08 it must not append thread items.
 
 Ask first vs Instant apply: **CMS website editor text** only. CMS Voice always

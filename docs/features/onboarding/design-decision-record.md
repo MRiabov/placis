@@ -147,4 +147,7 @@ inventing it.
     canvas to the website page being edited and apply copy (Follow, instant
     apply). (2026-08-30) Same day, later: unpaid Assistant stacks above the
     website-activation strip’s lift shadow. (2026-08-30) Same day, later: on a
-    wide pane the composer is max-width 32rem, centered. (2026-08-30)
+    wide pane the composer is max-width 32rem, centered. (2026-08-30) Same day,
+    later: Assistant shows the CMS thread (expand / reduce; no Plan / Ask first
+    / Clear context). Default expanded so 06 `tool_summary` is visible on land.
+    (2026-08-30)

@@ -107,7 +107,22 @@ export function PreviewAndEditPanel({
             Voice need Sign up with Google, then website-editor PATCH.
           </p>
           <div className="mx-auto mt-4 flex w-full max-w-lg flex-col gap-2 rounded-lg border border-border bg-background p-2">
-            <p className="text-xs font-medium">Assistant</p>
+            <div className="flex items-center gap-1">
+              <button
+                aria-label="Reduce"
+                className="grid size-7 place-items-center text-muted-foreground"
+                disabled
+                type="button"
+              >
+                <span aria-hidden="true">▾</span>
+              </button>
+              <p className="text-xs font-medium">Assistant</p>
+            </div>
+            <ul className="grid gap-1.5 text-xs leading-snug text-muted-foreground">
+              <li>Updated heading on Hero</li>
+              <li>Updated text on Hero</li>
+              <li>Generated image on Hero</li>
+            </ul>
             <input
               className="h-11 w-full rounded-md border border-border bg-muted px-3 text-sm"
               placeholder="Change this website page…"

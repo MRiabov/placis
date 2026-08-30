@@ -274,8 +274,9 @@ instead of silently replacing it.
     No `record-apply` / `record-reject` / `/thread/new` on this tree. Go does
     not upsert unpublished rows on that turn. Signed-in unactivated **PATCH**
     on the app origin is the apply path (not a human-vs-Assistant 403).
-    Onboarding session token may GET unpublished website; it must not PATCH and
-    must not send. The preview website address never calls this agent or PATCH.
+    Onboarding session token may GET unpublished website and GET `…/thread`
+    (hydrate only). It must not PATCH and must not send. The preview website
+    address never calls this agent or PATCH.
     Voice → text STT caveat (decision 22) **does** apply here; “not onboarding”
     there means Find / Review. Recordings use `assistant_voice` on
     `assistant.runs`. (2026-08-30)
