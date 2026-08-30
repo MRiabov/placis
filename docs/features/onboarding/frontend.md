@@ -154,7 +154,8 @@ starts as text (compact docked composer, max-width 32rem on a wide pane, in
 front of the website-activation strip’s lift shadow) with the CMS Assistant
 thread above it (expand / reduce; no Plan / Ask first / Clear context; default
 expanded). **Voice** is a switch in that composer. 06 `tool_summary` fills the
-thread on land (`GET …/thread` with the onboarding session token). No Content,
+thread on land (`GET …/thread` with the onboarding session token). While 06 is
+still writing, a six-dot spinner sits under the thread. No Content,
 no website styles rail, no click-to-edit, no design controls. Signed-out: view
 and switch website pages; hydrate the thread; prompt box visible; send and
 Voice need **Sign up with Google**.

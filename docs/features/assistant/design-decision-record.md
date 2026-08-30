@@ -133,4 +133,5 @@ owner-written; omit it rather than inventing it.
     expanded so 06 `tool_summary` is visible on land. (2026-08-30) Same day,
     later: website page list and Share sit on the canvas corners; this route has
     no Find / Review / Questions progress and no Find/Review Assistant.
-    (2026-08-30)
+    (2026-08-30) Same day, later: while copy generation is still writing, a
+    six-dot spinner sits under the Assistant thread. (2026-08-30)

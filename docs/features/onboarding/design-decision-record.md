@@ -153,4 +153,5 @@ inventing it.
     (2026-08-30) Same day, later: this route has no Find / Review / Questions
     progress, no onboarding Back, and no Find/Review Assistant. Website page
     list and Share sit on the canvas corners; they do not reserve a top band.
-    (2026-08-30)
+    (2026-08-30) Same day, later: while copy generation is still writing, a
+    six-dot spinner sits under the Assistant thread. (2026-08-30)
