@@ -169,8 +169,8 @@ Named fields: `code`, `message`, optional `retry_after`.
   `base_edit_history_head` is stale. `frontend-2` re-GETs with
   `include_edit_history=true`.
 - `409` ads — `base_updated_at` mismatch. `frontend-2` re-GETs.
-- `413` — oversize PATCH (website editor body cap 64 KB). Oversize voice
-  recording (`byte_size` over the cap on `POST …/voice/recordings`).
+- `413` — oversize PATCH (website editor body cap 64 KB). Oversize CMS voice
+  recording (`byte_size` over the cap on `POST /v1/assistant/voice/recordings`).
 - `429` — onboarding ETL enqueue cap or over-chatty PATCH. `Retry-After` /
   `research_wait_until`.
 

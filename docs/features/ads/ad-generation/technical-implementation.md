@@ -259,7 +259,8 @@ Routes, `Idempotency-Key`, `base_updated_at` / `409`, and `platform_refs` omit:
 live-website content.
 
 Rewrite and cleanup are the Review directed calls (`rewrite` with required
-`field` + `prompt` and optional selection; `cleanup` with required `prompt`).
+`field` + `prompt` and optional selection — **select to edit inline AI
+assistance**; omit selection = whole field; `cleanup` with required `prompt`).
 There is no unprompted Review `regenerate`.
 
 ## Future Callers Of The Service
@@ -435,9 +436,9 @@ Add Ads under `/cms/ads` in the CMS (`frontend-2`):
 4. the media library, scoped to approved tenant media assets, with framing
    controls
 5. copy fields with live character counts, headline sized to 40 characters,
-   button-label select, and a CMS AI orb on headline and primary text
-   (required prompt, overlay). Short label is typed; no
-   orb.
+   button-label select, and CMS **inline AI assistance** on headline and
+   primary text (required **inline AI assistance prompt**). Short label is
+   typed; no inline AI assistance.
 6. Facebook + Instagram placement for this ad's format, from an existing mock
    kit, live as copy/image change; Meta-like fonts inside the placement; not
    Meta `generatepreviews`
@@ -458,10 +459,10 @@ Allowed AI behavior:
 4. suggest an ideal customer profile from the business profile and business
    research, asynchronously and reviewable
 5. if copy includes a detail, call `update_details` (one shared tool; also the
-   website assistant); do not invent reviews, ratings, years, guarantees
+   Assistant); do not invent reviews, ratings, years, guarantees
    unprompted
-6. rewrite one copy field from a required owner prompt after generate (optional
-   selection; omit = whole field)
+6. rewrite one copy field from a required owner prompt after generate
+   (**select to edit inline AI assistance**; omit selection = whole field)
 7. apply promptable light cleanup of the current photo through
    `POST /v1/media-assets/{id}/image-edits`
 8. summarize the ad set into an owner-readable explanation

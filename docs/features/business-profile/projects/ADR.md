@@ -18,7 +18,9 @@ decision + date) instead of silently replacing the old entry.
 3. **Archive is not delete** — `status` is `active` / `archived`. Archive /
    Unarchive HTTP, not `DELETE`. Archive drops that id from every
    project-gallery website section (then compact). Unarchive returns the row to
-   the list, not onto website sections. (2026-08-29)
+   the list, not onto website sections. (2026-08-29) Same day, later
+   (2026-08-29): `status` is `draft` / `active` / `archived`. Unarchive returns
+   a **project draft**. See decision 5.
 
 4. **Owner action = assistant action** — Projects tools call the same
    `POST` / `PATCH` / archive HTTP as `/cms/projects/{id}`
@@ -30,4 +32,19 @@ decision + date) instead of silently replacing the old entry.
    the resulting `description`. Title and cover PATCH immediately. The LLM never
    sends a full `description` once copy exists (`span` / `quote` / `append` /
    `fill`). Writing on `/cms/projects/{id}` is Ads AI orbs, not Voice and not
-   the website assistant overlay. (2026-08-29)
+   the website assistant overlay. (2026-08-29) Same day, later (2026-08-29):
+   writing on `/cms/projects/{id}` is **inline AI assistance**. Cover is pick.
+   Projects **write** tools are allowed only on the website editor; the
+   Assistant on Projects stays guide.
+
+5. **Create is a project draft** — `POST /v1/projects` / `create_project` /
+   first click-off on New project inserts `status=draft`. **Approve** is
+   `POST /v1/projects/{id}/approve` (empty body, Idempotency-Key; same verb as
+   ads approve). `draft` → `active`. Already `active` on retry: **200**. **409**
+   if not a project draft. Not an assistant tool this pass. Website publication
+   bakes only `active` rows into `website_manifest.projects[]` and
+   `{{projects.*}}`. Draft ids may sit on unpublished galleries; bake omits
+   them (no 409). `POST …/unarchive` returns **project draft**, not silently
+   `active`. Archive still `POST …/archive` (`draft` or `active` → `archived`).
+   Onboarding / already-`active` rows stay `active`. GET list default is
+   non-archived (`draft` + `active`). (2026-08-29)

@@ -123,6 +123,10 @@ func homePrefixes(home string) []string {
 		return []string{"docs/features/business-profile/details", "internal/details"}
 	case "website":
 		return []string{"docs/features/website", "internal/website", "apps/contractor-website"}
+	case "projects":
+		return []string{"docs/features/business-profile/projects", "internal/projects"}
+	case "assistant":
+		return []string{"docs/features/assistant", "internal/assistant"}
 	default:
 		return []string{"docs/features/" + home, "internal/" + home}
 	}
@@ -309,6 +313,7 @@ var extraAllowed = []string{
 	"media picker",
 	"media caption",
 	"media library",
+	"media package",
 	"media asset",
 	"media assets",
 	"media item",
@@ -366,6 +371,9 @@ var extraAllowed = []string{
 	"desktop chrome",
 	"chrome devtools",
 	"headless chrome",
+	"session.update",
+	"company registry record",
+	"company registry records",
 }
 
 func inheritsDontSayContext(line string) bool {

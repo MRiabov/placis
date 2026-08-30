@@ -57,7 +57,9 @@ the same way.
 
 Upsert `google_maps_listings` on `place_id`. Replace child hours on the Details
 chunk. Insert reviews / photo refs whose `external_id` we do not already have.
-Set `latest_fetch_id` to the newest fetch that contributed.
+Set `latest_fetch_id` to the newest fetch that contributed. Set `country` from
+Places address country (`ie` / `gb` / `us`). Do not parse `listing_address` for
+country.
 
 ## Do — transform
 

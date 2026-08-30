@@ -15,8 +15,8 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
 ## Code today
 
 - `frontend-2/src/features/cms/editor/` — canvas, workspace (including Content),
-  media library attach from Content workspace, assistant modal (delete; overlay
-  replaces it), `EditorHeader.tsx`, `CmsEditorLayout.tsx`.
+  media library attach from Content workspace, assistant modal (delete; the
+  Assistant replaces it), `EditorHeader.tsx`, `CmsEditorLayout.tsx`.
 - Don't say inspector: `frontend-2/src/features/cms/editor/inspector/` (Don't
   say inspector: `Inspector.tsx`, `SlotControls.tsx`, `SeoInspector.tsx`,
   `DesignInspector.tsx`, `FormsInspector.tsx`, `HistoryInspector.tsx`,
@@ -44,14 +44,14 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
   fits. Canvas native widths Desktop 1080 / Tablet 760 / Mobile 390; scale down
   to fit the stage (`transform: scale`, never above 1). Do not reflow the
   contractor website to the CMS width. Canvas website scroll pad clears the
-  assistant overlay so last sections stay reachable. On narrow, the open list /
+  Assistant so last sections stay reachable. On narrow, the open list /
   Content title row is compact; the whole row hides the sheet (Add a website
   page stays its own hit).
 - Look clones the placis-web dashboard theme ([CMS design.md](../../general-architecture/cms/design.md),
   [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5). Predecessor `src/styles/cms/` tokens that
   fight this go (cross-cutting file).
 - Canvas via the shared contractor-website component package.
-- Assistant **overlay** pinned to the canvas (default collapsed on wide and
+- **Assistant** pinned to the canvas (default collapsed on wide and
   narrow; wide: one-row composer — chevrons, field, **Plan mode**,
   **Ask first**, **Plan** / **Send**; narrow collapsed stays two rows; expand /
   reduce height; no website dim; **Clear context** trash expanded-only). Apply /
@@ -65,7 +65,8 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
 
 ## Delete
 
-- Assistant toolbar modal / `#assistantModal` — overlay in [frontend.md](frontend.md).
+- Assistant toolbar modal / `#assistantModal` — replaced by the Assistant in
+  [frontend.md](frontend.md).
 - `EditorHeader` **Save** / Saving control (and e2e that clicks Save).
 - Single **Publish** toolbar button — replace with the website publication
   **dropdown** in [frontend.md](frontend.md).

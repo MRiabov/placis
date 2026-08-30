@@ -1,6 +1,6 @@
 # Assistant design decision record
 
-Look and interaction for the CMS assistant overlay and the onboarding assistant
+Look and interaction for the CMS Assistant and the onboarding assistant
 launcher. Architecture: [ADR.md](ADR.md). Tokens: [CMS design.md](../../general-architecture/cms/design.md). CMS nav:
 [CMS design decision record](../../general-architecture/cms/design-decision-record.md). Mocks: [cms.html](../../design/cms.html), [onboarding.html](../../design/onboarding.html).
 
@@ -18,9 +18,13 @@ owner-written; omit it rather than inventing it.
    **website editor only**. Placement: bottom-right of the canvas / overlay
    (website design decision 18 geometry), not a full-screen takeover.
    (2026-08-28) (2026-08-29): The **call** is the **Assistant** button (design
-   decision 11), not hunting for this overlay. Orb / composer look stays this
-   overlay once they have called. Closed until they call. Same day, later: that
-   button is bottom-right of the main pane, not top-right.
+   decision 11), not hunting for this Assistant. DustOrb / composer look stays
+   this Assistant once they have called. Closed until they call. Same day,
+   later: that button is bottom-right of the main pane, not top-right. Same day,
+   later (2026-08-29): do not say **overlay** for this Assistant; the product
+   term is **Assistant**. Plan / Ask first stay website editor **text**. Voice
+   is always Ask first; no owner Plan switch. Follow is always on (not an owner
+   switch).
 
 2. **Look is DustOrb** — Empty field fades to the particle orb. Not website
    design decision 18’s “soft glowing circle” HTML stand-in. Not the 44px Ads
@@ -46,11 +50,14 @@ owner-written; omit it rather than inventing it.
    (Details and other field lists): distinct agent-edited field notice (example:
    the field reads blue). Ads copy highlight can share that notice.
    `update_details` off Details: notification (OK / Revert), not Follow.
-   Headless 06: Follow does not apply. (2026-08-28)
+   Headless 06: Follow does not apply. (2026-08-28) Same day, later
+   (2026-08-29): Follow is always on; not a request field. `follow: false` →
+   400.
 
 5. **Assistant screen switch does not reset the thread** — Overlay stays. Speech
    is not interrupted. Clicks during an in-flight answer coalesce to the screen
    they ended on; that notice rides with the **next** owner turn. (2026-08-28)
+   Same day, later (2026-08-29): say **Assistant**, not overlay.
 
 6. **Onboarding launcher is bottom right, always turnable on** — Grow
    [onboarding.html](../../design/onboarding.html). Every onboarding screen in that mock (Find, Review, client

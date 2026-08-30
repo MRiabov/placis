@@ -90,40 +90,90 @@ Distinct from: Contractor (the business).
 The chat and voice agent in the CMS after website activation. Product guide and
 doer.
 
-Do not say **Website assistant**.
+Do not say **Website assistant**. Do not say **overlay** for this chrome.
 
-Distinct from: Onboarding assistant, Website copy generation.
-
----
-
-### Onboarding assistant
-
-The guide on onboarding screens. Distinct from the CMS assistant and from client
-interview (the field-filling step, not an agent writer). Owner-facing copy on
-onboarding is **guide** / **voice guide**, never **Assistant**.
+Distinct from: Onboarding assistant, Website copy generation, Inline AI
+assistance.
 
 ---
 
-### Assistant thread
+#### Assistant thread
 
 One persisted CMS conversation per tenant. The onboarding assistant has its own
 conversation; do not call that the CMS thread. Never say **session** for this.
 
 ---
 
-### Assistant screen context
+#### Assistant screen context
 
 The complete loaded state of one assistant screen (a CMS screen or an onboarding
 step’s screen). Never say **destination context**.
 
 ---
 
-### Assistant screen switch
+#### Assistant screen switch
 
 The owner moved to another assistant screen relative to the last **owner**
 request. Clicks during an in-flight run do not interrupt speech; the model is
 told on the next owner turn, with the screen they ended on. Never say
 **page switch** or **destination switch**.
+
+---
+
+#### Inline AI assistance
+
+The control on **one** value (copy rewrite; image cleanup or generate on that
+slot; project title or description). Required **inline AI assistance prompt**.
+Not the Assistant, not Voice, not DustOrb. Image generate and cleanup share this
+control; they stay different tools (generate = new library item; cleanup =
+copy-on-write; project cover is pick-only, no generate). Distinct from **Select
+to edit inline AI assistance** (a selected span of copy, not the whole value)
+and Ask first **inline diff** (pending hunks).
+
+---
+
+#### Inline AI assistance prompt
+
+The required prompt on inline AI assistance. Empty does not run. Do not shorten
+to “inline assistance prompt.”
+
+---
+
+#### Select to edit inline AI assistance
+
+Inline AI assistance that rewrites a **selected span** of copy only. Same
+control and required **inline AI assistance prompt**. Do not shorten to “select
+to edit.” Distinct from Inline AI assistance with no selection (the whole
+value). Not image cleanup or generate (no span). Distinct from Ask first
+**inline diff**.
+
+---
+
+#### Follow
+
+The canvas snapping to the website slot the agent is editing (website editor),
+or a distinct agent-edited field notice on form-like screens. Default **on**.
+The owner cannot turn it off.
+
+Distinct from: Voice agent.
+
+---
+
+#### Voice
+
+A channel: the assistant (CMS and onboarding) and the voice agent. Not a
+separate product and not a separate profile.
+
+Distinct from: Voice agent.
+
+---
+
+#### Voice agent
+
+The realtime agent the owner can turn on in the application.
+
+Distinct from: Voice (the channel), Website activation (never say “activate” for
+the voice agent).
 
 ---
 
@@ -190,7 +240,17 @@ Distinct from: Marketing phone.
 
 ---
 
-### Details
+### Profile
+
+The left-nav group in The CMS that holds Details, Projects, Certifications and
+reviews, and the media library. It is not a page and not a record.
+
+Distinct from: Business profile (the data), Details (the Business details
+screen), Profile history (how the business profile changed).
+
+---
+
+#### Details
 
 The screen where the contractor edits the Business details subset of the
 business profile (who they are, contact, hours, logo, Facebook / Maps links).
@@ -201,26 +261,26 @@ Distinct from: Profile (the nav group), Business profile (the record).
 
 ---
 
-### Trade
+#### Trade
 
 The main kind of work the business does. Open text (not a closed list).
 
 ---
 
-### Service
+#### Service
 
 A named thing the business offers, shown on the website and available as an ad
 focus.
 
 ---
 
-### Service area
+#### Service area
 
 A locality the business covers. The owner picks a place on Google Maps.
 
 ---
 
-### Certification
+#### Certification
 
 A trade accreditation the business holds, edited on Certifications and reviews.
 
@@ -228,7 +288,7 @@ Distinct from: Projects (photos of their work).
 
 ---
 
-### Projects
+#### Projects
 
 The contractor’s work shown on the website — jobs with photos — edited
 separately from website sections. Reached from Profile.
@@ -237,7 +297,7 @@ Use “projects” in product docs and UI. Do not say “portfolio”.
 
 ---
 
-### Reviews
+#### Reviews
 
 What people wrote about the business: who wrote it, the rating, and the text.
 Origins: the Google Maps listing, a Facebook business page, or the owner. Filled
@@ -252,7 +312,7 @@ ads featured list), Review citation (the short text shown from a review).
 
 ---
 
-### Top reviews
+#### Top reviews
 
 The ordered list of reviews the owner pinned on Certifications and reviews.
 Earlier in the order is more featured. Ads use this list. It is **not** what
@@ -263,7 +323,7 @@ ordered reviews on one reviews website section.
 
 ---
 
-### Review citation
+#### Review citation
 
 The short text taken from a review for cards, the website, and ads — not a
 paraphrase of the body. Never say bare “citation” for this.
@@ -274,23 +334,43 @@ website section.
 
 ---
 
-### Profile
-
-The left-nav group in The CMS that holds Details, Projects, Certifications and
-reviews, and the media library. It is not a page and not a record.
-
-Distinct from: Business profile (the data), Details (the Business details
-screen), Profile history (how the business profile changed).
-
----
-
-### Profile history
+#### Profile history
 
 The kept record of how the business profile changed.
 
 Do not say “version”, “versioned”, or “snapshot” for this. Distinct from:
 Profile (the nav group), Website version (published checkpoints of the website),
 Website edit history (unpublished website edits).
+
+---
+
+#### Media library
+
+The photo library: the contractor’s work, logos, and documents. Never say bare
+“media” for this library. Reached from Profile. The website editor attaches from
+the same library.
+
+Internal: Media asset, File. Do not say bare “asset” in product docs.
+
+---
+
+#### Media caption
+
+The alt text on a media item. Never say bare “caption”.
+
+---
+
+#### Approved media
+
+A media item the owner has accepted for use.
+
+---
+
+#### Supplied by
+
+Who originated this picture in the media library: the owner, research, or AI.
+
+Distinct from: Source refs (where a detail came from). Never say “provenance”.
 
 ---
 
@@ -329,46 +409,6 @@ One post on that Instagram profile.
 The contractor’s entry in a company registry (Companies House, CRO, or a US
 state registry), used to start onboarding and pre-fill legal details. Never say
 bare “registry record”.
-
----
-
-### Media library
-
-The photo library: the contractor’s work, logos, and documents. Never say bare
-“media” for this library. Reached from Profile. The website editor attaches from
-the same library.
-
-Internal: Media asset, File. Do not say bare “asset” in product docs.
-
----
-
-### Media caption
-
-The alt text on a media item. Never say bare “caption”.
-
----
-
-### Focal point
-
-The pin on a photo in the media library that marks the part that should stay in
-view when the photo is cropped. Owner copy is **Focal point**, not bare
-“focal”.
-
-Distinct from: Crop (the rectangle).
-
----
-
-### Approved media
-
-A media item the owner has accepted for use.
-
----
-
-### Supplied by
-
-Who originated this picture in the media library: the owner, research, or AI.
-
-Distinct from: Source refs (where a detail came from). Never say “provenance”.
 
 ---
 
@@ -413,6 +453,14 @@ business research, one business profile, then an unpublished website and a
 website preview. It ends at website activation (paid). Never call this “setup”.
 
 Distinct from: Onboarding session (the persisted run).
+
+---
+
+#### Onboarding assistant
+
+The guide on onboarding screens. Distinct from the CMS assistant and from client
+interview (the field-filling step, not an agent writer). Owner-facing copy on
+onboarding is **guide** / **voice guide**, never **Assistant**.
 
 ---
 
@@ -502,8 +550,9 @@ Distinct from: Placis website.
 The website after applying the website template, before website publication.
 Website visitors do not see it.
 
-Do not say bare “draft”. An ad in draft is an Ad states value; say “ad draft” if
-you must.
+Do not say bare “draft”. An ad in draft is an Ad states value; say **ad draft**.
+A project in draft is a Project states value; say **project draft**. The
+unpublished website is not a draft.
 
 Distinct from: Website preview (the sales stage where they choose to buy), Live
 website.
@@ -648,7 +697,10 @@ apply (no Apply / Reject), Ask first (Apply / Reject), Website copy generation
 The assistant shows Apply / Reject before an edit lands. Opposite of Instant
 apply.
 
-Distinct from: Instant apply, Website assistant plan.
+Distinct from: Instant apply, Website assistant plan, Inline AI assistance
+(one-value control; not Apply / Reject hunks), Select to edit inline AI
+assistance (span rewrite, not pending hunks). The **inline diff** on Ask first
+is the pending canvas hunks, not the inline AI assistance prompt.
 
 ---
 
@@ -851,6 +903,45 @@ Distinct from: Website activation (the one-time pay).
 
 ---
 
+#### AI vendor cost
+
+What OpenRouter / the model / image vendors invoice us (token and per-image
+lines). **Our cost** is that invoice. **Their cost** is ×5 on Usage & billing.
+
+Do not say **meter**.
+
+Distinct from: AI voice vendor cost.
+
+---
+
+#### AI voice vendor cost
+
+What xAI invoices for Voice: audio minutes (both directions) plus text
+`conversation.item.create` fees. **Our cost** is that invoice. **Their cost** is
+×5 on Usage & billing.
+
+Do not say **meter** / **audio meter**.
+
+Distinct from: AI vendor cost.
+
+---
+
+#### Our cost
+
+The AI vendor cost or AI voice vendor cost invoice.
+
+Distinct from: Their cost.
+
+---
+
+#### Their cost
+
+×5 our cost, shown on Usage & billing.
+
+Distinct from: Our cost.
+
+---
+
 #### Usage credit
 
 The credit the owner spends on billed work (assistant text, image
@@ -998,6 +1089,25 @@ carousel is several cards; a story is almost always one image.
 
 ---
 
+### Projects
+
+#### Project states
+
+Where a project stands:
+
+- **Project draft** — created or edited; not in the next website publication
+  bake until Approve.
+- **Active** — ready for the next website publication bake (`projects[]` /
+  `{{projects.*}}`).
+- **Archived** — left the list; dropped from unpublished project-gallery
+  website sections.
+
+Never say bare “draft”. Do not copy ads **ad needs review** / **ad ready to
+post** onto projects. Unarchive returns a **project draft**, not silently
+active.
+
+---
+
 ### Billing
 
 #### Subscription tier
@@ -1062,29 +1172,52 @@ In code: `ai_use_ledger`.
 
 The YAML that names which owner-facing markdown files belong to one assistant’s
 knowledge base (`cms_knowledge_base_registry.yaml` /
-`onboarding_knowledge_base_registry.yaml`). Never in PRDs or UI. Never say
-**catalog** for this YAML.
+`onboarding_knowledge_base_registry.yaml`). Both list the shared product
+glossary (`internal/knowledge/product_glossary.md`). Never in PRDs or UI. Never
+say **catalog** for this YAML.
 
 Distinct from: Assistant screen context; website style catalog.
 
 ---
 
-### Website editor tools
+### Assistant
+
+Internal tool-registry names for the CMS Assistant. Never in PRDs or UI.
+
+---
+
+#### Website editor tools
 
 The named tool registry for the website editor assistant screen. Not a product
 term. Not “website assistant.”
 
 ---
 
-### Ads tools
+#### Ads tools
 
-The named tool registry for the Ads assistant screen. Not a product term.
+The named tool registry for the Ads assistant screen. Not a product term. Full
+CMS `tools=` is always loaded; this is not a swapped list on navigation.
 
 ---
 
-### Per-screen tools
+#### Per-screen tools
 
-Internal. The named tool registry for that assistant screen.
+Internal. The named tool registry for that assistant screen. Full CMS `tools=`
+is always loaded; the **allowed set** is the execution gate. Do not swap
+`tools=` on assistant screen switch.
+
+Distinct from: Always executable.
+
+---
+
+#### Always executable
+
+Internal. The CMS tools Go will execute on **any** assistant screen. Not “the
+only tools the model sees” (full `tools=` is always loaded). Never say
+**General** for this subset.
+
+Distinct from: Per-screen tools (screen-gated allowed set), Website editor
+tools, Ads tools.
 
 ---
 
@@ -1233,34 +1366,6 @@ describe the questions).
 
 ---
 
-#### Voice
-
-A channel: the assistant (CMS and onboarding) and the voice agent. Not a
-separate product and not a separate profile.
-
-Distinct from: Voice agent.
-
----
-
-#### Voice agent
-
-The realtime agent the owner can turn on in the application.
-
-Distinct from: Voice (the channel), Website activation (never say “activate” for
-the voice agent).
-
----
-
-#### Follow
-
-The canvas snapping to the website slot the agent is editing (website editor),
-or a distinct agent-edited field notice on form-like screens. Default **on**.
-The owner cannot turn it off.
-
-Distinct from: Voice agent.
-
----
-
 ### Website
 
 #### Website placeholder
@@ -1345,10 +1450,10 @@ home marker says the unqualified word is self-understood there.
 `Don't say | Say` header, separator, data rows, and end the section at the
 next `##` heading. Unmarked =
 nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` /
-`(billing)` = unqualified only in that feature’s technical docs (not `prd.md`,
-not `frontend.md`) and later `internal/<home>/`; `(website)` also covers
-`apps/contractor-website`. Other features use the Say. `(in a PRD)` is only for
-`CMS`. Leftover `(bare)` is unmarked. Worked examples:
+`(billing)` / `(assistant)` / `(projects)` = unqualified only in that feature’s
+technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
+`(website)` also covers `apps/contractor-website`. Other features use the Say.
+`(in a PRD)` is only for `CMS`. Leftover `(bare)` is unmarked. Worked examples:
 `cmd/ci/check-dont-say/ref.md`.
 
 | Don't say | Say |
@@ -1386,7 +1491,7 @@ not `frontend.md`) and later `internal/<home>/`; `(website)` also covers
 | preview package | website preview |
 | claim / website claim (activation) | website activation |
 | marketing claim / advertising claim / unsupported claim | marketing statement / unsupported marketing statement |
-| draft (website, ads) | unpublished website, or ad draft (Ad states) |
+| draft (website, ads, projects) | unpublished website, ad draft (Ad states), or project draft (Project states) |
 | template (website) | website template |
 | page (website) / section (website) / styles (website) | website page / website section / website style or website styles |
 | slot (website) | heading, text, or image on that website section. Internal: website slot |
@@ -1459,6 +1564,8 @@ not `frontend.md`) and later `internal/<home>/`; `(website)` also covers
 | Pro Plus (billing) / Pro Max (billing) / Placis Pro Plus (billing) / Placis Pro Max (billing) | Placis Pro Plus plan / Placis Pro Max plan |
 | Placis Pro (billing) / Pro (billing) | Placis Pro plan |
 | Enterprise (billing) | Enterprise plan |
+| meter | AI vendor cost or AI voice vendor cost (or our cost / their cost) |
+| AI orb (ads) / Ads orb (ads) | inline AI assistance |
 
 ## Code naming rules
 

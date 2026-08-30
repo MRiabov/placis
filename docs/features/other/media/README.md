@@ -26,10 +26,11 @@ stay on `/cms/media`.
 ## Callers (same functions)
 
 `/cms/media`, the website editor PATCH, the assistant (`update_slot`,
-`cleanup_image`), and the ads Review orb call these same functions. The
-assistant does not get a second attach, crop, focal, or cleanup path. Ads
-Review, when it writes a copy, POSTs `/v1/media-assets/{id}/image-edits` and
-then PATCHes **that** placement — not `POST /v1/ads/…/cleanup`.
+`cleanup_image`), and ads Review **inline AI assistance** call these same
+functions. The assistant does not get a second attach, crop, focal, or cleanup
+path. Ads Review, when it writes a copy, POSTs
+`/v1/media-assets/{id}/image-edits` and then PATCHes **that** placement — not
+`POST /v1/ads/…/cleanup`.
 
 Replace and first upload take the file, so they stay on `/cms/media` / website
 editor drop. The assistant has no replace or upload tool (no file on a tool).
@@ -78,15 +79,15 @@ item). Caption, crop, focal point, replace, AI cleanup.
 **Look.** A large **view** of the selected photo (the frame follows landscape,
 square, or portrait; the photo is not forced square). That same view is where
 they compare cleanup. Promptable AI cleanup sits in a prompt box **beside** the
-view on a wide screen and **under** it on a narrow screen — not the Ads Review
-overlay orb. Same light cleanup as ads / the assistant `cleanup_image`
-(declutter, tidy background; not invent work). Required overlay prompt,
-`maxLength` 500, on `POST …/image-edits`. Empty prompt is rejected. First upload
-may already have run a tailored default; this prompt is a **different** cleanup.
-Cleanup takes **5–10 seconds**. The large view stays on the photo with
-**Cleaning up…**, a scan across the photo, and a filling bar. Then the view is
-the ads **before/after sweep** (drag the divider to
-clip, not resize) with **Accept** / **Reject**. Accept keeps the copy
+view on a wide screen and **under** it on a narrow screen — not Ads Review
+**inline AI assistance**. Same light cleanup as ads / the assistant
+`cleanup_image` (declutter, tidy background; not invent work). Required
+**inline AI assistance prompt**, `maxLength` 500, on `POST …/image-edits`. Empty
+prompt is rejected. First upload may already have run a tailored default; this
+prompt is a **different** cleanup. Cleanup takes **5–10 seconds**. The large
+view stays on the photo with **Cleaning up…**, a scan across the photo, and a
+filling bar. Then the view is the ads **before/after sweep** (drag the divider
+to clip, not resize) with **Accept** / **Reject**. Accept keeps the copy
 (`pending_review`) — no Accept HTTP, not `POST …/approve`. Reject is
 `POST …/reject` (archives the copy).
 

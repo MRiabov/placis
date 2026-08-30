@@ -40,8 +40,9 @@ Root:
 - `show_contact` (bar CTA to the Contact website page)
 - `website_forms[]` (`form_key`, `title`, `fields[]`, `privacy_notice`)
 - slim `projects[]` (`id`, `title`, `description`, cover URL + media caption) —
-  baked at website publication. Same staleness as Details. Not a live query of
-  `/cms/projects`.
+  baked at website publication from **active** project rows only (skip
+  `draft`). Same staleness as Details. Not a live query of `/cms/projects`.
+  Draft ids on unpublished galleries are omitted from this bake (no 409).
 - slim selected `certifications[]` (`id`, `name`, `short_label`, badge URL)
 
 Per website page:

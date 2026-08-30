@@ -136,8 +136,9 @@ One accordion wrapper with two expandable steps; both are visible immediately:
   after the first generate (not on the About the ad title, and not before the
   first generate). It unlocks so the owner can change format, audience, offer,
   or the ad lead form questions, then **Generate again** — changing format
-  regenerates this ad ([ADR 33](ADR.md)). Revise is not the Review **AI orb** (that
-  rewrites one copy field or prompts a different cleanup of the current photo).
+  regenerates this ad ([ADR 33](ADR.md)). Revise is not the Review
+  **inline AI assistance** (that rewrites one copy field or prompts a different
+  cleanup of the current photo).
 - **Step 2 — Review**: visible but locked — its title reads "Complete step 1 to
   unlock". It expands once step 1 is complete; step 2 itself is collapsible.
 - **AI loading state**: after **Create ad and generate**, a brief loading bar on
@@ -190,18 +191,19 @@ The questions and review content:
    (reviewable **before/after sweep viewer** — drag the divider to clip, not
    resize, the photo — with Accept/Reject). First upload already ran a tailored
    default cleanup from visual-issue classification (ranked hints on Cleanup
-   edit). After generate, an AI orb asks for a **different** cleanup (required
-   prompt, overlay) and POSTs `/v1/media-assets/{id}/image-edits` (same as the
-   assistant `cleanup_image`) — not a photo picker and not
-   `POST /v1/ads/…/cleanup`. Reject is `POST /v1/media-assets/{id}/reject`. The
-   sweep's size follows this ad's format: Square feed and Carousel cards are
-   1:1, Portrait feed is 4:5, Story is 9:16. The **photo strip is always shown**
-   — the LLM proposes, the owner picks. Square feed, Portrait feed, and Story
-   are **one image**: tapping a thumb uses that photo for the ad (single
-   select). Carousel is several square cards: tapping a thumb picks which card
-   the cleanup viewer shows. Crops follow the selected format automatically from
-   the **photo's stored focal point** (one anchor). Thumbs are the photo only —
-   no media caption overlay (alt stays on the image). (2026-08-28) Previous:
+   edit). After generate, an inline AI assistance asks for a **different**
+   cleanup (required prompt, overlay) and POSTs
+   `/v1/media-assets/{id}/image-edits` (same as the assistant `cleanup_image`) —
+   not a photo picker and not `POST /v1/ads/…/cleanup`. Reject is
+   `POST /v1/media-assets/{id}/reject`. The sweep's size follows this ad's
+   format: Square feed and Carousel cards are 1:1, Portrait feed is 4:5, Story
+   is 9:16. The **photo strip is always shown** — the LLM proposes, the owner
+   picks. Square feed, Portrait feed, and Story are **one image**: tapping a
+   thumb uses that photo for the ad (single select). Carousel is several square
+   cards: tapping a thumb picks which card the cleanup viewer shows. Crops
+   follow the selected format automatically from the
+   **photo's stored focal point** (one anchor). Thumbs are the photo only — no
+   media caption overlay (alt stays on the image). (2026-08-28) Previous:
    thumbnail labels were the media caption, two lines, full media caption on
    hover. Until the media caption is written, the thumb has no media caption
    line (not an error). A newly added photo shows **Uploading…** only while the
@@ -215,14 +217,16 @@ The questions and review content:
 6. **Text** — headline (input sized to 40 characters, not full-bleed), primary
    text, short label, button label, and the suggested **ad lead form title**.
    Live character counts against the shared limits; button label from Meta’s
-   fixed enum (no AI orb on the CTA). After the first unprompted generate, each
-   copy field except the CTA has the CMS **AI orb**, sized to the 44px field
-   height (not the 34px chat orb). Selecting a span opens a prompt
-   **overlay above that selection**. Orb click with no selection rewrites the
-   whole field (Ctrl+Z restores the previous text). Prompt text is required;
-   submit stays disabled while blank. Optional selection on rewrite; omit means
-   the whole field. Other owner edits are kept. Result is still editable. Not
-   the assistant chat. (2026-08-28) Short label has no AI orb.
+   fixed enum (no inline AI assistance on the CTA). After the first unprompted
+   generate, each copy field except the CTA has the CMS
+   **inline AI assistance**, sized to the 44px field height (not the 34px
+   DustOrb). **Select to edit inline AI assistance** opens the
+   **inline AI assistance prompt** above that span. Click with no selection
+   rewrites the whole field (Ctrl+Z restores the previous text). Prompt text is
+   required; submit stays disabled while blank. Optional selection on rewrite;
+   omit means the whole field. Other owner edits are kept. Result is still
+   editable. Not the assistant chat. (2026-08-28) Short label has no inline AI
+   assistance.
 7. **Ad format preview** — the selected format, rendered from the backend
    response, as **Facebook and Instagram** placements from an existing
    dual-platform mock kit (title / image / actions; add **Sponsored** and the
@@ -246,14 +250,15 @@ Actions:
   (ad posting is future work).
 - **Download** — produces the zip of the ad set (temporary step until direct
   transmission to Meta exists).
-- **AI orb (Review)** — after generate: promptable rewrite of headline or
-  primary text, and promptable cleanup of the current photo via
-  `POST /v1/media-assets/{id}/image-edits` (prompt required for a different
+- **inline AI assistance (Review)** — after generate: promptable rewrite of
+  headline or primary text (**select to edit inline AI assistance** on a span;
+  no selection is the whole field), and promptable cleanup of the current photo
+  via `POST /v1/media-assets/{id}/image-edits` (prompt required for a different
   cleanup; the upload default already ran). Reject:
   `POST /v1/media-assets/{id}/reject`. Replaces unprompted **Regenerate**. Marks
   **ad needs review**. Owner-typed or owner-prompted marketing statements are
   allowed. If they include a detail, **`update_details`** writes the business
-  profile (one shared tool; also the website assistant). A **notification** (OK
+  profile (one shared tool; also the Assistant). A **notification** (OK
   / Revert) appears bottom-right. Approve is not blocked. Conservative first ad
   draft is still unprompted.
 - **Revise** — on the generate row after the first generate: unlocks the
@@ -349,14 +354,15 @@ needs it):
 - FramingControls (adjust how a photo is framed; touch-friendly)
 - CleanupReview (before/after per image, accept/reject; frame matches the ad
   format's ratio; photo strip always visible — single-select for one-image
-  formats, card select for carousel; the CMS AI orb on cleanup with a required
-  overlay prompt for a different cleanup, calling the shared media library
-  cleanup)
+  formats, card select for carousel; the CMS inline AI assistance on cleanup
+  with a required overlay prompt for a different cleanup, calling the shared
+  media library cleanup)
 - CopyEditor (fields + character counts + CTA select + ad lead form title;
   headline ~40ch wide; field labels match the rest of the step — uppercase 11px
-  muted; the CMS AI orb on headline and primary text — 44px,
-  matching the field; prompt overlay, required; highlight
-  to edit a span. Short label is typed; no orb)
+  muted; the CMS inline AI assistance on headline and primary text — 44px,
+  matching the field; required **inline AI assistance prompt**; **select to
+  edit inline AI assistance** on a span. Short label is typed; no inline AI
+  assistance)
 - AdPreview (Facebook + Instagram placement for this ad's one format, from an
   existing mock kit; Meta-like fonts inside the placement, the CMS fonts on our
   card label; labels are owner-facing, no ratios; shows a brief empty note when
@@ -429,7 +435,7 @@ Mobile is a primary viewport. Ads must work on a mobile device:
 
 - Workspace statuses: list badges, accordion flow (step 1 pinned, confirmed
   after generate with Revise next to Generate again, step 2 lock/unlock), copy
-  limits, inline validation errors, approve at the bottom, AI-orb
+  limits, inline validation errors, approve at the bottom, inline AI assistance
   rewrite/cleanup preserving other fields' manual edits (empty prompt does not
   fire; Ctrl+Z restores an LLM rewrite and cleanup Accept; owner-prompted
   details call `update_details` and a notification, Approve is not blocked)

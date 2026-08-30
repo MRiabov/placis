@@ -213,3 +213,16 @@ retrieved text is not fast extract.)
     vs the Details panel; legal identity stays on Review (03) and is not
     repeated; interview may add photos, certifications, reviews, extra notes,
     contact name, and `emergency_phone` around that Details block. (2026-08-28)
+
+20. **Onboarding Voice stores text, not audio** — After the voice guide ends,
+    persist committed owner and assistant utterances (visible text) and
+    `created_at` on each conversation item (when that speech/response was
+    posted). Do not PUT a recording to object storage. Live audio is processed
+    by xAI on **eu-west-1** and is not kept by us. Online research consent is
+    not Voice-recording consent. (2026-08-30) Same day, later: xAI region
+    follows the **business country** (registry, else Maps address country,
+    else Find country) — not blanket eu-west-1. See assistant ADR 22. Same day,
+    later: persist Voice **`offset_seconds`** (from that run’s start), not
+    wall-clock as the conversation clock. Reconstruct
+    `[m:ss owner]` / `[m:ss assistant]`. Glossary in knowledge + Voice
+    keyterms / `replace`: assistant ADR 23.

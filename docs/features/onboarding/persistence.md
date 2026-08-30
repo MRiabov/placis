@@ -15,12 +15,13 @@ Isolated from CMS `assistant.threads`. Never migrated after website activation.
   `last_activity_at`, timestamps.
 - `assistant_conversation_items` — `id`, `onboarding_session_id` fk,
   `conversation_id` fk, `kind` (`owner` / `assistant` / `tool_summary` /
-  `thinking`), `body`, `icon`, `created_at`. Index `(conversation_id,
+  `thinking`), `body`, `icon`, `offset_seconds` int nullable (`>= 0`; Voice
+  utterances; seconds from that Voice run’s start; null if none), `created_at`
+  (row insert). Index `(conversation_id,
   created_at)`. Same shapes as CMS thread items.
 - `assistant_runs` — `id`, `onboarding_session_id` fk, `conversation_id` fk,
   `status` (`running` / `succeeded` / `failed`), `channel` (`text` / `voice`),
-  `ai_generation_id` uuid nullable, `recording_file_id` uuid nullable fk
-  (`files`; voice only), timestamps. Unique
+  `ai_generation_id` uuid nullable, timestamps. Unique
   `(onboarding_session_id) WHERE status = 'running'`.
 
 ## Onboarding sessions and client interview
