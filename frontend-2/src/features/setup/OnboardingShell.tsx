@@ -13,6 +13,7 @@ import {
 import { useSetupOnboarding } from "./model/useSetupOnboarding";
 import { GenerationPanel } from "./research/PreviewProgressPanels";
 import {
+  WAIT_TEASER_CAP_MS,
   waitTeaserBlocked,
   waitTeaserShouldOpenPreview,
 } from "./research/waitTeaser";
@@ -59,35 +60,62 @@ export function OnboardingShell(): ReactNode {
   useEffect(() => {
     if (!state.step.equals(OnboardingStep.Generating)) {
       waitStartedRef.current = null;
+      try {
+        window.sessionStorage.removeItem(
+          "placis.contractorOnboarding.waitStartedAt",
+        );
+      } catch {
+        // Browser storage can be disabled.
+      }
       return;
     }
     if (waitTeaserBlocked(state.progressEvents)) {
       return;
     }
     if (waitStartedRef.current === null) {
-      waitStartedRef.current = performance.now();
+      try {
+        const stored = window.sessionStorage.getItem(
+          "placis.contractorOnboarding.waitStartedAt",
+        );
+        waitStartedRef.current = stored ? Number(stored) : Date.now();
+        if (!stored) {
+          window.sessionStorage.setItem(
+            "placis.contractorOnboarding.waitStartedAt",
+            String(waitStartedRef.current),
+          );
+        }
+      } catch {
+        waitStartedRef.current = Date.now();
+      }
     }
-    const tryOpen = (now: number): boolean => {
-      const elapsed = now - (waitStartedRef.current ?? now);
-      if (!waitTeaserShouldOpenPreview(state.progressEvents, elapsed)) {
-        return false;
+    const elapsed = Date.now() - waitStartedRef.current;
+    if (waitTeaserShouldOpenPreview(state.progressEvents, elapsed)) {
+      try {
+        window.sessionStorage.removeItem(
+          "placis.contractorOnboarding.waitStartedAt",
+        );
+      } catch {
+        // Browser storage can be disabled.
       }
       actions.changeStep(OnboardingStep.PreviewAndEdit);
-      return true;
-    };
-    if (tryOpen(performance.now())) {
       return;
     }
-    let frame = 0;
-    const tick = (now: number): void => {
-      if (tryOpen(now)) {
+    const remaining = Math.max(0, WAIT_TEASER_CAP_MS - elapsed);
+    const timeout = window.setTimeout(() => {
+      if (waitTeaserBlocked(state.progressEvents)) {
         return;
       }
-      frame = window.requestAnimationFrame(tick);
-    };
-    frame = window.requestAnimationFrame(tick);
+      try {
+        window.sessionStorage.removeItem(
+          "placis.contractorOnboarding.waitStartedAt",
+        );
+      } catch {
+        // Browser storage can be disabled.
+      }
+      actions.changeStep(OnboardingStep.PreviewAndEdit);
+    }, remaining);
     return () => {
-      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
     };
   }, [actions.changeStep, state.progressEvents, state.step]);
 
