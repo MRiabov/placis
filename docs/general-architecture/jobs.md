@@ -20,7 +20,7 @@ must not block the website preview link.
 
 River job **and** the same in-process function. Triggers:
 
-- `assistant.threads.last_activity_at` older than **12 hours**
+- `ai.threads.last_activity_at` older than **12 hours** (`kind=cms_assistant`)
 - **text** `LLMProvider` prompt assembly would exceed **128K tokens**
 - Voice **instructions** seed would be too large to send (`realtime-connection`
   create — not mid-utterance)
@@ -28,15 +28,15 @@ River job **and** the same in-process function. Triggers:
 Keep the last **3 owner** and last **3 assistant** `thread_items` (plus
 `tool_summary` / `thinking` in that tail). Older items become **one**
 `assistant` summary in place; `compacted_through_item_id` advances. Kept Voice
-items keep `offset_seconds`. Summarize
-with a cheap flash model (DeepSeek V4 Flash or current Qwen Flash —
-**pin a dated id**, not `*-latest`). Write a new `ai_generations` row for that
-call (`thread_id` set). Does **not** debit usage credit (maintenance, not an
-owner turn). Does not rewrite existing `ai_generations` rows. Compaction prompt
-is assistant `prompts.yaml` (not Go). It does **not** include a pending
-Ask-first reject notice as a special case. It
-**does** include the Voice STT caveat when the thread has a `channel=voice` run.
-Not a live xAI Voice connection trim. There is no 24h discard.
+items keep `offset_seconds`. Summarize with a cheap flash model (DeepSeek V4
+Flash or current Qwen Flash — **pin a dated id**, not `*-latest`). Write a new
+`ai_generations` row for that call (on that `cms_assistant` thread). Does
+**not** debit usage credit (maintenance, not an owner turn). Does not rewrite
+existing `ai_generations` rows. Compaction prompt is assistant `prompts.yaml`
+(not Go). It does **not** include a pending Ask-first reject notice as a special
+case. It **does** include the Voice STT caveat when the thread has a
+`channel=voice` run. Not a live xAI Voice connection trim. There is no 24h
+discard.
 
 Onboarding [website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md) stays a River job with its own cap (3 steps
 / 12 calls / 4 website pages), not the CMS agent’s 20 model turns.

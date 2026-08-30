@@ -14,9 +14,9 @@ is how the system behaves. Do not retell this file in api or persistence.
   always allowed.
 - Product knowledge: owner-facing markdown compiled into the Go binary. Not RAG.
   Not feature `docs/`. Not `internal/ai` (that package is `LLMProvider` +
-  traces). **Exception:** both registries list the product glossary (Domain +
-  Enums + Don't say from [glossary](../../glossary.md); not Internal, not Why)
-  so CMS text, CMS Voice, and the onboarding voice guide use the same words.
+  threads + traces). **Exception:** both registries list the product glossary
+  (Domain + Enums + Don't say from [glossary](../../glossary.md); not Internal, not Why) so CMS
+  text, CMS Voice, and the onboarding voice guide use the same words.
 
 Two knowledge bases, two YAML registries (they do not share `prompts.yaml`):
 
@@ -295,8 +295,8 @@ stays the website-editor Assistant switch.
 only a **second start**, not the current voice run.
 
 Both paths append the **assistant thread** as they run. Parallel write:
-`ai.ai_generations` (audit, `thread_id` set). Assistant thinking (lightbulb) is
-`thread_items.kind=thinking` written at turn time.
+`ai.ai_generations` (audit, `kind=cms_assistant` thread). Assistant thinking
+(lightbulb) is `thread_items.kind=thinking` written at turn time.
 `ai_generations.internal_reasoning` stays on the audit row only (empty if the
 voice service did not emit it). The in-flight run holds the `ai_generations` id
 so voice tool-calls can append that audit row; that id is not stored on thread
@@ -374,7 +374,8 @@ context.
 discard timer.
 
 `POST /v1/assistant/thread/new` is one transaction: previous `status=completed`,
-insert `status=current`. Unique `(tenant_id) WHERE status = 'current'`
+insert `status=current` on `ai.threads` (`kind=cms_assistant`). Unique
+`(tenant_id) WHERE kind = 'cms_assistant' AND status = 'current'`
 violation is **409** `thread_current_exists`. **409** `in_flight_run` while any
 CMS run is `running` (text or Voice). Do **not** drop Voice from this POST —
 wait until the current run finishes. Pending Ask first keeps the run `running`,
@@ -436,7 +437,8 @@ notification (OK / Revert). No owner Plan switch on Voice.
 
 ## Compaction
 
-After 12 hours of inactivity (`threads.last_activity_at`), a River job
+After 12 hours of inactivity (`ai.threads.last_activity_at`,
+`kind=cms_assistant`), a River job
 summarizes older **thread** items in place: keep the last **3 owner** and last
 **3 assistant** items (plus `tool_summary` / `thinking` in that tail); older
 items become **one** `assistant` summary; `compacted_through_item_id` advances.
@@ -457,7 +459,7 @@ Not a live-xAI context trim. There is **no 24h discard job**.
 | `usage_credit_exhausted` | billing AI use ledger |
 | `in_flight_run` | `assistant.runs` unique running |
 | `allowed_set_rejected` | run `assistant_screen` vs that tool’s screen gate |
-| `thread_current_exists` | `assistant.threads` unique current |
+| `thread_current_exists` | `ai.threads` unique current (`kind=cms_assistant`) |
 | `ask_first_not_pending` | `runs.ask_first_status` is not `pending` |
 
 HTTP status for each code: [api.md](api.md). A request with `follow: false` is a

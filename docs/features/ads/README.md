@@ -59,7 +59,8 @@ product spec; `ad-generation/` still is.
 
 Rules to preserve: AI **proposes** (copy + image gallery + light cleanup), the
 owner decides; approved media items only (gated twice); every AI call records
-reasoning + output + tool calls via `ai_generations`; conservative unprompted
+reasoning + output + tool calls via `ai_generations` (`kind=ads_generate` /
+`ads_inline_assistance`); conservative unprompted
 marketing statements (owner override / owner prompt allowed — `update_details`
 writes the business profile; Approve is not blocked); character limits, uploads
 still in flight, and failed uploads still block. Owner-added photos in an ad are

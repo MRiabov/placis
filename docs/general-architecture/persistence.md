@@ -28,8 +28,10 @@ at the HTTP boundary. Clerk's own ids (`clerk_org_id`, `clerk_user_id`,
 `clerk_subject`) are `text`/`string` — Clerk's opaque ids (`org_…`, `user_…`),
 not UUIDs.
 
-Use DB check constraints for stable enums; transition tests before production
-use.
+Closed sets are Postgres enum types (`CREATE TYPE … AS ENUM` in that feature’s
+schema), not unconstrained text and not `text` + `CHECK`. A new label is
+`ALTER TYPE … ADD VALUE` plus the docs list (and the Go `StrEnum` when that
+package exists). Transition tests before production use.
 
 ## Postgres schemas (namespaces)
 
@@ -60,8 +62,8 @@ one owning file — never copied into a second `persistence.md`.
 | [leads](../features/other/leads/persistence.md) | `leads` | `leads` |
 | [files](files-and-s3.md) | `files` | `files` |
 | [audit](audit.md) | `audit` | `audit_events` |
-| [LLM layer](llm-layer.md) | `ai` | `ai_generations`, `ai_generation_tool_revisions` |
-| [Assistant](../features/assistant/persistence.md) | `assistant` | `threads`, `thread_items`, `runs` (in-flight lock; not hydrate) |
+| [LLM layer](llm-layer.md) | `ai` | `threads` (identity for every generate factory), `ai_generations`, `ai_generation_tool_revisions` |
+| [Assistant](../features/assistant/persistence.md) | `assistant` | `thread_items`, `runs` (in-flight lock; not hydrate). Thread identity is `ai.threads`. |
 | [Billing](../features/billing/persistence.md) | `billing` | `subscriptions`, `ai_use_ledger_entries` |
 | [jobs](jobs.md) | `jobs` | River-managed tables |
 

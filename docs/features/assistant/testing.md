@@ -41,12 +41,12 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
    item appended. `POST /v1/assistant/voice/transcripts` appends owner +
    assistant text with `offset_seconds` from that run’s start. Reconstruct
    `[m:ss owner]` / `[m:ss assistant]` (never say user). `ai_generations` has a
-   voice row with `thread_id`. Hydrate does not read that table. Tool-calls
-   during the **current** voice run succeed (`in_flight_run` is a second start).
-   Realtime URL host is the xAI region for that tenant’s business country
-   (`ie`/`gb` → **eu-west-1**, `us` → **us-east-1**), not a frontend-hardcoded
-   host. Connection create includes **Placis** in keyterms and `replace`
-   **Play-sis**.
+   voice row on that `cms_assistant` thread. Hydrate does not read that table.
+   Tool-calls during the **current** voice run succeed (`in_flight_run` is a
+   second start). Realtime URL host is the xAI region for that tenant’s business
+   country (`ie`/`gb` → **eu-west-1**, `us` → **us-east-1**), not a
+   frontend-hardcoded host. Connection create includes **Placis** in keyterms
+   and `replace` **Play-sis**.
 8. **Voice → text** — After a tool-using voice turn, expanded thread shows
    transcripts **and** muted tool lines. Next owner send on
    `GET /v1/assistant/thread/ws` continues from those thread items. First text

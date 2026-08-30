@@ -46,8 +46,9 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
 
 6. **Website copy generation** (faked LLM tools, overlapping DAG 06–08) —
    website slots/SEO update; tokens preserved.
-   - DB: `ai_generations` for the tool batches; no `create_page`. 07 already
-     wrote v1; 06 does not add another website publication.
+   - DB: `ai_generations` for the tool batches (`kind=website_copy_generation`);
+     no `create_page`. 07 already wrote v1; 06 does not add another website
+     publication.
    - Failure: unpublished website from 05 still gets 07 (cap) and can be
      activated.
 

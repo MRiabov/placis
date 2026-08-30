@@ -19,8 +19,9 @@ faked. DB asserts name the tables from
 3. **Generate** — **Create ad and generate** queues the background job (faked
    LLM); the UI shows a progressive "drafting…" step and lets the owner leave
    and return.
-   - DB: `ai_generations` (reasoning + output + tool calls + usage + `prompt_id`
-     / `prompt_version`), `ad_copy_variants` (source=`ai_proposal`),
+   - DB: `ai_generations` on an `ads_generate` thread (reasoning + output +
+     tool calls + usage + `prompt_id` / `prompt_version`),
+     `ad_copy_variants` (source=`ai_proposal`),
      `ad_variants` (format, status=`ad_needs_review`), `ad_image_placements`
      (`media_asset_id`, crop_mode / crop_x / crop_y / crop_width / crop_height,
      focal_x / focal_y, media_caption), `ad_lead_forms` (title, include flags).
@@ -32,10 +33,10 @@ faked. DB asserts name the tables from
    - Review **inline AI assistance**: owner prompts a copy-field rewrite (prompt
      required); **select to edit inline AI assistance** rewrites a span; no
      selection is the whole field; `ai_generations` records the owner prompt +
-     reasoning + output + tool calls. Empty prompt does not fire. Ctrl+Z
-     restores the previous copy. `update_details` writes the business profile
-     when copy includes a detail, plus a notification (OK / Revert). Approve is
-     not blocked.
+     reasoning + output + tool calls (`kind=ads_inline_assistance`). Empty
+     prompt does not fire. Ctrl+Z restores the previous copy. `update_details`
+     writes the business profile when copy includes a detail, plus a
+     notification (OK / Revert). Approve is not blocked.
 
 4. **Approve** — the owner reviews, edits copy, approves.
    - DB: `ad_copy_variants.source=owner_edit`, `ad_variants.status=approved`,
