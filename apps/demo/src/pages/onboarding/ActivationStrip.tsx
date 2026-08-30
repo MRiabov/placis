@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { cn } from "@/lib/cn";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
 import { GoogleSignUpButton } from "@/ui/GoogleSignUpButton";
@@ -12,6 +13,7 @@ export type ActivationScene =
   | "paid";
 
 export function ActivationStrip({
+  className,
   panelOpen,
   scene,
   onClose,
@@ -19,6 +21,7 @@ export function ActivationStrip({
   onPay,
   onSignUp,
 }: {
+  className?: string;
   panelOpen: boolean;
   scene: ActivationScene;
   onClose: () => void;
@@ -32,7 +35,10 @@ export function ActivationStrip({
   return (
     <aside
       aria-label="Website activation"
-      className="z-40 shrink-0 border-t border-stone-200 bg-white px-3 shadow-[0_-18px_48px_rgb(19_18_10/10%)]"
+      className={cn(
+        "shrink-0 border-t border-stone-200 bg-white px-3 shadow-[0_-18px_48px_rgb(19_18_10/10%)]",
+        className ?? "z-40",
+      )}
     >
       {panelOpen ? (
         <div className="mx-auto grid w-[min(36rem,calc(100%-2.5rem))] max-h-[min(58vh,28rem)] gap-4 overflow-auto pt-5">

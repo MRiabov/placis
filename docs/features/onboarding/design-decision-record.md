@@ -145,4 +145,5 @@ inventing it.
     and price, then the activate control. Unsigned identity on Assistant and the
     strip is **Sign up with Google**. After Sign up, Send and Voice snap the
     canvas to the website page being edited and apply copy (Follow, instant
-    apply). (2026-08-30)
+    apply). (2026-08-30) Same day, later: unpaid Assistant stacks above the
+    website-activation strip’s lift shadow. (2026-08-30)
