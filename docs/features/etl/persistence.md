@@ -159,7 +159,8 @@ writes; the listing stays here.
   Check: `usable_as_project` iff `project_id` is set. Do **not** copy title,
   description, or cover here. Skip when `algorithm` + `schema_revision` match
   and `force` is false. Analog of `photo_kind_*` on the classified thing:
-  skip keys on this row; model / prompt / reasoning on `ai_generations`.
+  skip keys on this row; model / prompt / reasoning on `ai_generations`
+  (`kind=etl_project_classify` thread).
   Must not hang this skip on Facebook / Instagram posts, profile reviews,
   crawl HTML URLs, or `etl.sources`.
 

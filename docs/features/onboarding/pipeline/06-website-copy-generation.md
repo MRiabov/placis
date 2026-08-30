@@ -53,7 +53,8 @@ second 06 start is 409 on that River key.
 ## Persist
 
 Updates to existing `website_slots` and website page SEO columns;
-`ai_generations` for tool batches. No `website_publications` from this job.
+`ai_generations` for tool batches (`kind=website_copy_generation` thread). No
+`website_publications` from this job.
 Onboarding session status is `applying_website_template` until 07, then
 `previewing`. Progress events on the onboarding session stream (complete website
 sections join the `/onboarding/preview` carousel). After they have landed on the

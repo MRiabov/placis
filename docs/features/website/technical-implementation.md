@@ -36,7 +36,9 @@ Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). T
   Ads generator calls it too).
 - Output is a reviewable diff, validated against website component contracts
   before the website editor PATCHes (CMS) or the 06 job writes (headless).
-- Every call records reasoning + output + tool calls via `ai_generations`.
+- Every call records reasoning + output + tool calls via `ai_generations` (CMS
+  assistant calls on the `cms_assistant` thread; onboarding 06 on a
+  `website_copy_generation` thread).
 - Apply / Reject is one-way; no revert-after-apply
   **on the unpublished website**. `update_details` uses the shared notification
   Revert (`POST /v1/business-profile/edits/{id}/undo`), not Reject. CMS Apply is

@@ -9,19 +9,20 @@ Extract and the Google Maps listing: [ETL](../etl/persistence.md). LLM traces: [
 
 ## Onboarding assistant (guide)
 
-Isolated from CMS `assistant.threads`. Never migrated after website activation.
+Isolated from CMS `cms_assistant` threads. Never migrated after website
+activation. Thread identity is [`ai.threads`](../../general-architecture/llm-layer.md) (`kind=onboarding_assistant`,
+unique per `onboarding_session_id`). Do **not** keep `assistant_conversations`
+as an identity table.
 
-- `assistant_conversations` — `id`, `onboarding_session_id` fk unique,
-  `last_activity_at`, timestamps.
 - `assistant_conversation_items` — `id`, `onboarding_session_id` fk,
-  `conversation_id` fk, `kind` (`owner` / `assistant` / `tool_summary` /
-  `thinking`), `body`, `icon`, `offset_seconds` int nullable (`>= 0`; Voice
-  utterances; seconds from that Voice run’s start; null if none), `created_at`
-  (row insert). Index `(conversation_id,
-  created_at)`. Same shapes as CMS thread items.
-- `assistant_runs` — `id`, `onboarding_session_id` fk, `conversation_id` fk,
-  `status` (`running` / `succeeded` / `failed`), `channel` (`text` / `voice`),
-  `ai_generation_id` uuid nullable, timestamps. Unique
+  `thread_id` fk → `ai.threads`, `kind` (`owner` / `assistant` /
+  `tool_summary` / `thinking`), `body`, `icon`, `offset_seconds` int nullable
+  (`>= 0`; Voice utterances; seconds from that Voice run’s start; null if none),
+  `created_at` (row insert). Index `(thread_id, created_at)`. Same shapes as CMS
+  thread items.
+- `assistant_runs` — `id`, `onboarding_session_id` fk, `thread_id` fk →
+  `ai.threads`, `status` (`running` / `succeeded` / `failed`), `channel`
+  (`text` / `voice`), `ai_generation_id` uuid nullable, timestamps. Unique
   `(onboarding_session_id) WHERE status = 'running'`.
 
 ## Onboarding sessions and client interview
@@ -70,6 +71,6 @@ at 07 ([07](pipeline/07-website-preview.md)). Website publications live on
 ## Indexes
 
 Lookup: `(tenant_id, status, created_at)` on onboarding sessions. Unique:
-`stripe_events.event_id`; `assistant_conversations.onboarding_session_id`;
-`(onboarding_session_id) WHERE status = 'running'` on `assistant_runs`. Lookup:
-`(conversation_id, created_at)` on `assistant_conversation_items`.
+`stripe_events.event_id`; `(onboarding_session_id) WHERE status = 'running'` on
+`assistant_runs`. Onboarding thread uniqueness lives on `ai.threads`. Lookup:
+`(thread_id, created_at)` on `assistant_conversation_items`.

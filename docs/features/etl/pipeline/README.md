@@ -62,7 +62,8 @@ calls `StartRun`.
   classification, and parse of crawl markdown into trade/services/etc. use
   **`glm-5.3-flash`** (dated gateway id; do not ride `*-latest`). Same model
   when input is text-only. Image on `input` when a depicting photo exists.
-  Record reasoning, owner-visible output, and tool calls. CMS Assistant /
+  Record reasoning, owner-visible output, and tool calls. Crawl parse uses an
+  `etl_crawl_parse` thread per HTML URL. CMS Assistant /
   Voice / onboarding 06 are unchanged.
 - **ETL writes cite `etl.sources`** — insert identity rows for blobs this spec
   cites. Each ETL `business_profile_edits` increment inserts ≥1

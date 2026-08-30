@@ -25,11 +25,13 @@ Package ownership. Workflows live in the feature docs this list points at.
    governed website-editor tools, plan vs continuous, and Ask first vs instant
    apply. Tools never do website publication. Onboarding 06 calls those tools
    headless. [Website editor tools](../features/website/assistant.md), [website ADR #6](../features/website/ADR.md).
-5. `assistant` owns the CMS thread, dispatcher, allowed set, and
-   `/v1/assistant/…` HTTP. `onboarding/assistant` owns the onboarding
-   conversation and `/v1/onboarding/assistant/…`. Knowledge YAML lives in those
-   packages (`go:embed`). Shared product glossary and Voice pronunciation live
-   in `internal/knowledge/` (onboarding must not import `internal/assistant`).
+5. `assistant` owns the CMS overlay (hydrate, dispatcher, allowed set,
+   `thread_items` / `runs`, `/v1/assistant/…` HTTP). Thread **identity** is
+   `ai.threads` (`kind=cms_assistant`). `onboarding/assistant` owns the
+   onboarding guide items/runs and `/v1/onboarding/assistant/…` (thread
+   `kind=onboarding_assistant`). Knowledge YAML lives in those packages
+   (`go:embed`). Shared product glossary and Voice pronunciation live in
+   `internal/knowledge/` (onboarding must not import `internal/assistant`).
    [Assistant](../features/assistant/README.md).
 6. `ads` is a standalone service (the `/cms/ads` workspace is one owner). It
    reads the profile + approved media library items, proposes copy + image
@@ -38,10 +40,11 @@ Package ownership. Workflows live in the feature docs this list points at.
    **Inline AI assistance** is those screens’ control, not a second dispatcher.
    Ads tools stay in `ads`. [Ads](../features/ads/README.md).
 7. `ai` is the `LLMProvider` interface (and the one implementation behind it):
-   generate, open-web search, traces / `ai_generations`. No website or ads
-   business rules, no tool registries that mutate product rows, and no product
-   prompt prose (`prompts.yaml` lives in the feature that calls the LLM).
-   Postgres schema `ai`. [LLM layer](llm-layer.md).
+   generate, open-web search, `ai.threads` (every call has a `thread_id`),
+   traces / `ai_generations`. No website or ads business rules, no tool
+   registries that mutate product rows, and no product prompt prose
+   (`prompts.yaml` lives in the feature that calls the LLM). Postgres schema
+   `ai`. [LLM layer](llm-layer.md).
 8. `billing` owns the AI use ledger and Usage & billing. Stripe website
    activation checkout stays in onboarding. Extra usage credit checkout may live
    here when that slice lands. [Billing](../features/billing/README.md).

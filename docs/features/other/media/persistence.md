@@ -60,7 +60,8 @@ captioning pass, `parallel_tool_calls=true`). Every argument is present: `low` /
 first). Suggest only: `blur`, `overlay_text`, `subject_too_small`,
 `low_resolution`. No auto-upres. Do not classify “looks unfinished”.
 Identifiable people stay on media review. Record the tool call in
-`ai_generations`.
+`ai_generations` (`kind=media_cleanup` thread; insert before the first
+generate).
 
 A cleanup copy inherits `supplied_by` from the parent. A generated image is
 `supplied_by=ai`.
