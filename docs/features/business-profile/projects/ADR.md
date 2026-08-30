@@ -57,3 +57,13 @@ decision + date) instead of silently replacing the old entry.
    /v1/onboarding-sessions/{id}/projects/{projectId}/archive`) is the same
    persist as CMS Archive (`active` → `archived`, `algorithm=human`). CMS
    `POST /v1/projects` still inserts a project draft. (2026-08-30)
+
+7. **The Project cites sources; sources do not own Projects** — Drop
+   `facebook_post_id` / `instagram_post_id` / crawl URL /
+   `business_profile_review_id` on `projects`. ETL Projects cite ≥1
+   `etl.sources` id via `project_sources`. Owner drafts have zero cites.
+   Classify skip / yes/no lives on
+   `etl.llm_source_to_project_classifications` (required `source_id`;
+   `project_id` only when yes). Same crawl URL, Extract + HTML both usable as
+   a Project → one Project, two cites. Text under 200 characters is verdict
+   no, no LLM. (2026-08-30)

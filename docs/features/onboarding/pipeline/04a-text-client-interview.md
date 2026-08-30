@@ -82,7 +82,8 @@ closed. Same SSE as Review; this screen is also a consumer.
   services and service areas (new names / localities they have not entered);
   opening-hours days still empty; certifications they did not `removed`;
   reviews; media library photos; Projects (ranked top 4, Archive stays
-  archived). Duplicate source keys do not add a second row (ETL skip).
+  archived). A `source_id` that already has a yes verdict does not add a
+  second Project (ETL skip).
 - Extra notes and `emergency_phone` are contractor-only. Business research
   does not write them.
 - Research conflict on a field they already saved stays a conflict (show

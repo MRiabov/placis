@@ -113,7 +113,7 @@ collection `POST /v1/onboarding-sessions`.
 - **Callers:** client interview Project cards ([04a](pipeline/04a-text-client-interview.md)).
 - **Idempotency-Key:** yes.
 - **Behavior:** same persist as CMS Archive: `active` → `archived`,
-  `algorithm=human`, unique source key kept so re-import does not duplicate.
+  `algorithm=human`, `project_sources` kept so re-import does not duplicate.
   Not `POST /v1/projects/{id}/archive` (that stays Clerk + activated tenant).
   Not an onboarding-guide tool and not `archive_project` (website-editor-only).
   Do not add DELETE. Do not add interview Approve. After Archive, the

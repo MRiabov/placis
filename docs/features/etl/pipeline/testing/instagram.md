@@ -6,6 +6,7 @@
   last Instagram post); duplicate post id left alone; `algorithm=human` is not
   overwritten; extract does not write `business_profile_*`; transform does not
   call the Instagram fake. Posts that are a past named job insert Projects
-  after photo classification.
+  after photo classification (`etl.sources` + `project_sources`; skip on the
+  verdict table).
 - **Fake**: Instagram scrape. Never Graph API, Parallel’s API, Exa, Perplexity,
   Tako, `:online`, OpenRouter web search.

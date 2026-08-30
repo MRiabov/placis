@@ -16,7 +16,9 @@ library item next to the hash — same skip as every other transform schema
 (classifier cost) until `force=true`. A bumped `schema_revision` (new fields /
 labels on `photo_kind`) classifies by default on the next run. `algorithm=human`
 is never overwritten by ETL, including `force=true` or a schema bump. Onboarding
-02 and Monday / Wednesday / Friday pass `force=false`.
+02 and Monday / Wednesday / Friday pass `force=false`. Project skip is **not**
+on the media item — it is `etl.llm_source_to_project_classifications`
+([projects.md](projects.md)).
 
 ## Trigger
 

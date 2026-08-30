@@ -39,9 +39,10 @@ parallel crawl remainder) finishes. Fakes at the adapter boundary must delay the
 slow path so tests can assert the live business profile after fast extract and
 before slow extract completes. Transform calls `profile` write APIs
 ([build-profile](../onboarding/pipeline/build-profile.md)), writes `algorithm` and `schema_revision` on every schema it
-sets, and skips `human` / matching algorithm+revision unless `force=true` (never
-`human`) or `schema_revision` is stale (extract by default). CI never spends
-Google / LLM quota.
+sets (including `etl.llm_source_to_project_classifications`), inserts
+`etl.sources` and junction cites for ETL writes, and skips `human` / matching
+algorithm+revision unless `force=true` (never `human`) or `schema_revision` is
+stale (extract by default). CI never spends Google / LLM quota.
 
 ## Validation & testing
 
