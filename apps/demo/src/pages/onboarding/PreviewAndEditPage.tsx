@@ -1,4 +1,10 @@
-import { type ReactNode, useEffect, useState } from "react";
+import {
+  type ReactNode,
+  type RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
@@ -37,6 +43,56 @@ type PreviewPageId = string;
 
 const shareHost = "bellfield-roofing-dublin.preview.placis.com";
 
+type ServiceRow = { title: string; blurb: string };
+
+type FollowSlot = "hero" | "services" | "contact";
+
+const followBeats: Array<{
+  page: PreviewPageId;
+  slot: FollowSlot;
+  hero?: typeof siteHero;
+  services?: ServiceRow[];
+  contact?: string;
+}> = [
+  {
+    page: "home",
+    slot: "hero",
+    hero: {
+      kicker: "Dublin emergency roofing",
+      headline: "Emergency roof repairs, same day.",
+      lede: "Storm damage and leaks across Dublin — call 01 555 0199.",
+    },
+  },
+  {
+    page: "services",
+    slot: "services",
+    services: [
+      {
+        title: "Roof repairs",
+        blurb:
+          "Same-day leak stops after Irish weather. No full strip unless you need one.",
+      },
+      {
+        title: "New roofs",
+        blurb: "Re-roofs with a workmanship guarantee on every job.",
+      },
+      {
+        title: "Guttering",
+        blurb: "Cleaning, replacement, and fascia upgrades.",
+      },
+    ],
+  },
+  {
+    page: "contact",
+    slot: "contact",
+    contact:
+      "Call 01 555 0199 for emergency roof repairs. We answer evenings and weekends.",
+  },
+];
+
+const followFlash =
+  "outline outline-dashed outline-amber-600 outline-offset-2 transition-[outline] duration-300";
+
 function pageTitle(page: PreviewPageId): string {
   for (const node of pageTree) {
     if (node.id === page) {
@@ -68,6 +124,45 @@ function PreviewAndEditInner(): ReactNode {
   const [scene, setScene] = useState<ActivationScene>("unsigned");
   const [panelOpen, setPanelOpen] = useState(false);
   const [shared, setShared] = useState(false);
+  const [hero, setHero] = useState(siteHero);
+  const [services, setServices] = useState<ServiceRow[]>(() =>
+    siteServices.map((item) => ({ title: item.title, blurb: item.blurb })),
+  );
+  const [contact, setContact] = useState(
+    "Unpublished website page. Assistant can open this page even when it is not in the top menu.",
+  );
+  const [followSlot, setFollowSlot] = useState<FollowSlot | null>(null);
+  const beatRef = useRef(0);
+  const followTimer = useRef(0);
+  const canvasRef = useRef<HTMLDivElement>(null);
+
+  function applyFollowBeat(): void {
+    const beat = followBeats[beatRef.current % followBeats.length];
+    if (!beat) {
+      return;
+    }
+    beatRef.current += 1;
+    setPage(beat.page);
+    if (beat.hero) {
+      setHero(beat.hero);
+    }
+    if (beat.services) {
+      setServices(beat.services);
+    }
+    if (beat.contact) {
+      setContact(beat.contact);
+    }
+    setFollowSlot(beat.slot);
+    canvasRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    window.clearTimeout(followTimer.current);
+    followTimer.current = window.setTimeout(() => {
+      setFollowSlot(null);
+    }, 1600);
+  }
+
+  useEffect(() => {
+    return () => window.clearTimeout(followTimer.current);
+  }, []);
 
   useEffect(() => {
     setExtraGroups([
@@ -121,7 +216,15 @@ function PreviewAndEditInner(): ReactNode {
         )}
         data-editor-canvas
       >
-        <UnpaidCanvas page={page} onPage={setPage} />
+        <UnpaidCanvas
+          canvasRef={canvasRef}
+          contact={contact}
+          followSlot={followSlot}
+          hero={hero}
+          page={page}
+          services={services}
+          onPage={setPage}
+        />
         <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-3 p-3">
           <div className="pointer-events-auto">
             <PageList
@@ -150,6 +253,7 @@ function PreviewAndEditInner(): ReactNode {
         ) : null}
         <AssistantLaunch className="absolute right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] z-30" />
         <AssistantSession
+          onSend={applyFollowBeat}
           onSignUp={() => setScene("signed")}
           signedIn={scene !== "unsigned"}
           unpaid
@@ -250,15 +354,29 @@ function PageList({
 }
 
 function UnpaidCanvas({
+  canvasRef,
+  contact,
+  followSlot,
+  hero,
   page,
+  services,
   onPage,
 }: {
+  canvasRef: RefObject<HTMLDivElement | null>;
+  contact: string;
+  followSlot: FollowSlot | null;
+  hero: typeof siteHero;
   page: PreviewPageId;
+  services: ServiceRow[];
   onPage: (id: PreviewPageId) => void;
 }): ReactNode {
-  const service = siteServices.find((item) => page === `service:${item.title}`);
+  const service = services.find((item) => page === `service:${item.title}`);
+
   return (
-    <div className="relative z-0 min-h-0 flex-1 overflow-auto bg-white pb-28">
+    <div
+      className="relative z-0 min-h-0 flex-1 overflow-auto bg-white pb-28"
+      ref={canvasRef}
+    >
       <div className="flex flex-wrap items-center justify-between gap-3 bg-site-hero px-8 pt-16 pb-4 text-site-hero-fg">
         <b>Bellfield Roofing</b>
         <nav className="flex flex-wrap gap-3 text-sm">
@@ -283,12 +401,32 @@ function UnpaidCanvas({
         </nav>
         <span>01 555 0199</span>
       </div>
-      {page === "home" ? <HomeBody /> : null}
-      {page === "services" ? <ServicesBody /> : null}
+      {page === "home" ? (
+        <HomeBody followSlot={followSlot} hero={hero} services={services} />
+      ) : null}
+      {page === "services" ? (
+        <ServicesBody followSlot={followSlot} services={services} />
+      ) : null}
       {service ? <ServiceBody service={service} /> : null}
-      {page === "contact" ? <SimpleBody title="Contact" /> : null}
-      {page === "privacy" ? <SimpleBody title="Privacy" /> : null}
-      {page === "terms" ? <SimpleBody title="Terms" /> : null}
+      {page === "contact" ? (
+        <SimpleBody
+          follow={followSlot === "contact"}
+          lede={contact}
+          title="Contact"
+        />
+      ) : null}
+      {page === "privacy" ? (
+        <SimpleBody
+          lede="Unpublished website page. Assistant can open this page even when it is not in the top menu."
+          title="Privacy"
+        />
+      ) : null}
+      {page === "terms" ? (
+        <SimpleBody
+          lede="Unpublished website page. Assistant can open this page even when it is not in the top menu."
+          title="Terms"
+        />
+      ) : null}
       <footer className="flex flex-wrap justify-between gap-2 border-t border-border px-8 py-4 text-xs text-muted-foreground">
         <span>Bellfield Roofing · Dublin</span>
         <span className="flex gap-3">
@@ -304,16 +442,29 @@ function UnpaidCanvas({
   );
 }
 
-function HomeBody(): ReactNode {
+function HomeBody({
+  followSlot,
+  hero,
+  services,
+}: {
+  followSlot: FollowSlot | null;
+  hero: typeof siteHero;
+  services: ServiceRow[];
+}): ReactNode {
   return (
     <>
-      <div className="bg-site-hero px-8 py-20 text-site-hero-fg">
-        <p className="text-xs tracking-[0.12em] uppercase">{siteHero.kicker}</p>
-        <h1 className="mt-2 text-4xl font-semibold">{siteHero.headline}</h1>
-        <p className="mt-4 max-w-lg text-sm opacity-80">{siteHero.lede}</p>
+      <div
+        className={cn(
+          "bg-site-hero px-8 py-20 text-site-hero-fg",
+          followSlot === "hero" ? followFlash : "",
+        )}
+      >
+        <p className="text-xs tracking-[0.12em] uppercase">{hero.kicker}</p>
+        <h1 className="mt-2 text-4xl font-semibold">{hero.headline}</h1>
+        <p className="mt-4 max-w-lg text-sm opacity-80">{hero.lede}</p>
         <Button className="mt-6">Get a quote</Button>
       </div>
-      <ServicesBody />
+      <ServicesBody followSlot={null} services={services} />
       <section className="bg-zinc-50 p-8">
         <h2 className="text-lg font-semibold">Google reviews</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -336,12 +487,20 @@ function HomeBody(): ReactNode {
   );
 }
 
-function ServicesBody(): ReactNode {
+function ServicesBody({
+  followSlot,
+  services,
+}: {
+  followSlot: FollowSlot | null;
+  services: ServiceRow[];
+}): ReactNode {
   return (
-    <section className="p-8">
+    <section
+      className={cn("p-8", followSlot === "services" ? followFlash : "")}
+    >
       <h2 className="text-lg font-semibold">Services</h2>
       <div className="mt-4 grid gap-6 sm:grid-cols-3">
-        {siteServices.map((item, index) => (
+        {services.map((item, index) => (
           <article key={item.title}>
             <img
               alt=""
@@ -357,12 +516,11 @@ function ServicesBody(): ReactNode {
   );
 }
 
-function ServiceBody({
-  service,
-}: {
-  service: (typeof siteServices)[number];
-}): ReactNode {
-  const index = siteServices.indexOf(service);
+function ServiceBody({ service }: { service: ServiceRow }): ReactNode {
+  const index = Math.max(
+    0,
+    siteServices.findIndex((item) => item.title === service.title),
+  );
   return (
     <section className="p-8">
       <h1 className="text-2xl font-semibold">{service.title}</h1>
@@ -378,14 +536,19 @@ function ServiceBody({
   );
 }
 
-function SimpleBody({ title }: { title: string }): ReactNode {
+function SimpleBody({
+  follow = false,
+  lede,
+  title,
+}: {
+  follow?: boolean;
+  lede: string;
+  title: string;
+}): ReactNode {
   return (
-    <section className="p-8">
+    <section className={cn("p-8", follow ? followFlash : "")}>
       <h1 className="text-2xl font-semibold">{title}</h1>
-      <p className="mt-3 max-w-lg text-sm text-muted-foreground">
-        Unpublished website page. Assistant can open this page even when it is
-        not in the top menu.
-      </p>
+      <p className="mt-3 max-w-lg text-sm text-muted-foreground">{lede}</p>
     </section>
   );
 }
