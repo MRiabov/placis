@@ -16,6 +16,8 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [audit.md](audit.md) — `audit_events`
 - [jobs.md](jobs.md) — River background jobs (including ETL)
 - [files-and-s3.md](files-and-s3.md) — object storage and the `files` row
+- [ADR.md](ADR.md) — architectural decision record (closed sets are checks, not
+  Postgres enums)
 - [persistence.md](persistence.md) — conventions and index of per-feature tables
 - [frontend.md](frontend.md) — `frontend-2` loading placeholders and other UI rules that no
   single feature owns. Tokens: [CMS design.md](cms/design.md).
