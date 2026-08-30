@@ -143,4 +143,6 @@ inventing it.
     starts as text; **Voice** is in the composer. Send and Voice need **Sign
     up with Google**. The website-activation strip stacks on a narrow pane: copy
     and price, then the activate control. Unsigned identity on Assistant and the
-    strip is **Sign up with Google**. (2026-08-30)
+    strip is **Sign up with Google**. After Sign up, Send and Voice snap the
+    canvas to the website page being edited and apply copy (Follow, instant
+    apply). (2026-08-30)

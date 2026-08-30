@@ -162,7 +162,9 @@ Services nests website pages; not the CMS Website pages rail). Website page list
 and **Share** float on the canvas. Pay is the sticky website-activation strip.
 Assistant starts as text (compact docked composer); **Voice** is a switch in
 that composer. Send and Voice need **Sign up with Google**. No owner Plan
-switch. Instant apply. Reuse CMS Assistant tokens.
+switch. Instant apply. After Sign up, Send and Voice on the look demo snap the
+canvas to the website page being edited (Follow) and apply copy. Reuse CMS
+Assistant tokens.
 
 **Preview website address** — after Share (or after 08 if they paid without
 sharing). Cache then R2 + strip. No website preview, no Assistant, no SPA. Pay

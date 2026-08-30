@@ -252,6 +252,7 @@ type AssistantSessionProps = {
   unpaid?: boolean;
   signedIn?: boolean;
   onSignUp?: () => void;
+  onSend?: () => void;
   askPending?: boolean;
   onAsk?: () => void;
 };
@@ -261,6 +262,7 @@ export function AssistantSession({
   unpaid = false,
   signedIn = true,
   onSignUp,
+  onSend,
   askPending = false,
   onAsk,
 }: AssistantSessionProps): ReactNode {
@@ -292,6 +294,7 @@ export function AssistantSession({
         <AssistantComposer
           closeAssistant={closeAssistant}
           onSignUp={onSignUp}
+          onSend={onSend}
           planMode={planMode}
           setPlanMode={setPlanMode}
           signedIn={signedIn}
@@ -404,6 +407,7 @@ function CanvasActions({
 function AssistantComposer({
   closeAssistant,
   onSignUp,
+  onSend,
   planMode,
   setPlanMode,
   signedIn,
@@ -413,6 +417,7 @@ function AssistantComposer({
 }: {
   closeAssistant: () => void;
   onSignUp: (() => void) | undefined;
+  onSend: (() => void) | undefined;
   planMode: boolean;
   setPlanMode: (value: boolean) => void;
   signedIn: boolean;
@@ -474,12 +479,20 @@ function AssistantComposer({
           <>
             <Button
               className={unpaid ? "h-11 flex-1" : undefined}
-              onClick={startVoice}
+              onClick={() => {
+                startVoice();
+                if (unpaid) {
+                  window.setTimeout(() => onSend?.(), 1400);
+                }
+              }}
               variant="outline"
             >
               Voice
             </Button>
-            <Button className={unpaid ? "h-11 flex-1" : undefined}>
+            <Button
+              className={unpaid ? "h-11 flex-1" : undefined}
+              onClick={onSend}
+            >
               {website && planMode ? "Plan" : "Send"}
             </Button>
           </>
