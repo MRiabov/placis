@@ -45,7 +45,10 @@ and search share Vercel; there is no OpenRouter hop.
   format revision, and the usage and cost. That includes text, voice, and image
   generate/cleanup. Voice **cost** is xAI audio minutes plus text-item fees, not
   token counts — leave `input_tokens` / `output_tokens` null on those rows
-  ([billing](../features/billing/README.md)). Hydrate of the assistant thread does **not** read this table.
+  ([billing](../features/billing/README.md)). Voice utterance reconstructability
+  is the forwarded xAI JSON on `thread_items.provider_event` (onboarding:
+  `assistant_conversation_items.provider_event`). Hydrate of the assistant
+  thread does **not** read this table or that jsonb.
   **Every call belongs to a thread** (`ai_generations.thread_id` required) so a
   schema mismatch can retry on the same thread (failed row stays; the next
   attempt is another generation). `LLMProvider` always receives `thread_id`.

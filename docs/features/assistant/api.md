@@ -28,7 +28,7 @@ do not treat a character cap as Voice generation. HTTP still puts a storage
 | Thread items | columns | `*Read` (`kind` enum, `body` string + `maxLength`, `icon` enum, `offset_seconds` int nullable, `created_at`). Owner `body` is **4000** (text) or **5000** (owner Voice utterance) **characters**. Assistant / `thinking` / `tool_summary` `body` storage `maxLength` is not generation — text generation is **12K tokens**. Field name is **`items`**, not `thread_items`. **Omit** `ai_generations` and `runs`. |
 | Assistant screen context | — | Closed per-screen structs, not a JSON bag. |
 | Voice tool-calls body | — | Closed union of CMS tool structs (name + the same types the LLM loop validates). |
-| Voice transcripts | — | Committed visible text + `offset_seconds` + optional reasoning/usage. **Omit** PCM, ASR/TTS deltas, and the recording file. |
+| Voice transcripts | — | Closed union of committed xAI Voice events (below) + optional reasoning/usage. Go maps to `kind` / `body` / `offset_seconds`. **Omit** PCM, ASR/TTS deltas, recording file, `provider_event` on GET. |
 | Voice realtime connection | — | Browser-safe secret + expiry + realtime URL (`string` + `maxLength`, `wss://…`). Region is Go-picked; **omit** a browser region field. |
 | Text WebSocket events | — | Closed `oneOf` event names (same rule as SSE: no unconstrained `payload`). |
 
@@ -76,7 +76,7 @@ socket; event structs still land in `/openapi.json` for typegen.
   empty `current`. Empty thread is `200` with `items: []`.
 - **Errors:** `403` `tenant_unactivated`.
 - **Must not:** return `thread_items` as the field name; return `runs`, audit
-  blobs, or recording URLs.
+  blobs, `provider_event`, or recording URLs.
 
 ### POST /v1/assistant/thread/new
 
@@ -160,22 +160,30 @@ Onboarding uses
 - **Callers:** browser after committed voice utterances, and usage-only when
   Voice turns off.
 - **Idempotency-Key:** yes.
-- **Request:** committed owner utterance (`maxLength` **5000 characters**) +
-  assistant utterance (visible text; storage `maxLength`, not a 5000-character
-  generation cap). Each utterance includes **`offset_seconds`** (int, `>= 0`,
-  maximum 7200): seconds from this Voice run’s realtime-connection start.
-  Reconstruct `[m:ss owner]` / `[m:ss assistant]`.
-  Never say user. Either utterance may be omitted on a **usage-only** POST.
-  Reasoning if
-  the voice service emitted it (`internal_reasoning`; empty string if omitted —
-  do not invent). **Usage** (required when debiting):
-  `audio_seconds_sent` (number), `audio_seconds_received` (number),
-  `billed_text_item_count` (int). Optional typed xAI usage struct when present
-  (named fields, not a JSON bag).
+- **Request:** closed union of **committed** xAI Voice events already on that
+  live socket — not a second STT request. Owner:
+  `conversation.item.input_audio_transcription.completed` (`body` maxLength
+  **5000 characters**). Assistant: `response.output_audio_transcript.done`
+  (storage `maxLength`, not a 5000-character generation cap). Include the
+  same-connection xAI timing event when the completed event has no
+  Voice-connection clock (typically `input_audio_buffer.speech_started`). Go
+  derives **`offset_seconds`** (int, `>= 0`, maximum 7200) from that xAI Voice
+  connection clock (ms from this Voice run’s realtime-connection start →
+  seconds). Reconstruct `[m:ss owner]` / `[m:ss assistant]` from `kind` +
+  `offset_seconds`. Never say user. Persist the forwarded JSON as
+  `provider_event` (jsonb; omitted from GET). Events may be omitted on a
+  **usage-only** POST. If xAI did not emit a committed transcript, omit that
+  utterance — do not invent text or offset. Reasoning if the voice service
+  emitted it (`internal_reasoning`; empty string if omitted — do not invent).
+  **Usage** (required when debiting): `audio_seconds_sent` (number),
+  `audio_seconds_received` (number), `billed_text_item_count` (int). Optional
+  typed xAI usage struct when present (named fields, not a JSON bag).
 - **Errors:** `403` `tenant_unactivated`. Settlement stays **200** (not 402).
   `409` `in_flight_run` is only a **second** start, not the current voice run.
 - **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
-  `created_at` as the conversation clock; accept a browser wall-clock.
+  `created_at` or a browser audio/wall clock as the conversation clock; call
+  `POST /v1/stt` or `wss://…/v1/stt`; transcribe the recording; accept a
+  freeform JSON bag of other xAI events.
 
 ### POST /v1/assistant/voice/recordings
 
@@ -235,3 +243,4 @@ Onboarding uses
 - `/v1/files` (media library owns photo upload; voice recordings are the
   routes above)
 - The recording file on `POST /v1/assistant/voice/transcripts`
+- `POST /v1/stt` and `wss://…/v1/stt` (use live Voice transcripts)

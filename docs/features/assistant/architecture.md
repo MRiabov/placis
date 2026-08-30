@@ -122,8 +122,9 @@ Each **CMS voice-connection seed** concatenates **instructions** in this order
 1. Knowledge base (includes the product glossary)
 2. Live business profile
 3. Thread items (compacted tail, same keep-last-3 rule). Voice items in that
-   tail are formatted `[m:ss owner]` / `[m:ss assistant]` from
-   `offset_seconds`, then `body`. Text items have no offset prefix.
+   tail are formatted `[m:ss owner]` / `[m:ss assistant]` from typed `kind` +
+   `offset_seconds` (xAI Voice connection clock), then `body`. Text items have
+   no offset prefix.
 4. Current assistant screen context (typed struct)
 5. Assistant screen switch notification when the screen changed since the last
    **owner** request
@@ -317,11 +318,11 @@ granted (denied microphone never POSTs `…/realtime-connection`). Onboarding ha
 
 **Voice idle:** frontend-owned. If the owner does not speak for **30 seconds**
 (named constant, asserted in tests), stop the conversation. CMS close path:
-leftover transcripts (`offset_seconds`) + usage, recording upload (signed URL),
-drop realtime connection. Onboarding close path: leftover transcripts
-(`offset_seconds`) + usage, drop realtime connection — **no** recording upload.
-A warning at **20 seconds** that it will end — look TBD. Go does not enforce
-this idle timer.
+leftover transcripts (committed xAI events → `offset_seconds`) + usage,
+recording upload (signed URL), drop realtime connection. Onboarding close path:
+leftover transcripts (committed xAI events → `offset_seconds`) + usage, drop
+realtime connection — **no** recording upload. A warning at **20 seconds** that
+it will end — look TBD. Go does not enforce this idle timer.
 
 **Billing:** billed CMS work is a text LLM call, image generate/cleanup, or ads
 generate. **Our cost** is the **AI vendor cost** invoice; **their cost** is ×5
@@ -348,23 +349,27 @@ context.
   process** on the text WebSocket. Do not add a browser POST of the whole convo
   after the socket. Do not dump debug over the socket.
 - **Voice text:** Go never saw audio. `POST /v1/assistant/voice/transcripts`
-  (and generations from `…/voice/tool-calls`) **is** the later text POST. Do not
-  invent a second text dump route.
+  (and generations from `…/voice/tool-calls`) **is** the later text POST. The
+  browser forwards committed xAI Voice events already on that socket; Go maps
+  them to typed `kind` / `body` / `offset_seconds` and stores `provider_event`.
+  Do not invent a second text dump route. Do not call STT again.
 - **Voice recording (CMS only):** after Voice turns off, the browser asks for a
   signed URL, PUTs **directly to object storage** (R2 in production), then
   `…/complete`. Same `files` table as media library / website-form uploads
-  ([files](../../general-architecture/files-and-s3.md)). `visibility=private`.
-  `owner_type=assistant_voice`, `owner_id` = that voice `runs.id`. One object
-  per voice run (`runs.recording_file_id`). Empty capture (they opened and
-  closed without audio): skip the upload. Failed PUT does not fail transcripts
-  or billing settlement. GET thread never returns the URL and never plays it.
-  Compaction does **not** delete the object or the `files` row. **Onboarding
-  does not store Voice recordings.** Persist committed utterance text on
-  `assistant_conversation_items` (`body` + `offset_seconds` from that Voice
-  run’s start). Reconstruct `[m:ss owner]` / `[m:ss assistant]`. No `files`
-  row, no `recording_file_id`, no onboarding recordings HTTP.
-  `created_at` is the row insert time, not the conversation clock.
-- **Not in Postgres:** the recording file, PCM, ASR/TTS deltas.
+  ([files](../../general-architecture/files-and-s3.md)). `visibility=private`. `owner_type=assistant_voice`, `owner_id` =
+  that voice `runs.id`. One object per voice run (`runs.recording_file_id`).
+  Empty capture (they opened and closed without audio): skip the upload. Failed
+  PUT does not fail transcripts or billing settlement. GET thread never returns
+  the URL and never plays it. Compaction does **not** delete the object or the
+  `files` row. **Onboarding does not store Voice recordings.** Persist committed
+  utterance text on `assistant_conversation_items` (`body` + `offset_seconds`
+  from the xAI Voice-connection clock on the live Voice transcript events;
+  `provider_event` jsonb). Reconstruct `[m:ss owner]` / `[m:ss assistant]` from
+  typed `kind` + `offset_seconds`. No `files` row, no `recording_file_id`, no
+  onboarding recordings HTTP. `created_at` is the row insert time, not the
+  conversation clock.
+- **Not in Postgres:** the recording file, PCM, ASR/TTS deltas. Committed xAI
+  transcript JSON is `provider_event` jsonb.
 - Compaction does **not** delete `ai_generations`. Compaction may shrink
   `thread_items`; debug still has generation `input` / `output` / `tool_calls`.
 

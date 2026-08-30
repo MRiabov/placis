@@ -155,8 +155,21 @@ instead of silently replacing it.
     `recording_file_id`, no `POST /v1/onboarding/assistant/voice/recordings`.
     CMS recordings stay. Online research consent is not this. Same day, later:
     Voice utterances store **`offset_seconds`** (seconds from that Voice run’s
-    start). Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`. Never say
-    **user**. `created_at` is the row insert time. (2026-08-30)
+    start). Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`.
+    Never say **user**. `created_at` is the row insert time. (2026-08-30) Same
+    day, later:
+    **`offset_seconds` and utterance `body` come from xAI’s live Voice
+    connection**, not a browser audio clock and not a second STT call. Browser
+    forwards committed xAI events already emitted on that socket
+    (`conversation.item.input_audio_transcription.completed` for owner;
+    `response.output_audio_transcript.done` for assistant). Go maps those to
+    typed `kind` (`owner` / `assistant`) + `body` + `offset_seconds` (xAI
+    Voice-connection clock on those events, int seconds) and persists the
+    forwarded JSON as `provider_event` jsonb. Reconstruct `[m:ss owner]` /
+    `[m:ss assistant]` from those columns — typed; never bake into `body`.
+    Never say **user**. If xAI did not emit a committed transcript for that
+    utterance, skip the row. Do not `POST /v1/stt`, do not open
+    `wss://…/v1/stt`, do not transcribe the recording. (2026-08-30)
 
 14. **AI voice vendor cost** — Voice is not billed as a text LLM call. Debit is
     **AI voice vendor cost** (xAI audio minutes + text
