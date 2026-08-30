@@ -19,8 +19,8 @@ and search share Vercel; there is no OpenRouter hop.
   wrap-up / reject / STT / compaction / Voice seed prompt in `assistant`; Ads
   generate / Review **inline AI assistance** in `ads`; media library cleanup in
   the media package; project title/description **inline AI assistance** in
-  projects; onboarding 06 in onboarding; ETL project-from-source / photo
-  classification / crawl parse in the ETL package. ETL extract/transform
+  projects; onboarding 06 in onboarding; ETL usable-as-a-Project classify /
+  photo classification / crawl parse in the ETL package. ETL extract/transform
   generation uses **`glm-5.3-flash`** (dated gateway id; do not ride `*-latest`)
   via `LLMProvider` — same cheap multimodal model when the input is text-only.
   Do not put product prompt prose in Go strings, and do not keep one global

@@ -27,6 +27,8 @@ write.
   `human` (ETL, including `force=true`). A later override is a manual transform.
 - Fabricate a value with no source (registry, Maps, crawl, business research, or
   the contractor).
+- Insert an ETL `business_profile_edits` increment without ≥1
+  `business_profile_edit_sources` row.
 - Write `registered_office` into `business_profile_service_areas` or the
   reverse.
 - Use Maps listing address as a second legal address (it stays on
@@ -36,7 +38,9 @@ write.
 ## Do — merge
 
 Each writer `SELECT … FOR UPDATE` the profile row, inserts only its increments,
-updates only those live profile columns.
+updates only those live profile columns. ETL increments also insert ≥1
+`business_profile_edit_sources`. Client interview / Details /
+`confirm_conflict` insert no junction rows.
 
 - **Conflict:** two disagreeing values for the same checklist key → status
   `conflict`. That live profile column **is not updated** (keep previous value,
@@ -125,11 +129,13 @@ Required keys not `empty` / `in_progress` / `conflict`. `skipped` /
 ## Persist
 
 `business_profiles` (live) + `business_profile_edits` +
+`business_profile_edit_sources` (ETL increments only) +
 `business_profile_services` / `business_profile_service_areas` /
 `business_profile_opening_hours` / `business_profile_reviews` /
 `facebook_profiles` / `facebook_posts` / `instagram_profiles` /
-`instagram_posts` / `business_profile.projects`. `last_edit_id` is the latest
-applied edit. 05 sets `accepted_edit_id` at complete.
+`instagram_posts` / `business_profile.projects` /
+`business_profile.project_sources` (ETL Projects only). `last_edit_id` is the
+latest applied edit. 05 sets `accepted_edit_id` at complete.
 
 ## Fail
 

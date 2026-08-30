@@ -14,6 +14,8 @@
   `extracting`. Scrape fake is `scraperlink/google-maps-scraper` input shape
   (`reviews=true`, `maxReviews=50`). Review photos attach to the listing
   review, not `google_maps_listing_photos`. Transform may insert Projects from
-  reviews usable as a Project.
+  reviews usable as a Project (verdict on
+  `etl.llm_source_to_project_classifications`; listing + listing-review
+  `etl.sources`; review add cites the listing-review `source_id`).
 - **Fake**: Google Maps Details / scrape. Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search.

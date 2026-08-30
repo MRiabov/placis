@@ -38,8 +38,8 @@ and no directory key → that kind is not started until
 - Parallel Extract or Apify on `robots.txt` or sitemap XML.
 - Regex / string-scan HTML for `img` / links (use goquery).
 - goquery on robots.txt or sitemap XML.
-- Put skip keys or project-from-source on fetch rows (fetches are
-  append-only).
+- Put skip keys, Project verdicts, or `etl.sources` identity on fetch rows
+  (fetches are append-only).
 - Stuff Parallel markdown and HTML into one fetch `raw`.
 - Count sitemap/robots GETs toward the 20 HTML URL cap.
 - Write `registered_office` from crawl text.
@@ -68,9 +68,11 @@ For the homepage / canonical URL only, run **in parallel**:
   HTML, the same goquery path; if JSON image URLs, map without HTML parse.
 
 Insert / update live `etl.website_crawl_pages` `status=fetched` when Extract
-**and** (`http_get` **or** `apify`) have landed. Transform immediately. Do
-not wait for sitemap or the remainder. If GET and Apify both fail, text-only
-transform from Extract markdown is allowed (no cover).
+**and** (`http_get` **or** `apify`) have landed. Insert `etl.sources`
+`kind=website_crawl_extract` and `kind=website_crawl_html` (Apify is the HTML
+blob when GET failed). Transform immediately. Do not wait for sitemap or the
+remainder. If GET and Apify both fail, text-only transform from Extract
+markdown is allowed (no cover; one extract source only).
 
 Retry of this `run_id` does not re-Extract / re-GET a `(canonical URL,
 fetched_from)` that already has a fetch.
@@ -83,11 +85,11 @@ In parallel with the homepage, or immediately after: GET `robots.txt`
 `encoding/xml` for sitemaps; line parse for robots. Persist `raw`; retry
 re-parses; do not GET again.
 
-Not live HTML URLs. No skip keys, no photos, no project-from-source. **Not in
-the 20 HTML cap.** `sitemap_index.xml`: GET child sitemaps until the HTML
-frontier is full (homepage + remainder ≤ 20), then stop. 404 / empty / junk:
-persist that fetch; fall back to homepage `<a href>`. Missing sitemap is not
-a crawl failure.
+Not live HTML URLs. No `etl.sources` for robots/sitemaps, no photos, no
+Project verdicts. **Not in the 20 HTML cap.** `sitemap_index.xml`: GET child
+sitemaps until the HTML frontier is full (homepage + remainder ≤ 20), then
+stop. 404 / empty / junk: persist that fetch; fall back to homepage
+`<a href>`. Missing sitemap is not a crawl failure.
 
 Parse same-host **HTML** URLs → `etl.website_crawl_pages` `discovered`. Skip
 `mailto:`, `tel:`, `#`, feeds, `wp-json`, `xmlrpc`, `oembed`, static assets
@@ -132,17 +134,21 @@ request handlers. CI does not measure p90.
 `status=transforming` for the HTML URL, then back to `extracting` if remainder
 extract continues. Fill empty trade, description, services, service areas,
 founder, marketing email, existing site URL from Extract markdown + HTML via
-[build-profile](../../onboarding/pipeline/build-profile.md). Then photos + [photo classification](photo-classification.md). Then [projects.md](projects.md) when
-the HTML URL is a past named job (depicting photo required). Disagreeing
-owner-typed scalars → research conflict.
+[build-profile](../../onboarding/pipeline/build-profile.md) (each increment
+cites ≥1 crawl `source_id`; both blobs when both dumps informed the value).
+Then photos + [photo classification](photo-classification.md). Then
+[projects.md](projects.md) per crawl blob (depicting photo on that HTML URL
+required). Same URL, both blobs usable as a Project → one Project, two cites.
+Disagreeing owner-typed scalars → research conflict.
 
 ## Persist
 
 `etl.website_crawl_fetches` (`fetched_from` as above);
-`etl.website_crawl_pages`; `etl.website_crawl_page_photos`;
-`etl.imported_media` kind `website_crawl`; `business_profile_edits` + live
-profile / list rows / Projects. `etl.runs.status=succeeded` when homepage and
-remainder are done.
+`etl.sources` (extract + HTML); `etl.website_crawl_pages`;
+`etl.website_crawl_page_photos`; `etl.imported_media` kind `website_crawl` +
+`imported_media_sources`; `business_profile_edits` +
+`business_profile_edit_sources` + live profile / list rows / Projects.
+`etl.runs.status=succeeded` when homepage and remainder are done.
 
 ## Fail
 
@@ -161,5 +167,7 @@ HTML URLs complete.
 - First-run only.
 - Extract does not write the live business profile.
 - Transform of the homepage does not wait for sitemap or the remainder.
-- One live HTML URL, many fetch rows, many fields.
-- Fetches never updated. Skip keys on live HTML URLs only.
+- One live HTML URL, many fetch rows, two `etl.sources` (extract + HTML), many
+  fields.
+- Fetches never updated. Project skip on
+  `etl.llm_source_to_project_classifications`, not on live HTML URLs.

@@ -11,8 +11,9 @@
   that landed; remaining `discovered` HTML URLs still run. A Monday /
   Wednesday / Friday `StartRun` does not include this kind. Extract does not
   write the live business profile. Transform does not call crawl / Extract /
-  GET fakes. Skip keys live on live HTML URLs, not fetches. Image GETs are
-  bounded (8).
+  GET fakes. Project skip lives on
+  `etl.llm_source_to_project_classifications`, not fetches or live HTML URLs.
+  Extract + HTML insert two `etl.sources`. Image GETs are bounded (8).
 - **Fake**: Parallel Extract HTTP, own GET / goquery fixtures, directory, Apify
   webpage scraper (GET-fail path). Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search. CI does not measure API
