@@ -13,6 +13,7 @@ import { cn } from "@/lib/cn";
 import { listen, play, stop } from "@/lib/mock-voice";
 import { Button } from "@/ui/Button";
 import { card } from "@/ui/card";
+import { DotSpinner } from "@/ui/DotSpinner";
 import { DustOrb } from "@/ui/DustOrb";
 import { TextArea, TextInput } from "@/ui/Field";
 import { GoogleSignUpButton } from "@/ui/GoogleSignUpButton";
@@ -538,6 +539,11 @@ function UnpaidComposer({
         </button>
       </div>
       {threadOpen ? <AssistantThread items={items} /> : null}
+      {inFlight ? (
+        <div className="flex justify-center py-1">
+          <DotSpinner />
+        </div>
+      ) : null}
       <TextInput
         disabled={inFlight}
         onChange={(event) => setPrompt(event.target.value)}

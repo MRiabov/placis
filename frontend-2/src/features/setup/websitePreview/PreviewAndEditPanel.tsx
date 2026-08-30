@@ -123,6 +123,17 @@ export function PreviewAndEditPanel({
               <li>Updated text on Hero</li>
               <li>Generated image on Hero</li>
             </ul>
+            <p className="flex justify-center py-1 text-muted-foreground">
+              <span
+                aria-label="Writing"
+                className="relative inline-grid size-3.5 animate-spin"
+                role="status"
+              >
+                <span className="absolute top-0 left-1/2 size-0.5 -translate-x-1/2 rounded-full bg-current" />
+                <span className="absolute top-1/4 right-0 size-0.5 rounded-full bg-current opacity-70" />
+                <span className="absolute bottom-1/4 right-0 size-0.5 rounded-full bg-current opacity-40" />
+              </span>
+            </p>
             <input
               className="h-11 w-full rounded-md border border-border bg-muted px-3 text-sm"
               placeholder="Change this website page…"

@@ -110,8 +110,9 @@ tool is the backend `summary` (`Updated heading on Hero`), pencil for
 **expand / reduce** the thread (not a hide). **Close** returns to the
 **Assistant** call. No Plan, no Ask first, no Clear context, no Apply / Reject
 pills. Default **expanded** on land so 06 `tool_summary` is visible (wait-end
-is ~15s; copy generation is usually still running). Canvas Follow still snaps
-to the website section being edited.
+is ~15s; copy generation is usually still running). While that run is `running`,
+a six-dot spinner sits under the thread (three to four dots lit). Canvas Follow
+still snaps to the website section being edited.
 
 ## Instant apply
 
