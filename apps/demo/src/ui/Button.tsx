@@ -9,8 +9,11 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants: Record<ButtonVariant, string> = {
-  ink: "border-black/10 bg-primary text-primary-foreground hover:bg-zinc-800",
-  outline: "border-border bg-background text-foreground hover:bg-zinc-50",
+  // Matches the Placis-web prompt controls: a clear hairline outline on both
+  // themes, with the ink action reading as a raised, deliberate submit.
+  ink: "border-stone-200 bg-primary text-primary-foreground transition hover:bg-zinc-800 dark:border-white/20 dark:hover:bg-zinc-800",
+  outline:
+    "border-stone-200 bg-background text-foreground transition hover:bg-zinc-50 dark:border-white/20 dark:hover:bg-zinc-900",
   danger: "border-red-500 bg-background text-red-700 hover:bg-red-50",
 };
 

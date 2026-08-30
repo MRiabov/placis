@@ -3,9 +3,10 @@ import { cn } from "@/lib/cn";
 /** HTML `--cms-radius-panel` and hardcoded 12px: onboarding cards, reviews, combo. */
 const panelClass = "rounded-panel border border-border bg-white";
 
-/** HTML `.cms-home-card`: 28px, hairline, heavier shadow than ads. */
+/** Home destination buttons use the same raised card as the Placis-web
+ * dashboard prompt: a visible outline plus a soft, deep dark-mode elevation. */
 const chooserCardClass =
-  "rounded-prompt border border-hairline bg-white shadow-chooser";
+  "rounded-prompt border border-stone-200 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.05)] dark:border-white/20 dark:bg-background dark:shadow-[0_1px_2px_rgba(0,0,0,0.3),0_6px_20px_rgba(0,0,0,0.35)]";
 
 /** HTML `.cms-notice`: 16px, hairline, prompt shadow. */
 const noticeClass =
