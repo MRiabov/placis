@@ -53,11 +53,13 @@ guide rows use an `onboarding_assistant` thread. Voice: `generation_type` voice;
 `internal_reasoning` empty if the voice service did not emit it; `output` is
 visible text; `cost_amount` from xAI usage (audio minutes + text-item fees);
 `input_tokens` / `output_tokens` stay null. Record `knowledge_id` +
-`knowledge_format_revision` when that call used a knowledge base. Image
-**files** stay in `files` / `media_library`. CMS Voice recording files stay in
-object storage; `runs.recording_file_id` points at `files`. Onboarding voice
-runs have no `recording_file_id`. Voice items store `provider_event` jsonb
-(forwarded xAI JSON); GET omits it.
+`knowledge_format_revision` when that call used a knowledge base. Voice create
+writes the exact instructions blob to `ai_generations.input` (with keyterms /
+`replace`); text turns write the exact assembled prompt. Prompt id is not a
+substitute. Image **files** stay in `files` / `media_library`. CMS Voice
+recording files stay in object storage; `runs.recording_file_id` points at
+`files`. Onboarding voice runs have no `recording_file_id`. Voice items store
+`provider_event` jsonb (forwarded xAI JSON); GET omits it.
 
 ## Indexes
 
