@@ -5,8 +5,9 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [frontend.md](frontend.md), [pipeline README](pipeline/README.md),
-[07 website preview](pipeline/07-website-preview.md),
-[08 website activation](pipeline/08-website-activation.md),
+[07 contractor copy improvement](pipeline/07-contractor-copy-improvement.md),
+[08 preview website address](pipeline/08-preview-website-address.md),
+[09 website activation](pipeline/09-website-activation.md),
 [api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 

@@ -13,7 +13,7 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 [website_addresses](persistence.md), [frontend.md](frontend.md),
 [contractor-website-debloat.md](contractor-website-debloat.md),
 [port-contractor-website.md](port-contractor-website.md),
-[website activation](../onboarding/pipeline/08-website-activation.md), [ci-cd.md](../../general-architecture/ci-cd.md).
+[website activation](../onboarding/pipeline/09-website-activation.md), [ci-cd.md](../../general-architecture/ci-cd.md).
 
 ## Locks
 
@@ -21,8 +21,8 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
   serves every tenant.
 - Live HTML is **prebuilt** at website publication into R2 `latest/`. A live GET
   never calls Go.
-- There is no per-request unpublished render. 07 writes the sales host the same
-  way as later CMS website publication (strip on, then 08 strip off).
+- There is no per-request unpublished render. 08 writes the sales host the same
+  way as later CMS website publication (strip on, then 09 strip off).
 - Website address uses **Cloudflare for SaaS Custom Hostnames**, not Cloudflare
   Pages project hostnames.
 - Owner-facing default live host after website publication is
@@ -41,14 +41,14 @@ publication into R2.
 - **Website address** — the hostname they supply (`acme.ie`). Live for website
   visitors once DNS and the certificate are ready.
 - **Preview website address** — `{website_prefix}.preview.placis.com`. Optional
-  while unpaid (after share, or after 08 if they paid without sharing). Static
-  `latest/` + website-activation strip until 08. After 08 it is still a preview
+  while unpaid (after share, or after 09 if they paid without sharing). Static
+  `latest/` + website-activation strip until 09. After 09 it is still a preview
   website address (same zone) and the live default (strip gone) — never call it
   website preview. Apex `preview.placis.com` (no prefix) is **404**.
 - **Website prefix** — `tenants.website_prefix`, the reserved DNS label and R2
-  key, **fixed at first 07 share or at 08** from `display_name`. Not a URL.
+  key, **fixed at first 08 share or at 09** from `display_name`. Not a URL.
 - **Website publication** — writes `website_publications` + HTML files. Not a
-  Worker deploy. Onboarding 07 share / 08 call this write (strip on, then strip
+  Worker deploy. Onboarding 08 share / 09 call this write (strip on, then strip
   off). Owner CMS publish is later versions.
 - **Website preview** — the unpaid editor `/onboarding/preview-and-edit/`. Not
   the R2 host. Not a token path. Not a per-request render.
@@ -149,7 +149,7 @@ One bucket per environment: `placis-contractor-websites` /
 | --- | --- |
 | `sites/hosts/{hostname}/latest/…` | Live files for **that** host |
 | `sites/hosts/{hostname}/{version_number}/…` | Kept copy for website rollback on that host |
-| `sites/{website_prefix}/latest/…` | Onboarding 07/08 unactivated write until the first owner publication on the preview host |
+| `sites/{website_prefix}/latest/…` | Onboarding 08/09 unactivated write until the first owner publication on the preview host |
 
 `{website_prefix}` is unique, URL-safe, the label in
 `{website_prefix}.preview.placis.com`, **fixed at 07**. Do not rename it when
@@ -193,16 +193,16 @@ the Placis host on website version *n* while `acme.ie` stays on *n−1* **unless
 they published those hosts separately (they may diverge).
 
 Live for website visitors on `{website_prefix}.preview.placis.com` = an active
-website publication (`latest/` present). After 07 that is true for the sales
-host (strip on). After 08 the same host stays up without the strip. Live on a
+website publication (`latest/` present). After 08 that is true for the sales
+host (strip on). After 09 the same host stays up without the strip. Live on a
 website address also needs that hostname’s certificate ready. Empty host = no
-`latest/` yet (before 07).
+`latest/` yet (before 08).
 
 ## Website preview
 
 While unactivated, `{website_prefix}.preview.placis.com` **is** the website
 preview: static `latest/` + website-activation strip island. No
-`/preview/{token}/`. No `GET /v1/public/site/resolve`. After 08 do not call that
+`/preview/{token}/`. No `GET /v1/public/site/resolve`. After 09 do not call that
 host website preview.
 
 The strip is the website-form pattern: shared Worker static assets hydrate Clerk
@@ -211,7 +211,7 @@ skips to pay) and Stripe (POST)
 public checkout to `cmd/api`; CORS by `Host` / `website_prefix` — not
 `/v1/website-previews/{token}/…`). Do not bake a Checkout Session URL into R2
 HTML. The strip is sticky to the bottom of the viewport while the website
-scrolls. 08 rewrites without the island and purges Cache.
+scrolls. 09 rewrites without the island and purges Cache.
 
 `/onboarding/preview` is the wait carousel in `frontend-2`, not this host.
 

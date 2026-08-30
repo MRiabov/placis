@@ -80,10 +80,10 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
     storage; `runs.recording_file_id` set. GET thread does not return the URL.
     The recording file is never posted to Go. Onboarding has no recording
     object.
-15. **06 overlap** — Activate (08) while 06 is still writing a website slot; CMS
+15. **06 overlap** — Activate (09) while 06 is still writing a website slot; CMS
     PATCH of that website slot is last-write / `edit_history_conflict`, not
     assistant `in_flight_run`. CMS assistant POSTs are not 409 because 06 is
-    running. 08 completed unpaid `current` and ended `running` in the same
+    running. 09 completed unpaid `current` and ended `running` in the same
     transaction as `status=active`; CMS GET is a new empty `current`.
 16. **Denied microphone** — Shared **notification** **Allow microphone access
     in your browser to talk. You can keep typing.** **Try again** retries
@@ -144,7 +144,7 @@ One E2E. [website-editor.md](../onboarding/website-editor.md).
    (onboarding session token) and shows 06 `tool_summary` while copy is still
    running. Sign up.
    One signed-in owner prompt after 06 idle. Canvas updates via website-editor
-   PATCH (instant apply). Pay (08). `/cms/website` shows the unpublished change.
+   PATCH (instant apply). Pay (09). `/cms/website` shows the unpublished change.
    CMS `GET /v1/assistant/thread` is a new empty `current` (unpaid thread
    completed). `/v1/assistant/…` was 403 `tenant_unactivated` before pay. Sixth
    unpaid prompt is out of this story (pay CTA, not 402).

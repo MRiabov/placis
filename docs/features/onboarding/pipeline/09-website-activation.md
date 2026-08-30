@@ -1,4 +1,4 @@
-# 08 — Website activation
+# 09 — Website activation
 
 The contractor pays on the **website preview** (`/onboarding/preview-and-edit/`)
 or on the **preview website address** strip if they shared (FQDN in
@@ -10,7 +10,7 @@ bake a Checkout Session URL into R2 HTML). The website-activation strip is
 **sticky to the bottom of the viewport** while the website scrolls
 ([frontend.md](../frontend.md), [design decision](../design-decision-record.md) 10). Website activation **upgrades** the
 existing unactivated tenant (`status=active`); it does not insert a second
-tenant. Does **not** wait for 06. Does **not** require a prior 07 share.
+tenant. Does **not** wait for 06. Does **not** require a prior 08 share.
 
 Stripe (via `stripe-go`) handles this checkout only. Amount is the activation
 price (predecessor: EUR 4900). `checkout.session.completed` is accepted only
@@ -31,7 +31,7 @@ that already lost.
 
 ## Pre
 
-- `tenants.website_prefix` reserved at 07 **or** reserved in this step if they
+- `tenants.website_prefix` reserved at 08 **or** reserved in this step if they
   never shared.
 - If they shared: `website_publications` v1 `active` (strip on) or a later
   onboarding write on that prefix.
@@ -61,15 +61,15 @@ that already lost.
    any `assistant.runs` `running` ([website editor](../website-editor.md)).
 5. Write **`website_publications`** without the website-activation strip,
    `published_by=onboarding`, `active`. If they never shared: reserve
-   `website_prefix` (same rules as 07) and write the **first** live R2
+   `website_prefix` (same rules as 08) and write the **first** live R2
    **without** strip. If they already shared: archive v1 (strip on) and write
-   live v2. Same R2 write as 07 / CMS website publication; purge Cache so
+   live v2. Same R2 write as 08 / CMS website publication; purge Cache so
    strip HTML does not linger. Host stays up. Website address is a later CMS
    modal.
 6. In-flight 06 **continues** on the same `tenant_id` as River-only. Do not
    cancel it. Do not append Assistant thread items. CMS assistant / PATCH are
-   not 409-blocked for leftover 06. Host HTML stays the 07/08 R2 `latest/` (06
-   does not live-update R2 after 07). Same website-slot overlap: last-write /
+   not 409-blocked for leftover 06. Host HTML stays the 08/09 R2 `latest/` (06
+   does not live-update R2 after 08). Same website-slot overlap: last-write /
    `edit_history_conflict`.
 
 ## Persist
@@ -89,8 +89,8 @@ activate twice. A second payer after the first verified completion is refused.
 `/cms/website` with **Publish**. `/me` returns unactivated `TenantRead` after
 Clerk org attach, then `status=active` after this step.
 `/onboarding/preview-and-edit/` redirects to `/cms/website`. The preview website
-address stays up without the strip (live website). If they never shared, 08
-created that host. Unpublished website from 05 (+ 06 + unpaid Assistant PATCHes)
+address stays up without the strip (live website). If they never shared, 09
+created that host. Unpublished website from 05 (+ 06 + 07 PATCHes)
 is what they edit. First **owner** website publication is the next website
 version and the first rollback-eligible website version.
 
@@ -118,7 +118,7 @@ subscription to host the website**.
    usage credit on the AI use ledger; check it before billed work and before a
    billed realtime connection.
 
-Currency for the website-activation pay stays as 08 specifies until that epic.
+Currency for the website-activation pay stays as 09 specifies until that epic.
 Usage credit display is **$** (provisional USD catalogue).
 
 See [billing](../../billing/README.md).
@@ -126,7 +126,7 @@ See [billing](../../billing/README.md).
 ## Invariants
 
 - Same `tenant_id` as 01.
-- Same `website_prefix` as 07.
+- Same `website_prefix` as 08.
 - `/me` tenant only when `status=active`.
 - Clerk organization 1-1 for **active** tenants only.
 - v1 and v2 are never website-rollback targets.

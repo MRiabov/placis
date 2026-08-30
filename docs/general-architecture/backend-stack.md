@@ -29,7 +29,7 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 `huma` handles JSON request/response endpoints and serves the derived OpenAPI
 spec at `/openapi.json`. The onboarding session **SSE** stream is a raw
 `net/http` handler outside huma. The contractor host is not an SSE endpoint
-([07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md)). Voice audio does not go through a Go WebSocket — the
+([pipeline README](../features/onboarding/pipeline/README.md)). Voice audio does not go through a Go WebSocket — the
 browser connects to the voice service with a short-lived secret
 ([voice agent](voice-agent.md)).
 

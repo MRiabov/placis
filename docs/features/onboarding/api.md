@@ -135,8 +135,8 @@ collection `POST /v1/onboarding-sessions`.
 - **Auth:** onboarding session token or Clerk JWT unactivated tenant
 - **Callers:** **Share** on `/onboarding/preview-and-edit/`.
 - **Idempotency-Key:** yes.
-- **Behavior:** [07](pipeline/07-website-preview.md) — reserve prefix if needed,
-  write R2 `latest/` with website-activation strip.
+- **Behavior:** [08](pipeline/08-preview-website-address.md) — reserve prefix if
+  needed, write R2 `latest/` with website-activation strip.
 - **Response:** preview website address URL (`string` + `maxLength`).
 - **Must not:** require website activation; auto-run at wait-end.
 

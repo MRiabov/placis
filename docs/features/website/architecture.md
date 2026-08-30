@@ -185,7 +185,7 @@ editor. Website components live in `packages/website-components`.
 
 At **website publication**, that app renders each live website page from the
 active `website_manifest` (`website.v1`) and writes HTML to R2 `latest/`. A live
-GET is Cache then R2. It never calls Go. Onboarding 07/08 call this same write
+GET is Cache then R2. It never calls Go. Onboarding 08/09 call this same write
 (strip on, then strip off). There is no per-request unpublished render and no
 `/preview/{token}/`.
 

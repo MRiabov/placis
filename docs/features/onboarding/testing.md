@@ -39,21 +39,21 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
    carousel, then `/onboarding/preview-and-edit/` (copy done or ~15s cap).
    - DB: unpublished `website_pages` / website sections / website slots;
      onboarding session `previewing`. Copy-generation job may still be running.
-     `website_prefix` is **not** required until share or 08.
+     `website_prefix` is **not** required until share or 09.
    - UI: live unpublished canvas. Assistant prompt → PATCH → pay is
      [assistant testing](../assistant/testing.md) (onboarding website editor).
 
-6. **Website copy generation** (faked LLM tools, overlapping DAG 06–08) —
-   website slots/SEO update; tokens preserved.
+6. **Automatic website copy generation** (faked LLM tools, overlapping DAG
+   06–09) — website slots/SEO update; tokens preserved.
    - DB: `ai_generations` for the tool batches (`kind=website_copy_generation`);
-     no `create_page`. 07 share is optional; 06 does not add a website
+     no `create_page`. 08 share is optional; 06 does not add a website
      publication.
    - Failure: unpublished website from 05 still opens the website preview and
      can be activated.
 
 7. **Website activation** — pay on the website preview (Clerk testing token +
    Stripe test
-   webhook). First payer wins. Prior 07 share is not required.
+   webhook). First payer wins. Prior 08 share is not required.
    - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as
      business lookup, now `tenants.status=active`, `tenant_memberships.owner`;
      onboarding session `activated`; unpaid `ai.threads` `kind=cms_assistant`

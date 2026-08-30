@@ -193,7 +193,7 @@ notification.
 
 ## Complete — website publication and Connect website address
 
-Onboarding 07/08 also write `website_publications` (`published_by=onboarding`).
+Onboarding 08/09 also write `website_publications` (`published_by=onboarding`).
 Those rows are not this CMS POST. They are never website-rollback targets.
 
 ### GET /v1/website/publications / POST /v1/website/publications
@@ -211,7 +211,7 @@ Those rows are not this CMS POST. They are never website-rollback targets.
   code.
 - **GET list:** metadata `*Read` (`version_number`, `status`, `active`,
   `published_by`, `website_address_id`, times). **Omit** `website_manifest`.
-  Rollback UI uses `published_by=owner` only — omit onboarding 07/08 and
+  Rollback UI uses `published_by=owner` only — omit onboarding 08/09 and
   05-retry rows.
 
 ### POST /v1/website/publications/{id}/rollback
@@ -255,7 +255,8 @@ Onboarding guide: [POST /v1/onboarding/assistant/voice/realtime-connection](../o
 - `/v1/tenants/{website_prefix}/website/…`
 - `/v1/public/site/…` (including resolve, meta, sitemap, assets)
 - leftover `/preview/{token}/` HTML or `GET …/public/site/resolve`
-- `POST /v1/website/addresses` with `type=subdomain` (reserved at 07)
+- `POST /v1/website/addresses` with `type=subdomain` (reserved at 08 share or
+  09)
 - blueprints, posts, careers
 - `/undo` `/redo` `/edit-history`
 - `POST /v1/website/publications/{id}/restore-unpublished` (editor GET

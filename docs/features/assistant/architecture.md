@@ -396,7 +396,7 @@ text send, second Voice create → 409. Same Voice connection may continue.
 `runs`.
 
 Onboarding 06 while unactivated **does** hold this table’s unique `running` on
-the unpaid website-preview thread. After 08 leftover 06 is River with a
+the unpaid website-preview thread. After 09 leftover 06 is River with a
 `tenant_id` lock only. CMS is not 409-blocked while leftover 06 finishes. Same
 website-slot overlap after pay is last-write / website PATCH
 `edit_history_conflict`.
@@ -434,7 +434,7 @@ appends `tool_summary` on the unpaid thread. The website preview follows
 via onboarding SSE + unpublished GET, and hydrates those items with
 `GET …/website-editor/assistant/thread` (onboarding session token or Clerk).
 That thread is the in-flight copy UI. Do not reparent 06 into the CMS Assistant
-HTTP. After 08 it must not append thread items.
+HTTP. After 09 it must not append thread items.
 
 Ask first vs Instant apply: **CMS website editor text** only. CMS Voice always
 Ask first. Unpaid website preview forces instant apply on text **and** Voice
@@ -478,5 +478,5 @@ plain **400**, not a named code.
 
 Activated owner: **403** on all onboarding routes (Find / Review and onboarding
 website editor). Unactivated: **403** `tenant_unactivated` on `/v1/assistant/…`.
-Unpaid website preview: [onboarding website editor](../onboarding/website-editor.md). 08 completes unpaid
+Unpaid website preview: [onboarding website editor](../onboarding/website-editor.md). 09 completes unpaid
 `current`; do not migrate items onto the CMS thread.

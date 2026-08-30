@@ -12,7 +12,7 @@ ETL: onboarding 02 and a Monday / Wednesday / Friday schedule both call
 Maps scrape stay in-process; API p90-delta during scrape:
 [processes.md](processes.md).
 
-Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/08-website-activation.md). Onboarding
+Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/09-website-activation.md). Onboarding
 [website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md) is a River job after applying the website template; it
 must not block the website preview. Compaction **skips** `ai.threads`
 `kind=cms_assistant` whose tenant is `status=unactivated` (unpaid current must

@@ -1,4 +1,4 @@
-# 07 — Website preview share (integration test)
+# 08 — Preview website address (integration test)
 
 - **Setup**: an unpublished website from 05. Wait-end already navigated to
   `/onboarding/preview-and-edit/` (copy done or cap). Do **not** require 06 to

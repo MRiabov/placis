@@ -160,9 +160,9 @@ no website styles rail, no click-to-edit, no design controls. Signed-out: view
 and switch website pages; hydrate the thread; prompt box visible; send and
 Voice need **Sign up with Google**.
 
-**Share** (optional) runs [07](pipeline/07-website-preview.md): preview website
-address with website-activation strip. Pay on the website preview **or** on
-that strip ([08](pipeline/08-website-activation.md)). After 08 this route
+**Share** (optional) runs [08](pipeline/08-preview-website-address.md): preview
+website address with website-activation strip. Pay on the website preview **or**
+on that strip ([09](pipeline/09-website-activation.md)). After 09 this route
 redirects to `/cms/website` (website editor, **Publish**).
 
 The look export’s unpaid website preview is `apps/demo/`

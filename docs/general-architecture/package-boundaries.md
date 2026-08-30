@@ -6,9 +6,10 @@ Package ownership. Workflows live in the feature docs this list points at.
    and permissions. [Auth](../features/other/auth/README.md). Unactivated tenants have no Clerk organization;
    activation upgrades that row.
 2. `onboarding` owns the onboarding session, client interview, enqueueing
-   apply-the-website-template (05) and website copy generation (06), the wait
-   teaser, on-demand 07 share (preview website address), and website activation.
-   `onboarding/websiteeditor` owns unpaid website-preview Assistant HTTP
+   apply-the-website-template (05) and automatic website copy generation (06),
+   the wait teaser, contractor copy improvement, on-demand 08 share (preview
+   website address), and website activation. `onboarding/websiteeditor` owns
+   unpaid website-preview Assistant HTTP
    (`/v1/onboarding/website-editor/assistant/…`) and unpaid policy (5-cap,
    instant apply, allowlist). It reuses `website/assistant` tools and
    `ai.threads` (`kind=cms_assistant`) overlay SQL. CMS `assistant` HTTP must

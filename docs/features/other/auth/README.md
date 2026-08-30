@@ -36,7 +36,7 @@ including `status=unactivated`. CMS still opens only when `status=active`
   activation, a canceled subscription still returns the tenant (`status=active`,
   `subscription_status=canceled`). That is not `tenant: null`. They can edit;
   they cannot Publish until they pay again.
-- Website activation (08) attaches the Clerk organization to the **existing**
+- Website activation (09) attaches the Clerk organization to the **existing**
   unactivated tenant and sets `status=active`. `POST /v1/me/clerk-organization`
   creates that org if needed; it does not skip pay. The frontend then calls
   `clerk.setActive` so sign-in tokens carry the Clerk organization claim. The
@@ -80,7 +80,7 @@ Services take `tenantID` explicitly.
 Routes: [api.md](api.md). Health: [HTTP conventions](../../../general-architecture/api.md). Clerk organization provisioning is
 `POST /v1/me/clerk-organization` after sign-in on the preview website address
 (`Organizations().Create`); the frontend then `clerk.setActive`. That POST does
-not set `status=active` — website activation (08) does.
+not set `status=active` — website activation (09) does.
 
 Do not resurrect: `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`,
 `.../memberships/*` CRUD, `/me/orgs`, `/me/tenants`, `/me/selected-org`. CMS

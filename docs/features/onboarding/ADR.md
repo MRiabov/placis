@@ -146,7 +146,8 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     incomplete wait-cap snapshots) are never website-rollback targets.
     (2026-08-16: activation does not do website publication; unpublished until
     CMS website publication. 2026-08-25: 07 is the first website publication; 08
-    is v2 strip off.)
+    is v2 strip off.) (2026-08-30 later: 08 is the optional first website
+    publication; 09 is strip off; 07 is contractor copy improvement.)
 
 13. **Website copy generation is async and does not block website activation** —
     after applying the website template, a River job writes copy into existing
@@ -154,7 +155,9 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     static HTML to R2. 08 does not wait for 06. If copy fails, the unpublished
     website stays. Same website editor tools as the website editor, no chat UI,
     no `create_page`. (2026-08-25: 07 wait is a cap, not “issue the website
-    preview immediately and live-render unpublished rows.”)
+    preview immediately and live-render unpublished rows.”) (2026-08-30 later:
+    wait-end is 07 contractor copy improvement; 08 share writes R2; 09 does not
+    wait for 06. 06 is automatic website copy generation.)
 
 14. **Resume is same-browser `localStorage` + the existing onboarding session
     token** — restore with `GET .../profile`. No server-side resume token. Clerk
@@ -238,10 +241,13 @@ Extract is known-URL crawl text, not a Projects-only hop.)
 21. **Wait teaser lands on the website preview** — `/onboarding/preview` (SSE
     carousel, ~15s cap) then navigates to `/onboarding/preview-and-edit/`,
     not the preview website address. Onboarding session `previewing` means the
-    website preview, not that 07 wrote `latest/`. 07 is on-demand **share** from
-    that website preview (strip on). 08 may run with no prior 07: reserve prefix
-    if needed, first live R2 without strip. If they already shared, 08 archives
-    strip HTML and writes live v2. (2026-08-30)
+    website preview, not that 08 wrote `latest/`. 07 is **contractor copy
+    improvement** (Assistant on that website preview). 08 is on-demand
+    **share** from that website preview (strip on). 09 may run with no prior
+    08: reserve prefix if needed, first live R2 without strip. If they already
+    shared, 09 archives strip HTML and writes live v2. (2026-08-30. 2026-08-30
+    later: 07 is contractor copy improvement; former 07 share is 08; former 08
+    activation is 09.)
 
 22. **`/me` returns unactivated `TenantRead` after Clerk org attach** —
     `POST /v1/me/clerk-organization` may attach `tenants.clerk_org_id` without
@@ -253,8 +259,16 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     sixth auth mode). Onboarding session token may GET unpublished website; it
     must not PATCH. (2026-08-30)
 
-23. **08 completes the unpaid Assistant thread** — In the same transaction as
+23. **09 completes the unpaid Assistant thread** — In the same transaction as
     `tenants.status=active`, complete `ai.threads` `kind=cms_assistant`
     `current` and end `running`. CMS GET lazy-creates a new empty `current`. Do
     not migrate unpaid items onto CMS. Leftover 06 continues as River-only.
-    (2026-08-30)
+    (2026-08-30. 2026-08-30 later: numbered 09 after 07 contractor copy
+    improvement.)
+
+24. **Contractor copy improvement is pipeline 07** — Wait-end on
+    `/onboarding/preview-and-edit/` is a DAG step: the contractor improves
+    generated copy with Assistant (five unpaid prompts, instant apply). Distinct
+    from 06 automatic website copy generation (the River job) and from 08 share
+    (R2). 09 does not wait for more prompts. HTTP:
+    [website-editor.md](website-editor.md). (2026-08-30)

@@ -2,9 +2,10 @@
 
 Unpaid website preview on `/onboarding/preview-and-edit/` (app origin only).
 Contractor copy is **Assistant**. Spec label is onboarding website editor.
+Pipeline step: [07 contractor copy improvement](pipeline/07-contractor-copy-improvement.md).
 
 Never under `{website_prefix}.preview.placis.com`. That host is Cache then R2
-(the [preview website address](../website/cloudflare.md)). After **08**, this
+(the [preview website address](../website/cloudflare.md)). After **09**, this
 route redirects to `/cms/website`.
 
 HTTP: `/v1/onboarding/website-editor/assistant/…` in
@@ -16,7 +17,7 @@ same 20-turn loop. It owns auth, knowledge YAML, allowlist, instant apply,
 
 CMS [`/v1/assistant/…`](../assistant/api.md) stays **403** `tenant_unactivated`
 for unactivated. Do not add unactivated branches there. Do not put this in
-`onboarding/websitepreview` (07 / R2 / SSE) or `onboarding/assistant` (Find,
+`onboarding/websitepreview` (08 / R2) or `onboarding/assistant` (Find,
 Review, and client interview, `tools=[]`). 06 and this package import
 `website/assistant`. `websitepreview` does not.
 
@@ -149,14 +150,14 @@ items as they land — that is the in-flight copy UI. Do not invent `run_status`
 on hydrate. Do not use the Assistant text socket as the 06 progress bus. Owner
 send is **409** `in_flight_run` until 06 is idle.
 
-After 08, leftover 06 continues as River-only: lock `tenant_id`, not
+After 09, leftover 06 continues as River-only: lock `tenant_id`, not
 `assistant.runs`. It must not append thread items. CMS assistant / PATCH stay
 **not** 409 because 06 is running ([assistant testing](../assistant/testing.md)
 §15). Same website-slot overlap: last-write / `edit_history_conflict`.
 
 06 still must not `create_page`.
 
-## 08
+## 09
 
 In the **same transaction** as `tenants.status=active`, complete `current` and
 end `running`. CMS `GET /v1/assistant/thread` lazy-creates a new empty
@@ -176,7 +177,7 @@ control); hydrate the Assistant thread (`GET …/thread`); compact text composer
 visible; send and Voice need **Sign up with Google**. Signed-in unpaid: live
 canvas, nested website page list + canvas top-menu/footer website page clicks
 stay on this route, Assistant thread + compact text composer (**Voice** switch),
-sticky website-activation strip, **Share**. After **08**, redirect to
+sticky website-activation strip, **Share**. After **09**, redirect to
 `/cms/website`.
 
 Look: custom top-left nested control (this website preview only, titles list —
@@ -193,13 +194,13 @@ thread on land. After Sign up, Send and Voice on the look demo snap the canvas
 to the website page being edited (Follow) and apply copy. Reuse CMS Assistant
 tokens.
 
-**Preview website address** — after Share (or after 08 if they paid without
+**Preview website address** — after Share (or after 09 if they paid without
 sharing). Cache then R2 + strip. No website preview, no Assistant, no SPA. Pay
-from the strip still works (08). Apex `preview.placis.com` is **404**.
+from the strip still works (09). Apex `preview.placis.com` is **404**.
 
 Share: onboarding session token (or Clerk unactivated). Reserves
-`website_prefix` if needed and runs [07](pipeline/07-website-preview.md) (strip
-on). Optional. That host does not follow later 06 or Assistant PATCHes until
-they share again (or 08).
+`website_prefix` if needed and runs [08](pipeline/08-preview-website-address.md)
+(strip on). Optional. That host does not follow later 06 or Assistant PATCHes
+until they share again (or 09).
 
 Pay does not require a prior share.
