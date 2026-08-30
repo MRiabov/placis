@@ -41,16 +41,20 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
    `function_call_output` on that same voice-service WS; muted `tool_summary`
    item appended. `POST /v1/assistant/voice/transcripts` forwards committed xAI
    Voice events (`input_audio_transcription.completed` /
-   `output_audio_transcript.done`) and appends owner + assistant text with
-   `offset_seconds` from the xAI Voice connection clock. Reconstruct
-   `[m:ss owner]` / `[m:ss assistant]` (never say user). `provider_event` jsonb
+   `output_audio_transcript.done`) and appends owner + assistant `transcript`
+   text. `offset_seconds` from `audio_start_ms` on paired
+   `speech_started` when that key exists; else null. Reconstruct
+   `[m:ss owner]` / `[m:ss assistant]`.
+   Never say **user**.
+   `provider_event` jsonb
    stored; GET omits it. No `POST /v1/stt`. If xAI omitted a committed
    transcript, no row. `ai_generations` has a voice row on that `cms_assistant`
    thread. Hydrate does not read that table. Tool-calls during the **current**
    voice run succeed (`in_flight_run` is a second start). Realtime URL host is
-   the xAI region for that tenant’s business country (`ie`/`gb` → **eu-west-1**,
-   `us` → **us-east-1**), not a frontend-hardcoded host. Connection create
-   includes **Placis** in keyterms and `replace` **Play-sis**.
+   **eu-west-1** for Find `ie`/`gb` and **us-east-1** for Find `us`
+   (`wss://{region}.api.x.ai/v1/realtime`), not a frontend-chosen host.
+   Connection create includes **`grok-transcribe`**, **Placis** in keyterms, and
+   `replace` **Play-sis**.
 8. **Voice → text** — After a tool-using voice turn, expanded thread shows
    transcripts **and** muted tool lines. Next owner send on
    `GET /v1/assistant/thread/ws` continues from those thread items. First text
@@ -118,10 +122,10 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
    mount). Close → **Enable voice guide**. Hidden on wait teaser. Turn on
    again more than 5s after that intro began: no second intro. In-flight 409 on
    a second realtime-connection create. Realtime URL host is **eu-west-1** for
-   Find `ie`/`gb` and **us-east-1** for Find `us` (company registry country wins
-   when a company registry record is attached; else Maps listing `country` when
-   set).
-   Connection create includes **Placis** in keyterms and `replace` **Play-sis**.
+   Find `ie`/`gb` and **us-east-1** for Find `us`
+   (`wss://{region}.api.x.ai/v1/realtime`). Connection create
+   includes **`grok-transcribe`**, **Placis** in keyterms, and `replace`
+   **Play-sis**.
 3. **No write tools** — Profile is unchanged after a guide turn. `tools=[]`.
 4. **No text backup** — There is no `GET /v1/onboarding/assistant/thread/ws`.
    After voice utterances, `GET` hydrate may return items for a later Voice

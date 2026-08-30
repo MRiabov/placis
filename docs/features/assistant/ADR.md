@@ -173,10 +173,25 @@ instead of silently replacing it.
     `ai_generations.input` at realtime-connection create (plus the keyterms /
     `replace` sent on that create) so a conversation can be reconstructed
     with the system prompt. Text turns do the same: `input` is the exact
-    assembled prompt sent that turn. Hydrate does not return it. If xAI did
-    not emit a committed transcript for that
-    utterance, skip the row. Do not `POST /v1/stt`, do not open
-    `wss://…/v1/stt`, do not transcribe the recording. (2026-08-30)
+    assembled prompt sent that turn. Hydrate does not return it. Same day,
+    later: **use only xAI Voice events that exist.** xAI documents the event
+    names and OpenAI Realtime compatibility. Owner committed text is
+    `conversation.item.input_audio_transcription.completed`; map `body` from
+    JSON `transcript` when present (OpenAI-compat keys; xAI REST lists the
+    event, not a field table). Assistant text is
+    `response.output_audio_transcript.done` the same way. Set
+    `audio.input.transcription.model` to **`grok-transcribe`** (named on
+    xAI’s `.updated` docs; `.updated` is captions only — do not POST it).
+    xAI does **not** document `offset_seconds`. Pair owner `.completed` with
+    `input_audio_buffer.speech_started` when both JSON objects share
+    `item_id`. If the forwarded JSON has `audio_start_ms` (OpenAI Realtime
+    field; xAI lists the event, not the payload), store `offset_seconds` as
+    floor(ms/1000). If that key is missing, leave `offset_seconds` null —
+    do not invent a browser clock. Assistant `.done` has no documented
+    clock; null unless a timing key is on that JSON. Do not call
+    `POST /v1/stt` / `wss://…/v1/stt` (separate STT API with word timings).
+    If xAI did not emit a committed transcript for that utterance, skip the
+    row. Do not transcribe the recording. (2026-08-30)
 
 14. **AI voice vendor cost** — Voice is not billed as a text LLM call. Debit is
     **AI voice vendor cost** (xAI audio minutes + text
@@ -241,6 +256,12 @@ instead of silently replacing it.
     country on `tenants.country` (`ie` / `gb` / `us`). Map `ie`/`gb` →
     **eu-west-1**, `us` → **us-east-1**. Not the contractor’s IP. Hosts:
     [voice agent](../../general-architecture/voice-agent.md). (2026-08-30)
+    Same day, later: **public Speech to Speech is documented as cluster
+    us-east-1** (`wss://api.x.ai/v1/realtime`,
+    `https://api.x.ai/v1/realtime/client_secrets`). Do not invent
+    `eu-west-1.api.x.ai` / `us-east-1.api.x.ai` Voice hosts. When xAI
+    documents an EU Voice host, map `ie`/`gb` there. Until then the create
+    response returns that documented realtime URL.
 
 24. **Glossary is in both assistants; Voice also gets pronunciation** — CMS
     text, CMS Voice, and the onboarding voice guide all include the product
@@ -248,7 +269,13 @@ instead of silently replacing it.
     Voice connection create also sets xAI `audio.input.transcription.keyterms`
     (STT bias) and `replace` (spoken wording; transcript text unchanged).
     **Placis** is a keyterm; `replace` speaks it **Play-sis**. Do not
-    `session.update` those mid-call. (2026-08-30)
+    `session.update` those mid-call. (2026-08-30) Same day, later: set
+    `audio.input.transcription.model` to **`grok-transcribe`**. xAI documents
+    `instructions`, `keyterms`, and `replace` on `session.update`. Bind them
+    on `POST /v1/realtime/client_secrets` when that request accepts an
+    initial-configuration object; otherwise the browser sends **one**
+    `session.update` after the Voice connection opens with the blob Go already
+    stored. Not a second configure mid-call.
 
 25. **Three Assistant implementations, one contractor name** — CMS
     `/v1/assistant/…` after website activation. Find, Review, and client

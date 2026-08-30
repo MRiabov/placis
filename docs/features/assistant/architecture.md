@@ -124,8 +124,8 @@ item):
 2. Live business profile
 3. Thread items (compacted tail, same keep-last-3 rule). Voice items in that
    tail are formatted `[m:ss owner]` / `[m:ss assistant]` from typed `kind` +
-   `offset_seconds` (xAI Voice connection clock), then `body`. Text items have
-   no offset prefix.
+   `offset_seconds` when set (`audio_start_ms` on paired `speech_started`), then
+   `body`. Text items have no offset prefix.
 4. Current assistant screen context (typed struct)
 5. Assistant screen switch notification when the screen changed since the last
    **owner** request
@@ -280,10 +280,9 @@ may have changed). Seed **instructions** (knowledge + profile + screen /
 compacted thread tail). Do not replay the thread as billed
 `conversation.item.create` items. Pin a dated xAI voice model id (not
 `grok-voice-latest`). Live Voice uses the xAI region for the **business
-country** ([voice agent](../../general-architecture/voice-agent.md)). Connection
-create also sets xAI **keyterms** and **`replace`** from
-`internal/knowledge/voice_pronunciation.yaml` (not a mid-call
-`session.update`).
+country** ([voice agent](../../general-architecture/voice-agent.md)):
+`wss://{region}.api.x.ai/v1/realtime`. Set **`grok-transcribe`**, **keyterms**,
+and **`replace`** on create / one opening `session.update` (not mid-call).
 
 Voice create has **no** `plan` / `ask_first` / `follow`. Voice is always **Ask
 first** in the run row. Instant apply is not a Voice path. No owner Plan switch
@@ -370,11 +369,10 @@ context.
   the URL and never plays it. Compaction does **not** delete the object or the
   `files` row. **Onboarding does not store Voice recordings.** Persist committed
   utterance text on `assistant_conversation_items` (`body` + `offset_seconds`
-  from the xAI Voice-connection clock on the live Voice transcript events;
-  `provider_event` jsonb). Reconstruct `[m:ss owner]` / `[m:ss assistant]` from
-  typed `kind` + `offset_seconds`. No `files` row, no `recording_file_id`, no
-  onboarding recordings HTTP. `created_at` is the row insert time, not the
-  conversation clock.
+  from `audio_start_ms` when present; `provider_event` jsonb). Reconstruct
+  `[m:ss owner]` / `[m:ss assistant]` from typed `kind` + `offset_seconds`. No
+  `files` row, no `recording_file_id`, no onboarding recordings HTTP.
+  `created_at` is the row insert time, not the conversation clock.
 - **Not in Postgres:** the recording file, PCM, ASR/TTS deltas. Committed xAI
   transcript JSON is `provider_event` jsonb.
 - Compaction does **not** delete `ai_generations`. Compaction may shrink

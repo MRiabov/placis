@@ -45,16 +45,20 @@ That surface is the [onboarding website editor](website-editor.md).
   committed xAI Voice events already on that socket (owner
   `input_audio_transcription.completed`, assistant
   `output_audio_transcript.done`). Go maps to **text**, **`offset_seconds`**
-  (xAI Voice connection clock), and `provider_event` jsonb. Reconstruct
-  `[m:ss owner]` / `[m:ss assistant]` + `body` from typed `kind` (never say
-  user; never `kind=system`). `created_at` is the row insert time. If xAI
-  omitted a committed transcript, skip the row — do not call STT again. Do
-  **not** store the Voice recording (no signed-URL PUT, no `files` row, no
+  (from `audio_start_ms` when present), and `provider_event` jsonb. Reconstruct
+  `[m:ss owner]` / `[m:ss assistant]` + `body` from typed `kind`.
+
+  Never say **user**.
+
+  Never `kind=system`. `created_at` is the row insert time. If xAI omitted a
+  committed transcript, skip the row — do not call STT again. Do **not** store
+  the Voice recording (no signed-URL PUT, no `files` row, no
   `recording_file_id`). Do not invent a second text dump route. Frontend posts
-  leftover transcripts on close. Live audio is browser ↔ the xAI region for the
-  business country ([voice agent](../../general-architecture/voice-agent.md)) and is not kept by us. Knowledge includes the
-  product glossary; Voice create sets keyterms and `replace` (Placis →
-  **Play-sis**).
+  leftover transcripts on close. Live audio is browser ↔ the xAI region for
+  the business country
+  ([voice agent](../../general-architecture/voice-agent.md)) and is not kept by
+  us. Knowledge includes the product glossary; Voice create sets keyterms and
+  `replace` (Placis → **Play-sis**).
 - Launcher: DustOrb bottom right, **visible**, voice off until they click. Cue
   **Click to turn on voice**; close → **Enable voice guide**. Prerecorded intro
   on click, then live Q&A. The intro does not replay if they turn the guide on

@@ -55,7 +55,7 @@ Onboarding website editor, Assistant thread).
   Voice; switch to text. Projects **write** tools only from the website editor.
 - Onboarding assistant: isolated, Voice only, not billed. Contractor copy is
   **Assistant**. Persist committed xAI Voice transcripts (**text** +
-  **`offset_seconds`** from the xAI Voice connection clock; `provider_event`
+  **`offset_seconds`** from `audio_start_ms` when present; `provider_event`
   jsonb); do not store the Voice recording. Do not call STT again.
 - Onboarding website editor: five unpaid prompts, instant apply, not billed,
   same `ai.threads` (`kind=cms_assistant`) until 09 completes `current`.
