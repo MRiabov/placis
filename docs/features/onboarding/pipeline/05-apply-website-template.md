@@ -52,7 +52,8 @@ onboarding session’s `tenant_id` (unactivated tenant from 01).
    Wait-end is [07](07-contractor-copy-improvement.md). 08 writes the host if
    they share — not immediately.
 
-Copy is **not** this step — [06](06-website-copy-generation.md).
+Copy is **not** this step —
+[06 automatic website copy generation](06-website-copy-generation.md).
 
 ## Persist
 
