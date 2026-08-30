@@ -170,7 +170,8 @@ Onboarding uses
   derives **`offset_seconds`** (int, `>= 0`, maximum 7200) from that xAI Voice
   connection clock (ms from this Voice run’s realtime-connection start →
   seconds). Reconstruct `[m:ss owner]` / `[m:ss assistant]` from `kind` +
-  `offset_seconds`. Never say user. Persist the forwarded JSON as
+  `offset_seconds`. Never say user. Never `kind=system` / `[m:ss system]`
+  (instructions stay the Voice-connection seed). Persist the forwarded JSON as
   `provider_event` (jsonb; omitted from GET). Events may be omitted on a
   **usage-only** POST. If xAI did not emit a committed transcript, omit that
   utterance — do not invent text or offset. Reasoning if the voice service
@@ -183,7 +184,8 @@ Onboarding uses
 - **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
   `created_at` or a browser audio/wall clock as the conversation clock; call
   `POST /v1/stt` or `wss://…/v1/stt`; transcribe the recording; accept a
-  freeform JSON bag of other xAI events.
+  freeform JSON bag of other xAI events; map xAI `role=system` / instructions
+  to a thread item.
 
 ### POST /v1/assistant/voice/recordings
 
