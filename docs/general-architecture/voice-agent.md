@@ -57,8 +57,8 @@ resumption are ops, not the assistant thread and not `ai_generations`.
 The adapter (not the browser) is responsible for:
 
 1. Create the short-lived secret (`POST …/voice/realtime-connection`).
-2. Return the documented Speech to Speech host (below). Pin a **dated**
-   voice model id (not `grok-voice-latest`).
+2. Pick the xAI region from the **business country** (below). Pin a **dated**
+   voice model id (not `grok-voice-latest`) that exists on that cluster.
 3. Seed **instructions** (knowledge concat + profile + screen / compacted thread
    tail as **one instructions blob**). Persist that exact blob on the voice
    run’s `ai_generations.input` (with keyterms / `replace` sent on create). Do
@@ -80,17 +80,18 @@ The adapter (not the browser) is responsible for:
 
 ## xAI region (business country)
 
-Do **not** geolocate the contractor’s IP. Do **not** let the browser pick a
-host.
+Do **not** blanket-route every tenant to eu-west-1. Do **not** geolocate the
+contractor’s IP. Do **not** let the browser pick a host.
 
-Public Speech to Speech is documented as cluster **us-east-1**
-(`wss://api.x.ai/v1/realtime`, `https://api.x.ai/v1/realtime/client_secrets`).
-The create response returns that documented realtime URL. Same host for token
-create and the WS. Do not invent `eu-west-1.api.x.ai` / `us-east-1.api.x.ai`.
+xAI regional API hosts are `{region}.api.x.ai`. Live ones include
+**eu-west-1** and **us-east-1** (also us-west-2 / us-saltlake-2 on some
+models). Global `https://api.x.ai` / `wss://api.x.ai` auto-routes; Speech to
+Speech examples use `wss://api.x.ai/v1/realtime`. Pin the regional host so
+IE/GB audio stays on eu-west-1. `grok-voice-think-fast-2.0` is listed in
+us-east-1, eu-west-1, and us-saltlake-2.
 
-At each `POST …/voice/realtime-connection` (CMS and onboarding), Go still
-resolves country (`ie` / `gb` / `us`) so `ie`/`gb` can map onto an EU Voice
-host **when xAI documents one**:
+At each `POST …/voice/realtime-connection` (CMS and onboarding), Go resolves
+country (`ie` / `gb` / `us`) in this order:
 
 1. **Company registry** — if a company registry record is attached, that
    registry’s country (CRO → `ie`, Companies House → `gb`, US state registry →
@@ -100,9 +101,13 @@ host **when xAI documents one**:
    `listing_address`).
 3. Else **Find country** — `tenants.country`, written at business lookup.
 
-Until that host exists, every country uses the documented us-east-1 URL. Do
-not switch host mid-call. Next Voice create re-resolves country (PATCH sources
-can change the winner).
+Then map: `ie` and `gb` → xAI **eu-west-1**; `us` → xAI **us-east-1**. `gb`
+uses the Europe cluster (latency and UK GDPR); it is not sent to the US.
+
+Return `wss://{region}.api.x.ai/v1/realtime` and create the secret on
+`https://{region}.api.x.ai/v1/realtime/client_secrets`. Same host for token
+create and the WS. Do not switch host mid-call. Next Voice create re-resolves
+country (PATCH sources can change the winner).
 
 Find country is persisted on `tenants.country` so CMS Voice still resolves after
 onboarding routes 403. Typeahead still uses country as a search parameter.
@@ -136,10 +141,10 @@ Do not mid-call `session.update` for these (same rule as tools / instructions).
    browser-safe connection fields.
 3. The frontend connects **directly to the voice service**; live audio never
    flows through the backend. The WS URL is the **realtime URL** from the
-   create response (documented xAI Voice host; today
-   `wss://api.x.ai/v1/realtime`). Ephemeral-token create uses the same host’s
-   `https://api.x.ai/v1/realtime/client_secrets`. Do not invent
-   `{region}.api.x.ai`. Do not hardcode a host in the frontend.
+   create response (`wss://{region}.api.x.ai/v1/realtime` from the business
+   country). Ephemeral-token create uses the same host’s
+   `https://{region}.api.x.ai/v1/realtime/client_secrets`. Do not hardcode a
+   host in the frontend.
 4. The browser never receives the long-lived voice API key.
 
 CMS create **includes** the unpublished website working copy when
@@ -186,9 +191,9 @@ audio-content items are not that text fee. `response.create` is not a billable
 event. Published audio rate 2026-08-28: `grok-voice-think-fast-2.0` $0.08 / min.
 Pin a dated model id; do not ride `grok-voice-latest`. Do not enable xAI
 server-side search / MCP tools (extra per-call fees). Do not use provisioned
-phone numbers. Live Voice uses the documented Speech to Speech host
-(`wss://api.x.ai/v1/realtime`, cluster us-east-1) until xAI publishes an EU
-Voice host.
+phone numbers. Live Voice uses the xAI region for the **business country**
+(`wss://{region}.api.x.ai/v1/realtime`; not a blanket eu-west-1, not the
+auto-routing global `api.x.ai` host).
 
 Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor cost**). CMS only. Onboarding
 guide is not billed to the contractor. Go never sees PCM (live audio or the

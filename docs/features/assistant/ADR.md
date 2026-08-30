@@ -261,7 +261,16 @@ instead of silently replacing it.
     `https://api.x.ai/v1/realtime/client_secrets`). Do not invent
     `eu-west-1.api.x.ai` / `us-east-1.api.x.ai` Voice hosts. When xAI
     documents an EU Voice host, map `ie`/`gb` there. Until then the create
-    response returns that documented realtime URL.
+    response returns that documented realtime URL. Same day, later:
+    **`{region}.api.x.ai` hosts are real.** status.x.ai lists
+    `eu-west-1.api.x.ai` / `us-east-1.api.x.ai`. xAI mTLS docs refer to
+    regional endpoints. `grok-voice-think-fast-2.0` is listed in us-east-1,
+    eu-west-1, and us-saltlake-2. Restore the map: `ie`/`gb` → **eu-west-1**,
+    `us` → **us-east-1**. Return `wss://{region}.api.x.ai/v1/realtime` and
+    create the secret on
+    `https://{region}.api.x.ai/v1/realtime/client_secrets`. Global `api.x.ai`
+    auto-routes; Speech to Speech examples use it. Pin the regional host for
+    live Voice. (2026-08-30)
 
 24. **Glossary is in both assistants; Voice also gets pronunciation** — CMS
     text, CMS Voice, and the onboarding voice guide all include the product

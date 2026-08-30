@@ -167,8 +167,8 @@ not one generation. **20** tool-using turns after one owner send or utterance
 (both channels). **128K / 12K tokens** are text `LLMProvider` assembly only.
 Voice live context is xAI-side after instructions seed
 ([assistant architecture](../features/assistant/architecture.md)). That live
-path uses the documented Speech to Speech host
-(`wss://api.x.ai/v1/realtime`; [voice agent](voice-agent.md)).
+path uses the xAI region for the **business country**, not the auto-routing
+global `api.x.ai` host ([voice agent](voice-agent.md)).
 
 Website-editor tools (Ask first / instant apply) live in `website/assistant`
 ([website editor tools](../features/website/assistant.md)). Ads generate / revise stay ads HTTP, not the CMS
