@@ -17,7 +17,7 @@ import { DustOrb } from "@/ui/DustOrb";
 import { TextArea } from "@/ui/Field";
 import { Notice } from "@/ui/Notice";
 
-const orbVars =
+export const assistantOrbVars =
   "[--assistant-h:7rem] [--voice-orb:min(5.5rem,30vw)] [--voice-orb-hit:2.75rem] min-[1101px]:[--assistant-h:3.25rem] max-[480px]:[--voice-orb:min(50vw,50dvh)] max-[480px]:[--voice-orb-hit:min(12rem,42vw)]";
 
 const pillClass =
@@ -226,7 +226,12 @@ export function CmsAssistantLayer(): ReactNode {
     return null;
   }
   return (
-    <div className={cn("pointer-events-none absolute inset-0 z-20", orbVars)}>
+    <div
+      className={cn(
+        "pointer-events-none absolute inset-0 z-20",
+        assistantOrbVars,
+      )}
+    >
       <AssistantSession />
     </div>
   );
