@@ -20,7 +20,7 @@ owner send / utterance). Tools are hard-typed website editor actions — never
 one generic plan tool with freeform JSON. Each call is validated on input; the
 backend turns it into a planned / applied / skipped / failed event. **128K /
 12K tokens** are text `LLMProvider` assembly only. Voice live context is
-xAI-side after instructions seed (`wss://api.x.ai/v1/realtime`).
+xAI-side after instructions seed (xAI region from the **business country**).
 
 | Tool | What it does |
 | --- | --- |

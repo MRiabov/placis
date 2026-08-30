@@ -131,7 +131,7 @@ socket; event structs still land in `/openapi.json` for typegen.
 - **Errors:** `403` `tenant_unactivated`; `402` `usage_credit_exhausted`;
   `409` `in_flight_run`.
 - **Must not:** return the long-lived voice API key; accept a browser-chosen
-  host.
+  region or host.
 
 Onboarding uses
 [POST /v1/onboarding/assistant/voice/realtime-connection](../onboarding/api.md).
