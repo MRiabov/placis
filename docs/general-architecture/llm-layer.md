@@ -46,6 +46,65 @@ and search share Vercel; there is no OpenRouter hop.
   generate/cleanup. Voice **cost** is xAI audio minutes plus text-item fees, not
   token counts — leave `input_tokens` / `output_tokens` null on those rows
   ([billing](../features/billing/README.md)). Hydrate of the assistant thread does **not** read this table.
+  **Every call belongs to a thread** (`ai_generations.thread_id` required) so a
+  schema mismatch can retry on the same thread (failed row stays; the next
+  attempt is another generation). `LLMProvider` always receives `thread_id`.
+
+## Threads
+
+Shared by the CMS assistant, the onboarding assistant, and every headless /
+offline generate factory. One table, not copied into feature persistence docs.
+Postgres schema **`ai`**. Go package `internal/ai/` (`StrEnum` when code
+exists). Do **not** dump non-assistant work into an `internal` kind.
+
+Closed set: native Postgres enum, not `text` + `CHECK`:
+
+```sql
+CREATE TYPE ai.thread_kind AS ENUM (
+  'cms_assistant',
+  'onboarding_assistant',
+  'ads_generate',
+  'ads_inline_assistance',
+  'website_copy_generation',
+  'website_template_picker',
+  'website_reviews_picker',
+  'etl_project_classify',
+  'etl_photo_classify',
+  'etl_crawl_parse',
+  'media_cleanup',
+  'project_inline_assistance',
+  'eval'
+);
+```
+
+A new generate factory is `ALTER TYPE ai.thread_kind ADD VALUE '…'` plus this
+list and the Go enum. Callers do not invent strings at the call site.
+
+- `threads` — `id`, `tenant_id` nullable fk (null on `eval`), `kind`
+  (`ai.thread_kind`, required), `onboarding_session_id` nullable fk
+  (`onboarding.onboarding_sessions`; required when `kind=onboarding_assistant`),
+  `status` (`current` / `completed`; used when `kind=cms_assistant`),
+  `last_activity_at`, `last_assistant_edit_at` (cms compaction),
+  `compacted_through_item_id` nullable fk (`assistant.thread_items`; cms only),
+  timestamps. Unique `(tenant_id) WHERE kind = 'cms_assistant' AND status =
+  'current'`. Unique `(onboarding_session_id) WHERE kind =
+  'onboarding_assistant'`.
+
+**`cms_assistant`** — CMS overlay conversation. Unique current per tenant.
+Compaction. GET `/v1/assistant/thread` hydrate (items, not generations).
+Compaction writes a new generation on **this** thread (not its own kind).
+
+**`onboarding_assistant`** — onboarding guide. Unique per onboarding session.
+Onboarding hydrate. Never migrated onto `cms_assistant` after website
+activation.
+
+**Every other `kind`** — insert a thread before the first generate; reuse it
+for schema-repair retries; do not hydrate on GET thread. Features that are not
+already on a CMS or onboarding thread create one with the matching enum value.
+
+Failed parse stays an `ai_generations` row. The next attempt is another row on
+the **same** `thread_id` (prior failure in context). Bounded subtree repair
+above still applies; this is the persistence for a further agentic retry.
 
 ## `ai_generations`
 
@@ -54,9 +113,8 @@ ads, and ETL post-text extract. One table, not copied into feature persistence
 docs. Postgres schema **`ai`** (not `llm`). Go package `internal/ai/`. Image
 **files** stay in `files` / `media_library`.
 
-- `ai_generations` — `id`, `tenant_id` nullable fk, `thread_id` nullable uuid
-  (CMS assistant; hydrate never joins), `conversation_id` nullable uuid
-  (onboarding assistant; hydrate never joins), `trace_type` (`prod`/`eval`),
+- `ai_generations` — `id`, `tenant_id` nullable fk, `thread_id` required fk →
+  `ai.threads` (hydrate never joins), `trace_type` (`prod`/`eval`),
   `generation_type` (includes `voice`), `model`, `prompt_id`, `prompt_version`
   (that feature’s `prompts.yaml` — not knowledge), `knowledge_id` +
   `knowledge_format_revision` nullable (knowledge base registry; not `prompt_id`

@@ -69,11 +69,12 @@ succeeded from their own transform.
 ## Fail
 
 A classifier output that does not match the schema is **retried up to 3 times**,
-not skipped. On each attempt, use bounded schema repair when the mismatch is
-small enough ([LLM layer](../../../general-architecture/llm-layer.md): repair only the smallest failing subtree; never
-accept a partial `photo_kind`). After those retries, leave `photo_kind` unset
-(do not write `photo_kind_algorithm`). Continue other items. Prior kinds’ live
-business profile stays.
+not skipped, on the same `etl_photo_classify` thread (insert before the first
+generate). On each attempt, use bounded schema repair when the mismatch is small
+enough ([LLM layer](../../../general-architecture/llm-layer.md): repair only the smallest failing subtree; never accept a
+partial `photo_kind`). After those retries, leave `photo_kind` unset (do not
+write `photo_kind_algorithm`). Continue other items. Prior kinds’ live business
+profile stays.
 
 Transport / job errors stay retryable on the River job. `status=error` when
 those retries exhaust.

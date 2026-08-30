@@ -79,7 +79,9 @@ chunk.
    review text. Schema: past completed named job or not; if yes, title +
    description within maxLengths. Prompt in ETL `prompts.yaml`, not Go.
    Record reasoning, owner-visible output, tool calls, model, and cost
-   ([LLM layer](../../../general-architecture/llm-layer.md)). Optional
+   ([LLM layer](../../../general-architecture/llm-layer.md)). Insert an
+   `etl_project_classify` thread before the first generate; retries of that
+   source reuse it. Optional
    `ai_generation_id` on the verdict.
 6. Skip in-progress / current jobs, hiring, offers, memes, generic service
    lists, generic reviews (“great plumber”, stars only, “highly recommend

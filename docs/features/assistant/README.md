@@ -12,7 +12,8 @@ UI; on Ads the assistant write tool is media-library `cleanup_image`.
   two cards, onboarding launcher
 - [architecture.md](architecture.md) — logic (context, allowed set, text vs voice, apply, locks).
   HTTP contract stays in [api.md](api.md); tables in [persistence.md](persistence.md).
-- [persistence.md](persistence.md) — schema `assistant` thread tables
+- [persistence.md](persistence.md) — schema `assistant` overlay items and runs;
+  thread identity is `ai.threads`
 - [api.md](api.md) — `/v1/assistant/…` routes (text WebSocket + HTTP; voice under
   `/v1/assistant/voice/`)
 - [testing.md](testing.md)
