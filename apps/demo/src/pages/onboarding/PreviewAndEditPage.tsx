@@ -487,7 +487,7 @@ function UnpaidCanvas({
       className="relative z-0 min-h-0 flex-1 overflow-auto bg-white pb-56"
       ref={canvasRef}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-site-hero px-8 pt-16 pb-4 text-site-hero-fg">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-site-hero px-8 py-4 text-site-hero-fg">
         <b>Bellfield Roofing</b>
         <nav className="flex flex-wrap gap-3 text-sm">
           {pageTree

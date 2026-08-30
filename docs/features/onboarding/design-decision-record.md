@@ -150,4 +150,7 @@ inventing it.
     wide pane the composer is max-width 32rem, centered. (2026-08-30) Same day,
     later: Assistant shows the CMS thread (expand / reduce; no Plan / Ask first
     / Clear context). Default expanded so 06 `tool_summary` is visible on land.
+    (2026-08-30) Same day, later: this route has no Find / Review / Questions
+    progress, no onboarding Back, and no Find/Review Assistant. Website page
+    list and Share sit on the canvas corners; they do not reserve a top band.
     (2026-08-30)
