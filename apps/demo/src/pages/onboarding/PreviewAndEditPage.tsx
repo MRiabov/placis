@@ -12,7 +12,9 @@ import { Button } from "@/ui/Button";
 import {
   AssistantLaunch,
   AssistantSession,
+  assistantOrbVars,
   CmsAssistantProvider,
+  useCmsAssistant,
 } from "@/ui/CmsAssistant";
 import { card } from "@/ui/card";
 
@@ -60,6 +62,7 @@ export function PreviewAndEditPage(): ReactNode {
 
 function PreviewAndEditInner(): ReactNode {
   const { setExtraGroups } = useOnboardingDev();
+  const { open: assistantOpen, voiceOn } = useCmsAssistant();
   const [page, setPage] = useState<PreviewPageId>("home");
   const [listOpen, setListOpen] = useState(false);
   const [scene, setScene] = useState<ActivationScene>("signed");
@@ -131,14 +134,15 @@ function PreviewAndEditInner(): ReactNode {
       ) : null}
       <div
         className={cn(
-          "relative min-h-0 flex-1 overflow-hidden",
-          "[--assistant-h:7rem] [--voice-orb:min(5.5rem,30vw)] [--voice-orb-hit:2.75rem]",
-          "min-[1101px]:[--assistant-h:3.25rem] max-[480px]:[--voice-orb:min(50vw,50dvh)] max-[480px]:[--voice-orb-hit:min(12rem,42vw)]",
+          "relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
+          assistantOrbVars,
+          voiceOn && assistantOpen ? "is-voice" : "",
         )}
+        data-editor-canvas
       >
         <UnpaidCanvas page={page} onPage={setPage} />
         <AssistantLaunch className="absolute right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] z-30" />
-        <AssistantSession />
+        <AssistantSession website />
       </div>
       <ActivationStrip
         panelOpen={panelOpen}
@@ -242,7 +246,7 @@ function UnpaidCanvas({
 }): ReactNode {
   const service = siteServices.find((item) => page === `service:${item.title}`);
   return (
-    <div className="h-full min-h-0 overflow-auto bg-white">
+    <div className="relative z-0 min-h-0 flex-1 overflow-auto bg-white">
       <div className="flex flex-wrap items-center justify-between gap-3 bg-site-hero px-8 py-4 text-site-hero-fg">
         <b>Bellfield Roofing</b>
         <nav className="flex flex-wrap gap-3 text-sm">
