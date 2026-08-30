@@ -81,7 +81,7 @@
             "role": "Founder/Chairman",
             "image_url": "{{images.institutional_leader_founder}}",
             "alt_text": "{{people.founder.name}}",
-            "bio": "The founder profile for {{business_name}} needs source-backed review before publication. Add confirmed founding, established, or incorporation details only when supported by tenant-approved evidence."
+            "bio": "The founder profile for {{business_name}} needs review backed by a detail before publication. Add confirmed founding, established, or incorporation details only when supported by tenant-approved evidence."
           },
           {
             "name": "{{people.executive.name}}",

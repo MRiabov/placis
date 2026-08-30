@@ -39,6 +39,14 @@ Go process is not. Jobs are Postgres rows in schema `jobs`; the worker is a loop
 that claims them. At this size, that loop runs inside `cmd/api`. Split into a
 `cmd/worker` container only if job CPU/RAM or webhook latency actually shows up.
 
+Website crawl (HTML GET, goquery, image GETs, Apify fallback) and Maps scrape
+wait stay in this process. **SLO:** while they run, API p90 must not increase
+by more than **1s** vs idle on the same instance (authenticated / onboarding
+HTTP; not the Cloudflare contractor website). Bound image-GET concurrency (8),
+timeouts, and body size. If an implementing agent cannot keep that without a
+worker split or unbounded GETs, **stop and tell the owner**. Do not add
+Prometheus or CI p90 tests for this unless that alert fires.
+
 ## Deployment
 
 One Railway container for `cmd/api`; `frontend-2` builds to static assets.

@@ -7,7 +7,7 @@ messaging actions.
 
 ## Best Fit
 
-Good near the end of a source-backed page when direct contact should be the
+Good near the end of a page backed by a detail when direct contact should be the
 primary next step.
 
 ## Avoid

@@ -30,13 +30,16 @@ already landed. Transform as soon as that fetch exists.
 
 ## Do — transform
 
-`status=transforming`. Write accreditation list / notes. Trade registry wins the
-same way registry wins legal identity ([build-profile](../../onboarding/pipeline/build-profile.md)).
+`status=transforming`. Insert `etl.sources` `kind=trade_registry_record` when
+this extract writes profile columns. Write accreditation list / notes (each
+increment cites that `source_id`). Trade registry wins the same way registry
+wins legal identity ([build-profile](../../onboarding/pipeline/build-profile.md)).
 
 ## Persist
 
-`etl.trade_registry_fetches`; `business_profile_edits` + accreditation live
-profile / list. `etl.runs.status=succeeded`.
+`etl.trade_registry_fetches`; `etl.sources`; `business_profile_edits` +
+`business_profile_edit_sources` + accreditation live profile / list.
+`etl.runs.status=succeeded`.
 
 ## Fail
 

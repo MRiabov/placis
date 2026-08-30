@@ -40,8 +40,10 @@ onboarding session’s `tenant_id` (unactivated tenant from 01).
    footer trees), and the two site-wide look website sections (`page_id` null).
    Named services on the accepted profile become service pages in that write.
    Reviews sections attach `website_slot_reviews` to `business_profile_reviews`.
-   Placeholders (`{{business_name}}`, `{{marketing_phone}}`, …) **stay**. Same
-   profile + same website template → same website pages.
+   Project-gallery website slots get the **ranked top 4** `active` business
+   research origin Project ids at apply (empty if none). Bake already omits
+   project drafts. Placeholders (`{{business_name}}`, `{{marketing_phone}}`, …)
+   **stay**. Same profile + same website template → same website pages.
 4. Prefer real projects / Maps photos for image website slots; do not invent
    work photos.
 5. Validate against website component contracts before the unpublished website

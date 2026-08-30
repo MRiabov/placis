@@ -17,6 +17,43 @@ Facebook / Instagram rows and photo classification live on the
   nullable, `started_at`, `finished_at`. One row per source kind extract. River
   retry keeps this `id`. `skipped` when scheduled and that kind has no key.
 
+## Sources (live extract identity)
+
+Anything extractable that later writes may **cite**. Identity only. Not mixed
+fetches, not `raw`, not a Project table.
+
+- `sources` — `id` (`source_id`), `tenant_id` fk, `kind`
+  (`google_maps_listing` / `google_maps_listing_review` /
+  `facebook_profile` / `facebook_post` / `instagram_profile` /
+  `instagram_post` / `website_crawl_extract` / `website_crawl_html` /
+  `company_registry_record` / `trade_registry_record`), `natural_key` (text;
+  unique per `(tenant_id, kind)`), timestamps
+
+**No** `algorithm`, **no** yes/no, **no** `project_id`. Insert a row before any
+cite of that blob. Company registry / trade registry: insert when those
+extracts write profile columns (cannot cite a missing id). Directory /
+web-search / listing **photos** are not inserted this spec unless a detail or
+file cites them.
+
+A `source_id` is never a nullable column. The junction is many-to-many with
+**at least one** `source_id` when extract blobs produced the data. Junctions
+live next to the written row ([edit sources](../business-profile/details/persistence.md),
+[project sources](../business-profile/projects/persistence.md),
+`imported_media_sources` below). Owner / client interview writes have **no**
+junction rows (they were not generated from extract blobs). This is which
+blobs produced the data. It is not `ai_generations` (the LLM call) and not
+`etl_run_id` (which run). Do not store citations as a generic `table.column`
+string map.
+
+Live rows that **are** the blob have a required `source_id` fk (not nullable):
+listing, listing review, Facebook / Instagram profile and post. Fetches do
+not. Images are not `etl.sources` rows. Crawl **HTML URL** stays one URL +
+photos; Extract markdown and goquery visible text are **two** sources (same
+canonical URL, two `kind`s, two `source_id`s). Apify stands in for the HTML
+blob when GET fails — not a third source. `business_profile_reviews` is a copy
+of the listing review: cite the listing-review `source_id` on the edit that
+inserted the profile review, not a second source.
+
 ## Fetches (append-only, one table per extract type)
 
 Never update a row. Latest body for a natural key is the newest `fetched_at`.
@@ -30,9 +67,12 @@ collapse the run to a single fetch.
   `fetched_at`, `raw` jsonb
 - `instagram_fetches` — `id`, handle, Instagram user, `run_id` fk, `fetched_at`,
   `raw` jsonb
-- `website_crawl_fetches` — `id`, canonical URL, `run_id` fk, `fetched_at`,
-  `raw` jsonb (one row per crawled URL; fast crawl is the first URL, slow crawl
-  is the rest)
+- `website_crawl_fetches` — `id`, canonical URL, `fetched_from`
+  (`parallel_extract` / `http_get` / `apify` / `robots_txt` / `sitemap`),
+  `run_id` fk, `fetched_at`, `raw` jsonb. One vendor dump per row. Retry key
+  is `(canonical URL, fetched_from)` for this `run_id`. HTML URLs use
+  `parallel_extract` + `http_get` (or `apify` if GET failed). Discovery GETs
+  use `robots_txt` / `sitemap`. Image files are not in `raw`.
 - `trade_registry_fetches` — `id`, registry id, `run_id` fk, `fetched_at`, `raw`
   jsonb
 
@@ -40,13 +80,50 @@ Company registry parquet and Find autocomplete are not these tables. A later
 Companies House / CRO API fetch gets its own fetch table.
 
 Retry of the **same** run reuses the fetch for a chunk that already landed
-(`place_id` + `fetched_from` for Maps Details vs scrape; canonical URL for
-crawl). Remaining slow extract chunks still insert. A `trigger=scheduled` run
-extracts again.
+(`place_id` + `fetched_from` for Maps Details vs scrape; canonical URL +
+`fetched_from` for crawl). Remaining slow extract chunks still insert. A
+`trigger=scheduled` run extracts again.
+
+## Website crawled URLs (live row, no `raw`)
+
+HTML URLs only (homepage + remainder under the 20 HTML cap). Not robots, not
+sitemaps. Analog of `google_maps_listings` / `facebook_posts`. Depicting
+photos live here. Project skip does **not**.
+
+- `website_crawl_pages` — `id`, `tenant_id` fk, canonical URL unique per
+  tenant, `status` (`discovered` / `fetched`), latest fetch ids for extract /
+  html / apify, `fetched_at`
+
+  Discovered rows have no `source_id` column (a nullable fk is forbidden). When
+  Extract markdown lands, insert `sources` `kind=website_crawl_extract`. When
+  HTML (GET or Apify) lands, insert `kind=website_crawl_html`. Natural key for
+  both is the canonical URL.
+
+- `website_crawl_page_photos` — `id`, `page_id` fk, `source_url`,
+  `media_asset_id` nullable fk, `content_hash` nullable
+
+Sitemap parse inserts `discovered`. Extract + HTML (or Apify) complete →
+`fetched`. Depicting photo for a crawl-origin Project must be one of these
+children.
+
+## `imported_media`
+
+- `imported_media` — `id`, `tenant_id` fk, `kind` (`google_maps_listing` /
+  `facebook` / `instagram` / `website_crawl` / `google_maps_listing_review`),
+  `external_id`, `media_asset_id` fk. Unique `(tenant_id, kind, external_id)`
+  so a later extract does not insert a second media library item, including
+  when that item is `archived`. Named from
+  [media library persistence](../other/media/persistence.md).
+- `imported_media_sources` — `imported_media_id` fk, `source_id` fk →
+  `etl.sources`, `tenant_id` fk. Unique `(imported_media_id, source_id)`.
+  Every `imported_media` row has **at least one** cite (parent blob: listing,
+  listing review, Facebook / Instagram post, crawl extract and/or HTML).
+  Owner uploads are not this table.
 
 ## Google Maps listing (live row, no `raw`)
 
-- `google_maps_listings` — `id`, `place_id` unique, `fetched_from`
+- `google_maps_listings` — `id`, `source_id` fk required → `etl.sources`
+  (`kind=google_maps_listing`), `place_id` unique, `fetched_from`
   (`google_maps_details` / `scrape`), `latest_fetch_id` fk, `display_name`,
   `primary_type`, `marketing_phone`, `website_url`, `google_maps_listing_url`,
   `listing_address`, `locality`, `country` (`ie` / `gb` / `us` nullable; Places
@@ -54,18 +131,44 @@ extracts again.
   `fetched_at`
 - `google_maps_listing_opening_hours` — `id`, `listing_id` fk, `day_of_week`,
   `opens_at`, `closes_at`, `closed`
-- `google_maps_listing_reviews` — `id`, `listing_id` fk, `external_id` (Google’s
-  review id, unique per listing when present), `author_name`, `rating` (1–5),
-  `body`, `published_at` nullable, `language` nullable
+- `google_maps_listing_reviews` — `id`, `listing_id` fk, `source_id` fk
+  required → `etl.sources` (`kind=google_maps_listing_review`), `external_id`
+  (Google’s review id, unique per listing when present), `author_name`,
+  `rating` (1–5), `body`, `published_at` nullable, `language` nullable
+- `google_maps_listing_review_photos` — `id`, `review_id` fk, `source_url`,
+  `media_asset_id` nullable fk, `content_hash` nullable. Scrape photos **on
+  that review** (not listing-level). Reviewer avatar is not a row here.
 - `google_maps_listing_photos` — `id`, `listing_id` fk, `external_id`,
   `source_url`, `content_hash` nullable
 
 The Google Maps listing is this row, not a blob on a fetch. Hours, reviews, and
-photo refs are child rows. Profile hours / reviews / media library items are
-copies transform writes; the listing stays here.
+photo refs are child rows. Review photos from scrape are children of the
+review. Profile hours / reviews / media library items are copies transform
+writes; the listing stays here.
+
+## Project verdict (skip)
+
+- `llm_source_to_project_classifications` — `id`, `tenant_id` fk, `source_id`
+  fk unique required → `etl.sources`, `algorithm` nullable,
+  `schema_revision` nullable, `usable_as_project` (yes or no), `project_id`
+  nullable fk → `business_profile.projects` (required when yes; **null** when
+  no — that UUID is the Project, not a source), `ai_generation_id` nullable
+  fk → `ai.ai_generations` (the LLM call for that classify; omit when the
+  length gate wrote no with no call), timestamps
+
+  Check: `usable_as_project` iff `project_id` is set. Do **not** copy title,
+  description, or cover here. Skip when `algorithm` + `schema_revision` match
+  and `force` is false. Analog of `photo_kind_*` on the classified thing:
+  skip keys on this row; model / prompt / reasoning on `ai_generations`.
+  Must not hang this skip on Facebook / Instagram posts, profile reviews,
+  crawl HTML URLs, or `etl.sources`.
 
 ## Indexes
 
 `runs` (`tenant_id`, `trigger`, `started_at`); unique (`enqueue_id`, `kind`).
 Fetches: (`place_id`, `fetched_at` desc) on Maps fetches; (`handle`,
-`fetched_at` desc) on Instagram fetches. Unique `google_maps_listings.place_id`.
+`fetched_at` desc) on Instagram fetches; (`canonical URL`, `fetched_from`)
+unique per `run_id` on crawl fetches. Unique `google_maps_listings.place_id`.
+Unique `website_crawl_pages` canonical URL per tenant. Unique
+`(tenant_id, kind, natural_key)` on `sources`. Unique
+`llm_source_to_project_classifications.source_id`.

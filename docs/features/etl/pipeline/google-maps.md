@@ -44,22 +44,34 @@ fetch).
 
 ## Do — extract (slow extract)
 
-Scrape remaining reviews / photos for this listing (on the order of 50 reviews).
+Scrape remaining reviews / photos for this listing (on the order of 50
+reviews). Actor **`scraperlink/google-maps-scraper`** (`id`
+`QaFBMgHDLJzHoOEMf`). Not Compass. Required input (defaults under-fetch):
+`placeIds` = Details `place_id`; `reviews=true`; `maxReviews=50`;
+`reviewsSort=newest`; `gl` from listing country (`ie` / `gb` / `us`);
+`hl=en`; `popularTimes=false`; `maxImages=0` (Details already has 10 listing
+photos; review photos come with `reviews=true`).
+
 Persist a `fetched_from=scrape` fetch as each scrape response arrives. Insert
-new listing reviews / photo refs. Transform **that** chunk before waiting for
-the rest (~40s extra after Details). `status` stays `extracting` until scrape
-has nothing left; `succeeded` only then.
+new listing reviews. Attach scrape photos onto **that** listing review
+(`google_maps_listing_review_photos` → media library). Do not put those in
+`google_maps_listing_photos`. Reviewer avatar is not the job. Transform
+**that** chunk before waiting for the rest (~40s extra after Details).
+`status` stays `extracting` until scrape has nothing left; `succeeded` only
+then.
 
 `kind=review` / `kind=photo` (when 02 included them) continue the same listing
 the same way.
 
 ## Do — listing
 
-Upsert `google_maps_listings` on `place_id`. Replace child hours on the Details
-chunk. Insert reviews / photo refs whose `external_id` we do not already have.
-Set `latest_fetch_id` to the newest fetch that contributed. Set `country` from
-Places address country (`ie` / `gb` / `us`). Do not parse `listing_address` for
-country.
+Upsert `google_maps_listings` on `place_id` after inserting
+`etl.sources` `kind=google_maps_listing` (`source_id` required on the listing).
+Replace child hours on the Details chunk. Insert reviews / photo refs whose
+`external_id` we do not already have (each new review gets
+`kind=google_maps_listing_review`). Set `latest_fetch_id` to the newest fetch
+that contributed. Set `country` from Places address country (`ie` / `gb` /
+`us`). Do not parse `listing_address` for country.
 
 ## Do — transform
 
@@ -68,21 +80,31 @@ continues. `SELECT … FOR UPDATE` the profile. Insert only the increments this
 chunk set.
 
 - Empty scalars fill from the listing (display name, marketing phone, website,
-  hours).
+  hours). Each increment cites the listing `source_id`.
 - New reviews → `business_profile_reviews` keyed to
-  `etl.google_maps_listing_reviews`.
-- New photos → media library items `supplied_by=business_research`; then
-  [photo classification](photo-classification.md) for those items (do not wait for scrape to finish).
+  `etl.google_maps_listing_reviews`. The add increment cites the listing-review
+  `source_id`. Then [projects.md](projects.md) for reviews **usable as a
+  Project** (work type, one past named job). Details reviews have **no photo
+  field** — cover empty. After scrape, photos on **that** review may fill an
+  empty cover on the same Project when `algorithm` is not `human` (do not
+  rewrite title / description).
+- New listing photos → media library items `supplied_by=business_research`
+  (`imported_media_sources` → listing `source_id`); then
+  [photo classification](photo-classification.md) for those items (do not wait
+  for scrape to finish). Listing photos are not review-origin covers. Review
+  photos cite the listing-review `source_id`.
 - Disagreeing owner-typed scalars → research conflict; live profile column is
   not updated.
 
 ## Persist
 
 `etl.google_maps_fetches` (several rows per run: Details, then scrape
-responses); `etl.google_maps_listings` + hours / reviews / photos;
-`business_profile_edits` + live profile hours / reviews / contact columns; media
-library items. `etl.runs.status=succeeded` when fast extract and slow extract
-are done.
+responses); `etl.sources` (listing + each listing review);
+`etl.google_maps_listings` + hours / reviews / listing photos / review photos;
+`business_profile_edits` + `business_profile_edit_sources` + live profile hours
+/ reviews / contact columns / Projects; media library items +
+`imported_media_sources`. `etl.runs.status=succeeded` when fast extract and
+slow extract are done.
 
 ## Fail
 
@@ -104,3 +126,4 @@ reviews / photos appear as scrape runs. Scheduled: no SSE.
 - Extract does not write the live business profile. Transform does not call
   Maps.
 - Transform of the Details chunk does not wait for scrape.
+- Do not stop inserting Projects at four. Rank is build-profile.

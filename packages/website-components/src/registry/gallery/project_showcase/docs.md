@@ -7,4 +7,4 @@ project link. It is for contractors with named jobs or portfolio stories, not
 for generic before/after thumbnail grids.
 
 Source fit: PCL's project/work feature area. Keep imported project facts
-source-backed and review required before reuse for another tenant.
+backed by a detail and review required before reuse for another tenant.

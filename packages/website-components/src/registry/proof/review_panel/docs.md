@@ -18,7 +18,7 @@ are missing.
 ## Key Props
 
 Use review quote, author, source, optional controls, and supporting labels.
-Treat review claims as source-backed content.
+Treat review claims as content backed by a detail.
 
 ## Style And Composition
 

@@ -8,8 +8,8 @@ image/text block.
 
 ## Best Fit
 
-Company story sections, source-backed about-page body copy, anniversary notes,
-and image-left editorial panels where the text hierarchy is part of the
+Company story sections, about-page body copy backed by a detail, anniversary
+notes, and image-left editorial panels where the text hierarchy is part of the
 reference.
 
 ## Avoid
