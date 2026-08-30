@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
@@ -9,6 +8,9 @@ import { VoiceInterviewOverlay } from "@/ui/VoiceInterviewOverlay";
 export function HomePage(): ReactNode {
   const { openDestinations } = useCmsLayout();
   const [voiceOpen, setVoiceOpen] = useState(false);
+  const [interviewGoal, setInterviewGoal] = useState<"website" | "ads">(
+    "website",
+  );
 
   useEffect(() => {
     function onKey(event: KeyboardEvent): void {
@@ -68,7 +70,10 @@ export function HomePage(): ReactNode {
               </svg>
             }
             title="Do my website…"
-            to="/cms/website"
+            onStart={() => {
+              setInterviewGoal("website");
+              setVoiceOpen(true);
+            }}
           />
           <ChooserCard
             hint="Have Placis run your ads"
@@ -87,36 +92,43 @@ export function HomePage(): ReactNode {
               </svg>
             }
             title="Run my ads"
-            to="/cms/ads"
+            onStart={() => {
+              setInterviewGoal("ads");
+              setVoiceOpen(true);
+            }}
           />
         </div>
       </section>
       {voiceOpen ? (
-        <VoiceInterviewOverlay onBack={() => setVoiceOpen(false)} />
+        <VoiceInterviewOverlay
+          goal={interviewGoal}
+          onBack={() => setVoiceOpen(false)}
+        />
       ) : null}
     </>
   );
 }
 
 function ChooserCard({
-  to,
   title,
   hint,
   icon,
+  onStart,
 }: {
-  to: "/cms/website" | "/cms/ads";
   title: string;
   hint: string;
   icon: ReactNode;
+  onStart: () => void;
 }): ReactNode {
   return (
-    <Link
+    <button
       className={chooserCard(
         "group flex items-center gap-4 px-5 py-[1.15rem] text-left transition-[background,box-shadow] duration-150 ease-out hover:bg-wash",
       )}
-      to={to}
+      onClick={onStart}
+      type="button"
     >
-      <span className="grid size-11 shrink-0 place-items-center rounded-[1rem] border border-hairline bg-wash text-foreground group-hover:bg-white">
+      <span className="grid size-11 shrink-0 place-items-center rounded-full border border-stone-200 bg-background text-foreground transition group-hover:bg-zinc-50 dark:border-white/20 dark:bg-background dark:group-hover:bg-zinc-900">
         {icon}
       </span>
       <span className="grid min-w-0 gap-1">
@@ -127,7 +139,7 @@ function ChooserCard({
           {hint}
         </span>
       </span>
-    </Link>
+    </button>
   );
 }
 
