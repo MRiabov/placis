@@ -12,9 +12,8 @@ Package ownership. Workflows live in the feature docs this list points at.
    (`/v1/onboarding/website-editor/assistant/…`) and unpaid policy (5-cap,
    instant apply, allowlist). It reuses `website/assistant` tools and
    `ai.threads` (`kind=cms_assistant`) overlay SQL. CMS `assistant` HTTP must
-   not import it.
-   `onboarding/assistant` is Find, Review, and client interview only
-   (`tools=[]`). Business research (step 02) only calls `etl.StartRun` and
+   not import it. `onboarding/assistant` is Find, Review, and client interview
+   only (`tools=[]`). Business research (step 02) only calls `etl.StartRun` and
    mirrors Postgres on SSE (`etl.runs` and the live business profile). It does
    not implement extract or transform. It does not implement apply, and it does
    not do website publication. [Onboarding](../features/onboarding/architecture.md).
