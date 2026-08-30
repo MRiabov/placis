@@ -54,13 +54,14 @@ and search share Vercel; there is no OpenRouter hop.
 
 Shared by the CMS assistant, the onboarding assistant, and every headless /
 offline generate factory. One table, not copied into feature persistence docs.
-Postgres schema **`ai`**. Go package `internal/ai/` (`StrEnum` when code
-exists). Do **not** dump non-assistant work into an `internal` kind.
+Postgres schema **`ai`**. Go package `internal/ai/`.
 
-Closed set: native Postgres enum, not `text` + `CHECK`:
+Closed set: `text` `NOT NULL` plus a check constraint, not a Postgres enum
+type. Go `StrEnum` when code exists. Do **not** dump non-assistant work into an
+`internal` kind.
 
 ```sql
-CREATE TYPE ai.thread_kind AS ENUM (
+kind text NOT NULL CHECK (kind IN (
   'cms_assistant',
   'onboarding_assistant',
   'ads_generate',
@@ -74,14 +75,14 @@ CREATE TYPE ai.thread_kind AS ENUM (
   'media_cleanup',
   'project_inline_assistance',
   'eval'
-);
+))
 ```
 
-A new generate factory is `ALTER TYPE ai.thread_kind ADD VALUE '…'` plus this
-list and the Go enum. Callers do not invent strings at the call site.
+A new generate factory replaces that check (plus this list and the Go enum).
+Callers do not invent strings at the call site.
 
-- `threads` — `id`, `tenant_id` nullable fk (null on `eval`), `kind`
-  (`ai.thread_kind`, required), `onboarding_session_id` nullable fk
+- `threads` — `id`, `tenant_id` nullable fk (null on `eval`), `kind` text
+  required (check above), `onboarding_session_id` nullable fk
   (`onboarding.onboarding_sessions`; required when `kind=onboarding_assistant`),
   `status` (`current` / `completed`; used when `kind=cms_assistant`),
   `last_activity_at`, `last_assistant_edit_at` (cms compaction),
@@ -100,7 +101,7 @@ activation.
 
 **Every other `kind`** — insert a thread before the first generate; reuse it
 for schema-repair retries; do not hydrate on GET thread. Features that are not
-already on a CMS or onboarding thread create one with the matching enum value.
+already on a CMS or onboarding thread create one with the matching `kind`.
 
 Failed parse stays an `ai_generations` row. The next attempt is another row on
 the **same** `thread_id` (prior failure in context). Bounded subtree repair

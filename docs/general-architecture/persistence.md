@@ -28,10 +28,9 @@ at the HTTP boundary. Clerk's own ids (`clerk_org_id`, `clerk_user_id`,
 `clerk_subject`) are `text`/`string` — Clerk's opaque ids (`org_…`, `user_…`),
 not UUIDs.
 
-Closed sets are Postgres enum types (`CREATE TYPE … AS ENUM` in that feature’s
-schema), not unconstrained text and not `text` + `CHECK`. A new label is
-`ALTER TYPE … ADD VALUE` plus the docs list (and the Go `StrEnum` when that
-package exists). Transition tests before production use.
+Use DB check constraints for stable enums; transition tests before production
+use. Do not use Postgres `CREATE TYPE … AS ENUM` (no `DROP VALUE`; retiring a
+label means rebuilding the type).
 
 ## Postgres schemas (namespaces)
 
