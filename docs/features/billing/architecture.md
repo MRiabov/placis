@@ -39,8 +39,8 @@ of an open socket. xAI invoices
    2026-08-28: `grok-voice-think-fast-2.0` **$0.08 / min** ($4.80 / hr).
    Deprecated `grok-voice-think-fast-1.0` $0.05 / min. Pin a dated model id; do
    not ride `grok-voice-latest`. Live Voice uses the xAI region for the
-   **business country**
-   ([voice agent](../../general-architecture/voice-agent.md)).
+   **business country** (`wss://{region}.api.x.ai/v1/realtime`; not a blanket
+   eu-west-1, not the auto-routing global `api.x.ai` host).
 2. **$0.004 per text `conversation.item.create`**. Not billed:
    `function_call_output` (our tool results) and items whose content is audio
    (those ride the audio minutes). `response.create` is not a billable event.

@@ -29,7 +29,7 @@ do not treat a character cap as Voice generation. HTTP still puts a storage
 | Assistant screen context | — | Closed per-screen structs, not a JSON bag. |
 | Voice tool-calls body | — | Closed union of CMS tool structs (name + the same types the LLM loop validates). |
 | Voice transcripts | — | Closed union of committed xAI Voice events (below) + optional reasoning/usage. Go maps to `kind` / `body` / `offset_seconds`. **Omit** PCM, ASR/TTS deltas, recording file, `provider_event` on GET. |
-| Voice realtime connection | — | Browser-safe secret + expiry + realtime URL (`string` + `maxLength`, `wss://…`). Region is Go-picked; **omit** a browser region field. |
+| Voice realtime connection | — | Browser-safe secret + expiry + realtime URL (`string` + `maxLength`, `wss://{region}.api.x.ai/v1/realtime`). Region is Go-picked; **omit** a browser region field. |
 | Text WebSocket events | — | Closed `oneOf` event names (same rule as SSE: no unconstrained `payload`). |
 
 ## Complete — Go WebSocket (text chat only)
@@ -124,13 +124,14 @@ socket; event structs still land in `/openapi.json` for typegen.
   screens). No `plan` / `ask_first` / `follow`. Always Ask first on the run
   row.
 - **Response:** browser-safe secret + expiry + **realtime URL** (`string` +
-  `maxLength`, `wss://…` for the xAI region Go picked). **Not** a Go
-  WebSocket. Audio is browser ↔ that URL. Go picks the region from the
-  business country ([voice agent](../../general-architecture/voice-agent.md)).
+  `maxLength`, `wss://{region}.api.x.ai/v1/realtime` for the xAI region Go
+  picked). **Not** a Go WebSocket. Audio is browser ↔ that URL. Go picks the
+  region from the business country
+  ([voice agent](../../general-architecture/voice-agent.md)).
 - **Errors:** `403` `tenant_unactivated`; `402` `usage_credit_exhausted`;
   `409` `in_flight_run`.
 - **Must not:** return the long-lived voice API key; accept a browser-chosen
-  region or host.
+  host.
 
 Onboarding uses
 [POST /v1/onboarding/assistant/voice/realtime-connection](../onboarding/api.md).
@@ -161,31 +162,40 @@ Onboarding uses
   Voice turns off.
 - **Idempotency-Key:** yes.
 - **Request:** closed union of **committed** xAI Voice events already on that
-  live socket — not a second STT request. Owner:
-  `conversation.item.input_audio_transcription.completed` (`body` maxLength
-  **5000 characters**). Assistant: `response.output_audio_transcript.done`
-  (storage `maxLength`, not a 5000-character generation cap). Include the
-  same-connection xAI timing event when the completed event has no
-  Voice-connection clock (typically `input_audio_buffer.speech_started`). Go
-  derives **`offset_seconds`** (int, `>= 0`, maximum 7200) from that xAI Voice
-  connection clock (ms from this Voice run’s realtime-connection start →
-  seconds). Reconstruct `[m:ss owner]` / `[m:ss assistant]` from `kind` +
-  `offset_seconds`. Never say user. Never `kind=system` / `[m:ss system]`
-  (instructions stay the Voice-connection seed). Persist the forwarded JSON as
-  `provider_event` (jsonb; omitted from GET). Events may be omitted on a
-  **usage-only** POST. If xAI did not emit a committed transcript, omit that
-  utterance — do not invent text or offset. Reasoning if the voice service
-  emitted it (`internal_reasoning`; empty string if omitted — do not invent).
-  **Usage** (required when debiting): `audio_seconds_sent` (number),
-  `audio_seconds_received` (number), `billed_text_item_count` (int). Optional
-  typed xAI usage struct when present (named fields, not a JSON bag).
+  live socket — not `POST /v1/stt`. xAI documents these **event names** and
+  OpenAI Realtime compatibility (`wss://api.x.ai/v1/realtime`). Owner:
+  `conversation.item.input_audio_transcription.completed`. Map `body` from JSON
+  key `transcript` when present (OpenAI-compat; xAI REST lists the event, not a
+  field table). Owner `body` maxLength **5000 characters**. Set
+  `audio.input.transcription.model` **`grok-transcribe`** (named on xAI’s
+  `.updated` docs). Assistant: `response.output_audio_transcript.done`; map
+  `body` from `transcript` when present (storage `maxLength`, not a
+  5000-character generation cap). Do not POST `.updated` or `.delta`. Pair owner
+  `.completed` with `input_audio_buffer.speech_started` when both JSON objects
+  share `item_id`. **`offset_seconds`** (int, `>= 0`, maximum 7200, nullable):
+  if the forwarded `speech_started` JSON has `audio_start_ms` (OpenAI Realtime
+  field; xAI lists the event, not the payload), store floor(ms/1000); else null.
+  Do not invent a browser clock. Assistant `.done` has no documented clock (null
+  unless a timing key is on that JSON). Reconstruct `[m:ss owner]` /
+  `[m:ss assistant]` from `kind` + `offset_seconds` when set.
+  Never say **user**.
+  Never `kind=system` / `[m:ss system]` (instructions stay the Voice-connection
+  seed). Persist the forwarded JSON as `provider_event` (jsonb; omitted from
+  GET). Events may be omitted on a **usage-only** POST. If xAI did not emit a
+  committed transcript, omit that utterance — do not invent text or offset.
+  Reasoning if the voice service emitted it (`internal_reasoning`; empty string
+  if omitted — do not invent). **Usage** (required when debiting):
+  `audio_seconds_sent` (number), `audio_seconds_received` (number),
+  `billed_text_item_count` (int). Optional typed xAI usage struct when present
+  (named fields, not a JSON bag).
 - **Errors:** `403` `tenant_unactivated`. Settlement stays **200** (not 402).
   `409` `in_flight_run` is only a **second** start, not the current voice run.
 - **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
   `created_at` or a browser audio/wall clock as the conversation clock; call
   `POST /v1/stt` or `wss://…/v1/stt`; transcribe the recording; accept a
   freeform JSON bag of other xAI events; map xAI `role=system` / instructions
-  to a thread item.
+  to a thread item; invent `offset_seconds` when the forwarded JSON has no
+  `audio_start_ms`.
 
 ### POST /v1/assistant/voice/recordings
 

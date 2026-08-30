@@ -57,8 +57,8 @@ resumption are ops, not the assistant thread and not `ai_generations`.
 The adapter (not the browser) is responsible for:
 
 1. Create the short-lived secret (`POST …/voice/realtime-connection`).
-2. Pick the xAI region from the **business country** (below). Pin a **dated**
-   voice model id (not `grok-voice-latest`) that exists on that cluster.
+2. Return the documented Speech to Speech host (below). Pin a **dated**
+   voice model id (not `grok-voice-latest`).
 3. Seed **instructions** (knowledge concat + profile + screen / compacted thread
    tail as **one instructions blob**). Persist that exact blob on the voice
    run’s `ai_generations.input` (with keyterms / `replace` sent on create). Do
@@ -68,20 +68,29 @@ The adapter (not the browser) is responsible for:
    tokenize or compact it mid-utterance. If the seed would be too large to send,
    compact the thread first with the 12h compaction rules, then seed.
 4. Pass the full CMS `tools=` list (onboarding: `tools=[]`).
-5. On connection create, set xAI `audio.input.transcription.keyterms` and
-   `replace` from `internal/knowledge/voice_pronunciation.yaml` (same create
-   payload as instructions). Do not `session.update` those mid-call. That live
-   Voice connection is the STT: committed transcript events go to
-   `POST …/voice/transcripts`. Do not call `POST /v1/stt`.
+5. On connection create, set `audio.input.transcription.model` to
+   **`grok-transcribe`**, plus `keyterms` and `replace` from
+   `internal/knowledge/voice_pronunciation.yaml` (same payload as instructions).
+   Bind on `POST /v1/realtime/client_secrets` when that request accepts an
+   initial-configuration object; else one
+   `session.update` after the Voice connection opens. Do not `session.update`
+   those mid-call. That live Voice connection is the STT: committed transcript
+   events go to `POST …/voice/transcripts`. Do not call `POST /v1/stt`.
 6. Close / drop the connection on CMS **402** `usage_credit_exhausted`.
 
 ## xAI region (business country)
 
-Do **not** blanket-route every tenant to eu-west-1. Do **not** geolocate the
-contractor’s IP. Do **not** let the browser pick a host.
+Do **not** geolocate the contractor’s IP. Do **not** let the browser pick a
+host.
 
-At each `POST …/voice/realtime-connection` (CMS and onboarding), Go resolves
-country (`ie` / `gb` / `us`) in this order:
+Public Speech to Speech is documented as cluster **us-east-1**
+(`wss://api.x.ai/v1/realtime`, `https://api.x.ai/v1/realtime/client_secrets`).
+The create response returns that documented realtime URL. Same host for token
+create and the WS. Do not invent `eu-west-1.api.x.ai` / `us-east-1.api.x.ai`.
+
+At each `POST …/voice/realtime-connection` (CMS and onboarding), Go still
+resolves country (`ie` / `gb` / `us`) so `ie`/`gb` can map onto an EU Voice
+host **when xAI documents one**:
 
 1. **Company registry** — if a company registry record is attached, that
    registry’s country (CRO → `ie`, Companies House → `gb`, US state registry →
@@ -91,13 +100,9 @@ country (`ie` / `gb` / `us`) in this order:
    `listing_address`).
 3. Else **Find country** — `tenants.country`, written at business lookup.
 
-Then map: `ie` and `gb` → xAI **eu-west-1**; `us` → xAI **us-east-1**. `gb` uses
-the Europe cluster (UK GDPR); it is not sent to the US.
-
-Token create and the browser WS use the same `{region}.api.x.ai` host. Create
-returns that realtime URL; the frontend connects as-is. Do not switch region
-mid-call. Next Voice create re-resolves. Pin a dated voice model that exists
-on that cluster.
+Until that host exists, every country uses the documented us-east-1 URL. Do
+not switch host mid-call. Next Voice create re-resolves country (PATCH sources
+can change the winner).
 
 Find country is persisted on `tenants.country` so CMS Voice still resolves after
 onboarding routes 403. Typeahead still uses country as a search parameter.
@@ -131,8 +136,10 @@ Do not mid-call `session.update` for these (same rule as tools / instructions).
    browser-safe connection fields.
 3. The frontend connects **directly to the voice service**; live audio never
    flows through the backend. The WS URL is the **realtime URL** from the
-   create response (xAI region Go picked). Do not hardcode a region in the
-   frontend.
+   create response (documented xAI Voice host; today
+   `wss://api.x.ai/v1/realtime`). Ephemeral-token create uses the same host’s
+   `https://api.x.ai/v1/realtime/client_secrets`. Do not invent
+   `{region}.api.x.ai`. Do not hardcode a host in the frontend.
 4. The browser never receives the long-lived voice API key.
 
 CMS create **includes** the unpublished website working copy when
@@ -179,8 +186,9 @@ audio-content items are not that text fee. `response.create` is not a billable
 event. Published audio rate 2026-08-28: `grok-voice-think-fast-2.0` $0.08 / min.
 Pin a dated model id; do not ride `grok-voice-latest`. Do not enable xAI
 server-side search / MCP tools (extra per-call fees). Do not use provisioned
-phone numbers. Live Voice uses the xAI region for the **business country**
-([voice agent](voice-agent.md)).
+phone numbers. Live Voice uses the documented Speech to Speech host
+(`wss://api.x.ai/v1/realtime`, cluster us-east-1) until xAI publishes an EU
+Voice host.
 
 Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor cost**). CMS only. Onboarding
 guide is not billed to the contractor. Go never sees PCM (live audio or the
@@ -192,8 +200,11 @@ when Voice turns off. After CMS Voice ends, the browser PUTs the recording to
 object storage via a signed URL ([assistant architecture](../features/assistant/architecture.md)). Onboarding does
 **not** PUT a recording; leftover transcripts (committed xAI events →
 `offset_seconds`; `provider_event` jsonb) only. Reconstruct `[m:ss owner]` /
-`[m:ss assistant]` from typed `kind` + `offset_seconds` + `body`. Never say
-user. Do not call `POST /v1/stt` or open a second STT socket. `created_at` is
+`[m:ss assistant]` from typed `kind` + `offset_seconds` + `body`.
+
+Never say **user**.
+
+Do not call `POST /v1/stt` or open a second STT socket. `created_at` is
 the row insert time.
 
 Seed knowledge in connection **instructions**. Do not replay the assistant

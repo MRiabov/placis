@@ -179,8 +179,9 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
 - **Request:** current onboarding step + visible fields. No unpublished website
   working copy.
 - **Response:** browser-safe secret + expiry + **realtime URL** (`string` +
-  `maxLength`, `wss://…` for the xAI region Go picked). Audio is browser ↔
-  that URL, not this socket. Go picks the region from the business country
+  `maxLength`, `wss://{region}.api.x.ai/v1/realtime` for the xAI region Go
+  picked). Audio is browser ↔ that URL, not this socket. Go picks the region
+  from the business country
   ([voice agent](../../general-architecture/voice-agent.md)).
 - **Errors:** **403** if the tenant is already activated; **409**
   `in_flight_run` if a guide run is already `running` for this onboarding
@@ -195,13 +196,13 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
   turns off.
 - **Idempotency-Key:** yes.
 - **Request:** same shape as CMS transcripts (closed union of committed xAI
-  Voice events; owner visible text `maxLength`
-  **5000 characters**; assistant visible text storage `maxLength`, not a
-  5000-character generation cap; **`offset_seconds`** from the xAI Voice
-  connection clock; `provider_event` jsonb persisted, omitted from GET; optional
-  reasoning; audio seconds + `billed_text_item_count` when present). Go sets
-  `created_at` on insert (row time). **Omit** PCM. If xAI did not emit a
-  committed transcript, omit that utterance.
+  Voice events; owner visible text `maxLength` **5000 characters**; assistant
+  visible text storage `maxLength`, not a 5000-character generation cap;
+  **`offset_seconds`** from `audio_start_ms` when present (else null);
+  `provider_event` jsonb persisted, omitted from GET; optional reasoning; audio
+  seconds + `billed_text_item_count` when present). Go sets `created_at` on
+  insert (row time). **Omit** PCM. If xAI did not emit a committed transcript,
+  omit that utterance.
 - **Errors:** **403** if activated. Settlement stays **200**.
 - **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
   `created_at` or a browser clock as the conversation clock; call

@@ -28,8 +28,8 @@ as an identity table.
 - `thread_items` — `id`, `tenant_id` fk, `thread_id` fk → `ai.threads`, `kind`
   (`owner` / `assistant` / `tool_summary` / `thinking`), `body` text, `icon`
   (`write` / `think` / null), `offset_seconds` int nullable (`>= 0`; Voice
-  utterances only; seconds from the xAI Voice connection clock on the committed
-  transcript events for that utterance; null on text items), `provider_event`
+  utterances only; seconds from `audio_start_ms` on paired `speech_started` when
+  present; null if that key is missing or on text items), `provider_event`
   jsonb nullable (the forwarded xAI JSON for that utterance; Voice only; omit
   from GET), `created_at` (row insert). Index `(thread_id, created_at)`. Do
   not store recording file. Do not bake `[m:ss …]` into `body`.
