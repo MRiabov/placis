@@ -20,7 +20,10 @@ then `POST .../interview/complete`.
 
 - Voice realtime connection, realtime tools, transcript replay.
 - Parallel / research jobs / photo classification (photo kinds are ETL
-  transform).
+  transform). The onboarding **guide** does not Archive or edit Project cards
+  (`tools=[]`).
+- Edit title / description / cover on interview Project cards. No Approve.
+  Archive is the contractor click below, not `/v1/projects/{id}/archive`.
 - `POST` a new onboarding session on Resume.
 - Complete while required checklist rows are `empty` / `in_progress` /
   `conflict`.
@@ -46,9 +49,13 @@ then `POST .../interview/complete`.
    `emergency_phone`; found photos in the media library plus upload (source from
    the internet / AI photo only if there are not enough); certifications
    (company registry pick locks that business-registry certification) / found
-   reviews; extra notes. Paste of one-per-line or comma-separated **service
-   names** may split into rows deterministically (no LLM). Do not ask a
-   photos-choice question.
+   reviews; **Projects** if any `active` business research origin rows exist —
+   up to four cards, current completeness rank ([build-profile](build-profile.md)), same look as
+   `/cms/projects` (cover, title, description), no Project draft badge, not
+   editable, **Archive** on the card. Zero `active` → omit the whole block.
+   Cards may appear / reorder over SSE while 02 is still running. Extra notes.
+   Paste of one-per-line or comma-separated **service names** may split into
+   rows deterministically (no LLM). Do not ask a photos-choice question.
 4. Final submission `kind=final`, then `POST .../interview/complete` iff the
    complete gate (service and service-area list rows present, or skipped).
 5. Contractor may mark a required row `skipped` in this step, then complete.
@@ -56,8 +63,8 @@ then `POST .../interview/complete`.
 ## Persist
 
 `client_interview_submissions`; `business_profile_edits` via build-profile;
-`onboarding_sessions.channel=text`. Complete → `accepted_edit_id=last_edit_id`,
-status `applying_website_template`, enqueue 05.
+`onboarding_sessions.channel=text`; interview Archive on Projects. Complete →
+`accepted_edit_id=last_edit_id`, status `applying_website_template`, enqueue 05.
 
 ## Fail
 

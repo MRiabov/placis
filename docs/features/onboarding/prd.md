@@ -22,9 +22,12 @@ questions to fill the gaps, and do business research from public sources.
    they cover, their contact details and opening hours.
 3. **Business research** from public sources: Google Maps, the company registry,
    Facebook (reviews and posts when they exist), their current website, and
-   photos of their work. After website activation, the same public sources are
+   photos of their work. When a post, crawled URL, or review is a past named
+   job, onboarding already has **Projects** (up to four on the client interview
+   and first gallery). After website activation, the same public sources are
    extracted again so new posts and photos land in the media library and the
-   review pool.
+   review pool. New Projects insert on the Profile; they do not rewrite the
+   first website gallery.
 4. Combine their answers with what we found into one clear **business profile**,
    each detail noting where it came from.
 5. When their answer disagrees with what we found,
@@ -74,6 +77,9 @@ By the end, the business profile holds:
 - **Certifications and reviews** — accreditations and certifications, the
   founder, and reviews.
 - **Photos** — their work, logo, and project photos.
+- **Projects** — named past jobs found online (title, description, cover), shown
+  as cards in the client interview when business research found any. Optional.
+  Archive removes a card. Not editable during the client interview.
 
 Each detail notes where it came from (the company registry, Google Maps, the
 client interview, or business research).

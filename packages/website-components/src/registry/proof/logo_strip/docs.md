@@ -12,7 +12,7 @@ Good for source-site logo strips and material/supplier proof rows.
 ## Avoid
 
 Avoid it when logos imply certifications or partnerships that are not
-source-backed.
+backed by a detail.
 
 ## Key Props
 

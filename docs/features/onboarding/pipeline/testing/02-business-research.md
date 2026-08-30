@@ -25,6 +25,8 @@
 - **Fail**: job error → `etl.runs.status=error`; onboarding session stays
   `client_interviewing`; prior live business profile kept. Enqueue cap is not
   this Fail.
-- **Mocked**: Google Maps Details / scrape, Vercel Parallel + extract, Facebook,
-  Instagram, trade registry, photo classifier (fakes). Never Parallel’s API,
-  Exa, Perplexity, Tako, `:online`, OpenRouter web search.
+- **Mocked**: Google Maps Details / scrape, Vercel Parallel Search + crawl
+  Extract HTTP, Facebook, Instagram, trade registry, photo classifier /
+  project-from-source (fakes). Never Parallel **Search** API, Exa, Perplexity,
+  Tako, `:online`, OpenRouter web search. Maps Details reviews usable as a
+  Project appear as client interview cards (paid Maps/LLM faked).

@@ -2,9 +2,11 @@
 
 Extract **and** transform public contractor sources (Google Maps listing,
 Facebook profile and posts, Instagram profile and posts, plus first-run crawl /
-trade registry). Raw fetches and the Google Maps listing live in Postgres schema
-`etl`. Transformed contractor-only rows live on the business profile. ETL is not
-extract-only: transform is the business logic that writes the profile.
+trade registry). Projects from posts / crawled URLs / reviews usable as a
+Project are transform on those kinds ([projects.md](pipeline/projects.md)). Raw fetches and the Google
+Maps listing live in Postgres schema `etl`. Transformed contractor-only rows
+live on the business profile. ETL is not extract-only: transform is the business
+logic that writes the profile.
 
 Onboarding 02 and a Monday / Wednesday / Friday schedule both call
 `etl.StartRun`. Extract chunks transform as they arrive (fast extract in about a

@@ -2,7 +2,8 @@
 
 Guide only: as if a person were helping the contractor through Find, Review, and
 the field screens. It does **not** conduct a client interview, does **not**
-write the business profile via interview tools, and does **not** share the CMS
+write the business profile via interview tools, does **not** Archive interview
+Project cards, and does **not** share the CMS
 thread, tool registry, or assistant screen context.
 
 CMS dispatcher, allowed set, and voice transport: [assistant](../assistant/README.md). This file is the

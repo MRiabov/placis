@@ -261,7 +261,7 @@
       "metadata": {
         "mandatory_edit": true,
         "review_required": true,
-        "edit_reason": "Generation/family-history claim must be source-backed for the tenant."
+        "edit_reason": "Generation/family-history claim must be backed by a detail for the tenant."
       }
     },
     {
@@ -412,7 +412,7 @@
         "review_required": true,
         "candidate_source": "source_reference_template",
         "selection_strategy": "research_rerank",
-        "edit_reason": "Accreditations must be selected from source-backed proof records.",
+        "edit_reason": "Accreditations must be selected from proof records backed by a detail.",
         "fallback_value": [
           {
             "title": "Construction Federation",

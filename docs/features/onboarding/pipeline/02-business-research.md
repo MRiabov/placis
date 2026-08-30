@@ -33,8 +33,9 @@ enqueue cap.
 ## Must not
 
 - Own adapters, fetch tables, or the Google Maps listing (those are ETL).
-- Call Parallel’s API; use Exa, Perplexity, Tako, a model’s built-in search,
-  `:online`, or OpenRouter web search.
+- Call Parallel’s **Search** API; use Exa, Perplexity, Tako, a model’s built-in
+  search, `:online`, or OpenRouter web search. Parallel Extract is the crawl
+  adapter, not 02.
 - Text autosave, create a realtime connection, `end_interview`, interview field
   lists, set `channel`.
 - Write Review. Photo classification is ETL transform, not 04a/04b.
@@ -62,10 +63,10 @@ Pass `onboarding_session_id`.
 
 | Kind | Live profile / checklist | Pipeline |
 | --- | --- | --- |
-| `google_maps_listing` | Maps profile, marketing phone, website, opening hours, reviews, photos (Details first, then scrape) | [Google Maps](../../etl/pipeline/google-maps.md) |
-| `facebook` | Facebook profile / URL / posts | [Facebook](../../etl/pipeline/facebook.md) |
-| `instagram` | Instagram profile / posts | [Instagram](../../etl/pipeline/instagram.md) |
-| `website_crawl` / `directory` | trade, services, service area, founder (fast crawl, then slow crawl) | [Website crawl](../../etl/pipeline/website-crawl.md) |
+| `google_maps_listing` | Maps profile, marketing phone, website, opening hours, reviews, photos, Projects from reviews usable as a Project (Details first, then scrape) | [Google Maps](../../etl/pipeline/google-maps.md) |
+| `facebook` | Facebook profile / URL / posts, Projects from posts | [Facebook](../../etl/pipeline/facebook.md) |
+| `instagram` | Instagram profile / posts, Projects from posts | [Instagram](../../etl/pipeline/instagram.md) |
+| `website_crawl` / `directory` | trade, services, service area, founder, photos, Projects (homepage fast, then parallel remainder) | [Website crawl](../../etl/pipeline/website-crawl.md) |
 | `trade_registry` | accreditations | [Trade registry](../../etl/pipeline/trade-registry.md) |
 | `web_search` | discover `place_id` / URL | [Web search](../../etl/pipeline/web-search.md) |
 | `review` / `photo` | further reviews, photos | [Google Maps](../../etl/pipeline/google-maps.md), [photo classification](../../etl/pipeline/photo-classification.md) |

@@ -54,14 +54,14 @@ as of `accepted_edit_id`. They do not replay profile history on every call.
   `brand_typography`, `brand_primary_color`, `brand_accent_color`), `list`
   nullable
   (`services`/`service_areas`/`opening_hours`/`reviews`/`certifications`/
-  `facebook_posts`/`instagram_posts` when the op is a list change),
+  `facebook_posts`/`instagram_posts`/`projects` when the op is a list change),
   `list_item_id` nullable, `text_value`, `int_value`, `date_value`, `bool_value`
   (check: the column that matches `field` is set; the others are null — not a
   json `value`), `created_by`
   (`business_research`/`voice`/`text`/`human`/`llm`), origin (where it came
   from: `google_maps_listing`/`company_registry_record`/`client_interview`/
-  `business_research`/`facebook`/`instagram`/`owner`), `algorithm` (ETL
-  transform identity, or `human` when the contractor wrote it),
+  `business_research`/`facebook`/`instagram`/`website_crawl`/`owner`),
+  `algorithm` (ETL transform identity, or `human` when the contractor wrote it),
   `schema_revision` (integer; bump when that schema gains fields — next extract
   runs by default), `request_id`, `etl_run_id` nullable, `created_at`
 
@@ -102,7 +102,10 @@ show Profile history, or to reconstruct the profile as of `accepted_edit_id`
   `body` if empty), `published_at` nullable, `language` nullable, `origin`
   (`google_maps_listing` / `facebook_business_page` / `owner`), `is_top` bool,
   `top_position` nullable int (only when `is_top`; dense order 1…n, **n ≤ 30**;
-  1 is most featured), `status` (`in_pool` / `archived`), `position`
+  1 is most featured), `status` (`in_pool` / `archived`), `position`,
+  `project_from_source_algorithm` nullable,
+  `project_from_source_schema_revision` nullable, whether that review produced
+  a Project
 
   Top set: partial unique index
   `(business_profile_id, top_position) WHERE top_position IS NOT NULL` (non-top
@@ -125,13 +128,19 @@ include `update` for top pin/reorder.
   `latest_fetch_id` nullable fk → `etl.facebook_fetches`
 - `facebook_posts` — `id`, `tenant_id` fk, `facebook_profile_id` fk,
   `external_id` unique per profile, body / media library refs, `published_at`
-  nullable, `algorithm`, `schema_revision`
+  nullable, `algorithm`, `schema_revision`,
+  `project_from_source_algorithm` nullable,
+  `project_from_source_schema_revision` nullable, whether that post produced
+  a Project
 - `instagram_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique,
   handle, Instagram user, `algorithm`, `schema_revision`, `latest_fetch_id`
   nullable fk → `etl.instagram_fetches`
 - `instagram_posts` — `id`, `tenant_id` fk, `instagram_profile_id` fk,
   `external_id` unique per profile, body / media library refs, `published_at`
-  nullable, `algorithm`, `schema_revision`
+  nullable, `algorithm`, `schema_revision`,
+  `project_from_source_algorithm` nullable,
+  `project_from_source_schema_revision` nullable, whether that post produced
+  a Project
 
 ETL transform upserts these on source `external_id` unless `algorithm=human`.
 Raw stays on the fetch tables. Skip / `force` / `human`: [ETL pipeline](../../etl/pipeline/README.md).

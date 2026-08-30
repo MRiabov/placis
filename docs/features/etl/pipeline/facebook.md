@@ -39,13 +39,15 @@ page id unless `algorithm=human`. Upsert `facebook_posts` on `external_id`
 (insert only ids we do not already have; skip existing rows whose `algorithm`
 matches **and** `schema_revision` matches, or is `human`). Fill empty
 `facebook_profile_url`. Attach new photos into the media library; then
-[photo classification](photo-classification.md). Write `algorithm` and `schema_revision` on rows this
+[photo classification](photo-classification.md); then [projects.md](projects.md) for posts that are a past named job
+(depicting photo required). Write `algorithm` and `schema_revision` on rows this
 transform set.
 
 ## Persist
 
 `etl.facebook_fetches`; `facebook_profiles` / `facebook_posts`;
-`business_profile_edits` when a live profile URL / photo increment is set.
+`business_profile_edits` when a live profile URL / photo increment is set;
+Projects when a post is usable as a Project.
 `etl.runs.status=succeeded`.
 
 ## Fail

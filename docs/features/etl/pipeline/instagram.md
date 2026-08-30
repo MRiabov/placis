@@ -38,13 +38,14 @@ later run after a `schema_revision` bump extracts again.
 Instagram user unless `algorithm=human`. Upsert `instagram_posts` on
 `external_id` (insert only ids we do not already have; skip existing rows whose
 `algorithm` matches **and** `schema_revision` matches, or is `human`). Attach
-new photos into the media library; then [photo classification](photo-classification.md). Write
-`algorithm` and `schema_revision` on rows this transform set.
+new photos into the media library; then [photo classification](photo-classification.md); then
+[projects.md](projects.md) for posts that are a past named job (depicting photo required).
+Write `algorithm` and `schema_revision` on rows this transform set.
 
 ## Persist
 
 `etl.instagram_fetches`; `instagram_profiles` / `instagram_posts`; media library
-items. `etl.runs.status=succeeded`.
+items; Projects when a post is usable as a Project. `etl.runs.status=succeeded`.
 
 ## Fail
 

@@ -415,7 +415,8 @@ ad-platform credentials and do no ad posting.
 ## Compliance And Content Safety
 
 Ads are public marketing statements with ad-platform review policies. The first
-implementation keeps marketing statements conservative and source-backed:
+implementation keeps marketing statements conservative and backed by a
+detail:
 
 1. no fabricated review counts, ratings, years in business, guarantees,
    certifications, insurance, licensing, or pricing

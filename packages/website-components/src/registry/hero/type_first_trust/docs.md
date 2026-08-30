@@ -7,8 +7,8 @@ proof and optional background media.
 
 ## Best Fit
 
-Good for source-backed rebuilds where the original page combines headline, CTAs,
-and proof metrics in one opening section.
+Good for rebuilds backed by a detail where the original page combines headline,
+CTAs, and proof metrics in one opening section.
 
 ## Avoid
 
@@ -18,7 +18,7 @@ visually quiet.
 ## Key Props
 
 Use headline, supporting copy, CTA actions, background media, and proof items.
-Treat numbers and review claims as source-backed content.
+Treat numbers and review claims as content backed by a detail.
 
 ## Style And Composition
 

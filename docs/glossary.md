@@ -290,8 +290,10 @@ Distinct from: Projects (photos of their work).
 
 #### Projects
 
-The contractor’s work shown on the website — jobs with photos — edited
-separately from website sections. Reached from Profile.
+A Project is a named job with title, description, and cover, shown on the
+website and edited at Profile. It is normally a **past** job (work already
+completed). Distinct from a media library item whose photo kind is project (a
+picture of their work that is not itself a Project).
 
 Use “projects” in product docs and UI. Do not say “portfolio”.
 
@@ -432,6 +434,9 @@ Distinct from: Copy (the words), Website activation (never “website claim”),
 sign-in identity claims (auth only).
 
 Never say “marketing claim”, “advertising claim”, or bare “claim” for this.
+Never say **source-backed** (contractor wording, PRDs, technical specs). Prefer
+**backed by a detail**, or name the origin (Google Maps listing, Facebook post,
+and the like).
 
 ---
 
@@ -1318,7 +1323,7 @@ or a fast crawl). Lands in about a second. Distinct from: Slow extract.
 #### Slow extract
 
 The remainder after the fast extract (Maps scrape of further reviews and photos,
-or a slow crawl). Tens of seconds. Distinct from: Fast extract.
+or website crawl’s parallel remainder extract). Distinct from: Fast extract.
 
 ---
 
@@ -1331,8 +1336,9 @@ from: Slow crawl.
 
 #### Slow crawl
 
-The rest of the existing site. A slow extract for website crawl. Distinct from:
-Fast crawl.
+The remainder extract of website crawl after the homepage: remaining HTML URLs
+in parallel (not a serial tens-of-seconds walk). A slow extract for that kind.
+Distinct from: Fast crawl.
 
 ---
 

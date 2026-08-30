@@ -7,29 +7,34 @@ implementation.
 Generation uses the Vercel AI SDK.
 **Open-web search is Parallel as a Vercel AI Gateway server tool**
 (`gateway.tools.parallelSearch()`) — not OpenRouter, not a model's built-in
-search, not Exa, Perplexity, or Tako, not Parallel's API directly (onboarding
-ADR 5a). Parallel returns excerpts; a follow-up extract over retrieved text is a
-Vercel generation call with no search tools. Generation and search share Vercel;
-there is no OpenRouter hop.
+search, not Exa, Perplexity, or Tako, not Parallel's **Search** API directly
+(onboarding ADR 5a). Known-URL crawl **text** may call Parallel **Extract**
+(`PARALLEL_API_KEY` → `https://api.parallel.ai/v1/extract`) from website crawl;
+that is not Search. Parallel Search returns excerpts; a follow-up generation
+over retrieved text is a Vercel generation call with no search tools. Generation
+and search share Vercel; there is no OpenRouter hop.
 
 - **Prompts live in per-feature `prompts.yaml`, not in Go.** The feature that
   issues the LLM call owns the file (`go:embed` in that package): CMS Assistant
   wrap-up / reject / STT / compaction / Voice seed prompt in `assistant`; Ads
   generate / Review **inline AI assistance** in `ads`; media library cleanup in
   the media package; project title/description **inline AI assistance** in
-  projects; onboarding 06 in onboarding. Do not put product prompt prose in Go
-  strings, and do not keep one global `internal/ai/prompts.yaml`. `ai` is
-  `LLMProvider` + traces; it records `prompt_id` / `prompt_version` from that
-  file (id + format revision). Assistant **product knowledge** is a separate
-  **knowledge base registry** (YAML + markdown `go:embed` in the assistant
-  packages), not `prompts.yaml` and not RAG. CMS and onboarding both list the
-  shared product glossary (`internal/knowledge/product_glossary.md`: Domain +
-  Enums + Don't say). Voice pronunciation / keyterms are
-  `internal/knowledge/voice_pronunciation.yaml`, not `prompts.yaml`. Interpolate
-  with `{{var}}`. Nested fields (business profile has many) use a dotted path:
-  `{{aaa.bbb}}`. Same spelling as a [website placeholder](../features/website/variables.md) when the value is a
-  profile detail; prompts.yaml is not unpublished website copy. Go fills
-  `{{var}}`; it does not own the prompt text.
+  projects; onboarding 06 in onboarding; ETL project-from-source / photo
+  classification / crawl parse in the ETL package. ETL extract/transform
+  generation uses **`glm-5.3-flash`** (dated gateway id; do not ride `*-latest`)
+  via `LLMProvider` — same cheap multimodal model when the input is text-only.
+  Do not put product prompt prose in Go strings, and do not keep one global
+  `internal/ai/prompts.yaml`. `ai` is `LLMProvider` + traces; it records
+  `prompt_id` / `prompt_version` from that file (id + format revision).
+  Assistant **product knowledge** is a separate **knowledge base registry**
+  (YAML + markdown `go:embed` in the assistant packages), not `prompts.yaml` and
+  not RAG. CMS and onboarding both list the shared product glossary
+  (`internal/knowledge/product_glossary.md`: Domain + Enums + Don't say). Voice
+  pronunciation / keyterms are `internal/knowledge/voice_pronunciation.yaml`,
+  not `prompts.yaml`. Interpolate with `{{var}}`. Nested fields (business
+  profile has many) use a dotted path: `{{aaa.bbb}}`. Same spelling as a
+  [website placeholder](../features/website/variables.md) when the value is a profile detail; prompts.yaml is not
+  unpublished website copy. Go fills `{{var}}`; it does not own the prompt text.
 - Output is parsed against a schema before it enters the app. A mismatch is
   **repaired under a bounded contract**: repair only the smallest subtree that
   fails (never regenerate the whole answer), discard or reject unknown fields

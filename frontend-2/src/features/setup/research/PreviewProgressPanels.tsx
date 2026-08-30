@@ -104,7 +104,7 @@ export function GenerationPanel({
             <p className="text-sm leading-6 text-foreground">
               {generationFailed
                 ? "Your saved interview is ready to retry."
-                : "We will use the saved interview and source-backed facts to prepare the editable website draft."}
+                : "We will use the saved interview and details we found to prepare the editable website draft."}
             </p>
             <button
               className="mt-4 inline-flex h-11 items-center justify-center rounded-md bg-foreground px-4 text-sm font-semibold text-background transition disabled:cursor-not-allowed disabled:opacity-50"

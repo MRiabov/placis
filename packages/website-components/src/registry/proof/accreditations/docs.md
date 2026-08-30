@@ -3,7 +3,7 @@
 ## Purpose
 
 Use this component to show insurance, certifications, trade memberships, or
-source-backed accreditations.
+accreditations backed by a detail.
 
 ## Best Fit
 

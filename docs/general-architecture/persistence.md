@@ -51,7 +51,7 @@ one owning file — never copied into a second `persistence.md`.
 | --- | --- | --- |
 | [auth](../features/other/auth/persistence.md) | `auth` | `tenants`, `tenant_memberships` |
 | [onboarding](../features/onboarding/persistence.md) | `onboarding` | onboarding sessions, client interview submissions, website activations, `stripe_events` |
-| [ETL](../features/etl/persistence.md) | `etl` | `runs`, per-type fetches, `google_maps_listings` (hours, reviews, photos) |
+| [ETL](../features/etl/persistence.md) | `etl` | `runs`, per-type fetches, `google_maps_listings` (hours, reviews, listing photos, review photos), `website_crawl_pages` (+ photos), `imported_media` |
 | [details](../features/business-profile/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews, Facebook / Instagram profile and posts, `certification_definitions`, `business_profile_certification_selections`) |
 | [projects](../features/business-profile/projects/persistence.md) | `business_profile` | `projects` |
 | [website](../features/website/persistence.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions) |

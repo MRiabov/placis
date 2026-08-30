@@ -11,6 +11,6 @@
   re-validate) and is not skipped; after 3 failures `photo_kind` stays unset;
   04a / 04b do not set `photo_kind`; no `etl.photo_classifications` table;
   photos attached from the Details chunk are classified before scrape photos
-  finish.
-- **Fake**: photo classifier. Never Maps / Facebook / Instagram networks from
-  this step.
+  finish. Crawl HTML URL photos classify the same way.
+- **Fake**: photo classifier (`glm-5.3-flash` dated id). Never Maps / Facebook /
+  Instagram / crawl networks from this step.
