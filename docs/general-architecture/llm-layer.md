@@ -57,8 +57,8 @@ offline generate factory. One table, not copied into feature persistence docs.
 Postgres schema **`ai`**. Go package `internal/ai/`.
 
 Closed set: `text` `NOT NULL` plus a check constraint, not a Postgres enum
-type. Go `StrEnum` when code exists. Do **not** dump non-assistant work into an
-`internal` kind.
+type ([ADR 1](ADR.md)). Go `StrEnum` when code exists. Do **not** dump
+non-assistant work into an `internal` kind.
 
 ```sql
 kind text NOT NULL CHECK (kind IN (
