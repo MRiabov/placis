@@ -124,4 +124,6 @@ owner-written; omit it rather than inventing it.
     Hidden on wait teaser. (2026-08-30) Same day, later: the composer is **on**
     as text; **Voice** is a switch in that composer. Website page list and Share
     float on the canvas. Send and Voice need **Sign up with Google**. The field
-    is a compact docked composer, not the CMS card. (2026-08-30)
+    is a compact docked composer, not the CMS card. (2026-08-30) Same day,
+    later: that composer stacks above the website-activation strip’s lift
+    shadow. (2026-08-30)

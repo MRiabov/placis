@@ -251,32 +251,43 @@ function PreviewAndEditInner(): ReactNode {
             Shared to {shareHost}
           </p>
         ) : null}
-        <AssistantLaunch className="absolute right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] z-30" />
-        <AssistantSession
-          onSend={applyFollowBeat}
+      </div>
+      <div className="relative z-50">
+        <div
+          className={cn(
+            "pointer-events-none absolute inset-x-0 bottom-full z-10",
+            assistantOrbVars,
+            voiceOn && assistantOpen ? "is-voice" : "",
+          )}
+        >
+          <AssistantLaunch className="pointer-events-auto absolute right-3 bottom-2" />
+          <AssistantSession
+            onSend={applyFollowBeat}
+            onSignUp={() => setScene("signed")}
+            signedIn={scene !== "unsigned"}
+            unpaid
+          />
+        </div>
+        <ActivationStrip
+          className="relative z-0"
+          panelOpen={panelOpen}
+          scene={scene}
+          onClose={() => setPanelOpen(false)}
+          onOpen={() => setPanelOpen(true)}
+          onPay={() => {
+            setScene("paying");
+            window.setTimeout(() => {
+              setScene("activating");
+              window.setTimeout(() => {
+                window.location.assign(
+                  "/cms/website?publication=1&from=activation",
+                );
+              }, 900);
+            }, 900);
+          }}
           onSignUp={() => setScene("signed")}
-          signedIn={scene !== "unsigned"}
-          unpaid
         />
       </div>
-      <ActivationStrip
-        panelOpen={panelOpen}
-        scene={scene}
-        onClose={() => setPanelOpen(false)}
-        onOpen={() => setPanelOpen(true)}
-        onPay={() => {
-          setScene("paying");
-          window.setTimeout(() => {
-            setScene("activating");
-            window.setTimeout(() => {
-              window.location.assign(
-                "/cms/website?publication=1&from=activation",
-              );
-            }, 900);
-          }, 900);
-        }}
-        onSignUp={() => setScene("signed")}
-      />
     </div>
   );
 }

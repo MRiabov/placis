@@ -148,10 +148,11 @@ CMS Website pages rail). Canvas top-menu/footer website page clicks stay on
 this route. Website page list and **Share** float on the canvas. Pay is the
 sticky website-activation strip (same bar as the host mock; on a narrow pane the
 copy and price sit on one row and the activate control is full width). Assistant
-starts as text (compact docked composer); **Voice** is a switch in that
-composer. No Content, no website styles rail, no click-to-edit, no design
-controls. Signed-out: view + switch website pages; prompt box visible; send and
-Voice need **Sign up with Google**.
+starts as text (compact docked composer, in front of the website-activation
+strip’s lift shadow); **Voice** is a switch in that composer. No Content, no
+website styles rail, no click-to-edit, no design controls. Signed-out: view +
+switch website pages; prompt box visible; send and Voice need **Sign up with
+Google**.
 
 **Share** (optional) runs [07](pipeline/07-website-preview.md): preview website
 address with website-activation strip. Pay on the website preview **or** on
