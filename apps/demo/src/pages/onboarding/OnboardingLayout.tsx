@@ -40,7 +40,9 @@ function OnboardingLayoutInner(): ReactNode {
   });
   const step = pathname.split("/").at(-1) ?? "find";
   const generated = step === "generated";
-  const hideOrb = step === "preview" || generated;
+  const previewAndEdit = step === "preview-and-edit";
+  const canvas = generated || previewAndEdit;
+  const hideOrb = step === "preview" || canvas;
   const [guide, setGuide] = useState<"cue" | "listening" | "dismissed">("cue");
   const [cueCopy, setCueCopy] = useState(cueTurnOn);
   const [speaking, setSpeaking] = useState(false);
@@ -71,6 +73,14 @@ function OnboardingLayoutInner(): ReactNode {
             void navigate({ to: item.to });
           },
         })),
+        {
+          id: "preview-and-edit",
+          label: "Website preview",
+          on: previewAndEdit,
+          onSelect: () => {
+            void navigate({ to: "/onboarding/preview-and-edit" });
+          },
+        },
         {
           id: "generated",
           label: "Skip generation",
@@ -127,12 +137,12 @@ function OnboardingLayoutInner(): ReactNode {
   }
 
   const currentIndex = steps.findIndex((entry) => entry.id === step);
-  const showBack = !generated && step !== "find";
+  const showBack = !canvas && step !== "find";
 
   return (
     <div className="flex h-full flex-col bg-background">
       <DevStrip groups={groups} />
-      {generated ? null : (
+      {canvas ? null : (
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-border">
           <div className="mx-auto flex h-14 w-[min(72rem,calc(100%-2.5rem))] items-center justify-between">
             <Link aria-label="placis" to="/onboarding/find">
@@ -172,7 +182,7 @@ function OnboardingLayoutInner(): ReactNode {
           </div>
         </header>
       )}
-      {generated ? null : (
+      {canvas ? null : (
         <nav
           aria-label="Onboarding progress"
           className="mx-auto w-[min(72rem,calc(100%-2.5rem))] pt-4"
@@ -208,7 +218,7 @@ function OnboardingLayoutInner(): ReactNode {
       <main
         className={cn(
           "relative min-h-0 flex-1 overflow-auto",
-          generated
+          canvas
             ? "flex flex-col overflow-hidden p-0"
             : hideOrb
               ? "pt-5"
@@ -221,9 +231,7 @@ function OnboardingLayoutInner(): ReactNode {
         <div className="fixed right-4 bottom-4 z-50 h-[min(5.5rem,30vw)] w-[min(5.5rem,30vw)] overflow-visible">
           <DustOrb
             aria-label={
-              guide === "listening"
-                ? "Voice guide on"
-                : "Turn on the voice guide"
+              guide === "listening" ? "Assistant on" : "Turn on Assistant"
             }
             aria-pressed={guide === "listening"}
             className="size-full"
@@ -237,7 +245,7 @@ function OnboardingLayoutInner(): ReactNode {
             speaking={speaking}
           />
           <button
-            aria-label="Turn off the voice guide"
+            aria-label="Turn off Assistant"
             className="absolute -top-[0.35rem] -left-[0.35rem] z-[1] grid size-6 place-items-center rounded-full border border-border bg-white text-[14px] leading-none"
             onClick={stopGuide}
             type="button"
@@ -292,7 +300,7 @@ function OnboardingLayoutInner(): ReactNode {
           onClick={startGuide}
           type="button"
         >
-          Enable voice guide
+          Enable Assistant
         </button>
       )}
     </div>

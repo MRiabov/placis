@@ -25,15 +25,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (!cacheableMethods.has(context.request.method)) {
     return next();
   }
+  const runtimeEnv = env as StaticSiteEnv;
+  const host = requestHost(context.request, context.url, runtimeEnv);
+  if (isPreviewApexHost(host)) {
+    return new Response("Not Found", { status: 404 });
+  }
   if (context.url.pathname.startsWith("/preview/")) {
     return next();
   }
-  const runtimeEnv = env as StaticSiteEnv;
   const bucket = runtimeEnv.CMS_STATIC_SITE_BUCKET;
   if (!bucket) {
     return next();
   }
-  const host = requestHost(context.request, context.url, runtimeEnv);
   const key = staticArtifactKey({
     host,
     pathname: context.url.pathname,
@@ -102,6 +105,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
   return response;
 });
+
+function isPreviewApexHost(host: string): boolean {
+  const normalizedHost = host
+    .toLowerCase()
+    .replace(/:\d+$/, "")
+    .replace(/\.$/, "");
+  return normalizedHost === "preview.placis.com";
+}
 
 function isHtmlArtifactPath(pathname: string) {
   const normalizedPath =

@@ -23,6 +23,7 @@ import { FindPage } from "@/pages/onboarding/FindPage";
 import { GeneratedPage } from "@/pages/onboarding/GeneratedPage";
 import { InterviewPage } from "@/pages/onboarding/InterviewPage";
 import { OnboardingLayout } from "@/pages/onboarding/OnboardingLayout";
+import { PreviewAndEditPage } from "@/pages/onboarding/PreviewAndEditPage";
 import { PreviewPage } from "@/pages/onboarding/PreviewPage";
 import { ReviewPage } from "@/pages/onboarding/ReviewPage";
 
@@ -263,6 +264,12 @@ const previewRoute = createRoute({
   component: PreviewPage,
 });
 
+const previewAndEditRoute = createRoute({
+  getParentRoute: () => onboardingRoute,
+  path: "preview-and-edit",
+  component: PreviewAndEditPage,
+});
+
 const generatedRoute = createRoute({
   getParentRoute: () => onboardingRoute,
   path: "generated",
@@ -296,6 +303,7 @@ const routeTree = rootRoute.addChildren([
     reviewRoute,
     interviewRoute,
     previewRoute,
+    previewAndEditRoute,
     generatedRoute,
   ]),
 ]);
