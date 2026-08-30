@@ -5,9 +5,9 @@ table stays ([files-and-s3.md](../../../general-architecture/files-and-s3.md)); 
 an item is never replaced in place; edits copy (`parent_media_asset_id`).
 
 Cleanup is this resource. Ads placements and website slots **reference** a
-`media_asset_id`; they do not own a second cleanup HTTP. The ads Review orb and
-the website editor `cleanup_image` are callers of these routes, then they
-retarget **that** placement or website-section image.
+`media_asset_id`; they do not own a second cleanup HTTP. Ads Review
+**inline AI assistance** and the website editor `cleanup_image` are callers of
+these routes, then they retarget **that** placement or website-section image.
 
 ## Serve only types on HTTP
 
@@ -66,7 +66,8 @@ Crop/focal are bounded numbers (0–1). Media caption is `string` + `maxLength`
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** `/cms/media` promptable cleanup; assistant `cleanup_image`; ads
-  Review orb (then PATCH the placement). Same function; not an ads verb.
+  Review **inline AI assistance** (then PATCH the placement). Same function; not
+  an ads verb.
 - **Idempotency-Key:** yes.
 - **Request:** `prompt` (`string`, `minLength` 1, `maxLength` 500). Empty prompt
   is `400`.

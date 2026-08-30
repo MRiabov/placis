@@ -1,8 +1,8 @@
 # Website editor tools
 
 Hard-typed website editor tools the **assistant** (and onboarding 06) may call.
-Overlay, thread, and HTTP: [assistant](../assistant/README.md). Plan vs continuous and Ask first vs
-instant apply stay **website editor only** (below). Generation and search go
+Assistant look, thread, and HTTP: [assistant](../assistant/README.md). Plan vs continuous and Ask first
+vs instant apply stay **website editor only** (below). Generation and search go
 through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
 Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses these tools headless
@@ -10,14 +10,17 @@ Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-gene
 website template is applied. That job is website copy generation, not the CMS
 assistant.
 
-Overlay look: [assistant design decision record](../assistant/design-decision-record.md), website placement:
+Assistant look: [assistant design decision record](../assistant/design-decision-record.md), website placement:
 [design decision 18](design-decision-record.md). Architecture: [website ADR](ADR.md) 6.
 
 ## Tools (hard-typed, validated, parallel)
 
-The planner uses hard-typed website editor action tools — never one generic plan
-tool with freeform JSON. Each call is validated on input; the backend turns it
-into a planned / applied / skipped / failed event.
+The assistant is an **agent** (up to **20** tool-using model turns after one
+owner send / utterance). Tools are hard-typed website editor actions — never
+one generic plan tool with freeform JSON. Each call is validated on input; the
+backend turns it into a planned / applied / skipped / failed event. **128K /
+12K tokens** are text `LLMProvider` assembly only. Voice live context is
+xAI-side after instructions seed (xAI region from the **business country**).
 
 | Tool | What it does |
 | --- | --- |
@@ -35,7 +38,7 @@ into a planned / applied / skipped / failed event.
 | `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
 | `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
 | `update_details` | the shared Details tool — one implementation ([details HTTP](../business-profile/details/api.md)) |
-| `create_project` | create a project (same `POST /v1/projects` as first click-off on **New project**) |
+| `create_project` | create a **project draft** (same `POST /v1/projects` as first click-off on **New project**; not in the next website publication bake until Approve) |
 | `set_project_title` | PATCH the project title (immediate) |
 | `set_project_cover` | PATCH cover to an existing media library item, or clear it |
 | `patch_project_description` | queue one Ask-first description hunk; **Apply** PATCHes the resulting `description` |
@@ -236,13 +239,15 @@ criteria. `assistant_plan` may summarize alongside the edit tools.
 
 ## Three configs
 
-Independent options. They combine. Default in the website editor:
+Independent options. They combine. Default in the website editor **text:**
 **plan + Ask first**, **Follow** on. Plan and Ask first are boolean switches on
-the overlay. Follow is not owner-turnable.
+the Assistant (website editor text only). Follow is always on (not a request
+field). Voice is always Ask first; no owner Plan switch; no `plan` /
+`ask_first` / `follow` on Voice create.
 
-**Follow** (`follow`) — the canvas snaps to the website slot the **agent** is
-editing. Default **on**. The owner cannot turn it off (no overlay switch). A
-request with `follow: false` is refused. Dispatcher: [assistant](../assistant/architecture.md).
+**Follow** — the canvas snaps to the website slot the **agent** is editing.
+Always **on**. The owner cannot turn it off. Not a WS / HTTP field. A request
+with `follow: false` is **400**. Dispatcher: [assistant](../assistant/architecture.md).
 
 **Workflow: plan vs continuous** (how the request is scoped)
 
@@ -254,9 +259,10 @@ request with `follow: false` is refused. Dispatcher: [assistant](../assistant/ar
 **Gate: instant apply vs Ask first** (whether Apply / Reject exist)
 
 - **Ask first** (`ask_first`) — **Apply** / **Reject** pills sit on the canvas
-  over the composer, or in the left stack next to the orb when the voice agent
-  is on, for the whole pending run. The canvas shows the proposal in memory.
-  Nothing is PATCHed until **Apply**. Never `on_confirm`.
+  over the composer, or in the left stack next to DustOrb when Voice is on, for
+  the whole pending run. The canvas shows the proposal in memory.
+  Nothing is PATCHed until **Apply**. Never `on_confirm`. Voice is always this
+  gate.
 - **Instant apply** — those buttons are bypassed. In the CMS, the website editor
   applies each validated tool to the in-memory projection and PATCHes as they
   succeed. There is no Reject for that edit. Onboarding 06 writes unpublished
@@ -484,15 +490,21 @@ Activity `summary` example: `Updated Business details`. Never a tool name.
 
 ### Projects tools
 
-Same HTTP as `/cms/projects` ([projects HTTP](../business-profile/projects/api.md), [projects ADR](../business-profile/projects/ADR.md) 4). Writing on
-`/cms/projects/{id}` is Ads AI orbs, not this overlay. Description hunks are
-**Ask first** (pending in memory; **Apply** PATCHes). Title and cover PATCH
-immediately. Cover is an existing media library item or null — never
-`generate_image`, never an invented photo. Archive only if the owner asked.
-`patch` is a closed union: `span` (UTF-8 code points, exclusive end), `quote`
-(find exactly once), `append`, `fill` (empty description only). Refuse empty
-find, 0 or >1 quote matches, out-of-range span, fill when non-empty, a whole new
-description as a tool arg, overlapping pending hunks.
+Same HTTP as `/cms/projects` ([projects HTTP](../business-profile/projects/api.md), [projects ADR](../business-profile/projects/ADR.md) 4). Allowed only
+while `assistant_screen` is `website_editor` (same gate as `update_slot`). The
+Assistant on Projects is guide-only. Writing on `/cms/projects/{id}` is
+**inline AI assistance**, not Voice and not the Assistant. `create_project`
+creates a **project draft** — do not treat a draft id as bake-ready in a
+gallery. Description hunks are **Ask first** (pending in memory; **Apply**
+PATCHes). Title and cover PATCH immediately. Cover is an existing media library
+item or null — never `generate_image`, never an invented photo. Archive only if
+the owner asked. `archive_project` / `unarchive_project` are the same POSTs as
+the editor (unarchive returns a project draft).
+**Select to edit inline AI assistance** is a `span` patch. `patch` is a closed
+union: `span` (UTF-8 code points, exclusive end), `quote` (find exactly once),
+`append`, `fill` (empty description only). Refuse empty find, 0 or >1 quote
+matches, out-of-range span, fill when non-empty, a whole new description as a
+tool arg, overlapping pending hunks.
 
 Activity `summary` examples: `Updated description on {title}`, `Added to
 description on {title}`, `Wrote description on {title}`. Never a tool name.

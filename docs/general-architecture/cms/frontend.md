@@ -5,7 +5,7 @@ chooser. Destination screens live with their features. Loading placeholders:
 every screen, per field / row — not a whole-panel swap ([frontend.md](../frontend.md)).
 
 Look: [design decision record](design-decision-record.md). Tokens: [design.md](design.md). Port:
-[frontend-debloat.md](../frontend-debloat.md). [ADR](ADR.md). Assistant overlay:
+[frontend-debloat.md](../frontend-debloat.md). [ADR](ADR.md). Assistant:
 [assistant](../../features/assistant/README.md).
 
 ## Left nav
@@ -66,9 +66,9 @@ of Sites.
 
 **Hide in product; keep mock HTML:** Settings, Log out, New chat nav row,
 Connect (the New chat Google / Meta control), Paperclip, Start client interview
-orb, leftover Usage & billing mock, leftover Usage rail item. Do not delete
-those nodes from the look-export HTML. Do **not** hide the website-editor voice
-orb.
+DustOrb leftover, leftover Usage & billing mock, leftover Usage rail item. Do
+not delete those nodes from the look-export HTML. Do **not** hide the
+website-editor DustOrb.
 
 ## Profile disclosure
 

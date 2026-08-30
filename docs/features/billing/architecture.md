@@ -18,30 +18,32 @@ subscription tier. Do **not** zero remaining. Unused usage credit carries over.
 Extra usage credit is already in the pool, so it carries too. No expiry. No
 carry-over cap.
 
-Owner markup is **×5** on **our cost**. Usage & billing shows their cost, never
-ours. $50 shown ⇒ they can spend **$10** of our cost.
+Owner markup is **×5** on **our cost**. Usage & billing shows **their cost**,
+never ours. $50 shown ⇒ they can spend **$10** of our cost.
 
 Onboarding, including the onboarding guide, is **not** billed.
 
-## Two vendor cost shapes
+## AI vendor cost and AI voice vendor cost
 
 Same ×5 into the pool.
 
-**Token or per-image invoice** (Vercel / model) — assistant text, image
-generate/cleanup, ads generate. Not Voice minutes.
+**AI vendor cost** (OpenRouter / model / image invoices) — assistant text,
+image generate/cleanup, ads generate. Not Voice minutes.
 
-**Voice (xAI Speech to Speech)** — not tokens and not wall-clock of an open
-socket. xAI invoices
+**AI voice vendor cost** (xAI Speech to Speech) — not tokens and not wall-clock
+of an open socket. xAI invoices
 ([pricing](https://docs.x.ai/developers/pricing),
 [Speech to Speech](https://docs.x.ai/developers/models/speech-to-speech)):
 
 1. **Per minute of audio sent or received** (both directions). Published
    2026-08-28: `grok-voice-think-fast-2.0` **$0.08 / min** ($4.80 / hr).
    Deprecated `grok-voice-think-fast-1.0` $0.05 / min. Pin a dated model id; do
-   not ride `grok-voice-latest`.
+   not ride `grok-voice-latest`. Live Voice uses the xAI region for the
+   **business country** (not a blanket eu-west-1, not the global `api.x.ai`
+   host).
 2. **$0.004 per text `conversation.item.create`**. Not billed:
    `function_call_output` (our tool results) and items whose content is audio
-   (those ride the audio meter). `response.create` is not a billable event.
+   (those ride the audio minutes). `response.create` is not a billable event.
 3. Do **not** enable xAI server-side `web_search` / `x_search` / collections /
    MCP (separate per-1k-call fees) or provisioned phone numbers (+$0.01 / min).
    Our tools are custom functions dispatched by Go.
@@ -51,13 +53,14 @@ generate) is **additional** ×5, tagged Image or Text, not rolled into the
 minute.
 
 Go never sees PCM. xAI's Speech to Speech docs do **not** attach a token-style
-usage object on `response.done`. Settle from **measured audio duration both
-directions** (audio we sent + audio we received) plus the count of billed text
-`conversation.item.create` events, posted on `POST /v1/assistant/transcripts`
-(including a usage-only POST when Voice turns off with no new visible text)
-and when the realtime connection closes. Prefer an xAI usage payload if one
-appears later. Do **not** debit wall-clock of an open socket (silence is not
-the audio meter). Do not invent `input_tokens` / `output_tokens` from minutes.
+usage object on `response.done`. Settle from
+**measured audio duration both directions** (audio we sent + audio we received)
+plus the count of billed text `conversation.item.create` events, posted on
+`POST /v1/assistant/voice/transcripts` (including a usage-only POST when Voice
+turns off with no new visible text) and when the realtime connection closes.
+Prefer an xAI usage payload if one appears later. Do **not** debit wall-clock of
+an open socket (silence is not AI voice vendor cost). Do not invent
+`input_tokens` / `output_tokens` from minutes.
 
 Seed knowledge and profile in the realtime-connection **instructions**, not as
 a stack of billed text items. Do not replay the assistant thread as

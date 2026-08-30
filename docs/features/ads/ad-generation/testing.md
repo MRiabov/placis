@@ -29,11 +29,13 @@ faked. DB asserts name the tables from
      the same inputs rolls the `prompt_version` so it is not a duplicate. Same
      roll if the result would duplicate a Published ad.
    - UI: the ad returns for review — never `ad_ready_to_post` without approval.
-   - Review AI orb: owner prompts a copy-field rewrite (prompt required);
-     `ai_generations` records the owner prompt + reasoning + output + tool
-     calls. Empty prompt does not fire. Ctrl+Z restores the previous copy.
-     `update_details` writes the business profile when copy includes a detail,
-     plus a notification (OK / Revert). Approve is not blocked.
+   - Review **inline AI assistance**: owner prompts a copy-field rewrite (prompt
+     required); **select to edit inline AI assistance** rewrites a span; no
+     selection is the whole field; `ai_generations` records the owner prompt +
+     reasoning + output + tool calls. Empty prompt does not fire. Ctrl+Z
+     restores the previous copy. `update_details` writes the business profile
+     when copy includes a detail, plus a notification (OK / Revert). Approve is
+     not blocked.
 
 4. **Approve** — the owner reviews, edits copy, approves.
    - DB: `ad_copy_variants.source=owner_edit`, `ad_variants.status=approved`,

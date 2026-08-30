@@ -26,7 +26,7 @@ and website publication. Ads live in [../ads/](../ads/README.md). Together they 
 - [variables.md](variables.md) — the `{{var}}` website placeholders and how they resolve
 - [assistant.md](assistant.md) — website editor tools: plan vs continuous, Ask first vs
   instant apply
-- [Assistant](../assistant/README.md) — overlay, thread, HTTP
+- [Assistant](../assistant/README.md) — Assistant, thread, HTTP
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density,
   motion
 - [technical-implementation.md](technical-implementation.md) — website template application, website

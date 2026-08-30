@@ -7,13 +7,21 @@ Named idle constant: **30 seconds** with no owner speech → frontend stops the
 voice conversation (CMS and onboarding). Assert that constant. 20s warning look
 TBD (do not assert UI). Go does not enforce idle.
 
+Named agent-loop constants: **20** tool-using model turns after one owner send
+or utterance (text and Voice). **Owner input is characters** (text **4000**,
+owner utterance **5000**). **Text:** **128K tokens** assembled context,
+**12K tokens** generation per turn (agent back and forth — not a 5000-character
+cap). Assert those constants. Wrap-up notice on
+**text** turns 18–20. **21st text** inference has empty `tools=` and a plaintext
+summary (not 409). Voice after 20 tool rounds does not execute more tools.
+
 ## CMS
 
 1. **Hydrate** — Calling the assistant (bottom-right **Assistant**) on website
    editor / Ads / Details / `/cms` returns the current thread (`items`, not
-   `thread_items`). Empty is `items: []`. Visiting `/cms` without calling does
-   not hydrate. Hydrate does not return `runs` and does not join
-   `ai_generations`.
+   `thread_items`). No `current` → insert empty `current`. Empty is `items: []`.
+   Visiting `/cms` without calling does not hydrate. Hydrate does not return
+   `runs` and does not join `ai_generations`.
 2. **Assistant screen switch** — Owner moves website editor → Details during
    speech; speech continues; next owner turn carries one switch notification for
    Details.
@@ -31,18 +39,29 @@ TBD (do not assert UI). Go does not enforce idle.
    `POST /v1/assistant/voice/tool-calls` (HTTP events) → browser writes
    `function_call_output` on that same voice-service WS; muted `tool_summary`
    item appended. `POST /v1/assistant/voice/transcripts` appends owner +
-   assistant text. `ai_generations` has a voice row with `thread_id`. Hydrate
-   does not read that table.
+   assistant text with `offset_seconds` from that run’s start. Reconstruct
+   `[m:ss owner]` / `[m:ss assistant]` (never say user). `ai_generations` has a
+   voice row with `thread_id`. Hydrate does not read that table. Tool-calls
+   during the **current** voice run succeed (`in_flight_run` is a second start).
+   Realtime URL host is the xAI region for that tenant’s business country
+   (`ie`/`gb` → **eu-west-1**, `us` → **us-east-1**), not a frontend-hardcoded
+   host. Connection create includes **Placis** in keyterms and `replace`
+   **Play-sis**.
 8. **Voice → text** — After a tool-using voice turn, expanded thread shows
    transcripts **and** muted tool lines. Next owner send on
-   `GET /v1/assistant/thread/ws` continues from those thread items.
+   `GET /v1/assistant/thread/ws` continues from those thread items. First text
+   send after Voice includes the STT caveat; second text send does not; Voice
+   then text includes it again.
 9. **Ask first** — Instant apply never writes `runs.ask_first_status=pending`.
    `record-apply` / `record-reject` **409** `ask_first_not_pending` unless
    `pending`. Second transition 409. Go does not upsert unpublished rows on
-   those POSTs.
+   those POSTs. While `pending`, the run stays `running`: New thread, second
+   text send, and second Voice create are **409**. Same Voice connection may
+   continue. Reject does not start a generation; it appends a muted thread item.
 10. **`/thread/new`** — Completes previous (`status=completed`), inserts
     `current`. Two racing POSTs: second **409** `thread_current_exists`.
-    In-flight run **409** `in_flight_run`.
+    In-flight run **409** `in_flight_run`. `/thread/new` while Voice is on →
+    409 (does not drop Voice).
 11. **Insufficient usage credit** — CMS text send / realtime-connection create
     is **402** (`usage_credit_exhausted`) when usage credit is exhausted. Voice
     minutes debit from posted usage (transcripts + connection close), not from
@@ -53,45 +72,60 @@ TBD (do not assert UI). Go does not enforce idle.
     `200`.
 12. **Unactivated** — **403** `tenant_unactivated` on `/v1/assistant/…`.
 13. **Voice idle** — After 30s with no owner speech, frontend closes (leftover
-    transcripts + usage posted; recording upload (signed URL); realtime
-    connection dropped).
-14. **Voice recording** — After Voice turns off, `files` row + object in
+    transcripts with `offset_seconds` + usage posted; CMS recording upload
+    (signed URL); realtime connection dropped). Onboarding idle skips the
+    recording PUT.
+14. **Voice recording** — After **CMS** Voice turns off, `files` row + object in
     storage; `runs.recording_file_id` set. GET thread does not return the URL.
-    The recording file is never posted to Go.
+    The recording file is never posted to Go. Onboarding has no recording
+    object.
 15. **06 overlap** — Activate (08) while 06 is still writing a website slot; CMS
     PATCH of that website slot is last-write / `edit_history_conflict`, not
     assistant `in_flight_run`. CMS assistant POSTs are not 409 because 06 is
     running.
 16. **Denied microphone** — Shared **notification** **Allow microphone access
     in your browser to talk. You can keep typing.** **Try again** retries
-    getUserMedia; **Switch to text mode** opens the composer. Overlay is not
+    getUserMedia; **Switch to text mode** opens the composer. Assistant is not
     restored until Switch to text mode. `POST …/realtime-connection` was not
     called.
 17. **Greeting once** — First Voice start plays the prerecorded greeting.
-    Start Voice again more than 5s after that greeting began: orb on, no second
-    greeting.
+    Start Voice again more than 5s after that greeting began: DustOrb on, no
+    second greeting.
+18. **Projects write tools** — `create_project` on `website_editor` leaves a
+    **project draft**. Those tools on Ads (or on Projects) are **409**
+    `allowed_set_rejected`.
+19. **Follow** — `follow: false` on the text socket is **400**. Voice create
+    has no `plan` / `ask_first` / `follow`; the run is Ask first.
+20. **128K overflow compact** — text assembly over 128K compact-in-place then
+    assemble again (same rules as the 12h job). Voice **create** seed-too-large
+    compact-then-seed. Not a live Voice connection trim.
 
 ## Onboarding
 
 1. **Guide hydrate** — Bottom-right DustOrb visible, voice off, cue
    **Click to turn on voice**. Conversation is onboarding-session-scoped.
    `GET /v1/onboarding/assistant/thread` returns that thread (`items: []` until
-   the first utterance).
-2. **Turn on** — Click orb: cue gone, prerecorded intro, microphone granted,
+   the first utterance). Denied mic stays retry cue (no Switch to text).
+2. **Turn on** — Click DustOrb: cue gone, prerecorded intro, microphone granted,
    then realtime connection created
    (`POST /v1/onboarding/assistant/voice/realtime-connection`, not on Find
    mount). Close → **Enable voice guide**. Hidden on wait teaser. Turn on
-   again more than 5s after that intro began: no second intro.
+   again more than 5s after that intro began: no second intro. In-flight 409 on
+   a second realtime-connection create. Realtime URL host is **eu-west-1** for
+   Find `ie`/`gb` and **us-east-1** for Find `us` (company registry country wins
+   when a company registry record is attached; else Maps listing `country` when
+   set).
+   Connection create includes **Placis** in keyterms and `replace` **Play-sis**.
 3. **No write tools** — Profile is unchanged after a guide turn. `tools=[]`.
-4. **Voice → text backup** — After voice utterances, `GET` hydrate then
-   `GET /v1/onboarding/assistant/thread/ws` continues the same conversation.
-   Text-backup look TBD (do not assert the launcher look).
+4. **No text backup** — There is no `GET /v1/onboarding/assistant/thread/ws`.
+   After voice utterances, `GET` hydrate may return items for a later Voice
+   turn (`offset_seconds` set).
 5. **No `/thread/new`** — That route does not exist on onboarding.
 6. **403 after website activation** — Activated owner cannot call
    `/v1/onboarding/assistant/…` (or leftover onboarding session routes).
-7. **Voice idle** — Same 30s frontend stop as CMS. Not billed (no 402).
-   Recording upload (signed URL) same as CMS (unactivated `tenant_id` on
-   `files`).
+7. **Voice idle** — Same 30s frontend stop as CMS. Not billed (no 402). Leftover
+   transcripts (text + `offset_seconds`) posted; **no** recording upload
+   (onboarding does not store Voice recordings).
 8. **Denied microphone** — Cue **Allow microphone access in your browser**.
-   Click orb retries. Voice does not stay on. `POST …/realtime-connection` was
-   not called. Text-backup look TBD.
+   Click DustOrb retries. Voice does not stay on. `POST …/realtime-connection`
+   was not called.

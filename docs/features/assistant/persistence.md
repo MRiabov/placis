@@ -10,7 +10,9 @@ Shared AI traces: [LLM layer](../../general-architecture/llm-layer.md) (`ai.ai_g
 [architecture.md](architecture.md).
 
 **Principle:** `ai` is shared `LLMProvider` + traces. This feature owns thread
-rows. No `ai_generation_id` on thread rows.
+rows. No `ai_generation_id` on thread rows. Follow and Plan are not columns.
+Reject notice and the Voice → text STT caveat are thread items / prompt
+assembly, not new columns.
 
 Do **not** keep leftover `website_assistant_threads` /
 `website_assistant_turns` (website schema).
@@ -22,8 +24,10 @@ Do **not** keep leftover `website_assistant_threads` /
   nullable fk, timestamps. Unique `(tenant_id) WHERE status = 'current'`.
 - `thread_items` — `id`, `tenant_id` fk, `thread_id` fk, `kind` (`owner` /
   `assistant` / `tool_summary` / `thinking`), `body` text, `icon` (`write` /
-  `think` / null), `created_at`. Index `(thread_id, created_at)`. Do not store
-  recording file.
+  `think` / null), `offset_seconds` int nullable (`>= 0`; Voice utterances
+  only; seconds from that Voice run’s realtime-connection start; null on text
+  items), `created_at` (row insert). Index `(thread_id, created_at)`. Do not
+  store recording file. Do not bake `[m:ss …]` into `body`.
 
 ## In-flight run
 
@@ -31,7 +35,7 @@ Do **not** keep leftover `website_assistant_threads` /
   `succeeded` / `failed`), `channel` (`text` / `voice`), `assistant_screen`
   (CMS v1 enum), `ask_first_status` (`pending` / `applied` / `rejected` /
   null), `ai_generation_id` uuid nullable (audit row for this run; **not** a
-  thread FK), `recording_file_id` uuid nullable fk (`files`; voice only),
+  thread FK), `recording_file_id` uuid nullable fk (`files`; CMS voice only),
   timestamps. Unique `(tenant_id) WHERE status = 'running'`.
 
 ## Audit (owned by `ai`)
@@ -43,14 +47,17 @@ Do **not** keep leftover `website_assistant_threads` /
 not emit it; `output` is visible text; `cost_amount` from xAI usage (audio
 minutes + text-item fees); `input_tokens` / `output_tokens` stay null. Record
 `knowledge_id` + `knowledge_format_revision` when that call used a knowledge
-base. Image **files** stay in `files` / `media_library`. Voice recording files
-stay in object storage; `runs.recording_file_id` points at `files`.
+base. Image **files** stay in `files` / `media_library`. CMS Voice recording
+files stay in object storage; `runs.recording_file_id` points at `files`.
+Onboarding voice runs have no `recording_file_id`.
 
 ## Indexes
 
 Unique: `(tenant_id) WHERE status = 'current'` on `threads`;
-`(tenant_id) WHERE status = 'running'` on `runs`. Lookup: `(thread_id,
-created_at)` on `thread_items`; compaction/discard on `threads.last_activity_at`
-and `threads.last_assistant_edit_at`.
+`(tenant_id) WHERE status = 'running'` on `runs`. Lookup:
+`(thread_id, created_at)` on `thread_items`; compaction on
+`threads.last_activity_at` and `threads.last_assistant_edit_at` (tool events,
+not a discard timer).
 
-River compaction job: [jobs](../../general-architecture/jobs.md).
+River compaction job: [jobs](../../general-architecture/jobs.md). Same function
+on text 128K overflow and Voice seed-too-large. No 24h discard.

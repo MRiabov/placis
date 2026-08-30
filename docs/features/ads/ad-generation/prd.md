@@ -227,9 +227,10 @@ Ads under `/cms/ads` should expose:
    point controls for this ad's format
 5. copy fields with headline (sized to 40 characters), primary text, short
    label, and button label, each with live character counts against ad-platform
-   limits; after generate, an AI orb on headline and primary text
-   (prompt required, overlay; highlight a span to edit that
-   span). Short label is typed; no orb. (2026-08-28)
+   limits; after generate, an inline AI assistance on headline and primary text
+   (required **inline AI assistance prompt**; **select to edit inline AI
+   assistance** on a span). Short label is typed; no inline AI assistance.
+   (2026-08-28)
 6. Facebook and Instagram mocks for this ad's format (Square feed, Portrait
    feed, Carousel, or Story)
 7. warnings shown inline next to the field they belong to (failed photo upload).
@@ -240,9 +241,10 @@ Ads under `/cms/ads` should expose:
 8. approve and download actions that produce the final ad set
 
 The owner rewrites a copy field or prompts cleanup of the current photo through
-the Review AI orb, without losing their other manual edits. First generate stays
-unprompted. Empty prompt is not allowed. Manual edits are always preserved as a
-new ad draft; the LLM never overwrites an approved variant silently.
+the Review inline AI assistance, without losing their other manual edits. First
+generate stays unprompted. Empty prompt is not allowed. Manual edits are always
+preserved as a new ad draft; the LLM never overwrites an approved variant
+silently.
 
 ## Ad Formats
 
@@ -432,8 +434,8 @@ implementation keeps marketing statements conservative and source-backed:
 
 Anything the LLM drafts unprompted that resembles a sensitive marketing
 statement (reviews, ratings, guarantees, prices, results) is flagged
-**ad needs review**. If the owner types it, or prompts the AI orb to write it,
-we allow it — Approve is **not** blocked. If it includes a detail,
+**ad needs review**. If the owner types it, or prompts the inline AI assistance
+to write it, we allow it — Approve is **not** blocked. If it includes a detail,
 **`update_details`** writes the business profile (one `business_profile_edits`
 increment); a **notification** (OK / Revert) appears bottom-right. Leaving the
 screen keeps the write. Character limits, uploads still in flight, and failed

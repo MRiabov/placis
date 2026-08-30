@@ -18,9 +18,10 @@ Status: planning (port instructions, not shipped UI).
 ## Keep
 
 - Working Projects screen: list plus `/cms/projects/new` and
-  `/cms/projects/{id}` (title, description, cover from the media library). Ads
-  AI orbs on title and description. Archive / Unarchive.
-- `GET/POST/PATCH /v1/projects` and archive / unarchive.
+  `/cms/projects/{id}` (title, description, cover from the media library).
+  **Inline AI assistance** on title and description. Archive / Unarchive /
+  Approve.
+- `GET/POST/PATCH /v1/projects` and archive / unarchive / approve.
 
 ## Delete
 
@@ -33,7 +34,7 @@ Status: planning (port instructions, not shipped UI).
 - A top-level Projects left-nav item (Profile child).
 - Decorative boxed heading icon.
 - Voice as the writing UI.
-- Website-assistant overlay as the writing UI.
+- The Assistant as the writing UI on `/cms/projects/{id}`.
 
 ## Retarget
 
