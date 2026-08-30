@@ -43,12 +43,18 @@ and search share Vercel; there is no OpenRouter hop.
 - **Every AI call is recorded so it can be reconstructed later**: the reasoning,
   the visible answer, and the tool calls — plus the model, the prompt id and
   format revision, and the usage and cost. That includes text, voice, and image
-  generate/cleanup. Voice **cost** is xAI audio minutes plus text-item fees, not
+  generate/cleanup. **`input` is the exact text sent** (text-turn assembled
+  prompt; Voice-connection instructions blob at create, including keyterms /
+  `replace` on that row). Prompt id / knowledge id are not a substitute for
+  that blob. Voice **cost** is xAI audio minutes plus text-item fees, not
   token counts — leave `input_tokens` / `output_tokens` null on those rows
   ([billing](../features/billing/README.md)). Voice utterance reconstructability
   is the forwarded xAI JSON on `thread_items.provider_event` (onboarding:
-  `assistant_conversation_items.provider_event`). Hydrate of the assistant
-  thread does **not** read this table or that jsonb.
+  `assistant_conversation_items.provider_event`) **plus** that run’s `input`
+  (instructions / system prompt). Reconstruct a Voice conversation from
+  `input` + ordered thread items (`kind` / `body` / `offset_seconds`) +
+  `provider_event` + `output` / `tool_calls` / `internal_reasoning`. Hydrate of
+  the assistant thread does **not** read this table or `provider_event`.
   **Every call belongs to a thread** (`ai_generations.thread_id` required) so a
   schema mismatch can retry on the same thread (failed row stays; the next
   attempt is another generation). `LLMProvider` always receives `thread_id`.

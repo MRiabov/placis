@@ -347,13 +347,19 @@ do not join `ai_generations`. Hydrate does not return `runs`.
 context.
 
 - **Text:** persist `thread_items` + `ai_generations` at turn end **in
-  process** on the text WebSocket. Do not add a browser POST of the whole convo
-  after the socket. Do not dump debug over the socket.
-- **Voice text:** Go never saw audio. `POST /v1/assistant/voice/transcripts`
+  process** on the text WebSocket. `ai_generations.input` is the exact
+  assembled prompt sent that turn (prompt assembly order above). Do not add a
+  browser POST of the whole convo after the socket. Do not dump debug over the
+  socket.
+- **Voice text:** Go never saw audio. At realtime-connection create, the voice
+  run’s `ai_generations.input` is the exact instructions blob seeded (plus
+  keyterms / `replace`). `POST /v1/assistant/voice/transcripts`
   (and generations from `…/voice/tool-calls`) **is** the later text POST. The
   browser forwards committed xAI Voice events already on that socket; Go maps
   them to typed `kind` / `body` / `offset_seconds` and stores `provider_event`.
-  Do not invent a second text dump route. Do not call STT again.
+  Reconstruct the conversation from that `input` + thread items +
+  `provider_event`. Do not invent a second text dump route. Do not call STT
+  again. No `kind=system` on the thread.
 - **Voice recording (CMS only):** after Voice turns off, the browser asks for a
   signed URL, PUTs **directly to object storage** (R2 in production), then
   `…/complete`. Same `files` table as media library / website-form uploads

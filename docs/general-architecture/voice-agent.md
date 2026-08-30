@@ -60,7 +60,9 @@ The adapter (not the browser) is responsible for:
 2. Pick the xAI region from the **business country** (below). Pin a **dated**
    voice model id (not `grok-voice-latest`) that exists on that cluster.
 3. Seed **instructions** (knowledge concat + profile + screen / compacted thread
-   tail as **one instructions blob**). Do **not** replay the thread as billed
+   tail as **one instructions blob**). Persist that exact blob on the voice
+   run’s `ai_generations.input` (with keyterms / `replace` sent on create). Do
+   **not** replay the thread as billed
    `conversation.item.create` items. The
    **rolling Voice connection is xAI-owned** after that seed. Go does not
    tokenize or compact it mid-utterance. If the seed would be too large to send,

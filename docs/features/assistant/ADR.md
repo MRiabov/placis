@@ -169,7 +169,12 @@ instead of silently replacing it.
     `[m:ss assistant]` from those columns — typed; never bake into `body`.
     Never say **user**. There is no `kind=system` and no `[m:ss system]`.
     xAI instructions / `role=system` stay the Voice-connection seed, not a
-    thread item. If xAI did not emit a committed transcript for that
+    thread item. Persist that exact instructions blob on the voice run’s
+    `ai_generations.input` at realtime-connection create (plus the keyterms /
+    `replace` sent on that create) so a conversation can be reconstructed
+    with the system prompt. Text turns do the same: `input` is the exact
+    assembled prompt sent that turn. Hydrate does not return it. If xAI did
+    not emit a committed transcript for that
     utterance, skip the row. Do not `POST /v1/stt`, do not open
     `wss://…/v1/stt`, do not transcribe the recording. (2026-08-30)
 
