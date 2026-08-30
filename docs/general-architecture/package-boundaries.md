@@ -6,11 +6,18 @@ Package ownership. Workflows live in the feature docs this list points at.
    and permissions. [Auth](../features/other/auth/README.md). Unactivated tenants have no Clerk organization;
    activation upgrades that row.
 2. `onboarding` owns the onboarding session, client interview, enqueueing
-   apply-the-website-template (05) and website copy generation (06), website
-   preview, and website activation. Business research (step 02) only calls
-   `etl.StartRun` and mirrors Postgres on SSE (`etl.runs` and the live business
-   profile). It does not implement extract or transform. It does not implement
-   apply, and it does not do website publication. [Onboarding](../features/onboarding/architecture.md).
+   apply-the-website-template (05) and website copy generation (06), the wait
+   teaser, on-demand 07 share (preview website address), and website activation.
+   `onboarding/websiteeditor` owns unpaid website-preview Assistant HTTP
+   (`/v1/onboarding/website-editor/assistant/…`) and unpaid policy (5-cap,
+   instant apply, allowlist). It reuses `website/assistant` tools and
+   `ai.threads` (`kind=cms_assistant`) overlay SQL. CMS `assistant` HTTP must
+   not import it.
+   `onboarding/assistant` is Find, Review, and client interview only
+   (`tools=[]`). Business research (step 02) only calls `etl.StartRun` and
+   mirrors Postgres on SSE (`etl.runs` and the live business profile). It does
+   not implement extract or transform. It does not implement apply, and it does
+   not do website publication. [Onboarding](../features/onboarding/architecture.md).
 3. `etl` owns extract **and** transform. `StartRun` only starts runs (cap,
    `enqueue_id`, `etl.runs`, enqueue). Adapters and fetch / Google Maps listing
    SQL live in `extract/<kind>/`; profile writes live in `transform/<kind>/`.
@@ -27,12 +34,15 @@ Package ownership. Workflows live in the feature docs this list points at.
    headless. [Website editor tools](../features/website/assistant.md), [website ADR #6](../features/website/ADR.md).
 5. `assistant` owns the CMS overlay (hydrate, dispatcher, allowed set,
    `thread_items` / `runs`, `/v1/assistant/…` HTTP). Thread **identity** is
-   `ai.threads` (`kind=cms_assistant`). `onboarding/assistant` owns the
+   `ai.threads` (`kind=cms_assistant`). Unactivated tenants get 403
+   `tenant_unactivated` on `/v1/assistant/…`. `onboarding/assistant` owns the
    onboarding guide items/runs and `/v1/onboarding/assistant/…` (thread
-   `kind=onboarding_assistant`). Knowledge YAML lives in those packages
+   `kind=onboarding_assistant`). `onboarding/websiteeditor` owns unpaid website
+   preview Assistant HTTP. Knowledge YAML lives in those packages
    (`go:embed`). Shared product glossary and Voice pronunciation live in
    `internal/knowledge/` (onboarding must not import `internal/assistant`).
    [Assistant](../features/assistant/README.md).
+   [Onboarding website editor](../features/onboarding/website-editor.md).
 6. `ads` is a standalone service (the `/cms/ads` workspace is one owner). It
    reads the profile + approved media library items, proposes copy + image
    galleries, and exports `ad ready to post` ad sets — never does ad posting.

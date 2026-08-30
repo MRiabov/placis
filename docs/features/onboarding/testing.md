@@ -36,31 +36,31 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
      selected.
 
 5. **Apply the website template + website preview** — `/onboarding/preview` SSE
-   carousel, then navigate to the preview website address when 07 has written
-   `latest/` (copy done or ~15s cap).
+   carousel, then `/onboarding/preview-and-edit/` (copy done or ~15s cap).
    - DB: unpublished `website_pages` / website sections / website slots;
-     `tenants.website_prefix`; `website_addresses` (`type=subdomain`);
-     `website_publications` v1 (`published_by=onboarding`, strip on); onboarding
-     session `previewing`. Copy-generation job may still be running.
-   - UI: host is static R2 HTML with the website-activation island.
+     onboarding session `previewing`. Copy-generation job may still be running.
+     `website_prefix` is **not** required until share or 08.
+   - UI: live unpublished canvas. Assistant prompt → PATCH → pay is
+     [assistant testing](../assistant/testing.md) (onboarding website editor).
 
 6. **Website copy generation** (faked LLM tools, overlapping DAG 06–08) —
    website slots/SEO update; tokens preserved.
    - DB: `ai_generations` for the tool batches (`kind=website_copy_generation`);
-     no `create_page`. 07 already wrote v1; 06 does not add another website
+     no `create_page`. 07 share is optional; 06 does not add a website
      publication.
-   - Failure: unpublished website from 05 still gets 07 (cap) and can be
-     activated.
+   - Failure: unpublished website from 05 still opens the website preview and
+     can be activated.
 
-7. **Website activation** — pay on the host (Clerk testing token + Stripe test
-   webhook). First payer wins.
+7. **Website activation** — pay on the website preview (Clerk testing token +
+   Stripe test
+   webhook). First payer wins. Prior 07 share is not required.
    - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as
      business lookup, now `tenants.status=active`, `tenant_memberships.owner`;
-     onboarding session `activated`; `website_publications` v2 strip off, v1
-     archived (neither is a website-rollback target).
-   - UI: lands in `/cms/website`. Host stays up without the strip.
-   - Optional: open the preview website address in a clean storage (no
-     `localStorage`) and still pay.
+     onboarding session `activated`; unpaid `ai.threads` `kind=cms_assistant`
+     `current` completed; live R2 without strip (first write if they never
+     shared).
+   - UI: lands in `/cms/website`. `/onboarding/preview-and-edit/` redirects
+     there.
 
 8. **Isolation** — a second onboarding session (second unactivated tenant).
    - Assert: the first tenant's profile and website pages are not readable under

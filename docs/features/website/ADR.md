@@ -201,3 +201,11 @@ Status: decided (2026-08-16, product owner + engineering).
     website rollback are **402** `subscription_canceled` until
     `subscription_status=active`. Not `usage_credit_exhausted`. CMS edit stays
     open. (2026-08-29)
+
+24. **Unpublished GET/PATCH on the app for unactivated** — Onboarding session
+    token or Clerk may GET unpublished website on the app origin (website
+    preview). Signed-in unactivated Clerk **PATCH** on the app is allowed
+    (Assistant apply). Onboarding session token must not PATCH. Preview website
+    address `{website_prefix}.preview.placis.com` is Cache then R2 only: no
+    website editor, no Assistant, no PATCH. Apex `preview.placis.com` is 404.
+    07 HTML write is on-demand share, not wait-teaser landing. (2026-08-30)

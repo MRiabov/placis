@@ -6,8 +6,10 @@ uses website PATCH + `record-apply` / `record-reject`; those routes live here,
 not under `/v1/website/editor/pages/{page_id}/assistant`.
 
 Unactivated tenant: **403** `tenant_unactivated` on every `/v1/assistant/…`
-route (HTTP and the text WebSocket). Activated owner: **403** on all
-`/v1/onboarding/assistant/…` routes.
+route (HTTP and the text WebSocket). Unpaid website preview uses
+[`/v1/onboarding/website-editor/assistant/…`](../onboarding/website-editor.md)
+instead. Activated owner: **403** on all `/v1/onboarding/assistant/…` and
+`/v1/onboarding/website-editor/assistant/…` routes.
 
 Caps are mixed. **Owner input is characters:** composer `owner_message.body`
 `maxLength` **4000**; owner Voice utterance **5000**. **Text agent back and

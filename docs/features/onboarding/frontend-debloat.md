@@ -21,8 +21,9 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 - Website preview + website activation: leftover
   `frontend-2/src/features/preview/` (`PreviewRoute.tsx`,
   `TargetedPreviewView.tsx`, `PayToClaimStrip.tsx`, `api/preview.ts`). Drop that
-  folder; website preview is the contractor host ([frontend stack](../../general-architecture/frontend-stack.md)). The
-  website-activation strip lives in the host HTML, not on `/onboarding/preview`.
+  folder. Website preview is `/onboarding/preview-and-edit/` in `frontend-2`.
+  The preview website address is the contractor host. The website-activation
+  strip lives in the host HTML after share, not on `/onboarding/preview`.
 - Router: `/onboarding`, `/onboarding/$step` in
   `frontend-2/src/app/router/index.tsx`. Drop `/preview/$token/$module`.
 - Don't say setup: API `frontend-2/src/features/setup/api/setup.ts`,

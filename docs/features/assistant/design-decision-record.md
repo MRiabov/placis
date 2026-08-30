@@ -116,3 +116,8 @@ owner-written; omit it rather than inventing it.
     [ADR](ADR.md) 10. (2026-08-29) Same day, later: **bottom-right** of the main pane,
     not top-right. On a narrow website editor it sits above the workspace bar.
     Same day, later: the Voice pill is **Switch to text mode**. (2026-08-29)
+
+12. **Unpaid website preview Assistant is on the canvas** — Same tokens as CMS
+    Assistant. Present on `/onboarding/preview-and-edit/` (not a “call
+    Assistant” button). Top-right stays pay / Share / Assistant. No owner Plan
+    switch. Instant apply. Hidden on wait teaser. (2026-08-30)

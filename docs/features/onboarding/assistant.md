@@ -54,8 +54,8 @@ onboarding-specific isolation. HTTP: [api.md](api.md). Tables:
   on click, then live Q&A. The intro does not replay if they turn the guide on
   again more than **5 seconds** after that first intro began. Denied microphone:
   cue **Allow microphone access in your browser**; click retries; do not leave
-  Voice on; do not create the realtime connection. Owner copy is **guide**,
-  never Assistant on those screens. Look: [assistant design decision 6](../assistant/design-decision-record.md). Denied
+  Voice on; do not create the realtime connection. Owner copy is **Assistant**,
+  never guide on those screens. Look: [assistant design decision 6](../assistant/design-decision-record.md). Denied
   microphone [design decision 8](../assistant/design-decision-record.md); greeting [design decision 9](../assistant/design-decision-record.md); realtime after
   microphone [design decision 10](../assistant/design-decision-record.md). Mock: [onboarding.html](../../design/onboarding.html).
 - Realtime connection is created **when they turn the voice guide on and the

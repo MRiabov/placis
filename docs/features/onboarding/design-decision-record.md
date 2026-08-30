@@ -128,3 +128,9 @@ inventing it.
     controls; the card look is the look difference. **Why:** onboarding
     should == details.
     (2026-08-28)
+
+13. **Wait teaser lands on the website preview** — `/onboarding/preview` then
+    `/onboarding/preview-and-edit/`. Custom top-left website page list (this
+    website preview only). Top-right: pay, Share, Assistant. Canvas
+    top-menu/footer clicks stay on this route. No Content / website styles
+    rail. Static host mock stays `/onboarding/generated`. (2026-08-30)

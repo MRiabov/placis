@@ -16,22 +16,24 @@ builds password auth.
 
 An **unactivated** tenant exists from business lookup (`status=unactivated`, no
 Clerk org). An **activated** tenant is that same row after website activation
-(`status=active`). `/me` returns a tenant only when `status=active` (the "not
-paid / CMS closed" signal is still `tenant: null`).
+(`status=active`). `/me` returns a tenant when a Clerk org is attached,
+including `status=unactivated`. CMS still opens only when `status=active`
+(the unpaid / CMS-closed signal is `status !== active`, not `tenant: null`).
 
-- Clerk organization ↔ tenant is 1-1 for **active** tenants only.
-  `tenants.clerk_org_id` (unique, nullable) is the entry point for CMS/API calls
-  that use a Clerk session. No org chooser, no selected-org cookie, no
-  app-controlled tenant selector.
+- Clerk organization ↔ tenant is 1-1. `tenants.clerk_org_id` (unique, nullable)
+  is the entry point for CMS/API calls that use a Clerk session. Unactivated
+  tenants may have an org after `POST /v1/me/clerk-organization`. No org
+  chooser, no selected-org cookie, no app-controlled tenant selector.
 - The API verifies the Clerk session/JWT, builds
   `Principal{userID, orgID, platformRole}`, and resolves the tenant from `orgID`
-  **only if that tenant is `active`**. An unactivated tenant is resolved from
-  the onboarding session token or the contractor website hostname, not from a
-  Clerk organization claim.
+  when that org is attached. Routes that require website activation still 403
+  `tenant_unactivated` when `status` is not `active`. Unpublished GET on the
+  app may also use the onboarding session token. Unpaid Assistant send/Voice and
+  unpublished PATCH require Clerk + unactivated tenant on the app origin.
 - `/me` returns `{owner, platform_role, tenant}` — a single `TenantRead` or
-  `null`. Authenticated but not activated → `tenant: null` even if an
-  unactivated tenant exists for the onboarding session. After activation, a
-  canceled subscription still returns the tenant (`status=active`,
+  `null`. Authenticated with no Clerk org → `tenant: null`. Authenticated with
+  an unactivated tenant’s org → `TenantRead` `status=unactivated`. After
+  activation, a canceled subscription still returns the tenant (`status=active`,
   `subscription_status=canceled`). That is not `tenant: null`. They can edit;
   they cannot Publish until they pay again.
 - Website activation (08) attaches the Clerk organization to the **existing**

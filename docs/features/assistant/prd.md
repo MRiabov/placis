@@ -1,12 +1,13 @@
 # Assistant PRD
 
 After website activation, one **assistant** in the CMS: product guide and doer.
-Voice and text are the same conversation. The contractor during onboarding gets
-a separate **onboarding assistant** (guide only).
+Voice and text are the same conversation. During onboarding, Find, Review, and
+client interview is a separate Voice-only Assistant. The unpaid website preview
+is a third implementation (text + Voice, five prompts) on
+`/onboarding/preview-and-edit/`.
 
-Terms: [glossary](../../glossary.md) (Assistant, Onboarding assistant, Assistant
-thread, Assistant screen context, Assistant screen switch, Inline AI
-assistance).
+Terms: [glossary](../../glossary.md) (Assistant, Onboarding assistant,
+Onboarding website editor, Assistant thread).
 
 ## Stories
 
@@ -23,11 +24,16 @@ assistance).
    and the muted tool lines, so text continues the same conversation.
 4. **As an owner**, `/cms` is two choices (Do my website / Run my ads), not a
    prompt home.
-5. **As a contractor**, I see a voice guide (DustOrb) on Find, Review, and
+5. **As a contractor**, I see **Assistant** (DustOrb) on Find, Review, and
    client interview (bottom right). Voice is off until I click; then a
-   prerecorded intro plays while the guide starts, and I can ask questions
+   prerecorded intro plays while it starts, and I can ask questions
    after. It does not write the business profile for me. There is no text
    backup.
+6. **As a contractor**, after the wait teaser I land on
+   `/onboarding/preview-and-edit/`, switch website pages, talk or type to
+   Assistant (five prompts, instant apply), optionally share, then pay. After
+   pay I edit the same unpublished website on `/cms/website` with a new
+   Assistant thread.
 
 ## In
 
@@ -47,9 +53,11 @@ assistance).
 - Guide-only on `/cms`, Projects, Certifications and reviews, media library,
   billing (usage). Called from the same bottom-right **Assistant**. Default
   Voice; switch to text. Projects **write** tools only from the website editor.
-- Onboarding assistant: isolated, Voice guide only this pass, not billed.
-  Persist utterance **text** and **`offset_seconds`**; do not store the Voice
-  recording.
+- Onboarding assistant: isolated, Voice only, not billed. Contractor copy is
+  **Assistant**. Persist utterance **text** and **`offset_seconds`**; do not
+  store the Voice recording.
+- Onboarding website editor: five unpaid prompts, instant apply, not billed,
+  same `ai.threads` (`kind=cms_assistant`) until 08 completes `current`.
 - Assistant debit of billing usage credit (**×5** **their cost** on **our
   cost**). Billed work is a text LLM call, image generate/cleanup, or ads
   generate (**AI vendor cost**). Voice is **AI voice vendor cost** (xAI audio

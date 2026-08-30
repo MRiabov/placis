@@ -1,14 +1,16 @@
 # 08 — Website activation
 
-The contractor pays on the **preview website address** (FQDN in
+The contractor pays on the **website preview** (`/onboarding/preview-and-edit/`)
+or on the **preview website address** strip if they shared (FQDN in
 [cloudflare.md](../../website/cloudflare.md)). Clerk **create account** if needed (modal island); an existing
 Clerk session skips to pay. Then Stripe checkout (island POSTs public checkout
-to `cmd/api`, CORS by `Host` / `website_prefix`; not
-`/v1/website-previews/{token}/…`; do not bake a Checkout Session URL into R2
-HTML). The website-activation strip is **sticky to the bottom of the viewport**
-while the website scrolls ([frontend.md](../frontend.md), [design decision](../design-decision-record.md) 10). Website
-activation **upgrades** the existing unactivated tenant (`status=active`); it
-does not insert a second tenant. Does **not** wait for 06.
+to `cmd/api`, CORS by `Host` / `website_prefix` on the preview website address;
+on the app origin CORS is the app. Not `/v1/website-previews/{token}/…`; do not
+bake a Checkout Session URL into R2 HTML). The website-activation strip is
+**sticky to the bottom of the viewport** while the website scrolls
+([frontend.md](../frontend.md), [design decision](../design-decision-record.md) 10). Website activation **upgrades** the
+existing unactivated tenant (`status=active`); it does not insert a second
+tenant. Does **not** wait for 06. Does **not** require a prior 07 share.
 
 Stripe (via `stripe-go`) handles this checkout only. Amount is the activation
 price (predecessor: EUR 4900). `checkout.session.completed` is accepted only
@@ -23,15 +25,16 @@ and pay. First verified `checkout.session.completed` wins.
 
 ## Trigger
 
-Verified Stripe `checkout.session.completed` for an unactivated tenant whose
-host is up (07 `latest/` present). Not a superseded 05-retry of a different
-in-flight checkout that already lost.
+Verified Stripe `checkout.session.completed` for an unactivated tenant. Host
+need not exist yet. Not a superseded 05-retry of a different in-flight checkout
+that already lost.
 
 ## Pre
 
-- `tenants.website_prefix` already reserved at 07.
-- `website_publications` v1 `active` (strip on) or a later onboarding write on
-  that prefix.
+- `tenants.website_prefix` reserved at 07 **or** reserved in this step if they
+  never shared.
+- If they shared: `website_publications` v1 `active` (strip on) or a later
+  onboarding write on that prefix.
 - Authenticated Clerk subject (the payer).
 - `onboarding_sessions.tenant_id` is the unactivated tenant from 01.
 
@@ -53,21 +56,28 @@ in-flight checkout that already lost.
 2. Resolve or create the Clerk organization; set `tenants.clerk_org_id`. Tenant
    name is the **business**; Clerk organization name is the **person**.
 3. `tenant_memberships` (`owner`) for the paying owner.
-4. `tenants.status=active`. Onboarding session → `activated`.
-5. Write **`website_publications` v2** without the website-activation strip,
-   `published_by=onboarding`, `active`. Archive v1. Same R2 write as 07 / CMS
-   website publication; purge Cache so v1-with-strip does not linger. Host stays
-   up. Website address is a later CMS modal.
-6. In-flight 06 **continues** on the same `tenant_id`. Do not cancel it. CMS
-   assistant / PATCH are not 409-blocked for leftover 06. Host HTML stays the
-   07/08 R2 `latest/` (06 does not live-update R2 after 07). Same website-slot
-   overlap: last-write / `edit_history_conflict`.
+4. `tenants.status=active`. Onboarding session → `activated`. In the **same
+   transaction**, complete `ai.threads` `kind=cms_assistant` `current` and end
+   any `assistant.runs` `running` ([website editor](../website-editor.md)).
+5. Write **`website_publications`** without the website-activation strip,
+   `published_by=onboarding`, `active`. If they never shared: reserve
+   `website_prefix` (same rules as 07) and write the **first** live R2
+   **without** strip. If they already shared: archive v1 (strip on) and write
+   live v2. Same R2 write as 07 / CMS website publication; purge Cache so
+   strip HTML does not linger. Host stays up. Website address is a later CMS
+   modal.
+6. In-flight 06 **continues** on the same `tenant_id` as River-only. Do not
+   cancel it. Do not append Assistant thread items. CMS assistant / PATCH are
+   not 409-blocked for leftover 06. Host HTML stays the 07/08 R2 `latest/` (06
+   does not live-update R2 after 07). Same website-slot overlap: last-write /
+   `edit_history_conflict`.
 
 ## Persist
 
 `website_activations`; `stripe_events`; **update** existing `tenants`;
-`tenant_memberships`; `website_publications` v2 + archive v1; R2 `latest/`
-without the strip.
+`tenant_memberships`; complete unpaid `ai.threads` `kind=cms_assistant`
+`current` + end `running`; `website_publications` live (no strip) + archive
+strip v1 if it existed; R2 `latest/` without the strip.
 
 ## Fail
 
@@ -76,11 +86,13 @@ activate twice. A second payer after the first verified completion is refused.
 
 ## Out
 
-`/cms/website` with **Publish**. `/me` now returns the tenant. The preview
-website address stays up without the strip (live website, not website preview).
-Unpublished website from 05 (+ whatever 06 has written) is what they edit. First
-**owner** website publication is v3+ and the first rollback-eligible website
-version.
+`/cms/website` with **Publish**. `/me` returns unactivated `TenantRead` after
+Clerk org attach, then `status=active` after this step.
+`/onboarding/preview-and-edit/` redirects to `/cms/website`. The preview website
+address stays up without the strip (live website). If they never shared, 08
+created that host. Unpublished website from 05 (+ 06 + unpaid Assistant PATCHes)
+is what they edit. First **owner** website publication is the next website
+version and the first rollback-eligible website version.
 
 ## After website activation (billing)
 
