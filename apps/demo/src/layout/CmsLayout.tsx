@@ -57,22 +57,30 @@ export function CmsLayout(): ReactNode {
   const pathname = useRouterState({
     select: (route) => route.location.pathname,
   });
-  const [expanded, setExpanded] = useState(false);
-  const [peek, setPeek] = useState(false);
-  const [overlayOpen, setOverlayOpen] = useState(false);
+  // Start with no persistent rail. Hovering the top-left control gives the
+  // same temporary "peek" as placis-web; the control inside the sidebar pins
+  // it open for people who prefer it visible.
+  const [sidebarPinned, setSidebarPinned] = useState(false);
+  const [sidebarPeek, setSidebarPeek] = useState(false);
   const [profileOpen, setProfileOpen] = useState(true);
   const [accountOpen, setAccountOpen] = useState(false);
   const profileActive = profilePaths.some((path) => pathname.startsWith(path));
-  const labelsVisible = overlayOpen || expanded || peek;
+  const sidebarOpen = sidebarPinned || sidebarPeek;
+  const labelsVisible = sidebarOpen;
   const iconOnly = !labelsVisible;
 
   function closeOverlay(): void {
-    setOverlayOpen(false);
+    // On desktop the sidebar stays open while moving between pages; on small
+    // screens it behaves like the familiar dismissible drawer.
+    if (window.matchMedia("(max-width: 1100px)").matches) {
+      setSidebarPinned(false);
+      setSidebarPeek(false);
+    }
   }
 
   return (
     <div className="flex min-h-0 min-w-80 flex-1 overflow-hidden bg-background">
-      {overlayOpen ? (
+      {sidebarOpen ? (
         <button
           aria-label="Close destinations"
           className="fixed inset-0 z-40 bg-black/20 min-[1101px]:hidden"
@@ -81,24 +89,46 @@ export function CmsLayout(): ReactNode {
         />
       ) : null}
 
+      {!sidebarOpen ? (
+        <>
+          {/* Keeps the whole former rail responsive without leaving a visible
+              strip in the workspace. */}
+          <div
+            aria-hidden="true"
+            className="fixed inset-y-0 left-0 z-50 hidden w-12 min-[1101px]:block"
+            onMouseEnter={() => setSidebarPeek(true)}
+          />
+          <div className="fixed top-3 left-3 z-[60]">
+            <button
+              aria-expanded={false}
+              aria-label="Open sidebar"
+              className="grid size-7 place-items-center rounded-md text-zinc-500 transition hover:bg-black/5 hover:text-foreground dark:text-muted-foreground dark:hover:bg-white/[.07] dark:hover:text-foreground"
+              onClick={() => setSidebarPinned(true)}
+              type="button"
+            >
+              <PanelLeft className="size-[18px]" strokeWidth={1.5} />
+            </button>
+          </div>
+        </>
+      ) : null}
       <aside
         aria-label="The CMS"
         className={cn(
           "z-50 flex shrink-0 flex-col overflow-hidden border-r border-border bg-sidebar",
           "transition-[width,transform] duration-[180ms] ease-[cubic-bezier(0.2,0,0,1)] motion-reduce:transition-none",
-          "min-[1101px]:relative min-[1101px]:translate-x-0 min-[1101px]:[transform:none]",
-          labelsVisible ? "min-[1101px]:w-[15rem]" : "min-[1101px]:w-12",
+          sidebarOpen
+            ? "min-[1101px]:relative min-[1101px]:w-[15rem] min-[1101px]:translate-x-0 min-[1101px]:[transform:none]"
+            : "min-[1101px]:hidden",
           "max-[1100px]:fixed max-[1100px]:inset-0 max-[1100px]:z-[70] max-[1100px]:w-full max-[1100px]:border-r-0",
-          overlayOpen
+          sidebarOpen
             ? "max-[1100px]:pointer-events-auto max-[1100px]:[transform:translateX(0)]"
             : "max-[1100px]:pointer-events-none max-[1100px]:[transform:translateX(-100%)]",
         )}
-        onMouseEnter={() => {
-          if (isDesktop() && !expanded) {
-            setPeek(true);
+        onMouseLeave={() => {
+          if (isDesktop() && !sidebarPinned) {
+            setSidebarPeek(false);
           }
         }}
-        onMouseLeave={() => setPeek(false)}
       >
         <div
           className={cn(
@@ -121,16 +151,17 @@ export function CmsLayout(): ReactNode {
             aria-label={labelsVisible ? "Collapse sidebar" : "Expand sidebar"}
             className="grid size-8 shrink-0 place-items-center rounded-lg text-zinc-600 hover:bg-black/5"
             onClick={() => {
-              if (!isDesktop()) {
-                closeOverlay();
+              if (isDesktop()) {
+                setSidebarPinned((pinned) => !pinned);
+                setSidebarPeek(false);
                 return;
               }
-              setExpanded((value) => !value);
-              setPeek(false);
+              setSidebarPinned(false);
+              setSidebarPeek(false);
             }}
             type="button"
           >
-            <PanelLeft className="size-[18px]" />
+            <PanelLeft className="size-[18px]" strokeWidth={1.5} />
           </button>
         </div>
         <nav className="flex flex-1 flex-col gap-px px-2">
@@ -174,7 +205,10 @@ export function CmsLayout(): ReactNode {
         <CmsAssistantProvider>
           <CmsLayoutContext.Provider
             value={{
-              openDestinations: () => setOverlayOpen(true),
+              openDestinations: () => {
+                setSidebarPinned(true);
+                setSidebarPeek(false);
+              },
             }}
           >
             <Outlet />

@@ -22,6 +22,10 @@ const orbVars =
 
 const pillClass =
   "pointer-events-auto inline-flex h-8 items-center rounded-full px-3.5 text-[13px] font-semibold shadow-prompt";
+const raisedOutlineControlClass =
+  "border border-stone-200 bg-background text-foreground transition hover:bg-zinc-50 dark:border-white/20 dark:hover:bg-zinc-900";
+const raisedPrimaryControlClass =
+  "border border-stone-200 bg-primary text-primary-foreground transition hover:bg-zinc-800 dark:border-white/20 dark:hover:bg-zinc-800";
 
 function shotMode(): boolean {
   return new URLSearchParams(window.location.search).get("shot") === "1";
@@ -276,20 +280,14 @@ export function AssistantSession({
             )}
           >
             <button
-              className={cn(
-                pillClass,
-                "border-0 bg-primary text-primary-foreground",
-              )}
+              className={cn(pillClass, raisedPrimaryControlClass)}
               onClick={onAsk}
               type="button"
             >
               Apply
             </button>
             <button
-              className={cn(
-                pillClass,
-                "border border-border bg-white text-foreground",
-              )}
+              className={cn(pillClass, raisedOutlineControlClass)}
               onClick={onAsk}
               type="button"
             >
@@ -302,7 +300,8 @@ export function AssistantSession({
             <button
               className={cn(
                 pillClass,
-                "col-start-1 row-start-2 justify-self-start border border-border bg-white text-foreground",
+                "col-start-1 row-start-2 justify-self-start",
+                raisedOutlineControlClass,
               )}
               onClick={switchToText}
               type="button"
