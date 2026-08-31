@@ -9,11 +9,13 @@ DB asserts name the tables from
 
 1. **Before sign-in** — open `/cms`.
    - UI: redirected to authenticate; not into the CMS.
-2. **After sign-in, not activated** — a contractor with no Clerk organization
-   (an unactivated tenant may already exist from business lookup).
-   - UI: routed to onboarding, not `/cms` (`/me` returns `tenant: null`). If
-     this browser has a stored onboarding session token, restore that onboarding
-     session (do not start Find from scratch). Clerk does not list incomplete
+2. **After sign-in, not activated** — a contractor with a Clerk organization
+   attached to an unactivated tenant (or no org yet).
+   - UI: routed to onboarding or `/onboarding/preview-and-edit/` if already
+     there, not `/cms`. `/me.tenant` may be `null` (no org) or `TenantRead`
+     `status=unactivated`. CMS keys off `status === "active"`. If this browser
+     has a stored onboarding session token, restore that onboarding session
+     (do not start Find from scratch). Clerk does not list incomplete
      onboarding sessions.
 3. **After sign-in, activated** — a contractor whose Clerk organization maps to
    an **active** tenant.
@@ -31,8 +33,9 @@ DB asserts name the tables from
    - Action: website activation creates the Clerk organization
      **programmatically from the known name** and **upgrades** that unactivated
      tenant; the contractor is not asked to type the name again.
-   - UI: `/me` stays `tenant: null` until activation; then it returns the
-     **same** tenant id.
+   - UI: `/me` returns `TenantRead` `status=unactivated` after
+     `POST /v1/me/clerk-organization`; CMS stays closed. After 09 it returns
+     the **same** tenant id with `status=active`.
    - DB: the existing `tenants` row gets `clerk_org_id` and `status=active`;
      `tenant_memberships` (`owner`) is written; no second tenant row.
 

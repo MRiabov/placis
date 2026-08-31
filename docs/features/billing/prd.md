@@ -7,7 +7,7 @@ Related docs:
 1. [Billing ADR](ADR.md)
 2. [Billing architecture](architecture.md)
 3. [Billing frontend](frontend.md)
-4. [Website activation](../onboarding/pipeline/08-website-activation.md)
+4. [Website activation](../onboarding/pipeline/09-website-activation.md)
 5. [Placis website](../placis-website/README.md)
 
 ## Problem

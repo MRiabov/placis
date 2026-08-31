@@ -91,7 +91,7 @@ find the business (company registry and/or Google Maps) + online research consen
 -> business research starts in the background
 -> review what we found → questions to fill the gaps
 -> one clear business profile (their answers + what we found, side by side)
--> apply the website template → website copy generation fills in in the background
+-> apply the website template → automatic website copy generation fills in in the background
 -> `/onboarding/preview` (complete website sections rotate until copy is done or the wait cap)
 -> the preview website address (static HTML, website-activation strip)
 -> website activation (pay) → same host stays up without the strip; owner website publication later in the website editor
@@ -146,9 +146,9 @@ question.
 4. When the contractor's answer disagrees with what we found, both are shown
    side by side so the contractor picks the right one.
 5. After they answer the questions they wait on `/onboarding/preview` (complete
-   website sections) until website copy generation finishes or the wait cap,
-   then land on the preview website address. If copy fails or the cap hits
-   first, they can still open the host and do website activation.
+   website sections) until automatic website copy generation finishes or the
+   wait cap, then land on the preview website address. If copy fails or the cap
+   hits first, they can still open the host and do website activation.
 6. Closing the tab and coming back on the same browser continues where they left
    off. Business lookup does not start a second run. Clearing storage before 07
    hides the pointer on that browser; the data stays. The host has no token and

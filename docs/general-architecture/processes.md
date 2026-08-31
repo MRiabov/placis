@@ -16,20 +16,20 @@ to the API. The Placis website is a separate static origin and does not call Go.
    tenants (no per-tenant build). The website component package is keep-and-cut;
    the Worker is write-thin (live GET never calls Go). Remaining cuts:
    [contractor-website-debloat.md](../features/website/contractor-website-debloat.md). API cutover: [port-contractor-website.md](../features/website/port-contractor-website.md).
-   Website preview is this host while unactivated (FQDN in [website Cloudflare](../features/website/cloudflare.md),
-   strip on). After website activation the same host stays up without the strip.
-   Locked serve path: [website Cloudflare](../features/website/cloudflare.md).
+   The preview website address is this host after share, while unactivated (FQDN
+   in [website Cloudflare](../features/website/cloudflare.md), strip on). After website activation the same host
+   stays up without the strip. Locked serve path: [website Cloudflare](../features/website/cloudflare.md).
 4. **Placis website** (`apps/placis-website`) — Astro static build uploaded to
    R2; hostname `placis.com`. No Worker. Locked serve path:
    [Placis website Cloudflare](../features/placis-website/cloudflare.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw
 payload saved, the work enqueued, and the request returned — see
-[website activation](../features/onboarding/pipeline/08-website-activation.md). Every background job can be retried safely (an explicit
+[website activation](../features/onboarding/pipeline/09-website-activation.md). Every background job can be retried safely (an explicit
 key) — see [jobs](jobs.md).
 
-Onboarding session progress events stream over SSE — see [07-website-preview.md](../features/onboarding/pipeline/07-website-preview.md)
-and [onboarding frontend](../features/onboarding/frontend.md). Anyone with the host URL opens the preview website
+Onboarding session progress events stream over SSE — see [pipeline README](../features/onboarding/pipeline/README.md) and
+[onboarding frontend](../features/onboarding/frontend.md). Anyone with the host URL opens the preview website
 address (Cache then R2). The contractor host is not an SSE endpoint.
 
 HTTP conventions: [api.md](api.md). Huma vs streaming: [backend stack](backend-stack.md).

@@ -10,6 +10,9 @@ CMS dispatcher, allowed set, and voice transport: [assistant](../assistant/READM
 onboarding-specific isolation. HTTP: [api.md](api.md). Tables:
 [persistence.md](persistence.md).
 
+Website preview on `/onboarding/preview-and-edit/` is **not** this assistant.
+That surface is the [onboarding website editor](website-editor.md).
+
 ## Isolation
 
 - Conversation is **onboarding-session-scoped** (the onboarding session token),
@@ -39,7 +42,7 @@ onboarding-specific isolation. HTTP: [api.md](api.md). Tables:
   Default launcher stays DustOrb.
 - Persist utterances on `POST /v1/onboarding/assistant/voice/transcripts`:
   committed owner and assistant **text**, plus **`offset_seconds`** from that
-  Voice run’s start (browser audio clock). Reconstruct
+  Voice run’s start. Reconstruct
   `[m:ss owner]` / `[m:ss assistant]` + `body` (never say user). `created_at`
   is the row insert time. Do **not** store
   the Voice recording (no signed-URL PUT, no `files` row, no
@@ -54,8 +57,8 @@ onboarding-specific isolation. HTTP: [api.md](api.md). Tables:
   on click, then live Q&A. The intro does not replay if they turn the guide on
   again more than **5 seconds** after that first intro began. Denied microphone:
   cue **Allow microphone access in your browser**; click retries; do not leave
-  Voice on; do not create the realtime connection. Owner copy is **guide**,
-  never Assistant on those screens. Look: [assistant design decision 6](../assistant/design-decision-record.md). Denied
+  Voice on; do not create the realtime connection. Owner copy is **Assistant**,
+  never guide on those screens. Look: [assistant design decision 6](../assistant/design-decision-record.md). Denied
   microphone [design decision 8](../assistant/design-decision-record.md); greeting [design decision 9](../assistant/design-decision-record.md); realtime after
   microphone [design decision 10](../assistant/design-decision-record.md). Mock: [onboarding.html](../../design/onboarding.html).
 - Realtime connection is created **when they turn the voice guide on and the

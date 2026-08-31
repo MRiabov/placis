@@ -15,18 +15,22 @@ uses `subscription_status` to block Publish without a billing GET.
 
 ### GET /v1/me
 
-- **Auth:** Clerk JWT. Tenant is resolved only when `status=active`.
-- **Callers:** `frontend-2` CMS gate (`AuthGate`, `/cms` redirect).
+- **Auth:** Clerk JWT. Tenant is resolved from the attached Clerk org
+  (`status` may be `unactivated` or `active`).
+- **Callers:** `frontend-2` CMS gate (`AuthGate`, `/cms` redirect) and unpaid
+  website preview (CMS-closed when `status !== active`).
 - **Response:** `{ owner, platform_role, tenant }`. `tenant` is `TenantRead`
-  only when `status=active`. After sign-in but not website-activated →
-  `tenant: null` even if an unactivated tenant exists for an onboarding session.
-- **Must not:** return unactivated tenants; return an org chooser list.
+  when a Clerk org is attached. After sign-in but no org → `tenant: null`.
+  After `POST /v1/me/clerk-organization` on an unactivated tenant →
+  `TenantRead` with `status=unactivated`. After 09 → `status=active`.
+- **Must not:** return an org chooser list; treat `/me.tenant` non-null as CMS
+  open.
 
 ### POST /v1/me/clerk-organization
 
 - **Auth:** Clerk JWT (the person after sign-in). Not an org chooser.
 - **Callers:** `frontend-2` `OrgProvisionStep` after sign-in on the
-  website-activation strip (so checkout can attach a Clerk subject) and after 08
+  website-activation strip (so checkout can attach a Clerk subject) and after 09
   so `clerk.setActive` has an org. [README.md](README.md).
 - **Idempotency-Key:** yes.
 - **Behavior:** create the **one** Clerk organization (`Organizations().Create`)

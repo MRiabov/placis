@@ -5,8 +5,9 @@ Status: planning (port instructions, not shipped UI).
 ## Target
 
 [frontend.md](frontend.md), [pipeline README](pipeline/README.md),
-[07 website preview](pipeline/07-website-preview.md),
-[08 website activation](pipeline/08-website-activation.md),
+[07 contractor copy improvement](pipeline/07-contractor-copy-improvement.md),
+[08 preview website address](pipeline/08-preview-website-address.md),
+[09 website activation](pipeline/09-website-activation.md),
 [api.md](api.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
 
@@ -21,8 +22,9 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 - Website preview + website activation: leftover
   `frontend-2/src/features/preview/` (`PreviewRoute.tsx`,
   `TargetedPreviewView.tsx`, `PayToClaimStrip.tsx`, `api/preview.ts`). Drop that
-  folder; website preview is the contractor host ([frontend stack](../../general-architecture/frontend-stack.md)). The
-  website-activation strip lives in the host HTML, not on `/onboarding/preview`.
+  folder. Website preview is `/onboarding/preview-and-edit/` in `frontend-2`.
+  The preview website address is the contractor host. The website-activation
+  strip lives in the host HTML after share, not on `/onboarding/preview`.
 - Router: `/onboarding`, `/onboarding/$step` in
   `frontend-2/src/app/router/index.tsx`. Drop `/preview/$token/$module`.
 - Don't say setup: API `frontend-2/src/features/setup/api/setup.ts`,

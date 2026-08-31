@@ -88,14 +88,12 @@ country (`ie` / `gb` / `us`) in this order:
 3. Else **Find country** — `tenants.country`, written at business lookup.
 
 Then map: `ie` and `gb` → xAI **eu-west-1**; `us` → xAI **us-east-1**. `gb` uses
-the Europe cluster (latency and UK GDPR); it is not sent to the US.
+the Europe cluster (UK GDPR); it is not sent to the US.
 
-Hosts: `https://{region}.api.x.ai/v1` for ephemeral-token create,
-`wss://{region}.api.x.ai/v1/realtime` for the browser WS. Create response
-returns that realtime URL; the frontend connects to it as-is. Same region for
-token create and the WS. Do not switch region mid-call. Next Voice create
-re-resolves (PATCH sources can change the winning country). Never the global
-`api.x.ai` host.
+Token create and the browser WS use the same `{region}.api.x.ai` host. Create
+returns that realtime URL; the frontend connects as-is. Do not switch region
+mid-call. Next Voice create re-resolves. Pin a dated voice model that exists
+on that cluster.
 
 Find country is persisted on `tenants.country` so CMS Voice still resolves after
 onboarding routes 403. Typeahead still uses country as a search parameter.
@@ -129,9 +127,8 @@ Do not mid-call `session.update` for these (same rule as tools / instructions).
    browser-safe connection fields.
 3. The frontend connects **directly to the voice service**; live audio never
    flows through the backend. The WS URL is the **realtime URL** from the
-   create response (xAI region Go picked). Ephemeral-token create uses the
-   same region’s `https://{region}.api.x.ai/v1`. Do not use the global
-   `api.x.ai` host. Do not hardcode a region in the frontend.
+   create response (xAI region Go picked). Do not hardcode a region in the
+   frontend.
 4. The browser never receives the long-lived voice API key.
 
 CMS create **includes** the unpublished website working copy when
@@ -179,7 +176,7 @@ event. Published audio rate 2026-08-28: `grok-voice-think-fast-2.0` $0.08 / min.
 Pin a dated model id; do not ride `grok-voice-latest`. Do not enable xAI
 server-side search / MCP tools (extra per-call fees). Do not use provisioned
 phone numbers. Live Voice uses the xAI region for the **business country**
-(not a blanket eu-west-1, not the global `api.x.ai` host).
+([voice agent](voice-agent.md)).
 
 Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor
 cost**). CMS only. Onboarding guide is not billed

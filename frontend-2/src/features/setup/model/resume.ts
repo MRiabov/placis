@@ -87,11 +87,8 @@ export function withOnboardingResumeTimeout<T>(
 
 export function restoredStepForProfile(
   storedStep: OnboardingStep | null,
-  restoredProfile: SetupProfileRead,
+  _restoredProfile: SetupProfileRead,
 ): OnboardingStep {
-  if (restoredProfile.active_preview_package) {
-    return OnboardingStep.Generating;
-  }
   if (storedStep && !storedStep.equals(OnboardingStep.Identify)) {
     return storedStep;
   }
@@ -103,6 +100,7 @@ const onboardingStepSegments: Record<string, string | null> = {
   [OnboardingStep.Review.value]: "review",
   [OnboardingStep.Interview.value]: "interview",
   [OnboardingStep.Generating.value]: "preview",
+  [OnboardingStep.PreviewAndEdit.value]: "preview-and-edit",
 };
 
 /** Reads the step from the /onboarding/{segment} path (port of the original
@@ -117,6 +115,9 @@ export function onboardingStepFromLocation(): OnboardingStep {
   }
   if (stepSegment === "interview") {
     return OnboardingStep.Interview;
+  }
+  if (stepSegment === "preview-and-edit") {
+    return OnboardingStep.PreviewAndEdit;
   }
   if (stepSegment === "preview" || stepSegment === "generating") {
     return OnboardingStep.Generating;

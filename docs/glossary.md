@@ -87,20 +87,32 @@ Distinct from: Contractor (the business).
 
 ### Assistant
 
-The chat and voice agent in the CMS after website activation. Product guide and
-doer.
+The chat and voice agent. Contractor copy is **Assistant** on every surface
+(CMS, Find / Review / interview, onboarding website editor). Specs still name
+three implementations. Product guide and doer where that implementation allows
+tools.
 
-Do not say **Website assistant**. Do not say **overlay** for this chrome.
+Do not say **Website assistant**. Do not say **overlay** for this chrome. Do
+not say **guide** in contractor UI.
 
-Distinct from: Onboarding assistant, Website copy generation, Inline AI
-assistance.
+Distinct from: Website copy generation, Inline AI assistance.
+
+---
+
+#### CMS Assistant
+
+The Assistant after website activation. HTTP `/v1/assistant/…`. Distinct from
+Onboarding assistant (Find / Review / interview) and Onboarding website
+editor.
 
 ---
 
 #### Assistant thread
 
-One persisted CMS conversation per tenant. The onboarding assistant has its own
-conversation; do not call that the CMS thread. Never say **session** for this.
+One persisted `ai.threads` (`kind=cms_assistant`) conversation per tenant (CMS
+Assistant and onboarding website editor). The onboarding assistant has its own
+`onboarding_assistant` thread; do not call that this thread. Never say
+**session** for this.
 
 ---
 
@@ -463,9 +475,19 @@ Distinct from: Onboarding session (the persisted run).
 
 #### Onboarding assistant
 
-The guide on onboarding screens. Distinct from the CMS assistant and from client
-interview (the field-filling step, not an agent writer). Owner-facing copy on
-onboarding is **guide** / **voice guide**, never **Assistant**.
+Find / Review / interview Voice only (`/v1/onboarding/assistant/…`). Distinct
+from CMS Assistant, from Onboarding website editor, and from client interview
+(the field-filling step, not an agent writer). Contractor copy is **Assistant**.
+Architecture files may still say guide.
+
+---
+
+#### Onboarding website editor
+
+The unpaid website editor on `/onboarding/preview-and-edit/`. Spec label;
+contractor copy is **Assistant**. HTTP
+`/v1/onboarding/website-editor/assistant/…`. Distinct from CMS Assistant, from
+Onboarding assistant, and from the CMS website editor.
 
 ---
 
@@ -513,26 +535,22 @@ Distinct from: Sign up, Website publication. Never say “website claim”.
 
 #### Website preview
 
-A stage in our sales process where they choose to buy the website or not. Never
-say bare “preview”. Do not use this word for the website editor canvas or for ad
-format mocks.
-
-The sales surface is the **preview website address** until website activation.
-After website activation that same host is the live website — never call it
-website preview then.
+The unpaid website editor at `/onboarding/preview-and-edit/` where they see the
+unpublished website and may buy. Never say bare “preview”. Do not use this
+word for the CMS website editor or for ad format mocks.
 
 Distinct from: Unpublished website, Website activation, Website preview link,
-Live website (the same host after they pay), Preview website address (the host).
+Live website, Preview website address (the optional R2 host).
 
 ---
 
 #### Website preview link
 
-The shareable URL of the website preview: the preview website address
-(`{website_prefix}.preview.placis.com`). Anyone who has it can open the host.
-Never say “signed website preview”.
+The shareable URL of the preview website address
+(`{website_prefix}.preview.placis.com`) after they share. Anyone who has it can
+open the host. Never say “signed website preview”.
 
-Distinct from: Website preview (the sales stage), Preview website address (the
+Distinct from: Website preview (the editor), Preview website address (the
 host), Signed URL.
 
 ---
@@ -559,8 +577,7 @@ Do not say bare “draft”. An ad in draft is an Ad states value; say **ad draf
 A project in draft is a Project states value; say **project draft**. The
 unpublished website is not a draft.
 
-Distinct from: Website preview (the sales stage where they choose to buy), Live
-website.
+Distinct from: Website preview (the unpaid editor), Live website.
 
 ---
 
@@ -722,9 +739,9 @@ starting point).
 
 #### Website copy generation
 
-Writing website copy into the unpublished website from the business profile. Do
-not call this “refinement” in onboarding. Never say generate without “website
-copy”.
+Automatic writing of website copy into the unpublished website from the
+business profile. Do not call this “refinement” in onboarding. Never say
+generate without “website copy”.
 
 Distinct from: Assistant, Apply the website template (the unpublished website
 structure).
@@ -791,14 +808,16 @@ prefix, Website page path.
 
 #### Preview website address
 
-Our host for their site: `{website_prefix}.preview.placis.com`. While they have
-not paid, this host is the website preview (sales stage). After website
-activation it is still a preview website address and the live default until they
-attach a website address. Never call the host “website preview” after they pay.
-Never say “website preview host”.
+Our host for their site: `{website_prefix}.preview.placis.com`. Optional while
+unpaid: it exists after they **share** from the website preview (R2 `latest/`
+with the website-activation strip), or after 08 if they paid without sharing.
+After website activation it is still a preview website address and the live
+default until they attach a website address. Never call the host “website
+preview”. Never say “website preview host”. Apex `preview.placis.com` (no
+prefix) is not a contractor site.
 
-Distinct from: Website address (`acme.ie`), Website prefix, Website preview (the
-sales stage).
+Distinct from: Website address (`acme.ie`), Website prefix, Website preview
+(the editor).
 
 ---
 

@@ -58,7 +58,7 @@ export function PreviewPage(): ReactNode {
         reduce ? Math.ceil((next / waitMs) * 15) * (waitMs / 15) : next,
       );
       if (next >= waitMs) {
-        void navigate({ to: "/onboarding/generated" });
+        void navigate({ to: "/onboarding/preview-and-edit" });
         return;
       }
       frame = window.requestAnimationFrame(tick);
@@ -78,7 +78,7 @@ export function PreviewPage(): ReactNode {
             We’re putting your website together
           </h1>
           <p className="text-sm text-muted-foreground">
-            This usually takes about 15 seconds. Then we’ll open the site.
+            This usually takes about 15 seconds. Then we’ll open your website.
           </p>
         </div>
         <div className="mx-auto max-w-3xl overflow-hidden rounded-xl bg-site-hero text-site-hero-fg shadow-sm">

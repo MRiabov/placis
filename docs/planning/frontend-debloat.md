@@ -40,9 +40,9 @@ leads console.
   second schema to generate from.
 - Keep as Go DTOs in current glossary names (fields may change): `/me`, health,
   onboarding session + profile + events stream (SSE outside huma), website
-  editor GET/PATCH, publication, Connect website address, 07 website preview
-  (host), website activation checkout / status, media library, ads when that
-  slice exists. Contractor website public routes: website form submit (see
+  editor GET/PATCH, publication, Connect website address, 08 preview website
+  address (host), website activation checkout / status, media library, ads when
+  that slice exists. Contractor website public routes: website form submit (see
   [port-contractor-website.md](../features/website/port-contractor-website.md)).
 - Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
   `/v1/tenants/{website_prefix}/website/…`, blog, careers,

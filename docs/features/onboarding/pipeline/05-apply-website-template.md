@@ -48,10 +48,12 @@ onboarding session’s `tenant_id` (unactivated tenant from 01).
    work photos.
 5. Validate against website component contracts before the unpublished website
    is kept.
-6. Enqueue 06. `/onboarding/preview` starts the wait (copy done or ~15s cap). 07
-   writes the host after that gate — not immediately.
+6. Enqueue 06. `/onboarding/preview` starts the wait (copy done or ~15s cap).
+   Wait-end is [07](07-contractor-copy-improvement.md). 08 writes the host if
+   they share — not immediately.
 
-Copy is **not** this step — [06](06-website-copy-generation.md).
+Copy is **not** this step —
+[06 automatic website copy generation](06-website-copy-generation.md).
 
 ## Persist
 
@@ -60,20 +62,21 @@ look website sections, and `website_slot_reviews`; `ai_generations` for the
 website template/website styles pick (`kind=website_template_picker`) and, when
 the reviews pool is ready, the reviews pick (`kind=website_reviews_picker`).
 Onboarding session stays
-`applying_website_template` until 07 writes `latest/`, then `previewing`.
+`applying_website_template` until wait-end, then `previewing`.
 
 ## Fail
 
 Throw → `apply_website_template_failed`. No `latest/`. Retry is a new apply
-(same `website_prefix` if 07 already reserved it; new onboarding publication on
+(same `website_prefix` if 08 already reserved it; new onboarding publication on
 that prefix).
 
 ## Out
 
-07 website preview (after the wait). 06 async copy.
+07 contractor copy improvement (after the wait). 06 async automatic website copy
+generation.
 
 ## Invariants
 
 - Tokens remain tokens through 05.
 - `tenant_id` is the 01 unactivated tenant.
-- No `website_publications` in this step (07 writes v1).
+- No `website_publications` in this step (08 writes v1).

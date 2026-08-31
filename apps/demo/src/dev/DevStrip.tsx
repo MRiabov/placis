@@ -18,6 +18,7 @@ export type DevGroup = {
 };
 
 type DevStripProps = {
+  belowHeader?: boolean;
   groups: DevGroup[];
 };
 
@@ -25,7 +26,10 @@ function isOn(value: unknown): boolean {
   return value === "1" || value === 1 || value === true;
 }
 
-export function DevStrip({ groups }: DevStripProps): ReactNode {
+export function DevStrip({
+  belowHeader = true,
+  groups,
+}: DevStripProps): ReactNode {
   const search = useRouterState({
     select: (route) =>
       route.location.search as { dev?: unknown; shot?: unknown },
@@ -47,7 +51,10 @@ export function DevStrip({ groups }: DevStripProps): ReactNode {
     return (
       <button
         aria-label="Show developer states"
-        className="fixed top-14 right-3 z-[80] grid size-9 place-items-center rounded-full border border-dashed border-amber-600 bg-amber-50 text-xs font-medium text-amber-700"
+        className={cn(
+          "fixed right-3 z-[80] grid size-9 place-items-center rounded-full border border-dashed border-amber-600 bg-amber-50 text-xs font-medium text-amber-700",
+          belowHeader ? "top-14" : "top-3",
+        )}
         onClick={() => setOpen(true)}
         title="Show developer states"
         type="button"

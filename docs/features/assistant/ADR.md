@@ -154,11 +154,9 @@ instead of silently replacing it.
     **text** on `assistant_conversation_items`. No `files` row, no
     `recording_file_id`, no `POST /v1/onboarding/assistant/voice/recordings`.
     CMS recordings stay. Online research consent is not this. Same day, later:
-    Voice utterances store **`offset_seconds`** from that Voice run’s
-    realtime-connection start (browser audio clock), not wall-clock `created_at`
-    as the conversation clock. Reconstruct as `[m:ss owner]` /
-    `[m:ss assistant]` + `body`. Never say **user**. `created_at` stays the row
-    insert time. (2026-08-30)
+    Voice utterances store **`offset_seconds`** (seconds from that Voice run’s
+    start). Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`. Never say
+    **user**. `created_at` is the row insert time. (2026-08-30)
 
 14. **AI voice vendor cost** — Voice is not billed as a text LLM call. Debit is
     **AI voice vendor cost** (xAI audio minutes + text
@@ -217,16 +215,12 @@ instead of silently replacing it.
     that has a voice run uses the same caveat. (2026-08-29)
 
 23. **xAI Voice follows the business country** — Live audio (CMS and onboarding)
-    does **not** blanket-route every tenant to eu-west-1. Go picks the xAI
-    region from the **business country** at realtime-connection create: company
-    registry country if a company registry record is attached; else Google Maps
-    listing address country; else Find country on `tenants.country` (`ie` / `gb`
-    / `us`). Map `ie`/`gb` → **eu-west-1**, `us` → **us-east-1**. Not the
-    contractor’s IP, not a browser-chosen host. Return the regional realtime URL
-    on the create response; the browser uses that URL as-is. Same host for
-    ephemeral-token create and the WS. Do not switch region mid-call. Pin a
-    dated voice model that exists on that cluster. Never the global `api.x.ai`
-    host.
+    does **not** blanket-route every tenant to eu-west-1. Region comes from the
+    **business country** at realtime-connection create: company registry
+    country if attached; else Google Maps listing address country; else Find
+    country on `tenants.country` (`ie` / `gb` / `us`). Map `ie`/`gb` →
+    **eu-west-1**, `us` → **us-east-1**. Not the contractor’s IP. Hosts:
+    [voice agent](../../general-architecture/voice-agent.md). (2026-08-30)
 
 24. **Glossary is in both assistants; Voice also gets pronunciation** — CMS
     text, CMS Voice, and the onboarding voice guide all include the product
@@ -235,3 +229,55 @@ instead of silently replacing it.
     (STT bias) and `replace` (spoken wording; transcript text unchanged).
     **Placis** is a keyterm; `replace` speaks it **Play-sis**. Do not
     `session.update` those mid-call. (2026-08-30)
+
+25. **Three Assistant implementations, one contractor name** — CMS
+    `/v1/assistant/…` after website activation. Find, Review, and client
+    interview `/v1/onboarding/assistant/…` (Voice only, `tools=[]`). Onboarding
+    website editor `/v1/onboarding/website-editor/assistant/…` on
+    `/onboarding/preview-and-edit/` only (policy wrapper in
+    `internal/onboarding/websiteeditor`). Contractor copy is **Assistant** on
+    all three. Do not relax unactivated **403** `tenant_unactivated` on
+    `/v1/assistant/…`. Do not add `/v1/website/editor/assistant`. CMS HTTP must
+    not import `onboarding/websiteeditor`. (2026-08-30)
+
+26. **Onboarding website editor reuses `ai.threads` (`kind=cms_assistant`)** —
+    Same overlay `thread_items` / `runs`. No `website_editor_*` tables. OpenAPI
+    grows paths, not persistence models. Unpaid `current` while
+    `tenants.status=unactivated`. **No compaction** on that `current` (12h,
+    128K overflow, or Voice compact-before-seed would drop `kind=owner` items
+    and refill the five unpaid prompts). If text assembly would exceed 128K or
+    Voice instructions would not fit, that turn / Voice create fails. 09
+    completes `current` and ends `running` in the **same transaction** as
+    `status=active`. CMS GET lazy-creates a new empty `current`. Five unpaid
+    prompts = count `kind=owner` items on that unpaid `current` (06 does not
+    write owner items). Over cap is pay CTA, not 402. 06 LLM traces stay on a
+    `website_copy_generation` thread. (2026-08-30)
+
+27. **06 is the first unpaid website-preview run** — While unactivated, 06 holds
+    `assistant.runs` `running` (`channel=text`) and appends `tool_summary`.
+    The website preview follows 06 via onboarding SSE + unpublished GET, not the
+    Assistant text socket. Owner send is **409** `in_flight_run` until 06 is
+    idle. After 09, leftover 06 is River-only (`tenant_id` lock, no
+    `assistant.runs`, no new thread items). CMS Assistant / PATCH stay not 409
+    because 06 is running (testing §15). 06 cap stays 3 / 12 / 4. 06 still must
+    not `create_page`. (2026-08-30)
+
+28. **Unpaid instant apply via website PATCH** — Text and Voice on the
+    onboarding website editor force instant apply (ignore `ask_first` / `plan`
+    on the wire). Exception to decision 17 (Voice always Ask first is CMS).
+    No `record-apply` / `record-reject` / `/thread/new` on this tree. Go does
+    not upsert unpublished rows on that turn. Signed-in unactivated **PATCH**
+    on the app origin is the apply path (not a human-vs-Assistant 403).
+    Onboarding session token may GET unpublished website and GET `…/thread`
+    (hydrate only). It must not PATCH and must not send. The preview website
+    address never calls this agent or PATCH.
+    Voice → text STT caveat (decision 22) **does** apply here; “not onboarding”
+    there means Find / Review. Recordings use `assistant_voice` on
+    `assistant.runs`. (2026-08-30)
+
+29. **Wait teaser lands on the website preview** — `/onboarding/preview` then
+    `/onboarding/preview-and-edit/`, not `{website_prefix}.preview.placis.com`.
+    Share is optional on-demand 08 (R2 + strip). 09 does **not** require a
+    prior share: if they never shared, 09 reserves the prefix if needed and
+    writes the first live R2 without strip. Apex `preview.placis.com` is not a
+    tenant site (404). (2026-08-30)
