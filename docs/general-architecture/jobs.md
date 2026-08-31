@@ -29,10 +29,15 @@ first is in flight is a River unique conflict — treat as already queued.
 Not HTTP 409 (nothing HTTP-enqueues this). After the first completes, a
 later enqueue on the same tenant is allowed.
 
-The job is dumb: load `in_pool` reviews, generate, replace `is_top` /
-`top_position` (skip `algorithm=human`). Same replace as Certifications
-and reviews PATCH. Provisional vs persistent is **when orchestration
-enqueues**, not a job field. No `onboarding_session_id`.
+The worker always loads `in_pool` reviews, generates, and replaces
+`is_top` / `top_position` (skip `algorithm=human`). Same replace as
+Certifications and reviews PATCH. Args: `tenant_id` only. No pass field.
+No `onboarding_session_id`.
+
+There is no stored provisional or persistent marker: no extra column, not
+`algorithm`, not a skip key. Pins are `is_top` / `top_position`. A later
+`reviews_ranking_for_display` may replace them until owner PATCH sets
+`algorithm=human`. When to enqueue is orchestration (below).
 
 `internal/jobs` worker calls the profile function. LLM:
 `thread_kind=reviews_ranking_for_display`,

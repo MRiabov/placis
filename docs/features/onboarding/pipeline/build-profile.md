@@ -118,17 +118,18 @@ rewrite a copied gallery token. The next website publication (04) resolves
 
 Onboarding orchestration. After **ETL fast extract** has written `in_pool`
 reviews, enqueue River job `reviews_ranking_for_display` — typically
-**in parallel** with client interview. That write is **provisional**
-`is_top` / `top_position` (will change; not a skip key; not
-`algorithm=human`). When the last overlapping ETL run for this onboarding
-enqueue finishes: enqueue again if additional `in_pool` rows landed, then
-write **persistent** pins. If no additional rows, persist the same pins
-without a second generate.
+**in parallel** with client interview. That writes `is_top` /
+`top_position`. Those pins are not locked: a later ranking job may
+replace them. They are not `algorithm=human` and not a skip key. There
+is no provisional column or flag.
+
+When the last overlapping ETL run for this onboarding enqueue finishes:
+enqueue again if additional `in_pool` rows landed (replace pins). If no
+additional rows, leave the pins — no second generate.
 
 **Scheduled ETL** (Monday / Wednesday / Friday): after a scheduled run
 **succeeds** and new `in_pool` rows landed, enqueue the same job
-**once** (not per chunk). No provisional versus persistent split on
-scheduled unless we already have one; one replace of pins.
+**once** (not per chunk). Same columns. One replace of pins.
 
 ETL transform inserts review rows only; it does not rank. Profile does
 not enqueue. Website does not enqueue. Persist columns:

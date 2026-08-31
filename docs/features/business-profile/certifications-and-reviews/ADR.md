@@ -50,7 +50,10 @@ decision + date) instead of silently replacing the old entry.
    **top reviews**. It does **not** enqueue ranking. River job enum value
    `reviews_ranking_for_display` (`thread_kind` and `prompt_id` the same string)
    writes `is_top` / `top_position` with the same replace as this screen’s
-   PATCH. Owner PATCH is `algorithm=human` and is not overwritten. Orchestration
-   (onboarding two-pass; scheduled ETL after `succeeded` when new `in_pool` rows
-   landed): [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../../../general-architecture/jobs.md). Website consumes the ranked pool
-   (`{{reviews.N}}`); it does not own ranking.
+   PATCH. Owner PATCH is `algorithm=human` and is not overwritten. Pins are only
+   `is_top` / `top_position`. There is no stored provisional or persistent
+   marker (no extra column, not `algorithm`, not a skip key). Orchestration
+   (onboarding enqueue after ETL fast extract, again if more `in_pool` rows when
+   that enqueue’s ETL finishes; scheduled ETL after `succeeded` when new
+   `in_pool` rows landed): [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../../../general-architecture/jobs.md). Website consumes the ranked
+   pool (`{{reviews.N}}`); it does not own ranking.

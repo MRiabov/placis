@@ -123,11 +123,11 @@ show Profile history, or to reconstruct the profile as of `accepted_edit_id`
   number. Writers never assign a single `top_position`. They replace the whole
   ordered id list in one transaction (`SELECT … FOR UPDATE` the profile row,
   then densify 1…n from that list). River job `reviews_ranking_for_display`
-  ([jobs](../../../general-architecture/jobs.md); provisional after ETL fast
-  extract, persistent after ETL finishes) and Certifications and reviews
-  PATCH do the same replace, not a merge. Provisional pins are not
-  a skip key. Owner PATCH is `algorithm=human` and is not overwritten.
-  Orchestration:
+  ([jobs](../../../general-architecture/jobs.md)) and Certifications and
+  reviews PATCH do the same replace, not a merge. There is no stored
+  provisional or persistent marker (no extra column, not `algorithm`, not
+  a skip key). A later ranking job may replace pins until owner PATCH
+  sets `algorithm=human`. Orchestration:
   [build-profile](../../onboarding/pipeline/build-profile.md).
 
 Website sections hold their own ordered ids via `website_slot_reviews`. Ads use
