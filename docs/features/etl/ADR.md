@@ -131,8 +131,11 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     the onboarding list: look up by `company_number` + country when attached,
     else `display_name` + country (Maps-only still runs). Discovered keys
     persist on the waiting `etl.runs` row and the onboarding session attach.
-    (2026-08-31; same day, later: trade registry is not gated on company
-    registry attach.)
+    `web_search` is always in that onboarding list (Maps pick and company
+    registry Find); it fills empty keys and does not overwrite a Find-attached
+    `place_id`. (2026-08-31; same day, later: trade registry is not gated on
+    company registry attach; same day, later: web search is not gated on a
+    missing `place_id`.)
 
 15. **Find attach is onboarding session keys; extract still owns the listing**
     — 01 persists `place_id` / `company_number` / `website_url` on the

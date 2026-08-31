@@ -40,7 +40,7 @@ Instagram. Onboarding 02: `trigger=onboarding`, the closed list in
 - Scheduled with no key (`place_id`, Facebook URL / handle, Instagram handle) →
   `status=skipped` immediately, no transform. Onboarding: no key yet → stay
   pending (do not scrape). Discovery writes the key onto this run. After Maps,
-  crawl, and web search (if any) finish, still no key → `skipped`.
+  crawl, and web search finish, still no key → `skipped`.
 - Discovered keys persist on the waiting `etl.runs` row **and** the
   onboarding session attach (`place_id`, `website_url`). Not a profile dump.
   Not a new `StartRun`.

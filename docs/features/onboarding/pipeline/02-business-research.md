@@ -74,12 +74,14 @@ lookup can stay **200** and a later source change can stay **429**.
 
 If the count is **0–4**, call `StartRun` with the ETL run kinds below. Pass
 `onboarding_session_id` and `force=false`. Copy onboarding session attach keys
-onto the matching `etl.runs` rows (`place_id`, `website_url`). Find with only a
-company registry record still gets Maps / crawl / Facebook / Instagram: [web
-search](../../etl/pipeline/web-search.md) seeds Parallel from `legal_name`,
-`company_number`, country, and `registered_office`. The first `place_id` /
-website URL unblocks those runs in this enqueue. Maps-only Find still gets
-`trade_registry` (lookup by `display_name` + country).
+onto the matching `etl.runs` rows (`place_id`, `website_url`). Both Find
+sources get [web search](../../etl/pipeline/web-search.md) (Parallel). Seed
+from `legal_name` / `company_number` / country / `registered_office` and/or
+Maps `display_name`. A Maps pick still runs Search (handles, extra URLs) even
+when `place_id` is already known. Empty keys fill; do not overwrite a
+Find-attached `place_id`. The first missing `place_id` / website URL unblocks
+Maps / crawl in this enqueue. Maps-only Find still gets `trade_registry`
+(lookup by `display_name` + country).
 
 ### ETL run kinds 02 passes
 
@@ -90,7 +92,7 @@ website URL unblocks those runs in this enqueue. Maps-only Find still gets
 | Always | `instagram` | Instagram profile / posts, Projects from posts. Waits for a handle | [Instagram](../../etl/pipeline/instagram.md) |
 | Always | `website_crawl` | trade, services, service area, founder, photos, Projects (homepage fast, then parallel remainder). Waits for a website URL | [Website crawl](../../etl/pipeline/website-crawl.md) |
 | Always | `trade_registry` | accreditations. Key is `company_number` + country when a company registry record is attached, else `display_name` + country (Maps-only is enough). Not the locked business-registry certification on Find | [Trade registry](../../etl/pipeline/trade-registry.md) |
-| Missing `place_id` **or** missing website URL on the onboarding session at this `StartRun` | `web_search` | discover `place_id` / URL onto sibling runs (not a profile dump) | [Web search](../../etl/pipeline/web-search.md) |
+| Always | `web_search` | Parallel discovery for **both** Find sources (Maps pick and company registry record). Fills empty `place_id` / website URL / Facebook / Instagram keys; does not overwrite a Find-attached `place_id` | [Web search](../../etl/pipeline/web-search.md) |
 
 Monday / Wednesday / Friday does not pass crawl, trade registry, or web search.
 Instagram is a persisted ETL run kind (scrape).
@@ -98,9 +100,8 @@ Instagram is a persisted ETL run kind (scrape).
 ETL run kinds in this enqueue **start when their key exists**. Maps Details,
 crawl links, and web search write discovered keys onto the waiting sibling run
 (and the onboarding session). That is not a new `StartRun`. After Maps, crawl,
-and web search (if any) have `succeeded` / `error` / `skipped`, a social ETL
-run kind still missing its key becomes `skipped`.
-
+and web search have `succeeded` / `error` / `skipped`, a social ETL run kind
+still missing its key becomes `skipped`.
 Profile deltas go through ETL transform using [build-profile](build-profile.md).
 Empty fields fill. On a research conflict the live business profile column is
 not updated.
