@@ -52,6 +52,11 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    section has its own ordered `website_slot_reviews` from the pool, capped by
    that website component. (2026-08-26)
 
+   (2026-08-31): `business_profiles.top_reviews_provisional` nullable bool
+   records whether the current top set may still be replaced by ranking
+   (true), is done for this enqueue or owner-locked (false), or was
+   never ranked (null). Not a skip key. Not on each review row.
+
 5. **Facebook and Google Maps listing are Details links** — Business details
    owns `facebook_profile_url` and `google_maps_listing_url`.
    **Link your Facebook** / Google Maps listing when unlinked (paste a public

@@ -68,7 +68,9 @@ jsonb dump. `GET`/`PATCH` fields are the columns and list tables in
   section’s ordered ids live on the website editor GET/PATCH
   (`website_slot_reviews`). Details owns the rows.
 - **Response:** the **pool** (`status=in_pool`), **top reviews** first
-  (`is_top`, then `top_position`). Archived rows only when listing the archive.
+  (`is_top`, then `top_position`), plus
+  `top_reviews_provisional` from the profile. Archived rows only when
+  listing the archive.
 
 ### PATCH /v1/business-profile/reviews (top / order)
 
@@ -81,7 +83,8 @@ jsonb dump. `GET`/`PATCH` fields are the columns and list tables in
   30, each id `in_pool`, no duplicates). The server writes `is_top` + dense
   `top_position` 1…n from that list; the request does not include
   `top_position`. New pin appends as least featured. Longer than 30, a duplicate
-  id, or an id not in the pool is `400`. Does **not** rewrite
+  id, or an id not in the pool is `400`. Sets
+  `top_reviews_provisional=false` and `algorithm=human`. Does **not** rewrite
   `website_slot_reviews`.
 
 ### PATCH /v1/business-profile/reviews/{id}/archive and …/unarchive

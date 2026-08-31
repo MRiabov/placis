@@ -31,13 +31,18 @@ later enqueue on the same tenant is allowed.
 
 The worker always loads `in_pool` reviews, generates, and replaces
 `is_top` / `top_position` (skip `algorithm=human`). Same replace as
-Certifications and reviews PATCH. Args: `tenant_id` only. No pass field.
-No `onboarding_session_id`.
+Certifications and reviews PATCH. In that transaction it sets
+`business_profiles.top_reviews_provisional`: **true** if overlapping ETL
+for this onboarding enqueue is still running, else **false**. Scheduled
+ranking always writes **false** (the run already `succeeded`). Args:
+`tenant_id` only. No pass field. No `onboarding_session_id`.
 
-There is no stored provisional or persistent marker: no extra column, not
-`algorithm`, not a skip key. Pins are `is_top` / `top_position`. A later
-`reviews_ranking_for_display` may replace them until owner PATCH sets
-`algorithm=human`. When to enqueue is orchestration (below).
+`top_reviews_provisional` is not a skip key. A later
+`reviews_ranking_for_display` may replace pins until owner PATCH sets
+`algorithm=human` (and `top_reviews_provisional=false`). When to enqueue
+is orchestration (below). When that enqueue’s ETL finishes with **no**
+extra `in_pool` rows: set `top_reviews_provisional=false` without a
+second generate.
 
 `internal/jobs` worker calls the profile function. LLM:
 `thread_kind=reviews_ranking_for_display`,

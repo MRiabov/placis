@@ -17,13 +17,17 @@
   `is_top` / `top_position` replaced; `ai.threads`
   `thread_kind=reviews_ranking_for_display`; `ai_generations`
   `prompt_id=reviews_ranking_for_display` with `input` /
-  `internal_reasoning` / `output`. Duplicate enqueue while that job is
+  `internal_reasoning` / `output`;
+  `business_profiles.top_reviews_provisional=true` while overlapping ETL
+  is still running. Duplicate enqueue while that job is
   pending/running: still one job (River unique conflict). Owner PATCH of
-  **top reviews** is `algorithm=human` and a later
+  **top reviews** is `algorithm=human` and
+  `top_reviews_provisional=false` and a later
   `reviews_ranking_for_display` does not overwrite those pins. When the
   last overlapping ETL run for this enqueue finishes with extra `in_pool`
-  rows: another `reviews_ranking_for_display` (first already completed).
-  No extra rows: no second generate; same pins persist. ETL transform
+  rows: another `reviews_ranking_for_display` (first already completed);
+  `top_reviews_provisional=false`. No extra rows: no second generate;
+  same pins; `top_reviews_provisional=false`. ETL transform
   does not enqueue this job.
 - **Fail**: writer error leaves other writers’ increments intact.
 - **Mocked**: ranking LLM for `reviews_ranking_for_display` (faked
