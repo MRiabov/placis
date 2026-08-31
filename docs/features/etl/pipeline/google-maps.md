@@ -1,14 +1,14 @@
 # Google Maps
 
-`kind=google_maps_listing` (further reviews may use `kind=review` on the same
-listing). Onboarding 02 and Monday / Wednesday / Friday. Shared extract /
+`etl_kind=google_maps_listing` (further reviews may use `etl_kind=review` on the
+same listing). Onboarding 02 and Monday / Wednesday / Friday. Shared extract /
 transform rules:
 [pipeline README](README.md).
 
 ## Trigger
 
-`StartRun` included this kind. Skip (`status=skipped`) when scheduled and there
-is no `place_id`.
+`StartRun` included this ETL kind. Skip (`status=skipped`) when scheduled and
+there is no `place_id`.
 
 ## Pre
 
@@ -21,7 +21,7 @@ is no `place_id`.
 - Write `business_profile_opening_hours` or `business_profile_reviews` during
   listing upsert (that is transform).
 - Use listing address as a legal address.
-- Call Facebook, Instagram, crawl, or Parallel from this kind.
+- Call Facebook, Instagram, crawl, or Parallel from this ETL kind.
 - Silently overwrite an owner-typed marketing phone, name, hours, or URL
   (research conflict).
 - Overwrite a live profile field whose winning `algorithm` is `human` (including
@@ -60,17 +60,17 @@ new listing reviews. Attach scrape photos onto **that** listing review
 `status` stays `extracting` until scrape has nothing left; `succeeded` only
 then.
 
-`kind=review` / `kind=photo` (when 02 included them) continue the same listing
-the same way.
+`etl_kind=review` / `etl_kind=photo` (when 02 included them) continue the same
+listing the same way.
 
 ## Do — listing
 
-Upsert `google_maps_listings` on `place_id` after inserting
-`etl.sources` `kind=google_maps_listing` (`source_id` required on the listing).
-Replace child hours on the Details chunk. Insert reviews / photo refs whose
+Upsert `google_maps_listings` on `place_id` after inserting `etl.sources`
+`source_kind=google_maps_listing` (`source_id` required on the listing). Replace
+child hours on the Details chunk. Insert reviews / photo refs whose
 `external_id` we do not already have (each new review gets
-`kind=google_maps_listing_review`). Set `latest_fetch_id` to the newest fetch
-that contributed. Set `country` from Places address country (`ie` / `gb` /
+`source_kind=google_maps_listing_review`). Set `latest_fetch_id` to the newest
+fetch that contributed. Set `country` from Places address country (`ie` / `gb` /
 `us`). Do not parse `listing_address` for country.
 
 ## Do — transform
@@ -115,7 +115,7 @@ remaining scrape still runs. `status=error` when retries exhaust.
 ## Out
 
 Onboarding SSE mirrors Postgres on change (`etl.runs` and the live business
-profile). After Details + transform, about half of this kind’s checklist is
+profile). After Details + transform, about half of this ETL kind’s checklist is
 already filled (hours, marketing phone, website, first reviews / photos); more
 reviews / photos appear as scrape runs. Scheduled: no SSE.
 

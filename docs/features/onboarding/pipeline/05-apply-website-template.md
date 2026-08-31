@@ -59,9 +59,9 @@ Copy is **not** this step —
 
 Unpublished website + media library rows, including `website.menus`, site-wide
 look website sections, and `website_slot_reviews`; `ai_generations` for the
-website template/website styles pick (`kind=website_template_picker`) and, when
-the reviews pool is ready, the reviews pick (`kind=website_reviews_picker`).
-Onboarding session stays
+website template/website styles pick (`thread_kind=website_template_picker`)
+and, when the reviews pool is ready, the reviews pick
+(`thread_kind=website_reviews_picker`). Onboarding session stays
 `applying_website_template` until wait-end, then `previewing`.
 
 ## Fail

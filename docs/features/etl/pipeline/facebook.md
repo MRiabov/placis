@@ -1,15 +1,15 @@
 # Facebook
 
-`kind=facebook`. Onboarding 02 and Monday / Wednesday / Friday. Shared extract /
-transform rules:
+`etl_kind=facebook`. Onboarding 02 and Monday / Wednesday / Friday. Shared
+extract / transform rules:
 [pipeline README](README.md).
 
 Public lookup (existing adapter). Graph API is later.
 
 ## Trigger
 
-`StartRun` included this kind. Skip (`status=skipped`) when scheduled and there
-is no Facebook page URL / handle.
+`StartRun` included this ETL kind. Skip (`status=skipped`) when scheduled and
+there is no Facebook page URL / handle.
 
 ## Pre
 
@@ -18,7 +18,7 @@ is no Facebook page URL / handle.
 
 ## Must not
 
-- Call Maps, Instagram, crawl, or Parallel from this kind.
+- Call Maps, Instagram, crawl, or Parallel from this ETL kind.
 - Dump fetch `raw` onto `facebook_profiles` / `facebook_posts`.
 - Silently overwrite an owner-typed `facebook_profile_url` (research conflict).
 - Overwrite a Facebook profile or post whose `algorithm` is `human` (including

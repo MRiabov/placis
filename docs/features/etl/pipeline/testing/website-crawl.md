@@ -9,7 +9,7 @@
   transform. Cap is **20 HTML URLs** (sitemap/robots GETs do not count).
   Retry of this `run_id` does not re-Extract / re-GET a `(URL, fetched_from)`
   that landed; remaining `discovered` HTML URLs still run. A Monday /
-  Wednesday / Friday `StartRun` does not include this kind. Extract does not
+  Wednesday / Friday `StartRun` does not include this ETL kind. Extract does not
   write the live business profile. Transform does not call crawl / Extract /
   GET fakes. Project skip lives on
   `etl.llm_source_to_project_classifications`, not fetches or live HTML URLs.

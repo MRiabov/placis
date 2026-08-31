@@ -220,17 +220,17 @@ export function ContentPanel({
       {section === "top-menu" ? (
         <>
           <div className="mb-4 grid gap-2">
-            <NavRow kind="page" page="home" />
-            <NavRow kind="text" text="Services" />
+            <NavRow menuNodeKind="page" page="home" />
+            <NavRow menuNodeKind="text" text="Services" />
             <div className="ml-3.5 grid gap-2 border-l border-border pl-2.5">
-              <NavRow kind="page" page="services" />
+              <NavRow menuNodeKind="page" page="services" />
               <NavRow
                 href="https://bellfield.ie/emergency"
-                kind="url"
+                menuNodeKind="url"
                 label="Emergency"
               />
             </div>
-            <NavRow kind="page" page="contact" />
+            <NavRow menuNodeKind="page" page="contact" />
           </div>
           <VisibilityRow checked label="Show marketing phone" />
           <VisibilityRow label="Show marketing email" />
@@ -240,8 +240,8 @@ export function ContentPanel({
       {section === "footer" ? (
         <>
           <div className="mb-4 grid gap-2">
-            <NavRow kind="page" page="privacy" />
-            <NavRow kind="page" page="terms" />
+            <NavRow menuNodeKind="page" page="privacy" />
+            <NavRow menuNodeKind="page" page="terms" />
           </div>
           <VisibilityRow checked label="Show marketing phone" />
           <VisibilityRow checked label="Show marketing email" />
@@ -270,35 +270,35 @@ export function ContentPanel({
 }
 
 function NavRow({
-  kind: initialKind,
+  menuNodeKind: initialKind,
   page = "home",
   text = "",
   href = "https://bellfield.ie/emergency",
   label = "Emergency",
 }: {
-  kind: "page" | "text" | "url";
+  menuNodeKind: "page" | "text" | "url";
   page?: string;
   text?: string;
   href?: string;
   label?: string;
 }): ReactNode {
-  const [kind, setKind] = useState(initialKind);
+  const [menuNodeKind, setMenuNodeKind] = useState(initialKind);
   const [url, setUrl] = useState(href);
 
   return (
     <div className="grid gap-1.5">
       <Select
-        aria-label="Kind"
+        aria-label="Menu node kind"
         onChange={(event) =>
-          setKind(event.target.value as "page" | "text" | "url")
+          setMenuNodeKind(event.target.value as "page" | "text" | "url")
         }
-        value={kind}
+        value={menuNodeKind}
       >
         <option value="page">Website page</option>
         <option value="text">Text</option>
         <option value="url">URL</option>
       </Select>
-      {kind === "page" ? (
+      {menuNodeKind === "page" ? (
         <Select aria-label="Website page" defaultValue={page}>
           {navPages.map((item) => (
             <option key={item.id} value={item.id}>
@@ -307,10 +307,10 @@ function NavRow({
           ))}
         </Select>
       ) : null}
-      {kind === "text" ? (
+      {menuNodeKind === "text" ? (
         <TextInput aria-label="Text" defaultValue={text} />
       ) : null}
-      {kind === "url" ? (
+      {menuNodeKind === "url" ? (
         <Combo
           createKind="URL"
           groupLabel="Existing URLs"

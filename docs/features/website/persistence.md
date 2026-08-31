@@ -142,7 +142,7 @@ hyphenate, strip junk, length-bounded. Unique in that tree; collision → `-2`,
 `-3`. On label/title change, recompute `id`. Tools match by this `id`, never by
 UUID. Never say slug.
 
-Kinds:
+Menu node kinds:
 
 - `page` — `page_id` (uuid). Clickable; path from the website page. May have
   `children`. Optional display `label` if the bar text should differ from the
@@ -155,16 +155,16 @@ Kinds:
   The picker does **not** `POST /pages`. Typing a new URL inserts a
   `website_urls` row.
 
-Clickable vs heading is `kind`, not a reorder flag. `reorder` sends nested `id`
-/ `children` only. Heading → link is remove + add.
+Clickable vs heading is `menu_node_kind`, not a reorder flag. `reorder` sends
+nested `id` / `children` only. Heading → link is remove + add.
 
 Caps: **8** top-level nodes on the top menu, **12** on the footer (a 9th
 top-level node is `409`). **8** children per parent. Hide = not in the tree.
 
-On **create page**: append `{ id, kind: page, page_id }` as a top-level footer
-node (if under cap); same on the top menu unless `legal` or cap (then omit). On
-**archive/delete page**: strip that node; drop empty text groups. Duplicate page
-in a tree is `400`.
+On **create page**: append `{ id, menu_node_kind: page, page_id }` as a
+top-level footer node (if under cap); same on the top menu unless `legal` or cap
+(then omit). On **archive/delete page**: strip that node; drop empty text
+groups. Duplicate page in a tree is `400`.
 
 Human PATCH may replace a whole tree (including a wipe). Assistant
 `remove_entries` max 4.
@@ -176,8 +176,8 @@ increments, like `business_profile_edits`.
 Do **not** keep leftover `website_assistant_threads` /
 `website_assistant_turns`. Thread tables: [assistant persistence](../assistant/persistence.md).
 
-- `website_urls` — reusable URL list for top menu / footer `kind: url` nodes.
-  `id`, `tenant_id` fk, `href` (`string`, URL, `maxLength` 2048), `label`
+- `website_urls` — reusable URL list for top menu / footer `menu_node_kind: url`
+  nodes. `id`, `tenant_id` fk, `href` (`string`, URL, `maxLength` 2048), `label`
   (`string`, `maxLength` 80), timestamps. Unique `(tenant_id, href)`. Typing a
   new URL in the combobox inserts a row. Does not create a website page.
 

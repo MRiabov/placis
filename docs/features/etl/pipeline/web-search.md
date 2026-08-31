@@ -1,18 +1,19 @@
 # Web search
 
-`kind=web_search`. First-run only (onboarding 02). Parallel discovery when we do
-not already have `place_id` or a known website URL. Shared extract / transform
-rules:
+`etl_kind=web_search`. First-run only (onboarding 02). Parallel discovery when
+we do not already have `place_id` or a known website URL. Shared extract /
+transform rules:
 [pipeline README](README.md).
 
 ## Trigger
 
-`StartRun` included this kind because Maps / crawl have no key yet.
+`StartRun` included this ETL kind because Maps / crawl have no key yet.
 
 ## Pre
 
 - `etl.runs` row `status=pending` (or retry).
-- No `place_id` and no known website URL (otherwise this kind is not started).
+- No `place_id` and no known website URL (otherwise this ETL kind is not
+  started).
 
 ## Must not
 
@@ -51,7 +52,7 @@ Retryable. `status=error` when retries exhaust. Do not invent a business.
 ## Out
 
 Onboarding SSE mirrors Postgres on change (`etl.runs` and discovered keys).
-Downstream kinds start when their key exists.
+Downstream ETL kinds start when their key exists.
 
 ## Invariants
 

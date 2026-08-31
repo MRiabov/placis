@@ -40,8 +40,8 @@ publication; website rollback of onboarding rows is refused
    on profile and SSE; a later source-change returns `429` with that timestamp.
    River retries of an existing ETL run do not create a new `enqueue_id`. See
    [02](pipeline/02-business-research.md).
-2. 02 calls `etl.StartRun(kinds, trigger=onboarding)`. Extract, listing upsert,
-   and transform are [ETL](../etl/technical-implementation.md).
+2. 02 calls `etl.StartRun(etl_kinds, trigger=onboarding)`. Extract, listing
+   upsert, and transform are [ETL](../etl/technical-implementation.md).
 3. Profile deltas use [build-profile](pipeline/build-profile.md).
 
 ## Profile building

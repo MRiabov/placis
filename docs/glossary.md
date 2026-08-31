@@ -109,9 +109,9 @@ editor.
 
 #### Assistant thread
 
-One persisted `ai.threads` (`kind=cms_assistant`) conversation per tenant (CMS
-Assistant and onboarding website editor). The onboarding assistant has its own
-`onboarding_assistant` thread; do not call that this thread. Never say
+One persisted `ai.threads` (`thread_kind=cms_assistant`) conversation per tenant
+(CMS Assistant and onboarding website editor). The onboarding assistant has its
+own `onboarding_assistant` thread; do not call that this thread. Never say
 **session** for this.
 
 ---
@@ -275,7 +275,7 @@ Distinct from: Profile (the nav group), Business profile (the record).
 
 #### Trade
 
-The main kind of work the business does. Open text (not a closed list).
+The main type of work the business does. Open text (not a closed list).
 
 ---
 
@@ -1257,6 +1257,35 @@ Voice connection **instructions**, the assembled prompt.
 
 ---
 
+#### Thread kind
+
+Which conversation an `ai.threads` row is (`cms_assistant`,
+`onboarding_assistant`, `ads_generate`, and the other closed values). Never
+bare **kind**. Distinct from: Thread item kind.
+
+In code: `ai.threads.thread_kind`. Go: `ThreadKind`.
+
+---
+
+#### Thread item kind
+
+Whether a thread item is owner, assistant, thinking, or tool summary. Never
+bare **kind**. Distinct from: Thread kind.
+
+In code: `assistant.thread_items.thread_item_kind` and onboarding
+`assistant_conversation_items.thread_item_kind`.
+
+---
+
+#### Tool revision kind
+
+Whether an `ai_generation_tool_revisions` row is a tool or a skill. Never bare
+**kind**.
+
+In code: `ai.ai_generation_tool_revisions.tool_revision_kind`.
+
+---
+
 ### Signed URL
 
 A time-limited file download URL. Distinct from: Website preview link. Never
@@ -1300,6 +1329,15 @@ Supplied by (who originated the picture).
 
 ---
 
+#### Photo kind
+
+The classifier label on a media library item: hero, project, service, founder,
+or logo. Never bare **kind**. Distinct from: Imported media kind.
+
+In code: `media_assets.photo_kind`.
+
+---
+
 ### File
 
 The stored photo or document. Distinct from: Media asset (the media library
@@ -1335,12 +1373,43 @@ In code: `internal/etl/` (`extract/` + `transform/`), Postgres schema `etl`.
 
 #### ETL run
 
-One extract of **one source kind** for one tenant (the Google Maps extract, the
+One extract of **one ETL kind** for one tenant (the Google Maps extract, the
 Facebook extract, the Instagram extract). River retries are the same run.
 Distinct from: Business research (onboarding 02 starts several runs, one per
-kind).
+ETL kind).
 
 In code: `etl.runs`.
+
+---
+
+#### ETL kind
+
+Which extract an ETL run is: Google Maps listing, Facebook, Instagram, website
+crawl, trade registry, directory, review, photo, or web search. Never bare
+**kind**. Distinct from: Source kind (a run vs a citable blob; some enum values
+overlap).
+
+In code: `etl.runs.etl_kind`. Go: `ETLKind`. Unique `(enqueue_id, etl_kind)`.
+
+---
+
+#### Source kind
+
+Which extract blob a citable `etl.sources` row is (Google Maps listing, listing
+review, Facebook or Instagram profile or post, website crawl extract or HTML,
+company registry record, or trade registry record). Never bare **kind**.
+Distinct from: ETL kind.
+
+In code: `etl.sources.source_kind`.
+
+---
+
+#### Imported media kind
+
+Which extract origin an imported media library item came from. Never bare
+**kind**. Distinct from: Photo kind.
+
+In code: `etl.imported_media.imported_media_kind`.
 
 ---
 
@@ -1360,16 +1429,16 @@ or website crawl’s parallel remainder extract). Distinct from: Fast extract.
 
 #### Fast crawl
 
-The first-response pass of website crawl. A fast extract for that kind. Distinct
-from: Slow crawl.
+The first-response pass of website crawl. A fast extract for that ETL kind.
+Distinct from: Slow crawl.
 
 ---
 
 #### Slow crawl
 
 The remainder extract of website crawl after the homepage: remaining HTML URLs
-in parallel (not a serial tens-of-seconds walk). A slow extract for that kind.
-Distinct from: Fast crawl.
+in parallel (not a serial tens-of-seconds walk). A slow extract for that ETL
+kind. Distinct from: Fast crawl.
 
 ---
 
@@ -1403,6 +1472,14 @@ describe the questions).
 
 ---
 
+#### Client interview submission kind
+
+Whether a client interview submission is autosave or final. Never bare **kind**.
+
+In code: `onboarding.client_interview_submissions.submission_kind`.
+
+---
+
 ### Website
 
 #### Website placeholder
@@ -1426,10 +1503,19 @@ component).
 #### Website slot
 
 A named editable value inside a website section (text, image, list, and the
-like). Never in product docs or UI — owners see the kind (heading, text, or
-image) on a website section.
+like). Never in product docs or UI — owners see heading, text, or image on a
+website section.
 
 Domain: Website section.
+
+---
+
+#### Menu node kind
+
+Whether a top menu or footer node is a page, a text heading, or a URL. Never
+bare **kind**.
+
+In code: JSON `menu_node_kind` on `website.menus` trees.
 
 ---
 
@@ -1603,6 +1689,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | Enterprise (billing) | Enterprise plan |
 | meter | AI vendor cost or AI voice vendor cost (or our cost / their cost) |
 | AI orb (ads) / Ads orb (ads) | inline AI assistance |
+| kind / kinds | ETL kind, photo kind, thread kind, source kind, imported media kind, thread item kind, menu node kind, client interview submission kind, or tool revision kind |
 
 ## Code naming rules
 

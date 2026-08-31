@@ -10,10 +10,9 @@ route redirects to `/cms/website`.
 
 HTTP: `/v1/onboarding/website-editor/assistant/…` in
 `internal/onboarding/websiteeditor`. Package is a **policy wrapper**: same
-[website editor tools](../website/assistant.md), same text/Voice transport, same
-website-editor PATCH, same `ai.threads` overlay SQL (`kind=cms_assistant`),
-same 20-turn loop. It owns auth, knowledge YAML, allowlist, instant apply,
-5-prompt cap, skip 402.
+[website editor tools](../website/assistant.md), same text/Voice transport, same website-editor PATCH,
+same `ai.threads` overlay SQL (`thread_kind=cms_assistant`), same 20-turn loop.
+It owns auth, knowledge YAML, allowlist, instant apply, 5-prompt cap, skip 402.
 
 CMS [`/v1/assistant/…`](../assistant/api.md) stays **403** `tenant_unactivated`
 for unactivated. Do not add unactivated branches there. Do not put this in
@@ -26,7 +25,7 @@ CMS Assistant: [assistant](../assistant/README.md).
 
 ## Persistence
 
-Same overlay as CMS: `ai.threads` (`kind=cms_assistant`) /
+Same overlay as CMS: `ai.threads` (`thread_kind=cms_assistant`) /
 `assistant.thread_items` / `assistant.runs`. Unique `current` / `running` per
 `tenant_id`. The unpaid website preview uses that `current` while
 `tenants.status=unactivated`. **No new persistence models.** OpenAPI grows
@@ -41,10 +40,10 @@ Voice recordings: CMS `assistant_voice` (`owner_id` = `assistant.runs` id), not
 `onboarding_assistant_voice`.
 
 **No compaction** on this unpaid `current` — not the 12h job, not 128K overflow,
-not compact-before-seed at Voice create. Any of those would drop `kind=owner`
-items and refill the five. Unpaid thread is 06 + at most five owner prompts. If
-text assembly would exceed 128K or Voice instructions would not fit, that turn
-/ Voice create fails. No 24h discard.
+not compact-before-seed at Voice create. Any of those would drop
+`thread_item_kind=owner` items and refill the five. Unpaid thread is 06 + at
+most five owner prompts. If text assembly would exceed 128K or Voice
+instructions would not fit, that turn / Voice create fails. No 24h discard.
 
 ## HTTP
 

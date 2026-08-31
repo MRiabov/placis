@@ -45,9 +45,9 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
 
 6. **Automatic website copy generation** (faked LLM tools, overlapping DAG
    06–09) — website slots/SEO update; tokens preserved.
-   - DB: `ai_generations` for the tool batches (`kind=website_copy_generation`);
-     no `create_page`. 08 share is optional; 06 does not add a website
-     publication.
+   - DB: `ai_generations` for the tool batches
+     (`thread_kind=website_copy_generation`); no `create_page`. 08 share is
+     optional; 06 does not add a website publication.
    - Failure: unpublished website from 05 still opens the website preview and
      can be activated.
 
@@ -56,9 +56,9 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
    webhook). First payer wins. Prior 08 share is not required.
    - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as
      business lookup, now `tenants.status=active`, `tenant_memberships.owner`;
-     onboarding session `activated`; unpaid `ai.threads` `kind=cms_assistant`
-     `current` completed; live R2 without strip (first write if they never
-     shared).
+     onboarding session `activated`; unpaid `ai.threads`
+     `thread_kind=cms_assistant` `current` completed; live R2 without strip
+     (first write if they never shared).
    - UI: lands in `/cms/website`. `/onboarding/preview-and-edit/` redirects
      there.
 

@@ -8,26 +8,26 @@ Facebook / Instagram rows and photo classification live on the
 
 ## Runs
 
-- `runs` — `id`, `tenant_id` fk, `enqueue_id` (uuid, shared by every kind in one
-  `StartRun` call), `trigger` (`onboarding` / `scheduled`), `kind`
+- `runs` — `id`, `tenant_id` fk, `enqueue_id` (uuid, shared by every ETL kind in
+  one `StartRun` call), `trigger` (`onboarding` / `scheduled`), `etl_kind`
   (`google_maps_listing` / `facebook` / `instagram` / `website_crawl` /
   `trade_registry` / `directory` / `review` / `photo` / `web_search`), `status`
   (`pending` / `extracting` / `transforming` / `succeeded` / `error` /
   `skipped`), `onboarding_session_id` nullable fk, `place_id` nullable, `error`
-  nullable, `started_at`, `finished_at`. One row per source kind extract. River
-  retry keeps this `id`. `skipped` when scheduled and that kind has no key.
+  nullable, `started_at`, `finished_at`. One row per ETL kind extract. River
+  retry keeps this `id`. `skipped` when scheduled and that ETL kind has no key.
 
 ## Sources (live extract identity)
 
 Anything extractable that later writes may **cite**. Identity only. Not mixed
 fetches, not `raw`, not a Project table.
 
-- `sources` — `id` (`source_id`), `tenant_id` fk, `kind`
+- `sources` — `id` (`source_id`), `tenant_id` fk, `source_kind`
   (`google_maps_listing` / `google_maps_listing_review` /
   `facebook_profile` / `facebook_post` / `instagram_profile` /
   `instagram_post` / `website_crawl_extract` / `website_crawl_html` /
   `company_registry_record` / `trade_registry_record`), `natural_key` (text;
-  unique per `(tenant_id, kind)`), timestamps
+  unique per `(tenant_id, source_kind)`), timestamps
 
 **No** `algorithm`, **no** yes/no, **no** `project_id`. Insert a row before any
 cite of that blob. Company registry / trade registry: insert when those
@@ -46,13 +46,13 @@ blobs produced the data. It is not `ai_generations` (the LLM call) and not
 string map.
 
 Live rows that **are** the blob have a required `source_id` fk (not nullable):
-listing, listing review, Facebook / Instagram profile and post. Fetches do
-not. Images are not `etl.sources` rows. Crawl **HTML URL** stays one URL +
-photos; Extract markdown and goquery visible text are **two** sources (same
-canonical URL, two `kind`s, two `source_id`s). Apify stands in for the HTML
-blob when GET fails — not a third source. `business_profile_reviews` is a copy
-of the listing review: cite the listing-review `source_id` on the edit that
-inserted the profile review, not a second source.
+listing, listing review, Facebook / Instagram profile and post. Fetches do not.
+Images are not `etl.sources` rows. Crawl **HTML URL** stays one URL + photos;
+Extract markdown and goquery visible text are **two** sources (same canonical
+URL, two `source_kind`s, two `source_id`s). Apify stands in for the HTML blob
+when GET fails — not a third source. `business_profile_reviews` is a copy of the
+listing review: cite the listing-review `source_id` on the edit that inserted
+the profile review, not a second source.
 
 ## Fetches (append-only, one table per extract type)
 
@@ -90,14 +90,14 @@ HTML URLs only (homepage + remainder under the 20 HTML cap). Not robots, not
 sitemaps. Analog of `google_maps_listings` / `facebook_posts`. Depicting
 photos live here. Project skip does **not**.
 
-- `website_crawl_pages` — `id`, `tenant_id` fk, canonical URL unique per
-  tenant, `status` (`discovered` / `fetched`), latest fetch ids for extract /
-  html / apify, `fetched_at`
+- `website_crawl_pages` — `id`, `tenant_id` fk, canonical URL unique per tenant,
+  `status` (`discovered` / `fetched`), latest fetch ids for extract / html /
+  apify, `fetched_at`
 
   Discovered rows have no `source_id` column (a nullable fk is forbidden). When
-  Extract markdown lands, insert `sources` `kind=website_crawl_extract`. When
-  HTML (GET or Apify) lands, insert `kind=website_crawl_html`. Natural key for
-  both is the canonical URL.
+  Extract markdown lands, insert `sources` `source_kind=website_crawl_extract`.
+  When HTML (GET or Apify) lands, insert `source_kind=website_crawl_html`.
+  Natural key for both is the canonical URL.
 
 - `website_crawl_page_photos` — `id`, `page_id` fk, `source_url`,
   `media_asset_id` nullable fk, `content_hash` nullable
@@ -108,12 +108,12 @@ children.
 
 ## `imported_media`
 
-- `imported_media` — `id`, `tenant_id` fk, `kind` (`google_maps_listing` /
-  `facebook` / `instagram` / `website_crawl` / `google_maps_listing_review`),
-  `external_id`, `media_asset_id` fk. Unique `(tenant_id, kind, external_id)`
-  so a later extract does not insert a second media library item, including
-  when that item is `archived`. Named from
-  [media library persistence](../other/media/persistence.md).
+- `imported_media` — `id`, `tenant_id` fk, `imported_media_kind`
+  (`google_maps_listing` / `facebook` / `instagram` / `website_crawl` /
+  `google_maps_listing_review`), `external_id`, `media_asset_id` fk. Unique
+  `(tenant_id, imported_media_kind, external_id)` so a later extract does not
+  insert a second media library item, including when that item is `archived`.
+  Named from [media library persistence](../other/media/persistence.md).
 - `imported_media_sources` — `imported_media_id` fk, `source_id` fk →
   `etl.sources`, `tenant_id` fk. Unique `(imported_media_id, source_id)`.
   Every `imported_media` row has **at least one** cite (parent blob: listing,
@@ -123,7 +123,7 @@ children.
 ## Google Maps listing (live row, no `raw`)
 
 - `google_maps_listings` — `id`, `source_id` fk required → `etl.sources`
-  (`kind=google_maps_listing`), `place_id` unique, `fetched_from`
+  (`source_kind=google_maps_listing`), `place_id` unique, `fetched_from`
   (`google_maps_details` / `scrape`), `latest_fetch_id` fk, `display_name`,
   `primary_type`, `marketing_phone`, `website_url`, `google_maps_listing_url`,
   `listing_address`, `locality`, `country` (`ie` / `gb` / `us` nullable; Places
@@ -131,10 +131,10 @@ children.
   `fetched_at`
 - `google_maps_listing_opening_hours` — `id`, `listing_id` fk, `day_of_week`,
   `opens_at`, `closes_at`, `closed`
-- `google_maps_listing_reviews` — `id`, `listing_id` fk, `source_id` fk
-  required → `etl.sources` (`kind=google_maps_listing_review`), `external_id`
-  (Google’s review id, unique per listing when present), `author_name`,
-  `rating` (1–5), `body`, `published_at` nullable, `language` nullable
+- `google_maps_listing_reviews` — `id`, `listing_id` fk, `source_id` fk required
+  → `etl.sources` (`source_kind=google_maps_listing_review`), `external_id`
+  (Google’s review id, unique per listing when present), `author_name`, `rating`
+  (1–5), `body`, `published_at` nullable, `language` nullable
 - `google_maps_listing_review_photos` — `id`, `review_id` fk, `source_url`,
   `media_asset_id` nullable fk, `content_hash` nullable. Scrape photos **on
   that review** (not listing-level). Reviewer avatar is not a row here.
@@ -160,16 +160,16 @@ writes; the listing stays here.
   description, or cover here. Skip when `algorithm` + `schema_revision` match
   and `force` is false. Analog of `photo_kind_*` on the classified thing:
   skip keys on this row; model / prompt / reasoning on `ai_generations`
-  (`kind=etl_project_classify` thread).
+  (`thread_kind=etl_project_classify` thread).
   Must not hang this skip on Facebook / Instagram posts, profile reviews,
   crawl HTML URLs, or `etl.sources`.
 
 ## Indexes
 
-`runs` (`tenant_id`, `trigger`, `started_at`); unique (`enqueue_id`, `kind`).
-Fetches: (`place_id`, `fetched_at` desc) on Maps fetches; (`handle`,
-`fetched_at` desc) on Instagram fetches; (`canonical URL`, `fetched_from`)
-unique per `run_id` on crawl fetches. Unique `google_maps_listings.place_id`.
-Unique `website_crawl_pages` canonical URL per tenant. Unique
-`(tenant_id, kind, natural_key)` on `sources`. Unique
+`runs` (`tenant_id`, `trigger`, `started_at`); unique (`enqueue_id`,
+`etl_kind`). Fetches: (`place_id`, `fetched_at` desc) on Maps fetches;
+(`handle`, `fetched_at` desc) on Instagram fetches; (`canonical URL`,
+`fetched_from`) unique per `run_id` on crawl fetches. Unique
+`google_maps_listings.place_id`. Unique `website_crawl_pages` canonical URL per
+tenant. Unique `(tenant_id, source_kind, natural_key)` on `sources`. Unique
 `llm_source_to_project_classifications.source_id`.

@@ -254,7 +254,7 @@ export function CmsAssistantLayer(): ReactNode {
 
 export type AssistantThreadItem = {
   id: string;
-  kind: "owner" | "assistant" | "tool_summary" | "thinking";
+  threadItemKind: "owner" | "assistant" | "tool_summary" | "thinking";
   body: string;
   icon: "write" | "think" | null;
 };
@@ -461,7 +461,9 @@ function AssistantThread({
             </svg>
           ) : null}
           <span
-            className={item.kind === "owner" ? "text-foreground" : undefined}
+            className={
+              item.threadItemKind === "owner" ? "text-foreground" : undefined
+            }
           >
             {item.body}
           </span>

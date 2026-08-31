@@ -348,8 +348,8 @@ never approved status:
 6. after that first unprompted draft, directed Review rewrites (`rewrite` with
    required owner prompt, one copy field) and promptable cleanup
    (`POST /v1/media-assets/{id}/image-edits`) record the owner prompt in
-   `ai_generations` (`kind=ads_inline_assistance` for Review rewrite;
-   `kind=media_cleanup` for cleanup). Empty prompt is rejected.
+   `ai_generations` (`thread_kind=ads_inline_assistance` for Review rewrite;
+   `thread_kind=media_cleanup` for cleanup). Empty prompt is rejected.
 
 Generation results are **cached** per input, ad format, and `prompt_id` /
 `prompt_version` on `ai_generations` (tool and skill format revisions on

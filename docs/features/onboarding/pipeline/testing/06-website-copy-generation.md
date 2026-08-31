@@ -8,7 +8,8 @@
 - **Assert**: onboarding session is `previewing` at wait-end (07), not at share;
   targeted website slots/SEO updated and still valid; reusable `{{…}}` detail
   tokens preserved in prose; `ai_generations` records reasoning + visible output
-  - tool calls (`kind=website_copy_generation` thread); no `create_page`; this
+  - tool calls (`thread_kind=website_copy_generation` thread); no `create_page`;
+    this
   job does not write `website_publications`; while unactivated, lock is
   `tenant_id` **and** unique `assistant.runs` `running`; after 09, lock is
   `tenant_id` only (not CMS `assistant.runs`); second 06 start is 409; job
