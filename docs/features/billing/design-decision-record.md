@@ -1,9 +1,8 @@
 # Billing design decision record
 
 Look and interaction for Usage & billing and Pricing. Architecture belongs in
-[ADR.md](ADR.md). The mock is [`apps/demo/`](../../../apps/demo/README.md) `/cms/billing`. HTML archive: [cms.html](../../design/cms.html)
-`?scene=billing`. Public Pricing look is the placis-web pricing grid (not
-predecessor dashboard Usage & billing copy).
+[ADR.md](ADR.md). The mock is [`apps/demo/`](../../../apps/demo/README.md) `/cms/billing`. Public Pricing look is the
+placis-web pricing grid (not predecessor dashboard Usage & billing copy).
 
 Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
 

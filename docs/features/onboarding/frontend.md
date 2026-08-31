@@ -1,9 +1,8 @@
 # Onboarding Frontend
 
-The contractor-facing onboarding in `frontend-2`. Screens and
-fields match the implemented app (copied from the predecessor). Port:
-[frontend-debloat.md](frontend-debloat.md). Look export:
-[onboarding.html](../../design/onboarding.html) ([design.md](design.md),
+The contractor-facing onboarding in `frontend-2`. Screens and fields match the
+implemented app (copied from the predecessor). Port: [frontend-debloat.md](frontend-debloat.md).
+Look: [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*` ([design.md](design.md),
 [design decision record](design-decision-record.md)).
 
 Related: [PRD](prd.md), [ADR](ADR.md), [pipeline](pipeline/README.md).

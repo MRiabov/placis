@@ -64,11 +64,11 @@ item is too much sidebar for how often it is used; Details is also opened
 infrequently. One Profile group keeps them reachable without adding another peer
 of Sites.
 
-**Hide in product; keep mock HTML:** Settings, Log out, New chat nav row,
+**Hide in product; keep in the look app:** Settings, Log out, New chat nav row,
 Connect (the New chat Google / Meta control), Paperclip, Start client interview
 DustOrb leftover, leftover Usage & billing mock, leftover Usage rail item. Do
-not delete those nodes from the look-export HTML. Do **not** hide the
-website-editor DustOrb.
+not delete those nodes from [`apps/demo/`](../../../apps/demo/README.md). Do **not** hide the website-editor
+DustOrb.
 
 ## Profile disclosure
 
@@ -132,11 +132,10 @@ hidden prompt-box Connect control is not Connect website address and not Details
 Facebook / Google Maps listing. No first-slice connection HTTP in this pass.
 Owner copy must not say “run campaigns” while Ads only export.
 
-The old prompt-box markup stays in the look-export HTML as restorable nodes
-(look: [design decision record](design-decision-record.md) 5). Product paints the two cards instead.
+The old prompt-box markup stays in the look app as restorable nodes (look:
+[design decision record](design-decision-record.md) 5). Product paints the two cards instead.
 
-Ads look for `/cms/ads` is [`apps/demo/`](../../../apps/demo/README.md). HTML archive:
-[ads.html](../../design/ads.html).
+Ads look for `/cms/ads` is [`apps/demo/`](../../../apps/demo/README.md).
 
 ## Account
 
@@ -154,4 +153,4 @@ row).
   **AI tools** left-nav item.
 - Destination field specs (Details, Projects, Certifications and reviews,
   website editor, Ads).
-- Deleting restorable nodes from the look-export HTML.
+- Deleting restorable nodes from the look app.
