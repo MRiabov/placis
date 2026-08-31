@@ -1,8 +1,8 @@
 # Web search
 
 `etl_run_kind=web_search`. First-run only (onboarding 02). One ETL run kind in
-[ETL run kind triggers](etl-kind-triggers.md): Parallel discovery of **empty**
-details. Not a profile dump. Shared extract / transform rules:
+[ETL run kind triggers](etl-run-kind-triggers.md): Parallel discovery of **empty** details. Not a profile
+dump. Shared extract / transform rules:
 [pipeline README](README.md).
 
 ## Trigger
@@ -25,12 +25,12 @@ Wednesday / Friday does not enable this ETL run kind.
   web search.
 - Run on the Monday / Wednesday / Friday schedule.
 - Treat a miss as “this business has no profile” — a miss is “ask”.
-- Wait until Parallel finishes before other ETL run kinds that already have their
-  details start.
+- Wait until Parallel finishes before other ETL run kinds that already have
+  their details start.
 - Overwrite a Find-attached `place_id` or `website_url`. Empty details fill.
 - Write Parallel prose onto the business profile.
-- Start this ETL run kind to rediscover identity the contractor already typed when
-  no empty details remain (pause / no-op).
+- Start this ETL run kind to rediscover identity the contractor already typed
+  when no empty details remain (pause / no-op).
 
 ## Do — extract
 
