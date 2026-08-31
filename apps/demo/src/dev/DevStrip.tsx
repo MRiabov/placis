@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 
 import { cn } from "@/lib/cn";
+import { ThemeControls } from "@/ui/ThemeToggle";
 
 type DevTab = {
   id: string;
@@ -70,6 +71,7 @@ export function DevStrip({
       role="note"
     >
       <span className="text-xs font-medium text-amber-700">Dev only</span>
+      <ThemeControls />
       {groups.map((group) => (
         <span className="flex flex-wrap items-center gap-1.5" key={group.title}>
           <span className="text-[11px] tracking-wide text-muted-foreground uppercase">
