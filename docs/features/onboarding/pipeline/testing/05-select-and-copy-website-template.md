@@ -7,19 +7,20 @@ SELECTs both.
   (`status=unactivated`). `onboarding_sessions`
   (`status=client_interviewing` until complete). Named services on the
   profile. Zero `website_settings` / `website_pages` /
-  `website_publications`.
-- **Invoke**: `POST .../interview/complete` (enqueues 05). Fake the
-  picker LLM to a fixed website template catalog id + `preset_id`. 02
-  write is real.
+  `website_publications`. Production-ready website templates exist in the
+  website template catalog.
+- **Invoke**: `POST .../interview/complete` (enqueues 05). 01 is real
+  occupancy + hash (no LLM). 02 write is real.
   Also complete when the gate fails (required `conflict` /
   `in_progress`).
 - **Assert** (Postgres, after 05 job succeeds, **before** 03 runs):
   - `business_profiles.accepted_edit_id` = `last_edit_id` at complete.
   - `onboarding_sessions.status=selecting_and_copying_website_template`
     (wait-end has not run yet).
-  - Website 01 rows: `website_settings.website_template_id` and
-    `preset_id`; `ai.threads` `website_template_picker`;
-    `ai_generations` `input` / `internal_reasoning` / `output`.
+  - Website 01 rows: `website_settings.website_template_id` in the
+    production-ready set and `preset_id` = that website template’s
+    associated website style catalog preset. **Must not**: `ai.threads` /
+    `ai_generations` for this step (no `website_template_picker`).
   - Website 02 rows: unpublished `website_pages` (home, about, contact,
     legal, service website pages = named services, N ≥ 1);
     `website_sections` including two `page_id` null look sections;
@@ -34,6 +35,7 @@ SELECTs both.
     no 05 rows; `accepted_edit_id` unchanged.
 - **Fail**: 01 or 02 throws →
   `onboarding_sessions.status=select_and_copy_website_template_failed`; no
-  unpublished website kept from this apply; no `website_copy_generation`; no
+  unpublished website kept from this copy; no `website_copy_generation`; no
   `website_publications`; `tenants.website_prefix` still null.
-- **Mocked**: the website template / website styles LLM.
+- **Mocked**: nothing for 01/02 (no picker LLM). Maps / billing occupancy
+  fixtures as website 01 testing when this tenant has coords.

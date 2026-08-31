@@ -128,7 +128,9 @@ children.
   (`google_maps_details` / `scrape`), `latest_fetch_id` fk, `display_name`,
   `primary_type`, `marketing_phone`, `website_url`, `google_maps_listing_url`,
   `listing_address`, `locality`, `country` (`ie` / `gb` / `us` nullable; Places
-  address country, not parsed from `listing_address`), `rating`, `review_count`,
+  address country, not parsed from `listing_address`), `latitude` double
+  precision nullable, `longitude` double precision nullable (Places Details
+  `location`; skip when Details never ran), `rating`, `review_count`,
   `fetched_at`
 - `google_maps_listing_opening_hours` — `id`, `listing_id` fk, `day_of_week`,
   `opens_at`, `closes_at`, `closed`

@@ -43,7 +43,7 @@ or a canvas selection opens the list. The owner can open Website pages, SEO,
 Website styles, or Website versions from the rail, and Content from a website
 section or image on the canvas. There is no right-hand editing panel.
 
-- **Website pages** — home, service, contact, and legal website pages,
+- **Website pages** — home, about, service, contact, and legal website pages,
   reorderable.
 - **SEO** — a standalone workspace rail panel that always shows the current
   website page.

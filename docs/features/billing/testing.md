@@ -30,7 +30,7 @@ faked. Voice settlement is not wall-clock. DB asserts name the tables from
    - DB: `extra_usage_credit` row after paid checkout.
 
 6. **Stopped paying** — `subscriptions.status=canceled` (and
-   `tenants.subscription_status=canceled`).
+   `tenants.subscription_status=canceled`). `canceled_at` is set.
    - Live website is unpublished.
    - HTTP: `POST /v1/website/publications` and live website rollback **402**
      `subscription_canceled` (not `usage_credit_exhausted`).
@@ -47,4 +47,5 @@ faked. Voice settlement is not wall-clock. DB asserts name the tables from
    - DB: `cancel_at_period_end=true`, `status=active`.
    - UI: **Cancels on** the period end; **Keep subscription** clears the flag.
    - Publish still works.
-   - After `current_period_end`: same as beat 6.
+   - After `current_period_end`: `status=canceled`, `canceled_at` set; same as
+     beat 6.

@@ -4,6 +4,7 @@
   "name": "Split trust reference home",
   "description": "Source-backed home-page decomposition with proof-heavy structure, hero trust markers, gallery, review proof, services, and contact CTA.",
   "status": "ready",
+  "production_selectable": false,
   "modelled_after": [
     "Bellfield Developments",
     "Bellfield"

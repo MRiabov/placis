@@ -52,9 +52,9 @@ Status: decided (2026-08-16, product owner + engineering).
    `update_slot` Go `POST`s `websiteRender` (website image render on the
    inference, not HTML). Go does not emit HTML. 04 is `websitePublication`
    (website HTML render, no website image render). Select website template is
-   `website_template_picker` at 01, not at copy-pages. (2026-09-01):
-   `WebsiteBusinessProfileRead` is the Common variables bag on canvas hydrate
-   and both Worker requests.
+   occupancy + hash at 01 (no LLM, no `website_template_picker`), not at
+   copy-pages. (2026-09-01): `WebsiteBusinessProfileRead` is the Common
+   variables bag on canvas hydrate and both Worker requests.
 
 7. **Website publication is kept and can be rolled back** — website publication
    creates a `website_publications` row (a published website copy); website
@@ -72,9 +72,14 @@ Status: decided (2026-08-16, product owner + engineering).
    switching the content and remixing the colors for a new business. They are
    not hand-authored from scratch.
 
-10. **First-pass page types are `home` / `service` / `contact` / `legal`** — no
-    `standard`, no `landing` (ads do not send people to the website for now).
-    Blog and careers stay deferred. (2026-08-20)
+10. **First-pass page types are `home` / `about` / `service` / `contact` /
+    `legal`** — no `standard`, no `landing` (ads do not send people to the
+    website for now). Blog and careers stay deferred.
+    `{{about.intro_paragraphs}}` is a placeholder namespace, not a page type.
+    About is on the top menu and the footer (menu constant). `legal` is the
+    page type for legal-document website pages such as privacy policy; Legal
+    is a footer heading, not a top-menu node. (2026-08-20; about added
+    2026-08-31)
 
 11. **Website page status is `unpublished` / `archived`** — publication is
     website-level (`website_publications`). There is no page-level `approved` or
@@ -233,3 +238,16 @@ Status: decided (2026-08-16, product owner + engineering).
     address `{website_prefix}.preview.placis.com` is Cache then R2 only: no
     website editor, no Assistant, no PATCH. Apex `preview.placis.com` is 404.
     07 HTML write is on-demand share, not wait-teaser landing. (2026-08-30)
+
+25. **Website template select is occupancy + hash; styles ship with the
+    website template** — 01 lists production-ready website templates only
+    (`production_ready=true`). Among occupying tenants (paid, not in
+    nonpayment ≥ 6 months) within 250 km (haversine on Maps listing lat/lng),
+    pick the lowest-count production-ready id; tie-break `hash(tenant_id)`.
+    No coords → hash over the production-ready set. Do not block 01 on ETL.
+    Same-tenant retry reuses `website_settings`. `preset_id` is that website
+    template’s associated website style catalog preset — not a second pick.
+    New looks graduate another validated website template; do not hash the 7
+    presets. 02 copies the catalog object
+    ([catalog.md](catalog.md)). Predecessor LLM picker collapsed; this
+    algorithm does not. (2026-08-31)

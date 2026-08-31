@@ -50,14 +50,16 @@ catalog data, kept as catalog revisions — not database rows.
 
 ## Select and copy the website template
 
-A **website template** lists the website pages and website sections a typical
-site of that trade needs. From-scratch writes:
-[pipeline/](pipeline/README.md).
+A **website template** is one catalog id. 01 writes it; 02 copies it.
+From-scratch writes: [pipeline/](pipeline/README.md).
+Object and mapping: [catalog.md](catalog.md).
 
 1. take the details from the business profile (services, service areas,
    certifications, projects, contact);
-2. **select website template** — persist `website_template_id` +
-   `preset_id`. Picker is out until the stacked rewrite
+2. **select website template** — occupancy within 250 km among
+   production-ready website templates, then hash tie-break. Website styles
+   = that website template’s associated website style catalog preset. No
+   LLM. Do not write unpublished pages
    ([01](pipeline/01-select-website-template.md));
 3. **copy the website template’s pages onto the unpublished website** —
    unpublished `website_pages` / `website_sections` / `website_slots` —

@@ -108,7 +108,9 @@ status is not `active`). The next included grant uses the new subscription
 tier; do not insert a second included grant mid-period. Cancel sets
 `cancel_at_period_end`. Until `current_period_end` they stay `active` (Publish
 still works). **Keep subscription** clears that flag. When the period ends
-without pay, `status=canceled`, unpublish, **402** `subscription_canceled`.
+without pay, `status=canceled`, set `canceled_at`, unpublish, **402**
+`subscription_canceled`. Website 01 occupancy: a canceled tenant still occupies
+until 6 months after `canceled_at`.
 
 ## Pricing
 
