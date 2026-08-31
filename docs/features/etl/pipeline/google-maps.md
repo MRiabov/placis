@@ -8,10 +8,10 @@ separate ETL run kind. Shared extract / transform rules:
 ## Trigger
 
 Starts when (any of) ([ETL run kind triggers](etl-kind-triggers.md)): `place_id`;
-**or** `display_name` + locality. Skip (`status=skipped`) when scheduled and
-neither tuple is met. Onboarding: start when a tuple is met (Find attach,
-Parallel, or Places Find). Insert `etl.runs` then.
-
+**or** `display_name` + locality; **or** `legal_name` + locality. Skip
+(`status=skipped`) when scheduled and none of those tuples are met. Onboarding:
+start when a tuple is met (Find attach, Parallel, or Places Find). Insert
+`etl.runs` then.
 ## Pre
 
 - `etl.runs` row `status=pending` (or retry of `extracting` / `transforming`).
@@ -37,13 +37,12 @@ Parallel, or Places Find). Insert `etl.runs` then.
 ## Do — extract (ETL fast extract)
 
 Set `status=extracting`. If there is no `place_id` yet, call Places Find / text
-search with `display_name` + locality (trade location, registered-office
-locality, or tenant country city). One high-confidence hit → persist that
-`place_id` as a detail (onboarding session attach, empty columns only) and
-continue. Several hits or a weak hit → do not pick; `skipped` unless Parallel
-or Find later supplies `place_id` (evaluator starts this ETL run kind then). Do not
-call Parallel from this ETL run kind.
-
+search with `display_name` if set, else `legal_name`, plus locality (trade
+location, registered-office locality, or tenant country city). One
+high-confidence hit → persist that `place_id` as a detail (onboarding session
+attach, empty columns only) and continue. Several hits or a weak hit → do not
+pick; `skipped` unless Parallel or Find later supplies `place_id` (evaluator
+starts this ETL run kind then). Do not call Parallel from this ETL run kind.
 Call Google Maps Details. Persist
 `etl.google_maps_fetches` (`fetched_from=google_maps_details`, UUID, `place_id`,
 `raw`, `run_id`, `fetched_at`). Upsert the listing (hours, first reviews / photo

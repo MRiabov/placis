@@ -80,8 +80,8 @@ lookup can stay **200** and a later source change can stay **429**.
 If the count is **0–4**, call `StartRun` with the onboarding ETL run kinds. Pass
 `onboarding_session_id` and `force=false`. Copy Find attach and live-profile
 details into the enqueue. The evaluator starts each ETL run kind that already has
-what it needs (Maps from `place_id` **or** `display_name` + locality; trade
-registry from `company_number` + country **or** `display_name` + country;
+what it needs (Maps from `place_id` **or** `display_name` + locality **or**
+`legal_name` + locality; traderegistry from `company_number` + country **or** `display_name` + country;
 Parallel when some discoverable detail is still empty; crawl / Facebook /
 Instagram when their URL/handle exists). Further ETL run kinds start when details
 change — including 04a URL / handle writes. That is not a new `StartRun`.
