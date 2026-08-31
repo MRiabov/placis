@@ -1486,6 +1486,32 @@ Do not say “session” in product docs.
 
 ---
 
+#### Wait teaser
+
+The `/onboarding/preview` screen after copying the website template’s pages.
+It waits until the **home** website page has automatic website copy generation,
+or until the wait cap. Distinct from: Website preview (the editor after
+wait-end).
+
+---
+
+#### Wait cap
+
+The ~15s bound on the wait teaser if the home website page is not done yet.
+
+---
+
+#### Wait-end
+
+When the wait teaser stops: onboarding session `preview_and_edit` and
+`/onboarding/preview-and-edit/`. Copy-done is the home website page finished;
+other website pages may still be generating.
+
+Distinct from: Wait teaser (the waiting screen), Website preview (where they
+land).
+
+---
+
 #### Resume
 
 Continuing an in-progress onboarding session on the same browser. Never say
@@ -1727,6 +1753,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | AI orb (ads) / Ads orb (ads) | inline AI assistance |
 | kind / kinds | ETL run kind, photo kind, thread kind, ETL source kind, imported media kind, thread item kind, menu node kind, client interview submission kind, or tool revision kind |
 | fast extract / slow extract / fast crawl / slow crawl | ETL fast extract, ETL slow extract, ETL fast crawl, or ETL slow crawl |
+| wait-end clock | wait-end, wait teaser, or wait cap |
 
 ## Code naming rules
 

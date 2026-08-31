@@ -5,7 +5,8 @@ Async River job after 02. Writes headlines, body, CTAs, SEO into
 **continuous + instant apply**. Distinct from onboarding
 [07 contractor copy improvement](../../onboarding/pipeline/07-contractor-copy-improvement.md)
 (the contractor’s Assistant prompts). Does not block 09. Wait teaser waits
-copy-done or the wait cap, not the full 03 job if the cap hits first.
+until the **home** website page has copy, or the wait cap — not the full 03
+job. Other website pages finish in parallel (including after wait-end).
 
 Onboarding [06](../../onboarding/pipeline/06-website-copy-generation.md) is
 the thin trigger (onboarding session / DAG / unpaid thread lock).
@@ -59,9 +60,11 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 1. **Turn 1 page render.** Go loads the unpublished tree (tokens) + live
    profile (not `website_manifest`) and asks the Worker **internal page
    render** (same Astro engine as 04). Put that HTML on the first inference.
-   Batch the first render (for example 8 pages) on **one Worker**, not
-   parallel Workers. “8 pages” is an example, not a rule when the site has
-   4 or 12 website pages. Worker binding, body, and batch encoding are
+   Complete the **home** website page first (wait teaser keys off that).
+   Other website pages generate in parallel. Batch the first render (for
+   example 8 pages) on **one Worker**, not parallel Workers. “8 pages” is an
+   example, not a rule when the site has 4 or 12 website pages. Worker
+   binding, body, and batch encoding are
    [open questions](../catalog.md#open-questions).
 2. Per website page, bounded parallel: `update_slot` (prose), `update_seo`,
    then image: **attach first** (`update_slot` + `media_asset_id`) when
@@ -105,9 +108,10 @@ Updates to existing `website_slots` and website page SEO columns;
 thread); `ai.threads` (`thread_kind=cms_assistant`) /
 `assistant.thread_items` / `assistant.runs` while unactivated. No
 `website_publications` from this job. Onboarding session status is
-`selecting_and_copying_website_template` until wait-end (copy done or cap), then
-`preview_and_edit`. Progress events on the onboarding session stream (complete
-website sections join the `/onboarding/preview` carousel). The website
+`selecting_and_copying_website_template` until wait-end (home website page
+copy done or wait cap), then `preview_and_edit`. Progress events on the
+onboarding session stream (complete website sections join the
+`/onboarding/preview` carousel). The website
 preview reloads unpublished GET from those events, and hydrates 03
 `tool_summary` with `GET …/website-editor/assistant/thread` (onboarding
 session token or Clerk). After they share (08), further 03 writes do

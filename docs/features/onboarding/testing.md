@@ -37,7 +37,8 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
 
 5. **Select and copy the website template + website preview** —
    `/onboarding/preview` SSE carousel, then `/onboarding/preview-and-edit/`
-   (copy done or ~15s cap).
+   (home website page copy done or wait cap; other website pages may still
+   be generating).
    - DB: `website_settings` (`website_template_id`, `preset_id`);
      unpublished `website_pages` / `website_sections` (including look
      sections) / tokenized `website_slots`; derived `website.menus`;

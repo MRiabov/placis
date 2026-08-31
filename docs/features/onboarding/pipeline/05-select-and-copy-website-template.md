@@ -39,10 +39,10 @@ Do not say apply the website template in prose.
    live business profile as of that edit. Later 02 business-research
    writes must not mutate this live business profile in place.
 2. Run website **01** then **02**.
-3. Enqueue 06. `/onboarding/preview` starts the wait (copy done or ~15s
-   cap). Wait-end who flips status is an
-   [open question](../../website/catalog.md#open-questions). 08 writes
-   the host if they share — not immediately.
+3. Enqueue 06. `/onboarding/preview` (wait teaser) waits until the **home**
+   website page has 03 copy, or the wait cap (~15s). Other website pages
+   finish in parallel. Then wait-end. 08 writes the host if they share —
+   not immediately.
 
 ## Persist
 

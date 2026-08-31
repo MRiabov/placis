@@ -14,7 +14,8 @@ is a later caller.
   small `update_slot` / `update_seo` batch (no `create_page`, no
   `update_reviews`). Fake the Worker internal website page render to
   return HTML. Also: start a second 03; also: run 09 (activate) while
-  the job is in flight; also: wait-end (copy done or cap) without
+  the job is in flight; also: wait-end (home website page copy done or
+  wait cap) without
   08/09.
 - **Assert** (Postgres):
   - **Intermediary — Worker (spy, not a substitute):** turn 1 asked
@@ -40,8 +41,8 @@ is a later caller.
     `status=current`; `assistant.runs` one `running` on that thread
     (`unique` running); `assistant.thread_items` `tool_summary` for
     applied tools.
-  - `onboarding_sessions.status=preview_and_edit` at wait-end (copy done or
-    cap), not at 08 share.
+  - `onboarding_sessions.status=preview_and_edit` at wait-end (home
+    website page copy done or wait cap), not at 08 share.
   - **Must not:** zero `website_publications`. Zero R2 / WebP / purge
     from this job (spy). `tenants.website_prefix` still null if 08
     never ran. Second 03 start is 409 on the River unique key; still

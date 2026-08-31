@@ -8,8 +8,10 @@ The contractor never waits on business research. Business lookup returns
 immediately; business research fills the checklist in the background;
 selecting and copying the website template starts only after the client
 interview completes.
-`/onboarding/preview` waits for automatic website copy generation **or** a ~15s
-cap, then navigates to `/onboarding/preview-and-edit/`. 08 share is optional.
+`/onboarding/preview` waits until the **home** website page has automatic
+website copy generation, or the wait cap (~15s). Other website pages finish
+in parallel. Then wait-end navigates to `/onboarding/preview-and-edit/`.
+08 share is optional.
 09 does not wait for 06 and does not require 08.
 
 ## DAG
@@ -27,7 +29,9 @@ contractor sees Review.
 04b. voice client interview — **out**; do not implement
      build the profile — concurrent persist, not a wait
 05.  select then copy the website template’s pages (after client interview complete)
-06.  automatic website copy generation (async; wait teaser waits copy-done or cap; does not block 09)
+06.  automatic website copy generation (async; wait teaser waits until the
+     home website page has copy, or the wait cap; other website pages
+     finish in parallel; does not block 09)
 07.  contractor copy improvement (Assistant on the website preview; five unpaid prompts; does not block 09)
 08.  preview website address share (optional; reserve website prefix + preview website address; website publication + R2 strip on)
 09.  website activation (pay → activate tenant; complete unpaid Assistant thread; live R2 no strip)
