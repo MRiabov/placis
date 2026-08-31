@@ -1,17 +1,19 @@
 # Google Maps
 
-`etl_run_kind=google_maps_listing`. Onboarding 02 and Monday / Wednesday / Friday.
-Scrape of further reviews / photos is **this ETL run kind’s ETL slow extract**, not a
-separate ETL run kind. Shared extract / transform rules:
+`etl_run_kind=google_maps_listing`. Onboarding 02 and Monday / Wednesday /
+Friday. Scrape of further reviews / photos is
+**this ETL run kind’s ETL slow extract**, not a separate ETL run kind. Shared
+extract / transform rules:
 [pipeline README](README.md).
 
 ## Trigger
 
-Starts when (any of) ([ETL run kind triggers](etl-kind-triggers.md)): `place_id`;
-**or** (02 only) `display_name` + locality; **or** (02 only) `legal_name` +
-locality. Skip (`status=skipped`) when scheduled and there is no `place_id`.
-Do not Places Find on scheduled. Onboarding: start when a tuple is met (Find
-attach, Parallel, or Places Find). Insert `etl.runs` then.
+Starts when (any of) ([ETL run kind triggers](etl-run-kind-triggers.md)): `place_id`; **or** (02 only)
+`display_name` + locality; **or** (02 only) `legal_name` + locality. Skip
+(`status=skipped`) when scheduled and there is no `place_id`. Do not Places Find
+on scheduled. Onboarding: start when a tuple is met (Find attach, Parallel, or
+Places Find). Insert `etl.runs` then.
+
 ## Pre
 
 - `etl.runs` row `status=pending` (or retry of `extracting` / `transforming`).
@@ -30,26 +32,26 @@ attach, Parallel, or Places Find). Insert `etl.runs` then.
   `force=true`).
 - Wait for scrape (ETL slow extract) before transforming the Details chunk (ETL
   fast extract).
-- Be an `etl_run_kind=review` or `etl_run_kind=photo` run. Those ETL run kinds do not exist.
+- Be an `etl_run_kind=review` or `etl_run_kind=photo` run. Those ETL run kinds
+  do not exist.
 - Pick among several Places Find hits, or accept a weak hit. Wrong listing is
   worse than an empty Maps row.
 - Call Places Find when `trigger=scheduled`. Scheduled Maps needs `place_id`.
 
 ## Do — extract (ETL fast extract)
 
-Set `status=extracting`. If there is no `place_id` yet and
-`trigger=onboarding`, call Places Find / text search with `display_name` if
-set, else `legal_name`, plus locality (trade location, registered-office
-locality, or tenant country city). One high-confidence hit → persist that
-`place_id` as a detail (onboarding session attach, empty columns only) and
-continue. Several hits or a weak hit → do not pick; `skipped` unless Parallel
-or Find later supplies `place_id` (evaluator starts this ETL run kind then). Do
-not call Parallel from this ETL run kind. Scheduled extract always has `place_id`
-(otherwise the run is `skipped`).
-Call Google Maps Details. Persist
-`etl.google_maps_fetches` (`fetched_from=google_maps_details`, UUID, `place_id`,
-`raw`, `run_id`, `fetched_at`). Upsert the listing (hours, first reviews / photo
-refs). Then transform this chunk immediately (ETL fast extract, p95 ≤ 5s).
+Set `status=extracting`. If there is no `place_id` yet and `trigger=onboarding`,
+call Places Find / text search with `display_name` if set, else `legal_name`,
+plus locality (trade location, registered-office locality, or tenant country
+city). One high-confidence hit → persist that `place_id` as a detail (onboarding
+session attach, empty columns only) and continue. Several hits or a weak hit →
+do not pick; `skipped` unless Parallel or Find later supplies `place_id`
+(evaluator starts this ETL run kind then). Do not call Parallel from this ETL
+run kind. Scheduled extract always has `place_id` (otherwise the run is
+`skipped`). Call Google Maps Details. Persist `etl.google_maps_fetches`
+(`fetched_from=google_maps_details`, UUID, `place_id`, `raw`, `run_id`,
+`fetched_at`). Upsert the listing (hours, first reviews / photo refs). Then
+transform this chunk immediately (ETL fast extract, p95 ≤ 5s).
 
 Details first response today (Places API Place resource): at most **5** reviews
 and **10** photos. Do not freeze those caps in contractor-facing copy. Retry of
@@ -71,15 +73,15 @@ Persist a `fetched_from=scrape` fetch as each scrape response arrives. Insert
 new listing reviews. Attach scrape photos onto **that** listing review
 (`google_maps_listing_review_photos` → media library). Do not put those in
 `google_maps_listing_photos`. Reviewer avatar is not the job. Transform **that**
-chunk before waiting for the rest (ETL slow extract, progressively over about 60s).
-`status` stays `extracting` until scrape has nothing left; `succeeded` only
-then. Skip remaining scrape when the only leftovers are `human` scalars
+chunk before waiting for the rest (ETL slow extract, progressively over about
+60s). `status` stays `extracting` until scrape has nothing left; `succeeded`
+only then. Skip remaining scrape when the only leftovers are `human` scalars
 (marketing phone, name, hours, website) **and** reviews / photos are already
-filled enough — [ETL run kind triggers](etl-kind-triggers.md) pause rule. Do not
-skip scrape only because marketing phone is `human`.
+filled enough — [ETL run kind triggers](etl-run-kind-triggers.md) pause rule. Do not skip scrape only
+because marketing phone is `human`.
 
-`etl_run_kind=review` / `etl_run_kind=photo` are not ETL run kinds. Further reviews and
-photos are this ETL slow extract.
+`etl_run_kind=review` / `etl_run_kind=photo` are not ETL run kinds. Further
+reviews and photos are this ETL slow extract.
 
 ## Do — listing
 
@@ -141,9 +143,9 @@ remaining scrape still runs. `status=error` when retries exhaust.
 ## Out
 
 Onboarding SSE mirrors Postgres on change (`etl.runs` and the live business
-profile). After Details + transform, about half of this ETL run kind’s checklist is
-already filled (hours, marketing phone, website, first reviews / photos); more
-reviews / photos appear as scrape runs. Scheduled: no SSE.
+profile). After Details + transform, about half of this ETL run kind’s checklist
+is already filled (hours, marketing phone, website, first reviews / photos);
+more reviews / photos appear as scrape runs. Scheduled: no SSE.
 
 ## Invariants
 

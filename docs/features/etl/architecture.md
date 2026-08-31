@@ -4,8 +4,8 @@ ETL is extract **and** transform. Extract persists raw fetches and the Google
 Maps listing. Transform is business logic: it writes the business profile.
 Callers do not inline either step.
 
-An **ETL run kind** (`etl.runs.etl_run_kind`) starts when it has the details it needs.
-Registry: [ETL run kind triggers](pipeline/etl-kind-triggers.md).
+An **ETL run kind** (`etl.runs.etl_run_kind`) starts when it has the details it
+needs. Registry: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md).
 
 ```text
 StartRun(trigger, tenant, force=false)  # onboarding: ETL run kinds; scheduled: Maps/FB/IG
@@ -30,12 +30,12 @@ interface for every ETL run kind (different keys and tables); dispatch is an
 Triggers:
 
 - **Onboarding 02** — `trigger=onboarding`. ETL run kinds:
-  [ETL run kind triggers](pipeline/etl-kind-triggers.md) (never `directory`,
-  `review`, or `photo`). Cap: 5 distinct `enqueue_id` per tenant per rolling
-  30 minutes. 02 counts first (200 + `research_wait_until` on business lookup;
-  `429` on a later source change). `StartRun` counts again and inserts nothing
-  if called over the cap. ETL fast extract then ETL slow extract is why ETL run kinds fire
-  in parallel from 01 seeds, not a job deadline.
+  [ETL run kind triggers](pipeline/etl-run-kind-triggers.md) (never `directory`, `review`, or `photo`). Cap: 5
+  distinct `enqueue_id` per tenant per rolling 30 minutes. 02 counts first
+  (200 + `research_wait_until` on business lookup; `429` on a later source
+  change). `StartRun` counts again and inserts nothing if called over the cap.
+  ETL fast extract then ETL slow extract is why ETL run kinds fire in parallel
+  from 01 seeds, not a job deadline.
 - **Monday / Wednesday / Friday** — `trigger=scheduled`. Activated tenants
   only. ETL run kinds: Google Maps, Facebook, Instagram. Stagger tenants. No
   matching **Starts when** tuple → `status=skipped` immediately. Scheduled Maps

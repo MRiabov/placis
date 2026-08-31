@@ -8,7 +8,7 @@ Accreditations. A later official registry API is its own fetch table.
 
 ## Trigger
 
-Starts when (any of) ([ETL run kind triggers](etl-kind-triggers.md)):
+Starts when (any of) ([ETL run kind triggers](etl-run-kind-triggers.md)):
 `company_number` + tenant country; **or** `display_name` + country. Maps-only
 Find still starts this ETL run kind when a name exists. Neither tuple → not
 started until Maps fills a name; nothing left that can produce a name →

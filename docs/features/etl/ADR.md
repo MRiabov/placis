@@ -20,11 +20,11 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    **`StartRun` is not a god function:** it counts the cap, creates
    `enqueue_id`, inserts `etl.runs` when an ETL run kind can start, and enqueues
    that River job. It does not call source networks, write fetches, upsert the
-   listing, or transform. Each ETL run kind’s extract and transform live in their
-   own packages (`extract/googlemaps`, `transform/facebook`, …). A small worker
-   dispatch calls those functions; it does not inline them. (2026-08-27; same
-   day, later: StartRun orchestration only. 2026-08-31: insert when the input
-   set is met.)
+   listing, or transform. Each ETL run kind’s extract and transform live in
+   their own packages (`extract/googlemaps`, `transform/facebook`, …). A small
+   worker dispatch calls those functions; it does not inline them. (2026-08-27;
+   same day, later: StartRun orchestration only. 2026-08-31: insert when the
+   input set is met.)
 
 3. **One fetch table per extract type** — Append-only UUID rows with typed
    metadata (Instagram handle / Instagram user, Facebook page / handle, Maps
@@ -36,15 +36,15 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    Project skip is `etl.llm_source_to_project_classifications`, not this
    table.)
 
-4. **An ETL run is one ETL run kind** — `etl.runs` is one row per ETL run kind that
-   started (Google Maps extract, Facebook extract, Instagram extract).
-   `StartRun(trigger, tenant, force=false)` creates one `enqueue_id` and
-   inserts a run when that ETL run kind can start. The onboarding cap counts
-   distinct `enqueue_id` with `trigger=onboarding` (5 per tenant per rolling 30
-   minutes), not jobs. (2026-08-27: explicit `etl_run_kinds` list, one pending row per
-   ETL run kind. 2026-08-31: `force` defaults false; onboarding ETL run kinds are the
-   [registry](pipeline/etl-kind-triggers.md). Same day, later: insert when the
-   Starts-when tuple is met, not one pending row per ETL run kind up front.)
+4. **An ETL run is one ETL run kind** — `etl.runs` is one row per ETL run kind
+   that started (Google Maps extract, Facebook extract, Instagram extract).
+   `StartRun(trigger, tenant, force=false)` creates one `enqueue_id` and inserts
+   a run when that ETL run kind can start. The onboarding cap counts distinct
+   `enqueue_id` with `trigger=onboarding` (5 per tenant per rolling 30 minutes),
+   not jobs. (2026-08-27: explicit `etl_run_kinds` list, one pending row per ETL
+   run kind. 2026-08-31: `force` defaults false; onboarding ETL run kinds are
+   the [registry](pipeline/etl-run-kind-triggers.md). Same day, later: insert when the Starts-when tuple is met,
+   not one pending row per ETL run kind up front.)
 
 5. **Transformed contractor data is the business profile** — Facebook profile /
    posts, Instagram profile / posts, and photo classification (hero / project /
@@ -61,6 +61,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    registry, and Parallel stay first-run (onboarding 02). Website activation
    implies this refresh; online research consent covers it. (2026-08-27;
    2026-08-31 later: scheduled Maps only if `place_id` exists.)
+
 7. **Increment is natural-key upsert** — No watermark table. A scheduled extract
    fetches again; insert only reviews / posts / photos whose source id we do not
    already have. A run may insert several fetch rows (ETL fast extract, then ETL
@@ -93,22 +94,22 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     transform schema; `human` reserved. Same day, later: `schema_revision` bump
     extracts by default.)
 
-11. **ETL fast extract then ETL slow extract; results as they arrive** — ETL fast extract is
-    the cheap first response (p95 ≤ 5s): Google Maps Details (Places API first
-    response: at most 5 reviews and 10 photos today), or an ETL fast crawl. ETL
-    slow extract is the remainder (progressively over about 60s): Maps scrape of
-    further reviews / photos (on the order of 50 reviews), or an ETL slow crawl.
-    Persist a fetch and transform each chunk before the next extract continues.
-    Onboarding shows about half of that ETL run kind’s checklist from the ETL fast
-    extract, then more as ETL slow extract runs. Web search is not instant; a new
-    empty `place_id` or URL is a detail that starts Maps / crawl in the same
-    enqueue. ETL fast extract / ETL slow extract live in the per-source package,
-    not `StartRun`.
-    (2026-08-27) (2026-08-30: website crawl ETL slow extract is a parallel remainder
-    extract after the homepage, not a serial tens-of-seconds walk. Maps scrape
-    remainder is unchanged. 2026-08-31: means fire from input sets, not sibling
-    unblocks. 2026-08-31 later: p95 ≤ 5s / ~60s progressive; ETL run kind starts
-    when it has the details it needs.)
+11. **ETL fast extract then ETL slow extract; results as they arrive** — ETL
+    fast extract is the cheap first response (p95 ≤ 5s): Google Maps Details
+    (Places API first response: at most 5 reviews and 10 photos today), or an
+    ETL fast crawl. ETL slow extract is the remainder (progressively over about
+    60s): Maps scrape of further reviews / photos (on the order of 50 reviews),
+    or an ETL slow crawl. Persist a fetch and transform each chunk before the
+    next extract continues. Onboarding shows about half of that ETL run kind’s
+    checklist from the ETL fast extract, then more as ETL slow extract runs. Web
+    search is not instant; a new empty `place_id` or URL is a detail that starts
+    Maps / crawl in the same enqueue. ETL fast extract / ETL slow extract live
+    in the per-source package, not `StartRun`. (2026-08-27) (2026-08-30: website
+    crawl ETL slow extract is a parallel remainder extract after the homepage,
+    not a serial tens-of-seconds walk. Maps scrape remainder is unchanged.
+    2026-08-31: means fire from input sets, not sibling unblocks. 2026-08-31
+    later: p95 ≤ 5s / ~60s progressive; ETL run kind starts when it has the
+    details it needs.)
 
 12. **Crawl fetches record `fetched_from`; live HTML URLs hold photos** —
     Parallel Extract, HTML GET, Apify, robots, and sitemaps are separate
@@ -142,16 +143,17 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     country city; one high-confidence hit only). `trade_registry` from
     `company_number` + country **or** `display_name` + country. `web_search`
     starts when some discoverable detail is still empty; it does not overwrite
-    Find-attached `place_id`. ETL fast extract then ETL slow extract is why ETL run kinds
-    fire in parallel from 01 seeds, not a job deadline. Skip remaining expensive
-    extract when the only leftovers are `human` scalars. (2026-08-31 closed ETL run
-    kind list + sibling unblock; same day, later: trade registry not gated on company
-    registry attach; web search not gated on missing `place_id`; same day,
-    later: Starts-when registry replaces the Always-ETL-run-kinds DAG. 2026-08-31 later:
-    ETL run kind + details, not means / identity key / input set / client-interview
-    window. 2026-08-31 later: Places Find may use `legal_name` +
-    registered-office locality. 2026-08-31 later: scheduled Maps only if
-    `place_id` exists.)
+    Find-attached `place_id`. ETL fast extract then ETL slow extract is why ETL
+    run kinds fire in parallel from 01 seeds, not a job deadline. Skip remaining
+    expensive extract when the only leftovers are `human` scalars. (2026-08-31
+    closed ETL run kind list + sibling unblock; same day, later: trade registry
+    not gated on company registry attach; web search not gated on missing
+    `place_id`; same day, later: Starts-when registry replaces the
+    Always-ETL-run-kinds DAG. 2026-08-31 later: ETL run kind + details, not
+    means / identity key / input set / client-interview window. 2026-08-31
+    later: Places Find may use `legal_name` + registered-office locality.
+    2026-08-31 later: scheduled Maps only if `place_id` exists.)
+
 15. **Find attach is onboarding session keys; extract still owns the listing**
     — 01 persists `place_id` / `company_number` / `website_url` on the
     onboarding session and writes profile increments from the selected

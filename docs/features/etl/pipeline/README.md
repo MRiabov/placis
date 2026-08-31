@@ -12,8 +12,8 @@ StartRun(trigger, tenant, force=false)
 
 Monday / Wednesday / Friday: `trigger=scheduled`, ETL run kinds Google Maps,
 Facebook, Instagram. Onboarding 02: `trigger=onboarding`, the
-[ETL run kind triggers](etl-kind-triggers.md) table (never `directory`, `review`,
-or `photo`). 02 only calls `StartRun`.
+[ETL run kind triggers](etl-run-kind-triggers.md) table (never `directory`, `review`, or `photo`). 02 only
+calls `StartRun`.
 
 ## Shared rules
 
@@ -22,16 +22,17 @@ or `photo`). 02 only calls `StartRun`.
   extract (or `status=succeeded`) before writing the live business profile.
   Onboarding SSE mirrors Postgres on change (not faster than ~2s): `etl.runs`
   **and** the live business profile / checklist transform already wrote.
-- **ETL fast extract then ETL slow extract.** ETL fast extract is the cheap first response
-  (p95 ≤ 5s). ETL slow extract is the remainder (progressively over about 60s).
-  After ETL fast extract + transform, about half of that ETL run kind’s visible
-  business research is already on the checklist; the rest fills during slow
-  extract. Not a stored progress ratio. ETL fast extract / ETL slow extract live in
-  the per-source extract package, not in `StartRun`.
+- **ETL fast extract then ETL slow extract.** ETL fast extract is the cheap
+  first response (p95 ≤ 5s). ETL slow extract is the remainder (progressively
+  over about 60s). After ETL fast extract + transform, about half of that ETL
+  run kind’s visible business research is already on the checklist; the rest
+  fills during ETL slow extract. Not a stored progress ratio. ETL fast
+  extract / ETL slow extract live in the per-source extract package, not in
+  `StartRun`.
 - Extract writes the matching `*_fetches` row (and the Google Maps listing on
-  that ETL run kind). It must not import `profile` or write `business_profile_*`. A
-  run may insert **several** fetch rows (ETL fast extract, then ETL slow extract URLs
-  / scrape responses).
+  that ETL run kind). It must not import `profile` or write
+  `business_profile_*`. A run may insert **several** fetch rows (ETL fast
+  extract, then ETL slow extract URLs / scrape responses).
 - Transform reads fetch / listing rows and writes the business profile. It must
   not call source networks.
 - Retry of **this** `run_id` reuses a fetch that already landed for that chunk
@@ -47,9 +48,8 @@ or `photo`). 02 only calls `StartRun`.
   (`place_id`, `website_url`, handles). Running jobs may copy them onto
   `etl.runs`. Not a profile dump. Not a new `StartRun`.
 - Pause remaining **expensive** extract when the only leftovers are `human`
-  scalars (marketing phone, email, …). Cheap ETL fast extract still runs. Lists /
-  Projects / reviews / photos still run. Details:
-  [ETL run kind triggers](etl-kind-triggers.md).
+  scalars (marketing phone, email, …). Cheap ETL fast extract still runs. Lists
+  / Projects / reviews / photos still run. Details: [ETL run kind triggers](etl-run-kind-triggers.md).
 - Dump `raw` only on the fetch row. Never on listing / profile / post live rows.
 - Open web **search** is Parallel through Vercel AI Gateway only
   ([web-search](web-search.md)). Known-URL crawl **text** is Parallel Extract
@@ -92,8 +92,8 @@ or `photo`). 02 only calls `StartRun`.
 
 ## Sources
 
-- [Google Maps](google-maps.md) — listing, hours, reviews, photos; Details then
-  scrape (Mon / Wed / Fri + 02). Scrape is this ETL run kind’s ETL slow extract, not a
+- [Google Maps](google-maps.md) — listing, hours, reviews, photos; Details then scrape (Mon /
+  Wed / Fri + 02). Scrape is this ETL run kind’s ETL slow extract, not a
   `review` / `photo` ETL run kind.
 - [Facebook](facebook.md) — profile and posts (Mon / Wed / Fri + 02). No
   Facebook page-review extract this slice.
@@ -104,7 +104,7 @@ or `photo`). 02 only calls `StartRun`.
   transform (not an ETL run kind); skip on
   `etl.llm_source_to_project_classifications`
 - [Trade registry](trade-registry.md) — accreditations (02 only)
-- [ETL run kind triggers](etl-kind-triggers.md) — starts when, fire / skip / pause
+- [ETL run kind triggers](etl-run-kind-triggers.md) — starts when, fire / skip / pause
 - [Web search](web-search.md) — Parallel **Search** (02 only; one ETL run kind)
 - [Photo classification](photo-classification.md) — photo kinds on media
   library items (transform after attach; not an ETL run kind)

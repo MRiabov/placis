@@ -14,9 +14,9 @@ ETL run kind this slice.
 ## Trigger
 
 Starts when: `website_url` (01 attach, Maps Details, Parallel, or contractor
-`existing_site_url`). No URL → this ETL run kind is not started. Evaluator starts
-it on this enqueue when the detail lands. Monday / Wednesday / Friday does not
-enable this ETL run kind.
+`existing_site_url`). No URL → this ETL run kind is not started. Evaluator
+starts it on this enqueue when the detail lands. Monday / Wednesday / Friday
+does not enable this ETL run kind.
 
 ## Pre
 
@@ -26,11 +26,11 @@ enable this ETL run kind.
 ## Must not
 
 - Run on the Monday / Wednesday / Friday schedule.
-- Call Parallel **Search** HTTP from this ETL run kind. Search stays [web-search](web-search.md) /
-  `gateway.tools.parallelSearch()`. Parallel **Extract** (`PARALLEL_API_KEY` →
-  `https://api.parallel.ai/v1/extract`) is the crawl **text** path for known
-  HTML URLs ([onboarding ADR](../../onboarding/ADR.md) 5a). A generation call over Search excerpts is not
-  crawl extract.
+- Call Parallel **Search** HTTP from this ETL run kind. Search stays
+  [web-search](web-search.md) / `gateway.tools.parallelSearch()`. Parallel **Extract**
+  (`PARALLEL_API_KEY` → `https://api.parallel.ai/v1/extract`) is the crawl
+  **text** path for known HTML URLs ([onboarding ADR](../../onboarding/ADR.md) 5a). A generation call
+  over Search excerpts is not crawl extract.
 - Call Maps / Facebook / Instagram from this ETL run kind.
 - Playwright / headless Chrome / Colly as the crawl engine.
 - Parallel Extract or Apify on `robots.txt` or sitemap XML.
@@ -110,9 +110,8 @@ were not in the sitemap, still under the cap, still parallel. Then stop.
 started until `website_url` is a detail. A miss is “ask”.
 
 Skip remaining crawl remainder + LLM parse when the only leftovers are `human`
-scalars (email, trade, description, founder) **and** Projects / photos /
-lists do not still need this extract — [ETL run kind triggers](etl-kind-triggers.md)
-pause rule.
+scalars (email, trade, description, founder) **and** Projects / photos / lists
+do not still need this extract — [ETL run kind triggers](etl-run-kind-triggers.md) pause rule.
 
 Website crawl must not borrow Maps scrape’s serial tens-of-seconds remainder.
 Glossary **ETL slow crawl** is this parallel remainder extract.
@@ -125,11 +124,10 @@ GET. Transform must not call networks.
 Image GETs: bounded concurrency (**8**), timeouts, max body size so one
 gallery cannot fill RAM. Skip logos, icon gifs, SVGs, cookie-banner assets.
 
-**SLO:** while this ETL run kind (and Maps scrape wait) run in-process, API p90 must
-not increase by more than **1s** vs idle on the same instance
-([processes](../../../general-architecture/processes.md)). Authenticated /
-onboarding HTTP, not the Cloudflare contractor website. SSE is not p90 of
-request handlers. CI does not measure p90.
+**SLO:** while this ETL run kind (and Maps scrape wait) run in-process, API p90
+must not increase by more than **1s** vs idle on the same instance
+([processes](../../../general-architecture/processes.md)). Authenticated / onboarding HTTP, not the Cloudflare contractor
+website. SSE is not p90 of request handlers. CI does not measure p90.
 
 ## Do — transform
 

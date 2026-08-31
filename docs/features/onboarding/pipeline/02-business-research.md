@@ -1,25 +1,23 @@
 # 02 — Business research
 
 Async, parallel. Starts when 01 business lookup returns — **not** when 03
-finishes. Overlaps Review and the client interview. Progress on the
-onboarding session SSE stream (reads `etl.runs` and the live business
-profile as each extract chunk transforms). ETL fast extract (p95 ≤ 5s) fills
-about half of that ETL run kind’s checklist; ETL slow extract (progressively over
-about 60s) fills the rest as fetches arrive. Photo classification of found
-photos is ETL transform, not the client interview.
+finishes. Overlaps Review and the client interview. Progress on the onboarding
+session SSE stream (reads `etl.runs` and the live business profile as each
+extract chunk transforms). ETL fast extract (p95 ≤ 5s) fills about half of that
+ETL run kind’s checklist; ETL slow extract (progressively over about 60s) fills
+the rest as fetches arrive. Photo classification of found photos is ETL
+transform, not the client interview.
 
 Paid lookups (Maps, Parallel, Facebook, crawl) cost money. A naive contractor
 must not be able to start that work dozens of times by repeating business
 lookup, picking another company, or retrying. Cap it.
 
 02 only calls **`etl.StartRun(trigger=onboarding, force=false)`** with the
-onboarding ETL run kinds. Extract and transform: [ETL](../../etl/README.md).
-When an ETL run kind starts:
-[ETL run kind triggers](../../etl/pipeline/etl-kind-triggers.md). One `StartRun`
-creates one `enqueue_id`. An ETL run is inserted when that ETL run kind
-**starts**. River retries keep the same `etl.runs.id`. Count distinct
-`enqueue_id`, not jobs — otherwise one business lookup would already exceed
-the cap.
+onboarding ETL run kinds. Extract and transform: [ETL](../../etl/README.md). When an ETL run kind
+starts: [ETL run kind triggers](../../etl/pipeline/etl-run-kind-triggers.md). One `StartRun` creates one `enqueue_id`. An ETL
+run is inserted when that ETL run kind **starts**. River retries keep the same
+`etl.runs.id`. Count distinct `enqueue_id`, not jobs — otherwise one business
+lookup would already exceed the cap.
 
 01 already wrote legal identity and Maps autocomplete increments. 02 does not
 repeat those writes and does not upsert `etl.google_maps_listings` itself.
@@ -54,15 +52,15 @@ enqueue cap.
   inside 30 minutes (paid or cache-hit).
 - Treat a River retry of an existing ETL run as a new enqueue.
 - Block business lookup, 03 Continue, or the client interview on this wait.
-- Wait for an ETL run kind’s `status=succeeded` before showing the ETL fast extract live
-  business profile on the checklist.
-- Pass `directory`, `review`, or `photo` as ETL run kinds. Scrape is ETL slow extract of
-  `google_maps_listing`. Photo classification runs after photos attach. Crawl
-  fills trade / founder / service areas (no directory job).
+- Wait for an ETL run kind’s `status=succeeded` before showing the ETL fast
+  extract live business profile on the checklist.
+- Pass `directory`, `review`, or `photo` as ETL run kinds. Scrape is ETL slow
+  extract of `google_maps_listing`. Photo classification runs after photos
+  attach. Crawl fills trade / founder / service areas (no directory job).
 - Pass an implicit “all sources” list or a hand-built Always table. The
   onboarding ETL run kinds are the trigger table.
-- Wait for a sibling ETL run kind to succeed before starting another. An ETL run kind
-  starts when it has the details it needs.
+- Wait for a sibling ETL run kind to succeed before starting another. An ETL run
+  kind starts when it has the details it needs.
 
 ## Do
 
@@ -79,18 +77,14 @@ lookup can stay **200** and a later source change can stay **429**.
 
 If the count is **0–4**, call `StartRun` with the onboarding ETL run kinds. Pass
 `onboarding_session_id` and `force=false`. Copy Find attach and live-profile
-details into the enqueue. The evaluator starts each ETL run kind that already has
-what it needs (Maps from `place_id` **or** `display_name` + locality **or**
-`legal_name` + locality; traderegistry from `company_number` + country **or** `display_name` + country;
-Parallel when some discoverable detail is still empty; crawl / Facebook /
-Instagram when their URL/handle exists). Further ETL run kinds start when details
-change — including 04a URL / handle writes. That is not a new `StartRun`.
+details into the enqueue. The evaluator starts each ETL run kind that already
+has what it needs (Maps from `place_id` **or** `display_name` + locality **or**
+`legal_name` + locality; trade registry from `company_number` + country **or**
+`display_name` + country; Parallel when some discoverable detail is still empty;
+crawl / Facebook / Instagram when their URL/handle exists). Further ETL run
+kinds start when details change — including 04a URL / handle writes. That is not
+a new `StartRun`.
 
-ETL run kinds in this enqueue **start when their key exists**. Maps Details,
-crawl links, and web search write discovered keys onto the waiting sibling run
-(and the onboarding session). That is not a new `StartRun`. After Maps, crawl,
-and web search have `succeeded` / `error` / `skipped`, a social ETL run kind
-still missing its key becomes `skipped`.
 Profile deltas go through ETL transform using [build-profile](build-profile.md).
 Empty fields fill. On a research conflict the live business profile column is
 not updated.
@@ -99,9 +93,9 @@ not updated.
 
 `etl.runs` (one per ETL run kind that started, shared `enqueue_id`); fetches and
 listing as extract chunks land; live business profile via transform of each
-chunk (not only when the ETL run kind succeeds). `research_wait_until` is derived
-when the cap is hit; it is not a table. Expose it on `GET .../profile` and the
-onboarding session SSE.
+chunk (not only when the ETL run kind succeeds). `research_wait_until` is
+derived when the cap is hit; it is not a table. Expose it on `GET .../profile`
+and the onboarding session SSE.
 
 ## Fail
 
@@ -139,4 +133,5 @@ enqueue’s ETL finishes**
 - Review ranking (`reviews_ranking_for_display`) is not copying the website
   template’s pages and not website 03.
 - 02 never passes `directory`, `review`, or `photo`.
-- An ETL run kind starts from details, not from a sibling ETL run kind succeeding.
+- An ETL run kind starts from details, not from a sibling ETL run kind
+  succeeding.

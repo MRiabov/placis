@@ -43,11 +43,9 @@ publication; website rollback of onboarding rows is refused
    River retries of an existing ETL run do not create a new `enqueue_id`. See
    [02](pipeline/02-business-research.md).
 2. 02 calls `etl.StartRun(trigger=onboarding, force=false)` with the onboarding
-   ETL run kinds ([ETL run kind triggers](../etl/pipeline/etl-kind-triggers.md)).
-   Extract, listing upsert, and transform are
-   [ETL](../etl/technical-implementation.md). `StartRun` counts the cap again
-   and inserts nothing if called over it. Runs are inserted when that ETL run kind
-   can start.
+   ETL run kinds ([ETL run kind triggers](../etl/pipeline/etl-run-kind-triggers.md)). Extract, listing upsert, and
+   transform are [ETL](../etl/technical-implementation.md). `StartRun` counts the cap again and inserts nothing if
+   called over it. Runs are inserted when that ETL run kind can start.
 3. Profile deltas use [build-profile](pipeline/build-profile.md).
 
 ## Profile building
