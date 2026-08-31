@@ -3,7 +3,7 @@
 Integration (real Postgres, adapters faked). One file per source / operation
 group.
 
-- [Means registry](means.md)
+- [ETL run kind triggers](etl-kind-triggers.md)
 - [Google Maps](google-maps.md)
 - [Facebook](facebook.md)
 - [Instagram](instagram.md)

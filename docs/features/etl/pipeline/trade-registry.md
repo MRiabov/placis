@@ -1,19 +1,20 @@
 # Trade registry
 
 `etl_run_kind=trade_registry`. First-run only (onboarding 02). Not on Monday /
-Wednesday / Friday. Shared extract / transform rules: [pipeline README](README.md).
+Wednesday / Friday. Shared extract / transform rules:
+[pipeline README](README.md).
 
 Accreditations. A later official registry API is its own fetch table.
 
 ## Trigger
 
-Input set met ([means](means.md)): (1) `company_number` + tenant country, or
-(2) `display_name` + country. Maps-only Find still starts this means when a
-name exists. Neither set → not started until Maps fills a name; nothing left
-that can produce a name → `skipped`. A miss is “ask”. The locked
-business-registry certification on Find (CRO in Ireland) is 01 from the
-company registry pick, not this extract. Monday / Wednesday / Friday does not
-enable this means.
+Starts when (any of) ([ETL run kind triggers](etl-kind-triggers.md)):
+`company_number` + tenant country; **or** `display_name` + country. Maps-only
+Find still starts this ETL run kind when a name exists. Neither tuple → not
+started until Maps fills a name; nothing left that can produce a name →
+`skipped`. A miss is “ask”. The locked business-registry certification on Find
+(CRO in Ireland) is 01 from the company registry pick, not this extract. Monday
+/ Wednesday / Friday does not enable this ETL run kind.
 
 ## Pre
 

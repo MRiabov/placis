@@ -21,15 +21,15 @@ Package ownership. Workflows live in the feature docs this list points at.
    select or copy of the website template, and it does not do website
    publication. [Onboarding](../features/onboarding/architecture.md).
 3. `etl` owns extract **and** transform. `StartRun` only starts runs (cap,
-   `enqueue_id`, evaluate input sets, insert `etl.runs` when a means starts,
-   enqueue). Adapters and fetch / Google Maps listing SQL live in
+   `enqueue_id`, insert `etl.runs` when an ETL run kind can start, enqueue).
+   Adapters and fetch / Google Maps listing SQL live in
    `extract/<etl_run_kind>/`; profile writes live in
-   `transform/<etl_run_kind>/`. Callers pass `trigger` and the enabled means
-   set; the evaluator starts matching input sets. The worker calls transform
-   after each extract chunk (ETL fast extract, then ETL slow extract); it does
-   not wait for the ETL run kind to finish. Do not grow `run.go` into every
-   source. [ETL](../features/etl/README.md),
-   [means](../features/etl/pipeline/means.md).
+   `transform/<etl_run_kind>/`. Callers pass `trigger` and the enabled ETL run
+   kinds; the evaluator starts matching rows. The worker calls transform after
+   each extract chunk (ETL fast extract, then ETL slow extract); it does not
+   wait for the ETL run kind to finish. Do not grow `run.go` into every source.
+   [ETL](../features/etl/README.md),
+   [ETL run kind triggers](../features/etl/pipeline/etl-kind-triggers.md).
 4. `website` owns the editable content model, selecting a website template and
    copying its pages onto the unpublished website (validate website component
    contracts, write unpublished `website_*` rows), and website publication. A

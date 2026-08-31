@@ -32,13 +32,12 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
 4. **Business research starts ETL** — 02 calls `etl.StartRun`. Google Maps,
    Facebook, Instagram, and website crawl sit behind ETL extract adapters with
    fakes. Transform writes the business profile (research conflicts, posts,
-   photo kinds) as each extract chunk lands, not only when the ETL run kind succeeds.
-   Raw fetch bodies stay on per-type `etl.*_fetches.raw` and never leak into the
-   profile. Google Maps listing columns live in `etl.google_maps_listings` (no
-   `raw` on that row). 01 writes legal identity and Maps autocomplete
-   increments from the selected records; it does not upsert the listing. 02
-   passes the onboarding means set
-   ([means](../etl/pipeline/means.md)).
+   photo kinds) as each extract chunk lands, not only when the ETL run kind
+   succeeds. Raw fetch bodies stay on per-type `etl.*_fetches.raw` and never
+   leak into the profile. Google Maps listing columns live in
+   `etl.google_maps_listings` (no `raw` on that row). 01 writes legal identity
+   and Maps autocomplete increments from the selected records; it does not
+   upsert the listing. 02 passes the onboarding ETL run kinds ([ETL run kind triggers](../etl/pipeline/etl-kind-triggers.md)).
    (2026-08-27: warehouse moved to ETL; onboarding 02 is the trigger only. Same
    day, later: transform per extract chunk. 2026-08-31: Find attach vs extract;
    closed 02 ETL run kinds. Same day, later: means registry / input sets.)
@@ -73,9 +72,9 @@ discovered key unblocks Maps / crawl in the same enqueue. Known-URL crawl
 `https://api.parallel.ai/v1/extract`, up to 20 URLs per request) plus own HTTP
 GET for HTML/images ([website crawl](../etl/pipeline/website-crawl.md)). Direct Extract HTTP is allowed; Search
 HTTP is not. Maps Details, scrape, and Facebook stay typed adapters.
-(2026-08-31: Parallel is a means in the [registry](../etl/pipeline/means.md), not the gate for Maps. Maps
-may start from `place_id` or `display_name` + locality. Search fills empty
-identity keys only. Same day, earlier: onboarding 02 always includes
+(2026-08-31: Parallel is an ETL run kind in [ETL run kind triggers](../etl/pipeline/etl-kind-triggers.md), not the gate for
+Maps. Maps may start from `place_id` or `display_name` + locality. Search fills
+empty details only. Same day, earlier: onboarding 02 always includes
 `web_search` for both Find sources, including a Maps pick that already has
 `place_id`. 2026-08-23: Parallel named, and OpenRouter web tools wrongly
 forbidden. Same day, later: Parallel is a search engine on OpenRouter; we use

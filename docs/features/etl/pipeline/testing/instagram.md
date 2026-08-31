@@ -2,7 +2,7 @@
 
 - **Assert**: extract writes `etl.instagram_fetches`; skip when scheduled with
   no handle (`status=skipped`); onboarding does not insert this run until
-  `instagram_handle` is an identity key, then `skipped` if nothing left can
+  `instagram_handle` is a detail, then `skipped` if nothing left can
   produce it; transform upserts `instagram_profiles` / `instagram_posts` on
   `external_id` as responses arrive (do not wait for the last Instagram post);
   duplicate post id left alone; `algorithm=human` is not overwritten; extract

@@ -2,8 +2,9 @@
 
 Shared transform after a Facebook post, Instagram post, website-crawl
 **source**, or Maps listing review is upserted and its photos are attached /
-classified. Not a `StartRun` ETL run kind. Shared extract / transform rules:
-[pipeline README](README.md). Profile writes: [build-profile](../../onboarding/pipeline/build-profile.md). Persistence:
+classified. Not an ETL run kind. Shared extract / transform rules:
+[pipeline README](README.md). Profile writes:
+[build-profile](../../onboarding/pipeline/build-profile.md). Persistence:
 [`etl.sources`](../persistence.md),
 [`llm_source_to_project_classifications`](../persistence.md),
 [`project_sources`](../../business-profile/projects/persistence.md).
@@ -34,7 +35,7 @@ chunk.
 
 ## Must not
 
-- Be a `StartRun` ETL run kind or a second crawl.
+- Be an ETL run kind or a second crawl.
 - Call source networks (read rows only).
 - Stop because four Projects already exist. Extract/classify **every** source
   in the chunks we fetch. Rank for the client interview / first gallery is

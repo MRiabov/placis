@@ -2,7 +2,7 @@
 
 - **Assert**: extract writes `etl.facebook_fetches`; skip when scheduled with no
   Facebook page URL / handle (`status=skipped`); onboarding does not insert this
-  run until `facebook_page_url` is an identity key, then `skipped` if nothing
+  run until `facebook_page_url` is a detail, then `skipped` if nothing
   left can produce it; a contractor paste still starts it on the same enqueue;
   transform upserts `facebook_profiles` / `facebook_posts` on `external_id` as
   responses arrive (do not wait for the last post); duplicate post id left

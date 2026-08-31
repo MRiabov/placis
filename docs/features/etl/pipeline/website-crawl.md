@@ -6,17 +6,17 @@ on Monday / Wednesday / Friday. Shared extract / transform rules:
 [projects.md](projects.md).
 
 This ETL run kind’s extract is **the** existing-site crawl for every field that
-ETL run kind already writes (trade, description, services, service areas, founder,
-marketing email, existing site URL, work photos) **and** Projects. Do not add
-a second crawl that only looks for named jobs. There is no `directory`
-`StartRun` ETL run kind this slice.
+this ETL run kind already writes (trade, description, services, service areas,
+founder, marketing email, existing site URL, work photos) **and** Projects. Do
+not add a second crawl that only looks for named jobs. There is no `directory`
+ETL run kind this slice.
 
 ## Trigger
 
-Input set met: `website_url` (01 attach, Maps Details, Parallel, or contractor
-`existing_site_url`). No URL → this means is not started. Evaluator starts it on
-this enqueue when the identity key lands. Monday / Wednesday / Friday does not
-enable this means.
+Starts when: `website_url` (01 attach, Maps Details, Parallel, or contractor
+`existing_site_url`). No URL → this ETL run kind is not started. Evaluator starts
+it on this enqueue when the detail lands. Monday / Wednesday / Friday does not
+enable this ETL run kind.
 
 ## Pre
 
@@ -26,11 +26,11 @@ enable this means.
 ## Must not
 
 - Run on the Monday / Wednesday / Friday schedule.
-- Call Parallel **Search** HTTP from this ETL run kind. Search stays
-  [web-search](web-search.md) / `gateway.tools.parallelSearch()`. Parallel **Extract**
-  (`PARALLEL_API_KEY` → `https://api.parallel.ai/v1/extract`) is the crawl
-  **text** path for known HTML URLs ([onboarding ADR](../../onboarding/ADR.md) 5a). A generation call
-  over Search excerpts is not crawl extract.
+- Call Parallel **Search** HTTP from this ETL run kind. Search stays [web-search](web-search.md) /
+  `gateway.tools.parallelSearch()`. Parallel **Extract** (`PARALLEL_API_KEY` →
+  `https://api.parallel.ai/v1/extract`) is the crawl **text** path for known
+  HTML URLs ([onboarding ADR](../../onboarding/ADR.md) 5a). A generation call over Search excerpts is not
+  crawl extract.
 - Call Maps / Facebook / Instagram from this ETL run kind.
 - Playwright / headless Chrome / Colly as the crawl engine.
 - Parallel Extract or Apify on `robots.txt` or sitemap XML.
@@ -47,7 +47,7 @@ enable this means.
 - Unbounded image GETs. If keeping API p90-delta ≤ 1s needs a `cmd/worker`
   split or dropping the cap, **stop and tell the owner**.
 
-## Do — extract (homepage, ~1s)
+## Do — extract (homepage, ETL fast extract)
 
 Set `status=extracting`. Known website URL (Maps, Find, or already on the
 onboarding session): start now.
@@ -106,12 +106,13 @@ A second remainder extract only if needed: links on first-remainder HTML that
 were not in the sitemap, still under the cap, still parallel. Then stop.
 `discovered` HTML URL rows **are** the frontier (no URL-queue table).
 
-**If they have no website URL:** do not Extract or GET. This means is not
-started until `website_url` is an identity key. A miss is “ask”.
+**If they have no website URL:** do not Extract or GET. This ETL run kind is not
+started until `website_url` is a detail. A miss is “ask”.
 
 Skip remaining crawl remainder + LLM parse when the only leftovers are `human`
 scalars (email, trade, description, founder) **and** Projects / photos /
-lists do not still need this extract — [means](means.md) pause rule.
+lists do not still need this extract — [ETL run kind triggers](etl-kind-triggers.md)
+pause rule.
 
 Website crawl must not borrow Maps scrape’s serial tens-of-seconds remainder.
 Glossary **ETL slow crawl** is this parallel remainder extract.
@@ -124,10 +125,11 @@ GET. Transform must not call networks.
 Image GETs: bounded concurrency (**8**), timeouts, max body size so one
 gallery cannot fill RAM. Skip logos, icon gifs, SVGs, cookie-banner assets.
 
-**SLO:** while this ETL run kind (and Maps scrape wait) run in-process, API p90
-must not increase by more than **1s** vs idle on the same instance
-([processes](../../../general-architecture/processes.md)). Authenticated / onboarding HTTP, not the Cloudflare contractor
-website. SSE is not p90 of request handlers. CI does not measure p90.
+**SLO:** while this ETL run kind (and Maps scrape wait) run in-process, API p90 must
+not increase by more than **1s** vs idle on the same instance
+([processes](../../../general-architecture/processes.md)). Authenticated /
+onboarding HTTP, not the Cloudflare contractor website. SSE is not p90 of
+request handlers. CI does not measure p90.
 
 ## Do — transform
 
@@ -136,9 +138,9 @@ extract continues. Fill empty trade, description, services, service areas,
 founder, marketing email, existing site URL from Extract markdown + HTML via
 [build-profile](../../onboarding/pipeline/build-profile.md) (each increment
 cites ≥1 crawl `source_id`; both sources when both dumps informed the value).
-Write discovered Facebook URLs and Instagram handles as identity keys
-(empty columns only) so those means may start on this enqueue (do not scrape
-them from this ETL run kind). Then
+Write discovered Facebook URLs and Instagram handles as details (empty columns
+only) so those ETL run kinds may start on this enqueue (do not scrape them from
+this ETL run kind). Then
 photos + [photo classification](photo-classification.md). Then
 [projects.md](projects.md) per crawl source (depicting photo on that HTML URL
 required). Same URL, both sources usable as a Project → one Project, two cites.
@@ -146,9 +148,10 @@ Disagreeing owner-typed scalars → research conflict.
 
 ## Persist
 
-`etl.website_crawl_fetches` (`fetched_from` as above); `etl.sources` (extract +
-HTML); `etl.website_crawl_pages`; `etl.website_crawl_page_photos`;
-`etl.imported_media` `imported_media_kind=website_crawl` +
+`etl.website_crawl_fetches` (`fetched_from` as above);
+`etl.sources` (extract + HTML); `etl.website_crawl_pages`;
+`etl.website_crawl_page_photos`; `etl.imported_media`
+`imported_media_kind=website_crawl` +
 `imported_media_sources`; `business_profile_edits` +
 `business_profile_edit_sources` + live profile / list rows / Projects.
 `etl.runs.status=succeeded` when homepage and remainder are done.

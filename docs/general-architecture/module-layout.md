@@ -26,7 +26,7 @@ internal/
     websitepreview/ #   package.go, events.go (08 R2 write + SSE for wait teaser)
     websiteeditor/  #   unpaid website preview HTTP + policy (not CMS /v1/assistant)
     assistant/    #   Find, Review, and client interview (isolated conversation + knowledge)
-  etl/            # run.go (StartRun: cap, enqueue_id, input sets, insert etl.runs when a means starts)
+  etl/            # run.go (StartRun: cap, enqueue_id, insert etl.runs when an ETL run kind can start)
     extract/      #   googlemaps/, facebook/, instagram/, crawl/, traderegistry/,
                   #   websearch/ — each with fakes; worker calls these, does not inline
     transform/    #   googlemaps/, facebook/, instagram/, crawl/, photo/,
