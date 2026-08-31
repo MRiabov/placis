@@ -19,7 +19,9 @@ deleted or zeroed.
 - `subscriptions` — `id` uuid pk, `tenant_id` fk unique, `subscription_tier`
   (`pro` / `pro-plus` / `pro-max`), `billing_interval` (`month` / `year`),
   `status` (`active` / `canceled`), `cancel_at_period_end` bool,
-  `current_period_end` timestamptz, `stripe_subscription_id` text nullable,
+  `current_period_end` timestamptz, `canceled_at` timestamptz nullable (set
+  when `status` becomes `canceled`; occupancy in website 01 uses this clock),
+  `stripe_subscription_id` text nullable,
   `created_at`, `updated_at`.
   Enterprise plan is not a self-serve `subscription_tier` value.
 - `ai_use_ledger_entries` — `id` uuid pk, `tenant_id` fk, `entry_kind`

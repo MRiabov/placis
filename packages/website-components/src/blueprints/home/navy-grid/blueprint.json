@@ -4,6 +4,7 @@
   "name": "Navy grid reference home",
   "description": "Source-backed home-page decomposition with editorial hero panels, metric proof, system cards, and image-led destination tiles.",
   "status": "ready",
+  "production_selectable": false,
   "modelled_after": [
     "Suffolk Construction",
     "Suffolk Construction Company",

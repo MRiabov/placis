@@ -2,7 +2,7 @@
   "id": "green_gold_home.reference",
   "schema_version": 1,
   "status": "ready",
-  "production_selectable": true,
+  "production_selectable": false,
   "selection_visibility": "public",
   "deprecated": false,
   "source_type": "source_backed_reference",

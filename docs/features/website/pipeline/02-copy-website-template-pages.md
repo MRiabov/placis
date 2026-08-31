@@ -41,6 +41,9 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 - Rewrite the privacy policy notice body (factory prose).
 - Invent a different layout per named service.
 - Skip service website pages, or invent a generic `/services` index.
+- Copy extra website pages (gallery / services index / testimonials /
+  careers) as `website_pages`.
+- Call an LLM.
 
 ## Do
 
@@ -53,7 +56,8 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
    policy** website page (`page_type=legal`). Copy the service website
    page **once per named service** on the accepted profile (same layout;
    path and title from that service name). N ≥ 1. Fail if zero named
-   services at this copy.
+   services at this copy. `{{about.intro_paragraphs}}` is a placeholder
+   namespace, not a page type.
 2. **Derive** `website.menus` (`top_menu` + `footer`) from the
    [menu constant](../catalog.md#menu-constant). Same pick + same named
    services → same website pages → same trees. Persist the row because
@@ -114,5 +118,5 @@ Onboarding 07 after the wait. 06 async automatic website copy generation.
 - `tenant_id` is the 01 unactivated tenant.
 - No `website_publications` in this step (08 writes v1).
 - Page set is static at client interview complete. N ≥ 1 service website
-  pages.
+  pages. One `page_type=about` website page.
 - Top menu and footer at 02 equal the menu constant for that page set.

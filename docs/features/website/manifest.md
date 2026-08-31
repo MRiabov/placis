@@ -48,7 +48,8 @@ Root:
 
 Per website page:
 
-- `path`, `title`, `page_type` (`home` / `service` / `contact` / `legal`)
+- `path`, `title`, `page_type` (`home` / `about` / `service` / `contact` /
+  `legal`)
 - page SEO columns (same set as root fallback)
 - `sections[]` only
 

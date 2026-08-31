@@ -594,8 +594,17 @@ unpublished website, Published website copy (the content), and Placis website
 
 #### Website template
 
-The starting point for a website: the website pages and website sections a
-typical site of that trade needs. Never say bare “template” or “blueprint”.
+The starting point for a website: one id in the website template catalog.
+Copying yields home, about, named service pages, contact, and privacy policy.
+Never say bare “template” or “blueprint”.
+
+---
+
+#### Production-ready website template
+
+A website template with `production_ready=true`. Website 01 may pick it.
+Internal, stub, and predecessor source-backed dumps are not 01 picks.
+Predecessor per-page `production_selectable` is not this flag.
 
 ---
 

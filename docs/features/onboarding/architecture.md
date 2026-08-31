@@ -15,7 +15,7 @@ find (company registry and/or Google Maps) + online research consent
   → Review (skippable; extra seconds for research)
   → client interview (text, 04a; voice writer 04b is **out**)
   → profile history accumulates as sources and answers arrive
-  → client interview complete → select then copy the website template (LLM picks website template/website styles; write is deterministic)
+  → client interview complete → select then copy the website template (occupancy + hash pick; write is deterministic)
   → automatic website copy generation starts (async; `/onboarding/preview`
     waits until the home website page has copy, or the wait cap; other
     website pages finish in parallel)
@@ -38,9 +38,12 @@ Client-interview-complete enqueues this step (05). Website
 [02](../website/pipeline/02-copy-website-template-pages.md).
 **Copying the website template’s pages is deterministic**: accepted profile +
 chosen website template → the same unpublished website, website placeholders
-kept. **Selecting** the website template and website styles is one bounded LLM
-call with a heuristic fallback — not website-page-by-website-page automatic
-website copy generation. Do not say apply the website template in prose.
+kept. **Selecting** the website template is occupancy within 250 km among
+production-ready website templates, then hash tie-break — not an LLM, not a
+trade table. Website styles ship with that website template’s associated
+website style catalog preset. 02 copies the website template (home, about, named
+service pages, contact, privacy policy) and derives the top menu and footer.
+Do not say apply the website template in prose.
 
 **Automatic website copy generation** (06) is a separate River job after that:
 the same tools as the website editor (`update_slot`, `update_seo`, …), writing

@@ -29,8 +29,9 @@ decomposed reference sites, not hand-picked palettes.
 
 ## How it flows
 
-1. The preset is selected during generation (or changed in the Website styles
-   workspace).
+1. [01 select website template](pipeline/01-select-website-template.md) sets
+   `preset_id` to that website template’s associated website style catalog
+   preset. The owner may change Website styles later in the CMS.
 2. `website_manifest.website_styles` carries the preset id + bounded overrides
    (`primary`, `neutral`, `accent`, `radius`, `density`). The Website styles
    workspace edits those three colors with a color picker (hex is only inside
