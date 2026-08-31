@@ -146,11 +146,11 @@ Status: decided (2026-08-16, product owner + engineering).
     Origins, archive, and create owner-written stay on the picker ADR.
 
     (2026-08-31): Do not pick `website_slot_reviews` when copying template
-    pages. **LLM ranking** (parallel to client interview if the pool exists;
-    again when ETL finishes) ranks the pool and selects **top reviews**.
-    `{{reviews.1}}` … resolve from that order. Website 03 must not
-    `update_reviews`. Owner Content / `update_reviews` can still override a
-    section later.
+    pages. **LLM ranking** after ETL fast extract writes provisional `is_top` /
+    `top_position` (not locked). After ETL finishes, rank again if additional
+    review rows landed, then write persistent pins. `{{reviews.1}}` … resolve
+    from that order. Website 03 must not `update_reviews`. Owner Content /
+    `update_reviews` can still override a section later.
 
     (2026-08-26): Certification definitions and selections are Details /
     business-profile tables (`certification_definitions`,

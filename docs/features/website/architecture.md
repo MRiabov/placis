@@ -69,9 +69,10 @@ site of that trade needs. From-scratch writes:
 4. pick or generate media assets (prefer real project photos; generate only
    when approved);
 5. reviews website sections keep `{{reviews.1}}` … ; **LLM ranking**
-   (`thread_kind=website_reviews_ranking`) orders the pool and selects
-   **top reviews** (ads). Owner Content / `update_reviews` can override a
-   section later;
+   (`thread_kind=website_reviews_ranking`) writes **provisional** top
+   reviews after ETL fast extract, then **persistent** pins after ETL
+   finishes if more reviews landed ([catalog.md](catalog.md#review-ranking)).
+   Owner Content / `update_reviews` can override a section later;
 6. validate against website component contracts, the company registry,
    marketing statements, links, website forms, SEO.
 

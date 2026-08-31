@@ -122,8 +122,10 @@ show Profile history, or to reconstruct the profile as of `accepted_edit_id`
   `top_position` is 1–30. Unique 1–30 is the cap — two rows cannot share a
   number. Writers never assign a single `top_position`. They replace the whole
   ordered id list in one transaction (`SELECT … FOR UPDATE` the profile row,
-  then densify 1…n from that list). The LLM pin job and Certifications and
-  reviews PATCH do the same replace, not a merge.
+  then densify 1…n from that list). The LLM ranking job (provisional after
+  ETL fast extract, persistent after ETL finishes) and Certifications and
+  reviews PATCH do the same replace, not a merge. Provisional pins are not
+  a skip key. Owner PATCH is `algorithm=human` and is not overwritten.
 
 Website sections hold their own ordered ids via `website_slot_reviews`. Ads use
 `is_top`. They do not copy the text except at website publication (citation

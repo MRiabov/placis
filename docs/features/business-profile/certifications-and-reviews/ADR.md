@@ -37,3 +37,11 @@ decision + date) instead of silently replacing the old entry.
    website template’s pages does not pick `website_slot_reviews`. Website copy
    generation must not `update_reviews`. Owner Content / `update_reviews` can
    still override a website section later.
+
+   (2026-08-31): After **ETL fast extract** writes `in_pool` reviews, the first
+   ranking replaces `is_top` / `top_position` as **provisional** — that set will
+   change and is not locked (not a skip key, not `algorithm=human`). When the
+   last overlapping ETL run for this enqueue finishes, rank again if additional
+   review rows landed, then replace `is_top` / `top_position` as **persistent**.
+   If no additional rows, persist the same pins without a second generate. Owner
+   PATCH on this screen stays human and is not overwritten.
