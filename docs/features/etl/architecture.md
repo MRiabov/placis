@@ -47,8 +47,7 @@ scrape. Web search is not instant: the first discovered `place_id` or URL
 unblocks Maps / crawl extract for already-inserted runs in this enqueue. Maps
 Details `website_url` and crawl `facebook.com` / Instagram links do the same for
 sibling runs. That is not a new `StartRun`. After Maps, crawl, and web search
-(if any) have `succeeded` / `error` / `skipped`, a social ETL run kind still missing
-its key becomes `skipped`.
+have `succeeded` / `error` / `skipped`, a social ETL run kind still missingits key becomes `skipped`.
 
 Packages: [`module layout`](../../general-architecture/module-layout.md),
 [package boundaries](../../general-architecture/package-boundaries.md).

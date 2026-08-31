@@ -72,7 +72,10 @@ discovered key unblocks Maps / crawl in the same enqueue. Known-URL crawl
 `https://api.parallel.ai/v1/extract`, up to 20 URLs per request) plus own HTTP
 GET for HTML/images ([website crawl](../etl/pipeline/website-crawl.md)). Direct
 Extract HTTP is allowed; Search HTTP is not. Maps Details, scrape, and Facebook
-stay typed adapters. (2026-08-23: Parallel named, and OpenRouter web tools
+stay typed adapters. (2026-08-31: onboarding 02 always includes `web_search` for
+both Find sources, including a Maps pick that already has `place_id`. Search
+fills empty keys and Facebook / Instagram handles; it does not overwrite a
+Find-attached `place_id`. 2026-08-23: Parallel named, and OpenRouter web tools
 wrongly forbidden. Same day, later: Parallel is a search engine on OpenRouter;
 we use OpenRouter for both search and extract. Predecessor used Perplexity
 Sonar via OpenRouter and Exa for Facebook discovery. 2026-08-24: Vercel AI
