@@ -4,13 +4,15 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
 02 still fills the checklist and writes `etl.*` rows. This feature’s own test is
 **integration** (real Postgres, faked Maps / Facebook / Instagram / LLM):
 
-1. **Bootstrap** — `StartRun` with `trigger=onboarding`, ETL run kinds including
-   Google Maps, Facebook, Instagram. Assert `etl.runs` (one per ETL run kind,
-   shared `enqueue_id`), `etl.sources`, fetch rows, Maps listing, profile posts
-   / reviews / media library photo kinds. Assert Details transform (hours /
-   marketing phone / first reviews) lands while scrape is still in flight;
+1. **Bootstrap** — `StartRun` with `trigger=onboarding` and the closed 02 ETL run kinds
+   list (never `directory`, `review`, or `photo`). Assert `etl.runs` (one per
+   ETL run kind, shared `enqueue_id`), `etl.sources`, fetch rows, Maps listing,
+   profile posts / reviews / media library photo kinds. Assert Details transform
+   (hours
+   / marketing phone / first reviews) lands while scrape is still in flight;
    scrape then adds further reviews / photos. ETL increments have
-   `business_profile_edit_sources`.
+   `business_profile_edit_sources`. Facebook / Instagram with no key stay
+   pending, then `skipped` if discovery finished with none.
 2. **Scheduled increment** — second `StartRun` with `trigger=scheduled` and a
    new review, a new Instagram post, a new photo, and a different marketing
    phone than the owner typed. Assert new review / post / photo on the business
@@ -25,7 +27,9 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
    scheduled run added no new `in_pool` rows, no ranking job.
 3. **Cap** — five onboarding `enqueue_id`s in 30 minutes; a sixth
    `StartRun(trigger=onboarding)` does not insert runs.
-4. **Skip** — scheduled Instagram with no handle → `status=skipped`, no fetch.
+4. **Skip** — scheduled Instagram with no handle → `status=skipped` immediately,
+   no fetch. Onboarding Instagram with no handle stays pending until discovery
+   finishes.
 5. **Isolation** — two tenants; each cannot read the other’s `etl.runs`,
    fetches, or profile posts.
 

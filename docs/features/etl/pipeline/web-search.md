@@ -7,13 +7,15 @@ transform rules:
 
 ## Trigger
 
-`StartRun` included this ETL run kind because Maps / crawl have no key yet.
+`StartRun` included this ETL run kind because Maps / crawl have no key yet (02: missing
+`place_id` **or** missing website URL on the onboarding session).
 
 ## Pre
 
 - `etl.runs` row `status=pending` (or retry).
-- No `place_id` and no known website URL (otherwise this ETL run kind is not
-  started).
+- 02 included this ETL run kind because the onboarding session lacked `place_id` **or**
+  lacked `website_url` at `StartRun`. If both keys exist by the time this job
+  runs, `skipped` (Maps / crawl already unblocked).
 
 ## Must not
 
@@ -28,10 +30,12 @@ transform rules:
 
 Set `status=extracting`. Call Parallel through Vercel AI Gateway
 (`gateway.tools.parallelSearch()`, any model). Parallel is not instant. Persist
-each discovered key as it arrives (typed columns on the onboarding session / run
-row, not a profile dump). A generation call over retrieved text (no search
-tools) may classify that text; it is not the ETL fast extract of Maps / crawl.
-Retry of this `run_id` does not search again for a result that already landed.
+each discovered key as it arrives onto the **already-inserted** sibling run
+(`place_id` on `google_maps_listing`, `website_url` on `website_crawl`) **and**
+the onboarding session attach. Not a profile dump. A generation call over
+retrieved text (no search tools) may classify that text; it is not the fast
+extract of Maps / crawl. Retry of this `run_id` does not search again for a
+result that already landed.
 
 ## Do — transform
 
@@ -42,8 +46,9 @@ wait for `web_search` `status=succeeded`.
 
 ## Persist
 
-`etl.runs` timestamps / error. Discovered keys on the onboarding session / run
-row as typed columns, not a profile dump.
+`etl.runs` timestamps / error. Discovered `place_id` / `website_url` on the
+sibling Maps / crawl runs and the onboarding session. Facebook / Instagram
+handles from Search land on those sibling runs the same way.
 
 ## Fail
 

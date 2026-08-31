@@ -6,27 +6,32 @@ Related: [ADR](ADR.md), [persistence](persistence.md), [pipeline](pipeline/READM
 
 ## StartRun
 
-`StartRun(etl_run_kinds, trigger, tenant)` (onboarding 02 also passes
-`onboarding_session_id`). `etl_run_kinds` length ≥ 1, explicit. Create
-`enqueue_id`. For `trigger=onboarding`, count distinct `enqueue_id` in the last
-30 minutes; 5 or more → do not insert runs (02 surfaces `research_wait_until`).
-Insert one `etl.runs` row per ETL run kind. Enqueue one extract River job per
-row.
+`StartRun(etl_run_kinds, trigger, tenant, force=false)` (onboarding 02 also passes
+`onboarding_session_id`). `etl_run_kinds` length ≥ 1, explicit. Create `enqueue_id`. For
+`trigger=onboarding`, count distinct `enqueue_id` in the last 30 minutes; 5 or
+more → do not insert runs (02 already counted so business lookup stays 200 and
+a later source-change stays `429`). Insert one `etl.runs` row per ETL run kind. Copy
+onboarding session attach keys onto those rows. Enqueue one extract River job
+per row.
+
+Onboarding `etl_run_kinds` are the closed list in
+[02](../onboarding/pipeline/02-business-research.md). Never `directory`,
+`review`, or `photo`. Scheduled `etl_run_kinds` = Google Maps, Facebook, Instagram.
 
 **Must not** (in `run.go`): call Maps / Facebook / Instagram / crawl / Parallel
 Search; insert fetch rows; upsert `google_maps_listings`; write the live
 business profile or classify photos. Parallel Extract is the crawl adapter, not
-`StartRun`. That work is a **package function** `Run` in
-`extract/<etl_run_kind>/` then `transform/<etl_run_kind>/` (for example
-`internal/etl/transform/googlemaps.Run`). Go has no classes; this is not a
-method on a per-ETL run kind type, and there is no shared `Extractor` /
-`Transformer` interface. The River worker calls those functions
+`StartRun`. That work is a **package function** `Run` in `extract/<etl_run_kind>/` then
+`transform/<etl_run_kind>/` (for example `internal/etl/transform/googlemaps.Run`). Go
+has no classes; this is not a method on a per-ETL run kind type, and there is no shared
+`Extractor` / `Transformer` interface. The River worker calls those functions
 ([module layout](../../general-architecture/module-layout.md)). The worker repeats that pair **per extract chunk** (ETL fast
-extract, then ETL slow extract). It does not wait for the ETL run kind to finish
-before the first transform.
+extract, then ETL slow extract). It does not wait for the ETL run kind to finish before the
+first transform. An ETL run kind with no key yet stays pending (onboarding) or is
+`skipped` (scheduled).
 
-Monday / Wednesday / Friday: stagger activated tenants. `etl_run_kinds` = Google
-Maps, Facebook, Instagram. Skip an ETL run kind with no key (`status=skipped`).
+Monday / Wednesday / Friday: stagger activated tenants. `etl_run_kinds` = Google Maps,
+Facebook, Instagram. Skip an ETL run kind with no key (`status=skipped` immediately).
 `force` defaults false (stale-algorithm transform rewrite is off;
 `algorithm=human` is never rewritten). `force` does not refetch when only the
 algorithm changed. A bumped `schema_revision` extracts by default.

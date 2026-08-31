@@ -8,8 +8,10 @@ Instagram profile and Instagram posts.
 
 ## Trigger
 
-`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled
-and there is no Instagram handle.
+`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled and there
+is no Instagram handle. Onboarding with no handle yet: stay pending until
+crawl or web search writes `instagram_handle` onto this run. After Maps,
+crawl, and web search (if any) finish, still no handle → `skipped`.
 
 ## Pre
 
