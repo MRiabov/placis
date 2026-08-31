@@ -23,8 +23,7 @@ sidebar (Sites, Profile with Business details, Projects, Certifications and
 reviews, and Media library) stays around it, and Ads is dashboard-ish content in
 the main area — My ads list, the ad workspace, and the ad detail all render
 inside that main area. Look:
-[`apps/demo/`](../../../../apps/demo/README.md) `/cms/ads`. HTML archive:
-[ads.html](../../../design/ads.html).
+[`apps/demo/`](../../../../apps/demo/README.md) `/cms/ads`.
 
 Stack: Vite + React + TanStack Router (the `/cms/*` island), generated API
 types, Tailwind + Radix, Kibo/shadcn components where they fit. Ads follows the
@@ -55,8 +54,7 @@ These principles shape every screen in this workspace:
 
 ## Design Mock
 
-Editable look is [`apps/demo/`](../../../../apps/demo/README.md) `/cms/ads`. The HTML archive is [ads.html](../../../design/ads.html). It
-shows the current direction:
+Editable look is [`apps/demo/`](../../../../apps/demo/README.md) `/cms/ads`. It shows the current direction:
 **one accordion wrapper with two expandable steps, both visible immediately** —
 step 1 "About the ad" (open by default, all the questions), step 2 "Review"
 (visible but locked — "Complete step 1 to unlock" — and expands once step 1 is
@@ -65,7 +63,7 @@ generate row), then the approve block when the ad is ad ready to post. The
 combobox is closed by default with a conditional "create new". Format pills are
 single-select (one format per ad) using owner-facing names (Square feed,
 Portrait feed, Carousel, Story) — no ratios, no ad-set jargon. The mock uses
-[tokens.css](../../../design/tokens.css). White canvas, Satoshi, hairline prompt box, control radius on
+[`theme.css`](../../../../apps/demo/src/styles/theme.css). White canvas, Satoshi, hairline prompt box, control radius on
 fields. The real implementation imports the app globals and should reuse the
 dashboard prompt look rather than duplicate a palette.
 

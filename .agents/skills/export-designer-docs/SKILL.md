@@ -1,13 +1,13 @@
 ---
 name: export-designer-docs
-description: Copies every sanitized Placis product, design, and frontend decision doc into the look-demo git repo (demo.placis.com) for the designer cofounder. On invocation: pull from latest, resolve if there are any conflicts, merge, and notify if there were changes while the user wasn't looking. After a successful copy, commit dest through a PR and squash-merge it; do not wait to be asked. No backend docs, no HTML mock archive, no zip. Use when asked to export design docs, copy designer docs into the demo repo, send product/look docs to a designer, or repeat the designer/cofounder docs extraction.
+description: Copies every sanitized Placis product, design, and frontend decision doc into the look-demo git repo (demo.placis.com) for the designer cofounder. On invocation: pull from latest, resolve if there are any conflicts, merge, and notify if there were changes while the user wasn't looking. After a successful copy, commit dest through a PR and squash-merge it; do not wait to be asked. No backend docs, no zip. Use when asked to export design docs, copy designer docs into the demo repo, send product/look docs to a designer, or repeat the designer/cofounder docs extraction.
 ---
 
 # Export designer docs
 
 Repeatable extraction of **look + product** for the designer cofounder. They
-have a complete say over the product. They must **not** receive backend code,
-backend docs, or the deprecated HTML mock archive.
+have a complete say over the product. They must **not** receive backend code
+or backend docs. Look is the Vite app in dest, not a separate HTML archive.
 
 The destination is the **same git repo** as the Vite look app
 (`demo.placis.com`). Git is the send channel. There is no zip.
@@ -86,8 +86,7 @@ leave dest uncommitted).
 
 ## Completeness (must pass)
 
-`dest/docs/` must contain **every** Placis file of these names (except under
-the HTML archive `docs/design/`):
+`dest/docs/` must contain **every** Placis file of these names:
 
 | Kind | Filename | Must include |
 | --- | --- | --- |
@@ -101,7 +100,7 @@ The cover `docs/README.md` must **index** all of those (do not omit assistant
 or billing PRDs, or the Projects design decision record). Compare
 `copied_prd.md=` / `copied_design-decision-record.md=` /
 `copied_frontend.md=` from the script to a glob of the same names under Placis
-`docs/` (skip `docs/design/`). If a new file of those names exists in Placis
+`docs/`. If a new file of those names exists in Placis
 and is missing from dest, the export is wrong — fix the script (usually
 `INCLUDED_MD_NAMES`) and re-run.
 
@@ -117,7 +116,7 @@ Media / leads / auth have no PRD, frontend spec, or design decision record.
 
 | They get | They do not get |
 | --- | --- |
-| Vite look app (via `scripts/sync-look-demo.sh`) | HTML/CSS/JS mock archive (`docs/design/`) |
+| Vite look app (via `scripts/sync-look-demo.sh`) | Zip dumps |
 | Every `prd.md`, `general-prd.md` | `ADR.md` |
 | Every `design-decision-record.md` | `api.md`, `persistence.md`, `technical-implementation.md` |
 | Every `frontend.md` (not `frontend-debloat.md`) | `architecture.md`, `pipeline/`, testing, Cloudflare/ops |
@@ -132,10 +131,9 @@ Send-back is commit and push this repo, not a zip.
 
 1. If it exits non-zero (`leftovers:` / `broken_links:`), fix
    `scripts/export_designer_docs.py` and re-run. Do not hand-edit dest.
-2. Run the Completeness checklist above. Confirm dest has **no**
-   `design/cms.html`, `onboarding.html`, `ads.html`, or `ADR.md`.
-3. Tell the user the dest path. Warn them not to send leftover zips such as
-   `docs/design.zip` or anything that includes `ADR.md`.
+2. Run the Completeness checklist above. Confirm dest has **no** `ADR.md`.
+3. Tell the user the dest path. Warn them not to send leftover zips or anything
+   that includes `ADR.md`.
 4. Land dest (next section). Do not stop and wait for “commit”, “push”, or
    “merge”.
 
@@ -193,8 +191,8 @@ Only Markdown is copied (omitted links stripped or retargeted from a feature
 
 ## Do not
 
-- Put backend files or HTML mocks in dest “for context”
-- Build a zip or write `docs/design/exported-docs/`
+- Put backend files in dest “for context”
+- Build a zip
 - Point the designer at `frontend-2/` or Go `internal/` packages
 - Send an unsanitized `docs/` tree (the exporter still strips omitted-file links)
 - Overwrite the Vite app or dest-root `README.md`

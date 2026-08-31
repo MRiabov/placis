@@ -1,6 +1,6 @@
 # Projects look
 
-Editable look: [`apps/demo/`](../../../../apps/demo/README.md) `/cms/projects`. HTML archive: [cms.html](../../../design/cms.html).
+Editable look: [`apps/demo/`](../../../../apps/demo/README.md) `/cms/projects`.
 
 [Design decision record](design-decision-record.md). The yellow strip is
 mock-only **per-screen states**. Default **collapsed**. Open with `?dev=1`. Hide

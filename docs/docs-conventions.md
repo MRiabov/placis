@@ -27,11 +27,11 @@ before adding or editing a doc.
   feature's docs in one place). `features/business-profile/` holds Details,
   Projects, and Certifications and reviews as child view dirs. `features/other/`
   is auth, media library, leads.
-- `design/` — deprecated HTML archives of look mocks. Do not start look there.
-  Editable look: [`apps/demo/`](../apps/demo/README.md). The designer checkout (`demo.placis.com`) gets
-  the Vite app via `scripts/sync-look-demo.sh` and product/look Markdown via
-  `scripts/export_designer_docs.py`. Specs remain canonical. CMS is the token
-  source of truth.
+- Look lives in [`apps/demo/`](../apps/demo/README.md), not under `docs/`. Do
+  not start look work outside that app. The designer checkout
+  (`demo.placis.com`) gets the Vite app via `scripts/sync-look-demo.sh` and
+  product/look Markdown via `scripts/export_designer_docs.py`. Specs remain
+  canonical. CMS is the token source of truth.
 - `planning/` — proposed, unshipped work; never the canonical source. The
   `frontend-2` port index is [planning/frontend-debloat.md](planning/frontend-debloat.md); per-feature cut
   lists live with the feature as `frontend-debloat.md`.

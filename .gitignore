@@ -48,6 +48,3 @@ apps/demo/.wrangler/
 
 # Local zip dumps (designer export, ads archives). Never commit archives.
 *.zip
-
-# Leftover local designer export dir (export now writes into demo.placis.com)
-docs/design/exported-docs/
