@@ -7,9 +7,9 @@
 - **Assert**: Review / checklist reads succeed before jobs finish; one
   `enqueue_id` per `StartRun` and several `etl.runs` (one per ETL run kind) sharing that
   `enqueue_id`; `etl_run_kinds` are the closed 02 list (never `directory`, `review`, or
-  `photo`); retry of the same `run_id` does not refetch a chunk that already
-  has a fetch and still runs remaining ETL slow extract; Maps path upserts
-  `etl.google_maps_listings` (+ hours, review rows) from Details **before**
+  `photo`; always includes `trade_registry` on Maps-only Find); retry of the
+  same `run_id` does not refetch a chunk that already
+  has a fetch and still runs remaining ETL slow extract; Maps path upserts  `etl.google_maps_listings` (+ hours, review rows) from Details **before**
   scrape finishes; checklist / SSE show that live business profile while the
   Maps run is still `extracting`; `place_id` on the Maps run; Facebook /
   Instagram with no key stay pending until crawl / Maps / web search write a

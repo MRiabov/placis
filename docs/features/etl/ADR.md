@@ -127,8 +127,12 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     slow extract of `google_maps_listing`. Photo classification is transform after
     attach. Crawl fills trade / founder / service areas (no directory job).
     Facebook / Instagram wait for a key from Maps, crawl, or web search, then
-    `skipped` if discovery finished with no key. Discovered keys persist on the
-    waiting `etl.runs` row and the onboarding session attach. (2026-08-31)
+    `skipped` if discovery finished with no key. `trade_registry` is always in
+    the onboarding list: look up by `company_number` + country when attached,
+    else `display_name` + country (Maps-only still runs). Discovered keys
+    persist on the waiting `etl.runs` row and the onboarding session attach.
+    (2026-08-31; same day, later: trade registry is not gated on company
+    registry attach.)
 
 15. **Find attach is onboarding session keys; extract still owns the listing**
     — 01 persists `place_id` / `company_number` / `website_url` on the
