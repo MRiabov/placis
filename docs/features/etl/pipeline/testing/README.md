@@ -3,6 +3,7 @@
 Integration (real Postgres, adapters faked). One file per source / operation
 group.
 
+- [Means registry](means.md)
 - [Google Maps](google-maps.md)
 - [Facebook](facebook.md)
 - [Instagram](instagram.md)

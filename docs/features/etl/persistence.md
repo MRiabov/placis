@@ -8,21 +8,20 @@ Facebook / Instagram rows and photo classification live on the
 
 ## Runs
 
-- `runs` — `id`, `tenant_id` fk, `enqueue_id` (uuid, shared by every ETL run kind in one
-  `StartRun` call), `trigger` (`onboarding` / `scheduled`), `etl_run_kind`
-  (`google_maps_listing` / `facebook` / `instagram` / `website_crawl` /
-  `trade_registry` / `web_search`), `status`
-  (`pending` / `extracting` / `transforming` / `succeeded` / `error` /
-  `skipped`), `onboarding_session_id` nullable fk, `place_id` nullable,
-  `website_url` nullable, `facebook_page_url` nullable, `instagram_handle`
-  nullable, `error` nullable, `started_at`, `finished_at`. One row per ETL run
-  kind extract. River retry keeps this `id`. Each ETL run kind uses the key
-  columns that apply (Maps `place_id`, crawl `website_url`, Facebook page URL,
-  Instagram handle). Discovery writes onto the waiting sibling run. `skipped`
-  when scheduled and that ETL run kind has no key, or when onboarding discovery
-  finished and that social ETL run kind still has no key. Do not persist
-  `directory`, `review`, or `photo` as `etl_run_kind` — those are not
-  `StartRun` ETL run kinds.
+- `runs` — `id`, `tenant_id` fk, `enqueue_id` (uuid, shared by every means that
+  started in one `StartRun` call), `trigger` (`onboarding` / `scheduled`),
+  `etl_run_kind` (`google_maps_listing` / `facebook` / `instagram` / `website_crawl` /
+  `trade_registry` / `web_search`), `status` (`pending` / `extracting` /
+  `transforming` / `succeeded` / `error` / `skipped`), `onboarding_session_id`
+  nullable fk, `place_id` nullable, `website_url` nullable, `facebook_page_url`
+  nullable, `instagram_handle` nullable, `error` nullable, `started_at`,
+  `finished_at`. One row per means that **started**. River retry keeps this
+  `id`. Key columns copy identity keys for the running job (Maps `place_id`,
+  crawl `website_url`, Facebook page URL, Instagram handle). Facts themselves
+  live on the onboarding session attach and the live profile. `skipped` when
+  scheduled and the input set is unmet, or when onboarding has nothing left that
+  can produce that identity key. Do not persist `directory`, `review`, or
+  `photo` as `etl_run_kind` — those are not `StartRun` ETL run kinds. Input sets: [means](pipeline/means.md).
 
 ## Sources (live extract identity)
 

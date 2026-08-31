@@ -7,9 +7,10 @@ separate `StartRun` ETL run kind. Shared extract / transform rules:
 
 ## Trigger
 
-`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled and there
-is no `place_id`. Onboarding with no `place_id` yet: stay pending until
-[web search](web-search.md) writes `place_id` onto this run (same enqueue).
+Input set met ([means](means.md)): (1) `place_id`, or (2) `display_name` +
+locality. Skip (`status=skipped`) when scheduled and neither input set is met.
+Onboarding: start when an input set is met (Find attach, Parallel, or Places
+Find). Insert `etl.runs` then.
 
 ## Pre
 
@@ -30,10 +31,20 @@ is no `place_id`. Onboarding with no `place_id` yet: stay pending until
 - Wait for scrape (ETL slow extract) before transforming the Details chunk (ETL
   fast extract).
 - Be a `etl_run_kind=review` or `etl_run_kind=photo` `StartRun`. Those ETL run kinds do not exist.
+- Pick among several Places Find hits, or accept a weak hit. Wrong listing is
+  worse than an empty Maps row.
 
 ## Do — extract (ETL fast extract)
 
-Set `status=extracting`. Call Google Maps Details. Persist
+Set `status=extracting`. If there is no `place_id` yet, call Places Find / text
+search with `display_name` + locality (trade location, registered-office
+locality, or tenant country city). One high-confidence hit → persist that
+`place_id` as an identity key (onboarding session attach, empty columns only)
+and continue. Several hits or a weak hit → do not pick; `skipped` unless
+Parallel or Find later supplies `place_id` (evaluator starts this means then).
+Do not call Parallel from this ETL run kind.
+
+Call Google Maps Details. Persist
 `etl.google_maps_fetches` (`fetched_from=google_maps_details`, UUID, `place_id`,
 `raw`, `run_id`, `fetched_at`). Upsert the listing (hours, first reviews / photo
 refs). Then transform this chunk immediately (~1s).
@@ -57,10 +68,12 @@ photos; review photos come with `reviews=true`).
 Persist a `fetched_from=scrape` fetch as each scrape response arrives. Insert
 new listing reviews. Attach scrape photos onto **that** listing review
 (`google_maps_listing_review_photos` → media library). Do not put those in
-`google_maps_listing_photos`. Reviewer avatar is not the job. Transform
-**that** chunk before waiting for the rest (~40s extra after Details).
-`status` stays `extracting` until scrape has nothing left; `succeeded` only
-then.
+`google_maps_listing_photos`. Reviewer avatar is not the job. Transform **that**
+chunk before waiting for the rest (~40s extra after Details). `status` stays
+`extracting` until scrape has nothing left; `succeeded` only then. Skip
+remaining scrape when the only leftovers are `human` scalars (marketing phone,
+name, hours, website) **and** reviews / photos are already filled enough —
+[means](means.md) pause rule. Do not skip scrape only because marketing phone is `human`.
 
 `etl_run_kind=review` / `etl_run_kind=photo` are not `StartRun` ETL run kinds. Further reviews and
 photos are this ETL slow extract.
@@ -85,8 +98,9 @@ this chunk set.
 
 - Empty scalars fill from the listing (display name, marketing phone, website,
   hours). Each increment cites the listing `source_id`. If Details has a
-  website URL, write it onto the sibling `website_crawl` run and the
-  onboarding session `website_url` (unblocks crawl in this enqueue).
+  website URL, write it as an identity key (`website_url` on the onboarding
+  session attach and live `existing_site_url` when empty). That may start
+  crawl on this enqueue. Do not overwrite a Find-attached `website_url`.
 - New reviews → `business_profile_reviews` keyed to
   `etl.google_maps_listing_reviews`. The add increment cites the listing-review
   `source_id`. Write a **review citation** on each new imported row (cheap

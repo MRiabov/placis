@@ -5,15 +5,15 @@ transform for that source. Shared profile-update / conflict rules:
 [build-profile](../../onboarding/pipeline/build-profile.md). Do not fork a second merge.
 
 ```text
-StartRun(etl_run_kinds, trigger, tenant, force=false)
-  → one etl.runs row per ETL run kind (shared enqueue_id)
+StartRun(trigger, tenant, force=false)
+  → enqueue_id; start each means whose input set is met (shared enqueue_id)
   → extract/<etl_run_kind> chunk → transform/<etl_run_kind> that chunk (repeat; not inlined in StartRun)
 ```
 
-Monday / Wednesday / Friday: `trigger=scheduled`, ETL run kinds Google Maps, Facebook,
-Instagram. Onboarding 02: `trigger=onboarding`, the closed list in
-[02](../../onboarding/pipeline/02-business-research.md) (never `directory`,
-`review`, or `photo`). 02 only calls `StartRun`.
+Monday / Wednesday / Friday: `trigger=scheduled`, means Google Maps, Facebook,
+Instagram. Onboarding 02: `trigger=onboarding`, the
+[means registry](means.md) (never `directory`, `review`, or `photo`). 02 only
+calls `StartRun`.
 
 ## Shared rules
 
@@ -37,13 +37,17 @@ Instagram. Onboarding 02: `trigger=onboarding`, the closed list in
 - Retry of **this** `run_id` reuses a fetch that already landed for that chunk
   (`fetched_from`, canonical URL + `fetched_from` for crawl). It does not skip
   remaining ETL slow extract chunks. `trigger=scheduled` extracts again.
-- Scheduled with no key (`place_id`, Facebook URL / handle, Instagram handle) →
-  `status=skipped` immediately, no transform. Onboarding: no key yet → stay
-  pending (do not scrape). Discovery writes the key onto this run. After Maps,
-  crawl, and web search finish, still no key → `skipped`.
-- Discovered keys persist on the waiting `etl.runs` row **and** the
-  onboarding session attach (`place_id`, `website_url`). Not a profile dump.
-  Not a new `StartRun`.
+- Scheduled with no input set (`place_id`, Facebook URL / handle, Instagram
+  handle) → `status=skipped` immediately, no transform. Onboarding: insert the
+  run when the input set is met. New identity keys (Maps, crawl, Parallel,
+  contractor URL) start further means on this enqueue. Nothing left that can
+  produce the identity key → `skipped`. A later paste can still start the means.
+- Identity keys persist on the onboarding session attach and the live profile
+  (`place_id`, `website_url`, handles). Running jobs may copy them onto
+  `etl.runs`. Not a profile dump. Not a new `StartRun`.
+- Pause remaining **expensive** extract when the only leftovers are `human`
+  scalars (marketing phone, email, …). Cheap ETL fast extract still runs. Lists /
+  Projects / reviews / photos still run. Details: [means](means.md).
 - Dump `raw` only on the fetch row. Never on listing / profile / post live rows.
 - Open web **search** is Parallel through Vercel AI Gateway only
   ([web-search](web-search.md)). Known-URL crawl **text** is Parallel Extract
@@ -98,6 +102,7 @@ Instagram. Onboarding 02: `trigger=onboarding`, the closed list in
   transform (not a StartRun ETL run kind); skip on
   `etl.llm_source_to_project_classifications`
 - [Trade registry](trade-registry.md) — accreditations (02 only)
-- [Web search](web-search.md) — Parallel **Search** discovery (02 only)
+- [Means registry](means.md) — input sets, client-interview window, fire / skip / pause
+- [Web search](web-search.md) — Parallel **Search** (02 only; one means)
 - [Photo classification](photo-classification.md) — photo kinds on media
   library items (transform after attach; not a `StartRun` ETL run kind)

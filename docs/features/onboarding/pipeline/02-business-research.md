@@ -12,11 +12,13 @@ Paid lookups (Maps, Parallel, Facebook, crawl) cost money. A naive contractor
 must not be able to start that work dozens of times by repeating business
 lookup, picking another company, or retrying. Cap it.
 
-02 only calls **`etl.StartRun(etl_run_kinds, trigger=onboarding, force=false)`**.
-Extract and transform: [ETL](../../etl/README.md). One `StartRun` creates one
-`enqueue_id` and one ETL run per ETL run kind. River retries keep the same
-`etl.runs.id`. Count distinct `enqueue_id`, not jobs — otherwise one business
-lookup would already exceed the cap.
+02 only calls **`etl.StartRun(trigger=onboarding, force=false)`** with the
+onboarding means set. Extract and transform: [ETL](../../etl/README.md).
+Means, input sets, and the client-interview window:
+[means registry](../../etl/pipeline/means.md). One `StartRun` creates one
+`enqueue_id`. An ETL run is inserted when that means **starts**. River retries
+keep the same `etl.runs.id`. Count distinct `enqueue_id`, not jobs — otherwise
+one business lookup would already exceed the cap.
 
 01 already wrote legal identity and Maps autocomplete increments. 02 does not
 repeat those writes and does not upsert `etl.google_maps_listings` itself.
@@ -38,13 +40,13 @@ enqueue cap.
 ## Must not
 
 - Own adapters, fetch tables, or the Google Maps listing (those are ETL).
-- Call Parallel Search HTTP. Discovery is [web-search](../../etl/pipeline/web-search.md)
+- Call Parallel Search HTTP. Search is [web-search](../../etl/pipeline/web-search.md)
   (`gateway.tools.parallelSearch()`). Parallel Extract is the crawl adapter, not
   02.
 - Use Exa, Perplexity, Tako, a model’s built-in search, `:online`, or
   OpenRouter web search.
-- Text autosave, create a realtime connection, `end_interview`, interview field
-  lists, set `channel`.
+- Text autosave, create a realtime connection, `end_interview`, client interview
+  field lists, set `channel`.
 - Write Review. Photo classification is ETL transform, not 04a/04b.
 - Say a miss means “this business has no profile” — a miss is “ask”.
 - Enqueue a 6th `StartRun` (`trigger=onboarding`) for the same `tenant_id`
@@ -56,7 +58,10 @@ enqueue cap.
 - Pass `directory`, `review`, or `photo` as `StartRun` ETL run kinds. Scrape is
   ETL slow extract of `google_maps_listing`. Photo classification runs after photos
   attach. Crawl fills trade / founder / service areas (no directory job).
-- Pass an implicit “all sources” list. Build `etl_run_kinds` from the table below.
+- Pass an implicit “all sources” list or a hand-built Always table. The
+  onboarding means set is the registry.
+- Wait for a sibling ETL run kind to succeed before starting another means.
+  Means start when an input set is met.
 
 ## Do
 
@@ -72,30 +77,15 @@ goes to
 ([ETL architecture](../../etl/architecture.md)). 02 checks first so business
 lookup can stay **200** and a later source change can stay **429**.
 
-If the count is **0–4**, call `StartRun` with the ETL run kinds below. Pass
-`onboarding_session_id` and `force=false`. Copy onboarding session attach keys
-onto the matching `etl.runs` rows (`place_id`, `website_url`). Both Find
-sources get [web search](../../etl/pipeline/web-search.md) (Parallel). Seed
-from `legal_name` / `company_number` / country / `registered_office` and/or
-Maps `display_name`. A Maps pick still runs Search (handles, extra URLs) even
-when `place_id` is already known. Empty keys fill; do not overwrite a
-Find-attached `place_id`. The first missing `place_id` / website URL unblocks
-Maps / crawl in this enqueue. Maps-only Find still gets `trade_registry`
-(lookup by `display_name` + country).
-
-### ETL run kinds 02 passes
-
-| Include when | ETL run kind | Live profile / checklist | Pipeline |
-| --- | --- | --- | --- |
-| Always | `google_maps_listing` | Maps profile, marketing phone, website, opening hours, reviews, photos, Projects from reviews usable as a Project (Details first, then scrape) | [Google Maps](../../etl/pipeline/google-maps.md) |
-| Always | `facebook` | Facebook profile / URL / posts, Projects from posts. Waits for a Facebook URL / handle | [Facebook](../../etl/pipeline/facebook.md) |
-| Always | `instagram` | Instagram profile / posts, Projects from posts. Waits for a handle | [Instagram](../../etl/pipeline/instagram.md) |
-| Always | `website_crawl` | trade, services, service area, founder, photos, Projects (homepage fast, then parallel remainder). Waits for a website URL | [Website crawl](../../etl/pipeline/website-crawl.md) |
-| Always | `trade_registry` | accreditations. Key is `company_number` + country when a company registry record is attached, else `display_name` + country (Maps-only is enough). Not the locked business-registry certification on Find | [Trade registry](../../etl/pipeline/trade-registry.md) |
-| Always | `web_search` | Parallel discovery for **both** Find sources (Maps pick and company registry record). Fills empty `place_id` / website URL / Facebook / Instagram keys; does not overwrite a Find-attached `place_id` | [Web search](../../etl/pipeline/web-search.md) |
-
-Monday / Wednesday / Friday does not pass crawl, trade registry, or web search.
-Instagram is a persisted ETL run kind (scrape).
+If the count is **0–4**, call `StartRun` with the onboarding means set. Pass
+`onboarding_session_id` and `force=false`. Copy Find attach and live-profile
+identity keys into the enqueue. The evaluator starts each means whose input set
+is already met (Maps from `place_id` **or** `display_name` + locality; trade
+registry from `company_number` + country **or** `display_name` + country;
+Parallel when identity keys exist and some identity key is still empty; crawl /
+Facebook / Instagram when their URL/handle exists). Further means start when
+identity keys change — including 04a URL / handle writes. That is not a new
+`StartRun`.
 
 ETL run kinds in this enqueue **start when their key exists**. Maps Details,
 crawl links, and web search write discovered keys onto the waiting sibling run
@@ -108,11 +98,11 @@ not updated.
 
 ## Persist
 
-`etl.runs` (one per ETL run kind, shared `enqueue_id`); fetches and listing as
-extract chunks land; live business profile via transform of each chunk (not only
-when the ETL run kind succeeds). `research_wait_until` is derived when the cap
-is hit; it is not a table. Expose it on `GET .../profile` and the onboarding
-session SSE.
+`etl.runs` (one per means that started, shared `enqueue_id`); fetches and
+listing as extract chunks land; live business profile via transform of each
+chunk (not only when the ETL run kind succeeds). `research_wait_until` is derived when
+the cap is hit; it is not a table. Expose it on `GET .../profile` and the
+onboarding session SSE.
 
 ## Fail
 
@@ -150,3 +140,4 @@ enqueue’s ETL finishes**
 - Review ranking (`reviews_ranking_for_display`) is not copying the website
   template’s pages and not website 03.
 - 02 never passes `directory`, `review`, or `photo`.
+- Means start from identity keys, not from a sibling ETL run kind succeeding.

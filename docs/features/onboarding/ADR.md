@@ -37,10 +37,11 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
    profile. Google Maps listing columns live in `etl.google_maps_listings` (no
    `raw` on that row). 01 writes legal identity and Maps autocomplete
    increments from the selected records; it does not upsert the listing. 02
-   passes the closed ETL run kinds list in [02](pipeline/02-business-research.md).
+   passes the onboarding means set
+   ([means](../etl/pipeline/means.md)).
    (2026-08-27: warehouse moved to ETL; onboarding 02 is the trigger only. Same
    day, later: transform per extract chunk. 2026-08-31: Find attach vs extract;
-   closed 02 ETL run kinds.)
+   closed 02 ETL run kinds. Same day, later: means registry / input sets.)
 
 5. **Retry may reuse a fetch for the same ETL run chunk; scheduled extract does
    not skip** — Look up the newest fetch for this `run_id` **and that chunk**
@@ -70,20 +71,21 @@ that text; it is not Maps / crawl extract. Parallel is not instant: the first
 discovered key unblocks Maps / crawl in the same enqueue. Known-URL crawl
 **text** is Parallel **Extract** (`PARALLEL_API_KEY` against
 `https://api.parallel.ai/v1/extract`, up to 20 URLs per request) plus own HTTP
-GET for HTML/images ([website crawl](../etl/pipeline/website-crawl.md)). Direct
-Extract HTTP is allowed; Search HTTP is not. Maps Details, scrape, and Facebook
-stay typed adapters. (2026-08-31: onboarding 02 always includes `web_search` for
-both Find sources, including a Maps pick that already has `place_id`. Search
-fills empty keys and Facebook / Instagram handles; it does not overwrite a
-Find-attached `place_id`. 2026-08-23: Parallel named, and OpenRouter web tools
-wrongly forbidden. Same day, later: Parallel is a search engine on OpenRouter;
-we use OpenRouter for both search and extract. Predecessor used Perplexity
-Sonar via OpenRouter and Exa for Facebook discovery. 2026-08-24: Vercel AI
-Gateway exposes Parallel as a server tool; OpenRouter is no longer the
-search/extract hop — generation and search stay on Vercel. 2026-08-27: Parallel
-is not instant; first discovered key unblocks Maps / crawl; generation over
-retrieved text is not ETL fast extract. 2026-08-30: Search vs Extract split;
-Extract is known-URL crawl text, not a Projects-only hop.)
+GET for HTML/images ([website crawl](../etl/pipeline/website-crawl.md)). Direct Extract HTTP is allowed; Search
+HTTP is not. Maps Details, scrape, and Facebook stay typed adapters.
+(2026-08-31: Parallel is a means in the [registry](../etl/pipeline/means.md), not the gate for Maps. Maps
+may start from `place_id` or `display_name` + locality. Search fills empty
+identity keys only. Same day, earlier: onboarding 02 always includes
+`web_search` for both Find sources, including a Maps pick that already has
+`place_id`. 2026-08-23: Parallel named, and OpenRouter web tools wrongly
+forbidden. Same day, later: Parallel is a search engine on OpenRouter; we use
+OpenRouter for both search and extract. Predecessor used Perplexity Sonar via
+OpenRouter and Exa for Facebook discovery. 2026-08-24: Vercel AI Gateway exposes
+Parallel as a server tool; OpenRouter is no longer the search/extract hop —
+generation and search stay on Vercel. 2026-08-27: Parallel is not instant; first
+discovered key unblocks Maps / crawl; generation over retrieved text is not fast
+extract. 2026-08-30: Search vs Extract split; Extract is known-URL crawl text,
+not a Projects-only hop.)
 
 6. **The business profile keeps profile history and every detail is
    attributable** — each change is a new `business_profile_history` row with
