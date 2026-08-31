@@ -46,5 +46,8 @@ apps/demo/.wrangler/
 # Test runner output
 **/test-results/
 
-# Leftover local designer zips (export now writes into demo.placis.com)
+# Local zip dumps (designer export, ads archives). Never commit archives.
+*.zip
+
+# Leftover local designer export dir (export now writes into demo.placis.com)
 docs/design/exported-docs/
