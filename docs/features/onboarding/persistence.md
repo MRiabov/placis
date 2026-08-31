@@ -32,7 +32,8 @@ activation. Thread identity is [`ai.threads`](../../general-architecture/llm-lay
   created at business lookup), `started_from` (`google_maps_listing`/
   `company_registry`), `channel` (`text`/`voice`), `status`
   (`created`/`client_interviewing`/
-  `applying_website_template`/`previewing`/`activated`/`apply_website_template_failed`),
+  `selecting_and_copying_website_template`/`preview_and_edit`/`activated`/
+  `select_and_copy_website_template_failed`),
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at`
   nullable, `interview_plan_markdown` nullable, `interview_plan_completed`
   text[] nullable, `interview_plan_next_questions` text[] nullable, timestamps

@@ -5,10 +5,12 @@ Assistant look, thread, and HTTP: [assistant](../assistant/README.md). Plan vs c
 vs instant apply stay **website editor only** (below). Generation and search go
 through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
-Onboarding [automatic website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses these tools headless
-(**continuous** + **instant apply**, no chat UI, no `create_page`) after the
-website template is applied. That job is automatic website copy generation, not
-the CMS assistant.
+Onboarding [automatic website copy generation](../onboarding/pipeline/06-website-copy-generation.md) ([website 03](pipeline/03-website-copy-generation.md)) reuses these tools
+headless (**continuous** + **instant apply**, no chat UI, no `create_page`, no
+`update_reviews`) after the website template’s pages are copied onto the
+unpublished website. That job is automatic website copy generation, not the CMS
+assistant. After each `update_slot`, Go asks the Worker for an internal page
+render on the tool result.
 
 Assistant look: [assistant design decision record](../assistant/design-decision-record.md), website placement:
 [design decision 18](design-decision-record.md). Architecture: [website ADR](ADR.md) 6.

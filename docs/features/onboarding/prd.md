@@ -91,7 +91,7 @@ find the business (company registry and/or Google Maps) + online research consen
 -> business research starts in the background
 -> review what we found → questions to fill the gaps
 -> one clear business profile (their answers + what we found, side by side)
--> apply the website template → automatic website copy generation fills in in the background
+-> select then copy the website template → automatic website copy generation fills in in the background
 -> `/onboarding/preview` (complete website sections rotate until copy is done or the wait cap)
 -> the preview website address (static HTML, website-activation strip)
 -> website activation (pay) → same host stays up without the strip; owner website publication later in the website editor
@@ -119,7 +119,7 @@ question.
 3. **As a contractor**, I want research conflicts between what I said and what
    was found to be shown to me, so I decide which is right.
    - Differences appear as research conflicts; I confirm or edit during the
-     client interview before applying the website template.
+     client interview before selecting and copying the website template.
 4. **As a contractor**, I want the profile to keep profile history, so we can
    see how it changed and where each detail came from.
    - Each change is kept, so nothing is lost.

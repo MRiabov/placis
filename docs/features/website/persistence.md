@@ -59,8 +59,10 @@ is [manifest.md](manifest.md). The reserved label on the tenant row is [auth](..
   omit from the tree. Bar CTA **values** are always `{{marketing_phone}}` /
   `{{marketing_email}}` ([variables.md](variables.md)); these flags are visibility only. Trees
   and flags are jsonb/bools on this row, not item tables. Node structs below.
-- `website_settings` — `id`, `tenant_id` fk unique, `preset_id`, bounded
-  website-style overrides (`primary`, `neutral`, `accent`, `radius`, `density`),
+- `website_settings` — `id`, `tenant_id` fk unique, `website_template_id`
+  (catalog id of the [01](pipeline/01-select-website-template.md) pick; 02
+  SELECTs this, not `ai_generations`), `preset_id`, bounded website-style
+  overrides (`primary`, `neutral`, `accent`, `radius`, `density`),
   `edit_history_head` uuid nullable (last copied-out `edit_history.batch_id`;
   not a server undo cursor), timestamps. One row per tenant. Copied into
   `website_manifest.website_styles` at website publication.
@@ -81,9 +83,10 @@ is [manifest.md](manifest.md). The reserved label on the tenant row is [auth](..
   `business_profile_review_id` fk, `position`; unique
   `(slot_id, business_profile_review_id)`. One ordered array
   **per reviews website section**, from the pool, length ≤ that website
-  component’s max (some layouts take 3, others 6 or 8). The LLM fills it after
-  the website template (and the assistant / Content can rewrite it). Pinning
-  **top reviews** does **not** rewrite these rows. Archive of a review drops
+  component’s max (some layouts take 3, others 6 or 8). 02 does not insert
+  these rows. 03 must not `update_reviews`. Ranking pins **top reviews** on
+  the pool; that order does **not** write these rows. Owner Content /
+  `update_reviews` can fill a section later. Archive of a review drops
   that id from every section array, then compact. Empty array: keep the website
   section. Live website waits for the next website publication.
 - `edit_history` — Website edit history. Append-only typed increments, same

@@ -51,8 +51,9 @@ word in a mixed or product-facing sentence where it could mean something else.
 Do not say **user**, **frozen**, bare **session**, **provider**,
 **instantiate**, **population**, **mint**, **fold**, or **bytes**. Say
 contractor, owner, or website visitor; name Google Maps, the LLM, or Stripe; say
-apply the website template; say create or use for ephemeral tokens and ids; say
-live business profile or unpublished website; say photo, image, file, or binary.
+copy the website template’s pages onto the unpublished website; say create or
+use for ephemeral tokens and ids; say live business profile or unpublished
+website; say photo, image, file, or binary.
 
 ---
 
@@ -571,7 +572,8 @@ Distinct from: Placis website.
 
 #### Unpublished website
 
-The website after applying the website template, before website publication.
+The website after copying the website template’s pages onto it, before
+website publication.
 Website visitors do not see it.
 
 Do not say bare “draft”. An ad in draft is an Ad states value; say **ad draft**.
@@ -727,14 +729,35 @@ is the pending canvas hunks, not the inline AI assistance prompt.
 
 ---
 
-#### Apply the website template
+#### Select website template
 
-Write unpublished website pages and website sections from a website template and
-the business profile. Website placeholders stay. Never say instantiate,
-population, or generate for this.
+Pick a website template and website styles for this contractor.
 
-Distinct from: Website copy generation (the words), Website template (the
-starting point).
+Distinct from: Copy the website template’s pages onto the unpublished
+website (the write), Website template (the starting point).
+
+---
+
+#### Copy the website template’s pages onto the unpublished website
+
+Write unpublished website pages and website sections from a website
+template and the business profile. Website placeholders stay. Never say
+instantiate, population, generate, or apply the website template for this.
+
+Distinct from: Select website template (the pick), Website copy generation
+(the words), Resolve website placeholders, Website template (the starting
+point), Copy (the words).
+
+---
+
+#### Resolve website placeholders
+
+Fill `{{…}}` from the live business profile. Not copying template pages.
+Not Go rewriting unpublished slots.
+
+Distinct from: Copy the website template’s pages onto the unpublished
+website, Website copy generation, Website publication (HTML snapshot after
+resolve).
 
 ---
 
@@ -744,8 +767,8 @@ Automatic writing of website copy into the unpublished website from the
 business profile. Do not call this “refinement” in onboarding. Never say
 generate without “website copy”.
 
-Distinct from: Assistant, Apply the website template (the unpublished website
-structure).
+Distinct from: Assistant, Copy the website template’s pages onto the
+unpublished website (the unpublished website structure).
 
 ---
 
@@ -1598,11 +1621,11 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | OnCall | Placis |
 | frozen / frozen copy | published website copy |
 | refine / refinement | website copy generation |
-| instantiate / population | apply the website template |
+| instantiate / population | copy the website template’s pages onto the unpublished website |
 | mint / minted / minting | create or use (ephemeral tokens and ids) |
 | fold / folds | live business profile or unpublished website |
 | bytes | photo, image, file, or binary |
-| generate unpublished website / generate website structure | apply the website template |
+| generate unpublished website / generate website structure | copy the website template’s pages onto the unpublished website |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (onboarding) | website preview link |
 | live markdown plan | website assistant plan |

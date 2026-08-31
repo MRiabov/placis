@@ -22,9 +22,10 @@ current unpublished rows (strip still on if unpaid).
 
 ## Pre
 
-Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
-Onboarding session is `previewing` (wait-end already happened) or still
-`applying_website_template` if they share during the wait (allowed; rare).
+Unpublished website from 05 (website 02) exists. `tenant_id` is the unactivated
+tenant. Onboarding session is `preview_and_edit` (wait-end already happened) or
+still `selecting_and_copying_website_template` if they share during the wait
+(allowed; rare).
 
 ## Must not
 
@@ -56,18 +57,16 @@ Onboarding session is `previewing` (wait-end already happened) or still
 2. Write `website_addresses` (`type=subdomain`, `status=reserved`,
    `is_primary=true`) if missing. Wildcard on **our** `placis.com` zone already
    points at the Worker. FQDN: [cloudflare.md](../../website/cloudflare.md).
-3. Build `website.v1` from current unpublished rows and insert
-   **`website_publications` v1**: `published_by=onboarding`, HTML **with** the
-   website-activation strip (Clerk/Stripe island, sticky to the bottom of the
-   viewport while the website scrolls; Placis orb lockup on the strip),
-   `active`. Same write as CMS website publication
-   ([cloudflare.md](../../website/cloudflare.md)): run the already-built website
-   component catalog on the JSON, PUT `{version_number}/` then copy onto
-   `latest/`, purge. Not per-request Astro. On 05 retry, archive the previous
-   onboarding website version and write a new row on the same prefix (strip
-   still on if unpaid).
-4. Onboarding session stays `previewing` (or becomes `previewing` if they
-   shared during the wait). Empty details show as website placeholders.
+3. Insert **`website_publications` v1**: `published_by=onboarding`,
+   `active`, strip **on**. HTML write is website
+   [04 website publication](../../website/pipeline/04-website-publication.md)
+   (tokenized dump + profile; Worker resolves; R2 + purge; strip flag on).
+   Clerk/Stripe island sticky to the bottom of the viewport; Placis orb
+   lockup on the strip. On 05 retry, archive the previous onboarding
+   website version and write a new row on the same prefix (strip still on
+   if unpaid).
+4. Onboarding session stays `preview_and_edit` (or becomes `preview_and_edit` if
+   they shared during the wait). Empty details show as website placeholders.
 
 HTTP: `POST /v1/onboarding-sessions/{id}/preview-website-address`
 ([api.md](../api.md)). Auth: onboarding session token or Clerk unactivated.

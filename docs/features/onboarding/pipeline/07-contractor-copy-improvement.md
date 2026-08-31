@@ -14,7 +14,7 @@ from that screen and do not wait for more prompts.
 ## Trigger
 
 Wait-end (06 done or the wait cap) navigates to `/onboarding/preview-and-edit/`.
-Onboarding session → `previewing`. Signed-in contractor may send Assistant
+Onboarding session → `preview_and_edit`. Signed-in contractor may send Assistant
 prompts that PATCH unpublished website.
 
 ## Pre
@@ -51,7 +51,7 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
 
 Unpublished website PATCH; `ai.threads` (`thread_kind=cms_assistant`) /
 `assistant.thread_items` / `assistant.runs`. No `website_publications` from this
-step. Onboarding session stays `previewing`.
+step. Onboarding session stays `preview_and_edit`.
 
 ## Fail
 

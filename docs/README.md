@@ -4,8 +4,8 @@ Docs for the Placis application — a **Go backend** plus the **`frontend-2`**
 Vite/React SPA. The product: a
 **done-for-you — delivered into your inbox, so you can DIY too** — marketing and
 advertising service for construction companies. We do business research, build a
-profile, apply a website template and edit a website, and suggest ads; the owner
-can do the same edits and ads themselves in the CMS.
+profile, select then copy a website template and edit a website, and suggest
+ads; the owner can do the same edits and ads themselves in the CMS.
 
 ## Reading order
 
@@ -22,7 +22,8 @@ can do the same edits and ads themselves in the CMS.
 8. [ETL](features/etl/README.md) — extract and transform (Google Maps, Facebook, Instagram); Monday /
    Wednesday / Friday refresh
 9. [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
-10. [Website](features/website/README.md) — website templates, applying them, editing, website publication
+10. [Website](features/website/README.md) — website templates, selecting and
+    copying them, editing, website publication
 11. [Assistant](features/assistant/README.md) — assistant (guide and doer); onboarding guide is a sibling
 12. [Billing](features/billing/README.md) — usage credit, Usage & billing, Pricing
 13. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)

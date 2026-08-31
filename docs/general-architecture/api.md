@@ -199,10 +199,15 @@ The contractor host is **not** SSE. `/onboarding/preview` and
 
 ## Worker internal render
 
-Website publication (River) renders `website.v1` through an authenticated
-internal render (shared secret / service binding) and writes R2. That is not
-public OpenAPI. **Do not create** `/v1/public/site/…`. Do not create leftover
+Two callers of one Astro engine (shared secret / service binding). Not public
+OpenAPI. **Do not create** `/v1/public/site/…`. Do not create leftover
 `/preview/{token}/` HTML.
+
+- **Website 03** — render only (tokenized unpublished + profile). No R2, no
+  WebP, no purge. Batch of pages on **one Worker**. SLO measured **back at
+  the Go worker**: 1 website page p50 500ms / p90 1s / p95 1.25s; batch of 8
+  website pages p50 750ms / p90 1.5s / p95 2s.
+- **Website 04 / publication** — same render, then write R2 and purge.
 
 Live contractor HTML GET is Cache then R2. Never Go. The leftover token path is
 gone.

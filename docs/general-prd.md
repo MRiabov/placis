@@ -2,7 +2,8 @@
 
 Placis is a **done-for-you — delivered into your inbox, so you can DIY too**
 marketing and advertising service for construction companies. One loop: learn
-the business, apply a website template, edit the website, then make ads.
+the business, select then copy a website template, edit the website, then make
+ads.
 
 Feature PRDs own the detail. This file is only the product-level loop, the
 boundary no feature owns, and pointers.
