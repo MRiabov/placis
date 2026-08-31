@@ -20,11 +20,11 @@ Package ownership. Workflows live in the feature docs this list points at.
    apply, and it does not do website publication. [Onboarding](../features/onboarding/architecture.md).
 3. `etl` owns extract **and** transform. `StartRun` only starts runs (cap,
    `enqueue_id`, `etl.runs`, enqueue). Adapters and fetch / Google Maps listing
-   SQL live in `extract/<etl_kind>/`; profile writes live in
-   `transform/<etl_kind>/`. Callers pass explicit `etl_kinds` to `StartRun`. The
-   worker calls transform after each extract chunk (fast extract, then slow
-   extract); it does not wait for the ETL kind to finish. Do not grow `run.go`
-   into every source. [ETL](../features/etl/README.md).
+   SQL live in `extract/<etl_run_kind>/`; profile writes live in
+   `transform/<etl_run_kind>/`. Callers pass explicit `etl_run_kinds` to
+   `StartRun`. The worker calls transform after each extract chunk (ETL fast
+   extract, then ETL slow extract); it does not wait for the ETL run kind to
+   finish. Do not grow `run.go` into every source. [ETL](../features/etl/README.md).
 4. `website` owns the editable content model, applying a website template
    (validate website component contracts, write unpublished `website_*` rows),
    and website publication. A `website_manifest` is only the validated read

@@ -67,9 +67,9 @@ frontend refreshes the Review checklist **and** live-fills the client interview
 rotates complete filled website sections (~2s, image fade). On the website
 preview the same stream plus unpublished GET Follow leftover 06. The stream is a
 **mirror** — Postgres is authoritative. Business research progress reads
-`etl.runs` **and** the live business profile transform already wrote (fast
-extract results appear before slow extract finishes). The contractor host is not
-an SSE endpoint.
+`etl.runs` **and** the live business profile transform already wrote (ETL fast
+extract results appear before ETL slow extract finishes). The contractor host is
+not an SSE endpoint.
 
 ## Where things stand
 

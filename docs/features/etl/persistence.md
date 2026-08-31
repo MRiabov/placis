@@ -8,14 +8,15 @@ Facebook / Instagram rows and photo classification live on the
 
 ## Runs
 
-- `runs` — `id`, `tenant_id` fk, `enqueue_id` (uuid, shared by every ETL kind in
-  one `StartRun` call), `trigger` (`onboarding` / `scheduled`), `etl_kind`
-  (`google_maps_listing` / `facebook` / `instagram` / `website_crawl` /
-  `trade_registry` / `directory` / `review` / `photo` / `web_search`), `status`
-  (`pending` / `extracting` / `transforming` / `succeeded` / `error` /
-  `skipped`), `onboarding_session_id` nullable fk, `place_id` nullable, `error`
-  nullable, `started_at`, `finished_at`. One row per ETL kind extract. River
-  retry keeps this `id`. `skipped` when scheduled and that ETL kind has no key.
+- `runs` — `id`, `tenant_id` fk, `enqueue_id` (uuid, shared by every ETL run
+  kind in one `StartRun` call), `trigger` (`onboarding` / `scheduled`),
+  `etl_run_kind` (`google_maps_listing` / `facebook` / `instagram` /
+  `website_crawl` / `trade_registry` / `directory` / `review` / `photo` /
+  `web_search`), `status` (`pending` / `extracting` / `transforming` /
+  `succeeded` / `error` / `skipped`), `onboarding_session_id` nullable fk,
+  `place_id` nullable, `error` nullable, `started_at`, `finished_at`. One row
+  per ETL run kind extract. River retry keeps this `id`. `skipped` when
+  scheduled and that ETL run kind has no key.
 
 ## Sources (live extract identity)
 
@@ -57,9 +58,9 @@ the profile review, not a second source.
 ## Fetches (append-only, one table per extract type)
 
 Never update a row. Latest body for a natural key is the newest `fetched_at`.
-One ETL run may insert **several** fetch rows (fast extract, then slow extract
-chunks). Retry reuses a row that already landed for that chunk; it does not
-collapse the run to a single fetch.
+One ETL run may insert **several** fetch rows (ETL fast extract, then ETL slow
+extract chunks). Retry reuses a row that already landed for that chunk; it does
+not collapse the run to a single fetch.
 
 - `google_maps_fetches` — `id`, `place_id`, `fetched_from`
   (`google_maps_details` / `scrape`), `run_id` fk, `fetched_at`, `raw` jsonb
@@ -81,7 +82,7 @@ Companies House / CRO API fetch gets its own fetch table.
 
 Retry of the **same** run reuses the fetch for a chunk that already landed
 (`place_id` + `fetched_from` for Maps Details vs scrape; canonical URL +
-`fetched_from` for crawl). Remaining slow extract chunks still insert. A
+`fetched_from` for crawl). Remaining ETL slow extract chunks still insert. A
 `trigger=scheduled` run extracts again.
 
 ## Website crawled URLs (live row, no `raw`)
@@ -167,7 +168,7 @@ writes; the listing stays here.
 ## Indexes
 
 `runs` (`tenant_id`, `trigger`, `started_at`); unique (`enqueue_id`,
-`etl_kind`). Fetches: (`place_id`, `fetched_at` desc) on Maps fetches;
+`etl_run_kind`). Fetches: (`place_id`, `fetched_at` desc) on Maps fetches;
 (`handle`, `fetched_at` desc) on Instagram fetches; (`canonical URL`,
 `fetched_from`) unique per `run_id` on crawl fetches. Unique
 `google_maps_listings.place_id`. Unique `website_crawl_pages` canonical URL per

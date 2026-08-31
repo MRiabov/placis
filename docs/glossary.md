@@ -464,10 +464,10 @@ contrast is needed.
 
 ### Onboarding
 
-Learning about the business and building its profile: start from a Google Maps
-listing or company registry record, online research consent, client interview,
-business research, one business profile, then an unpublished website and a
-website preview. It ends at website activation (paid). Never call this “setup”.
+Getting to know the contractor and selling to them. Includes business lookup,
+business research, client interview, unpublished website, and website preview.
+Ends at website activation. Never call this “setup”. Client interview is asking
+them, not public-source research.
 
 Distinct from: Onboarding session (the persisted run).
 
@@ -509,10 +509,11 @@ client interview question. Never say bare “consent”.
 
 #### Business research
 
-Finding out about the business from public sources (Maps, the company registry,
-Facebook, their current website, photos of their work) after online research
-consent. Never say bare “research”. Onboarding 02 starts ETL runs; it does not
-own extract tables.
+Research about the business from public sources. Onboarding 02 is the first
+run; Monday / Wednesday / Friday is the same research on a schedule. Does not
+include the client interview. Never say bare “research”.
+
+Distinct from: Client interview (asking them, not public sources).
 
 ---
 
@@ -1360,12 +1361,21 @@ word for a dependency.
 
 ---
 
+### Business research
+
+Domain business research is implemented by ETL. First useful public-source write
+is the ETL fast extract SLO; the rest is the ETL slow extract SLO. Never in PRDs
+or UI.
+
+Distinct from: Business research (Domain), client interview.
+
+---
+
 ### ETL
 
-Extract **and** transform: fetch public contractor sources, persist raw in the
-`etl` schema, then apply business logic that writes the business profile
-(research conflicts, posts, photo classification). Not extract-only. Distinct
-from: Business research (onboarding 02, which starts ETL runs).
+Extract **and** transform: how business research fetches public contractor
+sources and writes the business profile. Not extract-only. Not a second
+activity. Never in PRDs or UI. Distinct from: Business research (the activity).
 
 In code: `internal/etl/` (`extract/` + `transform/`), Postgres schema `etl`.
 
@@ -1373,32 +1383,34 @@ In code: `internal/etl/` (`extract/` + `transform/`), Postgres schema `etl`.
 
 #### ETL run
 
-One extract of **one ETL kind** for one tenant (the Google Maps extract, the
-Facebook extract, the Instagram extract). River retries are the same run.
-Distinct from: Business research (onboarding 02 starts several runs, one per
-ETL kind).
+One extract for one tenant (the Google Maps extract, the Facebook extract, the
+Instagram extract). River retries are the same run. Distinct from: Business
+research (starts several runs).
 
 In code: `etl.runs`.
 
 ---
 
-#### ETL kind
+#### ETL run kind
 
-Which extract an ETL run is: Google Maps listing, Facebook, Instagram, website
-crawl, trade registry, directory, review, photo, or web search. Never bare
-**kind**. Distinct from: Source kind (a run vs a citable blob; some enum values
-overlap).
+Which ETL run this is: Google Maps listing, Facebook, Instagram, website crawl,
+trade registry, directory, review, photo, or web search. The kind attaches to
+the run, not to ETL and not to the River job. Never bare **kind**. Distinct
+from: ETL source kind (the run vs the saved extract we point at later; some
+names overlap).
 
-In code: `etl.runs.etl_kind`. Go: `ETLKind`. Unique `(enqueue_id, etl_kind)`.
+In code: `etl.runs.etl_run_kind`. Go: `ETLRunKind`. Unique
+`(enqueue_id, etl_run_kind)`. Write `etl_run_kind=google_maps_listing`.
+Packages `extract/<etl_run_kind>/`.
 
 ---
 
-#### Source kind
+#### ETL source kind
 
-Which extract blob a citable `etl.sources` row is (Google Maps listing, listing
-review, Facebook or Instagram profile or post, website crawl extract or HTML,
-company registry record, or trade registry record). Never bare **kind**.
-Distinct from: ETL kind.
+What kind of saved extract a “where this came from” row is (Google Maps listing,
+listing review, Facebook or Instagram profile or post, website crawl extract or
+HTML, company registry record, or trade registry record). Never bare **kind**.
+Distinct from: ETL run kind; Source refs.
 
 In code: `etl.sources.source_kind`.
 
@@ -1413,32 +1425,32 @@ In code: `etl.imported_media.imported_media_kind`.
 
 ---
 
-#### Fast extract
+#### ETL fast extract
 
-The first cheap response for a source kind (Google Maps Details first response,
-or a fast crawl). Lands in about a second. Distinct from: Slow extract.
-
----
-
-#### Slow extract
-
-The remainder after the fast extract (Maps scrape of further reviews and photos,
-or website crawl’s parallel remainder extract). Distinct from: Fast extract.
+The first cheap response (Google Maps Details, or an ETL fast crawl). SLO ~1s.
+Distinct from: ETL slow extract.
 
 ---
 
-#### Fast crawl
+#### ETL slow extract
 
-The first-response pass of website crawl. A fast extract for that ETL kind.
-Distinct from: Slow crawl.
+The remainder after the ETL fast extract (Maps scrape of further reviews and
+photos, or an ETL slow crawl). SLO ~40s extra. Distinct from: ETL fast extract.
 
 ---
 
-#### Slow crawl
+#### ETL fast crawl
+
+The first-response pass of website crawl. An ETL fast extract for that ETL run
+kind. SLO ~1s. Distinct from: ETL slow crawl.
+
+---
+
+#### ETL slow crawl
 
 The remainder extract of website crawl after the homepage: remaining HTML URLs
-in parallel (not a serial tens-of-seconds walk). A slow extract for that ETL
-kind. Distinct from: Fast crawl.
+in parallel (not a serial tens-of-seconds walk). An ETL slow extract for that
+ETL run kind. SLO ~40s extra. Distinct from: ETL fast crawl.
 
 ---
 
@@ -1465,7 +1477,8 @@ Distinct from: Onboarding session (the persisted run), Website preview link.
 The questions we ask the contractor to fill gaps the Google Maps listing and
 company registry record do not cover. Text (04a) is the v1 writer into the
 business profile. Voice is not a v1 writer into the profile (04b is out). Never
-say bare “interview”.
+say bare “interview”. Distinct from: Business research (public sources, not
+asking them).
 
 Domain: (internal — use this name in technical docs; onboarding copy may
 describe the questions).
@@ -1689,7 +1702,8 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | Enterprise (billing) | Enterprise plan |
 | meter | AI vendor cost or AI voice vendor cost (or our cost / their cost) |
 | AI orb (ads) / Ads orb (ads) | inline AI assistance |
-| kind / kinds | ETL kind, photo kind, thread kind, source kind, imported media kind, thread item kind, menu node kind, client interview submission kind, or tool revision kind |
+| kind / kinds | ETL run kind, photo kind, thread kind, ETL source kind, imported media kind, thread item kind, menu node kind, client interview submission kind, or tool revision kind |
+| fast extract / slow extract / fast crawl / slow crawl | ETL fast extract, ETL slow extract, ETL fast crawl, or ETL slow crawl |
 
 ## Code naming rules
 

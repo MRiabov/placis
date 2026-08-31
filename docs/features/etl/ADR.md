@@ -18,29 +18,29 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    Extract must not import `profile` or write `business_profile_*`. Transform
    must not call Maps / Facebook / Instagram networks.
    **`StartRun` is not a god function:** it counts the cap, creates
-   `enqueue_id`, inserts `etl.runs`, and enqueues one River job per ETL kind. It
-   does not call source networks, write fetches, upsert the listing, or
-   transform. Each ETL kind’s extract and transform live in their own packages
-   (`extract/googlemaps`, `transform/facebook`, …). A small worker dispatch
-   calls those functions; it does not inline them. (2026-08-27; same day, later:
-   StartRun orchestration only.)
+   `enqueue_id`, inserts `etl.runs`, and enqueues one River job per ETL run
+   kind. It does not call source networks, write fetches, upsert the listing, or
+   transform. Each ETL run kind’s extract and transform live in their own
+   packages (`extract/googlemaps`, `transform/facebook`, …). A small worker
+   dispatch calls those functions; it does not inline them. (2026-08-27; same
+   day, later: StartRun orchestration only.)
 
 3. **One fetch table per extract type** — Append-only UUID rows with typed
    metadata (Instagram handle / Instagram user, Facebook page / handle, Maps
    `place_id`) plus `raw` jsonb. No single mixed `etl.fetches` dump. No `raw` on
    listing / profile / post live rows. A unifying `{id, type}` pointer table is
    not in this slice. (2026-08-27) (2026-08-30: `etl.sources` is live extract
-   **identity** — `etl_kind` + natural key — not mixed fetches and not `raw`.
+   **identity** — `source_kind` + natural key — not mixed fetches and not `raw`.
    Fetches stay one table per extract type. Live blob rows fk `source_id`.
    Project skip is `etl.llm_source_to_project_classifications`, not this
    table.)
 
-4. **An ETL run is one source kind** — `etl.runs` is one row per ETL kind
+4. **An ETL run is one ETL run kind** — `etl.runs` is one row per ETL run kind
    (Google Maps extract, Facebook extract, Instagram extract).
-   `StartRun(etl_kinds, trigger, tenant)` takes an explicit list (length ≥ 1),
-   creates one `enqueue_id`, inserts one run per ETL kind, enqueues that ETL
-   kind’s River job. The onboarding cap counts distinct `enqueue_id` with
-   `trigger=onboarding` (5 per tenant per rolling 30 minutes), not jobs.
+   `StartRun(etl_run_kinds, trigger, tenant)` takes an explicit list (length ≥
+   1), creates one `enqueue_id`, inserts one run per ETL run kind, enqueues that
+   ETL run kind’s River job. The onboarding cap counts distinct `enqueue_id`
+   with `trigger=onboarding` (5 per tenant per rolling 30 minutes), not jobs.
    (2026-08-27)
 
 5. **Transformed contractor data is the business profile** — Facebook profile /
@@ -52,7 +52,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
 
 6. **Scheduled refresh is Monday, Wednesday, Friday** — Activated tenants.
    Sources: Google Maps, Facebook, Instagram (public scrape; Graph API later).
-   Stagger across tenants. Skip an ETL kind that has no key (`place_id`,
+   Stagger across tenants. Skip an ETL run kind that has no key (`place_id`,
    handle). Company registry / existing-site API extracts later. Website crawl,
    trade registry, and Parallel stay first-run (onboarding 02). Website
    activation implies this refresh; online research consent covers it.
@@ -60,18 +60,18 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
 
 7. **Increment is natural-key upsert** — No watermark table. A scheduled extract
    fetches again; insert only reviews / posts / photos whose source id we do not
-   already have. A run may insert several fetch rows (fast extract, then slow
-   extract chunks). Retry of the same run reuses a fetch that already landed for
-   that chunk; it does not skip remaining chunks. A scheduled run does not skip
-   extract. (2026-08-27; same day, later: several fetches per run, retry per
-   chunk.)
+   already have. A run may insert several fetch rows (ETL fast extract, then ETL
+   slow extract chunks). Retry of the same run reuses a fetch that already
+   landed for that chunk; it does not skip remaining chunks. A scheduled run
+   does not skip extract. (2026-08-27; same day, later: several fetches per run,
+   retry per chunk.)
 
 8. **Transform uses the same profile-update rules as onboarding** — New reviews
    / posts / photos land. Empty fields fill. A disagreeing owner-typed value is
    a research conflict on Details, not a silent overwrite. Transform runs on
-   each extract chunk as it arrives; do not wait for slow extract or
+   each extract chunk as it arrives; do not wait for ETL slow extract or
    `status=succeeded`. (2026-08-27; same day, later: per chunk, not per
-   ETL kind done.)
+   ETL run kind done.)
 
 9. **Later: rename schema `details`** — Details the screen is a subset of the
    business profile. Rename Postgres schema `details` to `business_profile` or
@@ -90,18 +90,19 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     transform schema; `human` reserved. Same day, later: `schema_revision` bump
     extracts by default.)
 
-11. **Fast extract then slow extract; results as they arrive** — Fast extract is
-    the cheap first response (~1s): Google Maps Details (Places API first
-    response: at most 5 reviews and 10 photos today), or a fast crawl. Slow
-    extract is the remainder (~40s extra): Maps scrape of further reviews /
-    photos (on the order of 50 reviews), or a slow crawl. Persist a fetch and
-    transform each chunk before the next extract continues. Onboarding shows
-    about half of that ETL kind’s checklist from the fast extract, then more as
-    slow extract runs. Web search is not instant; the first discovered key
-    unblocks Maps / crawl in the same enqueue. Fast / slow live in the
-    per-source package, not `StartRun`. (2026-08-27) (2026-08-30: website crawl
-    slow extract is a parallel remainder extract after the homepage, not a
-    serial tens-of-seconds walk. Maps scrape remainder is unchanged.)
+11. **ETL fast extract then ETL slow extract; results as they arrive** — ETL
+    fast extract is the cheap first response (~1s): Google Maps Details (Places
+    API first response: at most 5 reviews and 10 photos today), or an ETL fast
+    crawl. ETL slow extract is the remainder (~40s extra): Maps scrape of
+    further reviews / photos (on the order of 50 reviews), or an ETL slow crawl.
+    Persist a fetch and transform each chunk before the next extract continues.
+    Onboarding shows about half of that ETL run kind’s checklist from the ETL
+    fast extract, then more as ETL slow extract runs. Web search is not instant;
+    the first discovered key unblocks Maps / crawl in the same enqueue. ETL fast
+    extract / ETL slow extract live in the per-source package, not `StartRun`.
+    (2026-08-27) (2026-08-30: website crawl ETL slow extract is a parallel
+    remainder extract after the homepage, not a serial tens-of-seconds walk.
+    Maps scrape remainder is unchanged.)
 
 12. **Crawl fetches record `fetched_from`; live HTML URLs hold photos** —
     Parallel Extract, HTML GET, Apify, robots, and sitemaps are separate

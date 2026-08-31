@@ -1,18 +1,18 @@
 # Web search
 
-`etl_kind=web_search`. First-run only (onboarding 02). Parallel discovery when
-we do not already have `place_id` or a known website URL. Shared extract /
+`etl_run_kind=web_search`. First-run only (onboarding 02). Parallel discovery
+when we do not already have `place_id` or a known website URL. Shared extract /
 transform rules:
 [pipeline README](README.md).
 
 ## Trigger
 
-`StartRun` included this ETL kind because Maps / crawl have no key yet.
+`StartRun` included this ETL run kind because Maps / crawl have no key yet.
 
 ## Pre
 
 - `etl.runs` row `status=pending` (or retry).
-- No `place_id` and no known website URL (otherwise this ETL kind is not
+- No `place_id` and no known website URL (otherwise this ETL run kind is not
   started).
 
 ## Must not
@@ -30,8 +30,8 @@ Set `status=extracting`. Call Parallel through Vercel AI Gateway
 (`gateway.tools.parallelSearch()`, any model). Parallel is not instant. Persist
 each discovered key as it arrives (typed columns on the onboarding session / run
 row, not a profile dump). A generation call over retrieved text (no search
-tools) may classify that text; it is not the fast extract of Maps / crawl. Retry
-of this `run_id` does not search again for a result that already landed.
+tools) may classify that text; it is not the ETL fast extract of Maps / crawl.
+Retry of this `run_id` does not search again for a result that already landed.
 
 ## Do — transform
 
@@ -52,7 +52,7 @@ Retryable. `status=error` when retries exhaust. Do not invent a business.
 ## Out
 
 Onboarding SSE mirrors Postgres on change (`etl.runs` and discovered keys).
-Downstream ETL kinds start when their key exists.
+Downstream ETL run kinds start when their key exists.
 
 ## Invariants
 

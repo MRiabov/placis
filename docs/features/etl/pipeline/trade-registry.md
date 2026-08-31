@@ -1,13 +1,14 @@
 # Trade registry
 
-`etl_kind=trade_registry`. First-run only (onboarding 02). Not on Monday /
+`etl_run_kind=trade_registry`. First-run only (onboarding 02). Not on Monday /
 Wednesday / Friday. Shared extract / transform rules: [pipeline README](README.md).
 
 Accreditations. A later official registry API is its own fetch table.
 
 ## Trigger
 
-`StartRun` included this ETL kind. No registry id → do not start (or `skipped`).
+`StartRun` included this ETL run kind. No registry id → do not start (or
+`skipped`).
 
 ## Pre
 
@@ -17,7 +18,7 @@ Accreditations. A later official registry API is its own fetch table.
 ## Must not
 
 - Run on the Monday / Wednesday / Friday schedule.
-- Call Maps / Facebook / Instagram / Parallel from this ETL kind.
+- Call Maps / Facebook / Instagram / Parallel from this ETL run kind.
 - Let crawl overwrite a trade-registry accreditation.
 - Overwrite a live profile field whose winning `algorithm` is `human`.
 

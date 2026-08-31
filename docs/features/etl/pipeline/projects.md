@@ -2,7 +2,7 @@
 
 Shared transform after a Facebook post, Instagram post, website-crawl **blob**,
 or Maps listing review is upserted and its photos are attached / classified.
-Not a `StartRun` ETL kind. Shared extract / transform rules:
+Not a `StartRun` ETL run kind. Shared extract / transform rules:
 [pipeline README](README.md). Profile writes:
 [build-profile](../../onboarding/pipeline/build-profile.md). Persistence:
 [`etl.sources`](../persistence.md),
@@ -35,7 +35,7 @@ chunk.
 
 ## Must not
 
-- Be a `StartRun` ETL kind or a second crawl.
+- Be a `StartRun` ETL run kind or a second crawl.
 - Call source networks (read rows only).
 - Stop because four Projects already exist. Extract/classify **every** source
   in the chunks we fetch. Rank for the client interview / first gallery is
@@ -106,7 +106,7 @@ chunk.
 `etl.sources`; `etl.llm_source_to_project_classifications`;
 `business_profile.projects`; `business_profile.project_sources`;
 `business_profile_edits.list=projects` + ≥1 `business_profile_edit_sources`.
-`etl.runs` stays succeeded from the calling ETL kind.
+`etl.runs` stays succeeded from the calling ETL run kind.
 
 ## Fail
 

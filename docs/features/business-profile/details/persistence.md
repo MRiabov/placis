@@ -73,8 +73,8 @@ as of `accepted_edit_id`. They do not replay profile history on every call.
   crawl blobs when both dumps informed trade / services; listing-review for a
   review add). Client interview / Details / `confirm_conflict` increments have
   **no** junction rows (they were not generated from extract blobs). Keep
-  `origin` for product copy (the source kind); the junction is the blob list.
-  `etl_run_id` is which run. `ai_generations` is the LLM call if any.
+  `origin` for product copy (the ETL source kind); the junction is the blob
+  list. `etl_run_id` is which run. `ai_generations` is the LLM call if any.
 
 This table is the audit for profile edits (the increment row, not the junction).
 Generic `audit_events` stays for website publication / website activation /

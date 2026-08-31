@@ -1,22 +1,22 @@
 # Website crawl
 
-`etl_kind=website_crawl` and `etl_kind=directory`. First-run only (onboarding
-02). Not on Monday / Wednesday / Friday. Shared extract / transform rules:
-[pipeline README](README.md). Projects from crawled URLs:
+`etl_run_kind=website_crawl` and `etl_run_kind=directory`. First-run only
+(onboarding 02). Not on Monday / Wednesday / Friday. Shared extract / transform
+rules: [pipeline README](README.md). Projects from crawled URLs:
 [projects.md](projects.md).
 
-This ETL kind’s extract is **the** existing-site crawl for every field that ETL
-kind already writes (trade, description, services, service areas, founder,
-marketing email, existing site URL, work photos) **and** Projects. Do not add a
-second crawl that only looks for named jobs.
+This ETL run kind’s extract is **the** existing-site crawl for every field this
+ETL run kind already writes (trade, description, services, service areas,
+founder, marketing email, existing site URL, work photos) **and** Projects. Do
+not add a second crawl that only looks for named jobs.
 
-`etl_kind=directory` stays directory lookup (not this Extract/GET stack unless
-that ETL kind already fetches HTML URLs).
+`etl_run_kind=directory` stays directory lookup (not this Extract/GET stack
+unless that ETL run kind already fetches HTML URLs).
 
 ## Trigger
 
 `StartRun` included `website_crawl` and/or `directory`. No known website URL
-and no directory key → that ETL kind is not started until
+and no directory key → that ETL run kind is not started until
 [web search](web-search.md) discovers a URL (same enqueue, not a new
 `StartRun`).
 
@@ -28,12 +28,12 @@ and no directory key → that ETL kind is not started until
 ## Must not
 
 - Run on the Monday / Wednesday / Friday schedule.
-- Call Parallel **Search** HTTP from this ETL kind. Search stays [web-search](web-search.md) /
-  `gateway.tools.parallelSearch()`. Parallel **Extract** (`PARALLEL_API_KEY` →
-  `https://api.parallel.ai/v1/extract`) is the crawl **text** path for known
-  HTML URLs ([onboarding ADR](../../onboarding/ADR.md) 5a). A generation call over Search excerpts is not
-  crawl extract.
-- Call Maps / Facebook / Instagram from this ETL kind.
+- Call Parallel **Search** HTTP from this ETL run kind. Search stays
+  [web-search](web-search.md) / `gateway.tools.parallelSearch()`. Parallel **Extract**
+  (`PARALLEL_API_KEY` → `https://api.parallel.ai/v1/extract`) is the crawl
+  **text** path for known HTML URLs ([onboarding ADR](../../onboarding/ADR.md) 5a). A generation call
+  over Search excerpts is not crawl extract.
+- Call Maps / Facebook / Instagram from this ETL run kind.
 - Playwright / headless Chrome / Colly as the crawl engine.
 - Parallel Extract or Apify on `robots.txt` or sitemap XML.
 - Regex / string-scan HTML for `img` / links (use goquery).
@@ -108,12 +108,12 @@ A second remainder extract only if needed: links on first-remainder HTML that
 were not in the sitemap, still under the cap, still parallel. Then stop.
 `discovered` HTML URL rows **are** the frontier (no URL-queue table).
 
-**If they have no website URL:** do not Extract or GET. This ETL kind waits.
+**If they have no website URL:** do not Extract or GET. This ETL run kind waits.
 `web_search` discovers a URL; the first key unblocks this run in the **same**
 `StartRun`. A miss is “ask”.
 
 Website crawl must not borrow Maps scrape’s serial tens-of-seconds remainder.
-Glossary **slow crawl** is this parallel remainder extract.
+Glossary **ETL slow crawl** is this parallel remainder extract.
 
 ## Do — parse (extract, not transform)
 
@@ -123,11 +123,10 @@ GET. Transform must not call networks.
 Image GETs: bounded concurrency (**8**), timeouts, max body size so one
 gallery cannot fill RAM. Skip logos, icon gifs, SVGs, cookie-banner assets.
 
-**SLO:** while this ETL kind (and Maps scrape wait) run in-process, API p90 must
-not increase by more than **1s** vs idle on the same instance
-([processes](../../../general-architecture/processes.md)). Authenticated /
-onboarding HTTP, not the Cloudflare contractor website. SSE is not p90 of
-request handlers. CI does not measure p90.
+**SLO:** while this ETL run kind (and Maps scrape wait) run in-process, API p90
+must not increase by more than **1s** vs idle on the same instance
+([processes](../../../general-architecture/processes.md)). Authenticated / onboarding HTTP, not the Cloudflare contractor
+website. SSE is not p90 of request handlers. CI does not measure p90.
 
 ## Do — transform
 

@@ -1,14 +1,14 @@
 # Google Maps
 
-`etl_kind=google_maps_listing` (further reviews may use `etl_kind=review` on the
-same listing). Onboarding 02 and Monday / Wednesday / Friday. Shared extract /
-transform rules:
+`etl_run_kind=google_maps_listing` (further reviews may use
+`etl_run_kind=review` on the same listing). Onboarding 02 and Monday / Wednesday
+/ Friday. Shared extract / transform rules:
 [pipeline README](README.md).
 
 ## Trigger
 
-`StartRun` included this ETL kind. Skip (`status=skipped`) when scheduled and
-there is no `place_id`.
+`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled
+and there is no `place_id`.
 
 ## Pre
 
@@ -21,15 +21,15 @@ there is no `place_id`.
 - Write `business_profile_opening_hours` or `business_profile_reviews` during
   listing upsert (that is transform).
 - Use listing address as a legal address.
-- Call Facebook, Instagram, crawl, or Parallel from this ETL kind.
+- Call Facebook, Instagram, crawl, or Parallel from this ETL run kind.
 - Silently overwrite an owner-typed marketing phone, name, hours, or URL
   (research conflict).
 - Overwrite a live profile field whose winning `algorithm` is `human` (including
   `force=true`).
-- Wait for scrape (slow extract) before transforming the Details chunk (fast
-  extract).
+- Wait for scrape (ETL slow extract) before transforming the Details chunk (ETL
+  fast extract).
 
-## Do — extract (fast extract)
+## Do — extract (ETL fast extract)
 
 Set `status=extracting`. Call Google Maps Details. Persist
 `etl.google_maps_fetches` (`fetched_from=google_maps_details`, UUID, `place_id`,
@@ -42,7 +42,7 @@ this `run_id` does not call Details again when that fetch already exists. A
 later run after a `schema_revision` bump extracts again (do not reuse an older
 fetch).
 
-## Do — extract (slow extract)
+## Do — extract (ETL slow extract)
 
 Scrape remaining reviews / photos for this listing (on the order of 50
 reviews). Actor **`scraperlink/google-maps-scraper`** (`id`
@@ -60,8 +60,8 @@ new listing reviews. Attach scrape photos onto **that** listing review
 `status` stays `extracting` until scrape has nothing left; `succeeded` only
 then.
 
-`etl_kind=review` / `etl_kind=photo` (when 02 included them) continue the same
-listing the same way.
+`etl_run_kind=review` / `etl_run_kind=photo` (when 02 included them) continue
+the same listing the same way.
 
 ## Do — listing
 
@@ -75,9 +75,9 @@ fetch that contributed. Set `country` from Places address country (`ie` / `gb` /
 
 ## Do — transform
 
-`status=transforming` for the chunk, then back to `extracting` if slow extract
-continues. `SELECT … FOR UPDATE` the profile. Insert only the increments this
-chunk set.
+`status=transforming` for the chunk, then back to `extracting` if ETL slow
+extract continues. `SELECT … FOR UPDATE` the profile. Insert only the increments
+this chunk set.
 
 - Empty scalars fill from the listing (display name, marketing phone, website,
   hours). Each increment cites the listing `source_id`.
@@ -103,8 +103,8 @@ responses); `etl.sources` (listing + each listing review);
 `etl.google_maps_listings` + hours / reviews / listing photos / review photos;
 `business_profile_edits` + `business_profile_edit_sources` + live profile hours
 / reviews / contact columns / Projects; media library items +
-`imported_media_sources`. `etl.runs.status=succeeded` when fast extract and
-slow extract are done.
+`imported_media_sources`. `etl.runs.status=succeeded` when ETL fast extract and
+ETL slow extract are done.
 
 ## Fail
 
@@ -115,9 +115,9 @@ remaining scrape still runs. `status=error` when retries exhaust.
 ## Out
 
 Onboarding SSE mirrors Postgres on change (`etl.runs` and the live business
-profile). After Details + transform, about half of this ETL kind’s checklist is
-already filled (hours, marketing phone, website, first reviews / photos); more
-reviews / photos appear as scrape runs. Scheduled: no SSE.
+profile). After Details + transform, about half of this ETL run kind’s checklist
+is already filled (hours, marketing phone, website, first reviews / photos);
+more reviews / photos appear as scrape runs. Scheduled: no SSE.
 
 ## Invariants
 
