@@ -13,9 +13,10 @@ a second crawl that only looks for named jobs. There is no `directory`
 
 ## Trigger
 
-`StartRun` included `website_crawl`. No known website URL → that ETL run kind is not
-started until [web search](web-search.md) or Maps Details writes `website_url`
-onto this run (same enqueue, not a new `StartRun`).
+Input set met: `website_url` (01 attach, Maps Details, Parallel, or contractor
+`existing_site_url`). No URL → this means is not started. Evaluator starts it on
+this enqueue when the identity key lands. Monday / Wednesday / Friday does not
+enable this means.
 
 ## Pre
 
@@ -105,9 +106,12 @@ A second remainder extract only if needed: links on first-remainder HTML that
 were not in the sitemap, still under the cap, still parallel. Then stop.
 `discovered` HTML URL rows **are** the frontier (no URL-queue table).
 
-**If they have no website URL:** do not Extract or GET. This ETL run kind waits.
-`web_search` discovers a URL; the first key unblocks this run in the **same**
-`StartRun`. A miss is “ask”.
+**If they have no website URL:** do not Extract or GET. This means is not
+started until `website_url` is an identity key. A miss is “ask”.
+
+Skip remaining crawl remainder + LLM parse when the only leftovers are `human`
+scalars (email, trade, description, founder) **and** Projects / photos /
+lists do not still need this extract — [means](means.md) pause rule.
 
 Website crawl must not borrow Maps scrape’s serial tens-of-seconds remainder.
 Glossary **ETL slow crawl** is this parallel remainder extract.
@@ -132,8 +136,9 @@ extract continues. Fill empty trade, description, services, service areas,
 founder, marketing email, existing site URL from Extract markdown + HTML via
 [build-profile](../../onboarding/pipeline/build-profile.md) (each increment
 cites ≥1 crawl `source_id`; both sources when both dumps informed the value).
-Write discovered Facebook URLs and Instagram handles onto sibling runs
-in this enqueue (do not scrape them from this ETL run kind). Then
+Write discovered Facebook URLs and Instagram handles as identity keys
+(empty columns only) so those means may start on this enqueue (do not scrape
+them from this ETL run kind). Then
 photos + [photo classification](photo-classification.md). Then
 [projects.md](projects.md) per crawl source (depicting photo on that HTML URL
 required). Same URL, both sources usable as a Project → one Project, two cites.

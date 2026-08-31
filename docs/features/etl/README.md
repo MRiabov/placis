@@ -15,9 +15,9 @@ about a second, then ETL slow extract). There is no owner-facing CMS screen in
 this slice.
 
 - [ADR](ADR.md) — architectural decision record
-- [architecture.md](architecture.md) — extract vs transform, triggers, packages (`StartRun`
+- [architecture.md](architecture.md) — extract vs transform, means registry, packages (`StartRun`
   orchestrates; per-source extract/transform files do the work)
-- [pipeline](pipeline/README.md) — per source (Google Maps, Facebook, Instagram, …)
+- [pipeline](pipeline/README.md) — means registry + per source (Google Maps, Facebook, Instagram, …)
 - [persistence.md](persistence.md) — `etl` tables
 - [technical-implementation.md](technical-implementation.md)
 - [testing.md](testing.md)

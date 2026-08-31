@@ -1427,9 +1427,42 @@ In code: `etl.runs.enqueue_id`.
 One extract of **one ETL run kind** for one tenant (the Google Maps extract, the
 Facebook extract, the Instagram extract). River retries are the same run.
 Distinct from: Business research (onboarding 02 starts several runs, one per
-ETL run kind), Enqueue (one `StartRun`).
+means that started), Enqueue (one `StartRun`), Means (the adapter).
 
 In code: `etl.runs`.
+
+---
+
+#### Means
+
+One lookup adapter that starts when an input set is met. Persisted as `etl_run_kind`
+on an ETL run. Distinct from: ETL run (one started means), Enqueue, Input set.
+
+---
+
+#### Identity key
+
+A known identity or handle used to start a means: Find attach, a later extract
+write, or a contractor write (`place_id`, `company_number`, `website_url`,
+`legal_name`, `display_name`, locality, Facebook URL, Instagram handle).
+Distinct from: sibling `etl.runs` key columns (those may copy an identity key;
+they are not the source of truth).
+
+---
+
+#### Input set
+
+One minimal tuple of identity keys that may start a means. A means may have
+several input sets; any one is enough (OR). Distinct from: the closed
+checklist.
+
+---
+
+#### Client-interview window
+
+The about-one-minute stretch after enqueue start when the contractor is
+expected to fill the client interview. Distinct from: the 5/30-minute enqueue
+cap (abuse), ETL fast extract, ETL slow extract. Not a job deadline.
 
 ---
 

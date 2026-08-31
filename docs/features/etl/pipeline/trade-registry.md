@@ -7,13 +7,14 @@ Accreditations. A later official registry API is its own fetch table.
 
 ## Trigger
 
-`StartRun` included this ETL run kind (onboarding 02 always passes it). Lookup
-key, in order: onboarding session `company_number` + tenant country; else live
-`display_name` + country (Maps autocomplete or Details). Maps-only Find still
-runs this ETL run kind. No `company_number` and no `display_name` yet → stay
-pending until Maps fills a name; after Maps / web search finish, still none →
-`skipped`. A miss is “ask”. The locked business-registry certification on Find
-(CRO in Ireland) is 01 from the company registry pick, not this extract.
+Input set met ([means](means.md)): (1) `company_number` + tenant country, or
+(2) `display_name` + country. Maps-only Find still starts this means when a
+name exists. Neither set → not started until Maps fills a name; nothing left
+that can produce a name → `skipped`. A miss is “ask”. The locked
+business-registry certification on Find (CRO in Ireland) is 01 from the
+company registry pick, not this extract. Monday / Wednesday / Friday does not
+enable this means.
+
 ## Pre
 
 - `etl.runs` row `status=pending` (or retry).

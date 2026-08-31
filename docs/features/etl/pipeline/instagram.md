@@ -8,10 +8,10 @@ Instagram profile and Instagram posts.
 
 ## Trigger
 
-`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled and there
-is no Instagram handle. Onboarding with no handle yet: stay pending until
-crawl or web search writes `instagram_handle` onto this run. After Maps,
-crawl, and web search finish, still no handle → `skipped`.
+Input set met: `instagram_handle`. Skip (`status=skipped`) when scheduled and
+there is no handle. Onboarding: start when the identity key exists. Nothing left
+that can produce it → `skipped`. A later paste can still start this means on
+this enqueue.
 
 ## Pre
 

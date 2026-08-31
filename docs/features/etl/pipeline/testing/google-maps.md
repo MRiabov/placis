@@ -21,7 +21,9 @@
   `etl.sources`; review add cites the listing-review `source_id`). New imported
   reviews get a review citation. Transform does not enqueue
   `reviews_ranking_for_display` and does not write `is_top` / `top_position`.
-  No `etl_run_kind=review` or `etl_run_kind=photo` run. Details website URL
-  unblocks the sibling crawl run.
+  No `etl_run_kind=review` or `etl_run_kind=photo` run. Details website URL is
+  an identity key that starts crawl on this enqueue. Places Find from
+  `display_name` + locality yields Details only on one high-confidence hit;
+  several hits do not pick a listing.
 - **Fake**: Google Maps Details / scrape. Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search.
