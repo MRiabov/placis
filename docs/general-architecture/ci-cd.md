@@ -36,11 +36,11 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
 
 1. **File-size guard** — files must stay < 800 lines (warning) and < 1200 (hard
    error), except `docs/glossary.md` (one ubiquitous-language file; do not split
-   it). The look app (`apps/demo/src`) hard-fails above 800 via
-   `apps/demo/scripts/check-files.mjs` (travels with the export). Repo-wide 1200
-   for `internal/`, `cmd/`, `migrations/`, `catalog/`, `docs/` is still a later
-   `cmd/ci` check. Prefer splitting a feature into its own package over allowing
-   a file to creep past 800.
+   it). The look app (`apps/demo/src`) hard-fails at 800; that is
+   [decision 1](#decisions). Repo-wide 1200 for `internal/`, `cmd/`,
+   `migrations/`, `catalog/`, `docs/` is still a later `cmd/ci` check. Prefer
+   splitting a feature into its own package over allowing a file to creep past
+   800.
 2. **Folder fan-out** — a nested dir under `internal/` may hold at most **9**
    entries (tracked files + child dirs). `internal/` root may hold at most
    **15**. Split a fat folder into a nested package; that is why `templates` and
@@ -78,6 +78,17 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    `additionalProperties: true`, and string fields documented as JSON blobs on
    huma DTOs (including SSE event structs). Persistence `jsonb` columns are not
    this check. See [HTTP conventions](api.md).
+
+## Decisions
+
+Status: decided (dates on each entry). Update an entry (keeping the old
+decision + date) instead of silently replacing the old entry.
+
+1. **Look app hard-fails at 800 lines** — Repo-wide files warn under 800 and
+   hard-fail at 1200. `apps/demo/src` hard-fails above 800 via
+   `apps/demo/scripts/check-files.mjs` (the checker copies with the look
+   export). Why: the look app only grows in complexity when it is integrated
+   into `frontend-2`. (2026-08-29)
 
 ## Runner policy
 
