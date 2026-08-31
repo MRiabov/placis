@@ -6,8 +6,7 @@ website. Website activation one-time Stripe stays in
 steal `website_activations` or activation checkout.
 
 The mock is [`apps/demo/`](../../../apps/demo/README.md) `/cms/billing`. Open Usage & billing from the account
-menu (user icon). The left-nav **Usage** row stays hidden. HTML archive:
-[cms.html](../../design/cms.html) `?scene=billing`.
+menu (user icon). The left-nav **Usage** row stays hidden.
 
 Do not put remaining usage credit on [auth](../other/auth/persistence.md). Never use predecessor dashboard
 Usage & billing copy. Do not say **ledger**; the Internal name is

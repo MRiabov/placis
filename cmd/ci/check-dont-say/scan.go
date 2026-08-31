@@ -243,8 +243,6 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	case strings.Contains(slash, "cmd/ci/check-dont-say/") || strings.Contains(slash, "ci/check-dont-say/"):
 		return true
-	case slash == "docs/design" || strings.HasPrefix(slash, "docs/design/") || strings.Contains(slash, "/docs/design/"):
-		return true
 	case strings.HasSuffix(slash, "generated/api-types.ts"):
 		return true
 	default:
@@ -265,7 +263,6 @@ var extraAllowed = []string{
 	"agency credit line",
 	"account menu",
 	"user icon",
-	"cms.html",
 	"placis pro plus plan",
 	"placis pro max plan",
 	"placis pro plan",

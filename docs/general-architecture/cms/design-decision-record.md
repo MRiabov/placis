@@ -3,8 +3,7 @@
 Look and interaction for The CMS (sidebar + main area): left nav, `/cms` two
 cards, viewport lock, theme. Website editor look stays in
 [website design decision record](../../features/website/design-decision-record.md). Tokens: [design.md](design.md). Look: [`apps/demo/`](../../../apps/demo/README.md).
-HTML archive: [cms.html](../../design/cms.html). Screens:
-[frontend.md](frontend.md).
+Screens: [frontend.md](frontend.md).
 
 Status: decided (dates on each entry). Do not silently replace the old entry.
 One number is one decision. **Why** is owner-written; omit it rather than
@@ -38,15 +37,14 @@ inventing it.
    rail still hides children.
 
 2. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
-   [cms.html](../../design/cms.html) (copy-out blocked, Ask first pending, pages, publication, and so
-   on). Hide with `?shot=1`. Copy-out is an error, not always-on UI.
+   [`apps/demo/`](../../../apps/demo/README.md) (copy-out blocked, Ask first pending, pages, publication, and
+   so on). Hide with `?shot=1`. Copy-out is an error, not always-on UI.
    (2026-08-26; moved from website design decision 7, 2026-08-27) Always
    collapsible to a **circle in the top right**; tap to reopen. Default
    **collapsed** (desktop and mobile). `?dev=1` opens it; `?shot=1` hides it.
    (2026-08-26; default collapsed everywhere 2026-08-27) (2026-08-28) Ads
-   destination states: **My ads** / **New ad** / **Review**. That destination
-   embeds [ads.html](../../design/ads.html) (`?embed=1`); standalone `ads.html` keeps the same
-   collapsible strip as onboarding.
+   destination states: **My ads** / **New ad** / **Review**. That destination is
+   [`apps/demo/`](../../../apps/demo/README.md) `/cms/ads`; the same collapsible strip as onboarding.
 
 3. **The CMS is viewport-locked, not a scrolling document** — The window never
    scrolls. The CMS fills the viewport like a PWA: The CMS stays put, overflow
@@ -106,19 +104,19 @@ inventing it.
    later `frontend-2` port can keep its cheaper orb. Website-editor Voice stays
    the canvas orb ([website design decision 18](../../features/website/design-decision-record.md)). Token table: [design.md](design.md).
    (2026-08-27) (2026-08-27): Product `/cms` is two cards (**Do my website…** /
-   **Run my ads**), not this prompt. Keep the prompt-box markup in the
-   look-export HTML for later restore. Hide Paperclip, Start client interview,
-   predecessor dashboard Usage & billing copy. Overlay rows drop New chat.
-   Connect stays. (2026-08-28): Voice on `/cms` is gone. Overlay look:
+   **Run my ads**), not this prompt. Keep the prompt-box markup in the look app
+   for later restore. Hide Paperclip, Start client interview, predecessor
+   dashboard Usage & billing copy. Overlay rows drop New chat. Connect stays.
+   (2026-08-28): Voice on `/cms` is gone. Overlay look:
    [assistant design decision record](../../features/assistant/design-decision-record.md). `/cms` cards clone the prompt-box look
    (hairline, prompt radius) with a readable lift of the prompt shade, and carry
    destination logos (Sites globe, Ads megaphone). Google / Meta connect lives
    on Ads too. The two cards sit in one row on a wide screen and stack on a
    narrow screen so the titles stay one line. (2026-08-29): Product `/cms` does
-   not paint the leftover Connect bar. Keep that markup in the look-export HTML
-   as a restorable node (`is-hidden`). Nav glyphs are the archive strokes (1.6),
-   not Lucide defaults. Wordmark weight matches placis-web (`font-semibold`,
-   16px / 14px from `sm`, same as the placis-web rail).
+   not paint the leftover Connect bar. Keep that markup in the look app as a
+   restorable node (`is-hidden`). Nav glyphs are the archive strokes (1.6), not
+   Lucide defaults. Wordmark weight matches placis-web (`font-semibold`, 16px /
+   14px from `sm`, same as the placis-web rail).
 
    (2026-08-29): `/cms` **placis** is the placis-web dashboard new-chat
    wordmark: `text-4xl`, `leading-tight`, tracking `-0.03em`. Type weights stay
@@ -127,19 +125,22 @@ inventing it.
    CMS breakpoint.
 
 6. **Owner field controls share one look** — Input, textarea, and select in The
-   CMS, onboarding, and Ads use `.cms-field-control` (look export:
-   [details-fields.css](../../design/details-fields.css)). Same sunken fill,
-   radius, type, and focus ring. Leftover `.cms-careers-input` /
-   `.cms-careers-textarea` / onboarding `.field-control` are that same control.
-   Not the website assistant composer, not the New chat prompt, not the
-   contractor website form, not Ads inplace names. Don't say form. Don't say
-   component. **Why:** we have so many forms, all of them use different styles;
-   no textarea is shared between components.
-   (2026-08-28)
-   (2026-08-28): Same file now holds owner buttons
+   CMS, onboarding, and Ads use `.cms-field-control` (look app: [`apps/demo/`](../../../apps/demo/README.md)
+   `src/styles/theme.css`). Same sunken fill, radius, type, and focus ring.
+   Leftover `.cms-careers-input` / `.cms-careers-textarea` / onboarding
+   `.field-control` are that same control. Not the website assistant composer,
+   not the New chat prompt, not the contractor website form, not Ads inplace
+   names. Don't say form. Don't say component. **Why:** we have so many forms,
+   all of them use different styles; no textarea is shared between components.
+   (2026-08-28) (2026-08-28): Same file now holds owner buttons
    (`.button-primary` / `.button-secondary`), combobox (`.cms-combo`), field
-   labels (13px / 450), and the mock-only yellow strip. Ads maps its old
-   `.btn` look to those buttons and About-the-ad combos to `.cms-combo`. Find
-   registry search stays search-then-pick; only the listbox look matches the
-   combo popover. `.cms-careers-input` / `.cms-careers-textarea` are renamed to
+   labels (13px / 450), and the mock-only yellow strip. Ads maps its old `.btn`
+   look to those buttons and About-the-ad combos to `.cms-combo`. Find registry
+   search stays search-then-pick; only the listbox look matches the combo
+   popover. `.cms-careers-input` / `.cms-careers-textarea` are renamed to
    `.cms-field-control`.
+
+7. **Look work is `apps/demo/` only** — The `docs/design/` HTML archive is
+   **removed**. Do not start or continue look work there. The editable look is
+   [`apps/demo/`](../../../apps/demo/README.md). Specs still win when they
+   disagree with the look. (2026-08-29; HTML archive deleted 2026-08-31)

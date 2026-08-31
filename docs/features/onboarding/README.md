@@ -13,8 +13,7 @@ Onboarding turns a spoken or typed description of a business into a clear
 - [technical-implementation.md](technical-implementation.md) — the technical plan (flow, pipeline)
 - [frontend.md](frontend.md) — the onboarding screens and fields (client
   interview Details == `/cms/details`)
-- [design.md](design.md) — look (`apps/demo/` `/onboarding/*`; archive
-  `docs/design/onboarding.html`)
+- [design.md](design.md) — look (`apps/demo/` `/onboarding/*`)
 - [design decision record](design-decision-record.md) — onboarding look and interaction
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [assistant.md](assistant.md) — Find / Review / interview Assistant

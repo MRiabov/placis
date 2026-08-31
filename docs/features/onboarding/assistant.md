@@ -67,7 +67,7 @@ That surface is the [onboarding website editor](website-editor.md).
   Voice on; do not create the realtime connection. Owner copy is **Assistant**,
   never guide on those screens. Look: [assistant design decision 6](../assistant/design-decision-record.md). Denied
   microphone [design decision 8](../assistant/design-decision-record.md); greeting [design decision 9](../assistant/design-decision-record.md); realtime after
-  microphone [design decision 10](../assistant/design-decision-record.md). Mock: [onboarding.html](../../design/onboarding.html).
+  microphone [design decision 10](../assistant/design-decision-record.md). Look: [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*`.
 - Realtime connection is created **when they turn the voice guide on and the
   microphone is granted**, not on Find mount.
 

@@ -2,8 +2,8 @@
 
 Look and interaction for contractor-facing onboarding. Architecture stays in
 [ADR.md](ADR.md). Screens: [frontend.md](frontend.md). Tokens:
-[CMS design.md](../../general-architecture/cms/design.md). Mock:
-[onboarding.html](../../design/onboarding.html).
+[CMS design.md](../../general-architecture/cms/design.md). Look:
+[`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*`.
 
 Status: decided (dates on each entry). Do not silently replace the old entry.
 One number is one decision. **Why** is owner-written; omit it rather than
