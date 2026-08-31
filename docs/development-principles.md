@@ -83,7 +83,9 @@ everything else FKs into `tenants`.
 - **Keep files under 800 lines** (hard error at 1200); split into a feature
   package instead. Markdown after rumdl wrap (80 characters) uses the same cap:
   split a doc that exceeds 800. Exception: `docs/glossary.md` (one
-  ubiquitous-language file; do not split it).
+  ubiquitous-language file; do not split it). The look app (`apps/demo/src`)
+  hard-fails at 800
+  ([CI decision 1](general-architecture/ci-cd.md#decisions)).
 
 ## What "good" looks like
 
