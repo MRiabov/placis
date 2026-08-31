@@ -31,9 +31,10 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 - `create_page` (02 already copied the website page set, including service
   pages from named services). Do not invent the service list. Unpaid owner
   prompts on the website preview **may** `create_page`.
-- `update_reviews`. Ranked pool order is the review ranking job, not this
-  job. Owner Content / `update_reviews` can still override a section later
-  (CMS).
+- `update_reviews`. Ranked pool order is River job
+  `reviews_ranking_for_display`
+  ([jobs](../../../general-architecture/jobs.md)), not this job. Owner
+  Content / `update_reviews` can still override a section later (CMS).
 - Emit HTML in Go. Go does not resolve `{{…}}`.
 - Persist Worker HTML onto unpublished slots.
 - Write R2, convert WebP, or purge (that is 04).

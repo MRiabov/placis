@@ -17,7 +17,11 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
    profile; owner-typed marketing phone unchanged (research conflict); photo ETL
    run kind not rewritten for the same content hash when `force` is false and
    `schema_revision` matches; a bumped `schema_revision` extracts / classifies
-   without `force`; `algorithm=human` is not overwritten.
+   without `force`; `algorithm=human` is not overwritten. After that
+   scheduled run **succeeds** and new `in_pool` review rows landed:
+   schema `jobs` has one `reviews_ranking_for_display` on that
+   `tenant_id` (once, not per chunk). Transform did not rank. If the
+   scheduled run added no new `in_pool` rows, no ranking job.
 3. **Cap** — five onboarding `enqueue_id`s in 30 minutes; a sixth
    `StartRun(trigger=onboarding)` does not insert runs.
 4. **Skip** — scheduled Instagram with no handle → `status=skipped`, no fetch.

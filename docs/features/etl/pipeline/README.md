@@ -70,6 +70,13 @@ apply. [02](../../onboarding/pipeline/02-business-research.md) only calls `Start
   `business_profile_edit_sources`. ETL Projects insert ≥1 `project_sources`.
   Imported files insert ≥1 `imported_media_sources`. Never a nullable
   `source_id` column. Client interview / owner writes have no junction rows.
+- **Reviews: insert only.** Transform writes `business_profile_reviews`
+  (`in_pool`). It does not rank, does not write `is_top` / `top_position`,
+  and does not enqueue `reviews_ranking_for_display`. Report that N new
+  `in_pool` rows landed. Onboarding and scheduled-ETL **succeeded** enqueue
+  that River job ([build-profile](../../onboarding/pipeline/build-profile.md),
+  [jobs](../../../general-architecture/jobs.md)). Incremental LLM rerank as
+  reviews arrive is later (do not spec).
 
 ## Sources
 

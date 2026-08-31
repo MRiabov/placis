@@ -83,11 +83,12 @@ this chunk set.
   hours). Each increment cites the listing `source_id`.
 - New reviews → `business_profile_reviews` keyed to
   `etl.google_maps_listing_reviews`. The add increment cites the listing-review
-  `source_id`. Then [projects.md](projects.md) for reviews **usable as a
-  Project** (work type, one past named job). Details reviews have **no photo
-  field** — cover empty. After scrape, photos on **that** review may fill an
-  empty cover on the same Project when `algorithm` is not `human` (do not
-  rewrite title / description).
+  `source_id`. Do not rank and do not enqueue `reviews_ranking_for_display`
+  (orchestration: [build-profile](../../onboarding/pipeline/build-profile.md)). Then [projects.md](projects.md) for reviews
+  **usable as a Project** (work type, one past named job). Details reviews have
+  **no photo field** — cover empty. After scrape, photos on **that** review may
+  fill an empty cover on the same Project when `algorithm` is not `human` (do
+  not rewrite title / description).
 - New listing photos → media library items `supplied_by=business_research`
   (`imported_media_sources` → listing `source_id`); then
   [photo classification](photo-classification.md) for those items (do not wait

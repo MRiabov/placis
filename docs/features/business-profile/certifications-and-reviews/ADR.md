@@ -45,3 +45,12 @@ decision + date) instead of silently replacing the old entry.
    review rows landed, then replace `is_top` / `top_position` as **persistent**.
    If no additional rows, persist the same pins without a second generate. Owner
    PATCH on this screen stays human and is not overwritten.
+
+   (2026-08-31, later): This screen owns columns, human PATCH, and ads use of
+   **top reviews**. It does **not** enqueue ranking. River job enum value
+   `reviews_ranking_for_display` (`thread_kind` and `prompt_id` the same string)
+   writes `is_top` / `top_position` with the same replace as this screen’s
+   PATCH. Owner PATCH is `algorithm=human` and is not overwritten. Orchestration
+   (onboarding two-pass; scheduled ETL after `succeeded` when new `in_pool` rows
+   landed): [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../../../general-architecture/jobs.md). Website consumes the ranked pool
+   (`{{reviews.N}}`); it does not own ranking.
