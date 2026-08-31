@@ -34,7 +34,9 @@ as of `accepted_edit_id`. They do not replay profile history on every call.
   `founder_country_of_residence`, `founder_appointed_on`,
   `founder_media_asset_id` nullable fk, `logo_media_asset_id` nullable fk,
   `brand_tone`, `brand_typography`, `brand_primary_color`, `brand_accent_color`,
-  `last_edit_id` nullable fk, `accepted_edit_id` nullable fk, timestamps
+  `top_reviews_provisional` nullable bool (null = never ranked; see top set
+  below), `last_edit_id` nullable fk, `accepted_edit_id` nullable fk,
+  timestamps
 
 - `business_profile_edits` — Profile history. Append-only typed increments.
   Never `details` jsonb and never a full-row dump of the profile. Each row is
@@ -51,8 +53,8 @@ as of `accepted_edit_id`. They do not replay profile history on every call.
   `founder_role`, `founder_occupation`, `founder_nationality`,
   `founder_country_of_residence`, `founder_appointed_on`,
   `founder_media_asset_id`, `logo_media_asset_id`, `brand_tone`,
-  `brand_typography`, `brand_primary_color`, `brand_accent_color`), `list`
-  nullable
+  `brand_typography`, `brand_primary_color`, `brand_accent_color`,
+  `top_reviews_provisional`), `list` nullable
   (`services`/`service_areas`/`opening_hours`/`reviews`/`certifications`/
   `facebook_posts`/`instagram_posts`/`projects` when the op is a list change),
   `list_item_id` nullable, `text_value`, `int_value`, `date_value`, `bool_value`
@@ -122,12 +124,16 @@ show Profile history, or to reconstruct the profile as of `accepted_edit_id`
   `top_position` is 1–30. Unique 1–30 is the cap — two rows cannot share a
   number. Writers never assign a single `top_position`. They replace the whole
   ordered id list in one transaction (`SELECT … FOR UPDATE` the profile row,
-  then densify 1…n from that list). River job `reviews_ranking_for_display`
+  then densify 1…n from that list). Same transaction writes
+  `business_profiles.top_reviews_provisional` (nullable bool). Null: never
+  ranked. True: this top set may still be replaced by another
+  `reviews_ranking_for_display` for this enqueue. False: ranking for this
+  enqueue is done, or owner PATCH. Not a skip key: ranking still overwrites
+  unless `algorithm=human`. Not on each review row. River job
+  `reviews_ranking_for_display`
   ([jobs](../../../general-architecture/jobs.md)) and Certifications and
-  reviews PATCH do the same replace, not a merge. There is no stored
-  provisional or persistent marker (no extra column, not `algorithm`, not
-  a skip key). A later ranking job may replace pins until owner PATCH
-  sets `algorithm=human`. Orchestration:
+  reviews PATCH do the same pin replace, not a merge. PATCH also sets
+  `top_reviews_provisional=false` and `algorithm=human`. Orchestration:
   [build-profile](../../onboarding/pipeline/build-profile.md).
 
 Website sections hold their own ordered ids via `website_slot_reviews`. Ads use

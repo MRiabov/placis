@@ -20,7 +20,8 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
    without `force`; `algorithm=human` is not overwritten. After that
    scheduled run **succeeds** and new `in_pool` review rows landed:
    schema `jobs` has one `reviews_ranking_for_display` on that
-   `tenant_id` (once, not per chunk). Transform did not rank. If the
+   `tenant_id` (once, not per chunk). After invoke:
+   `top_reviews_provisional=false`. Transform did not rank. If the
    scheduled run added no new `in_pool` rows, no ranking job.
 3. **Cap** — five onboarding `enqueue_id`s in 30 minutes; a sixth
    `StartRun(trigger=onboarding)` does not insert runs.

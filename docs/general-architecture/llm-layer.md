@@ -129,7 +129,8 @@ ads top reviews). River job enum value `reviews_ranking_for_display`
 package `prompts.yaml`. Input: current `in_pool` rows (id, citation/body,
 rating, origin, `published_at`). Output: ordered `review_ids[]`, length
 1–30, each id in that pool. The job writes `is_top` / `top_position`
-(same replace as Certifications and reviews PATCH) and skips
+(same replace as Certifications and reviews PATCH), sets
+`top_reviews_provisional` (not a skip key), and skips
 `algorithm=human`. Prompt prose and ranking heuristics are unspecified.
 When onboarding and scheduled ETL enqueue:
 [build-profile](../features/onboarding/pipeline/build-profile.md). Not a
