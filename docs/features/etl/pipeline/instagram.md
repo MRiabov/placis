@@ -1,6 +1,6 @@
 # Instagram
 
-`etl_kind=instagram`. Onboarding 02 and Monday / Wednesday / Friday. Shared
+`etl_run_kind=instagram`. Onboarding 02 and Monday / Wednesday / Friday. Shared
 extract / transform rules: [pipeline README](README.md).
 
 Public scrape. Graph API is later. Never say Instagram listing — this is an
@@ -8,8 +8,8 @@ Instagram profile and Instagram posts.
 
 ## Trigger
 
-`StartRun` included this ETL kind. Skip (`status=skipped`) when scheduled and
-there is no Instagram handle.
+`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled
+and there is no Instagram handle.
 
 ## Pre
 
@@ -18,7 +18,7 @@ there is no Instagram handle.
 
 ## Must not
 
-- Call Maps, Facebook, crawl, or Parallel from this ETL kind.
+- Call Maps, Facebook, crawl, or Parallel from this ETL run kind.
 - Dump fetch `raw` onto `instagram_profiles` / `instagram_posts`.
 - Treat this row as a listing.
 - Overwrite an Instagram profile or post whose `algorithm` is `human` (including

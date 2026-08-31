@@ -127,12 +127,24 @@ line when that line is not a new list item or heading.
 ## Banned synonym (unmarked) — kind
 
 - `docs/features/etl/persistence.md`: column `kind` or
-  `kind=google_maps_listing` → **fail**. Say **ETL kind** /
-  `etl_kind=google_maps_listing` (or source kind, thread kind, photo kind,
-  imported media kind as appropriate).
-- `internal/etl/run.go`: type `Kind` → **fail**. Say **ETLKind**.
-- `etl_kind=google_maps_listing` / “ETL kind” → **pass** (covering).
+  `kind=google_maps_listing` → **fail**. Say **ETL run kind** /
+  `etl_run_kind=google_maps_listing` (or ETL source kind, thread kind, photo
+  kind, imported media kind as appropriate).
+- `internal/etl/run.go`: type `Kind` → **fail**. Say **ETLRunKind**.
+- `etl_run_kind=google_maps_listing` / “ETL run kind” → **pass** (covering).
+- Bare “ETL kind” / “source kind” → **fail**. Say **ETL run kind** /
+  **ETL source kind**.
 - Do **not** extra-allow `kind=` or `.kind`.
+
+## Banned synonym (unmarked) — fast extract / slow extract / fast crawl / slow crawl
+
+- `docs/features/etl/pipeline/README.md`: “Fast extract then slow extract” →
+  **fail**. Say **ETL fast extract** / **ETL slow extract**.
+- `docs/features/etl/pipeline/website-crawl.md`: “a fast crawl” / “slow crawl”
+  → **fail**. Say **ETL fast crawl** / **ETL slow crawl**.
+- “ETL fast extract” / “ETL slow extract” / “ETL fast crawl” /
+  “ETL slow crawl” → **pass** (covering).
+- No extraAllowed for the bare forms. ETL docs are not a home.
 
 ## `setup` in testing docs
 
