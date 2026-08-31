@@ -29,13 +29,16 @@ transform rules:
 ## Do — extract
 
 Set `status=extracting`. Call Parallel through Vercel AI Gateway
-(`gateway.tools.parallelSearch()`, any model). Parallel is not instant. Persist
-each discovered key as it arrives onto the **already-inserted** sibling run
-(`place_id` on `google_maps_listing`, `website_url` on `website_crawl`) **and**
-the onboarding session attach. Not a profile dump. A generation call over
-retrieved text (no search tools) may classify that text; it is not the fast
-extract of Maps / crawl. Retry of this `run_id` does not search again for a
-result that already landed.
+(`gateway.tools.parallelSearch()`, any model). Seed the search from what 01
+already attached: company registry identity (`legal_name`, `company_number`,
+country, `registered_office`) and/or Maps `display_name` + country. Company
+number alone is enough to discover a `place_id` and website URL. Parallel is
+not instant. Persist each discovered key as it arrives onto the
+**already-inserted** sibling run (`place_id` on `google_maps_listing`,
+`website_url` on `website_crawl`) **and** the onboarding session attach. Not a
+profile dump. A generation call over retrieved text (no search tools) may
+classify that text; it is not the fast extract of Maps / crawl. Retry of this
+`run_id` does not search again for a result that already landed.
 
 ## Do — transform
 
@@ -63,5 +66,7 @@ Downstream ETL run kinds start when their key exists.
 
 - Parallel only via the Vercel AI Gateway server tool.
 - Web search does not write `business_profile_*`.
+- Find with only a company registry record still unblocks Maps / crawl in this
+  enqueue.
 - The first discovered key unblocks Maps / crawl without waiting for Parallel to
   finish.
