@@ -1,9 +1,9 @@
 # Photo classification
 
 Shared operation group after photos land from [Google Maps](google-maps.md), [Facebook](facebook.md),
-[Instagram](instagram.md), or [website crawl](website-crawl.md). Not a `StartRun` ETL run kind and not a client
-interview step. Shared extract / transform rules: [pipeline README](README.md). Classifier
-model: **`glm-5.3-flash`** (dated id; same cheap multimodal default as
+[Instagram](instagram.md), or [website crawl](website-crawl.md). Not an ETL run kind and not a client interview
+step. Shared extract / transform rules: [pipeline README](README.md). Classifier model:
+**`glm-5.3-flash`** (dated id; same cheap multimodal default as
 [projects.md](projects.md)).
 
 Labels: hero / project / service / founder / logo. Written as `photo_kind` on

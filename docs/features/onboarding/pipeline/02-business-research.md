@@ -3,22 +3,23 @@
 Async, parallel. Starts when 01 business lookup returns — **not** when 03
 finishes. Overlaps Review and the client interview. Progress on the
 onboarding session SSE stream (reads `etl.runs` and the live business
-profile as each extract chunk transforms). ETL fast extract (~1s) fills about half
-of that ETL run kind’s checklist; ETL slow extract (~40s extra) fills the rest as fetches
-arrive. Photo classification of found photos is ETL transform, not the client
-interview.
+profile as each extract chunk transforms). ETL fast extract (p95 ≤ 5s) fills
+about half of that ETL run kind’s checklist; ETL slow extract (progressively over
+about 60s) fills the rest as fetches arrive. Photo classification of found
+photos is ETL transform, not the client interview.
 
 Paid lookups (Maps, Parallel, Facebook, crawl) cost money. A naive contractor
 must not be able to start that work dozens of times by repeating business
 lookup, picking another company, or retrying. Cap it.
 
 02 only calls **`etl.StartRun(trigger=onboarding, force=false)`** with the
-onboarding means set. Extract and transform: [ETL](../../etl/README.md).
-Means, input sets, and the client-interview window:
-[means registry](../../etl/pipeline/means.md). One `StartRun` creates one
-`enqueue_id`. An ETL run is inserted when that means **starts**. River retries
-keep the same `etl.runs.id`. Count distinct `enqueue_id`, not jobs — otherwise
-one business lookup would already exceed the cap.
+onboarding ETL run kinds. Extract and transform: [ETL](../../etl/README.md).
+When an ETL run kind starts:
+[ETL run kind triggers](../../etl/pipeline/etl-kind-triggers.md). One `StartRun`
+creates one `enqueue_id`. An ETL run is inserted when that ETL run kind
+**starts**. River retries keep the same `etl.runs.id`. Count distinct
+`enqueue_id`, not jobs — otherwise one business lookup would already exceed
+the cap.
 
 01 already wrote legal identity and Maps autocomplete increments. 02 does not
 repeat those writes and does not upsert `etl.google_maps_listings` itself.
@@ -55,13 +56,13 @@ enqueue cap.
 - Block business lookup, 03 Continue, or the client interview on this wait.
 - Wait for an ETL run kind’s `status=succeeded` before showing the ETL fast extract live
   business profile on the checklist.
-- Pass `directory`, `review`, or `photo` as `StartRun` ETL run kinds. Scrape is
-  ETL slow extract of `google_maps_listing`. Photo classification runs after photos
-  attach. Crawl fills trade / founder / service areas (no directory job).
+- Pass `directory`, `review`, or `photo` as ETL run kinds. Scrape is ETL slow extract of
+  `google_maps_listing`. Photo classification runs after photos attach. Crawl
+  fills trade / founder / service areas (no directory job).
 - Pass an implicit “all sources” list or a hand-built Always table. The
-  onboarding means set is the registry.
-- Wait for a sibling ETL run kind to succeed before starting another means.
-  Means start when an input set is met.
+  onboarding ETL run kinds are the trigger table.
+- Wait for a sibling ETL run kind to succeed before starting another. An ETL run kind
+  starts when it has the details it needs.
 
 ## Do
 
@@ -70,22 +71,20 @@ this `tenant_id` with `trigger=onboarding` and
 `started_at > now() - 30 minutes`. If **5 or more**, do not call `StartRun`. Set
 `research_wait_until` = oldest of those five enqueue start times + 30 minutes.
 Business lookup and source changes still persist; 01 still returns; UI still
-goes to
-03. Profile and SSE carry `research_wait_until`.
+goes to 03. Profile and SSE carry `research_wait_until`.
 
 `StartRun` counts the same cap and inserts nothing if called over it
 ([ETL architecture](../../etl/architecture.md)). 02 checks first so business
 lookup can stay **200** and a later source change can stay **429**.
 
-If the count is **0–4**, call `StartRun` with the onboarding means set. Pass
+If the count is **0–4**, call `StartRun` with the onboarding ETL run kinds. Pass
 `onboarding_session_id` and `force=false`. Copy Find attach and live-profile
-identity keys into the enqueue. The evaluator starts each means whose input set
-is already met (Maps from `place_id` **or** `display_name` + locality; trade
+details into the enqueue. The evaluator starts each ETL run kind that already has
+what it needs (Maps from `place_id` **or** `display_name` + locality; trade
 registry from `company_number` + country **or** `display_name` + country;
-Parallel when identity keys exist and some identity key is still empty; crawl /
-Facebook / Instagram when their URL/handle exists). Further means start when
-identity keys change — including 04a URL / handle writes. That is not a new
-`StartRun`.
+Parallel when some discoverable detail is still empty; crawl / Facebook /
+Instagram when their URL/handle exists). Further ETL run kinds start when details
+change — including 04a URL / handle writes. That is not a new `StartRun`.
 
 ETL run kinds in this enqueue **start when their key exists**. Maps Details,
 crawl links, and web search write discovered keys onto the waiting sibling run
@@ -98,10 +97,10 @@ not updated.
 
 ## Persist
 
-`etl.runs` (one per means that started, shared `enqueue_id`); fetches and
+`etl.runs` (one per ETL run kind that started, shared `enqueue_id`); fetches and
 listing as extract chunks land; live business profile via transform of each
-chunk (not only when the ETL run kind succeeds). `research_wait_until` is derived when
-the cap is hit; it is not a table. Expose it on `GET .../profile` and the
+chunk (not only when the ETL run kind succeeds). `research_wait_until` is derived
+when the cap is hit; it is not a table. Expose it on `GET .../profile` and the
 onboarding session SSE.
 
 ## Fail
@@ -140,4 +139,4 @@ enqueue’s ETL finishes**
 - Review ranking (`reviews_ranking_for_display`) is not copying the website
   template’s pages and not website 03.
 - 02 never passes `directory`, `review`, or `photo`.
-- Means start from identity keys, not from a sibling ETL run kind succeeding.
+- An ETL run kind starts from details, not from a sibling ETL run kind succeeding.

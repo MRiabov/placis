@@ -1426,43 +1426,10 @@ In code: `etl.runs.enqueue_id`.
 
 One extract of **one ETL run kind** for one tenant (the Google Maps extract, the
 Facebook extract, the Instagram extract). River retries are the same run.
-Distinct from: Business research (onboarding 02 starts several runs, one per
-means that started), Enqueue (one `StartRun`), Means (the adapter).
+Distinct from: Business research (onboarding 02 starts several ETL runs),
+Enqueue (one `StartRun`), ETL run kind (the closed value on the run).
 
 In code: `etl.runs`.
-
----
-
-#### Means
-
-One lookup adapter that starts when an input set is met. Persisted as `etl_run_kind`
-on an ETL run. Distinct from: ETL run (one started means), Enqueue, Input set.
-
----
-
-#### Identity key
-
-A known identity or handle used to start a means: Find attach, a later extract
-write, or a contractor write (`place_id`, `company_number`, `website_url`,
-`legal_name`, `display_name`, locality, Facebook URL, Instagram handle).
-Distinct from: sibling `etl.runs` key columns (those may copy an identity key;
-they are not the source of truth).
-
----
-
-#### Input set
-
-One minimal tuple of identity keys that may start a means. A means may have
-several input sets; any one is enough (OR). Distinct from: the closed
-checklist.
-
----
-
-#### Client-interview window
-
-The about-one-minute stretch after enqueue start when the contractor is
-expected to fill the client interview. Distinct from: the 5/30-minute enqueue
-cap (abuse), ETL fast extract, ETL slow extract. Not a job deadline.
 
 ---
 
@@ -1470,9 +1437,10 @@ cap (abuse), ETL fast extract, ETL slow extract. Not a job deadline.
 
 Which ETL run this is: Google Maps listing, Facebook, Instagram, website crawl,
 trade registry, or web search. Never `directory`, `review`, or `photo` as a
-`StartRun` ETL run kind. The ETL run kind attaches to the run, not to ETL and
-not to the River job. Never bare **kind**. Distinct from: ETL source kind (the
-run vs the saved extract we point at later; some names overlap).
+`StartRun` ETL run kind. An ETL run kind starts when it has the details it
+needs. The ETL run kind attaches to the run, not to ETL and not to the River
+job. Never bare **kind**. Distinct from: ETL source kind (the run vs the saved
+extract we point at later; some names overlap).
 
 In code: `etl.runs.etl_run_kind`. Go: `ETLRunKind`. Unique
 `(enqueue_id, etl_run_kind)`. Write `etl_run_kind=google_maps_listing`.
@@ -1502,7 +1470,7 @@ In code: `etl.imported_media.imported_media_kind`.
 
 #### ETL fast extract
 
-The first cheap response (Google Maps Details, or an ETL fast crawl). SLO ~1s.
+The first cheap response (Google Maps Details, or an ETL fast crawl). p95 ≤ 5s.
 Distinct from: ETL slow extract.
 
 ---
@@ -1510,7 +1478,8 @@ Distinct from: ETL slow extract.
 #### ETL slow extract
 
 The remainder after the ETL fast extract (Maps scrape of further reviews and
-photos, or an ETL slow crawl). SLO ~40s extra. Distinct from: ETL fast extract.
+photos, or an ETL slow crawl). Fills the rest progressively over about 60s.
+Distinct from: ETL fast extract.
 
 ---
 
@@ -1525,7 +1494,7 @@ kind. SLO ~1s. Distinct from: ETL slow crawl.
 
 The remainder extract of website crawl after the homepage: remaining HTML URLs
 in parallel (not a serial tens-of-seconds walk). An ETL slow extract for that
-ETL run kind. SLO ~40s extra. Distinct from: ETL fast crawl.
+ETL run kind. Distinct from: ETL fast crawl.
 
 ---
 

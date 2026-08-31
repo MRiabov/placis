@@ -8,10 +8,10 @@ Instagram profile and Instagram posts.
 
 ## Trigger
 
-Input set met: `instagram_handle`. Skip (`status=skipped`) when scheduled and
-there is no handle. Onboarding: start when the identity key exists. Nothing left
-that can produce it → `skipped`. A later paste can still start this means on
-this enqueue.
+Starts when: `instagram_handle`. Skip (`status=skipped`) when scheduled and
+there is no handle. Onboarding: start when the detail exists. Nothing left that
+can produce it → `skipped`. A later paste can still start this ETL run kind on this
+enqueue.
 
 ## Pre
 

@@ -4,16 +4,16 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
 02 still fills the checklist and writes `etl.*` rows. This feature’s own test is
 **integration** (real Postgres, faked Maps / Facebook / Instagram / LLM):
 
-1. **Bootstrap** — `StartRun` with `trigger=onboarding` and 01 identity keys
-   that meet some input sets ([means](pipeline/means.md); never `directory`, `review`, or `photo`).
-   Assert `etl.runs` only for started means (shared `enqueue_id`),
-   `etl.sources`, fetch rows, Maps listing, profile posts / reviews / media
-   library photo kinds. Assert Details transform (hours / marketing phone /
-   first reviews) lands while scrape is still in flight; scrape then adds
-   further reviews / photos. ETL increments have
-   `business_profile_edit_sources`. Facebook / Instagram are not inserted until
-   a URL/handle identity key exists; `skipped` if nothing left can produce that
-   identity key.
+1. **Bootstrap** — `StartRun` with `trigger=onboarding` and 01 details that
+   let some ETL run kinds start ([ETL run kind triggers](pipeline/etl-kind-triggers.md);
+   never `directory`, `review`, or `photo`). Assert `etl.runs` only for started
+   ETL run kinds (shared `enqueue_id`), `etl.sources`, fetch rows, Maps listing,
+   profile posts / reviews / media library photo kinds. Assert Details
+   transform (hours / marketing phone / first reviews) lands while scrape is
+   still in flight; scrape then adds further reviews / photos. ETL increments
+   have `business_profile_edit_sources`. Facebook / Instagram are not inserted
+   until a URL/handle detail exists; `skipped` if nothing left can produce that
+   detail.
 2. **Scheduled increment** — second `StartRun` with `trigger=scheduled` and a
    new review, a new Instagram post, a new photo, and a different marketing
    phone than the owner typed. Assert new review / post / photo on the business
@@ -30,7 +30,7 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
    `StartRun(trigger=onboarding)` does not insert runs.
 4. **Skip** — scheduled Instagram with no handle → `status=skipped`
    immediately, no fetch. Onboarding Instagram is not inserted until a handle
-   identity key exists.
+   detail exists.
 5. **Isolation** — two tenants; each cannot read the other’s `etl.runs`,
    fetches, or profile posts.
 
