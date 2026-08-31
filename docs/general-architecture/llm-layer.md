@@ -45,19 +45,20 @@ and search share Vercel; there is no OpenRouter hop.
   format revision, and the usage and cost. That includes text, voice, and image
   generate/cleanup. **`input` is the exact text sent** (text-turn assembled
   prompt; Voice-connection instructions blob at create, including keyterms /
-  `replace` on that row). Prompt id / knowledge id are not a substitute for
-  that blob. Voice **cost** is xAI audio minutes plus text-item fees, not
-  token counts — leave `input_tokens` / `output_tokens` null on those rows
-  ([billing](../features/billing/README.md)). Voice utterance reconstructability
-  is the forwarded xAI JSON on `thread_items.provider_event` (onboarding:
+  `replace` on that row). Prompt id / knowledge id are not a substitute for that
+  blob. Voice **cost** is xAI audio minutes plus text-item fees, not token
+  counts — leave `input_tokens` / `output_tokens` null on those rows
+  ([billing](../features/billing/README.md)). Voice utterance reconstructability is the forwarded xAI JSON on
+  `thread_items.provider_event` (onboarding:
   `assistant_conversation_items.provider_event`) **plus** that run’s `input`
   (instructions / system prompt). Reconstruct a Voice conversation from
-  `input` + ordered thread items (`kind` / `body` / `offset_seconds`) +
-  `provider_event` + `output` / `tool_calls` / `internal_reasoning`. Hydrate of
-  the assistant thread does **not** read this table or `provider_event`.
-  **Every call belongs to a thread** (`ai_generations.thread_id` required) so a
-  schema mismatch can retry on the same thread (failed row stays; the next
-  attempt is another generation). `LLMProvider` always receives `thread_id`.
+  `input` + ordered thread items (`thread_item_kind` / `body` /
+  `offset_seconds`) + `provider_event` + `output` / `tool_calls` /
+  `internal_reasoning`. Hydrate of the assistant thread does **not** read this
+  table or `provider_event`. **Every call belongs to a thread**
+  (`ai_generations.thread_id` required) so a schema mismatch can retry on the
+  same thread (failed row stays; the next attempt is another generation).
+  `LLMProvider` always receives `thread_id`.
 
 ## Threads
 
@@ -67,10 +68,10 @@ Postgres schema **`ai`**. Go package `internal/ai/`.
 
 Closed set: `text` `NOT NULL` plus a check constraint, not a Postgres enum
 type ([ADR 1](ADR.md)). Go `StrEnum` when code exists. Do **not** dump
-non-assistant work into an `internal` kind.
+non-assistant work into an internal thread kind.
 
 ```sql
-kind text NOT NULL CHECK (kind IN (
+thread_kind text NOT NULL CHECK (thread_kind IN (
   'cms_assistant',
   'onboarding_assistant',
   'ads_generate',
@@ -90,30 +91,31 @@ kind text NOT NULL CHECK (kind IN (
 A new generate factory replaces that check (plus this list and the Go enum).
 Callers do not invent strings at the call site.
 
-- `threads` — `id`, `tenant_id` nullable fk (null on `eval`), `kind` text
+- `threads` — `id`, `tenant_id` nullable fk (null on `eval`), `thread_kind` text
   required (check above), `onboarding_session_id` nullable fk
-  (`onboarding.onboarding_sessions`; required when `kind=onboarding_assistant`),
-  `status` (`current` / `completed`; used when `kind=cms_assistant`),
-  `last_activity_at`, `last_assistant_edit_at` (cms compaction),
-  `compacted_through_item_id` nullable fk (`assistant.thread_items`; cms only),
-  timestamps. Unique `(tenant_id) WHERE kind = 'cms_assistant' AND status =
-  'current'`. Unique `(onboarding_session_id) WHERE kind =
-  'onboarding_assistant'`.
+  (`onboarding.onboarding_sessions`; required when
+  `thread_kind=onboarding_assistant`), `status` (`current` / `completed`; used
+  when `thread_kind=cms_assistant`), `last_activity_at`,
+  `last_assistant_edit_at` (cms compaction), `compacted_through_item_id`
+  nullable fk (`assistant.thread_items`; cms only), timestamps. Unique
+  `(tenant_id) WHERE thread_kind = 'cms_assistant' AND status = 'current'`.
+  Unique `(onboarding_session_id) WHERE thread_kind = 'onboarding_assistant'`.
 
 **`cms_assistant`** — CMS overlay conversation. Unique current per tenant.
 Compaction (skip while `tenants.status=unactivated`). GET `/v1/assistant/thread`
 hydrate (items, not generations). Unpaid onboarding website editor reuses this
 `current` until 09 completes it; CMS GET then lazy-creates a new empty
 `current`. Compaction writes a new generation on **this** thread (not its own
-kind).
+thread kind).
 
 **`onboarding_assistant`** — onboarding guide. Unique per onboarding session.
 Onboarding hydrate. Never migrated onto `cms_assistant` after website
 activation.
 
-**Every other `kind`** — insert a thread before the first generate; reuse it
-for schema-repair retries; do not hydrate on GET thread. Features that are not
-already on a CMS or onboarding thread create one with the matching `kind`.
+**Every other `thread_kind`** — insert a thread before the first generate; reuse
+it for schema-repair retries; do not hydrate on GET thread. Features that are
+not already on a CMS or onboarding thread create one with the matching
+`thread_kind`.
 
 Failed parse stays an `ai_generations` row. The next attempt is another row on
 the **same** `thread_id` (prior failure in context). Bounded subtree repair
@@ -137,8 +139,8 @@ persistence docs. Postgres schema **`ai`** (not `llm`). Go package
   (`pending_review`/`approved`/`applied`/`rejected`/`failed`), `applied_changes`
   jsonb, `status` (`running`/`succeeded`/`failed`), `error` nullable,
   `created_at`
-- `ai_generation_tool_revisions` — `id`, `ai_generation_id` fk, `kind`
-  (`tool`/`skill`), `name`, `format_revision`
+- `ai_generation_tool_revisions` — `id`, `ai_generation_id` fk,
+  `tool_revision_kind` (`tool`/`skill`), `name`, `format_revision`
 
 `input`, `internal_reasoning`, `output`, `tool_calls`, and `applied_changes`
 stay jsonb so a call can be reconstructed. Usage and cost are columns. Tool and

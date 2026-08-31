@@ -4,12 +4,10 @@ CMS assistant overlay tables. Conventions:
 [persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `assistant`).
 
-Thread **identity** is [`ai.threads`](../../general-architecture/llm-layer.md)
-(`kind=cms_assistant`). This feature owns items and the in-flight run. Shared AI
-traces: [LLM layer](../../general-architecture/llm-layer.md)
-(`ai.ai_generations`). Onboarding conversation:
-[onboarding persistence](../onboarding/persistence.md). Usage credit:
-[billing](../billing/persistence.md). Website last-writer:
+Thread **identity** is [`ai.threads`](../../general-architecture/llm-layer.md) (`thread_kind=cms_assistant`). This
+feature owns items and the in-flight run. Shared AI traces: [LLM layer](../../general-architecture/llm-layer.md)
+(`ai.ai_generations`). Onboarding conversation: [onboarding persistence](../onboarding/persistence.md). Usage
+credit: [billing](../billing/persistence.md). Website last-writer:
 [website edit history](../website/persistence.md)
 (`edit_history.ai_generation_id`). Logic: [architecture.md](architecture.md).
 
@@ -25,14 +23,15 @@ as an identity table.
 
 ## Overlay items
 
-- `thread_items` — `id`, `tenant_id` fk, `thread_id` fk → `ai.threads`, `kind`
-  (`owner` / `assistant` / `tool_summary` / `thinking`), `body` text, `icon`
-  (`write` / `think` / null), `offset_seconds` int nullable (`>= 0`; Voice
-  utterances only; seconds from `audio_start_ms` on paired `speech_started` when
-  present; null if that key is missing or on text items), `provider_event`
-  jsonb nullable (the forwarded xAI JSON for that utterance; Voice only; omit
-  from GET), `created_at` (row insert). Index `(thread_id, created_at)`. Do
-  not store recording file. Do not bake `[m:ss …]` into `body`.
+- `thread_items` — `id`, `tenant_id` fk, `thread_id` fk → `ai.threads`,
+  `thread_item_kind` (`owner` / `assistant` / `tool_summary` / `thinking`),
+  `body` text, `icon` (`write` / `think` / null), `offset_seconds` int nullable
+  (`>= 0`; Voice utterances only; seconds from `audio_start_ms` on paired
+  `speech_started` when present; null if that key is missing or on text items),
+  `provider_event` jsonb nullable (the forwarded xAI JSON for that utterance;
+  Voice only; omit from GET), `created_at` (row insert). Index
+  `(thread_id, created_at)`. Do not store recording file. Do not bake `[m:ss …]`
+  into `body`.
 
 ## In-flight run
 
@@ -66,8 +65,8 @@ recording files stay in object storage; `runs.recording_file_id` points at
 Unique: `(tenant_id) WHERE status = 'running'` on `runs`. Unique current CMS
 thread lives on `ai.threads`. Lookup: `(thread_id, created_at)` on
 `thread_items`; compaction on `ai.threads.last_activity_at` and
-`ai.threads.last_assistant_edit_at` (`kind=cms_assistant`; tool events, not a
-discard timer).
+`ai.threads.last_assistant_edit_at` (`thread_kind=cms_assistant`; tool events,
+not a discard timer).
 
 River compaction job: [jobs](../../general-architecture/jobs.md). Same function
 on text 128K overflow and Voice seed-too-large. No 24h discard.

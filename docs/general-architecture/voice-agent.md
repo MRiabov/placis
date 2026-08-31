@@ -167,7 +167,7 @@ Go does **not** upsert unpublished website rows on tool-calls.
 There is no structured-instruction handoff.
 
 Record reasoning, owner-visible output, and tool calls ([llm-layer](llm-layer.md)). Assistant
-thinking is `thread_items.kind=thinking` at turn time.
+thinking is `thread_items.thread_item_kind=thinking` at turn time.
 `ai_generations.internal_reasoning` is audit only (empty if the voice service
 did not emit it). Hydrate never reads audit.
 
@@ -205,7 +205,7 @@ when Voice turns off. After CMS Voice ends, the browser PUTs the recording to
 object storage via a signed URL ([assistant architecture](../features/assistant/architecture.md)). Onboarding does
 **not** PUT a recording; leftover transcripts (committed xAI events →
 `offset_seconds`; `provider_event` jsonb) only. Reconstruct `[m:ss owner]` /
-`[m:ss assistant]` from typed `kind` + `offset_seconds` + `body`.
+`[m:ss assistant]` from typed `thread_item_kind` + `offset_seconds` + `body`.
 
 Never say **user**.
 

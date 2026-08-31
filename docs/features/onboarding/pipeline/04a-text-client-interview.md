@@ -43,9 +43,9 @@ then `POST .../interview/complete`.
 1. Set `channel=text`. Do not switch to a voice writer this pass; do not
    complete twice.
 2. Autosave writes `business_profile_edits` for the fields this save set, plus
-   `client_interview_submissions` `kind=autosave` (interview-only: photo
-   uploads, optional source-from-internet / AI photo when there are not enough
-   photos, reviews unavailable, extra notes).
+   `client_interview_submissions` `submission_kind=autosave` (interview-only:
+   photo uploads, optional source-from-internet / AI photo when there are not
+   enough photos, reviews unavailable, extra notes).
 3. Fields: **Details == `/cms/details`** (identity, contact and presence,
    services, service areas, opening hours — same controls and writes). Do not
    repeat legal identity from 03. Plus interview-only: contact name,
@@ -61,8 +61,9 @@ then `POST .../interview/complete`.
    rows deterministically (no LLM). Do not ask a photos-choice question.
 4. While they stay on this screen, apply [live fill](#do--live-fill-while-02-runs) from the onboarding session
    SSE (Postgres is authoritative).
-5. Final submission `kind=final`, then `POST .../interview/complete` iff the
-   complete gate (service and service-area list rows present, or skipped).
+5. Final submission `submission_kind=final`, then `POST .../interview/complete`
+   iff the complete gate (service and service-area list rows present, or
+   skipped).
 6. Contractor may mark a required row `skipped` in this step, then complete.
 
 ## Do — live fill (while 02 runs)

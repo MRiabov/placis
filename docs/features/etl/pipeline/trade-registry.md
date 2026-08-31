@@ -1,13 +1,14 @@
 # Trade registry
 
-`kind=trade_registry`. First-run only (onboarding 02). Not on Monday / Wednesday
-/ Friday. Shared extract / transform rules: [pipeline README](README.md).
+`etl_run_kind=trade_registry`. First-run only (onboarding 02). Not on Monday /
+Wednesday / Friday. Shared extract / transform rules: [pipeline README](README.md).
 
 Accreditations. A later official registry API is its own fetch table.
 
 ## Trigger
 
-`StartRun` included this kind. No registry id → do not start (or `skipped`).
+`StartRun` included this ETL run kind. No registry id → do not start (or
+`skipped`).
 
 ## Pre
 
@@ -17,7 +18,7 @@ Accreditations. A later official registry API is its own fetch table.
 ## Must not
 
 - Run on the Monday / Wednesday / Friday schedule.
-- Call Maps / Facebook / Instagram / Parallel from this kind.
+- Call Maps / Facebook / Instagram / Parallel from this ETL run kind.
 - Let crawl overwrite a trade-registry accreditation.
 - Overwrite a live profile field whose winning `algorithm` is `human`.
 
@@ -30,8 +31,8 @@ already landed. Transform as soon as that fetch exists.
 
 ## Do — transform
 
-`status=transforming`. Insert `etl.sources` `kind=trade_registry_record` when
-this extract writes profile columns. Write accreditation list / notes (each
+`status=transforming`. Insert `etl.sources` `source_kind=trade_registry_record`
+when this extract writes profile columns. Write accreditation list / notes (each
 increment cites that `source_id`). Trade registry wins the same way registry
 wins legal identity ([build-profile](../../onboarding/pipeline/build-profile.md)).
 

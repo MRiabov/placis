@@ -12,18 +12,19 @@ Package ownership. Workflows live in the feature docs this list points at.
    unpaid website-preview Assistant HTTP
    (`/v1/onboarding/website-editor/assistant/…`) and unpaid policy (5-cap,
    instant apply, allowlist). It reuses `website/assistant` tools and
-   `ai.threads` (`kind=cms_assistant`) overlay SQL. CMS `assistant` HTTP must
-   not import it. `onboarding/assistant` is Find, Review, and client interview
-   only (`tools=[]`). Business research (step 02) only calls `etl.StartRun` and
-   mirrors Postgres on SSE (`etl.runs` and the live business profile). It does
-   not implement extract or transform. It does not implement apply, and it does
-   not do website publication. [Onboarding](../features/onboarding/architecture.md).
+   `ai.threads` (`thread_kind=cms_assistant`) overlay SQL. CMS `assistant` HTTP
+   must not import it. `onboarding/assistant` is Find, Review, and client
+   interview only (`tools=[]`). Business research (step 02) only calls
+   `etl.StartRun` and mirrors Postgres on SSE (`etl.runs` and the live business
+   profile). It does not implement extract or transform. It does not implement
+   apply, and it does not do website publication. [Onboarding](../features/onboarding/architecture.md).
 3. `etl` owns extract **and** transform. `StartRun` only starts runs (cap,
    `enqueue_id`, `etl.runs`, enqueue). Adapters and fetch / Google Maps listing
-   SQL live in `extract/<kind>/`; profile writes live in `transform/<kind>/`.
-   Callers pass explicit `kinds` to `StartRun`. The worker calls transform after
-   each extract chunk (fast extract, then slow extract); it does not wait for
-   the kind to finish. Do not grow `run.go` into every source. [ETL](../features/etl/README.md).
+   SQL live in `extract/<etl_run_kind>/`; profile writes live in
+   `transform/<etl_run_kind>/`. Callers pass explicit `etl_run_kinds` to
+   `StartRun`. The worker calls transform after each extract chunk (ETL fast
+   extract, then ETL slow extract); it does not wait for the ETL run kind to
+   finish. Do not grow `run.go` into every source. [ETL](../features/etl/README.md).
 4. `website` owns the editable content model, applying a website template
    (validate website component contracts, write unpublished `website_*` rows),
    and website publication. A `website_manifest` is only the validated read
@@ -34,15 +35,14 @@ Package ownership. Workflows live in the feature docs this list points at.
    headless. [Website editor tools](../features/website/assistant.md), [website ADR #6](../features/website/ADR.md).
 5. `assistant` owns the CMS overlay (hydrate, dispatcher, allowed set,
    `thread_items` / `runs`, `/v1/assistant/…` HTTP). Thread **identity** is
-   `ai.threads` (`kind=cms_assistant`). Unactivated tenants get 403
+   `ai.threads` (`thread_kind=cms_assistant`). Unactivated tenants get 403
    `tenant_unactivated` on `/v1/assistant/…`. `onboarding/assistant` owns the
    onboarding guide items/runs and `/v1/onboarding/assistant/…` (thread
-   `kind=onboarding_assistant`). `onboarding/websiteeditor` owns unpaid website
-   preview Assistant HTTP. Knowledge YAML lives in those packages
+   `thread_kind=onboarding_assistant`). `onboarding/websiteeditor` owns unpaid
+   website preview Assistant HTTP. Knowledge YAML lives in those packages
    (`go:embed`). Shared product glossary and Voice pronunciation live in
    `internal/knowledge/` (onboarding must not import `internal/assistant`).
-   [Assistant](../features/assistant/README.md).
-   [Onboarding website editor](../features/onboarding/website-editor.md).
+   [Assistant](../features/assistant/README.md). [Onboarding website editor](../features/onboarding/website-editor.md).
 6. `ads` is a standalone service (the `/cms/ads` workspace is one owner). It
    reads the profile + approved media library items, proposes copy + image
    galleries, and exports `ad ready to post` ad sets — never does ad posting.

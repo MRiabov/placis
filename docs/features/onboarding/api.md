@@ -212,9 +212,9 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
 
 - **Auth:** onboarding session token
 - **Callers:** reload, resume, later Voice turn.
-- **Response:** the one conversation `*Read` + ordered `items` (`kind`, `body`,
-  `icon`, `offset_seconds`, `created_at`). Empty is `200`
-  with `items: []`.
+- **Response:** the one conversation `*Read` + ordered `items`
+  (`thread_item_kind`, `body`, `icon`, `offset_seconds`, `created_at`). Empty is
+  `200` with `items: []`.
 - **Errors:** **403** if activated.
 - **Must not:** return `thread_items` as the field name; return runs, audit
   blobs, `provider_event`, or recording URLs.

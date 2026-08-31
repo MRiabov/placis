@@ -15,14 +15,15 @@ Maps scrape stay in-process; API p90-delta during scrape:
 Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/09-website-activation.md). Onboarding
 [automatic website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md) is a River job after applying the website
 template; it must not block the website preview. Compaction **skips**
-`ai.threads` `kind=cms_assistant` whose tenant is `status=unactivated` (unpaid
-current must not compact).
+`ai.threads` `thread_kind=cms_assistant` whose tenant is `status=unactivated`
+(unpaid current must not compact).
 
 ## Assistant thread compaction
 
 River job **and** the same in-process function. Triggers:
 
-- `ai.threads.last_activity_at` older than **12 hours** (`kind=cms_assistant`)
+- `ai.threads.last_activity_at` older than **12 hours**
+  (`thread_kind=cms_assistant`)
 - **text** `LLMProvider` prompt assembly would exceed **128K tokens**
 - Voice **instructions** seed would be too large to send (`realtime-connection`
   create — not mid-utterance)

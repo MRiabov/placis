@@ -2,7 +2,7 @@
 
 - **Setup**: 01+03 done (03 may have been skipped); 02 may still be running.
 - **Invoke**: `PUT .../text-interview/autosave`;
-  `POST .../text-interview/submissions` `kind=final`;
+  `POST .../text-interview/submissions` `submission_kind=final`;
   `POST .../interview/complete`; also attempt complete with a required
   `conflict` / `empty` / `in_progress` row;
   `POST .../projects/{projectId}/archive` on a client interview card.

@@ -12,11 +12,11 @@
 - **Assert**: `website_activations` written; `stripe_events` stored; the
   **existing** `tenants` row (same `tenant_id` as business lookup) now has
   `clerk_org_id` and `status=active`; `tenant_memberships` (`owner`); unpaid
-  `ai.threads` `kind=cms_assistant` `current` completed and `running` ended in
-  the same transaction; onboarding session `activated`; live R2 without the
-  strip (first write if they never shared; archive strip v1 if they did); replay
-  does not activate twice; second payer is refused; in-flight 06 continues as
-  River-only (not cancelled, no new thread items); CMS assistant POSTs are not
-  409 because 06 is running; `/onboarding/preview-and-edit/` redirects to
-  `/cms/website`.
+  `ai.threads` `thread_kind=cms_assistant` `current` completed and `running`
+  ended in the same transaction; onboarding session `activated`; live R2 without
+  the strip (first write if they never shared; archive strip v1 if they did);
+  replay does not activate twice; second payer is refused; in-flight 06
+  continues as River-only (not cancelled, no new thread items); CMS assistant
+  POSTs are not 409 because 06 is running; `/onboarding/preview-and-edit/`
+  redirects to `/cms/website`.
 - **Mocked**: Stripe test mode (no real charge).

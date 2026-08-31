@@ -328,7 +328,7 @@ Ask first Apply / Reject is a pair of **pills on the canvas** over the composer,
 not in the thread and not on each tool.
 
 `summary` is **deterministic**, built by the backend from the validated tool +
-target. The owner-facing kind on `update_slot` is a closed union: **heading**,
+target. The owner-facing label on `update_slot` is a closed union: **heading**,
 **text**, or **image**. The place is the website section’s owner-facing name
 (Hero, Services), not an id. The thread icon is from a closed union: **write**
 (pencil) for tool summaries, **think** (lightbulb) for thinking. There is no
@@ -400,7 +400,7 @@ Apply order:
 
 1. **remove** — old ids, max 4
 2. **add** — new nodes; server sets `id` from the label (page title for
-   `kind: page`)
+   `menu_node_kind: page`)
 3. **reorder** — nested `{ id, children }` using **pre-update** ids (GET ids
    plus ids just assigned by add). Membership = tree after remove+add. Does not
    delete. A flat id array is invalid.
@@ -411,17 +411,17 @@ Apply order:
    `{{marketing_email}}` (no `tel:` / `mailto:` override). Contact href is the
    Contact website page.
 
-`add_entries`: parent `id` (omit = top-level) + new node (`kind` + `path` or
-`label`/`href`). `remove_entries`: ids, at most 4. `update_entries`: text →
-`label`; url → `label` and/or `href`; page → `path`, optional display `label`.
-Kind is not changed by update (heading ↔ link is remove
+`add_entries`: parent `id` (omit = top-level) + new node (`menu_node_kind` +
+`path` or `label`/`href`). `remove_entries`: ids, at most 4. `update_entries`:
+text → `label`; url → `label` and/or `href`; page → `path`, optional display
+`label`. Menu node kind is not changed by update (heading ↔ link is remove
 
 - add).
 
 Invalid is `400`; over bar cap (8 top-level top menu, 12 footer, 8 children per
 parent) is `409`. A page already in that tree is `400`. Tool result returns the
 tree (post-update ids). GET for the assistant returns both trees with `id` /
-`kind` / `label` / `path` / `href` (no UUID).
+`menu_node_kind` / `label` / `path` / `href` (no UUID).
 
 Logo and density stay on **Website styles** (other tools). Do not name this
 tool `update_nav`.

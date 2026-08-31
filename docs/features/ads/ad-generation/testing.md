@@ -33,10 +33,10 @@ faked. DB asserts name the tables from
    - Review **inline AI assistance**: owner prompts a copy-field rewrite (prompt
      required); **select to edit inline AI assistance** rewrites a span; no
      selection is the whole field; `ai_generations` records the owner prompt +
-     reasoning + output + tool calls (`kind=ads_inline_assistance`). Empty
-     prompt does not fire. Ctrl+Z restores the previous copy. `update_details`
-     writes the business profile when copy includes a detail, plus a
-     notification (OK / Revert). Approve is not blocked.
+     reasoning + output + tool calls (`thread_kind=ads_inline_assistance`).
+     Empty prompt does not fire. Ctrl+Z restores the previous copy.
+     `update_details` writes the business profile when copy includes a detail,
+     plus a notification (OK / Revert). Approve is not blocked.
 
 4. **Approve** — the owner reviews, edits copy, approves.
    - DB: `ad_copy_variants.source=owner_edit`, `ad_variants.status=approved`,

@@ -2,7 +2,7 @@
 
 Shared transform after a Facebook post, Instagram post, website-crawl **blob**,
 or Maps listing review is upserted and its photos are attached / classified.
-Not a `StartRun` kind. Shared extract / transform rules:
+Not a `StartRun` ETL run kind. Shared extract / transform rules:
 [pipeline README](README.md). Profile writes:
 [build-profile](../../onboarding/pipeline/build-profile.md). Persistence:
 [`etl.sources`](../persistence.md),
@@ -35,7 +35,7 @@ chunk.
 
 ## Must not
 
-- Be a `StartRun` kind or a second crawl.
+- Be a `StartRun` ETL run kind or a second crawl.
 - Call source networks (read rows only).
 - Stop because four Projects already exist. Extract/classify **every** source
   in the chunks we fetch. Rank for the client interview / first gallery is
@@ -93,20 +93,20 @@ chunk.
 8. **No** → write verdict no (`project_id` null). **Yes** → insert Project
    through build-profile (`created_by=business_research`, `status=active`,
    origin `facebook` / `instagram` / `website_crawl` / `review`) **or** attach
-   to the sibling crawl blob’s Project when that URL’s other `kind` already
-   has a yes verdict. Cover = the depicting photo on that post / HTML URL when
-   the model (or `photo_kind=project`) confirms it shows the job; otherwise
-   empty. Insert ≥1 `project_sources` row. Write verdict yes with `project_id`.
-   Both crawl blobs yes → one Project, two `project_sources`, two verdicts
-   with the same `project_id`. A review usable as a Project may insert with
-   empty cover.
+   to the sibling crawl blob’s Project when that URL’s other `source_kind`
+   already has a yes verdict. Cover = the depicting photo on that post / HTML
+   URL when the model (or `photo_kind=project`) confirms it shows the job;
+   otherwise empty. Insert ≥1 `project_sources` row. Write verdict yes with
+   `project_id`. Both crawl blobs yes → one Project, two `project_sources`, two
+   verdicts with the same `project_id`. A review usable as a Project may insert
+   with empty cover.
 
 ## Persist
 
 `etl.sources`; `etl.llm_source_to_project_classifications`;
 `business_profile.projects`; `business_profile.project_sources`;
 `business_profile_edits.list=projects` + ≥1 `business_profile_edit_sources`.
-`etl.runs` stays succeeded from the calling kind.
+`etl.runs` stays succeeded from the calling ETL run kind.
 
 ## Fail
 

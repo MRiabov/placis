@@ -40,7 +40,7 @@ numbers are HTML comments so later entries keep their numbers.
    from the canvas: 12px on the left, right, and bottom. It is not flush to the
    canvas edges. (2026-08-26) Composer submit is **Plan** only while the Plan
    switch is on. Plan off (continuous) is **Send**. (2026-08-26) Activity lines
-   have a kind icon: **pencil** for writes (`Updated heading on Hero`),
+   have an icon: **pencil** for writes (`Updated heading on Hero`),
    **lightbulb** for thinking. There is no search/grep tool on the assistant; do
    not use a search icon on write lines. (2026-08-26) Default height:
    **desktop** is the single-line composer (thread reduced). **Mobile**

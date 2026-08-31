@@ -55,25 +55,25 @@ holds `assistant.runs` `running` on the onboarding-website-editor thread
    Whole-and-valid or the batch fails.
 4. Cap steps and tool calls (**3 steps / 12 calls / 4 website pages** at a
    time). Distinct from the CMS agent’s 20 model turns.
-5. Lazy-create `ai.threads` `kind=cms_assistant` `current` for the unactivated
-   tenant if needed. Start `assistant.runs` `running` `channel=text` on that
-   thread. Append `tool_summary` as tools apply. 06 LLM calls use a
-   `kind=website_copy_generation` thread (`ai_generations.thread_id` required).
-   After 09 do not append Assistant thread items.
+5. Lazy-create `ai.threads` `thread_kind=cms_assistant` `current` for the
+   unactivated tenant if needed. Start `assistant.runs` `running` `channel=text`
+   on that thread. Append `tool_summary` as tools apply. 06 LLM calls use a
+   `thread_kind=website_copy_generation` thread (`ai_generations.thread_id`
+   required). After 09 do not append Assistant thread items.
 
 ## Persist
 
 Updates to existing `website_slots` and website page SEO columns;
-`ai_generations` for tool batches (`kind=website_copy_generation` thread);
-`ai.threads` (`kind=cms_assistant`) / `assistant.thread_items` /
+`ai_generations` for tool batches (`thread_kind=website_copy_generation`
+thread); `ai.threads` (`thread_kind=cms_assistant`) / `assistant.thread_items` /
 `assistant.runs` while unactivated. No `website_publications` from this job.
-Onboarding session status is `applying_website_template` until wait-end
-(copy done or cap), then `previewing`. Progress events on the onboarding
-session stream (complete website sections join the `/onboarding/preview`
-carousel). The website preview reloads unpublished GET from those events, and
-hydrates 06 `tool_summary` with `GET …/website-editor/assistant/thread`
-(onboarding session token or Clerk). After they share (08), further 06 writes
-do **not** live-update R2.
+Onboarding session status is `applying_website_template` until wait-end (copy
+done or cap), then `previewing`. Progress events on the onboarding session
+stream (complete website sections join the `/onboarding/preview` carousel). The
+website preview reloads unpublished GET from those events, and hydrates 06
+`tool_summary` with `GET …/website-editor/assistant/thread` (onboarding session
+token or Clerk). After they share (08), further 06 writes do **not** live-update
+R2.
 
 ## Fail
 
