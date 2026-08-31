@@ -260,7 +260,9 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     shared, 09 archives strip HTML and writes live v2. (2026-08-30. 2026-08-30
     later: 07 is contractor copy improvement; former 07 share is 08; former 08
     activation is 09. 2026-08-31: wait-end status is `preview_and_edit` — they
-    edit on `/onboarding/preview-and-edit/`, not a read-only peek.)
+    edit on `/onboarding/preview-and-edit/`, not a read-only peek. Same day:
+    copy-done is the **home** website page finished; other website pages
+    generate in parallel. The wait cap still applies if home is not done.)
 
 22. **`/me` returns unactivated `TenantRead` after Clerk org attach** —
     `POST /v1/me/clerk-organization` may attach `tenants.clerk_org_id` without

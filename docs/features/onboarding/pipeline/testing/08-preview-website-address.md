@@ -4,7 +4,8 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
 (optional; archives this v1).
 
 - **Setup**: unpublished website from 05 (website 02). Wait-end already
-  navigated to `/onboarding/preview-and-edit/` (copy done or cap). Do
+  navigated to `/onboarding/preview-and-edit/` (home website page copy
+  done or wait cap). Do
   **not** require 06 to have finished. Record tokenized
   `website_slots.value`. `tenants.website_prefix` null. Zero
   `website_publications`.

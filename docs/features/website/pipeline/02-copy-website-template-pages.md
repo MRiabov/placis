@@ -71,9 +71,10 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
    website is kept.
 8. Same pick + same profile → same website pages (and the same derived
    menus).
-9. Enqueue onboarding 06. `/onboarding/preview` starts the wait (copy
-   done or ~15s cap). Wait-end is an
-   [open question](../catalog.md#open-questions).
+9. Enqueue onboarding 06. `/onboarding/preview` (wait teaser) waits until
+   the **home** website page has 03 copy, or the wait cap (~15s). Other
+   website pages finish in parallel. Then wait-end:
+   `preview_and_edit`.
 
 Copy is **not** this step —
 [03 automatic website copy generation](03-website-copy-generation.md).

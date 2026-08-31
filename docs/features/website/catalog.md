@@ -166,6 +166,17 @@ in `prompts.yaml` on that thread (not specified here).
 canvas/wait-teaser hydrate (provisional order until the persistent
 write).
 
+## Wait teaser and wait-end
+
+The wait teaser is `/onboarding/preview`. **Wait-end** is when that screen
+stops and the onboarding session becomes `preview_and_edit`
+(`/onboarding/preview-and-edit/`).
+
+Copy-done means the **home** website page has 03 copy. That is enough.
+Other website pages finish **in parallel** (including after wait-end) on
+the same 06 / 03 job. The **wait cap** (~15s) still ends the wait teaser
+if home is not done yet.
+
 ## Open questions
 
 Do **not** invent answers. Locked DAG, must-nots, tables, onboarding
@@ -195,8 +206,3 @@ request body (full dump vs one website page); how a batch is encoded;
 auth vs binding; timeout vs the SLO table. 03’s “for example 8 pages”
 is an example, not a rule when the site has 4 or 12 website pages. Do
 not invent an RPC to close 04 “don’t spec Worker RPC” vs the 03 SLO.
-
-**Wait-end clock.** Copy-done or ~15s cap → `preview_and_edit` →
-`/onboarding/preview-and-edit/`. Unspecified: who writes the status (05
-job, 06 job, or preview GET); 15s server vs frontend; what “copy-done”
-means (first 4 website pages? cap hit? job `completed`?).

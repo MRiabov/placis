@@ -1,7 +1,8 @@
 # 07 — Contractor copy improvement (integration test)
 
 - **Setup**: unpublished website from 05. Wait-end already navigated to
-  `/onboarding/preview-and-edit/` (copy done or cap). 06 may still be running.
+  `/onboarding/preview-and-edit/` (home website page copy done or wait
+  cap). 06 may still be running.
   Clerk testing-token contractor (or unsigned hydrate only).
 - **Invoke**: `GET /v1/onboarding/website-editor/assistant/thread` (onboarding
   session token). After 06 idle, signed-in Send (or Voice) that PATCHes a

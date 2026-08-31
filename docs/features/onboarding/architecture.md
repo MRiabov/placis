@@ -16,7 +16,9 @@ find (company registry and/or Google Maps) + online research consent
   → client interview (text, 04a; voice writer 04b is **out**)
   → profile history accumulates as sources and answers arrive
   → client interview complete → select then copy the website template (LLM picks website template/website styles; write is deterministic)
-  → automatic website copy generation starts (async; `/onboarding/preview` waits copy-done or ~15s cap)
+  → automatic website copy generation starts (async; `/onboarding/preview`
+    waits until the home website page has copy, or the wait cap; other
+    website pages finish in parallel)
   → wait-end lands on the website preview (07 contractor copy improvement)
   → 08 share writes static HTML to the host (optional; website publication v1, strip on)
   → website activation (v2 strip off, or first live write if they never shared)
