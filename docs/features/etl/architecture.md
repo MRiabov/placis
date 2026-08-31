@@ -38,9 +38,9 @@ Triggers:
   in parallel from 01 seeds, not a job deadline.
 - **Monday / Wednesday / Friday** — `trigger=scheduled`. Activated tenants
   only. ETL run kinds: Google Maps, Facebook, Instagram. Stagger tenants. No
-  matching **Starts when** tuple → `status=skipped` immediately. This trigger
-  does not use the onboarding cap.
-
+  matching **Starts when** tuple → `status=skipped` immediately. Scheduled Maps
+  only if `place_id` exists (no Places Find; they may have no Google Maps
+  listing). This trigger does not use the onboarding cap.
 SSE during onboarding **reads** Postgres: `etl.runs` and the live business
 profile transform already wrote. Do not wait for `status=succeeded` to show
 ETL fast extract results. After website activation, research conflicts show on

@@ -29,8 +29,9 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
 3. **Cap** — five onboarding `enqueue_id`s in 30 minutes; a sixth
    `StartRun(trigger=onboarding)` does not insert runs.
 4. **Skip** — scheduled Instagram with no handle → `status=skipped`
-   immediately, no fetch. Onboarding Instagram is not inserted until a handle
-   detail exists.
+   immediately, no fetch. Scheduled Maps with no `place_id` → `skipped`, no
+   Places Find. Onboarding Instagram is not inserted until a handle detail
+   exists.
 5. **Isolation** — two tenants; each cannot read the other’s `etl.runs`,
    fetches, or profile posts.
 

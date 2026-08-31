@@ -55,12 +55,12 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
 
 6. **Scheduled refresh is Monday, Wednesday, Friday** — Activated tenants.
    Sources: Google Maps, Facebook, Instagram (public scrape; Graph API later).
-   Stagger across tenants. Skip an ETL run kind that has no key (`place_id`,
-   handle). Company registry / existing-site API extracts later. Website crawl,
-   trade registry, and Parallel stay first-run (onboarding 02). Website
-   activation implies this refresh; online research consent covers it.
-   (2026-08-27)
-
+   Stagger across tenants. Skip an ETL run kind that has no key (`place_id` for
+   Maps — do not Places Find on scheduled; Facebook URL; Instagram handle).
+   Company registry / existing-site API extracts later. Website crawl, trade
+   registry, and Parallel stay first-run (onboarding 02). Website activation
+   implies this refresh; online research consent covers it. (2026-08-27;
+   2026-08-31 later: scheduled Maps only if `place_id` exists.)
 7. **Increment is natural-key upsert** — No watermark table. A scheduled extract
    fetches again; insert only reviews / posts / photos whose source id we do not
    already have. A run may insert several fetch rows (ETL fast extract, then ETL
@@ -150,7 +150,8 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     later: Starts-when registry replaces the Always-ETL-run-kinds DAG. 2026-08-31 later:
     ETL run kind + details, not means / identity key / input set / client-interview
     window. 2026-08-31 later: Places Find may use `legal_name` +
-    registered-office locality.)
+    registered-office locality. 2026-08-31 later: scheduled Maps only if
+    `place_id` exists.)
 15. **Find attach is onboarding session keys; extract still owns the listing**
     — 01 persists `place_id` / `company_number` / `website_url` on the
     onboarding session and writes profile increments from the selected

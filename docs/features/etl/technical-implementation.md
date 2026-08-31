@@ -37,8 +37,8 @@ kind that cannot start yet is not inserted (onboarding) or is `skipped`
 
 Monday / Wednesday / Friday: stagger activated tenants. ETL run kinds = Google
 Maps, Facebook, Instagram. Skip an ETL run kind with no matching **Starts when**
-tuple (`status=skipped` immediately). `force` defaults false (stale-algorithm
-transform rewrite is off; `algorithm=human` is never rewritten). `force` does
+tuple (`status=skipped` immediately). Scheduled Maps skips when there is no
+`place_id` (do not Places Find). `force` defaults false (stale-algorithmtransform rewrite is off; `algorithm=human` is never rewritten). `force` does
 not refetch when only the algorithm changed. A bumped `schema_revision`
 extracts by default.
 
