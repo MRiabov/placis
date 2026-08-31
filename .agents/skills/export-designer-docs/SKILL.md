@@ -1,6 +1,6 @@
 ---
 name: export-designer-docs
-description: Copies every sanitized Placis product, design, and frontend decision doc into the look-demo git repo (demo.placis.com) for the designer cofounder. On invocation: pull from latest, resolve if there are any conflicts, merge, and notify if there were changes while the user wasn't looking. No backend docs, no HTML mock archive, no zip. Use when asked to export design docs, copy designer docs into the demo repo, send product/look docs to a designer, or repeat the designer/cofounder docs extraction.
+description: Copies every sanitized Placis product, design, and frontend decision doc into the look-demo git repo (demo.placis.com) for the designer cofounder. On invocation: pull from latest, resolve if there are any conflicts, merge, and notify if there were changes while the user wasn't looking. After a successful copy, commit dest through a PR and squash-merge it; do not wait to be asked. No backend docs, no HTML mock archive, no zip. Use when asked to export design docs, copy designer docs into the demo repo, send product/look docs to a designer, or repeat the designer/cofounder docs extraction.
 ---
 
 # Export designer docs
@@ -37,7 +37,8 @@ export can be regenerated later.
 ### 3. merge
 
 Finish the merge so dest matches latest origin (complete `git pull` / `git
-merge`). Do not commit dest or push dest unless asked.
+merge`). Do not commit dest during this pull step. Landing the export is a
+later default (see Land on dest).
 
 ### 4. notify me if there were changes while I wasn't looking
 
@@ -76,9 +77,10 @@ The script fails if the dest is missing or not a git repo. It prints `dest=`,
 README, SANITIZATION.md, product/look Markdown). It does **not** overwrite the
 Vite app or the dest root `README.md`.
 
-Do not commit `demo.placis.com` unless asked. Re-running the exporter replaces
-`dest/docs/` (`rsync --delete`). That is why On invocation pulls dest and
-copies designer `docs/` back into Placis first when dest changed.
+Re-running the exporter replaces `dest/docs/` (`rsync --delete`). That is why
+On invocation pulls dest and copies designer `docs/` back into Placis first
+when dest changed. After a successful copy, land dest through a PR (do not
+leave dest uncommitted).
 
 `SANITIZATION.md` in `dest/docs/` records export time and source commit.
 
@@ -134,9 +136,42 @@ Send-back is commit and push this repo, not a zip.
    `design/cms.html`, `onboarding.html`, `ads.html`, or `ADR.md`.
 3. Tell the user the dest path. Warn them not to send leftover zips such as
    `docs/design.zip` or anything that includes `ADR.md`.
+4. Land dest (next section). Do not stop and wait for “commit”, “push”, or
+   “merge”.
 
 The look app is a separate copy: `scripts/sync-look-demo.sh` (excludes
-`docs/` so it does not wipe this package).
+`docs/` so it does not wipe this package). Exclude dest `.worktrees/` from
+`rsync --delete` (the committed script does not); move that directory aside
+or pass `--exclude .worktrees`, then put it back.
+
+## Land on dest (default)
+
+After completeness passes, if dest has git changes from the export and/or
+look sync, send them. Do not wait to be asked. Dest `origin` is
+`https://github.com/MRiabov/demo.placis.com.git`.
+
+1. Keep dest’s main checkout on `main`. Do dest commit work in a dest
+   worktree from `origin/main` (for example `.worktrees/sync-look-from-placis`
+   on branch `sync-look-from-placis`). Re-run the exporter and
+   `sync-look-demo.sh` into that worktree, or copy the already-synced tree
+   excluding `.git`, `.worktrees`, `node_modules`, and `dist`.
+2. Do not stage dest `.worktrees/`.
+3. Commit on the feature branch. Message style:
+   `Sync the look app and designer docs from Placis.` plus one sentence of
+   what moved if useful.
+4. Push the branch, open a PR targeting dest `main`, and squash-merge it
+   (`gh pr merge --squash --delete-branch`). Dest history uses squash
+   (`(#1)`, `(#2)`). Local branch delete can fail while the dest worktree
+   still exists; that is fine.
+5. Remove the dest worktree, delete the local feature branch if it remains,
+   then `git pull` dest `main`. Leave other dest worktrees (for example
+   designer look branches) alone.
+
+Tell the user the PR URL and that it merged.
+
+If dest is clean after export, do not open an empty PR. If On invocation
+found designer dest edits that must copy back into Placis first, stop
+before overwriting dest and do not dest-PR until dest is safe to replace.
 
 ## If the docs tree changed
 
@@ -168,3 +203,7 @@ Only Markdown is copied (omitted links stripped or retargeted from a feature
 - Overwrite dest `docs/` or the Vite app when dest has incoming or uncommitted
   designer edits
 - Treat a cover table that lists only onboarding/website/ads as complete
+- Leave dest uncommitted after a successful copy, or wait for the user to
+  say commit / push / merge
+- Commit dest `main` directly; land through a PR, then squash-merge
+- Delete unrelated dest worktrees such as a designer look branch
