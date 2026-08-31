@@ -70,5 +70,6 @@ Go is required (Don't-say). Then:
 pnpm check
 ```
 
-That is Biome, TypeScript (strict-plus), Knip, file-size (800 lines), token
+That is Biome, TypeScript (strict-plus), Knip, file-size (800-line hard fail;
+[CI decision 1](../../docs/general-architecture/ci-cd.md#decisions)), token
 colors, and Don't-say. CI runs the same command plus `pnpm build`.

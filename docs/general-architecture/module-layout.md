@@ -67,6 +67,7 @@ Rules:
 - **Feature-nested, not flat**: one package per feature; a leaf package starts
   as a single file and splits only when it grows. Enforce the file-size guard (<
   800 lines warning, > 1200 hard error) in CI — never flat file dumps.
+  `apps/demo/src` hard-fails at 800 ([CI decision 1](ci-cd.md#decisions)).
 - **Folder fan-out** (predecessor `check_folder_fanout`): a nested package dir
   may hold at most **9** entries (tracked files + child dirs). `internal/` root
   may hold at most **15**. Split a fat folder into a nested package. Scope is
