@@ -53,6 +53,26 @@
   --animate-dot-spin: dot-spin 0.75s linear infinite;
 }
 
+/* Placis dashboard palette — mirrors placis-web's light canvas and its
+   recessed #141414 dark chrome. Tailwind utilities reference these variables,
+   so the shared interface tokens switch together. */
+.dark {
+  --color-background: #181818;
+  --color-foreground: #e4e4e4;
+  --color-primary: #13120a;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: rgb(228 228 228 / 7%);
+  --color-secondary-foreground: #e4e4e4;
+  --color-muted: rgb(228 228 228 / 7%);
+  --color-muted-foreground: rgb(228 228 228 / 55%);
+  --color-border: rgb(228 228 228 / 7%);
+  --color-hairline: rgb(228 228 228 / 7%);
+  --color-ring: #71717a;
+  --color-sidebar: #141414;
+  --color-wash: #1c1c1c;
+  --color-placeholder: rgb(228 228 228 / 35%);
+}
+
 @font-face {
   font-family: "Satoshi";
   src: url("/fonts/Satoshi-Variable.woff2") format("woff2");
@@ -122,6 +142,33 @@
     background: #000;
     color: #fff;
   }
+}
+
+/* The mockups deliberately use a few literal neutral utility colours for
+   cards and secondary panels. Keep those surfaces in the same dark family as
+   placis-web instead of leaving bright islands in the dashboard. */
+.dark .bg-white {
+  background-color: #181818;
+}
+
+.dark .bg-zinc-50,
+.dark .bg-zinc-100 {
+  background-color: rgb(228 228 228 / 7%);
+}
+
+.dark .text-zinc-600,
+.dark .text-zinc-500,
+.dark .text-muted-foreground {
+  color: rgb(228 228 228 / 55%);
+}
+
+.dark .text-zinc-700,
+.dark .text-zinc-800 {
+  color: rgb(228 228 228 / 75%);
+}
+
+.dark .hover\:bg-black\/5:hover {
+  background-color: rgb(228 228 228 / 7%);
 }
 
 @keyframes voice-fade {
