@@ -86,7 +86,7 @@ wait for a key.
 | Always | `facebook` | Facebook profile / URL / posts, Projects from posts. Waits for a Facebook URL / handle | [Facebook](../../etl/pipeline/facebook.md) |
 | Always | `instagram` | Instagram profile / posts, Projects from posts. Waits for a handle | [Instagram](../../etl/pipeline/instagram.md) |
 | Always | `website_crawl` | trade, services, service area, founder, photos, Projects (homepage fast, then parallel remainder). Waits for a website URL | [Website crawl](../../etl/pipeline/website-crawl.md) |
-| Company registry record attached | `trade_registry` | accreditations. Key is onboarding session `company_number` + tenant country | [Trade registry](../../etl/pipeline/trade-registry.md) |
+| Always | `trade_registry` | accreditations. Key is `company_number` + country when a company registry record is attached, else `display_name` + country (Maps-only is enough). Not the locked business-registry certification on Find | [Trade registry](../../etl/pipeline/trade-registry.md) |
 | Missing `place_id` **or** missing website URL on the onboarding session at this `StartRun` | `web_search` | discover `place_id` / URL onto sibling runs (not a profile dump) | [Web search](../../etl/pipeline/web-search.md) |
 
 Monday / Wednesday / Friday does not pass crawl, trade registry, or web search.

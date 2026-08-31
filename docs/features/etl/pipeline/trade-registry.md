@@ -7,10 +7,13 @@ Accreditations. A later official registry API is its own fetch table.
 
 ## Trigger
 
-`StartRun` included this ETL run kind because 01 attached a company registry record.
-Key is onboarding session `company_number` + tenant country. No
-`company_number` → do not start (or `skipped`).
-
+`StartRun` included this ETL run kind (onboarding 02 always passes it). Lookup
+key, in order: onboarding session `company_number` + tenant country; else live
+`display_name` + country (Maps autocomplete or Details). Maps-only Find still
+runs this ETL run kind. No `company_number` and no `display_name` yet → stay
+pending until Maps fills a name; after Maps / web search finish, still none →
+`skipped`. A miss is “ask”. The locked business-registry certification on Find
+(CRO in Ireland) is 01 from the company registry pick, not this extract.
 ## Pre
 
 - `etl.runs` row `status=pending` (or retry).
