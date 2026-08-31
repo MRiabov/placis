@@ -7,8 +7,8 @@ and website publication. Ads live in [../ads/](../ads/README.md). Together they 
 - [ADR](ADR.md) — architectural decision record
 - [design decision record](design-decision-record.md) — website editor look and interaction (not
   architecture). CMS tokens: [CMS design.md](../../general-architecture/cms/design.md)
-- [architecture.md](architecture.md) — content model, applying the website template, website
-  editor, website publication, render
+- [architecture.md](architecture.md) — content model, select and copy the website template,
+  website editor, website publication, render
 - [cloudflare.md](cloudflare.md) — live R2 serve path (`apps/contractor-website` is in this
   repo). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md), not this Worker.
 - [persistence.md](persistence.md) — `website_addresses`, website pages, website sections,
@@ -29,7 +29,9 @@ and website publication. Ads live in [../ads/](../ads/README.md). Together they 
 - [Assistant](../assistant/README.md) — Assistant, thread, HTTP
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density,
   motion
-- [technical-implementation.md](technical-implementation.md) — website template application, website
+- [pipeline/](pipeline/README.md) — from-scratch create: 01 select, 02 copy
+  template pages, 03 copy generation, 04 Worker publication
+- [technical-implementation.md](technical-implementation.md) — website template select/copy, website
   publication, pipeline
 - [business profile](../business-profile/README.md) — Details, Projects, Certifications and reviews (Profile
   screens; website page content edited there)

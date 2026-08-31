@@ -6,7 +6,8 @@ Package ownership. Workflows live in the feature docs this list points at.
    and permissions. [Auth](../features/other/auth/README.md). Unactivated tenants have no Clerk organization;
    activation upgrades that row.
 2. `onboarding` owns the onboarding session, client interview, enqueueing
-   apply-the-website-template (05) and automatic website copy generation (06),
+   select-and-copy website template (05) and automatic website copy generation
+   (06),
    the wait teaser, contractor copy improvement, on-demand 08 share (preview
    website address), and website activation. `onboarding/websiteeditor` owns
    unpaid website-preview Assistant HTTP
@@ -17,7 +18,8 @@ Package ownership. Workflows live in the feature docs this list points at.
    interview only (`tools=[]`). Business research (step 02) only calls
    `etl.StartRun` and mirrors Postgres on SSE (`etl.runs` and the live business
    profile). It does not implement extract or transform. It does not implement
-   apply, and it does not do website publication. [Onboarding](../features/onboarding/architecture.md).
+   select or copy of the website template, and it does not do website
+   publication. [Onboarding](../features/onboarding/architecture.md).
 3. `etl` owns extract **and** transform. `StartRun` only starts runs (cap,
    `enqueue_id`, `etl.runs`, enqueue). Adapters and fetch / Google Maps listing
    SQL live in `extract/<etl_run_kind>/`; profile writes live in
@@ -25,11 +27,12 @@ Package ownership. Workflows live in the feature docs this list points at.
    `StartRun`. The worker calls transform after each extract chunk (ETL fast
    extract, then ETL slow extract); it does not wait for the ETL run kind to
    finish. Do not grow `run.go` into every source. [ETL](../features/etl/README.md).
-4. `website` owns the editable content model, applying a website template
-   (validate website component contracts, write unpublished `website_*` rows),
-   and website publication. A `website_manifest` is only the validated read
-   model, built at website publication time. [Website architecture](../features/website/architecture.md). Onboarding
-   trigger: [05 — Apply the website template](../features/onboarding/pipeline/05-apply-website-template.md). `website/assistant` owns the
+4. `website` owns the editable content model, selecting a website template and
+   copying its pages onto the unpublished website (validate website component
+   contracts, write unpublished `website_*` rows), and website publication. A
+   `website_manifest` is only the validated read model, built at website
+   publication time. [Website architecture](../features/website/architecture.md). Onboarding trigger:
+   [05 — Select and copy the website template](../features/onboarding/pipeline/05-select-and-copy-website-template.md). `website/assistant` owns the
    governed website-editor tools, plan vs continuous, and Ask first vs instant
    apply. Tools never do website publication. Onboarding 06 calls those tools
    headless. [Website editor tools](../features/website/assistant.md), [website ADR #6](../features/website/ADR.md).

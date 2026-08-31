@@ -94,7 +94,8 @@ closed. Same SSE as Review; this screen is also a consumer.
 
 `client_interview_submissions`; `business_profile_edits` via build-profile;
 `onboarding_sessions.channel=text`; interview Archive on Projects. Complete →
-`accepted_edit_id=last_edit_id`, status `applying_website_template`, enqueue 05.
+`accepted_edit_id=last_edit_id`, status
+`selecting_and_copying_website_template`, enqueue 05.
 
 ## Fail
 

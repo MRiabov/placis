@@ -90,7 +90,8 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
 ## Do not port
 
 - Don't say blueprint: website templates as CMS “blueprint” rows. Catalog data
-  is `catalog/`; applying a website template is onboarding step 04.
+  is `catalog/`; selecting and copying a website template is onboarding 05
+  (website 01 then 02).
 - Blog posts (`page_type=blog_post`) and `website_career_*`.
 - `/undo` `/redo` `/edit-history` routes. Undo is in RAM, seeded from website
   edit history on open.

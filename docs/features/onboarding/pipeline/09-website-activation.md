@@ -63,9 +63,9 @@ that already lost.
    `published_by=onboarding`, `active`. If they never shared: reserve
    `website_prefix` (same rules as 08) and write the **first** live R2
    **without** strip. If they already shared: archive v1 (strip on) and write
-   live v2. Same R2 write as 08 / CMS website publication; purge Cache so
-   strip HTML does not linger. Host stays up. Website address is a later CMS
-   modal.
+   live v2. HTML write is website
+   [04](../../website/pipeline/04-website-publication.md) (strip flag off).
+   Host stays up. Website address is a later CMS modal.
 6. In-flight 06 **continues** on the same `tenant_id` as River-only. Do not
    cancel it. Do not append Assistant thread items. CMS assistant / PATCH are
    not 409-blocked for leftover 06. Host HTML stays the 08/09 R2 `latest/` (06

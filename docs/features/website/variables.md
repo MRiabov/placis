@@ -1,13 +1,15 @@
 # Variables (`{{var}}`)
 
-Website placeholders in website content that resolve from the business profile
-at website publication. The unpublished website keeps the tokens; website
-publication substitutes the real values.
+Website placeholders in website content that **resolve website placeholders**
+from the business profile. The unpublished website keeps the tokens. Go does
+not rewrite slots. The Worker fills `{{…}}` when rendering publication HTML
+and when rendering copy-generation page previews. The wait teaser and CMS
+canvas fill them in `frontend-2` with the shared website component package.
 
-Onboarding 05 (apply the website template) writes `{{…}}` detail tokens and
-leaves them in place. Onboarding 06 (automatic website copy generation) may
-overwrite prose slots but must leave reusable detail tokens. Website publication
-resolves remaining tokens.
+Onboarding 05 (website 01 then 02) writes `{{…}}` detail tokens and leaves
+them in place. Website copy generation (03) may overwrite prose slots but
+must leave reusable detail tokens. Website publication (04) resolves
+remaining tokens into HTML.
 
 ## Syntax
 
@@ -15,6 +17,7 @@ resolves remaining tokens.
 - `{{services.featured}}` / `{{images.logo}}` — a dotted path into a nested
   detail.
 - `{{about.intro_paragraphs}}` — a list detail.
+- `{{reviews.1}}` — the nth review in the **ranked pool** (1-based).
 
 Two forms:
 
@@ -46,19 +49,26 @@ categories), and certifications.
 | `{{established_year}}`, `{{incorporation_date}}` | dates |
 | `{{logo_url}}` | logo URL emitted at website publication **only from** `logo_media_asset_id` (our media library file). Not a hotlink and not a `website_settings` URL |
 | `{{services.featured}}`, `{{services.marquee}}`, `{{services.footer_links}}`, `{{services.project_types}}` | services |
-| `{{projects.featured}}`, `{{projects.recent}}`, `{{projects.home_gallery}}`, `{{projects.categories}}` | projects (**active** rows only; skip `draft`) |
+| `{{projects.featured}}`, `{{projects.recent}}`, `{{projects.home_gallery}}`, `{{projects.categories}}` | projects (**active** rows only; skip `draft`). Resolve from the live profile at publication; do not bake ranked-top-4 ids at copy-template-pages |
+| `{{reviews.1}}` … | reviews from the ranked pool (not a per-section pick at copy-template-pages) |
 | `{{certifications}}` | certifications |
 | `{{images.*}}`, `{{about.intro_paragraphs}}`, `{{about.feature_paragraphs}}` | images / about copy |
 
 ## Flow
 
-1. A website template / website section writes **tokenized** values
-   (`{{business_name}}`) into unpublished website records.
+1. Copying the website template’s pages onto the unpublished website writes
+   **tokenized** values (`{{business_name}}`) into unpublished website
+   records.
 2. The website editor projection keeps the tokens and shows them as
    **inline variable chips** (with the variable's label), still editable.
-3. **Website publication** resolves every variable against the tenant details —
-   exact match → typed value, substring → substituted — and writes the resolved
-   `website_manifest` (a published website copy).
-4. A missing variable stays as a `{{var}}` token in the unpublished website; a
-   *required* website slot whose variable can't resolve becomes a
+   Wait teaser and CMS canvas resolve for paint through frontend-2 + the
+   website component package when current profile data can fill those
+   placeholders.
+3. **Website publication (04)** sends a tokenized dump plus profile to the
+   Worker. The Worker resolves every variable — exact match → typed value,
+   substring → substituted — and writes HTML to R2. Go does not fill tokens.
+4. A missing variable stays as a `{{var}}` token in the unpublished website;
+   a *required* website slot whose variable can't resolve becomes a
    **website publication blocker**.
+5. Live R2 is a snapshot. Later business research does not rewrite
+   `latest/` until the next 04.

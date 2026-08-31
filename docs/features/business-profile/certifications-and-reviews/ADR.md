@@ -27,3 +27,12 @@ decision + date) instead of silently replacing the old entry.
    business-profile tables (`certification_definitions`,
    `business_profile_certification_selections`), not `website_certification_*`.
    See [details ADR](../details/ADR.md) 7.
+
+   (2026-08-31): A ranking job orders the reviews pool and selects
+   **top reviews**. It runs **in parallel with client interview** if reviews are
+   already in the pool, and **again when ETL finishes**.
+   `thread_kind=website_reviews_ranking`. `{{reviews.1}}` … resolve from that
+   order at website publication and canvas/wait-teaser hydrate. Copying the
+   website template’s pages does not pick `website_slot_reviews`. Website copy
+   generation must not `update_reviews`. Owner Content / `update_reviews` can
+   still override a website section later.

@@ -121,7 +121,12 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     website copy generation is an onboarding job, not "the website assistant
     after website activation". 2026-08-19: do not say instantiate / generate /
     population for this step. 2026-08-23: applying the website template is 05;
-    website copy generation is 06.)
+    website copy generation is 06.) (2026-08-31: 05 is select then copy the
+    website template’s pages — website 01 then 02. Do not say apply the website
+    template in prose. Session status string stays `applying_website_template`.)
+    (2026-08-31, later: status is `selecting_and_copying_website_template`; fail
+    is `select_and_copy_website_template_failed`. Wait-end is
+    `preview_and_edit`, not `previewing`.)
 
 11. **Progressive progress over SSE** — during onboarding the backend pushes a
     progress event on each change (not faster than ~2s) over SSE; the stream
@@ -159,7 +164,9 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     no `create_page`. (2026-08-25: 07 wait is a cap, not “issue the website
     preview immediately and live-render unpublished rows.”) (2026-08-30 later:
     wait-end is 07 contractor copy improvement; 08 share writes R2; 09 does not
-    wait for 06. 06 is automatic website copy generation.)
+    wait for 06. 06 is automatic website copy generation.) (2026-08-31: 06 is
+    website 03. Turn 1 Worker website page render; no `update_reviews`. HTML
+    write is website 04, not 07.)
 
 14. **Resume is same-browser `localStorage` + the existing onboarding session
     token** — restore with `GET .../profile`. No server-side resume token. Clerk
@@ -252,7 +259,8 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     08: reserve prefix if needed, first live R2 without strip. If they already
     shared, 09 archives strip HTML and writes live v2. (2026-08-30. 2026-08-30
     later: 07 is contractor copy improvement; former 07 share is 08; former 08
-    activation is 09.)
+    activation is 09. 2026-08-31: wait-end status is `preview_and_edit` — they
+    edit on `/onboarding/preview-and-edit/`, not a read-only peek.)
 
 22. **`/me` returns unactivated `TenantRead` after Clerk org attach** —
     `POST /v1/me/clerk-organization` may attach `tenants.clerk_org_id` without

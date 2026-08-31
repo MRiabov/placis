@@ -1,7 +1,8 @@
 # Onboarding — Architecture
 
 The pipeline: find the business, business research in the background, fill the
-gaps, apply the website template, automatic website copy generation in the
+gaps, select then copy the website template, automatic website copy generation
+in the
 background, contractor copy improvement on the website preview, pay. Implemented
 in the predecessor (`OnCall`) and `frontend-2`; this is that loop under Placis
 names.
@@ -14,7 +15,7 @@ find (company registry and/or Google Maps) + online research consent
   → Review (skippable; extra seconds for research)
   → client interview (text, 04a; voice writer 04b is **out**)
   → profile history accumulates as sources and answers arrive
-  → client interview complete → apply the website template (LLM picks website template/website styles; write is deterministic)
+  → client interview complete → select then copy the website template (LLM picks website template/website styles; write is deterministic)
   → automatic website copy generation starts (async; `/onboarding/preview` waits copy-done or ~15s cap)
   → wait-end lands on the website preview (07 contractor copy improvement)
   → 08 share writes static HTML to the host (optional; website publication v1, strip on)
@@ -28,14 +29,16 @@ enqueue = one `StartRun`, not one ETL run). A 6th enqueue waits until the oldest
 of those five is 30 minutes old. Business lookup still returns; the wait is a
 quiet inline note on Review, not a blocker.
 
-## Apply the website template
+## Select and copy the website template
 
-Client-interview-complete enqueues this step (05).
-**Applying the website template is deterministic**: accepted profile + chosen
-website template → the same unpublished website, website placeholders kept.
-**Choosing** the website template and website styles is one bounded LLM call
-with a heuristic fallback — not website-page-by-website-page automatic website
-copy generation.
+Client-interview-complete enqueues this step (05). Website
+[01](../website/pipeline/01-select-website-template.md) then
+[02](../website/pipeline/02-copy-website-template-pages.md).
+**Copying the website template’s pages is deterministic**: accepted profile +
+chosen website template → the same unpublished website, website placeholders
+kept. **Selecting** the website template and website styles is one bounded LLM
+call with a heuristic fallback — not website-page-by-website-page automatic
+website copy generation. Do not say apply the website template in prose.
 
 **Automatic website copy generation** (06) is a separate River job after that:
 the same tools as the website editor (`update_slot`, `update_seo`, …), writing
@@ -60,25 +63,28 @@ publication is the next website version.
 
 ## Progressive progress (SSE)
 
-From confirm through applying the website template and copy, the backend pushes
-onboarding session events over SSE (on change, not faster than ~2s). The
-frontend refreshes the Review checklist **and** live-fills the client interview
-(untouched controls; enrichable lists — [04a](pipeline/04a-text-client-interview.md)). On `/onboarding/preview` it
-rotates complete filled website sections (~2s, image fade). On the website
-preview the same stream plus unpublished GET Follow leftover 06. The stream is a
-**mirror** — Postgres is authoritative. Business research progress reads
-`etl.runs` **and** the live business profile transform already wrote (ETL fast
-extract results appear before ETL slow extract finishes). The contractor host is
-not an SSE endpoint.
+From confirm through selecting and copying the website template and copy, the
+backend pushes onboarding session events over SSE (on change, not faster than
+~2s). The frontend refreshes the Review checklist **and** live-fills the client
+interview (untouched controls; enrichable lists — [04a](pipeline/04a-text-client-interview.md)). On
+`/onboarding/preview` it rotates a website section when current profile data can
+resolve its placeholders (~2s, image fade). Do not wait for 06 to overwrite
+prose. On the website preview the same stream plus unpublished GET Follow
+leftover 06. The stream is a **mirror** — Postgres is authoritative. Business
+research progress reads `etl.runs` **and** the live business profile transform
+already wrote (ETL fast extract results appear before ETL slow extract
+finishes). The contractor host is not an SSE endpoint.
 
 ## Where things stand
 
-`created → client_interviewing → applying_website_template → previewing → activated`
-(`apply_website_template_failed` if applying the website template throws).
-Automatic website copy generation may still be running while `previewing`. The
-website preview is `/onboarding/preview-and-edit/` (app origin). The preview
-website address is the optional host after 08 (no token, no TTL). The onboarding
-session has no `expired` status.
+`created` → `client_interviewing` →
+`selecting_and_copying_website_template` → `preview_and_edit` →
+`activated`
+(`select_and_copy_website_template_failed` if 05 throws). Automatic website copy
+generation may still be running while `preview_and_edit`. The website preview is
+`/onboarding/preview-and-edit/` (app origin). The preview website address is the
+optional host after 08 (no token, no TTL). The onboarding session has no
+`expired` status.
 
 ## Voice
 

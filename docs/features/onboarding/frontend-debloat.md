@@ -43,8 +43,9 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
 - `TextInterviewForm` / `AccreditationChecklist`. Onboarding Details ==
   `/cms/details` (same field controls; not a separate AvailabilityPicker).
-- Progress timeline (`PreviewProgressPanels` / apply-the-website-template
-  panel): SSE carousel of complete website sections (~2s). Navigate to the
+- Progress timeline (`PreviewProgressPanels` / select-and-copy website template
+  panel): SSE carousel of website sections whose placeholders can resolve
+  (~2s). Navigate to the
   preview website address when 07 has written `latest/` (copy done or ~15s cap).
 - Drop leftover `TargetedPreviewView` and any website-activation strip on
   `/onboarding/preview`.

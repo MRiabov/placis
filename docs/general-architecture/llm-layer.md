@@ -78,7 +78,7 @@ thread_kind text NOT NULL CHECK (thread_kind IN (
   'ads_inline_assistance',
   'website_copy_generation',
   'website_template_picker',
-  'website_reviews_picker',
+  'website_reviews_ranking',
   'etl_project_classify',
   'etl_photo_classify',
   'etl_crawl_parse',
@@ -120,6 +120,12 @@ not already on a CMS or onboarding thread create one with the matching
 Failed parse stays an `ai_generations` row. The next attempt is another row on
 the **same** `thread_id` (prior failure in context). Bounded subtree repair
 above still applies; this is the persistence for a further agentic retry.
+
+**`website_reviews_ranking`** — ranks the reviews pool and selects **top
+reviews**. Runs parallel to client interview if the pool exists, and again
+when ETL finishes. Not a per-website-section pick when copying the website
+template’s pages. Do not use
+`website_reviews_picker`.
 
 ## `ai_generations`
 

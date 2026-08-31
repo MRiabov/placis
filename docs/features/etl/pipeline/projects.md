@@ -116,8 +116,8 @@ Transport / job errors: River retry. Prior Projects stay.
 ## Out
 
 Onboarding SSE mirrors Postgres (`etl.runs` and live Projects). Client interview
-cards / 05 gallery consume the **ranked top 4** in build-profile, not arrival
-order.
+cards consume the **ranked top 4** in build-profile, not arrival order. Website
+02 does not bake those ids; 04 resolves `{{projects.*}}`.
 
 ## Invariants
 

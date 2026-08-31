@@ -10,7 +10,8 @@ Live business profile: [details](../business-profile/details/api.md). Projects: 
 Live HTML GET on `{website_prefix}.preview.placis.com` never calls Go.
 **Do not create** `/v1/public/site/…` (including leftover resolve). Website
 publication writes R2 through an authenticated internal render (not public
-OpenAPI) — that is not a live GET and not leftover `/preview/{token}/`. Website
+OpenAPI) — that is not a live GET and not leftover `/preview/{token}/`.
+Copy generation (03) uses the same internal render without writing R2. Website
 form POST is [leads](../other/leads/api.md).
 
 ## Serve only types on HTTP

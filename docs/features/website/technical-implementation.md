@@ -12,18 +12,23 @@ See [persistence.md](persistence.md). Media assets are
 [details](../business-profile/details/persistence.md). Projects:
 [projects](../business-profile/projects/persistence.md).
 
-## Website template application
+## Select and copy the website template
 
-Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). This feature owns the tables it writes.
+Owned by website [01](pipeline/01-select-website-template.md) then
+[02](pipeline/02-copy-website-template-pages.md). Onboarding
+[05](../onboarding/pipeline/05-select-and-copy-website-template.md)
+enqueues. This feature owns the tables 02 writes.
 
 1. Load the selected website template + website component contracts from the
    first-pass sidecars in `packages/website-components` (later the `catalog/`
    dump).
 2. Validate website component ids, props, design controls, website page paths,
-   website forms, and top menu / footer against the website component contract
-   structs.
-3. Keep website placeholders in the unpublished website; they resolve only at
-   website publication.
+   and website forms against the website component contract structs. Derive
+   top menu / footer from the website pages just written; do not copy a
+   catalog menu JSON.
+3. Keep website placeholders in the unpublished website; the Worker resolves
+   them at publication HTML and at 03 page-render previews. Go does not fill
+   tokens.
 4. Create tenant-owned `website_*` records as an unpublished website; never
    write a live website from this step.
 
@@ -51,11 +56,13 @@ Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). T
 1. Only registered website components render; props validated before save and
    before website publication.
 2. Website publication creates a `website_publications` row (kept, not edited;
-   active flag + website rollback chain) holding a typed `website.v1` document.
+   active flag + website rollback chain) holding a **tokenized** `website.v1`
+   document. The Worker resolves placeholders into HTML.
 3. Contractor website pages render only the active website publication (R2
    `latest/`). The website editor canvas renders the unpublished website. The
    preview website address is that same `latest/` tree (strip on until 09), not
-   a per-request unpublished render.
+   a per-request unpublished render for website visitors. 03 internal website
+   page render is not this serve path.
 4. Website rollback reactivates an earlier website publication; earlier
    published website copies are never overwritten.
 5. Website publication emits an audit event.

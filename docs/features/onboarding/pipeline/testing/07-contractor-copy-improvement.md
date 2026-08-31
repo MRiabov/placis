@@ -9,7 +9,8 @@
 - **Assert**: hydrate returns 06 `tool_summary` without Clerk. Send while 06
   `running` is **409** `in_flight_run`. After idle, one owner prompt applies
   (unpublished PATCH; Follow). Sixth prompt is **409** `unpaid_prompt_cap`, not
-  402. Onboarding session stays `previewing`. No `website_publications` from
+  402. Onboarding session stays `preview_and_edit`. No `website_publications`
+  from
   this step. Onboarding session token cannot PATCH / Send / Voice. CMS
   `/v1/assistant/…` stays **403** `tenant_unactivated`. 09 still allowed
   without more prompts.
