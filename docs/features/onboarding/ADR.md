@@ -232,7 +232,14 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     research consent is not Voice-recording consent. (2026-08-30) Same day,
     later: xAI region follows the **business country** — assistant ADR 23.
     Persist Voice **`offset_seconds`** — assistant ADR 13. Glossary in
-    knowledge + Voice keyterms / `replace`: assistant ADR 24.
+    knowledge + Voice keyterms / `replace`: assistant ADR 24. Same day, later:
+    **`offset_seconds` and `body` come from xAI’s live Voice events**, not a
+    browser clock and not a second STT call. Store the forwarded JSON as
+    `provider_event`. See assistant ADR 13. Same day, later: live audio uses
+    the documented Speech to Speech host (`wss://api.x.ai/v1/realtime`,
+    cluster us-east-1). Do not invent `eu-west-1.api.x.ai`. See assistant
+    ADR 23. Same day, later: `{region}.api.x.ai` hosts are real; pin
+    `ie`/`gb` to eu-west-1. See assistant ADR 23.
 
 21. **Wait teaser lands on the website preview** — `/onboarding/preview` (SSE
     carousel, ~15s cap) then navigates to `/onboarding/preview-and-edit/`,
