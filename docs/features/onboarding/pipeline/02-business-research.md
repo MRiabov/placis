@@ -74,9 +74,12 @@ lookup can stay **200** and a later source change can stay **429**.
 
 If the count is **0–4**, call `StartRun` with the ETL run kinds below. Pass
 `onboarding_session_id` and `force=false`. Copy onboarding session attach keys
-onto the matching `etl.runs` rows (`place_id`, `website_url`). Registry-only
-onboarding sessions still get Maps / crawl / Facebook / Instagram runs; those
-wait for a key.
+onto the matching `etl.runs` rows (`place_id`, `website_url`). Find with only a
+company registry record still gets Maps / crawl / Facebook / Instagram: [web
+search](../../etl/pipeline/web-search.md) seeds Parallel from `legal_name`,
+`company_number`, country, and `registered_office`. The first `place_id` /
+website URL unblocks those runs in this enqueue. Maps-only Find still gets
+`trade_registry` (lookup by `display_name` + country).
 
 ### ETL run kinds 02 passes
 
