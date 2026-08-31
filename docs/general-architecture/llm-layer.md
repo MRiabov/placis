@@ -121,11 +121,15 @@ Failed parse stays an `ai_generations` row. The next attempt is another row on
 the **same** `thread_id` (prior failure in context). Bounded subtree repair
 above still applies; this is the persistence for a further agentic retry.
 
-**`website_reviews_ranking`** — ranks the reviews pool and selects **top
-reviews**. Runs parallel to client interview if the pool exists, and again
-when ETL finishes. Not a per-website-section pick when copying the website
-template’s pages. Do not use
-`website_reviews_picker`.
+**`website_reviews_ranking`** — **LLM ranking** of the reviews pool
+(not stars or recency). Selects **top reviews** onto
+`business_profile_reviews.is_top` / `top_position` (same replace as
+Certifications and reviews PATCH). Runs parallel to client interview if
+the pool exists, and again when ETL finishes. `{{reviews.N}}` is 1-based
+into that ranked `in_pool` order. Not a per-website-section pick when
+copying the website template’s pages. Do not use
+`website_reviews_picker`. Ranking prompt is `prompts.yaml` on that
+thread.
 
 ## `ai_generations`
 

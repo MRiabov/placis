@@ -20,12 +20,12 @@ Owned by website [01](pipeline/01-select-website-template.md) then
 enqueues. This feature owns the tables 02 writes.
 
 1. Load the selected website template + website component contracts from the
-   first-pass sidecars in `packages/website-components` (later the `catalog/`
-   dump).
+   `go:embed` dump under `catalog/` ([catalog.md](catalog.md)). Do not load
+   `packages/website-components/src/blueprints/` as the catalog.
 2. Validate website component ids, props, design controls, website page paths,
    and website forms against the website component contract structs. Derive
-   top menu / footer from the website pages just written; do not copy a
-   catalog menu JSON.
+   top menu / footer from the [menu constant](catalog.md#menu-constant); do
+   not copy a catalog menu JSON.
 3. Keep website placeholders in the unpublished website; the Worker resolves
    them at publication HTML and at 03 page-render previews. Go does not fill
    tokens.

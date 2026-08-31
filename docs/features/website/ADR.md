@@ -146,8 +146,8 @@ Status: decided (2026-08-16, product owner + engineering).
     Origins, archive, and create owner-written stay on the picker ADR.
 
     (2026-08-31): Do not pick `website_slot_reviews` when copying template
-    pages. A ranking job (parallel to client interview if the pool exists; again
-    when ETL finishes) ranks the pool and selects **top reviews**.
+    pages. **LLM ranking** (parallel to client interview if the pool exists;
+    again when ETL finishes) ranks the pool and selects **top reviews**.
     `{{reviews.1}}` … resolve from that order. Website 03 must not
     `update_reviews`. Owner Content / `update_reviews` can still override a
     section later.

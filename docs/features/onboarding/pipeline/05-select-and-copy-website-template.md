@@ -40,7 +40,8 @@ Do not say apply the website template in prose.
    writes must not mutate this live business profile in place.
 2. Run website **01** then **02**.
 3. Enqueue 06. `/onboarding/preview` starts the wait (copy done or ~15s
-   cap). Wait-end is [07](07-contractor-copy-improvement.md). 08 writes
+   cap). Wait-end who flips status is an
+   [open question](../../website/catalog.md#open-questions). 08 writes
    the host if they share — not immediately.
 
 ## Persist
@@ -48,7 +49,8 @@ Do not say apply the website template in prose.
 Onboarding session stays `selecting_and_copying_website_template` until
 wait-end, then `preview_and_edit`. `business_profiles.accepted_edit_id` at
 complete. `website_settings` (01) and unpublished website + River 06 job (02).
-`ai_generations` for the pick.
+01 picker `ai_generations` belong to the stacked rewrite
+([01](../../website/pipeline/01-select-website-template.md)).
 
 ## Fail
 

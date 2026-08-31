@@ -601,9 +601,9 @@ typical site of that trade needs. Never say bare “template” or “blueprint�
 
 #### Website page
 
-One page of the website (home, a service page, contact, legal), with a website
-page path, title, and an ordered list of website sections. Never say bare “page”
-in PRDs or UI.
+One page of the website (home, about, a service page, contact, legal), with a
+website page path, title, and an ordered list of website sections. Never say
+bare “page” in PRDs or UI.
 
 ---
 
