@@ -12,7 +12,7 @@ type BillingKind = "ok" | "warn" | "empty" | "ending" | "canceled";
 type SelfServePlan = "pro" | "pro-plus" | "pro-max";
 type BillingInterval = "month" | "year";
 
-const kinds: BillingKind[] = ["ok", "warn", "empty", "ending", "canceled"];
+const variants: BillingKind[] = ["ok", "warn", "empty", "ending", "canceled"];
 
 const kindLabels: Record<BillingKind, string> = {
   canceled: "Subscription not active",
@@ -99,7 +99,7 @@ function usageCreditFeature(amount: number): string {
 }
 
 function isBillingKind(value: string | null): value is BillingKind {
-  return value !== null && (kinds as readonly string[]).includes(value);
+  return value !== null && (variants as readonly string[]).includes(value);
 }
 
 function initialKind(): BillingKind {
@@ -109,17 +109,17 @@ function initialKind(): BillingKind {
 
 export function BillingPage(): ReactNode {
   const { openDestinations } = useCmsLayout();
-  const [kind, setKind] = useState<BillingKind>(initialKind);
+  const [variant, setVariant] = useState<BillingKind>(initialKind);
   const [selectedPlan, setSelectedPlan] = useState<SelfServePlan>("pro");
   const [interval, setInterval] = useState<BillingInterval>("month");
   const [noticeOpen, setNoticeOpen] = useState(
-    () => kind === "warn" || kind === "empty",
+    () => variant === "warn" || variant === "empty",
   );
-  const pool = pools[kind];
+  const pool = pools[variant];
   const yearly = interval === "year";
   const current = selfServePlans.find((plan) => plan.id === selectedPlan);
-  const showCurrent = kind !== "canceled";
-  const payAgain = kind === "canceled";
+  const showCurrent = variant !== "canceled";
+  const payAgain = variant === "canceled";
   const currentPrice = current
     ? yearly
       ? current.yearlyPerMonth
@@ -130,12 +130,12 @@ export function BillingPage(): ReactNode {
     : `${usd(currentPrice)} / mo`;
 
   function applyKind(next: BillingKind): void {
-    setKind(next);
+    setVariant(next);
     setNoticeOpen(next === "warn" || next === "empty");
   }
 
   function choosePlan(id: SelfServePlan): void {
-    if (kind === "canceled" || kind === "ending") {
+    if (variant === "canceled" || variant === "ending") {
       applyKind("ok");
     }
     setSelectedPlan(id);
@@ -147,10 +147,10 @@ export function BillingPage(): ReactNode {
         groups={[
           {
             title: "Usage & billing",
-            tabs: kinds.map((id) => ({
+            tabs: variants.map((id) => ({
               id,
               label: kindLabels[id],
-              on: kind === id,
+              on: variant === id,
               onSelect: () => applyKind(id),
             })),
           },
@@ -168,14 +168,14 @@ export function BillingPage(): ReactNode {
           <section className={cn("max-w-xl p-5 sm:p-6", raisedCardClass)}>
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-sm text-muted-foreground">
-                {kind === "canceled"
+                {variant === "canceled"
                   ? (current?.name ?? "Placis Pro plan")
                   : `${current?.name ?? "Placis Pro plan"} · ${currentPriceLabel}`}
               </p>
-              {kind === "canceled" ? (
+              {variant === "canceled" ? (
                 <StatusPill>Subscription is not active</StatusPill>
               ) : null}
-              {kind === "ending" ? (
+              {variant === "ending" ? (
                 <StatusPill>Cancels on 29 Sep</StatusPill>
               ) : null}
             </div>
@@ -209,7 +209,7 @@ export function BillingPage(): ReactNode {
               <Legend color="bg-usage-text" label="Text edits" />
               <Legend bordered color="bg-zinc-100" label="Remaining" />
             </ul>
-            {kind === "canceled" ? (
+            {variant === "canceled" ? (
               <p className="mt-5 text-sm">
                 Pay the subscription price to Publish.
               </p>
@@ -333,9 +333,9 @@ export function BillingPage(): ReactNode {
             </div>
           </section>
 
-          {kind === "canceled" ? null : (
+          {variant === "canceled" ? null : (
             <div className="mt-10 max-w-xl border-t border-border pt-5">
-              {kind === "ending" ? (
+              {variant === "ending" ? (
                 <>
                   <p className="text-sm text-muted-foreground">
                     Cancels on 29 Sep. You can still Publish until then.
@@ -357,10 +357,10 @@ export function BillingPage(): ReactNode {
           )}
         </div>
       </div>
-      {noticeOpen && (kind === "warn" || kind === "empty") ? (
+      {noticeOpen && (variant === "warn" || variant === "empty") ? (
         <Notice
           message={
-            kind === "empty"
+            variant === "empty"
               ? "You are out of usage credit."
               : "You're running out of usage credit."
           }

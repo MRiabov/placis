@@ -56,9 +56,9 @@ that already lost.
 2. Resolve or create the Clerk organization; set `tenants.clerk_org_id`. Tenant
    name is the **business**; Clerk organization name is the **person**.
 3. `tenant_memberships` (`owner`) for the paying owner.
-4. `tenants.status=active`. Onboarding session → `activated`. In the **same
-   transaction**, complete `ai.threads` `kind=cms_assistant` `current` and end
-   any `assistant.runs` `running` ([website editor](../website-editor.md)).
+4. `tenants.status=active`. Onboarding session → `activated`. In the
+   **same transaction**, complete `ai.threads` `thread_kind=cms_assistant`
+   `current` and end any `assistant.runs` `running` ([website editor](../website-editor.md)).
 5. Write **`website_publications`** without the website-activation strip,
    `published_by=onboarding`, `active`. If they never shared: reserve
    `website_prefix` (same rules as 08) and write the **first** live R2
@@ -75,7 +75,7 @@ that already lost.
 ## Persist
 
 `website_activations`; `stripe_events`; **update** existing `tenants`;
-`tenant_memberships`; complete unpaid `ai.threads` `kind=cms_assistant`
+`tenant_memberships`; complete unpaid `ai.threads` `thread_kind=cms_assistant`
 `current` + end `running`; `website_publications` live (no strip) + archive
 strip v1 if it existed; R2 `latest/` without the strip.
 

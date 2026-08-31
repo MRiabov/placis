@@ -31,9 +31,9 @@ Root:
   `seo_og_description`, `seo_canonical_url`, `seo_noindex`,
   `seo_primary_keyword`
 - `pages[]`
-- `top_menu[]` — resolved tree: `id`, `kind`, `label`, `path` or `href`,
-  `children` (depth 2). Page nodes bake path/title from `website_pages`. Do not
-  leave unpublished `page_id` in the dump.
+- `top_menu[]` — resolved tree: `id`, `menu_node_kind`, `label`, `path` or
+  `href`, `children` (depth 2). Page nodes bake path/title from `website_pages`.
+  Do not leave unpublished `page_id` in the dump.
 - `footer[]` (same shape)
 - `show_phone`, `show_email` (bar CTA visibility; values already resolved from
   `{{marketing_phone}}` / `{{marketing_email}}`)

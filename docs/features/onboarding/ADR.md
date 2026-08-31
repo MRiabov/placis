@@ -32,28 +32,29 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
 4. **Business research starts ETL** — 02 calls `etl.StartRun`. Google Maps,
    Facebook, Instagram, and website crawl sit behind ETL extract adapters with
    fakes. Transform writes the business profile (research conflicts, posts,
-   photo kinds) as each extract chunk lands, not only when the kind succeeds.
-   Raw fetch bodies stay on per-type `etl.*_fetches.raw` and never leak into the
-   profile. Google Maps listing columns live in `etl.google_maps_listings` (no
-   `raw` on that row). (2026-08-27: warehouse moved to ETL; onboarding 02 is the
-   trigger only. Same day, later: transform per extract chunk.)
+   photo kinds) as each extract chunk lands, not only when the ETL run kind
+   succeeds. Raw fetch bodies stay on per-type `etl.*_fetches.raw` and never
+   leak into the profile. Google Maps listing columns live in
+   `etl.google_maps_listings` (no `raw` on that row). (2026-08-27: warehouse
+   moved to ETL; onboarding 02 is the trigger only. Same day, later: transform
+   per extract chunk.)
 
 5. **Retry may reuse a fetch for the same ETL run chunk; scheduled extract does
    not skip** — Look up the newest fetch for this `run_id` **and that chunk**
    (`fetched_from`, canonical URL) before calling out. Do not treat one fetch as
-   the whole run: fast extract and slow extract are several rows. Google Maps
-   listings keyed by `place_id`. A scheduled Monday / Wednesday / Friday run
-   extracts again. Still write `etl.runs` for this enqueue. Not the business
+   the whole run: ETL fast extract and ETL slow extract are several rows. Google
+   Maps listings keyed by `place_id`. A scheduled Monday / Wednesday / Friday
+   run extracts again. Still write `etl.runs` for this enqueue. Not the business
    profile. Company registry parquet and Find autocomplete are not this cache.
    (2026-08-16: a `google_maps_listing_cache` jsonb-only payload, described as
    “repeat paid lookups”. 2026-08-19: Google Maps Details is the free API;
    scrape is the fallback. Same day, later: that table is `google_maps_listings`
    (typed columns + `raw` ETL body); do not also dump the body onto
    `business_research_sources.raw`. 2026-08-23: cache is global for every
-   external kind, not Maps-only. 2026-08-27: no TTL for retry of the same run;
-   no last-write unique fetch table; scheduled refresh extracts again. Same day,
-   later: retry reuses a fetch per chunk, not one fetch for the whole run. See
-   [ETL ADR](../etl/ADR.md).)
+   external ETL run kind, not Maps-only. 2026-08-27: no TTL for retry of the
+   same run; no last-write unique fetch table; scheduled refresh extracts again.
+   Same day, later: retry reuses a fetch per chunk, not one fetch for the whole
+   run. See [ETL ADR](../etl/ADR.md).)
 
 5a. **Open web search is Parallel via the Vercel AI Gateway server tool** —
 Parallel is the search engine for our agents. When a research job must discover
@@ -75,7 +76,7 @@ Sonar via OpenRouter and Exa for Facebook discovery. 2026-08-24: Vercel AI
 Gateway exposes Parallel as a server tool; OpenRouter is no longer the
 search/extract hop — generation and search stay on Vercel. 2026-08-27: Parallel
 is not instant; first discovered key unblocks Maps / crawl; generation over
-retrieved text is not fast extract. 2026-08-30: Search vs Extract split;
+retrieved text is not ETL fast extract. 2026-08-30: Search vs Extract split;
 Extract is known-URL crawl text, not a Projects-only hop.)
 
 6. **The business profile keeps profile history and every detail is
@@ -124,18 +125,19 @@ Extract is known-URL crawl text, not a Projects-only hop.)
 
 11. **Progressive progress over SSE** — during onboarding the backend pushes a
     progress event on each change (not faster than ~2s) over SSE; the stream
-    mirrors the DB; it is not the source of truth. Fast extract live business
-    profile writes appear on the checklist before slow extract finishes (about
-    half of that kind’s visible business research, then more as fetches arrive).
-    On `/onboarding/preview`, the frontend rotates **complete** filled website
-    sections (~2s, image fade) from that stream, then navigates to the host. Not
-    full website pages. Not SSE on the preview website address. (2026-08-25:
-    carousel + host navigate; earlier: 2–10s re-render so the website builds up.
-    2026-08-27: fast extract live business profile appears before slow extract
-    finishes. 2026-08-30: the client interview is also an SSE consumer —
-    untouched controls fill and enrichable lists (reviews, photos, Projects,
-    services, service areas, empty hours days, certifications) grow while 02
-    runs; dirty / `human` controls are not rewritten.)
+    mirrors the DB; it is not the source of truth. ETL fast extract live
+    business profile writes appear on the checklist before ETL slow extract
+    finishes (about half of that ETL run kind’s visible business research, then
+    more as fetches arrive). On `/onboarding/preview`, the frontend rotates
+    **complete** filled website sections (~2s, image fade) from that stream,
+    then navigates to the host. Not full website pages. Not SSE on the preview
+    website address. (2026-08-25: carousel + host navigate; earlier: 2–10s
+    re-render so the website builds up. 2026-08-27: ETL fast extract live
+    business profile appears before ETL slow extract finishes. 2026-08-30: the
+    client interview is also an SSE consumer — untouched controls fill and
+    enrichable lists (reviews, photos, Projects, services, service areas, empty
+    hours days, certifications) grow while 02 runs; dirty / `human` controls are
+    not rewritten.)
 
 12. **Website activation writes the strip-off website publication** — 07 already
     wrote `website_publications` **v1** (static HTML on the host,
@@ -263,7 +265,7 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     must not PATCH. (2026-08-30)
 
 23. **09 completes the unpaid Assistant thread** — In the same transaction as
-    `tenants.status=active`, complete `ai.threads` `kind=cms_assistant`
+    `tenants.status=active`, complete `ai.threads` `thread_kind=cms_assistant`
     `current` and end `running`. CMS GET lazy-creates a new empty `current`. Do
     not migrate unpaid items onto CMS. Leftover 06 continues as River-only.
     (2026-08-30. 2026-08-30 later: numbered 09 after 07 contractor copy

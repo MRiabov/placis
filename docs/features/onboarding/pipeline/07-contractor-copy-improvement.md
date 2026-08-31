@@ -49,7 +49,7 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
 
 ## Persist
 
-Unpublished website PATCH; `ai.threads` (`kind=cms_assistant`) /
+Unpublished website PATCH; `ai.threads` (`thread_kind=cms_assistant`) /
 `assistant.thread_items` / `assistant.runs`. No `website_publications` from this
 step. Onboarding session stays `previewing`.
 

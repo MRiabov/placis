@@ -3,15 +3,16 @@
 Extract **and** transform public contractor sources (Google Maps listing,
 Facebook profile and posts, Instagram profile and posts, plus first-run crawl /
 trade registry). Projects from posts / crawled blobs / reviews usable as a
-Project are transform on those kinds ([projects.md](pipeline/projects.md)); skip
-lives on `etl.llm_source_to_project_classifications`. Extract identity is
-`etl.sources`. Raw fetches and the Google Maps listing live in Postgres schema
-`etl`. Transformed contractor-only rows live on the business profile. ETL is
-not extract-only: transform is the business logic that writes the profile.
+Project are transform on those ETL run kinds ([projects.md](pipeline/projects.md)); skip lives on
+`etl.llm_source_to_project_classifications`. Extract identity is `etl.sources`.
+Raw fetches and the Google Maps listing live in Postgres schema `etl`.
+Transformed contractor-only rows live on the business profile. ETL is not
+extract-only: transform is the business logic that writes the profile.
 
 Onboarding 02 and a Monday / Wednesday / Friday schedule both call
-`etl.StartRun`. Extract chunks transform as they arrive (fast extract in about a
-second, then slow extract). There is no owner-facing CMS screen in this slice.
+`etl.StartRun`. Extract chunks transform as they arrive (ETL fast extract in
+about a second, then ETL slow extract). There is no owner-facing CMS screen in
+this slice.
 
 - [ADR](ADR.md) — architectural decision record
 - [architecture.md](architecture.md) — extract vs transform, triggers, packages (`StartRun`

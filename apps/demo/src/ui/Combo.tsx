@@ -149,7 +149,7 @@ function ComboMenu({
   setQuery: (query: string) => void;
   value: string;
 }): ReactNode {
-  const kind = createKind ?? "item";
+  const noun = createKind ?? "item";
   return (
     <div
       className={card(
@@ -166,10 +166,10 @@ function ComboMenu({
           >
             {creating ? (
               <>
-                {createHint(true, mapsPlace, kind)} “{query.trim()}”
+                {createHint(true, mapsPlace, noun)} “{query.trim()}”
               </>
             ) : (
-              createHint(false, mapsPlace, kind)
+              createHint(false, mapsPlace, noun)
             )}
           </p>
         </div>

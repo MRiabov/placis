@@ -4,18 +4,18 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
 02 still fills the checklist and writes `etl.*` rows. This feature’s own test is
 **integration** (real Postgres, faked Maps / Facebook / Instagram / LLM):
 
-1. **Bootstrap** — `StartRun` with `trigger=onboarding`, kinds including Google
-   Maps, Facebook, Instagram. Assert `etl.runs` (one per kind, shared
-   `enqueue_id`), `etl.sources`, fetch rows, Maps listing, profile posts /
-   reviews / media library photo kinds. Assert Details transform (hours /
+1. **Bootstrap** — `StartRun` with `trigger=onboarding`, ETL run kinds including
+   Google Maps, Facebook, Instagram. Assert `etl.runs` (one per ETL run kind,
+   shared `enqueue_id`), `etl.sources`, fetch rows, Maps listing, profile posts
+   / reviews / media library photo kinds. Assert Details transform (hours /
    marketing phone / first reviews) lands while scrape is still in flight;
    scrape then adds further reviews / photos. ETL increments have
    `business_profile_edit_sources`.
 2. **Scheduled increment** — second `StartRun` with `trigger=scheduled` and a
    new review, a new Instagram post, a new photo, and a different marketing
    phone than the owner typed. Assert new review / post / photo on the business
-   profile; owner-typed marketing phone unchanged (research conflict); photo
-   kind not rewritten for the same content hash when `force` is false and
+   profile; owner-typed marketing phone unchanged (research conflict); photo ETL
+   run kind not rewritten for the same content hash when `force` is false and
    `schema_revision` matches; a bumped `schema_revision` extracts / classifies
    without `force`; `algorithm=human` is not overwritten.
 3. **Cap** — five onboarding `enqueue_id`s in 30 minutes; a sixth

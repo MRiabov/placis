@@ -336,7 +336,7 @@ needs it):
 - InlineError (validation shown next to the field it belongs to)
 - ApproveBlock (actions only: approve/download, closing the screen)
 - **SearchableCombobox** — the picker for offers, services, the ideal customer
-  profile, and location (create-new per kind). Full control spec below.
+  profile, and location (create-new per field). Full control spec below.
 - IdealCustomerProfileEditor (default + free text + async suggestion display;
   steers generation, not targeting)
 - AdLeadFormQuestions (About the ad: a fixed set of standard fields: phone
@@ -374,7 +374,7 @@ needs it):
 Used for offers, services, the ideal customer profile, and location. Behavior:
 
 - **Trigger field**: single-line text input, full width, hint text like "Select
-  or type to create a new service…" (the noun follows the kind: service /
+  or type to create a new service…" (the noun follows the field: service /
   profile / area); typing filters the list in real time. No extra icons in the
   field.
 - **Dropdown panel** (closed by default, opens below the input on focus/click):

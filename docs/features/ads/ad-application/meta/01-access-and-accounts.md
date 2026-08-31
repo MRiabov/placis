@@ -87,7 +87,7 @@ Official: [On Behalf Of](https://developers.facebook.com/docs/marketing-api/busi
 This is the older agency pattern: Placis's admin business integration system
 user creates a business integration system user **inside the contractor's**
 Business Portfolio. It still requires the contractor admin to login once. More
-moving parts, easier to get wrong, and Meta's current preference for this kind
+moving parts, easier to get wrong, and Meta's current preference for this type
 of app is Login for Business. Do not start here.
 
 ### What we should not do
