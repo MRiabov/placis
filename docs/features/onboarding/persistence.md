@@ -10,12 +10,12 @@ Extract and the Google Maps listing: [ETL](../etl/persistence.md). LLM traces: [
 ## Onboarding assistant (guide)
 
 Isolated from CMS `cms_assistant` threads. Never migrated after website
-activation. Thread identity is [`ai.threads`](../../general-architecture/llm-layer.md) (`kind=onboarding_assistant`,
-unique per `onboarding_session_id`). Do **not** keep `assistant_conversations`
-as an identity table.
+activation. Thread identity is [`ai.threads`](../../general-architecture/llm-layer.md)
+(`thread_kind=onboarding_assistant`, unique per `onboarding_session_id`). Do
+**not** keep `assistant_conversations` as an identity table.
 
 - `assistant_conversation_items` — `id`, `onboarding_session_id` fk,
-  `thread_id` fk → `ai.threads`, `kind` (`owner` / `assistant` /
+  `thread_id` fk → `ai.threads`, `thread_item_kind` (`owner` / `assistant` /
   `tool_summary` / `thinking`), `body`, `icon`, `offset_seconds` int nullable
   (`>= 0`; Voice utterances; seconds from `audio_start_ms` on paired
   `speech_started` when present; null if none), `provider_event` jsonb nullable
@@ -36,9 +36,10 @@ as an identity table.
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at`
   nullable, `interview_plan_markdown` nullable, `interview_plan_completed`
   text[] nullable, `interview_plan_next_questions` text[] nullable, timestamps
-- `client_interview_submissions` — `id`, `onboarding_session_id` fk, `kind`
-  (`autosave`/`final`), `photos_fill` nullable (`source_from_internet`/`ai`)
-  only when found + uploaded photos are not enough, `google_maps_listing_choice`
+- `client_interview_submissions` — `id`, `onboarding_session_id` fk,
+  `submission_kind` (`autosave`/`final`), `photos_fill` nullable
+  (`source_from_internet`/`ai`) only when found + uploaded photos are not
+  enough, `google_maps_listing_choice`
   (`use_found`/`lookup`/`no_profile`/`add_later`), `reviews_unavailable`,
   `additional_notes`, `created_at`
 

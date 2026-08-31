@@ -25,10 +25,10 @@ do not treat a character cap as Voice generation. HTTP still puts a storage
 | Location | Persistence | HTTP |
 | --- | --- | --- |
 | Thread | columns | `*Read` (`id`, `status` `current`/`completed`, `last_activity_at`). |
-| Thread items | columns | `*Read` (`kind` enum, `body` string + `maxLength`, `icon` enum, `offset_seconds` int nullable, `created_at`). Owner `body` is **4000** (text) or **5000** (owner Voice utterance) **characters**. Assistant / `thinking` / `tool_summary` `body` storage `maxLength` is not generation — text generation is **12K tokens**. Field name is **`items`**, not `thread_items`. **Omit** `ai_generations` and `runs`. |
+| Thread items | columns | `*Read` (`thread_item_kind` enum, `body` string + `maxLength`, `icon` enum, `offset_seconds` int nullable, `created_at`). Owner `body` is **4000** (text) or **5000** (owner Voice utterance) **characters**. Assistant / `thinking` / `tool_summary` `body` storage `maxLength` is not generation — text generation is **12K tokens**. Field name is **`items`**, not `thread_items`. **Omit** `ai_generations` and `runs`. |
 | Assistant screen context | — | Closed per-screen structs, not a JSON bag. |
 | Voice tool-calls body | — | Closed union of CMS tool structs (name + the same types the LLM loop validates). |
-| Voice transcripts | — | Closed union of committed xAI Voice events (below) + optional reasoning/usage. Go maps to `kind` / `body` / `offset_seconds`. **Omit** PCM, ASR/TTS deltas, recording file, `provider_event` on GET. |
+| Voice transcripts | — | Closed union of committed xAI Voice events (below) + optional reasoning/usage. Go maps to `thread_item_kind` / `body` / `offset_seconds`. **Omit** PCM, ASR/TTS deltas, recording file, `provider_event` on GET. |
 | Voice realtime connection | — | Browser-safe secret + expiry + realtime URL (`string` + `maxLength`, `wss://{region}.api.x.ai/v1/realtime`). Region is Go-picked; **omit** a browser region field. |
 | Text WebSocket events | — | Closed `oneOf` event names (same rule as SSE: no unconstrained `payload`). |
 
@@ -71,9 +71,9 @@ socket; event structs still land in `/openapi.json` for typegen.
 - **Callers:** bottom-right **Assistant** on an assistant screen, including
   `/cms`. Visiting `/cms` without calling does not hydrate.
 - **Response:** current thread `*Read` (`id`, `status`, `last_activity_at`) +
-  ordered `items` (`kind`, `body`, `icon`, `offset_seconds` nullable,
-  `created_at`). No `current` → insert
-  empty `current`. Empty thread is `200` with `items: []`.
+  ordered `items` (`thread_item_kind`, `body`, `icon`, `offset_seconds`
+  nullable, `created_at`). No `current` → insert empty `current`. Empty thread
+  is `200` with `items: []`.
 - **Errors:** `403` `tenant_unactivated`.
 - **Must not:** return `thread_items` as the field name; return `runs`, audit
   blobs, `provider_event`, or recording URLs.
@@ -177,17 +177,16 @@ Onboarding uses
   field; xAI lists the event, not the payload), store floor(ms/1000); else null.
   Do not invent a browser clock. Assistant `.done` has no documented clock (null
   unless a timing key is on that JSON). Reconstruct `[m:ss owner]` /
-  `[m:ss assistant]` from `kind` + `offset_seconds` when set.
-  Never say **user**.
-  Never `kind=system` / `[m:ss system]` (instructions stay the Voice-connection
-  seed). Persist the forwarded JSON as `provider_event` (jsonb; omitted from
-  GET). Events may be omitted on a **usage-only** POST. If xAI did not emit a
-  committed transcript, omit that utterance — do not invent text or offset.
-  Reasoning if the voice service emitted it (`internal_reasoning`; empty string
-  if omitted — do not invent). **Usage** (required when debiting):
-  `audio_seconds_sent` (number), `audio_seconds_received` (number),
-  `billed_text_item_count` (int). Optional typed xAI usage struct when present
-  (named fields, not a JSON bag).
+  `[m:ss assistant]` from `thread_item_kind` + `offset_seconds` when set.
+  Never say **user**. Never `thread_item_kind=system` / `[m:ss system]`
+  (instructions stay the Voice-connection seed). Persist the forwarded JSON as
+  `provider_event` (jsonb; omitted from GET). Events may be omitted on a
+  **usage-only** POST. If xAI did not emit a committed transcript, omit that
+  utterance — do not invent text or offset. Reasoning if the voice service
+  emitted it (`internal_reasoning`; empty string if omitted — do not invent).
+  **Usage** (required when debiting): `audio_seconds_sent` (number),
+  `audio_seconds_received` (number), `billed_text_item_count` (int). Optional
+  typed xAI usage struct when present (named fields, not a JSON bag).
 - **Errors:** `403` `tenant_unactivated`. Settlement stays **200** (not 402).
   `409` `in_flight_run` is only a **second** start, not the current voice run.
 - **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use

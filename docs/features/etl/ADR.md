@@ -18,9 +18,9 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    Extract must not import `profile` or write `business_profile_*`. Transform
    must not call Maps / Facebook / Instagram networks.
    **`StartRun` is not a god function:** it counts the cap, creates
-   `enqueue_id`, inserts `etl.runs`, and enqueues one River job per kind. It
+   `enqueue_id`, inserts `etl.runs`, and enqueues one River job per ETL kind. It
    does not call source networks, write fetches, upsert the listing, or
-   transform. Each kind’s extract and transform live in their own packages
+   transform. Each ETL kind’s extract and transform live in their own packages
    (`extract/googlemaps`, `transform/facebook`, …). A small worker dispatch
    calls those functions; it does not inline them. (2026-08-27; same day, later:
    StartRun orchestration only.)
@@ -30,16 +30,16 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    `place_id`) plus `raw` jsonb. No single mixed `etl.fetches` dump. No `raw` on
    listing / profile / post live rows. A unifying `{id, type}` pointer table is
    not in this slice. (2026-08-27) (2026-08-30: `etl.sources` is live extract
-   **identity** — `kind` + natural key — not mixed fetches and not `raw`.
+   **identity** — `etl_kind` + natural key — not mixed fetches and not `raw`.
    Fetches stay one table per extract type. Live blob rows fk `source_id`.
    Project skip is `etl.llm_source_to_project_classifications`, not this
    table.)
 
-4. **An ETL run is one source kind** — `etl.runs` is one row per kind (Google
-   Maps extract, Facebook extract, Instagram extract).
-   `StartRun(kinds, trigger, tenant)` takes an explicit list (length ≥ 1),
-   creates one `enqueue_id`, inserts one run per kind, enqueues that kind’s
-   River job. The onboarding cap counts distinct `enqueue_id` with
+4. **An ETL run is one source kind** — `etl.runs` is one row per ETL kind
+   (Google Maps extract, Facebook extract, Instagram extract).
+   `StartRun(etl_kinds, trigger, tenant)` takes an explicit list (length ≥ 1),
+   creates one `enqueue_id`, inserts one run per ETL kind, enqueues that ETL
+   kind’s River job. The onboarding cap counts distinct `enqueue_id` with
    `trigger=onboarding` (5 per tenant per rolling 30 minutes), not jobs.
    (2026-08-27)
 
@@ -52,10 +52,11 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
 
 6. **Scheduled refresh is Monday, Wednesday, Friday** — Activated tenants.
    Sources: Google Maps, Facebook, Instagram (public scrape; Graph API later).
-   Stagger across tenants. Skip a kind that has no key (`place_id`, handle).
-   Company registry / existing-site API extracts later. Website crawl, trade
-   registry, and Parallel stay first-run (onboarding 02). Website activation
-   implies this refresh; online research consent covers it. (2026-08-27)
+   Stagger across tenants. Skip an ETL kind that has no key (`place_id`,
+   handle). Company registry / existing-site API extracts later. Website crawl,
+   trade registry, and Parallel stay first-run (onboarding 02). Website
+   activation implies this refresh; online research consent covers it.
+   (2026-08-27)
 
 7. **Increment is natural-key upsert** — No watermark table. A scheduled extract
    fetches again; insert only reviews / posts / photos whose source id we do not
@@ -70,7 +71,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    a research conflict on Details, not a silent overwrite. Transform runs on
    each extract chunk as it arrives; do not wait for slow extract or
    `status=succeeded`. (2026-08-27; same day, later: per chunk, not per
-   kind-done.)
+   ETL kind done.)
 
 9. **Later: rename schema `details`** — Details the screen is a subset of the
    business profile. Rename Postgres schema `details` to `business_profile` or
@@ -95,12 +96,12 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     extract is the remainder (~40s extra): Maps scrape of further reviews /
     photos (on the order of 50 reviews), or a slow crawl. Persist a fetch and
     transform each chunk before the next extract continues. Onboarding shows
-    about half of that kind’s checklist from the fast extract, then more as slow
-    extract runs. Web search is not instant; the first discovered key unblocks
-    Maps / crawl in the same enqueue. Fast / slow live in the per-source
-    package, not `StartRun`. (2026-08-27) (2026-08-30: website crawl slow
-    extract is a parallel remainder extract after the homepage, not a serial
-    tens-of-seconds walk. Maps scrape remainder is unchanged.)
+    about half of that ETL kind’s checklist from the fast extract, then more as
+    slow extract runs. Web search is not instant; the first discovered key
+    unblocks Maps / crawl in the same enqueue. Fast / slow live in the
+    per-source package, not `StartRun`. (2026-08-27) (2026-08-30: website crawl
+    slow extract is a parallel remainder extract after the homepage, not a
+    serial tens-of-seconds walk. Maps scrape remainder is unchanged.)
 
 12. **Crawl fetches record `fetched_from`; live HTML URLs hold photos** —
     Parallel Extract, HTML GET, Apify, robots, and sitemaps are separate
@@ -117,4 +118,4 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     cite **at least one** `etl.sources` id (`business_profile_edit_sources`,
     `project_sources`, `imported_media_sources`). Owner / client interview
     writes have no junction rows. Do not use a generic `table.column` field map.
-    `origin` stays the product kind. (2026-08-30)
+    `origin` stays the product origin. (2026-08-30)

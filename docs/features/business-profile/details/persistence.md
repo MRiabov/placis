@@ -73,7 +73,7 @@ as of `accepted_edit_id`. They do not replay profile history on every call.
   crawl blobs when both dumps informed trade / services; listing-review for a
   review add). Client interview / Details / `confirm_conflict` increments have
   **no** junction rows (they were not generated from extract blobs). Keep
-  `origin` for product copy (the kind); the junction is the blob list.
+  `origin` for product copy (the source kind); the junction is the blob list.
   `etl_run_id` is which run. `ai_generations` is the LLM call if any.
 
 This table is the audit for profile edits (the increment row, not the junction).
@@ -133,19 +133,19 @@ id from every website section array. Profile-history list ops for `reviews`
 include `update` for top pin/reorder.
 
 - `facebook_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique,
-  `source_id` fk required → `etl.sources` (`kind=facebook_profile`),
+  `source_id` fk required → `etl.sources` (`source_kind=facebook_profile`),
   Facebook page id / URL, handle, `algorithm`, `schema_revision`,
   `latest_fetch_id` nullable fk → `etl.facebook_fetches`
 - `facebook_posts` — `id`, `tenant_id` fk, `facebook_profile_id` fk,
-  `source_id` fk required → `etl.sources` (`kind=facebook_post`),
+  `source_id` fk required → `etl.sources` (`source_kind=facebook_post`),
   `external_id` unique per profile, body / media library refs, `published_at`
   nullable, `algorithm`, `schema_revision`
 - `instagram_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique,
-  `source_id` fk required → `etl.sources` (`kind=instagram_profile`),
+  `source_id` fk required → `etl.sources` (`source_kind=instagram_profile`),
   handle, Instagram user, `algorithm`, `schema_revision`, `latest_fetch_id`
   nullable fk → `etl.instagram_fetches`
 - `instagram_posts` — `id`, `tenant_id` fk, `instagram_profile_id` fk,
-  `source_id` fk required → `etl.sources` (`kind=instagram_post`),
+  `source_id` fk required → `etl.sources` (`source_kind=instagram_post`),
   `external_id` unique per profile, body / media library refs, `published_at`
   nullable, `algorithm`, `schema_revision`
 

@@ -8,7 +8,7 @@ Conventions:
 Referenced, not owned here: [details](../business-profile/details/persistence.md) (profile, services, reviews),
 [projects](../business-profile/projects/persistence.md),
 [media library](../other/media/persistence.md) (`ad_image_placements.media_asset_id`), [leads](../other/leads/persistence.md) (attribution).
-LLM traces: [LLM layer](../../general-architecture/llm-layer.md) (`kind=ads_generate` / `ads_inline_assistance`).
+LLM traces: [LLM layer](../../general-architecture/llm-layer.md) (`thread_kind=ads_generate` / `ads_inline_assistance`).
 Sensitive mutations also write
 [audit](../../general-architecture/audit.md).
 

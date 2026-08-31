@@ -58,7 +58,7 @@ Onboarding website editor, Assistant thread).
   **`offset_seconds`** from `audio_start_ms` when present; `provider_event`
   jsonb); do not store the Voice recording. Do not call STT again.
 - Onboarding website editor: five unpaid prompts, instant apply, not billed,
-  same `ai.threads` (`kind=cms_assistant`) until 09 completes `current`.
+  same `ai.threads` (`thread_kind=cms_assistant`) until 09 completes `current`.
 - Assistant debit of billing usage credit (**×5** **their cost** on **our
   cost**). Billed work is a text LLM call, image generate/cleanup, or ads
   generate (**AI vendor cost**). Voice is **AI voice vendor cost** (xAI audio

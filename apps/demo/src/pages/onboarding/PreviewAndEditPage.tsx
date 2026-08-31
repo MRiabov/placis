@@ -210,7 +210,7 @@ function PreviewAndEditInner(): ReactNode {
   const [items, setItems] = useState<AssistantThreadItem[]>(() => [
     {
       id: "copy-0",
-      kind: "tool_summary",
+      threadItemKind: "tool_summary",
       body: copyGenBeats[0]?.summary ?? "Updated heading on Hero",
       icon: "write",
     },
@@ -244,10 +244,10 @@ function PreviewAndEditInner(): ReactNode {
     const id = `owner-${beatRef.current}`;
     setItems((current) => [
       ...current,
-      { id: `${id}-o`, kind: "owner", body, icon: null },
+      { id: `${id}-o`, threadItemKind: "owner", body, icon: null },
       {
         id: `${id}-t`,
-        kind: "tool_summary",
+        threadItemKind: "tool_summary",
         body: beat.summary,
         icon: "write",
       },
@@ -284,7 +284,7 @@ function PreviewAndEditInner(): ReactNode {
         ...current,
         {
           id: `copy-${copyRef.current}`,
-          kind: beat.icon === "think" ? "thinking" : "tool_summary",
+          threadItemKind: beat.icon === "think" ? "thinking" : "tool_summary",
           body: beat.summary,
           icon: beat.icon ?? "write",
         },

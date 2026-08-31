@@ -124,6 +124,16 @@ line when that line is not a new list item or heading.
   (do not name the contractor website a runtime; do not use `runtime` as a
   synonym).
 
+## Banned synonym (unmarked) — kind
+
+- `docs/features/etl/persistence.md`: column `kind` or
+  `kind=google_maps_listing` → **fail**. Say **ETL kind** /
+  `etl_kind=google_maps_listing` (or source kind, thread kind, photo kind,
+  imported media kind as appropriate).
+- `internal/etl/run.go`: type `Kind` → **fail**. Say **ETLKind**.
+- `etl_kind=google_maps_listing` / “ETL kind” → **pass** (covering).
+- Do **not** extra-allow `kind=` or `.kind`.
+
 ## `setup` in testing docs
 
 The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`.

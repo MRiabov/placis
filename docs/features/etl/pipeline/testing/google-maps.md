@@ -1,6 +1,6 @@
 # Google Maps — integration test
 
-- **Assert**: `StartRun` with this kind inserts `etl.runs`; extract writes
+- **Assert**: `StartRun` with this ETL kind inserts `etl.runs`; extract writes
   `etl.google_maps_fetches` (Details first, then scrape rows as they arrive);
   retry of the same `run_id` does not refetch Details when that fetch exists and
   still runs remaining scrape; `trigger=scheduled` inserts a new fetch; listing

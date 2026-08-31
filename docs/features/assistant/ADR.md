@@ -56,11 +56,11 @@ instead of silently replacing it.
    `LLMProvider` + traces; features own product rows. (2026-08-28) Same day,
    later (2026-08-30): Thread **identity** moves to `ai.threads`. Every
    `ai_generations` row has a required `thread_id` FK (CMS
-   `kind=cms_assistant`, onboarding `kind=onboarding_assistant`, headless
-   factories their own enum value). Schema `assistant` keeps `thread_items` and
-   `runs` only. Onboarding drops `assistant_conversations`; items/runs FK
-   `ai.threads`. Hydrate still reads overlay items only (never joins
-   `ai_generations`). No FK from thread items to generations.
+   `thread_kind=cms_assistant`, onboarding `thread_kind=onboarding_assistant`,
+   headless factories their own enum value). Schema `assistant` keeps
+   `thread_items` and `runs` only. Onboarding drops `assistant_conversations`;
+   items/runs FK `ai.threads`. Hydrate still reads overlay items only (never
+   joins `ai_generations`). No FK from thread items to generations.
 
 6. **Voice is typed HTTP of finals** — No Go WebSocket for audio, VAD, playback,
    or transcript deltas. `POST …/tool-calls` and `POST …/transcripts` append the
@@ -137,8 +137,8 @@ instead of silently replacing it.
     includes the Voice STT caveat when the thread has a `channel=voice` run. It
     does **not** treat a pending Ask-first reject notice as a special case.
     (2026-08-29) Later (2026-08-30): `last_activity_at` is on `ai.threads`
-    (`kind=cms_assistant`). Same day, later (2026-08-31): compaction includes
-    the **Voice transcription notice**, not an STT caveat.
+    (`thread_kind=cms_assistant`). Same day, later (2026-08-31): compaction
+    includes the **Voice transcription notice**, not an STT caveat.
 
 12. **No 24h discard** — Aging is compaction only. Do not discard the thread at
     24h on `last_assistant_edit_at`. That column is written when tool events
@@ -156,43 +156,42 @@ instead of silently replacing it.
     `recording_file_id`, no `POST /v1/onboarding/assistant/voice/recordings`.
     CMS recordings stay. Online research consent is not this. Same day, later:
     Voice utterances store **`offset_seconds`** (seconds from that Voice run’s
-    start). Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`.
-    Never say **user**. `created_at` is the row insert time. (2026-08-30) Same
-    day, later:
+    start). Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`. Never say
+    **user**. `created_at` is the row insert time. (2026-08-30) Same day, later:
     **`offset_seconds` and utterance `body` come from xAI’s live Voice
     connection**, not a browser audio clock and not a second STT call. Browser
     forwards committed xAI events already emitted on that socket
     (`conversation.item.input_audio_transcription.completed` for owner;
     `response.output_audio_transcript.done` for assistant). Go maps those to
-    typed `kind` (`owner` / `assistant`) + `body` + `offset_seconds` (xAI
-    Voice-connection clock on those events, int seconds) and persists the
+    typed `thread_item_kind` (`owner` / `assistant`) + `body` + `offset_seconds`
+    (xAI Voice-connection clock on those events, int seconds) and persists the
     forwarded JSON as `provider_event` jsonb. Reconstruct `[m:ss owner]` /
     `[m:ss assistant]` from those columns — typed; never bake into `body`.
-    Never say **user**. There is no `kind=system` and no `[m:ss system]`.
+    Never say **user**. There is no `thread_item_kind=system` and no
+    `[m:ss system]`.
     xAI instructions / `role=system` stay the Voice-connection seed, not a
     thread item. Persist that exact instructions blob on the voice run’s
     `ai_generations.input` at realtime-connection create (plus the keyterms /
-    `replace` sent on that create) so a conversation can be reconstructed
-    with the system prompt. Text turns do the same: `input` is the exact
-    assembled prompt sent that turn. Hydrate does not return it. Same day,
-    later: **use only xAI Voice events that exist.** xAI documents the event
-    names and OpenAI Realtime compatibility. Owner committed text is
+    `replace` sent on that create) so a conversation can be reconstructed with
+    the system prompt. Text turns do the same: `input` is the exact assembled
+    prompt sent that turn. Hydrate does not return it. Same day, later:
+    **use only xAI Voice events that exist.** xAI documents the event names and
+    OpenAI Realtime compatibility. Owner committed text is
     `conversation.item.input_audio_transcription.completed`; map `body` from
     JSON `transcript` when present (OpenAI-compat keys; xAI REST lists the
     event, not a field table). Assistant text is
     `response.output_audio_transcript.done` the same way. Set
-    `audio.input.transcription.model` to **`grok-transcribe`** (named on
-    xAI’s `.updated` docs; `.updated` is captions only — do not POST it).
-    xAI does **not** document `offset_seconds`. Pair owner `.completed` with
-    `input_audio_buffer.speech_started` when both JSON objects share
-    `item_id`. If the forwarded JSON has `audio_start_ms` (OpenAI Realtime
-    field; xAI lists the event, not the payload), store `offset_seconds` as
-    floor(ms/1000). If that key is missing, leave `offset_seconds` null —
-    do not invent a browser clock. Assistant `.done` has no documented
-    clock; null unless a timing key is on that JSON. Do not call
-    `POST /v1/stt` / `wss://…/v1/stt` (separate STT API with word timings).
-    If xAI did not emit a committed transcript for that utterance, skip the
-    row. Do not transcribe the recording. (2026-08-30)
+    `audio.input.transcription.model` to **`grok-transcribe`** (named on xAI’s
+    `.updated` docs; `.updated` is captions only — do not POST it). xAI does
+    **not** document `offset_seconds`. Pair owner `.completed` with
+    `input_audio_buffer.speech_started` when both JSON objects share `item_id`.
+    If the forwarded JSON has `audio_start_ms` (OpenAI Realtime field; xAI lists
+    the event, not the payload), store `offset_seconds` as floor(ms/1000). If
+    that key is missing, leave `offset_seconds` null — do not invent a browser
+    clock. Assistant `.done` has no documented clock; null unless a timing key
+    is on that JSON. Do not call `POST /v1/stt` / `wss://…/v1/stt` (separate STT
+    API with word timings). If xAI did not emit a committed transcript for that
+    utterance, skip the row. Do not transcribe the recording. (2026-08-30)
 
 14. **AI voice vendor cost** — Voice is not billed as a text LLM call. Debit is
     **AI voice vendor cost** (xAI audio minutes + text
@@ -299,18 +298,19 @@ instead of silently replacing it.
     `/v1/assistant/…`. Do not add `/v1/website/editor/assistant`. CMS HTTP must
     not import `onboarding/websiteeditor`. (2026-08-30)
 
-26. **Onboarding website editor reuses `ai.threads` (`kind=cms_assistant`)** —
-    Same overlay `thread_items` / `runs`. No `website_editor_*` tables. OpenAPI
-    grows paths, not persistence models. Unpaid `current` while
-    `tenants.status=unactivated`. **No compaction** on that `current` (12h,
-    128K overflow, or Voice compact-before-seed would drop `kind=owner` items
-    and refill the five unpaid prompts). If text assembly would exceed 128K or
-    Voice instructions would not fit, that turn / Voice create fails. 09
-    completes `current` and ends `running` in the **same transaction** as
-    `status=active`. CMS GET lazy-creates a new empty `current`. Five unpaid
-    prompts = count `kind=owner` items on that unpaid `current` (06 does not
-    write owner items). Over cap is pay CTA, not 402. 06 LLM traces stay on a
-    `website_copy_generation` thread. (2026-08-30)
+26. **Onboarding website editor reuses `ai.threads`
+    (`thread_kind=cms_assistant`)** — Same overlay `thread_items` / `runs`. No
+    `website_editor_*` tables. OpenAPI grows paths, not persistence models.
+    Unpaid `current` while `tenants.status=unactivated`. **No compaction** on
+    that `current` (12h, 128K overflow, or Voice compact-before-seed would drop
+    `thread_item_kind=owner` items and refill the five unpaid prompts). If text
+    assembly would exceed 128K or Voice instructions would not fit, that turn /
+    Voice create fails. 09 completes `current` and ends `running` in the
+    **same transaction** as `status=active`. CMS GET lazy-creates a new empty
+    `current`. Five unpaid prompts = count `thread_item_kind=owner` items on
+    that unpaid `current` (06 does not write owner items). Over cap is pay CTA,
+    not 402. 06 LLM traces stay on a `website_copy_generation` thread.
+    (2026-08-30)
 
 27. **06 is the first unpaid website-preview run** — While unactivated, 06 holds
     `assistant.runs` `running` (`channel=text`) and appends `tool_summary`.

@@ -5,14 +5,14 @@ transform for that source. Shared profile-update / conflict rules:
 [build-profile](../../onboarding/pipeline/build-profile.md). Do not fork a second merge.
 
 ```text
-StartRun(kinds, trigger, tenant)
-  → one etl.runs row per kind (shared enqueue_id)
-  → extract/<kind> chunk → transform/<kind> that chunk (repeat; not inlined in StartRun)
+StartRun(etl_kinds, trigger, tenant)
+  → one etl.runs row per ETL kind (shared enqueue_id)
+  → extract/<etl_kind> chunk → transform/<etl_kind> that chunk (repeat; not inlined in StartRun)
 ```
 
-Monday / Wednesday / Friday: `trigger=scheduled`, kinds Google Maps, Facebook,
-Instagram. Onboarding 02: `trigger=onboarding`, the kinds that apply. [02](../../onboarding/pipeline/02-business-research.md) only
-calls `StartRun`.
+Monday / Wednesday / Friday: `trigger=scheduled`, ETL kinds Google Maps,
+Facebook, Instagram. Onboarding 02: `trigger=onboarding`, the ETL kinds that
+apply. [02](../../onboarding/pipeline/02-business-research.md) only calls `StartRun`.
 
 ## Shared rules
 
@@ -23,13 +23,13 @@ calls `StartRun`.
   **and** the live business profile / checklist transform already wrote.
 - **Fast extract then slow extract.** Fast extract is the cheap first response
   (~1s). Slow extract is the remainder (~40s extra). After fast extract +
-  transform, about half of that kind’s visible business research is already on
-  the checklist; the rest fills during slow extract. Not a stored progress
+  transform, about half of that ETL kind’s visible business research is already
+  on the checklist; the rest fills during slow extract. Not a stored progress
   ratio. Fast extract / slow extract live in the per-source extract package, not
   in `StartRun`.
 - Extract writes the matching `*_fetches` row (and the Google Maps listing on
-  that kind). It must not import `profile` or write `business_profile_*`. A run
-  may insert **several** fetch rows (fast extract, then slow extract URLs /
+  that ETL kind). It must not import `profile` or write `business_profile_*`. A
+  run may insert **several** fetch rows (fast extract, then slow extract URLs /
   scrape responses).
 - Transform reads fetch / listing rows and writes the business profile. It must
   not call source networks.
@@ -49,7 +49,7 @@ calls `StartRun`.
   `algorithm` matches, `schema_revision` matches, and `force` is false. A
   **new algorithm** does not auto-rerun (cost) until `force=true`. A **bumped
   `schema_revision`** (new fields on that schema) **extracts by default** on
-  the next run — do not reuse an older fetch for that kind. `force=true`
+  the next run — do not reuse an older fetch for that ETL kind. `force=true`
   rewrites rows whose stored algorithm is stale and **not** `human`. Onboarding
   02 and Monday / Wednesday / Friday pass `force=false`. `force` does not
   refetch when only the algorithm changed. Project skip is the verdict table,
@@ -80,7 +80,7 @@ calls `StartRun`.
 - [Website crawl](website-crawl.md) — homepage fast then parallel remainder /
   directory (02 only)
 - [Projects from source](projects.md) — after FB / IG / crawl / Maps review
-  transform (not a StartRun kind); skip on
+  transform (not a StartRun ETL kind); skip on
   `etl.llm_source_to_project_classifications`
 - [Trade registry](trade-registry.md) — accreditations (02 only)
 - [Web search](web-search.md) — Parallel **Search** discovery (02 only)

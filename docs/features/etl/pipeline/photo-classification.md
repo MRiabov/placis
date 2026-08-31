@@ -1,7 +1,7 @@
 # Photo classification
 
 Shared operation group after photos land from [Google Maps](google-maps.md), [Facebook](facebook.md),
-[Instagram](instagram.md), [website crawl](website-crawl.md), or `kind=photo`. Not a client interview step.
+[Instagram](instagram.md), [website crawl](website-crawl.md), or `etl_kind=photo`. Not a client interview step.
 Shared extract / transform rules: [pipeline README](README.md). Classifier model:
 **`glm-5.3-flash`** (dated id; same cheap multimodal default as [projects.md](projects.md)).
 
@@ -22,8 +22,8 @@ on the media item — it is `etl.llm_source_to_project_classifications`
 
 ## Trigger
 
-Transform for a kind that attached new photos, or `StartRun` included
-`kind=photo` (further photo fetch on onboarding 02). `force` is the shared
+Transform for an ETL kind that attached new photos, or `StartRun` included
+`etl_kind=photo` (further photo fetch on onboarding 02). `force` is the shared
 transform job arg (default false). It does not refetch Maps / Facebook /
 Instagram / crawl.
 
@@ -57,14 +57,14 @@ When `force=true`, also reclassify items whose `photo_kind_algorithm` is not the
 current `algorithm` and is not `human`. Leave items whose stored algorithm
 already matches or is `human`.
 
-`kind=photo` extract (if started) inserts further photo refs the same way Maps /
-social transform attaches them, then classifies.
+`etl_kind=photo` extract (if started) inserts further photo refs the same way
+Maps / social transform attaches them, then classifies.
 
 ## Persist
 
 `media_assets.photo_kind`, `photo_kind_algorithm`, `photo_kind_schema_revision`,
-`content_hash`. `etl.runs.status=succeeded` for `kind=photo`. Other kinds stay
-succeeded from their own transform.
+`content_hash`. `etl.runs.status=succeeded` for `etl_kind=photo`. Other ETL
+kinds stay succeeded from their own transform.
 
 ## Fail
 
@@ -73,8 +73,8 @@ not skipped, on the same `etl_photo_classify` thread (insert before the first
 generate). On each attempt, use bounded schema repair when the mismatch is small
 enough ([LLM layer](../../../general-architecture/llm-layer.md): repair only the smallest failing subtree; never accept a
 partial `photo_kind`). After those retries, leave `photo_kind` unset (do not
-write `photo_kind_algorithm`). Continue other items. Prior kinds’ live business
-profile stays.
+write `photo_kind_algorithm`). Continue other items. Prior ETL kinds’ live
+business profile stays.
 
 Transport / job errors stay retryable on the River job. `status=error` when
 those retries exhaust.

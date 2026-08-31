@@ -48,7 +48,7 @@ Profile
 Ads
 ```
 
-| Label | Kind | Route |
+| Label | Role | Route |
 | -- | -- | -- |
 | Sites | destination | `/cms/website` |
 | Profile | disclosure | none |
