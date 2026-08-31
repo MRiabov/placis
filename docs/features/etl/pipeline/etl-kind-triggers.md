@@ -24,7 +24,9 @@ Instagram links, Parallel Search, **and** 04a writes of `existing_site_url` /
 Facebook URL / Instagram handle. 04a does not call `StartRun`. The evaluator
 does.
 
-Scheduled: no matching **Starts when** tuple → `status=skipped` immediately.
+Scheduled: no matching **Starts when** tuple → `status=skipped` immediately
+(Maps: no `place_id`; Facebook: no URL; Instagram: no handle). Do not Places
+Find on scheduled — they may have no Google Maps listing.
 Onboarding: do not insert a run until a tuple is met. If nothing left can
 produce that detail (those ETL run kinds `succeeded` / `error` / `skipped` with no
 handle) → `skipped`. A later contractor paste can still start the ETL run kind on
@@ -55,8 +57,9 @@ stop extract. Later 02 writes are new edits after `accepted_edit_id`.
 Scheduled continues after activation.
 
 Serial Parallel → Maps → scrape that lands at t=90s is a failed ETL slow extract
-clock. Maps may start from `place_id` **or** Places Find (`display_name` or
-`legal_name` + locality) so company-number-only does not wait for Parallel.
+clock. Onboarding Maps may start from `place_id` **or** Places Find
+(`display_name` or `legal_name` + locality) so company-number-only does not
+wait for Parallel. Scheduled Maps needs `place_id`.
 In-process **API p90-delta ≤ 1s** while scrape/crawl run is a different SLO:
 [processes](../../../general-architecture/processes.md).
 
@@ -64,9 +67,9 @@ In-process **API p90-delta ≤ 1s** while scrape/crawl run is a different SLO:
 
 | ETL run kind | Starts when (any of) | Writes | ETL slow extract | Onboarding / scheduled |
 | --- | --- | --- | --- | --- |
-| `google_maps_listing` | `place_id`; **or** `display_name` + locality; **or** `legal_name` + locality | listing; `display_name`, marketing phone, hours, website, reviews, photos; may write `website_url` / Facebook URL | scrape (ETL slow extract) | 02 + scheduled |
-| `web_search` | any of `legal_name`, `display_name`, `company_number` (+ country) | **empty** details only: `place_id`, `website_url`, Facebook URL, Instagram handle. No profile dump. No-op when none of those details are empty | Parallel is this ETL run kind | 02 only || `website_crawl` | `website_url` (01 attach, Maps, Parallel, or contractor `existing_site_url`) | trade, services, areas, founder, email, photos, Projects; may write social URLs | parallel remainder | 02 only |
-| `facebook` | `facebook_page_url` | Facebook profile / posts / Projects | posts | 02 + scheduled |
+| `google_maps_listing` | `place_id`; **or** (02 only) `display_name` + locality; **or** (02 only) `legal_name` + locality | listing; `display_name`, marketing phone, hours, website, reviews, photos; may write `website_url` / Facebook URL | scrape (ETL slow extract) | 02 + scheduled |
+| `web_search` | any of `legal_name`, `display_name`, `company_number` (+ country) | **empty** details only: `place_id`, `website_url`, Facebook URL, Instagram handle. No profile dump. No-op when none of those details are empty | Parallel is this ETL run kind | 02 only |
+| `website_crawl` | `website_url` (01 attach, Maps, Parallel, or contractor `existing_site_url`) | trade, services, areas, founder, email, photos, Projects; may write social URLs | parallel remainder | 02 only || `facebook` | `facebook_page_url` | Facebook profile / posts / Projects | posts | 02 + scheduled |
 | `instagram` | `instagram_handle` | Instagram profile / posts / Projects | posts | 02 + scheduled |
 | `trade_registry` | `company_number` + country; **or** `display_name` + country | accreditations | no | 02 only |
 
@@ -74,13 +77,14 @@ Never `directory`, `review`, or `photo` as ETL run kinds. Scrape is Maps ETL slo
 extract. Photo classification is transform after attach. Crawl fills trade /
 founder / service areas.
 
-**Maps — Places Find:** if there is no `place_id`, Places Find / text search
-from `display_name` if set, else `legal_name`, plus locality (trade location,
-registered-office locality, or tenant country city). Registry-only Find uses
-`legal_name` + registered-office locality. One high-confidence hit → that
-`place_id` is a detail, then Details. Several hits or a weak hit → do not
-pick. Wait for Parallel or Find attach. Wrong listing is worse than an empty
-Maps row.
+**Maps — Places Find (onboarding 02 only):** if there is no `place_id`, Places
+Find / text search from `display_name` if set, else `legal_name`, plus
+locality (trade location, registered-office locality, or tenant country city).
+Registry-only Find uses `legal_name` + registered-office locality. One
+high-confidence hit → that `place_id` is a detail, then Details. Several hits
+or a weak hit → do not pick. Wait for Parallel or Find attach. Wrong listing
+is worse than an empty Maps row. Scheduled Maps starts only when `place_id`
+exists; no Places Find. They may have no Google Maps listing.
 
 Per-source extract/transform: [Google Maps](google-maps.md),
 [Facebook](facebook.md), [Instagram](instagram.md),

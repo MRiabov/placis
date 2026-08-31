@@ -12,6 +12,7 @@
   does not start when discoverable details are already complete. Remaining
   expensive scrape / remainder is skipped when only `human` scalars would be
   filled and reviews / photos / Projects do not still need that chunk.
+  Scheduled Maps without `place_id` → `skipped` immediately, no Places Find.
   Scheduled with no matching tuple → `skipped` immediately. Never `directory`,
   `review`, or `photo` as ETL run kinds.- **Fake**: Maps Details / Places Find / scrape, Vercel Parallel Search,
   crawl Extract, Facebook, Instagram, trade registry.
