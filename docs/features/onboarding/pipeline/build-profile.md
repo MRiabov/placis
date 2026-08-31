@@ -114,15 +114,18 @@ scheduled inserts add Profile rows only; they do not add service pages or
 rewrite a copied gallery token. The next website publication (04) resolves
 `{{projects.*}}` from the live profile.
 
-## Rank reviews (parallel to client interview; again when ETL finishes)
+## Rank reviews (after ETL fast extract; again when ETL finishes)
 
-If `business_profile_reviews` already has rows during the client interview,
-enqueue a ranking job (`thread_kind=website_reviews_ranking`) **in parallel**
-with questioning. When the last overlapping ETL run for this onboarding enqueue
-finishes, run it **again**: rank the pool and select **top reviews** (ads).
-Spec: [certifications-and-reviews ADR](../../business-profile/certifications-and-reviews/ADR.md). `{{reviews.1}}` … resolve from that
-order. This is not `website_reviews_picker` when copying the website template’s
-pages.
+After **ETL fast extract** has written `in_pool` reviews, enqueue a ranking
+job (`thread_kind=website_reviews_ranking`) — typically **in parallel** with
+client interview. That write is **provisional** `is_top` / `top_position`
+(will change; not locked). When the last overlapping ETL run for this
+onboarding enqueue finishes, rank **again if additional review rows
+landed**, then write **persistent** pins. If no additional rows, persist
+the same pins without a second generate. Spec:
+[certifications-and-reviews ADR](../../business-profile/certifications-and-reviews/ADR.md).
+`{{reviews.1}}` … resolve from that order. This is not
+`website_reviews_picker` when copying the website template’s pages.
 
 ## Status function (one winner)
 

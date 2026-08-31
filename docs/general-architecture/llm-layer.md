@@ -122,14 +122,16 @@ the **same** `thread_id` (prior failure in context). Bounded subtree repair
 above still applies; this is the persistence for a further agentic retry.
 
 **`website_reviews_ranking`** — **LLM ranking** of the reviews pool
-(not stars or recency). Selects **top reviews** onto
-`business_profile_reviews.is_top` / `top_position` (same replace as
-Certifications and reviews PATCH). Runs parallel to client interview if
-the pool exists, and again when ETL finishes. `{{reviews.N}}` is 1-based
-into that ranked `in_pool` order. Not a per-website-section pick when
-copying the website template’s pages. Do not use
-`website_reviews_picker`. Ranking prompt is `prompts.yaml` on that
-thread.
+(not stars or recency). After **ETL fast extract** has written `in_pool`
+reviews, replace `is_top` / `top_position` as **provisional** (will
+change; not a skip key; not `algorithm=human`). When the last overlapping
+ETL run for this enqueue finishes: rank again if the pool gained rows,
+then replace `is_top` / `top_position` as **persistent**. If no additional
+rows, persist the same pins without a second generate. Owner PATCH stays
+human and is not overwritten. `{{reviews.N}}` is 1-based into that ranked
+`in_pool` order. Not a per-website-section pick when copying the website
+template’s pages. Do not use `website_reviews_picker`. Ranking prompt is
+`prompts.yaml` on that thread.
 
 ## `ai_generations`
 

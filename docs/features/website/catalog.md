@@ -148,13 +148,23 @@ predecessor contact placeholders to `{{marketing_phone}}` /
 ## Review ranking
 
 **LLM ranking** (`thread_kind=website_reviews_ranking`), not stars or
-recency. Runs parallel to client interview if the pool exists, and again
-when ETL finishes. Writes **top reviews** on
-`business_profile_reviews.is_top` / `top_position` (same replace as
-Certifications and reviews PATCH). `{{reviews.N}}` is 1-based into that
-ranked `in_pool` order at 04 and canvas/wait-teaser hydrate. 02 does not
-insert `website_slot_reviews`. Ranking prompt lives in `prompts.yaml` on
-that thread (not specified here).
+recency. 02 does not insert `website_slot_reviews`. Ranking prompt lives
+in `prompts.yaml` on that thread (not specified here).
+
+1. After **ETL fast extract** has written `in_pool` reviews, rank once
+   and replace `is_top` / `top_position` as **provisional**. That set
+   will change. It is not a skip key and not `algorithm=human`. Later
+   ranking overwrites it. Owner PATCH on Certifications and reviews
+   stays human and is not overwritten.
+2. When the last overlapping ETL run for this enqueue has finished: if
+   the pool gained rows since that ranking, rank again. Then replace
+   `is_top` / `top_position` as **persistent** (same replace as
+   Certifications and reviews PATCH). If no additional rows, persist the
+   same pins without a second generate.
+
+`{{reviews.N}}` is 1-based into that ranked `in_pool` order at 04 and
+canvas/wait-teaser hydrate (provisional order until the persistent
+write).
 
 ## Open questions
 
