@@ -8,7 +8,8 @@ Feature `api.md` files:
 
 - [Auth](../features/other/auth/api.md)
 - [Onboarding](../features/onboarding/api.md) (includes website activation and `/v1/onboarding/assistant/…`;
-  SSE reads [ETL](../features/etl/README.md) `etl.runs` — ETL has no public `api.md`)
+  SSE reads [ETL](../features/etl/README.md) `etl.runs` and the live business profile — ETL has no public
+  `api.md`)
 - [Assistant](../features/assistant/api.md) (CMS `/v1/assistant/…`; voice under
   `/v1/assistant/voice/`; text `GET /v1/assistant/thread/ws`)
 - [Billing](../features/billing/api.md) (usage credit, Usage & billing)
@@ -103,7 +104,7 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 | Website manifest | jsonb `website.v1` | **Omit** from website-editor GET/PATCH. Website publication `*Read` is metadata (website version number, status, times). Live HTML does not use this HTTP. |
 | Website styles overrides | columns + bounded jsonb | Named fields: `preset_id`, `primary`, `neutral`, `accent`, `radius`, `density`. Extra keys 4xx. |
 | Ads `platform_refs` | jsonb | **Omit** from first-slice DTOs. When ad posting exists: named fields (`meta_ad_id`, …), not a string map. |
-| Company registry / Maps search | raw ETL cache | `*Read` (id, name, address, …). **Omit** `raw`. |
+| Company registry / Maps search | registry parquet / Maps autocomplete (not `etl.*_fetches`) | `*Read` (id, name, address, …). **Omit** `raw`. |
 | Business research / ETL fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
 | Stripe event body | jsonb | **Omit** from `frontend-2`. Activation-status is a closed enum + checkout URL. |
 | LLM traces (`ai_generations`) | jsonb | **Omit.** Assistant activity is named event structs. Each tool event has `summary` (`string` + `maxLength`) for owner copy. Never render tool names. |

@@ -23,14 +23,15 @@ internal/
   # only when it grows past ~800 lines (never flat file dumps).
   tenancy/        # tenants.go, memberships.go
   onboarding/     # onboarding.go, client_interview.go, orchestrate.go, activation.go
-    websitepreview/ #   package.go, events.go (07 R2 write + SSE for wait teaser)
+    websitepreview/ #   package.go, events.go (08 R2 write + SSE for wait teaser)
     websiteeditor/  #   unpaid website preview HTTP + policy (not CMS /v1/assistant)
     assistant/    #   Find, Review, and client interview (isolated conversation + knowledge)
   etl/            # run.go (StartRun: cap, enqueue_id, insert etl.runs, enqueue jobs only)
     extract/      #   googlemaps/, facebook/, instagram/, crawl/, traderegistry/,
                   #   websearch/ — each with fakes; worker calls these, does not inline
-    transform/    #   googlemaps/, facebook/, instagram/, crawl/, photo/ — live business
-                  #   profile, posts, photo classification; after each extract chunk
+    transform/    #   googlemaps/, facebook/, instagram/, crawl/, photo/,
+                  #   projects/ — live business profile, posts, photo classification,
+                  #   Projects from source; after each extract chunk
   profile/        # profile.go, profile_edits.go, services.go, areas.go, hours.go, certifications.go
   website/        # root: types.go, service.go
     pages/        #   handler.go, service.go, model.go

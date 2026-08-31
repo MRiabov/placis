@@ -1,14 +1,15 @@
 # Google Maps
 
-`etl_run_kind=google_maps_listing` (further reviews may use
-`etl_run_kind=review` on the same listing). Onboarding 02 and Monday / Wednesday
-/ Friday. Shared extract / transform rules:
+`etl_run_kind=google_maps_listing`. Onboarding 02 and Monday / Wednesday / Friday.
+Scrape of further reviews / photos is **this ETL run kind’s ETL slow extract**, not a
+separate `StartRun` ETL run kind. Shared extract / transform rules:
 [pipeline README](README.md).
 
 ## Trigger
 
-`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled
-and there is no `place_id`.
+`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled and there
+is no `place_id`. Onboarding with no `place_id` yet: stay pending until
+[web search](web-search.md) writes `place_id` onto this run (same enqueue).
 
 ## Pre
 
@@ -28,6 +29,7 @@ and there is no `place_id`.
   `force=true`).
 - Wait for scrape (ETL slow extract) before transforming the Details chunk (ETL
   fast extract).
+- Be a `etl_run_kind=review` or `etl_run_kind=photo` `StartRun`. Those ETL run kinds do not exist.
 
 ## Do — extract (ETL fast extract)
 
@@ -60,8 +62,8 @@ new listing reviews. Attach scrape photos onto **that** listing review
 `status` stays `extracting` until scrape has nothing left; `succeeded` only
 then.
 
-`etl_run_kind=review` / `etl_run_kind=photo` (when 02 included them) continue
-the same listing the same way.
+`etl_run_kind=review` / `etl_run_kind=photo` are not `StartRun` ETL run kinds. Further reviews and
+photos are this ETL slow extract.
 
 ## Do — listing
 
@@ -82,15 +84,19 @@ extract continues. `SELECT … FOR UPDATE` the profile. Insert only the incremen
 this chunk set.
 
 - Empty scalars fill from the listing (display name, marketing phone, website,
-  hours). Each increment cites the listing `source_id`.
+  hours). Each increment cites the listing `source_id`. If Details has a
+  website URL, write it onto the sibling `website_crawl` run and the
+  onboarding session `website_url` (unblocks crawl in this enqueue).
 - New reviews → `business_profile_reviews` keyed to
   `etl.google_maps_listing_reviews`. The add increment cites the listing-review
-  `source_id`. Do not rank and do not enqueue `reviews_ranking_for_display`
-  (orchestration: [build-profile](../../onboarding/pipeline/build-profile.md)). Then [projects.md](projects.md) for reviews
-  **usable as a Project** (work type, one past named job). Details reviews have
-  **no photo field** — cover empty. After scrape, photos on **that** review may
-  fill an empty cover on the same Project when `algorithm` is not `human` (do
-  not rewrite title / description).
+  `source_id`. Write a **review citation** on each new imported row (cheap
+  multimodal default; empty review citation falls back to `body`). Do not rank
+  and do not enqueue `reviews_ranking_for_display` (orchestration:
+  [build-profile](../../onboarding/pipeline/build-profile.md)). Then
+  [projects.md](projects.md) for reviews **usable as a Project** (work type,
+  one past named job). Details reviews have **no photo field** — cover empty.
+  After scrape, photos on **that** review may fill an empty cover on the same
+  Project when `algorithm` is not `human` (do not rewrite title / description).
 - New listing photos → media library items `supplied_by=business_research`
   (`imported_media_sources` → listing `source_id`); then
   [photo classification](photo-classification.md) for those items (do not wait

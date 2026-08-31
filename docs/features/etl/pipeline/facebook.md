@@ -8,8 +8,10 @@ Public lookup (existing adapter). Graph API is later.
 
 ## Trigger
 
-`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled
-and there is no Facebook page URL / handle.
+`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled and there
+is no Facebook page URL / handle. Onboarding with no key yet: stay pending
+until Maps, crawl, or web search writes `facebook_page_url` onto this run.
+After those discovery ETL run kinds finish, still no key → `skipped`.
 
 ## Pre
 
@@ -23,6 +25,9 @@ and there is no Facebook page URL / handle.
 - Silently overwrite an owner-typed `facebook_profile_url` (research conflict).
 - Overwrite a Facebook profile or post whose `algorithm` is `human` (including
   `force=true`).
+- Extract Facebook page reviews this slice. Reviews on the checklist come from
+  Maps. Hook Maps reviews. Facebook reviews only if some other writer already
+  inserted `business_profile_reviews`.
 
 ## Do — extract
 

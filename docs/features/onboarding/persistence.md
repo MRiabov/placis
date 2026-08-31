@@ -35,8 +35,11 @@ activation. Thread identity is [`ai.threads`](../../general-architecture/llm-lay
   `selecting_and_copying_website_template`/`preview_and_edit`/`activated`/
   `select_and_copy_website_template_failed`),
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at`
-  nullable, `interview_plan_markdown` nullable, `interview_plan_completed`
-  text[] nullable, `interview_plan_next_questions` text[] nullable, timestamps
+  nullable, `place_id` nullable (Maps attach), `company_number` nullable
+  (registry attach; trade-registry key with `tenants.country`), `website_url`
+  nullable (known existing-site URL; crawl key), `interview_plan_markdown`
+  nullable, `interview_plan_completed` text[] nullable,
+  `interview_plan_next_questions` text[] nullable, timestamps
 - `client_interview_submissions` — `id`, `onboarding_session_id` fk,
   `submission_kind` (`autosave`/`final`), `photos_fill` nullable
   (`source_from_internet`/`ai`) only when found + uploaded photos are not
@@ -53,9 +56,10 @@ the media library; the owner may upload more.
 
 02 calls `etl.StartRun` ([ETL](../etl/README.md); [02](pipeline/02-business-research.md)). This schema has no extract tables.
 `research_wait_until` is derived from `etl.runs` (`trigger=onboarding`, distinct
-`enqueue_id` in the last 30 minutes). SSE reads `etl.runs`. Live business
-profile via
-[build-profile](pipeline/build-profile.md).
+`enqueue_id` in the last 30 minutes). SSE reads `etl.runs` **and** the live
+business profile transform already wrote. 01 inserts `etl.sources`
+`source_kind=company_registry_record` when registry increments write profile columns.
+Live business profile via [build-profile](pipeline/build-profile.md).
 
 ## Website activation
 

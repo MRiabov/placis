@@ -8,15 +8,21 @@ Facebook / Instagram rows and photo classification live on the
 
 ## Runs
 
-- `runs` — `id`, `tenant_id` fk, `enqueue_id` (uuid, shared by every ETL run
-  kind in one `StartRun` call), `trigger` (`onboarding` / `scheduled`),
-  `etl_run_kind` (`google_maps_listing` / `facebook` / `instagram` /
-  `website_crawl` / `trade_registry` / `directory` / `review` / `photo` /
-  `web_search`), `status` (`pending` / `extracting` / `transforming` /
-  `succeeded` / `error` / `skipped`), `onboarding_session_id` nullable fk,
-  `place_id` nullable, `error` nullable, `started_at`, `finished_at`. One row
-  per ETL run kind extract. River retry keeps this `id`. `skipped` when
-  scheduled and that ETL run kind has no key.
+- `runs` — `id`, `tenant_id` fk, `enqueue_id` (uuid, shared by every ETL run kind in one
+  `StartRun` call), `trigger` (`onboarding` / `scheduled`), `etl_run_kind`
+  (`google_maps_listing` / `facebook` / `instagram` / `website_crawl` /
+  `trade_registry` / `web_search`), `status`
+  (`pending` / `extracting` / `transforming` / `succeeded` / `error` /
+  `skipped`), `onboarding_session_id` nullable fk, `place_id` nullable,
+  `website_url` nullable, `facebook_page_url` nullable, `instagram_handle`
+  nullable, `error` nullable, `started_at`, `finished_at`. One row per ETL run
+  kind extract. River retry keeps this `id`. Each ETL run kind uses the key
+  columns that apply (Maps `place_id`, crawl `website_url`, Facebook page URL,
+  Instagram handle). Discovery writes onto the waiting sibling run. `skipped`
+  when scheduled and that ETL run kind has no key, or when onboarding discovery
+  finished and that social ETL run kind still has no key. Do not persist
+  `directory`, `review`, or `photo` as `etl_run_kind` — those are not
+  `StartRun` ETL run kinds.
 
 ## Sources (live extract identity)
 
@@ -31,10 +37,11 @@ fetches, not `raw`, not a Project table.
   unique per `(tenant_id, source_kind)`), timestamps
 
 **No** `algorithm`, **no** yes/no, **no** `project_id`. Insert a row before any
-cite of that source. Company registry / trade registry: insert when those
-extracts write profile columns (cannot cite a missing id). Directory /
-web-search / listing **photos** are not inserted this spec unless a detail or
-file cites them.
+cite of that source. Trade registry: insert when that extract writes profile
+columns (cannot cite a missing id). Company registry: **01** inserts
+`source_kind=company_registry_record` when Find registry increments write legal
+identity (not a `StartRun` ETL run kind). Web-search / listing **photos** are
+not inserted this spec unless a detail or file cites them.
 
 A `source_id` is never a nullable column. The junction is many-to-many with
 **at least one** `source_id` when extracts produced the data. Junctions live

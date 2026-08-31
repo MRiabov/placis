@@ -14,11 +14,14 @@
   write `business_profile_*`; transform does not call the Maps fake; SSE /
   checklist show Details live business profile while `status` is still
   `extracting`. Scrape fake is `scraperlink/google-maps-scraper` input shape
-  (`reviews=true`, `maxReviews=50`). Review photos attach to the listing review,
-  not `google_maps_listing_photos`. Transform may insert Projects from reviews
-  usable as a Project (verdict on `etl.llm_source_to_project_classifications`;
-  listing + listing-review `etl.sources`; review add cites the listing-review
-  `source_id`). Transform does not enqueue `reviews_ranking_for_display`
-  and does not write `is_top` / `top_position`.
+  (`reviews=true`, `maxReviews=50`). Review photos attach to the listing
+  review, not `google_maps_listing_photos`. Transform may insert Projects from
+  reviews usable as a Project (verdict on
+  `etl.llm_source_to_project_classifications`; listing + listing-review
+  `etl.sources`; review add cites the listing-review `source_id`). New imported
+  reviews get a review citation. Transform does not enqueue
+  `reviews_ranking_for_display` and does not write `is_top` / `top_position`.
+  No `etl_run_kind=review` or `etl_run_kind=photo` run. Details website URL
+  unblocks the sibling crawl run.
 - **Fake**: Google Maps Details / scrape. Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search.

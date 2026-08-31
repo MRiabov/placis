@@ -1,9 +1,10 @@
 # Photo classification
 
 Shared operation group after photos land from [Google Maps](google-maps.md), [Facebook](facebook.md),
-[Instagram](instagram.md), [website crawl](website-crawl.md), or `etl_run_kind=photo`. Not a client interview
-step. Shared extract / transform rules: [pipeline README](README.md). Classifier model:
-**`glm-5.3-flash`** (dated id; same cheap multimodal default as [projects.md](projects.md)).
+[Instagram](instagram.md), or [website crawl](website-crawl.md). Not a `StartRun` ETL run kind and not a client
+interview step. Shared extract / transform rules: [pipeline README](README.md). Classifier
+model: **`glm-5.3-flash`** (dated id; same cheap multimodal default as
+[projects.md](projects.md)).
 
 Labels: hero / project / service / founder / logo. Written as `photo_kind` on
 the business profile’s media library items. Captioning and visual-issue tools
@@ -22,10 +23,9 @@ on the media item — it is `etl.llm_source_to_project_classifications`
 
 ## Trigger
 
-Transform for an ETL run kind that attached new photos, or `StartRun` included
-`etl_run_kind=photo` (further photo fetch on onboarding 02). `force` is the
-shared transform job arg (default false). It does not refetch Maps / Facebook /
-Instagram / crawl.
+Transform for an ETL run kind that attached new photos. `force` is the shared
+transform job arg (default false). It does not refetch Maps / Facebook /
+Instagram / crawl. 02 never passes a `photo` ETL run kind.
 
 ## Pre
 
@@ -57,14 +57,10 @@ When `force=true`, also reclassify items whose `photo_kind_algorithm` is not the
 current `algorithm` and is not `human`. Leave items whose stored algorithm
 already matches or is `human`.
 
-`etl_run_kind=photo` extract (if started) inserts further photo refs the same
-way Maps / social transform attaches them, then classifies.
-
 ## Persist
 
 `media_assets.photo_kind`, `photo_kind_algorithm`, `photo_kind_schema_revision`,
-`content_hash`. `etl.runs.status=succeeded` for `etl_run_kind=photo`. Other ETL
-run kinds stay succeeded from their own transform.
+`content_hash`. Calling ETL run kinds stay succeeded from their own transform.
 
 ## Fail
 

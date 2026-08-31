@@ -5,14 +5,15 @@ transform for that source. Shared profile-update / conflict rules:
 [build-profile](../../onboarding/pipeline/build-profile.md). Do not fork a second merge.
 
 ```text
-StartRun(etl_run_kinds, trigger, tenant)
+StartRun(etl_run_kinds, trigger, tenant, force=false)
   → one etl.runs row per ETL run kind (shared enqueue_id)
   → extract/<etl_run_kind> chunk → transform/<etl_run_kind> that chunk (repeat; not inlined in StartRun)
 ```
 
-Monday / Wednesday / Friday: `trigger=scheduled`, ETL run kinds Google Maps,
-Facebook, Instagram. Onboarding 02: `trigger=onboarding`, the ETL run kinds that
-apply. [02](../../onboarding/pipeline/02-business-research.md) only calls `StartRun`.
+Monday / Wednesday / Friday: `trigger=scheduled`, ETL run kinds Google Maps, Facebook,
+Instagram. Onboarding 02: `trigger=onboarding`, the closed list in
+[02](../../onboarding/pipeline/02-business-research.md) (never `directory`,
+`review`, or `photo`). 02 only calls `StartRun`.
 
 ## Shared rules
 
@@ -37,7 +38,12 @@ apply. [02](../../onboarding/pipeline/02-business-research.md) only calls `Start
   (`fetched_from`, canonical URL + `fetched_from` for crawl). It does not skip
   remaining ETL slow extract chunks. `trigger=scheduled` extracts again.
 - Scheduled with no key (`place_id`, Facebook URL / handle, Instagram handle) →
-  `status=skipped`, no transform.
+  `status=skipped` immediately, no transform. Onboarding: no key yet → stay
+  pending (do not scrape). Discovery writes the key onto this run. After Maps,
+  crawl, and web search (if any) finish, still no key → `skipped`.
+- Discovered keys persist on the waiting `etl.runs` row **and** the
+  onboarding session attach (`place_id`, `website_url`). Not a profile dump.
+  Not a new `StartRun`.
 - Dump `raw` only on the fetch row. Never on listing / profile / post live rows.
 - Open web **search** is Parallel through Vercel AI Gateway only
   ([web-search](web-search.md)). Known-URL crawl **text** is Parallel Extract
@@ -81,14 +87,17 @@ apply. [02](../../onboarding/pipeline/02-business-research.md) only calls `Start
 ## Sources
 
 - [Google Maps](google-maps.md) — listing, hours, reviews, photos; Details then scrape (Mon /
-  Wed / Fri + 02)
-- [Facebook](facebook.md) — profile and posts (Mon / Wed / Fri + 02)
+  Wed / Fri + 02). Scrape is this ETL run kind’s ETL slow extract, not a
+  `review` / `photo` `StartRun` ETL run kind.
+- [Facebook](facebook.md) — profile and posts (Mon / Wed / Fri + 02). No
+  Facebook page-review extract this slice.
 - [Instagram](instagram.md) — profile and posts (Mon / Wed / Fri + 02)
-- [Website crawl](website-crawl.md) — homepage fast then parallel remainder /
-  directory (02 only)
+- [Website crawl](website-crawl.md) — homepage fast then parallel remainder
+  (02 only). Not a `directory` `StartRun` ETL run kind.
 - [Projects from source](projects.md) — after FB / IG / crawl / Maps review
   transform (not a StartRun ETL run kind); skip on
   `etl.llm_source_to_project_classifications`
 - [Trade registry](trade-registry.md) — accreditations (02 only)
 - [Web search](web-search.md) — Parallel **Search** discovery (02 only)
-- [Photo classification](photo-classification.md) — photo kinds on media library items
+- [Photo classification](photo-classification.md) — photo kinds on media
+  library items (transform after attach; not a `StartRun` ETL run kind)

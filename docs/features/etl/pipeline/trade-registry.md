@@ -7,8 +7,9 @@ Accreditations. A later official registry API is its own fetch table.
 
 ## Trigger
 
-`StartRun` included this ETL run kind. No registry id → do not start (or
-`skipped`).
+`StartRun` included this ETL run kind because 01 attached a company registry record.
+Key is onboarding session `company_number` + tenant country. No
+`company_number` → do not start (or `skipped`).
 
 ## Pre
 

@@ -32,12 +32,15 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
 4. **Business research starts ETL** — 02 calls `etl.StartRun`. Google Maps,
    Facebook, Instagram, and website crawl sit behind ETL extract adapters with
    fakes. Transform writes the business profile (research conflicts, posts,
-   photo kinds) as each extract chunk lands, not only when the ETL run kind
-   succeeds. Raw fetch bodies stay on per-type `etl.*_fetches.raw` and never
-   leak into the profile. Google Maps listing columns live in
-   `etl.google_maps_listings` (no `raw` on that row). (2026-08-27: warehouse
-   moved to ETL; onboarding 02 is the trigger only. Same day, later: transform
-   per extract chunk.)
+   photo kinds) as each extract chunk lands, not only when the ETL run kind succeeds.
+   Raw fetch bodies stay on per-type `etl.*_fetches.raw` and never leak into the
+   profile. Google Maps listing columns live in `etl.google_maps_listings` (no
+   `raw` on that row). 01 writes legal identity and Maps autocomplete
+   increments from the selected records; it does not upsert the listing. 02
+   passes the closed ETL run kinds list in [02](pipeline/02-business-research.md).
+   (2026-08-27: warehouse moved to ETL; onboarding 02 is the trigger only. Same
+   day, later: transform per extract chunk. 2026-08-31: Find attach vs extract;
+   closed 02 ETL run kinds.)
 
 5. **Retry may reuse a fetch for the same ETL run chunk; scheduled extract does
    not skip** — Look up the newest fetch for this `run_id` **and that chunk**

@@ -1413,11 +1413,21 @@ In code: `internal/etl/` (`extract/` + `transform/`), Postgres schema `etl`.
 
 ---
 
+#### Enqueue
+
+One `StartRun` call. Several ETL runs (one per ETL run kind) share
+`enqueue_id`. Distinct from: ETL run (one ETL run kind).
+
+In code: `etl.runs.enqueue_id`.
+
+---
+
 #### ETL run
 
-One extract for one tenant (the Google Maps extract, the Facebook extract, the
-Instagram extract). River retries are the same run. Distinct from: Business
-research (starts several runs).
+One extract of **one ETL run kind** for one tenant (the Google Maps extract, the
+Facebook extract, the Instagram extract). River retries are the same run.
+Distinct from: Business research (onboarding 02 starts several runs, one per
+ETL run kind), Enqueue (one `StartRun`).
 
 In code: `etl.runs`.
 
@@ -1426,10 +1436,10 @@ In code: `etl.runs`.
 #### ETL run kind
 
 Which ETL run this is: Google Maps listing, Facebook, Instagram, website crawl,
-trade registry, directory, review, photo, or web search. The kind attaches to
-the run, not to ETL and not to the River job. Never bare **kind**. Distinct
-from: ETL source kind (the run vs the saved extract we point at later; some
-names overlap).
+trade registry, or web search. Never `directory`, `review`, or `photo` as a
+`StartRun` ETL run kind. The ETL run kind attaches to the run, not to ETL and
+not to the River job. Never bare **kind**. Distinct from: ETL source kind (the
+run vs the saved extract we point at later; some names overlap).
 
 In code: `etl.runs.etl_run_kind`. Go: `ETLRunKind`. Unique
 `(enqueue_id, etl_run_kind)`. Write `etl_run_kind=google_maps_listing`.

@@ -35,13 +35,14 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    Project skip is `etl.llm_source_to_project_classifications`, not this
    table.)
 
-4. **An ETL run is one ETL run kind** — `etl.runs` is one row per ETL run kind
-   (Google Maps extract, Facebook extract, Instagram extract).
-   `StartRun(etl_run_kinds, trigger, tenant)` takes an explicit list (length ≥
-   1), creates one `enqueue_id`, inserts one run per ETL run kind, enqueues that
-   ETL run kind’s River job. The onboarding cap counts distinct `enqueue_id`
-   with `trigger=onboarding` (5 per tenant per rolling 30 minutes), not jobs.
-   (2026-08-27)
+4. **An ETL run is one ETL run kind** — `etl.runs` is one row per ETL run kind (Google
+   Maps extract, Facebook extract, Instagram extract).
+   `StartRun(etl_run_kinds, trigger, tenant, force=false)` takes an explicit list
+   (length ≥ 1), creates one `enqueue_id`, inserts one run per ETL run kind, enqueues
+   that ETL run kind’s River job. The onboarding cap counts distinct `enqueue_id` with
+   `trigger=onboarding` (5 per tenant per rolling 30 minutes), not jobs.
+   (2026-08-27; 2026-08-31: `force` defaults false; 02 ETL run kinds are the closed list
+   in [02](../onboarding/pipeline/02-business-research.md).)
 
 5. **Transformed contractor data is the business profile** — Facebook profile /
    posts, Instagram profile / posts, and photo classification (hero / project /
@@ -120,3 +121,19 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     `project_sources`, `imported_media_sources`). Owner / client interview
     writes have no junction rows. Do not use a generic `table.column` field map.
     `origin` stays the product origin. (2026-08-30)
+
+14. **Onboarding `StartRun` ETL run kinds are a closed list; discovery unblocks sibling
+    runs** — 02 never passes `directory`, `review`, or `photo`. Scrape is ETL
+    slow extract of `google_maps_listing`. Photo classification is transform after
+    attach. Crawl fills trade / founder / service areas (no directory job).
+    Facebook / Instagram wait for a key from Maps, crawl, or web search, then
+    `skipped` if discovery finished with no key. Discovered keys persist on the
+    waiting `etl.runs` row and the onboarding session attach. (2026-08-31)
+
+15. **Find attach is onboarding session keys; extract still owns the listing**
+    — 01 persists `place_id` / `company_number` / `website_url` on the
+    onboarding session and writes profile increments from the selected
+    company registry record and Maps autocomplete Read. It does not upsert
+    `etl.google_maps_listings` or insert fetch rows. 02 copies those keys onto
+    `etl.runs`. Company registry `etl.sources` rows are inserted by 01, not by
+    an ETL run kind. (2026-08-31)

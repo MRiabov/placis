@@ -1,24 +1,21 @@
 # Website crawl
 
-`etl_run_kind=website_crawl` and `etl_run_kind=directory`. First-run only
-(onboarding 02). Not on Monday / Wednesday / Friday. Shared extract / transform
-rules: [pipeline README](README.md). Projects from crawled URLs:
+`etl_run_kind=website_crawl`. First-run only (onboarding 02). Not
+on Monday / Wednesday / Friday. Shared extract / transform rules:
+[pipeline README](README.md). Projects from crawled URLs:
 [projects.md](projects.md).
 
-This ETL run kind’s extract is **the** existing-site crawl for every field this
-ETL run kind already writes (trade, description, services, service areas,
-founder, marketing email, existing site URL, work photos) **and** Projects. Do
-not add a second crawl that only looks for named jobs.
-
-`etl_run_kind=directory` stays directory lookup (not this Extract/GET stack
-unless that ETL run kind already fetches HTML URLs).
+This ETL run kind’s extract is **the** existing-site crawl for every field that
+ETL run kind already writes (trade, description, services, service areas, founder,
+marketing email, existing site URL, work photos) **and** Projects. Do not add
+a second crawl that only looks for named jobs. There is no `directory`
+`StartRun` ETL run kind this slice.
 
 ## Trigger
 
-`StartRun` included `website_crawl` and/or `directory`. No known website URL
-and no directory key → that ETL run kind is not started until
-[web search](web-search.md) discovers a URL (same enqueue, not a new
-`StartRun`).
+`StartRun` included `website_crawl`. No known website URL → that ETL run kind is not
+started until [web search](web-search.md) or Maps Details writes `website_url`
+onto this run (same enqueue, not a new `StartRun`).
 
 ## Pre
 
@@ -135,7 +132,9 @@ extract continues. Fill empty trade, description, services, service areas,
 founder, marketing email, existing site URL from Extract markdown + HTML via
 [build-profile](../../onboarding/pipeline/build-profile.md) (each increment
 cites ≥1 crawl `source_id`; both sources when both dumps informed the value).
-Then photos + [photo classification](photo-classification.md). Then
+Write discovered Facebook URLs and Instagram handles onto sibling runs
+in this enqueue (do not scrape them from this ETL run kind). Then
+photos + [photo classification](photo-classification.md). Then
 [projects.md](projects.md) per crawl source (depicting photo on that HTML URL
 required). Same URL, both sources usable as a Project → one Project, two cites.
 Disagreeing owner-typed scalars → research conflict.
