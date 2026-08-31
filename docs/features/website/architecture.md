@@ -68,11 +68,11 @@ site of that trade needs. From-scratch writes:
    ([02](pipeline/02-copy-website-template-pages.md));
 4. pick or generate media assets (prefer real project photos; generate only
    when approved);
-5. reviews website sections keep `{{reviews.1}}` … ; **LLM ranking**
-   (`thread_kind=website_reviews_ranking`) writes **provisional** top
-   reviews after ETL fast extract, then **persistent** pins after ETL
-   finishes if more reviews landed ([catalog.md](catalog.md#review-ranking)).
-   Owner Content / `update_reviews` can override a section later;
+5. reviews website sections keep `{{reviews.1}}` … from the ranked pool.
+   Website does not rank. River job `reviews_ranking_for_display`
+   ([build-profile](../onboarding/pipeline/build-profile.md),
+   [jobs](../../general-architecture/jobs.md)). Owner Content /
+   `update_reviews` can override a section later;
 6. validate against website component contracts, the company registry,
    marketing statements, links, website forms, SEO.
 
@@ -126,10 +126,11 @@ content (placeholders, project galleries, reviews, photos) edited on
 [business profile](../business-profile/README.md) and [media library](../other/media/README.md) screens. They are separate entities.
 Certifications and reviews is the picker for **all reviews** and for pinning
 **top reviews** (ads). First-pass reviews website sections resolve
-`{{reviews.1}}` … from the ranked pool. The website editor reviews Content may
-later set **that website section’s** ordered `website_slot_reviews` (add from
-all reviews, remove, reorder; cap from the website component). They are not
-generic website slots. The edit loop is in [editing.md](editing.md). Screens:
+`{{reviews.1}}` … from the ranked pool (River job `reviews_ranking_for_display`;
+website does not rank). The website editor reviews Content may later set
+**that website section’s** ordered `website_slot_reviews` (add from all reviews,
+remove, reorder; cap from the website component). They are not generic website
+slots. The edit loop is in [editing.md](editing.md). Screens:
 [frontend.md](frontend.md).
 
 ## Website editor tools (assistant)

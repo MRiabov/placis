@@ -88,7 +88,7 @@ gaps.
 | `service_areas` | work | `business_profile_service_areas` | crawl / directory | required |
 | `accreditations` | certifications | list / notes | trade registry | optional |
 | `photos` | photos | media library | Maps / Facebook photos + ETL transform classification; owner upload | required enough photos (found + uploaded). Source from the internet / AI photo only if still short |
-| `reviews` | reviews | `business_profile_reviews` | Maps / Facebook / review job; ranking job orders the pool + pins **top reviews** | optional |
+| `reviews` | reviews | `business_profile_reviews` | Maps / Facebook; `reviews_ranking_for_display` orders the pool + pins **top reviews** | optional |
 | `projects` | photos | `business_profile.projects` | Facebook / Instagram / website crawl / reviews usable as a Project; rank top 4 for client interview | optional |
 | `facebook_profile_url` | reviews | `facebook_profile_url` | Facebook | optional |
 
@@ -116,14 +116,26 @@ rewrite a copied gallery token. The next website publication (04) resolves
 
 ## Rank reviews (after ETL fast extract; again when ETL finishes)
 
-After **ETL fast extract** has written `in_pool` reviews, enqueue a ranking
-job (`thread_kind=website_reviews_ranking`) — typically **in parallel** with
-client interview. That write is **provisional** `is_top` / `top_position`
-(will change; not locked). When the last overlapping ETL run for this
-onboarding enqueue finishes, rank **again if additional review rows
-landed**, then write **persistent** pins. If no additional rows, persist
-the same pins without a second generate. Spec:
+Onboarding orchestration. After **ETL fast extract** has written `in_pool`
+reviews, enqueue River job `reviews_ranking_for_display` — typically
+**in parallel** with client interview. That write is **provisional**
+`is_top` / `top_position` (will change; not a skip key; not
+`algorithm=human`). When the last overlapping ETL run for this onboarding
+enqueue finishes: enqueue again if additional `in_pool` rows landed, then
+write **persistent** pins. If no additional rows, persist the same pins
+without a second generate.
+
+**Scheduled ETL** (Monday / Wednesday / Friday): after a scheduled run
+**succeeds** and new `in_pool` rows landed, enqueue the same job
+**once** (not per chunk). No provisional versus persistent split on
+scheduled unless we already have one; one replace of pins.
+
+ETL transform inserts review rows only; it does not rank. Profile does
+not enqueue. Website does not enqueue. Persist columns:
 [certifications-and-reviews ADR](../../business-profile/certifications-and-reviews/ADR.md).
+Job, `thread_kind`, `prompt_id`, I/O:
+[jobs](../../../general-architecture/jobs.md),
+[LLM layer](../../../general-architecture/llm-layer.md).
 `{{reviews.1}}` … resolve from that order. This is not
 `website_reviews_picker` when copying the website template’s pages.
 

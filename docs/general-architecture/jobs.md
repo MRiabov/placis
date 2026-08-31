@@ -17,8 +17,37 @@ Stripe webhooks enqueue work and return; see [website activation](../features/on
 ([website 03](../features/website/pipeline/03-website-copy-generation.md)) is a River job after copying the website template’s pages onto
 the unpublished website; it must not block the website preview. Unique key =
 `tenant_id`. Closed River job enum value and args are [open questions](../features/website/catalog.md#open-questions).
-Compaction **skips** `ai.threads` `thread_kind=cms_assistant` whose tenant is
-`status=unactivated` (unpaid current must not compact).
+[Reviews ranking for display](#reviews-ranking-for-display) is a separate River job. Compaction **skips**
+`ai.threads` `thread_kind=cms_assistant` whose tenant is `status=unactivated`
+(unpaid current must not compact).
+
+## Reviews ranking for display
+
+River job enum value `reviews_ranking_for_display`. Args: `tenant_id` only.
+Unique key: `tenant_id` while pending/running. A second insert while the
+first is in flight is a River unique conflict — treat as already queued.
+Not HTTP 409 (nothing HTTP-enqueues this). After the first completes, a
+later enqueue on the same tenant is allowed.
+
+The job is dumb: load `in_pool` reviews, generate, replace `is_top` /
+`top_position` (skip `algorithm=human`). Same replace as Certifications
+and reviews PATCH. Provisional vs persistent is **when orchestration
+enqueues**, not a job field. No `onboarding_session_id`.
+
+`internal/jobs` worker calls the profile function. LLM:
+`thread_kind=reviews_ranking_for_display`,
+`prompt_id=reviews_ranking_for_display` in the profile package
+`prompts.yaml`. Input: current `in_pool` rows (id, citation/body, rating,
+origin, `published_at`). Output: ordered `review_ids[]`, length 1–30,
+each id in that pool. Prompt prose, ranking heuristics, and dated model
+id are unspecified. Not stars or recency.
+[LLM layer](llm-layer.md).
+
+**Onboarding** enqueue: [build-profile](../features/onboarding/pipeline/build-profile.md) (after ETL fast extract has `in_pool`
+reviews; again when that enqueue’s overlapping ETL runs finish if additional
+rows landed). **Scheduled ETL** (Monday / Wednesday / Friday): after a scheduled
+run **succeeds** and new `in_pool` rows landed, enqueue **once** (not per
+chunk). ETL transform does not rank. Website does not enqueue this job.
 
 ## Assistant thread compaction
 

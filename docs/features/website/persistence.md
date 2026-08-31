@@ -85,8 +85,9 @@ is [manifest.md](manifest.md). The reserved label on the tenant row is [auth](..
   `(slot_id, business_profile_review_id)`. One ordered array
   **per reviews website section**, from the pool, length ≤ that website
   component’s max (some layouts take 3, others 6 or 8). 02 does not insert
-  these rows. 03 must not `update_reviews`. Ranking pins **top reviews** on
-  the pool; that order does **not** write these rows. Owner Content /
+  these rows. 03 must not `update_reviews`. River job
+  `reviews_ranking_for_display` pins **top reviews** on the pool; that
+  order does **not** write these rows. Owner Content /
   `update_reviews` can fill a section later. Archive of a review drops
   that id from every section array, then compact. Empty array: keep the website
   section. Live website waits for the next website publication.

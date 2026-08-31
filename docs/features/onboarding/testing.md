@@ -29,7 +29,9 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
      as a Project, the client interview shows Project cards; Archive uses the
      onboarding-session route. While 02 is still running, reviews / photos /
      Projects / empty Details controls appear on `/onboarding/interview`
-     without reload; a field they already typed is not rewritten.
+     without reload; a field they already typed is not rewritten. After
+     Details reviews land: schema `jobs` has `reviews_ranking_for_display`
+     on this `tenant_id`.
 
 4. **Business research** (faked, overlapping 2–3) — SSE progress.
    - DB: `etl.runs` → fetch rows + `etl.google_maps_listings` when a place was
