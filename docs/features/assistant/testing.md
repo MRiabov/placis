@@ -58,8 +58,8 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 8. **Voice → text** — After a tool-using voice turn, expanded thread shows
    transcripts **and** muted tool lines. Next owner send on
    `GET /v1/assistant/thread/ws` continues from those thread items. First text
-   send after Voice includes the STT caveat; second text send does not; Voice
-   then text includes it again.
+   send after Voice includes the Voice transcription notice; second text send
+   does not; Voice then text includes it again.
 9. **Ask first** — Instant apply never writes `runs.ask_first_status=pending`.
    `record-apply` / `record-reject` **409** `ask_first_not_pending` unless
    `pending`. Second transition 409. Go does not upsert unpublished rows on

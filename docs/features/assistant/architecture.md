@@ -40,9 +40,9 @@ voice connection instructions (same text). A missing listed file fails boot.
 Record `knowledge_id` + `knowledge_format_revision` on `ai_generations`. YAML +
 markdown land with the Go implementation; this feature specifies the contract.
 
-CMS Assistant prompt text (wrap-up notice, reject notice, STT caveat,
-compaction, Voice seed prompt) lives in this feature’s `prompts.yaml` with
-`{{var}}` / `{{aaa.bbb}}` slots, not in Go. [LLM layer](../../general-architecture/llm-layer.md).
+CMS Assistant prompt text (wrap-up notice, reject notice, Voice transcription
+notice, compaction, Voice seed prompt) lives in this feature’s `prompts.yaml`
+with `{{var}}` / `{{aaa.bbb}}` slots, not in Go. [LLM layer](../../general-architecture/llm-layer.md).
 
 Keep it small enough to inject every turn. `get_context_about_screen` is live
 assistant screen context, not this copy.
@@ -105,10 +105,10 @@ reorder):
 6. Typed Ask-first **reject notice** when a muted reject thread item is pending
    (clock: this **model** turn, not last owner request). Consume once this turn
    starts; do not re-inject. Apply has no parallel notice.
-7. Voice → text **STT caveat** when the most recent completed run on this thread
-   is `channel=voice` (**Switch to text mode** / idle / close,
-   then this first text send). Owner lines so far were speech-to-text and may
-   contain transcription issues; do not always take them literally; this
+7. **Voice transcription notice** when the most recent completed run on this
+   thread is `channel=voice` (**Switch to text mode** / idle / close, then this
+   first text send). Owner lines so far were speech-to-text and may contain
+   transcription issues; do not always take them literally; this
    `owner_message` (and later typed sends) are typed. Model-only (like step 5),
    not a hydrate item, not billed `conversation.item.create`. After this text
    run completes, the latest run is `channel=text` — do not re-inject on the
@@ -143,8 +143,8 @@ then assemble again. Not random token trim. The frontend cannot 400 this. If
 knowledge + profile + working copy + tail is still over 128K, that **text** turn
 fails (WS terminal `error`). Compaction prompt does **not** treat a pending
 reject notice as a special case (reject is a thread item and may sit in the kept
-tail). Compaction **does** include the STT caveat when the thread has a
-`channel=voice` run.
+tail). Compaction **does** include the Voice transcription notice when the
+thread has a `channel=voice` run.
 
 **Voice seed too large.** If instructions would be too large to send, compact
 the thread first with those same rules, then seed. If still too large, **Voice
@@ -306,8 +306,8 @@ When the owner leaves Voice, the thread already has utterances and muted tool
 send assembles thread items from **this thread**, not from the voice service and
 not from `ai_generations`. Voice → text is always a backup on the same
 conversation (CMS: **Switch to text mode**). First text assembly after a
-completed voice run injects step 7 (STT caveat). If the browser refuses the
-microphone, Voice cannot hear: CMS shows the shared **notification**
+completed voice run injects step 7 (Voice transcription notice). If the browser
+refuses the microphone, Voice cannot hear: CMS shows the shared **notification**
 ([frontend](../../general-architecture/frontend.md); same Ads/Details notice as [ads.html](../../design/ads.html)): **Try again** (retry the
 microphone) and **Switch to text mode**. Copy:
 **Allow microphone access in your browser to talk. You can keep typing.**

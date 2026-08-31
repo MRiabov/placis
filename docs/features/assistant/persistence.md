@@ -15,7 +15,7 @@ traces: [LLM layer](../../general-architecture/llm-layer.md)
 
 **Principle:** `ai` is shared `LLMProvider` + threads + traces. This feature
 owns overlay items. No `ai_generation_id` on thread items. Follow and Plan are
-not columns. Reject notice and the Voice → text STT caveat are thread items /
+not columns. Reject notice and the Voice transcription notice are thread items /
 prompt assembly, not new columns. Voice `provider_event` is the forwarded xAI
 JSON (jsonb, persistence-only); hydrate omits it.
 
