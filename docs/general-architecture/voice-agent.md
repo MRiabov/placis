@@ -220,7 +220,8 @@ Voice **create** seed if instructions would not fit). Do not compact
 mid-utterance to “fix” Voice context.
 
 When the owner leaves Voice for text (**Switch to text
-mode**), the first CMS text `LLMProvider` assembly injects an STT caveat
+mode**), the first CMS text `LLMProvider` assembly injects a Voice
+transcription notice
 ([assistant architecture](../features/assistant/architecture.md) step 7).
 
 ## Authority

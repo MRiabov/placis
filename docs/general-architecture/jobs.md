@@ -36,9 +36,9 @@ model (DeepSeek V4 Flash or current Qwen Flash — **pin a dated id**, not
 `cms_assistant` thread). Does **not** debit usage credit (maintenance, not an
 owner turn). Does not rewrite existing `ai_generations` rows. Compaction prompt
 is assistant `prompts.yaml` (not Go). It does **not** include a pending Ask-first
-reject notice as a special case. It **does** include the Voice STT caveat when
-the thread has a `channel=voice` run. Not a live xAI Voice connection trim.
-There is no 24h discard.
+reject notice as a special case. It **does** include the Voice transcription
+notice when the thread has a `channel=voice` run. Not a live xAI Voice
+connection trim. There is no 24h discard.
 **Skip** threads whose tenant is `status=unactivated` (onboarding website
 editor unpaid `current` must not compact — 12h, 128K overflow, or
 compact-before-seed would refill the five unpaid prompts).

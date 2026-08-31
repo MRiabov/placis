@@ -137,7 +137,8 @@ instead of silently replacing it.
     includes the Voice STT caveat when the thread has a `channel=voice` run. It
     does **not** treat a pending Ask-first reject notice as a special case.
     (2026-08-29) Later (2026-08-30): `last_activity_at` is on `ai.threads`
-    (`kind=cms_assistant`).
+    (`kind=cms_assistant`). Same day, later (2026-08-31): compaction includes
+    the **Voice transcription notice**, not an STT caveat.
 
 12. **No 24h discard** — Aging is compaction only. Do not discard the thread at
     24h on `last_assistant_edit_at`. That column is written when tool events
@@ -247,7 +248,9 @@ instead of silently replacing it.
     `channel=voice` run injects a typed notice: those owner lines were
     speech-to-text and may contain transcription issues; do not always take them
     literally. Model-only. Not a column. Not onboarding. Compaction of a thread
-    that has a voice run uses the same caveat. (2026-08-29)
+    that has a voice run uses the same caveat. (2026-08-29) Same day, later
+    (2026-08-31): this is the **Voice transcription notice**. Same inject
+    rules. Do not say caveat.
 
 23. **xAI Voice follows the business country** — Live audio (CMS and onboarding)
     does **not** blanket-route every tenant to eu-west-1. Region comes from the
