@@ -136,8 +136,10 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     and the live profile (Find, extract, or contractor). Insert `etl.runs` when
     the ETL run kind starts. Facebook / Instagram start on URL/handle; `skipped`
     when nothing left can produce that detail. A later paste can still start
-    them. Maps may start from `place_id` **or** `display_name` + locality
-    (Places Find; one high-confidence hit only). `trade_registry` from
+    them. Maps may start from `place_id` **or** `display_name` + locality **or**
+    `legal_name` + locality (Places Find uses `display_name` if set, else
+    `legal_name`, plus registered-office locality / trade location / tenant
+    country city; one high-confidence hit only). `trade_registry` from
     `company_number` + country **or** `display_name` + country. `web_search`
     starts when some discoverable detail is still empty; it does not overwrite
     Find-attached `place_id`. ETL fast extract then ETL slow extract is why ETL run kinds
@@ -147,8 +149,8 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     registry attach; web search not gated on missing `place_id`; same day,
     later: Starts-when registry replaces the Always-ETL-run-kinds DAG. 2026-08-31 later:
     ETL run kind + details, not means / identity key / input set / client-interview
-    window.)
-
+    window. 2026-08-31 later: Places Find may use `legal_name` +
+    registered-office locality.)
 15. **Find attach is onboarding session keys; extract still owns the listing**
     — 01 persists `place_id` / `company_number` / `website_url` on the
     onboarding session and writes profile increments from the selected

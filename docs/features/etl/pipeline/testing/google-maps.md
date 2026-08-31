@@ -23,7 +23,8 @@
   `reviews_ranking_for_display` and does not write `is_top` / `top_position`.
   No `etl_run_kind=review` or `etl_run_kind=photo` run. Details website URL is
   a detail that starts crawl on this enqueue. Places Find from
-  `display_name` + locality yields Details only on one high-confidence hit;
-  several hits do not pick a listing.
+  `display_name` if set, else `legal_name`, plus locality (including
+  `legal_name` + registered-office locality on registry-only Find) yields
+  Details only on one high-confidence hit; several hits do not pick a listing.
 - **Fake**: Google Maps Details / scrape. Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search.

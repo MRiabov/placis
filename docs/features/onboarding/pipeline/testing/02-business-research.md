@@ -8,10 +8,11 @@
   `enqueue_id` per `StartRun`; `etl.runs` rows exist for ETL run kinds that could
   start (never `directory`, `review`, or `photo`); Maps-only Find starts
   `trade_registry` from `display_name` + country; Maps starts from `place_id`
-  **or** Places Find (`display_name` + locality, one confident hit); retry of
-  the same `run_id` does not refetch a chunk that already has a fetch and still
-  runs remaining ETL slow extract; Maps path upserts `etl.google_maps_listings` (+
-  hours, review rows) from Details **before** scrape finishes; checklist / SSE
+  **or** Places Find (`display_name` if set, else `legal_name`, plus locality,
+  one confident hit); company-number-only Maps Places Find uses `legal_name` +
+  registered-office locality and does not wait for Parallel; retry of the same
+  `run_id` does not refetch a chunk that already has a fetch and still runs
+  remaining ETL slow extract; Maps path upserts `etl.google_maps_listings` (+  hours, review rows) from Details **before** scrape finishes; checklist / SSE
   show that live business profile while the Maps run is still `extracting`;
   Facebook / Instagram are **not** inserted until a URL/handle detail exists
   (Maps, crawl, Parallel, or 04a paste), then `skipped` if nothing left can
