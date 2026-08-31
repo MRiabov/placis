@@ -30,8 +30,9 @@ That surface is the [onboarding website editor](website-editor.md).
 - No `obtained_information` / `end_interview`. Client-interview writer tools are
   not in this registry.
 - **Not billed.** No 402. Still write `ai_generations` (`thread_id` on the
-  `onboarding_assistant` thread).
-  Usage on transcripts is recorded, not debited.
+  `onboarding_assistant` thread). Voice create stores the exact instructions
+  blob on `ai_generations.input` (reconstructable; hydrate omits it). Usage on
+  transcripts is recorded, not debited.
 - In-flight lock is `onboarding.assistant_runs`, unique running per
   `onboarding_session_id` (not `tenant_id`). Voice lock starts at
   realtime-connection create and ends on close / crash. A second
@@ -41,10 +42,16 @@ That surface is the [onboarding website editor](website-editor.md).
   `GET /v1/onboarding/assistant/thread` may hydrate for a later Voice turn.
   Default launcher stays DustOrb.
 - Persist utterances on `POST /v1/onboarding/assistant/voice/transcripts`:
-  committed owner and assistant **text**, plus **`offset_seconds`** from that
-  Voice run’s start. Reconstruct
-  `[m:ss owner]` / `[m:ss assistant]` + `body` (never say user). `created_at`
-  is the row insert time. Do **not** store
+  committed xAI Voice events already on that socket (owner
+  `input_audio_transcription.completed`, assistant
+  `output_audio_transcript.done`). Go maps to **text**, **`offset_seconds`**
+  (from `audio_start_ms` when present), and `provider_event` jsonb. Reconstruct
+  `[m:ss owner]` / `[m:ss assistant]` + `body` from typed `kind`.
+
+  Never say **user**.
+
+  Never `kind=system`. `created_at` is the row insert time. If xAI omitted a
+  committed transcript, skip the row — do not call STT again. Do **not** store
   the Voice recording (no signed-URL PUT, no `files` row, no
   `recording_file_id`). Do not invent a second text dump route. Frontend posts
   leftover transcripts on close. Live audio is browser ↔ the xAI region for

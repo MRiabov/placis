@@ -60,21 +60,35 @@ The adapter (not the browser) is responsible for:
 2. Pick the xAI region from the **business country** (below). Pin a **dated**
    voice model id (not `grok-voice-latest`) that exists on that cluster.
 3. Seed **instructions** (knowledge concat + profile + screen / compacted thread
-   tail as **one instructions blob**). Do **not** replay the thread as billed
+   tail as **one instructions blob**). Persist that exact blob on the voice
+   run’s `ai_generations.input` (with keyterms / `replace` sent on create). Do
+   **not** replay the thread as billed
    `conversation.item.create` items. The
    **rolling Voice connection is xAI-owned** after that seed. Go does not
    tokenize or compact it mid-utterance. If the seed would be too large to send,
    compact the thread first with the 12h compaction rules, then seed.
 4. Pass the full CMS `tools=` list (onboarding: `tools=[]`).
-5. On connection create, set xAI `audio.input.transcription.keyterms` and
-   `replace` from `internal/knowledge/voice_pronunciation.yaml` (same create
-   payload as instructions). Do not `session.update` those mid-call.
+5. On connection create, set `audio.input.transcription.model` to
+   **`grok-transcribe`**, plus `keyterms` and `replace` from
+   `internal/knowledge/voice_pronunciation.yaml` (same payload as instructions).
+   Bind on `POST /v1/realtime/client_secrets` when that request accepts an
+   initial-configuration object; else one
+   `session.update` after the Voice connection opens. Do not `session.update`
+   those mid-call. That live Voice connection is the STT: committed transcript
+   events go to `POST …/voice/transcripts`. Do not call `POST /v1/stt`.
 6. Close / drop the connection on CMS **402** `usage_credit_exhausted`.
 
 ## xAI region (business country)
 
 Do **not** blanket-route every tenant to eu-west-1. Do **not** geolocate the
 contractor’s IP. Do **not** let the browser pick a host.
+
+xAI regional API hosts are `{region}.api.x.ai`. Live ones include
+**eu-west-1** and **us-east-1** (also us-west-2 / us-saltlake-2 on some
+models). Global `https://api.x.ai` / `wss://api.x.ai` auto-routes; Speech to
+Speech examples use `wss://api.x.ai/v1/realtime`. Pin the regional host so
+IE/GB audio stays on eu-west-1. `grok-voice-think-fast-2.0` is listed in
+us-east-1, eu-west-1, and us-saltlake-2.
 
 At each `POST …/voice/realtime-connection` (CMS and onboarding), Go resolves
 country (`ie` / `gb` / `us`) in this order:
@@ -87,13 +101,13 @@ country (`ie` / `gb` / `us`) in this order:
    `listing_address`).
 3. Else **Find country** — `tenants.country`, written at business lookup.
 
-Then map: `ie` and `gb` → xAI **eu-west-1**; `us` → xAI **us-east-1**. `gb` uses
-the Europe cluster (UK GDPR); it is not sent to the US.
+Then map: `ie` and `gb` → xAI **eu-west-1**; `us` → xAI **us-east-1**. `gb`
+uses the Europe cluster (latency and UK GDPR); it is not sent to the US.
 
-Token create and the browser WS use the same `{region}.api.x.ai` host. Create
-returns that realtime URL; the frontend connects as-is. Do not switch region
-mid-call. Next Voice create re-resolves. Pin a dated voice model that exists
-on that cluster.
+Return `wss://{region}.api.x.ai/v1/realtime` and create the secret on
+`https://{region}.api.x.ai/v1/realtime/client_secrets`. Same host for token
+create and the WS. Do not switch host mid-call. Next Voice create re-resolves
+country (PATCH sources can change the winner).
 
 Find country is persisted on `tenants.country` so CMS Voice still resolves after
 onboarding routes 403. Typeahead still uses country as a search parameter.
@@ -127,8 +141,10 @@ Do not mid-call `session.update` for these (same rule as tools / instructions).
    browser-safe connection fields.
 3. The frontend connects **directly to the voice service**; live audio never
    flows through the backend. The WS URL is the **realtime URL** from the
-   create response (xAI region Go picked). Do not hardcode a region in the
-   frontend.
+   create response (`wss://{region}.api.x.ai/v1/realtime` from the business
+   country). Ephemeral-token create uses the same host’s
+   `https://{region}.api.x.ai/v1/realtime/client_secrets`. Do not hardcode a
+   host in the frontend.
 4. The browser never receives the long-lived voice API key.
 
 CMS create **includes** the unpublished website working copy when
@@ -176,21 +192,25 @@ event. Published audio rate 2026-08-28: `grok-voice-think-fast-2.0` $0.08 / min.
 Pin a dated model id; do not ride `grok-voice-latest`. Do not enable xAI
 server-side search / MCP tools (extra per-call fees). Do not use provisioned
 phone numbers. Live Voice uses the xAI region for the **business country**
-([voice agent](voice-agent.md)).
+(`wss://{region}.api.x.ai/v1/realtime`; not a blanket eu-west-1, not the
+auto-routing global `api.x.ai` host).
 
-Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor
-cost**). CMS only. Onboarding guide is not billed
-to the contractor. Go never sees PCM (live audio or the debug recording PUT).
-xAI does not document a token-style usage object on `response.done`; the browser
-measures audio sent + received (and billed text items) and posts that on
-`POST /v1/assistant/voice/transcripts` (onboarding twin under
-`/v1/onboarding/assistant/voice/transcripts`), including a usage-only POST when
-Voice turns off. After CMS Voice ends, the browser PUTs the recording to object
-storage via a signed URL
-([assistant architecture](../features/assistant/architecture.md)). Onboarding
-does **not** PUT a recording; leftover transcripts (text + `offset_seconds`)
-only. Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`. Never say user.
-`created_at` is the row insert time.
+Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor cost**). CMS only. Onboarding
+guide is not billed to the contractor. Go never sees PCM (live audio or the
+debug recording PUT). xAI does not document a token-style usage object on
+`response.done`; the browser measures audio sent + received (and billed text
+items) and posts that on `POST /v1/assistant/voice/transcripts` (onboarding twin
+under `/v1/onboarding/assistant/voice/transcripts`), including a usage-only POST
+when Voice turns off. After CMS Voice ends, the browser PUTs the recording to
+object storage via a signed URL ([assistant architecture](../features/assistant/architecture.md)). Onboarding does
+**not** PUT a recording; leftover transcripts (committed xAI events →
+`offset_seconds`; `provider_event` jsonb) only. Reconstruct `[m:ss owner]` /
+`[m:ss assistant]` from typed `kind` + `offset_seconds` + `body`.
+
+Never say **user**.
+
+Do not call `POST /v1/stt` or open a second STT socket. `created_at` is
+the row insert time.
 
 Seed knowledge in connection **instructions**. Do not replay the assistant
 thread as billed text items. Nested image/cleanup from a voice tool is another
@@ -200,7 +220,8 @@ Voice **create** seed if instructions would not fit). Do not compact
 mid-utterance to “fix” Voice context.
 
 When the owner leaves Voice for text (**Switch to text
-mode**), the first CMS text `LLMProvider` assembly injects an STT caveat
+mode**), the first CMS text `LLMProvider` assembly injects a Voice
+transcription notice
 ([assistant architecture](../features/assistant/architecture.md) step 7).
 
 ## Authority

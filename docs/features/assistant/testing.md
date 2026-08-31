@@ -21,7 +21,8 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
    editor / Ads / Details / `/cms` returns the current thread (`items`, not
    `thread_items`). No `current` → insert empty `current`. Empty is `items: []`.
    Visiting `/cms` without calling does not hydrate. Hydrate does not return
-   `runs` and does not join `ai_generations`.
+   `runs` and does not join `ai_generations`. Voice create still wrote the
+   instructions blob on `ai_generations.input` (reconstructable; not in GET).
 2. **Assistant screen switch** — Owner moves website editor → Details during
    speech; speech continues; next owner turn carries one switch notification for
    Details.
@@ -38,20 +39,27 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 7. **Voice relay + transcripts** — `function_call` on the voice-service WS →
    `POST /v1/assistant/voice/tool-calls` (HTTP events) → browser writes
    `function_call_output` on that same voice-service WS; muted `tool_summary`
-   item appended. `POST /v1/assistant/voice/transcripts` appends owner +
-   assistant text with `offset_seconds` from that run’s start. Reconstruct
-   `[m:ss owner]` / `[m:ss assistant]` (never say user). `ai_generations` has a
-   voice row on that `cms_assistant` thread. Hydrate does not read that table.
-   Tool-calls during the **current** voice run succeed (`in_flight_run` is a
-   second start). Realtime URL host is the xAI region for that tenant’s business
-   country (`ie`/`gb` → **eu-west-1**, `us` → **us-east-1**), not a
-   frontend-hardcoded host. Connection create includes **Placis** in keyterms
-   and `replace` **Play-sis**.
+   item appended. `POST /v1/assistant/voice/transcripts` forwards committed xAI
+   Voice events (`input_audio_transcription.completed` /
+   `output_audio_transcript.done`) and appends owner + assistant `transcript`
+   text. `offset_seconds` from `audio_start_ms` on paired
+   `speech_started` when that key exists; else null. Reconstruct
+   `[m:ss owner]` / `[m:ss assistant]`.
+   Never say **user**.
+   `provider_event` jsonb
+   stored; GET omits it. No `POST /v1/stt`. If xAI omitted a committed
+   transcript, no row. `ai_generations` has a voice row on that `cms_assistant`
+   thread. Hydrate does not read that table. Tool-calls during the **current**
+   voice run succeed (`in_flight_run` is a second start). Realtime URL host is
+   **eu-west-1** for Find `ie`/`gb` and **us-east-1** for Find `us`
+   (`wss://{region}.api.x.ai/v1/realtime`), not a frontend-chosen host.
+   Connection create includes **`grok-transcribe`**, **Placis** in keyterms, and
+   `replace` **Play-sis**.
 8. **Voice → text** — After a tool-using voice turn, expanded thread shows
    transcripts **and** muted tool lines. Next owner send on
    `GET /v1/assistant/thread/ws` continues from those thread items. First text
-   send after Voice includes the STT caveat; second text send does not; Voice
-   then text includes it again.
+   send after Voice includes the Voice transcription notice; second text send
+   does not; Voice then text includes it again.
 9. **Ask first** — Instant apply never writes `runs.ask_first_status=pending`.
    `record-apply` / `record-reject` **409** `ask_first_not_pending` unless
    `pending`. Second transition 409. Go does not upsert unpublished rows on
@@ -73,9 +81,9 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 12. **Unactivated** — **403** `tenant_unactivated` on `/v1/assistant/…`. Unpaid
     website preview uses `/v1/onboarding/website-editor/assistant/…`.
 13. **Voice idle** — After 30s with no owner speech, frontend closes (leftover
-    transcripts with `offset_seconds` + usage posted; CMS recording upload
-    (signed URL); realtime connection dropped). Onboarding idle skips the
-    recording PUT.
+    transcripts with `offset_seconds` from xAI events + usage posted; CMS
+    recording upload (signed URL); realtime connection dropped). Onboarding idle
+    skips the recording PUT.
 14. **Voice recording** — After **CMS** Voice turns off, `files` row + object in
     storage; `runs.recording_file_id` set. GET thread does not return the URL.
     The recording file is never posted to Go. Onboarding has no recording
@@ -114,22 +122,22 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
    mount). Close → **Enable voice guide**. Hidden on wait teaser. Turn on
    again more than 5s after that intro began: no second intro. In-flight 409 on
    a second realtime-connection create. Realtime URL host is **eu-west-1** for
-   Find `ie`/`gb` and **us-east-1** for Find `us` (company registry country wins
-   when a company registry record is attached; else Maps listing `country` when
-   set).
-   Connection create includes **Placis** in keyterms and `replace` **Play-sis**.
+   Find `ie`/`gb` and **us-east-1** for Find `us`
+   (`wss://{region}.api.x.ai/v1/realtime`). Connection create
+   includes **`grok-transcribe`**, **Placis** in keyterms, and `replace`
+   **Play-sis**.
 3. **No write tools** — Profile is unchanged after a guide turn. `tools=[]`.
 4. **No text backup** — There is no `GET /v1/onboarding/assistant/thread/ws`.
    After voice utterances, `GET` hydrate may return items for a later Voice
-   turn (`offset_seconds` set).
+   turn (`offset_seconds` from xAI events). No `POST /v1/stt`.
 5. **No `/thread/new`** — That route does not exist on onboarding.
 6. **403 after website activation** — Activated owner cannot call
    `/v1/onboarding/assistant/…` or
    `/v1/onboarding/website-editor/assistant/…` (or leftover onboarding session
    routes).
 7. **Voice idle** — Same 30s frontend stop as CMS. Not billed (no 402). Leftover
-   transcripts (text + `offset_seconds`) posted; **no** recording upload
-   (onboarding does not store Voice recordings).
+   transcripts (committed xAI events → `offset_seconds`) posted; **no**
+   recording upload (onboarding does not store Voice recordings).
 8. **Denied microphone** — Cue **Allow microphone access in your browser**.
    Click DustOrb retries. Voice does not stay on. `POST …/realtime-connection`
    was not called.

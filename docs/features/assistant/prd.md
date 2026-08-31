@@ -54,8 +54,9 @@ Onboarding website editor, Assistant thread).
   billing (usage). Called from the same bottom-right **Assistant**. Default
   Voice; switch to text. Projects **write** tools only from the website editor.
 - Onboarding assistant: isolated, Voice only, not billed. Contractor copy is
-  **Assistant**. Persist utterance **text** and **`offset_seconds`**; do not
-  store the Voice recording.
+  **Assistant**. Persist committed xAI Voice transcripts (**text** +
+  **`offset_seconds`** from `audio_start_ms` when present; `provider_event`
+  jsonb); do not store the Voice recording. Do not call STT again.
 - Onboarding website editor: five unpaid prompts, instant apply, not billed,
   same `ai.threads` (`kind=cms_assistant`) until 09 completes `current`.
 - Assistant debit of billing usage credit (**×5** **their cost** on **our
@@ -76,8 +77,8 @@ Onboarding website editor, Assistant thread).
 - Per-tool HTTP paths (`/v1/assistant/tool/…`).
 - A Go WebSocket for audio.
 - Onboarding text backup / **Switch to text mode** on onboarding.
-- Onboarding Voice recording files (persist utterance text + `offset_seconds`
-  only).
+- Onboarding Voice recording files (persist committed xAI transcripts +
+  `offset_seconds` only)
 - 24h thread discard (compaction only).
 - Usage credit on auth `tenants`. Billing is its own feature and usage screen.
 
