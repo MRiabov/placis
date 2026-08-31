@@ -2,8 +2,7 @@
 
 Look and interaction for The CMS website editor. Architecture stays in [ADR.md](ADR.md).
 Screens: [frontend.md](frontend.md). Tokens: [CMS design.md](../../general-architecture/cms/design.md). CMS nav / `/cms` / theme:
-[CMS design decision record](../../general-architecture/cms/design-decision-record.md). Mock:
-[cms.html](../../design/cms.html).
+[CMS design decision record](../../general-architecture/cms/design-decision-record.md). Look: [`apps/demo/`](../../../apps/demo/README.md) `/cms/website`.
 
 Status: decided (2026-08-26, product owner). Update an entry (keeping the old
 decision + date) instead of silently rewriting history. One number is one
@@ -229,14 +228,14 @@ numbers are HTML comments so later entries keep their numbers.
     circle — that HTML was a stand-in. Dispatcher: [assistant](../assistant/README.md). **Follow** is
     default **on**; the owner cannot turn it off; canvas snaps to the website
     slot the **agent** is editing. (2026-08-27: glow mock + Follow off.
-    2026-08-28: DustOrb; Follow on. Same day, later: [cms.html](../../design/cms.html) uses
-    [dust-orb.js](../../design/dust-orb.js); bounce on hover/tap and while speaking. Same day, later:
+    2026-08-28: DustOrb; Follow on. Same day, later: the look app uses
+    [`DustOrb.tsx`](../../../apps/demo/src/ui/DustOrb.tsx); bounce on hover/tap and while speaking. Same day, later:
     scale matches placis-web OrbDemo (`hover:scale-[1.03]`, speaking
     `scale-110`, 500ms); dust recycles from the centre and the cursor pulls it.
     Same day, later: Voice asks for the microphone and bounces from owner noise
     level. (2026-08-29): owner speech grows more particles from the centre; the
     control does not scale up. Hover / tap still `scale-[1.03]`. Same day,
-    later: mock greeting [cms-voice-greeting.mp3](../../design/cms-voice-greeting.mp3) when the orb comes on. Same
+    later: mock greeting [cms-voice-greeting.mp3](../../../apps/demo/public/cms-voice-greeting.mp3) when the orb comes on. Same
     day, later: ≤480px orb **50vw** (`min(50vw, 50dvh)`); wider **30vw**
     (`min(30vw, 24rem)`), not `min(5.5rem, 30vw)`. Same day, later: wider is
     `min(5.5rem, 30vw)` again; ≤480px stays **50vw**. Apply / Reject over Switch

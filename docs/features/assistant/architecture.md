@@ -308,8 +308,8 @@ not from `ai_generations`. Voice → text is always a backup on the same
 conversation (CMS: **Switch to text mode**). First text assembly after a
 completed voice run injects step 7 (Voice transcription notice). If the browser
 refuses the microphone, Voice cannot hear: CMS shows the shared **notification**
-([frontend](../../general-architecture/frontend.md); same Ads/Details notice as [ads.html](../../design/ads.html)): **Try again** (retry the
-microphone) and **Switch to text mode**. Copy:
+([frontend](../../general-architecture/frontend.md); same Ads/Details notice as [`apps/demo/`](../../../apps/demo/README.md) `/cms/ads`):
+**Try again** (retry the microphone) and **Switch to text mode**. Copy:
 **Allow microphone access in your browser to talk. You can keep typing.**
 Onboarding returns to the cue (**Allow microphone access in your browser**);
 click retries. Do not create the realtime connection until the microphone is

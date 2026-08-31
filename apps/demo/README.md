@@ -9,8 +9,8 @@ remain canonical. From the Placis repo root:
 - `scripts/sync-look-demo.sh` copies this folder, `docs/glossary.md`, and the
   Don't-say checker (skips dest `docs/` so the product package stays).
 - `scripts/export_designer_docs.py` copies sanitized product/look Markdown into
-  dest `docs/` (PRDs, design decision records, glossary). No HTML mocks; this
-  Vite app superseded them. No zip — git is the send channel.
+  dest `docs/` (PRDs, design decision records, glossary). This Vite app is the
+  look. No zip — git is the send channel.
 
 Copy-back: rsync this app onto Placis `apps/demo/`, then copy `glossary.md` onto
 `docs/glossary.md`. Product-doc edits in dest `docs/` copy back onto the same

@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="240" height="120" viewBox="0 0 240 120" role="img" aria-label="CIRI">
-  <rect width="240" height="120" rx="14" fill="#ffffff"/>
-  <rect x="18" y="22" width="58" height="76" rx="6" fill="#1d4f91"/>
-  <rect x="32" y="36" width="12" height="48" fill="#ffffff"/>
-  <rect x="50" y="36" width="12" height="48" fill="#ffffff"/>
-  <text x="96" y="61" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" fill="#1d4f91">CIRI</text>
-  <text x="97" y="83" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#4c5f78">CONSTRUCTION REGISTER</text>
-</svg>

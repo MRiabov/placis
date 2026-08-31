@@ -2,7 +2,7 @@
 
 Look and interaction for the CMS Assistant and the onboarding assistant
 launcher. Architecture: [ADR.md](ADR.md). Tokens: [CMS design.md](../../general-architecture/cms/design.md). CMS nav:
-[CMS design decision record](../../general-architecture/cms/design-decision-record.md). Mocks: [cms.html](../../design/cms.html), [onboarding.html](../../design/onboarding.html).
+[CMS design decision record](../../general-architecture/cms/design-decision-record.md). Look: [`apps/demo/`](../../../apps/demo/README.md).
 
 Status: decided (2026-08-28). One number is one decision. Related amendments
 (same surface, same topic — orb widths, then the hit target) stay on that
@@ -29,16 +29,16 @@ owner-written; omit it rather than inventing it.
 2. **Look is DustOrb** — Empty field fades to the particle orb. Not website
    design decision 18’s “soft glowing circle” HTML stand-in. Not the 44px Ads
    Review rewrite orb. Canonical file: `frontend-2/src/shared/ui/DustOrb.tsx`
-   (bring across in the frontend pass). (2026-08-28) Same day, later: HTML mocks
-   run the particle orb from [dust-orb.js](../../design/dust-orb.js) (vanilla port of that DustOrb). The
-   orb **bounces** when they hover or tap it, and while they speak with it.
-   Reduced motion: no bounce. Same day, later: scale matches placis-web OrbDemo
-   (`hover:scale-[1.03]`, speaking `scale-110`, 500ms round transform). Dust
-   recycles from the centre; the cursor pulls it. Not a bounce squash. Same day,
-   later: Voice asks for the microphone and bounces the orb from owner noise
-   level (skip `?shot=1`). (2026-08-28) Same day, later: owner speech grows more
-   particles from the centre. The control does not scale up. Hover / tap still
-   `scale-[1.03]`. (2026-08-29)
+   (bring across in the frontend pass). (2026-08-28) Same day, later: the look
+   app runs the particle orb from [`DustOrb.tsx`](../../../apps/demo/src/ui/DustOrb.tsx). The orb **bounces** when they
+   hover or tap it, and while they speak with it. Reduced motion: no bounce.
+   Same day, later: scale matches placis-web OrbDemo (`hover:scale-[1.03]`,
+   speaking `scale-110`, 500ms round transform). Dust recycles from the centre;
+   the cursor pulls it. Not a bounce squash. Same day, later: Voice asks for the
+   microphone and bounces the orb from owner noise level (skip `?shot=1`).
+   (2026-08-28) Same day, later: owner speech grows more particles from the
+   centre. The control does not scale up. Hover / tap still `scale-[1.03]`.
+   (2026-08-29)
 
 3. **`/cms` is two cards** — **Do my website…** → `/cms/website`, **Run my ads**
    → `/cms/ads`. New chat / prompt home is gone. Not a composer, not Voice, not
@@ -60,11 +60,11 @@ owner-written; omit it rather than inventing it.
    Same day, later (2026-08-29): say **Assistant**, not overlay.
 
 6. **Onboarding launcher is bottom right, always turnable on** — Grow
-   [onboarding.html](../../design/onboarding.html). Every onboarding screen in that mock (Find, Review, client
-   interview, wait teaser). Not the CMS overlay cloned onto onboarding. Not
-   empty-composer-only. Not “Start voice client interview” as data entry.
-   DustOrb when on. Preview website address / website-activation strip stays out
-   of this file. (2026-08-28) Same day, later: DustOrb is
+   [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*`. Every onboarding screen in that look (Find,
+   Review, client interview, wait teaser). Not the CMS overlay cloned onto
+   onboarding. Not empty-composer-only. Not “Start voice client interview” as
+   data entry. DustOrb when on. Preview website address / website-activation
+   strip stays out of this file. (2026-08-28) Same day, later: DustOrb is
    **visible by default**, voice **off**. Cue: squiggly arrow +
    **Click to turn on voice**. Click the orb: cue gone, play a
    **prerecorded intro** (not the live model) while the realtime connection
@@ -96,7 +96,7 @@ owner-written; omit it rather than inventing it.
    and **Switch to text mode**. Not Revert / OK. Onboarding
    cue is unchanged. (2026-08-28)
 
-9. **Prerecorded greeting / intro plays once** — HTML mocks:
+9. **Prerecorded greeting / intro plays once** — Look app:
    `cms-voice-greeting.mp3` when the website-editor orb comes on;
    `onboarding-guide-intro.mp3` on guide turn-on. Silent when `?shot=1`. The
    file plays on the first start. Starting Voice / the guide again more than

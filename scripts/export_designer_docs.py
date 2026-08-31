@@ -102,14 +102,8 @@ INCLUDED_MD_NAMES = {
 
 def collect_sources() -> list[Path]:
     files: list[Path] = []
-    design_root = (DOCS / "design").resolve()
     for path in DOCS.rglob("*"):
         if not path.is_file() or path.suffix.lower() != ".md":
-            continue
-        if "exported-docs" in path.parts:
-            continue
-        resolved = path.resolve()
-        if resolved == design_root or design_root in resolved.parents:
             continue
         if path.name in INCLUDED_MD_NAMES:
             files.append(path)
@@ -374,7 +368,7 @@ entries in place.
 ## What is not here
 
 Backend code, HTTP/persistence docs, architectural decision records, pipeline
-runbooks, port/debloat notes, and the old HTML mock archive were omitted by
+runbooks, port/debloat notes were omitted by
 agreement. Some leftover engineering filenames in prose were stripped; if a
 sentence reads oddly, that is why.
 """,
@@ -409,7 +403,7 @@ def write_sanitization(
 Markdown was copied, then links to omitted files were stripped. The glossary
 is copied whole (Domain, Enums, Internal, Don't say, code-naming rules).
 
-Not copied: the HTML mock archive (`docs/design/`), backend code, `ADR.md`,
+Not copied: backend code, `ADR.md`,
 `api.md`, `persistence.md`, `technical-implementation.md`, `architecture.md`,
 pipeline docs, testing, Cloudflare/ops, frontend-debloat / stack notes, and
 other engineering docs. The live look is the Vite app at the repo root.

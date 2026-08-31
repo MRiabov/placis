@@ -1,7 +1,6 @@
 # Onboarding look
 
-Editable look: [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*`. HTML archive:
-[onboarding.html](../../design/onboarding.html).
+Editable look: [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*`.
 
 [Design decision record](design-decision-record.md). The yellow strip is
 mock-only **per-screen states**. Default **collapsed** (circle in the top
@@ -10,17 +9,14 @@ Review, client interview, wait teaser, generated-website mock. Don't say
 preview. Wait teaser is `?scene=preview` (not a website preview);
 `?scene=generated` is the generated-website mock.
 
-- [onboarding.html](../../design/onboarding.html) — markup
-- [onboarding.css](../../design/onboarding.css) — look
-- [onboarding.js](../../design/onboarding.js) — mock-only scene wiring (not product UI)
-- [details-fields.css](../../design/details-fields.css) / [details-fields.js](../../design/details-fields.js) — owner field controls plus Details
-  widgets (also cms.html and ads.html)
-- [tokens.css](../../design/tokens.css) — shared CMS tokens
-- [placis-mark.png](../../design/placis-mark.png) — orb lockup in the wordmark and on the website-activation
+- [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*` — markup and look
+- [`theme.css`](../../../apps/demo/src/styles/theme.css) — shared CMS tokens and owner field controls (also `/cms` and
+  `/cms/ads`)
+- [`placis-mark.png`](../../../apps/demo/public/placis-mark.png) — orb lockup in the wordmark and on the website-activation
   strip
 
 The mock is visual. Function is the specs ([PRD](prd.md), [frontend.md](frontend.md), [pipeline](pipeline/README.md));
-when they disagree, the specs win. Tokens: [tokens.css](../../design/tokens.css) ([CMS design.md](../../general-architecture/cms/design.md)) — do
+when they disagree, the specs win. Tokens: [`theme.css`](../../../apps/demo/src/styles/theme.css) ([CMS design.md](../../general-architecture/cms/design.md)) — do
 not invent a second palette.
 
 Screens in the mock: Find, Review, client interview, wait teaser, unpaid website
@@ -30,8 +26,8 @@ pay it opens [`apps/demo/`](../../../apps/demo/README.md) `/cms/website` — web
 
 The **onboarding assistant** (owner copy: **Assistant**) is a DustOrb bottom
 right: **visible**, voice off, cue **Click to turn on voice**. Particle orb from
-[dust-orb.js](../../design/dust-orb.js); hover / tap scale 1.03. Click plays a prerecorded intro
-([onboarding-guide-intro.mp3](../../design/onboarding-guide-intro.mp3)) after the microphone is granted, while the
+[`DustOrb.tsx`](../../../apps/demo/src/ui/DustOrb.tsx); hover / tap scale 1.03. Click plays a prerecorded intro
+([onboarding-guide-intro.mp3](../../../apps/demo/public/onboarding-guide-intro.mp3)) after the microphone is granted, while the
 connection starts, and grows more particles from owner noise; they ask questions
 after. Denied microphone returns to the cue
 (**Allow microphone access in your browser**); click the orb retries. The
