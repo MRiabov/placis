@@ -154,11 +154,9 @@ instead of silently replacing it.
     **text** on `assistant_conversation_items`. No `files` row, no
     `recording_file_id`, no `POST /v1/onboarding/assistant/voice/recordings`.
     CMS recordings stay. Online research consent is not this. Same day, later:
-    Voice utterances store **`offset_seconds`** from that Voice run’s
-    realtime-connection start (browser audio clock), not wall-clock `created_at`
-    as the conversation clock. Reconstruct as `[m:ss owner]` /
-    `[m:ss assistant]` + `body`. Never say **user**. `created_at` stays the row
-    insert time. (2026-08-30)
+    Voice utterances store **`offset_seconds`** (seconds from that Voice run’s
+    start). Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`. Never say
+    **user**. `created_at` is the row insert time. (2026-08-30)
 
 14. **AI voice vendor cost** — Voice is not billed as a text LLM call. Debit is
     **AI voice vendor cost** (xAI audio minutes + text
@@ -217,16 +215,12 @@ instead of silently replacing it.
     that has a voice run uses the same caveat. (2026-08-29)
 
 23. **xAI Voice follows the business country** — Live audio (CMS and onboarding)
-    does **not** blanket-route every tenant to eu-west-1. Go picks the xAI
-    region from the **business country** at realtime-connection create: company
-    registry country if a company registry record is attached; else Google Maps
-    listing address country; else Find country on `tenants.country` (`ie` / `gb`
-    / `us`). Map `ie`/`gb` → **eu-west-1**, `us` → **us-east-1**. Not the
-    contractor’s IP, not a browser-chosen host. Return the regional realtime URL
-    on the create response; the browser uses that URL as-is. Same host for
-    ephemeral-token create and the WS. Do not switch region mid-call. Pin a
-    dated voice model that exists on that cluster. Never the global `api.x.ai`
-    host.
+    does **not** blanket-route every tenant to eu-west-1. Region comes from the
+    **business country** at realtime-connection create: company registry
+    country if attached; else Google Maps listing address country; else Find
+    country on `tenants.country` (`ie` / `gb` / `us`). Map `ie`/`gb` →
+    **eu-west-1**, `us` → **us-east-1**. Not the contractor’s IP. Hosts:
+    [voice agent](../../general-architecture/voice-agent.md). (2026-08-30)
 
 24. **Glossary is in both assistants; Voice also gets pronunciation** — CMS
     text, CMS Voice, and the onboarding voice guide all include the product

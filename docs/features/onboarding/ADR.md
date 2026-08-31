@@ -227,16 +227,12 @@ Extract is known-URL crawl text, not a Projects-only hop.)
 
 20. **Onboarding Voice stores text, not audio** — After the voice guide ends,
     persist committed owner and assistant utterances (visible text) and
-    `created_at` on each conversation item (when that speech/response was
-    posted). Do not PUT a recording to object storage. Live audio is processed
-    by xAI on **eu-west-1** and is not kept by us. Online research consent is
-    not Voice-recording consent. (2026-08-30) Same day, later: xAI region
-    follows the **business country** (registry, else Maps address country,
-    else Find country) — not blanket eu-west-1. See assistant ADR 22. Same day,
-    later: persist Voice **`offset_seconds`** (from that run’s start), not
-    wall-clock as the conversation clock. Reconstruct
-    `[m:ss owner]` / `[m:ss assistant]`. Glossary in knowledge + Voice
-    keyterms / `replace`: assistant ADR 23.
+    `created_at` on each conversation item. Do not PUT a recording to object
+    storage. Live audio is processed by xAI and is not kept by us. Online
+    research consent is not Voice-recording consent. (2026-08-30) Same day,
+    later: xAI region follows the **business country** — assistant ADR 23.
+    Persist Voice **`offset_seconds`** — assistant ADR 13. Glossary in
+    knowledge + Voice keyterms / `replace`: assistant ADR 24.
 
 21. **Wait teaser lands on the website preview** — `/onboarding/preview` (SSE
     carousel, ~15s cap) then navigates to `/onboarding/preview-and-edit/`,

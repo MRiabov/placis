@@ -277,13 +277,11 @@ Voice HTTP is under `/v1/assistant/voice/` (`realtime-connection`, `tool-calls`,
 may have changed). Seed **instructions** (knowledge + profile + screen /
 compacted thread tail). Do not replay the thread as billed
 `conversation.item.create` items. Pin a dated xAI voice model id (not
-`grok-voice-latest`). Live Voice (CMS and onboarding) uses the xAI region for
-the **business country** ([voice agent](../../general-architecture/voice-agent.md)): registry country, else Maps listing
-address country, else Find country (`tenants.country`). `ie`/`gb` →
-**eu-west-1**; `us` → **us-east-1**. Create returns that realtime URL. Do not
-use the global `api.x.ai` host. Connection create also sets xAI **keyterms** and
-**`replace`** from `internal/knowledge/voice_pronunciation.yaml` (same create
-payload as instructions; not a mid-call `session.update`).
+`grok-voice-latest`). Live Voice uses the xAI region for the **business
+country** ([voice agent](../../general-architecture/voice-agent.md)). Connection
+create also sets xAI **keyterms** and **`replace`** from
+`internal/knowledge/voice_pronunciation.yaml` (not a mid-call
+`session.update`).
 
 Voice create has **no** `plan` / `ask_first` / `follow`. Voice is always **Ask
 first** in the run row. Instant apply is not a Voice path. No owner Plan switch

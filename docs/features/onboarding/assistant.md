@@ -42,7 +42,7 @@ That surface is the [onboarding website editor](website-editor.md).
   Default launcher stays DustOrb.
 - Persist utterances on `POST /v1/onboarding/assistant/voice/transcripts`:
   committed owner and assistant **text**, plus **`offset_seconds`** from that
-  Voice run’s start (browser audio clock). Reconstruct
+  Voice run’s start. Reconstruct
   `[m:ss owner]` / `[m:ss assistant]` + `body` (never say user). `created_at`
   is the row insert time. Do **not** store
   the Voice recording (no signed-URL PUT, no `files` row, no

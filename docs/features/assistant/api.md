@@ -163,8 +163,8 @@ Onboarding uses
 - **Request:** committed owner utterance (`maxLength` **5000 characters**) +
   assistant utterance (visible text; storage `maxLength`, not a 5000-character
   generation cap). Each utterance includes **`offset_seconds`** (int, `>= 0`,
-  maximum 7200): seconds from this Voice run’s realtime-connection start
-  (browser audio clock). Reconstruct `[m:ss owner]` / `[m:ss assistant]`.
+  maximum 7200): seconds from this Voice run’s realtime-connection start.
+  Reconstruct `[m:ss owner]` / `[m:ss assistant]`.
   Never say user. Either utterance may be omitted on a **usage-only** POST.
   Reasoning if
   the voice service emitted it (`internal_reasoning`; empty string if omitted —
