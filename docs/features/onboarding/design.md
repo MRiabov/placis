@@ -23,14 +23,12 @@ The mock is visual. Function is the specs ([PRD](prd.md), [frontend.md](frontend
 when they disagree, the specs win. Tokens: [tokens.css](../../design/tokens.css) ([CMS design.md](../../general-architecture/cms/design.md)) — do
 not invent a second palette.
 
-Screens in the mock: Find, Review, client interview, wait teaser. The generated
-scene is a mock of the [preview website address](pipeline/07-website-preview.md) (website-activation strip
-sticky at the bottom), so Skip generation has somewhere to land. After pay it
-opens [`apps/demo/`](../../../apps/demo/README.md) `/cms/website` — website editor with **Publish**. Product
-website preview and website activation still live on that host, not on
-`/onboarding/preview`.
+Screens in the mock: Find, Review, client interview, wait teaser, unpaid website
+preview (`/onboarding/preview-and-edit`). The generated scene is a mock of the
+[preview website address](pipeline/08-preview-website-address.md) (website-activation strip sticky at the bottom). After
+pay it opens [`apps/demo/`](../../../apps/demo/README.md) `/cms/website` — website editor with **Publish**.
 
-The **onboarding assistant** (owner copy: **voice guide**) is a DustOrb bottom
+The **onboarding assistant** (owner copy: **Assistant**) is a DustOrb bottom
 right: **visible**, voice off, cue **Click to turn on voice**. Particle orb from
 [dust-orb.js](../../design/dust-orb.js); hover / tap scale 1.03. Click plays a prerecorded intro
 ([onboarding-guide-intro.mp3](../../design/onboarding-guide-intro.mp3)) after the microphone is granted, while the

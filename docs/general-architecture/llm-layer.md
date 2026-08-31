@@ -92,8 +92,11 @@ Callers do not invent strings at the call site.
   'onboarding_assistant'`.
 
 **`cms_assistant`** — CMS overlay conversation. Unique current per tenant.
-Compaction. GET `/v1/assistant/thread` hydrate (items, not generations).
-Compaction writes a new generation on **this** thread (not its own kind).
+Compaction (skip while `tenants.status=unactivated`). GET `/v1/assistant/thread`
+hydrate (items, not generations). Unpaid onboarding website editor reuses this
+`current` until 09 completes it; CMS GET then lazy-creates a new empty
+`current`. Compaction writes a new generation on **this** thread (not its own
+kind).
 
 **`onboarding_assistant`** — onboarding guide. Unique per onboarding session.
 Onboarding hydrate. Never migrated onto `cms_assistant` after website
@@ -109,10 +112,10 @@ above still applies; this is the persistence for a further agentic retry.
 
 ## `ai_generations`
 
-Shared by website copy generation, the CMS assistant, the onboarding assistant,
-ads, and ETL post-text extract. One table, not copied into feature persistence
-docs. Postgres schema **`ai`** (not `llm`). Go package `internal/ai/`. Image
-**files** stay in `files` / `media_library`.
+Shared by automatic website copy generation, the CMS assistant, the onboarding
+assistant, ads, and ETL post-text extract. One table, not copied into feature
+persistence docs. Postgres schema **`ai`** (not `llm`). Go package
+`internal/ai/`. Image **files** stay in `files` / `media_library`.
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `thread_id` required fk →
   `ai.threads` (hydrate never joins), `trace_type` (`prod`/`eval`),

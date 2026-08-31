@@ -116,3 +116,22 @@ owner-written; omit it rather than inventing it.
     [ADR](ADR.md) 10. (2026-08-29) Same day, later: **bottom-right** of the main pane,
     not top-right. On a narrow website editor it sits above the workspace bar.
     Same day, later: the Voice pill is **Switch to text mode**. (2026-08-29)
+
+12. **Unpaid website preview Assistant is on the canvas** — Same tokens as CMS
+    Assistant (bottom-right **Assistant** call, then DustOrb / composer).
+    Present on `/onboarding/preview-and-edit/`. Top-right is **Share** only. Pay
+    is the sticky website-activation strip. No owner Plan switch. Instant apply.
+    Hidden on wait teaser. (2026-08-30) Same day, later: the composer is **on**
+    as text; **Voice** is a switch in that composer. Website page list and Share
+    float on the canvas. Send and Voice need **Sign up with Google**. The field
+    is a compact docked composer, not the CMS card. (2026-08-30) Same day,
+    later: that composer stacks above the website-activation strip’s lift
+    shadow. (2026-08-30) Same day, later: on a wide pane the composer is
+    **max-width 32rem**, centered; on a narrow pane it still docks nearly full
+    width. (2026-08-30) Same day, later: the composer shows the CMS Assistant
+    thread (expand / reduce; no Plan / Ask first / Clear context). Default
+    expanded so 06 `tool_summary` is visible on land. (2026-08-30) Same day,
+    later: website page list and Share sit on the canvas corners; this route has
+    no Find / Review / Questions progress and no Find/Review Assistant.
+    (2026-08-30) Same day, later: while copy generation is still writing, a
+    six-dot spinner sits under the Assistant thread. (2026-08-30)

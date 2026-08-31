@@ -152,7 +152,7 @@ credit for this blocker. After a successful website publication,
 `has_unpublished_changes` is false until the next edit. The POST sends
 `website_address_id`: that host’s R2 tree, then purge **that** host ([api.md](api.md),
 [cloudflare.md](cloudflare.md)). The **host row** is the Publish click. Hosts can diverge.
-After website activation (08), `/cms/website` opens with **Publish**; first
+After website activation (09), `/cms/website` opens with **Publish**; first
 owner website publication is v3+.
 
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that

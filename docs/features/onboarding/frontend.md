@@ -117,19 +117,19 @@ research does not write them).
 ### 4. Wait teaser — `/onboarding/preview`
 
 Wait teaser, not the shareable host. Timeline from the onboarding session SSE
-(05 apply the website template, then 06 copy filling in). Rotate **complete**
-filled website sections (whole-and-valid, not website placeholders), named
-interval ~2s, smooth phase in/out especially images. Reuse
+(05 apply the website template, then 06 automatic website copy generation).
+Rotate **complete** filled website sections (whole-and-valid, not website
+placeholders), named interval ~2s, smooth phase in/out especially images. Reuse
 **website components** for that one website section — not Astro, not full
 website pages, not the website editor path.
 
-Wait until **website copy generation finishes** or the **~15s cap**, whichever
-first. The footer shows a progress bar for that cap, painted every animation
-frame ([design decision](design-decision-record.md) 7). Then 07 writes `latest/` and the browser
-**navigates** to the preview website address. Do not paint full website pages
-here. Do not put the website-activation strip on this route (it lives in the
-host HTML). The wait-teaser hero uses the same job-site photo as the site they
-will open. The wait timeline moves to “Opening the site” as the cap ends
+Wait until **automatic website copy generation finishes** or the **~15s cap**,
+whichever first. The footer shows a progress bar for that cap, painted every
+animation frame ([design decision](design-decision-record.md) 7). Then the browser **navigates** to
+`/onboarding/preview-and-edit/`. Do not paint full website pages here. Do not
+put the website-activation strip on this route (it lives in the host HTML after
+Share). The wait-teaser hero uses the same job-site photo as the site they will
+open. The wait timeline moves to “Opening the site” as the cap ends
 ([design decision](design-decision-record.md) 11). `prefers-reduced-motion` stops the carousel loop and
 jumps the bar in second steps.
 
@@ -139,18 +139,35 @@ website-activation strip ([design decision](design-decision-record.md) 10).
 Paid (the Paid tab) opens the website editor look export with **Publish**
 (`?scene=website&publication=1&from=activation`).
 
-### 5. Website preview + website activation — preview website address
+### 5. Website preview + website activation — `/onboarding/preview-and-edit/`
 
-Static R2 HTML (Cache then R2). Website-activation strip is a Clerk/Stripe
-**island** in that HTML ([07](pipeline/07-website-preview.md), [cloudflare.md](../website/cloudflare.md)). It is
-**sticky to the bottom of the viewport** while the website scrolls
-([design decision](design-decision-record.md) 10). The strip is a white bar with the Placis orb lockup
-(`placis-mark.png`), headline, EUR 4,900, and the activate CTA. Create an
-account, then pay. An existing Clerk session skips to pay. Copy still running
-after they land is not a live update. Success (08) → `/cms/website` (website
-editor, **Publish**). Anyone with the URL may create an account and pay. The
-look export’s paid mock opens the website editor with **Publish**
-(`?scene=website&publication=1&from=activation`).
+Wait teaser `/onboarding/preview` (SSE carousel, ~15s cap) then **navigates to
+`/onboarding/preview-and-edit/`**. Live unpublished canvas. Custom top-left
+nested control to switch website pages (titles list, Services nested; not the
+CMS Website pages rail). Canvas top-menu/footer website page clicks stay on
+this route. Website page list and **Share** sit on the canvas corners (no
+reserved top row). No Find / Review / Questions progress, no onboarding Back, no
+Find/Review Assistant. Pay is the sticky website-activation strip (same bar as
+the host mock; on a narrow pane the copy and price sit on one row and the
+activate control is full width). Assistant
+starts as text (compact docked composer, max-width 32rem on a wide pane, in
+front of the website-activation strip’s lift shadow) with the CMS Assistant
+thread above it (expand / reduce; no Plan / Ask first / Clear context; default
+expanded). **Voice** is a switch in that composer. 06 `tool_summary` fills the
+thread on land (`GET …/thread` with the onboarding session token). While 06 is
+still writing, a six-dot spinner sits under the thread. No Content,
+no website styles rail, no click-to-edit, no design controls. Signed-out: view
+and switch website pages; hydrate the thread; prompt box visible; send and
+Voice need **Sign up with Google**.
+
+**Share** (optional) runs [08](pipeline/08-preview-website-address.md): preview
+website address with website-activation strip. Pay on the website preview **or**
+on that strip ([09](pipeline/09-website-activation.md)). After 09 this route
+redirects to `/cms/website` (website editor, **Publish**).
+
+The look export’s unpaid website preview is `apps/demo/`
+`/onboarding/preview-and-edit`. The static host mock stays `GeneratedPage`
+(`/onboarding/generated`).
 
 ## Resume
 
@@ -160,8 +177,9 @@ session status and whether `latest/` exists win. Screen map: [pipeline README](p
 
 Reload during the wait → stay on `/onboarding/preview`, reconnect SSE, keep
 rotating complete sections, finish the **same** wait (copy done or remaining
-time to the original cap — not a new 15s). Reload after 07 → the host.
-`activated` → `/cms/website`. The host opens without `localStorage`.
+time to the original cap — not a new 15s). Reload after wait-end →
+`/onboarding/preview-and-edit/`. `activated` → `/cms/website`. The preview
+website address (after share) opens without `localStorage`.
 
 Restore failure keeps the token and
 retries; it does not `POST` a new onboarding session.
@@ -181,5 +199,7 @@ retries; it does not `POST` a new onboarding session.
 - `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — SSE carousel of
   complete website sections; 15s wait progress in the shared footer, painted
   every animation frame.
+- `PreviewAndEditPanel` — unpaid website preview after the wait teaser.
+  Assistant thread stub shows muted 06 `tool_summary` lines above the field.
 - Leftover `src/features/preview/` is predecessor code to drop (no
   `/preview/{token}/` in this app).

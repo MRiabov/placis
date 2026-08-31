@@ -26,8 +26,8 @@ export function CmsRoute(): ReactNode {
   useEffect(() => {
     // Tenant <-> Clerk org is 1-1 and there is no chooser anymore. CMS access
     // requires an active (paid/activated) tenant: no tenant, or a tenant that
-    // is still draft, is the "not onboarded yet" state -> continue onboarding
-    // (which is also reachable without signing in).
+    // is still unactivated, is the "not onboarded yet" state -> continue
+    // onboarding (which is also reachable without signing in).
     if (!sessionPending && session && !hasActiveTenant) {
       redirectTo("/onboarding");
     }

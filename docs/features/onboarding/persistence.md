@@ -64,8 +64,9 @@ profile via
 - `stripe_events` — `id`, `event_id` unique, `type`, `payload` jsonb,
   `processed`, `created_at`
 
-No `website_previews` / `token_hash`. The website preview is the host reserved
-at 07 ([07](pipeline/07-website-preview.md)). Website publications live on
+No `website_previews` / `token_hash`. The website preview is
+`/onboarding/preview-and-edit/`. The preview website address is reserved at 08
+([08](pipeline/08-preview-website-address.md)). Website publications live on
 [website persistence](../website/persistence.md).
 
 ## Indexes

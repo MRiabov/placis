@@ -5,9 +5,9 @@ at website publication. The unpublished website keeps the tokens; website
 publication substitutes the real values.
 
 Onboarding 05 (apply the website template) writes `{{…}}` detail tokens and
-leaves them in place. Onboarding 06 (website copy generation) may overwrite
-prose slots but must leave reusable detail tokens. Website publication resolves
-remaining tokens.
+leaves them in place. Onboarding 06 (automatic website copy generation) may
+overwrite prose slots but must leave reusable detail tokens. Website publication
+resolves remaining tokens.
 
 ## Syntax
 

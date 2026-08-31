@@ -18,6 +18,7 @@ import {
   progressEventLabel,
   visibleProgressEvents,
 } from "./progress";
+import { waitTeaserCopyDone } from "./waitTeaser";
 import { WebsiteComponentEditPreview } from "./WebsiteComponentEditPreview";
 
 export type GenerationPanelProps = {
@@ -32,15 +33,12 @@ export type GenerationPanelProps = {
 
 export function GenerationPanel({
   onResumeGeneration,
-  previewPackage,
   progressEvents,
   resumeActionBusy,
   setupSessionId,
   status,
   streamState,
 }: GenerationPanelProps): ReactNode {
-  const previewToken = previewPackage?.preview_token;
-  const previewPath = previewToken ? previewUrlForToken(previewToken) : "";
   const generationBlocked =
     latestGenerationStateEvent(progressEvents)?.event_type ===
     "generation.blocked";
@@ -52,16 +50,14 @@ export function GenerationPanel({
   const websiteEditing = progressEvents.some(
     (event) =>
       event.event_type === "generation.website_editing_started" ||
-      event.event_type === "generation.website_preview_ready" ||
       event.event_type === "generation.completed",
   );
   const generating =
     Boolean(setupSessionId) &&
-    !previewToken &&
     !status.equals(OnboardingStatus.Error) &&
     generationStarted &&
     !generationStopped;
-  const previewReady = Boolean(previewToken);
+  const previewReady = waitTeaserCopyDone(progressEvents);
   const heroIconClassName = heroIconClass(previewReady, generationStopped);
   const heroCopy = generationPanelCopy({
     generationBlocked,
@@ -95,11 +91,11 @@ export function GenerationPanel({
           {heroCopy.description}
         </p>
 
-        {!previewToken && !generationStopped ? (
+        {!generationStopped ? (
           <WebsiteComponentEditPreview progressEvents={progressEvents} />
         ) : null}
 
-        {!previewToken && generationStopped ? (
+        {generationStopped ? (
           <div className="mt-6 rounded-lg border border-destructive/30 bg-destructive/5 p-4">
             <p className="text-sm leading-6 text-foreground">
               {generationFailed
@@ -120,27 +116,6 @@ export function GenerationPanel({
                   ? "Try generation again"
                   : "Continue generation"}
             </button>
-          </div>
-        ) : null}
-
-        {previewToken ? (
-          <div className="mt-6 grid gap-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
-            <div>
-              <p className="font-semibold text-emerald-950">
-                Open the native website preview.
-              </p>
-              <p className="mt-1 text-sm leading-6 text-emerald-900">
-                The preview opens as the actual website with review actions
-                fixed to the bottom of the screen.
-              </p>
-            </div>
-            <a
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-foreground px-5 text-sm font-semibold text-background transition"
-              href={previewPath}
-            >
-              View website
-              <ArrowRight className="size-4" />
-            </a>
           </div>
         ) : null}
       </div>

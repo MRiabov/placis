@@ -7,7 +7,7 @@ Onboarding turns a spoken or typed description of a business into a clear
 - [ADR](ADR.md) — architectural decision record
 - [architecture.md](architecture.md) — pipeline, SSE, where things stand
 - [pipeline](pipeline/README.md) — one doc per step (DAG: 01 find, 02 research, 03 Review, 04a
-  interview; 04b out; build-profile, 05–08)
+  interview; 04b out; build-profile, 05–09)
 - [persistence.md](persistence.md) — onboarding sessions, website activation
 - [api.md](api.md) — HTTP (business lookup, resume, SSE, website activation)
 - [technical-implementation.md](technical-implementation.md) — the technical plan (flow, pipeline)
@@ -17,10 +17,11 @@ Onboarding turns a spoken or typed description of a business into a clear
   `docs/design/onboarding.html`)
 - [design decision record](design-decision-record.md) — onboarding look and interaction
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
-- [assistant.md](assistant.md) — onboarding guide (isolated conversation)
+- [assistant.md](assistant.md) — Find / Review / interview Assistant
+- [website-editor.md](website-editor.md) — unpaid website preview Assistant
 - [testing.md](testing.md) — the onboarding E2E test
 
 Auth is interleaved with onboarding (website activation), but auth and tenancy
-are owned by the [auth feature](../other/auth/README.md). Stripe checkout lives in [website activation](pipeline/08-website-activation.md).
+are owned by the [auth feature](../other/auth/README.md). Stripe checkout lives in [website activation](pipeline/09-website-activation.md).
 HTTP: [api.md](api.md). The schema lives in [persistence.md](persistence.md) (onboarding sessions),
 [ETL](../etl/persistence.md) (extract), and [details](../business-profile/details/persistence.md) (business profile).

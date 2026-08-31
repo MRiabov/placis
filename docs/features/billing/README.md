@@ -2,7 +2,7 @@
 
 Usage credit, subscription price, Usage & billing, and Pricing on the Placis
 website. Website activation one-time Stripe stays in
-[08](../onboarding/pipeline/08-website-activation.md). This feature does not
+[09](../onboarding/pipeline/09-website-activation.md). This feature does not
 steal `website_activations` or activation checkout.
 
 The mock is [`apps/demo/`](../../../apps/demo/README.md) `/cms/billing`. Open Usage & billing from the account

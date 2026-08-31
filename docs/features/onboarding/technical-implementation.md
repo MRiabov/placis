@@ -15,9 +15,10 @@ extract/transform are
 `created → client_interviewing → applying_website_template → previewing → activated`
 (`apply_website_template_failed` if applying the website template throws).
 Business research runs in the background alongside review/client interview;
-applying the website template starts at client interview complete; website copy
-generation runs after that and does not block website activation. 07 waits
-copy-done or the wait cap, then writes the host.
+applying the website template starts at client interview complete; automatic
+website copy generation runs after that and does not block website activation.
+Wait-end lands on the website preview (07 contractor copy improvement). 08 share
+(optional) writes the host.
 
 ## HTTP
 
@@ -27,7 +28,7 @@ Website activation checkout is public, CORS by `Host` / `website_prefix` — not
 `/v1/website-previews/{token}/…`. Website publication / website rollback:
 [website HTTP](../website/api.md).
 
-Website publication of 07/08 is the same write as the website editor’s website
+Website publication of 08/09 is the same write as the website editor’s website
 publication; website rollback of onboarding rows is refused
 ([website technical implementation](../website/technical-implementation.md)).
 
@@ -60,8 +61,8 @@ publication; website rollback of onboarding rows is refused
   (see [ci-cd.md](../../general-architecture/ci-cd.md)).
 - One E2E: find → review → client interview → apply the website template →
   website preview → website activation (Google / LLM / Stripe faked, core logic
-  unmocked). The website preview can be activated before website copy generation
-  finishes.
+  unmocked). The website preview can be activated before automatic website copy
+  generation finishes.
 
 ## Frontend
 

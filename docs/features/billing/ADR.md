@@ -16,7 +16,7 @@ new entries with the next number, the area, and the date.
 
 2. **Website activation checkout stays in 08** — Billing does not steal
    `website_activations` or activation Stripe.
-   ([08](../onboarding/pipeline/08-website-activation.md)). (2026-08-29)
+   ([09](../onboarding/pipeline/09-website-activation.md)). (2026-08-29)
 
 3. **Do not commit to Clerk Billing yet** — Already decided in 08. Optimistic
    subscription status in Postgres; refresh when expected. (2026-08-29)

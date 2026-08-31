@@ -3,7 +3,7 @@
 Flows and states. Tables: [persistence.md](persistence.md). HTTP: [api.md](api.md). Look:
 [design decision record](design-decision-record.md). Decisions: [ADR.md](ADR.md).
 
-Website activation (one-time pay) is [08](../onboarding/pipeline/08-website-activation.md). This feature owns usage credit after
+Website activation (one-time pay) is [09](../onboarding/pipeline/09-website-activation.md). This feature owns usage credit after
 that.
 
 ## Pool
@@ -39,8 +39,8 @@ of an open socket. xAI invoices
    2026-08-28: `grok-voice-think-fast-2.0` **$0.08 / min** ($4.80 / hr).
    Deprecated `grok-voice-think-fast-1.0` $0.05 / min. Pin a dated model id; do
    not ride `grok-voice-latest`. Live Voice uses the xAI region for the
-   **business country** (not a blanket eu-west-1, not the global `api.x.ai`
-   host).
+   **business country**
+   ([voice agent](../../general-architecture/voice-agent.md)).
 2. **$0.004 per text `conversation.item.create`**. Not billed:
    `function_call_output` (our tool results) and items whose content is audio
    (those ride the audio minutes). `response.create` is not a billable event.
@@ -98,7 +98,7 @@ Optimistic `subscription_status` on `tenants` (`active` / `canceled` /
 `none`). If they stop paying the subscription price, unpublish the website.
 They cannot do a **website publication** (or live website rollback) until the
 subscription is `active` again. That is **402** `subscription_canceled`, not
-`usage_credit_exhausted`, and not 08 website activation (the tenant stays
+`usage_credit_exhausted`, and not 09 website activation (the tenant stays
 `status=active`; CMS edit stays open). Self-serve tiers: Placis Pro plan /
 Placis Pro Plus plan / Placis Pro Max plan. Enterprise plan is sales-led.
 

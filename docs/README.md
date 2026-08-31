@@ -18,7 +18,7 @@ can do the same edits and ads themselves in the CMS.
    layer, audit, jobs, files, `frontend-2` UI
 6. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization for active tenants
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building;
-   [website activation](features/onboarding/pipeline/08-website-activation.md) is pay-and-activate
+   [website activation](features/onboarding/pipeline/09-website-activation.md) is pay-and-activate
 8. [ETL](features/etl/README.md) — extract and transform (Google Maps, Facebook, Instagram); Monday /
    Wednesday / Friday refresh
 9. [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
@@ -50,7 +50,7 @@ can do the same edits and ads themselves in the CMS.
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
 | ETL (extract + transform) | [features/etl/README.md](features/etl/README.md) |
 | Business profile | [features/business-profile/README.md](features/business-profile/README.md) |
-| Website activation / payments | [features/onboarding/pipeline/08-website-activation.md](features/onboarding/pipeline/08-website-activation.md) |
+| Website activation / payments | [features/onboarding/pipeline/09-website-activation.md](features/onboarding/pipeline/09-website-activation.md) |
 | Website building + editing | [features/website/README.md](features/website/README.md) |
 | Assistant | [features/assistant/README.md](features/assistant/README.md) |
 | Billing (usage credit) | [features/billing/README.md](features/billing/README.md) |
@@ -69,7 +69,7 @@ One product, one loop:
 ```text
 onboard (from their Google Maps listing or company registry record)
   -> a few questions -> business research -> business profile
-  -> website (website template + website copy generation) -> edit in the CMS -> website publication
+  -> website (website template + automatic website copy generation) -> edit in the CMS -> website publication
   -> ads from the profile + approved photos
 ```
 

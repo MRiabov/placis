@@ -54,7 +54,7 @@ Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). T
    active flag + website rollback chain) holding a typed `website.v1` document.
 3. Contractor website pages render only the active website publication (R2
    `latest/`). The website editor canvas renders the unpublished website. The
-   preview website address is that same `latest/` tree (strip on until 08), not
+   preview website address is that same `latest/` tree (strip on until 09), not
    a per-request unpublished render.
 4. Website rollback reactivates an earlier website publication; earlier
    published website copies are never overwritten.

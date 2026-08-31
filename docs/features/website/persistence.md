@@ -68,10 +68,10 @@ is [manifest.md](manifest.md). The reserved label on the tenant row is [auth](..
   `version_number`, `status` (`published`/`archived`/`rolled_back`), `active`,
   `manifest_version`, `website_manifest` jsonb, `published_by`
   (`onboarding`/`owner`), `website_address_id` nullable fk (required on owner
-  CMS POST; onboarding 07/08 write the preview host),
+  CMS POST; onboarding 08/09 write the preview host),
   `rollback_of_publication_id` nullable, `published_at`; unique
   `(tenant_id, version_number)`. Website rollback lists and reactivates
-  `published_by=owner` only, **on that host**. Onboarding 07/08 (and 05-retry)
+  `published_by=owner` only, **on that host**. Onboarding 08/09 (and 05-retry)
   rows stay out of that list; the API refuses them by id.
 - `website_publication_issues` — `id`, `publication_id` fk, `code`, `message`,
   `entity_type` nullable, `entity_id` nullable. **Post-publication only.**

@@ -5,10 +5,10 @@ Assistant look, thread, and HTTP: [assistant](../assistant/README.md). Plan vs c
 vs instant apply stay **website editor only** (below). Generation and search go
 through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
 
-Onboarding [website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses these tools headless
+Onboarding [automatic website copy generation](../onboarding/pipeline/06-website-copy-generation.md) reuses these tools headless
 (**continuous** + **instant apply**, no chat UI, no `create_page`) after the
-website template is applied. That job is website copy generation, not the CMS
-assistant.
+website template is applied. That job is automatic website copy generation, not
+the CMS assistant.
 
 Assistant look: [assistant design decision record](../assistant/design-decision-record.md), website placement:
 [design decision 18](design-decision-record.md). Architecture: [website ADR](ADR.md) 6.

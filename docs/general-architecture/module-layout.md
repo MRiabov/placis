@@ -23,8 +23,9 @@ internal/
   # only when it grows past ~800 lines (never flat file dumps).
   tenancy/        # tenants.go, memberships.go
   onboarding/     # onboarding.go, client_interview.go, orchestrate.go, activation.go
-    websitepreview/ #   package.go, events.go (website preview of the unpublished website during onboarding)
-    assistant/    #   onboarding guide (isolated conversation + knowledge)
+    websitepreview/ #   package.go, events.go (07 R2 write + SSE for wait teaser)
+    websiteeditor/  #   unpaid website preview HTTP + policy (not CMS /v1/assistant)
+    assistant/    #   Find, Review, and client interview (isolated conversation + knowledge)
   etl/            # run.go (StartRun: cap, enqueue_id, insert etl.runs, enqueue jobs only)
     extract/      #   googlemaps/, facebook/, instagram/, crawl/, traderegistry/,
                   #   websearch/ — each with fakes; worker calls these, does not inline
@@ -56,7 +57,7 @@ apps/
 packages/
   website-components/  # website templates, website component renderers + contract.json, website style catalog presets
 catalog/          # later: typed structs dumped to JSON; first-pass JSON sidecars live in packages/website-components
-frontend-2/       # CMS + onboarding (Vite); website preview is apps/contractor-website
+frontend-2/       # CMS + onboarding including `/onboarding/preview-and-edit/`
 docs/
 go.mod
 ```

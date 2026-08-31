@@ -7,8 +7,9 @@ Resume, business-lookup-once, DAG. It does not retell the steps.
 The contractor never waits on business research. Business lookup returns
 immediately; business research fills the checklist in the background; applying
 the website template starts only after the client interview completes.
-`/onboarding/preview` waits for website copy generation **or** a ~15s cap, then
-07 writes the host. 08 does not wait for 06.
+`/onboarding/preview` waits for automatic website copy generation **or** a ~15s
+cap, then navigates to `/onboarding/preview-and-edit/`. 08 share is optional.
+09 does not wait for 06 and does not require 08.
 
 ## DAG
 
@@ -25,17 +26,20 @@ contractor sees Review.
 04b. voice client interview — **out**; do not implement
      build the profile — concurrent persist, not a wait
 05.  apply the website template (after client interview complete)
-06.  website copy generation (async; 07 waits copy-done or cap; does not block 08)
-07.  website preview (reserve website prefix + preview website address; website publication v1 + R2 strip on)
-08.  website activation (pay → activate tenant; website publication v2 strip off)
+06.  automatic website copy generation (async; wait teaser waits copy-done or cap; does not block 09)
+07.  contractor copy improvement (Assistant on the website preview; five unpaid prompts; does not block 09)
+08.  preview website address share (optional; reserve website prefix + preview website address; website publication + R2 strip on)
+09.  website activation (pay → activate tenant; complete unpaid Assistant thread; live R2 no strip)
 ```
 
 ```text
 01 business lookup
   ├─► 02 business research ──► build-profile (live business profile)
-  └─► 03 Review (skip ok) ─► 04a ──► 05 ─► 07 ─► 08
-                                      │              └─► 06 (async)
-                                      └─► build-profile
+  └─► 03 Review (skip ok) ─► 04a ──► 05 ─► wait teaser ─► website preview
+                                      │                      ├─► 07 contractor copy improvement
+                                      │                      ├─► 08 share (optional)
+                                      │                      └─► 09
+                                      └─► 06 (async)
 ```
 
 SSE (`GET /v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from
@@ -46,7 +50,8 @@ authoritative. Business research progress reads `etl.runs`.
 
 `created` → `client_interviewing` (confirmed; 02 + 03 + 04a) →
 `applying_website_template` (client interview complete; 05 running) →
-`previewing` (07 wrote `latest/`; 06 may still write copy) → `activated`.
+`previewing` (wait-end; `/onboarding/preview-and-edit/`; 06 may still write
+copy; 07 may run; 08 share is optional) → `activated`.
 `apply_website_template_failed` if 05 throws. 06 failing does not change
 onboarding session status. The preview website address has no token and no TTL.
 The onboarding session has no `expired` status. Review (03) does not get its own
@@ -66,7 +71,7 @@ second token and no server-side resume token.
 | `client_interviewing`, no client interview started | `/onboarding/review` (Review) |
 | `client_interviewing`, interview in progress (`channel` set or an autosave exists) | `/onboarding/interview` |
 | `applying_website_template` or `apply_website_template_failed` | `/onboarding/preview` (SSE carousel; same wait) |
-| `previewing` | the preview website address |
+| `previewing` | `/onboarding/preview-and-edit/` |
 | `activated` | clear storage; `/cms/website` |
 
 Business lookup creates the onboarding session **once** (01), when this browser
@@ -91,8 +96,9 @@ Canonical detail: [frontend.md](../frontend.md), [onboarding assistant](../assis
 - [build-profile.md](build-profile.md)
 - [05-apply-website-template.md](05-apply-website-template.md)
 - [06-website-copy-generation.md](06-website-copy-generation.md)
-- [07-website-preview.md](07-website-preview.md)
-- [08-website-activation.md](08-website-activation.md)
+- [07-contractor-copy-improvement.md](07-contractor-copy-improvement.md)
+- [08-preview-website-address.md](08-preview-website-address.md)
+- [09-website-activation.md](09-website-activation.md)
 
 ## Tests
 
