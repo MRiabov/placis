@@ -33,7 +33,8 @@ Strip on/off is a caller flag.
 - Rewrite `latest/` because later business research landed. Live R2 is a
   **snapshot**. Later business research only changes what the **next** 04
   resolves.
-- Spec Worker RPC internals.
+- Spec Worker RPC internals
+  ([open questions](../catalog.md#open-questions)).
 - Make onboarding-written rows website-rollback targets
   (`published_by=onboarding`).
 

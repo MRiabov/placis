@@ -60,7 +60,9 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
    profile (not `website_manifest`) and asks the Worker **internal page
    render** (same Astro engine as 04). Put that HTML on the first inference.
    Batch the first render (for example 8 pages) on **one Worker**, not
-   parallel Workers.
+   parallel Workers. “8 pages” is an example, not a rule when the site has
+   4 or 12 website pages. Worker binding, body, and batch encoding are
+   [open questions](../catalog.md#open-questions).
 2. Per website page, bounded parallel: `update_slot` (prose), `update_seo`,
    then image: **attach first** (`update_slot` + `media_asset_id`) when
    `media_assets[]` already has a fit; `generate_image` only when nothing

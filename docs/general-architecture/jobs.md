@@ -14,11 +14,11 @@ Maps scrape stay in-process; API p90-delta during scrape:
 
 Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/09-website-activation.md). Onboarding
 [automatic website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md)
-([website 03](../features/website/pipeline/03-website-copy-generation.md)) is a
-River job after copying the website template’s pages onto the unpublished
-website; it must not block the website preview. Compaction **skips**
-`ai.threads` `thread_kind=cms_assistant` whose tenant is `status=unactivated`
-(unpaid current must not compact).
+([website 03](../features/website/pipeline/03-website-copy-generation.md)) is a River job after copying the website template’s pages onto
+the unpublished website; it must not block the website preview. Unique key =
+`tenant_id`. Closed River job enum value and args are [open questions](../features/website/catalog.md#open-questions).
+Compaction **skips** `ai.threads` `thread_kind=cms_assistant` whose tenant is
+`status=unactivated` (unpaid current must not compact).
 
 ## Assistant thread compaction
 

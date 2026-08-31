@@ -26,7 +26,8 @@ is [manifest.md](manifest.md). The reserved label on the tenant row is [auth](..
   **Connect website address** (modal over the website editor), not website
   publication. See [cloudflare.md](cloudflare.md).
 - `website_pages` — `id`, `tenant_id` fk, `path`, `title`, `page_type`
-  (`home`/`service`/ `contact`/`legal`), `status` (`unpublished`/`archived`),
+  (`home`/`about`/`service`/`contact`/`legal`; `legal` = legal-document
+  website pages such as privacy policy), `status` (`unpublished`/`archived`),
   `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
   `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`, timestamps; unique
   `(tenant_id, path)`

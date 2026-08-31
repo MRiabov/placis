@@ -10,9 +10,9 @@ A website is a list of **website pages**; a website page is an ordered list of
 and editable website slots.
 
 - **website page** — website page path, title, type
-  (`home`/`service`/`contact`/`legal`), SEO, and an ordered list of website
-  sections. Status is `unpublished` or `archived`. The live set is the active
-  website publication, not a page-level published flag.
+  (`home`/`about`/`service`/`contact`/`legal`), SEO, and an ordered list of
+  website sections. Status is `unpublished` or `archived`. The live set is the
+  active website publication, not a page-level published flag.
 - **website section** — an instance of a website component (`component_id`),
   with its props and design, at a position on the website page. Two site-wide
   look sections (`page_id` null) paint the top menu and footer (logo, density);
@@ -40,13 +40,13 @@ components render. A reviews website component’s contract includes the max
 number of reviews that layout paints (examples 3 / 6 / 8 — not a closed product
 list).
 
-The first-pass website template catalog and website component catalog live in
-`packages/website-components` (from the predecessor), not a short list written
-here. Go loads those JSON sidecars for save and website publication validation;
-it must not hand-duplicate the struct shapes. A later dump of the same typed
-structs lives under `catalog/`. Website templates and website component
-contracts are static website template catalog data, kept as website template
-catalog revisions — not database rows.
+The website template catalog object and 02 mapping are
+[catalog.md](catalog.md). Website component renderers live in
+`packages/website-components`. Go `go:embed`s a dump of the same typed JSON
+under `catalog/` (like `prompts.yaml`). It must not hand-duplicate slot keys
+as Go fields and must not load `src/blueprints/` as the catalog. Extra keys
+rejected. Website templates and website component contracts are static
+catalog data, kept as catalog revisions — not database rows.
 
 ## Select and copy the website template
 
@@ -56,21 +56,22 @@ site of that trade needs. From-scratch writes:
 
 1. take the details from the business profile (services, service areas,
    certifications, projects, contact);
-2. **select website template** — one bounded LLM call picks website template
-   and website styles (heuristic fallback). Do not write unpublished pages
+2. **select website template** — persist `website_template_id` +
+   `preset_id`. Picker is out until the stacked rewrite
    ([01](pipeline/01-select-website-template.md));
 3. **copy the website template’s pages onto the unpublished website** —
    unpublished `website_pages` / `website_sections` / `website_slots` —
    website placeholders stay. Named services on the confirmed profile become
-   service pages. Page set is then static. Derive `website.menus` from that
-   set (not a catalog menu JSON). Do not insert
-   `website_slot_reviews`. Do not bake ranked-top-4 project ids
+   service pages (one layout copied N times). Page set is then static. Derive
+   `website.menus` from the [menu constant](catalog.md#menu-constant). Do not
+   insert `website_slot_reviews`. Do not bake ranked-top-4 project ids
    ([02](pipeline/02-copy-website-template-pages.md));
 4. pick or generate media assets (prefer real project photos; generate only
    when approved);
-5. reviews website sections keep `{{reviews.1}}` … ; the ranking job orders
-   the pool and selects **top reviews** (ads). Owner Content /
-   `update_reviews` can override a section later;
+5. reviews website sections keep `{{reviews.1}}` … ; **LLM ranking**
+   (`thread_kind=website_reviews_ranking`) orders the pool and selects
+   **top reviews** (ads). Owner Content / `update_reviews` can override a
+   section later;
 6. validate against website component contracts, the company registry,
    marketing statements, links, website forms, SEO.
 

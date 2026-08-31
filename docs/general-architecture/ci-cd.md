@@ -78,6 +78,15 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    `additionalProperties: true`, and string fields documented as JSON blobs on
    huma DTOs (including SSE event structs). Persistence `jsonb` columns are not
    this check. See [HTTP conventions](api.md).
+8. **Production-ready website template** — a website template marked
+   `production_ready` (the flag 01 may pick) fails CI unless it has the
+   expected website pages and look sections, and every Common variable from
+   [variables.md](../features/website/variables.md) appears at least once.
+   Rules: [website template catalog](../features/website/catalog.md). Do not
+   turn this gate on against leftover predecessor per-website-page JSON
+   until a website template index exists. Dump/source drift of `catalog/` vs
+   `packages/website-components` contracts also fails CI after that dump
+   exists. Keep the deferred blog/careers fail.
 
 ## Decisions
 

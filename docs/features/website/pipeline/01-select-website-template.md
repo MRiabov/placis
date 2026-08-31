@@ -2,6 +2,12 @@
 
 Pick a website template and website styles. Do not write unpublished pages.
 
+**Out until the stacked rewrite.** Persist columns stay
+(`website_template_id`, `preset_id`). Do not implement the LLM picker on
+this branch. Picker output schema, `website_template_id` type, and the
+heuristic table are [open questions](../catalog.md#open-questions). What
+one website template is: [catalog.md](../catalog.md).
+
 Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) enqueues this, then [02](02-copy-website-template-pages.md).
 
 ## Trigger
@@ -23,24 +29,22 @@ Onboarding 05 after client interview complete
 - Wait for business research to finish.
 - Pick reviews or bake project gallery ids.
 - Website publication.
+- Implement the LLM picker on this branch (stacked rewrite).
 
 ## Do
 
-1. One bounded LLM call picks website template + website styles
-   (`thread_kind=website_template_picker`). Not website-page-by-website-page
-   copy.
-2. Heuristic fallback remains the existing pointer only: trade → website
-   template, else default. What one website template is (catalog family) is
-   out of this step.
-3. Persist the pick. Do not copy pages (that is 02).
+1. Persist the pick onto `website_settings`. Do not copy pages (that is
+   02). How the pick is chosen is the stacked rewrite / open questions —
+   not an LLM schema in this file.
+2. Do not write unpublished website rows.
 
 ## Persist
 
-`ai.threads` (`thread_kind=website_template_picker`) and `ai_generations`
-for the pick (`input`, `internal_reasoning`, `output`, `tool_calls`). One
-`website_settings` row on that `tenant_id`: `website_template_id` = catalog
-id, `preset_id` = website styles. 02 SELECTs that row. No unpublished
-website rows. No River 06 job yet.
+One `website_settings` row on that `tenant_id`: `website_template_id` =
+catalog id, `preset_id` = website styles. 02 SELECTs that row. No
+unpublished website rows. No River 06 job yet. `ai.threads` /
+`ai_generations` for a picker call belong to the stacked rewrite, not
+this branch.
 
 ## Fail
 
@@ -53,6 +57,6 @@ website. No `latest/`. Retry is a new 05 (01 then 02).
 
 ## Invariants
 
-- One LLM call (or the heuristic fallback). Not a write of pages.
+- Not a write of pages.
 - Same profile + same catalog → same pick is 02’s concern, not this file’s
   write.

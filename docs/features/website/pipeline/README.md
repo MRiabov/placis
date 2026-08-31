@@ -2,7 +2,7 @@
 
 From-scratch website create. Website owns the **write**. Onboarding owns
 **when** it runs. Contractor copy improvement stays onboarding 07 — not a
-from-scratch create step.
+from-scratch create step. Website template object: [catalog.md](../catalog.md).
 
 Each step file uses Trigger / Pre / Must not / Do / Persist / Fail / Out /
 Invariants. Matching [testing/](testing/) — backend integration tests (real Go + real
