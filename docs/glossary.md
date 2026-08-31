@@ -1206,7 +1206,8 @@ Distinct from: Assistant screen context; website style catalog.
 
 ### Assistant
 
-Internal tool-registry names for the CMS Assistant. Never in PRDs or UI.
+Internal names for the CMS Assistant (tool registries and prompt-assembly
+notices). Never in PRDs or UI.
 
 ---
 
@@ -1242,6 +1243,17 @@ only tools the model sees” (full `tools=` is always loaded). Never say
 
 Distinct from: Per-screen tools (screen-gated allowed set), Website editor
 tools, Ads tools.
+
+---
+
+#### Voice transcription, wrap-up, reject notice
+
+A named slice of CMS Assistant text prompt assembly for the model this turn:
+**wrap-up notice**, **reject notice**, **Voice transcription notice**. Never in
+PRDs or UI. Never say **caveat**.
+
+Distinct from: Follow (owner-facing field notice), CMS **notification** chrome,
+Voice connection **instructions**, the assembled prompt.
 
 ---
 
