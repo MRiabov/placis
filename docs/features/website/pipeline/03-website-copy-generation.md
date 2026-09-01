@@ -119,7 +119,7 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
    (`ai_generations.thread_id` required). After 09 do not append Assistant
    thread items.
 
-## Website image render SLO (Go worker round-trip)
+### Website image render SLO (Go worker round-trip)
 
 Clock: request leaves the Go worker → `websiteRender` → the website image
 render is back at the Go worker. Not Worker-only. Not 04 R2 / WebP /

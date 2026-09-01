@@ -76,7 +76,7 @@ this write. Retry the same caller (share / pay / Publish).
 Live GET is Cache then R2. Website visitors keep the previous `latest/`
 until copy + purge finish.
 
-## Website HTML render SLO (Go worker round-trip)
+### Website HTML render SLO (Go worker round-trip)
 
 Clock: request leaves the Go worker → `websitePublication` writes HTML to
 R2 → response is back at the Go worker. Not a website image render. Not

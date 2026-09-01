@@ -94,7 +94,7 @@ created that host. Unpublished website from 05 (+ 06 + 07 PATCHes)
 is what they edit. First **owner** website publication is the next website
 version and the first rollback-eligible website version.
 
-## After website activation (billing)
+### After website activation (billing)
 
 Unpaid access to the application (never website-activated) is **forbidden**.
 After activation, stopping the subscription price unpublishes the website and

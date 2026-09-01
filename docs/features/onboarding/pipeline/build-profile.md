@@ -63,7 +63,7 @@ updates only those live profile columns. ETL increments also insert ≥1
   VAT number is required (and later website publication may block) only when
   that status is set.
 
-## Checklist
+### Checklist
 
 Stable keys. 03 groups them for display. ETL transform may fill; 04a/04b fill
 gaps.
@@ -96,7 +96,7 @@ Found photos are shown in the client interview. There is no `photos_choice`
 question (`use_found` / `source_from_google` / `upload_later` / `use_neutral`).
 Projects is optional (same as `reviews`). Complete does not require Projects.
 
-## Rank Projects (client interview / 05)
+### Rank Projects (client interview / 05)
 
 Among business research origin `business_profile.projects` that are still
 `active` (not archived, not owner project drafts), order by **completeness**:
@@ -114,7 +114,7 @@ scheduled inserts add Profile rows only; they do not add service pages or
 rewrite a copied gallery token. The next website publication (04) resolves
 `{{projects.*}}` from the live profile.
 
-## Rank reviews (after ETL fast extract; again when ETL finishes)
+### Rank reviews (after ETL fast extract; again when ETL finishes)
 
 Onboarding orchestration. After **ETL fast extract** has written `in_pool`
 reviews, enqueue River job `reviews_ranking_for_display` — typically
@@ -143,7 +143,7 @@ Job, `thread_kind`, `prompt_id`, I/O:
 `{{reviews.1}}` … resolve from that order. This is not
 `website_reviews_picker` when copying the website template’s pages.
 
-## Status function (one winner)
+### Status function (one winner)
 
 `in_progress` (in-flight ETL run for that key) → `conflict` →
 `needs_confirmation` → `filled_by_user` → `filled_by_research` → `skipped` /
@@ -152,7 +152,7 @@ Job, `thread_kind`, `prompt_id`, I/O:
 Derived from the live business profile + winning edit origin + in-flight
 `etl.runs` + interview-only choices.
 
-## Complete gate
+### Complete gate
 
 Required keys not `empty` / `in_progress` / `conflict`. `skipped` /
 `not_applicable` allowed. 04a and 04b apply this. Skip 03 does not change it.
