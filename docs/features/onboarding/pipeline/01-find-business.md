@@ -47,9 +47,9 @@ token.
 5. Initialize [business profile](../../business-profile/details/persistence.md): `business_profiles` with that `tenant_id`,
    empty/unknown details, `last_edit_id` and `accepted_edit_id` null. Then
    increments via [build-profile](build-profile.md): registry fills legal identity (insert
-   `etl.sources` `source_kind=company_registry_record` and cite it); Maps autocomplete
-   Read may fill `display_name` (no listing upsert, no fetch row). Both:
-   registry wins legal identity. Contact fields that Details will confirm
+   `etl.sources` `source_kind=company_registry_record` and cite it); Maps
+   autocomplete Read may fill `display_name` (no listing upsert, no fetch row).
+   Both: registry wins legal identity. Contact fields that Details will confirm
    (marketing phone, hours, website) wait for 02.
 6. Enqueue 02 **if** this `tenant_id` has fewer than 5 onboarding ETL
    `enqueue_id`s in the last 30 minutes ([02](02-business-research.md)). Otherwise persist sources, do
