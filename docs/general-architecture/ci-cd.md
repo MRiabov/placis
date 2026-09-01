@@ -51,11 +51,15 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    checker. Layout: [module layout](module-layout.md).
 3. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`,
    `golangci-lint` (non-mutating); look app (`apps/demo/`) TypeScript check +
-   Biome (non-mutating) via `pnpm check`; **rumdl** `fmt --check` then `check`
+   Biome (non-mutating) via biome / `tsc` / knip / file and token checks in
+   parent CI (`pnpm check` locally and on the copied `demo.placis.com`
+   checkout, which also runs Don't-say); **rumdl** `fmt --check` then `check`
    on first-party Markdown (non-mutating). See Pre-commit below. Look CI:
-   `.github/workflows/frontend-quality.yml` (and the copied
-   `apps/demo/.github/workflows/check.yml` on `demo.placis.com`). `frontend-2`
-   TypeScript + Biome is the same contract once that app is enabled.
+   `.github/workflows/frontend-quality.yml` (path filter: `apps/demo/**` and
+   that workflow file; Don't-say is the docs-gates job, not this one) and the
+   copied `apps/demo/.github/workflows/check.yml` on `demo.placis.com`.
+   `frontend-2` TypeScript + Biome is the same contract once that app is
+   enabled.
 4. **Build + test** — `go build ./...` and `go test ./...` with **no**
    `-count=1` (Testcontainers Postgres; CircleCI uses the machine executor when
    it is live); `frontend-2` typecheck + `vitest run --changed origin/main` +
@@ -116,12 +120,19 @@ decision + date) instead of silently replacing the old entry.
   `--only-changed` can diff against main. Empty Vitest selection is a pass
   (`--passWithNoTests` where needed).
 - **Caches (both runners, same keys).** GitHub Actions is live:
-  `actions/setup-go` with `cache: true` persists `GOCACHE` (`~/.cache/go-build`)
+  `actions/setup-go` with `cache: true` and `cache-dependency-path: go.mod`
+  persists `GOCACHE` (`~/.cache/go-build`)
   and the module cache — do not add a second overlapping `actions/cache` for
-  those paths. Persist `golangci-lint` cache separately. Persist Vite `cacheDir`
+  those paths. The repo often has no `go.sum` (stdlib-only `go.mod`);
+  `actions/setup-go` `@v5` hashes `go.sum` by default and will not save a cache
+  without `cache-dependency-path: go.mod`. Pin `go.mod` to a release in the
+  ubuntu-latest tool-cache (today 1.24–1.26; 1.27 is not there yet) so
+  `actions/setup-go` does not download a toolchain every job. Persist
+  `golangci-lint` cache
+  separately. Persist Vite `cacheDir`
   (`node_modules/.vite`), `.frontend-quality-cache/`, and Playwright Chromium
   (`~/.cache/ms-playwright`) keyed on `pnpm-lock.yaml`. CircleCI, when live,
-  uses `restore_cache`/`save_cache` for the same Go paths (keyed on `go.sum`
+  uses `restore_cache`/`save_cache` for the same Go paths (keyed on `go.mod`
   plus a bump suffix when the cache format changes), the lint cache, and the
   same frontend paths. Do not restore Clerk `storageState`, cookies, or
   `test-results/` across jobs. Do not expect skipped tests from a restored Vite
@@ -261,9 +272,12 @@ list). Worked examples:
   trees in full. Paths outside those trees (including `packages/`) are ignored
   even when filenames are passed in. A copied look checkout (`demo.placis.com`)
   uses the same checker with `--glossary glossary.md` over `src/`.
-- CI: `.github/workflows/check-dont-say.yml` runs
-  `go test ./cmd/ci/check-dont-say` then `go run ./cmd/ci/check-dont-say --all`
-  on pull requests (not via `just`). `--frontend` stays off until frontend work
+- CI: `.github/workflows/docs-gates.yml` runs
+  `go test` for Don't-say, docs-code, and pipeline-tables, then
+  `go run ./cmd/ci/check-dont-say --all` (and the other two scanners) in one
+  job so `actions/setup-go` and the stdlib compile are paid once.
+  `--frontend` stays off
+  until frontend work
   starts from the Go backend (see [frontend-debloat.md](frontend-debloat.md)).
 
 Skip `.agents/` and generated files. There is no empty-list or shrink ratchet:
@@ -272,12 +286,15 @@ parse failure is the failure.
 ### Pipeline tables checker
 
 `cmd/ci/check-pipeline-tables` enforces the table pairing and pipeline step
-heading lists in [docs conventions](../docs-conventions.md#named-identifiers). Unit tests + `go run`. Pre-commit on
+heading lists in
+[docs conventions](../docs-conventions.md#named-identifiers).
+Unit tests + `go run`. Pre-commit on
 `docs/features/**/{persistence,testing,api}.md`,
 `docs/features/**/pipeline/**/*.md`, and `docs/general-architecture/jobs.md`.
-CI: `.github/workflows/check-pipeline-tables.yml` runs
+CI: `.github/workflows/docs-gates.yml` runs
 `go test ./cmd/ci/check-pipeline-tables` then
-`go run ./cmd/ci/check-pipeline-tables --all`.
+`go run ./cmd/ci/check-pipeline-tables --all` in the same job as the other docs
+scanners.
 
 This pass: **tables**, **pipeline step headings**,
 **feature `api.md` / `persistence.md` / `testing.md` headings**,
@@ -305,9 +322,10 @@ so `::warning` can fire.
 lists in `docs/`. Unit tests + `go run`. Pre-commit on `docs/**/*.md`,
 `internal/`, `cmd/`, `migrations/`, `openapi.json`, and the Worker
 internal OpenAPI file when present. CI:
-`.github/workflows/check-docs-code.yml` runs
+`.github/workflows/docs-gates.yml` runs
 `go test ./cmd/ci/docnames ./cmd/ci/check-docs-code` then
-`go run ./cmd/ci/check-docs-code --all`.
+`go run ./cmd/ci/check-docs-code --all` in the same job as the other docs
+scanners.
 
 - **Gate A (always on):** a path, DTO type name, River job kind, or SQL
   table in public OpenAPI, Worker internal OpenAPI, Go under `internal/`
