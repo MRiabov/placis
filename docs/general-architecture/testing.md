@@ -8,9 +8,10 @@ Three tiers, and they are not interchangeable:
   faked. No DB, no network.
 - **Integration** — asserts the API on one side, with
   **internal services real, not mocked**: **backend-only** (handler → service →
-  sqlc → real Postgres, no frontend) or **frontend-only** (the frontend
-  asserting against the API). Only Google, the LLM, voice, and Stripe are
-  faked. The contractor-website **Worker** is real (container; no
+  sqlc → real Postgres, no frontend; HTTP via `humatest`) or
+  **frontend-only** (the frontend asserting against the API). Only Google,
+  the LLM, voice, and Stripe are
+  faked. The contractor-website **Worker** is real (container; no)
   `wrangler deploy`) when the test calls `websiteRender` or
   `websitePublication`. R2 / `purge_cache` are faked (paid Cloudflare).
 - **E2E** — **both sides real**: Playwright drives `frontend-2` against the real
@@ -118,5 +119,9 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
   Signed-in Playwright tests write `storageState` once per job, then
   `test.use({ storageState })`. Do not re-sign-in per spec.
 - **Stripe** uses test mode the same way: real SDK + test keys, no real charge.
+- **`humatest`** — backend-only tests that hit the API use Huma's
+  `humatest` (the faster in-process API: `api.Get` / `api.Post`, no
+  listen). Do not start a real HTTP server for those tests. Playwright
+  E2E still drives `frontend-2` against the real Go process.
 - Fakes for Google, the LLM, Stripe, and voice live in the repo (see
   [ci-cd.md](ci-cd.md)); tests never spend money or reach production APIs.
