@@ -71,7 +71,9 @@ child hours on the Details chunk. Insert reviews / photo refs whose
 `external_id` we do not already have (each new review gets
 `source_kind=google_maps_listing_review`). Set `latest_fetch_id` to the newest
 fetch that contributed. Set `country` from Places address country (`ie` / `gb` /
-`us`). Do not parse `listing_address` for country.
+`us`). Do not parse `listing_address` for country. Persist Places Details
+`location` as `latitude` / `longitude`. Leave both null when Details never ran
+or the response has no location. Do not geocode `registered_office`.
 
 ## Do — transform
 

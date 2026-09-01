@@ -48,9 +48,9 @@ Do not say apply the website template in prose.
 
 Onboarding session stays `selecting_and_copying_website_template` until
 wait-end, then `preview_and_edit`. `business_profiles.accepted_edit_id` at
-complete. `website_settings` (01) and unpublished website + River 06 job (02).
-01 picker `ai_generations` belong to the stacked rewrite
-([01](../../website/pipeline/01-select-website-template.md)).
+complete. `website_settings` (01) and unpublished website +
+`website_copy_generation` (02). No `ai_generations` for the pick (01 is
+occupancy + hash, not an LLM).
 
 ## Fail
 
