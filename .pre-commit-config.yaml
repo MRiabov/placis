@@ -9,8 +9,19 @@ repos:
     hooks:
       - id: rumdl-fmt
         exclude: ^\.agents/
+      # Whole-tree fmt --check / check on tracked Markdown (~0.2s). Staged-only
+      # rumdl-fmt misses rebase leftovers; CI still scans the checkout.
+      - id: rumdl-fmt
+        alias: rumdl-fmt-check
+        name: rumdl fmt --check (tracked)
+        entry: bash scripts/rumdl-tracked.sh fmt --check
+        pass_filenames: false
+        always_run: true
       - id: rumdl
-        exclude: ^\.agents/
+        name: rumdl check (tracked)
+        entry: bash scripts/rumdl-tracked.sh check
+        pass_filenames: false
+        always_run: true
   - repo: local
     hooks:
       - id: demo-check

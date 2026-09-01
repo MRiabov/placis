@@ -70,11 +70,13 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   wrapped.
 - **Tables:** compact separators (`| --- | --- |`), not padded dash rows
   (`MD060`).
-- **When it runs:** pre-commit `rumdl-fmt` reflows on `git commit` (then `rumdl`
-  lints). Install once per clone: `pre-commit install`. Worktrees share
-  `.git/hooks`. Do not skip hooks. If the hook rewrites staged files, restage
-  and commit again. `rumdl fmt` is optional if you want to see wrapping before
-  commit.
+- **When it runs:** pre-commit `rumdl-fmt` reflows staged Markdown on `git
+  commit`. Then `rumdl-fmt-check` and `rumdl` always run `fmt --check` and
+  `check` on all tracked Markdown (not untracked files), so rebase leftovers
+  fail locally the same way CI does. Install once per clone: `pre-commit
+  install`. Worktrees share `.git/hooks`. Do not skip hooks. If `rumdl-fmt`
+  rewrites staged files, restage and commit again. `rumdl fmt` is optional if
+  you want to see wrapping before commit.
 - **CI:** `.github/workflows/rumdl.yml` runs `rumdl fmt --check` then
   `rumdl check` on pull requests. CI never rewrites files.
 - **Out of scope:** `.agents/` (imported and first-party skills) and
