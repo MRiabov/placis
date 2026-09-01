@@ -70,8 +70,10 @@ everything else FKs into `tenants`.
   E2E + regenerated types). Never "add the website feature" as one task.
 - **Don't write the whole OpenAPI up front.** `huma` derives it from the DTOs,
   so writing every DTO now is the speculative batch that caused the last
-  collapse. Write each feature's DTOs as you build that slice. The
-  **HTTP routes** (paths, auth, fields) are already in that feature's `api.md`.
+  collapse. Write each feature's DTOs as you build that slice. Specs already
+  name tables, routes, DTO **types and fields**, and major services
+  ([docs conventions](docs-conventions.md#named-identifiers)); implementation
+  keeps those names. Do not pre-write OpenAPI YAML or Go struct literals.
   Predecessor OpenAPI is not a compatibility surface for `frontend-2` or the
   contractor website: do not wrap it, alias old paths, or generate types from
   it.

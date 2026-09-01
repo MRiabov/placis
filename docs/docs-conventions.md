@@ -46,14 +46,14 @@ A feature directory holds, as applicable:
 | `prd.md` | business requirements, user stories, acceptance criteria (domain language) |
 | `ADR.md` | architectural decision record (numbered, dated; keep old entries) |
 | `design-decision-record.md` | design decision record (look and interaction, not architecture). Same numbered, dated, keep-old-entry structure as ADR.md. One number is one decision. **Why** is owner-written; omit it rather than inventing it. |
-| `architecture.md` | the logic: content/component model, flows, states (no structs) |
-| `persistence.md` | that feature's tables (columns, indexes); shared tables are linked, never copied |
-| `api.md` | Canonical HTTP routes for this feature. Routes, auth, callers, request/response fields, errors, do-not-create. Not Go structs. Conventions: [general-architecture/api.md](general-architecture/api.md). |
+| `architecture.md` | the logic: content/component model, flows, states. Named services index when the feature is defined. Not Go struct bodies. |
+| `persistence.md` | that feature's tables. Defined features: `## Tables` / `## Indexes` with Columns, Enums, Uniques, Written by, Notes. Shared tables are linked, never copied. |
+| `api.md` | Canonical HTTP for this feature. Defined features: `## DTOs`, `## Routes` (one table), `## Do not create`. Not Go struct bodies. Conventions: [general-architecture/api.md](general-architecture/api.md). |
 | `technical-implementation.md` | pipeline, validation, testing — references `persistence.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
-| `testing.md` | the full-stack E2E test(s) with DB asserts |
-| `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline) |
+| `testing.md` | the owner E2E (or ETL integration) with DB asserts at Persist grain. Every persistence table is asserted here and/or in `pipeline/testing/`. |
+| `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline). Closed `##` on step files (see Named identifiers). |
 | `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features) |
 
 Not every file is needed — a feature uses only the ones it has content for. A
@@ -103,10 +103,10 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   See `glossary.md`.
 - **New names come from the glossary** — coin a word there first, never in a
   PRD. The glossary defines terms; it never prescribes.
-- **Logic before structs**: architecture/pipeline docs describe flows and
-  models; structs/DTOs fall out at implementation time and are not pre-written.
-  The **HTTP routes** are per-feature `api.md` (plus
-  [general-architecture/api.md](general-architecture/api.md)); that is paths and fields, not huma structs.
+- **Named identifiers** (below): tables, routes, DTO **type names and
+  fields**, and major services are specified **before** code. Do not dump
+  Go struct bodies or OpenAPI YAML. Do not invent names at implementation
+  time.
 - **Filenames hyphenate; prose does not.** `design-decision-record.md` is the
   file. The document is a **design decision record** — the look-and-interaction
   counterpart of ADR.md. Link the file as `[CMS design decision record](...)` 3,
@@ -115,3 +115,152 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   **Why** is owner-written; omit it when it is not known. Keep the hyphen in the
   path and in backticks. `ADR.md` is the **architectural decision record**; do
   not label it **decisions** either.
+
+## Named identifiers
+
+A feature is **ill-defined** until tables, columns, routes, DTO type names
+and fields, and major service functions are named in technical docs
+(`persistence.md`, `api.md`, `architecture.md`, `pipeline/`, `testing.md`).
+Not in PRDs or `frontend.md`. Do not dump Go struct bodies or OpenAPI YAML.
+Every identifier is backticked, glossary-derived, and the same spelling in
+spec, code, and tests (`website.menus`, not “the menus table”;
+`WebsitePageRead`, not “the page payload”). Do not say **uses** or
+**accepts**.
+
+### Verbs
+
+Tables:
+
+- **persists into** — INSERT/UPDATE this table (or named columns)
+- **reads** — SELECT this table
+- **must not write** — pipeline Must not; keep table names backticked
+
+HTTP: Routes **Request** / **Response** name a row from `## DTOs`. Do not
+repeat field lists on the route.
+
+Other objects:
+
+- **sends** — outbound body where Go is the HTTP caller (Worker, LLM)
+- **loads** — website template catalog or website component catalog sidecar
+- **calls** — named service function, Worker operation, or River job
+
+HTTP example: `PATCH /v1/website/editor/pages/{page_id}` — Request
+`WebsitePageUpdate`, Response `WebsiteEditApplyRead`, persists into
+`website_slots` / `edit_history`.
+
+Pipeline example: `GenerateWebsiteCopy` **calls** `websiteRender`,
+**sends** `WebsiteRenderRequest`, **reads** unpublished `website_pages`,
+**persists into** `website_slots`.
+
+### Three pairing rules
+
+`persistence.md` and `api.md` are the named lists. `pipeline/` is the ordered
+write. Tests prove the names. Influence is one-way; do not stuff website
+editor GET into pipeline 01–04.
+
+1. **Pipeline only names existing lists.** A backticked table or HTTP
+   path in `pipeline/` must already live in some `persistence.md` or a
+   Routes **Method + path** cell. Match the path as written (`GET /v1/…`,
+   later `/v2/…`, `POST /internal/…`). Do not match a raw `v1` token.
+2. **Test docs assert every persistence table.** Every table in that
+   feature’s `persistence.md` is asserted at least once in `testing.md`
+   and/or `pipeline/testing/*.md`. Grain follows Persist / Must not (see
+   Named asserts). The same table **may** appear in several files.
+   `testing.md` is the owner journey (ETL: integration, no owner UI). It
+   only asserts what that journey reads or writes. Do not invent writes in
+   the E2E for tables another test file already asserts. Do not leave a
+   persistence table with no assert in either place. Do not require a
+   bullet per Routes row. **Do not create** stays untested.
+3. **Every table has a write path.** **Written by** on that table’s
+   persistence entry: pipeline function, Routes method+path, or job.
+
+### Named asserts
+
+Grain follows **Persist** / **Must not**, not a mandatory
+table+column+predicate triple.
+
+- Persist names a **table** → testing asserts that table (row exists,
+  empty, unchanged, one row).
+- Persist names **table.column** → testing asserts that column. Add a
+  short predicate only if the test would check it (`status=unpublished`,
+  empty, unchanged). Not a SQL dump. Not a jsonb tree essay.
+- Must not write a **table** → testing asserts that table stayed empty /
+  unchanged. No column.
+- Prior-step fixture “already from a prior step” names the **tables** that
+  step persisted. Do not repeat that step’s column predicates.
+- Non-Postgres objects stay named as themselves (R2 key, Worker op).
+
+Ban “Assert Details transform lands”, “assert the copy”, “profile posts /
+reviews” with no table. CI checks **table names** only; columns are a
+writing rule.
+
+### Closed headings
+
+`##` lists are closed. Extra `##` is how unstructured essays return.
+
+**`api.md`** — intro prose (Auth default, Idempotency-Key, feature serve-only
+rows that are not in [HTTP conventions](general-architecture/api.md)), then only:
+
+- `## DTOs` — when the feature is defined; do not add an empty stub
+- `## Routes`
+- `## Do not create`
+
+Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays.
+`###` only as Routes overflow: `### METHOD /path` when a table cell would
+be a paragraph. No `###` under DTOs.
+
+**`persistence.md`** — intro, then only `## Tables` and `## Indexes`.
+Overflow is `###` under a table, not a new `##`.
+
+**`testing.md`** — H1 + numbered journey. No required `##`. Optional `##`
+only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
+`## Do not create`, and `### GET /v1/…`.
+
+**`pipeline/` step files** — intro, then only:
+
+- Required: `## Trigger`, `## Pre`, `## Must not`, `## Do` (also
+  `## Do — <phase>`), `## Persist`, `## Fail`, `## Out`, `## Invariants`
+- Optional: `## Reads`, `## Loads`, `## Sends`, `## Calls`
+
+**Do** names the step’s own function (backticked, first sentence). Ban
+`## In code`, `## Routes`, SLO titles, and other essays. Overflow is
+`###` under the matching closed heading. `pipeline/README.md` is a
+gatherer — not this list. `pipeline/testing/` keeps bold fixture / invoke /
+assert / fail / mocked / cases labels, not `##`.
+
+### `api.md` shape (defined features)
+
+`## DTOs` — table **DTO** | **Fields** | **Description**. Fields are
+backticked names only. Nested types get their own rows. No `minLength` /
+`enum` in the table. One `*Read` / `*Create` / `*Update` per entity.
+
+`## Routes` — **one table**, fixed columns (empty cell = N/A; do not drop
+columns). One row per operation:
+
+- **Method + path** — `GET /v1/billing/usage`,
+  `POST /internal/website-render`. Never path-only, never
+  `GET … / PATCH …` in one row.
+- **Callers**, **Request**, **Response**, **Reads**, **Persists into**,
+  **Behavior**, **Errors**, **Must not**
+
+Auth in a row only when it differs from the file intro. Query params live
+on the Request DTO.
+
+### `persistence.md` shape (defined features)
+
+`## Tables` then one `### \`table_name\`` (qualified when needed:
+`website.menus`). Closed keys; omit an empty key:
+
+- **Columns:** backticked names plus `fk` / `nullable` when that is the
+  contract. Keep `jsonb` where that is the contract. No enum sets here.
+- **Enums:** closed check-constraints (`page_type` → `home` / `about` /
+  …). Glossary = meaning; persistence = which column.
+- **Uniques:** `(tenant_id, path)`, …
+- **Written by:** function, Routes method+path, or job.
+- **Notes:** one line. Overflow as `###` under that table.
+
+`## Indexes` — as billing already does.
+
+Major features that must eventually satisfy this contract: ads, assistant,
+billing, ETL, onboarding, website. Website is the first fully defined
+feature. CI: [ci-cd.md](general-architecture/ci-cd.md).
