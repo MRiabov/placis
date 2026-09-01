@@ -178,10 +178,12 @@ does). We do **not** hand-roll AST scripts up front:
 - `gofmt`/`goimports`, `go vet`, `golangci-lint` (`staticcheck`, `govet`,
   `errcheck`, `ineffassign`, `unused`, `misspell`, `revive`).
 - **rumdl** — Markdown format + lint (standard flavor, 80-col wrap, compact
-  tables). Config: [`.rumdl.toml`](../../.rumdl.toml). Pre-commit: `rumdl-fmt` then `rumdl`
-  (excludes `.agents/`). CI: `.github/workflows/rumdl.yml` runs
-  `rumdl fmt --check` then `rumdl check` on pull requests (not via `just`; never
-  `rumdl fmt` in CI). Conventions: [docs conventions](../docs-conventions.md).
+  tables). Config: [`.rumdl.toml`](../../.rumdl.toml). Pre-commit:
+  `rumdl-fmt` on staged files, then `rumdl-fmt-check` and `rumdl` on all
+  tracked Markdown (excludes `.agents/`). CI: `.github/workflows/rumdl.yml`
+  runs `rumdl fmt --check` then `rumdl check` on pull requests (not via
+  `just`; never `rumdl fmt` in CI). Conventions:
+  [docs conventions](../docs-conventions.md).
 - **Don't-say glossary check** (`cmd/ci/check-dont-say`) — see below.
 - Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen,
   Worker internal OpenAPI export + contractor-website typegen).
