@@ -117,7 +117,7 @@ rewrite a copied gallery token. The next website publication (04) resolves
 ### Rank reviews (after ETL fast extract; again when ETL finishes)
 
 Onboarding orchestration. After **ETL fast extract** has written `in_pool`
-reviews, enqueue River job `reviews_ranking_for_display` — typically
+reviews, **inserts** River job kind `reviews_ranking_for_display` — typically
 **in parallel** with client interview. That writes `is_top` /
 `top_position` and `top_reviews_provisional=true` while overlapping ETL
 is still running. Those pins are not locked: a later ranking job may
@@ -125,12 +125,12 @@ replace them. They are not `algorithm=human`. `top_reviews_provisional`
 is not a skip key.
 
 When the last overlapping ETL run for this onboarding enqueue finishes:
-enqueue again if additional `in_pool` rows landed (replace pins,
+**inserts** again if additional `in_pool` rows landed (replace pins,
 `top_reviews_provisional=false`). If no additional rows, leave the pins
 and set `top_reviews_provisional=false` — no second generate.
 
 **Scheduled ETL** (Monday / Wednesday / Friday): after a scheduled run
-**succeeds** and new `in_pool` rows landed, enqueue the same job
+**succeeds** and new `in_pool` rows landed, **inserts** the same job
 **once** (not per chunk). Writes `top_reviews_provisional=false`. One
 replace of pins.
 

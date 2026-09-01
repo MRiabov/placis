@@ -16,9 +16,9 @@ Stripe (via `stripe-go`) handles this checkout only. Amount is the activation
 price (predecessor: EUR 4900). `checkout.session.completed` is accepted only
 after the SDK verifies the signature (`webhook.ConstructEvent`) and the metadata
 matches (`tenant_id`, authenticated Clerk subject). The raw payload is saved on
-`stripe_events`, the work is enqueued on [River](../../../general-architecture/jobs.md), and the request returns.
-Activation can be replayed safely and is never triggered by a browser success
-URL alone.
+`stripe_events`, the webhook **inserts** River job kind `website_activation`,
+and the request returns. Activation can be replayed safely and is never
+triggered by a browser success URL alone.
 
 **Whoever pays becomes the owner.** Unauthenticated visitors may authenticate
 and pay. First verified `checkout.session.completed` wins.
@@ -51,6 +51,9 @@ that already lost.
 
 ## Do
 
+This step **is** River job kind `website_activation`. Set
+`tenants.status=active`, then **calls** `PublishWebsite` (strip off).
+
 1. Load the unactivated [tenant](../../other/auth/persistence.md) on
    `onboarding_sessions.tenant_id`.
 2. Resolve or create the Clerk organization; set `tenants.clerk_org_id`. Tenant
@@ -72,9 +75,15 @@ that already lost.
    does not live-update R2 after 08). Same website-slot overlap: last-write /
    `edit_history_conflict`.
 
+## Inserts
+
+`website_activation` (webhook **inserts**; this step **is** that River job
+kind).
+
 ## Persist
 
-`website_activations`; `stripe_events`; **update** existing `tenants`;
+`website_activations`; `stripe_events`; schema `jobs` River job kind
+`website_activation`; **update** existing `tenants`;
 `tenant_memberships`; complete unpaid `ai.threads` `thread_kind=cms_assistant`
 `current` + end `running`; `website_publications` live (no strip) + archive
 strip v1 if it existed; R2 `latest/` without the strip.

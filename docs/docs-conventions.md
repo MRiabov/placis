@@ -118,13 +118,14 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
 
 ## Named identifiers
 
-A feature is **ill-defined** until tables, columns, routes, DTO type names
-and fields, and major service functions are named in technical docs
-(`persistence.md`, `api.md`, `architecture.md`, `pipeline/`, `testing.md`).
-Not in PRDs or `frontend.md`. Do not dump Go struct bodies or OpenAPI YAML.
-Every identifier is backticked, glossary-derived, and the same spelling in
-spec, code, and tests (`website.menus`, not “the menus table”;
-`WebsitePageRead`, not “the page payload”). Do not say **uses** or
+A feature is **ill-defined** until tables, columns, routes, DTO type names and
+fields, major service functions, and **River job kind** names (and River
+workflows when the sequence is more than one River job kind) are named in
+technical docs (`persistence.md`, `api.md`, `architecture.md`, `pipeline/`,
+`testing.md`, [jobs.md](general-architecture/jobs.md)). Not in PRDs or `frontend.md`. Do not dump Go struct
+bodies or OpenAPI YAML. Every identifier is backticked, glossary-derived, and
+the same spelling in spec, code, and tests (`website.menus`, not “the menus
+table”; `WebsitePageRead`, not “the page payload”). Do not say **uses** or
 **accepts**.
 
 ### Verbs
@@ -142,7 +143,10 @@ Other objects:
 
 - **sends** — outbound body where Go is the HTTP caller (Worker, LLM)
 - **loads** — website template catalog or website component catalog sidecar
-- **calls** — named service function, Worker operation, or River job
+- **calls** — named service function or Worker operation (already running;
+  not enqueue)
+- **inserts** — enqueue this River job kind (schema `jobs`). Distinct from
+  **persists into** (feature tables) and **calls**.
 
 HTTP example: `PATCH /v1/website/editor/pages/{page_id}` — Request
 `WebsitePageUpdate`, Response `WebsiteEditApplyRead`, persists into
@@ -152,16 +156,18 @@ Pipeline example: `GenerateWebsiteCopy` **calls** `websiteRender`,
 **sends** `WebsiteRenderRequest`, **reads** unpublished `website_pages`,
 **persists into** `website_slots`.
 
-### Three pairing rules
+### Pairing rules
 
-`persistence.md` and `api.md` are the named lists. `pipeline/` is the ordered
-write. Tests prove the names. Influence is one-way; do not stuff website
-editor GET into pipeline 01–04.
+`persistence.md` and `api.md` are the named lists. `jobs.md` is the River
+job kind list. `pipeline/` is the ordered write. Tests prove the names.
+Influence is one-way; do not stuff website editor GET into pipeline 01–04.
 
 1. **Pipeline only names existing lists.** A backticked table or HTTP
    path in `pipeline/` must already live in some `persistence.md` or a
-   Routes **Method + path** cell. Match the path as written (`GET /v1/…`,
-   later `/v2/…`, `POST /internal/…`). Do not match a raw `v1` token.
+   Routes **Method + path** cell. A backticked River job kind in
+   `pipeline/` must already live in [jobs.md](general-architecture/jobs.md)
+   `## Jobs`. Match the path as written (`GET /v1/…`, later `/v2/…`,
+   `POST /internal/…`). Do not match a raw `v1` token.
 2. **Test docs assert every persistence table.** Every table in that
    feature’s `persistence.md` is asserted at least once in `testing.md`
    and/or `pipeline/testing/*.md`. Grain follows Persist / Must not (see
@@ -175,12 +181,25 @@ editor GET into pipeline 01–04.
    bullet per Routes row. **Do not create** stays untested.
 3. **Every table has a write path.** **Written by** on that table’s
    persistence entry: pipeline function, Routes method+path, or job.
+4. **Code only names existing lists.** A path, DTO type name, River job
+   kind, or SQL table in OpenAPI, Go, or goose migrations must already
+   live in `docs/` (Routes **Method + path**, `## DTOs`, `## Jobs`,
+   `persistence.md`). Empty code is fine. When a feature’s paths first
+   appear in OpenAPI, documented Routes/DTOs still missing from that spec
+   may only shrink (`cmd/ci/check-docs-code` leftover). Worker
+   `POST /internal/…` is not required on public `GET /openapi.json`.
+   **Do not create** paths fail if they appear in OpenAPI. DTO **fields**
+   and `frontend-2` routes are out of this gate.
+   CI: [ci-cd.md](general-architecture/ci-cd.md).
 
 ### Named asserts
 
 Grain follows **Persist** / **Must not**, not a mandatory
 table+column+predicate triple.
 
+- Persist / Inserts names a **River job kind** → testing asserts schema
+  `jobs` has a row with that River job kind (grain already used for
+  `website_copy_generation`).
 - Persist names a **table** → testing asserts that table (row exists,
   empty, unchanged, one row).
 - Persist names **table.column** → testing asserts that column. Add a
@@ -207,15 +226,15 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 - `## Routes`
 - `## Do not create`
 
-Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
-ratchets leftover extra `##` on undefined features (extras may only shrink).
-Website, billing, and assistant have none. Optional `###` groups under
+Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays.
+CI ratchets leftover extra `##` on undefined features (extras may only
+shrink). Website, billing, and assistant have none. Optional `###` groups under
 `## DTOs` and `## Routes` (glossary terms, same titles on both when
 split; [glossary.md](glossary.md) grain). Not mandatory — split when
 the table is hard to review. `### METHOD /path` overflow still sits
 under that group when a cell would be a paragraph. `## Do not create`
-stays one list. Persistence already overflows as `### \`name\``; do not
-add a second grouping layer there.
+stays one list. Persistence and `jobs.md` already overflow as
+`### \`name\``; do not add a second grouping layer there.
 
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`.
 Overflow is `###` under a table, not a new `##`. CI ratchets leftover
@@ -228,11 +247,15 @@ only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
 `## Do not create`, and `### GET /v1/…`. CI ratchets those bans (empty
 leftover today).
 
+**`jobs.md`** — intro, then only `## Workflows` and `## Jobs`. Overflow is `###`
+with a backticked River job kind under Jobs (retry, leftover, skip). No leftover
+extra `##`.
+
 **`pipeline/` step files** — intro, then only:
 
 - Required: `## Trigger`, `## Pre`, `## Must not`, `## Do` (also
   `## Do — <phase>`), `## Persist`, `## Fail`, `## Out`, `## Invariants`
-- Optional: `## Reads`, `## Loads`, `## Sends`, `## Calls`
+- Optional: `## Reads`, `## Loads`, `## Sends`, `## Calls`, `## Inserts`
 
 **Do** names the step’s own function (backticked, first sentence). Ban
 `## In code`, `## Routes`, SLO titles, and other essays. Overflow is

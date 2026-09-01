@@ -34,7 +34,7 @@ Strip on/off is a caller flag.
 - Rewrite `latest/` because later business research landed. Live R2 is a
   **snapshot**. Later business research only changes what the **next** 04
   resolves.
-- Call `websiteRender` from this job.
+- Call `websiteRender` from this step.
 - Persist resolved HTML onto unpublished `website_slots`.
 - Return a website image render to the model.
 - Put image files or expiring signed URLs on `websitePublication`.
