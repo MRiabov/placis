@@ -39,10 +39,12 @@ leads console.
   actually serves. Predecessor OpenAPI is human reference, not an input, not a
   second schema to generate from.
 - Keep as Go DTOs in current glossary names (fields may change): `/me`, health,
-  onboarding session + profile + events stream (SSE outside huma), website
-  editor GET/PATCH, publication, Connect website address, 08 preview website
-  address (host), website activation checkout / status, media library, ads when
-  that slice exists. Contractor website public routes: website form submit (see
+  onboarding session + profile + events stream (SSE outside huma), CMS website
+  editor GET/PATCH (`/v1/website/editor/…`), unpaid website editor GET/PATCH
+  (`/v1/onboarding/website/editor/…`), CMS publication, Connect website
+  address, 08 preview website address (host), website activation checkout /
+  status, media library, ads when that slice exists. Contractor website public
+  routes: website form submit (see
   [port-contractor-website.md](../features/website/port-contractor-website.md)).
 - Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
   `/v1/tenants/{website_prefix}/website/…`, blog, careers,
@@ -61,9 +63,14 @@ leads console.
   enums). No unconstrained JSON in UI code. The generated file must not
   reintroduce predecessor-only paths.
 - CMS calls `/v1/website/editor/…` only. Do not call
-  `/v1/tenants/{website_prefix}/website/…`.
+  `/v1/tenants/{website_prefix}/website/…`. Unactivated **403** on that
+  prefix.
+- Onboarding Find / Review / client interview:
+  `POST /v1/onboarding/business-lookup`, `GET /v1/onboarding/profile`,
+  `GET /v1/onboarding/events/stream`.
 - Onboarding unpaid canvas calls `/v1/onboarding/website/editor/…` (not
-  `/v1/website/editor` while unactivated). Share is
+  `/v1/website/editor` while unactivated) and
+  `/v1/onboarding/website/assistant/…`. Share is
   `POST /v1/onboarding/website/publications`. First pay is
   `POST /v1/onboarding/activation/checkout`.
 - `/onboarding/preview` is the SSE website-section carousel; the shareable host
@@ -75,8 +82,10 @@ leads console.
   click-off; 500ms coalesce; leave guard. See [editing.md](../features/website/editing.md).
 - Ads (when they exist): explicit mutations + `base_updated_at` / `409` re-GET;
   `POST …/ad-set` and download. Not the website autosave loop.
-- Voice is a channel now ([voice agent](../general-architecture/voice-agent.md)); first-pass onboarding is the **text**
-  client interview. Voice routes are listed + deferred.
+- Voice is a channel now ([voice agent](../general-architecture/voice-agent.md)); first-pass Find / Review / client
+  interview is **text**. Guide Voice (`/v1/onboarding/assistant/…`) is listed +
+  deferred. Unpaid canvas Voice is v1 under
+  `/v1/onboarding/website/assistant/…`.
 - Enable `cmd/ci/check-dont-say --frontend` and drop the `frontend-2/`
   pre-commit exclude when the first frontend-from-Go PR lands.
 
@@ -89,8 +98,9 @@ on touched files + one E2E per epic (docs-only PRs excepted).
 1. **This docs set** (instruction files + pointers).
 2. **Contract scaffolding** — switch typegen to Go `/health` + `/me`; stop
    generating unused predecessor paths. Cross-cutting file.
-3. **Onboarding** — rename the predecessor onboarding folder; drop voice; text
-   client interview + SSE progress.
+3. **Onboarding** — rename the predecessor onboarding folder; drop 04b
+   Voice; text client interview + SSE progress + unpaid canvas
+   (`/v1/onboarding/website/…`).
 4. **CMS layout + details** — Profile disclosure; drop `/cms/proof`; leftover
    layout names; Business details without a Save control.
 5. **Website editor** — PATCH working copy; publication dropdown; Connect
