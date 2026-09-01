@@ -180,7 +180,9 @@ River orchestrates. The same Astro Worker paints from a **tokenized** dump
 plus `WebsiteBusinessProfileRead` through two operations
 ([website HTTP](api.md)): `websiteRender` (website image render) and
 `websitePublication` (website HTML render). Those paths are not a live GET. Go
-does not resolve `{{…}}`.
+does not resolve `{{…}}`. Both requests send `media_asset_urls`; the Worker
+GETs those public delivery URLs from the media library bucket (not website
+`latest/`, not Worker static assets, not image files in the JSON).
 
 Website copy generation (03) uses `websiteRender` **only** (no R2 / WebP /
 purge). Batch page renders run on **one Worker**. SLO (clock stops when

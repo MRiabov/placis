@@ -206,7 +206,8 @@ resolves website placeholders and writes HTML to R2 `latest/`. A live GET
 is Cache then R2. It never calls Go. Onboarding 08/09 call this same write
 (strip on, then strip off). Website copy generation (03) `POST`s
 `websiteRender` (**without** writing R2) and gets a website image render.
-There is
+Both requests include `media_asset_urls` (public delivery URLs; Worker
+GETs them; no image files in the JSON). There is
 no per-request unpublished render for website visitors and no
 `/preview/{token}/`.
 

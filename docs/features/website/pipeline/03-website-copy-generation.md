@@ -39,6 +39,8 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
   Content / `update_reviews` can still override a section later (CMS).
 - Emit HTML in Go. Go does not resolve `{{…}}`.
 - Invent a hotlink URL for an image website slot.
+- Put image files or expiring signed URLs on `websiteRender`
+  (`media_asset_urls` is public delivery URLs only).
 - `generate_image` for a logo website slot. Leave `{{logo_url}}`.
 - Attach a photo whose photo kind is `founder` or `logo` on a home hero,
   service page, or home service-card image website slot.
@@ -69,8 +71,9 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 ## Do
 
 1. **Turn 1 `websiteRender`.** Go loads the unpublished tree (tokens) +
-   `WebsiteBusinessProfileRead` (not `website_manifest`) and `POST`s
-   `websiteRender` ([website HTTP](../api.md)). Put that **website image render** on the
+   `WebsiteBusinessProfileRead` (not `website_manifest`) +
+   `media_asset_urls` (often `{}`) and `POST`s `websiteRender`
+   ([website HTTP](../api.md)). Put that **website image render** on the
    first inference (not HTML). Complete the **home** website page first (wait
    teaser keys off that). Other website pages generate in parallel. Batch the
    first `websiteRender` (for example 8 pages) on **one Worker**, not parallel
@@ -97,7 +100,8 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
      media library items). That fills the gap for the owner.
    - Do not reuse an already-attached photo on a later image website slot.
 3. After each `update_slot`, the same `websiteRender` for the affected
-   website page (`before_pages` + `pages`). Put `before_image` and
+   website page (`before_pages` + `pages`). `media_asset_urls` is the
+   exact set for that body (new attach included). Put `before_image` and
    `after_image` on the tool result. Do not persist a website image render
    or HTML onto unpublished website slots.
 4. After 03 a hero headline is **generated prose** that may still contain

@@ -33,6 +33,7 @@ Same Astro engine. Not one union with a flag. Website form POST is
 | LLM traces | jsonb | **Omit.** Activity cards are named event structs. |
 | Top menu / footer | `website.menus` jsonb trees | Named node fields (extra keys 4xx). |
 | Website business profile | live business profile + projects + ranked reviews + media library URLs | `WebsiteBusinessProfileRead` — Common variables bag ([variables.md](variables.md)). Extra keys 4xx. Not the Details editor `GET /v1/business-profile` `*Read`. |
+| Worker `media_asset_urls` | `files` public delivery URL | Map keyed by media library item id → URL (`minLength` 1, `maxLength` 2048). **Omit** from website-editor GET/PATCH. |
 
 ## `WebsiteBusinessProfileRead`
 
@@ -305,6 +306,39 @@ on these DTOs (same as CMS: no `map[string]any`, no
 Maps are `map` keyed by **website page id** → typed page schema. OpenAPI
 `additionalProperties` is that page schema, never `true`.
 
+### `media_asset_urls`
+
+Required on **both** Worker requests. Same field, same engine lookup.
+
+Map keyed by **media library item id** → that item’s **public delivery
+URL** (`string`, URL, `minLength` 1, `maxLength` 2048). OpenAPI
+`additionalProperties` is that URL schema, never `true`. Extra request
+keys 4xx.
+
+**Exact set** (a missing referenced id and a spare id are both 4xx):
+
+- every image website slot `media_asset_id` on `pages` and, after
+  `update_slot`, `before_pages`
+- every image website slot `media_asset_id` on `top_menu_section` /
+  `footer_section`
+- Details `logo_media_asset_id` when `{{logo_url}}` is in those dumps or
+  in `profile`
+- any other media library item id on `profile` that paints (project
+  cover, certification badge) if that field is an id, not already a URL
+
+Turn 1 with only `{{images.*}}` / `{{logo_url}}` and no attached ids →
+`{}` is valid. After attach, that id **must** be in the map.
+
+URL is the public delivery URL for that item’s `files` row
+([files](../../general-architecture/files-and-s3.md)) — not an expiring
+signed URL, not Railway, not a Maps/Facebook hotlink. Worker **GET**s it
+(same-account R2). Go does not put the file in the JSON.
+
+Crop / focal stay on the image website slot. `{{images.*}}` /
+`{{logo_url}}` stay tokens in slots; those URLs stay on
+`WebsiteBusinessProfileRead`. Website-editor GET does **not** embed this
+map.
+
 `generate_image` is a website-editor / media-library tool. It is **not**
 either endpoint. **Must not:** a model-invoked screenshot tool. First view
 and `update_slot` already return the pictures.
@@ -322,9 +356,11 @@ table ([03](pipeline/03-website-copy-generation.md),
 
 - **Callers:** website 03 (turn 1 first view; after each `update_slot`).
 - **Must not:** write R2, WebP, or purge; persist a website image render or
-  HTML onto unpublished website slots; call `websitePublication`.
+  HTML onto unpublished website slots; call `websitePublication`; put
+  image files in the JSON.
 - **Request (`WebsiteRenderRequest`):**
   - `profile` — `WebsiteBusinessProfileRead`
+  - `media_asset_urls` — exact set ([above](#media_asset_urls))
   - `website_styles` — current **website style** (`preset_id` + bounded
     overrides)
   - `menus` — **top menu** and **footer** trees + bar flags
@@ -350,13 +386,15 @@ table ([03](pipeline/03-website-copy-generation.md),
 
 - **Callers:** website 04 (onboarding 08/09 and CMS Publish).
 - **Must not:** return a website image render; persist resolved HTML onto
-  unpublished website slots; call `websiteRender`.
+  unpublished website slots; call `websiteRender`; put image files in the
+  JSON.
 - **Request (`WebsitePublicationRequest`):** `dump` (`website.v1` — that
   dump **is** the latest design, including **website styles**, **top
   menu**, **footer**, and website pages) + `profile`
-  (`WebsiteBusinessProfileRead`) + `strip` + `website_prefix` +
-  `version_number`. Keep `pages[]` as a **list** on `website.v1`
-  ([manifest.md](manifest.md)); do not dict the publication dump.
+  (`WebsiteBusinessProfileRead`) + `media_asset_urls` + `strip` +
+  `website_prefix` + `version_number`. Keep `pages[]` as a **list** on
+  `website.v1` ([manifest.md](manifest.md)); do not dict the publication
+  dump.
 - **Response (`WebsitePublicationResponse`):** closed result of that
   **write** (no website image render, no HTML body). Extra keys 4xx.
 

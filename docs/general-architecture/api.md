@@ -206,7 +206,8 @@ GET.
 
 Go structs are the source. Worker typegens from a **separate** OpenAPI
 file (not `GET /openapi.json`). Routes, DTOs, and `$ref` for
-`WebsiteBusinessProfileRead`: [website HTTP](../features/website/api.md).
+`WebsiteBusinessProfileRead` and `media_asset_urls`:
+[website HTTP](../features/website/api.md).
 Auth: shared secret / service binding (out of the JSON body). Binding
 **name** is not this file.
 

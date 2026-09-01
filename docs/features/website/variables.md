@@ -6,7 +6,11 @@ website keeps the tokens. Go does not rewrite slots. The Worker fills `{{…}}`
 on `websiteRender` (website image render) and on `websitePublication`
 (website HTML render).
 The wait teaser and CMS canvas fill them in `frontend-2` with the shared
-website component package from the same `*Read` (page GET embed).
+website component package from the same `*Read` (website page GET embed).
+Attached image website slots keep a media library item id in the dump; Go
+sends `media_asset_urls` on both Worker requests so the Worker can GET
+that file. Token `{{images.*}}` / `{{logo_url}}` URLs stay on
+`WebsiteBusinessProfileRead`.
 
 Onboarding 05 (website 01 then 02) writes `{{…}}` detail tokens and leaves
 them in place. Website copy generation (03) may overwrite prose slots but
