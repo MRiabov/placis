@@ -113,6 +113,10 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
 | Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; URL combobox `/v1/website/editor/urls`; assistant under `/v1/assistant/…`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
 | `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
 
+Unactivated owners **403** on `/v1/website/editor`. Unpaid canvas uses
+`/v1/onboarding/website/editor/…`
+([onboarding frontend-debloat](../onboarding/frontend-debloat.md)).
+
 Connect website address is a **modal on `/cms/website`** (no extra route). Add
 with the website Go phase (Cloudflare custom hostname + DNS rows).
 

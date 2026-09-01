@@ -82,10 +82,11 @@ for that chunk. Transform skip is `algorithm` + `schema_revision`.
 
 ### `select_and_copy_website_template`
 
-Onboarding [05](../features/onboarding/pipeline/05-select-and-copy-website-template.md). `POST .../interview/complete` **inserts** this River job kind.
-Website 01 then 02 run in-process. 02 **inserts** `website_copy_generation`.
-Fail → `select_and_copy_website_template_failed`. Retry is a new insert of this
-River job kind (same `website_prefix` if 08 already reserved it).
+Onboarding [05](../features/onboarding/pipeline/05-select-and-copy-website-template.md). `POST /v1/onboarding/interview/complete` **inserts** this River
+job kind. Website 01 then 02 run in-process. 02 **inserts**
+`website_copy_generation`. Fail → `select_and_copy_website_template_failed`.
+Retry is a new insert of this River job kind (same `website_prefix` if 08
+already reserved it).
 
 ### `website_copy_generation`
 

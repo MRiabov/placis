@@ -54,7 +54,7 @@ decision + date) instead of silently replacing the old entry.
    as a Project insert `status=active`, matching decision 5 (onboarding /
    already-`active` stay `active`). Not a project draft. No Approve in the
    client interview. Client interview Archive (`POST
-   /v1/onboarding-sessions/{id}/projects/{projectId}/archive`) is the same
+   /v1/onboarding/projects/{projectId}/archive`) is the same
    persist as CMS Archive (`active` → `archived`, `algorithm=human`). CMS
    `POST /v1/projects` still inserts a project draft. (2026-08-30)
 

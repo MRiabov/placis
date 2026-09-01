@@ -11,7 +11,7 @@ Package ownership. Workflows live in the feature docs this list points at.
    the wait teaser, contractor copy improvement, on-demand 08 share (preview
    website address), and website activation. `onboarding/websiteeditor` owns
    unpaid website-preview Assistant HTTP
-   (`/v1/onboarding/website-editor/assistant/…`) and unpaid policy (5-cap,
+   (`/v1/onboarding/website/assistant/…`) and unpaid policy (5-cap,
    instant apply, allowlist). It reuses `website/assistant` tools and
    `ai.threads` (`thread_kind=cms_assistant`) overlay SQL. CMS `assistant` HTTP
    must not import it. `onboarding/assistant` is Find, Review, and client

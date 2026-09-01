@@ -10,7 +10,7 @@ this step runs **inside** that River job kind, then [02](02-copy-website-templat
 ## Trigger
 
 Onboarding 05 after client interview complete
-(`POST .../interview/complete` **inserts**
+(`POST /v1/onboarding/interview/complete` **inserts**
 `select_and_copy_website_template`).
 
 ## Pre

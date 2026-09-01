@@ -6,15 +6,15 @@ v1 writer into the live business profile. Channel is `text`. Voice writer
 ## Trigger
 
 Contractor is on `/onboarding/interview` with `onboarding_sessions.channel=text`
-(setting this unsets voice as the active writer). Autosave:
-`PUT .../text-interview/autosave`. Final: `POST .../text-interview/submissions`
-then `POST .../interview/complete`.
+(setting this unsets voice as the active writer). Click-off:
+`PUT /v1/onboarding/interview`. Continue:
+`POST /v1/onboarding/interview/complete`.
 
 ## Pre
 
 - `status=client_interviewing`.
 - 03 may have been skipped.
-- Checklist and complete gate: [build-profile](build-profile.md).
+- Complete gate: [build-profile](build-profile.md).
 
 ## Must not
 
@@ -25,7 +25,7 @@ then `POST .../interview/complete`.
 - Edit title / description / cover on interview Project cards. No Approve.
   Archive is the contractor click below, not `/v1/projects/{id}/archive`.
 - `POST` a new onboarding session on Resume.
-- Complete while required checklist rows are `empty` / `in_progress` /
+- Complete while required keys are `empty` / `in_progress` /
   `conflict`.
 - Run a second complete (exactly one complete → 05).
 - Repeat legal-identity fields (shown on 03).
@@ -40,9 +40,13 @@ then `POST .../interview/complete`.
 
 ## Do
 
+`SaveTextClientInterview` persists click-off. `CompleteClientInterview`
+is Continue (submit): optional last answers, complete gate, **inserts**
+`select_and_copy_website_template`.
+
 1. Set `channel=text`. Do not switch to a voice writer this pass; do not
    complete twice.
-2. Autosave writes `business_profile_edits` for the fields this save set, plus
+2. Click-off writes `business_profile_edits` for the fields this save set, plus
    `client_interview_submissions` `submission_kind=autosave` (interview-only:
    photo uploads, optional source-from-internet / AI photo when there are not
    enough photos, reviews unavailable, extra notes).
@@ -61,9 +65,10 @@ then `POST .../interview/complete`.
    rows deterministically (no LLM). Do not ask a photos-choice question.
 4. While they stay on this screen, apply [live fill](#do--live-fill-while-02-runs) from the onboarding session
    SSE (Postgres is authoritative).
-5. Final submission `submission_kind=final`, then `POST .../interview/complete`
-   iff the complete gate (service and service-area list rows present, or
-   skipped).
+5. `POST /v1/onboarding/interview/complete` (optional last dirty answers on
+   the same body) iff the complete gate (service and service-area list rows
+   present, or skipped). May persist `submission_kind=final`. One hop — not
+   PUT-then-POST.
 6. Contractor may mark a required row `skipped` in this step, then complete.
 
 ## Do — live fill (while 02 runs)
@@ -99,7 +104,7 @@ closed. Same SSE as Review; this screen is also a consumer.
 
 ## Fail
 
-Autosave fail keeps the token. Complete rejected if the gate fails; stay
+Save fail keeps the token. Complete rejected if the gate fails; stay
 `client_interviewing`.
 
 ## Out
@@ -111,7 +116,7 @@ until complete. After complete, later 02 writes are new edits after
 ## Invariants
 
 - Skip 03 does not relax the complete gate.
-- Complete path is `POST .../interview/complete` ([build-profile](build-profile.md)).
+- Complete path is `POST /v1/onboarding/interview/complete` ([build-profile](build-profile.md)).
 - Applying the website template never reads a transcript.
 - Services and service areas are structured Details rows at complete; the wait
   does not combine them with an LLM.

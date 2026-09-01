@@ -18,13 +18,16 @@ func TestPersistHeadingsClosed(t *testing.T) {
 
 func TestPersistHeadingsLeftoverOK(t *testing.T) {
 	p := persistFile{
-		path: "docs/features/onboarding/persistence.md",
-		rel:  "onboarding/persistence.md",
+		path: "docs/features/etl/persistence.md",
+		rel:  "etl/persistence.md",
 		heads: []string{
-			"Onboarding assistant (guide)",
-			"Onboarding sessions and client interview",
-			"Business research",
-			"Website activation",
+			"Runs",
+			"Sources (live extract identity)",
+			"Fetches (append-only, one table per extract type)",
+			"Website crawled URLs (live row, no `raw`)",
+			"`imported_media`",
+			"Google Maps listing (live row, no `raw`)",
+			"Project verdict (skip)",
 			"Indexes",
 		},
 	}

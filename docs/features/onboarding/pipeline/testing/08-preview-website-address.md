@@ -9,7 +9,7 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
   **not** require 06 to have finished. Record tokenized
   `website_slots.value`. `tenants.website_prefix` null. Zero
   `website_publications`.
-- **Invoke**: `POST /v1/onboarding-sessions/{id}/preview-website-address`.
+- **Invoke**: `POST /v1/onboarding/website/publications`.
   Also: 05 retry after a first share; also: collision on
   `display_name`; also: wait-end without this POST.
 - **Assert** (Postgres):

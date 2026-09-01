@@ -1,9 +1,9 @@
 # 05 — Select and copy the website template
 
-After client interview complete. `POST .../interview/complete` (04a submit or
-04b `end_interview`) sets `selecting_and_copying_website_template` and
-**inserts** River job kind `select_and_copy_website_template`. It does **not**
-run at business lookup.
+After client interview complete. `POST /v1/onboarding/interview/complete`
+sets `selecting_and_copying_website_template` and **inserts** River job
+kind `select_and_copy_website_template`. It does **not** run at business
+lookup.
 
 Onboarding **owns** kicking this off and waiting until an unpublished
 website exists. The writes are website pipeline
@@ -18,7 +18,7 @@ Do not say apply the website template in prose.
 
 ## Trigger
 
-`POST .../interview/complete` after the complete gate
+`POST /v1/onboarding/interview/complete` after the complete gate
 ([build-profile](build-profile.md)).
 
 ## Pre

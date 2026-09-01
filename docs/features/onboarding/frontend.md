@@ -38,15 +38,15 @@ larger than field labels ([design decision](design-decision-record.md) 9).
 
 ### 2. Review — `/onboarding/review`
 
-Found vs missing checklist (who they are, legal, contact, services, service
-area, certifications and reviews, photos). Business research may still be
-filling rows (SSE). **Continue** in the shared footer. No missing-topics queue
-or “next: client interview” aside ([design decision](design-decision-record.md) 2).
+Found vs missing (who they are, legal, contact, services, service area,
+certifications and reviews, photos). Business research may still be filling rows
+(SSE). **Continue** in the shared footer. No missing-topics queue or “next:
+client interview” aside ([design decision](design-decision-record.md) 2).
 
 When `research_wait_until` is in the future, a quiet inline wait on this screen
 (and on the client interview if they Continue): “We’ll look the business up
 again in a few minutes.” Not a modal, not a full-screen stop, Continue stays
-enabled. Same field on `GET .../profile` and SSE.
+enabled. Same field on `GET /v1/onboarding/profile` and SSE.
 
 ### 3. Client interview — `/onboarding/interview`
 
@@ -173,8 +173,9 @@ The look export’s unpaid website preview is `apps/demo/`
 ## Resume
 
 Same browser. `localStorage` holds the onboarding session **token** and last UI
-step. Reload calls `GET .../profile`. The stored step is a hint; onboarding
-session status and whether `latest/` exists win. Screen map: [pipeline README](pipeline/README.md).
+step. Reload calls `GET /v1/onboarding/profile`. The stored step is a hint;
+onboarding session status and whether `latest/` exists win. Screen map:
+[pipeline README](pipeline/README.md).
 
 Reload during the wait → stay on `/onboarding/preview`, reconnect SSE, keep
 rotating complete sections, finish the **same** wait (copy done or remaining

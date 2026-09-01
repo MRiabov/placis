@@ -19,12 +19,12 @@ func TestAPIHeadingsClosed(t *testing.T) {
 
 func TestAPIHeadingsLeftoverOK(t *testing.T) {
 	f := headingFile{
-		path: "docs/features/onboarding/api.md",
-		rel:  "onboarding/api.md",
+		path: "docs/features/business-profile/details/api.md",
+		rel:  "business-profile/details/api.md",
 		heads: []string{
 			"Serve only types on HTTP",
-			"Routes — onboarding assistant (guide)",
-			"Listed",
+			"`update_details` (one governed tool)",
+			"Routes",
 			"Do not create",
 		},
 	}
@@ -35,12 +35,12 @@ func TestAPIHeadingsLeftoverOK(t *testing.T) {
 
 func TestAPIHeadingsNewExtraFails(t *testing.T) {
 	f := headingFile{
-		path: "docs/features/onboarding/api.md",
-		rel:  "onboarding/api.md",
+		path: "docs/features/business-profile/details/api.md",
+		rel:  "business-profile/details/api.md",
 		heads: []string{
 			"Serve only types on HTTP",
-			"Routes — onboarding assistant (guide)",
-			"Listed",
+			"`update_details` (one governed tool)",
+			"Routes",
 			"Essay",
 			"Do not create",
 		},
@@ -67,6 +67,14 @@ func TestAPIHeadingsStaleLeftoverFails(t *testing.T) {
 	}
 	if errs := checkOneAPI(f); len(errs) != 0 {
 		t.Fatalf("closed assistant: %v", errs)
+	}
+	f = headingFile{
+		path:  "docs/features/onboarding/api.md",
+		rel:   "onboarding/api.md",
+		heads: []string{"DTOs", "Routes", "Do not create"},
+	}
+	if errs := checkOneAPI(f); len(errs) != 0 {
+		t.Fatalf("closed onboarding: %v", errs)
 	}
 }
 

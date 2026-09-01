@@ -8,9 +8,12 @@ Never under `{website_prefix}.preview.placis.com`. That host is Cache then R2
 (the [preview website address](../website/cloudflare.md)). After **09**, this
 route redirects to `/cms/website`.
 
-HTTP: `/v1/onboarding/website-editor/assistant/…` in
-`internal/onboarding/websiteeditor`. Package is a **policy wrapper**: same
-[website editor tools](../website/assistant.md), same text/Voice transport, same website-editor PATCH,
+HTTP: named Routes in [api.md](api.md) (`/v1/onboarding/website/editor/…`,
+`/v1/onboarding/website/assistant/…`,
+`POST /v1/onboarding/website/publications`).
+Package `internal/onboarding/websiteeditor` is a **policy wrapper**: same
+[website editor tools](../website/assistant.md), same text/Voice transport,
+same unpublished PATCH (`/v1/onboarding/website/editor/…`),
 same `ai.threads` overlay SQL (`thread_kind=cms_assistant`), same 20-turn loop.
 It owns auth, knowledge YAML, allowlist, instant apply, 5-prompt cap, skip 402.
 
@@ -47,7 +50,7 @@ instructions would not fit, that turn / Voice create fails. No 24h discard.
 
 ## HTTP
 
-Prefix `/v1/onboarding/website-editor/assistant`. Same DTO names as
+Prefix `/v1/onboarding/website/assistant`. Same DTO names as
 [assistant HTTP](../assistant/api.md) (`AssistantThreadRead`,
 `AssistantOwnerMessage`, `AssistantVoiceUsage`, …). Seven routes:
 
@@ -119,7 +122,9 @@ still snaps to the website section being edited.
 
 Server **forces instant apply** on text **and** Voice (ignore `ask_first` /
 `plan` on the wire). Exception to CMS Voice always Ask first (assistant ADR 17).
-Tool results → canvas projection → existing [`PATCH /v1/website/editor/…`](../website/api.md). Go
+Tool results → canvas projection →
+[`PATCH /v1/onboarding/website/editor/…`](api.md)
+(same `WebsitePageUpdate` as CMS). Go
 does not upsert unpublished rows on that turn. No click-to-edit UI. No Content /
 website styles rail / design controls / owner Plan switch.
 

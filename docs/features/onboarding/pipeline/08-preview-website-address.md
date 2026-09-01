@@ -41,6 +41,9 @@ still `selecting_and_copying_website_template` if they share during the wait
 
 ## Do
 
+`SharePreviewWebsiteAddress` reserves the prefix if needed and **calls**
+`PublishWebsite` with the website-activation strip on.
+
 1. **Reserve** `tenants.website_prefix` from `display_name` (`{{business_name}}`
    — Maps / public name, required at client interview complete). Not
    `legal_name`. Skip reserve if already set.
@@ -68,7 +71,7 @@ still `selecting_and_copying_website_template` if they share during the wait
 4. Onboarding session stays `preview_and_edit` (or becomes `preview_and_edit` if
    they shared during the wait). Empty details show as website placeholders.
 
-HTTP: `POST /v1/onboarding-sessions/{id}/preview-website-address`
+HTTP: `POST /v1/onboarding/website/publications`
 ([api.md](../api.md)). Auth: onboarding session token or Clerk unactivated.
 
 SSE is the onboarding session stream. The contractor host is not an SSE
