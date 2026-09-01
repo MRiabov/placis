@@ -68,7 +68,7 @@ A cleanup copy inherits `supplied_by` from the parent. A generated image is
 
 Maps listing photos and Facebook/Instagram **post** images are
 `source=imported`, `supplied_by=business_research`. External ids live in
-`etl.imported_media`, not a second column on this row. Parent extract blobs are
+`etl.imported_media`, not a second column on this row. Parent extracts are
 `imported_media_sources` (≥1 `etl.sources` id). A later extract does not insert
 a second item for the same `(tenant_id, imported_media_kind, external_id)`,
 including when this row is `archived`. Owner uploads are not `imported_media`

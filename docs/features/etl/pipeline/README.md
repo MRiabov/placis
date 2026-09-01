@@ -65,7 +65,7 @@ apply. [02](../../onboarding/pipeline/02-business-research.md) only calls `Start
   Record reasoning, owner-visible output, and tool calls. Crawl parse uses an
   `etl_crawl_parse` thread per HTML URL. CMS Assistant /
   Voice / onboarding 06 are unchanged.
-- **ETL writes cite `etl.sources`** — insert identity rows for blobs this spec
+- **ETL writes cite `etl.sources`** — insert identity rows for sources this spec
   cites. Each ETL `business_profile_edits` increment inserts ≥1
   `business_profile_edit_sources`. ETL Projects insert ≥1 `project_sources`.
   Imported files insert ≥1 `imported_media_sources`. Never a nullable

@@ -14,7 +14,7 @@ no single feature owns.
 ## Code today
 
 - `frontend-2/src/generated/api-types.ts` (~18 064 lines) — predecessor OpenAPI,
-  including unconstrained JSON blobs and CRM sandbox types the app never
+  including unconstrained JSON and CRM sandbox types the app never
   calls.
 - Don't say shell: `frontend-2/src/app/shell/index.tsx` (`AppShell` =
   `<Outlet />`).
@@ -91,7 +91,7 @@ against old paths. No shims, no `as any`, no mapping layer (predecessor types �
 
 Do not wait until Go has “enough” routes. The generated file must not
 reintroduce predecessor-only paths (CRM sandbox, tenant-scoped website CRUD,
-unconstrained blobs). Contractor website typegen is a different consumer:
+unconstrained JSON). Contractor website typegen is a different consumer:
 [port-contractor-website.md](../features/website/port-contractor-website.md).
 
 ## Retarget

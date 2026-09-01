@@ -54,7 +54,7 @@ Status: decided (2026-08-16, product owner + engineering).
    (website HTML render, no website image render). Select website template is
    occupancy + hash at 01 (no LLM, no `website_template_picker`), not at
    copy-pages. (2026-09-01): `WebsiteBusinessProfileRead` is the Common
-   variables bag on canvas hydrate and both Worker requests.
+   variables struct on canvas hydrate and both Worker requests.
 
 7. **Website publication is kept and can be rolled back** — website publication
    creates a `website_publications` row (a published website copy); website

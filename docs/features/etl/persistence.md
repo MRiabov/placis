@@ -31,29 +31,29 @@ fetches, not `raw`, not a Project table.
   unique per `(tenant_id, source_kind)`), timestamps
 
 **No** `algorithm`, **no** yes/no, **no** `project_id`. Insert a row before any
-cite of that blob. Company registry / trade registry: insert when those
+cite of that source. Company registry / trade registry: insert when those
 extracts write profile columns (cannot cite a missing id). Directory /
 web-search / listing **photos** are not inserted this spec unless a detail or
 file cites them.
 
 A `source_id` is never a nullable column. The junction is many-to-many with
-**at least one** `source_id` when extract blobs produced the data. Junctions
-live next to the written row ([edit sources](../business-profile/details/persistence.md),
+**at least one** `source_id` when extracts produced the data. Junctions live
+next to the written row ([edit sources](../business-profile/details/persistence.md),
 [project sources](../business-profile/projects/persistence.md),
 `imported_media_sources` below). Owner / client interview writes have **no**
-junction rows (they were not generated from extract blobs). This is which
-blobs produced the data. It is not `ai_generations` (the LLM call) and not
+junction rows (they were not generated from extracts). This is which
+extracts produced the data. It is not `ai_generations` (the LLM call) and not
 `etl_run_id` (which run). Do not store citations as a generic `table.column`
 string map.
 
-Live rows that **are** the blob have a required `source_id` fk (not nullable):
-listing, listing review, Facebook / Instagram profile and post. Fetches do not.
-Images are not `etl.sources` rows. Crawl **HTML URL** stays one URL + photos;
-Extract markdown and goquery visible text are **two** sources (same canonical
-URL, two `source_kind`s, two `source_id`s). Apify stands in for the HTML blob
-when GET fails — not a third source. `business_profile_reviews` is a copy of the
-listing review: cite the listing-review `source_id` on the edit that inserted
-the profile review, not a second source.
+Live rows that **are** the extract have a required `source_id` fk (not
+nullable): listing, listing review, Facebook / Instagram profile and post.
+Fetches do not. Images are not `etl.sources` rows. Crawl **HTML URL** stays one
+URL + photos; Extract markdown and goquery visible text are **two** sources
+(same canonical URL, two `source_kind`s, two `source_id`s). Apify stands in for
+the crawled HTML when GET fails — not a third source. `business_profile_reviews`
+is a copy of the listing review: cite the listing-review `source_id` on the edit
+that inserted the profile review, not a second source.
 
 ## Fetches (append-only, one table per extract type)
 
@@ -117,7 +117,7 @@ children.
   Named from [media library persistence](../other/media/persistence.md).
 - `imported_media_sources` — `imported_media_id` fk, `source_id` fk →
   `etl.sources`, `tenant_id` fk. Unique `(imported_media_id, source_id)`.
-  Every `imported_media` row has **at least one** cite (parent blob: listing,
+  Every `imported_media` row has **at least one** cite (parent source: listing,
   listing review, Facebook / Instagram post, crawl extract and/or HTML).
   Owner uploads are not this table.
 
@@ -144,7 +144,8 @@ children.
 - `google_maps_listing_photos` — `id`, `listing_id` fk, `external_id`,
   `source_url`, `content_hash` nullable
 
-The Google Maps listing is this row, not a blob on a fetch. Hours, reviews, and
+The Google Maps listing is this row, not unstructured jsonb on a fetch. Hours,
+reviews, and
 photo refs are child rows. Review photos from scrape are children of the
 review. Profile hours / reviews / media library items are copies transform
 writes; the listing stays here.
