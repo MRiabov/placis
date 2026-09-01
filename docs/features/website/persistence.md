@@ -62,7 +62,7 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
 
 - **Columns:** `id`, `tenant_id` fk, `page_id` nullable fk,
   `component_id`, `component_version`, `position`, `status`, `props`
-  jsonb, `design` jsonb, `origin`
+  jsonb oneOf `component_id`, `design` jsonb, `origin`
 - **Enums:** `status` → `visible` / `hidden`; `origin` →
   `website_template` / `website_copy_generation` / `owner` /
   `business_research`
@@ -75,7 +75,8 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
 ### `website_slots`
 
 - **Columns:** `id`, `tenant_id` fk, `section_id` fk, `slot_key`,
-  `slot_type`, `value` jsonb, `status`, `origin`, `validation_errors`
+  `slot_type`, `value` jsonb oneOf `slot_type`, `status`, `origin`,
+  `validation_errors`
 - **Enums:** `slot_type` → `text` / `rich_text` / `image` / `link` /
   `list` / `json`; `status` → `unpublished` / `reviewed` / `approved` /
   `rejected`; `origin` → `website_template` /

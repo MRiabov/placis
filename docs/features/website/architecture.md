@@ -12,7 +12,7 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   ([01](pipeline/01-select-website-template.md))
 - `CopyWebsiteTemplatePages` — `internal/website/templates`
   ([02](pipeline/02-copy-website-template-pages.md))
-- `GenerateWebsiteCopy` — River job `website_copy_generation`
+- `GenerateWebsiteCopy` — River job kind `website_copy_generation`
   ([03](pipeline/03-website-copy-generation.md))
 - `PublishWebsite` — **calls** `websitePublication`
   ([04](pipeline/04-website-publication.md))
@@ -95,7 +95,7 @@ Object and mapping: [catalog.md](catalog.md).
    kinds exclusive; do not filter on `hero` / `project` / `service`)
    ([03](pipeline/03-website-copy-generation.md));
 5. reviews website sections keep `{{reviews.1}}` … from the ranked pool.
-   Website does not rank. River job `reviews_ranking_for_display`
+   Website does not rank. River job kind `reviews_ranking_for_display`
    ([build-profile](../onboarding/pipeline/build-profile.md),
    [jobs](../../general-architecture/jobs.md)). Owner Content /
    `update_reviews` can override a section later;
@@ -152,11 +152,12 @@ content (placeholders, project galleries, reviews, photos) edited on
 [business profile](../business-profile/README.md) and [media library](../other/media/README.md) screens. They are separate entities.
 Certifications and reviews is the picker for **all reviews** and for pinning
 **top reviews** (ads). First-pass reviews website sections resolve
-`{{reviews.1}}` … from the ranked pool (River job `reviews_ranking_for_display`;
-website does not rank). The website editor reviews Content may later set
-**that website section’s** ordered `website_slot_reviews` (add from all reviews,
-remove, reorder; cap from the website component). They are not generic website
-slots. The edit loop is in [editing.md](editing.md). Screens:
+`{{reviews.1}}` … from the ranked pool (River job kind
+`reviews_ranking_for_display`; website does not rank). The website editor
+reviews Content may later set **that website section’s** ordered
+`website_slot_reviews` (add from all reviews, remove, reorder; cap from the
+website component). They are not generic website slots. The edit loop is in
+[editing.md](editing.md). Screens:
 [frontend.md](frontend.md).
 
 ## Website editor tools (assistant)

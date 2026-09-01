@@ -18,9 +18,9 @@ Not the Worker. Playwright E2E is
 
 | Website pipeline | Onboarding DAG (thin trigger) |
 | --- | --- |
-| [01 select website template](01-select-website-template.md) | 05 enqueue (select then copy template pages) |
-| [02 copy the website template’s pages onto the unpublished website](02-copy-website-template-pages.md) | same 05 run, after 01 |
-| [03 automatic website copy generation](03-website-copy-generation.md) | 06 River job / wait teaser / unpaid thread |
+| [01 select website template](01-select-website-template.md) | 05 **inserts** `select_and_copy_website_template` (select then copy template pages) |
+| [02 copy the website template’s pages onto the unpublished website](02-copy-website-template-pages.md) | same River job kind, after 01; **inserts** `website_copy_generation` |
+| [03 automatic website copy generation](03-website-copy-generation.md) | 06 River job kind `website_copy_generation` / wait teaser / unpaid thread |
 | [04 website publication](04-website-publication.md) | 08 share (strip on) and 09 pay (strip off); later CMS Publish is the same 04 |
 
 ```text

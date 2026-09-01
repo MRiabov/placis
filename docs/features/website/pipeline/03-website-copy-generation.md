@@ -13,7 +13,7 @@ the thin trigger (onboarding session / DAG / unpaid thread lock).
 
 ## Trigger
 
-02 succeeded. One River job `website_copy_generation`. Lock key:
+02 succeeded. One River job kind `website_copy_generation`. Lock key:
 `tenant_id` (unactivated tenant already exists). A second 03 start is
 **409** from River unique-insert on that key (do not HTTP-check before
 insert). While
@@ -33,11 +33,10 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 - `create_page` (02 already copied the website page set, including service
   pages from named services). Do not invent the service list. Unpaid owner
   prompts on the website preview **may** `create_page`.
-- `update_reviews`. Ranked pool order is River job
-  `reviews_ranking_for_display`
-  ([jobs](../../../general-architecture/jobs.md)), not this job. Do not
-  write `website_slot_reviews`. Owner Content / `update_reviews` can
-  still override a section later (CMS).
+- `update_reviews`. Ranked pool order is River job kind
+  `reviews_ranking_for_display` ([jobs](../../../general-architecture/jobs.md)), not this River job kind. Do not write
+  `website_slot_reviews`. Owner Content / `update_reviews` can still override a
+  section later (CMS).
 - Emit HTML in Go. Go does not resolve `{{…}}`.
 - Invent a hotlink URL for an image website slot.
 - Put image files or expiring signed URLs on `websiteRender`
@@ -72,7 +71,7 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 ## Do
 
 `GenerateWebsiteCopy` writes copy and photo selection into existing
-unpublished website slots. River job remains `website_copy_generation`.
+unpublished website slots. River job kind `website_copy_generation`.
 
 1. **Turn 1 `websiteRender`.** Go loads the unpublished tree (tokens) +
    `WebsiteBusinessProfileRead` (not `website_manifest`) +
@@ -154,7 +153,7 @@ Unpublished `website_pages`, `website_sections`, `website_slots`,
 
 ## Calls
 
-`websiteRender`. River job `website_copy_generation`.
+`websiteRender`.
 
 ## Persist
 
@@ -165,7 +164,7 @@ agent batches; `ai_generations` for tool batches
 `prompt_id=website_copy_generation`); `ai.threads`
 (`thread_kind=cms_assistant`) / `assistant.thread_items` /
 `assistant.runs` while unactivated. `onboarding_sessions` wait-end
-`preview_and_edit`. No `website_publications` from this job. After they
+`preview_and_edit`. No `website_publications` from this step. After they
 share (08), further 03 writes do **not** live-update R2.
 
 ## Fail

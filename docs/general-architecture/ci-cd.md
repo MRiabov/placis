@@ -185,6 +185,7 @@ does). We do **not** hand-roll AST scripts up front:
   `just`; never `rumdl fmt` in CI). Conventions:
   [docs conventions](../docs-conventions.md).
 - **Don't-say glossary check** (`cmd/ci/check-dont-say`) — see below.
+- **Docs–code named identifiers** (`cmd/ci/check-docs-code`) — see below.
 - **Pipeline table and heading check** (`cmd/ci/check-pipeline-tables`) —
   step files pair with `pipeline/testing/<name>.md`; **known** persistence
   tables in a step appear in that testing file; every persistence table
@@ -192,7 +193,8 @@ does). We do **not** hand-roll AST scripts up front:
   exist; pipeline step `##` headings are a closed list; feature `api.md`,
   `persistence.md`, and `testing.md` `##` use a shrink-only leftover list
   (closed `api.md` is DTOs / Routes / Do not create; closed `persistence.md`
-  is Tables / Indexes). Missing
+  is Tables / Indexes); `jobs.md` `##` is Workflows / Jobs; backticked
+  River job kind must already live in `jobs.md` `## Jobs`. Missing
   `testing.md` (media library / leads / Details / Projects) does not
   fail; a changed `persistence.md` passed on the command line without
   `testing.md` warns. See
@@ -271,25 +273,54 @@ parse failure is the failure.
 
 `cmd/ci/check-pipeline-tables` enforces the table pairing and pipeline step
 heading lists in [docs conventions](../docs-conventions.md#named-identifiers). Unit tests + `go run`. Pre-commit on
-`docs/features/**/{persistence,testing,api}.md` and
-`docs/features/**/pipeline/**/*.md`. CI:
-`.github/workflows/check-pipeline-tables.yml` runs
+`docs/features/**/{persistence,testing,api}.md`,
+`docs/features/**/pipeline/**/*.md`, and `docs/general-architecture/jobs.md`.
+CI: `.github/workflows/check-pipeline-tables.yml` runs
 `go test ./cmd/ci/check-pipeline-tables` then
 `go run ./cmd/ci/check-pipeline-tables --all`.
 
-This pass: **tables**, **pipeline step headings**, and **feature `api.md` /
-`persistence.md` / `testing.md` headings**. Not Routes paths,
-not gatherers (`pipeline/README.md`,
+This pass: **tables**, **pipeline step headings**,
+**feature `api.md` / `persistence.md` / `testing.md` headings**,
+**`jobs.md` Workflows / Jobs**, and **known River job kind** names. Not
+Routes paths, not gatherers (`pipeline/README.md`,
 `etl/pipeline/etl-run-kind-triggers.md`). Closed `api.md` `##` is DTOs
 (optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
-and Indexes. Undefined features keep leftover extra-heading lists in
-`cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
-entry in the same PR). `testing.md` bans `## Routes` / `## DTOs` /
-`## Tables` / `## Do not create` and `### METHOD /path`.
-Pairing matches **known**
-table names (already in some
-`persistence.md`); invented names and columns are writing rules. Warn
-(do not fail) when a changed `persistence.md` is passed on the command
-line and that feature has no `testing.md`. `--all` with no extra paths
-does not warn on untouched files. GitHub Actions passes the PR’s
-changed `persistence.md` paths after `--all` so `::warning` can fire.
+and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. A backticked
+River job kind (`River job \`foo\``, `River job kind \`foo\``,
+`**inserts** \`foo\``) must be a `## Jobs` row. Undefined features keep
+leftover extra-heading lists in `cmd/ci/check-pipeline-tables`; extras may
+only shrink (drop the leftover entry in the same PR). `testing.md` bans
+`## Routes` / `## DTOs` / `## Tables` / `## Do not create` and
+`### METHOD /path`. Pairing matches **known** table names (already in some
+`persistence.md`); invented names and columns are writing rules. Warn (do
+not fail) when a changed `persistence.md` is passed on the command line
+and that feature has no `testing.md`. `--all` with no extra paths does not
+warn on untouched files. GitHub Actions passes the PR’s changed
+`persistence.md` paths after `--all` so `::warning` can fire.
+
+### Docs–code named identifiers
+
+`cmd/ci/check-docs-code` pairs OpenAPI, Go, and goose SQL with the named
+lists in `docs/`. Unit tests + `go run`. Pre-commit on `docs/**/*.md`,
+`internal/`, `cmd/`, `migrations/`, `openapi.json`, and the Worker
+internal OpenAPI file when present. CI:
+`.github/workflows/check-docs-code.yml` runs
+`go test ./cmd/ci/docnames ./cmd/ci/check-docs-code` then
+`go run ./cmd/ci/check-docs-code --all`.
+
+- **Gate A (always on):** a path, DTO type name, River job kind, or SQL
+  table in public OpenAPI, Worker internal OpenAPI, Go under `internal/`
+  and `cmd/` (not `cmd/ci`), or `CREATE TABLE` in `migrations/` must
+  already live in docs. Missing trees are skipped. Empty code does not
+  fail. Public OpenAPI must not list `/internal/…`. A **Do not create**
+  path in OpenAPI fails even if the string appears in docs.
+- **Gate B (ratchet after OpenAPI exists):** when a feature’s paths
+  appear in OpenAPI, that file’s documented public Routes and
+  route-linked DTOs must be in the spec, except a shrink-only leftover
+  list in `cmd/ci/check-docs-code`. Website public arms on `/v1/website`;
+  Worker internal arms on `/internal/website-`; billing waits for
+  `## DTOs`; `GET /v1/health` and `GET /openapi.json` are required once
+  public OpenAPI exists. Undefined `api.md` files stay out of Gate B.
+
+Shared parsers live in `cmd/ci/docnames`. This pass does not check DTO
+field constraints or `frontend-2` routes.
