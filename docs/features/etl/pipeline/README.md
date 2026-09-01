@@ -38,12 +38,13 @@ calls `StartRun`.
 - Retry of **this** `run_id` reuses a fetch that already landed for that chunk
   (`fetched_from`, canonical URL + `fetched_from` for crawl). It does not skip
   remaining ETL slow extract chunks. `trigger=scheduled` extracts again.
-- Scheduled with no matching **Starts when** tuple (`place_id`, Facebook URL /
-  handle, Instagram handle) → `status=skipped` immediately, no transform.
-  Onboarding: insert the run when the ETL run kind can start. New details (Maps,
-  crawl, Parallel, contractor URL) start further ETL run kinds on this enqueue.
-  Nothing left that can produce the detail → `skipped`. A later paste can still
-  start the ETL run kind.
+- Scheduled with no matching **Starts when** tuple (`place_id`, Facebook URL,
+  Instagram handle) → `status=insufficient_data_for_lookup` immediately, no
+  transform. Onboarding: insert the run when the ETL run kind can start. New
+  details (Maps, crawl, Parallel, contractor URL) start further ETL run kinds
+  on this enqueue. Nothing left that can produce the detail →
+  `insufficient_data_for_lookup`. A later paste can still start the ETL run
+  kind.
 - Details persist on the onboarding session attach and the live profile
   (`place_id`, `website_url`, handles). Running jobs may copy them onto
   `etl.runs`. Not a profile dump. Not a new `StartRun`.

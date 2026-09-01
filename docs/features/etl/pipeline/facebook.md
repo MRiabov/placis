@@ -9,9 +9,10 @@ Public lookup (existing adapter). Graph API is later.
 ## Trigger
 
 Starts when: `facebook_page_url` (Maps, crawl, Parallel, Find, or contractor
-paste). Skip (`status=skipped`) when scheduled and there is no Facebook URL /
-handle. Onboarding: start when the detail exists. Nothing left that can produce
-it → `skipped`. A later paste can still start this ETL run kind on this enqueue.
+paste). Skip (`status=insufficient_data_for_lookup`) when scheduled and there
+is no Facebook URL. Onboarding: start when the detail exists. Nothing left that
+can produce it → `insufficient_data_for_lookup`. A later paste can still start
+this ETL run kind on this enqueue.
 
 ## Pre
 
