@@ -197,15 +197,32 @@ unknown events are logged and dropped, never parsed as `any`.
 The contractor host is **not** SSE. `/onboarding/preview` and
 `/onboarding/preview-and-edit/` in `frontend-2` are.
 
-## Worker internal render
+## Worker internal operations
 
-Website publication (River) renders `website.v1` through an authenticated
-internal render (shared secret / service binding) and writes R2. That is not
-public OpenAPI. **Do not create** `/v1/public/site/…`. Do not create leftover
-`/preview/{token}/` HTML.
+Two operations. Same Astro engine. **Not** one union with a flag. Not on
+`cmd/api`. Not public OpenAPI. **Do not create** `/v1/public/site/…`. Do
+not create leftover `/preview/{token}/` HTML. Do not put these on live
+GET.
 
-Live contractor HTML GET is Cache then R2. Never Go. The leftover token path is
-gone.
+Go structs are the source. Worker typegens from a **separate** OpenAPI
+file (not `GET /openapi.json`). Routes, DTOs, `$ref`, and the known
+omission (Worker is the HTTP server; product owner chose Go as source,
+not an agent; that inversion may cause issues):
+[website HTTP](../features/website/api.md).
+Auth: shared secret / service binding (out of the JSON body). Binding
+**name** is not this file.
+
+- **`websiteRender`** (`POST /internal/website-render`) — website 03.
+  Website image render. No R2, no WebP, no purge. Batch of website pages
+  on **one Worker**. SLO:
+  [03](../features/website/pipeline/03-website-copy-generation.md).
+- **`websitePublication`** (`POST /internal/website-publication`) —
+  website 04. Website HTML render. Writes HTML to R2 and purge as 04
+  already says. No website image render to the model. SLO:
+  [04](../features/website/pipeline/04-website-publication.md).
+
+Live contractor HTML GET is Cache then R2. Never Go. The leftover token
+path is gone.
 
 ## Cross-cutting routes
 
@@ -219,5 +236,6 @@ gone.
 
 - **Auth:** none (or the same gate as other unauthenticated discovery; not a
   tenant resource)
-- **Callers:** `openapi-typescript` typegen
+- **Callers:** `openapi-typescript` typegen for `frontend-2` (CMS
+  `/v1`). Not the Worker internal OpenAPI file.
 - **Response:** huma OpenAPI 3.1

@@ -27,3 +27,34 @@ decision + date) instead of silently replacing the old entry.
    business-profile tables (`certification_definitions`,
    `business_profile_certification_selections`), not `website_certification_*`.
    See [details ADR](../details/ADR.md) 7.
+
+   (2026-08-31): A ranking job **LLM-ranks** the reviews pool and selects
+   **top reviews**. It runs **in parallel with client interview** if reviews are
+   already in the pool, and **again when ETL finishes**.
+   `thread_kind=website_reviews_ranking`. Persist `is_top` / `top_position`
+   (same replace as this screen’s PATCH). `{{reviews.1}}` … resolve from that
+   order at website publication and canvas/wait-teaser hydrate. Copying the
+   website template’s pages does not pick `website_slot_reviews`. Website copy
+   generation must not `update_reviews`. Owner Content / `update_reviews` can
+   still override a website section later.
+
+   (2026-08-31): After **ETL fast extract** writes `in_pool` reviews, the first
+   ranking replaces `is_top` / `top_position` as **provisional** — that set will
+   change and is not locked (not a skip key, not `algorithm=human`). When the
+   last overlapping ETL run for this enqueue finishes, rank again if additional
+   review rows landed, then replace `is_top` / `top_position` as **persistent**.
+   If no additional rows, persist the same pins without a second generate. Owner
+   PATCH on this screen stays human and is not overwritten.
+
+   (2026-08-31, later): This screen owns columns, human PATCH, and ads use of
+   **top reviews**. It does **not** enqueue ranking. River job enum value
+   `reviews_ranking_for_display` (`thread_kind` and `prompt_id` the same string)
+   writes `is_top` / `top_position` with the same replace as this screen’s
+   PATCH. Owner PATCH is `algorithm=human` and `top_reviews_provisional=false`
+   and is not overwritten. The top set’s freshness is
+   `business_profiles.top_reviews_provisional` (nullable bool; not a skip key;
+   not on each review). Orchestration (onboarding enqueue after ETL fast
+   extract, again if more `in_pool` rows when that enqueue’s ETL finishes;
+   scheduled ETL after `succeeded` when new `in_pool` rows landed):
+   [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../../../general-architecture/jobs.md). Website consumes the ranked pool (`{{reviews.N}}`);
+   it does not own ranking.

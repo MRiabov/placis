@@ -60,8 +60,9 @@ line when that line is not a new list item or heading.
 - `docs/features/website/prd.md`: “each page has sections” → **fail**. PRDs are
   product-facing. Say **website page**.
 - `docs/features/website/frontend.md`: same as PRD → **fail**.
-- `docs/features/onboarding/pipeline/05-apply-website-template.md`: “create the
-  page” → **fail**. Onboarding is not the website. Say **website page**.
+- `docs/features/onboarding/pipeline/05-select-and-copy-website-template.md`:
+  “create the page” → **fail**. Onboarding is not the website. Say
+  **website page**.
 - `docs/features/ads/ad-generation/technical-implementation.md`: “landing page”
   if it matches `\bpage\b` → **fail**. Say **website page**.
 - Same ads file: “website page” → **pass** (covering).

@@ -19,11 +19,12 @@ and search share Vercel; there is no OpenRouter hop.
   wrap-up / reject / STT / compaction / Voice seed prompt in `assistant`; Ads
   generate / Review **inline AI assistance** in `ads`; media library cleanup in
   the media package; project title/description **inline AI assistance** in
-  projects; onboarding 06 in onboarding; ETL usable-as-a-Project classify /
-  photo classification / crawl parse in the ETL package. ETL extract/transform
-  generation uses **`glm-5.3-flash`** (dated gateway id; do not ride `*-latest`)
-  via `LLMProvider` — same cheap multimodal model when the input is text-only.
-  Do not put product prompt prose in Go strings, and do not keep one global
+  projects; onboarding 06 in onboarding; reviews ranking for display in
+  `profile`; ETL usable-as-a-Project classify / photo classification / crawl
+  parse in the ETL package. ETL extract/transform generation uses
+  **`glm-5.3-flash`** (dated gateway id; do not ride `*-latest`) via
+  `LLMProvider` — same cheap multimodal model when the input is text-only. Do
+  not put product prompt prose in Go strings, and do not keep one global
   `internal/ai/prompts.yaml`. `ai` is `LLMProvider` + traces; it records
   `prompt_id` / `prompt_version` from that file (id + format revision).
   Assistant **product knowledge** is a separate **knowledge base registry**
@@ -78,7 +79,7 @@ thread_kind text NOT NULL CHECK (thread_kind IN (
   'ads_inline_assistance',
   'website_copy_generation',
   'website_template_picker',
-  'website_reviews_picker',
+  'reviews_ranking_for_display',
   'etl_project_classify',
   'etl_photo_classify',
   'etl_crawl_parse',
@@ -120,6 +121,27 @@ not already on a CMS or onboarding thread create one with the matching
 Failed parse stays an `ai_generations` row. The next attempt is another row on
 the **same** `thread_id` (prior failure in context). Bounded subtree repair
 above still applies; this is the persistence for a further agentic retry.
+
+**`website_copy_generation`** — automatic website copy generation (onboarding
+06 / website 03). River job enum value `website_copy_generation`
+([jobs](jobs.md)). `prompt_id=website_copy_generation` in the onboarding
+package `prompts.yaml`. Writes existing unpublished website slots. Do not
+`create_page` or `update_reviews`.
+
+**`reviews_ranking_for_display`** — **LLM ranking** of the reviews pool
+(not stars or recency) for display (website tokens, Certifications cards,
+ads top reviews). River job enum value `reviews_ranking_for_display`
+([jobs](jobs.md)). `prompt_id=reviews_ranking_for_display` in the profile
+package `prompts.yaml`. Input: current `in_pool` rows (id, citation/body,
+rating, origin, `published_at`). Output: ordered `review_ids[]`, length
+1–30, each id in that pool. The job writes `is_top` / `top_position`
+(same replace as Certifications and reviews PATCH), sets
+`top_reviews_provisional` (not a skip key), and skips
+`algorithm=human`. Prompt prose and ranking heuristics are unspecified.
+When onboarding and scheduled ETL enqueue:
+[build-profile](../features/onboarding/pipeline/build-profile.md). Not a
+per-website-section pick when copying the website template’s pages. Do
+not use `website_reviews_picker`.
 
 ## `ai_generations`
 

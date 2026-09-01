@@ -17,12 +17,13 @@ predecessor types.
 | Live GET | Cache then R2 `latest/`. Miss is 404. Never Go. | None. No OpenAPI. |
 | Website-activation checkout | Go public checkout (CORS by `Host` / `website_prefix`). Not `/v1/website-previews/{token}/…`. | Closed checkout DTO. |
 | Website form POST | Go `POST /v1/website-forms/{form_id}/submissions` (and uploads). | Closed public form DTO. |
+| `websiteRender` / `websitePublication` | Go → Worker internal (shared secret / service binding). | Go-owned internal OpenAPI file. Worker `openapi-typescript` on **that** file only. |
 
 Do not call `GET /v1/preview/{token}/module/website` or
 `GET /v1/public/site/resolve`. Do not generate a second
 full-CMS typegen in this app. Form types come from
-`website.v1` / `catalog/` (same JSON Go writes). A public-only slice of Go
-`/openapi.json` is allowed; the CMS spec is not.
+`website.v1` / `catalog/` (same JSON Go writes). Worker operations typegen
+from the **internal** OpenAPI file, not CMS `GET /openapi.json`.
 
 ## Glue
 
@@ -48,3 +49,4 @@ Python field lists only when [api.md](api.md) already says so.
 - Website forms use `POST /v1/website-forms/{form_id}/submissions`.
 - No predecessor OpenAPI typegen, leftover predecessor types, or module/website
   path in this app.
+- Worker typegen matches the Go-owned internal OpenAPI file (no diff).

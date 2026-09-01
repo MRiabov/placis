@@ -8,10 +8,16 @@ Live business profile: [details](../business-profile/details/api.md). Projects: 
 [media library](../other/media/api.md). Website form submit: [leads](../other/leads/api.md).
 
 Live HTML GET on `{website_prefix}.preview.placis.com` never calls Go.
-**Do not create** `/v1/public/site/…` (including leftover resolve). Website
-publication writes R2 through an authenticated internal render (not public
-OpenAPI) — that is not a live GET and not leftover `/preview/{token}/`. Website
-form POST is [leads](../other/leads/api.md).
+**Do not create** `/v1/public/site/…` (including leftover resolve). Go calls
+two Worker operations (not on `cmd/api`, not public OpenAPI, not a live
+GET, not leftover `/preview/{token}/`):
+
+- **`websiteRender`** — 03; website image render; does not write R2
+- **`websitePublication`** — 04; website HTML render; writes HTML to R2;
+  does not return a website image render
+
+Same Astro engine. Not one union with a flag. Website form POST is
+[leads](../other/leads/api.md).
 
 ## Serve only types on HTTP
 
@@ -26,6 +32,38 @@ form POST is [leads](../other/leads/api.md).
 | Website assistant plan | text | `string` + `maxLength`. Markdown. |
 | LLM traces | jsonb | **Omit.** Activity cards are named event structs. |
 | Top menu / footer | `website.menus` jsonb trees | Named node fields (extra keys 4xx). |
+| Website business profile | live business profile + projects + ranked reviews + media library URLs | `WebsiteBusinessProfileRead` — Common variables bag ([variables.md](variables.md)). Extra keys 4xx. Not the Details editor `GET /v1/business-profile` `*Read`. |
+| Worker `media_asset_urls` | `files` public delivery URL | Map keyed by media library item id → URL (`minLength` 1, `maxLength` 2048). **Omit** from website-editor GET/PATCH. |
+
+## `WebsiteBusinessProfileRead`
+
+One Go struct. `$ref` in CMS OpenAPI **and** the Worker internal OpenAPI
+file. Not a third endpoint. Not named `WebsiteRenderProfile`.
+**Render** stays on `websiteRender`.
+
+The website-placeholder resolve bag: every Common variable in
+[variables.md](variables.md). Named fields, not `map[string]any`. Nested
+objects match the dotted paths (`services.featured`, `projects.recent`,
+`reviews` as the ranked pool for `{{reviews.1}}` …). Extra keys 4xx.
+
+Callers:
+
+- CMS canvas and wait teaser (paint in `frontend-2`)
+- `websiteRender` `profile`
+- `websitePublication` `profile`
+
+This is **not** the Details editor `GET /v1/business-profile` `*Read`
+(Facebook card, `top_reviews_provisional`, profile
+history). Details owns writes. Do **not** create
+`/v1/website/editor/business-profile`. Do not dump the ads **top reviews**
+list. No field named `look`.
+
+`{{logo_url}}` is the URL emitted from `logo_media_asset_id` (media library
+file). Not a hotlink and not a `website_settings` URL.
+
+Wait teaser does not get a new GET. Unpublished page GET already allows
+an onboarding session token; that hydrate **embeds** this type. Do not
+put it on onboarding `GET …/profile` (that GET is not Details).
 
 ## Complete — unpublished website
 
@@ -82,9 +120,10 @@ Preview website address: no website-editor GET/PATCH.
   **Compute realtime; do not persist** (not `website_publication_issues`).
   `publication.has_unpublished_changes` (unpublished vs live, even when
   `publication_id` is set), sections with catalog-discriminated `props` /
-  `design` / `value`. Embeds tenant-scoped website styles, top menu, footer, and
-  website forms so the canvas can paint. May embed display name / marketing
-  phone for website placeholders; Details owns those writes. Reviews website
+  `design` / `value`. Embeds tenant-scoped website styles, top menu, footer,
+  website forms, and **`website_business_profile`**
+  (`WebsiteBusinessProfileRead`, required) so the canvas can paint website
+  placeholders. Details owns those writes. Reviews website
   sections include that section’s ordered pool ids (`website_slot_reviews`), not
   the ads **top reviews** list. Pool cards for Content “add from the pool” come
   from Details `GET /v1/business-profile/reviews`.
@@ -249,6 +288,120 @@ Those rows are not this CMS POST. They are never website-rollback targets.
 
 CMS voice realtime connection: [POST /v1/assistant/voice/realtime-connection](../assistant/api.md).
 Onboarding guide: [POST /v1/onboarding/assistant/voice/realtime-connection](../onboarding/api.md).
+
+## Complete — Worker internal (not `cmd/api`)
+
+Go is the caller. The Worker implements these routes. Same Astro engine;
+**not** one union with a flag. Authenticated internal (shared secret /
+service binding). Auth is **out of** the JSON body. Binding **name** is
+not this file. Not on `cmd/api`. Not `GET /openapi.json`. **Do not
+create** `/v1/public/site/…`. Do not put these on live GET.
+
+Go structs are the source. Worker typegens **both** operations from a
+**separate** OpenAPI file. `apps/contractor-website` `openapi-typescript`
+on that file only. CI: export + typegen no diff; OpenAPI constraints
+on these DTOs (same as CMS: no `map[string]any`, no
+`additionalProperties: true`).
+
+**Known omission:** the Worker is the HTTP server; that side usually owns
+OpenAPI. Product owner chose Go as source (not an agent) so
+`WebsiteBusinessProfileRead` stays one struct (CMS + Worker `$ref`) and
+export stays the huma pipeline. That inversion may cause issues.
+
+Maps are `map` keyed by **website page id** → typed page schema. OpenAPI
+`additionalProperties` is that page schema, never `true`.
+
+### `media_asset_urls`
+
+Required on **both** Worker requests. Same field, same engine lookup.
+
+Map keyed by **media library item id** → that item’s **public delivery
+URL** (`string`, URL, `minLength` 1, `maxLength` 2048). OpenAPI
+`additionalProperties` is that URL schema, never `true`. Extra request
+keys 4xx.
+
+**Exact set** (a missing referenced id and a spare id are both 4xx):
+
+- every image website slot `media_asset_id` on `pages` and, after
+  `update_slot`, `before_pages`
+- every image website slot `media_asset_id` on `top_menu_section` /
+  `footer_section`
+- Details `logo_media_asset_id` when `{{logo_url}}` is in those dumps or
+  in `profile`
+- any other media library item id on `profile` that paints (project
+  cover, certification badge) if that field is an id, not already a URL
+
+Turn 1 with only `{{images.*}}` / `{{logo_url}}` and no attached ids →
+`{}` is valid. After attach, that id **must** be in the map.
+
+URL is the public delivery URL for that item’s `files` row
+([files](../../general-architecture/files-and-s3.md)) — not an expiring
+signed URL, not Railway, not a Maps/Facebook hotlink. Worker **GET**s it
+(same-account R2). Go does not put the file in the JSON.
+
+Crop / focal stay on the image website slot. `{{images.*}}` /
+`{{logo_url}}` stay tokens in slots; those URLs stay on
+`WebsiteBusinessProfileRead`. Website-editor GET does **not** embed this
+map.
+
+`generate_image` is a website-editor / media-library tool. It is **not**
+either endpoint. **Must not:** a model-invoked screenshot tool. First view
+and `update_slot` already return the pictures.
+
+| Caller | Operation id | Path | Request | Response |
+| --- | --- | --- | --- | --- |
+| 03 | `websiteRender` | `POST /internal/website-render` | `WebsiteRenderRequest` | `WebsiteRenderResponse` |
+| 04 | `websitePublication` | `POST /internal/website-publication` | `WebsitePublicationRequest` | `WebsitePublicationResponse` |
+
+The Worker has **no Postgres**. Timeouts follow each operation’s SLO
+table ([03](pipeline/03-website-copy-generation.md),
+[04](pipeline/04-website-publication.md)).
+
+### `POST /internal/website-render` (`websiteRender`)
+
+- **Callers:** website 03 (turn 1 first view; after each `update_slot`).
+- **Must not:** write R2, WebP, or purge; persist a website image render or
+  HTML onto unpublished website slots; call `websitePublication`; put
+  image files in the JSON.
+- **Request (`WebsiteRenderRequest`):**
+  - `profile` — `WebsiteBusinessProfileRead`
+  - `media_asset_urls` — exact set ([above](#media_asset_urls))
+  - `website_styles` — current **website style** (`preset_id` + bounded
+    overrides)
+  - `menus` — **top menu** and **footer** trees + bar flags
+    (`website.menus`)
+  - `top_menu_section` / `footer_section` — the two site-wide **website
+    sections** (`page_id` null) that paint the top menu and the footer
+    (website component, design, slots). They are on every website page’s
+    picture.
+  - `pages` — map of website page id → unpublished **website page** dump
+    (path, `page_type`, SEO, ordered website sections: `component_id`,
+    design, slot values as they are now). Tokens still in slots. 1..N
+    entries = this batch.
+  - After `update_slot` only: `before_pages` — same map shape, dumps
+    **before** that edit, same website page ids. One round trip.
+- No `page_paths`. No field named `look`. No `strip`. No R2. Turn 1
+  example: up to 8 website pages in `pages` (“8” is an example).
+- **Response (`WebsiteRenderResponse`):** `pages` as the **same map**
+  (website page id → `WebsiteRenderPage`: a website image render). First
+  view: `image`. After `update_slot`: `before_image` + `after_image`. Not
+  HTML on the inference.
+
+### `POST /internal/website-publication` (`websitePublication`)
+
+- **Callers:** website 04 (onboarding 08/09 and CMS Publish).
+- **Must not:** return a website image render; persist resolved HTML onto
+  unpublished website slots; call `websiteRender`; put image files in the
+  JSON.
+- **Request (`WebsitePublicationRequest`):** `dump` (`website.v1` — that
+  dump **is** the latest design, including **website styles**, **top
+  menu**, **footer**, and website pages) + `profile`
+  (`WebsiteBusinessProfileRead`) + `media_asset_urls` + `strip` +
+  `website_prefix` + `version_number`. Keep `pages[]` as a **list** on
+  `website.v1` ([manifest.md](manifest.md)); do not dict the publication
+  dump.
+- **Response (`WebsitePublicationResponse`):** closed result of that
+  **write** (no website image render, no HTML body). Extra keys 4xx.
 
 ## Do not create
 

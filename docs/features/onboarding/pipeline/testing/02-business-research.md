@@ -32,4 +32,7 @@
   Tako, `:online`, OpenRouter web search. Maps Details reviews usable as a
   Project appear as client interview cards (paid Maps/LLM faked). Open
   `/onboarding/interview` before scrape finishes: empty marketing phone fills;
-  scrape reviews land on the reviews list without reload.
+  scrape reviews land on the reviews list without reload. After Details
+  transform writes `in_pool` reviews: schema `jobs` has one
+  `reviews_ranking_for_display` on this `tenant_id` (orchestration, not
+  transform). Transform does not write `is_top` / `top_position`.

@@ -12,18 +12,23 @@ See [persistence.md](persistence.md). Media assets are
 [details](../business-profile/details/persistence.md). Projects:
 [projects](../business-profile/projects/persistence.md).
 
-## Website template application
+## Select and copy the website template
 
-Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). This feature owns the tables it writes.
+Owned by website [01](pipeline/01-select-website-template.md) then
+[02](pipeline/02-copy-website-template-pages.md). Onboarding
+[05](../onboarding/pipeline/05-select-and-copy-website-template.md)
+enqueues. This feature owns the tables 02 writes.
 
 1. Load the selected website template + website component contracts from the
-   first-pass sidecars in `packages/website-components` (later the `catalog/`
-   dump).
+   `go:embed` dump under `catalog/` ([catalog.md](catalog.md)). Do not load
+   `packages/website-components/src/blueprints/` as the catalog.
 2. Validate website component ids, props, design controls, website page paths,
-   website forms, and top menu / footer against the website component contract
-   structs.
-3. Keep website placeholders in the unpublished website; they resolve only at
-   website publication.
+   and website forms against the website component contract structs. Derive
+   top menu / footer from the [menu constant](catalog.md#menu-constant); do
+   not copy a catalog menu JSON.
+3. Keep website placeholders in the unpublished website;
+   `websitePublication` is a website HTML render; `websiteRender` is a
+   website image render for 03. Go does not fill tokens.
 4. Create tenant-owned `website_*` records as an unpublished website; never
    write a live website from this step.
 
@@ -51,16 +56,19 @@ Owned by onboarding [05](../onboarding/pipeline/05-apply-website-template.md). T
 1. Only registered website components render; props validated before save and
    before website publication.
 2. Website publication creates a `website_publications` row (kept, not edited;
-   active flag + website rollback chain) holding a typed `website.v1` document.
+   active flag + website rollback chain) holding a **tokenized** `website.v1`
+   document. `websitePublication` resolves placeholders into HTML.
 3. Contractor website pages render only the active website publication (R2
    `latest/`). The website editor canvas renders the unpublished website. The
    preview website address is that same `latest/` tree (strip on until 09), not
-   a per-request unpublished render.
+   a per-request unpublished render for website visitors. `websiteRender` is
+   not this serve path.
 4. Website rollback reactivates an earlier website publication; earlier
    published website copies are never overwritten.
 5. Website publication emits an audit event.
-6. Website publication is not a Cloudflare deploy. River asks the contractor
-   website Worker to render HTML into R2 and purge; live GET is Cache then R2.
+6. Website publication is not a Cloudflare deploy. River `POST`s
+   `websitePublication`; the Worker writes HTML into R2 and purge; live GET
+   is Cache then R2.
    Details: [cloudflare.md](cloudflare.md).
 7. Website publication and live website rollback require an active
    subscription. Otherwise **402** `subscription_canceled`

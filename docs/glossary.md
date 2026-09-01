@@ -51,8 +51,9 @@ word in a mixed or product-facing sentence where it could mean something else.
 Do not say **user**, **frozen**, bare **session**, **provider**,
 **instantiate**, **population**, **mint**, **fold**, or **bytes**. Say
 contractor, owner, or website visitor; name Google Maps, the LLM, or Stripe; say
-apply the website template; say create or use for ephemeral tokens and ids; say
-live business profile or unpublished website; say photo, image, file, or binary.
+copy the website template’s pages onto the unpublished website; say create or
+use for ephemeral tokens and ids; say live business profile or unpublished
+website; say photo, image, file, or binary.
 
 ---
 
@@ -571,7 +572,8 @@ Distinct from: Placis website.
 
 #### Unpublished website
 
-The website after applying the website template, before website publication.
+The website after copying the website template’s pages onto it, before
+website publication.
 Website visitors do not see it.
 
 Do not say bare “draft”. An ad in draft is an Ad states value; say **ad draft**.
@@ -599,9 +601,9 @@ typical site of that trade needs. Never say bare “template” or “blueprint�
 
 #### Website page
 
-One page of the website (home, a service page, contact, legal), with a website
-page path, title, and an ordered list of website sections. Never say bare “page”
-in PRDs or UI.
+One page of the website (home, about, a service page, contact, legal), with a
+website page path, title, and an ordered list of website sections. Never say
+bare “page” in PRDs or UI.
 
 ---
 
@@ -727,14 +729,35 @@ is the pending canvas hunks, not the inline AI assistance prompt.
 
 ---
 
-#### Apply the website template
+#### Select website template
 
-Write unpublished website pages and website sections from a website template and
-the business profile. Website placeholders stay. Never say instantiate,
-population, or generate for this.
+Pick a website template and website styles for this contractor.
 
-Distinct from: Website copy generation (the words), Website template (the
-starting point).
+Distinct from: Copy the website template’s pages onto the unpublished
+website (the write), Website template (the starting point).
+
+---
+
+#### Copy the website template’s pages onto the unpublished website
+
+Write unpublished website pages and website sections from a website
+template and the business profile. Website placeholders stay. Never say
+instantiate, population, generate, or apply the website template for this.
+
+Distinct from: Select website template (the pick), Website copy generation
+(the words), Resolve website placeholders, Website template (the starting
+point), Copy (the words).
+
+---
+
+#### Resolve website placeholders
+
+Fill `{{…}}` from the live business profile. Not copying template pages.
+Not Go rewriting unpublished slots.
+
+Distinct from: Copy the website template’s pages onto the unpublished
+website, Website copy generation, Website publication (HTML snapshot after
+resolve).
 
 ---
 
@@ -744,8 +767,8 @@ Automatic writing of website copy into the unpublished website from the
 business profile. Do not call this “refinement” in onboarding. Never say
 generate without “website copy”.
 
-Distinct from: Assistant, Apply the website template (the unpublished website
-structure).
+Distinct from: Assistant, Copy the website template’s pages onto the
+unpublished website (the unpublished website structure).
 
 ---
 
@@ -1463,6 +1486,32 @@ Do not say “session” in product docs.
 
 ---
 
+#### Wait teaser
+
+The `/onboarding/preview` screen after copying the website template’s pages.
+It waits until the **home** website page has automatic website copy generation,
+or until the wait cap. Distinct from: Website preview (the editor after
+wait-end).
+
+---
+
+#### Wait cap
+
+The ~15s bound on the wait teaser if the home website page is not done yet.
+
+---
+
+#### Wait-end
+
+When the wait teaser stops: onboarding session `preview_and_edit` and
+`/onboarding/preview-and-edit/`. Copy-done is the home website page finished;
+other website pages may still be generating.
+
+Distinct from: Wait teaser (the waiting screen), Website preview (where they
+land).
+
+---
+
 #### Resume
 
 Continuing an in-progress onboarding session on the same browser. Never say
@@ -1568,6 +1617,25 @@ from: Website publication, Published website copy. Never say “site manifest”
 
 ---
 
+#### Website image render
+
+Painting a website page to an image (`websiteRender`). Never in PRDs or
+UI. Distinct from: Website HTML render, image on a website section,
+media library.
+
+In code: `websiteRender`. Never say **raster**.
+
+---
+
+#### Website HTML render
+
+Painting a website page to HTML (`websitePublication`). Never in PRDs or
+UI. Distinct from: Website image render, live GET.
+
+In code: `websitePublication`.
+
+---
+
 ### Ad
 
 #### Creative set
@@ -1598,11 +1666,12 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | OnCall | Placis |
 | frozen / frozen copy | published website copy |
 | refine / refinement | website copy generation |
-| instantiate / population | apply the website template |
+| instantiate / population | copy the website template’s pages onto the unpublished website |
 | mint / minted / minting | create or use (ephemeral tokens and ids) |
 | fold / folds | live business profile or unpublished website |
 | bytes | photo, image, file, or binary |
-| generate unpublished website / generate website structure | apply the website template |
+| raster | website image render |
+| generate unpublished website / generate website structure | copy the website template’s pages onto the unpublished website |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (onboarding) | website preview link |
 | live markdown plan | website assistant plan |
@@ -1704,6 +1773,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | AI orb (ads) / Ads orb (ads) | inline AI assistance |
 | kind / kinds | ETL run kind, photo kind, thread kind, ETL source kind, imported media kind, thread item kind, menu node kind, client interview submission kind, or tool revision kind |
 | fast extract / slow extract / fast crawl / slow crawl | ETL fast extract, ETL slow extract, ETL fast crawl, or ETL slow crawl |
+| wait-end clock | wait-end, wait teaser, or wait cap |
 
 ## Code naming rules
 

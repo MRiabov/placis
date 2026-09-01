@@ -1,8 +1,9 @@
 # Website manifest (`website.v1`)
 
-The website manifest is the published website copy the contractor website
-renders. It is enough to paint a page with no unpublished-table reads. Website
-placeholders are already resolved.
+The website manifest is the published website copy dump the contractor website
+renders from. It is enough to paint a page with no unpublished-table reads.
+Website placeholders **stay tokens** in this dump; the Worker resolves them
+when writing HTML.
 
 `manifest_version` is `website.v1` — a **contract generation**, not semver. A
 website publication row is kept and never overwritten; rollback must still
@@ -35,8 +36,8 @@ Root:
   `href`, `children` (depth 2). Page nodes bake path/title from `website_pages`.
   Do not leave unpublished `page_id` in the dump.
 - `footer[]` (same shape)
-- `show_phone`, `show_email` (bar CTA visibility; values already resolved from
-  `{{marketing_phone}}` / `{{marketing_email}}`)
+- `show_phone`, `show_email` (bar CTA visibility; tokens
+  `{{marketing_phone}}` / `{{marketing_email}}` until the Worker resolves)
 - `show_contact` (bar CTA to the Contact website page)
 - `website_forms[]` (`form_key`, `title`, `fields[]`, `privacy_notice`)
 - slim `projects[]` (`id`, `title`, `description`, cover URL + media caption) —
@@ -67,7 +68,7 @@ Per website section:
 - root-level `sections` used as a single-page fallback
 - blog / careers collections (deferred)
 - predecessor project-as-blog collection (body, markdown, status, visibility)
-- template keys, `created_by`, how the unpublished website was applied
+- template keys, `created_by`, how the unpublished website was copied
 - unpublished-only fields: `origin`, slot `status`, `validation_errors`,
   `has_unpublished_changes`
 - Clerk / tenant internals, file ids, signed-URL machinery (resolved public URLs
@@ -76,8 +77,9 @@ Per website section:
   `top_menu` / `footer` (baked from `website.menus`), not from website sections
   on every website page
 
-Reviews: bake **that website section’s** `website_slot_reviews` into the website
-section `props` at publication (review citation with `body` fallback). Do not
+Reviews: if that website section has `website_slot_reviews`, bake those ids
+into the website section `props` at publication (review citation with `body`
+fallback). Otherwise resolve `{{reviews.1}}` … from the ranked pool. Do not
 dump the whole profile review list or the ads **top reviews** list.
 
 Changing Details, Projects, certifications and reviews, website styles, or the

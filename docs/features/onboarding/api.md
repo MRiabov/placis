@@ -1,8 +1,9 @@
 # Onboarding HTTP
 
 Conventions: [HTTP conventions](../../general-architecture/api.md). Business lookup, resume, client interview, SSE,
-website activation. Details after website activation: [details HTTP](../business-profile/details/api.md). Applying
-the website template is owned by [website](../website/api.md); this feature only enqueues it.
+website activation. Details after website activation: [details HTTP](../business-profile/details/api.md). Selecting
+and copying the website template is owned by [website](../website/api.md); this feature only
+enqueues it.
 
 ## Serve only types on HTTP
 
@@ -36,7 +37,7 @@ collection `POST /v1/onboarding-sessions`.
   business profile; enqueues business research if under the 5-enqueue cap. Over
   cap → still 200 with `research_wait_until` (later source change that would
   start `StartRun` is `429`).
-- **Must not:** apply the website template; wait for business research.
+- **Must not:** select or copy the website template; wait for business research.
 
 ### GET /v1/onboarding-sessions/company-registry/search
 
@@ -104,7 +105,8 @@ collection `POST /v1/onboarding-sessions`.
 - **Auth:** onboarding session token
 - **Callers:** complete gate in [build-profile](pipeline/build-profile.md).
 - **Idempotency-Key:** yes.
-- **Behavior:** sets `accepted_edit_id`; enqueues apply-the-website-template.
+- **Behavior:** sets `accepted_edit_id`; enqueues select-and-copy website
+  template (website 01 then 02).
   **No** `generation-runs` from `frontend-2`.
 
 ### POST /v1/onboarding-sessions/{id}/projects/{projectId}/archive

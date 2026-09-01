@@ -106,6 +106,10 @@ profile as chunks arrive). 03 and/or 04a/04b may already be open; the client
 interview live-fills untouched controls and enriches lists
 ([04a](04a-text-client-interview.md)). Do not wait
 for an ETL run kind’s `status=succeeded` to show ETL fast extract results.
+Review ranking (`reviews_ranking_for_display`) runs **in parallel with the
+client interview** if the pool already has rows, and **again when this
+enqueue’s ETL finishes**
+([build-profile](build-profile.md)).
 
 ## Invariants
 
@@ -117,3 +121,5 @@ for an ETL run kind’s `status=succeeded` to show ETL fast extract results.
 - Photo classification is ETL transform, not 04a/04b.
 - Parallel only via the Vercel AI Gateway Parallel server tool.
 - The wait does not change onboarding session status and does not block 03/04.
+- Review ranking (`reviews_ranking_for_display`) is not copying the website
+  template’s pages and not website 03.

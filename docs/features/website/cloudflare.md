@@ -21,8 +21,10 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
   serves every tenant.
 - Live HTML is **prebuilt** at website publication into R2 `latest/`. A live GET
   never calls Go.
-- There is no per-request unpublished render. 08 writes the sales host the same
-  way as later CMS website publication (strip on, then 09 strip off).
+- There is no per-request unpublished render for website visitors. 08 writes
+  the sales host the same way as later CMS website publication (strip on, then
+  09 strip off). Copy generation (03) may call `websiteRender` without
+  persisting.
 - Website address uses **Cloudflare for SaaS Custom Hostnames**, not Cloudflare
   Pages project hostnames.
 - Owner-facing default live host after website publication is
@@ -33,8 +35,9 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 - One `latest/` tree. Publication destinations share it; they are not
   independent website versions.
 
-Go never emits HTML. Astro in `apps/contractor-website` renders at website
-publication into R2.
+Go never emits HTML. Astro in `apps/contractor-website` writes HTML at
+`websitePublication` (website HTML render) into R2, and returns a website
+image render from `websiteRender` without writing R2.
 
 ## Terms already in the glossary
 
@@ -173,11 +176,21 @@ then purge) — not a JSONB migrate. Deleting ancient prefixes is later GC.
 
 ## Website publication side effects
 
-River orchestrates. The same Astro Worker renders each live website page from
-`website.v1` through an **authenticated internal render** (shared secret /
-service binding). That path is not a live GET.
+River orchestrates. The same Astro Worker paints from a **tokenized** dump
+plus `WebsiteBusinessProfileRead` through two operations
+([website HTTP](api.md)): `websiteRender` (website image render) and
+`websitePublication` (website HTML render). Those paths are not a live GET. Go
+does not resolve `{{…}}`. Both requests send `media_asset_urls`; the Worker
+GETs those public delivery URLs from the media library bucket (not website
+`latest/`, not Worker static assets, not image files in the JSON).
 
-The job:
+Website copy generation (03) uses `websiteRender` **only** (no R2 / WebP /
+purge). Batch page renders run on **one Worker**. SLO (clock stops when
+the website image render is back at the Go worker): 1 page p50 500ms / p90
+1s / p95 1.25s; 8-page batch p50 750ms / p90 1.5s / p95 2s. Website HTML
+render SLO: [04](pipeline/04-website-publication.md).
+
+The publication job:
 
 1. Renders HTML for each live website page plus sitemap and robots.
 2. Converts approved live-path images to same-host WebP.

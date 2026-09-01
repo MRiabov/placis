@@ -1,7 +1,8 @@
 # 07 — Contractor copy improvement (integration test)
 
 - **Setup**: unpublished website from 05. Wait-end already navigated to
-  `/onboarding/preview-and-edit/` (copy done or cap). 06 may still be running.
+  `/onboarding/preview-and-edit/` (home website page copy done or wait
+  cap). 06 may still be running.
   Clerk testing-token contractor (or unsigned hydrate only).
 - **Invoke**: `GET /v1/onboarding/website-editor/assistant/thread` (onboarding
   session token). After 06 idle, signed-in Send (or Voice) that PATCHes a
@@ -9,7 +10,8 @@
 - **Assert**: hydrate returns 06 `tool_summary` without Clerk. Send while 06
   `running` is **409** `in_flight_run`. After idle, one owner prompt applies
   (unpublished PATCH; Follow). Sixth prompt is **409** `unpaid_prompt_cap`, not
-  402. Onboarding session stays `previewing`. No `website_publications` from
+  402. Onboarding session stays `preview_and_edit`. No `website_publications`
+  from
   this step. Onboarding session token cannot PATCH / Send / Voice. CMS
   `/v1/assistant/…` stays **403** `tenant_unactivated`. 09 still allowed
   without more prompts.

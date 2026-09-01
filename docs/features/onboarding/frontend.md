@@ -32,9 +32,9 @@ larger than field labels ([design decision](design-decision-record.md) 9).
 - **Online research consent** — checkbox required to enable business lookup.
 - **Business lookup** — creates the onboarding session **once** (when this
   browser has no token), starts business research, goes to Review. Does not
-  apply the website template or write the host yet. Opening Find with nothing
-  stored must not `POST` an onboarding session. Opening Find with a stored token
-  restores (see Resume).
+  select or copy the website template or write the host yet. Opening Find with
+  nothing stored must not `POST` an onboarding session. Opening Find with a
+  stored token restores (see Resume).
 
 ### 2. Review — `/onboarding/review`
 
@@ -59,8 +59,8 @@ Projects, extra notes, contact name, `emergency_phone`). Look: white
 
 Default surface is **text** (owner: **Write**). Voice is listed and deferred
 ([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)); owner copy is that voice is coming later, not pipeline phrasing.
-Text submit completes the client interview, then 05 apply the website template.
-Port:
+Text submit completes the client interview, then 05 select and copy the website
+template. Port:
 [frontend-debloat.md](frontend-debloat.md).
 
 02 may still be running. SSE applies the live business profile onto this
@@ -116,11 +116,13 @@ research does not write them).
 ### 4. Wait teaser — `/onboarding/preview`
 
 Wait teaser, not the shareable host. Timeline from the onboarding session SSE
-(05 apply the website template, then 06 automatic website copy generation).
-Rotate **complete** filled website sections (whole-and-valid, not website
-placeholders), named interval ~2s, smooth phase in/out especially images. Reuse
+(05 select and copy the website template, then 06 automatic website copy
+generation). Rotate a website section when current profile data can resolve its
+placeholders (whole-and-valid after resolve, not leftover `{{…}}` the profile
+cannot fill), named interval ~2s, smooth phase in/out especially images. Reuse
 **website components** for that one website section — not Astro, not full
-website pages, not the website editor path.
+website pages, not the website editor path. Do not wait for 06 to overwrite
+prose ([design decision](design-decision-record.md) 14).
 
 Wait until **automatic website copy generation finishes** or the **~15s cap**,
 whichever first. The footer shows a progress bar for that cap, painted every
@@ -196,7 +198,8 @@ retries; it does not `POST` a new onboarding session.
   generate a better website or run ads.
 - `AccreditationChecklist` — trade certifications plus other certifications.
 - `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — SSE carousel of
-  complete website sections; 15s wait progress in the shared footer, painted
+  website sections whose placeholders can resolve from current profile data;
+  15s wait progress in the shared footer, painted
   every animation frame.
 - `PreviewAndEditPanel` — unpaid website preview after the wait teaser.
   Assistant thread stub shows muted 06 `tool_summary` lines above the field.

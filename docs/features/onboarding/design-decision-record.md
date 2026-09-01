@@ -153,5 +153,11 @@ inventing it.
     (2026-08-30) Same day, later: this route has no Find / Review / Questions
     progress, no onboarding Back, and no Find/Review Assistant. Website page
     list and Share sit on the canvas corners; they do not reserve a top band.
-    (2026-08-30) Same day, later: while copy generation is still writing, a
+    (2026-08-31) Same day, later: while copy generation is still writing, a
     six-dot spinner sits under the Assistant thread. (2026-08-30)
+
+14. **Wait teaser shows a website section when placeholders can resolve** —
+    `/onboarding/preview` paints a website section only when current profile
+    data can resolve its website placeholders. Do not wait for website copy
+    generation to overwrite prose. Reuse website components in `frontend-2`,
+    not the Worker. (2026-08-31)

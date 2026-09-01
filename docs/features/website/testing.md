@@ -2,10 +2,11 @@
 
 One full-stack E2E test: edit → assistant → website publication → live HTML
 (fake R2 + fake purge) → website rollback → website form. Drives `frontend-2`
-(Playwright) against the real API + real Postgres; the LLM is faked. Cloudflare
-is faked (Custom Hostnames, `purge_cache`, R2). Apply the website template is
-the [onboarding E2E](../onboarding/testing.md). DB asserts name the tables from [persistence.md](persistence.md) (and
-[leads](../other/leads/persistence.md) for the website form).
+(Playwright) against the real API + real Postgres; the LLM is faked. Worker
+**container** is up (no `wrangler deploy`). Cloudflare R2 / Custom Hostnames /
+`purge_cache` are faked. Select and copy the website template is the
+[onboarding E2E](../onboarding/testing.md). DB asserts name the tables from [persistence.md](persistence.md) (and [leads](../other/leads/persistence.md)
+for the website form).
 
 1. **Open the website editor** — the owner opens the website editor.
    - UI: the website page list renders.
@@ -31,12 +32,15 @@ the [onboarding E2E](../onboarding/testing.md). DB asserts name the tables from 
    - UI: muted tool-call rows in the thread. Apply / Reject pills on the canvas
      over the composer if Ask first; no revert-after-apply.
 
-5. **Website publication** — the owner does a website publication.
+5. **Website publication** — the owner does a website publication
+   (`websitePublication`; 03 must not have written `website_publications`
+   / R2).
    - DB: `website_publications` (status=`published`, `active=true`,
      `website_manifest`, `version_number` — a website version).
    - Fake: R2 keys `sites/{website_prefix}/{version_number}/` then `…/latest/`,
      plus `purge_cache` for live website page URLs (and sitemap, robots, WebP)
-     on every active hostname. No live Cloudflare.
+     on every active hostname. No live Cloudflare. No website image render
+     on the publication response.
    - UI: the live website is shown when a website address is `active`; otherwise
      the owner still uses the preview website address.
 

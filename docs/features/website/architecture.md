@@ -10,18 +10,19 @@ A website is a list of **website pages**; a website page is an ordered list of
 and editable website slots.
 
 - **website page** — website page path, title, type
-  (`home`/`service`/`contact`/`legal`), SEO, and an ordered list of website
-  sections. Status is `unpublished` or `archived`. The live set is the active
-  website publication, not a page-level published flag.
+  (`home`/`about`/`service`/`contact`/`legal`), SEO, and an ordered list of
+  website sections. Status is `unpublished` or `archived`. The live set is the
+  active website publication, not a page-level published flag.
 - **website section** — an instance of a website component (`component_id`),
   with its props and design, at a position on the website page. Two site-wide
   look sections (`page_id` null) paint the top menu and footer (logo, density);
   link trees live on `website.menus`.
 - **website slot** — a named editable value inside a website section: text, rich
-  text, image, link, list, or json. Each **reviews website section** has its own
-  ordered `website_slot_reviews` from the pool (capped by that website
-  component; not `slot_type`). Ads use **top reviews**. A project gallery is a
-  list/json of project ids.
+  text, image, link, list, or json. Reviews website sections resolve
+  `{{reviews.1}}` … from the **ranked pool** (not a per-section list at copy
+  template pages). Owner Content / `update_reviews` may later set
+  `website_slot_reviews` on that section. Ads use **top reviews**. A project
+  gallery is tokens (`{{projects.*}}`) until website publication resolves them.
 - **menus** — one `website.menus` row per tenant: `top_menu` and `footer` JSON
   trees (page / text / URL nodes, depth 2) plus `show_phone` / `show_email` /
   `show_contact`.
@@ -39,41 +40,51 @@ components render. A reviews website component’s contract includes the max
 number of reviews that layout paints (examples 3 / 6 / 8 — not a closed product
 list).
 
-The first-pass website template catalog and website component catalog live in
-`packages/website-components` (from the predecessor), not a short list written
-here. Go loads those JSON sidecars for save and website publication validation;
-it must not hand-duplicate the struct shapes. A later dump of the same typed
-structs lives under `catalog/`. Website templates and website component
-contracts are static website template catalog data, kept as website template
-catalog revisions — not database rows.
+The website template catalog object and 02 mapping are
+[catalog.md](catalog.md). Website component renderers live in
+`packages/website-components`. Go `go:embed`s a dump of the same typed JSON
+under `catalog/` (like `prompts.yaml`). It must not hand-duplicate slot keys
+as Go fields and must not load `src/blueprints/` as the catalog. Extra keys
+rejected. Website templates and website component contracts are static
+catalog data, kept as catalog revisions — not database rows.
 
-## Apply the website template
+## Select and copy the website template
 
 A **website template** lists the website pages and website sections a typical
-site of that trade needs. Applying the website template writes those onto the
-business profile:
+site of that trade needs. From-scratch writes:
+[pipeline/](pipeline/README.md).
 
 1. take the details from the business profile (services, service areas,
    certifications, projects, contact);
-2. pick the website template and website styles (one bounded LLM call, heuristic
-   fallback);
-3. create unpublished `website_pages` / `website_sections` / `website_slots`
-   rows — website placeholders (`{{business_name}}`, `{{marketing_phone}}`, …)
-   stay in the unpublished website, resolving at website publication;
-4. pick or generate media assets (prefer real project photos; generate only when
-   approved);
-5. create reviews website sections with empty `website_slot_reviews` (keep the
-   website section, no fake copy). After the unpublished website exists and the
-   pool is ready, one bounded LLM call picks an ordered list
-   **per reviews website section** from the pool (page path, `page_type`,
-   service if service page, `component_id`, max from that website component
-   contract). Overlap across sections is allowed. Length ≤ that max. Do **not**
-   copy **top reviews** onto every section;
-6. validate against website component contracts, the company registry, marketing
-   statements, links, website forms, SEO.
+2. **select website template** — persist `website_template_id` +
+   `preset_id`. Picker is out until the stacked rewrite
+   ([01](pipeline/01-select-website-template.md));
+3. **copy the website template’s pages onto the unpublished website** —
+   unpublished `website_pages` / `website_sections` / `website_slots` —
+   website placeholders stay, including image website slots
+   (`{{images.*}}` / `{{logo_url}}`). Named services on the confirmed
+   profile become service pages (one layout copied N times, N ≥ 1). Page
+   set is then static. Derive `website.menus` from the
+   [menu constant](catalog.md#menu-constant). Do not insert
+   `website_slot_reviews`. Do not bake ranked-top-4 project ids. Do not
+   attach `media_asset_id`
+   ([02](pipeline/02-copy-website-template-pages.md));
+4. **automatic website copy generation** — prose, SEO, and **photo
+   selection**: attach first when **media caption** fits that image
+   website slot; `generate_image` when nothing fits (founder / logo photo
+   kinds exclusive; do not filter on `hero` / `project` / `service`)
+   ([03](pipeline/03-website-copy-generation.md));
+5. reviews website sections keep `{{reviews.1}}` … from the ranked pool.
+   Website does not rank. River job `reviews_ranking_for_display`
+   ([build-profile](../onboarding/pipeline/build-profile.md),
+   [jobs](../../general-architecture/jobs.md)). Owner Content /
+   `update_reviews` can override a section later;
+6. validate against website component contracts, the company registry,
+   marketing statements, links, website forms, SEO.
 
 The result is an unpublished website, never a live website. Website copy
-generation is onboarding [06](../onboarding/pipeline/06-website-copy-generation.md) — async, same tools, not this editor.
+generation is [03](pipeline/03-website-copy-generation.md) — async, same
+tools, not this editor. Do not say apply the website template for this write.
 
 **Where website templates come from**: mostly by taking inspiration from
 existing websites — decomposing them into patterns (website page structure +
@@ -120,10 +131,13 @@ publication writes a website version. **Details**, **Projects**,
 content (placeholders, project galleries, reviews, photos) edited on
 [business profile](../business-profile/README.md) and [media library](../other/media/README.md) screens. They are separate entities.
 Certifications and reviews is the picker for **all reviews** and for pinning
-**top reviews** (ads). The website editor reviews Content edits
+**top reviews** (ads). First-pass reviews website sections resolve
+`{{reviews.1}}` … from the ranked pool (River job `reviews_ranking_for_display`;
+website does not rank). The website editor reviews Content may later set
 **that website section’s** ordered `website_slot_reviews` (add from all reviews,
 remove, reorder; cap from the website component). They are not generic website
-slots. The edit loop is in [editing.md](editing.md). Screens: [frontend.md](frontend.md).
+slots. The edit loop is in [editing.md](editing.md). Screens:
+[frontend.md](frontend.md).
 
 ## Website editor tools (assistant)
 
@@ -139,16 +153,19 @@ registry and plan / Ask first: [assistant.md](assistant.md).
 ## Website publication
 
 Website publication walks the unpublished website, validates every website
-section against its website component contract, resolves the `{{var}}` website
-placeholders from the business profile (see [variables.md](variables.md)), copies tenant
-website styles from `website_settings`, and writes one `website_publications`
-row holding the published website copy as `website_manifest` (a `website.v1`
-website manifest — [manifest.md](manifest.md)). That row is a website version. The website
-manifest is the read model — the renderer only ever reads the active website
-version. Website rollback reactivates an earlier **owner** website version
-(copies it onto `latest/`). Onboarding-written rows are never website-rollback
-targets. That control is on earlier owner website versions (Website versions
-workspace item and the publication dropdown), not on the live website version.
+section against its website component contract, and writes one
+`website_publications` row holding a **tokenized** `website.v1` dump
+([manifest.md](manifest.md)). Go sends that dump plus
+`WebsiteBusinessProfileRead` to **`websitePublication`**. The Worker
+**resolves website placeholders** and writes HTML
+([04](pipeline/04-website-publication.md), [variables.md](variables.md)).
+Go does not resolve `{{…}}` and does not emit HTML. That row is a website
+version. Live HTML in R2 is the snapshot the renderer serves. Website
+rollback reactivates an earlier **owner** website version (copies it onto
+`latest/`). Onboarding-written rows are never website-rollback targets.
+That control is on earlier owner website versions (Website versions
+workspace item and the publication dropdown), not on the live website
+version.
 **Preview** opens the live website. Loading an owner website version into the
 unpublished canvas (`GET` with `publication_id`, then PATCH) is not a Website
 versions control in this UI ([api.md](api.md)). That is not website rollback.
@@ -161,9 +178,10 @@ editor PATCH still works. Usage & billing is how they pay again
 
 Edits to Details, Projects, certifications and reviews, website styles, or the
 unpublished website do not change the live website until the next website
-publication. Website publication bakes only **active** projects into
-`website_manifest.projects[]` and `{{projects.*}}` (skip `draft`; omit draft
-ids from published galleries — no 409).
+publication. Website publication sends tokenized `{{projects.*}}` on
+`WebsiteBusinessProfileRead` (active rows only; skip `draft`); omit draft
+ids from published galleries — no 409. Later
+business research does not rewrite `latest/`.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website
 application serves every tenant. The **Publish** dropdown lists hosts
@@ -183,10 +201,14 @@ Live websites and website previews are served by a
 **separate Astro + React app** (`apps/contractor-website`), not the website
 editor. Website components live in `packages/website-components`.
 
-At **website publication**, that app renders each live website page from the
-active `website_manifest` (`website.v1`) and writes HTML to R2 `latest/`. A live
-GET is Cache then R2. It never calls Go. Onboarding 08/09 call this same write
-(strip on, then strip off). There is no per-request unpublished render and no
+At **website publication**, Go `POST`s `websitePublication`. The Worker
+resolves website placeholders and writes HTML to R2 `latest/`. A live GET
+is Cache then R2. It never calls Go. Onboarding 08/09 call this same write
+(strip on, then strip off). Website copy generation (03) `POST`s
+`websiteRender` (**without** writing R2) and gets a website image render.
+Both requests include `media_asset_urls` (public delivery URLs; Worker
+GETs them; no image files in the JSON). There is
+no per-request unpublished render for website visitors and no
 `/preview/{token}/`.
 
 Astro owns routing, the Astro document, prerender-at-publication, and metadata;
@@ -195,8 +217,9 @@ React owns interactive islands. One application serves every contractor website
 bundle-boundary check blocks imports from `frontend-2`).
 
 The onboarding wait teaser (`/onboarding/preview`) reuses website components in
-`frontend-2` for **one complete website section** at a time. It is not this app
-and not the host.
+`frontend-2` for **one complete website section** at a time when current
+profile data can resolve its placeholders. It is not this app and not the
+host. Not the Worker.
 
 ## Voice
 
