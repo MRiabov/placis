@@ -1,4 +1,4 @@
-name: check-pipeline-tables
+name: docs-gates
 
 on:
   pull_request:
@@ -8,8 +8,8 @@ permissions:
   contents: read
 
 jobs:
-  pipeline-tables:
-    name: Pipeline table and heading check
+  docs-gates:
+    name: Docs gates
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,11 +20,18 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
+          cache-dependency-path: go.mod
 
-      - name: Test checker
-        run: go test ./cmd/ci/check-pipeline-tables
+      - name: Test checkers
+        run: go test ./cmd/ci/check-dont-say ./cmd/ci/docnames ./cmd/ci/check-docs-code ./cmd/ci/check-pipeline-tables
 
-      - name: Scan feature docs
+      - name: Don't-say glossary check
+        run: go run ./cmd/ci/check-dont-say --all
+
+      - name: Docs–code named identifiers
+        run: go run ./cmd/ci/check-docs-code --all
+
+      - name: Pipeline table and heading check
         run: |
           changed=""
           if [ "${{ github.event_name }}" = "pull_request" ]; then
