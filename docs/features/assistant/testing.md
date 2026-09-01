@@ -142,7 +142,7 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 5. **No `/thread/new`** — That route does not exist on onboarding.
 6. **403 after website activation** — Activated owner cannot call
    `/v1/onboarding/assistant/…` or
-   `/v1/onboarding/website/assistant/…` (or leftover onboarding session
+   `/v1/onboarding/website/…` (or leftover onboarding session
    routes).
 7. **Voice idle** — Same 30s frontend stop as CMS. Not billed (no 402). Leftover
    transcripts (committed xAI events → `offset_seconds`) posted; **no**
