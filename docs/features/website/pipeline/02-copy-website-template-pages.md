@@ -32,8 +32,8 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 - Website publication.
 - `create_page` (this write already has the page set, including service
   pages from named services).
-- Copy a catalog top menu / footer JSON. The trees are the
-  [menu constant](../catalog.md#menu-constant), not a second website template copy.
+- Copy a catalog top menu / footer JSON. The trees are the [menu constant](../catalog.md#menu-constant), not
+  a second website template copy.
 - Bake raw profile strings into website slots that should stay tokens.
 - Invent a hotlink URL for an image website slot.
 - Attach `media_asset_id` or run photo selection (`generate_image`). That
