@@ -3,10 +3,11 @@
 The contractor pays on the **website preview** (`/onboarding/preview-and-edit/`)
 or on the **preview website address** strip if they shared (FQDN in
 [cloudflare.md](../../website/cloudflare.md)). Clerk **create account** if needed (modal island); an existing
-Clerk session skips to pay. Then Stripe checkout (island POSTs public checkout
-to `cmd/api`, CORS by `Host` / `website_prefix` on the preview website address;
-on the app origin CORS is the app. Not `/v1/website-previews/{token}/…`; do not
-bake a Checkout Session URL into R2 HTML). The website-activation strip is
+Clerk session skips to pay. Then Stripe checkout (island POSTs
+`POST /v1/onboarding/activation/checkout` to `cmd/api`, CORS by `Host` /
+`website_prefix` on the preview website address; on the app origin CORS is the
+app. Not `/v1/website-previews/{token}/…`; do not bake a Checkout Session URL
+into R2 HTML). The website-activation strip is
 **sticky to the bottom of the viewport** while the website scrolls
 ([frontend.md](../frontend.md), [design decision](../design-decision-record.md) 10). Website activation **upgrades** the
 existing unactivated tenant (`status=active`); it does not insert a second

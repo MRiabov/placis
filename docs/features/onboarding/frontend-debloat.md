@@ -36,8 +36,9 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 ## Keep
 
 - Screens: `/onboarding/find`, `/onboarding/review`, `/onboarding/interview`,
-  `/onboarding/preview` (SSE carousel). Website preview + pay: the preview
-  website address.
+  `/onboarding/preview` (SSE carousel), `/onboarding/preview-and-edit/`
+  (unpaid canvas). Website preview + pay on the preview website address after
+  Share.
 - `BusinessSourcePanel` (country, company registry, optional Google Maps, online
   research consent). Business lookup creates the onboarding session **once**.
 - `FoundInformationReview` (found vs missing; SSE may still fill rows).
@@ -65,25 +66,37 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 ## Do not port
 
 - Don't say setup: `/api/v1/setup-sessions` and `…/profile/facts`.
-- Voice as the first-pass client interview.
-- Website publication CRUD under onboarding (belongs under the website editor).
+- Voice as the first-pass client interview. Guide Voice
+  (`/v1/onboarding/assistant/…`) stays listed + deferred.
+- CMS `POST /v1/website/publications` (or list / rollback) from the unpaid
+  canvas. Share is `POST /v1/onboarding/website/publications`. Do not invent
+  `/v1/onboarding/website-editor/…` or
+  `POST /v1/onboarding/preview-website-address`.
 - CRM / quotes / invoices / jobs leftover types on the website preview sandbox.
 
 ## Retarget
 
+Named Routes and auth: [api.md](api.md). This table is predecessor → path.
+
 | Today | Constrained API |
 | --- | --- |
-| Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding-sessions/business-lookup` |
+| Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding/business-lookup` |
 | Don't say setup: `…/from-google-place` | company registry / Maps on the business-lookup body (no `…/from-google-maps-listing`) |
-| Company registry search, Google Maps autocomplete | same nested under onboarding sessions |
-| `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations, details |
-| Text client interview autosave + submissions | client interview autosave + submissions |
-| Don't say setup: `GET …/events/stream` | `GET /v1/onboarding-sessions/{id}/events/stream` |
-| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | public checkout / activation-status (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
-| Don't say claim: `GET …/claim/status` | activation-status |
+| Company registry search, Google Maps autocomplete | `GET /v1/onboarding/find/search/company-registry`, `GET /v1/onboarding/find/search/google-maps` |
+| Attach or change Maps / registry after lookup | `PUT /v1/onboarding/sources` |
+| `GET …/profile`, checklist | `GET /v1/onboarding/profile` (fill status nested; no checklist, no confirmations) |
+| Text client interview autosave + submissions | `PUT /v1/onboarding/interview`; `POST /v1/onboarding/interview/complete` |
+| Interview Project Archive | `POST /v1/onboarding/projects/{projectId}/archive` |
+| Don't say setup: `GET …/events/stream` | `GET /v1/onboarding/events/stream` |
+| Unpaid canvas `GET/PATCH` leftover website editor | `GET/PATCH /v1/onboarding/website/editor/pages…` and `…/menus` (not `/v1/website/editor` while unactivated; PATCH Clerk only) |
+| Unpaid canvas Assistant hydrate / send / Voice | `GET /v1/onboarding/website/assistant/thread` (onboarding session token or Clerk); send and Voice same prefix, Clerk only. Not `/v1/assistant/…` |
+| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | `POST /v1/onboarding/activation/checkout` (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
+| Don't say claim: `GET …/claim/status` | `GET /v1/onboarding/activation/status` |
+| Don't say preview-packages / leftover share POST | `POST /v1/onboarding/website/publications` |
 
-SSE drives Review, the client interview (live fill), and `/onboarding/preview`.
-The contractor host is static HTML; it is not an SSE endpoint.
+SSE drives Review, the client interview (live fill), `/onboarding/preview`,
+and `/onboarding/preview-and-edit/` while 06 runs. The contractor host is
+static HTML; it is not an SSE endpoint.
 
 ## Don't say / rename
 
@@ -115,7 +128,8 @@ The contractor host is static HTML; it is not an SSE endpoint.
 ## Done when
 
 - Folder and types use onboarding, not the predecessor name.
-- Voice code is gone from first-pass `frontend-2`.
-- Generated types and MSW call `/v1/onboarding-sessions…` only.
+- Client-interview Voice code is gone from first-pass `frontend-2`. Unpaid
+  canvas Voice stays (Retarget).
+- Generated types and MSW call `/v1/onboarding/…` only.
 - Text client interview is the default `/onboarding/interview` surface.
 - Website activation copy and routes match 07. Don't say claim.

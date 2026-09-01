@@ -487,7 +487,8 @@ Architecture files may still say guide.
 
 The unpaid website editor on `/onboarding/preview-and-edit/`. Spec label;
 contractor copy is **Assistant**. HTTP
-`/v1/onboarding/website-editor/assistant/…`. Distinct from CMS Assistant, from
+`/v1/onboarding/website/editor/…` and `/v1/onboarding/website/assistant/…`.
+Distinct from CMS Assistant, from
 Onboarding assistant, and from the CMS website editor.
 
 ---

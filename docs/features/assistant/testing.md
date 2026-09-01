@@ -86,7 +86,7 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
     socket. Exhausted usage credit drops the CMS realtime connection.
     Transcripts settlement stays `200`.
 12. **Unactivated** — **403** `tenant_unactivated` on `/v1/assistant/…`. Unpaid
-    website preview is `/v1/onboarding/website-editor/assistant/…`.
+    website preview is `/v1/onboarding/website/assistant/…`.
 13. **Voice idle** — After 30s with no owner speech, frontend closes (leftover
     transcripts with `offset_seconds` from Voice events + `AssistantVoiceUsage`;
     CMS recording upload (signed URL); realtime connection dropped). Onboarding
@@ -142,7 +142,7 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 5. **No `/thread/new`** — That route does not exist on onboarding.
 6. **403 after website activation** — Activated owner cannot call
    `/v1/onboarding/assistant/…` or
-   `/v1/onboarding/website-editor/assistant/…` (or leftover onboarding session
+   `/v1/onboarding/website/…` (or leftover onboarding session
    routes).
 7. **Voice idle** — Same 30s frontend stop as CMS. Not billed (no 402). Leftover
    transcripts (committed xAI events → `offset_seconds`) posted; **no**
@@ -150,6 +150,11 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 8. **Denied microphone** — Cue **Allow microphone access in your browser**.
    Click DustOrb retries. Voice does not stay on. `POST …/realtime-connection`
    was not called.
+
+   DB (this story, Persist grain): `onboarding.assistant_conversation_items`,
+   `onboarding.assistant_runs`, `ai.threads`
+   (`thread_kind=onboarding_assistant`, unique per `onboarding_session_id`).
+   Voice/LLM faked; Go + Postgres + `frontend-2` not mocked.
 
 ## Onboarding website editor
 

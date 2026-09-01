@@ -8,7 +8,8 @@ This README is the index: status machine, screens, Resume, business-lookup-once,
 DAG. It does not retell the steps.
 
 The contractor never waits on business research. Business lookup returns
-immediately; business research fills the checklist in the background;
+immediately; business research fills the live business profile in the
+background;
 selecting and copying the website template starts only after the client
 interview completes.
 `/onboarding/preview` waits until the **home** website page has automatic
@@ -50,7 +51,7 @@ contractor sees Review.
                                       └─► 06 (async)
 ```
 
-SSE (`GET /v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from
+SSE (`GET /v1/onboarding/events/stream`) mirrors the DB from
 business lookup through selecting and copying the website template and copy.
 Postgres is authoritative. Business research progress reads `etl.runs` **and**
 the live business profile transform already wrote.
@@ -69,14 +70,14 @@ its own status.
 ## Resume
 
 Same browser only. `localStorage` holds the onboarding session **token**
-(`onboarding_sessions.token`) plus last UI step. Restore is `GET .../profile`.
-The stored step is a hint; status and whether `latest/` exists win. There is no
-second token and no server-side resume token.
+(`onboarding_sessions.token`) plus last UI step. Restore is
+`GET /v1/onboarding/profile`. The stored step is a hint; status and whether
+`latest/` exists win. There is no second token and no server-side resume token.
 
 | Onboarding session | Screen |
 | --- | --- |
 | No stored token | `/onboarding/find` |
-| Token present, `GET .../profile` failing | stay on a loading placeholder; keep the token; retry. Do not go to Find and do not `POST` |
+| Token present, `GET /v1/onboarding/profile` failing | stay on a loading placeholder; keep the token; retry. Do not go to Find and do not `POST` |
 | `client_interviewing`, no client interview started | `/onboarding/review` (Review) |
 | `client_interviewing`, interview in progress (`channel` set or an autosave exists) | `/onboarding/interview` |
 | `selecting_and_copying_website_template` or `select_and_copy_website_template_failed` | `/onboarding/preview` (SSE carousel; same wait) |
@@ -87,8 +88,8 @@ Business lookup creates the onboarding session **once** (01), when this browser
 has no token. Opening Find with nothing stored must not `POST` an onboarding
 session. Opening `/onboarding/find` with a stored token restores (same table as
 reload); it does not submit business lookup again. Restore failure keeps the
-token and retries `GET .../profile` on a loading placeholder — do not drop the
-pointer and do not `POST` a replacement.
+token and retries `GET /v1/onboarding/profile` on a loading placeholder — do not
+drop the pointer and do not `POST` a replacement.
 
 Creating a realtime connection seeds the **onboarding assistant guide** from
 current step + visible fields. Live audio is the guide, not a profile writer.

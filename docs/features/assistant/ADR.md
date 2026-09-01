@@ -291,7 +291,7 @@ instead of silently replacing it.
 25. **Three Assistant implementations, one contractor name** — CMS
     `/v1/assistant/…` after website activation. Find, Review, and client
     interview `/v1/onboarding/assistant/…` (Voice only, `tools=[]`). Onboarding
-    website editor `/v1/onboarding/website-editor/assistant/…` on
+    website editor `/v1/onboarding/website/assistant/…` on
     `/onboarding/preview-and-edit/` only (policy wrapper in
     `internal/onboarding/websiteeditor`). Contractor copy is **Assistant** on
     all three. Do not relax unactivated **403** `tenant_unactivated` on

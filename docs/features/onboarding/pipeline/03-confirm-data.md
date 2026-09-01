@@ -15,7 +15,7 @@ started (`channel` unset, no autosave) also lands here.
 ## Pre
 
 - Onboarding session `status=client_interviewing`.
-- Stored token restores via `GET .../profile`.
+- Stored token restores via `GET /v1/onboarding/profile`.
 - 02 may be in flight (`in_progress` rows), or `research_wait_until` may be in
   the future.
 
@@ -23,27 +23,27 @@ started (`channel` unset, no autosave) also lands here.
 
 - Create or replace an onboarding session.
 - Start or cancel 02.
-- `POST .../interview/complete` or select and copy the website template.
+- `POST /v1/onboarding/interview/complete` or select and copy the website
+  template.
 - Wait for 02 to finish before Continue is enabled.
 - Turn the research wait into a modal, a full-screen stop, or a disabled
   Continue.
-- Define a second copy of the closed checklist (owned by [build-profile](build-profile.md)).
+- Define a second copy of the complete-gate keys (owned by [build-profile](build-profile.md)).
 - Treat skip as Fail.
 
 ## Do
 
-1. **Render** the derived checklist projection from build-profile (found vs
-   missing). Conflicts never auto-picked.
+1. **Render** found vs missing from build-profile fill status. Conflicts never
+   auto-picked; the contractor edits the field on 04a (`algorithm=human`).
 2. Legal identity from the registry is shown here; the text client interview
-   (04a) does not repeat those fields. 04b may still `confirm_conflict` on a
-   legal row if 02 later disagrees.
+   (04a) does not repeat those fields.
 3. Continue is always enabled. Skip = the same Continue with zero dwell.
 4. If `research_wait_until` is in the future, show a **quiet inline wait** on
    this screen (and on 04 if they Continue): we’ll look the business up again
    then; not a modal, not a full-screen block, not a disabled Continue. Copy
    stays product language (“We’ll look the business up again in a few minutes”)
    — see [frontend.md](../frontend.md).
-5. Out → 04a or 04b (`/onboarding/interview`). 02 keeps running when an ETL run
+5. Out → 04a (`/onboarding/interview`). 02 keeps running when an ETL run
    is in flight.
 
 ## Persist
@@ -57,12 +57,12 @@ placeholder). Do not `POST` a new onboarding session.
 
 ## Out
 
-`/onboarding/interview` (04a or 04b). 02 still running when an ETL run is in
+`/onboarding/interview` (04a). 02 still running when an ETL run is in
 flight.
 
 ## Invariants
 
-- Skip 03 does not skip required checklist rows (complete gate unchanged).
+- Skip 03 does not skip required complete-gate keys (complete gate unchanged).
 - Skip 03 does not stop 02.
 - No Review POST.
 - No onboarding session status of its own (`client_interviewing` covers
