@@ -58,7 +58,7 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
   privacy, service area. Projects and certifications paint from the slim
   `website.v1` lists ([manifest.md](manifest.md)).
 - Website component contracts as typed structs in `catalog/` (Go + TS consume
-  the same JSON). Do not keep a second freeform `props` bag as the contract.
+  the same JSON). Do not keep a second freeform `props` object as the contract.
 - Typed preset tokens in `src/themes/<preset>/index.ts`. Visual rules:
   [styles.md](styles.md).
 

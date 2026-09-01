@@ -170,7 +170,7 @@ instead of silently replacing it.
     Never say **user**. There is no `thread_item_kind=system` and no
     `[m:ss system]`.
     xAI instructions / `role=system` stay the Voice-connection seed, not a
-    thread item. Persist that exact instructions blob on the voice run’s
+    thread item. Persist those exact instructions on the voice run’s
     `ai_generations.input` at realtime-connection create (plus the keyterms /
     `replace` sent on that create) so a conversation can be reconstructed with
     the system prompt. Text turns do the same: `input` is the exact assembled
@@ -285,8 +285,8 @@ instead of silently replacing it.
     `instructions`, `keyterms`, and `replace` on `session.update`. Bind them
     on `POST /v1/realtime/client_secrets` when that request accepts an
     initial-configuration object; otherwise the browser sends **one**
-    `session.update` after the Voice connection opens with the blob Go already
-    stored. Not a second configure mid-call.
+    `session.update` after the Voice connection opens with the instructions
+    Go already stored. Not a second configure mid-call.
 
 25. **Three Assistant implementations, one contractor name** — CMS
     `/v1/assistant/…` after website activation. Find, Review, and client

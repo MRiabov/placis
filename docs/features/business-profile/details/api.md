@@ -16,7 +16,7 @@ jsonb dump. `GET`/`PATCH` fields are the columns and list tables in
 
 - **Auth:** Clerk JWT, active tenant
 - **Callers:** `/cms/details` (Business details). Not the website-placeholder
-  bag. Website editor website page GET embeds
+  resolve struct. Website editor website page GET embeds
   `WebsiteBusinessProfileRead`
   ([website HTTP](../../website/api.md)); it does not own this resource.
 - **Response:** live business profile `*Read` (who they are, contact, where,

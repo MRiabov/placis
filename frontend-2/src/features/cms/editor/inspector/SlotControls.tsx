@@ -445,7 +445,7 @@ function PrimitiveListEditor({
   );
 }
 
-/** Flat metadata bag editor (design overrides, media crop/provenance, and
+/** Flat metadata editor (design overrides, media crop/provenance, and
  *  similar provider-shaped records) with one labeled field per key. */
 function KeyValueEditor({
   addLabel = "Add field",

@@ -31,7 +31,7 @@ That surface is the [onboarding website editor](website-editor.md).
   not in this registry.
 - **Not billed.** No 402. Still write `ai_generations` (`thread_id` on the
   `onboarding_assistant` thread). Voice create stores the exact instructions
-  blob on `ai_generations.input` (reconstructable; hydrate omits it). Usage on
+  on `ai_generations.input` (reconstructable; hydrate omits it). Usage on
   transcripts is recorded, not debited.
 - In-flight lock is `onboarding.assistant_runs`, unique running per
   `onboarding_session_id` (not `tenant_id`). Voice lock starts at

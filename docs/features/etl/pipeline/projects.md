@@ -1,17 +1,16 @@
 # Projects from source
 
-Shared transform after a Facebook post, Instagram post, website-crawl **blob**,
-or Maps listing review is upserted and its photos are attached / classified.
-Not a `StartRun` ETL run kind. Shared extract / transform rules:
-[pipeline README](README.md). Profile writes:
-[build-profile](../../onboarding/pipeline/build-profile.md). Persistence:
+Shared transform after a Facebook post, Instagram post, website-crawl
+**source**, or Maps listing review is upserted and its photos are attached /
+classified. Not a `StartRun` ETL run kind. Shared extract / transform rules:
+[pipeline README](README.md). Profile writes: [build-profile](../../onboarding/pipeline/build-profile.md). Persistence:
 [`etl.sources`](../persistence.md),
 [`llm_source_to_project_classifications`](../persistence.md),
 [`project_sources`](../../business-profile/projects/persistence.md).
 
 **Internal (spec / ETL, not glossary, not owner copy):** a source is **usable
 as a Project** when it describes **one past named job**. Same phrase for a
-post, a crawl Extract or HTML blob, or a review. Never say well-scoped,
+post, a crawl Extract or crawled HTML, or a review. Never say well-scoped,
 qualifying source, or **source-backed**.
 
 A Project is title (1–80), description (1–2000), optional cover. ETL insert is
@@ -29,9 +28,9 @@ chunk.
 ## Pre
 
 - `business_profiles` row for `tenant_id`.
-- `etl.sources` rows for blobs in this chunk (both crawl blobs when both have
-  landed). Live posts / listing reviews already fk those ids. Crawl HTML URL
-  rows exist (`etl.website_crawl_pages` `status=fetched`).
+- `etl.sources` rows for sources in this chunk (both crawl sources when both
+  have landed). Live posts / listing reviews already fk those ids. Crawl HTML
+  URL rows exist (`etl.website_crawl_pages` `status=fetched`).
 
 ## Must not
 
@@ -41,7 +40,7 @@ chunk.
   in the chunks we fetch. Rank for the client interview / first gallery is
   [build-profile](../../onboarding/pipeline/build-profile.md).
 - Merge the same job across Facebook, Instagram, the current site, and
-  reviews. Same crawl URL, **both** blobs yes → **one** Project (two cites).
+  reviews. Same crawl URL, **both** sources yes → **one** Project (two cites).
 - Invent a depicting photo. Do not steal a Maps listing dump, another job,
   logo, selfie, or **reviewer avatar**.
 - Use listing-level `google_maps_listing_photos` as a review-origin cover.
@@ -64,8 +63,8 @@ chunk.
 
 ## Do
 
-1. Ensure `etl.sources` for each blob in this chunk (Extract markdown **and**
-   goquery HTML for a crawled URL; Apify is the HTML blob when GET failed).
+1. Ensure `etl.sources` for each source in this chunk (Extract markdown **and**
+   goquery HTML for a crawled URL; Apify is the crawled HTML when GET failed).
 2. Skip a `source_id` whose verdict row matches `algorithm` +
    `schema_revision` and `force` is false. Skip `algorithm=human` Projects
    pointed at by that verdict (do not insert a second row).
@@ -93,13 +92,13 @@ chunk.
 8. **No** → write verdict no (`project_id` null). **Yes** → insert Project
    through build-profile (`created_by=business_research`, `status=active`,
    origin `facebook` / `instagram` / `website_crawl` / `review`) **or** attach
-   to the sibling crawl blob’s Project when that URL’s other `source_kind`
+   to the sibling crawl source’s Project when that URL’s other `source_kind`
    already has a yes verdict. Cover = the depicting photo on that post / HTML
    URL when the model (or `photo_kind=project`) confirms it shows the job;
    otherwise empty. Insert ≥1 `project_sources` row. Write verdict yes with
-   `project_id`. Both crawl blobs yes → one Project, two `project_sources`, two
-   verdicts with the same `project_id`. A review usable as a Project may insert
-   with empty cover.
+   `project_id`. Both crawl sources yes → one Project, two `project_sources`,
+   two verdicts with the same `project_id`. A review usable as a Project may
+   insert with empty cover.
 
 ## Persist
 
@@ -121,7 +120,7 @@ cards consume the **ranked top 4** in build-profile, not arrival order. Website
 
 ## Invariants
 
-- One Project per usable source, except same crawl URL with two yes blobs.
+- One Project per usable source, except same crawl URL with two yes sources.
 - Display cap is four; extract cap is the chunks we already fetch.
 - Owner `algorithm=human` wins.
 - Reviews usable as a Project may have empty cover until scrape photos land

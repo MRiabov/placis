@@ -31,7 +31,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    listing / profile / post live rows. A unifying `{id, type}` pointer table is
    not in this slice. (2026-08-27) (2026-08-30: `etl.sources` is live extract
    **identity** — `source_kind` + natural key — not mixed fetches and not `raw`.
-   Fetches stay one table per extract type. Live blob rows fk `source_id`.
+   Fetches stay one table per extract type. Live extract rows fk `source_id`.
    Project skip is `etl.llm_source_to_project_classifications`, not this
    table.)
 
@@ -109,12 +109,12 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     append-only fetch rows. Depicting photos live on
     `etl.website_crawl_pages`, not fetches. Extract markdown and goquery
     visible text are two `etl.sources` (`website_crawl_extract` /
-    `website_crawl_html`). Apify stands in for the HTML blob when GET fails.
+    `website_crawl_html`). Apify stands in for the crawled HTML when GET fails.
     Project skip lives on `etl.llm_source_to_project_classifications`, not on
     crawl HTML URLs. (2026-08-30; same day, later: two crawl sources; Project
     skip off the HTML URL row.)
 
-13. **Written rows cite extract blobs through typed junctions** — `source_id` is
+13. **Written rows cite extracts through typed junctions** — `source_id` is
     never a nullable column. ETL-produced edits, Projects, and imported files
     cite **at least one** `etl.sources` id (`business_profile_edit_sources`,
     `project_sources`, `imported_media_sources`). Owner / client interview

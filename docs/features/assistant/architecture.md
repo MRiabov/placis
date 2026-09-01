@@ -117,7 +117,7 @@ reorder):
 Plus wrap-up when 3 tool-using turns remain (text only).
 
 Each **CMS voice-connection seed** concatenates **instructions** in this order
-(one blob, not billed `conversation.item.create`, not a
+(one instructions string, not billed `conversation.item.create`, not a
 `thread_item_kind=system` thread item):
 
 1. Knowledge base (includes the product glossary)
@@ -174,8 +174,9 @@ unpublished website working copy.
 Same assistant screen as last **owner** request: no extra notice. An
 **assistant screen switch** is relative to the last owner request, not to clicks
 during the current run. Inject an assistant screen switch notification plus that
-screen’s assistant screen context (typed per screen, not a JSON bag). Website
-editor working copy from the frontend (local-first projection). Ads from Go.
+screen’s assistant screen context (typed per screen, not unconstrained JSON).
+Website editor working copy from the frontend (local-first projection). Ads from
+Go.
 Details: notification only — profile is already loaded.
 
 Do not interrupt an in-flight run. Owner clicks Ads → website editor → Details
@@ -274,7 +275,7 @@ The text WebSocket is **only** the streaming chat pipe. Do not put hydrate,
 
 Voice HTTP is under `/v1/assistant/voice/` (`realtime-connection`, `tool-calls`,
 `transcripts`). Voice create includes the unpublished website working copy when
-`assistant_screen` is `website_editor`. Other screens omit that blob.
+`assistant_screen` is `website_editor`. Other screens omit that working copy.
 `POST …/voice/tool-calls` still sends working copy when those tools run (canvas
 may have changed). Seed **instructions** (knowledge + profile + screen /
 compacted thread tail). Do not replay the thread as billed
@@ -351,7 +352,7 @@ context.
   browser POST of the whole convo after the socket. Do not dump debug over the
   socket.
 - **Voice text:** Go never saw audio. At realtime-connection create, the voice
-  run’s `ai_generations.input` is the exact instructions blob seeded (plus
+  run’s `ai_generations.input` is the exact instructions seeded (plus
   keyterms / `replace`). `POST /v1/assistant/voice/transcripts` (and generations
   from `…/voice/tool-calls`) **is** the later text POST. The browser forwards
   committed xAI Voice events already on that socket; Go maps them to typed
