@@ -46,6 +46,9 @@ Pays, upgrades the tenant, and **calls** website 04 (strip off). Leftover
   - `/onboarding/preview-and-edit/` redirects to `/cms/website`.
   - **Spy:** fake R2 `latest/` without the strip; fake purge as
     website 04.
+  - `billing.subscriptions` (Placis Pro plan, `status=active`,
+    `stripe_subscription_id` set). `ai_use_ledger_entries`
+    `entry_kind=included_usage_credit`. `tenants.subscription_status=active`.
 - **Handoff**: tenant is `active`; live host is R2 `latest/`; CMS
   Publish is a later website 04 (`published_by=owner`). Leftover 03
   continues River-only.

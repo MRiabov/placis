@@ -308,7 +308,6 @@ on the Request DTO.
 `## Indexes` — as billing already does.
 
 Major features that must eventually satisfy this contract: ads, assistant,
-billing, ETL, onboarding, website. Website, ads, assistant, and onboarding
-are fully defined (DTOs, Routes, tables, named services). Billing has
-closed Routes and no empty DTOs stub. CI:
-[ci-cd.md](general-architecture/ci-cd.md).
+billing, ETL, onboarding, website. Website, ads, assistant, onboarding, and
+billing are fully defined (DTOs, Routes, tables, named services).
+CI: [ci-cd.md](general-architecture/ci-cd.md).

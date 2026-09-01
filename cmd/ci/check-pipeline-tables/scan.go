@@ -323,7 +323,7 @@ func isTableName(name string) bool {
 		return true
 	}
 	switch name {
-	case "runs", "sources", "menus", "ads", "leads", "files", "tenants", "projects":
+	case "runs", "sources", "menus", "ads", "leads", "files", "tenants", "projects", "subscriptions":
 		return true
 	default:
 		return false

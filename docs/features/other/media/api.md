@@ -77,8 +77,10 @@ No freeform jsonb on these DTOs. Upload signed URL is `string` + `maxLength`
   `supplied_by`. Parent file is never replaced. **Does not retarget uses.**
   `/cms/media` selects the child. Website assistant / ads UI then point **that**
   website-section image or `ad_image_placements` row at the child. Other uses
-  stay on the parent.
+  stay on the parent. **Calls** `AssertUsageCredit` then `RecordAIUseSpend`
+  (`usage_category=image`).
 - **Response:** the child `*Read`.
+- **Errors:** `400` empty prompt; `402` `usage_credit_exhausted`.
 - First-upload tailored cleanup is **not** this route (worker, no owner prompt).
   Accept after the sweep is **not** a route: the child already exists as
   `pending_review`. Accept is not `POST …/approve`.
