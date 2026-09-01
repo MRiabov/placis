@@ -199,15 +199,16 @@ auto-routing global `api.x.ai` host).
 
 Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor cost**). CMS only. Onboarding
 guide is not billed to the contractor. Go never sees PCM (live audio or the
-debug recording PUT). xAI does not document a token-style usage object on
-`response.done`; the browser measures audio sent + received (and billed text
-items) and posts that on `POST /v1/assistant/voice/transcripts` (onboarding twin
-under `/v1/onboarding/assistant/voice/transcripts`), including a usage-only POST
-when Voice turns off. After CMS Voice ends, the browser PUTs the recording to
-object storage via a signed URL ([assistant architecture](../features/assistant/architecture.md)). Onboarding does
-**not** PUT a recording; leftover transcripts (committed xAI events →
-`offset_seconds`; `provider_event` jsonb) only. Reconstruct `[m:ss owner]` /
-`[m:ss assistant]` from typed `thread_item_kind` + `offset_seconds` + `body`.
+debug recording PUT). Debit is `AssistantVoiceUsage` on
+`POST /v1/assistant/voice/transcripts` (onboarding twin under
+`/v1/onboarding/assistant/voice/transcripts`), including a usage-only POST when
+Voice turns off: `audio_seconds_sent`, `audio_seconds_received`,
+`billed_text_item_count` ([assistant HTTP](../features/assistant/api.md)). After CMS Voice ends, the browser
+PUTs the recording to object storage via a signed URL
+([assistant architecture](../features/assistant/architecture.md)). Onboarding does **not** PUT a recording; leftover
+transcripts (committed xAI events → `offset_seconds`; `provider_event` jsonb)
+only. Reconstruct `[m:ss owner]` / `[m:ss assistant]` from typed
+`thread_item_kind` + `offset_seconds` + `body`.
 
 Never say **user**.
 

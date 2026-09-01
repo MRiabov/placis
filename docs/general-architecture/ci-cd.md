@@ -287,16 +287,17 @@ Routes paths, not gatherers (`pipeline/README.md`,
 (optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
 and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. A backticked
 River job kind (`River job \`foo\``, `River job kind \`foo\``,
-`**inserts** \`foo\``) must be a `## Jobs` row. Undefined features keep
-leftover extra-heading lists in `cmd/ci/check-pipeline-tables`; extras may
-only shrink (drop the leftover entry in the same PR). `testing.md` bans
-`## Routes` / `## DTOs` / `## Tables` / `## Do not create` and
-`### METHOD /path`. Pairing matches **known** table names (already in some
-`persistence.md`); invented names and columns are writing rules. Warn (do
-not fail) when a changed `persistence.md` is passed on the command line
-and that feature has no `testing.md`. `--all` with no extra paths does not
-warn on untouched files. GitHub Actions passes the PR’s changed
-`persistence.md` paths after `--all` so `::warning` can fire.
+`**inserts** \`foo\``) must be a `## Jobs` row. Website, billing, ads, and
+assistant have none. Undefined features keep leftover extra-heading lists
+in `cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
+entry in the same PR). `testing.md` bans `## Routes` / `## DTOs` /
+`## Tables` / `## Do not create` and `### METHOD /path`. Pairing matches
+**known** table names (already in some `persistence.md`); invented names
+and columns are writing rules. Warn (do not fail) when a changed
+`persistence.md` is passed on the command line and that feature has no
+`testing.md`. `--all` with no extra paths does not warn on untouched files.
+GitHub Actions passes the PR’s changed `persistence.md` paths after `--all`
+so `::warning` can fire.
 
 ### Docs–code named identifiers
 

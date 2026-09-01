@@ -19,13 +19,12 @@ func TestAPIHeadingsClosed(t *testing.T) {
 
 func TestAPIHeadingsLeftoverOK(t *testing.T) {
 	f := headingFile{
-		path:  "docs/features/assistant/api.md",
-		rel:   "assistant/api.md",
+		path: "docs/features/onboarding/api.md",
+		rel:  "onboarding/api.md",
 		heads: []string{
 			"Serve only types on HTTP",
-			"Routes — Go WebSocket (text chat only)",
-			"Routes — HTTP",
-			"Named codes (this feature)",
+			"Routes — onboarding assistant (guide)",
+			"Listed",
 			"Do not create",
 		},
 	}
@@ -36,19 +35,18 @@ func TestAPIHeadingsLeftoverOK(t *testing.T) {
 
 func TestAPIHeadingsNewExtraFails(t *testing.T) {
 	f := headingFile{
-		path: "docs/features/assistant/api.md",
-		rel:  "assistant/api.md",
+		path: "docs/features/onboarding/api.md",
+		rel:  "onboarding/api.md",
 		heads: []string{
 			"Serve only types on HTTP",
-			"Routes — Go WebSocket (text chat only)",
-			"Routes — HTTP",
-			"Named codes (this feature)",
+			"Routes — onboarding assistant (guide)",
 			"Listed",
+			"Essay",
 			"Do not create",
 		},
 	}
 	errs := checkOneAPI(f)
-	if len(errs) != 1 || !strings.Contains(errs[0], "Listed") {
+	if len(errs) != 1 || !strings.Contains(errs[0], "Essay") {
 		t.Fatalf("new extra: %v", errs)
 	}
 }
@@ -61,6 +59,14 @@ func TestAPIHeadingsStaleLeftoverFails(t *testing.T) {
 	}
 	if errs := checkOneAPI(f); len(errs) != 0 {
 		t.Fatalf("closed ads: %v", errs)
+	}
+	f = headingFile{
+		path:  "docs/features/assistant/api.md",
+		rel:   "assistant/api.md",
+		heads: []string{"DTOs", "Routes", "Do not create"},
+	}
+	if errs := checkOneAPI(f); len(errs) != 0 {
+		t.Fatalf("closed assistant: %v", errs)
 	}
 }
 

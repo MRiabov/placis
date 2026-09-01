@@ -1,240 +1,138 @@
 # Assistant HTTP
 
-Conventions: [HTTP conventions](../../general-architecture/api.md). Auth: Clerk JWT, active tenant, unless noted.
-Logic: [architecture.md](architecture.md). Tables: [persistence.md](persistence.md). Website-editor apply still
-uses website PATCH + `record-apply` / `record-reject`; those routes live here,
-not under `/v1/website/editor/pages/{page_id}/assistant`.
+Conventions: [HTTP conventions](../../general-architecture/api.md).
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+Logic: [architecture.md](architecture.md). Tables:
+[persistence.md](persistence.md). Website-editor apply is website PATCH
+then `record-apply` / `record-reject`; those routes live here, not under
+`/v1/website/editor/pages/{page_id}/assistant`.
 
-Unactivated tenant: **403** `tenant_unactivated` on every `/v1/assistant/…`
-route (HTTP and the text WebSocket). Unpaid website preview uses
+**Auth default:** Clerk JWT, active tenant. Mutating unary Routes send
+`Idempotency-Key` (not the text WebSocket). Unactivated tenant: **403**
+`tenant_unactivated` on every `/v1/assistant/…` route (HTTP and the text
+WebSocket). Unpaid website preview:
 [`/v1/onboarding/website-editor/assistant/…`](../onboarding/website-editor.md)
-instead. Activated owner: **403** on all `/v1/onboarding/assistant/…` and
+(same DTO names). Activated owner: **403** on all
+`/v1/onboarding/assistant/…` and
 `/v1/onboarding/website-editor/assistant/…` routes.
 
-Caps are mixed. **Owner input is characters:** composer `owner_message.body`
-`maxLength` **4000**; owner Voice utterance **5000**. **Text agent back and
-forth is tokens:** assembled context **128K** and generation **12K** per model
-turn ([architecture.md](architecture.md)) — thinking, assistant `body`, and
-tool `summary` persist that generation. Do **not** use a 5000-character
-`maxLength` as generation. **Voice:** no Go token cap on the live connection;
-do not treat a character cap as Voice generation. HTTP still puts a storage
-`maxLength` on those strings (OpenAPI). Do **not** add `agent_turn_limit` 409.
+Caps are mixed. **Owner input is characters:** composer
+`AssistantOwnerMessage.body` **4000**; owner Voice utterance **5000**.
+**Text agent back and forth is tokens:** assembled context **128K** and
+generation **12K** per model turn ([architecture.md](architecture.md)) —
+thinking, assistant `body`, and tool `summary` persist that generation.
+Do **not** use a 5000-character `maxLength` as generation. **Voice:** no Go
+token cap on the live connection. HTTP still puts a storage `maxLength`
+on those strings (OpenAPI). Do **not** add `agent_turn_limit` 409.
 
-## Serve only types on HTTP
+Huma may not host `GET /v1/assistant/thread/ws`; event structs still land
+in `/openapi.json` for typegen (same rule as SSE). Audio never hits this
+socket. Hydrate, `/thread/new`, voice HTTP, `record-apply`, and
+`record-reject` stay unary HTTP.
 
-| Location | Persistence | HTTP |
+Serve-only jsonb: Voice `provider_event` is persistence-only; **omit**
+from GET. **Omit** `ai_generations` and `runs` on hydrate and the text
+WebSocket. Extra keys 4xx. Field name is **`items`**, not
+`thread_items`. `409 edit_history_conflict` stays on website PATCH
+([website HTTP](../website/api.md)).
+
+## DTOs
+
+### Assistant
+
+| DTO | Fields | Description |
 | --- | --- | --- |
-| Thread | columns | `*Read` (`id`, `status` `current`/`completed`, `last_activity_at`). |
-| Thread items | columns | `*Read` (`thread_item_kind` enum, `body` string + `maxLength`, `icon` enum, `offset_seconds` int nullable, `created_at`). Owner `body` is **4000** (text) or **5000** (owner Voice utterance) **characters**. Assistant / `thinking` / `tool_summary` `body` storage `maxLength` is not generation — text generation is **12K tokens**. Field name is **`items`**, not `thread_items`. **Omit** `ai_generations` and `runs`. |
-| Assistant screen context | — | Closed per-screen structs, not unconstrained JSON. |
-| Voice tool-calls body | — | Closed union of CMS tool structs (name + the same types the LLM loop validates). |
-| Voice transcripts | — | Closed union of committed xAI Voice events (below) + optional reasoning/usage. Go maps to `thread_item_kind` / `body` / `offset_seconds`. **Omit** PCM, ASR/TTS deltas, recording file, `provider_event` on GET. |
-| Voice realtime connection | — | Browser-safe secret + expiry + realtime URL (`string` + `maxLength`, `wss://{region}.api.x.ai/v1/realtime`). Region is Go-picked; **omit** a browser region field. |
-| Text WebSocket events | — | Closed `oneOf` event names (same rule as SSE: no unconstrained `payload`). |
+| `AssistantThreadRead` | `id`, `status`, `last_activity_at`, `items: []AssistantThreadItemRead` | Hydrate / new thread |
+| `AssistantThreadItemRead` | `thread_item_kind`, `body`, `icon`, `offset_seconds`, `created_at` | One `items[]` row; omit `provider_event` |
+| `AssistantOwnerMessage` | `type`, `body`, `assistant_screen`, `plan`, `ask_first`, `website_working_copy: AssistantWebsiteWorkingCopy` | WS inbound; `type=owner_message` |
+| `AssistantWebsiteWorkingCopy` | `pages: []WebsitePageRead`, `menus: WebsiteMenusRead`, `website_styles: WebsiteSettingsRead` | Omit off `website_editor` |
+| `AssistantTokenDelta` | `type`, `delta` | WS outbound; `type=token_delta` |
+| `AssistantThinkingEvent` | `type`, `body` | WS outbound; `type=thinking` |
+| `AssistantToolActivityEvent` | `type`, `status`, `summary`, `icon` | WS outbound; `type=tool_activity` |
+| `AssistantWsError` | `type`, `code`, `message` | WS outbound; `type=error` |
+| `AssistantRecordApplyCreate` | `run_id` | Ask first Apply |
+| `AssistantRecordRejectCreate` | `run_id` | Ask first Reject |
 
-## Routes — Go WebSocket (text chat only)
+Omit `website_working_copy` off `website_editor`. `plan` / `ask_first`
+only when `assistant_screen` is `website_editor`. **Follow** is not a
+field; `follow: false` → **400**.
 
-Audio never uses this socket. Hydrate, `/thread/new`, voice HTTP,
-`record-apply`, and `record-reject` stay unary HTTP. Huma may not host the
-socket; event structs still land in `/openapi.json` for typegen.
+### Voice
+
+| DTO | Fields | Description |
+| --- | --- | --- |
+| `AssistantVoiceRealtimeConnectionCreate` | `assistant_screen`, `website_working_copy: AssistantWebsiteWorkingCopy` | Voice create; no `plan` / `ask_first` / `follow` |
+| `AssistantVoiceRealtimeConnectionRead` | `secret`, `expires_at`, `realtime_url` | Browser-safe; omit API key and region field |
+| `AssistantVoiceToolCallsCreate` | `assistant_screen`, `website_working_copy: AssistantWebsiteWorkingCopy`, `tools` | Closed CMS tool union; args in [website editor tools](../website/assistant.md) |
+| `AssistantVoiceToolEventRead` | `status`, `summary`, `icon` | HTTP JSON; not pushed on the Go WS |
+| `AssistantVoiceTranscriptsCreate` | `events: oneOf AssistantVoiceOwnerTranscriptEvent / AssistantVoiceAssistantTranscriptEvent / AssistantVoiceSpeechStartedEvent`, `usage: AssistantVoiceUsage`, `internal_reasoning` | `events` omit on usage-only; `usage` required when debiting |
+| `AssistantVoiceUsage` | `audio_seconds_sent`, `audio_seconds_received`, `billed_text_item_count` | Debit body; extra keys 4xx |
+| `AssistantVoiceOwnerTranscriptEvent` | `type`, `item_id`, `transcript` | `type=conversation.item.input_audio_transcription.completed` |
+| `AssistantVoiceAssistantTranscriptEvent` | `type`, `item_id`, `transcript` | `type=response.output_audio_transcript.done` |
+| `AssistantVoiceSpeechStartedEvent` | `type`, `item_id`, `audio_start_ms` | `type=input_audio_buffer.speech_started` |
+| `AssistantVoiceRecordingCreate` | `run_id`, `content_type`, `byte_size` | Signed-URL grant |
+| `AssistantVoiceRecordingRead` | `id`, `signed_url`, `expires_at` | `files` id + PUT URL |
+
+Do **not** add `input_tokens` / `output_tokens` on
+`AssistantVoiceUsage`. Voice `ai_generations.input_tokens` /
+`output_tokens` stay null.
+
+## Routes
+
+### Assistant
+
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `GET /v1/assistant/thread/ws` | CMS Assistant text composer after hydrate | `AssistantOwnerMessage` | `AssistantTokenDelta`, `AssistantThinkingEvent`, `AssistantToolActivityEvent`, `AssistantWsError` | `ai.threads`, `thread_items` | `thread_items`, `runs`, `ai_generations` | Text chat pipe; `StreamAssistantThread`; in-process tools | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `allowed_set_rejected`; `400` `follow: false` | Hydrate; `/thread/new`; voice HTTP; `record-apply` / `record-reject`; dump `ai_generations` |
+| `GET /v1/assistant/thread` | Bottom-right **Assistant**; visiting `/cms` without calling does not hydrate | | `AssistantThreadRead` | `ai.threads`, `thread_items` | `ai.threads` | No `current` → insert empty `current`; empty is `items: []` | `403` `tenant_unactivated` | Field `thread_items`; return `runs`, `provider_event`, recording URLs |
+| `POST /v1/assistant/thread/new` | **New thread** / clear context | | `AssistantThreadRead` | | `ai.threads` | Previous `status=completed`; `items: []`; does not drop Voice | `403` `tenant_unactivated`; `409` `thread_current_exists`; `409` `in_flight_run` | `/thread/clear`; `status=cleared` |
+| `POST /v1/assistant/record-apply` | Ask first **Apply** after website PATCH | `AssistantRecordApplyCreate` | | `runs` | `runs.ask_first_status` | Empty 200; metadata only | `403` `tenant_unactivated`; `409` `ask_first_not_pending` | Website slot payload; upsert unpublished website rows |
+| `POST /v1/assistant/record-reject` | Ask first **Reject** | `AssistantRecordRejectCreate` | | `runs` | `runs`, `thread_items` | Empty 200; muted thread item; no LLM | `403` `tenant_unactivated`; `409` `ask_first_not_pending` | Upsert or delete unpublished website rows; 402 |
 
 ### GET /v1/assistant/thread/ws
 
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** CMS Assistant text composer after hydrate (including `/cms`
-  once they have called the assistant). Not Voice.
-- **Transport:** WebSocket. Query/`Authorization` as other Clerk sockets; not a
-  POST body.
-- **Owner → Go (closed union):**
-  - `owner_message` — `body` string `maxLength` 4000; `assistant_screen` (CMS v1
-    enum); `plan` / `ask_first` booleans when `assistant_screen` is
-    `website_editor` (omit on other screens); unpublished website working copy
-    when `website_editor`; assistant screen switch notification when the screen
-    changed since the last **owner** request. **Follow** is not a field;
-    `follow: false` → **400**.
-- **Go → owner (closed union):** token deltas; `thinking` (`body` storage
-  `maxLength`, generation is **12K tokens**); tool activity (`planned` /
-  `applied` / `skipped` / `failed` + `summary` storage `maxLength`, generation
-  is **12K tokens**, + `icon`); terminal `error` (`code`, `message`).
-  **Must not** dump `ai_generations` or debug traces on this socket.
-- **Errors:** `403` `tenant_unactivated`; `402` `usage_credit_exhausted`;
-  `409` `in_flight_run`; `409` `allowed_set_rejected` (failed activity event on
-  this socket).
-- **Must not:** hydrate, `/thread/new`, voice create, transcripts, tool-calls,
-  recordings, or record-apply/reject on this socket.
+Inbound closed `oneOf` on `type`: `owner_message` only. Assistant screen
+switch is a field on that message when the screen changed since the last
+**owner** request, not a second event. `website_working_copy` /
+`plan` / `ask_first` only when `assistant_screen` is `website_editor`.
 
-## Routes — HTTP
+Outbound closed `oneOf` on `type`: `token_delta`, `thinking`,
+`tool_activity`, `error`. `tool_activity.status` is `planned` /
+`applied` / `skipped` / `failed`. `409` `allowed_set_rejected` is a
+failed activity event on this socket.
 
-### GET /v1/assistant/thread
+### Voice
 
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** bottom-right **Assistant** on an assistant screen, including
-  `/cms`. Visiting `/cms` without calling does not hydrate.
-- **Response:** current thread `*Read` (`id`, `status`, `last_activity_at`) +
-  ordered `items` (`thread_item_kind`, `body`, `icon`, `offset_seconds`
-  nullable, `created_at`). No `current` → insert empty `current`. Empty thread
-  is `200` with `items: []`.
-- **Errors:** `403` `tenant_unactivated`.
-- **Must not:** return `thread_items` as the field name; return `runs`, audit
-  jsonb, `provider_event`, or recording URLs.
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `POST /v1/assistant/voice/realtime-connection` | CMS Assistant after microphone granted | `AssistantVoiceRealtimeConnectionCreate` | `AssistantVoiceRealtimeConnectionRead` | | `runs`, `ai_generations` | Always Ask first on the run; `CreateAssistantVoiceRealtimeConnection`; **calls** xAI region from business country | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run` | Long-lived voice API key; browser-chosen region or host; Go WebSocket |
+| `POST /v1/assistant/voice/tool-calls` | Browser after voice-service `function_call` | `AssistantVoiceToolCallsCreate` | `AssistantVoiceToolEventRead` | `runs` | `thread_items`, `ai_generations` | `CreateAssistantVoiceToolCalls`; `in_flight_run` is a second start; after 20 tool rounds do not execute more tools | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `allowed_set_rejected` | Freeform tool registry; wait on the text WS; upsert unpublished website rows |
+| `POST /v1/assistant/voice/transcripts` | Committed utterances; usage-only when Voice turns off | `AssistantVoiceTranscriptsCreate` | | | `thread_items` | `CreateAssistantVoiceTranscripts`; settlement 200; `in_flight_run` is a second start | `403` `tenant_unactivated` | PCM; `.updated` / `.delta`; `POST /v1/stt`; recording file; invent `offset_seconds`; `thread_item_kind=system` |
+| `POST /v1/assistant/voice/recordings` | CMS Voice off (including idle) | `AssistantVoiceRecordingCreate` | `AssistantVoiceRecordingRead` | `runs` | `files` | Signed URL; browser PUT; then complete | `403` `tenant_unactivated`; `404` bad `run_id`; `409` already has a recording; `413` `byte_size` | Recording file on this POST; `/v1/media-assets` |
+| `POST /v1/assistant/voice/recordings/{id}/complete` | After PUT succeeds | | | `files` | `runs.recording_file_id` | `CompleteAssistantVoiceRecording` | `403` `tenant_unactivated`; `404` not this tenant’s voice recording | Recording file on this POST |
 
-### POST /v1/assistant/thread/new
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** Assistant **New thread** / clear context. Does **not** preempt a
-  running text or Voice run (`409` `in_flight_run`). Does **not** drop Voice.
-- **Idempotency-Key:** yes.
-- **Request:** empty body.
-- **Response:** new thread `*Read` + `items: []`. Previous thread is
-  `status=completed`.
-- **Errors:** `403` `tenant_unactivated`; `409` `thread_current_exists`;
-  `409` `in_flight_run`.
-- **Must not:** name this `/thread/clear`; set `status=cleared`.
-
-### POST /v1/assistant/record-apply
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** Ask first **Apply** after the website editor PATCHed (or queued)
-  the dirty keys.
-- **Idempotency-Key:** yes.
-- **Request:** metadata only (`run_id`). No unpublished payload.
-- **Errors:** `403` `tenant_unactivated`; **409** `ask_first_not_pending`.
-- **Must not:** accept a website slot payload; upsert unpublished website rows.
-
-### POST /v1/assistant/record-reject
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** Ask first **Reject**. Frontend drops pending edits in memory; no
-  PATCH.
-- **Idempotency-Key:** yes.
-- **Request:** metadata only (`run_id`).
-- **Errors:** `403` `tenant_unactivated`; **409** `ask_first_not_pending`.
-- **Must not:** upsert or delete unpublished website rows; call the LLM (not
-  402). **Does** append a muted thread item (edits did not land) for the next
-  **model** turn’s reject notice.
-
-### POST /v1/assistant/voice/realtime-connection
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** CMS Assistant when Voice turns on, after the microphone is
-  granted.
-- **Idempotency-Key:** yes.
-- **Request:** `assistant_screen` (CMS v1 enum); unpublished website working
-  copy when `assistant_screen` is `website_editor` (omit that working copy on
-  other screens). No `plan` / `ask_first` / `follow`. Always Ask first on the
-  run row.
-- **Response:** browser-safe secret + expiry + **realtime URL** (`string` +
-  `maxLength`, `wss://{region}.api.x.ai/v1/realtime` for the xAI region Go
-  picked). **Not** a Go WebSocket. Audio is browser ↔ that URL. Go picks the
-  region from the business country
-  ([voice agent](../../general-architecture/voice-agent.md)).
-- **Errors:** `403` `tenant_unactivated`; `402` `usage_credit_exhausted`;
-  `409` `in_flight_run`.
-- **Must not:** return the long-lived voice API key; accept a browser-chosen
-  region or host.
-
-Onboarding uses
+Onboarding guide Voice:
 [POST /v1/onboarding/assistant/voice/realtime-connection](../onboarding/api.md).
-
-### POST /v1/assistant/voice/tool-calls
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** browser, after a voice-service `function_call` on **that**
-  voice-service WebSocket. Text does **not** use this route.
-- **Idempotency-Key:** yes.
-- **Request:** `assistant_screen`; unpublished website working copy when those
-  tools need the canvas (`website_editor` writes); array of closed CMS tool
-  structs (parallel).
-- **Response:** HTTP JSON events (`planned` / `applied` / `skipped` / `failed`
-  - `summary` / `icon`). Go does **not** push these on any WebSocket.
-- **Errors:** `403` `tenant_unactivated`; `402` `usage_credit_exhausted`;
-  `409` `in_flight_run` (a **second** start, not the current voice run);
-  `409` `allowed_set_rejected`.
-- **Must not:** accept freeform JSON as a tool registry; wait on
-  `GET /v1/assistant/thread/ws` for these events; upsert unpublished website
-  rows. After **20** tool-using rounds on this run, do not execute more tools
-  (`function_call_output` that the budget is done).
+`realtime_url` is `wss://{region}.api.x.ai/v1/realtime` (Go-picked region).
+Not a Go WebSocket.
 
 ### POST /v1/assistant/voice/transcripts
 
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** browser after committed voice utterances, and usage-only when
-  Voice turns off.
-- **Idempotency-Key:** yes.
-- **Request:** closed union of **committed** xAI Voice events already on that
-  live socket — not `POST /v1/stt`. xAI documents these **event names** and
-  OpenAI Realtime compatibility (`wss://api.x.ai/v1/realtime`). Owner:
-  `conversation.item.input_audio_transcription.completed`. Map `body` from JSON
-  key `transcript` when present (OpenAI-compat; xAI REST lists the event, not a
-  field table). Owner `body` maxLength **5000 characters**. Set
-  `audio.input.transcription.model` **`grok-transcribe`** (named on xAI’s
-  `.updated` docs). Assistant: `response.output_audio_transcript.done`; map
-  `body` from `transcript` when present (storage `maxLength`, not a
-  5000-character generation cap). Do not POST `.updated` or `.delta`. Pair owner
-  `.completed` with `input_audio_buffer.speech_started` when both JSON objects
-  share `item_id`. **`offset_seconds`** (int, `>= 0`, maximum 7200, nullable):
-  if the forwarded `speech_started` JSON has `audio_start_ms` (OpenAI Realtime
-  field; xAI lists the event, not the payload), store floor(ms/1000); else null.
-  Do not invent a browser clock. Assistant `.done` has no documented clock (null
-  unless a timing key is on that JSON). Reconstruct `[m:ss owner]` /
-  `[m:ss assistant]` from `thread_item_kind` + `offset_seconds` when set.
-  Never say **user**. Never `thread_item_kind=system` / `[m:ss system]`
-  (instructions stay the Voice-connection seed). Persist the forwarded JSON as
-  `provider_event` (jsonb; omitted from GET). Events may be omitted on a
-  **usage-only** POST. If xAI did not emit a committed transcript, omit that
-  utterance — do not invent text or offset. Reasoning if the voice service
-  emitted it (`internal_reasoning`; empty string if omitted — do not invent).
-  **Usage** (required when debiting): `audio_seconds_sent` (number),
-  `audio_seconds_received` (number), `billed_text_item_count` (int). Optional
-  typed xAI usage struct when present (named fields, not unconstrained JSON).
-- **Errors:** `403` `tenant_unactivated`. Settlement stays **200** (not 402).
-  `409` `in_flight_run` is only a **second** start, not the current voice run.
-- **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
-  `created_at` or a browser audio/wall clock as the conversation clock; call
-  `POST /v1/stt` or `wss://…/v1/stt`; transcribe the recording; accept a
-  freeform JSON of other xAI events; map xAI `role=system` / instructions
-  to a thread item; invent `offset_seconds` when the forwarded JSON has no
-  `audio_start_ms`.
-
-### POST /v1/assistant/voice/recordings
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** browser after Voice turns off (including idle stop).
-- **Idempotency-Key:** yes.
-- **Request:** `run_id`; `content_type` (`audio/webm` | `audio/mp4`);
-  `byte_size` (int, `> 0`, maximum 33554432).
-- **Response:** `id` (`files` id) + signed URL (`string` + `maxLength`) +
-  expiry. Browser **PUT**s the object to that URL. Completes via
-  `…/recordings/{id}/complete`.
-- **Errors:** `403` `tenant_unactivated`; `404` if `run_id` is missing or not a
-  voice run for this tenant; `409` if that run already has a recording;
-  `413` if `byte_size` is over the maximum. `409` `in_flight_run` is only a
-  **second** start, not the current voice run.
-- **Must not:** accept the recording file on this POST; use
-  `/v1/media-assets` for this.
-
-### POST /v1/assistant/voice/recordings/{id}/complete
-
-- **Auth:** Clerk JWT, active tenant
-- **Callers:** browser after the PUT to the signed URL succeeds.
-- **Idempotency-Key:** yes.
-- **Errors:** `403` `tenant_unactivated`; `404` if the `files` row is not this
-  tenant’s voice recording. `409` `in_flight_run` is only a **second** start,
-  not the current voice run.
-- **Must not:** accept the recording file.
-
-## Named codes (this feature)
-
-| `code` | HTTP |
-| --- | --- |
-| `tenant_unactivated` | 403 |
-| `usage_credit_exhausted` | 402 |
-| `in_flight_run` | 409 |
-| `allowed_set_rejected` | 409 |
-| `thread_current_exists` | 409 |
-| `ask_first_not_pending` | 409 |
-
-`409 edit_history_conflict` stays on website PATCH ([website HTTP](../website/api.md)), not here.
+Map `AssistantVoiceOwnerTranscriptEvent.transcript` to owner `body`
+(maxLength **5000 characters**). Map
+`AssistantVoiceAssistantTranscriptEvent.transcript` to assistant `body`
+(storage `maxLength`, not a 5000-character generation cap). Pair owner
+`.completed` with `AssistantVoiceSpeechStartedEvent` when both share
+`item_id`. If `audio_start_ms` is set, `offset_seconds` is floor(ms/1000);
+else null. Do not invent a browser clock. Assistant `.done` has no
+documented clock (`offset_seconds` null unless a timing key is on that
+JSON). Reconstruct `[m:ss owner]` / `[m:ss assistant]` from
+`thread_item_kind` + `offset_seconds`. Never say **user**. Persist the
+forwarded JSON as `provider_event` (omit from GET).
+`internal_reasoning` empty string if omitted. `AssistantVoiceUsage` is
+required when debiting. Set `audio.input.transcription.model`
+**`grok-transcribe`** on Voice create (not this POST).
 
 ## Do not create
 
@@ -255,3 +153,5 @@ Onboarding uses
   routes above)
 - The recording file on `POST /v1/assistant/voice/transcripts`
 - `POST /v1/stt` and `wss://…/v1/stt` (use live Voice transcripts)
+- `input_tokens` / `output_tokens` on `AssistantVoiceUsage`
+- AsyncAPI (WS types are the DTOs above in `/openapi.json`)
