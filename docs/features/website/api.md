@@ -24,7 +24,7 @@ Same Astro engine. Not one union with a flag. Website form POST is
 | Location | Persistence | HTTP |
 | --- | --- | --- |
 | Website slot `value` | jsonb | Discriminated union on `slot_type`: `text`/`rich_text` → string + `maxLength`; `image` → media library item id + crop/focal; `link` → url + label; `list` → typed array. **Do not expose `slot_type=json`.** |
-| Website section `props` | jsonb | `oneOf` by `component_id`. Extra keys 4xx. Unknown `component_id` → `unsupported_component` + no props bag. |
+| Website section `props` | jsonb | `oneOf` by `component_id`. Extra keys 4xx. Unknown `component_id` → `unsupported_component` + no props object. |
 | Website section `design` | jsonb | Named design-control fields. Extra keys 4xx. |
 | Website edit history `before`/`after` | jsonb | Same union as the live field. |
 | Website manifest | jsonb `website.v1` | **Omit** from website-editor GET/PATCH. Publication `*Read` is metadata only. |
@@ -32,7 +32,7 @@ Same Astro engine. Not one union with a flag. Website form POST is
 | Website assistant plan | text | `string` + `maxLength`. Markdown. |
 | LLM traces | jsonb | **Omit.** Activity cards are named event structs. |
 | Top menu / footer | `website.menus` jsonb trees | Named node fields (extra keys 4xx). |
-| Website business profile | live business profile + projects + ranked reviews + media library URLs | `WebsiteBusinessProfileRead` — Common variables bag ([variables.md](variables.md)). Extra keys 4xx. Not the Details editor `GET /v1/business-profile` `*Read`. |
+| Website business profile | live business profile + projects + ranked reviews + media library URLs | `WebsiteBusinessProfileRead` — Common variables struct ([variables.md](variables.md)). Extra keys 4xx. Not the Details editor `GET /v1/business-profile` `*Read`. |
 | Worker `media_asset_urls` | `files` public delivery URL | Map keyed by media library item id → URL (`minLength` 1, `maxLength` 2048). **Omit** from website-editor GET/PATCH. |
 
 ## `WebsiteBusinessProfileRead`
@@ -41,7 +41,7 @@ One Go struct. `$ref` in CMS OpenAPI **and** the Worker internal OpenAPI
 file. Not a third endpoint. Not named `WebsiteRenderProfile`.
 **Render** stays on `websiteRender`.
 
-The website-placeholder resolve bag: every Common variable in
+The website-placeholder resolve struct: every Common variable in
 [variables.md](variables.md). Named fields, not `map[string]any`. Nested
 objects match the dotted paths (`services.featured`, `projects.recent`,
 `reviews` as the ranked pool for `{{reviews.1}}` …). Extra keys 4xx.

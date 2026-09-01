@@ -37,7 +37,7 @@ typed against predecessor paths.
 Keep as Go DTOs in current glossary names (fields may change): website form
 submit, activation checkout. Drop (do not alias): predecessor preview module
 path, leftover resolve, predecessor hand types, CRM/sandbox routes,
-unconstrained `additionalProperties` bags.
+unconstrained `additionalProperties` objects.
 
 “Genuinely good” means the **behavior** is still in the website spec. Copy
 Python field lists only when [api.md](api.md) already says so.

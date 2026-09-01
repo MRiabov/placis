@@ -1,10 +1,10 @@
 # Projects from source — integration test
 
-- **Assert**: Facebook / Instagram posts and crawled blobs that are a past named
-  job insert `business_profile.projects` `status=active` with origin and ≥1
-  `project_sources` row; a Maps Details review usable as a Project (work type,
-  one past job) inserts with empty cover; scrape photos on **that** review may
-  fill cover only when `algorithm` is not `human`. Same crawl URL, Extract +
+- **Assert**: Facebook / Instagram posts and crawled sources that are a past
+  named job insert `business_profile.projects` `status=active` with origin and
+  ≥1 `project_sources` row; a Maps Details review usable as a Project (work
+  type, one past job) inserts with empty cover; scrape photos on **that** review
+  may fill cover only when `algorithm` is not `human`. Same crawl URL, Extract +
   HTML both yes → one Project, two cites, two
   `etl.llm_source_to_project_classifications` rows with the same `project_id`.
   Text under 200 characters writes verdict no with no LLM. Do not stop at four

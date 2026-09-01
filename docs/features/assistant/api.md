@@ -26,7 +26,7 @@ do not treat a character cap as Voice generation. HTTP still puts a storage
 | --- | --- | --- |
 | Thread | columns | `*Read` (`id`, `status` `current`/`completed`, `last_activity_at`). |
 | Thread items | columns | `*Read` (`thread_item_kind` enum, `body` string + `maxLength`, `icon` enum, `offset_seconds` int nullable, `created_at`). Owner `body` is **4000** (text) or **5000** (owner Voice utterance) **characters**. Assistant / `thinking` / `tool_summary` `body` storage `maxLength` is not generation — text generation is **12K tokens**. Field name is **`items`**, not `thread_items`. **Omit** `ai_generations` and `runs`. |
-| Assistant screen context | — | Closed per-screen structs, not a JSON bag. |
+| Assistant screen context | — | Closed per-screen structs, not unconstrained JSON. |
 | Voice tool-calls body | — | Closed union of CMS tool structs (name + the same types the LLM loop validates). |
 | Voice transcripts | — | Closed union of committed xAI Voice events (below) + optional reasoning/usage. Go maps to `thread_item_kind` / `body` / `offset_seconds`. **Omit** PCM, ASR/TTS deltas, recording file, `provider_event` on GET. |
 | Voice realtime connection | — | Browser-safe secret + expiry + realtime URL (`string` + `maxLength`, `wss://{region}.api.x.ai/v1/realtime`). Region is Go-picked; **omit** a browser region field. |
@@ -76,7 +76,7 @@ socket; event structs still land in `/openapi.json` for typegen.
   is `200` with `items: []`.
 - **Errors:** `403` `tenant_unactivated`.
 - **Must not:** return `thread_items` as the field name; return `runs`, audit
-  blobs, `provider_event`, or recording URLs.
+  jsonb, `provider_event`, or recording URLs.
 
 ### POST /v1/assistant/thread/new
 
@@ -120,9 +120,9 @@ socket; event structs still land in `/openapi.json` for typegen.
   granted.
 - **Idempotency-Key:** yes.
 - **Request:** `assistant_screen` (CMS v1 enum); unpublished website working
-  copy when `assistant_screen` is `website_editor` (omit that blob on other
-  screens). No `plan` / `ask_first` / `follow`. Always Ask first on the run
-  row.
+  copy when `assistant_screen` is `website_editor` (omit that working copy on
+  other screens). No `plan` / `ask_first` / `follow`. Always Ask first on the
+  run row.
 - **Response:** browser-safe secret + expiry + **realtime URL** (`string` +
   `maxLength`, `wss://{region}.api.x.ai/v1/realtime` for the xAI region Go
   picked). **Not** a Go WebSocket. Audio is browser ↔ that URL. Go picks the
@@ -186,13 +186,13 @@ Onboarding uses
   emitted it (`internal_reasoning`; empty string if omitted — do not invent).
   **Usage** (required when debiting): `audio_seconds_sent` (number),
   `audio_seconds_received` (number), `billed_text_item_count` (int). Optional
-  typed xAI usage struct when present (named fields, not a JSON bag).
+  typed xAI usage struct when present (named fields, not unconstrained JSON).
 - **Errors:** `403` `tenant_unactivated`. Settlement stays **200** (not 402).
   `409` `in_flight_run` is only a **second** start, not the current voice run.
 - **Must not:** accept PCM, ASR/TTS deltas, or the recording file; use
   `created_at` or a browser audio/wall clock as the conversation clock; call
   `POST /v1/stt` or `wss://…/v1/stt`; transcribe the recording; accept a
-  freeform JSON bag of other xAI events; map xAI `role=system` / instructions
+  freeform JSON of other xAI events; map xAI `role=system` / instructions
   to a thread item; invent `offset_seconds` when the forwarded JSON has no
   `audio_start_ms`.
 

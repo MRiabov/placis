@@ -196,7 +196,7 @@ those wait on the in-flight copy-out rather than opening a second connection.
 
 The jsonb columns (`website_slots.value`, `website_sections.props` / `design`)
 are in-place `UPDATE`s of one row. There is no unpublished snapshot per edit, so
-we do not append a page- or site-sized jsonb blob per keystroke. Click-off plus
+we do not append a page- or site-sized jsonb row per keystroke. Click-off plus
 the safety timer is what keeps TOAST and WAL down. Website edit history appends
 typed increments for the copy-out (one field / slot / structure change), not a
 second unpublished website copy. Website publication still writes one

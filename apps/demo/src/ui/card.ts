@@ -19,9 +19,9 @@ const onbCardClass = `${panelClass} grid gap-2.5 px-6 py-5`;
 export function card(
   ...extra: Array<string | false | null | undefined>
 ): string {
-  const blob = extra.filter(Boolean).join(" ");
-  const radius = /\brounded-/.test(blob) ? null : "rounded-lg";
-  const border = /\bborder-(hairline|border)\b/.test(blob)
+  const extras = extra.filter(Boolean).join(" ");
+  const radius = /\brounded-/.test(extras) ? null : "rounded-lg";
+  const border = /\bborder-(hairline|border)\b/.test(extras)
     ? "border"
     : "border border-border";
   return cn("bg-white", radius, border, ...extra);

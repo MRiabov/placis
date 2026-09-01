@@ -13,7 +13,7 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    `SELECT … FOR UPDATE`, insert only what they set, and update only those live
    profile columns. No writer may submit a full profile. (2026-08-19)
 
-   The predecessor stored profile history as a details blob / full merge. Under
+   The predecessor stored profile history as a details dump / full merge. Under
    a race (client interview and business research at the same time) one write
    omitted a field the other had set; the UI went from 7 populated fields to 6
    with no explicit edit. Last snapshot wins. Increments keep both writes; a
@@ -34,8 +34,8 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    They are ordinary live profile columns and ordinary
    `business_profile_edits.field` values. Business research extras (confidence,
    evidence) stay on ETL fetch metadata / the Facebook or Instagram profile row,
-   not a founder blob. (2026-08-19; 2026-08-27: `business_research_sources`
-   removed.)
+   not unstructured founder jsonb. (2026-08-19; 2026-08-27:
+   `business_research_sources` removed.)
 
 4. **Reviews have origin, top, archive, and citation** — each
    `business_profile_reviews` row has `origin` (`google_maps_listing` /

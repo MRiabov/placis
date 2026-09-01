@@ -72,10 +72,10 @@ as of `accepted_edit_id`. They do not replay profile history on every call.
 - `business_profile_edit_sources` — `edit_id` fk, `source_id` fk →
   `etl.sources`, `tenant_id` fk. Unique `(edit_id, source_id)`. Every **ETL**
   increment has **at least one** cite (Maps listing for marketing phone; both
-  crawl blobs when both dumps informed trade / services; listing-review for a
+  crawl sources when both dumps informed trade / services; listing-review for a
   review add). Client interview / Details / `confirm_conflict` increments have
-  **no** junction rows (they were not generated from extract blobs). Keep
-  `origin` for product copy (the ETL source kind); the junction is the blob
+  **no** junction rows (they were not generated from extracts). Keep
+  `origin` for product copy (the ETL source kind); the junction is the source
   list. `etl_run_id` is which run. `ai_generations` is the LLM call if any.
 
 This table is the audit for profile edits (the increment row, not the junction).

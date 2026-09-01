@@ -22,7 +22,7 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
    `thread_items`). No `current` → insert empty `current`. Empty is `items: []`.
    Visiting `/cms` without calling does not hydrate. Hydrate does not return
    `runs` and does not join `ai_generations`. Voice create still wrote the
-   instructions blob on `ai_generations.input` (reconstructable; not in GET).
+   instructions on `ai_generations.input` (reconstructable; not in GET).
 2. **Assistant screen switch** — Owner moves website editor → Details during
    speech; speech continues; next owner turn carries one switch notification for
    Details.

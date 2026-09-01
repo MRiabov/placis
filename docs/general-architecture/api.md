@@ -74,7 +74,7 @@ CMS unpublished website writes are `POST`/`PATCH` on `/v1/website/editor/…` on
 
 ## Serve only types on HTTP
 
-The predecessor shipped unconstrained JSON bags.
+The predecessor shipped unconstrained JSON objects.
 Don't say: `JsonRecord` / `JsonObjectPayload` / `additionalProperties`.
 **Forbid that on every frontend-facing field.**
 
@@ -96,8 +96,8 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 
 | Location | Persistence | HTTP to `frontend-2` / contractor website |
 | --- | --- | --- |
-| Website slot `value` | jsonb | Discriminated union on `slot_type`: `text`/`rich_text` → string + `maxLength`; `image` → media library item id + crop/focal; `link` → url + label; `list` → typed array (e.g. project ids). **Do not expose `slot_type=json`.** Project galleries and reviews are ids / `website_slot_reviews`, not a JSON bag. |
-| Website section `props` | jsonb | `oneOf` by `component_id` from the website component catalog. Extra keys 4xx. Unknown `component_id` → `unsupported_component` flag + no props bag. |
+| Website slot `value` | jsonb | Discriminated union on `slot_type`: `text`/`rich_text` → string + `maxLength`; `image` → media library item id + crop/focal; `link` → url + label; `list` → typed array (e.g. project ids). **Do not expose `slot_type=json`.** Project galleries and reviews are ids / `website_slot_reviews`, not unconstrained JSON. |
+| Website section `props` | jsonb | `oneOf` by `component_id` from the website component catalog. Extra keys 4xx. Unknown `component_id` → `unsupported_component` flag + no props object. |
 | Website section `design` | jsonb | Named design-control fields (enum/bool options from the same website component catalog). Extra keys 4xx. |
 | Website edit history `before`/`after` | jsonb (one website slot or field) | Same union as the live field (`entity_type` + `field` / website slot key). |
 | Website manifest | jsonb `website.v1` | **Omit** from website-editor GET/PATCH. Website publication `*Read` is metadata (website version number, status, times). Live HTML does not use this HTTP. |
@@ -116,13 +116,13 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 
 ### Do not create
 
-- Don't say: `JsonRecord`, `JsonObjectPayload`, `PublicSite*` bags,
+- Don't say: `JsonRecord`, `JsonObjectPayload`, `PublicSite*` objects,
   `props: object`, `value: object` without discriminator
 - `slot_type=json` on GET/PATCH
-- String fields documented as a JSON blob
+- String fields documented as JSON
 - SSE `payload` as unconstrained object
 - Returning ETL fetch `raw`, Stripe raw, or `ai_generations`
-  blobs to `frontend-2`
+  jsonb to `frontend-2`
 
 Website component catalog structs are the only polymorphism: discriminator
 `component_id` / `slot_type`, generated into OpenAPI `oneOf`. A leftover

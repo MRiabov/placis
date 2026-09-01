@@ -35,7 +35,7 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
     Services (same children), Contact, Legal (text heading) + privacy
     policy child. Legal is not on `top_menu`. `show_phone=true`,
     `show_email=false`, `show_contact=true`. Trees are not a catalog menu
-    JSON blob. Bar CTA values stay `{{marketing_phone}}` /
+    JSON. Bar CTA values stay `{{marketing_phone}}` /
     `{{marketing_email}}`.
   - `website_forms` / `website_form_fields`: present iff the website
     template has form website sections; `form_key` matches the catalog
