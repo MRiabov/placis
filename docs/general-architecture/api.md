@@ -72,8 +72,10 @@ Do not say `slug` in paths or fields (website prefix / website page path).
 Do not say **fold** in `api.md` or path names. Say **live business profile** and
 **unpublished website**.
 
-CMS unpublished website writes are `POST`/`PATCH` on `/v1/website/editor/…` only
-([website HTTP](../features/website/api.md)).
+CMS unpublished website writes are `POST`/`PATCH` on `/v1/website/editor/…`
+(active tenant) or `/v1/onboarding/website/editor/…` (unactivated)
+([website HTTP](../features/website/api.md),
+[onboarding HTTP](../features/onboarding/api.md)).
 
 ## Serve only types on HTTP
 
@@ -146,11 +148,13 @@ Named once here. Feature `api.md` files name the mode, they do not redefine it.
    from the contractor `Host`, not from `/me.tenant`.
 5. **Stripe webhook signature**.
 
-Clerk JWT + unactivated tenant on the **app** origin (unpublished GET/PATCH,
-`/v1/onboarding/website-editor/assistant/…` send/Voice) is the same Clerk
+Clerk JWT + unactivated tenant on the **app** origin (unpublished GET/PATCH
+on `/v1/onboarding/website/editor/…`,
+`/v1/onboarding/website/assistant/…` send/Voice) is the same Clerk
 verification as mode 3 without the active gate. Not a sixth mode. Onboarding
-session token (mode 2) may GET unpublished website and GET
-`/v1/onboarding/website-editor/assistant/thread`; it must not PATCH and must
+session token (mode 2) may GET unpublished website
+(`/v1/onboarding/website/editor/…`) and GET
+`/v1/onboarding/website/assistant/thread`; it must not PATCH and must
 not send.
 
 Contractor website `Host` is CORS for website form POST and website activation
@@ -192,7 +196,7 @@ tenant). Named on each mutating **Routes** row in the feature `api.md`.
 
 ## Onboarding SSE
 
-`GET /v1/onboarding-sessions/{id}/events/stream` uses Huma `sse.Register`: event
+`GET /v1/onboarding/events/stream` uses Huma `sse.Register`: event
 name → Go struct, so payloads are in `/openapi.json`. Do not use a raw
 `net/http` handler that bypasses the spec. `frontend-2` exhaustive-matches;
 unknown events are logged and dropped, never parsed as `any`.

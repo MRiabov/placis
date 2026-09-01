@@ -32,9 +32,9 @@ on CMS `assistant.runs`; leftover 06 is River-only on `tenant_id`.
 
 ## Do
 
-Run website 03. Complete the **home** website page first. Other website
-pages finish in parallel. `/onboarding/preview` waits until that home
-copy is done, or the wait cap (~15s). Wait-end is
+`GenerateWebsiteCopy` runs website 03. Complete the **home** website page
+first. Other website pages finish in parallel. `/onboarding/preview` waits
+until that home copy is done, or the wait cap (~15s). Wait-end is
 [07](07-contractor-copy-improvement.md).
 
 ## Persist

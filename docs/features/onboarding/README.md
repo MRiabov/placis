@@ -5,7 +5,8 @@ Onboarding turns a spoken or typed description of a business into a clear
 
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — architectural decision record
-- [architecture.md](architecture.md) — pipeline, SSE, where things stand
+- [architecture.md](architecture.md) — pipeline, SSE, named identifiers,
+  where things stand
 - [pipeline](pipeline/README.md) — one doc per step (DAG: 01 find, 02 research, 03 Review, 04a
   interview; 04b out; build-profile, 05–09)
 - [persistence.md](persistence.md) — onboarding sessions, website activation

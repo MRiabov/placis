@@ -1,7 +1,8 @@
 # Details HTTP
 
 Conventions: [HTTP conventions](../../../general-architecture/api.md). Live business profile the rest of the app
-reads. Projects: [projects HTTP](../projects/api.md). Onboarding resume is [onboarding `/profile`](../../onboarding/api.md),
+reads. Projects: [projects HTTP](../projects/api.md). Onboarding resume is
+[onboarding `GET /v1/onboarding/profile`](../../onboarding/api.md),
 not this resource.
 
 ## Serve only types on HTTP

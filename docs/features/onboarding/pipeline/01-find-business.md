@@ -8,7 +8,7 @@ Business research (02) starts in the background. UI lands on Review (03).
 ## Trigger
 
 Contractor submits business lookup on `/onboarding/find`
-(`POST /v1/onboarding-sessions/business-lookup`) when this browser has no stored
+(`POST /v1/onboarding/business-lookup`) when this browser has no stored
 token.
 
 ## Pre
@@ -31,6 +31,9 @@ token.
 
 ## Do
 
+`LookupBusiness` inserts the unactivated tenant and onboarding session,
+then returns immediately.
+
 1. Insert [unactivated tenant](../../other/auth/persistence.md): `tenants.status=unactivated`, `clerk_org_id`
    null, `website_prefix` null, `name` = known legal/display name or empty,
    `country` = Find country (`ie` / `gb` / `us`).
@@ -43,7 +46,7 @@ token.
 3. Record `online_research_consent_at`.
 4. Persist the selected company registry record and/or attach the Maps place on
    **this** onboarding session (those typed keys). Wrong company is not a new
-   run: attach or change sources on the same row (`PATCH .../sources`).
+   run: attach or change sources on the same row (`PUT /v1/onboarding/sources`).
 5. Initialize [business profile](../../business-profile/details/persistence.md): `business_profiles` with that `tenant_id`,
    empty/unknown details, `last_edit_id` and `accepted_edit_id` null. Then
    increments via [build-profile](build-profile.md): registry fills legal identity (insert
@@ -76,8 +79,8 @@ Schemas: [persistence.md](../persistence.md), [ETL](../../etl/persistence.md), [
 - Missing consent or missing both sources → 4xx; no tenant, no onboarding
   session, no 02.
 - Registry/Maps lookup error → show miss; do not invent a business.
-- Restore path: stored token + `GET .../profile` failing → loading placeholder;
-  keep the token; retry; do not `POST`.
+- Restore path: stored token + `GET /v1/onboarding/profile` failing → loading
+  placeholder; keep the token; retry; do not `POST`.
 - 02 enqueue cap ([02](02-business-research.md)): business lookup still succeeds; 02 is not enqueued;
   `research_wait_until` is set. Not this Fail.
 

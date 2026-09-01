@@ -20,6 +20,6 @@
   token does not `POST` an onboarding session; a second business lookup with a
   stored token does not insert another `onboarding_sessions` row; UI lands on
   Review (`/onboarding/review`); no `website_pages` and no `website_prefix` yet.
-- **Fail**: restore with a stored token and failing `GET .../profile` keeps the
-  token and does not `POST`.
+- **Fail**: restore with a stored token and failing `GET /v1/onboarding/profile`
+  keeps the token and does not `POST`.
 - **Mocked**: registry parquet query and Google Maps autocomplete (fakes).

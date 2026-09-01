@@ -73,14 +73,15 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 
 | Today | Constrained API |
 | --- | --- |
-| Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding-sessions/business-lookup` |
+| Don't say setup: `POST /api/v1/setup-sessions` | `POST /v1/onboarding/business-lookup` |
 | Don't say setup: `…/from-google-place` | company registry / Maps on the business-lookup body (no `…/from-google-maps-listing`) |
-| Company registry search, Google Maps autocomplete | same nested under onboarding sessions |
-| `GET …/profile`, checklist | `…/profile`, `…/profile/checklist`, confirmations, details |
-| Text client interview autosave + submissions | client interview autosave + submissions |
-| Don't say setup: `GET …/events/stream` | `GET /v1/onboarding-sessions/{id}/events/stream` |
-| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | public checkout / activation-status (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
-| Don't say claim: `GET …/claim/status` | activation-status |
+| Company registry search, Google Maps autocomplete | `GET /v1/onboarding/find/search/company-registry`, `GET /v1/onboarding/find/search/google-maps` |
+| `GET …/profile`, checklist | `GET /v1/onboarding/profile` (fill status nested; no checklist, no confirmations) |
+| Text client interview autosave + submissions | `PUT /v1/onboarding/interview`; `POST /v1/onboarding/interview/complete` |
+| Don't say setup: `GET …/events/stream` | `GET /v1/onboarding/events/stream` |
+| Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | `POST /v1/onboarding/activation/checkout` (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
+| Don't say claim: `GET …/claim/status` | `GET /v1/onboarding/activation/status` |
+| Don't say preview-packages / leftover share POST | `POST /v1/onboarding/website/publications` |
 
 SSE drives Review, the client interview (live fill), and `/onboarding/preview`.
 The contractor host is static HTML; it is not an SSE endpoint.
@@ -116,6 +117,6 @@ The contractor host is static HTML; it is not an SSE endpoint.
 
 - Folder and types use onboarding, not the predecessor name.
 - Voice code is gone from first-pass `frontend-2`.
-- Generated types and MSW call `/v1/onboarding-sessions…` only.
+- Generated types and MSW call `/v1/onboarding/…` only.
 - Text client interview is the default `/onboarding/interview` surface.
 - Website activation copy and routes match 07. Don't say claim.

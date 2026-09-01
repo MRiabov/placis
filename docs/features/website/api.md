@@ -8,11 +8,9 @@ website address. Field authority for the website-editor PATCH body
 remains [editing.md](editing.md); this file locks DTO names and routes.
 
 **Auth default:** Clerk JWT, active tenant. Mutating Routes send
-`Idempotency-Key`. **Unactivated (app origin only):** unpublished GET
-(pages list, page by id, menus) allows onboarding session token or
-Clerk. PATCH pages / menus allows Clerk + unactivated tenant only
-(Assistant apply). Onboarding session token must not PATCH. Settings /
-styles / publication stay active tenant. Preview website address: no
+`Idempotency-Key`. Unactivated **403** on this tree (unpaid canvas is
+[onboarding website editor](../onboarding/api.md)). Settings / styles /
+publication stay active tenant. Preview website address: no
 website-editor GET/PATCH.
 
 Live business profile: [details](../business-profile/details/api.md).
@@ -39,8 +37,9 @@ spare, image file in the JSON, or expiring signed URL is 4xx).
 
 CMS unpublished `website_*` / `website.menus` / `website_settings`
 writes are only `POST` / `PATCH` on `/v1/website/editor/…` from
-`frontend-2`. Onboarding 05/06 write them in River, not via these
-routes.
+`frontend-2` (active tenant). Unpaid canvas is
+`PATCH /v1/onboarding/website/editor/…`. Onboarding 05/06 write them in
+River, not via these routes.
 
 ## DTOs
 
@@ -97,14 +96,14 @@ dotted Common variable paths. Extra keys 4xx. Not the Details
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/website/editor/pages` | CMS workspace; unpaid preview | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages` | | Optional `publication_id` owner version | `409` onboarding row | Preview host GET |
+| `GET /v1/website/editor/pages` | CMS workspace | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages` | | Optional `publication_id` owner version | `409` onboarding row; `403` unactivated | Preview host GET |
 | `POST /v1/website/editor/pages` | add page | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | Append menu node | | |
-| `GET /v1/website/editor/pages/{page_id}` | canvas hydrate; unpaid preview | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications` | | Optional `publication_id` or `include_edit_history` | `404`/`409`/`400` | `/pages/{id}/seo`; `slot_type=json`; return `website_manifest`; both query flags |
-| `PATCH /v1/website/editor/pages/{page_id}` | website editor | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Dirty keys only; 500ms coalesce | `409 edit_history_conflict`, `413`, `429` | See overflow |
+| `GET /v1/website/editor/pages/{page_id}` | canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications` | | Optional `publication_id` or `include_edit_history` | `404`/`409`/`400`; `403` unactivated | `/pages/{id}/seo`; `slot_type=json`; return `website_manifest`; both query flags |
+| `PATCH /v1/website/editor/pages/{page_id}` | website editor | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Dirty keys only; 500ms coalesce | `409 edit_history_conflict`, `413`, `429`; `403` unactivated | See overflow |
 | `GET /v1/website/editor/settings` | Website styles | `WebsiteEditorGet` | `WebsiteSettingsRead` | `website_settings` | | Optional `publication_id` | `409`/`400` | Logo on this body |
 | `PATCH /v1/website/editor/settings` | Website styles apply | `WebsiteSettingsUpdate` | `WebsiteEditApplyRead` | | `website_settings`, `edit_history` | Explicit apply | `409 edit_history_conflict` | |
-| `GET /v1/website/editor/menus` | menu editors; unpaid preview | `WebsiteEditorGet` | `WebsiteMenusRead` | `website.menus` | | Optional `publication_id` | `409`/`400` | `/top-menu` or `/footer` |
-| `PATCH /v1/website/editor/menus` | menu editors | `WebsiteMenusUpdate` | `WebsiteEditApplyRead` | | `website.menus`, `edit_history` | One row | `409 edit_history_conflict` | Menus on page PATCH |
+| `GET /v1/website/editor/menus` | menu editors | `WebsiteEditorGet` | `WebsiteMenusRead` | `website.menus` | | Optional `publication_id` | `409`/`400`; `403` unactivated | `/top-menu` or `/footer` |
+| `PATCH /v1/website/editor/menus` | menu editors | `WebsiteMenusUpdate` | `WebsiteEditApplyRead` | | `website.menus`, `edit_history` | One row | `409 edit_history_conflict`; `403` unactivated | Menus on page PATCH |
 | `GET /v1/website/editor/urls` | URL combobox | | `WebsiteUrlRead` | `website_urls` | | | | `POST /pages` from picker |
 | `POST /v1/website/editor/urls` | type to create | `WebsiteUrlCreate` | `WebsiteUrlRead` | | `website_urls` | | | Create a website page |
 
@@ -116,7 +115,7 @@ library item id. No GET-after-PATCH. `review_ids` over the website
 component max is `400`. Must not: predecessor `POST …/sections`,
 `PATCH …/sections/order`, `DELETE …/sections/{id}`,
 `POST …/slots/{key}/asset`. Top menu / footer are `/menus`. Unactivated
-PATCH: Clerk only; onboarding session token **403**.
+**403** (use `/v1/onboarding/website/editor/…`).
 
 ### Website publication
 
@@ -146,6 +145,8 @@ never `true`).
 - `/v1/tenants/{website_prefix}/website/…`
 - `/v1/public/site/…` (including resolve, meta, sitemap, assets)
 - leftover `/preview/{token}/` HTML or `GET …/public/site/resolve`
+- unactivated `/v1/website/editor/…` (use
+  `/v1/onboarding/website/editor/…`)
 - `POST /v1/website/addresses` with `type=subdomain`
 - blueprints, posts, careers
 - `/undo` `/redo` `/edit-history`

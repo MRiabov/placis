@@ -30,7 +30,8 @@ tenant row is [auth](../other/auth/persistence.md)
 - **Enums:** `type` → `subdomain` / `custom`; `status` → `reserved` /
   `pending` / `active` / `failed`
 - **Uniques:** `hostname`; at most one `is_primary=true` per `tenant_id`
-- **Written by:** onboarding 08/09 (`type=subdomain`);
+- **Written by:** `POST /v1/onboarding/website/publications` and
+  onboarding 09 (`type=subdomain`);
   `POST /v1/website/addresses` (`type=custom`)
 - **Notes:** Custom Hostnames columns are Connect website address, not
   website publication.
@@ -56,7 +57,8 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
 - **Uniques:** `(tenant_id, path)`
 - **Written by:** `CopyWebsiteTemplatePages`; `GenerateWebsiteCopy`
   (SEO columns); `POST /v1/website/editor/pages`;
-  `PATCH /v1/website/editor/pages/{page_id}`
+  `PATCH /v1/website/editor/pages/{page_id}`;
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}`
 
 ### `website_sections`
 
@@ -68,7 +70,8 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
   `business_research`
 - **Uniques:** `(page_id, position)` when `page_id` is set
 - **Written by:** `CopyWebsiteTemplatePages`;
-  `PATCH /v1/website/editor/pages/{page_id}`
+  `PATCH /v1/website/editor/pages/{page_id}`;
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}`
 - **Notes:** `page_id` null is the site-wide top-menu or footer look
   section. Structure of the bars is `website.menus`.
 
@@ -83,7 +86,8 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
   `website_copy_generation` / `owner` / `business_research`
 - **Uniques:** `(section_id, slot_key)`
 - **Written by:** `CopyWebsiteTemplatePages`; `GenerateWebsiteCopy`;
-  `PATCH /v1/website/editor/pages/{page_id}`
+  `PATCH /v1/website/editor/pages/{page_id}`;
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}`
 
 ### `website_forms`
 
@@ -93,7 +97,8 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
   `create_website_lead`
 - **Uniques:** `(tenant_id, form_key)`
 - **Written by:** `CopyWebsiteTemplatePages`;
-  `PATCH /v1/website/editor/pages/{page_id}`
+  `PATCH /v1/website/editor/pages/{page_id}`;
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}`
 
 ### `website_form_fields`
 
@@ -103,13 +108,15 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
   `marketing_phone` / `address` / `select` / `date` / `checkbox`
 - **Uniques:** `(form_id, field_key)`
 - **Written by:** `CopyWebsiteTemplatePages`;
-  `PATCH /v1/website/editor/pages/{page_id}`
+  `PATCH /v1/website/editor/pages/{page_id}`;
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}`
 
 ### `website_form_field_options`
 
 - **Columns:** `id`, `field_id` fk, `position`, `label`, `value`
 - **Written by:** `CopyWebsiteTemplatePages`;
-  `PATCH /v1/website/editor/pages/{page_id}`
+  `PATCH /v1/website/editor/pages/{page_id}`;
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}`
 
 ### `website.menus`
 
@@ -119,7 +126,9 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
 - **Written by:** `CopyWebsiteTemplatePages`;
   `POST /v1/website/editor/pages`;
   `PATCH /v1/website/editor/pages/{page_id}`;
-  `PATCH /v1/website/editor/menus`
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}`;
+  `PATCH /v1/website/editor/menus`;
+  `PATCH /v1/onboarding/website/editor/menus`
 - **Notes:** Hide = omit from the tree. Bar CTA values are always
   `{{marketing_phone}}` / `{{marketing_email}}`.
 
@@ -157,7 +166,8 @@ may replace a whole tree. Assistant `remove_entries` max 4.
 - **Enums:** `status` → `published` / `archived` / `rolled_back`;
   `published_by` → `onboarding` / `owner`
 - **Uniques:** `(tenant_id, version_number)`
-- **Written by:** `PublishWebsite`; onboarding 08/09;
+- **Written by:** `PublishWebsite`;
+  `POST /v1/onboarding/website/publications`; onboarding 09;
   `POST /v1/website/publications`;
   `POST /v1/website/publications/{id}/rollback`
 - **Notes:** Rollback lists `published_by=owner` only on that host.
@@ -175,7 +185,8 @@ may replace a whole tree. Assistant `remove_entries` max 4.
 - **Columns:** `id`, `tenant_id` fk, `slot_id` fk,
   `business_profile_review_id` fk, `position`
 - **Uniques:** `(slot_id, business_profile_review_id)`
-- **Written by:** `PATCH /v1/website/editor/pages/{page_id}` (owner
+- **Written by:** `PATCH /v1/website/editor/pages/{page_id}`;
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}` (owner
   Content / `update_reviews`)
 - **Notes:** 02 does not insert these rows. 03 must not
   `update_reviews`.
@@ -191,8 +202,11 @@ may replace a whole tree. Assistant `remove_entries` max 4.
   `website_form_field` / `website_settings` / `website_menus`; `op` →
   `set` / `clear` / `add` / `remove` / `update`
 - **Written by:** `PATCH /v1/website/editor/pages/{page_id}`;
+  `PATCH /v1/onboarding/website/editor/pages/{page_id}`;
   `PATCH /v1/website/editor/settings`;
-  `PATCH /v1/website/editor/menus`; `GenerateWebsiteCopy` (agent batches)
+  `PATCH /v1/website/editor/menus`;
+  `PATCH /v1/onboarding/website/editor/menus`;
+  `GenerateWebsiteCopy` (agent batches)
 - **Notes:** Keep the last **200** batches per tenant. Last writer lives
   only here. Do not keep leftover `website_assistant_threads`.
 
