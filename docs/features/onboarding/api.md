@@ -9,7 +9,7 @@ enqueues it.
 
 | Location | Persistence | HTTP |
 | --- | --- | --- |
-| Company registry / Maps search | raw ETL cache | `*Read` (id, name, address, …). **Omit** `raw`. |
+| Company registry / Maps search | registry parquet / Maps autocomplete (not `etl.*_fetches`) | `*Read` (id, name, address, …). **Omit** `raw`. |
 | Business research / ETL fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
 | Stripe event body | jsonb | **Omit.** Activation-status is a closed enum + checkout URL. |
 | Client interview extra notes | text | `string` + `maxLength`. |
@@ -57,7 +57,7 @@ collection `POST /v1/onboarding-sessions`.
 - **Auth:** onboarding session token
 - **Callers:** Resume and Review. Restore failure does not POST.
 - **Response:** onboarding session status, checklist `*Read`, research
-  conflicts, preview website address when 07 has reserved it,
+  conflicts, preview website address when 08 has reserved it,
   `research_wait_until`. This is **not** Details.
 - **Must not:** return ETL fetch `raw`.
 
@@ -80,7 +80,9 @@ collection `POST /v1/onboarding-sessions`.
 
 - **Auth:** onboarding session token
 - **Callers:** attach/change Google Maps listing or company registry record on
-  the **same** onboarding session (new `etl.StartRun`, same cap).
+  the **same** onboarding session (new `etl.StartRun`, same cap). Request
+  fields: `place_id` / `company_number` / `website_url` (named; extra keys
+  4xx).
 - **Idempotency-Key:** yes.
 - **Replaces:** predecessor `company-selection` / `imports` / `consents`.
 - **Errors:** `429` with `research_wait_until` when the enqueue cap would be

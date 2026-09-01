@@ -71,9 +71,9 @@ gaps.
 | Key | Group | Column / list | 02 may fill | Complete |
 | --- | --- | --- | --- | --- |
 | `display_name` | who | `display_name` | Maps | required |
-| `trade` | who | `trade` | crawl / directory | required |
+| `trade` | who | `trade` | crawl | required |
 | `description` | who | `description` | crawl | optional |
-| `founder` | who | founder columns | directory | optional |
+| `founder` | who | founder columns | crawl | optional |
 | `legal_name` | legal | `legal_name` | registry only | required if registry |
 | `company_number` | legal | `company_number` | registry only | required if registry |
 | `registered_office` | legal | `registered_office` | registry only | required if registry |
@@ -85,11 +85,11 @@ gaps.
 | `emergency_phone` | contact | `emergency_phone` | — | required |
 | `opening_hours` | contact | `business_profile_opening_hours` | Maps | optional |
 | `services` | work | `business_profile_services` | crawl | required |
-| `service_areas` | work | `business_profile_service_areas` | crawl / directory | required |
+| `service_areas` | work | `business_profile_service_areas` | crawl | required |
 | `accreditations` | certifications | list / notes | trade registry | optional |
 | `photos` | photos | media library | Maps / Facebook photos + ETL transform classification; owner upload | required enough photos (found + uploaded). Source from the internet / AI photo only if still short |
-| `reviews` | reviews | `business_profile_reviews` | Maps / Facebook; `reviews_ranking_for_display` orders the pool + pins **top reviews** | optional |
-| `projects` | photos | `business_profile.projects` | Facebook / Instagram / website crawl / reviews usable as a Project; rank top 4 for client interview | optional |
+| `reviews` | reviews | `business_profile_reviews` | Maps; ETL transform writes review citations. Facebook page reviews are not an extract this slice. `reviews_ranking_for_display` orders the pool + pins **top reviews** | optional |
+| `projects` | photos | `business_profile.projects` | Facebook / Instagram / website crawl / reviews usable as a Project; rank top 4 for client interview / 05 | optional |
 | `facebook_profile_url` | reviews | `facebook_profile_url` | Facebook | optional |
 
 Found photos are shown in the client interview. There is no `photos_choice`

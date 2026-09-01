@@ -14,7 +14,7 @@
   fakes. Project skip lives on `etl.llm_source_to_project_classifications`, not
   fetches or live HTML URLs. Extract + HTML insert two `etl.sources`. Image GETs
   are bounded (8).
-- **Fake**: Parallel Extract HTTP, own GET / goquery fixtures, directory, Apify
+- **Fake**: Parallel Extract HTTP, own GET / goquery fixtures, Apify
   webpage scraper (GET-fail path). Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search. CI does not measure API
   p90 during crawl (SLO is operational:
