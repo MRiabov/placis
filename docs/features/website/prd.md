@@ -71,10 +71,11 @@ text, rich text, images, lists, and links.
 A **Details** view edits the Business details subset of the business profile
 shown on the site ([details](../business-profile/details/README.md)). **Projects** are edited at `/cms/projects`
 ([projects](../business-profile/projects/README.md)). **Certifications and reviews** are edited at
-`/cms/certifications-and-reviews` ([certifications and reviews](../business-profile/certifications-and-reviews/README.md)). Each reviews
-website section has its own ordered `website_slot_reviews` from the pool (the
-LLM picks it; Content can change it). Ads use **top reviews**. A project gallery
-lists their projects.
+`/cms/certifications-and-reviews` ([certifications and reviews](../business-profile/certifications-and-reviews/README.md)). Reviews
+website sections first resolve `{{reviews.1}}` … from the ranked pool. Owner
+Content / `update_reviews` may later set that website section’s ordered
+`website_slot_reviews`. Ads use **top reviews**. A project gallery resolves
+`{{projects.*}}` at website publication.
 
 Website publication makes a **published website copy** of the site each time.
 Those screens update the website editor immediately; the live website changes
@@ -109,5 +110,5 @@ only on the next website publication. **Link your Facebook** is a Details link
    [billing](../billing/prd.md)).
 5. One end-to-end test covers edit → assistant → website publication → live HTML
    (fake R2 + fake purge) → website rollback → website form, with outside
-   services faked in tests but the core logic real. Apply the website template
-   is the onboarding E2E.
+   services faked in tests but the core logic real. Select and copy the website
+   template is the onboarding E2E.

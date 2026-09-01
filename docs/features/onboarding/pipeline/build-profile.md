@@ -88,8 +88,8 @@ gaps.
 | `service_areas` | work | `business_profile_service_areas` | crawl / directory | required |
 | `accreditations` | certifications | list / notes | trade registry | optional |
 | `photos` | photos | media library | Maps / Facebook photos + ETL transform classification; owner upload | required enough photos (found + uploaded). Source from the internet / AI photo only if still short |
-| `reviews` | reviews | `business_profile_reviews` | Maps / Facebook / review job; then LLM pins **top reviews** + review citations | optional |
-| `projects` | photos | `business_profile.projects` | Facebook / Instagram / website crawl / reviews usable as a Project; rank top 4 for client interview / 05 | optional |
+| `reviews` | reviews | `business_profile_reviews` | Maps / Facebook; `reviews_ranking_for_display` orders the pool + pins **top reviews** | optional |
+| `projects` | photos | `business_profile.projects` | Facebook / Instagram / website crawl / reviews usable as a Project; rank top 4 for client interview | optional |
 | `facebook_profile_url` | reviews | `facebook_profile_url` | Facebook | optional |
 
 Found photos are shown in the client interview. There is no `photos_choice`
@@ -105,12 +105,43 @@ Among business research origin `business_profile.projects` that are still
 2. Then longer text: `len(description) + len(title)`.
 3. Tie-break: newer `created_at`.
 
-**Top 4** are what 04a shows and what 05 puts on project-gallery website slots.
-SSE may reshuffle as scrape fills covers. `/cms/projects` lists all `active`
-extras. Client interview Archive sets `algorithm=human` and `archived` — that
-row leaves the pool; the next-complete `active` business research origin may
-appear. 05 freezes the gallery to the ranked four **at apply**. Later 02 /
-scheduled inserts add Profile rows only; they do not rewrite that gallery.
+**Top 4** are what 04a shows. Website 02 does **not** bake those ids into
+gallery slots (`{{projects.*}}` stay). SSE may reshuffle as scrape fills
+covers. `/cms/projects` lists all `active` extras. Client interview Archive
+sets `algorithm=human` and `archived` — that row leaves the pool; the
+next-complete `active` business research origin may appear. Later 02 /
+scheduled inserts add Profile rows only; they do not add service pages or
+rewrite a copied gallery token. The next website publication (04) resolves
+`{{projects.*}}` from the live profile.
+
+## Rank reviews (after ETL fast extract; again when ETL finishes)
+
+Onboarding orchestration. After **ETL fast extract** has written `in_pool`
+reviews, enqueue River job `reviews_ranking_for_display` — typically
+**in parallel** with client interview. That writes `is_top` /
+`top_position` and `top_reviews_provisional=true` while overlapping ETL
+is still running. Those pins are not locked: a later ranking job may
+replace them. They are not `algorithm=human`. `top_reviews_provisional`
+is not a skip key.
+
+When the last overlapping ETL run for this onboarding enqueue finishes:
+enqueue again if additional `in_pool` rows landed (replace pins,
+`top_reviews_provisional=false`). If no additional rows, leave the pins
+and set `top_reviews_provisional=false` — no second generate.
+
+**Scheduled ETL** (Monday / Wednesday / Friday): after a scheduled run
+**succeeds** and new `in_pool` rows landed, enqueue the same job
+**once** (not per chunk). Writes `top_reviews_provisional=false`. One
+replace of pins.
+
+ETL transform inserts review rows only; it does not rank. Profile does
+not enqueue. Website does not enqueue. Persist columns:
+[certifications-and-reviews ADR](../../business-profile/certifications-and-reviews/ADR.md).
+Job, `thread_kind`, `prompt_id`, I/O:
+[jobs](../../../general-architecture/jobs.md),
+[LLM layer](../../../general-architecture/llm-layer.md).
+`{{reviews.1}}` … resolve from that order. This is not
+`website_reviews_picker` when copying the website template’s pages.
 
 ## Status function (one winner)
 

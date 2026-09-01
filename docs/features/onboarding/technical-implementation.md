@@ -12,13 +12,15 @@ extract/transform are
 
 ## Flow
 
-`created → client_interviewing → applying_website_template → previewing → activated`
-(`apply_website_template_failed` if applying the website template throws).
-Business research runs in the background alongside review/client interview;
-applying the website template starts at client interview complete; automatic
-website copy generation runs after that and does not block website activation.
-Wait-end lands on the website preview (07 contractor copy improvement). 08 share
-(optional) writes the host.
+`created` → `client_interviewing` →
+`selecting_and_copying_website_template` → `preview_and_edit` →
+`activated`
+(`select_and_copy_website_template_failed` if 05 throws). Business research runs
+in the background alongside review/client interview; selecting and copying the
+website template starts at client interview complete; automatic website copy
+generation runs after that and does not block website activation. Wait-end lands
+on the website preview (07 contractor copy improvement). 08 share (optional)
+writes the host.
 
 ## HTTP
 
@@ -51,15 +53,16 @@ publication; website rollback of onboarding rows is refused
    applied to the live business profile in the same transaction
    (`SELECT … FOR UPDATE`, then those columns only).
 2. Surface research conflicts for the owner to review.
-3. At client interview complete, set `accepted_edit_id`; applying the website
-   template uses the profile as of that edit.
+3. At client interview complete, set `accepted_edit_id`; selecting and copying
+   the website template uses the profile as of that edit.
 
 ## Validation & testing
 
 - Tenant isolation for onboarding sessions, ETL runs, and profile rows.
 - Fakes force deterministic tests; CI never spends Google / LLM / Stripe quota
   (see [ci-cd.md](../../general-architecture/ci-cd.md)).
-- One E2E: find → review → client interview → apply the website template →
+- One E2E: find → review → client interview → select and copy the website
+  template →
   website preview → website activation (Google / LLM / Stripe faked, core logic
   unmocked). The website preview can be activated before automatic website copy
   generation finishes.

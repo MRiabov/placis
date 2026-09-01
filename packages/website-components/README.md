@@ -5,33 +5,38 @@ contractor website application and the `frontend-2` website editor canvas both
 render from it. It must not import `frontend-2`, shadcn CMS UI, or Kibo.
 
 Each registry folder owns a `contract.json` sidecar beside the renderer:
-identity, display name, props, website slots, design controls, and aliases. The
-Go backend will load those sidecars instead of duplicating website component
-schemas.
+identity, display name, props, website slots, design controls, and aliases. Go
+embeds a dump of those sidecars under `catalog/` instead of duplicating website
+component schemas. Model: [website catalog](../../docs/features/website/catalog.md).
 
-Website templates live as JSON + sidecars next to this package's website page
-factories (home, service, contact, legal, plus predecessor extras). Website
-style catalog presets live under `src/themes/`. First-pass page types for the
-rewrite are `home` / `service` / `contact` / `legal`. Blog and careers are
-deferred and are not in this package.
+Website templates are catalog JSON Go copies onto the unpublished website
+([02](../../docs/features/website/pipeline/02-copy-website-template-pages.md)).
+`src/blueprints/` is leftover predecessor page dumps, not the catalog.
+Website style catalog presets live under `src/themes/`. First-pass page
+types are `home` / `about` / `service` / `contact` / `legal`. Blog and
+careers are deferred and are not in this package.
 
 ## Website templates
 
-Reusable website templates are backend-readable factories, not a live website
-and not tenant-owned content. The backend validates them against website
-component `contract.json` files, then applies them to create unpublished website
-pages, website sections, website slots, website forms, top menu, and footer.
-Website template JSON is the contract. Selection and visual rules live in
-[website architecture](../../docs/features/website/architecture.md) and
+Reusable website templates are backend-readable catalog data, not a live
+website and not tenant-owned content. The backend validates them against
+website component `contract.json` files, then copies them onto unpublished
+website pages, website sections, website slots, website forms, and derives
+the top menu and footer. Website template JSON is the contract. Selection
+and visual rules live in
+[website architecture](../../docs/features/website/architecture.md),
+[website catalog](../../docs/features/website/catalog.md), and
 [website styles](../../docs/features/website/styles.md).
 
-`home.stub` is skeletal on purpose. Source-backed website templates recompose a
-reference site into website page structure + website section composition, then
-switch content (`{{business_name}}`, …) and remix colors via a website style
-catalog preset. Trade does not pick the website template 1:1.
+`home.stub` is skeletal on purpose. Source-backed files in `src/blueprints/`
+are design reference only and are not 01 picks. Trade does not pick the
+website template 1:1.
 
 `pnpm --dir packages/website-components check` runs the style,
-reference-boundary, and website-template intent guards.
+reference-boundary, and website-template intent guards. Production-ready
+website template CI (pages + variables coverage) cutover is
+[catalog.md](../../docs/features/website/catalog.md) and
+[ci-cd.md](../../docs/general-architecture/ci-cd.md).
 
 ## Website component IDs
 

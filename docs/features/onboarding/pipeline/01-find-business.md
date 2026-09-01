@@ -22,7 +22,7 @@ token.
 
 - `POST` an onboarding session on Find mount, on keystroke, or when a token is
   already stored.
-- Apply the website template, create a website preview, or wait for 02.
+- Select or copy the website template, create a website preview, or wait for 02.
 - Insert a second tenant or a second onboarding session for the same browser
   token.
 - Start 02 without `online_research_consent_at`.

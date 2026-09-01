@@ -5,10 +5,13 @@ Fail / Out / Invariants. This README is the index: status machine, screens,
 Resume, business-lookup-once, DAG. It does not retell the steps.
 
 The contractor never waits on business research. Business lookup returns
-immediately; business research fills the checklist in the background; applying
-the website template starts only after the client interview completes.
-`/onboarding/preview` waits for automatic website copy generation **or** a ~15s
-cap, then navigates to `/onboarding/preview-and-edit/`. 08 share is optional.
+immediately; business research fills the checklist in the background;
+selecting and copying the website template starts only after the client
+interview completes.
+`/onboarding/preview` waits until the **home** website page has automatic
+website copy generation, or the wait cap (~15s). Other website pages finish
+in parallel. Then wait-end navigates to `/onboarding/preview-and-edit/`.
+08 share is optional.
 09 does not wait for 06 and does not require 08.
 
 ## DAG
@@ -25,8 +28,10 @@ contractor sees Review.
 04a. text client interview (v1 writer)
 04b. voice client interview — **out**; do not implement
      build the profile — concurrent persist, not a wait
-05.  apply the website template (after client interview complete)
-06.  automatic website copy generation (async; wait teaser waits copy-done or cap; does not block 09)
+05.  select then copy the website template’s pages (after client interview complete)
+06.  automatic website copy generation (async; wait teaser waits until the
+     home website page has copy, or the wait cap; other website pages
+     finish in parallel; does not block 09)
 07.  contractor copy improvement (Assistant on the website preview; five unpaid prompts; does not block 09)
 08.  preview website address share (optional; reserve website prefix + preview website address; website publication + R2 strip on)
 09.  website activation (pay → activate tenant; complete unpaid Assistant thread; live R2 no strip)
@@ -43,19 +48,20 @@ contractor sees Review.
 ```
 
 SSE (`GET /v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from
-business lookup through applying the website template and copy. Postgres is
+business lookup through selecting and copying the website template and copy.
+Postgres is
 authoritative. Business research progress reads `etl.runs`.
 
 ## Onboarding session status
 
 `created` → `client_interviewing` (confirmed; 02 + 03 + 04a) →
-`applying_website_template` (client interview complete; 05 running) →
-`previewing` (wait-end; `/onboarding/preview-and-edit/`; 06 may still write
-copy; 07 may run; 08 share is optional) → `activated`.
-`apply_website_template_failed` if 05 throws. 06 failing does not change
-onboarding session status. The preview website address has no token and no TTL.
-The onboarding session has no `expired` status. Review (03) does not get its own
-status.
+`selecting_and_copying_website_template` (client interview complete; 05 running)
+→ `preview_and_edit` (wait-end; `/onboarding/preview-and-edit/`; 06 may still
+write copy; 07 may run; 08 share is optional) → `activated`.
+`select_and_copy_website_template_failed` if 05 throws. 06 failing does not
+change onboarding session status. The preview website address has no token and
+no TTL. The onboarding session has no `expired` status. Review (03) does not get
+its own status.
 
 ## Resume
 
@@ -70,8 +76,8 @@ second token and no server-side resume token.
 | Token present, `GET .../profile` failing | stay on a loading placeholder; keep the token; retry. Do not go to Find and do not `POST` |
 | `client_interviewing`, no client interview started | `/onboarding/review` (Review) |
 | `client_interviewing`, interview in progress (`channel` set or an autosave exists) | `/onboarding/interview` |
-| `applying_website_template` or `apply_website_template_failed` | `/onboarding/preview` (SSE carousel; same wait) |
-| `previewing` | `/onboarding/preview-and-edit/` |
+| `selecting_and_copying_website_template` or `select_and_copy_website_template_failed` | `/onboarding/preview` (SSE carousel; same wait) |
+| `preview_and_edit` | `/onboarding/preview-and-edit/` |
 | `activated` | clear storage; `/cms/website` |
 
 Business lookup creates the onboarding session **once** (01), when this browser
@@ -94,7 +100,7 @@ Canonical detail: [frontend.md](../frontend.md), [onboarding assistant](../assis
 - [04a-text-client-interview.md](04a-text-client-interview.md)
 - [04b-voice-client-interview.md](04b-voice-client-interview.md)
 - [build-profile.md](build-profile.md)
-- [05-apply-website-template.md](05-apply-website-template.md)
+- [05-select-and-copy-website-template.md](05-select-and-copy-website-template.md)
 - [06-website-copy-generation.md](06-website-copy-generation.md)
 - [07-contractor-copy-improvement.md](07-contractor-copy-improvement.md)
 - [08-preview-website-address.md](08-preview-website-address.md)
@@ -102,4 +108,10 @@ Canonical detail: [frontend.md](../frontend.md), [onboarding assistant](../assis
 
 ## Tests
 
-Each step has a matching integration test in [testing/](testing/01-find-business.md).
+Each step has a matching integration test in
+[testing/](testing/01-find-business.md). Those tests are backend
+integration (real Go + real Postgres). Prior-step rows are already in
+Postgres. Assert is every table that step writes, plus the next-step
+handoff in Postgres. Paid / external collaborators are faked. They do
+not defer to another file with “asserts hold”. Playwright E2E is
+[onboarding/testing.md](../testing.md).

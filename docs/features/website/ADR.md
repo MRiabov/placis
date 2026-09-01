@@ -25,10 +25,12 @@ Status: decided (2026-08-16, product owner + engineering).
    under `catalog/`; the backend loads and validates them, never hand-duplicates
    their schemas.
 
-5. **Website placeholders fill in at website publication** —
-   `{{business_name}}`, `{{marketing_phone}}`, `{{trade}}`, … pull from the
-   business profile when website publication runs; the unpublished website keeps
-   the website placeholders rather than inventing details.
+5. **Website placeholders stay tokens until the Worker resolves them** —
+   `{{business_name}}`, `{{marketing_phone}}`, `{{trade}}`, `{{reviews.1}}`, …
+   stay in unpublished rows and in the dump Go sends. Go does not resolve.
+   The Worker fills them for publication HTML and for copy-generation page
+   renders. Wait teaser and CMS canvas resolve in frontend-2 + the website
+   component package. (2026-08-16; Worker resolve, not Go, 2026-08-31)
 
 6. **The LLM drafts; the owner decides** — the **assistant** is another caller
    of the same website-editor / media-library execution the owner already uses
@@ -45,7 +47,14 @@ Status: decided (2026-08-16, product owner + engineering).
    `edit_history`. (2026-08-20; assistant configs + Apply/Reject terminal
    2026-08-23; Ask first 2026-08-23; attach-before-generate + shared
    media-library functions 2026-08-24; collapse + no dim 2026-08-26; CMS
-   assistant HTTP 2026-08-28)
+   assistant HTTP 2026-08-28) (2026-08-31): automatic website copy generation
+   (03) uses the same tools headless; no `update_reviews`; turn 1 and after each
+   `update_slot` Go `POST`s `websiteRender` (website image render on the
+   inference, not HTML). Go does not emit HTML. 04 is `websitePublication`
+   (website HTML render, no website image render). Select website template is
+   `website_template_picker` at 01, not at copy-pages. (2026-09-01):
+   `WebsiteBusinessProfileRead` is the Common variables bag on canvas hydrate
+   and both Worker requests.
 
 7. **Website publication is kept and can be rolled back** — website publication
    creates a `website_publications` row (a published website copy); website
@@ -110,11 +119,13 @@ Status: decided (2026-08-16, product owner + engineering).
     Worker is write-thin against this serve path (live GET never calls Go).
     Remaining live-site work is R2 `latest/`, website publication HTML, Custom
     Hostnames, and Connect website address. Website publication is not a
-    Cloudflare deploy. There is no per-request unpublished render. Website
-    address uses Custom Hostnames, not Pages. See [cloudflare.md](cloudflare.md),
-    [contractor-website-debloat.md](contractor-website-debloat.md), [port-contractor-website.md](port-contractor-website.md), and ADR
-    18–20. (2026-08-20; edge locked 2026-08-21; imported 2026-08-23; Worker
-    write-thin 2026-08-23; token preview dropped 2026-08-25)
+    Cloudflare deploy. There is no per-request unpublished render for website
+    visitors. Copy generation (03) uses `websiteRender` (no R2). Website
+    publication uses `websitePublication`. Website address uses Custom
+    Hostnames, not Pages. See [cloudflare.md](cloudflare.md), [contractor-website-debloat.md](contractor-website-debloat.md),
+    [port-contractor-website.md](port-contractor-website.md), and ADR 18–20. (2026-08-20; edge locked
+    2026-08-21; imported 2026-08-23; Worker write-thin 2026-08-23; token preview
+    dropped 2026-08-25)
 
 16. **Certifications and reviews picker is a Profile screen** —
     `/cms/certifications-and-reviews`. Picker rules, top reviews, archive, and
@@ -136,6 +147,19 @@ Status: decided (2026-08-16, product owner + engineering).
     review from every website section array and from top reviews. Empty array:
     keep the website section (no fake copy; do not hide the website component).
     Origins, archive, and create owner-written stay on the picker ADR.
+
+    (2026-08-31): Do not pick `website_slot_reviews` when copying template
+    pages. **LLM ranking** after ETL fast extract writes provisional `is_top` /
+    `top_position` (not locked). After ETL finishes, rank again if additional
+    review rows landed, then write persistent pins. `{{reviews.1}}` … resolve
+    from that order. Website 03 must not `update_reviews`. Owner Content /
+    `update_reviews` can still override a section later.
+
+    (2026-08-31, later): Website does **not** own ranking. 02 keeps
+    `{{reviews.N}}` and does not insert `website_slot_reviews`. 03 must not
+    `update_reviews`. Hydrate / 04 read the ranked pool. Ranking is River job
+    `reviews_ranking_for_display` ([build-profile](../onboarding/pipeline/build-profile.md), [jobs](../../general-architecture/jobs.md)). Owner Content /
+    `update_reviews` can still override a section later.
 
     (2026-08-26): Certification definitions and selections are Details /
     business-profile tables (`certification_definitions`,

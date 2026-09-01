@@ -13,10 +13,67 @@ Maps scrape stay in-process; API p90-delta during scrape:
 [processes.md](processes.md).
 
 Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/09-website-activation.md). Onboarding
-[automatic website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md) is a River job after applying the website
-template; it must not block the website preview. Compaction **skips**
-`ai.threads` `thread_kind=cms_assistant` whose tenant is `status=unactivated`
-(unpaid current must not compact).
+[automatic website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md)
+([website 03](../features/website/pipeline/03-website-copy-generation.md)) is
+River job `website_copy_generation` after copying the website template’s
+pages onto the unpublished website; it must not block the website
+preview. Unique key = `tenant_id`.
+[Reviews ranking for display](#reviews-ranking-for-display) is a separate
+River job. Compaction **skips** `ai.threads` `thread_kind=cms_assistant`
+whose tenant is `status=unactivated` (unpaid current must not compact).
+
+## Automatic website copy generation
+
+River job enum value `website_copy_generation`. Same job as onboarding 06
+(enqueue, wait teaser, unpaid lock) and website 03 (website slot writes). Args:
+`tenant_id` only. Unique key: `tenant_id` while pending/running. A second
+enqueue while the first is in flight is a River unique conflict → HTTP
+**409**. Do not HTTP-check uniqueness before insert (it races). After 09
+the leftover job stays in schema `jobs` on that `tenant_id` (not
+cancelled). CMS PATCH / assistant HTTP are **not** 409 because this job
+is running (`assistant.runs` is a different lock).
+
+`thread_kind=website_copy_generation`, `prompt_id=website_copy_generation` in
+the onboarding package `prompts.yaml`. Worker: [website 03](../features/website/pipeline/03-website-copy-generation.md) (`websiteRender`).
+Routes: [website HTTP](../features/website/api.md).
+
+## Reviews ranking for display
+
+River job enum value `reviews_ranking_for_display`. Args: `tenant_id` only.
+Unique key: `tenant_id` while pending/running. A second insert while the
+first is in flight is a River unique conflict — treat as already queued.
+Not HTTP 409 (nothing HTTP-enqueues this). After the first completes, a
+later enqueue on the same tenant is allowed.
+
+The worker always loads `in_pool` reviews, generates, and replaces
+`is_top` / `top_position` (skip `algorithm=human`). Same replace as
+Certifications and reviews PATCH. In that transaction it sets
+`business_profiles.top_reviews_provisional`: **true** if overlapping ETL
+for this onboarding enqueue is still running, else **false**. Scheduled
+ranking always writes **false** (the run already `succeeded`). Args:
+`tenant_id` only. No pass field. No `onboarding_session_id`.
+
+`top_reviews_provisional` is not a skip key. A later
+`reviews_ranking_for_display` may replace pins until owner PATCH sets
+`algorithm=human` (and `top_reviews_provisional=false`). When to enqueue
+is orchestration (below). When that enqueue’s ETL finishes with **no**
+extra `in_pool` rows: set `top_reviews_provisional=false` without a
+second generate.
+
+`internal/jobs` worker calls the profile function. LLM:
+`thread_kind=reviews_ranking_for_display`,
+`prompt_id=reviews_ranking_for_display` in the profile package
+`prompts.yaml`. Input: current `in_pool` rows (id, citation/body, rating,
+origin, `published_at`). Output: ordered `review_ids[]`, length 1–30,
+each id in that pool. Prompt prose, ranking heuristics, and dated model
+id are unspecified. Not stars or recency.
+[LLM layer](llm-layer.md).
+
+**Onboarding** enqueue: [build-profile](../features/onboarding/pipeline/build-profile.md) (after ETL fast extract has `in_pool`
+reviews; again when that enqueue’s overlapping ETL runs finish if additional
+rows landed). **Scheduled ETL** (Monday / Wednesday / Friday): after a scheduled
+run **succeeds** and new `in_pool` rows landed, enqueue **once** (not per
+chunk). ETL transform does not rank. Website does not enqueue this job.
 
 ## Assistant thread compaction
 

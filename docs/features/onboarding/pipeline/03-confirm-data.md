@@ -23,7 +23,7 @@ started (`channel` unset, no autosave) also lands here.
 
 - Create or replace an onboarding session.
 - Start or cancel 02.
-- `POST .../interview/complete` or apply the website template.
+- `POST .../interview/complete` or select and copy the website template.
 - Wait for 02 to finish before Continue is enabled.
 - Turn the research wait into a modal, a full-screen stop, or a disabled
   Continue.
