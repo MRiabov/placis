@@ -2,7 +2,38 @@
 
 ETL is extract **and** transform. Extract persists raw fetches and the Google
 Maps listing. Transform is business logic: it writes the business profile.
-Callers do not inline either step.
+Callers do not inline either step. Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+
+## Named identifiers
+
+Pipeline **Do** functions (same spelling in spec, Go, and tests):
+
+- `StartRun` — `internal/etl` (`run.go`)
+- `extract/googlemaps.Run` —
+  [Google Maps](pipeline/google-maps.md)
+- `transform/googlemaps.Run` —
+  [Google Maps](pipeline/google-maps.md)
+- `extract/facebook.Run` — [Facebook](pipeline/facebook.md)
+- `transform/facebook.Run` — [Facebook](pipeline/facebook.md)
+- `extract/instagram.Run` — [Instagram](pipeline/instagram.md)
+- `transform/instagram.Run` — [Instagram](pipeline/instagram.md)
+- `extract/crawl.Run` — [website crawl](pipeline/website-crawl.md)
+- `transform/crawl.Run` — [website crawl](pipeline/website-crawl.md)
+- `extract/websearch.Run` — [web search](pipeline/web-search.md)
+- `transform/websearch.Run` — [web search](pipeline/web-search.md)
+- `extract/traderegistry.Run` —
+  [trade registry](pipeline/trade-registry.md)
+- `transform/traderegistry.Run` —
+  [trade registry](pipeline/trade-registry.md)
+- `transform/projects.Run` —
+  [Projects from source](pipeline/projects.md)
+
+River job kinds **call** those functions
+([jobs](../../general-architecture/jobs.md)). Tables:
+[persistence.md](persistence.md). `StartRun` is orchestration only (not a
+pipeline step file). Transform **inserts** `describe_image` (media
+`DescribeImage`); there is no `transform/photo`.
 
 An **ETL run kind** (`etl.runs.etl_run_kind`) starts when it has the details it
 needs. Registry: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md).

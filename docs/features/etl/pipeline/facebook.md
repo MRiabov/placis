@@ -32,34 +32,55 @@ this ETL run kind on this enqueue.
 
 ## Do — extract
 
-Set `status=extracting`. Facebook lookup. Insert `etl.facebook_fetches` (UUID,
-Facebook page id / URL, handle, `raw`, `run_id`, `fetched_at`) as each response
-arrives; transform that chunk before waiting for later posts. Retry of this
-`run_id` does not insert a second fetch for the same Facebook page id already
-landed. A later run after a `schema_revision` bump extracts again.
+`extract/facebook.Run` sets `status=extracting`. Facebook lookup. Insert
+`etl.facebook_fetches` (UUID, `facebook_page_id`, `facebook_profile_url`,
+`handle`, `raw`, `run_id`, `fetched_at`) as each response arrives;
+transform that chunk before waiting for later posts. Retry of this
+`run_id` does not insert a second fetch for the same `facebook_page_id`
+already landed. A later run after a `schema_revision` bump extracts
+again.
 
 ## Do — transform
 
-`status=transforming`. Ensure `etl.sources` for the Facebook profile and each
-post. Upsert `facebook_profiles` on this contractor’s Facebook page id unless
-`algorithm=human` (`source_id` required). Upsert `facebook_posts` on
-`external_id` (insert only ids we do not already have; skip existing rows whose
-`algorithm` matches **and** `schema_revision` matches, or is `human`). Fill
-empty `facebook_profile_url` (cite the profile `source_id` on that increment).
-Attach new photos into the media library (`imported_media_sources` → post
-`source_id`); **calls** `WriteImageThumbnail`; then **inserts** `describe_image`
-per new row with no classification yet (do not wait); then [projects.md](projects.md) for
-posts that are a past named job (depicting photo required). Write `algorithm`
-and `schema_revision` on rows this transform set.
+`transform/facebook.Run` sets `status=transforming`. Ensure `etl.sources`
+for the Facebook profile and each post. Upsert `facebook_profiles` on
+this contractor’s `facebook_page_id` unless `algorithm=human`
+(`source_id` required). Upsert `facebook_posts` on `external_id` (insert
+only ids we do not already have; skip existing rows whose `algorithm`
+matches **and** `schema_revision` matches, or is `human`). Fill empty
+`facebook_profile_url` (cite the profile `source_id` on that increment).
+Attach new photos into the media library (`imported_media_sources` →
+post `source_id`); **calls** `WriteImageThumbnail`; then **inserts**
+`describe_image` per new row with no classification yet (do not wait);
+then [projects.md](projects.md) for posts that are a past named job
+(depicting photo required). Write `algorithm` and `schema_revision` on
+rows this transform set.
+
+## Reads
+
+`etl.runs`; `etl.facebook_fetches` for this `run_id` (retry);
+`facebook_profiles` / `facebook_posts`; `business_profiles`.
+
+## Calls
+
+`WriteImageThumbnail`. `transform/projects.Run` (transform, after posts
+usable as a Project).
+
+## Inserts
+
+Extract **inserts** `facebook_transform` after each chunk. Transform
+**inserts** `facebook_extract` when post chunks remain. Transform
+**inserts** `describe_image` per new imported row with no classification
+yet (do not wait).
 
 ## Persist
 
-`etl.facebook_fetches`; `etl.sources`; `facebook_profiles` / `facebook_posts`;
-`business_profile_edits` + `business_profile_edit_sources` when a live profile
-URL / photo increment is set; `imported_media_sources`; **calls**
-`WriteImageThumbnail`; **inserts** `describe_image` per new imported row with
-no classification yet; Projects when a post
-is usable as a Project. `etl.runs.status=succeeded`.
+Extract **persists into** `etl.facebook_fetches`; `etl.sources`.
+Transform **persists into** `facebook_profiles` / `facebook_posts`;
+`business_profile_edits` + `business_profile_edit_sources` when a live
+profile URL / photo increment is set; `imported_media_sources`; Projects
+when a post is usable as a Project. **Persists into**
+`etl.runs.status=succeeded`.
 
 ## Fail
 

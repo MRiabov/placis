@@ -8,20 +8,11 @@ var persistClosedHeads = map[string]bool{
 }
 
 // Leftover grouping ## on undefined feature persistence.md files. Ceiling:
-// extras may only shrink. Website, billing, ads, assistant,
-// onboarding, auth, and the media library have none (## Tables + ## Indexes). Intro-only files
-// (Details, Projects) have no ## yet.
-var persistHeadingLeftover = map[string][]string{
-	"etl/persistence.md": {
-		"Runs",
-		"Sources (live extract identity)",
-		"Fetches (append-only, one table per extract type)",
-		"Website crawled URLs (live row, no `raw`)",
-		"`imported_media`",
-		"Google Maps listing (live row, no `raw`)",
-		"Project verdict (skip)",
-	},
-}
+// extras may only shrink. Website, billing, ads, assistant, onboarding,
+// auth, the media library, and ETL have none (## Tables + ## Indexes).
+// Intro-only files (Projects) have no ## yet. Details has Tables + Indexes
+// for Facebook / Instagram profile and post rows only.
+var persistHeadingLeftover = map[string][]string{}
 
 func checkPersistHeadings(r report) []string {
 	var errs []string

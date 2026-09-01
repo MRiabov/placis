@@ -49,9 +49,10 @@ ETL run kinds start
 
 `etl.runs` only for started ETL run kinds (shared `enqueue_id`),
 `etl.sources`, `google_maps_fetches` / `facebook_fetches` /
-`instagram_fetches`, `google_maps_listings`, `facebook_posts` /
-`instagram_posts`, media library photos via `imported_media` /
-`imported_media_sources`. `business_profile_opening_hours` has rows,
+`instagram_fetches` / `web_search_fetches`, `google_maps_listings`,
+`facebook_posts` / `instagram_posts`, media library photos via
+`imported_media` / `imported_media_sources`.
+`business_profile_opening_hours` has rows,
 `business_profiles.marketing_phone` is set, and first
 `business_profile_reviews` exist while scrape `etl.runs.status` is
 still in flight; later scrape **persists into** further

@@ -6,12 +6,15 @@
   Facebook URL, and Instagram handle are already set. Parallel **Search** is
   called through Vercel AI Gateway, seeded from the company registry record
   (`legal_name`, `company_number`, country, `registered_office`) and/or Maps
-  `display_name`. A missing `place_id` or URL becomes a detail and starts Maps
-  / crawl on the same enqueue before Parallel finishes. A Find-attached
-  `place_id` is not overwritten; Facebook / Instagram handles from Search still
-  land when empty. This ETL run kind is absent from Monday / Wednesday / Friday.
-  Never Parallel Search HTTP from this ETL run kind. Extract HTTP is crawl, not
-  web-search. Never Exa, Perplexity, Tako, `:online`, OpenRouter web search.
+  `display_name`. Persist Parallel gateway dumps into `web_search_fetches`;
+  retry of this `run_id` reuses a fetch that already landed. A missing
+  `place_id` or URL becomes a detail and starts Maps / crawl on the same
+  enqueue before Parallel finishes. A Find-attached `place_id` is not
+  overwritten; Facebook / Instagram handles from Search still land when
+  empty. This ETL run kind is absent from Monday / Wednesday / Friday.
+  Never Parallel Search HTTP from this ETL run kind. Extract HTTP is crawl,
+  not web-search. Never Exa, Perplexity, Tako, `:online`, OpenRouter web
+  search. Transform does not write Parallel prose onto the profile.
 - **Fake**: Vercel Parallel Search (Gateway).
 
-Named tables: `etl.runs`.
+Named tables: `etl.runs`, `web_search_fetches`.
