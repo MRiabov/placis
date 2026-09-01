@@ -205,8 +205,8 @@ not create leftover `/preview/{token}/` HTML. Do not put these on live
 GET.
 
 Go structs are the source. Worker typegens from a **separate** OpenAPI
-file (not `GET /openapi.json`). Routes, DTOs, and `$ref` for
-`WebsiteBusinessProfileRead` and `media_asset_urls`:
+file (not `GET /openapi.json`). Routes, DTOs, `$ref`, and the known
+omission (Worker is the HTTP server; that inversion may cause issues):
 [website HTTP](../features/website/api.md).
 Auth: shared secret / service binding (out of the JSON body). Binding
 **name** is not this file.
