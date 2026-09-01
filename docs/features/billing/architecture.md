@@ -52,15 +52,13 @@ Nested image or ads work from a Voice tool (cleanup, `generate_image`, ads
 generate) is **additional** ×5, tagged Image or Text, not rolled into the
 minute.
 
-Go never sees PCM. xAI's Speech to Speech docs do **not** attach a token-style
-usage object on `response.done`. Settle from
-**measured audio duration both directions** (audio we sent + audio we received)
-plus the count of billed text `conversation.item.create` events, posted on
+Go never sees PCM. Settle from `AssistantVoiceUsage` on
 `POST /v1/assistant/voice/transcripts` (including a usage-only POST when Voice
-turns off with no new visible text) and when the realtime connection closes.
-Prefer an xAI usage payload if one appears later. Do **not** debit wall-clock of
-an open socket (silence is not AI voice vendor cost). Do not invent
-`input_tokens` / `output_tokens` from minutes.
+turns off with no new visible text): `audio_seconds_sent`,
+`audio_seconds_received`, `billed_text_item_count`
+([assistant HTTP](../assistant/api.md)). Extra keys 4xx. Do **not** debit
+wall-clock of an open socket (silence is not AI voice vendor cost). Do not
+add `input_tokens` / `output_tokens` on that body.
 
 Seed knowledge and profile in the realtime-connection **instructions**, not as
 a stack of billed text items. Do not replay the assistant thread as

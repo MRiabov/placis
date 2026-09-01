@@ -1,12 +1,35 @@
 # Assistant architecture
 
 Logic: what is in context, how tools are allowed, how text and voice share one
-dispatcher, when rows are written, which HTTP error maps to which gate. Tables:
-[persistence.md](persistence.md). HTTP contract: [api.md](api.md). Assistant
-look: [design decision record](design-decision-record.md).
+dispatcher, when rows are written, which HTTP error maps to which gate. Named
+identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+Tables: [persistence.md](persistence.md). HTTP contract: [api.md](api.md).
+Assistant look: [design decision record](design-decision-record.md).
 
-Those two files are the contract (fields, errors, columns, indexes). This file
-is how the system behaves. Do not retell this file in api or persistence.
+Those two files are the contract (fields, errors, columns, indexes). This
+file is how the system behaves. Do not retell this file in api or persistence.
+
+## Named identifiers
+
+HTTP (same spelling in spec, Go, and tests):
+
+- `GetAssistantThread` — `GET /v1/assistant/thread`
+- `CreateAssistantThread` — `POST /v1/assistant/thread/new`
+- `RecordAssistantApply` — `POST /v1/assistant/record-apply`
+- `RecordAssistantReject` — `POST /v1/assistant/record-reject`
+- `CreateAssistantVoiceRealtimeConnection` —
+  `POST /v1/assistant/voice/realtime-connection`
+- `CreateAssistantVoiceToolCalls` — `POST /v1/assistant/voice/tool-calls`
+- `CreateAssistantVoiceTranscripts` — `POST /v1/assistant/voice/transcripts`
+- `CreateAssistantVoiceRecording` — `POST /v1/assistant/voice/recordings`
+- `CompleteAssistantVoiceRecording` —
+  `POST /v1/assistant/voice/recordings/{id}/complete`
+
+Text WebSocket + in-process agent loop: `StreamAssistantThread`
+(`GET /v1/assistant/thread/ws`). Job / in-process compact:
+`CompactAssistantThread` ([jobs](../../general-architecture/jobs.md)). DTOs
+and Routes: [api.md](api.md).
 
 ## Always in context
 
@@ -455,7 +478,7 @@ off Details: notification (OK / Revert). No owner Plan switch on Voice.
 ## Compaction
 
 After 12 hours of inactivity (`ai.threads.last_activity_at`,
-`thread_kind=cms_assistant`), a River job
+`thread_kind=cms_assistant`), `CompactAssistantThread` (River job)
 summarizes older **thread** items in place: keep the last **3 owner** and last
 **3 assistant** items (plus `tool_summary` / `thinking` in that tail); older
 items become **one** `assistant` summary; `compacted_through_item_id` advances.
@@ -464,9 +487,9 @@ id**, not `*-latest`). New `ai_generations` row for that call; no usage-credit
 debit. Does not rewrite existing `ai_generations` rows. Compaction keeps the
 thread `id`. Clear context is `POST /v1/assistant/thread/new`, not compaction.
 
-The **same function** runs when text prompt assembly would exceed 128K tokens,
-or when Voice **instructions** would be too large to send (do not wait 12h).
-Not a live-xAI context trim. There is **no 24h discard job**. Compaction
+`CompactAssistantThread` also runs when text prompt assembly would exceed 128K
+tokens, or when Voice **instructions** would be too large to send (do not wait
+12h). Not a live-xAI context trim. There is **no 24h discard job**. Compaction
 **skips** threads whose tenant is `status=unactivated` (onboarding website
 editor unpaid `current` must not compact).
 

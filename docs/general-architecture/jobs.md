@@ -77,7 +77,8 @@ chunk). ETL transform does not rank. Website does not enqueue this job.
 
 ## Assistant thread compaction
 
-River job **and** the same in-process function. Triggers:
+`CompactAssistantThread` is a River job **and** the same in-process
+function. Triggers:
 
 - `ai.threads.last_activity_at` older than **12 hours**
   (`thread_kind=cms_assistant`)
