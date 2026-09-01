@@ -304,9 +304,9 @@ on these DTOs (same as CMS: no `map[string]any`, no
 `additionalProperties: true`).
 
 **Known omission:** the Worker is the HTTP server; that side usually owns
-OpenAPI. Go owns this file so `WebsiteBusinessProfileRead` stays one
-struct (CMS + Worker `$ref`) and export stays the huma pipeline. That
-inversion may cause issues.
+OpenAPI. Product owner chose Go as source (not an agent) so
+`WebsiteBusinessProfileRead` stays one struct (CMS + Worker `$ref`) and
+export stays the huma pipeline. That inversion may cause issues.
 
 Maps are `map` keyed by **website page id** → typed page schema. OpenAPI
 `additionalProperties` is that page schema, never `true`.
