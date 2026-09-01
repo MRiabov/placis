@@ -36,10 +36,17 @@ type stepFile struct {
 	tables   []string
 }
 
+type apiFile struct {
+	path  string
+	rel   string
+	heads []string
+}
+
 type report struct {
 	known        map[string]bool
 	persistFiles []persistFile
 	steps        []stepFile
+	apiFiles     []apiFile
 }
 
 func inspect(root string) (report, error) {
@@ -63,6 +70,12 @@ func inspect(root string) (report, error) {
 			for _, t := range p.tables {
 				r.known[t] = true
 			}
+		case strings.HasSuffix(slash, "/api.md"):
+			a, err := parseAPIFile(root, path)
+			if err != nil {
+				return err
+			}
+			r.apiFiles = append(r.apiFiles, a)
 		case isPipelineStep(slash):
 			s, err := parseStep(path)
 			if err != nil {
@@ -77,6 +90,7 @@ func inspect(root string) (report, error) {
 	}
 	sort.Slice(r.persistFiles, func(i, j int) bool { return r.persistFiles[i].path < r.persistFiles[j].path })
 	sort.Slice(r.steps, func(i, j int) bool { return r.steps[i].path < r.steps[j].path })
+	sort.Slice(r.apiFiles, func(i, j int) bool { return r.apiFiles[i].path < r.apiFiles[j].path })
 	return r, nil
 }
 

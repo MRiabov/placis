@@ -41,4 +41,4 @@ repos:
         language: system
         entry: go run ./cmd/ci/check-pipeline-tables
         pass_filenames: true
-        files: '^docs/features/.*/(persistence|testing)\.md$|^docs/features/.*/pipeline/.*\.md$'
+        files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$'

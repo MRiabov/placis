@@ -189,7 +189,9 @@ does). We do **not** hand-roll AST scripts up front:
   step files pair with `pipeline/testing/<name>.md`; **known** persistence
   tables in a step appear in that testing file; every persistence table
   appears in `testing.md` and/or `pipeline/testing/` when those files
-  exist; pipeline step `##` headings are a closed list. Missing
+  exist; pipeline step `##` headings are a closed list; feature `api.md`
+  `##` is DTOs / Routes / Do not create, with a shrink-only leftover list
+  for undefined features. Missing
   `testing.md` (media library / leads / Details / Projects) does not
   fail; a changed `persistence.md` passed on the command line without
   `testing.md` warns. See
@@ -268,16 +270,19 @@ parse failure is the failure.
 
 `cmd/ci/check-pipeline-tables` enforces the table pairing and pipeline step
 heading lists in [docs conventions](../docs-conventions.md#named-identifiers). Unit tests + `go run`. Pre-commit on
-`docs/features/**/{persistence,testing}.md` and
+`docs/features/**/{persistence,testing,api}.md` and
 `docs/features/**/pipeline/**/*.md`. CI:
 `.github/workflows/check-pipeline-tables.yml` runs
 `go test ./cmd/ci/check-pipeline-tables` then
 `go run ./cmd/ci/check-pipeline-tables --all`.
 
-This pass: **tables** and **pipeline step headings**. Not Routes paths, not
-`api.md` headings, not gatherers (`pipeline/README.md`,
-`etl/pipeline/etl-run-kind-triggers.md`). Pairing matches **known** table
-names (already in some
+This pass: **tables**, **pipeline step headings**, and **feature `api.md`
+headings**. Not Routes paths, not gatherers (`pipeline/README.md`,
+`etl/pipeline/etl-run-kind-triggers.md`). Closed `api.md` `##` is DTOs
+(optional), Routes, Do not create. Undefined features keep a leftover
+extra-heading list in `cmd/ci/check-pipeline-tables`; extras may only
+shrink (drop the leftover entry in the same PR). Pairing matches **known**
+table names (already in some
 `persistence.md`); invented names and columns are writing rules. Warn
 (do not fail) when a changed `persistence.md` is passed on the command
 line and that feature has no `testing.md`. `--all` with no extra paths

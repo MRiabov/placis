@@ -208,8 +208,10 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 - `## Do not create`
 
 Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays.
-`###` only as Routes overflow: `### METHOD /path` when a table cell would
-be a paragraph. No `###` under DTOs.
+CI ratchets leftover extra `##` on undefined features (extras may only
+shrink). Website and billing have none. `###` only as Routes overflow:
+`### METHOD /path` when a table cell would be a paragraph. No `###`
+under DTOs.
 
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`.
 Overflow is `###` under a table, not a new `##`.
