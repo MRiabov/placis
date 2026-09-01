@@ -42,12 +42,13 @@ when 03/04 run (no `wrangler deploy`). DB asserts use [persistence.md](persisten
    `/onboarding/preview` SSE carousel, then `/onboarding/preview-and-edit/`
    (home website page copy done or wait cap; other website pages may still
    be generating).
-   - DB: `website_settings` (`website_template_id`, `preset_id`); unpublished
-     `website_pages` / `website_sections` (including look sections) / tokenized
-     `website_slots`; derived `website.menus`; onboarding session
-     `preview_and_edit` at wait-end. Schema `jobs`: `website_copy_generation` on
-     `tenant_id`. `website_prefix` is **not** required until share or 09. Zero
-     `website_publications` until 08/09.
+   - DB: `website_settings` (`website_template_id`, `preset_id`); no
+     `website_template_picker` thread; unpublished `website_pages`
+     (including `page_type=about`) / `website_sections` (including look
+     sections) / tokenized `website_slots`; derived `website.menus`;
+     onboarding session `preview_and_edit` at wait-end. Schema `jobs`:
+     `website_copy_generation` on `tenant_id`. `website_prefix` is **not**
+     required until share or 09. Zero `website_publications` until 08/09.
    - UI: live unpublished canvas. Assistant prompt → PATCH → pay is
      [assistant testing](../assistant/testing.md) (onboarding website editor).
 

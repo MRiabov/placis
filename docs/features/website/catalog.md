@@ -2,8 +2,9 @@
 
 The catalog object [01](pipeline/01-select-website-template.md) picks and
 [02](pipeline/02-copy-website-template-pages.md) copies. Go parses a **typed
-model** (extra keys rejected). Style is `website_settings.preset_id`, not a
-field on the website template.
+model** (extra keys rejected). 01 sets `website_settings.preset_id` from that
+website template’s associated website style catalog preset. Style is that
+column, not a field 02 reads off the website template JSON.
 
 Predecessor `packages/website-components/src/blueprints/` page dumps are
 scrap. Registry **renderers** and the idea of `contract.json` beside a
@@ -179,12 +180,11 @@ status, and DB-oracle tests stay as they are.
 **First pass extra pages.** Gallery website page, services index website
 page, testimonials website page, terms of service, cookies.
 
-**Website 01 picker — out until the stacked rewrite.** Persist columns
-are named (`website_template_id`, `preset_id`). Unspecified:
-`website_template_id` type (catalog path vs uuid vs string id); picker
-output schema / `prompts.yaml`; heuristic table (`trade → website
-template, else default`). Do not implement the LLM picker on this
-branch.
+**Website 01 picker.** Occupancy within 250 km among production-ready
+website templates, then hash tie-break. No LLM. No
+`thread_kind=website_template_picker`. `website_template_id` is the
+website template catalog id (string). Spec:
+[01](pipeline/01-select-website-template.md).
 
 **Worker binding name.** Unspecified: production service-binding **name**
 (and whether auth is that binding vs a shared secret). DTOs, paths, both

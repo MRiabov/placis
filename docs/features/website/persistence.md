@@ -168,8 +168,8 @@ top-level node is `409`). **8** children per parent. Hide = not in the tree.
 
 On **create page**: append `{ id, menu_node_kind: page, page_id }` as a
 top-level footer node (if under cap); same on the top menu unless `legal` or cap
-(then omit). On **archive/delete page**: strip that node; drop empty text
-groups. Duplicate page in a tree is `400`.
+(then omit). About is on both trees. On **archive/delete page**: strip that
+node; drop empty text groups. Duplicate page in a tree is `400`.
 
 Human PATCH may replace a whole tree (including a wipe). Assistant
 `remove_entries` max 4.

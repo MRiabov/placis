@@ -4,10 +4,10 @@ Writes the unpublished website. Next step is 03, enqueued as a River job
 on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
 
 - **Setup**: 01 already wrote `website_settings`
-  (`website_template_id` + `preset_id`). `business_profiles.accepted_edit_id`
-  set. At least two named services on that accepted profile. Media library
-  photos may exist; 02 does not attach them. Zero
-  `website_pages`. No `website_copy_generation` yet.
+  (`website_template_id` + `preset_id`). No picker `ai_generations` row.
+  `business_profiles.accepted_edit_id` set. At least two named services on
+  that accepted profile. Media library photos may exist; 02 does not
+  attach them. Zero `website_pages`. No `website_copy_generation` yet.
 - **Invoke**: copy the website template’s pages onto the unpublished
   website (real write). Then, in a second case, insert a later ETL named
   service after this write (do not re-run 02).
@@ -16,7 +16,8 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
     `status=unpublished`; one `page_type=home`, one `about`, one
     `contact`, one `legal` (privacy policy), and one `service` page per
     named service on the accepted profile (not per later ETL). Same
-    layout on every service page. Unique `(tenant_id, path)`.
+    layout on every service page. Unique `(tenant_id, path)`. No gallery /
+    services-index / testimonials / careers rows.
   - `website_sections`: every page has sections;
     `origin=website_template`; exactly two `page_id` null look sections
     (top-menu look, footer look) from the website template. No extra look
@@ -44,7 +45,7 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
   - **Must not**: zero `website_slot_reviews`. Zero
     `website_publications`. Zero `website_publication_issues`. No slot
     `origin=website_copy_generation` yet. No `edit_history` batch from
-    this copy.
+    this copy. No `ai.threads` / `ai_generations` for 01/02.
   - Same pick + same accepted profile, second tenant (or replay on a
     clean tenant): same `website_pages` paths / `page_type` set and the
     same derived `website.menus` trees.

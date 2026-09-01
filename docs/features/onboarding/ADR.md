@@ -126,7 +126,13 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     template in prose. Session status string stays `applying_website_template`.)
     (2026-08-31, later: status is `selecting_and_copying_website_template`; fail
     is `select_and_copy_website_template_failed`. Wait-end is
-    `preview_and_edit`, not `previewing`.)
+    `preview_and_edit`, not `previewing`.) (2026-08-31, later:
+    **superseded the LLM pick.** Website 01 does not call an LLM and does not
+    write `thread_kind=website_template_picker`. Occupancy among
+    production-ready website templates within 250 km, then hash tie-break;
+    website styles are that website template’s associated website style catalog
+    preset. 02 copy-pages stays deterministic. About is in the 02 website page
+    set.)
 
 11. **Progressive progress over SSE** — during onboarding the backend pushes a
     progress event on each change (not faster than ~2s) over SSE; the stream

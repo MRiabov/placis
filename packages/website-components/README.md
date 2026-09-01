@@ -12,9 +12,10 @@ component schemas. Model: [website catalog](../../docs/features/website/catalog.
 Website templates are catalog JSON Go copies onto the unpublished website
 ([02](../../docs/features/website/pipeline/02-copy-website-template-pages.md)).
 `src/blueprints/` is leftover predecessor page dumps, not the catalog.
-Website style catalog presets live under `src/themes/`. First-pass page
-types are `home` / `about` / `service` / `contact` / `legal`. Blog and
-careers are deferred and are not in this package.
+Website style catalog presets live under `src/themes/`. First-pass website
+page types are `home` / `about` / `service` / `contact` / `legal`. Blog and
+careers are deferred and are not in this package. 01 lists
+`production_ready=true` website templates only.
 
 ## Website templates
 
@@ -29,8 +30,9 @@ and visual rules live in
 [website styles](../../docs/features/website/styles.md).
 
 `home.stub` is skeletal on purpose. Source-backed files in `src/blueprints/`
-are design reference only and are not 01 picks. Trade does not pick the
-website template 1:1.
+are design reference only and are not 01 picks. 01 does not pick by trade
+1:1. Website styles at 01 are that website template’s associated website
+style catalog preset.
 
 `pnpm --dir packages/website-components check` runs the style,
 reference-boundary, and website-template intent guards. Production-ready
