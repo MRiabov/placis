@@ -6,8 +6,10 @@ thread, and that this job must not block 09. The write is website
 
 ## Trigger
 
-05 succeeded. One River job. Lock key: `tenant_id` (unactivated tenant
-already exists). A second 06 start is 409 on that River key. While
+05 succeeded. One River job `website_copy_generation`. Lock key:
+`tenant_id` (unactivated tenant already exists). A second 06 start is
+**409** from River unique-insert on that key (do not HTTP-check before
+insert). While
 unactivated, 06 also holds `assistant.runs` `running` on the
 onboarding-website-editor thread
 ([website editor](../website-editor.md)). After 09 that lock must not sit

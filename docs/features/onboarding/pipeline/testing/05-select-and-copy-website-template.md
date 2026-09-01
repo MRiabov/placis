@@ -25,14 +25,14 @@ SELECTs both.
     `page_id` null look sections; tokenized `website_slots`; derived
     `website.menus`; zero `website_slot_reviews`; zero
     `website_publications`.
-  - **Handoff to 06**: schema `jobs` has one River job for 06 / website
-    03, unique key = that `tenant_id`. No
+  - **Handoff to 06**: schema `jobs` has one `website_copy_generation`,
+    unique key = that `tenant_id`. No
     `website_slots.origin=website_copy_generation` yet.
   - All website rows use the unactivated `tenant_id` from 01 find.
   - Gate-fail complete: onboarding session stays `client_interviewing`;
     no 05 rows; `accepted_edit_id` unchanged.
 - **Fail**: 01 or 02 throws →
   `onboarding_sessions.status=select_and_copy_website_template_failed`; no
-  unpublished website kept from this apply; no River 06 job; no
+  unpublished website kept from this apply; no `website_copy_generation`; no
   `website_publications`; `tenants.website_prefix` still null.
 - **Mocked**: the website template / website styles LLM.

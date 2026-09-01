@@ -24,7 +24,7 @@ it on this branch.
   - **Must not**: `website_pages`, `website_sections`, `website_slots`,
     `website.menus`, `website_forms`, `website_slot_reviews`,
     `website_publications`, `edit_history` all still empty for that
-    tenant. Schema `jobs`: no River job for 06 / website 03 yet.
+    tenant. Schema `jobs`: no `website_copy_generation` yet.
     `onboarding_sessions.status` still `selecting_and_copying_website_template`.
     `tenants.website_prefix` still null.
 - **Handoff to 02**: 02 Pre can SELECT that `website_settings` row. No
@@ -32,6 +32,7 @@ it on this branch.
 - **Fail**: no website template catalog id to persist →
   `onboarding_sessions.status=select_and_copy_website_template_failed`; no
   `website_settings` row (or `website_template_id` null and 02 must not
-  run); still zero unpublished website rows; still no River 06 job.
+  run); still zero unpublished website rows; still no
+  `website_copy_generation`.
 - **Mocked**: stacked-rewrite picker only. Do not add an LLM picker on
   this branch to make this test green.

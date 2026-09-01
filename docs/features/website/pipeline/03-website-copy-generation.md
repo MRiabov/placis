@@ -13,8 +13,10 @@ the thin trigger (onboarding session / DAG / unpaid thread lock).
 
 ## Trigger
 
-02 succeeded. One River job. Lock key: `tenant_id` (unactivated tenant
-already exists). A second 03 start is 409 on that River key. While
+02 succeeded. One River job `website_copy_generation`. Lock key:
+`tenant_id` (unactivated tenant already exists). A second 03 start is
+**409** from River unique-insert on that key (do not HTTP-check before
+insert). While
 unactivated, 03 also holds `assistant.runs` `running` on the
 onboarding-website-editor thread
 ([website editor](../../onboarding/website-editor.md)). After 09 that lock
@@ -105,17 +107,16 @@ One Worker handles a batch, not one Worker per page.
 ## Persist
 
 Updates to existing `website_slots` and website page SEO columns;
-`ai_generations` for tool batches (`thread_kind=website_copy_generation`
-thread); `ai.threads` (`thread_kind=cms_assistant`) /
-`assistant.thread_items` / `assistant.runs` while unactivated. No
+`ai_generations` for tool batches (`thread_kind=website_copy_generation` thread,
+`prompt_id=website_copy_generation`); `ai.threads` (`thread_kind=cms_assistant`)
+/ `assistant.thread_items` / `assistant.runs` while unactivated. No
 `website_publications` from this job. Onboarding session status is
-`selecting_and_copying_website_template` until wait-end (home website page
-copy done or wait cap), then `preview_and_edit`. Progress events on the
-onboarding session stream (complete website sections join the
-`/onboarding/preview` carousel). The website
-preview reloads unpublished GET from those events, and hydrates 03
-`tool_summary` with `GET …/website-editor/assistant/thread` (onboarding
-session token or Clerk). After they share (08), further 03 writes do
+`selecting_and_copying_website_template` until wait-end (home website page copy
+done or wait cap), then `preview_and_edit`. Progress events on the onboarding
+session stream (complete website sections join the `/onboarding/preview`
+carousel). The website preview reloads unpublished GET from those events, and
+hydrates 03 `tool_summary` with `GET …/website-editor/assistant/thread`
+(onboarding session token or Clerk). After they share (08), further 03 writes do
 **not** live-update R2.
 
 ## Fail

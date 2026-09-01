@@ -156,10 +156,10 @@ The wait teaser is `/onboarding/preview`. **Wait-end** is when that screen
 stops and the onboarding session becomes `preview_and_edit`
 (`/onboarding/preview-and-edit/`).
 
-Copy-done means the **home** website page has 03 copy. That is enough.
-Other website pages finish **in parallel** (including after wait-end) on
-the same 06 / 03 job. The **wait cap** (~15s) still ends the wait teaser
-if home is not done yet.
+Copy-done means the **home** website page has 03 copy. That is enough. Other
+website pages finish **in parallel** (including after wait-end) on the same
+`website_copy_generation` job. The **wait cap** (~15s) still ends the wait
+teaser if home is not done yet.
 
 ## Open questions
 
@@ -179,11 +179,6 @@ are named (`website_template_id`, `preset_id`). Unspecified:
 output schema / `prompts.yaml`; heuristic table (`trade → website
 template, else default`). Do not implement the LLM picker on this
 branch.
-
-**River job.** Unique key = `tenant_id` is locked. Unspecified: closed
-River job enum value for onboarding 06 / website 03; args struct
-(`tenant_id` vs `onboarding_session_id`); whether 409 is River
-unique-insert or an HTTP check before insert.
 
 **Worker internal render.** Unspecified: URL or service binding name;
 request body (full dump vs one website page); how a batch is encoded;

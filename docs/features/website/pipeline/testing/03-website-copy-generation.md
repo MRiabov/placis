@@ -6,7 +6,8 @@ is a later caller.
 
 - **Setup**: 02 rows exist (`website_pages` / `website_sections` /
   `website_slots` `origin=website_template`; derived `website.menus`; look
-  sections). Schema `jobs`: the 06 / 03 River job on this `tenant_id`.
+  sections). Schema `jobs`: one `website_copy_generation` on this
+  `tenant_id`.
   `onboarding_sessions.status=selecting_and_copying_website_template`.
   `business_profiles.accepted_edit_id` set. Record website page ids, website
   slot ids, and tokenized `website_slots.value` before invoke.
@@ -33,7 +34,8 @@ is a later caller.
     (`page_id` null) unchanged.
   - `website_slot_reviews`: still zero.
   - `ai.threads`: `thread_kind=website_copy_generation` for that
-    tenant; `ai_generations` on it with `input`, `internal_reasoning`,
+    tenant; `ai_generations` on it with `prompt_id=website_copy_generation`,
+    `input`, `internal_reasoning`,
     `output`, `tool_calls` all present (`status=succeeded` for the
     batch). `tool_calls` includes `update_slot` / `update_seo` and does
     **not** include `create_page` or `update_reviews`.
@@ -45,8 +47,8 @@ is a later caller.
     website page copy done or wait cap), not at 08 share.
   - **Must not:** zero `website_publications`. Zero R2 / WebP / purge
     from this job (spy). `tenants.website_prefix` still null if 08
-    never ran. Second 03 start is 409 on the River unique key; still
-    one job row for that `tenant_id`.
+    never ran. Second 03 start is **409** from River unique-insert; still
+    one `website_copy_generation` row for that `tenant_id`.
   - After 09 while in flight: `assistant.runs` has no `running` on CMS
     `cms_assistant`; leftover job still in schema `jobs` on the same
     `tenant_id` (not deleted, not cancelled). Further 03 website slot

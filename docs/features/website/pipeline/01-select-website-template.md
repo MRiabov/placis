@@ -42,7 +42,7 @@ Onboarding 05 after client interview complete
 
 One `website_settings` row on that `tenant_id`: `website_template_id` =
 catalog id, `preset_id` = website styles. 02 SELECTs that row. No
-unpublished website rows. No River 06 job yet. `ai.threads` /
+unpublished website rows. No `website_copy_generation` yet. `ai.threads` /
 `ai_generations` for a picker call belong to the stacked rewrite, not
 this branch.
 

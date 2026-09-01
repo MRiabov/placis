@@ -14,12 +14,29 @@ Maps scrape stay in-process; API p90-delta during scrape:
 
 Stripe webhooks enqueue work and return; see [website activation](../features/onboarding/pipeline/09-website-activation.md). Onboarding
 [automatic website copy generation](../features/onboarding/pipeline/06-website-copy-generation.md)
-([website 03](../features/website/pipeline/03-website-copy-generation.md)) is a River job after copying the website template’s pages onto
-the unpublished website; it must not block the website preview. Unique key =
-`tenant_id`. Closed River job enum value and args are [open questions](../features/website/catalog.md#open-questions).
-[Reviews ranking for display](#reviews-ranking-for-display) is a separate River job. Compaction **skips**
-`ai.threads` `thread_kind=cms_assistant` whose tenant is `status=unactivated`
-(unpaid current must not compact).
+([website 03](../features/website/pipeline/03-website-copy-generation.md)) is
+River job `website_copy_generation` after copying the website template’s
+pages onto the unpublished website; it must not block the website
+preview. Unique key = `tenant_id`.
+[Reviews ranking for display](#reviews-ranking-for-display) is a separate
+River job. Compaction **skips** `ai.threads` `thread_kind=cms_assistant`
+whose tenant is `status=unactivated` (unpaid current must not compact).
+
+## Automatic website copy generation
+
+River job enum value `website_copy_generation`. Same job as onboarding 06
+(enqueue, wait teaser, unpaid lock) and website 03 (website slot writes). Args:
+`tenant_id` only. Unique key: `tenant_id` while pending/running. A second
+enqueue while the first is in flight is a River unique conflict → HTTP
+**409**. Do not HTTP-check uniqueness before insert (it races). After 09
+the leftover job stays in schema `jobs` on that `tenant_id` (not
+cancelled). CMS PATCH / assistant HTTP are **not** 409 because this job
+is running (`assistant.runs` is a different lock).
+
+`thread_kind=website_copy_generation`, `prompt_id=website_copy_generation` in
+the onboarding package `prompts.yaml`. Worker: [website 03](../features/website/pipeline/03-website-copy-generation.md). Worker internal
+render binding is still an
+[open question](../features/website/catalog.md#open-questions).
 
 ## Reviews ranking for display
 
