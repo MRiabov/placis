@@ -20,6 +20,7 @@ Fills the 01 stub. Next step is 03 (after owner Review on Routes).
   - `ai.threads` `thread_kind=ads_generate`; `ai_generations` has
     reasoning + output + tool calls + `prompt_id=ads_generate` /
     `prompt_version`.
+  - `ai_use_ledger_entries` `entry_kind=spend` (`usage_category=text`).
   - Optional child `media_assets` for cleanup: `pending_review`,
     `parent_media_asset_id` set; source row unchanged.
   - **Must not**: `ads.status=ad_ready_to_post`.

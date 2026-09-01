@@ -169,7 +169,8 @@ may replace a whole tree. Assistant `remove_entries` max 4.
 - **Written by:** `PublishWebsite`;
   `POST /v1/onboarding/website/publications`; onboarding 09;
   `POST /v1/website/publications`;
-  `POST /v1/website/publications/{id}/rollback`
+  `POST /v1/website/publications/{id}/rollback`; `UnpublishWebsite`
+  (clears `active`)
 - **Notes:** Rollback lists `published_by=owner` only on that host.
 
 ### `website_publication_issues`
