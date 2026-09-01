@@ -47,12 +47,14 @@ When implementing, call only:
 
 1. `GET/POST /v1/ads`
 2. `GET/PATCH/DELETE /v1/ads/{ad_id}` (delete = draft-only)
-3. variants GET/PATCH; `POST …/rewrite` (required prompt). Photo cleanup:
+3. `POST /v1/ads/{ad_id}/generate`
+4. `POST /v1/ads/{ad_id}/archive` and `POST …/unarchive`
+5. variants GET/PATCH; `POST …/rewrite` (required prompt). Photo cleanup:
    `POST /v1/media-assets/{id}/image-edits` (required prompt), then PATCH the
    placement. Reject: `POST /v1/media-assets/{id}/reject`.
-4. `POST …/approve`
-5. `POST …/ad-set`
-6. `POST …/download`
+6. `POST …/approve`
+7. `POST …/ad-set`
+8. `POST …/download`
 
 Mutating: `Idempotency-Key` + `base_updated_at`; `409` re-GETs. Prefetch the ads
 list (and ad-platform connection status) into the query cache as specified.
