@@ -1,7 +1,8 @@
 # 09 — Website activation (integration test)
 
-Pays, upgrades the tenant, and calls website 04 (strip off). Leftover
-06 stays a River job.
+Pays, upgrades the tenant, and **calls** website 04 (strip off). Leftover
+06 stays River job kind `website_copy_generation`. The webhook **inserts**
+`website_activation`.
 
 - **Setup**: unpublished website from 05; wait-end on
   `/onboarding/preview-and-edit/`. 08 share is **optional**. A Clerk
@@ -20,6 +21,8 @@ Pays, upgrades the tenant, and calls website 04 (strip off). Leftover
     `onboarding_session_id`, `payment_status=paid`,
     `checkout_session_id`).
   - `stripe_events` stored (`event_id` unique, `processed`).
+  - Schema `jobs` had River job kind `website_activation` on that
+    `tenant_id` (webhook **inserts**; worker ran 04).
   - Same `tenants` row as business lookup: `clerk_org_id` set,
     `status=active` (not a second tenant). `tenant_memberships`
     (`owner`).

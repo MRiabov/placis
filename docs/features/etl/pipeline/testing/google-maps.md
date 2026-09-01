@@ -30,3 +30,8 @@
   `insufficient_data_for_lookup` and does not call Places Find.
 - **Fake**: Google Maps Details / scrape. Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search.
+
+Named tables: `business_profile_edit_sources`, `business_profile_edits`,
+`business_profile_opening_hours`, `business_profile_reviews`,
+`business_profiles`, `etl.google_maps_listing_reviews`,
+`google_maps_listing_review_photos`, `imported_media_sources`.

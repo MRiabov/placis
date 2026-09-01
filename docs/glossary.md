@@ -1206,6 +1206,25 @@ organization.
 
 ---
 
+### River job kind
+
+The `Kind()` string River runs (schema `jobs`). Never bare **kind**. Never in
+PRDs or UI. Distinct from: ETL run kind (the run, not the job);
+thread kind.
+
+In code: River `Kind()`. Catalog: [jobs.md](general-architecture/jobs.md)
+`## Jobs`.
+
+---
+
+### River workflow
+
+A named sequence of River job kind rows in [jobs.md](general-architecture/jobs.md) `## Workflows`. Never in
+PRDs or UI. Not a paid River workflows module. Distinct from: assistant
+continuous workflow; Cloudflare Workflows.
+
+---
+
 ### Clerk organization
 
 The Clerk organization, 1-1 with an **activated** tenant, named after the person
@@ -1438,9 +1457,10 @@ In code: `etl.runs`.
 Which ETL run this is: Google Maps listing, Facebook, Instagram, website crawl,
 trade registry, or web search. Never `directory`, `review`, or `photo` as a
 `StartRun` ETL run kind. An ETL run kind starts when it has the details it
-needs. The ETL run kind attaches to the run, not to ETL and not to the River
-job. Never bare **kind**. Distinct from: ETL source kind (the run vs the saved
-extract we point at later; some names overlap).
+needs. The ETL run kind attaches to the run, not to ETL and not to the River job
+kind. Never bare **kind**. Distinct from: ETL source kind (the run vs the saved
+extract we point at later; some names overlap); River job kind
+(`google_maps_listing_extract`, not the run kind alone).
 
 In code: `etl.runs.etl_run_kind`. Go: `ETLRunKind`. Unique
 `(enqueue_id, etl_run_kind)`. Write `etl_run_kind=google_maps_listing`.
@@ -1792,7 +1812,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | Enterprise (billing) | Enterprise plan |
 | meter | AI vendor cost or AI voice vendor cost (or our cost / their cost) |
 | AI orb (ads) / Ads orb (ads) | inline AI assistance |
-| kind / kinds | ETL run kind, photo kind, thread kind, ETL source kind, imported media kind, thread item kind, menu node kind, client interview submission kind, or tool revision kind |
+| kind / kinds | ETL run kind, photo kind, thread kind, ETL source kind, imported media kind, thread item kind, menu node kind, client interview submission kind, tool revision kind, or River job kind |
 | fast extract / slow extract / fast crawl / slow crawl | ETL fast extract, ETL slow extract, ETL fast crawl, or ETL slow crawl |
 | wait-end clock | wait-end, wait teaser, or wait cap |
 | bag / bags | typed struct or named fields (not a freeform object) |

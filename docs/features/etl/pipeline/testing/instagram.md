@@ -12,3 +12,5 @@
   classification (`etl.sources` + `project_sources`; skip on the verdict table).
 - **Fake**: Instagram scrape. Never Graph API, Parallel’s API, Exa, Perplexity,
   Tako, `:online`, OpenRouter web search.
+
+Named tables: `business_profiles`, `etl.runs`, `imported_media_sources`.

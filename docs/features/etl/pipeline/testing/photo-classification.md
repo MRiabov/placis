@@ -15,3 +15,5 @@
   finish. Crawl HTML URL photos classify the same way.
 - **Fake**: photo classifier (`glm-5.3-flash` dated id). Never Maps / Facebook /
   Instagram / crawl networks from this step.
+
+Named tables: `etl.llm_source_to_project_classifications`, `etl.runs`.

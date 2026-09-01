@@ -16,7 +16,7 @@ No freeform jsonb on these DTOs. Upload signed URL is `string` + `maxLength`
 `maxLength`
 500. Cleanup prompt is `string` + `minLength` 1 + `maxLength` 500.
 
-## Complete
+## Routes
 
 ### GET /v1/media-assets
 

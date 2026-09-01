@@ -46,7 +46,10 @@ Cross-namespace foreign keys are allowed (e.g.
 pool, one goose migration chain.
 
 Table definitions live with the feature that owns them. Shared tables live in
-one owning file — never copied into a second `persistence.md`.
+one owning file — never copied into a second `persistence.md`. Defined
+features list tables as `## Tables` / `### \`name\`` with Columns, Enums,
+Uniques, Written by, Notes
+([docs conventions](../docs-conventions.md#named-identifiers)).
 
 | Owner | Postgres schema (namespace) | Tables |
 | --- | --- | --- |

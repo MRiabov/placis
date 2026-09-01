@@ -1,12 +1,13 @@
 # 06 — Automatic website copy generation
 
-Async River job after 05. Onboarding owns the lock, wait teaser, unpaid
-thread, and that this job must not block 09. The write is website
+Async River job kind `website_copy_generation` after 05. Onboarding owns the
+lock, wait teaser, unpaid thread, and that this job must not block 09. The
+write is website
 [03 automatic website copy generation](../../website/pipeline/03-website-copy-generation.md).
 
 ## Trigger
 
-05 succeeded. One River job `website_copy_generation`. Lock key:
+05 succeeded. One River job kind `website_copy_generation`. Lock key:
 `tenant_id` (unactivated tenant already exists). A second 06 start is
 **409** from River unique-insert on that key (do not HTTP-check before
 insert). While

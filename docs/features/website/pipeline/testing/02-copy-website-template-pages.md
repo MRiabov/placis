@@ -1,13 +1,14 @@
 # 02 — Copy website template pages (integration test)
 
-Writes the unpublished website. Next step is 03, enqueued as a River job
-on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
+Writes the unpublished website. Next step is 03: 02 **inserts** River job
+kind `website_copy_generation` on this `tenant_id`. Mapping:
+[catalog.md](../../catalog.md).
 
-- **Setup**: 01 already wrote `website_settings`
-  (`website_template_id` + `preset_id`). No picker `ai_generations` row.
-  `business_profiles.accepted_edit_id` set. At least two named services on
-  that accepted profile. Media library photos may exist; 02 does not
-  attach them. Zero `website_pages`. No `website_copy_generation` yet.
+- **Setup**: 01 already wrote `website_settings`. No picker
+  `ai_generations` row. `business_profiles` (`accepted_edit_id` set). At
+  least two named services on that accepted profile. Media library photos
+  may exist; 02 does not attach them. Zero `website_pages`. No
+  `website_copy_generation` yet.
 - **Invoke**: copy the website template’s pages onto the unpublished
   website (real write). Then, in a second case, insert a later ETL named
   service after this write (do not re-run 02).
@@ -37,9 +38,10 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
     `show_email=false`, `show_contact=true`. Trees are not a catalog menu
     JSON. Bar CTA values stay `{{marketing_phone}}` /
     `{{marketing_email}}`.
-  - `website_forms` / `website_form_fields`: present iff the website
-    template has form website sections; `form_key` matches the catalog
-    form key; `tenant_id` matches.
+  - `website_forms` / `website_form_fields` / `website_form_field_options`:
+    present iff the website template has form website sections; `form_key`
+    matches the catalog form key; `tenant_id` matches.
+  - `website_urls`: present iff the template menus have `url` nodes.
   - `website_settings` unchanged from 01 (`website_template_id`,
     `preset_id`).
   - **Must not**: zero `website_slot_reviews`. Zero

@@ -10,7 +10,7 @@ and 5. Same POST / PATCH / archive / approve as `/cms/projects/{id}` (owner
 action = assistant action for the tools). No description-patches route. No
 `PATCH` with `status`. No PUT.
 
-## Complete — projects
+## Routes — projects
 
 All mutating routes: **Auth** Clerk JWT, active tenant; **Idempotency-Key:**
 yes.

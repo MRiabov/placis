@@ -11,6 +11,10 @@
   `business_profile_*`; transform does not call the Facebook fake. Posts that
   are a past named job insert Projects after photo classification (`etl.sources`
   - `project_sources`; skip on the verdict table). No Facebook page-review
-  extract.
+  extract into `business_profile_reviews`.
 - **Fake**: Facebook lookup. Never Graph API, Parallel’s API, Exa, Perplexity,
   Tako, `:online`, OpenRouter web search.
+
+Named tables: `business_profile_edit_sources`, `business_profile_edits`,
+`business_profile_reviews`, `business_profiles`, `etl.runs`,
+`imported_media_sources`.

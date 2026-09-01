@@ -6,11 +6,12 @@ Never say instantiate, population, or generate for this. Distinct from **Copy**
 (the words) and [website copy generation](03-website-copy-generation.md).
 Catalog object and mapping: [catalog.md](../catalog.md).
 
-Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) runs this in the same job as 01.
+Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) runs this in the same River job kind
+`select_and_copy_website_template` as 01.
 
 ## Trigger
 
-01 succeeded in the same 05 run.
+01 succeeded in the same `select_and_copy_website_template` run.
 
 ## Pre
 
@@ -47,6 +48,9 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 
 ## Do
 
+`CopyWebsiteTemplatePages` writes the unpublished website from the 01
+pick. Tokens stay.
+
 1. Deterministic copy from the website template: unpublished
    `website_pages` / `website_sections` / `website_slots`. Explode each
    website section’s `editable_slots`. Non-slot layout props may stay on
@@ -73,31 +77,48 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
    `asset_id`). Keep `{{images.*}}` / `{{logo_url}}`. Do not attach
    `media_asset_id`. Photo selection is
    [03](03-website-copy-generation.md). Do not bake ranked-top-4 ids.
-6. Persist `website_forms` / fields from form website sections’ contracts
-   (`form_key` = the catalog form key on that website section).
+6. Persist `website_forms` / `website_form_fields` /
+   `website_form_field_options` from form website sections’ contracts
+   (`form_key` = the catalog form key on that website section). Persist
+   `website_urls` iff the template menus have `url` nodes.
 7. Validate against website component contracts before the unpublished
    website is kept.
 8. Same pick + same profile → same website pages (and the same derived
    menus).
-9. Enqueue onboarding 06. `/onboarding/preview` (wait teaser) waits until
-   the **home** website page has 03 copy, or the wait cap (~15s). Other
-   website pages finish in parallel. Then wait-end:
+9. **Inserts** `website_copy_generation`. `/onboarding/preview` (wait teaser)
+   waits until the **home** website page has 03 copy, or the wait cap (~15s).
+   Other website pages finish in parallel. Then wait-end:
    `preview_and_edit`.
 
 Copy is **not** this step —
 [03 automatic website copy generation](03-website-copy-generation.md).
 
+## Loads
+
+Website template catalog object for the 01 pick, plus website component
+contracts under `catalog/`.
+
+## Reads
+
+`website_settings` (`website_template_id`, `preset_id`), live
+`business_profiles` as of `accepted_edit_id`.
+
+## Inserts
+
+`website_copy_generation`.
+
 ## Persist
 
-Unpublished website, including a **derived** `website.menus` row and
-site-wide look website sections. No `media_asset_id` on image website
-slots from this copy. No `website_slot_reviews`. No
-`website_publications`. Schema `jobs`: one River job
-`website_copy_generation` (onboarding 06 / website 03), unique key = that
-`tenant_id`. Args: `tenant_id` only. Second enqueue while pending/running
-is River unique conflict → HTTP 409.
-[jobs](../../../general-architecture/jobs.md). Onboarding
-session stays `selecting_and_copying_website_template` until wait-end, then
+`website_pages`, `website_sections`, `website_slots`, `website.menus`,
+`website_forms`, `website_form_fields`, `website_form_field_options`,
+`website_urls` (iff the template has `url` nodes). Schema `jobs`: one
+River job kind `website_copy_generation` (onboarding 06 / website 03), unique
+key = that `tenant_id`. Args: `tenant_id` only. Second insert while
+pending/running is River unique conflict → HTTP 409.
+[jobs](../../../general-architecture/jobs.md). Must not write
+`website_slot_reviews`, `website_publications`, `edit_history`, or
+attach `media_asset_id` on image slots. Onboarding session stays
+`selecting_and_copying_website_template` until wait-end, then
 `preview_and_edit`.
 
 ## Fail

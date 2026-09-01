@@ -1,5 +1,10 @@
 # Ads — pipeline
 
+No step files yet. Future `01-….md` files use Trigger / Pre / Must not / Do /
+Persist / Fail / Out / Invariants (closed `##`) and ship with
+`testing/01-….md`. Named identifiers:
+[docs conventions](../../../../docs-conventions.md#named-identifiers).
+
 ```text
 01. create (ad)
 02. draft (LLM: copy + image gallery + light cleanup) — async, queued

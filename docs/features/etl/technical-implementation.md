@@ -13,7 +13,8 @@ Related: [ADR](ADR.md), [persistence](persistence.md),
 distinct `enqueue_id` in the last 30 minutes; 5 or more → do not insert runs (02
 already counted so business lookup stays 200 and a later source-change stays
 `429`). Copy 01 attach and live-profile details. For each ETL run kind that can
-start, insert one `etl.runs` row and enqueue one extract River job. Do not
+start, persist into `etl.runs` and **inserts** that ETL run kind’s extract
+River job kind ([jobs](../../general-architecture/jobs.md)). Do not
 insert pending rows. Re-check when details change (same `enqueue_id`).
 
 Onboarding ETL run kinds: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md). Never `directory`, `review`,
@@ -26,9 +27,13 @@ business profile or classify photos. Parallel Extract is the crawl adapter, not
 `extract/<etl_run_kind>/` then `transform/<etl_run_kind>/` (for example
 `internal/etl/transform/googlemaps.Run`). Go has no classes; this is not a
 method on a per-ETL run kind type, and there is no shared `Extractor` /
-`Transformer` interface. The River worker calls those functions
-([module layout](../../general-architecture/module-layout.md)). The worker repeats that pair **per extract chunk** (ETL fast
-extract, then ETL slow extract). It does not wait for the ETL run kind to finish
+`Transformer` interface. The extract worker **calls**
+`extract/<etl_run_kind>.Run`; the transform worker **calls**
+`transform/<etl_run_kind>.Run`
+([module layout](../../general-architecture/module-layout.md),
+[jobs](../../general-architecture/jobs.md)). Extract **inserts** transform after
+the chunk’s fetch row; transform **inserts** the next extract when ETL slow
+extract chunks remain. It does not wait for the ETL run kind to finish
 before the first transform. An ETL run kind that cannot start yet is not
 inserted (onboarding) or is `insufficient_data_for_lookup` (scheduled).
 

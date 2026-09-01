@@ -14,7 +14,7 @@ Conventions: [HTTP conventions](../../general-architecture/api.md). Ad generatio
 Download signed URL: `string` + `maxLength`. Copy fields use platform character
 limits as `maxLength`.
 
-## Complete
+## Routes
 
 All mutating routes: **Auth** Clerk JWT, active tenant; **Idempotency-Key** yes.
 PATCH / rewrite / approve send `base_updated_at` (last-seen `ads.updated_at`).

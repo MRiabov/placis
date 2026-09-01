@@ -18,3 +18,5 @@ test; do not implement or schedule it this pass.
   then `interview/complete` → 05.
 - **Fail**: invalid tool call rejected; live business profile unchanged.
 - **Mocked**: voice agent (returns fixed tool-call proposals).
+
+Named tables: `onboarding_sessions`.

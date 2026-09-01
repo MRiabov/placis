@@ -10,7 +10,7 @@ Profile history is typed `business_profile_edits` increments — never a `detail
 jsonb dump. `GET`/`PATCH` fields are the columns and list tables in
 [persistence.md](persistence.md). Validation errors: `string[]` with `maxLength` per item.
 
-## Complete
+## Routes
 
 ### GET /v1/business-profile
 
