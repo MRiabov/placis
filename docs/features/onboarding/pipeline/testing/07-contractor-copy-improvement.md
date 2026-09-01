@@ -17,3 +17,5 @@
   without more prompts.
 - **Mocked**: the Assistant LLM (website editor tools faked to a small
   `update_slot` batch).
+
+Named tables: `assistant.runs`, `assistant.thread_items`.

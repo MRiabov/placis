@@ -11,3 +11,5 @@
   accreditation.
 - **Fake**: trade registry. Never Parallel’s API, Exa, Perplexity, Tako,
   `:online`, OpenRouter web search.
+
+Named tables: `business_profile_edits`, `business_profiles`, `etl.runs`.

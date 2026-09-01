@@ -37,9 +37,10 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
     `show_email=false`, `show_contact=true`. Trees are not a catalog menu
     JSON. Bar CTA values stay `{{marketing_phone}}` /
     `{{marketing_email}}`.
-  - `website_forms` / `website_form_fields`: present iff the website
-    template has form website sections; `form_key` matches the catalog
-    form key; `tenant_id` matches.
+  - `website_forms` / `website_form_fields` / `website_form_field_options`:
+    present iff the website template has form website sections; `form_key`
+    matches the catalog form key; `tenant_id` matches.
+  - `website_urls`: present iff the template menus have `url` nodes.
   - `website_settings` unchanged from 01 (`website_template_id`,
     `preset_id`).
   - **Must not**: zero `website_slot_reviews`. Zero

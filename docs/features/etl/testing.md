@@ -7,13 +7,19 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
 1. **Bootstrap** — `StartRun` with `trigger=onboarding` and 01 details that let
    some ETL run kinds start ([ETL run kind triggers](pipeline/etl-run-kind-triggers.md); never `directory`,
    `review`, or `photo`). Assert `etl.runs` only for started ETL run kinds
-   (shared `enqueue_id`), `etl.sources`, fetch rows, Maps listing, profile posts
-   / reviews / media library photo kinds. Assert Details transform (hours /
-   marketing phone / first reviews) lands while scrape is still in flight;
-   scrape then adds further reviews / photos. ETL increments have
-   `business_profile_edit_sources`. Facebook / Instagram are not inserted until
-   a URL/handle detail exists; `insufficient_data_for_lookup` if nothing left
-   can produce that detail.
+   (shared `enqueue_id`), `etl.sources`, `google_maps_fetches` /
+   `facebook_fetches` / `instagram_fetches`, `google_maps_listings`,
+   `facebook_posts` / `instagram_posts`, media library photos via
+   `imported_media` / `imported_media_sources`. Assert
+   `business_profile_opening_hours` has rows,
+   `business_profiles.marketing_phone` is set, and first
+   `business_profile_reviews` exist while scrape `etl.runs.status` is still in
+   flight; later scrape **persists into** further `business_profile_reviews` /
+   `google_maps_listing_reviews` / `google_maps_listing_review_photos` /
+   `google_maps_listing_opening_hours` / `website_crawl_page_photos`. ETL
+   increments have `business_profile_edit_sources`. Facebook / Instagram are
+   not inserted until a URL/handle detail exists; `insufficient_data_for_lookup`
+   if nothing left can produce that detail.
 2. **Scheduled increment** — second `StartRun` with `trigger=scheduled` and a
    new review, a new Instagram post, a new photo, and a different marketing
    phone than the owner typed. Assert new review / post / photo on the business
