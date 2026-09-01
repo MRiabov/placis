@@ -3,9 +3,12 @@
 Persists a website version and HTML in R2. Callers are 08 (strip on),
 09 (strip off), and later CMS Publish.
 
-- **Setup**: unpublished website from 02 (optional 03 copy already in
-  website slots). Record `website_slots.value` (still tokenized where
-  required). For 08: onboarding session `preview_and_edit`,
+- **Setup**: unpublished website from 02 (`website_pages` /
+  `website_sections` / `website_slots` / `website.menus` /
+  `website_forms`; `website_settings` from 01). Live
+  `business_profiles`. Optional 03 copy already in website slots. Record
+  `website_slots.value` (still tokenized where required). For 08:
+  onboarding session `preview_and_edit`,
   `website_prefix` null, zero `website_publications`. For 09-after-08:
   v1 `active` `published_by=onboarding` already exists (strip on). For
   CMS: tenant `status=active`, an owner host `website_addresses` row.

@@ -4,9 +4,13 @@ One full-stack E2E test: edit → assistant → website publication → live HTM
 (fake R2 + fake purge) → website rollback → website form. Drives `frontend-2`
 (Playwright) against the real API + real Postgres; the LLM is faked. Worker
 **container** is up (no `wrangler deploy`). Cloudflare R2 / Custom Hostnames /
-`purge_cache` are faked. Select and copy the website template is the
-[onboarding E2E](../onboarding/testing.md). DB asserts name the tables from [persistence.md](persistence.md) (and [leads](../other/leads/persistence.md)
-for the website form).
+`purge_cache` are faked. 01/02 already ran (`website_pages` /
+`website_sections` / `website_slots` / `website.menus` /
+`website_forms` / `website_settings` exist). This journey does not
+re-assert 02 Persist. Select and copy the website template is the
+[onboarding E2E](../onboarding/testing.md). DB asserts name the tables
+from [persistence.md](persistence.md) (and
+[leads](../other/leads/persistence.md) for the website form).
 
 1. **Open the website editor** — the owner opens the website editor.
    - UI: the website page list renders.
@@ -14,10 +18,11 @@ for the website form).
 
 2. **Edit** — the owner edits a website section's text and swaps an image via
    the media library panel (drop a file onto the left panel, or drag a photo
-   onto the canvas).
-   - DB: `website_slots.value` (new text) and `website_sections` (new media
-     asset id) are updated; `edit_history` has a human batch;
-     `website_settings.edit_history_head` moved.
+   onto the canvas). Request `WebsitePageUpdate`; Response
+   `WebsiteEditApplyRead`.
+   - DB: **persists into** `website_slots.value` (new text) and
+     `website_sections` (new media asset id); `edit_history` has a human
+     batch; `website_settings.edit_history_head` moved.
    - UI: the edit is visible in the canvas.
 
 3. **Validate** — saving an invalid prop is rejected.
@@ -32,11 +37,12 @@ for the website form).
    - UI: muted tool-call rows in the thread. Apply / Reject pills on the canvas
      over the composer if Ask first; no revert-after-apply.
 
-5. **Website publication** — the owner does a website publication
-   (`websitePublication`; 03 must not have written `website_publications`
-   / R2).
-   - DB: `website_publications` (status=`published`, `active=true`,
-     `website_manifest`, `version_number` — a website version).
+5. **Website publication** — `PublishWebsite` **calls**
+   `websitePublication` and **sends** `WebsitePublicationRequest` (03
+   must not have written `website_publications` / R2).
+   - DB: **persists into** `website_publications` (`status=published`,
+     `active=true`, `website_manifest`, `version_number` — a website
+     version).
    - Fake: R2 keys `sites/{website_prefix}/{version_number}/` then `…/latest/`,
      plus `purge_cache` for live website page URLs (and sitemap, robots, WebP)
      on every active hostname. No live Cloudflare. No website image render
@@ -61,7 +67,8 @@ for the website form).
      the earlier published website copy. Website versions: rollback on earlier
      owner website versions; Preview on the live website version.
 
-8. **Website form → website lead** — a website visitor submits a website form.
-   - DB: `leads` (source=`website_form`, `website_form_id`, `contact_name`,
-     `marketing_phone`, `marketing_email`, message, status=`new`) under the
-     tenant.
+8. **Website form → website lead** — a website visitor submits a website form
+   (reads existing `website_forms` from 02).
+   - DB: **persists into** `leads` (`source=website_form`,
+     `website_form_id`, `contact_name`, `marketing_phone`,
+     `marketing_email`, message, `status=new`) under the tenant.

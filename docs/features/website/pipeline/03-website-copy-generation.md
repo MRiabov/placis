@@ -70,6 +70,9 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 
 ## Do
 
+`GenerateWebsiteCopy` writes copy and photo selection into existing
+unpublished website slots. River job remains `website_copy_generation`.
+
 1. **Turn 1 `websiteRender`.** Go loads the unpublished tree (tokens) +
    `WebsiteBusinessProfileRead` (not `website_manifest`) +
    `media_asset_urls` (often `{}`) and `POST`s `websiteRender`
@@ -133,11 +136,26 @@ purge.
 One Worker handles a batch, not one Worker per page. Worker timeout
 follows this table.
 
+## Reads
+
+Unpublished `website_pages`, `website_sections`, `website_slots`,
+`website.menus`, `website_settings`; live `business_profiles`;
+`media_assets`.
+
+## Sends
+
+`WebsiteRenderRequest` to `websiteRender`. Response
+`WebsiteRenderResponse`.
+
+## Calls
+
+`websiteRender`. River job `website_copy_generation`.
+
 ## Persist
 
-Updates to existing `website_slots` and website page SEO columns;
-media library rows from `generate_image` (`supplied_by=ai`, pending
-review); `ai_generations` for tool batches
+`website_slots`; `website_pages` SEO columns; `media_assets` from
+`generate_image` (`supplied_by=ai`, pending review); `edit_history`
+agent batches; `ai_generations` for tool batches
 (`thread_kind=website_copy_generation` thread,
 `prompt_id=website_copy_generation`); `ai.threads`
 (`thread_kind=cms_assistant`) / `assistant.thread_items` /
