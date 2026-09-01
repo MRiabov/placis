@@ -77,7 +77,7 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    strings carry `minLength` (and `maxLength`), numbers carry
    `minimum`/`maximum`, fixed sets are `enum`. A field missing its constraints
    fails CI. The check must also fail `map[string]any`, `json.RawMessage`,
-   `additionalProperties: true`, and string fields documented as JSON blobs on
+   `additionalProperties: true`, and string fields documented as JSON on
    huma DTOs (including SSE event structs). The **same** check runs on the
    Worker internal OpenAPI file. Persistence `jsonb` columns are not
    this check. See [HTTP conventions](api.md).

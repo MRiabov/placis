@@ -2,7 +2,7 @@
 
 Extract **and** transform public contractor sources (Google Maps listing,
 Facebook profile and posts, Instagram profile and posts, plus first-run crawl /
-trade registry). Projects from posts / crawled blobs / reviews usable as a
+trade registry). Projects from posts / crawled sources / reviews usable as a
 Project are transform on those ETL run kinds ([projects.md](pipeline/projects.md)); skip lives on
 `etl.llm_source_to_project_classifications`. Extract identity is `etl.sources`.
 Raw fetches and the Google Maps listing live in Postgres schema `etl`.

@@ -219,7 +219,7 @@ not this assistant. Isolation and `tools=[]`: [onboarding assistant](assistant.m
   `200` with `items: []`.
 - **Errors:** **403** if activated.
 - **Must not:** return `thread_items` as the field name; return runs, audit
-  blobs, `provider_event`, or recording URLs.
+  jsonb, `provider_event`, or recording URLs.
 
 ## Listed
 

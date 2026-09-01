@@ -60,8 +60,9 @@ The adapter (not the browser) is responsible for:
 2. Pick the xAI region from the **business country** (below). Pin a **dated**
    voice model id (not `grok-voice-latest`) that exists on that cluster.
 3. Seed **instructions** (knowledge concat + profile + screen / compacted thread
-   tail as **one instructions blob**). Persist that exact blob on the voice
-   run’s `ai_generations.input` (with keyterms / `replace` sent on create). Do
+   tail as **one instructions string**). Persist those exact instructions on
+   the voice run’s `ai_generations.input` (with keyterms / `replace` sent on
+   create). Do
    **not** replay the thread as billed
    `conversation.item.create` items. The
    **rolling Voice connection is xAI-owned** after that seed. Go does not
@@ -148,8 +149,9 @@ Do not mid-call `session.update` for these (same rule as tools / instructions).
 4. The browser never receives the long-lived voice API key.
 
 CMS create **includes** the unpublished website working copy when
-`assistant_screen` is `website_editor`. Other CMS screens omit that blob.
-Onboarding create: current step + visible fields + product glossary, no canvas.
+`assistant_screen` is `website_editor`. Other CMS screens omit that working
+copy. Onboarding create: current step + visible fields + product glossary, no
+canvas.
 
 **Two routes** (lifecycle gate is one auth mode per prefix):
 

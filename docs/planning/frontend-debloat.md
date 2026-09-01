@@ -58,7 +58,7 @@ leads console.
   Screens with no Go route yet stay unwired, not typed against old paths.
 - Regenerate `frontend-2/src/generated/api-types.ts` from Go `/openapi.json`.
   Every DTO field is constrained (`minLength`/`maxLength`, `minimum`/`maximum`,
-  enums). No unconstrained JSON blobs in UI code. The generated file must not
+  enums). No unconstrained JSON in UI code. The generated file must not
   reintroduce predecessor-only paths.
 - CMS calls `/v1/website/editor/…` only. Do not call
   `/v1/tenants/{website_prefix}/website/…`.

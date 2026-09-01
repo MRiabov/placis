@@ -70,7 +70,7 @@ For the homepage / canonical URL only, run **in parallel**:
 Insert / update live `etl.website_crawl_pages` `status=fetched` when Extract
 **and** (`http_get` **or** `apify`) have landed. Insert `etl.sources`
 `source_kind=website_crawl_extract` and `source_kind=website_crawl_html` (Apify
-is the HTML blob when GET failed). Transform immediately. Do not wait for
+is the crawled HTML when GET failed). Transform immediately. Do not wait for
 sitemap or the remainder. If GET and Apify both fail, text-only transform from
 Extract markdown is allowed (no cover; one extract source only).
 
@@ -134,10 +134,10 @@ website. SSE is not p90 of request handlers. CI does not measure p90.
 extract continues. Fill empty trade, description, services, service areas,
 founder, marketing email, existing site URL from Extract markdown + HTML via
 [build-profile](../../onboarding/pipeline/build-profile.md) (each increment
-cites ≥1 crawl `source_id`; both blobs when both dumps informed the value).
+cites ≥1 crawl `source_id`; both sources when both dumps informed the value).
 Then photos + [photo classification](photo-classification.md). Then
-[projects.md](projects.md) per crawl blob (depicting photo on that HTML URL
-required). Same URL, both blobs usable as a Project → one Project, two cites.
+[projects.md](projects.md) per crawl source (depicting photo on that HTML URL
+required). Same URL, both sources usable as a Project → one Project, two cites.
 Disagreeing owner-typed scalars → research conflict.
 
 ## Persist

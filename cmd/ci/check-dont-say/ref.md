@@ -53,6 +53,17 @@ line when that line is not a new list item or heading.
   **fail**. Say **file**.
 - Go `import "bytes"` / `bytes.Buffer` → **pass** (stdlib; extra-allowed).
 
+## Banned synonym (unmarked) — bag / blob
+
+- `docs/general-architecture/api.md`: “unconstrained JSON bags” /
+  “not a JSON bag” → **fail**. Say **typed struct** / **named fields**.
+- `docs/features/assistant/architecture.md`: “instructions blob” → **fail**.
+  Say **instructions**.
+- `docs/features/etl/persistence.md`: “extract blobs” / “HTML blob” →
+  **fail**. Say **`etl.sources` row** / **crawled HTML** / **Extract markdown**.
+- GitHub `github.com/.../blob/...` → **pass** (`/blob/`; extra-allowed).
+- `new Blob(...)` / `response.blob()` → **pass** (Web API; extra-allowed).
+
 ## Self-understood at home — website `page`
 
 - `docs/features/website/architecture.md`: “each page has sections” → **pass**

@@ -109,7 +109,7 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   file. The document is a **design decision record** — the look-and-interaction
   counterpart of ADR.md. Link the file as `[CMS design decision record](...)` 3,
   not `[CMS design-decision-record]` and not bare **decisions**. One numbered
-  entry is one decision (do not pack a screen’s look into a single blob).
+  entry is one decision (do not pack a screen’s look into a single entry).
   **Why** is owner-written; omit it when it is not known. Keep the hyphen in the
   path and in backticks. `ADR.md` is the **architectural decision record**; do
   not label it **decisions** either.

@@ -45,9 +45,9 @@ and search share Vercel; there is no OpenRouter hop.
   the visible answer, and the tool calls — plus the model, the prompt id and
   format revision, and the usage and cost. That includes text, voice, and image
   generate/cleanup. **`input` is the exact text sent** (text-turn assembled
-  prompt; Voice-connection instructions blob at create, including keyterms /
+  prompt; Voice-connection instructions at create, including keyterms /
   `replace` on that row). Prompt id / knowledge id are not a substitute for that
-  blob. Voice **cost** is xAI audio minutes plus text-item fees, not token
+  `input`. Voice **cost** is xAI audio minutes plus text-item fees, not token
   counts — leave `input_tokens` / `output_tokens` null on those rows
   ([billing](../features/billing/README.md)). Voice utterance reconstructability is the forwarded xAI JSON on
   `thread_items.provider_event` (onboarding:

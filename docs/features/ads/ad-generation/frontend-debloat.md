@@ -17,7 +17,7 @@ list so the predecessor OpenAPI does not grow a campaign console.
 - No `/cms/ads`, `/cms/ads/new`, `/cms/ads/{id}` in `app/router/index.tsx`.
 - `frontend-2/src/generated/api-types.ts` has **no** `/v1/ads/*`.
 - Predecessor leftovers that must not become Ads screens: CRM sandbox schemas
-  (quotes, invoices, crew, workflows) and unconstrained JSON blobs in that
+  (quotes, invoices, crew, workflows) and unconstrained JSON in that
   generated file (cross-cutting file owns the typegen cut).
 
 ## Keep
