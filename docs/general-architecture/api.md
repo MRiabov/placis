@@ -23,9 +23,11 @@ Feature `api.md` files:
 The [Placis website](../features/placis-website/README.md) has no Go HTTP. Live contractor website HTML is Cache then
 R2; it never calls Go.
 
-This file is HTTP conventions, not Go structs. DTOs still fall out per slice
-([development principles](../development-principles.md)). Predecessor OpenAPI is not a compatibility surface:
-do not alias `/api/v1/…`.
+This file is HTTP conventions, not Go structs. DTO **type names and fields**
+are named in the feature `api.md` before code
+([docs conventions](../docs-conventions.md#named-identifiers)). Do not dump
+Go struct bodies or OpenAPI YAML here. Predecessor OpenAPI is not a
+compatibility surface: do not alias `/api/v1/…`.
 
 ## Versioning
 
@@ -186,7 +188,7 @@ Named fields: `code`, `message`, optional `retry_after`.
 ## Retries
 
 Mutating routes that are safe to retry accept `Idempotency-Key` (checked per
-tenant). Named on each Complete mutation in the feature `api.md`.
+tenant). Named on each mutating **Routes** row in the feature `api.md`.
 
 ## Onboarding SSE
 

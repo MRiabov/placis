@@ -11,7 +11,7 @@ Website activation checkout and webhooks stay on
 [onboarding HTTP](../onboarding/api.md). Do not create auth routes for usage
 credit.
 
-## Complete
+## Routes
 
 ### GET /v1/billing/usage
 

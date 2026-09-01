@@ -15,7 +15,7 @@ enqueues it.
 | Client interview extra notes | text | `string` + `maxLength`. |
 | SSE events | — | Huma `sse.Register` event name → struct. Not an unconstrained `payload`. |
 
-## Complete
+## Routes
 
 Business lookup is **one** command. Collapse predecessor Don't say setup:
 `POST /setup-sessions` and `…/from-google-place`. **Do not create** a bare
@@ -168,7 +168,7 @@ collection `POST /v1/onboarding-sessions`.
 - **Behavior:** verify, persist event, enqueue website activation, return. Never
   trust the browser success URL.
 
-## Complete — onboarding assistant (guide)
+## Routes — onboarding assistant (guide)
 
 Auth is the onboarding session token, not Clerk `/me.tenant`. Activated owner:
 **403** on all `/v1/onboarding/assistant/…`. Onboarding session

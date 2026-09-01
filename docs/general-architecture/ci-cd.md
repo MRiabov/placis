@@ -185,6 +185,14 @@ does). We do **not** hand-roll AST scripts up front:
   `just`; never `rumdl fmt` in CI). Conventions:
   [docs conventions](../docs-conventions.md).
 - **Don't-say glossary check** (`cmd/ci/check-dont-say`) — see below.
+- **Pipeline table and heading check** (`cmd/ci/check-pipeline-tables`) —
+  step files pair with `pipeline/testing/<name>.md`; persistence tables in a
+  step appear in that testing file and in some `persistence.md`; every
+  persistence table appears in `testing.md` and/or `pipeline/testing/`
+  when those files exist; pipeline step `##` headings are a closed list.
+  Missing `testing.md` (media library / leads / Details / Projects) does
+  not fail; a changed `persistence.md` without `testing.md` warns. See
+  [docs conventions](../docs-conventions.md#named-identifiers).
 - Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen,
   Worker internal OpenAPI export + contractor-website typegen).
 - Later: file-size guard and folder fan-out (`cmd/ci`), documented above, not
@@ -254,3 +262,17 @@ list). Worked examples:
 
 Skip `.agents/` and generated files. There is no empty-list or shrink ratchet:
 parse failure is the failure.
+
+### Pipeline tables checker
+
+`cmd/ci/check-pipeline-tables` enforces the table pairing and pipeline step
+heading lists in [docs conventions](../docs-conventions.md#named-identifiers). Unit tests + `go run`. Pre-commit on
+`docs/features/**/{persistence,testing}.md` and
+`docs/features/**/pipeline/**/*.md`. CI:
+`.github/workflows/check-pipeline-tables.yml` runs
+`go test ./cmd/ci/check-pipeline-tables` then
+`go run ./cmd/ci/check-pipeline-tables --all`.
+
+This pass: **tables** and **pipeline step headings**. Not Routes paths, not
+`api.md` headings. Warn (do not fail) when a changed `persistence.md` has
+no feature `testing.md`.

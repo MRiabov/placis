@@ -34,8 +34,12 @@ what the UI shows and the DB rows. A feature does not pass without its E2E test
 green.
 
 Each feature defines its E2E test in its own `testing.md`, spelling out the
-exact tables read and written at each step (names come from that feature's
-`persistence.md`):
+tables that journey reads and writes at Persist grain (names come from that
+feature's `persistence.md`). Every table in that persistence file must appear
+in `testing.md` and/or `pipeline/testing/`
+([docs conventions](../docs-conventions.md#named-identifiers)). Do not require
+a bullet per Routes row. Pipeline integration tests pair
+`pipeline/<name>.md` ↔ `pipeline/testing/<name>.md` (step tables).
 
 - [assistant](../features/assistant/testing.md)
 - [onboarding](../features/onboarding/testing.md)
