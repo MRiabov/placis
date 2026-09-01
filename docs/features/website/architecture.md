@@ -1,7 +1,25 @@
 # Website — Architecture
 
-How a website is built, edited, given website publication, and rendered. Logic
-first; the structs and DTOs fall out of this.
+How a website is built, edited, given website publication, and rendered.
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+
+## Named identifiers
+
+Pipeline **Do** functions (same spelling in spec, Go, and tests):
+
+- `SelectWebsiteTemplate` — `internal/website/templates`
+  ([01](pipeline/01-select-website-template.md))
+- `CopyWebsiteTemplatePages` — `internal/website/templates`
+  ([02](pipeline/02-copy-website-template-pages.md))
+- `GenerateWebsiteCopy` — River job kind `website_copy_generation`
+  ([03](pipeline/03-website-copy-generation.md))
+- `PublishWebsite` — **calls** `websitePublication`
+  ([04](pipeline/04-website-publication.md))
+
+CMS HTTP: one function per Routes verb+noun (`GetWebsitePage`,
+`UpdateWebsitePage`, `CreateWebsitePublication`, …). Tables:
+[persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 
 ## The content model
 
@@ -31,8 +49,8 @@ and editable website slots.
 ## The website component model
 
 A website component is a named building block (`public.hero.image`,
-`public.services.grid`, …). Each has a **contract**: the props it accepts, the
-website slots it exposes, and its **design controls** — small enum/bool fields
+`public.services.grid`, …). Each has a **contract**: props, the website
+slots it exposes, and its **design controls** — small enum/bool fields
 (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values. The
 contract is one typed struct dumped to JSON under `catalog/` — the website
 editor and the renderer read the same structs. Only registered website
@@ -77,7 +95,7 @@ Object and mapping: [catalog.md](catalog.md).
    kinds exclusive; do not filter on `hero` / `project` / `service`)
    ([03](pipeline/03-website-copy-generation.md));
 5. reviews website sections keep `{{reviews.1}}` … from the ranked pool.
-   Website does not rank. River job `reviews_ranking_for_display`
+   Website does not rank. River job kind `reviews_ranking_for_display`
    ([build-profile](../onboarding/pipeline/build-profile.md),
    [jobs](../../general-architecture/jobs.md)). Owner Content /
    `update_reviews` can override a section later;
@@ -134,11 +152,12 @@ content (placeholders, project galleries, reviews, photos) edited on
 [business profile](../business-profile/README.md) and [media library](../other/media/README.md) screens. They are separate entities.
 Certifications and reviews is the picker for **all reviews** and for pinning
 **top reviews** (ads). First-pass reviews website sections resolve
-`{{reviews.1}}` … from the ranked pool (River job `reviews_ranking_for_display`;
-website does not rank). The website editor reviews Content may later set
-**that website section’s** ordered `website_slot_reviews` (add from all reviews,
-remove, reorder; cap from the website component). They are not generic website
-slots. The edit loop is in [editing.md](editing.md). Screens:
+`{{reviews.1}}` … from the ranked pool (River job kind
+`reviews_ranking_for_display`; website does not rank). The website editor
+reviews Content may later set **that website section’s** ordered
+`website_slot_reviews` (add from all reviews, remove, reorder; cap from the
+website component). They are not generic website slots. The edit loop is in
+[editing.md](editing.md). Screens:
 [frontend.md](frontend.md).
 
 ## Website editor tools (assistant)
@@ -189,8 +208,9 @@ Website publication is not a Cloudflare deploy. One shared contractor-website
 application serves every tenant. The **Publish** dropdown lists hosts
 (`{website_prefix}.preview.placis.com`, a connected website address, or New URL)
 — the POST has no destination ([api.md](api.md)). Specs call the act website
-publication. Host routing uses `website_addresses` reserved at onboarding
-07. Serve path, R2 keys, cache purge, website address, and local Worker:
+publication. Host routing **reads** `website_addresses` reserved at
+onboarding 08. Serve path, R2 keys, cache purge, website address, and
+local Worker:
 [cloudflare.md](cloudflare.md).
 `apps/contractor-website` is in this repo; remaining cuts:
 [contractor-website-debloat.md](contractor-website-debloat.md). API cutover:

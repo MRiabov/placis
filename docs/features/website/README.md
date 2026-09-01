@@ -3,6 +3,9 @@
 Building a website from a website template, editing it in the website editor,
 and website publication. Ads live in [../ads/](../ads/README.md). Together they sit under the CMS.
 
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — architectural decision record
 - [design decision record](design-decision-record.md) — website editor look and interaction (not
@@ -31,10 +34,10 @@ and website publication. Ads live in [../ads/](../ads/README.md). Together they 
 - [Assistant](../assistant/README.md) — Assistant, thread, HTTP
 - [styles.md](styles.md) — the website style catalog: colors, typography, radius, density,
   motion
-- [pipeline/](pipeline/README.md) — from-scratch create: 01 select, 02 copy
-  template pages, 03 copy generation, 04 Worker publication
-- [technical-implementation.md](technical-implementation.md) — website template select/copy, website
-  publication, pipeline
+- [pipeline/](pipeline/README.md) — from-scratch create: `SelectWebsiteTemplate`,
+  `CopyWebsiteTemplatePages`, `GenerateWebsiteCopy`, `PublishWebsite`
+- [technical-implementation.md](technical-implementation.md) — named services, website template select/copy,
+  website publication, pipeline
 - [business profile](../business-profile/README.md) — Details, Projects, Certifications and reviews (Profile
   screens; website page content edited there)
 - [media library](../other/media/README.md) — the media library + image editing

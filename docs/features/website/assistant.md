@@ -8,11 +8,12 @@ through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.
 Onboarding [automatic website copy generation](../onboarding/pipeline/06-website-copy-generation.md) ([website 03](pipeline/03-website-copy-generation.md)) reuses these tools
 headless (**continuous** + **instant apply**, no chat UI, no `create_page`, no
 `update_reviews`) after the website template’s pages are copied onto the
-unpublished website. That job is automatic website copy generation, not the CMS
-assistant. After each `update_slot`, Go `POST`s `websiteRender`
-([website HTTP](api.md)). The tool result is a website image render (`before_image` /
-`after_image`), not HTML. Do not persist a website image render onto unpublished
-website slots. **Must not:** a model-invoked screenshot tool.
+unpublished website. That job is `GenerateWebsiteCopy`, not the CMS assistant.
+After each `update_slot`, Go **calls** `websiteRender` and **sends**
+`WebsiteRenderRequest` ([website HTTP](api.md)). Response `WebsiteRenderResponse`. The
+tool result is a website image render (`before_image` / `after_image`), not
+HTML. Do not persist a website image render onto unpublished website slots.
+**Must not:** a model-invoked screenshot tool.
 
 Assistant look: [assistant design decision record](../assistant/design-decision-record.md), website placement:
 [design decision 18](design-decision-record.md). Architecture: [website ADR](ADR.md) 6.
@@ -214,9 +215,14 @@ Copy-on-write (`parent_media_asset_id`, parent file never replaced) stays
 
 **Write-path ownership.** The CMS dispatcher (text in-process on
 `GET /v1/assistant/thread/ws`; voice `POST /v1/assistant/voice/tool-calls`)
-returns events only. It does **not** upsert unpublished website rows. Frontend
-mutates the in-memory projection and PATCHes (and `/menus`). Onboarding 06
-writes unpublished rows in River SQL (no `frontend-2`). `generate_image` /
+returns events only. It does **not** upsert unpublished website rows.
+Frontend mutates the in-memory projection and PATCHes Request
+`WebsitePageUpdate` (and `/menus` Request `WebsiteMenusUpdate`). Those
+PATCHes **persist into** `website_slots` / `website_sections` /
+`website_pages` / `website_forms` / `edit_history` /
+`website_settings.edit_history_head` (and `website.menus` on `/menus`).
+Onboarding 06 writes unpublished rows in River SQL (no `frontend-2`).
+`generate_image` /
 `cleanup_image` write `media_library` immediately (same as today’s media-library
 HTTP); canvas attach still follows Ask first vs instant apply. Every agent edit
 is Ctrl+Z’able. `cleanup_image` is also allowed on Ads (same media-library

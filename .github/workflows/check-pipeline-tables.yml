@@ -1,0 +1,34 @@
+name: check-pipeline-tables
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline-tables:
+    name: Pipeline table and heading check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Test checker
+        run: go test ./cmd/ci/check-pipeline-tables
+
+      - name: Scan feature docs
+        run: |
+          changed=""
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            changed=$(git diff --name-only "${{ github.event.pull_request.base.sha }}...HEAD" -- 'docs/features/**/persistence.md' || true)
+          fi
+          # shellcheck disable=SC2086
+          go run ./cmd/ci/check-pipeline-tables --all $changed

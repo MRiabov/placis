@@ -62,16 +62,19 @@ home gallery, projects website page, categories), and certifications.
 
 ## Flow
 
-1. Copying the website template’s pages onto the unpublished website writes
-   **tokenized** values (`{{business_name}}`) into unpublished website
-   records.
+1. `CopyWebsiteTemplatePages` **persists into** `website_pages` /
+   `website_sections` / `website_slots` / `website.menus` as
+   **tokenized** values (`{{business_name}}`).
 2. The website editor projection keeps the tokens and shows them as
    **inline variable chips** (with the variable's label), still editable.
    Wait teaser and CMS canvas resolve for paint through frontend-2 + the
    website component package when current profile data can fill those
    placeholders.
-3. **Website publication (04)** sends a tokenized dump plus
-   `WebsiteBusinessProfileRead` to `websitePublication`. The Worker
+3. `GenerateWebsiteCopy` **sends** `WebsiteRenderRequest` (`profile`
+   `WebsiteBusinessProfileRead`, `pages`, `media_asset_urls`) to
+   `websiteRender`. **Website publication (04)** **sends**
+   `WebsitePublicationRequest` (`dump` plus `WebsiteBusinessProfileRead`)
+   to `websitePublication`. The Worker
    resolves every variable — exact match → typed value, substring →
    substituted — and writes HTML to R2. Go does not fill tokens.
 4. A missing variable stays as a `{{var}}` token in the unpublished website;

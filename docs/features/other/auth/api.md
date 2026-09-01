@@ -11,7 +11,7 @@ status, `subscription_status` (`active` / `canceled` / `none`). Clerk ids are
 not on these responses; the Clerk SDK verifies the sign-in. The website editor
 uses `subscription_status` to block Publish without a billing GET.
 
-## Complete
+## Routes
 
 ### GET /v1/me
 

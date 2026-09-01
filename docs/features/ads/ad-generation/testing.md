@@ -49,3 +49,5 @@ faked. DB asserts name the tables from
      text, short label (`description`), CTA label, image crops for this ad's
      format, ad lead form fields, and the note of source media library item —
      and is deterministic (same input → same images).
+
+Named tables: `ad_reviews`.

@@ -12,7 +12,8 @@ Does not write unpublished website pages. Next step is 02, which SELECTs
   `website_settings` / `website_publications`. Production-ready website
   templates exist (`production_ready=true`). WIP ids
   (`production_ready=false`) exist and must not be chosen.
-- **Invoke**: website 01 in the 05 job (no LLM). Cases below share that
+- **Invoke**: website 01 in River job kind
+  `select_and_copy_website_template` (no LLM). Cases below share that
   invoke.
 - **Assert** (Postgres after 01, **before** 02 runs):
   - `website_settings`: one row, `tenant_id` = that tenant,
@@ -34,11 +35,11 @@ Does not write unpublished website pages. Next step is 02, which SELECTs
     production-ready id remains (lowest count is 0).
   - Ten **unactivated** tenants in Dublin do not occupy; this tenant may
     still receive a production-ready id those unpaid rows used.
-  - Occupying tenant `subscriptions.status=canceled`, `canceled_at` **5
-    months** ago still occupies. Same setup at **7 months** does not occupy.
+  - Occupying tenant `billing.subscriptions` (`status=canceled`, `canceled_at`
+    **5 months** ago still occupies. Same setup at **7 months** does not occupy.
   - Coords 300 km from the only occupying tenant: may share that website
     template.
-  - No Maps listing / no lat/lng: skip geo; pick is
+  - No Maps listing / no lat/lng on `google_maps_listings`: skip geo; pick is
     `sorted_production_ready[hash(tenant_id) % len]`.
   - Same `tenant_id` retry: same `website_settings` row, unchanged ids.
 - **Handoff to 02**: 02 Pre can SELECT this `website_settings` row. No

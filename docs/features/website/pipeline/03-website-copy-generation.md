@@ -13,7 +13,7 @@ the thin trigger (onboarding session / DAG / unpaid thread lock).
 
 ## Trigger
 
-02 succeeded. One River job `website_copy_generation`. Lock key:
+02 succeeded. One River job kind `website_copy_generation`. Lock key:
 `tenant_id` (unactivated tenant already exists). A second 03 start is
 **409** from River unique-insert on that key (do not HTTP-check before
 insert). While
@@ -33,10 +33,10 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 - `create_page` (02 already copied the website page set, including service
   pages from named services). Do not invent the service list. Unpaid owner
   prompts on the website preview **may** `create_page`.
-- `update_reviews`. Ranked pool order is River job
-  `reviews_ranking_for_display`
-  ([jobs](../../../general-architecture/jobs.md)), not this job. Owner
-  Content / `update_reviews` can still override a section later (CMS).
+- `update_reviews`. Ranked pool order is River job kind
+  `reviews_ranking_for_display` ([jobs](../../../general-architecture/jobs.md)), not this River job kind. Do not write
+  `website_slot_reviews`. Owner Content / `update_reviews` can still override a
+  section later (CMS).
 - Emit HTML in Go. Go does not resolve `{{…}}`.
 - Invent a hotlink URL for an image website slot.
 - Put image files or expiring signed URLs on `websiteRender`
@@ -69,6 +69,9 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 - Run at business lookup. Not on every later 02 event.
 
 ## Do
+
+`GenerateWebsiteCopy` writes copy and photo selection into existing
+unpublished website slots. River job kind `website_copy_generation`.
 
 1. **Turn 1 `websiteRender`.** Go loads the unpublished tree (tokens) +
    `WebsiteBusinessProfileRead` (not `website_manifest`) +
@@ -119,7 +122,7 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
    (`ai_generations.thread_id` required). After 09 do not append Assistant
    thread items.
 
-## Website image render SLO (Go worker round-trip)
+### Website image render SLO (Go worker round-trip)
 
 Clock: request leaves the Go worker → `websiteRender` → the website image
 render is back at the Go worker. Not Worker-only. Not 04 R2 / WebP /
@@ -133,23 +136,36 @@ purge.
 One Worker handles a batch, not one Worker per page. Worker timeout
 follows this table.
 
+## Loads
+
+Website component contracts under `catalog/`.
+
+## Reads
+
+Unpublished `website_pages`, `website_sections`, `website_slots`,
+`website.menus`, `website_settings`; live `business_profiles`;
+`media_assets`.
+
+## Sends
+
+`WebsiteRenderRequest` to `websiteRender`. Response
+`WebsiteRenderResponse`.
+
+## Calls
+
+`websiteRender`.
+
 ## Persist
 
-Updates to existing `website_slots` and website page SEO columns;
-media library rows from `generate_image` (`supplied_by=ai`, pending
-review); `ai_generations` for tool batches
+`website_slots`; `website_pages` SEO columns; `media_assets` from
+`generate_image` (`supplied_by=ai`, pending review); `edit_history`
+agent batches; `ai_generations` for tool batches
 (`thread_kind=website_copy_generation` thread,
 `prompt_id=website_copy_generation`); `ai.threads`
 (`thread_kind=cms_assistant`) / `assistant.thread_items` /
-`assistant.runs` while unactivated. No `website_publications` from this
-job. Onboarding session status is
-`selecting_and_copying_website_template` until wait-end (home website page copy
-done or wait cap), then `preview_and_edit`. Progress events on the onboarding
-session stream (complete website sections join the `/onboarding/preview`
-carousel). The website preview reloads unpublished GET from those events, and
-hydrates 03 `tool_summary` with `GET …/website-editor/assistant/thread`
-(onboarding session token or Clerk). After they share (08), further 03 writes do
-**not** live-update R2.
+`assistant.runs` while unactivated. `onboarding_sessions` wait-end
+`preview_and_edit`. No `website_publications` from this step. After they
+share (08), further 03 writes do **not** live-update R2.
 
 ## Fail
 
@@ -161,9 +177,14 @@ still writes current unpublished rows if they share after the cap.
 ## Out
 
 Wait-end navigates to `/onboarding/preview-and-edit/`
-([07](../../onboarding/pipeline/07-contractor-copy-improvement.md)). 08
-share (optional) writes the host from unpublished rows. The contractor host
-is static; it does not re-render as this job continues.
+([07](../../onboarding/pipeline/07-contractor-copy-improvement.md)).
+Progress events on the onboarding session stream (complete website
+sections join the `/onboarding/preview` carousel). The website preview
+reloads unpublished GET from those events, and hydrates 03
+`tool_summary` from [assistant HTTP](../../assistant/api.md) (onboarding
+session token or Clerk). 08 share (optional) writes the host from
+unpublished rows. The contractor host is static; it does not re-render
+as this job continues.
 
 ## Invariants
 

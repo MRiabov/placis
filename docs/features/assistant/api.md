@@ -32,7 +32,7 @@ do not treat a character cap as Voice generation. HTTP still puts a storage
 | Voice realtime connection | — | Browser-safe secret + expiry + realtime URL (`string` + `maxLength`, `wss://{region}.api.x.ai/v1/realtime`). Region is Go-picked; **omit** a browser region field. |
 | Text WebSocket events | — | Closed `oneOf` event names (same rule as SSE: no unconstrained `payload`). |
 
-## Complete — Go WebSocket (text chat only)
+## Routes — Go WebSocket (text chat only)
 
 Audio never uses this socket. Hydrate, `/thread/new`, voice HTTP,
 `record-apply`, and `record-reject` stay unary HTTP. Huma may not host the
@@ -63,7 +63,7 @@ socket; event structs still land in `/openapi.json` for typegen.
 - **Must not:** hydrate, `/thread/new`, voice create, transcripts, tool-calls,
   recordings, or record-apply/reject on this socket.
 
-## Complete — HTTP
+## Routes — HTTP
 
 ### GET /v1/assistant/thread
 

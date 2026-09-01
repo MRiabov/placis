@@ -5,19 +5,22 @@ From-scratch website create. Website owns the **write**. Onboarding owns
 from-scratch create step. Website template object: [catalog.md](../catalog.md).
 
 Each step file uses Trigger / Pre / Must not / Do / Persist / Fail / Out /
-Invariants. Matching [testing/](testing/) — backend integration tests
-(real Go + real Postgres + real Worker). Prior-step rows are already in
-Postgres. Assert is every table this step writes, plus the next-step
-handoff row in Postgres. Paid / external collaborators are faked (Google,
-LLM, Stripe, voice, R2, `purge_cache`). Not the Worker. Playwright E2E is
+Invariants (closed `##`; optional Reads / Loads / Sends / Calls). **Do**
+names the function. Matching [testing/](testing/) — backend integration
+tests (real Go + real Postgres + real Worker). Named identifiers:
+[docs conventions](../../../docs-conventions.md#named-identifiers).
+Prior-step rows are already in Postgres. Assert is every table this step
+writes, plus the next-step handoff row in Postgres. Paid / external
+collaborators are faked (Google, LLM, Stripe, voice, R2, `purge_cache`).
+Not the Worker. Playwright E2E is
 [website/testing.md](../testing.md) /
 [onboarding/testing.md](../../onboarding/testing.md).
 
 | Website pipeline | Onboarding DAG (thin trigger) |
 | --- | --- |
-| [01 select website template](01-select-website-template.md) | 05 enqueue (select then copy template pages) |
-| [02 copy the website template’s pages onto the unpublished website](02-copy-website-template-pages.md) | same 05 run, after 01 |
-| [03 automatic website copy generation](03-website-copy-generation.md) | 06 River job / wait teaser / unpaid thread |
+| [01 select website template](01-select-website-template.md) | 05 **inserts** `select_and_copy_website_template` (select then copy template pages) |
+| [02 copy the website template’s pages onto the unpublished website](02-copy-website-template-pages.md) | same River job kind, after 01; **inserts** `website_copy_generation` |
+| [03 automatic website copy generation](03-website-copy-generation.md) | 06 River job kind `website_copy_generation` / wait teaser / unpaid thread |
 | [04 website publication](04-website-publication.md) | 08 share (strip on) and 09 pay (strip off); later CMS Publish is the same 04 |
 
 ```text

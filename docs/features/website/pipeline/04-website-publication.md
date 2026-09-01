@@ -34,13 +34,17 @@ Strip on/off is a caller flag.
 - Rewrite `latest/` because later business research landed. Live R2 is a
   **snapshot**. Later business research only changes what the **next** 04
   resolves.
-- Call `websiteRender` from this job.
+- Call `websiteRender` from this step.
+- Persist resolved HTML onto unpublished `website_slots`.
 - Return a website image render to the model.
 - Put image files or expiring signed URLs on `websitePublication`.
 - Make onboarding-written rows website-rollback targets
   (`published_by=onboarding`).
 
 ## Do
+
+`PublishWebsite` **calls** `websitePublication`. Same write for
+onboarding 08/09 and later CMS Publish.
 
 1. Validate every website section against its website component contract.
    A required missing var is a publication blocker.
@@ -60,11 +64,31 @@ Strip on/off is a caller flag.
 5. Insert / archive `website_publications` as 08/09/CMS already specify
    (`published_by`, strip, `active`).
 
+## Loads
+
+Website component contracts under `catalog/`.
+
+## Reads
+
+Unpublished `website_pages`, `website_sections`, `website_slots`,
+`website.menus`, `website_settings`, `website_forms`; prior
+`website_publications`; live `business_profiles`; `media_assets`.
+
+## Sends
+
+`WebsitePublicationRequest` to `websitePublication`. Response
+`WebsitePublicationResponse`.
+
+## Calls
+
+`websitePublication`.
+
 ## Persist
 
 `website_publications` (tokenized dump on the row; HTML snapshot in R2);
-R2 `{version_number}/` and `latest/`; purge. Caller-owned host rows
-(`website_addresses`, `website_prefix`) stay in 08/09/CMS.
+`website_publication_issues` post-publication only. R2 `{version_number}/`
+and `latest/`; purge. Caller-owned host rows (`website_addresses`,
+`website_prefix`) stay in 08/09/CMS.
 
 ## Fail
 
@@ -76,7 +100,7 @@ this write. Retry the same caller (share / pay / Publish).
 Live GET is Cache then R2. Website visitors keep the previous `latest/`
 until copy + purge finish.
 
-## Website HTML render SLO (Go worker round-trip)
+### Website HTML render SLO (Go worker round-trip)
 
 Clock: request leaves the Go worker → `websitePublication` writes HTML to
 R2 → response is back at the Go worker. Not a website image render. Not

@@ -135,12 +135,17 @@ A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`,
 
 ### Write — the patch
 
-`PATCH /v1/website/editor/pages/{page_id}` takes a website page patch whose
-`sections[]` carry the edits, plus required `base_edit_history_head` (the acked
-head; null only if the stack is empty). Dirty keys unchanged — including keys
-dirtied by in-memory undo/redo. Assistant copy-out adds `ai_generation_id` on
-those dirty keys. Success returns **only** `{ edit_history_head, batch_id }` —
-not the projection, not the log. To update a website slot you send:
+`PATCH /v1/website/editor/pages/{page_id}` Request `WebsitePageUpdate`,
+Response `WebsiteEditApplyRead`. It **persists into** `website_slots` /
+`website_sections` / `website_pages` / `website_forms` /
+`website_form_fields` / `website_form_field_options` / `website.menus` /
+`edit_history` and `website_settings.edit_history_head`. Body: dirty keys
+plus required
+`base_edit_history_head` (the acked head; null only if the stack is empty).
+Dirty keys unchanged — including keys dirtied by in-memory undo/redo.
+Assistant copy-out adds `ai_generation_id` on those dirty keys. Success
+returns **only** `{ edit_history_head, batch_id }` — not the projection,
+not the log. To update a website slot you send:
 
 ```json
 { "sections": [ { "id": "<section id>", "slots": [
@@ -160,12 +165,14 @@ not the projection, not the log. To update a website slot you send:
   `fields[]` (typed form field rows), `privacy_notice`.
 
 Top menu and footer writes are **not** on this PATCH. They are
-`PATCH /v1/website/editor/menus`: `base_edit_history_head` plus dirty keys
-(`top_menu` and/or `footer` and/or `show_phone` / `show_email` /
-`show_contact`). Omit a field = no change. Human PATCH may replace a whole tree
-(including a wipe). Assistant writes use `update_menus` ([assistant.md](assistant.md)), then
-the website editor copies out on `/menus` like any other dirty keys. Same
-`{ edit_history_head, batch_id }` response and `409 edit_history_conflict`.
+`PATCH /v1/website/editor/menus` (Request `WebsiteMenusUpdate`, Response
+`WebsiteEditApplyRead`; **persists into** `website.menus` / `edit_history`):
+`base_edit_history_head` plus dirty keys (`top_menu` and/or `footer` and/or
+`show_phone` / `show_email` / `show_contact`). Omit a field = no change. Human
+PATCH may replace a whole tree (including a wipe). Assistant writes use
+`update_menus` ([assistant.md](assistant.md)), then the website editor copies out on `/menus`
+like any other dirty keys. Same `{ edit_history_head, batch_id }` response and
+`409 edit_history_conflict`.
 
 Coalesce means the **dirty keys since the last successful copy-out**, not the
 full draft. Do not send sibling website slots, `media_assets[]`, the website

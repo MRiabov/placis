@@ -4,12 +4,14 @@ Pick a website template. Website styles ship with that pick. Do not write
 unpublished pages. Do not call an LLM. What one website template is:
 [catalog.md](../catalog.md).
 
-Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) enqueues this, then [02](02-copy-website-template-pages.md).
+Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) **inserts** River job kind `select_and_copy_website_template`;
+this step runs **inside** that River job kind, then [02](02-copy-website-template-pages.md).
 
 ## Trigger
 
 Onboarding 05 after client interview complete
-(`POST .../interview/complete`).
+(`POST .../interview/complete` **inserts**
+`select_and_copy_website_template`).
 
 ## Pre
 
@@ -20,7 +22,9 @@ Onboarding 05 after client interview complete
 
 ## Must not
 
-- Write unpublished `website_pages` / `website_sections` / `website_slots`.
+- Write unpublished `website_pages` / `website_sections` / `website_slots`
+  / `website.menus` / `website_forms`.
+- Write `website_publications` / `edit_history`.
 - Resolve website placeholders.
 - Wait for business research to finish.
 - Pick reviews or bake project gallery ids.
@@ -29,6 +33,9 @@ Onboarding 05 after client interview complete
   website template table. No independent website styles pick.
 
 ## Do
+
+`SelectWebsiteTemplate` picks a production-ready website template. No
+LLM. No unpublished pages.
 
 1. If this tenant already has `website_settings.website_template_id`, reuse
    that pick (retry of the same tenant). Stop.
@@ -68,22 +75,30 @@ Onboarding 05 after client interview complete
    least-used in radius, not “pick any.”
 7. Persist the pick. Do not copy pages (that is 02).
 
+## Loads
+
+Production-ready website templates from the website template catalog
+(`production_ready=true`).
+
+## Reads
+
+`tenants`, `billing.subscriptions`, `google_maps_listings` (coords when
+Maps ran), existing `website_settings` on retry.
+
 ## Persist
 
 One `website_settings` row on that `tenant_id`: `website_template_id` =
 production-ready website template catalog id (string), `preset_id` = that
 website template’s associated website style catalog preset. 02 SELECTs that
-row. No unpublished website rows. No `website_copy_generation` yet. No
-`ai.threads` / `ai_generations` for this step.
-
-`billing.subscriptions.canceled_at` timestamptz nullable: set when
-`status` becomes `canceled`. Occupancy reads it.
+row. No `website_copy_generation` yet. No `ai.threads` /
+`ai_generations` for this step.
 
 ## Fail
 
-Throw with 05 (`select_and_copy_website_template_failed`). No unpublished
-website. No `latest/`. Retry is a new 05 (01 then 02). Empty
-production-ready catalog is this Fail.
+Throw with 05 (`select_and_copy_website_template_failed`). No
+`website_pages` / `website_sections` / `website_slots`. No `latest/`.
+Retry is a new 05 (01 then 02). Empty production-ready catalog is this
+Fail.
 
 ## Out
 

@@ -1,8 +1,9 @@
 # 02 — Business research (integration test)
 
 - **Setup**: 01 business lookup has returned; `online_research_consent_at` set.
-- **Invoke**: business lookup returns; ETL extract/transform jobs run as
-  background jobs. Also: attach/change sources six times inside 30 minutes on
+- **Invoke**: business lookup returns; `StartRun` **inserts** each ETL run
+  kind’s extract River job kind, then the matching transform River job kind,
+  as background jobs. Also: attach/change sources six times inside 30 minutes on
   the same tenant.
 - **Assert**: Review / checklist reads succeed before jobs finish; one
   `enqueue_id` per `StartRun`; `etl.runs` rows exist for ETL run kinds that

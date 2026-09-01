@@ -17,3 +17,6 @@
   `business_profile_edit_sources`. Paid Maps / LLM faked.
 - **Fake**: Maps Details / scrape, LLM (`glm-5.3-flash` dated id), crawl
   Extract/GET. Never live Google / OpenRouter / Parallel Search.
+
+Named tables: `business_profile_reviews`, `business_profiles`, `etl.runs`,
+`etl.sources`, `etl.website_crawl_pages`, `google_maps_listing_photos`.
