@@ -8,6 +8,15 @@ import (
 	"testing"
 )
 
+func TestLiteralNeedle(t *testing.T) {
+	if got := literalNeedle("marketing claim"); got != "marketing" {
+		t.Fatalf("got %q", got)
+	}
+	if got := literalNeedle("MarketingClaim"); got != "marketingclaim" {
+		t.Fatalf("got %q", got)
+	}
+}
+
 func TestScanAppliesTiers(t *testing.T) {
 	src := mustRead(t, "testdata/glossary.md")
 	tokens, err := parseDontSayTable(src)

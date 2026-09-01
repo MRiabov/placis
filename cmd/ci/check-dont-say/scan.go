@@ -24,7 +24,8 @@ var defaultRoots = []string{
 
 type compiledToken struct {
 	token
-	re *regexp.Regexp
+	re     *regexp.Regexp
+	needle string
 }
 
 type hit struct {
@@ -58,7 +59,7 @@ func compileTokens(tokens []token) ([]compiledToken, error) {
 			if err != nil {
 				return fmt.Errorf("%q: %w", p, err)
 			}
-			out = append(out, compiledToken{token: tok, re: re})
+			out = append(out, compiledToken{token: tok, re: re, needle: literalNeedle(p)})
 			return nil
 		}
 		for _, p := range phrases {
@@ -73,6 +74,14 @@ func compileTokens(tokens []token) ([]compiledToken, error) {
 		}
 	}
 	return out, nil
+}
+
+func literalNeedle(phrase string) string {
+	lower := strings.ToLower(phrase)
+	if i := strings.IndexAny(lower, " \t"); i > 0 {
+		return lower[:i]
+	}
+	return lower
 }
 
 func compilePhrase(phrase string, identifier bool) (*regexp.Regexp, error) {
@@ -476,7 +485,21 @@ func coveredByAllowed(line string, start, end int, tok compiledToken) bool {
 	return false
 }
 
+func tokensForPath(path string, compiled []compiledToken) []compiledToken {
+	out := make([]compiledToken, 0, len(compiled))
+	for _, tok := range compiled {
+		if appliesTo(tok, path) {
+			out = append(out, tok)
+		}
+	}
+	return out
+}
+
 func scanFile(path string, compiled []compiledToken) ([]hit, error) {
+	applicable := tokensForPath(path, compiled)
+	if len(applicable) == 0 {
+		return nil, nil
+	}
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -484,21 +507,32 @@ func scanFile(path string, compiled []compiledToken) ([]hit, error) {
 	lines := strings.Split(string(data), "\n")
 	var hits []hit
 	for i, line := range lines {
-		prev, next := "", ""
+		lower := strings.ToLower(line)
+		prev := ""
 		if i > 0 {
 			prev = lines[i-1]
 		}
-		if i+1 < len(lines) {
-			next = lines[i+1]
-		}
-		window, mapSpan := coveringWindow(prev, line, next)
-		for _, tok := range compiled {
-			if !appliesTo(tok, path) || allowedOnLine(tok, line) || (inheritsDontSayContext(line) && allowedOnLine(tok, prev)) {
+		var window string
+		var mapSpan func(start, end int) (int, int, bool)
+		windowReady := false
+		for _, tok := range applicable {
+			if tok.needle != "" && !strings.Contains(lower, tok.needle) {
+				continue
+			}
+			if allowedOnLine(tok, line) || (inheritsDontSayContext(line) && allowedOnLine(tok, prev)) {
 				continue
 			}
 			locs := tok.re.FindAllStringIndex(line, -1)
 			if locs == nil {
 				continue
+			}
+			if !windowReady {
+				next := ""
+				if i+1 < len(lines) {
+					next = lines[i+1]
+				}
+				window, mapSpan = coveringWindow(prev, line, next)
+				windowReady = true
 			}
 			hitLine := false
 			for _, loc := range locs {
