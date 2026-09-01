@@ -48,7 +48,7 @@ A feature directory holds, as applicable:
 | `design-decision-record.md` | design decision record (look and interaction, not architecture). Same numbered, dated, keep-old-entry structure as ADR.md. One number is one decision. **Why** is owner-written; omit it rather than inventing it. |
 | `architecture.md` | the logic: content/component model, flows, states. Named services index when the feature is defined. Not Go struct bodies. |
 | `persistence.md` | that feature's tables. Defined features: `## Tables` / `## Indexes` with Columns, Enums, Uniques, Written by, Notes. Shared tables are linked, never copied. |
-| `api.md` | Canonical HTTP for this feature. Defined features: `## DTOs`, `## Routes` (one table), `## Do not create`. Not Go struct bodies. Conventions: [general-architecture/api.md](general-architecture/api.md). |
+| `api.md` | Canonical HTTP for this feature. Defined features: `## DTOs`, `## Routes`, `## Do not create`. Optional `###` groups under DTOs/Routes (glossary terms). Not Go struct bodies. Conventions: [general-architecture/api.md](general-architecture/api.md). |
 | `technical-implementation.md` | pipeline, validation, testing — references `persistence.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
@@ -209,8 +209,13 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 
 Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
 ratchets leftover extra `##` on undefined features (extras may only shrink).
-Website, billing, and assistant have none. `###` only as Routes overflow:
-`### METHOD /path` when a table cell would be a paragraph. No `###` under DTOs.
+Website, billing, and assistant have none. Optional `###` groups under
+`## DTOs` and `## Routes` (glossary terms, same titles on both when
+split; [glossary.md](glossary.md) grain). Not mandatory — split when
+the table is hard to review. `### METHOD /path` overflow still sits
+under that group when a cell would be a paragraph. `## Do not create`
+stays one list. Persistence already overflows as `### \`name\``; do not
+add a second grouping layer there.
 
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`.
 Overflow is `###` under a table, not a new `##`. CI ratchets leftover
@@ -239,12 +244,19 @@ labels, not `##`.
 
 ### `api.md` shape (defined features)
 
-`## DTOs` — table **DTO** | **Fields** | **Description**. Fields are
-backticked names only. Nested types get their own rows. No `minLength` /
-`enum` in the table. One `*Read` / `*Create` / `*Update` per entity.
+`## DTOs` — table **DTO** | **Fields** | **Description**. Each field is
+one backtick. Primitives are the name only (`id`). A nested DTO, slice,
+or map uses Go after a colon (`blockers: []WebsitePageBlockerRead`,
+`publication: WebsitePublicationRead`,
+`pages: map[string]WebsiteRenderPage`). A closed union is OpenAPI
+`oneOf` (`events: oneOf AssistantVoiceOwnerTranscriptEvent /
+AssistantVoiceAssistantTranscriptEvent /
+AssistantVoiceSpeechStartedEvent`) — Go has no sum type. Nested types
+still get their own rows. No `minLength` / `enum` in the table (HTTP
+conventions / OpenAPI). One `*Read` / `*Create` / `*Update` per entity.
 
-`## Routes` — **one table**, fixed columns (empty cell = N/A; do not drop
-columns). One row per operation:
+`## Routes` — **one table** (or one table per `###` group), fixed
+columns (empty cell = N/A; do not drop columns). One row per operation:
 
 - **Method + path** — `GET /v1/billing/usage`,
   `POST /internal/website-render`. Never path-only, never
@@ -260,8 +272,10 @@ on the Request DTO.
 `## Tables` then one `### \`table_name\`` (qualified when needed:
 `website.menus`). Closed keys; omit an empty key:
 
-- **Columns:** backticked names plus `fk` / `nullable` when that is the
-  contract. Keep `jsonb` where that is the contract. No enum sets here.
+- **Columns:** backticked names. Annotate the SQL type when it is the
+  contract (`uuid`, `text`, `int`, `bool`, `timestamptz`, `jsonb`), then
+  `fk` / `nullable`. `fk` may name the target (`fk` → `ai.threads`).
+  jsonb may name a DTO or a closed union. No enum sets here.
 - **Enums:** closed check-constraints (`page_type` → `home` / `about` /
   …). Glossary = meaning; persistence = which column.
 - **Uniques:** `(tenant_id, path)`, …

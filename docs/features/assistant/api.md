@@ -39,23 +39,34 @@ WebSocket. Extra keys 4xx. Field name is **`items`**, not
 
 ## DTOs
 
+### Assistant
+
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `AssistantThreadRead` | `id`, `status`, `last_activity_at`, `items` | Hydrate / new thread |
+| `AssistantThreadRead` | `id`, `status`, `last_activity_at`, `items: []AssistantThreadItemRead` | Hydrate / new thread |
 | `AssistantThreadItemRead` | `thread_item_kind`, `body`, `icon`, `offset_seconds`, `created_at` | One `items[]` row; omit `provider_event` |
-| `AssistantOwnerMessage` | `type`, `body`, `assistant_screen`, `plan`, `ask_first`, `website_working_copy` | WS inbound; `type=owner_message` |
-| `AssistantWebsiteWorkingCopy` | `pages`, `menus`, `website_styles` | Nested `WebsitePageRead` / `WebsiteMenusRead` / `WebsiteSettingsRead`; omit off `website_editor` |
+| `AssistantOwnerMessage` | `type`, `body`, `assistant_screen`, `plan`, `ask_first`, `website_working_copy: AssistantWebsiteWorkingCopy` | WS inbound; `type=owner_message` |
+| `AssistantWebsiteWorkingCopy` | `pages: []WebsitePageRead`, `menus: WebsiteMenusRead`, `website_styles: WebsiteSettingsRead` | Omit off `website_editor` |
 | `AssistantTokenDelta` | `type`, `delta` | WS outbound; `type=token_delta` |
 | `AssistantThinkingEvent` | `type`, `body` | WS outbound; `type=thinking` |
 | `AssistantToolActivityEvent` | `type`, `status`, `summary`, `icon` | WS outbound; `type=tool_activity` |
 | `AssistantWsError` | `type`, `code`, `message` | WS outbound; `type=error` |
 | `AssistantRecordApplyCreate` | `run_id` | Ask first Apply |
 | `AssistantRecordRejectCreate` | `run_id` | Ask first Reject |
-| `AssistantVoiceRealtimeConnectionCreate` | `assistant_screen`, `website_working_copy` | Voice create; no `plan` / `ask_first` / `follow` |
+
+Omit `website_working_copy` off `website_editor`. `plan` / `ask_first`
+only when `assistant_screen` is `website_editor`. **Follow** is not a
+field; `follow: false` → **400**.
+
+### Voice
+
+| DTO | Fields | Description |
+| --- | --- | --- |
+| `AssistantVoiceRealtimeConnectionCreate` | `assistant_screen`, `website_working_copy: AssistantWebsiteWorkingCopy` | Voice create; no `plan` / `ask_first` / `follow` |
 | `AssistantVoiceRealtimeConnectionRead` | `secret`, `expires_at`, `realtime_url` | Browser-safe; omit API key and region field |
-| `AssistantVoiceToolCallsCreate` | `assistant_screen`, `website_working_copy`, `tools` | Closed CMS tool union; args in [website editor tools](../website/assistant.md) |
+| `AssistantVoiceToolCallsCreate` | `assistant_screen`, `website_working_copy: AssistantWebsiteWorkingCopy`, `tools` | Closed CMS tool union; args in [website editor tools](../website/assistant.md) |
 | `AssistantVoiceToolEventRead` | `status`, `summary`, `icon` | HTTP JSON; not pushed on the Go WS |
-| `AssistantVoiceTranscriptsCreate` | `events`, `usage`, `internal_reasoning` | `events` omit on usage-only; `usage` required when debiting |
+| `AssistantVoiceTranscriptsCreate` | `events: oneOf AssistantVoiceOwnerTranscriptEvent / AssistantVoiceAssistantTranscriptEvent / AssistantVoiceSpeechStartedEvent`, `usage: AssistantVoiceUsage`, `internal_reasoning` | `events` omit on usage-only; `usage` required when debiting |
 | `AssistantVoiceUsage` | `audio_seconds_sent`, `audio_seconds_received`, `billed_text_item_count` | Debit body; extra keys 4xx |
 | `AssistantVoiceOwnerTranscriptEvent` | `type`, `item_id`, `transcript` | `type=conversation.item.input_audio_transcription.completed` |
 | `AssistantVoiceAssistantTranscriptEvent` | `type`, `item_id`, `transcript` | `type=response.output_audio_transcript.done` |
@@ -63,17 +74,13 @@ WebSocket. Extra keys 4xx. Field name is **`items`**, not
 | `AssistantVoiceRecordingCreate` | `run_id`, `content_type`, `byte_size` | Signed-URL grant |
 | `AssistantVoiceRecordingRead` | `id`, `signed_url`, `expires_at` | `files` id + PUT URL |
 
-`AssistantThreadRead.items` are `AssistantThreadItemRead`.
-`AssistantOwnerMessage.website_working_copy` and Voice create / tool-calls
-`website_working_copy` are `AssistantWebsiteWorkingCopy` (omit off
-`website_editor`). `plan` / `ask_first` only when `assistant_screen` is
-`website_editor`. **Follow** is not a field; `follow: false` → **400**.
-`AssistantVoiceTranscriptsCreate.events` is a closed `oneOf` of the
-three Voice event DTOs. `usage` is `AssistantVoiceUsage`. Do **not** add
-`input_tokens` / `output_tokens` on that body. Voice
-`ai_generations.input_tokens` / `output_tokens` stay null.
+Do **not** add `input_tokens` / `output_tokens` on
+`AssistantVoiceUsage`. Voice `ai_generations.input_tokens` /
+`output_tokens` stay null.
 
 ## Routes
+
+### Assistant
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -82,16 +89,6 @@ three Voice event DTOs. `usage` is `AssistantVoiceUsage`. Do **not** add
 | `POST /v1/assistant/thread/new` | **New thread** / clear context | | `AssistantThreadRead` | | `ai.threads` | Previous `status=completed`; `items: []`; does not drop Voice | `403` `tenant_unactivated`; `409` `thread_current_exists`; `409` `in_flight_run` | `/thread/clear`; `status=cleared` |
 | `POST /v1/assistant/record-apply` | Ask first **Apply** after website PATCH | `AssistantRecordApplyCreate` | | `runs` | `runs.ask_first_status` | Empty 200; metadata only | `403` `tenant_unactivated`; `409` `ask_first_not_pending` | Website slot payload; upsert unpublished website rows |
 | `POST /v1/assistant/record-reject` | Ask first **Reject** | `AssistantRecordRejectCreate` | | `runs` | `runs`, `thread_items` | Empty 200; muted thread item; no LLM | `403` `tenant_unactivated`; `409` `ask_first_not_pending` | Upsert or delete unpublished website rows; 402 |
-| `POST /v1/assistant/voice/realtime-connection` | CMS Assistant after microphone granted | `AssistantVoiceRealtimeConnectionCreate` | `AssistantVoiceRealtimeConnectionRead` | | `runs`, `ai_generations` | Always Ask first on the run; `CreateAssistantVoiceRealtimeConnection`; **calls** xAI region from business country | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run` | Long-lived voice API key; browser-chosen region or host; Go WebSocket |
-| `POST /v1/assistant/voice/tool-calls` | Browser after voice-service `function_call` | `AssistantVoiceToolCallsCreate` | `AssistantVoiceToolEventRead` | `runs` | `thread_items`, `ai_generations` | `CreateAssistantVoiceToolCalls`; `in_flight_run` is a second start; after 20 tool rounds do not execute more tools | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `allowed_set_rejected` | Freeform tool registry; wait on the text WS; upsert unpublished website rows |
-| `POST /v1/assistant/voice/transcripts` | Committed utterances; usage-only when Voice turns off | `AssistantVoiceTranscriptsCreate` | | | `thread_items` | `CreateAssistantVoiceTranscripts`; settlement 200; `in_flight_run` is a second start | `403` `tenant_unactivated` | PCM; `.updated` / `.delta`; `POST /v1/stt`; recording file; invent `offset_seconds`; `thread_item_kind=system` |
-| `POST /v1/assistant/voice/recordings` | CMS Voice off (including idle) | `AssistantVoiceRecordingCreate` | `AssistantVoiceRecordingRead` | `runs` | `files` | Signed URL; browser PUT; then complete | `403` `tenant_unactivated`; `404` bad `run_id`; `409` already has a recording; `413` `byte_size` | Recording file on this POST; `/v1/media-assets` |
-| `POST /v1/assistant/voice/recordings/{id}/complete` | After PUT succeeds | | | `files` | `runs.recording_file_id` | `CompleteAssistantVoiceRecording` | `403` `tenant_unactivated`; `404` not this tenant’s voice recording | Recording file on this POST |
-
-Onboarding guide Voice:
-[POST /v1/onboarding/assistant/voice/realtime-connection](../onboarding/api.md).
-`realtime_url` is `wss://{region}.api.x.ai/v1/realtime` (Go-picked region).
-Not a Go WebSocket.
 
 ### GET /v1/assistant/thread/ws
 
@@ -104,6 +101,21 @@ Outbound closed `oneOf` on `type`: `token_delta`, `thinking`,
 `tool_activity`, `error`. `tool_activity.status` is `planned` /
 `applied` / `skipped` / `failed`. `409` `allowed_set_rejected` is a
 failed activity event on this socket.
+
+### Voice
+
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `POST /v1/assistant/voice/realtime-connection` | CMS Assistant after microphone granted | `AssistantVoiceRealtimeConnectionCreate` | `AssistantVoiceRealtimeConnectionRead` | | `runs`, `ai_generations` | Always Ask first on the run; `CreateAssistantVoiceRealtimeConnection`; **calls** xAI region from business country | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run` | Long-lived voice API key; browser-chosen region or host; Go WebSocket |
+| `POST /v1/assistant/voice/tool-calls` | Browser after voice-service `function_call` | `AssistantVoiceToolCallsCreate` | `AssistantVoiceToolEventRead` | `runs` | `thread_items`, `ai_generations` | `CreateAssistantVoiceToolCalls`; `in_flight_run` is a second start; after 20 tool rounds do not execute more tools | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `allowed_set_rejected` | Freeform tool registry; wait on the text WS; upsert unpublished website rows |
+| `POST /v1/assistant/voice/transcripts` | Committed utterances; usage-only when Voice turns off | `AssistantVoiceTranscriptsCreate` | | | `thread_items` | `CreateAssistantVoiceTranscripts`; settlement 200; `in_flight_run` is a second start | `403` `tenant_unactivated` | PCM; `.updated` / `.delta`; `POST /v1/stt`; recording file; invent `offset_seconds`; `thread_item_kind=system` |
+| `POST /v1/assistant/voice/recordings` | CMS Voice off (including idle) | `AssistantVoiceRecordingCreate` | `AssistantVoiceRecordingRead` | `runs` | `files` | Signed URL; browser PUT; then complete | `403` `tenant_unactivated`; `404` bad `run_id`; `409` already has a recording; `413` `byte_size` | Recording file on this POST; `/v1/media-assets` |
+| `POST /v1/assistant/voice/recordings/{id}/complete` | After PUT succeeds | | | `files` | `runs.recording_file_id` | `CompleteAssistantVoiceRecording` | `403` `tenant_unactivated`; `404` not this tenant’s voice recording | Recording file on this POST |
+
+Onboarding guide Voice:
+[POST /v1/onboarding/assistant/voice/realtime-connection](../onboarding/api.md).
+`realtime_url` is `wss://{region}.api.x.ai/v1/realtime` (Go-picked region).
+Not a Go WebSocket.
 
 ### POST /v1/assistant/voice/transcripts
 
