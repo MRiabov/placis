@@ -177,7 +177,7 @@ First pay (09). Not Usage & billing
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `POST /v1/onboarding/activation/checkout` | strip island; pay CTA on `/onboarding/preview-and-edit/` | | `WebsiteActivationCheckoutRead` | | `website_activations` | First activation also signs up / creates the owner | | Website publication; browser Stripe success URL as truth; `/v1/website-activations/…`; `/v1/billing/subscription/checkout` |
 | `GET /v1/onboarding/activation/status` | poll after checkout | | `WebsiteActivationStatusRead` | `website_activations` | | Closed `payment_status` + checkout URL if still needed | | |
-| `POST /v1/webhooks/stripe` | Stripe | | | | `stripe_events`, `website_activations` | Verify, persist event, **insert** `website_activation`, return | | Trust browser success URL |
+| `POST /v1/webhooks/stripe` | Stripe | | | | `stripe_events`, `website_activations` | Verify, persist event; activation Checkout **inserts** `website_activation`; extra usage credit Checkout **inserts** `billing_extra_usage_credit`; subscription / `invoice.paid` **inserts** `billing_subscription_sync` | | Trust browser success URL |
 
 Checkout / status auth: Clerk JWT, Host / `website_prefix`
 (unactivated allowed) **or** (checkout only) Clerk JWT unactivated

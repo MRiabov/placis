@@ -73,7 +73,9 @@ step.
 | `reviews_ranking_for_display` | `tenant_id` | `tenant_id` while pending/running | rank `in_pool` reviews for display |
 | `ads_generate` | `tenant_id`, `ad_id` | `(tenant_id, ad_id)` while pending/running | `GenerateAdDraft` |
 | `assistant_thread_compaction` | `thread_id` | `thread_id` while pending/running | compact `ai.threads` in place |
-| `website_activation` | `tenant_id`, `checkout_session_id` | `tenant_id` while pending/running | `tenants.status=active`; **calls** `PublishWebsite` |
+| `website_activation` | `tenant_id`, `checkout_session_id` | `tenant_id` while pending/running | `tenants.status=active`; **calls** `PublishWebsite`; **calls** `ActivateSubscription` |
+| `billing_extra_usage_credit` | Stripe checkout session id | checkout session id while pending/running | `ApplyExtraUsageCredit` |
+| `billing_subscription_sync` | Stripe subscription id | Stripe subscription id while pending/running | `SyncSubscriptionFromStripe`; on `canceled` **calls** `UnpublishWebsite`; on `invoice.paid` **calls** `AddIncludedUsageCredit` |
 | `scheduled_etl` | none | `tenant_id` while pending/running | **calls** `StartRun(trigger=scheduled)` |
 
 Extract **must not** write `business_profile_*`. Transform **must not** call
@@ -181,8 +183,30 @@ turns.
 Stripe `checkout.session.completed` **inserts** this River job kind and the
 request returns. Worker: onboarding
 [09](../features/onboarding/pipeline/09-website-activation.md) (Clerk /
-`tenants.status=active`, then **calls** `PublishWebsite` strip off). Replay
+`tenants.status=active`, then **calls** `PublishWebsite` strip off, then
+**calls** `ActivateSubscription`). Replay
 does not activate twice (persist grain, not this unique key).
+
+### `billing_extra_usage_credit`
+
+Paid extra usage credit Checkout. `POST /v1/webhooks/stripe` **inserts** this
+River job kind after `stripe_events`. Worker **calls** `ApplyExtraUsageCredit`
+(**persists into** `ai_use_ledger_entries` `entry_kind=extra_usage_credit`).
+Replay of the same checkout session id is a unique conflict; do not insert a
+second row. Not website activation. Routes:
+[billing HTTP](../features/billing/api.md).
+
+### `billing_subscription_sync`
+
+Stripe subscription created / updated / deleted and `invoice.paid` (billing).
+Webhook **inserts** this River job kind. Unique on Stripe subscription id while
+pending/running (serialize). Worker **calls** `SyncSubscriptionFromStripe`.
+New paid period: **calls** `AddIncludedUsageCredit` (safe to retry via
+`stripe_events.event_id`; do not insert a second `included_usage_credit` from
+the Stripe subscription-updated event alone). `status=canceled`: **calls**
+`UnpublishWebsite`. Pay-again Checkout paid: new `stripe_subscription_id`,
+`status=active`, `canceled_at` cleared. Routes:
+[billing HTTP](../features/billing/api.md).
 
 ### `scheduled_etl`
 

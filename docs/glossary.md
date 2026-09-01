@@ -1807,6 +1807,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | subscription shelf / subscription-shelf | Usage & billing |
 | ledger | AI use ledger |
 | usage credit ledger | AI use ledger |
+| credit grant / included grant | included usage credit |
 | lapsed | they stopped paying / subscription is not active (`canceled`) |
 | Pro Plus (billing) / Pro Max (billing) / Placis Pro Plus (billing) / Placis Pro Max (billing) | Placis Pro Plus plan / Placis Pro Max plan |
 | Placis Pro (billing) / Pro (billing) | Placis Pro plan |

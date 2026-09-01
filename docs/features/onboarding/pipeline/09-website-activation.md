@@ -53,7 +53,8 @@ that already lost.
 ## Do
 
 This step **is** River job kind `website_activation`. Set
-`tenants.status=active`, then **calls** `PublishWebsite` (strip off).
+`tenants.status=active`, then **calls** `PublishWebsite` (strip off), then
+**calls** `ActivateSubscription`.
 
 1. Load the unactivated [tenant](../../other/auth/persistence.md) on
    `onboarding_sessions.tenant_id`.
@@ -87,7 +88,10 @@ kind).
 `website_activation`; **update** existing `tenants`;
 `tenant_memberships`; complete unpaid `ai.threads` `thread_kind=cms_assistant`
 `current` + end `running`; `website_publications` live (no strip) + archive
-strip v1 if it existed; R2 `latest/` without the strip.
+strip v1 if it existed; R2 `latest/` without the strip;
+`billing.subscriptions` (Placis Pro plan, `status=active`);
+`ai_use_ledger_entries` `entry_kind=included_usage_credit`
+(`ActivateSubscription`).
 
 ## Fail
 
@@ -114,10 +118,12 @@ subscription to host the website**.
 1. **One upfront pay** (this checkout; predecessor EUR 4900 stays until that
    epic).
 2. Then a **subscription price** on a **subscription tier** (provisional
-   catalogue: [billing PRD](../../billing/prd.md)). If they stop paying, the
-   website is **unpublished** and they cannot **Publish** until the
-   subscription is active again ([billing](../../billing/architecture.md)).
-   CMS edit stays open (`tenants.status=active`).
+   catalogue: [billing PRD](../../billing/prd.md)). This step **calls**
+   `ActivateSubscription` (Placis Pro plan; Stripe Subscription, not this
+   Checkout). If they stop paying, **calls** `UnpublishWebsite` and they cannot
+   **Publish** until the subscription is active again
+   ([billing](../../billing/architecture.md)). CMS edit stays open
+   (`tenants.status=active`).
 3. **Do not commit to Clerk Billing yet.** Optimistic DB cache of subscription
    status; refresh when expected.
 4. Monthly **usage credit** is visible on **Usage & billing** as **$**. Unused

@@ -61,7 +61,7 @@ Package ownership. Workflows live in the feature docs this list points at.
    (`prompts.yaml` lives in the feature that calls the LLM). Postgres schema
    `ai`. [LLM layer](llm-layer.md).
 8. `billing` owns the AI use ledger and Usage & billing. Stripe website
-   activation checkout stays in onboarding. Extra usage credit checkout may live
-   here when that slice lands. [Billing](../features/billing/README.md).
+   activation checkout stays in onboarding. Extra usage credit checkout, Change
+   plan, cancel, and keep live here. [Billing](../features/billing/README.md).
 9. Integrations (ETL adapters, LLM, storage, Stripe, email/SMS) are behind
    interfaces so tests run without network calls. [CI and delivery](ci-cd.md).
