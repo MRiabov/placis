@@ -26,9 +26,11 @@ is a later caller.
   (home website page copy done or wait cap) without 08/09.
 - **Assert** (Postgres + Worker):
   - **Worker:** turn 1 asked **one** Worker `websiteRender` of the
-    unpublished tree + `WebsiteBusinessProfileRead` (tokens still in
-    `pages`). After each `update_slot`, another `websiteRender` of the
-    affected website page (`before_pages` + `pages`). Those website image
+    unpublished tree + `WebsiteBusinessProfileRead` + `media_asset_urls`
+    (tokens still in `pages`; map `{}` unless an image website slot
+    already has a `media_asset_id`). After each `update_slot`, another
+    `websiteRender` of the affected website page (`before_pages` +
+    `pages`) with the exact `media_asset_urls` set. Those website image
     renders are **not** in `website_slots.value`. Zero R2 / WebP / purge
     from this job. 03 did not call `websitePublication`.
   - **Website slots / website pages:** targeted `website_slots.value`

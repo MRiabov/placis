@@ -36,6 +36,7 @@ Strip on/off is a caller flag.
   resolves.
 - Call `websiteRender` from this job.
 - Return a website image render to the model.
+- Put image files or expiring signed URLs on `websitePublication`.
 - Make onboarding-written rows website-rollback targets
   (`published_by=onboarding`).
 
@@ -45,9 +46,10 @@ Strip on/off is a caller flag.
    A required missing var is a publication blocker.
 2. Go `POST`s `websitePublication` ([website HTTP](../api.md)): tokenized
    `website.v1` dump (`pages[]` still a list) plus
-   `WebsiteBusinessProfileRead`, `strip`, `website_prefix`,
-   `version_number`. Authenticated internal (shared secret / service
-   binding). Not a live GET. Not public OpenAPI. Not `websiteRender`.
+   `WebsiteBusinessProfileRead`, `media_asset_urls`, `strip`,
+   `website_prefix`, `version_number`. Authenticated internal (shared
+   secret / service binding). Not a live GET. Not public OpenAPI. Not
+   `websiteRender`.
 3. Worker resolves website placeholders from that profile (exact match →
    typed value, substring → substituted) and writes HTML to R2.
 4. Then persist: write `{version_number}/`, copy onto `latest/`, convert
