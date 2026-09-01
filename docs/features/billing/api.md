@@ -71,7 +71,10 @@ credit.
 
 ## Do not create
 
-- website-activation checkout / status / Stripe webhooks (08)
+- website-activation checkout / status live on
+  [onboarding HTTP](../onboarding/api.md)
+  (`/v1/onboarding/activation/…`); Stripe webhooks stay
+  `POST /v1/webhooks/stripe`
 - Clerk Billing routes
 - public checkout on the Placis website
 - predecessor `/v1/me/organization`

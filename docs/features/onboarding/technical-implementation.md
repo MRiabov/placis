@@ -2,7 +2,9 @@
 
 Status: proposed implementation plan.
 
-Related: [PRD](prd.md), [ADR](ADR.md), [persistence](persistence.md), [HTTP](api.md).
+Related: [PRD](prd.md), [ADR](ADR.md), [persistence](persistence.md),
+[HTTP](api.md). Named identifiers:
+[architecture.md](architecture.md#named-identifiers).
 
 ## Domain objects
 
@@ -25,9 +27,11 @@ writes the host.
 ## HTTP
 
 Routes: [api.md](api.md). Business lookup is
-`POST /v1/onboarding-sessions/business-lookup` (no bare collection POST).
-Website activation checkout is public, CORS by `Host` / `website_prefix` — not
-`/v1/website-previews/{token}/…`. Website publication / website rollback:
+`POST /v1/onboarding/business-lookup` (no bare collection POST).
+Website activation checkout is
+`POST /v1/onboarding/activation/checkout`, CORS by `Host` /
+`website_prefix` — not `/v1/website-previews/{token}/…`. Website
+publication / website rollback:
 [website HTTP](../website/api.md).
 
 Website publication of 08/09 is the same write as the website editor’s website

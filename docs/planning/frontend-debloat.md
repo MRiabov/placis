@@ -62,9 +62,10 @@ leads console.
   reintroduce predecessor-only paths.
 - CMS calls `/v1/website/editor/…` only. Do not call
   `/v1/tenants/{website_prefix}/website/…`.
-- Onboarding calls `/v1/onboarding-sessions/business-lookup` and
-  `GET /v1/onboarding-sessions/{id}/events/stream` (Huma `sse.Register`).
-  Restore is `GET …/profile`.
+- Onboarding unpaid canvas calls `/v1/onboarding/website/editor/…` (not
+  `/v1/website/editor` while unactivated). Share is
+  `POST /v1/onboarding/website/publications`. First pay is
+  `POST /v1/onboarding/activation/checkout`.
 - `/onboarding/preview` is the SSE website-section carousel; the shareable host
   is the preview website address (not `/preview/{token}/…`, not an SSE
   endpoint). Website activation uses public checkout / status (Host /

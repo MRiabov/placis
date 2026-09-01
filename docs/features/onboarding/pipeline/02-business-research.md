@@ -4,8 +4,8 @@ Async, parallel. Starts when 01 business lookup returns — **not** when 03
 finishes. Overlaps Review and the client interview. Progress on the onboarding
 session SSE stream (reads `etl.runs` and the live business profile as each
 extract chunk transforms). ETL fast extract (p95 ≤ 5s) fills about half of that
-ETL run kind’s checklist; ETL slow extract (progressively over about 60s) fills
-the rest as fetches arrive. Photo classification of found photos is ETL
+ETL run kind’s required keys; ETL slow extract (progressively over about 60s)
+fills the rest as fetches arrive. Photo classification of found photos is ETL
 transform, not the client interview.
 
 Paid lookups (Maps, Parallel, Facebook, crawl) cost money. A naive contractor
@@ -54,7 +54,7 @@ enqueue cap.
 - Treat a River retry of an existing ETL run as a new enqueue.
 - Block business lookup, 03 Continue, or the client interview on this wait.
 - Wait for an ETL run kind’s `status=succeeded` before showing the ETL fast
-  extract live business profile on the checklist.
+  extract live business profile on Review found vs missing.
 - Pass `directory`, `review`, or `photo` as ETL run kinds. Scrape is ETL slow
   extract of `google_maps_listing`. Photo classification runs after photos
   attach. Crawl fills trade / founder / service areas (no directory job).
@@ -64,6 +64,10 @@ enqueue cap.
   kind starts when it has the details it needs.
 
 ## Do
+
+`StartBusinessResearch` **calls** `etl.StartRun` (`trigger=onboarding`,
+`force=false`) and **inserts** that ETL run kind’s extract River job
+kind.
 
 **Enqueue cap (before StartRun):** count distinct `enqueue_id` on `etl.runs` for
 this `tenant_id` with `trigger=onboarding` and
@@ -95,14 +99,14 @@ not updated.
 `etl.runs` (one per ETL run kind that started, shared `enqueue_id`); fetches and
 listing as extract chunks land; live business profile via transform of each
 chunk (not only when the ETL run kind succeeds). `research_wait_until` is
-derived when the cap is hit; it is not a table. Expose it on `GET .../profile`
-and the onboarding session SSE.
+derived when the cap is hit; it is not a table. Expose it on
+`GET /v1/onboarding/profile` and the onboarding session SSE.
 
 ## Fail
 
 Retryable River jobs inside ETL. Fail leaves prior live business profile +
-`etl.runs.status=error`. In-progress checklist rows clear when the job ends. Do
-not change onboarding session status. Job retry keeps the same `etl.runs.id`.
+`etl.runs.status=error`. In-progress fill-status keys clear when the job ends.
+Do not change onboarding session status. Job retry keeps the same `etl.runs.id`.
 
 Enqueue cap: not a pipeline Fail. 01 business lookup still succeeds. A later
 source change that would start a 6th enqueue in 30 minutes does not call

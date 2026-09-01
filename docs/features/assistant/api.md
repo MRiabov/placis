@@ -12,10 +12,9 @@ then `record-apply` / `record-reject`; those routes live here, not under
 `Idempotency-Key` (not the text WebSocket). Unactivated tenant: **403**
 `tenant_unactivated` on every `/v1/assistant/…` route (HTTP and the text
 WebSocket). Unpaid website preview:
-[`/v1/onboarding/website-editor/assistant/…`](../onboarding/website-editor.md)
+[`/v1/onboarding/website/assistant/…`](../onboarding/website-editor.md)
 (same DTO names). Activated owner: **403** on all
-`/v1/onboarding/assistant/…` and
-`/v1/onboarding/website-editor/assistant/…` routes.
+`/v1/onboarding/assistant/…` and `/v1/onboarding/website/…` routes.
 
 Caps are mixed. **Owner input is characters:** composer
 `AssistantOwnerMessage.body` **4000**; owner Voice utterance **5000**.

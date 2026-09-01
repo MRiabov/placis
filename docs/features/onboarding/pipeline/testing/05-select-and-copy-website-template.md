@@ -3,13 +3,13 @@
 Onboarding owns the DAG. Website 01 then 02 do the writes. This test
 SELECTs both.
 
-- **Setup**: 04a/04b complete gate passed. `tenants`
+- **Setup**: 04a complete gate passed. `tenants`
   (`status=unactivated`). `onboarding_sessions`
   (`status=client_interviewing` until complete). Named services on the
   profile. Zero `website_settings` / `website_pages` /
   `website_publications`. Production-ready website templates exist in the
   website template catalog.
-- **Invoke**: `POST .../interview/complete` (**inserts**
+- **Invoke**: `POST /v1/onboarding/interview/complete` (**inserts**
   `select_and_copy_website_template`). 01 is real
   occupancy + hash (no LLM). 02 write is real.
   Also complete when the gate fails (required `conflict` /

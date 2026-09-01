@@ -7,6 +7,31 @@ background, contractor copy improvement on the website preview, pay. Implemented
 in the predecessor (`OnCall`) and `frontend-2`; this is that loop under Placis
 names.
 
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+
+## Named identifiers
+
+Pipeline **Do** functions (same spelling in spec, Go, and tests):
+
+- `LookupBusiness` — `internal/onboarding`
+  ([01](pipeline/01-find-business.md))
+- `StartBusinessResearch` — **calls** `etl.StartRun`
+  ([02](pipeline/02-business-research.md))
+- `SaveTextClientInterview` / `CompleteClientInterview` —
+  ([04a](pipeline/04a-text-client-interview.md))
+- `MergeProfileIncrement` —
+  ([build-profile](pipeline/build-profile.md))
+- `SharePreviewWebsiteAddress` — **calls** `PublishWebsite` strip on
+  ([08](pipeline/08-preview-website-address.md))
+
+05 **calls** `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages`.
+06 is River job kind `website_copy_generation` / `GenerateWebsiteCopy`.
+09 is River job kind `website_activation` / **calls** `PublishWebsite`
+strip off. HTTP: one function per Routes verb+noun (`LookupBusiness`,
+`GetOnboardingProfile`, `UpdateOnboardingSources`, …). Tables:
+[persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
+
 ## The pipeline
 
 ```text
@@ -73,8 +98,9 @@ publication is the next website version.
 
 From confirm through selecting and copying the website template and copy, the
 backend pushes onboarding session events over SSE (on change, not faster than
-~2s). The frontend refreshes the Review checklist **and** live-fills the client
-interview (untouched controls; enrichable lists — [04a](pipeline/04a-text-client-interview.md)). On
+~2s). The frontend refreshes Review found vs missing **and** live-fills the
+client interview (untouched controls; enrichable lists —
+[04a](pipeline/04a-text-client-interview.md)). On
 `/onboarding/preview` it rotates a website section when current profile data can
 resolve its placeholders (~2s, image fade). Do not wait for 06 to overwrite
 prose. On the website preview the same stream plus unpublished GET Follow

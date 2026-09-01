@@ -1,14 +1,14 @@
 # Build the profile (concurrent persist)
 
-Not a wait step. 01, 02, 04a, and 04b **append** [business profile](../../business-profile/details/persistence.md)
+Not a wait step. 01, 02, and 04a **append** [business profile](../../business-profile/details/persistence.md)
 `business_profile_edits` (one increment per field or list item actually set —
 never a full profile). 05 reads the live business profile as of
 `accepted_edit_id` at client interview complete.
 
-This file owns the **closed checklist**, the **status function**, and the
-**conflict-merge rule**. 03 only renders the projection. 04a/04b and complete
+This file owns the **complete-gate keys**, the **status function**, and the
+**conflict-merge rule**. 03 only renders found vs missing. 04a and complete
 **link** here. No `checklist.md`. No `checklist_rows` table — derived
-projection.
+fill status.
 
 ## Trigger
 
@@ -33,26 +33,28 @@ write.
   reverse.
 - Use Maps listing address as a second legal address (it stays on
   `etl.google_maps_listings`).
-- Upsert a checklist row (there is no such table).
+- Upsert a fill-status row (there is no such table).
 
 ## Do — merge
 
+`MergeProfileIncrement` appends one increment per field or list item
+actually set.
+
 Each writer `SELECT … FOR UPDATE` the profile row, inserts only its increments,
 updates only those live profile columns. ETL increments also insert ≥1
-`business_profile_edit_sources`. Client interview / Details /
-`confirm_conflict` insert no junction rows.
+`business_profile_edit_sources`. Client interview / Details insert no junction
+rows.
 
-- **Conflict:** two disagreeing values for the same checklist key → status
+- **Conflict:** two disagreeing values for the same complete-gate key → status
   `conflict`. That live profile column **is not updated** (keep previous value,
-  or empty). Research must not `UPDATE` that column while `conflict`. Contractor
-  `confirm_conflict` or a contractor edit writes the live business profile, sets
-  `filled_by_user`, and sets `algorithm=human`. That is the only “contractor
-  wins.”
+  or empty). Research must not `UPDATE` that column while `conflict`. A
+  contractor edit writes the live business profile, sets `filled_by_user`, and
+  sets `algorithm=human`. That is the only “contractor wins.”
 - **`algorithm` / `schema_revision`:** ETL transform writes the current
   transform identity and the current schema revision. Client interview / Details
-  / `confirm_conflict` write `algorithm=human`. Transform skips when both match
-  and `force` is false. A bumped `schema_revision` extracts by default (empty
-  new fields may fill). It never overwrites `human` ([ETL pipeline](../../etl/pipeline/README.md)).
+  write `algorithm=human`. Transform skips when both match and `force` is false.
+  A bumped `schema_revision` extracts by default (empty new fields may fill). It
+  never overwrites `human` ([ETL pipeline](../../etl/pipeline/README.md)).
 - **Legal identity:** registry wins `legal_name`, `company_number`,
   `registered_office`, `company_status`, `incorporation_date` even if Maps/crawl
   disagree; not a contractor question when a registry source exists.
@@ -63,9 +65,9 @@ updates only those live profile columns. ETL increments also insert ≥1
   VAT number is required (and later website publication may block) only when
   that status is set.
 
-### Checklist
+### Complete-gate keys
 
-Stable keys. 03 groups them for display. ETL transform may fill; 04a/04b fill
+Stable keys. 03 groups them for display. ETL transform may fill; 04a fills
 gaps.
 
 | Key | Group | Column / list | 02 may fill | Complete |
@@ -146,7 +148,7 @@ Job, `thread_kind`, `prompt_id`, I/O:
 ### Status function (one winner)
 
 `in_progress` (in-flight ETL run for that key) → `conflict` →
-`needs_confirmation` → `filled_by_user` → `filled_by_research` → `skipped` /
+`filled_by_user` → `filled_by_research` → `skipped` /
 `not_applicable` → else `empty`.
 
 Derived from the live business profile + winning edit origin + in-flight
@@ -155,7 +157,7 @@ Derived from the live business profile + winning edit origin + in-flight
 ### Complete gate
 
 Required keys not `empty` / `in_progress` / `conflict`. `skipped` /
-`not_applicable` allowed. 04a and 04b apply this. Skip 03 does not change it.
+`not_applicable` allowed. 04a applies this. Skip 03 does not change it.
 
 ## Persist
 
@@ -175,7 +177,7 @@ stays until the contractor acts.
 
 ## Out
 
-SSE checklist projection. 05 reads `accepted_edit_id`. Later ETL transform
+SSE fill-status projection. 05 reads `accepted_edit_id`. Later ETL transform
 writes after complete are new edits after that id; they must not mutate the
 accepted live business profile in place.
 

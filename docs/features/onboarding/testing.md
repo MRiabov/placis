@@ -7,8 +7,12 @@ registry / Facebook / crawl and the LLM are faked. Worker **container** is up
 when 03/04 run (no `wrangler deploy`). DB asserts use [persistence.md](persistence.md) and
 [details](../business-profile/details/persistence.md).
 
+Guide Voice is a **separate** full-stack E2E in [assistant testing](../assistant/testing.md)
+`## Onboarding` (`assistant_conversation_items`, `assistant_runs`, `ai.threads`
+`thread_kind=onboarding_assistant`). Do not include it in this journey.
+
 1. **Find** — country, registry and/or Google Maps, online research consent,
-   business lookup.
+   business lookup (`POST /v1/onboarding/business-lookup`).
    - UI: `/onboarding/find` → Review.
    - DB: `tenants` (`status=unactivated`, `country` from Find);
      `onboarding_sessions` (`status=client_interviewing`, token,
@@ -17,24 +21,25 @@ when 03/04 run (no `wrangler deploy`). DB asserts use [persistence.md](persisten
 
 2. **Review** — found vs missing; Continue to client interview.
    - UI: `/onboarding/review`.
-   - DB: checklist rows from 01/02 (`filled_by_research` appearing as each
-     extract chunk transforms, Details before scrape finishes).
+   - DB: live business profile fill from 01/02 (`filled_by_research`
+     appearing as each extract chunk transforms, Details before scrape
+     finishes). No `checklist_rows` table.
 
 3. **Client interview** — fill the gaps (text path in this E2E so it does not
-   depend on a live voice service); submit. Reload mid-interview: lands on
-   `/onboarding/interview` with autosaved answers, extra notes, and last
-   `update_interview_plan` still present.
+   depend on a live voice service); Continue
+   (`POST /v1/onboarding/interview/complete`). Reload mid-interview: lands on
+   `/onboarding/interview` with click-off saved answers and extra notes.
    - DB: `client_interview_submissions`; `business_profile_edits` with
-     `created_by=text`; `onboarding_sessions.interview_plan_*` when voice
-     `update_interview_plan` ran. If Maps Details fakes include a review usable
-     as a Project, the client interview shows Project cards; Archive uses the
-     onboarding-session route. While 02 is still running, reviews / photos /
-     Projects / empty Details controls appear on `/onboarding/interview`
-     without reload; a field they already typed is not rewritten. After
-     Details reviews land: schema `jobs` has `reviews_ranking_for_display`
-     on this `tenant_id`.
+     `created_by=text`. If Maps Details fakes include a review usable
+     as a Project, the client interview shows Project cards; Archive uses
+     `POST /v1/onboarding/projects/{projectId}/archive`. While 02 is still
+     running, reviews / photos / Projects / empty Details controls appear
+     on `/onboarding/interview` without reload; a field they already typed
+     is not rewritten. After Details reviews land: schema `jobs` has
+     `reviews_ranking_for_display` on this `tenant_id`.
 
-4. **Business research** (faked, overlapping 2–3) — SSE progress.
+4. **Business research** (faked, overlapping 2–3) — SSE
+   (`GET /v1/onboarding/events/stream`).
    - DB: `etl.runs` → fetch rows + `etl.google_maps_listings` when a place was
      selected.
 
@@ -67,8 +72,8 @@ when 03/04 run (no `wrangler deploy`). DB asserts use [persistence.md](persisten
      can be activated.
 
 7. **Website activation** — pay on the website preview (Clerk testing token +
-   Stripe test
-   webhook). First payer wins. Prior 08 share is not required.
+   Stripe test webhook). First payer wins. Prior 08 share is not required.
+   Checkout: `POST /v1/onboarding/activation/checkout`.
    - DB: `website_activations`, `stripe_events`; **same** `tenant_id` as
      business lookup, now `tenants.status=active`, `tenant_memberships.owner`;
      onboarding session `activated`; unpaid `ai.threads`
@@ -83,5 +88,3 @@ when 03/04 run (no `wrangler deploy`). DB asserts use [persistence.md](persisten
 8. **Isolation** — a second onboarding session (second unactivated tenant).
    - Assert: the first tenant's profile and website pages are not readable under
      the second tenant (before or after activation).
-
-Named tables: `assistant_conversation_items`, `assistant_runs`.

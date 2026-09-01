@@ -36,7 +36,8 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
 
 ## Do
 
-1. Land on the website preview. Hydrate `GET …/website-editor/assistant/thread`
+1. Land on the website preview. Hydrate
+   `GET /v1/onboarding/website/assistant/thread`
    (onboarding session token or Clerk) so 06 `tool_summary` is visible.
 2. Follow leftover 06 via the existing onboarding session SSE plus unpublished
    GET. While 06 holds `assistant.runs` `running`, owner Send / Voice is
@@ -49,7 +50,9 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
 
 ## Persist
 
-Unpublished website PATCH; `ai.threads` (`thread_kind=cms_assistant`) /
+Unpublished website PATCH
+(`PATCH /v1/onboarding/website/editor/pages/{page_id}`);
+`ai.threads` (`thread_kind=cms_assistant`) /
 `assistant.thread_items` / `assistant.runs`. No `website_publications` from this
 step. Onboarding session stays `preview_and_edit`.
 
