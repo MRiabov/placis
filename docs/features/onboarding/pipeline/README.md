@@ -1,8 +1,11 @@
 # Onboarding — pipeline
 
-Executable spec. Each step file uses Trigger / Pre / Must not / Do / Persist /
-Fail / Out / Invariants. This README is the index: status machine, screens,
-Resume, business-lookup-once, DAG. It does not retell the steps.
+Executable spec. Each step file uses Trigger / Pre / Must not / Do /
+Persist / Fail / Out / Invariants (closed `##`; optional Reads / Loads /
+Sends / Calls). **Do** names the function. Named identifiers:
+[docs conventions](../../../docs-conventions.md#named-identifiers).
+This README is the index: status machine, screens, Resume, business-lookup-once,
+DAG. It does not retell the steps.
 
 The contractor never waits on business research. Business lookup returns
 immediately; business research fills the checklist in the background;

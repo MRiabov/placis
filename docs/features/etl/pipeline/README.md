@@ -4,6 +4,12 @@ One file per **source** (or a shared operation group). Each file is extract then
 transform for that source. Shared profile-update / conflict rules:
 [build-profile](../../onboarding/pipeline/build-profile.md). Do not fork a second merge.
 
+Each source file uses Trigger / Pre / Must not / Do / Persist / Fail / Out /
+Invariants (closed `##`; `## Do — <phase>` is Do). Matching
+[testing/](testing/) names every persistence table that file backticks.
+Named identifiers:
+[docs conventions](../../../docs-conventions.md#named-identifiers).
+
 ```text
 StartRun(trigger, tenant, force=false)
   → enqueue_id; start each ETL run kind that has the details it needs (shared enqueue_id)

@@ -5,11 +5,14 @@ From-scratch website create. Website owns the **write**. Onboarding owns
 from-scratch create step. Website template object: [catalog.md](../catalog.md).
 
 Each step file uses Trigger / Pre / Must not / Do / Persist / Fail / Out /
-Invariants. Matching [testing/](testing/) — backend integration tests
-(real Go + real Postgres + real Worker). Prior-step rows are already in
-Postgres. Assert is every table this step writes, plus the next-step
-handoff row in Postgres. Paid / external collaborators are faked (Google,
-LLM, Stripe, voice, R2, `purge_cache`). Not the Worker. Playwright E2E is
+Invariants (closed `##`; optional Reads / Loads / Sends / Calls). **Do**
+names the function. Matching [testing/](testing/) — backend integration
+tests (real Go + real Postgres + real Worker). Named identifiers:
+[docs conventions](../../../docs-conventions.md#named-identifiers).
+Prior-step rows are already in Postgres. Assert is every table this step
+writes, plus the next-step handoff row in Postgres. Paid / external
+collaborators are faked (Google, LLM, Stripe, voice, R2, `purge_cache`).
+Not the Worker. Playwright E2E is
 [website/testing.md](../testing.md) /
 [onboarding/testing.md](../../onboarding/testing.md).
 
