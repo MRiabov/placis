@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 )
 
@@ -39,25 +37,6 @@ var apiHeadingLeftover = map[string][]string{
 	"other/media/api.md": {"Serve only types on HTTP"},
 }
 
-func parseAPIFile(root, path string) (apiFile, error) {
-	src, err := os.ReadFile(path)
-	if err != nil {
-		return apiFile{}, err
-	}
-	rel, err := filepath.Rel(root, path)
-	if err != nil {
-		rel = path
-	}
-	a := apiFile{
-		path: filepath.ToSlash(path),
-		rel:  filepath.ToSlash(rel),
-	}
-	for _, m := range headingRe.FindAllStringSubmatch(string(src), -1) {
-		a.heads = append(a.heads, strings.TrimSpace(m[1]))
-	}
-	return a, nil
-}
-
 func checkAPIHeadings(r report) []string {
 	var errs []string
 	for _, f := range r.apiFiles {
@@ -66,28 +45,16 @@ func checkAPIHeadings(r report) []string {
 	return errs
 }
 
-func checkOneAPI(f apiFile) []string {
-	var errs []string
-	allowed := map[string]bool{}
-	for _, t := range apiHeadingLeftover[f.rel] {
-		allowed[t] = true
-	}
-	have := map[string]bool{}
+func checkOneAPI(f headingFile) []string {
+	errs := leftoverHeadingErrs(f.path, f.rel, f.heads, apiClosedHeads, apiHeadingLeftover)
 	hasRoutes := false
 	hasDoNotCreate := false
 	for _, h := range f.heads {
-		have[h] = true
 		if h == "Routes" || strings.HasPrefix(h, "Routes") {
 			hasRoutes = true
 		}
 		if h == "Do not create" {
 			hasDoNotCreate = true
-		}
-		if apiClosedHeads[h] {
-			continue
-		}
-		if !allowed[h] {
-			errs = append(errs, fmt.Sprintf("%s: extra heading ## %s", f.path, h))
 		}
 	}
 	if !hasRoutes {
@@ -95,11 +62,6 @@ func checkOneAPI(f apiFile) []string {
 	}
 	if !hasDoNotCreate {
 		errs = append(errs, fmt.Sprintf("%s: missing ## Do not create", f.path))
-	}
-	for _, t := range apiHeadingLeftover[f.rel] {
-		if !have[t] {
-			errs = append(errs, fmt.Sprintf("%s: leftover heading ## %s is gone; remove it from apiHeadingLeftover", f.path, t))
-		}
 	}
 	return errs
 }

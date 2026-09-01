@@ -6,3 +6,7 @@ Conventions: (Postgres schema `widget`).
 
 - `widget_rows` — `id`
 - `menus` — qualified `widget.menus`.
+
+## Indexes
+
+`(tenant_id)`

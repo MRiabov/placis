@@ -24,8 +24,10 @@ var (
 
 type persistFile struct {
 	path        string
+	rel         string
 	featureDir  string
 	tables      []string
+	heads       []string
 	testingPath string
 	pipeTestDir string
 }
@@ -36,17 +38,19 @@ type stepFile struct {
 	tables   []string
 }
 
-type apiFile struct {
+type headingFile struct {
 	path  string
 	rel   string
 	heads []string
+	h3    []string
 }
 
 type report struct {
 	known        map[string]bool
 	persistFiles []persistFile
 	steps        []stepFile
-	apiFiles     []apiFile
+	apiFiles     []headingFile
+	testingFiles []headingFile
 }
 
 func inspect(root string) (report, error) {
@@ -66,16 +70,23 @@ func inspect(root string) (report, error) {
 			if err != nil {
 				return err
 			}
+			p.rel = relToRoot(root, path)
 			r.persistFiles = append(r.persistFiles, p)
 			for _, t := range p.tables {
 				r.known[t] = true
 			}
 		case strings.HasSuffix(slash, "/api.md"):
-			a, err := parseAPIFile(root, path)
+			a, err := parseHeadingFile(root, path)
 			if err != nil {
 				return err
 			}
 			r.apiFiles = append(r.apiFiles, a)
+		case isFeatureTesting(slash):
+			t, err := parseHeadingFile(root, path)
+			if err != nil {
+				return err
+			}
+			r.testingFiles = append(r.testingFiles, t)
 		case isPipelineStep(slash):
 			s, err := parseStep(path)
 			if err != nil {
@@ -91,6 +102,7 @@ func inspect(root string) (report, error) {
 	sort.Slice(r.persistFiles, func(i, j int) bool { return r.persistFiles[i].path < r.persistFiles[j].path })
 	sort.Slice(r.steps, func(i, j int) bool { return r.steps[i].path < r.steps[j].path })
 	sort.Slice(r.apiFiles, func(i, j int) bool { return r.apiFiles[i].path < r.apiFiles[j].path })
+	sort.Slice(r.testingFiles, func(i, j int) bool { return r.testingFiles[i].path < r.testingFiles[j].path })
 	return r, nil
 }
 
@@ -119,6 +131,7 @@ func parsePersistence(path string) (persistFile, error) {
 	text := string(src)
 	p := persistFile{path: filepath.ToSlash(path)}
 	p.featureDir = filepath.ToSlash(filepath.Dir(path))
+	p.heads = headingTitles(text)
 	seen := map[string]bool{}
 	add := func(name string) {
 		if name == "" || seen[name] {

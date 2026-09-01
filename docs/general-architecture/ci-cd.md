@@ -189,9 +189,10 @@ does). We do **not** hand-roll AST scripts up front:
   step files pair with `pipeline/testing/<name>.md`; **known** persistence
   tables in a step appear in that testing file; every persistence table
   appears in `testing.md` and/or `pipeline/testing/` when those files
-  exist; pipeline step `##` headings are a closed list; feature `api.md`
-  `##` is DTOs / Routes / Do not create, with a shrink-only leftover list
-  for undefined features. Missing
+  exist; pipeline step `##` headings are a closed list; feature `api.md`,
+  `persistence.md`, and `testing.md` `##` use a shrink-only leftover list
+  (closed `api.md` is DTOs / Routes / Do not create; closed `persistence.md`
+  is Tables / Indexes). Missing
   `testing.md` (media library / leads / Details / Projects) does not
   fail; a changed `persistence.md` passed on the command line without
   `testing.md` warns. See
@@ -276,12 +277,16 @@ heading lists in [docs conventions](../docs-conventions.md#named-identifiers). U
 `go test ./cmd/ci/check-pipeline-tables` then
 `go run ./cmd/ci/check-pipeline-tables --all`.
 
-This pass: **tables**, **pipeline step headings**, and **feature `api.md`
-headings**. Not Routes paths, not gatherers (`pipeline/README.md`,
+This pass: **tables**, **pipeline step headings**, and **feature `api.md` /
+`persistence.md` / `testing.md` headings**. Not Routes paths,
+not gatherers (`pipeline/README.md`,
 `etl/pipeline/etl-run-kind-triggers.md`). Closed `api.md` `##` is DTOs
-(optional), Routes, Do not create. Undefined features keep a leftover
-extra-heading list in `cmd/ci/check-pipeline-tables`; extras may only
-shrink (drop the leftover entry in the same PR). Pairing matches **known**
+(optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
+and Indexes. Undefined features keep leftover extra-heading lists in
+`cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
+entry in the same PR). `testing.md` bans `## Routes` / `## DTOs` /
+`## Tables` / `## Do not create` and `### METHOD /path`.
+Pairing matches **known**
 table names (already in some
 `persistence.md`); invented names and columns are writing rules. Warn
 (do not fail) when a changed `persistence.md` is passed on the command
