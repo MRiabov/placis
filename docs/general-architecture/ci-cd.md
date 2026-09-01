@@ -275,7 +275,9 @@ heading lists in [docs conventions](../docs-conventions.md#named-identifiers). U
 `go run ./cmd/ci/check-pipeline-tables --all`.
 
 This pass: **tables** and **pipeline step headings**. Not Routes paths, not
-`api.md` headings. Pairing matches **known** table names (already in some
+`api.md` headings, not gatherers (`pipeline/README.md`,
+`etl/pipeline/etl-run-kind-triggers.md`). Pairing matches **known** table
+names (already in some
 `persistence.md`); invented names and columns are writing rules. Warn
 (do not fail) when a changed `persistence.md` is passed on the command
 line and that feature has no `testing.md`. `--all` with no extra paths
