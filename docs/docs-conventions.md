@@ -214,11 +214,15 @@ shrink). Website and billing have none. `###` only as Routes overflow:
 under DTOs.
 
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`.
-Overflow is `###` under a table, not a new `##`.
+Overflow is `###` under a table, not a new `##`. CI ratchets leftover
+grouping `##` the same way as `api.md` (extras may only shrink). Website
+and billing have none. Intro-only files (ads, media library, Details,
+Projects) have no `##` yet.
 
 **`testing.md`** — H1 + numbered journey. No required `##`. Optional `##`
 only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
-`## Do not create`, and `### GET /v1/…`.
+`## Do not create`, and `### GET /v1/…`. CI ratchets those bans (empty
+leftover today).
 
 **`pipeline/` step files** — intro, then only:
 

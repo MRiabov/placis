@@ -32,6 +32,8 @@ func run(args []string) error {
 	var errs []string
 	errs = append(errs, checkHeadings(rep)...)
 	errs = append(errs, checkAPIHeadings(rep)...)
+	errs = append(errs, checkPersistHeadings(rep)...)
+	errs = append(errs, checkTestingHeadings(rep)...)
 	errs = append(errs, checkPipelinePairing(rep)...)
 	errs = append(errs, checkCoverage(rep)...)
 	if len(changed) > 0 {
