@@ -287,7 +287,7 @@ Routes paths, not gatherers (`pipeline/README.md`,
 (optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
 and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. A backticked
 River job kind (`River job \`foo\``, `River job kind \`foo\``,
-`**inserts** \`foo\``) must be a `## Jobs` row. Website, billing, and
+`**inserts** \`foo\``) must be a `## Jobs` row. Website, billing, ads, and
 assistant have none. Undefined features keep leftover extra-heading lists
 in `cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
 entry in the same PR). `testing.md` bans `## Routes` / `## DTOs` /

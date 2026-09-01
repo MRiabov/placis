@@ -14,8 +14,8 @@ instance.
 Named identifiers:
 [docs conventions](../docs-conventions.md#named-identifiers). Closed
 `## Workflows` and `## Jobs`. Overflow is `###` with a backticked River
-job kind under Jobs (retry, after-09 leftover, skip unactivated). Ads
-generate / Meta reconcile stay unnamed until ads is defined.
+job kind under Jobs (retry, after-09 leftover, skip unactivated). Meta
+reconcile stays unnamed until ad posting is defined.
 
 Crawl / Maps scrape stay in-process inside that River job kind’s extract
 worker; API p90-delta during scrape: [processes.md](processes.md).
@@ -71,6 +71,7 @@ step.
 | `trade_registry_extract` | `run_id` | `run_id` while pending/running | **calls** `extract/traderegistry.Run` |
 | `trade_registry_transform` | `run_id` | `run_id` while pending/running | **calls** `transform/traderegistry.Run` |
 | `reviews_ranking_for_display` | `tenant_id` | `tenant_id` while pending/running | rank `in_pool` reviews for display |
+| `ads_generate` | `tenant_id`, `ad_id` | `(tenant_id, ad_id)` while pending/running | `GenerateAdDraft` |
 | `assistant_thread_compaction` | `thread_id` | `thread_id` while pending/running | compact `ai.threads` in place |
 | `website_activation` | `tenant_id`, `checkout_session_id` | `tenant_id` while pending/running | `tenants.status=active`; **calls** `PublishWebsite` |
 | `scheduled_etl` | none | `tenant_id` while pending/running | **calls** `StartRun(trigger=scheduled)` |
@@ -97,6 +98,17 @@ uniqueness before insert (it races). After 09 the leftover job stays in schema
 `thread_kind=website_copy_generation`, `prompt_id=website_copy_generation`
 in the onboarding package `prompts.yaml`. Worker: website 03
 (`websiteRender`). Routes: [website HTTP](../features/website/api.md).
+
+### `ads_generate`
+
+Same job for **Create ad and generate** and **Generate again**. A second
+insert while pending/running is a River unique conflict → HTTP **409**.
+Do not HTTP-check uniqueness before insert (it races).
+
+`thread_kind=ads_generate`, `prompt_id=ads_generate` in
+`internal/ads/prompts.yaml`. Worker:
+[ads 02](../features/ads/ad-generation/pipeline/02-generate-ad-draft.md).
+Routes: [ads HTTP](../features/ads/api.md).
 
 ### `reviews_ranking_for_display`
 

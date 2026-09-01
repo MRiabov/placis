@@ -8,8 +8,8 @@ var persistClosedHeads = map[string]bool{
 }
 
 // Leftover grouping ## on undefined feature persistence.md files. Ceiling:
-// extras may only shrink. Website, billing, and assistant have none
-// (## Tables + ## Indexes). Intro-only files (ads, media library, Details,
+// extras may only shrink. Website, billing, ads, and assistant have none
+// (## Tables + ## Indexes). Intro-only files (media library, Details,
 // Projects) have no ## yet.
 var persistHeadingLeftover = map[string][]string{
 	"etl/persistence.md": {
