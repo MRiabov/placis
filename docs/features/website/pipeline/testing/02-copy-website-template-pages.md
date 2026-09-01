@@ -7,7 +7,7 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
   (`website_template_id` + `preset_id`). `business_profiles.accepted_edit_id`
   set. At least two named services on that accepted profile. Preferred real
   photos exist in the media library when the fixture has them. Zero
-  `website_pages`. No River 06 job yet.
+  `website_pages`. No `website_copy_generation` yet.
 - **Invoke**: copy the website template’s pages onto the unpublished
   website (real write). Then, in a second case, insert a later ETL named
   service after this write (do not re-run 02).
@@ -50,14 +50,14 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
     same derived `website.menus` trees.
   - Later ETL named service: `website_pages` where `page_type=service`
     count **unchanged**.
-- **Handoff to 03**: schema `jobs` has one River job for onboarding 06 / website
-  03; unique key = that `tenant_id`; job is available / running, not cancelled.
+- **Handoff to 03**: schema `jobs` has one `website_copy_generation`;
+  unique key = that `tenant_id`; job is available / running, not cancelled.
   `onboarding_sessions.status` still `selecting_and_copying_website_template`.
   03 Pre can load unpublished pages for that tenant.
 - **Fail**: website-component contract fail during copy →
   `onboarding_sessions.status=select_and_copy_website_template_failed`; this
   copy’s unpublished pages / sections / slots / menus are not kept
   (transaction); `website_settings` pick from 01 may remain; **no**
-  River 06 job; no `website_publications`; `tenants.website_prefix`
+  `website_copy_generation`; no `website_publications`; `tenants.website_prefix`
   still null.
 - **Mocked**: nothing for the write (01 pick already on `website_settings`).

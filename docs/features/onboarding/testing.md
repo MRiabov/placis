@@ -41,12 +41,12 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
    `/onboarding/preview` SSE carousel, then `/onboarding/preview-and-edit/`
    (home website page copy done or wait cap; other website pages may still
    be generating).
-   - DB: `website_settings` (`website_template_id`, `preset_id`);
-     unpublished `website_pages` / `website_sections` (including look
-     sections) / tokenized `website_slots`; derived `website.menus`;
-     onboarding session `preview_and_edit` at wait-end. Schema `jobs`: 06
-     River job on `tenant_id`. `website_prefix` is **not** required
-     until share or 09. Zero `website_publications` until 08/09.
+   - DB: `website_settings` (`website_template_id`, `preset_id`); unpublished
+     `website_pages` / `website_sections` (including look sections) / tokenized
+     `website_slots`; derived `website.menus`; onboarding session
+     `preview_and_edit` at wait-end. Schema `jobs`: `website_copy_generation` on
+     `tenant_id`. `website_prefix` is **not** required until share or 09. Zero
+     `website_publications` until 08/09.
    - UI: live unpublished canvas. Assistant prompt → PATCH → pay is
      [assistant testing](../assistant/testing.md) (onboarding website editor).
 
@@ -55,7 +55,8 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
    Worker internal website page render on turn 1 and after `update_slot`
    (faked).
    - DB: targeted `website_slots.origin=website_copy_generation`;
-     `ai_generations` (`thread_kind=website_copy_generation`, `input` /
+     `ai_generations` (`thread_kind=website_copy_generation`,
+     `prompt_id=website_copy_generation`, `input` /
      `internal_reasoning` / `output` / `tool_calls`); no `create_page`;
      no `update_reviews`; zero `website_publications` from 06. 08 share
      is optional.
@@ -70,7 +71,8 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
      onboarding session `activated`; unpaid `ai.threads`
      `thread_kind=cms_assistant` `current` completed; `website_publications`
      live (`published_by=onboarding`, strip off, `website_manifest`
-     still tokenized); leftover 06 still in schema `jobs` if in flight;
+     still tokenized); leftover `website_copy_generation` still in schema
+     `jobs` if in flight;
      live R2 without strip (first write if they never shared).
    - UI: lands in `/cms/website`. `/onboarding/preview-and-edit/` redirects
      there.

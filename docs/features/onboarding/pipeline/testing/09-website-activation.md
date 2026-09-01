@@ -8,8 +8,8 @@ Pays, upgrades the tenant, and calls website 04 (strip off). Leftover
   testing-token contractor (Clerk organization may be missing).
   Automatic website copy generation may still be running, or may have
   failed — neither blocks website activation. Record: if 08 ran,
-  v1 `website_publications` `active`; the 06 River job row if still
-  in flight.
+  v1 `website_publications` `active`; the `website_copy_generation` job
+  row if still in flight.
 - **Invoke**: public checkout POST (app origin **or** CORS by `Host` /
   `website_prefix` if they shared); deliver
   `checkout.session.completed` (Stripe SDK signature against a test

@@ -83,9 +83,11 @@ Copy is **not** this step —
 
 Unpublished website + media library rows, including a **derived**
 `website.menus` row and site-wide look website sections. No
-`website_slot_reviews`. No `website_publications`. Schema `jobs`: one River job
-for onboarding 06 / website 03, unique key = that `tenant_id`. River job enum
-value and args are [open questions](../catalog.md#open-questions). Onboarding
+`website_slot_reviews`. No `website_publications`. Schema `jobs`: one
+River job `website_copy_generation` (onboarding 06 / website 03), unique
+key = that `tenant_id`. Args: `tenant_id` only. Second enqueue while
+pending/running is River unique conflict → HTTP 409.
+[jobs](../../../general-architecture/jobs.md). Onboarding
 session stays `selecting_and_copying_website_template` until wait-end, then
 `preview_and_edit`.
 
