@@ -2,6 +2,13 @@
 
 Status: proposed implementation plan.
 
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+Services: `SelectWebsiteTemplate`, `CopyWebsiteTemplatePages`,
+`GenerateWebsiteCopy` (River job `website_copy_generation`),
+`PublishWebsite` (**calls** `websitePublication`). Tables:
+[persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
+
 Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture.md), [persistence](persistence.md), [manifest](manifest.md),
 [HTTP](api.md).
 
@@ -19,7 +26,8 @@ Owned by website [01](pipeline/01-select-website-template.md) then
 [05](../onboarding/pipeline/05-select-and-copy-website-template.md)
 enqueues. This feature owns the tables 02 writes.
 
-1. Load the selected website template + website component contracts from the
+1. `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages` **load** the
+   selected website template + website component contracts from the
    `go:embed` dump under `catalog/` ([catalog.md](catalog.md)). Do not load
    `packages/website-components/src/blueprints/` as the catalog.
 2. Validate website component ids, props, design controls, website page paths,

@@ -47,6 +47,9 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 
 ## Do
 
+`CopyWebsiteTemplatePages` writes the unpublished website from the 01
+pick. Tokens stay.
+
 1. Deterministic copy from the website template: unpublished
    `website_pages` / `website_sections` / `website_slots`. Explode each
    website section’s `editable_slots`. Non-slot layout props may stay on
@@ -87,17 +90,32 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 Copy is **not** this step —
 [03 automatic website copy generation](03-website-copy-generation.md).
 
+## Loads
+
+Website template catalog object for the 01 pick, plus website component
+contracts under `catalog/`.
+
+## Reads
+
+`website_settings` (`website_template_id`, `preset_id`), live
+`business_profiles` as of `accepted_edit_id`.
+
+## Calls
+
+River job `website_copy_generation`.
+
 ## Persist
 
-Unpublished website, including a **derived** `website.menus` row and
-site-wide look website sections. No `media_asset_id` on image website
-slots from this copy. No `website_slot_reviews`. No
-`website_publications`. Schema `jobs`: one River job
-`website_copy_generation` (onboarding 06 / website 03), unique key = that
-`tenant_id`. Args: `tenant_id` only. Second enqueue while pending/running
-is River unique conflict → HTTP 409.
-[jobs](../../../general-architecture/jobs.md). Onboarding
-session stays `selecting_and_copying_website_template` until wait-end, then
+`website_pages`, `website_sections`, `website_slots`, `website.menus`,
+`website_forms`, `website_form_fields`, `website_form_field_options`,
+`website_urls` (iff the template has `url` nodes). Schema `jobs`: one
+River job `website_copy_generation` (onboarding 06 / website 03), unique
+key = that `tenant_id`. Args: `tenant_id` only. Second enqueue while
+pending/running is River unique conflict → HTTP 409.
+[jobs](../../../general-architecture/jobs.md). Must not write
+`website_slot_reviews`, `website_publications`, `edit_history`, or
+attach `media_asset_id` on image slots. Onboarding session stays
+`selecting_and_copying_website_template` until wait-end, then
 `preview_and_edit`.
 
 ## Fail

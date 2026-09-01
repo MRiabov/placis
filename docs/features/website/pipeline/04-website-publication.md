@@ -42,6 +42,9 @@ Strip on/off is a caller flag.
 
 ## Do
 
+`PublishWebsite` **calls** `websitePublication`. Same write for
+onboarding 08/09 and later CMS Publish.
+
 1. Validate every website section against its website component contract.
    A required missing var is a publication blocker.
 2. Go `POST`s `websitePublication` ([website HTTP](../api.md)): tokenized
@@ -59,6 +62,25 @@ Strip on/off is a caller flag.
    03 never purges.
 5. Insert / archive `website_publications` as 08/09/CMS already specify
    (`published_by`, strip, `active`).
+
+## Loads
+
+Website component contracts under `catalog/`.
+
+## Reads
+
+Unpublished `website_pages`, `website_sections`, `website_slots`,
+`website.menus`, `website_settings`, `website_forms`; live
+`business_profiles`.
+
+## Sends
+
+`WebsitePublicationRequest` to `websitePublication`. Response
+`WebsitePublicationResponse`.
+
+## Calls
+
+`websitePublication`.
 
 ## Persist
 

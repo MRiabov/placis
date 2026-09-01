@@ -1,7 +1,25 @@
 # Website — Architecture
 
-How a website is built, edited, given website publication, and rendered. Logic
-first; the structs and DTOs fall out of this.
+How a website is built, edited, given website publication, and rendered.
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+
+## Named identifiers
+
+Pipeline **Do** functions (same spelling in spec, Go, and tests):
+
+- `SelectWebsiteTemplate` — `internal/website/templates`
+  ([01](pipeline/01-select-website-template.md))
+- `CopyWebsiteTemplatePages` — `internal/website/templates`
+  ([02](pipeline/02-copy-website-template-pages.md))
+- `GenerateWebsiteCopy` — River job `website_copy_generation`
+  ([03](pipeline/03-website-copy-generation.md))
+- `PublishWebsite` — **calls** `websitePublication`
+  ([04](pipeline/04-website-publication.md))
+
+CMS HTTP: one function per Routes verb+noun (`GetWebsitePage`,
+`UpdateWebsitePage`, `CreateWebsitePublication`, …). Tables:
+[persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 
 ## The content model
 
@@ -31,8 +49,8 @@ and editable website slots.
 ## The website component model
 
 A website component is a named building block (`public.hero.image`,
-`public.services.grid`, …). Each has a **contract**: the props it accepts, the
-website slots it exposes, and its **design controls** — small enum/bool fields
+`public.services.grid`, …). Each has a **contract**: props, the website
+slots it exposes, and its **design controls** — small enum/bool fields
 (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values. The
 contract is one typed struct dumped to JSON under `catalog/` — the website
 editor and the renderer read the same structs. Only registered website

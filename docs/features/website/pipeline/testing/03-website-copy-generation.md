@@ -6,11 +6,12 @@ is a later caller.
 
 - **Setup**: 02 rows exist (`website_pages` / `website_sections` /
   `website_slots` `origin=website_template`; derived `website.menus`; look
-  sections). Image website slots are still `{{images.*}}` / `{{logo_url}}`
-  (no `media_asset_id` from 02). Schema `jobs`: one
+  sections; `website_settings` from 01). Image website slots are still
+  `{{images.*}}` / `{{logo_url}}` (no `media_asset_id` from 02).
+  `media_assets` may exist for photo selection. Schema `jobs`: one
   `website_copy_generation` on this `tenant_id`.
   `onboarding_sessions.status=selecting_and_copying_website_template`.
-  `business_profiles.accepted_edit_id` set. At least two named services
+  `business_profiles` (`accepted_edit_id` set). At least two named services
   (roof repairs and gutter cleaning). Record website page ids, website
   slot ids, and tokenized `website_slots.value` before invoke. Two cases
   for photo selection: (a) unused non-founder/non-logo photos whose
@@ -38,7 +39,8 @@ is a later caller.
     Untargeted website slots still `origin=website_template`. Reusable
     `{{…}}` detail tokens still in prose `value`. No website slot
     `status=approved`. SEO columns on targeted `website_pages`
-    updated. Website page **count** and website page **ids** unchanged
+    updated. `edit_history` has an agent batch for those writes.
+    Website page **count** and website page **ids** unchanged
     (no `create_page`). `website.menus` trees unchanged. Look sections
     (`page_id` null) unchanged.
   - `website_slot_reviews`: still zero.
