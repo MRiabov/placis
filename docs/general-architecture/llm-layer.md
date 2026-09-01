@@ -123,14 +123,14 @@ the **same** `thread_id` (prior failure in context). Bounded subtree repair
 above still applies; this is the persistence for a further agentic retry.
 
 **`website_copy_generation`** — automatic website copy generation (onboarding
-06 / website 03). River job enum value `website_copy_generation`
+06 / website 03). River job kind `website_copy_generation`
 ([jobs](jobs.md)). `prompt_id=website_copy_generation` in the onboarding
 package `prompts.yaml`. Writes existing unpublished website slots. Do not
 `create_page` or `update_reviews`.
 
 **`reviews_ranking_for_display`** — **LLM ranking** of the reviews pool
 (not stars or recency) for display (website tokens, Certifications cards,
-ads top reviews). River job enum value `reviews_ranking_for_display`
+ads top reviews). River job kind `reviews_ranking_for_display`
 ([jobs](jobs.md)). `prompt_id=reviews_ranking_for_display` in the profile
 package `prompts.yaml`. Input: current `in_pool` rows (id, citation/body,
 rating, origin, `published_at`). Output: ordered `review_ids[]`, length

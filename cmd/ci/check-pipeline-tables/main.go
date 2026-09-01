@@ -19,6 +19,8 @@ func run(args []string) error {
 	flags := flag.NewFlagSet("check-pipeline-tables", flag.ContinueOnError)
 	_ = flags.Bool("all", false, "scan docs/features instead of listed files")
 	root := flags.String("root", "docs/features", "features docs root")
+	jobs := flags.String("jobs", "docs/general-architecture/jobs.md", "path to jobs.md")
+	docs := flags.String("docs", "docs", "docs root for known River job kind names")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
@@ -36,6 +38,16 @@ func run(args []string) error {
 	errs = append(errs, checkTestingHeadings(rep)...)
 	errs = append(errs, checkPipelinePairing(rep)...)
 	errs = append(errs, checkCoverage(rep)...)
+	if fileExists(*jobs) {
+		cat, err := parseJobsCatalog(*jobs)
+		if err != nil {
+			return err
+		}
+		errs = append(errs, checkJobsHeadings(cat)...)
+		if fileExists(*docs) {
+			errs = append(errs, checkKnownRiverJobs(*docs, cat.names)...)
+		}
+	}
 	if len(changed) > 0 {
 		emitWarnings(warnMissingTesting(rep, changed))
 	}

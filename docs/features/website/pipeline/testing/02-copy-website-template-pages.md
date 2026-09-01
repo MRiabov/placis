@@ -1,7 +1,8 @@
 # 02 — Copy website template pages (integration test)
 
-Writes the unpublished website. Next step is 03, enqueued as a River job
-on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
+Writes the unpublished website. Next step is 03: 02 **inserts** River job
+kind `website_copy_generation` on this `tenant_id`. Mapping:
+[catalog.md](../../catalog.md).
 
 - **Setup**: 01 already wrote `website_settings`. No picker
   `ai_generations` row. `business_profiles` (`accepted_edit_id` set). At
