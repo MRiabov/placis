@@ -19,24 +19,28 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
   `tenant_id`).
 - Live business profile as of `accepted_edit_id`.
 - Client interview complete. Named services on that confirmed profile are
-  the service list for this write.
+  the service list for this write. At least one named service (checklist
+  `services` is required at complete).
 
 ## Must not
 
 - Wait for business research to finish.
 - Resolve website placeholders. Go does not rewrite `{{…}}`.
 - Call `website_reviews_picker` or insert `website_slot_reviews`.
-- Bake ranked-top-4 project ids into gallery slots. `{{projects.*}}` /
+- Bake ranked-top-4 project ids into gallery website slots. `{{projects.*}}` /
   `{{reviews.1}}` stay tokens.
 - Website publication.
 - `create_page` (this write already has the page set, including service
   pages from named services).
 - Copy a catalog top menu / footer JSON. The trees are the
   [menu constant](../catalog.md#menu-constant), not a second template blob.
-- Bake raw profile strings into slots that should stay tokens.
+- Bake raw profile strings into website slots that should stay tokens.
 - Invent a hotlink URL for an image website slot.
+- Attach `media_asset_id` or run photo selection (`generate_image`). That
+  is [03](03-website-copy-generation.md).
 - Rewrite the privacy policy notice body (factory prose).
 - Invent a different layout per named service.
+- Skip service website pages, or invent a generic `/services` index.
 
 ## Do
 
@@ -48,7 +52,8 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
    the **about** website page (`page_type=about`). Copy the **privacy
    policy** website page (`page_type=legal`). Copy the service website
    page **once per named service** on the accepted profile (same layout;
-   path and title from that service name).
+   path and title from that service name). N ≥ 1. Fail if zero named
+   services at this copy.
 2. **Derive** `website.menus` (`top_menu` + `footer`) from the
    [menu constant](../catalog.md#menu-constant). Same pick + same named
    services → same website pages → same trees. Persist the row because
@@ -60,11 +65,10 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
    trees per [persistence.md](../persistence.md)).
 4. Placeholders (`{{business_name}}`, `{{marketing_phone}}`,
    `{{reviews.1}}`, `{{projects.featured}}`, …) **stay**.
-5. Image website slots are `slot_type=image` (contract image slot
-   `asset_id`). Attach `media_asset_id` using ETL **media caption** and
-   photo kind, or keep `{{images.*}}` / `{{logo_url}}`. Scoring is an
-   [open question](../catalog.md#open-questions). Do not bake
-   ranked-top-4 ids.
+5. Image website slots are `slot_type=image` (contract image website slot
+   `asset_id`). Keep `{{images.*}}` / `{{logo_url}}`. Do not attach
+   `media_asset_id`. Photo selection is
+   [03](03-website-copy-generation.md). Do not bake ranked-top-4 ids.
 6. Persist `website_forms` / fields from form website sections’ contracts
    (`form_key` = the catalog form key on that website section).
 7. Validate against website component contracts before the unpublished
@@ -81,19 +85,21 @@ Copy is **not** this step —
 
 ## Persist
 
-Unpublished website + media library rows, including a **derived**
-`website.menus` row and site-wide look website sections. No
-`website_slot_reviews`. No `website_publications`. Schema `jobs`: one
-River job `website_copy_generation` (onboarding 06 / website 03), unique
-key = that `tenant_id`. Args: `tenant_id` only. Second enqueue while
-pending/running is River unique conflict → HTTP 409.
+Unpublished website, including a **derived** `website.menus` row and
+site-wide look website sections. No `media_asset_id` on image website
+slots from this copy. No `website_slot_reviews`. No
+`website_publications`. Schema `jobs`: one River job
+`website_copy_generation` (onboarding 06 / website 03), unique key = that
+`tenant_id`. Args: `tenant_id` only. Second enqueue while pending/running
+is River unique conflict → HTTP 409.
 [jobs](../../../general-architecture/jobs.md). Onboarding
 session stays `selecting_and_copying_website_template` until wait-end, then
 `preview_and_edit`.
 
 ## Fail
 
-Throw with 05 (`select_and_copy_website_template_failed`). No `latest/`. Retry
+Throw with 05 (`select_and_copy_website_template_failed`), including when
+the accepted profile has zero named services. No `latest/`. Retry
 is a new 05 (same `website_prefix` if 08 already reserved it; new onboarding
 publication on that prefix).
 
@@ -103,8 +109,10 @@ Onboarding 07 after the wait. 06 async automatic website copy generation.
 
 ## Invariants
 
-- Tokens remain tokens through 02.
+- Tokens remain tokens through 02. Image website slots have no
+  `media_asset_id` from this copy.
 - `tenant_id` is the 01 unactivated tenant.
 - No `website_publications` in this step (08 writes v1).
-- Page set is static at client interview complete.
+- Page set is static at client interview complete. N ≥ 1 service website
+  pages.
 - Top menu and footer at 02 equal the menu constant for that page set.

@@ -61,13 +61,19 @@ site of that trade needs. From-scratch writes:
    ([01](pipeline/01-select-website-template.md));
 3. **copy the website template’s pages onto the unpublished website** —
    unpublished `website_pages` / `website_sections` / `website_slots` —
-   website placeholders stay. Named services on the confirmed profile become
-   service pages (one layout copied N times). Page set is then static. Derive
-   `website.menus` from the [menu constant](catalog.md#menu-constant). Do not
-   insert `website_slot_reviews`. Do not bake ranked-top-4 project ids
+   website placeholders stay, including image website slots
+   (`{{images.*}}` / `{{logo_url}}`). Named services on the confirmed
+   profile become service pages (one layout copied N times, N ≥ 1). Page
+   set is then static. Derive `website.menus` from the
+   [menu constant](catalog.md#menu-constant). Do not insert
+   `website_slot_reviews`. Do not bake ranked-top-4 project ids. Do not
+   attach `media_asset_id`
    ([02](pipeline/02-copy-website-template-pages.md));
-4. pick or generate media assets (prefer real project photos; generate only
-   when approved);
+4. **automatic website copy generation** — prose, SEO, and **photo
+   selection**: attach first when **media caption** fits that image
+   website slot; `generate_image` when nothing fits (founder / logo photo
+   kinds exclusive; do not filter on `hero` / `project` / `service`)
+   ([03](pipeline/03-website-copy-generation.md));
 5. reviews website sections keep `{{reviews.1}}` … from the ranked pool.
    Website does not rank. River job `reviews_ranking_for_display`
    ([build-profile](../onboarding/pipeline/build-profile.md),
