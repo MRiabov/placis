@@ -46,8 +46,10 @@ Before or alongside implementation, decide whether docs need to change.
 - Use `docs/migrations/` for investigations, bakeoffs, experiments, and proposed work that is not yet canonical architecture.
 - Keep docs, implementation pack names, branch names, and PR titles aligned when they are part of the same feature.
 - If code changes make existing docs inaccurate, update or explicitly mark the gap in the same PR.
-- Pre-commit `rumdl-fmt` wraps first-party Markdown on commit; do not skip hooks. CI runs
-  `rumdl fmt --check` then `rumdl check`. Do not format `.agents/`.
+- Pre-commit `rumdl-fmt` wraps staged first-party Markdown on commit;
+  `rumdl-fmt-check` and `rumdl` then check all tracked Markdown. Do not skip
+  hooks. CI runs `rumdl fmt --check` then `rumdl check`. Do not format
+  `.agents/`.
 
 ## Schemas, Contracts, And Migrations
 
