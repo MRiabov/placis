@@ -206,7 +206,8 @@ GET.
 
 Go structs are the source. Worker typegens from a **separate** OpenAPI
 file (not `GET /openapi.json`). Routes, DTOs, `$ref`, and the known
-omission (Worker is the HTTP server; that inversion may cause issues):
+omission (Worker is the HTTP server; product owner chose Go as source,
+not an agent; that inversion may cause issues):
 [website HTTP](../features/website/api.md).
 Auth: shared secret / service binding (out of the JSON body). Binding
 **name** is not this file.
