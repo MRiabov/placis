@@ -316,8 +316,8 @@ scanners.
 
 This pass: **tables**, **pipeline step headings**,
 **feature `api.md` / `persistence.md` / `testing.md` headings**,
-**`jobs.md` Workflows / Jobs**, and **known River job kind** names. Not
-Routes paths, not gatherers (`pipeline/README.md`,
+**`jobs.md` Workflows / Jobs**, and **known River job kind** names. Not Routes
+paths, not gatherers (`pipeline/README.md`,
 `etl/pipeline/etl-run-kind-triggers.md`). Closed `api.md` `##` is DTOs
 (optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
 and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. Closed
@@ -329,9 +329,10 @@ exactly `TestPipelineHappyPath{Feature}Full` (leftover list may only
 shrink). Skip **Do not run** testing files. Skip Persist none
 (onboarding `03`). A
 backticked River job kind (`River job \`foo\``, `River job kind \`foo\``,
-`**inserts** \`foo\``) must be a `## Jobs` row. Website, billing, ads, and
-assistant have none. Undefined features keep leftover extra-heading lists
-in `cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
+`**inserts** \`foo\``) must be a `## Jobs` row. Website, billing, ads,
+assistant, onboarding, auth, the media library, and ETL have none.
+Undefined features keep leftover extra-heading lists in
+`cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
 entry in the same PR). Pairing matches
 **known** table names (already in some `persistence.md`); invented names
 and columns are writing rules. Warn (do not fail) when a changed

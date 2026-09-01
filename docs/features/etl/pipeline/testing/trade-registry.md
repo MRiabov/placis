@@ -4,7 +4,7 @@
   **or** `display_name` + country is a detail (Maps-only Find too).
   Lookup uses `company_number` + tenant country when a company registry record
   is attached, else `display_name` + country. Writes
-  `etl.trade_registry_fetches`, `etl.sources`
+  `etl.trade_registry_fetches` (`trade_registry_record_id`), `etl.sources`
   `source_kind=trade_registry_record`, and accreditation increments with
   `business_profile_edit_sources`; a Monday / Wednesday / Friday `StartRun`
   does not include this ETL run kind; crawl cannot overwrite a trade-registry

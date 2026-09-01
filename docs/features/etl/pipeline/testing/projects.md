@@ -19,4 +19,5 @@
   Extract/GET. Never live Google / OpenRouter / Parallel Search.
 
 Named tables: `business_profile_reviews`, `business_profiles`, `etl.runs`,
-`etl.sources`, `etl.website_crawl_pages`, `google_maps_listing_photos`.
+`etl.sources`, `etl.website_crawl_pages`, `google_maps_listing_photos`,
+`media_assets`.
