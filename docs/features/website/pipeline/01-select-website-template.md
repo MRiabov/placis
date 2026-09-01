@@ -4,12 +4,14 @@ Pick a website template. Website styles ship with that pick. Do not write
 unpublished pages. Do not call an LLM. What one website template is:
 [catalog.md](../catalog.md).
 
-Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) enqueues this, then [02](02-copy-website-template-pages.md).
+Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) **inserts** River job kind `select_and_copy_website_template`;
+this step runs **inside** that River job kind, then [02](02-copy-website-template-pages.md).
 
 ## Trigger
 
 Onboarding 05 after client interview complete
-(`POST .../interview/complete`).
+(`POST .../interview/complete` **inserts**
+`select_and_copy_website_template`).
 
 ## Pre
 

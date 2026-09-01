@@ -11,5 +11,13 @@
   description: Pair pipeline steps with testing files, require persistence tables in testing.md or pipeline/testing, close pipeline step headings, and ratchet feature api.md headings.
   entry: go run ./cmd/ci/check-pipeline-tables
   language: system
-  files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$'
+  files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$|^docs/general-architecture/jobs.md$'
   pass_filenames: true
+
+- id: check-docs-code
+  name: Docs–code named identifiers
+  description: Fail if OpenAPI, Go, or SQL names a path, DTO, River job kind, or table that is not in docs, and ratchet docs-to-OpenAPI leftover after a feature appears in OpenAPI.
+  entry: go run ./cmd/ci/check-docs-code
+  language: system
+  files: '^docs/.*\.md$|^internal/|^cmd/|^migrations/|^openapi\.json$|^apps/contractor-website/openapi\.json$'
+  pass_filenames: false

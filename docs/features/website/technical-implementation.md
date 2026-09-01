@@ -5,7 +5,7 @@ Status: proposed implementation plan.
 Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 Services: `SelectWebsiteTemplate`, `CopyWebsiteTemplatePages`,
-`GenerateWebsiteCopy` (River job `website_copy_generation`),
+`GenerateWebsiteCopy` (River job kind `website_copy_generation`),
 `PublishWebsite` (**calls** `websitePublication`). Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 

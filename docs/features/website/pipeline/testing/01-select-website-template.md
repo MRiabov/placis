@@ -12,7 +12,8 @@ Does not write unpublished website pages. Next step is 02, which SELECTs
   `website_settings` / `website_publications`. Production-ready website
   templates exist (`production_ready=true`). WIP ids
   (`production_ready=false`) exist and must not be chosen.
-- **Invoke**: website 01 in the 05 job (no LLM). Cases below share that
+- **Invoke**: website 01 in River job kind
+  `select_and_copy_website_template` (no LLM). Cases below share that
   invoke.
 - **Assert** (Postgres after 01, **before** 02 runs):
   - `website_settings`: one row, `tenant_id` = that tenant,

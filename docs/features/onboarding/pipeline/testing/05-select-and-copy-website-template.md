@@ -9,11 +9,13 @@ SELECTs both.
   profile. Zero `website_settings` / `website_pages` /
   `website_publications`. Production-ready website templates exist in the
   website template catalog.
-- **Invoke**: `POST .../interview/complete` (enqueues 05). 01 is real
+- **Invoke**: `POST .../interview/complete` (**inserts**
+  `select_and_copy_website_template`). 01 is real
   occupancy + hash (no LLM). 02 write is real.
   Also complete when the gate fails (required `conflict` /
   `in_progress`).
-- **Assert** (Postgres, after 05 job succeeds, **before** 03 runs):
+- **Assert** (Postgres, after `select_and_copy_website_template` succeeds,
+  **before** 03 runs):
   - `business_profiles.accepted_edit_id` = `last_edit_id` at complete.
   - `onboarding_sessions.status=selecting_and_copying_website_template`
     (wait-end has not run yet).
@@ -27,7 +29,8 @@ SELECTs both.
     tokenized `website_slots` (image website slots still `{{images.*}}` /
     `{{logo_url}}`, no `media_asset_id`); derived `website.menus`; zero
     `website_slot_reviews`; zero `website_publications`.
-  - **Handoff to 06**: schema `jobs` has one `website_copy_generation`,
+  - **Handoff to 06**: schema `jobs` has one River job kind
+    `website_copy_generation`,
     unique key = that `tenant_id`. No
     `website_slots.origin=website_copy_generation` yet.
   - All website rows use the unactivated `tenant_id` from 01 find.
