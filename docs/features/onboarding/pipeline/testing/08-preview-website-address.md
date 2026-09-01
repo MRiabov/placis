@@ -42,5 +42,6 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
 - **Fail**: website 04 required missing var → no new
   `website_publications`; `website_prefix` may already be reserved
   (keep it); unpublished tree unchanged; retry the same POST.
-- **Mocked**: Worker internal render, R2, `purge_cache` (website 04).
+- **Mocked**: R2, `purge_cache` (website 04). Real Worker
+  (`websitePublication`).
   No live Cloudflare.

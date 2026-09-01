@@ -9,9 +9,14 @@ Three tiers, and they are not interchangeable:
 - **Integration** — asserts the API on one side, with
   **internal services real, not mocked**: **backend-only** (handler → service →
   sqlc → real Postgres, no frontend) or **frontend-only** (the frontend
-  asserting against the API). Only Google, the LLM, voice, and Stripe are faked.
+  asserting against the API). Only Google, the LLM, voice, and Stripe are
+  faked. The contractor-website **Worker** is real (container; no
+  `wrangler deploy`) when the test calls `websiteRender` or
+  `websitePublication`. R2 / `purge_cache` are faked (paid Cloudflare).
 - **E2E** — **both sides real**: Playwright drives `frontend-2` against the real
   Go API + real Postgres. A full contractor/owner/website-visitor journey.
+  Website / onboarding E2E that hit 03 or 04 start the Worker container.
+  Live GET does not call Go. R2 / `purge_cache` stay faked.
 
 Agents must not substitute a unit test where an integration or E2E test is
 required — stubbing an E2E with unit tests is a failure, not a pass.
@@ -21,7 +26,9 @@ required — stubbing an E2E with unit tests is a failure, not a pass.
 At least **one E2E test per feature** — a "feature" is a directory under
 `docs/features/`. E2E is **full-stack**: a Playwright test drives `frontend-2`
 (the real UI) against the real Go API and a real Postgres (Testcontainers), with
-migrations run. Only Google, the LLM, and voice are faked. Each E2E asserts both
+migrations run. Only Google, the LLM, and voice are faked. Website /
+onboarding E2E that hit 03 or 04 also run the Worker container. Each E2E
+asserts both
 what the UI shows and the DB rows. A feature does not pass without its E2E test
 green.
 
@@ -82,9 +89,10 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
   transform caches for `webServer`; skip specs with
   `playwright test --only-changed=origin/main` (TypeScript import graph). That
   graph cannot see Go, SQL, or OpenAPI — force the **full** list for that job
-  when `internal/`, `cmd/`, `migrations/`, `openapi.json`, Playwright config,
-  `package.json`, or `pnpm-lock.yaml` change. Path-filter `frontend-2` e2e
-  unless `frontend-2/`, `packages/website-components/`, Go, migrations, or
+  when `internal/`, `cmd/`, `migrations/`, `openapi.json`, the Worker
+  internal OpenAPI file, Playwright config, `package.json`, or
+  `pnpm-lock.yaml` change. Path-filter `frontend-2` e2e unless
+  `frontend-2/`, `packages/website-components/`, Go, migrations, or
   `openapi.json` changed. Path-filter `apps/placis-website` e2e unless that app
   (or its shared packages) changed. Do not `--shard` until one job with workers
   is still too slow (shards multiply hosted minutes and Clerk traffic). Do not

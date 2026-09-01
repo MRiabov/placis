@@ -65,7 +65,9 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
 5. **Generated-code freshness** — `sqlc generate` must produce no diff; `goose`
    migrations apply cleanly to a fresh DB; the `huma` OpenAPI spec + frontend
    typegen stay in sync with the API structs (a contract check), so generated
-   types are evidence and never drift.
+   types are evidence and never drift. The **Worker** typegens from a
+   **separate** internal OpenAPI file (not `GET /openapi.json`). Export
+   and `apps/contractor-website` typegen must produce no diff.
 6. **External API isolation** — the backend test job strips Google / LLM /
    Stripe / voice credentials and forces fakes, then fails if any
    credential-shaped env var remains. Tests must not spend LLM, Google,
@@ -76,7 +78,8 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    `minimum`/`maximum`, fixed sets are `enum`. A field missing its constraints
    fails CI. The check must also fail `map[string]any`, `json.RawMessage`,
    `additionalProperties: true`, and string fields documented as JSON blobs on
-   huma DTOs (including SSE event structs). Persistence `jsonb` columns are not
+   huma DTOs (including SSE event structs). The **same** check runs on the
+   Worker internal OpenAPI file. Persistence `jsonb` columns are not
    this check. See [HTTP conventions](api.md).
 8. **Production-ready website template** — a website template marked
    `production_ready` (the flag 01 may pick) fails CI unless it has the
@@ -106,6 +109,9 @@ decision + date) instead of silently replacing the old entry.
   skips jobs irrelevant to the change: `frontend-2` e2e unless `frontend-2/`,
   `packages/website-components/`, Go, migrations, or `openapi.json` changed;
   `apps/placis-website` e2e unless that app (or its shared packages) changed.
+  Start the contractor-website **Worker container** (no `wrangler deploy`)
+  when `apps/contractor-website/`, the internal OpenAPI file, or Go
+  callers of `websiteRender` / `websitePublication` change.
 - Non-shallow git (or an explicit fetch of `origin/main`) so `--changed` /
   `--only-changed` can diff against main. Empty Vitest selection is a pass
   (`--passWithNoTests` where needed).
@@ -177,7 +183,8 @@ does). We do **not** hand-roll AST scripts up front:
   `rumdl fmt --check` then `rumdl check` on pull requests (not via `just`; never
   `rumdl fmt` in CI). Conventions: [docs conventions](../docs-conventions.md).
 - **Don't-say glossary check** (`cmd/ci/check-dont-say`) — see below.
-- Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen).
+- Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen,
+  Worker internal OpenAPI export + contractor-website typegen).
 - Later: file-size guard and folder fan-out (`cmd/ci`), documented above, not
   implemented in this pass.
 

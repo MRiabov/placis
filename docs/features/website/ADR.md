@@ -49,9 +49,11 @@ Status: decided (2026-08-16, product owner + engineering).
    media-library functions 2026-08-24; collapse + no dim 2026-08-26; CMS
    assistant HTTP 2026-08-28) (2026-08-31): automatic website copy generation
    (03) uses the same tools headless; no `update_reviews`; turn 1 and after each
-   `update_slot` Go asks the Worker internal website page render; Go does not
-   emit HTML. Select website template is `website_template_picker` at 01, not at
-   copy-pages.
+   `update_slot` Go `POST`s `websiteRender` (rasters on the inference, not
+   HTML). Go does not emit HTML. 04 is `websitePublication` (write R2, no
+   rasters). Select website template is `website_template_picker` at 01, not at
+   copy-pages. (2026-09-01): `WebsiteBusinessProfileRead` is the Common
+   variables bag on canvas hydrate and both Worker requests.
 
 7. **Website publication is kept and can be rolled back** — website publication
    creates a `website_publications` row (a published website copy); website
@@ -117,9 +119,9 @@ Status: decided (2026-08-16, product owner + engineering).
     Remaining live-site work is R2 `latest/`, website publication HTML, Custom
     Hostnames, and Connect website address. Website publication is not a
     Cloudflare deploy. There is no per-request unpublished render for website
-    visitors. Copy generation (03) uses an authenticated internal website page
-    render (no R2). Website address uses Custom Hostnames, not Pages. See
-    [cloudflare.md](cloudflare.md), [contractor-website-debloat.md](contractor-website-debloat.md),
+    visitors. Copy generation (03) uses `websiteRender` (no R2). Website
+    publication uses `websitePublication`. Website address uses Custom
+    Hostnames, not Pages. See [cloudflare.md](cloudflare.md), [contractor-website-debloat.md](contractor-website-debloat.md),
     [port-contractor-website.md](port-contractor-website.md), and ADR 18–20. (2026-08-20; edge locked
     2026-08-21; imported 2026-08-23; Worker write-thin 2026-08-23; token preview
     dropped 2026-08-25)

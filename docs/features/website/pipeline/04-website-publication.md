@@ -2,8 +2,9 @@
 
 Worker **resolves website placeholders** and writes HTML to R2, then purges.
 Same write for onboarding 08 (strip on), onboarding 09 (strip off), and later
-owner CMS Publish. Go sends a **tokenized** dump plus the live business
-profile. Go does not emit HTML and does not resolve `{{…}}`.
+owner CMS Publish. Go sends a **tokenized** dump plus
+`WebsiteBusinessProfileRead` to **`websitePublication`**. Go does not emit
+HTML and does not resolve `{{…}}`. 04 must not call `websiteRender`.
 
 Onboarding [08](../../onboarding/pipeline/08-preview-website-address.md) /
 [09](../../onboarding/pipeline/09-website-activation.md) keep reserve-prefix,
@@ -33,8 +34,8 @@ Strip on/off is a caller flag.
 - Rewrite `latest/` because later business research landed. Live R2 is a
   **snapshot**. Later business research only changes what the **next** 04
   resolves.
-- Spec Worker RPC internals
-  ([open questions](../catalog.md#open-questions)).
+- Call `websiteRender` from this job.
+- Return rasters to the model.
 - Make onboarding-written rows website-rollback targets
   (`published_by=onboarding`).
 
@@ -42,12 +43,13 @@ Strip on/off is a caller flag.
 
 1. Validate every website section against its website component contract.
    A required missing var is a publication blocker.
-2. Go sends a **tokenized** dump (`website.v1` shape, tokens still in
-   slots) plus profile to the Worker **internal page render** (same engine
-   as 03). Authenticated internal render (shared secret / service binding).
-   Not a live GET. Not public OpenAPI.
+2. Go `POST`s `websitePublication` ([website HTTP](../api.md)): tokenized
+   `website.v1` dump (`pages[]` still a list) plus
+   `WebsiteBusinessProfileRead`, `strip`, `website_prefix`,
+   `version_number`. Authenticated internal (shared secret / service
+   binding). Not a live GET. Not public OpenAPI. Not `websiteRender`.
 3. Worker resolves website placeholders from that profile (exact match →
-   typed value, substring → substituted) and renders HTML.
+   typed value, substring → substituted) and writes HTML to R2.
 4. Then persist: write `{version_number}/`, copy onto `latest/`, convert
    approved live-path images to same-host WebP, refresh host pointers,
    `purge_cache` for page URLs, sitemap, robots, WebP URLs. Purge exists so
@@ -72,10 +74,22 @@ this write. Retry the same caller (share / pay / Publish).
 Live GET is Cache then R2. Website visitors keep the previous `latest/`
 until copy + purge finish.
 
+## Publication SLO (Go worker round-trip)
+
+Clock: request leaves the Go worker → `websitePublication` writes HTML to
+R2 → response is back at the Go worker. Not 03 rasters. Not live GET
+TTFB (Cache then R2).
+
+Worker timeout follows this table. Do **not** reuse the 03 raster SLO
+numbers.
+
+| Call | What returns |
+| --- | --- |
+| `websitePublication` | closed write result (no rasters). Visitors keep previous `latest/` until copy + purge finish |
+
 ## Invariants
 
 - One HTML engine: `apps/contractor-website`.
 - Tokens in unpublished rows and in the dump Go sends. Resolved values in
   HTML only.
 - Same write for first onboarding publication and later owner Publish.
-- Do not spec Worker RPC internals.

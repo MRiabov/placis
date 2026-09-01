@@ -1,10 +1,11 @@
 # Variables (`{{var}}`)
 
 Website placeholders in website content that **resolve website placeholders**
-from the business profile. The unpublished website keeps the tokens. Go does
-not rewrite slots. The Worker fills `{{…}}` when rendering publication HTML
-and when rendering copy-generation page previews. The wait teaser and CMS
-canvas fill them in `frontend-2` with the shared website component package.
+from `WebsiteBusinessProfileRead` ([website HTTP](api.md)). The unpublished
+website keeps the tokens. Go does not rewrite slots. The Worker fills `{{…}}`
+on `websiteRender` (03 rasters) and on `websitePublication` (04 HTML).
+The wait teaser and CMS canvas fill them in `frontend-2` with the shared
+website component package from the same `*Read` (page GET embed).
 
 Onboarding 05 (website 01 then 02) writes `{{…}}` detail tokens and leaves
 them in place. Website copy generation (03) may overwrite prose slots but
@@ -28,12 +29,12 @@ Two forms:
 
 ## The details
 
-Variables resolve from **tenant default details** built from the business
-profile, business research, and media assets: branding (address, logo, legal
-name, established year, incorporation, service region, legal disclosure), images
-(per website slot image details), services (featured, marquee, footer links,
-project types), projects (featured, recent, home gallery, projects website page,
-categories), and certifications.
+Variables resolve from **`WebsiteBusinessProfileRead`**, built from the
+business profile, projects, ranked reviews, and media assets: branding
+(address, logo, legal name, established year, incorporation, service region,
+legal disclosure), images (per website slot image details), services
+(featured, marquee, footer links, project types), projects (featured, recent,
+home gallery, projects website page, categories), and certifications.
 
 ## Common variables
 
@@ -64,9 +65,10 @@ categories), and certifications.
    Wait teaser and CMS canvas resolve for paint through frontend-2 + the
    website component package when current profile data can fill those
    placeholders.
-3. **Website publication (04)** sends a tokenized dump plus profile to the
-   Worker. The Worker resolves every variable — exact match → typed value,
-   substring → substituted — and writes HTML to R2. Go does not fill tokens.
+3. **Website publication (04)** sends a tokenized dump plus
+   `WebsiteBusinessProfileRead` to `websitePublication`. The Worker
+   resolves every variable — exact match → typed value, substring →
+   substituted — and writes HTML to R2. Go does not fill tokens.
 4. A missing variable stays as a `{{var}}` token in the unpublished website;
    a *required* website slot whose variable can't resolve becomes a
    **website publication blocker**.
