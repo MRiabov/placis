@@ -282,11 +282,11 @@ This pass: **tables**, **pipeline step headings**, and **feature `api.md` /
 not gatherers (`pipeline/README.md`,
 `etl/pipeline/etl-run-kind-triggers.md`). Closed `api.md` `##` is DTOs
 (optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
-and Indexes. Undefined features keep leftover extra-heading lists in
-`cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
-entry in the same PR). `testing.md` bans `## Routes` / `## DTOs` /
-`## Tables` / `## Do not create` and `### METHOD /path`.
-Pairing matches **known**
+and Indexes. Website, billing, and assistant have none. Undefined features
+keep leftover extra-heading lists in `cmd/ci/check-pipeline-tables`;
+extras may only shrink (drop the leftover entry in the same PR).
+`testing.md` bans `## Routes` / `## DTOs` / `## Tables` /
+`## Do not create` and `### METHOD /path`. Pairing matches **known**
 table names (already in some
 `persistence.md`); invented names and columns are writing rules. Warn
 (do not fail) when a changed `persistence.md` is passed on the command

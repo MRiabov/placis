@@ -207,17 +207,16 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 - `## Routes`
 - `## Do not create`
 
-Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays.
-CI ratchets leftover extra `##` on undefined features (extras may only
-shrink). Website and billing have none. `###` only as Routes overflow:
-`### METHOD /path` when a table cell would be a paragraph. No `###`
-under DTOs.
+Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
+ratchets leftover extra `##` on undefined features (extras may only shrink).
+Website, billing, and assistant have none. `###` only as Routes overflow:
+`### METHOD /path` when a table cell would be a paragraph. No `###` under DTOs.
 
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`.
 Overflow is `###` under a table, not a new `##`. CI ratchets leftover
-grouping `##` the same way as `api.md` (extras may only shrink). Website
-and billing have none. Intro-only files (ads, media library, Details,
-Projects) have no `##` yet.
+grouping `##` the same way as `api.md` (extras may only shrink). Website,
+billing, and assistant have none. Intro-only files (ads, media library,
+Details, Projects) have no `##` yet.
 
 **`testing.md`** — H1 + numbered journey. No required `##`. Optional `##`
 only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
@@ -272,5 +271,6 @@ on the Request DTO.
 `## Indexes` — as billing already does.
 
 Major features that must eventually satisfy this contract: ads, assistant,
-billing, ETL, onboarding, website. Website is the first fully defined
-feature. CI: [ci-cd.md](general-architecture/ci-cd.md).
+billing, ETL, onboarding, website. Website and assistant are fully defined
+(DTOs, Routes, tables, named services). Billing has closed Routes and no
+empty DTOs stub. CI: [ci-cd.md](general-architecture/ci-cd.md).

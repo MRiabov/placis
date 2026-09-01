@@ -200,6 +200,15 @@ unknown events are logged and dropped, never parsed as `any`.
 The contractor host is **not** SSE. `/onboarding/preview` and
 `/onboarding/preview-and-edit/` in `frontend-2` are.
 
+## Go WebSocket events
+
+`GET /v1/assistant/thread/ws` follows the same typing rule as SSE: named
+event → Go struct, payloads in `/openapi.json`. Discriminator `type`.
+Huma need not host the socket. Do not add AsyncAPI. Unknown events are
+logged and dropped, never parsed as `any`. Voice audio is the xAI
+realtime URL, not this socket.
+[Assistant HTTP](../features/assistant/api.md).
+
 ## Worker internal operations
 
 Two operations. Same Astro engine. **Not** one union with a flag. Not on
