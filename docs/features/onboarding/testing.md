@@ -3,8 +3,9 @@
 One full-stack E2E: find → review → client interview → select and copy the
 website template → website preview → website activation. Drives `frontend-2`
 (Playwright) against the real API + real Postgres; Google Maps / company
-registry / Facebook / crawl and the LLM are faked. DB asserts use
-[persistence.md](persistence.md) and [details](../business-profile/details/persistence.md).
+registry / Facebook / crawl and the LLM are faked. Worker **container** is up
+when 03/04 run (no `wrangler deploy`). DB asserts use [persistence.md](persistence.md) and
+[details](../business-profile/details/persistence.md).
 
 1. **Find** — country, registry and/or Google Maps, online research consent,
    business lookup.
@@ -52,8 +53,9 @@ registry / Facebook / crawl and the LLM are faked. DB asserts use
 
 6. **Automatic website copy generation** (faked LLM tools, overlapping DAG
    06–09) — website slots/SEO update; tokens preserved; no `update_reviews`.
-   Worker internal website page render on turn 1 and after `update_slot`
-   (faked).
+   Real Worker `websiteRender` on turn 1 and after `update_slot` (rasters;
+   unpublished slots still tokens). Zero `website_publications` / R2 from
+   03.
    - DB: targeted `website_slots.origin=website_copy_generation`;
      `ai_generations` (`thread_kind=website_copy_generation`,
      `prompt_id=website_copy_generation`, `input` /

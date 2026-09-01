@@ -47,5 +47,5 @@ Pays, upgrades the tenant, and calls website 04 (strip off). Leftover
   continues River-only.
 - **Fail**: invalid Stripe signature → no `website_activations` paid
   row; tenant still `unactivated`; no new `website_publications`.
-- **Mocked**: Stripe test mode (no real charge). Website 04 Worker /
-  R2 / purge as 08.
+- **Mocked**: Stripe test mode (no real charge). Website 04 as 08 (real
+  Worker `websitePublication`; R2 / purge faked).

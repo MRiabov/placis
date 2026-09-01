@@ -47,7 +47,8 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
   website slot’s intent (a van photo on gutter cleaning).
 - Persist Worker HTML onto unpublished website slots.
 - Write R2, convert WebP, or purge (that is 04).
-- Extra screenshot tool.
+- Extra screenshot tool. First view and `update_slot` already return
+  rasters from `websiteRender`.
 - Block 09.
 - Wait past the wait-teaser cap to “finish” before the website preview can
   exist.
@@ -67,15 +68,15 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 
 ## Do
 
-1. **Turn 1 page render.** Go loads the unpublished tree (tokens) + live
-   profile (not `website_manifest`) and asks the Worker **internal page
-   render** (same Astro engine as 04). Put that HTML on the first inference.
-   Complete the **home** website page first (wait teaser keys off that).
-   Other website pages generate in parallel. Batch the first render (for
-   example 8 pages) on **one Worker**, not parallel Workers. “8 pages” is an
-   example, not a rule when the site has 4 or 12 website pages. Worker
-   request DTO, binding, and batch encoding are
-   [open questions](../catalog.md#open-questions).
+1. **Turn 1 `websiteRender`.** Go loads the unpublished tree (tokens) +
+   `WebsiteBusinessProfileRead` (not `website_manifest`) and `POST`s
+   `websiteRender` ([website HTTP](../api.md)). Put those **rasters** on
+   the first inference (not HTML). Complete the **home** website page
+   first (wait teaser keys off that). Other website pages generate in
+   parallel. Batch the first `websiteRender` (for example 8 pages) on
+   **one Worker**, not parallel Workers. “8 pages” is an example, not a
+   rule when the site has 4 or 12 website pages. Do not call
+   `websitePublication`.
 2. Per website page, bounded parallel: `update_slot` (prose), `update_seo`,
    then **photo selection**. **Attach first** (`update_slot` +
    `media_asset_id`) when `media_assets[]` already has a fit; `generate_image`
@@ -96,9 +97,10 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
      unpublished canvas warning; website publication still requires approved
      media library items). That fills the gap for the owner.
    - Do not reuse an already-attached photo on a later image website slot.
-3. After each `update_slot`, the same Worker internal render for the
-   affected website page. Put that HTML on the tool result. Do not persist it
-   onto unpublished website slots.
+3. After each `update_slot`, the same `websiteRender` for the affected
+   website page (`before_pages` + `pages`). Put `before_image` and
+   `after_image` on the tool result. Do not persist rasters or HTML onto
+   unpublished website slots.
 4. After 03 a hero headline is **generated prose** that may still contain
    detail tokens. It is not a raw live-profile dump and not a lone
    `{{business_name}}` unless 03 left it. Remaining tokens resolve at
@@ -116,16 +118,16 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 
 ## Page-render SLO (Go worker round-trip)
 
-Clock: request leaves the Go worker → Worker internal page render →
-response is back at the Go worker. Not Worker-only. Not 04 R2 / WebP /
-purge.
+Clock: request leaves the Go worker → `websiteRender` → rasters are back
+at the Go worker. Not Worker-only. Not 04 R2 / WebP / purge.
 
-| Shape | p50 | p90 | p95 |
+| Call | p50 | p90 | p95 |
 | --- | --- | --- | --- |
 | 1 page (after `update_slot`) | 500ms | 1s | 1.25s |
 | Batch of 8 pages (turn 1) | 750ms | 1.5s | 2s |
 
-One Worker handles a batch, not one Worker per page.
+One Worker handles a batch, not one Worker per page. Worker timeout
+follows this table.
 
 ## Persist
 

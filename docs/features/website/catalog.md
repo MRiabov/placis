@@ -186,8 +186,9 @@ output schema / `prompts.yaml`; heuristic table (`trade → website
 template, else default`). Do not implement the LLM picker on this
 branch.
 
-**Worker internal render.** Unspecified: the **request DTO** (full dump
-vs one website page; how a batch is encoded); URL or service binding
-name; auth vs binding; timeout vs the SLO table. 03’s “for example 8
-pages” is an example, not a rule when the site has 4 or 12 website pages.
-Do not invent an RPC to close 04 “don’t spec Worker RPC” vs the 03 SLO.
+**Worker binding name.** Unspecified: production service-binding **name**
+(and whether auth is that binding vs a shared secret). DTOs, paths, both
+SLO clocks, and OpenAPI ownership are locked in [website HTTP](api.md)
+and [HTTP conventions](../../general-architecture/api.md). 03’s “for
+example 8 pages” is an example, not a rule when the site has 4 or 12
+website pages.

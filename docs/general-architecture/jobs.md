@@ -34,9 +34,8 @@ cancelled). CMS PATCH / assistant HTTP are **not** 409 because this job
 is running (`assistant.runs` is a different lock).
 
 `thread_kind=website_copy_generation`, `prompt_id=website_copy_generation` in
-the onboarding package `prompts.yaml`. Worker: [website 03](../features/website/pipeline/03-website-copy-generation.md). Worker internal
-render binding is still an
-[open question](../features/website/catalog.md#open-questions).
+the onboarding package `prompts.yaml`. Worker: [website 03](../features/website/pipeline/03-website-copy-generation.md) (`websiteRender`).
+Routes: [website HTTP](../features/website/api.md).
 
 ## Reviews ranking for display
 

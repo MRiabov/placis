@@ -155,16 +155,17 @@ registry and plan / Ask first: [assistant.md](assistant.md).
 Website publication walks the unpublished website, validates every website
 section against its website component contract, and writes one
 `website_publications` row holding a **tokenized** `website.v1` dump
-([manifest.md](manifest.md)). Go sends that dump plus the live business
-profile to the Worker. The Worker **resolves website placeholders** and
-renders HTML ([04](pipeline/04-website-publication.md),
-[variables.md](variables.md)). Go does not resolve `{{…}}` and does not emit
-HTML. That row is a website version. Live HTML in R2 is the snapshot the
-renderer serves. Website rollback reactivates an earlier **owner** website
-version (copies it onto `latest/`). Onboarding-written rows are never
-website-rollback targets. That control is on earlier owner website versions
-(Website versions workspace item and the publication dropdown), not on the
-live website version.
+([manifest.md](manifest.md)). Go sends that dump plus
+`WebsiteBusinessProfileRead` to **`websitePublication`**. The Worker
+**resolves website placeholders** and writes HTML
+([04](pipeline/04-website-publication.md), [variables.md](variables.md)).
+Go does not resolve `{{…}}` and does not emit HTML. That row is a website
+version. Live HTML in R2 is the snapshot the renderer serves. Website
+rollback reactivates an earlier **owner** website version (copies it onto
+`latest/`). Onboarding-written rows are never website-rollback targets.
+That control is on earlier owner website versions (Website versions
+workspace item and the publication dropdown), not on the live website
+version.
 **Preview** opens the live website. Loading an owner website version into the
 unpublished canvas (`GET` with `publication_id`, then PATCH) is not a Website
 versions control in this UI ([api.md](api.md)). That is not website rollback.
@@ -177,9 +178,9 @@ editor PATCH still works. Usage & billing is how they pay again
 
 Edits to Details, Projects, certifications and reviews, website styles, or the
 unpublished website do not change the live website until the next website
-publication. Website publication sends tokenized `{{projects.*}}` (and
-`website_manifest.projects[]` as the profile slice the Worker may resolve);
-skip `draft`; omit draft ids from published galleries — no 409. Later
+publication. Website publication sends tokenized `{{projects.*}}` on
+`WebsiteBusinessProfileRead` (active rows only; skip `draft`); omit draft
+ids from published galleries — no 409. Later
 business research does not rewrite `latest/`.
 
 Website publication is not a Cloudflare deploy. One shared contractor-website
@@ -200,11 +201,11 @@ Live websites and website previews are served by a
 **separate Astro + React app** (`apps/contractor-website`), not the website
 editor. Website components live in `packages/website-components`.
 
-At **website publication**, that app’s **authenticated internal render**
-resolves website placeholders and renders each live website page, then writes
-HTML to R2 `latest/`. A live GET is Cache then R2. It never calls Go.
-Onboarding 08/09 call this same write (strip on, then strip off). Website copy
-generation (03) uses the same internal render **without** writing R2. There is
+At **website publication**, Go `POST`s `websitePublication`. The Worker
+resolves website placeholders and writes HTML to R2 `latest/`. A live GET
+is Cache then R2. It never calls Go. Onboarding 08/09 call this same write
+(strip on, then strip off). Website copy generation (03) `POST`s
+`websiteRender` (**without** writing R2) and gets rasters. There is
 no per-request unpublished render for website visitors and no
 `/preview/{token}/`.
 

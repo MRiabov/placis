@@ -197,20 +197,28 @@ unknown events are logged and dropped, never parsed as `any`.
 The contractor host is **not** SSE. `/onboarding/preview` and
 `/onboarding/preview-and-edit/` in `frontend-2` are.
 
-## Worker internal render
+## Worker internal operations
 
-Two callers of one Astro engine (shared secret / service binding). Not public
-OpenAPI. **Do not create** `/v1/public/site/…`. Do not create leftover
-`/preview/{token}/` HTML.
+Two operations. Same Astro engine. **Not** one union with a flag. Not on
+`cmd/api`. Not public OpenAPI. **Do not create** `/v1/public/site/…`. Do
+not create leftover `/preview/{token}/` HTML. Do not put these on live
+GET.
 
-- **Website 03** — render only (tokenized unpublished + profile). No R2, no
-  WebP, no purge. Batch of pages on **one Worker**. SLO measured **back at
-  the Go worker**: 1 website page p50 500ms / p90 1s / p95 1.25s; batch of 8
-  website pages p50 750ms / p90 1.5s / p95 2s.
-- **Website 04 / publication** — same render, then write R2 and purge.
+Go structs are the source. Worker typegens from a **separate** OpenAPI
+file (not `GET /openapi.json`). Routes, DTOs, and `$ref` for
+`WebsiteBusinessProfileRead`: [website HTTP](../features/website/api.md).
+Auth: shared secret / service binding (out of the JSON body). Binding
+**name** is not this file.
 
-Live contractor HTML GET is Cache then R2. Never Go. The leftover token path is
-gone.
+- **`websiteRender`** (`POST /internal/website-render`) — website 03. Returns
+  rasters. No R2, no WebP, no purge. Batch of website pages on **one Worker**.
+  SLO: [03](../features/website/pipeline/03-website-copy-generation.md).
+- **`websitePublication`** (`POST /internal/website-publication`) — website 04.
+  Writes HTML to R2 and purge as 04 already says. No rasters to the model. SLO:
+  [04](../features/website/pipeline/04-website-publication.md).
+
+Live contractor HTML GET is Cache then R2. Never Go. The leftover token
+path is gone.
 
 ## Cross-cutting routes
 
@@ -224,5 +232,6 @@ gone.
 
 - **Auth:** none (or the same gate as other unauthenticated discovery; not a
   tenant resource)
-- **Callers:** `openapi-typescript` typegen
+- **Callers:** `openapi-typescript` typegen for `frontend-2` (CMS
+  `/v1`). Not the Worker internal OpenAPI file.
 - **Response:** huma OpenAPI 3.1

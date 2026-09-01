@@ -21,17 +21,16 @@ is a later caller.
   small `update_slot` / `update_seo` batch (no `create_page`, no
   `update_reviews`). In (a) also `update_slot` + `media_asset_id` attach
   of the matching photos. In (b) also `generate_image` for a service
-  image website slot. Fake the Worker internal website page render to
-  return HTML. Also: start a second 03; also: run 09 (activate) while
-  the job is in flight; also: wait-end (home website page copy done or
-  wait cap) without
-  08/09.
-- **Assert** (Postgres):
-  - **Intermediary — Worker (spy, not a substitute):** turn 1 asked
-    **one** Worker for a website page render of the unpublished tree +
-    live profile (tokens still in the dump). After each `update_slot`,
-    another website page render of the affected website page. HTML from
-    those calls is **not** in `website_slots.value`.
+  image website slot. Real Worker (`websiteRender`). Also: start a second
+  03; also: run 09 (activate) while the job is in flight; also: wait-end
+  (home website page copy done or wait cap) without 08/09.
+- **Assert** (Postgres + Worker):
+  - **Worker:** turn 1 asked **one** Worker `websiteRender` of the
+    unpublished tree + `WebsiteBusinessProfileRead` (tokens still in
+    `pages`). After each `update_slot`, another `websiteRender` of the
+    affected website page (`before_pages` + `pages`). Rasters from those
+    calls are **not** in `website_slots.value`. Zero R2 / WebP / purge
+    from this job. 03 did not call `websitePublication`.
   - **Website slots / website pages:** targeted `website_slots.value`
     changed; `origin=website_copy_generation` on those rows only.
     Untargeted website slots still `origin=website_template`. Reusable
@@ -59,10 +58,10 @@ is a later caller.
     applied tools.
   - `onboarding_sessions.status=preview_and_edit` at wait-end (home
     website page copy done or wait cap), not at 08 share.
-  - **Must not:** zero `website_publications`. Zero R2 / WebP / purge
-    from this job (spy). `tenants.website_prefix` still null if 08
-    never ran. Second 03 start is **409** from River unique-insert; still
-    one `website_copy_generation` row for that `tenant_id`.
+  - **Must not:** zero `website_publications`. `tenants.website_prefix`
+    still null if 08 never ran. Second 03 start is **409** from River
+    unique-insert; still one `website_copy_generation` row for that
+    `tenant_id`.
   - After 09 while in flight: `assistant.runs` has no `running` on CMS
     `cms_assistant`; leftover job still in schema `jobs` on the same
     `tenant_id` (not deleted, not cancelled). Further 03 website slot
@@ -78,6 +77,5 @@ is a later caller.
   `selecting_and_copying_website_template` or `preview_and_edit` if wait-end
   already happened; still zero `website_publications`; 09 still allowed (no
   activation blocker row).
-- **Mocked**: copy-generation LLM (including `generate_image` in (b));
-  Worker internal website page render (assert Go asked; do not require
-  live Cloudflare). Do not invent a Worker request DTO.
+- **Mocked**: copy-generation LLM (including `generate_image` in (b)).
+  Not the Worker. R2 / `purge_cache` unused (03 must not call them).

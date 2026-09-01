@@ -9,11 +9,12 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
   `website_prefix` null, zero `website_publications`. For 09-after-08:
   v1 `active` `published_by=onboarding` already exists (strip on). For
   CMS: tenant `status=active`, an owner host `website_addresses` row.
-- **Invoke**: the publication write (Worker internal render faked; R2
-  and `purge_cache` faked). Call 08 strip on, 09 strip off, and CMS
+- **Invoke**: the publication write (real Worker `websitePublication`;
+  R2 and `purge_cache` faked). Call 08 strip on, 09 strip off, and CMS
   Publish as separate cases. Also: required missing var. Also: later
-  ETL reviews/projects without another 04.
-- **Assert** (Postgres + fakes):
+  ETL reviews/projects without another 04. Also: 04 must not call
+  `websiteRender`.
+- **Assert** (Postgres + Worker + fakes):
   - `website_publications`: one new row, `tenant_id` matches,
     `version_number` incremented, `status=published`, `active=true`,
     `published_by=onboarding` (08/09) or `owner` (CMS),
@@ -31,16 +32,16 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
   - **Unpublished tree unchanged as HTML:** `website_slots.value`
     still tokens (Worker resolve did not write back). No new
     `website_pages`.
-  - **Spy:** Go sent the tokenized dump + live profile to the Worker
-    internal website page render (not a live GET). Fake R2 has
-    `{version_number}/` then `latest/` keys. Fake `purge_cache`
+  - Go sent the tokenized dump + `WebsiteBusinessProfileRead` to
+    `websitePublication` (not a live GET, not `websiteRender`). Fake
+    R2 has `{version_number}/` then `latest/` keys. Fake `purge_cache`
     includes live website page URLs, sitemap, robots, WebP on that
-    host.
+    host. Response has no rasters.
   - 08 strip on / 09 strip off / CMS Publish are the same write with
-    the caller flag (strip present in 08 HTML spy, absent in 09/CMS).
+    the caller flag (strip present in 08 HTML, absent in 09/CMS).
   - Later ETL without 04: no new `website_publications` row;
     fake `latest/` objects unchanged.
-  - Live GET of the host does not call Go (spy).
+  - Live GET of the host does not call Go.
 - **Handoff**: live path is R2 `latest/` (fake) + this
   `website_publications` row. Next owner Publish is another 04 on the
   same unpublished tree. Onboarding 09 after 08 archives v1 and writes
@@ -50,5 +51,4 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
   slots unchanged; `website_publication_issues` is **not** used for this
   pre-write blocker (editor `blockers[]` / throw). Retry the same
   caller.
-- **Mocked**: Worker internal render, R2, `purge_cache`. No live
-  Cloudflare.
+- **Mocked**: R2, `purge_cache`. Not the Worker. No live Cloudflare.

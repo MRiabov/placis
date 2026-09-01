@@ -15,9 +15,10 @@ jsonb dump. `GET`/`PATCH` fields are the columns and list tables in
 ### GET /v1/business-profile
 
 - **Auth:** Clerk JWT, active tenant
-- **Callers:** `/cms/details` (Business details). Website editor `*Read` may
-  **embed** display name / marketing phone for website placeholders; it does not
-  own this resource.
+- **Callers:** `/cms/details` (Business details). Not the website-placeholder
+  bag. Website editor website page GET embeds
+  `WebsiteBusinessProfileRead`
+  ([website HTTP](../../website/api.md)); it does not own this resource.
 - **Response:** live business profile `*Read` (who they are, contact, where,
   services, legal, opening hours, Facebook URL, Google Maps listing URL, logo).
   When Facebook or the Google Maps listing is linked, the `*Read` includes that

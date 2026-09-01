@@ -32,5 +32,5 @@ must not block 09. Website 03 does the website slot writes.
   onboarding session still `selecting_and_copying_website_template` or
   `preview_and_edit`; 09 still allowed.
 - **Mocked**: as website 03 (copy-generation LLM, including
-  `generate_image` when that fixture applies; Worker internal website
-  page render). Do not invent a Worker request DTO.
+  `generate_image` when that fixture applies). Real Worker
+  (`websiteRender`). Not a fake Worker.

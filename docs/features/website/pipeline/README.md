@@ -5,10 +5,12 @@ From-scratch website create. Website owns the **write**. Onboarding owns
 from-scratch create step. Website template object: [catalog.md](../catalog.md).
 
 Each step file uses Trigger / Pre / Must not / Do / Persist / Fail / Out /
-Invariants. Matching [testing/](testing/) — backend integration tests (real Go + real
-Postgres). Prior-step rows are already in Postgres. Assert is every table this
-step writes, plus the next-step handoff row in Postgres. Paid / external
-collaborators are faked. Playwright E2E is [website/testing.md](../testing.md) /
+Invariants. Matching [testing/](testing/) — backend integration tests
+(real Go + real Postgres + real Worker). Prior-step rows are already in
+Postgres. Assert is every table this step writes, plus the next-step
+handoff row in Postgres. Paid / external collaborators are faked (Google,
+LLM, Stripe, voice, R2, `purge_cache`). Not the Worker. Playwright E2E is
+[website/testing.md](../testing.md) /
 [onboarding/testing.md](../../onboarding/testing.md).
 
 | Website pipeline | Onboarding DAG (thin trigger) |
@@ -24,8 +26,8 @@ collaborators are faked. Playwright E2E is [website/testing.md](../testing.md) /
     unpublished website pages / website sections / tokenized website slots
 03. automatic website copy generation → copy and photo selection in
     existing unpublished website slots
-04. website publication → Worker resolves website placeholders → HTML →
-    R2 latest/ + purge
+04. website publication → `websitePublication` resolves website
+    placeholders → HTML → R2 latest/ + purge
 ```
 
 Later owner steps (stubs only):

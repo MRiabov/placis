@@ -15,7 +15,8 @@ and website publication. Ads live in [../ads/](../ads/README.md). Together they 
 - [persistence.md](persistence.md) — `website_addresses`, website pages, website sections,
   website slots, website forms, `website.menus`, website publications, website
   settings, `edit_history`
-- [api.md](api.md) — HTTP (unpublished website, publication, Connect website address)
+- [api.md](api.md) — HTTP (unpublished website, publication, Connect website
+  address, Worker `websiteRender` / `websitePublication`)
 - [manifest.md](manifest.md) — `website.v1` keep / keep-out
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
 - [frontend.md](frontend.md) — `/cms/website` (publication dropdown + Connect modal)
