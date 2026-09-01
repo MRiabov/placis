@@ -13,14 +13,8 @@ var apiClosedHeads = map[string]bool{
 
 // Leftover extra ## on undefined feature api.md files. Ceiling: a file may
 // only keep a subset. Drop a title here in the same PR that removes it.
-// Website, billing, and ads have none.
+// Website, billing, ads, and assistant have none.
 var apiHeadingLeftover = map[string][]string{
-	"assistant/api.md": {
-		"Serve only types on HTTP",
-		"Routes — Go WebSocket (text chat only)",
-		"Routes — HTTP",
-		"Named codes (this feature)",
-	},
 	"business-profile/details/api.md": {
 		"Serve only types on HTTP",
 		"`update_details` (one governed tool)",

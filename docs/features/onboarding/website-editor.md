@@ -47,8 +47,9 @@ instructions would not fit, that turn / Voice create fails. No 24h discard.
 
 ## HTTP
 
-Prefix `/v1/onboarding/website-editor/assistant`. Same event shapes as CMS.
-Seven routes:
+Prefix `/v1/onboarding/website-editor/assistant`. Same DTO names as
+[assistant HTTP](../assistant/api.md) (`AssistantThreadRead`,
+`AssistantOwnerMessage`, `AssistantVoiceUsage`, …). Seven routes:
 
 - `GET …/thread` — hydrate; lazy-create empty `current` if needed; omits
   `runs`. Onboarding session token **or** Clerk + unactivated (same as

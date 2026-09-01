@@ -1,7 +1,9 @@
 # Assistant testing
 
 One full-stack E2E per story below. DB asserts. External/paid services mocked;
-Go, Postgres, and `frontend-2` are not mocked.
+Go, Postgres, and `frontend-2` are not mocked. Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+DTOs and Routes: [api.md](api.md). Tables: [persistence.md](persistence.md).
 
 Named idle constant: **30 seconds** with no owner speech → frontend stops the
 voice conversation (CMS and onboarding). Assert that constant. 20s warning look
@@ -17,15 +19,16 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 
 ## CMS
 
-1. **Hydrate** — Calling the assistant (bottom-right **Assistant**) on website
-   editor / Ads / Details / `/cms` returns the current thread (`items`, not
-   `thread_items`). No `current` → insert empty `current`. Empty is `items: []`.
-   Visiting `/cms` without calling does not hydrate. Hydrate does not return
-   `runs` and does not join `ai_generations`. Voice create still wrote the
-   instructions on `ai_generations.input` (reconstructable; not in GET).
+1. **Hydrate** — `GetAssistantThread` on website editor / Ads / Details / `/cms`
+   (bottom-right **Assistant**). Response `AssistantThreadRead` (`items`, not
+   `thread_items`). **reads** `ai.threads` / `thread_items`. No `current` →
+   **persists into** `ai.threads` empty `current`. Empty is `items: []`.
+   Visiting `/cms` without calling does not hydrate. Hydrate omits `runs` and
+   does not join `ai_generations`. Voice create still wrote the instructions on
+   `ai_generations.input` (reconstructable; not in GET).
 2. **Assistant screen switch** — Owner moves website editor → Details during
-   speech; speech continues; next owner turn carries one switch notification for
-   Details.
+   speech; speech continues; next `AssistantOwnerMessage` carries one switch
+   notification for Details.
 3. **`switch_assistant_screen`** — Tool opens Ads; allowed set then includes Ads
    `cleanup_image`.
 4. **`get_context_about_screen`** — Returns Ads assistant screen context without
@@ -37,57 +40,62 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 6. **`get_ad` off Ads** — Unknown / other-tenant id is **404**, not screen-gate
    409.
 7. **Voice relay + transcripts** — `function_call` on the voice-service WS →
-   `POST /v1/assistant/voice/tool-calls` (HTTP events) → browser writes
-   `function_call_output` on that same voice-service WS; muted `tool_summary`
-   item appended. `POST /v1/assistant/voice/transcripts` forwards committed xAI
-   Voice events (`input_audio_transcription.completed` /
-   `output_audio_transcript.done`) and appends owner + assistant `transcript`
-   text. `offset_seconds` from `audio_start_ms` on paired
-   `speech_started` when that key exists; else null. Reconstruct
-   `[m:ss owner]` / `[m:ss assistant]`.
+   Request `AssistantVoiceToolCallsCreate`; Response
+   `AssistantVoiceToolEventRead` → browser writes `function_call_output` on
+   that same voice-service WS; **persists into** `thread_items`
+   (`tool_summary`). Request `AssistantVoiceTranscriptsCreate` **persists
+   into** `thread_items` (`provider_event` jsonb; GET omits it). Map
+   `AssistantVoiceOwnerTranscriptEvent` /
+   `AssistantVoiceAssistantTranscriptEvent`. `offset_seconds` from
+   `audio_start_ms` on paired `AssistantVoiceSpeechStartedEvent` when that key
+   exists; else null. Reconstruct `[m:ss owner]` / `[m:ss assistant]`.
    Never say **user**.
-   `provider_event` jsonb
-   stored; GET omits it. No `POST /v1/stt`. If xAI omitted a committed
-   transcript, no row. `ai_generations` has a voice row on that `cms_assistant`
-   thread. Hydrate does not read that table. Tool-calls during the **current**
-   voice run succeed (`in_flight_run` is a second start). Realtime URL host is
-   **eu-west-1** for Find `ie`/`gb` and **us-east-1** for Find `us`
+   No `POST /v1/stt`. If a committed transcript was omitted, no row.
+   `ai_generations` has a voice row on that `cms_assistant` thread. Hydrate
+   does not read that table. Tool-calls during the **current** voice run
+   succeed (`in_flight_run` is a second start). Request
+   `AssistantVoiceRealtimeConnectionCreate`; Response
+   `AssistantVoiceRealtimeConnectionRead`. Realtime URL host is **eu-west-1**
+   for Find `ie`/`gb` and **us-east-1** for Find `us`
    (`wss://{region}.api.x.ai/v1/realtime`), not a frontend-chosen host.
    Connection create includes **`grok-transcribe`**, **Placis** in keyterms, and
    `replace` **Play-sis**.
 8. **Voice → text** — After a tool-using voice turn, expanded thread shows
-   transcripts **and** muted tool lines. Next owner send on
-   `GET /v1/assistant/thread/ws` continues from those thread items. First text
-   send after Voice includes the Voice transcription notice; second text send
-   does not; Voice then text includes it again.
+   transcripts **and** muted tool lines. Next `AssistantOwnerMessage` on
+   `GET /v1/assistant/thread/ws` (`StreamAssistantThread`) continues from those
+   `thread_items`. First text send after Voice includes the Voice transcription
+   notice; second text send does not; Voice then text includes it again.
 9. **Ask first** — Instant apply never writes `runs.ask_first_status=pending`.
-   `record-apply` / `record-reject` **409** `ask_first_not_pending` unless
-   `pending`. Second transition 409. Go does not upsert unpublished rows on
-   those POSTs. While `pending`, the run stays `running`: New thread, second
-   text send, and second Voice create are **409**. Same Voice connection may
-   continue. Reject does not start a generation; it appends a muted thread item.
-10. **`/thread/new`** — Completes previous (`status=completed`), inserts
-    `current`. Two racing POSTs: second **409** `thread_current_exists`.
-    In-flight run **409** `in_flight_run`. `/thread/new` while Voice is on →
-    409 (does not drop Voice).
+   `RecordAssistantApply` / `RecordAssistantReject` **409**
+   `ask_first_not_pending` unless `pending`. Second transition 409. Those POSTs
+   do not upsert unpublished website rows. Reject **persists into**
+   `thread_items` (muted item) and `runs`. While `pending`, the run stays
+   `running`: New thread, second text send, and second Voice create are **409**.
+   Same Voice connection may continue.
+10. **`/thread/new`** — `CreateAssistantThread` **persists into** `ai.threads`
+    (previous `status=completed`, insert `current`). Response
+    `AssistantThreadRead` (`items: []`). Two racing POSTs: second **409**
+    `thread_current_exists`. In-flight run **409** `in_flight_run`.
+    `/thread/new` while Voice is on → 409 (does not drop Voice).
 11. **Insufficient usage credit** — CMS text send / realtime-connection create
     is **402** (`usage_credit_exhausted`) when usage credit is exhausted. Voice
-    minutes debit from posted usage (transcripts + connection close), not from
-    `POST /v1/assistant/voice/tool-calls`. A tool that is itself a billed LLM or
-    image call is **402** when usage credit is exhausted; failed
-    `function_call_output` still reaches the voice-service socket. Exhausted
-    usage credit drops the CMS realtime connection. Transcripts settlement stays
-    `200`.
+    minutes debit from `AssistantVoiceUsage` on transcripts (and connection
+    close), not from `POST /v1/assistant/voice/tool-calls`. A tool that is
+    itself a billed LLM or image call is **402** when usage credit is
+    exhausted; failed `function_call_output` still reaches the voice-service
+    socket. Exhausted usage credit drops the CMS realtime connection.
+    Transcripts settlement stays `200`.
 12. **Unactivated** — **403** `tenant_unactivated` on `/v1/assistant/…`. Unpaid
-    website preview uses `/v1/onboarding/website-editor/assistant/…`.
+    website preview is `/v1/onboarding/website-editor/assistant/…`.
 13. **Voice idle** — After 30s with no owner speech, frontend closes (leftover
-    transcripts with `offset_seconds` from xAI events + usage posted; CMS
-    recording upload (signed URL); realtime connection dropped). Onboarding idle
-    skips the recording PUT.
-14. **Voice recording** — After **CMS** Voice turns off, `files` row + object in
-    storage; `runs.recording_file_id` set. GET thread does not return the URL.
-    The recording file is never posted to Go. Onboarding has no recording
-    object.
+    transcripts with `offset_seconds` from Voice events + `AssistantVoiceUsage`;
+    CMS recording upload (signed URL); realtime connection dropped). Onboarding
+    idle skips the recording PUT.
+14. **Voice recording** — After **CMS** Voice turns off, Request
+    `AssistantVoiceRecordingCreate`; Response `AssistantVoiceRecordingRead`.
+    **persists into** `files`; complete **persists into**
+    `runs.recording_file_id`. GET thread does not return the URL. The recording
+    file is never posted to Go. Onboarding has no recording object.
 15. **06 overlap** — Activate (09) while 06 is still writing a website slot; CMS
     PATCH of that website slot is last-write / `edit_history_conflict`, not
     assistant `in_flight_run`. CMS assistant POSTs are not 409 because 06 is
@@ -106,9 +114,10 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
     `allowed_set_rejected`.
 19. **Follow** — `follow: false` on the text socket is **400**. Voice create
     has no `plan` / `ask_first` / `follow`; the run is Ask first.
-20. **128K overflow compact** — text assembly over 128K compact-in-place then
-    assemble again (same rules as the 12h job). Voice **create** seed-too-large
-    compact-then-seed. Not a live Voice connection trim.
+20. **128K overflow compact** — `CompactAssistantThread` in-place then assemble
+    again (same rules as the 12h job). Voice **create** seed-too-large
+    compact-then-seed. **persists into** `thread_items`. Not a live Voice
+    connection trim.
 
 ## Onboarding
 

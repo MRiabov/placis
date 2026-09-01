@@ -10,16 +10,20 @@ names and plan / Ask first stay in
 rewrite stay Ads UI; on Ads the assistant write tool is media-library
 `cleanup_image`.
 
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+
 - [PRD](prd.md)
 - [ADR](ADR.md) — architectural decision record
 - [design decision record](design-decision-record.md) — bottom-right **Assistant** (call), DustOrb, `/cms`
   two cards, onboarding launcher
 - [architecture.md](architecture.md) — logic (context, allowed set, text vs voice, apply, locks).
-  HTTP contract stays in [api.md](api.md); tables in [persistence.md](persistence.md).
-- [persistence.md](persistence.md) — schema `assistant` overlay items and runs;
-  thread identity is `ai.threads`
-- [api.md](api.md) — `/v1/assistant/…` routes (text WebSocket + HTTP; voice under
-  `/v1/assistant/voice/`)
+  HTTP: `GetAssistantThread`, `StreamAssistantThread`, `CompactAssistantThread`,
+  …. Contract stays in [api.md](api.md); tables in [persistence.md](persistence.md).
+- [persistence.md](persistence.md) — `thread_items`, `runs`; thread identity is
+  `ai.threads`
+- [api.md](api.md) — DTOs and Routes (`/v1/assistant/…`; text
+  `GET /v1/assistant/thread/ws`; voice under `/v1/assistant/voice/`)
 - [testing.md](testing.md)
 
 Onboarding guide: [onboarding assistant](../onboarding/assistant.md). Unpaid
