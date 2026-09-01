@@ -4,12 +4,19 @@ Ad generation turns approved contractor content (business profile, media
 library, projects, services) into a reviewable, exportable ad set. This doc is
 the overview; the **single authority** for the feature is [`ad-generation/`](ad-generation/ADR.md):
 
-- [persistence.md](persistence.md) — `ads` and `ad_*` tables
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+
+- [persistence.md](persistence.md) — `ads`, `ad_variants`, `ad_copy_variants`,
+  `ad_image_placements`, `ad_lead_forms`, `ad_reviews`
 - [api.md](api.md) — HTTP (`/v1/ads`)
+- [architecture.md](architecture.md) — content model; `CreateAd`,
+  `GenerateAdDraft`, `ApproveAd`, `ExportAdSet`
+- [pipeline/](ad-generation/pipeline/README.md) — create, generate, approve,
+  export
 - [ADR](ad-generation/ADR.md) — architectural decision record (why each choice was made)
 - [PRD](ad-generation/prd.md) — product spec, user stories, acceptance criteria
-- [technical-implementation.md](ad-generation/technical-implementation.md) — domain objects, generation pipeline,
-  validation, export
+- [technical-implementation.md](ad-generation/technical-implementation.md) — named services, format/crop, AI allow/block
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
 - [design-decision-record.md](ad-generation/design-decision-record.md) — Archive look (same as projects)
 - [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-2` port: keep / delete / retarget

@@ -37,6 +37,19 @@ is running (`assistant.runs` is a different lock).
 the onboarding package `prompts.yaml`. Worker: [website 03](../features/website/pipeline/03-website-copy-generation.md) (`websiteRender`).
 Routes: [website HTTP](../features/website/api.md).
 
+## Generate ad draft
+
+River job enum value `ads_generate`. Args: `tenant_id`, `ad_id`. Unique
+key: `(tenant_id, ad_id)` while pending/running. A second enqueue while
+the first is in flight is a River unique conflict → HTTP **409**. Do
+not HTTP-check uniqueness before insert (it races). Same job for
+**Create ad and generate** and **Generate again**.
+
+`thread_kind=ads_generate`, `prompt_id=ads_generate` in
+`internal/ads/prompts.yaml`. Worker:
+[ads 02](../features/ads/ad-generation/pipeline/02-generate-ad-draft.md).
+Routes: [ads HTTP](../features/ads/api.md).
+
 ## Reviews ranking for display
 
 River job enum value `reviews_ranking_for_display`. Args: `tenant_id` only.
