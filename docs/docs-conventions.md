@@ -167,7 +167,9 @@ editor GET into pipeline 01–04.
    and/or `pipeline/testing/*.md`. Grain follows Persist / Must not (see
    Named asserts). The same table **may** appear in several files.
    `testing.md` is the owner journey (ETL: integration, no owner UI). It
-   only asserts what that journey reads or writes. Do not invent writes in
+   only asserts what that journey reads or writes. A pipeline testing
+   file only asserts what **that step** reads or persists. Do not invent
+   writes in
    the E2E for tables another test file already asserts. Do not leave a
    persistence table with no assert in either place. Do not require a
    bullet per Routes row. **Do not create** stays untested.
@@ -191,8 +193,8 @@ table+column+predicate triple.
 - Non-Postgres objects stay named as themselves (R2 key, Worker op).
 
 Ban “Assert Details transform lands”, “assert the copy”, “profile posts /
-reviews” with no table. CI checks **table names** only; columns are a
-writing rule.
+reviews” with no table. CI checks **known** table names only (already in
+some `persistence.md`); invented names and columns are writing rules.
 
 ### Closed headings
 
@@ -225,8 +227,9 @@ only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
 **Do** names the step’s own function (backticked, first sentence). Ban
 `## In code`, `## Routes`, SLO titles, and other essays. Overflow is
 `###` under the matching closed heading. `pipeline/README.md` is a
-gatherer — not this list. `pipeline/testing/` keeps bold fixture / invoke /
-assert / fail / mocked / cases labels, not `##`.
+gatherer — not this list. `pipeline/testing/` keeps bold prior-step
+fixture / **Invoke** / **Assert** / **Fail** / **Mocked** / **Cases**
+labels, not `##`.
 
 ### `api.md` shape (defined features)
 

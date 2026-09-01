@@ -76,8 +76,10 @@ pick. Tokens stay.
    `asset_id`). Keep `{{images.*}}` / `{{logo_url}}`. Do not attach
    `media_asset_id`. Photo selection is
    [03](03-website-copy-generation.md). Do not bake ranked-top-4 ids.
-6. Persist `website_forms` / fields from form website sections’ contracts
-   (`form_key` = the catalog form key on that website section).
+6. Persist `website_forms` / `website_form_fields` /
+   `website_form_field_options` from form website sections’ contracts
+   (`form_key` = the catalog form key on that website section). Persist
+   `website_urls` iff the template menus have `url` nodes.
 7. Validate against website component contracts before the unpublished
    website is kept.
 8. Same pick + same profile → same website pages (and the same derived

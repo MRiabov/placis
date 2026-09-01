@@ -39,7 +39,7 @@ tenant row is [auth](../other/auth/persistence.md)
 
 `type=subdomain` is the preview website address
 (`{website_prefix}.preview.placis.com`; R2 prefix is
-`tenants.website_prefix`). Reserved at onboarding 07. Show it as the
+`tenants.website_prefix`). Reserved at onboarding 08. Show it as the
 default host (website preview until website activation; live website
 after). `type=custom` is the hostname they supply. `is_primary` marks
 sitemap and canonical: the subdomain host until a `type=custom` row is
@@ -54,8 +54,8 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
 - **Enums:** `page_type` → `home` / `about` / `service` / `contact` /
   `legal`; `status` → `unpublished` / `archived`
 - **Uniques:** `(tenant_id, path)`
-- **Written by:** `CopyWebsiteTemplatePages`;
-  `POST /v1/website/editor/pages`;
+- **Written by:** `CopyWebsiteTemplatePages`; `GenerateWebsiteCopy`
+  (SEO columns); `POST /v1/website/editor/pages`;
   `PATCH /v1/website/editor/pages/{page_id}`
 
 ### `website_sections`
@@ -116,6 +116,8 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
   `show_phone`, `show_email`, `show_contact`, timestamps
 - **Uniques:** `tenant_id`
 - **Written by:** `CopyWebsiteTemplatePages`;
+  `POST /v1/website/editor/pages`;
+  `PATCH /v1/website/editor/pages/{page_id}`;
   `PATCH /v1/website/editor/menus`
 - **Notes:** Hide = omit from the tree. Bar CTA values are always
   `{{marketing_phone}}` / `{{marketing_email}}`.

@@ -76,6 +76,27 @@ func TestWarnOnChangedPersistence(t *testing.T) {
 	if rep.persistFiles[0].testingPath != "" {
 		t.Fatalf("expected no testing.md, got %s", rep.persistFiles[0].testingPath)
 	}
+	if msgs := warnMissingTesting(rep, nil); len(msgs) != 0 {
+		t.Fatalf("no changed files: %v", msgs)
+	}
+	if msgs := warnMissingTesting(rep, []string{rep.persistFiles[0].path}); len(msgs) != 1 {
+		t.Fatalf("changed persist: %v", msgs)
+	}
+	if err := run([]string{"--all", "--root", root}); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestHeadingsMissingRequired(t *testing.T) {
+	root := filepath.Join("testdata", "missing-persist")
+	rep, err := inspect(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	errs := checkHeadings(rep)
+	if len(errs) == 0 {
+		t.Fatal("expected missing ## Persist")
+	}
 }
 
 func TestRunAllOK(t *testing.T) {

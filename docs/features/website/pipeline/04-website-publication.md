@@ -35,6 +35,7 @@ Strip on/off is a caller flag.
   **snapshot**. Later business research only changes what the **next** 04
   resolves.
 - Call `websiteRender` from this job.
+- Persist resolved HTML onto unpublished `website_slots`.
 - Return a website image render to the model.
 - Put image files or expiring signed URLs on `websitePublication`.
 - Make onboarding-written rows website-rollback targets
@@ -70,8 +71,8 @@ Website component contracts under `catalog/`.
 ## Reads
 
 Unpublished `website_pages`, `website_sections`, `website_slots`,
-`website.menus`, `website_settings`, `website_forms`; live
-`business_profiles`.
+`website.menus`, `website_settings`, `website_forms`; prior
+`website_publications`; live `business_profiles`; `media_assets`.
 
 ## Sends
 
@@ -85,8 +86,9 @@ Unpublished `website_pages`, `website_sections`, `website_slots`,
 ## Persist
 
 `website_publications` (tokenized dump on the row; HTML snapshot in R2);
-R2 `{version_number}/` and `latest/`; purge. Caller-owned host rows
-(`website_addresses`, `website_prefix`) stay in 08/09/CMS.
+`website_publication_issues` post-publication only. R2 `{version_number}/`
+and `latest/`; purge. Caller-owned host rows (`website_addresses`,
+`website_prefix`) stay in 08/09/CMS.
 
 ## Fail
 

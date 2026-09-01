@@ -207,8 +207,9 @@ Website publication is not a Cloudflare deploy. One shared contractor-website
 application serves every tenant. The **Publish** dropdown lists hosts
 (`{website_prefix}.preview.placis.com`, a connected website address, or New URL)
 — the POST has no destination ([api.md](api.md)). Specs call the act website
-publication. Host routing uses `website_addresses` reserved at onboarding
-07. Serve path, R2 keys, cache purge, website address, and local Worker:
+publication. Host routing **reads** `website_addresses` reserved at
+onboarding 08. Serve path, R2 keys, cache purge, website address, and
+local Worker:
 [cloudflare.md](cloudflare.md).
 `apps/contractor-website` is in this repo; remaining cuts:
 [contractor-website-debloat.md](contractor-website-debloat.md). API cutover:

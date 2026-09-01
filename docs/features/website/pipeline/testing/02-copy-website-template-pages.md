@@ -3,11 +3,11 @@
 Writes the unpublished website. Next step is 03, enqueued as a River job
 on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
 
-- **Setup**: 01 already wrote `website_settings`
-  (`website_template_id` + `preset_id`). No picker `ai_generations` row.
-  `business_profiles` (`accepted_edit_id` set). At least two named services on
-  that accepted profile. Media library photos may exist; 02 does not
-  attach them. Zero `website_pages`. No `website_copy_generation` yet.
+- **Setup**: 01 already wrote `website_settings`. No picker
+  `ai_generations` row. `business_profiles` (`accepted_edit_id` set). At
+  least two named services on that accepted profile. Media library photos
+  may exist; 02 does not attach them. Zero `website_pages`. No
+  `website_copy_generation` yet.
 - **Invoke**: copy the website template’s pages onto the unpublished
   website (real write). Then, in a second case, insert a later ETL named
   service after this write (do not re-run 02).
