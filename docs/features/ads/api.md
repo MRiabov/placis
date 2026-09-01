@@ -29,27 +29,39 @@ format.
 
 ## DTOs
 
+### Ad
+
 | DTO | Fields | Description |
 | --- | --- | --- |
 | `AdListGet` | `archived` | Query; list vs Archive |
-| `AdRead` | `id`, `name`, `status`, `offer`, `ad_goal`, `service_focus_id`, `icp_age_min`, `icp_age_max`, `icp_household`, `icp_location_focus`, `icp_notes`, `icp_source`, `icp_review_status`, `origin`, `platform_status`, `updated_at`, `created_at`, `variant`, `lead_form`, `copy` | Hydrate; omit `platform_refs` |
+| `AdRead` | `id`, `name`, `status`, `offer`, `ad_goal`, `service_focus_id`, `icp_age_min`, `icp_age_max`, `icp_household`, `icp_location_focus`, `icp_notes`, `icp_source`, `icp_review_status`, `origin`, `platform_status`, `updated_at`, `created_at`, `variant: AdVariantRead`, `lead_form: AdLeadFormRead`, `copy: AdCopyVariantRead` | Hydrate; omit `platform_refs` |
 | `AdCreate` | `name`, `offer`, `ad_goal`, `service_focus_id`, `icp_age_min`, `icp_age_max`, `icp_household`, `icp_location_focus`, `icp_notes`, `format`, `include_marketing_phone`, `include_full_name`, `include_postcode`, `include_email` | About the ad; no lead-form `title` |
 | `AdUpdate` | `base_updated_at`, `name`, `offer`, `ad_goal`, `service_focus_id`, `icp_age_min`, `icp_age_max`, `icp_household`, `icp_location_focus`, `icp_notes`, `format`, `include_marketing_phone`, `include_full_name`, `include_postcode`, `include_email`, `title` | Click-off; `title` is Review |
 | `AdLeadFormRead` | `title`, `include_marketing_phone`, `include_full_name`, `include_postcode`, `include_email` | Nested on `AdRead.lead_form` |
-| `AdVariantRead` | `id`, `format`, `status`, `placements` | Nested on `AdRead.variant` |
-| `AdVariantUpdate` | `base_updated_at`, `placements` | Crop / swap / order |
+| `AdGenerateRequest` | `base_updated_at` | Create ad and generate / Generate again |
+
+Extra keys 4xx. List returns `AdRead[]`.
+
+### Review
+
+| DTO | Fields | Description |
+| --- | --- | --- |
+| `AdVariantRead` | `id`, `format`, `status`, `placements: []AdImagePlacementRead` | Nested on `AdRead.variant` |
+| `AdVariantUpdate` | `base_updated_at`, `placements: []AdImagePlacementRead` | Crop / swap / order |
 | `AdCopyVariantRead` | `headline`, `primary_text`, `description`, `cta_label`, `source` | Nested on `AdRead.copy` |
 | `AdImagePlacementRead` | `id`, `media_asset_id`, `format`, `crop_mode`, `crop_x`, `crop_y`, `crop_width`, `crop_height`, `focal_x`, `focal_y`, `position`, `media_caption` | One placement |
 | `AdRewriteRequest` | `base_updated_at`, `field`, `prompt`, `selection_start`, `selection_end` | `field` is `headline` / `primary_text`; omit selection = whole field |
-| `AdGenerateRequest` | `base_updated_at` | Create ad and generate / Generate again |
-| `AdSetRead` | `format_number`, `format`, `headline`, `primary_text`, `description`, `cta_label`, `placements`, `lead_form` | Machine-readable ad set |
+
+### Ad set
+
+| DTO | Fields | Description |
+| --- | --- | --- |
+| `AdSetRead` | `format_number`, `format`, `headline`, `primary_text`, `description`, `cta_label`, `placements: []AdImagePlacementRead`, `lead_form: AdLeadFormRead` | Machine-readable ad set |
 | `AdDownloadRead` | `url` | signed URL for the zip |
 
-`AdRead.variant` is `AdVariantRead`. `lead_form` is `AdLeadFormRead`.
-`copy` is `AdCopyVariantRead`. `placements` are
-`AdImagePlacementRead`. Extra keys 4xx. List returns `AdRead[]`.
-
 ## Routes
+
+### Ad
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -58,17 +70,6 @@ format.
 | `GET /v1/ads/{ad_id}` | workspace hydrate; detail | | `AdRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | | | `404` | Return `platform_refs` |
 | `PATCH /v1/ads/{ad_id}` | click-off; Revise | `AdUpdate` | `AdRead` | `ads`, `ad_variants`, `ad_lead_forms` | `ads`, `ad_variants`, `ad_lead_forms` | Save on click-off of the ad draft; format change after generate waits for generate again | `409` | Write a Published ad; enqueue generate |
 | `DELETE /v1/ads/{ad_id}` | discard draft | `AdGenerateRequest` | | `ads` | `ads` (delete) | Ad draft only | `409` if not `draft` | Archive |
-| `POST /v1/ads/{ad_id}/archive` | Archive on detail | `AdGenerateRequest` | `AdRead` | `ads` | `ads`, `ad_reviews`, `audit_events` | `status=archived`; leaves the list | `409` | Hard delete |
-| `POST /v1/ads/{ad_id}/unarchive` | Archive list Undo | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `ads`, `ad_reviews`, `audit_events` | `draft` when no approved variant, else `ad_ready_to_post` | `409` | |
-| `GET /v1/ads/{ad_id}/variants` | workspace | | `AdVariantRead` | `ad_variants`, `ad_image_placements` | | One row | `404` | Multi-format list |
-| `PATCH /v1/ads/{ad_id}/variants/{variant_id}` | Review crop / swap | `AdVariantUpdate` | `AdVariantRead` | `ad_variants`, `ad_image_placements` | `ad_image_placements`, `ads.updated_at` | After media library cleanup, retarget `media_asset_id` | `409` | `POST …/cleanup` |
-| `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` | Review inline AI assistance | `AdRewriteRequest` | `AdCopyVariantRead` | `ad_copy_variants` | `ad_copy_variants`, `ai_generations`, `ads.updated_at` | `thread_kind=ads_inline_assistance`; omit selection = whole field | `400` empty prompt; `409` | Rewrite `cta_label` / short label; `/regenerate` |
-| `POST /v1/ads/{ad_id}/generate` | Create ad and generate; Generate again | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `jobs` (`ads_generate`) | **calls** `GenerateAdDraft`; 409 while that job is pending/running | `409`; empty format | Write `ad_ready_to_post` |
-| `POST /v1/ads/{ad_id}/approve` | Approve | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `ads`, `ad_variants`, `ad_reviews`, `audit_events` | **calls** `ApproveAd` | `400` blockers; `409` | Ad posting |
-| `POST /v1/ads/{ad_id}/ad-set` | service caller; CMS | `AdGenerateRequest` | `AdSetRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `audit_events` | **calls** `ExportAdSet`; no zip | `409` if not `ad_ready_to_post` | Ad posting; write ad tables |
-| `POST /v1/ads/{ad_id}/download` | Download | `AdGenerateRequest` | `AdDownloadRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `files`, `audit_events` | **calls** `ExportAdSet`; signed URL | `409` if not `ad_ready_to_post` | Public URL; ad posting |
-
-Worker auth does not apply. Not on the contractor website.
 
 ### PATCH /v1/ads/{ad_id}
 
@@ -77,6 +78,15 @@ the first generate, About the ad is locked until **Revise**; then
 **Generate again** is `POST …/generate`. `title` on this body is the
 suggested ad lead form title (Review copy, [ADR 38](ad-generation/ADR.md)).
 
+### Review
+
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `GET /v1/ads/{ad_id}/variants` | workspace | | `AdVariantRead` | `ad_variants`, `ad_image_placements` | | One row | `404` | Multi-format list |
+| `PATCH /v1/ads/{ad_id}/variants/{variant_id}` | Review crop / swap | `AdVariantUpdate` | `AdVariantRead` | `ad_variants`, `ad_image_placements` | `ad_image_placements`, `ads.updated_at` | After media library cleanup, retarget `media_asset_id` | `409` | `POST …/cleanup` |
+| `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` | Review inline AI assistance | `AdRewriteRequest` | `AdCopyVariantRead` | `ad_copy_variants` | `ad_copy_variants`, `ai_generations`, `ads.updated_at` | `thread_kind=ads_inline_assistance`; omit selection = whole field | `400` empty prompt; `409` | Rewrite `cta_label` / short label; `/regenerate` |
+| `POST /v1/ads/{ad_id}/generate` | Create ad and generate; Generate again | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `jobs` (`ads_generate`) | **calls** `GenerateAdDraft`; 409 while that job is pending/running | `409`; empty format | Write `ad_ready_to_post` |
+
 ### POST /v1/ads/{ad_id}/generate
 
 Enqueues River job `ads_generate`. Retry while Ad draft / Ad needs
@@ -84,12 +94,29 @@ review returns the cached generation. After `ad_ready_to_post`, or if
 the result would duplicate a Published ad, roll `prompt_version`. See
 [02](ad-generation/pipeline/02-generate-ad-draft.md).
 
+### Ad set
+
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `POST /v1/ads/{ad_id}/approve` | Approve | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `ads`, `ad_variants`, `ad_reviews`, `audit_events` | **calls** `ApproveAd` | `400` blockers; `409` | Ad posting |
+| `POST /v1/ads/{ad_id}/ad-set` | service caller; CMS | `AdGenerateRequest` | `AdSetRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `audit_events` | **calls** `ExportAdSet`; no zip | `409` if not `ad_ready_to_post` | Ad posting; write ad tables |
+| `POST /v1/ads/{ad_id}/download` | Download | `AdGenerateRequest` | `AdDownloadRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `files`, `audit_events` | **calls** `ExportAdSet`; signed URL | `409` if not `ad_ready_to_post` | Public URL; ad posting |
+
+Worker auth does not apply. Not on the contractor website.
+
 ### POST /v1/ads/{ad_id}/approve
 
 Blockers: character limits, uploads still in flight, failed uploads. A
 media caption is not a blocker for a photo the owner added to this ad.
 Sensitive unprompted copy does not block once the owner kept, edited, or
 prompted it. See [03](ad-generation/pipeline/03-approve-ad.md).
+
+### Archive
+
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `POST /v1/ads/{ad_id}/archive` | Archive on detail | `AdGenerateRequest` | `AdRead` | `ads` | `ads`, `ad_reviews`, `audit_events` | `status=archived`; leaves the list | `409` | Hard delete |
+| `POST /v1/ads/{ad_id}/unarchive` | Archive list Undo | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `ads`, `ad_reviews`, `audit_events` | `draft` when no approved variant, else `ad_ready_to_post` | `409` | |
 
 ### POST /v1/ads/{ad_id}/archive
 
