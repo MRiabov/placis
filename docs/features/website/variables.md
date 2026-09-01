@@ -3,7 +3,8 @@
 Website placeholders in website content that **resolve website placeholders**
 from `WebsiteBusinessProfileRead` ([website HTTP](api.md)). The unpublished
 website keeps the tokens. Go does not rewrite slots. The Worker fills `{{…}}`
-on `websiteRender` (03 rasters) and on `websitePublication` (04 HTML).
+on `websiteRender` (website image render) and on `websitePublication`
+(website HTML render).
 The wait teaser and CMS canvas fill them in `frontend-2` with the shared
 website component package from the same `*Read` (page GET embed).
 

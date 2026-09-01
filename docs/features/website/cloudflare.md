@@ -36,8 +36,8 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
   independent website versions.
 
 Go never emits HTML. Astro in `apps/contractor-website` writes HTML at
-`websitePublication` into R2, and returns rasters from `websiteRender`
-without writing R2.
+`websitePublication` (website HTML render) into R2, and returns a website
+image render from `websiteRender` without writing R2.
 
 ## Terms already in the glossary
 
@@ -178,15 +178,15 @@ then purge) — not a JSONB migrate. Deleting ancient prefixes is later GC.
 
 River orchestrates. The same Astro Worker paints from a **tokenized** dump
 plus `WebsiteBusinessProfileRead` through two operations
-([website HTTP](api.md)): `websiteRender` (03 rasters) and
-`websitePublication` (04 HTML to R2). Those paths are not a live GET. Go
+([website HTTP](api.md)): `websiteRender` (website image render) and
+`websitePublication` (website HTML render). Those paths are not a live GET. Go
 does not resolve `{{…}}`.
 
 Website copy generation (03) uses `websiteRender` **only** (no R2 / WebP /
 purge). Batch page renders run on **one Worker**. SLO (clock stops when
-the rasters are back at the Go worker): 1 page p50 500ms / p90 1s / p95
-1.25s; 8-page batch p50 750ms / p90 1.5s / p95 2s. Publication SLO:
-[04](pipeline/04-website-publication.md).
+the website image render is back at the Go worker): 1 page p50 500ms / p90
+1s / p95 1.25s; 8-page batch p50 750ms / p90 1.5s / p95 2s. Website HTML
+render SLO: [04](pipeline/04-website-publication.md).
 
 The publication job:
 

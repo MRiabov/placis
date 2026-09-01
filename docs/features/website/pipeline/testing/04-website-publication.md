@@ -36,7 +36,7 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
     `websitePublication` (not a live GET, not `websiteRender`). Fake
     R2 has `{version_number}/` then `latest/` keys. Fake `purge_cache`
     includes live website page URLs, sitemap, robots, WebP on that
-    host. Response has no rasters.
+    host. Response has no website image render.
   - 08 strip on / 09 strip off / CMS Publish are the same write with
     the caller flag (strip present in 08 HTML, absent in 09/CMS).
   - Later ETL without 04: no new `website_publications` row;

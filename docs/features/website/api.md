@@ -12,8 +12,9 @@ Live HTML GET on `{website_prefix}.preview.placis.com` never calls Go.
 two Worker operations (not on `cmd/api`, not public OpenAPI, not a live
 GET, not leftover `/preview/{token}/`):
 
-- **`websiteRender`** — 03; returns rasters; does not write R2
-- **`websitePublication`** — 04; writes HTML to R2; returns no rasters
+- **`websiteRender`** — 03; website image render; does not write R2
+- **`websitePublication`** — 04; website HTML render; writes HTML to R2;
+  does not return a website image render
 
 Same Astro engine. Not one union with a flag. Website form POST is
 [leads](../other/leads/api.md).
@@ -320,8 +321,8 @@ table ([03](pipeline/03-website-copy-generation.md),
 ### `POST /internal/website-render` (`websiteRender`)
 
 - **Callers:** website 03 (turn 1 first view; after each `update_slot`).
-- **Must not:** write R2, WebP, or purge; persist rasters or HTML onto
-  unpublished website slots; call `websitePublication`.
+- **Must not:** write R2, WebP, or purge; persist a website image render or
+  HTML onto unpublished website slots; call `websitePublication`.
 - **Request (`WebsiteRenderRequest`):**
   - `profile` — `WebsiteBusinessProfileRead`
   - `website_styles` — current **website style** (`preset_id` + bounded
@@ -341,14 +342,14 @@ table ([03](pipeline/03-website-copy-generation.md),
 - No `page_paths`. No field named `look`. No `strip`. No R2. Turn 1
   example: up to 8 website pages in `pages` (“8” is an example).
 - **Response (`WebsiteRenderResponse`):** `pages` as the **same map**
-  (website page id → `WebsiteRenderPage`: rasters). First view: `image`.
-  After `update_slot`: `before_image` + `after_image`. Not HTML on the
-  inference.
+  (website page id → `WebsiteRenderPage`: a website image render). First
+  view: `image`. After `update_slot`: `before_image` + `after_image`. Not
+  HTML on the inference.
 
 ### `POST /internal/website-publication` (`websitePublication`)
 
 - **Callers:** website 04 (onboarding 08/09 and CMS Publish).
-- **Must not:** return model rasters; persist resolved HTML onto
+- **Must not:** return a website image render; persist resolved HTML onto
   unpublished website slots; call `websiteRender`.
 - **Request (`WebsitePublicationRequest`):** `dump` (`website.v1` — that
   dump **is** the latest design, including **website styles**, **top
@@ -357,7 +358,7 @@ table ([03](pipeline/03-website-copy-generation.md),
   `version_number`. Keep `pages[]` as a **list** on `website.v1`
   ([manifest.md](manifest.md)); do not dict the publication dump.
 - **Response (`WebsitePublicationResponse`):** closed result of that
-  **write** (no rasters, no HTML body). Extra keys 4xx.
+  **write** (no website image render, no HTML body). Extra keys 4xx.
 
 ## Do not create
 

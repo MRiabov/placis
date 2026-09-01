@@ -39,8 +39,8 @@ for the website form).
      `website_manifest`, `version_number` — a website version).
    - Fake: R2 keys `sites/{website_prefix}/{version_number}/` then `…/latest/`,
      plus `purge_cache` for live website page URLs (and sitemap, robots, WebP)
-     on every active hostname. No live Cloudflare. No rasters on the
-     publication response.
+     on every active hostname. No live Cloudflare. No website image render
+     on the publication response.
    - UI: the live website is shown when a website address is `active`; otherwise
      the owner still uses the preview website address.
 

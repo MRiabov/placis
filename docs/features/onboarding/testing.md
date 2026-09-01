@@ -53,9 +53,9 @@ when 03/04 run (no `wrangler deploy`). DB asserts use [persistence.md](persisten
 
 6. **Automatic website copy generation** (faked LLM tools, overlapping DAG
    06–09) — website slots/SEO update; tokens preserved; no `update_reviews`.
-   Real Worker `websiteRender` on turn 1 and after `update_slot` (rasters;
-   unpublished slots still tokens). Zero `website_publications` / R2 from
-   03.
+   Real Worker `websiteRender` on turn 1 and after `update_slot` (website
+   image render; unpublished slots still tokens). Zero `website_publications`
+   / R2 from 03.
    - DB: targeted `website_slots.origin=website_copy_generation`;
      `ai_generations` (`thread_kind=website_copy_generation`,
      `prompt_id=website_copy_generation`, `input` /

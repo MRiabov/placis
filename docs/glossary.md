@@ -1617,6 +1617,25 @@ from: Website publication, Published website copy. Never say “site manifest”
 
 ---
 
+#### Website image render
+
+Painting a website page to an image (`websiteRender`). Never in PRDs or
+UI. Distinct from: Website HTML render, image on a website section,
+media library.
+
+In code: `websiteRender`. Never say **raster**.
+
+---
+
+#### Website HTML render
+
+Painting a website page to HTML (`websitePublication`). Never in PRDs or
+UI. Distinct from: Website image render, live GET.
+
+In code: `websitePublication`.
+
+---
+
 ### Ad
 
 #### Creative set
@@ -1651,6 +1670,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | mint / minted / minting | create or use (ephemeral tokens and ids) |
 | fold / folds | live business profile or unpublished website |
 | bytes | photo, image, file, or binary |
+| raster | website image render |
 | generate unpublished website / generate website structure | copy the website template’s pages onto the unpublished website |
 | provider | name the service (Google Maps, the LLM, Stripe) or fakes in tests |
 | signed (onboarding) | website preview link |

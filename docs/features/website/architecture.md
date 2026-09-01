@@ -205,7 +205,8 @@ At **website publication**, Go `POST`s `websitePublication`. The Worker
 resolves website placeholders and writes HTML to R2 `latest/`. A live GET
 is Cache then R2. It never calls Go. Onboarding 08/09 call this same write
 (strip on, then strip off). Website copy generation (03) `POST`s
-`websiteRender` (**without** writing R2) and gets rasters. There is
+`websiteRender` (**without** writing R2) and gets a website image render.
+There is
 no per-request unpublished render for website visitors and no
 `/preview/{token}/`.
 

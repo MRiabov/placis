@@ -49,11 +49,12 @@ Status: decided (2026-08-16, product owner + engineering).
    media-library functions 2026-08-24; collapse + no dim 2026-08-26; CMS
    assistant HTTP 2026-08-28) (2026-08-31): automatic website copy generation
    (03) uses the same tools headless; no `update_reviews`; turn 1 and after each
-   `update_slot` Go `POST`s `websiteRender` (rasters on the inference, not
-   HTML). Go does not emit HTML. 04 is `websitePublication` (write R2, no
-   rasters). Select website template is `website_template_picker` at 01, not at
-   copy-pages. (2026-09-01): `WebsiteBusinessProfileRead` is the Common
-   variables bag on canvas hydrate and both Worker requests.
+   `update_slot` Go `POST`s `websiteRender` (website image render on the
+   inference, not HTML). Go does not emit HTML. 04 is `websitePublication`
+   (website HTML render, no website image render). Select website template is
+   `website_template_picker` at 01, not at copy-pages. (2026-09-01):
+   `WebsiteBusinessProfileRead` is the Common variables bag on canvas hydrate
+   and both Worker requests.
 
 7. **Website publication is kept and can be rolled back** — website publication
    creates a `website_publications` row (a published website copy); website

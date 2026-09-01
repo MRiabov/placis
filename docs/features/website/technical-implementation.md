@@ -26,9 +26,9 @@ enqueues. This feature owns the tables 02 writes.
    and website forms against the website component contract structs. Derive
    top menu / footer from the [menu constant](catalog.md#menu-constant); do
    not copy a catalog menu JSON.
-3. Keep website placeholders in the unpublished website; `websitePublication`
-   resolves them into HTML and `websiteRender` returns rasters for 03.
-   Go does not fill tokens.
+3. Keep website placeholders in the unpublished website;
+   `websitePublication` is a website HTML render; `websiteRender` is a
+   website image render for 03. Go does not fill tokens.
 4. Create tenant-owned `website_*` records as an unpublished website; never
    write a live website from this step.
 
