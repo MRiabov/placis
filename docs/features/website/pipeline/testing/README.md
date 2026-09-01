@@ -6,7 +6,8 @@ LLM, Stripe, voice, R2, and `purge_cache` are faked. Do not fake the
 Worker. Do not `wrangler deploy`.
 
 A step does not pass because a collaborator was called. It passes when
-**Postgres holds the writes** (and 03 got rasters / 04 wrote R2 keys).
+**Postgres holds the writes** (and 03 got a website image render / 04 wrote R2
+keys).
 
 ## Contract
 
@@ -19,8 +20,9 @@ A step does not pass because a collaborator was called. It passes when
   intermediary rows (threads, generations, onboarding session status,
   look sections)
   and the **handoff** to the next step (the row or River job that step
-  Pre reads). Assert Must-not tables stay empty / unchanged. 03: rasters
-  back; unpublished slots still tokens; no `website_publications` / R2.
+  Pre reads). Assert Must-not tables stay empty / unchanged. 03: website
+  image render back; unpublished slots still tokens; no
+  `website_publications` / R2.
   04: publication rows + fake R2 keys; unpublished slots still tokens.
 - **Fail** — error status on the onboarding session or publication
   blocker; prior good rows kept; no next-step handoff written.

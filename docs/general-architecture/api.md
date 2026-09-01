@@ -210,11 +210,13 @@ file (not `GET /openapi.json`). Routes, DTOs, and `$ref` for
 Auth: shared secret / service binding (out of the JSON body). Binding
 **name** is not this file.
 
-- **`websiteRender`** (`POST /internal/website-render`) — website 03. Returns
-  rasters. No R2, no WebP, no purge. Batch of website pages on **one Worker**.
-  SLO: [03](../features/website/pipeline/03-website-copy-generation.md).
-- **`websitePublication`** (`POST /internal/website-publication`) — website 04.
-  Writes HTML to R2 and purge as 04 already says. No rasters to the model. SLO:
+- **`websiteRender`** (`POST /internal/website-render`) — website 03.
+  Website image render. No R2, no WebP, no purge. Batch of website pages
+  on **one Worker**. SLO:
+  [03](../features/website/pipeline/03-website-copy-generation.md).
+- **`websitePublication`** (`POST /internal/website-publication`) —
+  website 04. Website HTML render. Writes HTML to R2 and purge as 04
+  already says. No website image render to the model. SLO:
   [04](../features/website/pipeline/04-website-publication.md).
 
 Live contractor HTML GET is Cache then R2. Never Go. The leftover token

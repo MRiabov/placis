@@ -28,8 +28,8 @@ is a later caller.
   - **Worker:** turn 1 asked **one** Worker `websiteRender` of the
     unpublished tree + `WebsiteBusinessProfileRead` (tokens still in
     `pages`). After each `update_slot`, another `websiteRender` of the
-    affected website page (`before_pages` + `pages`). Rasters from those
-    calls are **not** in `website_slots.value`. Zero R2 / WebP / purge
+    affected website page (`before_pages` + `pages`). Those website image
+    renders are **not** in `website_slots.value`. Zero R2 / WebP / purge
     from this job. 03 did not call `websitePublication`.
   - **Website slots / website pages:** targeted `website_slots.value`
     changed; `origin=website_copy_generation` on those rows only.

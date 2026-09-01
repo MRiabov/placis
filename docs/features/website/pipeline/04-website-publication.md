@@ -35,7 +35,7 @@ Strip on/off is a caller flag.
   **snapshot**. Later business research only changes what the **next** 04
   resolves.
 - Call `websiteRender` from this job.
-- Return rasters to the model.
+- Return a website image render to the model.
 - Make onboarding-written rows website-rollback targets
   (`published_by=onboarding`).
 
@@ -74,18 +74,18 @@ this write. Retry the same caller (share / pay / Publish).
 Live GET is Cache then R2. Website visitors keep the previous `latest/`
 until copy + purge finish.
 
-## Publication SLO (Go worker round-trip)
+## Website HTML render SLO (Go worker round-trip)
 
 Clock: request leaves the Go worker → `websitePublication` writes HTML to
-R2 → response is back at the Go worker. Not 03 rasters. Not live GET
-TTFB (Cache then R2).
+R2 → response is back at the Go worker. Not a website image render. Not
+live GET TTFB (Cache then R2).
 
-Worker timeout follows this table. Do **not** reuse the 03 raster SLO
-numbers.
+Worker timeout follows this table. Do **not** reuse the 03 website image
+render SLO numbers.
 
 | Call | What returns |
 | --- | --- |
-| `websitePublication` | closed write result (no rasters). Visitors keep previous `latest/` until copy + purge finish |
+| `websitePublication` | closed write result (website HTML render). Visitors keep previous `latest/` until copy + purge finish |
 
 ## Invariants
 
