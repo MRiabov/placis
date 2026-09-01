@@ -32,3 +32,10 @@
 - **Fail**: writer error leaves other writers’ increments intact.
 - **Mocked**: ranking LLM for `reviews_ranking_for_display` (faked
   `review_ids[]`). Real Postgres.
+
+Named tables: `business_profile.project_sources`,
+`business_profile_edit_sources`, `business_profile_edits`,
+`business_profile_opening_hours`, `business_profile_reviews`,
+`business_profile_service_areas`, `business_profile_services`,
+`business_profiles`, `etl.google_maps_listings`, `etl.runs`, `facebook_posts`,
+`facebook_profiles`, `instagram_posts`, `instagram_profiles`.

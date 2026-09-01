@@ -1,0 +1,26 @@
+name: check-pipeline-tables
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pipeline-tables:
+    name: Pipeline table and heading check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Test checker
+        run: go test ./cmd/ci/check-pipeline-tables
+
+      - name: Scan feature docs
+        run: go run ./cmd/ci/check-pipeline-tables --all

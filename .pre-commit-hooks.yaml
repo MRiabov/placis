@@ -5,3 +5,11 @@
   language: system
   files: '^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$'
   pass_filenames: true
+
+- id: check-pipeline-tables
+  name: Pipeline table and heading check
+  description: Pair pipeline steps with testing files, require persistence tables in testing.md or pipeline/testing, and close pipeline step headings.
+  entry: go run ./cmd/ci/check-pipeline-tables
+  language: system
+  files: '^docs/features/.*/(persistence|testing)\.md$|^docs/features/.*/pipeline/.*\.md$'
+  pass_filenames: true

@@ -13,3 +13,5 @@
   Never Parallel Search HTTP from this ETL run kind. Extract HTTP is crawl, not
   web-search. Never Exa, Perplexity, Tako, `:online`, OpenRouter web search.
 - **Fake**: Vercel Parallel Search (Gateway).
+
+Named tables: `etl.runs`.

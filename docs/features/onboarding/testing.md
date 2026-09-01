@@ -83,3 +83,5 @@ when 03/04 run (no `wrangler deploy`). DB asserts use [persistence.md](persisten
 8. **Isolation** — a second onboarding session (second unactivated tenant).
    - Assert: the first tenant's profile and website pages are not readable under
      the second tenant (before or after activation).
+
+Named tables: `assistant_conversation_items`, `assistant_runs`.

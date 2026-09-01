@@ -19,3 +19,7 @@
   Perplexity, Tako, `:online`, OpenRouter web search. CI does not measure API
   p90 during crawl (SLO is operational:
   [processes](../../../../general-architecture/processes.md)).
+
+Named tables: `business_profile_edit_sources`, `business_profile_edits`,
+`business_profiles`, `etl.imported_media`, `etl.runs`,
+`etl.website_crawl_page_photos`, `imported_media_sources`.

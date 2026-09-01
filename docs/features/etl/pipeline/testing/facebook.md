@@ -14,3 +14,6 @@
   extract.
 - **Fake**: Facebook lookup. Never Graph API, Parallel’s API, Exa, Perplexity,
   Tako, `:online`, OpenRouter web search.
+
+Named tables: `business_profile_edit_sources`, `business_profile_edits`,
+`business_profiles`, `etl.runs`, `imported_media_sources`.
