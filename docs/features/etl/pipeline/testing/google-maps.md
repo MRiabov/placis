@@ -14,11 +14,19 @@
   write `business_profile_*`; transform does not call the Maps fake; SSE /
   checklist show Details live business profile while `status` is still
   `extracting`. Scrape fake is `scraperlink/google-maps-scraper` input shape
-  (`reviews=true`, `maxReviews=50`). Review photos attach to the listing review,
-  not `google_maps_listing_photos`. Transform may insert Projects from reviews
-  usable as a Project (verdict on `etl.llm_source_to_project_classifications`;
-  listing + listing-review `etl.sources`; review add cites the listing-review
-  `source_id`). Transform does not enqueue `reviews_ranking_for_display`
-  and does not write `is_top` / `top_position`.
+  (`reviews=true`, `maxReviews=50`). Review photos attach to the listing
+  review, not `google_maps_listing_photos`. Transform may insert Projects from
+  reviews usable as a Project (verdict on
+  `etl.llm_source_to_project_classifications`; listing + listing-review
+  `etl.sources`; review add cites the listing-review `source_id`). New imported
+  reviews get a review citation. Transform does not enqueue
+  `reviews_ranking_for_display` and does not write `is_top` / `top_position`.
+  No `etl_run_kind=review` or `etl_run_kind=photo` run. Details website URL is
+  a detail that starts crawl on this enqueue. Places Find from
+  `display_name` if set, else `legal_name`, plus locality (including
+  `legal_name` + registered-office locality on registry-only Find) yields
+  Details only on one high-confidence hit; several hits do not pick a listing.
+  Places Find is onboarding only; `trigger=scheduled` with no `place_id` is
+  `insufficient_data_for_lookup` and does not call Places Find.
 - **Fake**: Google Maps Details / scrape. Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search.

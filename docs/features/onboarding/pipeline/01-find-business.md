@@ -26,6 +26,8 @@ token.
 - Insert a second tenant or a second onboarding session for the same browser
   token.
 - Start 02 without `online_research_consent_at`.
+- Upsert `etl.google_maps_listings` or insert `etl.*_fetches` (those are ETL
+  extract). Maps autocomplete is a search Read, not a Details extract.
 
 ## Do
 
@@ -35,15 +37,20 @@ token.
 2. Insert `onboarding_sessions`: `status=created` then immediately
    `client_interviewing`; unique `token`; `tenant_id` that tenant;
    `clerk_user_id` null; `channel` unset; `started_from` = `company_registry` /
-   `google_maps_listing` / both via sources.
+   `google_maps_listing` / both via sources; typed attach keys from the
+   selected records (`place_id`, `company_number`, `website_url` — all
+   nullable).
 3. Record `online_research_consent_at`.
 4. Persist the selected company registry record and/or attach the Maps place on
-   **this** onboarding session. Wrong company is not a new run: attach or change
-   sources on the same row.
+   **this** onboarding session (those typed keys). Wrong company is not a new
+   run: attach or change sources on the same row (`PATCH .../sources`).
 5. Initialize [business profile](../../business-profile/details/persistence.md): `business_profiles` with that `tenant_id`,
-   empty/unknown details, `last_edit_id` and `accepted_edit_id` null. Registry
-   fills legal identity; Maps fills contact/listing fields. Both: registry wins
-   legal identity ([build-profile](build-profile.md)).
+   empty/unknown details, `last_edit_id` and `accepted_edit_id` null. Then
+   increments via [build-profile](build-profile.md): registry fills legal identity (insert
+   `etl.sources` `source_kind=company_registry_record` and cite it); Maps
+   autocomplete Read may fill `display_name` (no listing upsert, no fetch row).
+   Both: registry wins legal identity. Contact fields that Details will confirm
+   (marketing phone, hours, website) wait for 02.
 6. Enqueue 02 **if** this `tenant_id` has fewer than 5 onboarding ETL
    `enqueue_id`s in the last 30 minutes ([02](02-business-research.md)). Otherwise persist sources, do
    not enqueue 02, and expose `research_wait_until`. Navigate UI to Review
@@ -57,9 +64,10 @@ activation). Not an onboarding session column.
 ## Persist
 
 `tenants` (`status=unactivated`, `country`); `onboarding_sessions` (`token`,
-`tenant_id`, `online_research_consent_at`, `status=client_interviewing`); empty
-`business_profiles` (same `tenant_id`); registry/Maps attach rows; profile
-increments via [build-profile](build-profile.md).
+`tenant_id`, `online_research_consent_at`, `status=client_interviewing`,
+`place_id` / `company_number` / `website_url`); empty `business_profiles`
+(same `tenant_id`) then registry / Maps-autocomplete increments via
+[build-profile](build-profile.md).
 
 Schemas: [persistence.md](../persistence.md), [ETL](../../etl/persistence.md), [details](../../business-profile/details/persistence.md). Do not re-define them here.
 
@@ -85,5 +93,6 @@ onboarding session stream.
 - 02 does not start without `online_research_consent_at`.
 - 02 does not start a 6th onboarding `StartRun` for this tenant inside 30
   minutes.
+- Find does not upsert `etl.google_maps_listings` or insert fetch rows.
 - No `website_pages` / `website_prefix` yet.
 - `/me` still has no tenant (`status=unactivated`).

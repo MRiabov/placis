@@ -116,8 +116,8 @@ jsonb dump. `GET`/`PATCH` fields are the columns and list tables in
 - **Request:** import from the linked `google_maps_listing_url` and/or
   `facebook_profile_url` on the live business profile. Safe to retry on external
   id. Skip `archived` rows (do not recreate). Import does **not** truncate
-  `body`. The review citation is filled by the onboarding extract (or later the
-  same extract); empty review citation falls back to `body` until then.
+  `body`. The review citation is filled by ETL transform; empty review citation
+  falls back to `body` until then.
 
 ## `update_details` (one governed tool)
 

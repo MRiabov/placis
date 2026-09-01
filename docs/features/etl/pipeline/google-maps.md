@@ -1,14 +1,18 @@
 # Google Maps
 
-`etl_run_kind=google_maps_listing` (further reviews may use
-`etl_run_kind=review` on the same listing). Onboarding 02 and Monday / Wednesday
-/ Friday. Shared extract / transform rules:
+`etl_run_kind=google_maps_listing`. Onboarding 02 and Monday / Wednesday /
+Friday. Scrape of further reviews / photos is
+**this ETL run kind’s ETL slow extract**, not a separate ETL run kind. Shared
+extract / transform rules:
 [pipeline README](README.md).
 
 ## Trigger
 
-`StartRun` included this ETL run kind. Skip (`status=skipped`) when scheduled
-and there is no `place_id`.
+Starts when (any of) ([ETL run kind triggers](etl-run-kind-triggers.md)): `place_id`; **or** (02 only)
+`display_name` + locality; **or** (02 only) `legal_name` + locality. Skip
+(`status=insufficient_data_for_lookup`) when scheduled and there is no
+`place_id`. Do not Places Find on scheduled. Onboarding: start when a tuple is
+met (Find attach, Parallel, or Places Find). Insert `etl.runs` then.
 
 ## Pre
 
@@ -28,13 +32,28 @@ and there is no `place_id`.
   `force=true`).
 - Wait for scrape (ETL slow extract) before transforming the Details chunk (ETL
   fast extract).
+- Be an `etl_run_kind=review` or `etl_run_kind=photo` run. Those ETL run kinds
+  do not exist.
+- Pick among several Places Find hits, or accept a weak hit. Wrong listing is
+  worse than an empty Maps row.
+- Call Places Find when `trigger=scheduled`. Scheduled Maps needs `place_id`.
 
 ## Do — extract (ETL fast extract)
 
-Set `status=extracting`. Call Google Maps Details. Persist
-`etl.google_maps_fetches` (`fetched_from=google_maps_details`, UUID, `place_id`,
-`raw`, `run_id`, `fetched_at`). Upsert the listing (hours, first reviews / photo
-refs). Then transform this chunk immediately (~1s).
+Set `status=extracting`. If there is no `place_id` yet and `trigger=onboarding`,
+call Places Find / text search with `display_name` if set, else `legal_name`,
+plus locality (trade location, registered-office locality, or tenant country
+city). One high-confidence hit → persist that `place_id` as a detail (onboarding
+session attach, empty columns only) and continue. Several hits or a weak hit →
+do not pick; `insufficient_data_for_lookup` unless Parallel or Find later
+supplies `place_id`
+(evaluator starts this ETL run kind then). Do not call Parallel from this ETL
+run kind. Scheduled extract always has `place_id` (otherwise the run is
+`insufficient_data_for_lookup`). Call Google Maps Details. Persist
+`etl.google_maps_fetches`
+(`fetched_from=google_maps_details`, UUID, `place_id`, `raw`, `run_id`,
+`fetched_at`). Upsert the listing (hours, first reviews / photo refs). Then
+transform this chunk immediately (ETL fast extract, p95 ≤ 5s).
 
 Details first response today (Places API Place resource): at most **5** reviews
 and **10** photos. Do not freeze those caps in contractor-facing copy. Retry of
@@ -55,20 +74,23 @@ photos; review photos come with `reviews=true`).
 Persist a `fetched_from=scrape` fetch as each scrape response arrives. Insert
 new listing reviews. Attach scrape photos onto **that** listing review
 (`google_maps_listing_review_photos` → media library). Do not put those in
-`google_maps_listing_photos`. Reviewer avatar is not the job. Transform
-**that** chunk before waiting for the rest (~40s extra after Details).
-`status` stays `extracting` until scrape has nothing left; `succeeded` only
-then.
+`google_maps_listing_photos`. Reviewer avatar is not the job. Transform **that**
+chunk before waiting for the rest (ETL slow extract, progressively over about
+60s). `status` stays `extracting` until scrape has nothing left; `succeeded`
+only then. Skip remaining scrape when the only leftovers are `human` scalars
+(marketing phone, name, hours, website) **and** reviews / photos are already
+filled enough — [ETL run kind triggers](etl-run-kind-triggers.md) pause rule. Do not skip scrape only
+because marketing phone is `human`.
 
-`etl_run_kind=review` / `etl_run_kind=photo` (when 02 included them) continue
-the same listing the same way.
+`etl_run_kind=review` / `etl_run_kind=photo` are not ETL run kinds. Further
+reviews and photos are this ETL slow extract.
 
 ## Do — listing
 
-Upsert `google_maps_listings` on `place_id` after inserting `etl.sources`
-`source_kind=google_maps_listing` (`source_id` required on the listing). Replace
-child hours on the Details chunk. Insert reviews / photo refs whose
-`external_id` we do not already have (each new review gets
+Upsert `google_maps_listings` on `place_id` after inserting
+`etl.sources` `source_kind=google_maps_listing` (`source_id` required on the
+listing). Replace child hours on the Details chunk. Insert reviews / photo refs
+whose `external_id` we do not already have (each new review gets
 `source_kind=google_maps_listing_review`). Set `latest_fetch_id` to the newest
 fetch that contributed. Set `country` from Places address country (`ie` / `gb` /
 `us`). Do not parse `listing_address` for country. Persist Places Details
@@ -82,15 +104,20 @@ extract continues. `SELECT … FOR UPDATE` the profile. Insert only the incremen
 this chunk set.
 
 - Empty scalars fill from the listing (display name, marketing phone, website,
-  hours). Each increment cites the listing `source_id`.
+  hours). Each increment cites the listing `source_id`. If Details has a
+  website URL, write it as a detail (`website_url` on the onboarding
+  session attach and live `existing_site_url` when empty). That may start
+  crawl on this enqueue. Do not overwrite a Find-attached `website_url`.
 - New reviews → `business_profile_reviews` keyed to
   `etl.google_maps_listing_reviews`. The add increment cites the listing-review
-  `source_id`. Do not rank and do not enqueue `reviews_ranking_for_display`
-  (orchestration: [build-profile](../../onboarding/pipeline/build-profile.md)). Then [projects.md](projects.md) for reviews
-  **usable as a Project** (work type, one past named job). Details reviews have
-  **no photo field** — cover empty. After scrape, photos on **that** review may
-  fill an empty cover on the same Project when `algorithm` is not `human` (do
-  not rewrite title / description).
+  `source_id`. Write a **review citation** on each new imported row (cheap
+  multimodal default; empty review citation falls back to `body`). Do not rank
+  and do not enqueue `reviews_ranking_for_display` (orchestration:
+  [build-profile](../../onboarding/pipeline/build-profile.md)). Then
+  [projects.md](projects.md) for reviews **usable as a Project** (work type,
+  one past named job). Details reviews have **no photo field** — cover empty.
+  After scrape, photos on **that** review may fill an empty cover on the same
+  Project when `algorithm` is not `human` (do not rewrite title / description).
 - New listing photos → media library items `supplied_by=business_research`
   (`imported_media_sources` → listing `source_id`); then
   [photo classification](photo-classification.md) for those items (do not wait

@@ -49,8 +49,8 @@ contractor sees Review.
 
 SSE (`GET /v1/onboarding-sessions/{id}/events/stream`) mirrors the DB from
 business lookup through selecting and copying the website template and copy.
-Postgres is
-authoritative. Business research progress reads `etl.runs`.
+Postgres is authoritative. Business research progress reads `etl.runs` **and**
+the live business profile transform already wrote.
 
 ## Onboarding session status
 
