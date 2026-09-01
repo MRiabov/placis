@@ -10,9 +10,10 @@ needs. Registry: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md).
 ```text
 StartRun(trigger, tenant, force=false)  # onboarding: ETL run kinds; scheduled: Maps/FB/IG
   → enqueue_id; copy 01 attach + live profile details
-  → for each ETL run kind that can start: insert etl.runs + enqueue River job
+  → for each ETL run kind that can start: insert etl.runs + **inserts** `{etl_run_kind}_extract`
   → extract/<etl_run_kind> chunk          # not inlined in StartRun
-  → transform/<etl_run_kind> that chunk   # as it arrives; do not wait for ETL slow extract
+  → **inserts** `{etl_run_kind}_transform` that chunk
+  → transform **inserts** the next extract when ETL slow extract chunks remain
   → new details (place_id, website_url, handles) re-check the table (same enqueue)
        → live business profile / Facebook and Instagram posts / Projects / photo classification
          (etl.sources + typed junctions; Project skip on llm_source_to_project_classifications)
@@ -21,8 +22,10 @@ StartRun(trigger, tenant, force=false)  # onboarding: ETL run kinds; scheduled: 
 `StartRun` (in `internal/etl/run.go`) is orchestration only. It must not contain
 Google Maps / Facebook / Instagram / crawl / classifier logic. Per-source
 packages match [pipeline](pipeline/README.md). There is no one `Extractor`
-interface for every ETL run kind (different keys and tables); dispatch is an
-`etl_run_kind` switch that **calls** those packages.
+interface for every ETL run kind (different keys and tables). Each River job
+kind **calls** that package (`google_maps_listing_extract` **calls**
+`extract/googlemaps.Run`). Named in
+[jobs](../../general-architecture/jobs.md).
 
 `force` defaults false. Onboarding 02 and Monday / Wednesday / Friday pass
 `force=false`.

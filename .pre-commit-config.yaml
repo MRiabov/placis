@@ -41,4 +41,10 @@ repos:
         language: system
         entry: go run ./cmd/ci/check-pipeline-tables
         pass_filenames: true
-        files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$'
+        files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$|^docs/general-architecture/jobs.md$'
+      - id: check-docs-code
+        name: Docs–code named identifiers
+        language: system
+        entry: go run ./cmd/ci/check-docs-code
+        pass_filenames: false
+        files: '^docs/.*\.md$|^internal/|^cmd/|^migrations/|^openapi\.json$|^apps/contractor-website/openapi\.json$'
