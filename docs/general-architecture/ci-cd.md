@@ -125,7 +125,10 @@ decision + date) instead of silently replacing the old entry.
   and the module cache — do not add a second overlapping `actions/cache` for
   those paths. The repo often has no `go.sum` (stdlib-only `go.mod`);
   `actions/setup-go` `@v5` hashes `go.sum` by default and will not save a cache
-  without `cache-dependency-path: go.mod`. Persist `golangci-lint` cache
+  without `cache-dependency-path: go.mod`. Pin `go.mod` to a release in the
+  ubuntu-latest tool-cache (today 1.24–1.26; 1.27 is not there yet) so
+  `actions/setup-go` does not download a toolchain every job. Persist
+  `golangci-lint` cache
   separately. Persist Vite `cacheDir`
   (`node_modules/.vite`), `.frontend-quality-cache/`, and Playwright Chromium
   (`~/.cache/ms-playwright`) keyed on `pnpm-lock.yaml`. CircleCI, when live,
