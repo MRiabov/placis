@@ -226,8 +226,9 @@ only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
 
 **Do** names the step’s own function (backticked, first sentence). Ban
 `## In code`, `## Routes`, SLO titles, and other essays. Overflow is
-`###` under the matching closed heading. `pipeline/README.md` is a
-gatherer — not this list. `pipeline/testing/` keeps bold prior-step
+`###` under the matching closed heading. Gatherers are not this list:
+`pipeline/README.md` and `etl/pipeline/etl-run-kind-triggers.md`.
+`pipeline/testing/` keeps bold prior-step
 fixture / **Invoke** / **Assert** / **Fail** / **Mocked** / **Cases**
 labels, not `##`.
 

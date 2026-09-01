@@ -88,7 +88,13 @@ func isPipelineStep(slash string) bool {
 		return false
 	}
 	base := filepath.Base(slash)
-	return base != "README.md"
+	switch base {
+	case "README.md", "etl-run-kind-triggers.md":
+		// Gatherers, not extract/transform steps. Closed ## is for step files.
+		return false
+	default:
+		return true
+	}
 }
 
 func parsePersistence(path string) (persistFile, error) {

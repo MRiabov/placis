@@ -7,6 +7,21 @@ import (
 	"testing"
 )
 
+func TestPipelineStepSkipsGatherers(t *testing.T) {
+	if isPipelineStep("docs/features/etl/pipeline/README.md") {
+		t.Fatal("README")
+	}
+	if isPipelineStep("docs/features/etl/pipeline/etl-run-kind-triggers.md") {
+		t.Fatal("triggers registry")
+	}
+	if isPipelineStep("docs/features/etl/pipeline/testing/facebook.md") {
+		t.Fatal("testing dir")
+	}
+	if !isPipelineStep("docs/features/etl/pipeline/facebook.md") {
+		t.Fatal("facebook step")
+	}
+}
+
 func TestHeadingsAllowDoPhase(t *testing.T) {
 	root := filepath.Join("testdata", "ok")
 	rep, err := inspect(root)
