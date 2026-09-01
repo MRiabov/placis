@@ -6,7 +6,10 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"runtime"
+	"sort"
 	"strings"
+	"sync"
 )
 
 func main() {
@@ -58,19 +61,9 @@ func run(args []string) error {
 		files = filterEnabledFiles(files, *frontend)
 	}
 
-	var hits []hit
-	for _, path := range files {
-		if shouldSkipPath(path, *frontend) {
-			continue
-		}
-		if !scanExt(path, *frontend) {
-			continue
-		}
-		found, err := scanFile(path, compiled)
-		if err != nil {
-			return err
-		}
-		hits = append(hits, found...)
+	hits, err := scanFiles(files, compiled, *frontend)
+	if err != nil {
+		return err
 	}
 
 	if len(hits) == 0 {
@@ -80,6 +73,51 @@ func run(args []string) error {
 		fmt.Fprintf(os.Stderr, "%s:%d: don't say %q (say %s)\n  %s\n", h.path, h.line, h.tok.phrase, h.tok.say, h.text)
 	}
 	return fmt.Errorf("%d Don't-say hit(s)", len(hits))
+}
+
+func scanFiles(files []string, compiled []compiledToken, frontend bool) ([]hit, error) {
+	type result struct {
+		hits []hit
+		err  error
+	}
+	results := make([]result, len(files))
+	workers := runtime.GOMAXPROCS(0)
+	if workers < 1 {
+		workers = 1
+	}
+	sem := make(chan struct{}, workers)
+	var wg sync.WaitGroup
+	for i, path := range files {
+		if shouldSkipPath(path, frontend) || !scanExt(path, frontend) {
+			continue
+		}
+		wg.Add(1)
+		sem <- struct{}{}
+		go func(i int, path string) {
+			defer wg.Done()
+			defer func() { <-sem }()
+			found, err := scanFile(path, compiled)
+			results[i] = result{hits: found, err: err}
+		}(i, path)
+	}
+	wg.Wait()
+	var hits []hit
+	for _, r := range results {
+		if r.err != nil {
+			return nil, r.err
+		}
+		hits = append(hits, r.hits...)
+	}
+	sort.Slice(hits, func(i, j int) bool {
+		if hits[i].path != hits[j].path {
+			return hits[i].path < hits[j].path
+		}
+		if hits[i].line != hits[j].line {
+			return hits[i].line < hits[j].line
+		}
+		return hits[i].tok.phrase < hits[j].tok.phrase
+	})
+	return hits, nil
 }
 
 func splitRoots(raw string) []string {
