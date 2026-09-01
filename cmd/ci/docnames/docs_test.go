@@ -52,17 +52,29 @@ func TestParseAPIFileWebsite(t *testing.T) {
 	}
 }
 
-func TestParseAPIFileBillingH3(t *testing.T) {
+func TestParseAPIFileBilling(t *testing.T) {
 	src, err := os.ReadFile(filepath.Join("..", "..", "..", "docs", "features", "billing", "api.md"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	f := ParseAPIFile("billing/api.md", string(src))
-	if !f.Paths["GET /v1/billing/usage"] {
-		t.Fatalf("paths: %v", f.Paths)
+	wantPaths := []string{
+		"GET /v1/billing/usage",
+		"POST /v1/billing/extra-usage-credit/checkout",
+		"POST /v1/billing/subscription/checkout",
+		"POST /v1/billing/subscription/cancel",
+		"POST /v1/billing/subscription/keep",
 	}
-	if f.HasDTOTable() {
-		t.Fatal("billing has no DTO table")
+	for _, p := range wantPaths {
+		if !f.Paths[p] {
+			t.Fatalf("missing path %s: %v", p, f.Paths)
+		}
+	}
+	if !f.DTOs["BillingUsageRead"] || !f.HasDTOTable() {
+		t.Fatalf("DTOs: %v", f.DTOs)
+	}
+	if !f.PublicDTOs["BillingUsageRead"] {
+		t.Fatal("public DTO")
 	}
 }
 

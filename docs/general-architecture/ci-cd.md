@@ -337,9 +337,10 @@ scanners.
   appear in OpenAPI, that file’s documented public Routes and
   route-linked DTOs must be in the spec, except a shrink-only leftover
   list in `cmd/ci/check-docs-code`. Website public arms on `/v1/website`;
-  Worker internal arms on `/internal/website-`; billing waits for
-  `## DTOs`; `GET /v1/health` and `GET /openapi.json` are required once
-  public OpenAPI exists. Undefined `api.md` files stay out of Gate B.
+  Worker internal arms on `/internal/website-`; billing public arms on
+  `/v1/billing` once that prefix exists in OpenAPI; `GET /v1/health` and
+  `GET /openapi.json` are required once public OpenAPI exists. Undefined
+  `api.md` files stay out of Gate B.
 
 Shared parsers live in `cmd/ci/docnames`. This pass does not check DTO
 field constraints or `frontend-2` routes.

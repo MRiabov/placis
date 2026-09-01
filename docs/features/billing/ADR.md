@@ -24,13 +24,14 @@ new entries with the next number, the area, and the date.
 4. **Onboarding is not billed** — Including the onboarding guide. Still record
    `ai_generations`. (2026-08-29)
 
-5. **One usage credit pool, with carry-over** — Monthly included amount (by
-   subscription tier) plus extra usage credit purchases. Unused remaining
-   carries over: add the new included grant; do not reset remaining. Two vendor
-   cost shapes, same ×5 into that pool. No auto-reload, no rolling 5-hour /
-   weekly caps. Self-serve: Placis Pro plan / Placis Pro Plus plan / Placis Pro
-   Max plan. Enterprise plan is sales-led, not a self-serve plan id.
-   (2026-08-29)
+5. **One usage credit pool, with carry-over** — Monthly included usage
+   credit (by subscription tier) plus extra usage credit purchases. Unused
+   remaining carries over: insert a new `included_usage_credit` row; do not
+   reset remaining. Two vendor cost shapes, same ×5 into that pool. No
+   auto-reload, no rolling 5-hour / weekly caps. Self-serve: Placis Pro plan /
+   Placis Pro Plus plan / Placis Pro Max plan. Enterprise plan is sales-led,
+   not a self-serve plan id. Usage credit is Postgres only (not Stripe).
+   (2026-08-29; `included_usage_credit` enum 2026-09-01)
 
 6. **Nested tool work during Voice is not the Voice minute** — Cleanup,
    generate_image, and ads generate during Voice spend the same usage credit
@@ -41,9 +42,10 @@ new entries with the next number, the area, and the date.
    ([errors](../../general-architecture/api.md)). (2026-08-29)
 
 8. **`internal/billing` is the AI use ledger plus Usage & billing HTTP** —
-   Extra usage credit checkout, Change plan / cancel / keep, and 20% / empty
-   signals live here when that slice lands. Activation Stripe stays on 08.
-   (2026-08-29; subscription-tier checkout on this package 2026-08-29)
+   Extra usage credit checkout, Change plan / cancel / keep live here.
+   Activation Stripe stays on 08. 20% / empty is frontend from
+   `BillingUsageRead`. (2026-08-29; subscription-tier checkout on this package
+   2026-08-29; named HTTP 2026-09-01)
 
 9. **Pricing is the Placis website page** — Astro static, `placis.com/pricing/`.
    Usage & billing is the in-app screen. Checkout is not on `placis.com`.

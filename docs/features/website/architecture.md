@@ -16,6 +16,9 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   ([03](pipeline/03-website-copy-generation.md))
 - `PublishWebsite` — **calls** `websitePublication`
   ([04](pipeline/04-website-publication.md))
+- `UnpublishWebsite` — holding page on R2 `latest/`; clears
+  `website_publications.active`. Billing **calls** this when the
+  subscription is `canceled`.
 
 CMS HTTP: one function per Routes verb+noun (`GetWebsitePage`,
 `UpdateWebsitePage`, `CreateWebsitePublication`, …). Tables:
@@ -192,9 +195,11 @@ unpublished canvas (`GET` with `publication_id`, then PATCH) is not a Website
 versions control in this UI ([api.md](api.md)). That is not website rollback.
 
 Website publication and live website rollback require
-`tenants.subscription_status=active`. If they stopped paying, the live website
-is already unpublished; POST is **402** `subscription_canceled`. Website
-editor PATCH still works. Usage & billing is how they pay again
+`tenants.subscription_status=active`. If they stopped paying,
+`UnpublishWebsite` already replaced R2 `latest/` with the holding page
+and cleared `website_publications.active`; POST is **402**
+`subscription_canceled`. Website editor PATCH still works. Usage &
+billing is how they pay again
 ([billing architecture](../billing/architecture.md)).
 
 Edits to Details, Projects, certifications and reviews, website styles, or the

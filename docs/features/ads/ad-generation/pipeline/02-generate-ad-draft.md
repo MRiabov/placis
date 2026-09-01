@@ -66,15 +66,16 @@ approved), details / projects / top reviews.
 ## Calls
 
 `update_details` when copy includes a detail. Media library cleanup HTTP
-for proposed light cleanup copies.
+for proposed light cleanup copies. **Calls** `RecordAIUseSpend`
+(`usage_category=text`).
 
 ## Persist
 
 `ad_copy_variants`, `ad_image_placements`, the existing `ad_variants`
 row, `ads.status=ad_needs_review`, `ad_lead_forms.title`, `ai.threads` /
-`ai_generations`. Optional child `media_assets` for cleanup
-(`pending_review`, `parent_media_asset_id` set). Schema `jobs`:
-`ads_generate` completed (or still running until Persist).
+`ai_generations`; `ai_use_ledger_entries` `entry_kind=spend`. Optional child
+`media_assets` for cleanup (`pending_review`, `parent_media_asset_id` set).
+Schema `jobs`: `ads_generate` completed (or still running until Persist).
 
 ## Fail
 
