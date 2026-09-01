@@ -12,8 +12,8 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
    marketing phone / first reviews) lands while scrape is still in flight;
    scrape then adds further reviews / photos. ETL increments have
    `business_profile_edit_sources`. Facebook / Instagram are not inserted until
-   a URL/handle detail exists; `skipped` if nothing left can produce that
-   detail.
+   a URL/handle detail exists; `insufficient_data_for_lookup` if nothing left
+   can produce that detail.
 2. **Scheduled increment** — second `StartRun` with `trigger=scheduled` and a
    new review, a new Instagram post, a new photo, and a different marketing
    phone than the owner typed. Assert new review / post / photo on the business
@@ -28,8 +28,9 @@ ETL has no owner UI. The full-stack onboarding E2E ([onboarding testing](../onbo
    scheduled run added no new `in_pool` rows, no ranking job.
 3. **Cap** — five onboarding `enqueue_id`s in 30 minutes; a sixth
    `StartRun(trigger=onboarding)` does not insert runs.
-4. **Skip** — scheduled Instagram with no handle → `status=skipped`
-   immediately, no fetch. Scheduled Maps with no `place_id` → `skipped`, no
+4. **insufficient_data_for_lookup** — scheduled Instagram with no handle →
+   `status=insufficient_data_for_lookup` immediately, no fetch. Scheduled Maps
+   with no `place_id` → `insufficient_data_for_lookup`, no
    Places Find. Onboarding Instagram is not inserted until a handle detail
    exists.
 5. **Isolation** — two tenants; each cannot read the other’s `etl.runs`,

@@ -12,7 +12,8 @@ Starts when (any of) ([ETL run kind triggers](etl-run-kind-triggers.md)):
 `company_number` + tenant country; **or** `display_name` + country. Maps-only
 Find still starts this ETL run kind when a name exists. Neither tuple → not
 started until Maps fills a name; nothing left that can produce a name →
-`skipped`. A miss is “ask”. The locked business-registry certification on Find
+`insufficient_data_for_lookup`. A miss is “ask”. The locked business-registry
+certification on Find
 (CRO in Ireland) is 01 from the company registry pick, not this extract. Monday
 / Wednesday / Friday does not enable this ETL run kind.
 

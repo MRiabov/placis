@@ -8,10 +8,10 @@ Instagram profile and Instagram posts.
 
 ## Trigger
 
-Starts when: `instagram_handle`. Skip (`status=skipped`) when scheduled and
-there is no handle. Onboarding: start when the detail exists. Nothing left that
-can produce it → `skipped`. A later paste can still start this ETL run kind on this
-enqueue.
+Starts when: `instagram_handle`. Skip (`status=insufficient_data_for_lookup`)
+when scheduled and there is no handle. Onboarding: start when the detail
+exists. Nothing left that can produce it → `insufficient_data_for_lookup`. A
+later paste can still start this ETL run kind on this enqueue.
 
 ## Pre
 

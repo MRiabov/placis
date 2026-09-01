@@ -27,6 +27,6 @@
   `legal_name` + registered-office locality on registry-only Find) yields
   Details only on one high-confidence hit; several hits do not pick a listing.
   Places Find is onboarding only; `trigger=scheduled` with no `place_id` is
-  `skipped` and does not call Places Find.
+  `insufficient_data_for_lookup` and does not call Places Find.
 - **Fake**: Google Maps Details / scrape. Never Parallel **Search** API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search.

@@ -12,17 +12,20 @@ Facebook / Instagram rows and photo classification live on the
   kind that started in one `StartRun` call), `trigger` (`onboarding` /
   `scheduled`), `etl_run_kind` (`google_maps_listing` / `facebook` / `instagram`
   / `website_crawl` / `trade_registry` / `web_search`), `status` (`pending` /
-  `extracting` / `transforming` / `succeeded` / `error` / `skipped`),
-  `onboarding_session_id` nullable fk, `place_id` nullable, `website_url`
-  nullable, `facebook_page_url` nullable, `instagram_handle` nullable, `error`
-  nullable, `started_at`, `finished_at`. One row per ETL run kind that
-  **started**. River retry keeps this `id`. Key columns copy details for the
-  running job (Maps `place_id`, crawl `website_url`, Facebook page URL,
-  Instagram handle). Details themselves live on the onboarding session attach
-  and the live profile. `skipped` when scheduled and no **Starts when** tuple is
-  met, or when onboarding has nothing left that can produce that detail. Do not
-  persist `directory`, `review`, or `photo` as `etl_run_kind` — those are not
-  ETL run kinds. Triggers: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md).
+  `extracting` / `transforming` / `succeeded` / `error` /
+  `insufficient_data_for_lookup`), `onboarding_session_id` nullable fk,
+  `place_id` nullable, `website_url` nullable, `facebook_page_url` nullable,
+  `instagram_handle` nullable, `error` nullable, `started_at`, `finished_at`.
+  One row per ETL run kind that **started**. River retry keeps this `id`. Key
+  columns copy details for the running job (Maps `place_id`, crawl
+  `website_url`, Facebook page URL, Instagram handle). Details themselves live
+  on the onboarding session attach and the live profile.
+  `insufficient_data_for_lookup` when scheduled and no **Starts when** tuple is
+  met, or when onboarding has nothing left that can produce that detail.
+  Distinct from checklist `skipped` (the contractor marked a required row
+  skipped). Timeouts and exhausted retries are `error`. Do not persist
+  `directory`, `review`, or `photo` as `etl_run_kind` — those are not ETL run
+  kinds. Triggers: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md).
 
 ## Sources (live extract identity)
 

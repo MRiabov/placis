@@ -15,8 +15,9 @@ columns may copy a detail for the running job. They are not the orchestrator.
 ## Fire
 
 When any of the **Starts when** tuples becomes true and that ETL run kind has
-not started (or the only row for that ETL run kind on this enqueue is `skipped`
-because Places Find missed), insert `etl.runs` for that `etl_run_kind` (same
+not started (or the only row for that ETL run kind on this enqueue is
+`insufficient_data_for_lookup` because Places Find missed), insert `etl.runs`
+for that `etl_run_kind` (same
 `enqueue_id`) and start extract. Parallel with every other eligible ETL run
 kind. Do not wait for `status=succeeded` on anything else.
 
@@ -25,12 +26,14 @@ Instagram links, Parallel Search, **and** 04a writes of `existing_site_url` /
 Facebook URL / Instagram handle. 04a does not call `StartRun`. The evaluator
 does.
 
-Scheduled: no matching **Starts when** tuple → `status=skipped` immediately
-(Maps: no `place_id`; Facebook: no URL; Instagram: no handle). Do not Places
-Find on scheduled — they may have no Google Maps listing. Onboarding: do not
-insert a run until a tuple is met. If nothing left can produce that detail
-(those ETL run kinds `succeeded` / `error` / `skipped` with no handle) →
-`skipped`. A later contractor paste can still start the ETL run kind on this
+Scheduled: no matching **Starts when** tuple →
+`status=insufficient_data_for_lookup` immediately (Maps: no `place_id`;
+Facebook: no URL; Instagram: no handle). Do not Places Find on scheduled —
+they may have no Google Maps listing. Onboarding: do not insert a run until a
+tuple is met. If nothing left can produce that detail (those ETL run kinds
+`succeeded` / `error` / `insufficient_data_for_lookup` with no URL or handle)
+→ `insufficient_data_for_lookup`. A later contractor paste can still start
+the ETL run kind on this
 enqueue.
 
 Do not overwrite a Find-attached `place_id` / `website_url` /

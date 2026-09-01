@@ -30,11 +30,12 @@ method on a per-ETL run kind type, and there is no shared `Extractor` /
 ([module layout](../../general-architecture/module-layout.md)). The worker repeats that pair **per extract chunk** (ETL fast
 extract, then ETL slow extract). It does not wait for the ETL run kind to finish
 before the first transform. An ETL run kind that cannot start yet is not
-inserted (onboarding) or is `skipped` (scheduled).
+inserted (onboarding) or is `insufficient_data_for_lookup` (scheduled).
 
 Monday / Wednesday / Friday: stagger activated tenants. ETL run kinds = Google
 Maps, Facebook, Instagram. Skip an ETL run kind with no matching **Starts when**
-tuple (`status=skipped` immediately). Scheduled Maps skips when there is no
+tuple (`status=insufficient_data_for_lookup` immediately). Scheduled Maps
+skips when there is no
 `place_id` (do not Places Find). `force` defaults false
 (stale-algorithmtransform rewrite is off; `algorithm=human` is never rewritten).
 `force` does not refetch when only the algorithm changed. A bumped

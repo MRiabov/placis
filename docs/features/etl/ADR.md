@@ -55,8 +55,9 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
 
 6. **Scheduled refresh is Monday, Wednesday, Friday** — Activated tenants.
    Sources: Google Maps, Facebook, Instagram (public scrape; Graph API later).
-   Stagger across tenants. Skip an ETL run kind that has no key (`place_id` for
-   Maps — do not Places Find on scheduled; Facebook URL; Instagram handle).
+   Stagger across tenants. An ETL run kind with no key is
+   `insufficient_data_for_lookup` (`place_id` for Maps — do not Places Find on
+   scheduled; Facebook URL; Instagram handle).
    Company registry / existing-site API extracts later. Website crawl, trade
    registry, and Parallel stay first-run (onboarding 02). Website activation
    implies this refresh; online research consent covers it. (2026-08-27;
@@ -135,8 +136,9 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     job). An ETL run kind starts when it has the details it needs (any of the
     **Starts when** tuples). Those details live on the onboarding session attach
     and the live profile (Find, extract, or contractor). Insert `etl.runs` when
-    the ETL run kind starts. Facebook / Instagram start on URL/handle; `skipped`
-    when nothing left can produce that detail. A later paste can still start
+    the ETL run kind starts. Facebook starts on `facebook_page_url`; Instagram
+    on `instagram_handle`; `insufficient_data_for_lookup` when nothing left can
+    produce that detail. A later paste can still start
     them. Maps may start from `place_id` **or** `display_name` + locality **or**
     `legal_name` + locality (Places Find uses `display_name` if set, else
     `legal_name`, plus registered-office locality / trade location / tenant
@@ -152,7 +154,9 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     Always-ETL-run-kinds DAG. 2026-08-31 later: ETL run kind + details, not
     means / identity key / input set / client-interview window. 2026-08-31
     later: Places Find may use `legal_name` + registered-office locality.
-    2026-08-31 later: scheduled Maps only if `place_id` exists.)
+    2026-08-31 later: scheduled Maps only if `place_id` exists. 2026-09-01:
+    `etl.runs.status` `skipped` is `insufficient_data_for_lookup`; timeouts
+    stay `error`. Distinct from checklist `skipped`.)
 
 15. **Find attach is onboarding session keys; extract still owns the listing**
     — 01 persists `place_id` / `company_number` / `website_url` on the

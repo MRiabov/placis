@@ -38,7 +38,8 @@ Triggers:
   from 01 seeds, not a job deadline.
 - **Monday / Wednesday / Friday** — `trigger=scheduled`. Activated tenants
   only. ETL run kinds: Google Maps, Facebook, Instagram. Stagger tenants. No
-  matching **Starts when** tuple → `status=skipped` immediately. Scheduled Maps
+  matching **Starts when** tuple → `status=insufficient_data_for_lookup`
+  immediately. Scheduled Maps
   only if `place_id` exists (no Places Find; they may have no Google Maps
   listing). This trigger does not use the onboarding cap.
 SSE during onboarding **reads** Postgres: `etl.runs` and the live business
