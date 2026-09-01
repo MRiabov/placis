@@ -6,11 +6,12 @@ Never say instantiate, population, or generate for this. Distinct from **Copy**
 (the words) and [website copy generation](03-website-copy-generation.md).
 Catalog object and mapping: [catalog.md](../catalog.md).
 
-Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) runs this in the same job as 01.
+Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md) runs this in the same River job kind
+`select_and_copy_website_template` as 01.
 
 ## Trigger
 
-01 succeeded in the same 05 run.
+01 succeeded in the same `select_and_copy_website_template` run.
 
 ## Pre
 
@@ -84,9 +85,9 @@ pick. Tokens stay.
    website is kept.
 8. Same pick + same profile → same website pages (and the same derived
    menus).
-9. Enqueue onboarding 06. `/onboarding/preview` (wait teaser) waits until
-   the **home** website page has 03 copy, or the wait cap (~15s). Other
-   website pages finish in parallel. Then wait-end:
+9. **Inserts** `website_copy_generation`. `/onboarding/preview` (wait teaser)
+   waits until the **home** website page has 03 copy, or the wait cap (~15s).
+   Other website pages finish in parallel. Then wait-end:
    `preview_and_edit`.
 
 Copy is **not** this step —
@@ -102,17 +103,17 @@ contracts under `catalog/`.
 `website_settings` (`website_template_id`, `preset_id`), live
 `business_profiles` as of `accepted_edit_id`.
 
-## Calls
+## Inserts
 
-River job `website_copy_generation`.
+`website_copy_generation`.
 
 ## Persist
 
 `website_pages`, `website_sections`, `website_slots`, `website.menus`,
 `website_forms`, `website_form_fields`, `website_form_field_options`,
 `website_urls` (iff the template has `url` nodes). Schema `jobs`: one
-River job `website_copy_generation` (onboarding 06 / website 03), unique
-key = that `tenant_id`. Args: `tenant_id` only. Second enqueue while
+River job kind `website_copy_generation` (onboarding 06 / website 03), unique
+key = that `tenant_id`. Args: `tenant_id` only. Second insert while
 pending/running is River unique conflict → HTTP 409.
 [jobs](../../../general-architecture/jobs.md). Must not write
 `website_slot_reviews`, `website_publications`, `edit_history`, or

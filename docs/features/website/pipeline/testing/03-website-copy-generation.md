@@ -30,7 +30,7 @@ is a later caller.
     `websiteRender` of the affected website page (`before_pages` +
     `pages`) with the exact `media_asset_urls` set. Those website image
     renders are **not** in `website_slots.value`. Zero R2 / WebP / purge
-    from this job. 03 did not call `websitePublication`.
+    from this step. 03 did not call `websitePublication`.
   - **Website slots / website pages:** targeted `website_slots.value`
     changed; `origin=website_copy_generation` on those rows only.
     Untargeted website slots still `origin=website_template`. Reusable
@@ -70,7 +70,7 @@ is a later caller.
     writes may land; they do **not** insert `website_publications` and
     do **not** rewrite R2. CMS PATCH / assistant HTTP are not 409
     because this job is running.
-- **Handoff to 04**: none from this job. 08/09/CMS Publish SELECTs the
+- **Handoff to 04**: none from this step. 08/09/CMS Publish SELECTs the
   unpublished tree (tokens + 03 copy) when they call 04. After wait-end
   the onboarding session is `preview_and_edit` so 07/08 may run.
 - **Fail**: fake the LLM to throw → unpublished 02 rows kept (website slot

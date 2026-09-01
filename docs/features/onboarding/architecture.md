@@ -33,7 +33,8 @@ quiet inline note on Review, not a blocker.
 
 ## Select and copy the website template
 
-Client-interview-complete enqueues this step (05). Website
+Client-interview-complete **inserts** River job kind
+`select_and_copy_website_template` (05). Website
 [01](../website/pipeline/01-select-website-template.md) then
 [02](../website/pipeline/02-copy-website-template-pages.md).
 **Copying the website template’s pages is deterministic**: accepted profile +
@@ -45,7 +46,8 @@ website style catalog preset. 02 copies the website template (home, about, named
 service pages, contact, privacy policy) and derives the top menu and footer.
 Do not say apply the website template in prose.
 
-**Automatic website copy generation** (06) is a separate River job after that:
+**Automatic website copy generation** (06) is River job kind
+`website_copy_generation` after that:
 the same tools as the website editor (`update_slot`, `update_seo`, …), writing
 into the existing unpublished website. Wait-end opens the website preview
 ([07](pipeline/07-contractor-copy-improvement.md)). 08 writes the host if they
@@ -59,7 +61,8 @@ publication).
 
 ## End of onboarding: paid, host stays up
 
-Website activation (09) **upgrades** the existing unactivated tenant (Clerk
+Website activation (09): the webhook **inserts** River job kind
+`website_activation`, which **upgrades** the existing unactivated tenant (Clerk
 organization, owner membership, `status=active`). It does not create a tenant
 and does not invent `website_prefix` (08 reserved it if they shared; otherwise
 09 reserves). 09 writes website publication without the strip (v2 if they

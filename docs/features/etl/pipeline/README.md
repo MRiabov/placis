@@ -9,11 +9,13 @@ Invariants (closed `##`; `## Do — <phase>` is Do). Matching
 [testing/](testing/) names every persistence table that file backticks.
 Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
+River job kind list: [jobs](../../../general-architecture/jobs.md).
 
 ```text
 StartRun(trigger, tenant, force=false)
   → enqueue_id; start each ETL run kind that has the details it needs (shared enqueue_id)
-  → extract/<etl_run_kind> chunk → transform/<etl_run_kind> that chunk (repeat; not inlined in StartRun)
+  → **inserts** `{etl_run_kind}_extract` → persist fetch → **inserts** `{etl_run_kind}_transform`
+    (repeat per chunk; not inlined in StartRun)
 ```
 
 Monday / Wednesday / Friday: `trigger=scheduled`, ETL run kinds Google Maps,
@@ -23,11 +25,12 @@ calls `StartRun`.
 
 ## Shared rules
 
-- **As they arrive, not one dump at the end.** Extract emits chunks. Transform
-  runs on each chunk before the next extract continues. Do not wait for ETL slow
-  extract (or `status=succeeded`) before writing the live business profile.
-  Onboarding SSE mirrors Postgres on change (not faster than ~2s): `etl.runs`
-  **and** the live business profile / checklist transform already wrote.
+- **As they arrive, not one dump at the end.** Extract persists the chunk, then
+  **inserts** that River job kind’s transform. Transform **inserts** the next
+  extract when more chunks remain. Do not wait for ETL slow extract (or
+  `status=succeeded`) before writing the live business profile. Onboarding SSE
+  mirrors Postgres on change (not faster than ~2s): `etl.runs` **and** the live
+  business profile / checklist transform already wrote.
 - **ETL fast extract then ETL slow extract.** ETL fast extract is the cheap
   first response (p95 ≤ 5s). ETL slow extract is the remainder (progressively
   over about 60s). After ETL fast extract + transform, about half of that ETL

@@ -84,7 +84,8 @@ instructions mid-call. Do **not** inject wrap-up via billed
 `conversation.item.create`. No Go 128K / 12K on the live Voice connection.
 
 Onboarding Voice guide: `tools=[]`, so the 20-count is idle. No Go 128K / 12K on
-that connection. Onboarding 06 is a River job with its own cap (**3 steps / 12
+that connection. Onboarding 06 is River job kind `website_copy_generation`
+with its own cap (**3 steps / 12
 calls / 4 website pages**) — not this 20.
 
 `in_flight_run` locks the **whole** agent run (all those turns), not one
@@ -455,7 +456,7 @@ off Details: notification (OK / Revert). No owner Plan switch on Voice.
 ## Compaction
 
 After 12 hours of inactivity (`ai.threads.last_activity_at`,
-`thread_kind=cms_assistant`), a River job
+`thread_kind=cms_assistant`), River job kind `assistant_thread_compaction`
 summarizes older **thread** items in place: keep the last **3 owner** and last
 **3 assistant** items (plus `tool_summary` / `thinking` in that tail); older
 items become **one** `assistant` summary; `compacted_through_item_id` advances.

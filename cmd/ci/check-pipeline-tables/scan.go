@@ -18,7 +18,7 @@ var (
 	headingRe     = regexp.MustCompile(`(?m)^## (.+)$`)
 	tableTokenRe  = regexp.MustCompile(`^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)?$`)
 	requiredHeads = []string{"Trigger", "Pre", "Must not", "Do", "Persist", "Fail", "Out", "Invariants"}
-	optionalHeads = map[string]bool{"Reads": true, "Loads": true, "Sends": true, "Calls": true}
+	optionalHeads = map[string]bool{"Reads": true, "Loads": true, "Sends": true, "Calls": true, "Inserts": true}
 	adsTestingRel = filepath.ToSlash(filepath.Join("ads", "ad-generation", "testing.md"))
 )
 

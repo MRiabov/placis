@@ -1,8 +1,9 @@
 # 05 — Select and copy the website template
 
 After client interview complete. `POST .../interview/complete` (04a submit or
-04b `end_interview`) sets `selecting_and_copying_website_template` and enqueues
-this step. It does **not** run at business lookup.
+04b `end_interview`) sets `selecting_and_copying_website_template` and
+**inserts** River job kind `select_and_copy_website_template`. It does **not**
+run at business lookup.
 
 Onboarding **owns** kicking this off and waiting until an unpublished
 website exists. The writes are website pipeline
@@ -35,14 +36,21 @@ Do not say apply the website template in prose.
 
 ## Do
 
+This step **is** River job kind `select_and_copy_website_template`.
+**Calls** `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages`.
+
 1. Set `accepted_edit_id` to current `last_edit_id`. 01 and 02 read the
    live business profile as of that edit. Later 02 business-research
    writes must not mutate this live business profile in place.
 2. Run website **01** then **02**.
-3. Enqueue 06. `/onboarding/preview` (wait teaser) waits until the **home**
-   website page has 03 copy, or the wait cap (~15s). Other website pages
-   finish in parallel. Then wait-end. 08 writes the host if they share —
-   not immediately.
+3. 02 **inserts** `website_copy_generation`. `/onboarding/preview` (wait
+   teaser) waits until the **home** website page has 03 copy, or the wait
+   cap (~15s). Other website pages finish in parallel. Then wait-end. 08
+   writes the host if they share — not immediately.
+
+## Inserts
+
+`website_copy_generation`.
 
 ## Persist
 
@@ -54,9 +62,9 @@ occupancy + hash, not an LLM).
 
 ## Fail
 
-Throw → `select_and_copy_website_template_failed`. No `latest/`. Retry is a new
-05 (same `website_prefix` if 08 already reserved it; new onboarding publication
-on that prefix).
+Throw → `select_and_copy_website_template_failed`. No `latest/`. Retry is a
+new `select_and_copy_website_template` (same `website_prefix` if 08 already
+reserved it; new onboarding publication on that prefix).
 
 ## Out
 
