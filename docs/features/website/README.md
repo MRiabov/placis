@@ -3,6 +3,9 @@
 Building a website from a website template, editing it in the website editor,
 and website publication. Ads live in [../ads/](../ads/README.md). Together they sit under the CMS.
 
+Named identifiers:
+[docs conventions](../../docs-conventions.md#named-identifiers).
+
 - [PRD](prd.md) — business requirements, user stories, acceptance criteria
 - [ADR](ADR.md) — architectural decision record
 - [design decision record](design-decision-record.md) — website editor look and interaction (not

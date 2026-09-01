@@ -5,19 +5,16 @@ off a publication row. Wait-end is onboarding session `preview_and_edit`. 04
 is a later caller.
 
 - **Setup**: 02 rows exist (`website_pages` / `website_sections` /
-  `website_slots` `origin=website_template`; derived `website.menus`; look
-  sections; `website_settings` from 01). Image website slots are still
-  `{{images.*}}` / `{{logo_url}}` (no `media_asset_id` from 02).
-  `media_assets` may exist for photo selection. Schema `jobs`: one
-  `website_copy_generation` on this `tenant_id`.
-  `onboarding_sessions.status=selecting_and_copying_website_template`.
-  `business_profiles` (`accepted_edit_id` set). At least two named services
-  (roof repairs and gutter cleaning). Record website page ids, website
-  slot ids, and tokenized `website_slots.value` before invoke. Two cases
-  for photo selection: (a) unused non-founder/non-logo photos whose
-  **media caption** matches those named services; (b) no matching media
-  caption in that pool (founder / logo photos only, or a media caption
-  that does not match).
+  `website_slots` / `website.menus` / `website_forms`; `website_settings`
+  from 01). Schema `jobs`: one `website_copy_generation` on this
+  `tenant_id`. `onboarding_sessions`. `media_assets` may exist for photo
+  selection. `business_profiles`. At least two named services (roof
+  repairs and gutter cleaning). Record website page ids, website slot
+  ids, and tokenized `website_slots.value` before invoke. Two cases for
+  photo selection: (a) unused non-founder/non-logo photos whose **media
+  caption** matches those named services; (b) no matching media caption
+  in that pool (founder / logo photos only, or a media caption that does
+  not match).
 - **Invoke**: run that River job. Fake the website-editor-tool LLM to a
   small `update_slot` / `update_seo` batch (no `create_page`, no
   `update_reviews`). In (a) also `update_slot` + `media_asset_id` attach
@@ -54,7 +51,8 @@ is a later caller.
     non-founder/non-logo photos (not each other’s, not founder/logo);
     no reuse. (b) `tool_calls` includes `generate_image`; a new media
     library item `supplied_by=ai` pending review is attached — not a
-    leftover unmatched photo. Logo image website slots stay
+    leftover unmatched photo. That write **persists into** `media_assets`
+    (`supplied_by=ai`, pending review). Logo image website slots stay
     `{{logo_url}}` (no `generate_image`).
   - While unactivated: `ai.threads` `thread_kind=cms_assistant`
     `status=current`; `assistant.runs` one `running` on that thread

@@ -93,9 +93,10 @@ row. No `website_copy_generation` yet. No `ai.threads` /
 
 ## Fail
 
-Throw with 05 (`select_and_copy_website_template_failed`). No unpublished
-website. No `latest/`. Retry is a new 05 (01 then 02). Empty
-production-ready catalog is this Fail.
+Throw with 05 (`select_and_copy_website_template_failed`). No
+`website_pages` / `website_sections` / `website_slots`. No `latest/`.
+Retry is a new 05 (01 then 02). Empty production-ready catalog is this
+Fail.
 
 ## Out
 

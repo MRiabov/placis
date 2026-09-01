@@ -6,7 +6,8 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
 - **Setup**: unpublished website from 02 (`website_pages` /
   `website_sections` / `website_slots` / `website.menus` /
   `website_forms`; `website_settings` from 01). Live
-  `business_profiles`. Optional 03 copy already in website slots. Record
+  `business_profiles`. `media_assets` as needed for `media_asset_urls`.
+  Optional 03 copy already in website slots. Record
   `website_slots.value` (still tokenized where required). For 08:
   onboarding session `preview_and_edit`,
   `website_prefix` null, zero `website_publications`. For 09-after-08:
@@ -45,6 +46,8 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
   - Later ETL without 04: no new `website_publications` row;
     fake `latest/` objects unchanged.
   - Live GET of the host does not call Go.
+  - Happy path: `website_publication_issues` empty (post-publication
+    rows only when the Worker reports them).
 - **Handoff**: live path is R2 `latest/` (fake) + this
   `website_publications` row. Next owner Publish is another 04 on the
   same unpublished tree. Onboarding 09 after 08 archives v1 and writes

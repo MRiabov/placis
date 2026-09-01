@@ -186,12 +186,13 @@ does). We do **not** hand-roll AST scripts up front:
   [docs conventions](../docs-conventions.md).
 - **Don't-say glossary check** (`cmd/ci/check-dont-say`) — see below.
 - **Pipeline table and heading check** (`cmd/ci/check-pipeline-tables`) —
-  step files pair with `pipeline/testing/<name>.md`; persistence tables in a
-  step appear in that testing file and in some `persistence.md`; every
-  persistence table appears in `testing.md` and/or `pipeline/testing/`
-  when those files exist; pipeline step `##` headings are a closed list.
-  Missing `testing.md` (media library / leads / Details / Projects) does
-  not fail; a changed `persistence.md` without `testing.md` warns. See
+  step files pair with `pipeline/testing/<name>.md`; **known** persistence
+  tables in a step appear in that testing file; every persistence table
+  appears in `testing.md` and/or `pipeline/testing/` when those files
+  exist; pipeline step `##` headings are a closed list. Missing
+  `testing.md` (media library / leads / Details / Projects) does not
+  fail; a changed `persistence.md` passed on the command line without
+  `testing.md` warns. See
   [docs conventions](../docs-conventions.md#named-identifiers).
 - Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen,
   Worker internal OpenAPI export + contractor-website typegen).
@@ -274,5 +275,9 @@ heading lists in [docs conventions](../docs-conventions.md#named-identifiers). U
 `go run ./cmd/ci/check-pipeline-tables --all`.
 
 This pass: **tables** and **pipeline step headings**. Not Routes paths, not
-`api.md` headings. Warn (do not fail) when a changed `persistence.md` has
-no feature `testing.md`.
+`api.md` headings. Pairing matches **known** table names (already in some
+`persistence.md`); invented names and columns are writing rules. Warn
+(do not fail) when a changed `persistence.md` is passed on the command
+line and that feature has no `testing.md`. `--all` with no extra paths
+does not warn on untouched files. GitHub Actions passes the PR’s
+changed `persistence.md` paths after `--all` so `::warning` can fire.

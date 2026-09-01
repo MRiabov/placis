@@ -28,13 +28,14 @@ OpenAPI, not a live GET): `websiteRender` (03) and `websitePublication`
 Serve-only jsonb (not a DTO field dump): slot `value` is a union on
 `slot_type` (`text`/`rich_text` → string; `image` → media library item
 id + crop/focal; `link` → url + label; `list` → typed array; **do not
-expose `slot_type=json`**). Section `props` is `oneOf` by
-`component_id` (unknown → `unsupported_component`). Section `design` is
-named design-control fields. Extra keys 4xx. `website_manifest` is
-**omit** from website-editor GET/PATCH. LLM traces omit. Worker
+expose `slot_type=json`**). `edit_history` `before`/`after` is that same
+union. Section `props` is `oneOf` by `component_id` (unknown →
+`unsupported_component` and no props object). Section `design` is named
+design-control fields. Extra keys 4xx. `website_manifest` is **omit**
+from website-editor GET/PATCH. LLM traces omit. Worker
 `media_asset_urls` is media library item id → public delivery URL;
-**omit** from website-editor GET/PATCH. Exact set of ids (missing or
-spare id is 4xx).
+**omit** from website-editor GET/PATCH. Exact set of ids (missing,
+spare, image file in the JSON, or expiring signed URL is 4xx).
 
 CMS unpublished `website_*` / `website.menus` / `website_settings`
 writes are only `POST` / `PATCH` on `/v1/website/editor/…` from
@@ -45,33 +46,40 @@ routes.
 
 | DTO | Fields | Description |
 | --- | --- | --- |
+| `WebsiteEditorGet` | `publication_id`, `include_edit_history` | Query; not both |
 | `WebsitePageSummaryRead` | `id`, `path`, `title`, `page_type`, `status` | Pages list row |
-| `WebsitePageRead` | `path`, `title`, `page_type`, `status`, SEO columns, `validation`, `blockers`, `publication`, `sections`, `website_styles`, `menus`, `forms`, `website_business_profile` | Canvas hydrate |
-| `WebsitePageCreate` | `path`, `title`, `page_type`, SEO columns | Create page |
-| `WebsitePageUpdate` | `base_edit_history_head`, dirty page/section/slot/form keys, `ordered_section_ids`, `review_ids` | Dirty PATCH body |
+| `WebsitePageRead` | `path`, `title`, `page_type`, `status`, `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`, `validation`, `blockers`, `publication`, `sections`, `website_styles`, `menus`, `forms`, `website_business_profile` | Canvas hydrate |
+| `WebsitePageCreate` | `path`, `title`, `page_type`, `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword` | Create page |
+| `WebsitePageUpdate` | `base_edit_history_head`, `ai_generation_id`, `ordered_section_ids`, `review_ids`, `sections`, `title`, `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`, `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`, `forms` | Dirty PATCH body |
 | `WebsiteSectionRead` | `id`, `component_id`, `component_version`, `position`, `status`, `props`, `design`, `slots` | Section on a page |
 | `WebsiteSlotRead` | `key`, `type`, `value`, `status` | One slot |
+| `WebsiteFormRead` | `id`, `form_key`, `title`, `submit_action`, `privacy_notice`, `fields` | Form on page GET |
+| `WebsitePageBlockerRead` | `code`, `entity_type`, `entity_id` | Jumpable unpublished blocker |
 | `WebsiteEditApplyRead` | `edit_history_head`, `batch_id` | PATCH ack |
 | `WebsiteSettingsRead` | `preset_id`, `primary`, `neutral`, `accent`, `radius`, `density` | Website styles |
-| `WebsiteSettingsUpdate` | `base_edit_history_head`, dirty style keys | Styles PATCH |
+| `WebsiteSettingsUpdate` | `base_edit_history_head`, `preset_id`, `primary`, `neutral`, `accent`, `radius`, `density` | Styles PATCH |
 | `WebsiteMenusRead` | `top_menu`, `footer`, `show_phone`, `show_email`, `show_contact` | One menus row |
-| `WebsiteMenusUpdate` | `base_edit_history_head`, dirty tree/flag keys | Menus PATCH |
+| `WebsiteMenusUpdate` | `base_edit_history_head`, `top_menu`, `footer`, `show_phone`, `show_email`, `show_contact` | Menus PATCH |
 | `WebsiteUrlRead` | `id`, `href`, `label` | Combobox row |
 | `WebsiteUrlCreate` | `href`, `label` | Type-to-create URL |
-| `WebsitePublicationRead` | `version_number`, `status`, `active`, `published_by`, `website_address_id`, times | Metadata only; omit `website_manifest` |
+| `WebsitePublicationRead` | `version_number`, `status`, `active`, `published_by`, `website_address_id`, `published_at` | Metadata only; omit `website_manifest` |
 | `WebsitePublicationCreate` | `website_address_id` | CMS Publish |
-| `WebsiteAddressRead` | `hostname`, `type`, `status`, DNS rows | Host poll |
+| `WebsiteAddressRead` | `hostname`, `type`, `status`, `dcv_txt_name`, `dcv_txt_value`, `cloudflare_hostname_status`, `cloudflare_ssl_status` | Host poll |
 | `WebsiteAddressCreate` | `hostname` | Connect `type=custom` |
 | `WebsiteBusinessProfileRead` | Common variable fields ([variables.md](variables.md)) | Resolve struct; CMS + Worker `$ref` |
 | `WebsiteRenderRequest` | `profile`, `media_asset_urls`, `website_styles`, `menus`, `top_menu_section`, `footer_section`, `pages`, `before_pages` | `websiteRender` body |
+| `WebsiteRenderRequestPage` | `id`, `path`, `sections` | Unpublished page on `pages` / `before_pages` |
 | `WebsiteRenderPage` | `image`, `before_image`, `after_image` | One page picture |
 | `WebsiteRenderResponse` | `pages` | Map of page id → `WebsiteRenderPage` |
 | `WebsitePublicationRequest` | `dump`, `profile`, `media_asset_urls`, `strip`, `website_prefix`, `version_number` | `websitePublication` body |
-| `WebsitePublicationResponse` | closed write result | No image, no HTML body |
+| `WebsitePublicationResponse` | | No image, no HTML body |
 
 `WebsitePageRead.website_business_profile` is
-`WebsiteBusinessProfileRead` (required). Nested objects match dotted
-Common variable paths. Extra keys 4xx. Not the Details editor
+`WebsiteBusinessProfileRead` (required). `sections` are
+`WebsiteSectionRead`; `forms` are `WebsiteFormRead`; `blockers` are
+`WebsitePageBlockerRead`; `publication` is `WebsitePublicationRead`;
+`menus` is `WebsiteMenusRead`. Nested profile objects match dotted
+Common variable paths. Extra keys 4xx. Not the Details
 `GET /v1/business-profile` `*Read`. Do **not** create
 `/v1/website/editor/business-profile`.
 
@@ -79,24 +87,24 @@ Common variable paths. Extra keys 4xx. Not the Details editor
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/website/editor/pages` | CMS workspace; unpaid preview | | `WebsitePageSummaryRead` list | `website_pages` | | Optional `publication_id` owner version | `409` onboarding row | Preview host GET |
+| `GET /v1/website/editor/pages` | CMS workspace; unpaid preview | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages` | | Optional `publication_id` owner version | `409` onboarding row | Preview host GET |
 | `POST /v1/website/editor/pages` | add page | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | Append menu node | | |
-| `GET /v1/website/editor/pages/{page_id}` | canvas hydrate; unpaid preview | | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews` | | Optional `publication_id`; embeds profile | `404`/`409`/`400` | `/pages/{id}/seo`; `slot_type=json`; return `website_manifest` |
-| `PATCH /v1/website/editor/pages/{page_id}` | website editor | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `edit_history` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Dirty keys only; 500ms coalesce | `409 edit_history_conflict`, `413`, `429` | See overflow |
-| `GET /v1/website/editor/settings` | Website styles | | `WebsiteSettingsRead` | `website_settings` | | Optional `publication_id` | `409`/`400` | Logo on this body |
+| `GET /v1/website/editor/pages/{page_id}` | canvas hydrate; unpaid preview | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications` | | Optional `publication_id` or `include_edit_history` | `404`/`409`/`400` | `/pages/{id}/seo`; `slot_type=json`; return `website_manifest`; both query flags |
+| `PATCH /v1/website/editor/pages/{page_id}` | website editor | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Dirty keys only; 500ms coalesce | `409 edit_history_conflict`, `413`, `429` | See overflow |
+| `GET /v1/website/editor/settings` | Website styles | `WebsiteEditorGet` | `WebsiteSettingsRead` | `website_settings` | | Optional `publication_id` | `409`/`400` | Logo on this body |
 | `PATCH /v1/website/editor/settings` | Website styles apply | `WebsiteSettingsUpdate` | `WebsiteEditApplyRead` | | `website_settings`, `edit_history` | Explicit apply | `409 edit_history_conflict` | |
-| `GET /v1/website/editor/menus` | menu editors; unpaid preview | | `WebsiteMenusRead` | `website.menus` | | Optional `publication_id` | `409`/`400` | `/top-menu` or `/footer` |
+| `GET /v1/website/editor/menus` | menu editors; unpaid preview | `WebsiteEditorGet` | `WebsiteMenusRead` | `website.menus` | | Optional `publication_id` | `409`/`400` | `/top-menu` or `/footer` |
 | `PATCH /v1/website/editor/menus` | menu editors | `WebsiteMenusUpdate` | `WebsiteEditApplyRead` | | `website.menus`, `edit_history` | One row | `409 edit_history_conflict` | Menus on page PATCH |
-| `GET /v1/website/editor/urls` | URL combobox | | `WebsiteUrlRead` list | `website_urls` | | | | `POST /pages` from picker |
+| `GET /v1/website/editor/urls` | URL combobox | | `WebsiteUrlRead` | `website_urls` | | | | `POST /pages` from picker |
 | `POST /v1/website/editor/urls` | type to create | `WebsiteUrlCreate` | `WebsiteUrlRead` | | `website_urls` | | | Create a website page |
-| `GET /v1/website/publications` | publication dropdown | | `WebsitePublicationRead` list | `website_publications` | | Omit onboarding rows in rollback UI | | Return `website_manifest` |
-| `POST /v1/website/publications` | CMS Publish | `WebsitePublicationCreate` | `WebsitePublicationRead` | unpublished website | `website_publications` | **calls** `websitePublication`; `published_by=owner` | `402 subscription_canceled` | |
+| `GET /v1/website/publications` | publication dropdown | | `WebsitePublicationRead` | `website_publications` | | Omit onboarding rows in rollback UI | | Return `website_manifest` |
+| `POST /v1/website/publications` | CMS Publish | `WebsitePublicationCreate` | `WebsitePublicationRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms` | `website_publications`, `website_publication_issues` | **calls** `websitePublication`; **sends** `WebsitePublicationRequest`; `published_by=owner` | `402 subscription_canceled` | |
 | `POST /v1/website/publications/{id}/rollback` | live rollback | | `WebsitePublicationRead` | `website_publications` | `website_publications` | Copy that owner version onto that host `latest/` | `402`, `409` onboarding id | Rewrite unpublished rows |
-| `GET /v1/website/addresses` | dropdown + Connect | | `WebsiteAddressRead` list | `website_addresses` | | Does not create subdomain | | |
+| `GET /v1/website/addresses` | dropdown + Connect | | `WebsiteAddressRead` | `website_addresses` | | Does not create subdomain | | |
 | `POST /v1/website/addresses` | Connect modal | `WebsiteAddressCreate` | `WebsiteAddressRead` | | `website_addresses` | `type=custom` only | | `type=subdomain`; reserve `website_prefix` |
 | `GET /v1/website/addresses/{id}` | poll until `active` | | `WebsiteAddressRead` | `website_addresses` | | DNS rows copyable | | Nameserver mutation |
-| `POST /internal/website-render` | website 03 | `WebsiteRenderRequest` | `WebsiteRenderResponse` | | | **calls** `websiteRender` | Extra keys 4xx | Write R2; persist HTML onto slots; `websitePublication` |
-| `POST /internal/website-publication` | website 04 | `WebsitePublicationRequest` | `WebsitePublicationResponse` | | R2 `latest/` | **calls** `websitePublication` | Extra keys 4xx | Return image render; persist HTML onto slots; `websiteRender` |
+| `POST /internal/website-render` | website 03 | `WebsiteRenderRequest` | `WebsiteRenderResponse` | | | Worker op `websiteRender` | Extra keys 4xx | Write R2; persist HTML onto slots; image files in JSON; `websitePublication` |
+| `POST /internal/website-publication` | website 04 | `WebsitePublicationRequest` | `WebsitePublicationResponse` | | R2 `latest/` | Worker op `websitePublication` | Extra keys 4xx | Return image render; persist HTML onto slots; image files in JSON; `websiteRender` |
 
 Worker auth is out of the JSON body (shared secret / service binding).
 Not on `cmd/api`. Not `GET /openapi.json`. Maps are keyed by website
@@ -105,14 +113,11 @@ never `true`).
 
 ### PATCH /v1/website/editor/pages/{page_id}
 
-Dirty keys only — per-section / per-slot, dirty page metadata, website
-form patches, section create/swap/visibility/design,
-`ordered_section_ids[]`, reviews `review_ids[]` (from the pool; over
-max is `400`). Archive of a website page strips that page node from
+Dirty keys only. Archive of a website page strips that page node from
 `website.menus`. Body cap 64 KB. Image website slots send a media
-library item id. Response is `{ edit_history_head, batch_id }` plus
-assigned ids on create. No GET-after-PATCH. Must not: predecessor
-`POST …/sections`, `PATCH …/sections/order`, `DELETE …/sections/{id}`,
+library item id. No GET-after-PATCH. `review_ids` over the website
+component max is `400`. Must not: predecessor `POST …/sections`,
+`PATCH …/sections/order`, `DELETE …/sections/{id}`,
 `POST …/slots/{key}/asset`. Top menu / footer are `/menus`. Unactivated
 PATCH: Clerk only; onboarding session token **403**.
 
@@ -127,10 +132,10 @@ PATCH: Clerk only; onboarding session token **403**.
 - `POST /v1/website/publications/{id}/restore-unpublished`
 - `GET /v1/website/publications/{id}/pages`
 - `/v1/website/editor/top-menu`, `/v1/website/editor/footer`
-- `/v1/website/editor/assistant` and `…/clear` (use
-  [assistant HTTP](../assistant/api.md))
-- `/v1/website/editor/assistant/record-apply` and `…/record-reject`
-  (use [assistant HTTP](../assistant/api.md))
+- `/v1/website/editor/assistant` and `…/clear` — routes live in
+  [assistant HTTP](../assistant/api.md)
+- `/v1/website/editor/assistant/record-apply` and `…/record-reject` —
+  routes live in [assistant HTTP](../assistant/api.md)
 - `/v1/website/editor/pages/{page_id}/assistant` and `…/record-apply` /
   `…/record-reject`
 - per-website-page website publication

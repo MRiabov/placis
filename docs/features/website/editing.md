@@ -137,8 +137,10 @@ A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`,
 
 `PATCH /v1/website/editor/pages/{page_id}` Request `WebsitePageUpdate`,
 Response `WebsiteEditApplyRead`. It **persists into** `website_slots` /
-`website_sections` / `website_pages` / `website_forms` / `edit_history`
-and `website_settings.edit_history_head`. Body: dirty keys plus required
+`website_sections` / `website_pages` / `website_forms` /
+`website_form_fields` / `website_form_field_options` / `website.menus` /
+`edit_history` and `website_settings.edit_history_head`. Body: dirty keys
+plus required
 `base_edit_history_head` (the acked head; null only if the stack is empty).
 Dirty keys unchanged — including keys dirtied by in-memory undo/redo.
 Assistant copy-out adds `ai_generation_id` on those dirty keys. Success

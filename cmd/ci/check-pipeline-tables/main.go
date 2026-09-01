@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func main() {
@@ -16,14 +17,13 @@ func main() {
 
 func run(args []string) error {
 	flags := flag.NewFlagSet("check-pipeline-tables", flag.ContinueOnError)
-	all := flags.Bool("all", false, "scan docs/features instead of listed files")
+	_ = flags.Bool("all", false, "scan docs/features instead of listed files")
 	root := flags.String("root", "docs/features", "features docs root")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
 
 	changed := flags.Args()
-	scanAll := *all || len(changed) == 0
 	rep, err := inspect(*root)
 	if err != nil {
 		return err
@@ -33,8 +33,8 @@ func run(args []string) error {
 	errs = append(errs, checkHeadings(rep)...)
 	errs = append(errs, checkPipelinePairing(rep)...)
 	errs = append(errs, checkCoverage(rep)...)
-	if !scanAll {
-		warnMissingTesting(rep, changed)
+	if len(changed) > 0 {
+		emitWarnings(warnMissingTesting(rep, changed))
 	}
 
 	if len(errs) == 0 {
@@ -46,23 +46,31 @@ func run(args []string) error {
 	return fmt.Errorf("%d check-pipeline-tables error(s)", len(errs))
 }
 
-func warnMissingTesting(rep report, changed []string) {
+func warnMissingTesting(r report, changed []string) []string {
 	touched := map[string]bool{}
 	for _, f := range changed {
 		touched[filepath.ToSlash(f)] = true
 	}
-	github := os.Getenv("GITHUB_ACTIONS") == "true"
-	for _, p := range rep.persistFiles {
+	var out []string
+	for _, p := range r.persistFiles {
 		if p.testingPath != "" {
 			continue
 		}
 		if !touched[filepath.ToSlash(p.path)] {
 			continue
 		}
-		msg := fmt.Sprintf("%s: no testing.md for this feature; add one so persistence tables are asserted", p.path)
+		out = append(out, fmt.Sprintf("%s: no testing.md for this feature; add one so persistence tables are asserted", p.path))
+	}
+	return out
+}
+
+func emitWarnings(msgs []string) {
+	github := os.Getenv("GITHUB_ACTIONS") == "true"
+	for _, msg := range msgs {
 		fmt.Fprintln(os.Stderr, "warning: "+msg)
 		if github {
-			fmt.Printf("::warning file=%s::%s\n", p.path, msg)
+			file, _, _ := strings.Cut(msg, ":")
+			fmt.Printf("::warning file=%s::%s\n", file, msg)
 		}
 	}
 }
