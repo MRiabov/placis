@@ -22,9 +22,14 @@ The website template names:
 - one **home** website page
 - one **about** website page (`page_type=about`)
 - one **service** website page, copied **N times** at 02 from named
-  services on the accepted profile (same sections and slots; path and
-  title from that service name / [persistence](persistence.md) website
-  page path rules). 03 does not invent a different layout per service
+  services on the accepted profile (same website sections and website
+  slots; path and title from that service name /
+  [persistence](persistence.md) website page path rules). N ≥ 1 (checklist
+  `services` is required at complete). Do not skip those pages. Do not
+  invent a generic `/services` index. 03 does not invent a different
+  layout per service. Home services are **cards**, depending on that
+  website component / design — 02 copies those website slots as the
+  template has them.
 - one **contact** website page
 - one **privacy policy** website page (`page_type=legal`). **Legal** is a
   footer **heading** for pages like privacy policy — not a page type.
@@ -38,36 +43,39 @@ gallery website page, services index website page, testimonials website
 page, terms of service, cookies.
 
 Each website page in the template: default path, `page_type`, seo,
-ordered website sections (`component_id`, design, slot values as `{{…}}`
-from [variables.md](variables.md) Common variables).
+ordered website sections (`component_id`, design, website slot values as
+`{{…}}` from [variables.md](variables.md) Common variables).
 
 ## Copy onto the unpublished website (02)
 
 1. Load the website template by `website_settings.website_template_id`.
 2. Each template website page → one `website_pages` row: default path,
    `page_type`, seo. Copy the service website page **once per named
-   service**. Same layout every time.
+   service** (N ≥ 1). Same layout every time. Pre/Fail if the accepted
+   profile has zero named services (complete should have blocked). Empty
+   `business_profile_services` **during** the client interview is OK — no
+   global ≥1 CHECK.
 3. Explode each website section’s `editable_slots` into `website_slots`
    (`origin=website_template`). Non-slot layout props may stay on
    section `props` jsonb. Tokens stay. Go does not rewrite `{{…}}`.
-4. **Image slots:** if the contract slot type is image, persist
-   `slot_type=image`. Predecessor used a nested image object and dotted
-   slot keys — the image slot key is `asset_id` on that object. Keep that
-   dotted `slot_key`; persist a `media_asset_id` or a `{{images.*}}` /
-   `{{logo_url}}` token. Never invent a hotlink URL. Drop extra
-   predecessor hotlink URL fields (`url`, `image_url`,
-   `generated_image_url`) on dump.
-5. **Photo pick:** use ETL **media caption** and **photo kind** (`hero` /
-   `project` / `service` / `founder` / `logo`). Not filename. 02 stays
-   deterministic (no LLM). Scoring is an [open question](#open-questions).
-6. `website_forms` / fields from form website sections’ contracts, not a
+4. **Image website slots:** if the contract website slot type is image,
+   persist `slot_type=image`. Predecessor used a nested image object and
+   dotted website slot keys — the image website slot key is `asset_id` on
+   that object. Keep that dotted `slot_key`; persist a `{{images.*}}` /
+   `{{logo_url}}` token. Never invent a hotlink URL. **Do not** attach
+   `media_asset_id`. **Photo selection** is
+   [03](pipeline/03-website-copy-generation.md). Drop extra predecessor
+   hotlink URL fields (`url`, `image_url`, `generated_image_url`) on
+   dump. Logo is not a 02 attach: publication emits `{{logo_url}}` from
+   Details `logo_media_asset_id`.
+5. `website_forms` / fields from form website sections’ contracts, not a
    parallel root `forms[]`. `form_key` = the catalog form key on that
    website section.
-7. Look website sections come from the website template (not empty
+6. Look website sections come from the website template (not empty
    synthesized rows).
-8. Derive `website.menus` from the [menu constant](#menu-constant). Do
+7. Derive `website.menus` from the [menu constant](#menu-constant). Do
    not copy catalog menu JSON.
-9. Validate against website component contracts before the unpublished
+8. Validate against website component contracts before the unpublished
    website is kept.
 
 Reviews website sections keep `{{reviews.N}}`. 02 does not insert
@@ -83,8 +91,10 @@ footer heading only.
 Service children: named services on the accepted profile, **list order**
 (Details list / `business_profile_services` as of `accepted_edit_id`).
 Same order in both trees. Cap **8 children**: first 8; extra service
-website pages exist, omitted from menus until the owner adds them. Zero
-named services: omit the Services heading (no empty text node).
+website pages exist, omitted from menus until the owner adds them. At 02
+there is at least one named service, so the Services heading is present.
+Omit the Services heading (no empty text node) only for a **later** empty
+list (owner deleted all named services).
 
 Top menu (4 top-level, under cap 8):
 
@@ -166,12 +176,8 @@ teaser if home is not done yet.
 Do **not** invent answers. Locked DAG, must-nots, tables, onboarding
 status, and DB-oracle tests stay as they are.
 
-**02 leftovers.** Zero named services (omit service website pages, or
-one generic `/services`?). Home services grid: expand N cards at 02 vs
-leave `{{services.*}}`. Photo scoring given **media caption** and photo
-kind (first unused of that photo kind vs media caption similarity).
-Gallery / services index / testimonials website pages. Terms of service /
-cookies.
+**First pass extra pages.** Gallery website page, services index website
+page, testimonials website page, terms of service, cookies.
 
 **Website 01 picker — out until the stacked rewrite.** Persist columns
 are named (`website_template_id`, `preset_id`). Unspecified:
@@ -180,8 +186,8 @@ output schema / `prompts.yaml`; heuristic table (`trade → website
 template, else default`). Do not implement the LLM picker on this
 branch.
 
-**Worker internal render.** Unspecified: URL or service binding name;
-request body (full dump vs one website page); how a batch is encoded;
-auth vs binding; timeout vs the SLO table. 03’s “for example 8 pages”
-is an example, not a rule when the site has 4 or 12 website pages. Do
-not invent an RPC to close 04 “don’t spec Worker RPC” vs the 03 SLO.
+**Worker internal render.** Unspecified: the **request DTO** (full dump
+vs one website page; how a batch is encoded); URL or service binding
+name; auth vs binding; timeout vs the SLO table. 03’s “for example 8
+pages” is an example, not a rule when the site has 4 or 12 website pages.
+Do not invent an RPC to close 04 “don’t spec Worker RPC” vs the 03 SLO.

@@ -6,14 +6,22 @@ is a later caller.
 
 - **Setup**: 02 rows exist (`website_pages` / `website_sections` /
   `website_slots` `origin=website_template`; derived `website.menus`; look
-  sections). Schema `jobs`: one `website_copy_generation` on this
-  `tenant_id`.
+  sections). Image website slots are still `{{images.*}}` / `{{logo_url}}`
+  (no `media_asset_id` from 02). Schema `jobs`: one
+  `website_copy_generation` on this `tenant_id`.
   `onboarding_sessions.status=selecting_and_copying_website_template`.
-  `business_profiles.accepted_edit_id` set. Record website page ids, website
-  slot ids, and tokenized `website_slots.value` before invoke.
+  `business_profiles.accepted_edit_id` set. At least two named services
+  (roof repairs and gutter cleaning). Record website page ids, website
+  slot ids, and tokenized `website_slots.value` before invoke. Two cases
+  for photo selection: (a) unused non-founder/non-logo photos whose
+  **media caption** matches those named services; (b) no matching media
+  caption in that pool (founder / logo photos only, or a media caption
+  that does not match).
 - **Invoke**: run that River job. Fake the website-editor-tool LLM to a
   small `update_slot` / `update_seo` batch (no `create_page`, no
-  `update_reviews`). Fake the Worker internal website page render to
+  `update_reviews`). In (a) also `update_slot` + `media_asset_id` attach
+  of the matching photos. In (b) also `generate_image` for a service
+  image website slot. Fake the Worker internal website page render to
   return HTML. Also: start a second 03; also: run 09 (activate) while
   the job is in flight; also: wait-end (home website page copy done or
   wait cap) without
@@ -38,7 +46,13 @@ is a later caller.
     `input`, `internal_reasoning`,
     `output`, `tool_calls` all present (`status=succeeded` for the
     batch). `tool_calls` includes `update_slot` / `update_seo` and does
-    **not** include `create_page` or `update_reviews`.
+    **not** include `create_page` or `update_reviews`. (a) roof-repairs
+    vs gutter-cleaning image website slots got the matching unused
+    non-founder/non-logo photos (not each other’s, not founder/logo);
+    no reuse. (b) `tool_calls` includes `generate_image`; a new media
+    library item `supplied_by=ai` pending review is attached — not a
+    leftover unmatched photo. Logo image website slots stay
+    `{{logo_url}}` (no `generate_image`).
   - While unactivated: `ai.threads` `thread_kind=cms_assistant`
     `status=current`; `assistant.runs` one `running` on that thread
     (`unique` running); `assistant.thread_items` `tool_summary` for
@@ -64,5 +78,6 @@ is a later caller.
   `selecting_and_copying_website_template` or `preview_and_edit` if wait-end
   already happened; still zero `website_publications`; 09 still allowed (no
   activation blocker row).
-- **Mocked**: copy-generation LLM; Worker internal website page render
-  (assert Go asked; do not require live Cloudflare).
+- **Mocked**: copy-generation LLM (including `generate_image` in (b));
+  Worker internal website page render (assert Go asked; do not require
+  live Cloudflare). Do not invent a Worker request DTO.

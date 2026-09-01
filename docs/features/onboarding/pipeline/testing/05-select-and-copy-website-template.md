@@ -20,11 +20,12 @@ SELECTs both.
   - Website 01 rows: `website_settings.website_template_id` and
     `preset_id`; `ai.threads` `website_template_picker`;
     `ai_generations` `input` / `internal_reasoning` / `output`.
-  - Website 02 rows: unpublished `website_pages` (home, contact, legal,
-    service website pages = named services); `website_sections` including two
-    `page_id` null look sections; tokenized `website_slots`; derived
-    `website.menus`; zero `website_slot_reviews`; zero
-    `website_publications`.
+  - Website 02 rows: unpublished `website_pages` (home, about, contact,
+    legal, service website pages = named services, N ≥ 1);
+    `website_sections` including two `page_id` null look sections;
+    tokenized `website_slots` (image website slots still `{{images.*}}` /
+    `{{logo_url}}`, no `media_asset_id`); derived `website.menus`; zero
+    `website_slot_reviews`; zero `website_publications`.
   - **Handoff to 06**: schema `jobs` has one `website_copy_generation`,
     unique key = that `tenant_id`. No
     `website_slots.origin=website_copy_generation` yet.

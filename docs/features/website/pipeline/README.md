@@ -22,7 +22,8 @@ collaborators are faked. Playwright E2E is [website/testing.md](../testing.md) /
 01. select website template → persist the pick (no unpublished pages yet)
 02. copy the website template’s pages onto the unpublished website →
     unpublished website pages / website sections / tokenized website slots
-03. automatic website copy generation → copy in existing unpublished slots
+03. automatic website copy generation → copy and photo selection in
+    existing unpublished website slots
 04. website publication → Worker resolves website placeholders → HTML →
     R2 latest/ + purge
 ```

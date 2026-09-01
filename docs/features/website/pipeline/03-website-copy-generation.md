@@ -38,7 +38,14 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
   ([jobs](../../../general-architecture/jobs.md)), not this job. Owner
   Content / `update_reviews` can still override a section later (CMS).
 - Emit HTML in Go. Go does not resolve `{{…}}`.
-- Persist Worker HTML onto unpublished slots.
+- Invent a hotlink URL for an image website slot.
+- `generate_image` for a logo website slot. Leave `{{logo_url}}`.
+- Attach a photo whose photo kind is `founder` or `logo` on a home hero,
+  service page, or home service-card image website slot.
+- Reuse an already-attached photo on a later image website slot.
+- Attach a leftover photo whose **media caption** does not match that
+  website slot’s intent (a van photo on gutter cleaning).
+- Persist Worker HTML onto unpublished website slots.
 - Write R2, convert WebP, or purge (that is 04).
 - Extra screenshot tool.
 - Block 09.
@@ -67,15 +74,31 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
    Other website pages generate in parallel. Batch the first render (for
    example 8 pages) on **one Worker**, not parallel Workers. “8 pages” is an
    example, not a rule when the site has 4 or 12 website pages. Worker
-   binding, body, and batch encoding are
+   request DTO, binding, and batch encoding are
    [open questions](../catalog.md#open-questions).
 2. Per website page, bounded parallel: `update_slot` (prose), `update_seo`,
-   then image: **attach first** (`update_slot` + `media_asset_id`) when
-   `media_assets[]` already has a fit; `generate_image` only when nothing
-   fits (ADR 6).
+   then **photo selection**. **Attach first** (`update_slot` +
+   `media_asset_id`) when `media_assets[]` already has a fit; `generate_image`
+   only when nothing fits (ADR 6). Not filename. Do not invent a numeric
+   score.
+   - **Logo** image website slots: unused photo kind **`logo`**. Else leave
+     `{{logo_url}}`. Do not `generate_image` a logo. Publication emits
+     `{{logo_url}}` from Details `logo_media_asset_id`.
+   - **Founder** image website slots: unused photo kind **`founder`**. Else
+     `generate_image` if that website slot needs a person and nothing fits.
+   - **Every other** image website slot (home hero, service page images, home
+     service cards): unused photos whose photo kind is **not** `founder` and
+     **not** `logo` (includes `hero` / `project` / `service` and unset). Attach
+     when **media caption** matches that website slot’s intent (roof repairs →
+     people working on a roof; gutter cleaning → people cleaning gutters). Do
+     not filter on photo kind `hero` / `project` / `service`.
+   - If nothing fits: **`generate_image`** (`supplied_by=ai`, pending review;
+     unpublished canvas warning; website publication still requires approved
+     media library items). That fills the gap for the owner.
+   - Do not reuse an already-attached photo on a later image website slot.
 3. After each `update_slot`, the same Worker internal render for the
-   affected page. Put that HTML on the tool result. Do not persist it onto
-   unpublished slots.
+   affected website page. Put that HTML on the tool result. Do not persist it
+   onto unpublished website slots.
 4. After 03 a hero headline is **generated prose** that may still contain
    detail tokens. It is not a raw live-profile dump and not a lone
    `{{business_name}}` unless 03 left it. Remaining tokens resolve at
@@ -107,10 +130,13 @@ One Worker handles a batch, not one Worker per page.
 ## Persist
 
 Updates to existing `website_slots` and website page SEO columns;
-`ai_generations` for tool batches (`thread_kind=website_copy_generation` thread,
-`prompt_id=website_copy_generation`); `ai.threads` (`thread_kind=cms_assistant`)
-/ `assistant.thread_items` / `assistant.runs` while unactivated. No
-`website_publications` from this job. Onboarding session status is
+media library rows from `generate_image` (`supplied_by=ai`, pending
+review); `ai_generations` for tool batches
+(`thread_kind=website_copy_generation` thread,
+`prompt_id=website_copy_generation`); `ai.threads`
+(`thread_kind=cms_assistant`) / `assistant.thread_items` /
+`assistant.runs` while unactivated. No `website_publications` from this
+job. Onboarding session status is
 `selecting_and_copying_website_template` until wait-end (home website page copy
 done or wait cap), then `preview_and_edit`. Progress events on the onboarding
 session stream (complete website sections join the `/onboarding/preview`
@@ -141,3 +167,5 @@ is static; it does not re-render as this job continues.
 - Detail tokens that should stay reusable stay in the prose.
 - Does not set website slot `approved`.
 - Go does not emit HTML.
+- Photo selection is this job, not 02. Attach first when media caption
+  fits; `generate_image` when nothing fits.

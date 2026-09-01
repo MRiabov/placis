@@ -31,5 +31,6 @@ must not block 09. Website 03 does the website slot writes.
 - **Fail**: fake the LLM to throw → 02 unpublished rows kept;
   onboarding session still `selecting_and_copying_website_template` or
   `preview_and_edit`; 09 still allowed.
-- **Mocked**: as website 03 (copy-generation LLM; Worker internal
-  website page render).
+- **Mocked**: as website 03 (copy-generation LLM, including
+  `generate_image` when that fixture applies; Worker internal website
+  page render). Do not invent a Worker request DTO.

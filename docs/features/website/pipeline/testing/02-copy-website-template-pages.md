@@ -5,8 +5,8 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
 
 - **Setup**: 01 already wrote `website_settings`
   (`website_template_id` + `preset_id`). `business_profiles.accepted_edit_id`
-  set. At least two named services on that accepted profile. Preferred real
-  photos exist in the media library when the fixture has them. Zero
+  set. At least two named services on that accepted profile. Media library
+  photos may exist; 02 does not attach them. Zero
   `website_pages`. No `website_copy_generation` yet.
 - **Invoke**: copy the website template’s pages onto the unpublished
   website (real write). Then, in a second case, insert a later ETL named
@@ -25,9 +25,9 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
     `approved`. `value` jsonb still contains website placeholders
     (`{{business_name}}`, `{{marketing_phone}}`, `{{reviews.1}}`,
     `{{projects.featured}}` / `{{projects.*}}` as the template uses). Go
-    did not rewrite those tokens into profile strings. Image slots are
-    `slot_type=image`: a token or a media asset id — not an invented URL.
-    Do not assert a photo scoring algorithm.
+    did not rewrite those tokens into profile strings. Image website slots
+    are `slot_type=image` and still `{{images.*}}` / `{{logo_url}}` — no
+    `media_asset_id` from this copy, not an invented URL.
   - `website.menus`: one row, `tenant_id` unique. Top menu top-level:
     Home, Services (text heading + service page children in accepted
     profile list order), About, Contact. Footer top-level: Home, About,
@@ -54,7 +54,8 @@ on this `tenant_id`. Mapping: [catalog.md](../../catalog.md).
   unique key = that `tenant_id`; job is available / running, not cancelled.
   `onboarding_sessions.status` still `selecting_and_copying_website_template`.
   03 Pre can load unpublished pages for that tenant.
-- **Fail**: website-component contract fail during copy →
+- **Fail**: website-component contract fail during copy, or zero named
+  services on the accepted profile →
   `onboarding_sessions.status=select_and_copy_website_template_failed`; this
   copy’s unpublished pages / sections / slots / menus are not kept
   (transaction); `website_settings` pick from 01 may remain; **no**
