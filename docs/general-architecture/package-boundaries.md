@@ -3,8 +3,9 @@
 Package ownership. Workflows live in the feature docs this list points at.
 
 1. `auth` proves identity via the Clerk Go SDK; `tenancy` decides tenant access
-   and permissions. [Auth](../features/other/auth/README.md). Unactivated tenants have no Clerk organization;
-   activation upgrades that row.
+   and permissions. [Auth](../features/other/auth/README.md). Unactivated tenants may have a Clerk organization
+   after checkout attach; activation upgrades that same row (`status=active`).
+   Tenant ↔ Clerk org is 1-1. Clerk users on that tenant are 1-many.
 2. `onboarding` owns the onboarding session, client interview, enqueueing
    select-and-copy website template (05) and automatic website copy generation
    (06),

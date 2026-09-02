@@ -37,7 +37,9 @@ profile and profile history), [ETL](../etl/persistence.md),
   kind `select_and_copy_website_template` (wait-end
   `preview_and_edit`; fail
   `select_and_copy_website_template_failed`); River job kind
-  `website_activation` (`status=activated`, `clerk_user_id`)
+  `website_activation` (`status=activated`; `clerk_user_id` if still
+  unset); `BindClerkUserToOnboardingSession`
+  (`clerk_user_id` on the first Clerk request)
 - **Notes:** `research_wait_until` is derived from `etl.runs`
   (`trigger=onboarding`, distinct `enqueue_id` in the last 30
   minutes), not a column.

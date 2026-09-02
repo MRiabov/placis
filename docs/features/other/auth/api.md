@@ -1,49 +1,70 @@
 # Auth HTTP
 
-Conventions: [HTTP conventions](../../../general-architecture/api.md). Identity,
-Clerk organization, tenant on `/v1/me`. Health is
-[cross-cutting](../../../general-architecture/api.md).
+Conventions: [HTTP conventions](../../../general-architecture/api.md).
+Named identifiers:
+[docs conventions](../../../docs-conventions.md#named-identifiers).
 
-## Serve only types on HTTP
+**Auth default:** Clerk JWT. Tenant may be missing or unactivated. This
+file is **not** “active tenant only.” Health is
+[cross-cutting](../../../general-architecture/api.md). Auth has one
+public Route: `GET /v1/me`. Clerk organization attach lives on
+[onboarding activation checkout](../../onboarding/api.md) and
+[09](../../onboarding/pipeline/09-website-activation.md), not here.
 
-None of these fields are `jsonb`. `TenantRead` fields: id, website prefix, name,
-status, `subscription_status` (`active` / `canceled` / `none`). Clerk ids are
-not on these responses; the Clerk SDK verifies the sign-in. The website editor
-uses `subscription_status` to block Publish without a billing GET.
+## DTOs
+
+| DTO | Fields | Description |
+| --- | --- | --- |
+| `MeRead` | `owner: OwnerRead`, `platform_role`, `tenant: TenantRead` (nullable), `clerk_org_id` (nullable) | `/me`. `clerk_org_id` is `tenants.clerk_org_id` when attached (unactivated or active). Null if no org yet. Same spelling as checkout |
+| `OwnerRead` | `display_name` | The signed-in **owner**. Nested on `MeRead.owner`. First write from `founder_name`; later the Clerk UI in the app |
+| `TenantRead` | `id`, `name`, `status`, `subscription_status` | The data tenant. CMS keys off `status`. No `website_prefix` |
+
+`platform_role` is `none` / `platform_admin`. `status` is
+`unactivated` / `active` / `suspended`. `subscription_status` is
+`active` / `canceled` / `none`. No `ClerkOrganizationRead` on auth
+HTTP. `clerk_org_id` for `setActive` lives on
+`WebsiteActivationCheckoutRead` (checkout one-shot before Stripe) and
+on `MeRead.clerk_org_id` (`/login`, dropped checkout body, AuthGate).
+Inside `/cms` the Clerk session is usually already `setActive`; `/me` still
+echoes the id. Frontend: `if (!orgId && clerk_org_id) setActive`. Do
+not create a Clerk session token from Go.
+
+`website_prefix` stays on `auth.tenants` and on
+`PreviewWebsiteAddressRead.url`, `WebsiteAddressRead.hostname`,
+internal `WebsitePublicationRequest.website_prefix`. Host → tenant is
+`ResolveTenantFromHost` from the request `Host`, not from `/me`.
 
 ## Routes
 
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `GET /v1/me` | `AuthGate` / CMS-open; unpaid website preview CMS-closed; `setActive` after checkout if the checkout body was dropped | | `MeRead` | `auth.tenants`, `auth.tenant_memberships`; may read `onboarding_sessions` | | **calls** `GetMe` | | Org chooser; treat tenant non-null as CMS open; dump Clerk claims besides `clerk_org_id`; return `website_prefix` |
+
 ### GET /v1/me
 
-- **Auth:** Clerk JWT. Tenant is resolved from the attached Clerk org
-  (`status` may be `unactivated` or `active`).
-- **Callers:** `frontend-2` CMS gate (`AuthGate`, `/cms` redirect) and unpaid
-  website preview (CMS-closed when `status !== active`).
-- **Response:** `{ owner, platform_role, tenant }`. `tenant` is `TenantRead`
-  when a Clerk org is attached. After sign-in but no org → `tenant: null`.
-  After `POST /v1/me/clerk-organization` on an unactivated tenant →
-  `TenantRead` with `status=unactivated`. After 09 → `status=active`.
-- **Must not:** return an org chooser list; treat `/me.tenant` non-null as CMS
-  open.
-
-### POST /v1/me/clerk-organization
-
-- **Auth:** Clerk JWT (the person after sign-in). Not an org chooser.
-- **Callers:** `frontend-2` `OrgProvisionStep` after sign-in on the
-  website-activation strip (so checkout can attach a Clerk subject) and after 09
-  so `clerk.setActive` has an org. [README.md](README.md).
-- **Idempotency-Key:** yes.
-- **Behavior:** create the **one** Clerk organization (`Organizations().Create`)
-  and attach `tenants.clerk_org_id`. Named after the person; tenant name is the
-  business. Do not insert a second tenant.
-- **Must not:** set `tenants.status=active` (website activation / Stripe webhook
-  owns that); accept a Clerk organization id from `frontend-2` as a chooser.
+Resolution: [architecture.md](architecture.md). CMS-open is
+`status === "active"`, not tenant non-null. After checkout attach,
+`tenant` may be unactivated `TenantRead`. Authenticated with no bind
+→ `tenant: null` (`/cms` goes to onboarding). Do not create an org
+from `/cms`.
 
 ## Do not create
 
+- `POST /v1/me/clerk-organization` and `/v1/me/organization` (predecessor)
+- `POST /v1/me/clerk-organization/create`
+- OrgProvisionStep / “name your workspace”
+- Clerk SignUp **name** / workspace / email-password / magic-link
+  fields on the modal (OAuth only)
+- Accepting a Clerk organization id or org **name** from `frontend-2`
+  as a chooser
 - `/me/orgs`, `/me/tenants`, `/me/selected-org`
-- Don't say organization: `/me/organization` (predecessor name)
 - `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`
-- memberships CRUD
-- custom impersonation (Clerk native impersonation only)
+- Memberships CRUD, invites, a second `tenant_memberships.role`
+  (`admin` / `staff`). Extra office members stay **TBD** in
+  [README.md](README.md) / [architecture.md](architecture.md) /
+  [persistence.md](persistence.md), not as routes
+- Custom impersonation (Clerk native impersonation only)
 - `placis_selected_org` cookie
+- HTTP functions named `Ensure*`
+- `GET /v1/onboarding/me`
+- HTTP that returns a Clerk session token

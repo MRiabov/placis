@@ -301,6 +301,8 @@ var extraAllowed = []string{
 	"user access token",
 	"facebook user",
 	"instagram user",
+	"clerk user",
+	"clerk users",
 	"playwright page",
 	"actions/setup-go",
 	"preview.placis.com",
