@@ -219,10 +219,12 @@ does). We do **not** hand-roll AST scripts up front:
 - **HappyPath OpenAPI check** (`cmd/ci/check-happy-path`) — `--public`
   leftover-checks structured `api.md` Routes (public and `/internal/…`)
   plus exported `openapi.json` when present; `--worker` against the
-  Worker internal OpenAPI file. Each op needs a `func TestHappyPath*`
+  Worker internal OpenAPI file. Each op needs a `### TestHappyPath*`
+  Exercise 1:1 in the owning `testing.md` and a `func TestHappyPath*`
   that hits **exactly that one** Method+path literal. Flow tests do not
-  fill a 1:1 row. `TestPipelineHappyPath*` is not a 1:1 row. Docs leftover
-  may only shrink. Missing spec file: that walk no-ops. See
+  fill a 1:1 row. `TestPipelineHappyPath*` is not a 1:1 row. Two leftover
+  files (`leftover_docs.go`, `leftover_tests.go`) may only shrink. Missing
+  spec file: that walk no-ops. See
   [testing.md](testing.md).
 - Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen,
   Worker internal OpenAPI export + contractor-website typegen).
@@ -339,16 +341,21 @@ so `::warning` can fire.
 
 `cmd/ci/check-happy-path --public` leftover-checks structured `api.md`
 Routes **Method + path** cells (and HTTP conventions `GET /v1/health` /
-`GET /openapi.json`) plus exported `openapi.json` when present.
-`internal/**/*_test.go` must have a `func TestHappyPath*` (not
-`TestPipelineHappyPath`) that hits exactly that one Method+path literal.
-`--worker` uses the Worker internal OpenAPI file and `/internal/…` ops.
-Docs leftover may only shrink; a spec op has no leftover. No spec file:
-that walk passes. Unit tests + `go run`. Pre-commit: `--public` with the
-other docs scanners (also on `docs/**/api.md`). `--worker` only on the
-Worker job (do not start the Worker container from the public job). CI:
-`.github/workflows/docs-gates.yml` runs `go test ./cmd/ci/check-happy-path`
-then `go run ./cmd/ci/check-happy-path --public`.
+`GET /openapi.json`) plus exported `openapi.json` when present. The
+owning `testing.md` must have a `### TestHappyPath*` (not
+`TestPipelineHappyPath`) whose **Exercise** is exactly that one
+Method+path. `internal/**/*_test.go` must have a `func TestHappyPath*`
+that hits that same literal. `--worker` uses the Worker internal
+OpenAPI file and `/internal/…` ops. Two leftover files
+(`leftover_docs.go`, `leftover_tests.go`) may only shrink; a heading
+does not shrink the tests leftover, a func does not shrink the docs
+leftover. A spec op has no leftover. No spec file: that walk passes.
+Unit tests + `go run`. Pre-commit: `--public` with the other docs
+scanners (also on `docs/**/api.md` and `docs/**/testing.md`).
+`--worker` only on the Worker job (do not start the Worker container
+from the public job). CI: `.github/workflows/docs-gates.yml` runs
+`go test ./cmd/ci/check-happy-path` then
+`go run ./cmd/ci/check-happy-path --public`.
 
 ### Docs–code named identifiers
 

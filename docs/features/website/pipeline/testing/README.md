@@ -12,7 +12,8 @@ Do not fake the Worker when it is in the write path.
 
 A step does not pass because a collaborator was called. It passes when
 **Postgres holds the writes** (and 03 got a website image render / 04
-wrote MinIO keys).
+wrote MinIO keys). Route HappyPath (`TestHappyPath*`) Verify through
+HTTP lives in [website testing.md](../../testing.md).
 
 ## Contract
 
