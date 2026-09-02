@@ -16,7 +16,7 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 4. [Product](general-prd.md) — the loop, product-level in/out of scope
 5. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes, LLM
    layer, audit, jobs, files, `frontend-2` UI
-6. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization for active tenants
+6. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization 1-1
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building;
    [website activation](features/onboarding/pipeline/09-website-activation.md) is pay-and-activate
 8. [ETL](features/etl/README.md) — extract and transform (Google Maps, Facebook, Instagram); Monday /

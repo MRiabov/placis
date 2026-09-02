@@ -24,11 +24,16 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   ([build-profile](pipeline/build-profile.md))
 - `SharePreviewWebsiteAddress` — **calls** `PublishWebsite` strip on
   ([08](pipeline/08-preview-website-address.md))
+- `BindClerkUserToOnboardingSession` — **calls** `CreateClerkUser`;
+  **persists into** `onboarding_sessions.clerk_user_id`
 
 05 **calls** `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages`.
 06 is River job kind `website_copy_generation` / `GenerateWebsiteCopy`.
-09 is River job kind `website_activation` / **calls** `PublishWebsite`
-strip off. HTTP: one function per Routes verb+noun (`LookupBusiness`,
+09 is River job kind `website_activation` / **calls**
+`AttachClerkOrganization` (if `clerk_org_id` still null),
+`InsertOwnerMembership`, then `PublishWebsite` strip off. Activation
+checkout **calls** `AttachClerkOrganization` and returns `clerk_org_id`.
+HTTP: one function per Routes verb+noun (`LookupBusiness`,
 `GetOnboardingProfile`, `UpdateOnboardingSources`, …). Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 

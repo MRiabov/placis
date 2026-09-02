@@ -1199,8 +1199,8 @@ code snake_cases the Domain term.
 
 Placis’s tenancy record for one contractor. Created at business lookup as an
 **unactivated** tenant; website activation makes it an **activated** tenant. One
-**activated** tenant maps to one Clerk organization. The tenant name is the
-business. Never in PRDs.
+tenant maps to one Clerk organization (1-1), including while unactivated after
+org attach. The tenant name is the business. Never in PRDs.
 
 Domain: (none — never in PRDs). Distinct from: Business profile, Clerk
 organization.
@@ -1228,9 +1228,9 @@ continuous workflow; Cloudflare Workflows.
 
 ### Clerk organization
 
-The Clerk organization, 1-1 with an **activated** tenant, named after the person
-(the account owner), not the business. Never say bare “organization”.
-Unactivated tenants have no Clerk organization yet.
+The Clerk organization, 1-1 with the data tenant (including while
+unactivated after attach). Named and badged as the **business**, not the
+owner. Never say bare “organization”.
 
 Domain: (none — never in PRDs as a synonym for the contractor).
 
