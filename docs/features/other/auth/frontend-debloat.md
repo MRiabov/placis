@@ -82,9 +82,10 @@ Website activation Clerk + Stripe is owned by
 
 ## Tests
 
-- Keep `AuthGate.test.tsx`. Delete `OrgProvisionStep.test.tsx`.
+- Vitest `HappyPathAuthFull` ([testing.md](testing.md)). Delete
+  `AuthGate.test.tsx` and `OrgProvisionStep.test.tsx`.
 - `e2e/auth/clerk-auth.spec.ts` — OAuth modal (Sign in with Google, no
-  name fields); assert the chooser does **not** appear. PR job mints
+  name fields); assert the chooser does **not** appear. PR job creates
   **one** Testing Token and reuses it
   ([testing.md](testing.md)).
 - Local e2e uses a **fresh port**.
