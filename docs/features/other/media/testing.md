@@ -126,8 +126,9 @@ ads / Details / Projects. Skip **Do not create**.
 | `TestHappyPathV1MediaAssetsIdImageEdits` | `POST /v1/media-assets/{id}/image-edits` | child `MediaAssetRead` |
 | `TestHappyPathV1MediaAssetsIdReject` | `POST /v1/media-assets/{id}/reject` | `MediaAssetRejectRead` |
 
-`check-happy-path` has no leftover. Go funcs land with the API. Once
-exported `openapi.json` has these ops, missing tests fail.
+Docs leftover until the Go funcs exist (extras may only shrink). Drop
+the leftover row in the same PR that adds the func. Once exported
+`openapi.json` has these ops, missing tests fail with no leftover.
 
 #### Setup
 
