@@ -28,7 +28,7 @@ website is
    move with `frontend-2` / Go. (2026-08-23)
 
 5. **Islands follow the predecessor marketing source** — The predecessor home
-   hydrates in the browser because interactive widgets share a file with the
+   hydrates in the browser because interactive islands share a file with the
    markup. Keep as islands: TopBar (mobile nav + scroll glass), RotatingWord
    (hero trade timer), PlacisPromptBox (hero; drop Clerk `useAuth` / paywall;
    submit and Try now / Login go to `app.placis.com`), `/contact` mailto

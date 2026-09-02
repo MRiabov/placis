@@ -80,8 +80,8 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
 - **CI:** `.github/workflows/docs-gates.yml` runs `rumdl fmt --check` then
   `rumdl check` before the Go scanners. CI never rewrites files.
 - **Out of scope:** `.agents/` (imported and first-party skills) and
-  `**/testdata/**` (Don’t-say fixtures). New first-party `.md` files are
-  included automatically.
+  `**/testdata/**` (Don’t-say fixtures; `check-dont-say` skips them too). New
+  first-party `.md` files are included automatically.
 - **File size:** after wrap, a doc over 800 lines must be split (hard error at
   1200). Exception: `glossary.md` stays one file (Don’t-say table + ubiquitous
   language).

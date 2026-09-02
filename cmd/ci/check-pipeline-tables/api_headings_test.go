@@ -88,8 +88,8 @@ func TestAPIHeadingsStaleLeftoverFails(t *testing.T) {
 
 func TestAPIHeadingsMissingRoutes(t *testing.T) {
 	f := headingFile{
-		path:  "docs/features/widget/api.md",
-		rel:   "widget/api.md",
+		path:  "docs/features/sample/api.md",
+		rel:   "sample/api.md",
 		heads: []string{"Do not create"},
 	}
 	errs := checkOneAPI(f)

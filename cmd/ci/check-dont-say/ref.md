@@ -73,6 +73,15 @@ line when that line is not a new list item or heading.
 - `docs/general-architecture/jobs.md`: “persist grain, not this unique key”
   → **fail**. Say **`website_activations`**.
 
+## Banned synonym (unmarked) — widget
+
+- `docs/features/other/media/README.md`: “**Widget:** Crop is a rect overlay”
+  → **fail**. Say **Crop / focal**.
+- `docs/features/onboarding/ADR.md`: “onboarding-only widget for a Details
+  field” → **fail**. Say **control**.
+- `docs/features/placis-website/ADR.md`: “interactive widgets share a file”
+  → **fail**. Say **islands**.
+
 ## Self-understood at home — website `page`
 
 - `docs/features/website/architecture.md`: “each page has sections” → **pass**
