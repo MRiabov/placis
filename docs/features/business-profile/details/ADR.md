@@ -97,8 +97,8 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    field.
 
 9. **Notification Revert undoes that profile-history increment** — One governed
-   tool, `update_details` ([api.md](api.md)). Website assistant, Ads generator, and
-   later LLM callers invoke **that** tool — one implementation (the same
+   tool, `update_details` ([architecture.md](architecture.md)). Website assistant, Ads generator,
+   and later LLM callers invoke **that** tool — one implementation (the same
    increment function as click-off `PATCH /v1/business-profile`). The write is
    applied. **OK** keeps it. **Revert** is
    `POST /v1/business-profile/edits/{id}/undo` (that `business_profile_edits`
