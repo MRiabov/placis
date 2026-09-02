@@ -19,11 +19,10 @@ func TestAPIHeadingsClosed(t *testing.T) {
 
 func TestAPIHeadingsLeftoverOK(t *testing.T) {
 	f := headingFile{
-		path: "docs/features/business-profile/details/api.md",
-		rel:  "business-profile/details/api.md",
+		path: "docs/features/other/leads/api.md",
+		rel:  "other/leads/api.md",
 		heads: []string{
 			"Serve only types on HTTP",
-			"`update_details` (one governed tool)",
 			"Routes",
 			"Do not create",
 		},
@@ -35,11 +34,10 @@ func TestAPIHeadingsLeftoverOK(t *testing.T) {
 
 func TestAPIHeadingsNewExtraFails(t *testing.T) {
 	f := headingFile{
-		path: "docs/features/business-profile/details/api.md",
-		rel:  "business-profile/details/api.md",
+		path: "docs/features/other/leads/api.md",
+		rel:  "other/leads/api.md",
 		heads: []string{
 			"Serve only types on HTTP",
-			"`update_details` (one governed tool)",
 			"Routes",
 			"Essay",
 			"Do not create",
@@ -83,6 +81,22 @@ func TestAPIHeadingsStaleLeftoverFails(t *testing.T) {
 	}
 	if errs := checkOneAPI(f); len(errs) != 0 {
 		t.Fatalf("closed auth: %v", errs)
+	}
+	f = headingFile{
+		path:  "docs/features/business-profile/details/api.md",
+		rel:   "business-profile/details/api.md",
+		heads: []string{"DTOs", "Routes", "Do not create"},
+	}
+	if errs := checkOneAPI(f); len(errs) != 0 {
+		t.Fatalf("closed details: %v", errs)
+	}
+	f = headingFile{
+		path:  "docs/features/business-profile/projects/api.md",
+		rel:   "business-profile/projects/api.md",
+		heads: []string{"DTOs", "Routes", "Do not create"},
+	}
+	if errs := checkOneAPI(f); len(errs) != 0 {
+		t.Fatalf("closed projects: %v", errs)
 	}
 }
 

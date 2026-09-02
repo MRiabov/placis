@@ -42,7 +42,7 @@ xAI-side after instructions seed (xAI region from the **business country**).
 | `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` / `show_contact` |
 | `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
 | `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
-| `update_details` | the shared Details tool — one implementation ([details HTTP](../business-profile/details/api.md)) |
+| `update_details` | the shared Details tool — one implementation ([details architecture](../business-profile/details/architecture.md)) |
 | `create_project` | create a **project draft** (same `POST /v1/projects` as first click-off on **New project**; not in the next website publication bake until Approve) |
 | `set_project_title` | PATCH the project title (immediate) |
 | `set_project_cover` | PATCH cover to an existing media library item, or clear it |
@@ -497,9 +497,9 @@ undo.
 
 ### `update_details`
 
-The shared Details tool ([details HTTP](../business-profile/details/api.md)) — one implementation, also invoked by
-the Ads generator. Not a second copy here. On this surface: applied immediately
-(not Ask first Apply / Reject, not `edit_history`). Then the shared
+The shared Details tool ([details architecture](../business-profile/details/architecture.md)) — one implementation, also
+invoked by the Ads generator. Not a second copy here. On this surface: applied
+immediately (not Ask first Apply / Reject, not `edit_history`). Then the shared
 notification. Onboarding 06 does not call it.
 
 Activity `summary` example: `Updated Business details`. Never a tool name.
