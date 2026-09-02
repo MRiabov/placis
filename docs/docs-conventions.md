@@ -259,8 +259,9 @@ lists.
 Integration is **one side**. Backend: `humatest` + Testcontainers
 Postgres + Testcontainers MinIO. Frontend: React + router + MSW (not
 screen count). Do not add one `###` per OpenAPI row. Per-operation
-HappyPath is Go `TestHappyPath*` (public vs Worker, two jobs). Pipeline
-steps are Go `TestPipelineHappyPath{Feature}{Step}` plus exactly
+HappyPath is Go `TestHappyPath*` (public vs Worker, two jobs) for every
+structured Routes **Method + path** (leftover until the Go funcs exist).
+Pipeline steps are Go `TestPipelineHappyPath{Feature}{Step}` plus exactly
 `TestPipelineHappyPath{Feature}Full`. Frontend completeness is one
 `HappyPath{Feature}Full` owner journey, not OpenAPI or pipeline 1:1.
 Backend flow **Exercise** lists Method+path literals. Frontend

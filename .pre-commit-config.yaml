@@ -47,7 +47,7 @@ repos:
         language: system
         entry: go run ./cmd/ci/check-happy-path --public
         pass_filenames: false
-        files: '^internal/.*_test\.go$|^openapi\.json$|^cmd/ci/check-happy-path/'
+        files: '^internal/.*_test\.go$|^openapi\.json$|^cmd/ci/check-happy-path/|^docs/.*/api\.md$'
       - id: check-docs-code
         name: Docs–code named identifiers
         language: system

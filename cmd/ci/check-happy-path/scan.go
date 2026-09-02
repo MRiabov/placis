@@ -144,28 +144,11 @@ func httpMethodName(sel string) string {
 	}
 }
 
-func inSpecSet(op string, set specSet) bool {
-	internal := strings.Contains(op, " /internal/")
-	switch set {
-	case specPublic:
-		return !internal
-	case specWorker:
-		return internal
-	default:
-		return false
-	}
-}
-
 func checkHappyPath(specPath string, specOps map[string]bool, tests []happyPathTest, set specSet) []string {
-	covered := map[string]bool{}
-	for _, t := range tests {
-		if len(t.ops) != 1 {
-			continue
-		}
-		for op := range t.ops {
-			if inSpecSet(op, set) {
-				covered[op] = true
-			}
+	covered := oneToOneCovered(tests)
+	for op := range covered {
+		if !inSpecSet(op, set) {
+			delete(covered, op)
 		}
 	}
 	var missing []string
