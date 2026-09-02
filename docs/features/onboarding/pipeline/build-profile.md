@@ -56,7 +56,7 @@ rows.
   A bumped `schema_revision` extracts by default (empty new fields may fill). It
   never overwrites `human` ([ETL pipeline](../../etl/pipeline/README.md)).
 - **Legal identity:** registry wins `legal_name`, `company_number`,
-  `registered_office`, `company_status`, `incorporation_date` even if Maps/crawl
+  `registered_office`, `incorporation_date` even if Maps/crawl
   disagree; not a contractor question when a registry source exists.
 - **Accreditations:** trade registry wins the same way.
 - **Anti-fabrication:** unverifiable fields stay empty and become a targeted
@@ -79,7 +79,6 @@ gaps.
 | `legal_name` | legal | `legal_name` | registry only | required if registry |
 | `company_number` | legal | `company_number` | registry only | required if registry |
 | `registered_office` | legal | `registered_office` | registry only | required if registry |
-| `company_status` | legal | `company_status` | registry only | optional |
 | `contact_name` | contact | `contact_name` | — | required |
 | `marketing_phone` | contact | `marketing_phone` | Maps | required |
 | `marketing_email` | contact | `marketing_email` | crawl | required |
@@ -120,21 +119,21 @@ rewrite a copied gallery token. The next website publication (04) resolves
 
 Onboarding orchestration. After **ETL fast extract** has written `in_pool`
 reviews, **inserts** River job kind `reviews_ranking_for_display` — typically
-**in parallel** with client interview. That writes `is_top` /
-`top_position` and `top_reviews_provisional=true` while overlapping ETL
+**in parallel** with client interview. That inserts a ranking batch
+(`is_top` / `top_position`, `provisional=true`) while overlapping ETL
 is still running. Those pins are not locked: a later ranking job may
-replace them. They are not `algorithm=human`. `top_reviews_provisional`
-is not a skip key.
+replace them. They are not `algorithm=human`. `provisional` is not a
+skip key.
 
 When the last overlapping ETL run for this onboarding enqueue finishes:
 **inserts** again if additional `in_pool` rows landed (replace pins,
-`top_reviews_provisional=false`). If no additional rows, leave the pins
-and set `top_reviews_provisional=false` — no second generate.
+`provisional=false`). If no additional rows, insert a copy of the
+latest batch with `provisional=false` — no second generate.
 
 **Scheduled ETL** (Monday / Wednesday / Friday): after a scheduled run
 **succeeds** and new `in_pool` rows landed, **inserts** the same job
-**once** (not per chunk). Writes `top_reviews_provisional=false`. One
-replace of pins.
+**once** (not per chunk). Writes `provisional=false`. One replace of
+pins.
 
 ETL transform inserts review rows only; it does not rank. Profile does
 not enqueue. Website does not enqueue. Persist columns:
@@ -165,6 +164,7 @@ Required keys not `empty` / `in_progress` / `conflict`. `skipped` /
 `business_profile_edit_sources` (ETL increments only) +
 `business_profile_services` / `business_profile_service_areas` /
 `business_profile_opening_hours` / `business_profile_reviews` /
+`business_profile_review_rankings` /
 `facebook_profiles` / `facebook_posts` / `instagram_profiles` /
 `instagram_posts` / `business_profile.projects` /
 `business_profile.project_sources` (ETL Projects only). `last_edit_id` is the

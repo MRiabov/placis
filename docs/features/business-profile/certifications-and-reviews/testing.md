@@ -27,9 +27,9 @@ exist.
 
 #### Verify
 
-1. UI: top band matches the owner order. Ads still read `is_top`.
+1. UI: top band matches the owner order. Ads still hydrate `is_top`.
 2. Ranking does not overwrite `algorithm=human` pins.
-   `top_reviews_provisional=false`.
+   Latest ranking batch `provisional=false`.
 
 #### Mocked
 
@@ -51,9 +51,9 @@ PATCH ordered `review_ids[]` (featured-first, max 30). Then run
 
 #### Verify
 
-PATCH wrote `is_top` / `top_position` with `algorithm=human` and
-`top_reviews_provisional=false`. The later ranking job does not
-overwrite those pins. Ads still read `is_top`. No
+PATCH inserted a ranking batch with `is_top` / `top_position`,
+`algorithm=human`, and `provisional=false`. The later ranking job does
+not overwrite those pins. Ads still hydrate `is_top`. No
 `website_slot_reviews` rewrite.
 
 #### Fail

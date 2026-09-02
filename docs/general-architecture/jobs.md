@@ -121,13 +121,13 @@ A second insert while the first is in flight is a River unique conflict —
 treat as already queued. Not HTTP 409 (nothing HTTP-inserts this). After
 the first completes, a later insert on the same tenant is allowed.
 
-The worker always loads `in_pool` reviews, generates, and replaces
-`is_top` / `top_position` (skip `algorithm=human`). Same replace as
-Certifications and reviews PATCH. In that transaction it sets
-`business_profiles.top_reviews_provisional`: **true** if overlapping ETL
-for this onboarding enqueue is still running, else **false**. Scheduled
-ranking always writes **false** (the run already `succeeded`). No pass
-field. No `onboarding_session_id`.
+The worker always loads `in_pool` reviews, generates, and inserts a
+`business_profile_review_rankings` batch (skip latest
+`algorithm=human`). Same replace as Certifications and reviews PATCH.
+`provisional` is **true** if overlapping ETL for this onboarding
+enqueue is still running, else **false**. Scheduled ranking always
+writes **false** (the run already `succeeded`). No pass field. No
+`onboarding_session_id`.
 
 `internal/jobs` worker **calls** the profile function. LLM:
 `thread_kind=reviews_ranking_for_display`,
@@ -144,11 +144,11 @@ rows landed). **Scheduled ETL** (Monday / Wednesday / Friday): after a scheduled
 run **succeeds** and new `in_pool` rows landed, insert **once** (not per chunk).
 ETL transform does not rank. Website does not insert this job.
 
-`top_reviews_provisional` is not a skip key. A later
-`reviews_ranking_for_display` may replace pins until owner PATCH sets
-`algorithm=human` (and `top_reviews_provisional=false`). When the enqueue’s
-ETL finishes with **no** extra `in_pool` rows: set
-`top_reviews_provisional=false` without a second generate.
+`provisional` is not a skip key. A later
+`reviews_ranking_for_display` may replace pins until owner PATCH
+inserts `algorithm=human` (and `provisional=false`). When the enqueue’s
+ETL finishes with **no** extra `in_pool` rows: insert a copy of the
+latest batch with `provisional=false`, no second generate.
 
 ### `assistant_thread_compaction`
 

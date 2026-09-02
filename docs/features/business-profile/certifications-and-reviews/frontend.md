@@ -37,7 +37,8 @@ onto All reviews to unpin. Reorder inside Top reviews is featured-first. Keep
 drag-and-drop on narrow screens (grip always visible; no hover-only). The six
 dots stay compact; the hit is 44px. Do not fall back to up/down-only.
 
-Unpin / reorder of **top reviews** updates `is_top` / `top_position` only. Live
+Unpin / reorder of **top reviews** inserts `business_profile_review_rankings`
+rows (`is_top` / `top_position` hydrate on the cards). Live
 website waits for the next website publication. Website editor reviews Content
 edits **that website section’s** ordered list (add from all reviews, remove,
 reorder; cap from the website component). If a reviews website section has zero

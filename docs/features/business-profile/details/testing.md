@@ -159,7 +159,7 @@ selected set. Unchecked rows are `status=removed` on
 
 Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 `in_pool` and `archived` `business_profile_reviews` rows. Some
-`is_top`.
+pinned via `business_profile_review_rankings`.
 
 #### Exercise
 
@@ -188,8 +188,9 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 #### Verify
 
 200. Then `GET /v1/business-profile/reviews` shows `is_top` /
-`top_position` dense 1…n, `algorithm=human`,
-`top_reviews_provisional=false`. Does not rewrite
+`top_position` dense 1…n from the latest ranking batch,
+`algorithm=human`, `top_reviews_provisional=false`. Ranking rows
+inserted; review pin columns unchanged (none). Does not rewrite
 `website_slot_reviews`.
 
 #### Fail
@@ -201,7 +202,7 @@ Longer than 30, a duplicate id, or an id not `in_pool` → `400`.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Activated tenant. An
-`in_pool` review, possibly `is_top`, possibly on
+`in_pool` review, possibly pinned, possibly on
 `website_slot_reviews`.
 
 #### Exercise
