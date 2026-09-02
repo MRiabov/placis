@@ -143,7 +143,8 @@ website slots and ad placements stay on the parent. **Calls**
 `AssertUsageCredit` then `RecordAIUseSpend` (`usage_category=image`).
 `402` `usage_credit_exhausted`. **inserts** `describe_image` on the
 child. First-upload tailored cleanup is **not** this route
-(`DescribeImage` **calls** the same function, no owner prompt). Accept
+(`DescribeImage` **calls** the same function, no owner prompt, only
+when feature flag `media_auto_cleanup` is on; default off). Accept
 after the sweep is **not** a route.
 
 ### POST /v1/media-assets/{id}/reject
