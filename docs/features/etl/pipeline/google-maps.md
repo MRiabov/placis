@@ -119,10 +119,10 @@ this chunk set.
   After scrape, photos on **that** review may fill an empty cover on the same
   Project when `algorithm` is not `human` (do not rewrite title / description).
 - New listing photos → media library items `supplied_by=business_research`
-  (`imported_media_sources` → listing `source_id`); then
-  [photo classification](photo-classification.md) for those items (do not wait
-  for scrape to finish). Listing photos are not review-origin covers. Review
-  photos cite the listing-review `source_id`.
+  (`imported_media_sources` → listing `source_id`); **calls**
+  `WriteImageThumbnail`; then **inserts** `describe_image` per new row with
+  no classification yet (do not wait). Listing photos are not review-origin
+  covers. Review photos cite the listing-review `source_id`.
 - Disagreeing owner-typed scalars → research conflict; live profile column is
   not updated.
 
@@ -133,8 +133,9 @@ responses); `etl.sources` (listing + each listing review);
 `etl.google_maps_listings` + hours / reviews / listing photos / review photos;
 `business_profile_edits` + `business_profile_edit_sources` + live profile hours
 / reviews / contact columns / Projects; media library items +
-`imported_media_sources`. `etl.runs.status=succeeded` when ETL fast extract and
-ETL slow extract are done.
+`imported_media_sources`; **calls** `WriteImageThumbnail`; **inserts**
+`describe_image` per new imported row with no classification yet.
+`etl.runs.status=succeeded` when ETL fast extract and ETL slow extract are done.
 
 ## Fail
 

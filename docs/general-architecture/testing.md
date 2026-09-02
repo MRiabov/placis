@@ -114,6 +114,7 @@ a bullet per Routes row. Pipeline integration tests pair
 - [ETL](../features/etl/testing.md) — integration (no owner UI); onboarding E2E covers 02
 - [website](../features/website/testing.md)
 - [ads](../features/ads/ad-generation/testing.md)
+- [media library](../features/other/media/testing.md)
 - [auth](../features/other/auth/testing.md)
 - [Placis website](../features/placis-website/testing.md) — static origin only (no Go / Postgres)
 

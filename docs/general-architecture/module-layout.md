@@ -29,8 +29,8 @@ internal/
   etl/            # run.go (StartRun: cap, enqueue_id, insert etl.runs when an ETL run kind can start)
     extract/      #   googlemaps/, facebook/, instagram/, crawl/, traderegistry/,
                   #   websearch/ — each with fakes; worker calls these, does not inline
-    transform/    #   googlemaps/, facebook/, instagram/, crawl/, photo/,
-                  #   projects/ — live business profile, posts, photo classification,
+    transform/    #   googlemaps/, facebook/, instagram/, crawl/,
+                  #   projects/ — live business profile, posts,
                   #   Projects from source; after each extract chunk
   profile/        # profile.go, profile_edits.go, services.go, areas.go, hours.go, certifications.go
   website/        # root: types.go, service.go

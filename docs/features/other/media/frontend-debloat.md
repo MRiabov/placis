@@ -25,14 +25,14 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 - One library: `/cms/media` under Profile, plus attach / pick in Content when an
   image is selected (upload, drag onto canvas, attach to a website slot as a
   discrete PATCH).
-- Media caption, focal point, crop, replace, AI cleanup that **creates a copy**
+- Focal point, crop, replace, AI cleanup that **creates a copy**
   (`parent_media_asset_id`); parent file is never replaced. Website editor
   PATCH, website editor tools, and ads light cleanup call these same functions
   ([README.md](README.md)). `/cms/media` look: large view (also where they compare
   cleanup), prompt box beside/under it, before/after sweep on cleanup, dense
   thumbs (3 then 4 columns; mixed ratios). Not huge square cards. Cleanup waits
   5–10 seconds on the large view (**Cleaning up…**, scan, filling bar) before
-  the sweep.
+  the sweep. No `/cms/media` field to change the media caption.
 - Leave guard covers an in-flight upload ([editing.md](../../website/editing.md)). Hover the uploading
   thumb: a circle-and-cross button; click it to cancel (same overlay as Ads).
 
@@ -54,8 +54,8 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
 
 | Today | Target |
 | --- | --- |
-| `GET/POST /api/v1/website/editor/assets` | `/v1/media-assets` (this resource owns upload) |
-| Signed URL + complete upload | `POST /v1/media-assets` + `…/complete` |
+| `GET/POST /api/v1/website/editor/assets` | `GET /v1/media-assets` / `POST /v1/media-assets/start-upload` |
+| Signed URL + complete upload | `start-upload` / `start-replace-upload` → PUT `upload_url` → `confirm-upload` |
 | Workspace panel only | add `/cms/media` full-screen (same rows) with the website Go phase |
 
 Media is **not** a fifth top-level left-nav peer in the first nav pass (details

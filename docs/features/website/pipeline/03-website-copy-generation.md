@@ -42,9 +42,13 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 - Put image files or expiring signed URLs on `websiteRender`
   (`media_asset_urls` is public delivery URLs only).
 - `generate_image` for a logo website slot. Leave `{{logo_url}}`.
-- Attach a photo whose photo kind is `founder` or `logo` on a home hero,
-  service page, or home service-card image website slot.
-- Reuse an already-attached photo on a later image website slot.
+- `generate_image` a face for a portrait / About / leadership website
+  slot. Leave the slot / token empty.
+- Attach a `photo_kind=logo` on a home hero, service page, or home
+  service-card image website slot.
+- Reuse an already-attached photo on a later image website slot
+  (**this page**, later slots; not site-global; parent vs cleanup child
+  are two ids).
 - Attach a leftover photo whose **media caption** does not match that
   website slot’s intent (a van photo on gutter cleaning).
 - Persist Worker HTML onto unpublished website slots.
@@ -84,24 +88,31 @@ unpublished website slots. River job kind `website_copy_generation`.
    website pages. Do not call `websitePublication`.
 2. Per website page, bounded parallel: `update_slot` (prose), `update_seo`,
    then **photo selection**. **Attach first** (`update_slot` +
-   `media_asset_id`) when `media_assets[]` already has a fit; `generate_image`
-   only when nothing fits (ADR 6). Not filename. Do not invent a numeric
+   `media_asset_id`) when `media_assets[]` already has a fit;
+   `generate_image` only when nothing fits on a work-photo slot (ADR 6).
+   Not filename. Do not invent a numeric
    score.
-   - **Logo** image website slots: unused photo kind **`logo`**. Else leave
+   - **Logo** image website slots: unused `photo_kind=logo`. Else leave
      `{{logo_url}}`. Do not `generate_image` a logo. Publication emits
      `{{logo_url}}` from Details `logo_media_asset_id`.
-   - **Founder** image website slots: unused photo kind **`founder`**. Else
-     `generate_image` if that website slot needs a person and nothing fits.
-   - **Every other** image website slot (home hero, service page images, home
-     service cards): unused photos whose photo kind is **not** `founder` and
-     **not** `logo` (includes `hero` / `project` / `service` and unset). Attach
-     when **media caption** matches that website slot’s intent (roof repairs →
-     people working on a roof; gutter cleaning → people cleaning gutters). Do
-     not filter on photo kind `hero` / `project` / `service`.
-   - If nothing fits: **`generate_image`** (`supplied_by=ai`, pending review;
-     unpublished canvas warning; website publication still requires approved
-     media library items). That fills the gap for the owner.
-   - Do not reuse an already-attached photo on a later image website slot.
+   - **Portrait** image website slots (About / leadership / a named-person
+     slot): unused `photo_kind=photo` whose **media caption** is a
+     portrait of a person. Two slots pick two unused matching photos.
+     If nothing fits, leave the slot / token empty. Do not
+     `generate_image` a face.
+   - **Every other** image website slot (home hero, service page images,
+     home service cards): unused `photo_kind=photo` (not `logo`). Attach
+     when **media caption** matches that website slot’s intent (roof
+     repairs → people working on a roof; gutter cleaning → people
+     cleaning gutters). A job-site photo with crew in it is still a
+     photo. If nothing fits: **`generate_image`** (`CreateGeneratedMediaAsset`;
+     `supplied_by=ai`, `created_by=ai`, pending review; persists the tool
+     `media_caption` as `media_asset_classifications`
+     (`photo_kind=photo`, `algorithm=copy_requested_media_caption`); no
+     `describe_image`; unpublished canvas warning; website publication
+     still requires approved media library items).
+   - Do not reuse an already-attached photo on a later image website slot
+     (**this page**, later slots; not site-global; GET hydrates one page).
 3. After each `update_slot`, the same `websiteRender` for the affected
    website page (`before_pages` + `pages`). `media_asset_urls` is the
    exact set for that body (new attach included). Put `before_image` and
@@ -158,7 +169,9 @@ Unpublished `website_pages`, `website_sections`, `website_slots`,
 ## Persist
 
 `website_slots`; `website_pages` SEO columns; `media_assets` from
-`generate_image` (`supplied_by=ai`, pending review); `edit_history`
+`generate_image` (`CreateGeneratedMediaAsset`; `supplied_by=ai`,
+`created_by=ai`, pending review) and `media_asset_classifications`
+(`algorithm=copy_requested_media_caption`); `edit_history`
 agent batches; `ai_generations` for tool batches
 (`thread_kind=website_copy_generation` thread,
 `prompt_id=website_copy_generation`); `ai.threads`
@@ -195,4 +208,7 @@ as this job continues.
 - Does not set website slot `approved`.
 - Go does not emit HTML.
 - Photo selection is this job, not 02. Attach first when media caption
-  fits; `generate_image` when nothing fits.
+  fits. Logo: unused `logo` or leave the token. Portrait: unused photo
+  whose **media caption** is a person portrait; leave empty if nothing
+  fits (no `generate_image`). Other image slots: `generate_image` when
+  nothing fits.

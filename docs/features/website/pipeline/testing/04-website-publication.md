@@ -49,6 +49,8 @@ later CMS Publish.
   - Live GET of the host does not call Go.
   - Happy path: `website_publication_issues` empty (post-publication
     rows only when the Worker reports them).
+  - `media_assets.review_status=approved` for `pending_review` items
+    on that dump (`ApproveMediaAsset`).
 - **Handoff**: live path is MinIO `latest/` + this
   `website_publications` row. Next owner Publish is another 04 on the
   same unpublished tree. Onboarding 09 after 08 archives v1 and writes

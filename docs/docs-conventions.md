@@ -17,8 +17,9 @@ before adding or editing a doc.
   `backend-stack.md`, `frontend-stack.md`, `module-layout.md`, `processes.md`,
   `package-boundaries.md`, `api.md` (HTTP conventions + index of per-feature
   `api.md` files), `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
-  `files-and-s3.md`, `persistence.md` (conventions + index of per-feature
-  tables), `frontend.md` (`frontend-2` UI rules), `cms/` (The CMS: left nav,
+  `persistence.md` (conventions, classification/prediction tables, index
+  of per-feature tables), `frontend.md` (`frontend-2` UI rules), `cms/`
+  (The CMS: left nav,
   `/cms` two cards, look tokens), `frontend-debloat.md` (cross-cutting port),
   `ci-cd.md`, `testing.md`. Feature-owned capabilities (website
   activation/payments, leads, media library, ETL, business profile, assistant,
@@ -230,19 +231,20 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 
 Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
 ratchets leftover extra `##` on undefined features (extras may only shrink).
-Website, billing, ads, assistant, onboarding, and auth have none. Optional `###`
-groups under `## DTOs` and `## Routes` (glossary terms, same titles on both when
-split; see [glossary.md](glossary.md)). Not mandatory — split when the table is hard to
-review. `### METHOD /path` overflow still sits under that group when a cell
-would be a paragraph. `## Do not create` stays one list. Persistence and
-`jobs.md` already overflow as `### \`name\``; do not add a second grouping layer
-there.
+Website, billing, ads, assistant, onboarding, auth, and the media
+library have none. Optional `###` groups under `## DTOs` and
+`## Routes` (glossary terms, same titles on both when split;
+[glossary.md](glossary.md)). Not mandatory — split when the
+table is hard to review. `### METHOD /path` overflow still sits under
+that group when a cell would be a paragraph. `## Do not create` stays
+one list. Persistence and `jobs.md` already overflow as
+`### \`name\``; do not add a second grouping layer there.
 
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`. Overflow
 is `###` under a table, not a new `##`. CI ratchets leftover grouping `##` the
 same way as `api.md` (extras may only shrink). Website, billing, ads, assistant,
-onboarding, and auth have none. Intro-only files (media library, Details,
-Projects) have no `##` yet.
+onboarding, auth, and the media library have none. Intro-only files
+(Details, Projects) have no `##` yet.
 
 **`testing.md`** — H1 + intro, then only `## E2E` and/or `## Integration`.
 Unit tests are not specified here. `###` is one test (open names; ban
@@ -329,6 +331,7 @@ on the Request DTO.
 `## Indexes` — as billing already does.
 
 Major features that must eventually satisfy this contract: ads, assistant,
-auth, billing, ETL, onboarding, website. Website, ads, assistant, onboarding,
-billing, and auth are fully defined (DTOs, Routes, tables, named services).
-CI: [ci-cd.md](general-architecture/ci-cd.md).
+auth, billing, ETL, onboarding, website, media library. Website, ads,
+assistant, onboarding, billing, auth, and the media library are fully
+defined (DTOs, Routes, tables, named services). CI:
+[ci-cd.md](general-architecture/ci-cd.md).

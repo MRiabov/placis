@@ -77,6 +77,8 @@ step.
 | `billing_extra_usage_credit` | Stripe checkout session id | checkout session id while pending/running | `ApplyExtraUsageCredit` |
 | `billing_subscription_sync` | Stripe subscription id | Stripe subscription id while pending/running | `SyncSubscriptionFromStripe`; on `canceled` **calls** `UnpublishWebsite`; on `invoice.paid` **calls** `AddIncludedUsageCredit` |
 | `scheduled_etl` | none | `tenant_id` while pending/running | **calls** `StartRun(trigger=scheduled)` |
+| `describe_image` | `tenant_id`, `media_asset_id` | `(tenant_id, media_asset_id)` while pending/running | `DescribeImage` |
+| `sweep_stale_media_uploads` | none | one global row while pending/running | delete stale `uploading` or upload-failed (`failed` + null `file_id`) |
 
 Extract **must not** write `business_profile_*`. Transform **must not** call
 source networks. Retry of this `run_id` reuses a fetch that already landed
@@ -213,3 +215,55 @@ the Stripe subscription-updated event alone). `status=canceled`: **calls**
 Monday / Wednesday / Friday. Stagger activated tenants. **Calls**
 `StartRun(trigger=scheduled)` ([ETL](../features/etl/README.md)). Does not
 inline extract.
+
+### `describe_image`
+
+Owner `POST /v1/media-assets/{id}/confirm-upload` **or** an ETL
+transform **or** `CleanupMediaAsset` **inserts** this River job kind.
+Transform **inserts** only when there is no classification yet. The
+worker skips a new LLM row when latest matches `algorithm` +
+`schema_revision`. `force` is ETL `StartRun` / transform only; this
+job has no `force`. Do not wait inside transform. Unique
+`(tenant_id, media_asset_id)` while pending/running — not `tenant_id`
+alone. Dedicated queue, max workers **48**. Fail → retry that id only;
+row stays `processing` until success or retries exhaust →
+captioning-failed (`processing_status=failed`; `file_id` set). Sibling
+photos are other job ids.
+
+`DescribeImage` **sends** media caption + `submit_image_visual_issues`
+(`parallel_tool_calls=true`) and **writes**
+`media_asset_classifications` (`photo_kind` `logo` or `photo`,
+`content_hash` of this canonical `file_id`, `algorithm`,
+`schema_revision`, `ai_generation_id`). Tool `clutter` maps to column
+`clutter_severity` (same for the other seven). Never updates an old
+classification. Then sets `media_assets.processing_status=ready`.
+Record reasoning, output, and tool calls on `ai_generations`. Insert /
+reuse `ai.threads` `thread_kind=media_cleanup` for this item. Must not
+write `hero` / `project` / `service` / `founder` / `person`. Must not
+write `pending_review` on the original owner or ETL row. Must not
+auto-upres (`blur` / `overlay_text` / `subject_too_small` /
+`low_resolution` are suggestions only). `WriteCanonicalWebP` and
+`WriteImageThumbnail` already ran in confirm-upload / ETL insert.
+
+First-upload auto-cleanup when **latest** `photo_kind=photo` **and**
+`clutter_severity` / `busy_background_severity` /
+`poor_lighting_severity` / `color_cast_severity` is not null (high
+first): **calls** `CleanupMediaAsset` (no owner prompt). Skip when
+latest is `logo` or there is no classification yet. Original stays
+`ready` + `approved`. Child: new original + canonical + thumbnail,
+`pending_review`, `parent_media_asset_id`, inherit `supplied_by` /
+`created_by`, `cleaned_up_with_ai=true`. `CleanupMediaAsset` **calls**
+`WriteCanonicalWebP` then `WriteImageThumbnail` on the child and
+**inserts** `describe_image` on the child.
+Routes: [media library HTTP](../features/other/media/api.md).
+
+### `sweep_stale_media_uploads`
+
+Periodic insert from the same `cmd/api` in-process River workers as
+`scheduled_etl`. Not crontab. Not list/GET handler deletes. Args none;
+unique one global row while pending/running. **Do:** delete
+`media_assets` older than the website-editor leave-guard window
+([editing.md](../features/website/editing.md)) that are `uploading`
+**or** upload-failed (`failed` + null `file_id`). Must not delete
+captioning-failed (`failed` + `file_id` set). Age lives only here.
+`ListMediaAssets` omits those in-flight `uploading` rows immediately.

@@ -14,7 +14,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
 
 2. **ETL is not extract-only** — `internal/etl/extract/` writes fetches and the
    Google Maps listing. `internal/etl/transform/` writes the business profile
-   (research conflicts, Facebook / Instagram posts, photo classification).
+   (research conflicts, Facebook / Instagram posts).
    Extract must not import `profile` or write `business_profile_*`. Transform
    must not call Maps / Facebook / Instagram networks.
    **`StartRun` is not a god function:** it counts the cap, creates
@@ -24,7 +24,10 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    their own packages (`extract/googlemaps`, `transform/facebook`, …). A small
    worker dispatch calls those functions; it does not inline them. (2026-08-27;
    same day, later: StartRun orchestration only. 2026-08-31: insert when the
-   input set is met.)
+   input set is met. 2026-09-02: no `transform/photo`; `DescribeImage`
+   inserts `media_asset_classifications` (`photo_kind`); skip is latest
+   classification, not `media_assets.media_caption`. Still no
+   `etl.photo_classifications`.)
 
 3. **One fetch table per extract type** — Append-only UUID rows with typed
    metadata (Instagram handle / Instagram user, Facebook page / handle, Maps
@@ -47,11 +50,11 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    not one pending row per ETL run kind up front.)
 
 5. **Transformed contractor data is the business profile** — Facebook profile /
-   posts, Instagram profile / posts, and photo classification (hero / project /
-   service / founder / logo) live on the business profile (today’s `details`
-   schema) and that profile’s media library items. `etl` keeps raw fetches,
-   runs, and the Google Maps listing (hours / reviews on `place_id`).
-   (2026-08-27)
+   posts, Instagram profile / posts live on the business profile (today’s
+   `details` schema) and that profile’s media library items. `etl` keeps raw
+   fetches, runs, and the Google Maps listing (hours / reviews on `place_id`).
+   (2026-08-27; 2026-09-02: photo kind is `logo` / `photo` on
+   `DescribeImage`, not a 5-way ETL classifier.)
 
 6. **Scheduled refresh is Monday, Wednesday, Friday** — Activated tenants.
    Sources: Google Maps, Facebook, Instagram (public scrape; Graph API later).
@@ -167,3 +170,9 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     `etl.sources` rows are inserted by 01, not by an ETL run kind.
     (2026-08-31; same day, later: identity keys, not sibling key-passing.
     2026-08-31 later: details, not identity keys.)
+
+16. **Photo kind is logo or photo on `DescribeImage`** — not a 5-way ETL
+    classifier (`hero` / `project` / `service` / `founder`). There is no
+    `etl.photo_classifications` table and no `etl_photo_classify` thread.
+    Transform attaches imported files and **inserts** `describe_image`.
+    (2026-09-02)

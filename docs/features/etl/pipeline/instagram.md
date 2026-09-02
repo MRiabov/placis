@@ -41,15 +41,18 @@ Instagram post. Upsert `instagram_profiles` on this contractor’s Instagram use
 unless `algorithm=human` (`source_id` required). Upsert `instagram_posts` on
 `external_id` (insert only ids we do not already have; skip existing rows whose
 `algorithm` matches **and** `schema_revision` matches, or is `human`). Attach
-new photos into the media library (`imported_media_sources` → post
-`source_id`); then [photo classification](photo-classification.md); then
-[projects.md](projects.md) for posts that are a past named job (depicting photo
-required). Write `algorithm` and `schema_revision` on rows this transform set.
+new photos into the media library (`imported_media_sources` → post `source_id`);
+**calls** `WriteImageThumbnail`; then **inserts** `describe_image` per new row
+with no classification yet (do not wait); then [projects.md](projects.md) for posts that are
+a past named job (depicting photo required). Write `algorithm` and
+`schema_revision` on rows this transform set.
 
 ## Persist
 
 `etl.instagram_fetches`; `etl.sources`; `instagram_profiles` /
-`instagram_posts`; media library items + `imported_media_sources`; Projects
+`instagram_posts`; media library items + `imported_media_sources`; **calls**
+`WriteImageThumbnail`; **inserts** `describe_image` per new imported row with
+no classification yet; Projects
 when a post is usable as a Project. `etl.runs.status=succeeded`.
 
 ## Fail
