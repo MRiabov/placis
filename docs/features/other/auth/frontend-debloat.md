@@ -38,11 +38,11 @@ Website activation Clerk + Stripe is owned by
   (no-auth). That is not the auth E2E.
 - `/login` and the 09 modal island: **Sign in with Google** (OAuth).
   No name / workspace / magic-link fields.
-- `/me` as `{owner, platform_role, tenant, pending_clerk_org_id}`.
+- `/me` as `{owner, platform_role, tenant, clerk_org_id}`.
   CMS-open is `status === "active"`, not tenant non-null.
 - `/cms` with no active tenant → onboarding.
-- `setActive` from checkout `clerk_org_id` or
-  `MeRead.pending_clerk_org_id`.
+- `setActive` from checkout `clerk_org_id` or `MeRead.clerk_org_id`
+  when `orgId` is unset. Skip if already active.
 - `CmsAccountMenu` = Clerk **business** org profile, not a switcher.
 - Owner display name: first write from `founder_name`; later overridable
   in the Clerk UI in the app (Clerk human name on the account menu).
@@ -71,7 +71,7 @@ Website activation Clerk + Stripe is owned by
 | Today | Constrained API |
 | --- | --- |
 | `GET /v1/me` | `MeRead`; CMS-open is `status === "active"` |
-| Don't say organization: `POST /api/v1/me/organization` | **Delete.** Checkout / 09 **call** `AttachClerkOrganization`; frontend `setActive` from `clerk_org_id` / `pending_clerk_org_id` |
+| Don't say organization: `POST /api/v1/me/organization` | **Delete.** Checkout / 09 **call** `AttachClerkOrganization`; frontend `setActive` from checkout or `/me` `clerk_org_id` |
 
 ## Don't say / rename
 

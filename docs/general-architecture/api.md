@@ -165,10 +165,10 @@ checkout/status. HTML GET never reaches Go, so it is not a sixth auth mode.
 
 Clerk ids (`clerk_org_id`, `clerk_user_id`, `clerk_subject`) are Postgres
 columns and JWT claims. The Clerk SDK verifies the sign-in. They are not an HTTP
-union. The one Clerk id allowed on `GET /v1/me` is
-`pending_clerk_org_id` (JWT has no org claim yet; `tenants.clerk_org_id`
-is already set). Checkout also returns `clerk_org_id` on
-`WebsiteActivationCheckoutRead` for `setActive`.
+union. The Clerk id allowed on HTTP is `clerk_org_id` on `GET /v1/me`
+(`MeRead`) and on `WebsiteActivationCheckoutRead` (checkout, for
+`setActive` before Stripe). Not a dump of JWT claims. Do not create a
+Clerk session token from Go.
 
 ## Errors
 

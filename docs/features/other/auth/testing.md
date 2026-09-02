@@ -45,6 +45,6 @@ DB asserts name the tables from [persistence.md](persistence.md).
    - OAuth modal (Sign in with Google, no name fields).
    - Programmatic `founder_name` / business org.
    - Frontend `setActive` from checkout `clerk_org_id` or
-     `pending_clerk_org_id`.
+     `MeRead.clerk_org_id` if the Clerk session has no org yet.
    - After 09, `/cms` opens (`status=active`).
    - DB: same `tenants` / `tenant_memberships` asserts as beat 1.

@@ -313,4 +313,6 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     `InsertOwnerMembership`. There is no `POST /v1/me/clerk-organization`.
     ADR 22 still holds: `/me` may return unactivated `TenantRead` after
     attach — attach is checkout, not that POST. Tenant ↔ Clerk org is 1-1;
-    Clerk users on that tenant are 1-many. (2026-09-02)
+    Clerk users on that tenant are 1-many. Same day, later: `MeRead` and
+    checkout return `clerk_org_id` (not `pending_clerk_org_id`). Frontend
+    `setActive` from that id when the Clerk session has no org yet. (2026-09-02)
