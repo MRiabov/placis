@@ -23,6 +23,7 @@ func run(args []string) error {
 	openapiPath := flags.String("openapi", "openapi.json", "public OpenAPI JSON")
 	workerPath := flags.String("worker-openapi", "apps/contractor-website/openapi.json", "Worker internal OpenAPI JSON")
 	internal := flags.String("internal", "internal", "Go internal packages")
+	docsRoot := flags.String("docs", "docs", "docs root for structured api.md Routes")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
@@ -37,6 +38,7 @@ func run(args []string) error {
 
 	var errs []string
 	if *public {
+		errs = append(errs, checkDocsHappyPath(*docsRoot, tests, docsHappyPathLeftover)...)
 		errs = append(errs, checkSpec(*openapiPath, tests, specPublic)...)
 	}
 	if *worker {
