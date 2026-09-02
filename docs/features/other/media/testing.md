@@ -105,59 +105,228 @@ PATCH 4xx: inline error.
 
 All HTTP via MSW.
 
-### TestHappyPath media (public)
+### TestHappyPathV1MediaAssetsReturnsList
 
-Backend. Go `TestHappyPath*` — one func per [api.md](api.md) **Routes**
-row. Not the Vitest Full. Named persist/job tests below do not fill
-these rows. No `TestHappyPath*` for browser PUT to `upload_url`, River
-`describe_image` / `sweep_stale_media_uploads`, in-process
-`CreateGeneratedMediaAsset` / `ApproveMediaAsset` /
-`WriteCanonicalWebP` / `WriteImageThumbnail`, or attach on website /
-ads / Details / Projects. Skip **Do not create**.
-
-| Go name | Method+path | Response |
-| --- | --- | --- |
-| `TestHappyPathV1MediaAssetsReturnsList` | `GET /v1/media-assets` | `MediaAssetRead[]` |
-| `TestHappyPathV1MediaAssetsStartUpload` | `POST /v1/media-assets/start-upload` | `MediaAssetUploadRead` |
-| `TestHappyPathV1MediaAssetsIdConfirmUpload` | `POST /v1/media-assets/{id}/confirm-upload` | `MediaAssetRead` |
-| `TestHappyPathV1MediaAssetsReturnsItem` | `GET /v1/media-assets/{id}` | `MediaAssetRead` |
-| `TestHappyPathV1MediaAssetsPatch` | `PATCH /v1/media-assets/{id}` | `MediaAssetRead` |
-| `TestHappyPathV1MediaAssetsIdStartReplaceUpload` | `POST /v1/media-assets/{id}/start-replace-upload` | `MediaAssetUploadRead` |
-| `TestHappyPathV1MediaAssetsIdImageEdits` | `POST /v1/media-assets/{id}/image-edits` | child `MediaAssetRead` |
-| `TestHappyPathV1MediaAssetsIdReject` | `POST /v1/media-assets/{id}/reject` | `MediaAssetRejectRead` |
-
-Docs leftover until the Go funcs exist (extras may only shrink). Drop
-the leftover row in the same PR that adds the func. Once exported
-`openapi.json` has these ops, missing tests fail with no leftover.
+Backend. Go `TestHappyPathV1MediaAssetsReturnsList`. OpenAPI 1:1.
 
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. Confirm-upload, image-edits, and
-start-replace-upload need a prior start-upload + PUT (MinIO real).
-Image-edits needs usage credit.
+Prefer fake Clerk. No `frontend-2`. Tenant active. One `ready` item
+and one `uploading` item (`file_id` null).
 
 #### Exercise
 
-Each func hits **exactly that one** Method+path as a literal
-(`api.Get("/v1/media-assets")` or
-`"POST /v1/media-assets/start-upload"`).
+`GET /v1/media-assets`. Request `MediaAssetListGet`. Response
+`MediaAssetRead[]`.
 
 #### Verify
 
-2xx + that row’s response DTO. HTTP `MediaAssetRead` has `photo_kind`
-and no `media_caption`. Persist details stay on the named tests
-below.
-
-#### Fail
-
-`404` unknown id on item routes. Confirm already-`failed` → `400`.
-Image-edits `402` `usage_credit_exhausted`. Reject `409`
-`not_pending_review` / `in_use`.
+200. Body is `MediaAssetRead[]`. The `ready` item is present
+(`photo_kind` set or null; no `media_caption`). The `uploading` item
+is omitted.
 
 #### Mocked
 
-LLM. Not MinIO (Testcontainers). Prefer fake Clerk.
+LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
+
+### TestHappyPathV1MediaAssetsStartUpload
+
+Backend. Go `TestHappyPathV1MediaAssetsStartUpload`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
+Prefer fake Clerk. No `frontend-2`. Tenant active. Zero
+`media_assets`.
+
+#### Exercise
+
+`POST /v1/media-assets/start-upload`. Request `MediaAssetCreate`.
+Response `MediaAssetUploadRead`.
+
+#### Verify
+
+200. Body has `id` and `upload_url`. Then
+`GET /v1/media-assets/{id}` returns `uploading`. List omits the row.
+
+#### Fail
+
+Missing `content_type` → 400.
+
+#### Mocked
+
+LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
+
+### TestHappyPathV1MediaAssetsIdConfirmUpload
+
+Backend. Go `TestHappyPathV1MediaAssetsIdConfirmUpload`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
+Prefer fake Clerk. No `frontend-2`. Start-upload already wrote the
+row (`uploading`). Test PUT to `upload_url` (MinIO real).
+
+#### Exercise
+
+`POST /v1/media-assets/{id}/confirm-upload`. Empty body. Response
+`MediaAssetRead`.
+
+#### Verify
+
+200. Body `processing_status=processing`, `delivery_url` and
+`thumbnail_url` set, no `media_caption`. Then
+`GET /v1/media-assets/{id}` returns the same.
+
+#### Fail
+
+Already-`failed` → `400`. Unknown id → `404`.
+
+#### Mocked
+
+LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
+
+### TestHappyPathV1MediaAssetsReturnsItem
+
+Backend. Go `TestHappyPathV1MediaAssetsReturnsItem`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
+Prefer fake Clerk. No `frontend-2`. An `uploading` row exists
+(`file_id` null).
+
+#### Exercise
+
+`GET /v1/media-assets/{id}`. Response `MediaAssetRead`.
+
+#### Verify
+
+200. Body is that `uploading` row. No `media_caption`.
+
+#### Fail
+
+Unknown id → `404`.
+
+#### Mocked
+
+LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
+
+### TestHappyPathV1MediaAssetsPatch
+
+Backend. Go `TestHappyPathV1MediaAssetsPatch`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
+Prefer fake Clerk. No `frontend-2`. A `ready` + `approved`
+unreferenced item.
+
+#### Exercise
+
+`PATCH /v1/media-assets/{id}`. Request `MediaAssetUpdate`. Response
+`MediaAssetRead`.
+
+#### Verify
+
+200. Then `GET /v1/media-assets/{id}` returns the new crop / focal.
+No `media_caption` on the body.
+
+#### Fail
+
+Bad crop → `400`. Unknown id → `404`.
+
+#### Mocked
+
+LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
+
+### TestHappyPathV1MediaAssetsIdStartReplaceUpload
+
+Backend. Go `TestHappyPathV1MediaAssetsIdStartReplaceUpload`. OpenAPI
+1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
+Prefer fake Clerk. No `frontend-2`. A `ready` parent.
+
+#### Exercise
+
+`POST /v1/media-assets/{id}/start-replace-upload`. Response
+`MediaAssetUploadRead`.
+
+#### Verify
+
+200. Body is the child `id` + `upload_url`. Then
+`GET /v1/media-assets/{child id}` is `uploading`. Parent
+`GET /v1/media-assets/{id}` `delivery_url` unchanged.
+
+#### Fail
+
+Unknown id → `404`.
+
+#### Mocked
+
+LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
+
+### TestHappyPathV1MediaAssetsIdImageEdits
+
+Backend. Go `TestHappyPathV1MediaAssetsIdImageEdits`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
+Prefer fake Clerk. No `frontend-2`. A `ready` parent. Usage credit
+available.
+
+#### Exercise
+
+`POST /v1/media-assets/{id}/image-edits`. Request
+`MediaAssetImageEditCreate`. Response child `MediaAssetRead`.
+
+#### Verify
+
+200. Then `GET /v1/media-assets/{child id}` is `pending_review`,
+`cleaned_up_with_ai=true`. Parent GET `delivery_url` unchanged.
+
+#### Fail
+
+Empty prompt → `400`. `402` `usage_credit_exhausted`. Unknown id →
+`404`.
+
+#### Mocked
+
+LLM (cleanup generate). Not MinIO (Testcontainers). Prefer fake
+Clerk.
+
+### TestHappyPathV1MediaAssetsIdReject
+
+Backend. Go `TestHappyPathV1MediaAssetsIdReject`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
+Prefer fake Clerk. No `frontend-2`. A `pending_review` child with a
+parent.
+
+#### Exercise
+
+`POST /v1/media-assets/{id}/reject`. Response `MediaAssetRejectRead`.
+
+#### Verify
+
+200. Body has parent `MediaAssetRead` plus
+`rejected_media_asset_id`. Then `GET /v1/media-assets/{id}` is
+`archived` + `rejected`. Parent GET still `approved`.
+
+#### Fail
+
+`409` `not_pending_review`. `409` `in_use`.
+
+#### Mocked
+
+LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
 
 ### Two-tenant isolation
 
