@@ -35,8 +35,10 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
 ## Gates
 
 1. **File-size guard** — files must stay < 800 lines (warning) and < 1200 (hard
-   error), except `docs/glossary.md` (one ubiquitous-language file; do not split
-   it). The look app (`apps/demo/src`) hard-fails at 800; that is
+   error), except `docs/glossary.md` (one ubiquitous-language file; do not
+   split it) and `docs/features/onboarding/testing.md` (owning
+   `TestHappyPath*` 1:1 plus E2E / Full / extras; do not split it). The look
+   app (`apps/demo/src`) hard-fails at 800; that is
    [decision 1](#decisions). Repo-wide 1200 for `internal/`, `cmd/`,
    `migrations/`, `catalog/`, `docs/` is still a later `cmd/ci` check. Prefer
    splitting a feature into its own package over allowing a file to creep past
@@ -324,7 +326,8 @@ Verify / Fail / Mocked / Teardown (`###` is one test; ban
 `### METHOD /path`). Paired pipeline steps require
 `TestPipelineHappyPath{Feature}{Step}` in `internal/**/*_test.go` plus
 exactly `TestPipelineHappyPath{Feature}Full` (leftover list may only
-shrink). Skip **Do not run** testing files. A
+shrink). Skip **Do not run** testing files. Skip Persist none
+(onboarding `03`). A
 backticked River job kind (`River job \`foo\``, `River job kind \`foo\``,
 `**inserts** \`foo\``) must be a `## Jobs` row. Website, billing, ads, and
 assistant have none. Undefined features keep leftover extra-heading lists

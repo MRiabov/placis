@@ -99,7 +99,8 @@ Pipeline (not OpenAPI 1:1). Every `pipeline/` needs **both**:
 - Per paired step: `TestPipelineHappyPathWebsite01SelectWebsiteTemplate`
   ↔ `pipeline/testing/01-select-website-template.md`. Unnumbered stems
   (ETL `google-maps.md`, onboarding `build-profile.md`) use PascalCase of
-  the filename. Skip **Do not run** (onboarding `04b`). Skip gatherers and
+  the filename. Skip **Do not run** (onboarding `04b`). Skip Persist
+  none (onboarding `03`). Skip gatherers and
   testing-only `worker-internal.md` (Worker OpenAPI 1:1).
 - Whole pipeline: exactly `TestPipelineHappyPath{Feature}Full`
   (`TestPipelineHappyPathWebsiteFull`, `OnboardingFull`, `AdsFull`,
