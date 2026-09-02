@@ -8,6 +8,10 @@ Canceled-subscription Publish is the
 asserts name the tables from [persistence.md](persistence.md) (and
 [leads](../other/leads/persistence.md) for the website form).
 
+Public and Worker 1:1 HappyPath specs live under `## Integration` (one
+`### TestHappyPath*` per [api.md](api.md) Routes row). They do not
+replace this E2E or pipeline Full. **Do not create** paths are omitted.
+
 ## E2E
 
 ### Edit through website form
@@ -85,6 +89,433 @@ LLM. Cloudflare R2 / Custom Hostnames / `purge_cache`. Worker is real
 (container).
 
 ## Integration
+
+### TestHappyPathV1WebsiteEditorPagesReturnsPages
+
+Backend. Go `TestHappyPathV1WebsiteEditorPagesReturnsPages`. OpenAPI
+1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/editor/pages`. Request `WebsiteEditorGet`. Response
+`WebsitePageSummaryRead`.
+
+#### Verify
+
+**reads** `website_pages`. Must not: preview host GET.
+
+#### Fail
+
+`409` onboarding row. `403` unactivated.
+
+### TestHappyPathV1WebsiteEditorPagesCreatesPage
+
+Backend. Go `TestHappyPathV1WebsiteEditorPagesCreatesPage`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/website/editor/pages`. Request `WebsitePageCreate`. Response
+`WebsitePageRead`.
+
+#### Verify
+
+**persists into** `website_pages`, `website.menus` (append menu node).
+
+### TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage
+
+Backend. Go `TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/editor/pages/{page_id}`. Request `WebsiteEditorGet`.
+Response `WebsitePageRead`.
+
+#### Verify
+
+**reads** `website_pages`, `website_sections`, `website_slots`,
+`website.menus`, `website_settings`, `website_forms`,
+`website_slot_reviews`, `website_publications`. Must not: `/pages/{id}/seo`;
+`slot_type=json`; return `website_manifest`; both query flags.
+
+#### Fail
+
+`404` / `409` / `400`. `403` unactivated.
+
+### TestHappyPathV1WebsiteEditorPagesPageIdUpdatesPage
+
+Backend. Go `TestHappyPathV1WebsiteEditorPagesPageIdUpdatesPage`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`PATCH /v1/website/editor/pages/{page_id}`. Request `WebsitePageUpdate`.
+Response `WebsiteEditApplyRead`.
+
+#### Verify
+
+**reads** `website_pages`, `website_settings`, `edit_history`.
+**persists into** `website_slots`, `website_sections`, `website_pages`,
+`website_forms`, `website_form_fields`, `website_form_field_options`,
+`website.menus`, `edit_history`, `website_settings.edit_history_head`.
+Must not: predecessor `POST …/sections` (see [api.md](api.md) overflow).
+
+#### Fail
+
+`409 edit_history_conflict`. `413`. `429`. `403` unactivated.
+
+### TestHappyPathV1WebsiteEditorSettingsReturnsSettings
+
+Backend. Go `TestHappyPathV1WebsiteEditorSettingsReturnsSettings`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/editor/settings`. Request `WebsiteEditorGet`. Response
+`WebsiteSettingsRead`.
+
+#### Verify
+
+**reads** `website_settings`. Must not: logo on this body.
+
+#### Fail
+
+`409` / `400`.
+
+### TestHappyPathV1WebsiteEditorSettingsUpdatesSettings
+
+Backend. Go `TestHappyPathV1WebsiteEditorSettingsUpdatesSettings`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`PATCH /v1/website/editor/settings`. Request `WebsiteSettingsUpdate`.
+Response `WebsiteEditApplyRead`.
+
+#### Verify
+
+**persists into** `website_settings`, `edit_history`.
+
+#### Fail
+
+`409 edit_history_conflict`.
+
+### TestHappyPathV1WebsiteEditorMenusReturnsMenus
+
+Backend. Go `TestHappyPathV1WebsiteEditorMenusReturnsMenus`. OpenAPI
+1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/editor/menus`. Request `WebsiteEditorGet`. Response
+`WebsiteMenusRead`.
+
+#### Verify
+
+**reads** `website.menus`. Must not: `/top-menu` or `/footer`.
+
+#### Fail
+
+`409` / `400`. `403` unactivated.
+
+### TestHappyPathV1WebsiteEditorMenusUpdatesMenus
+
+Backend. Go `TestHappyPathV1WebsiteEditorMenusUpdatesMenus`. OpenAPI
+1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`PATCH /v1/website/editor/menus`. Request `WebsiteMenusUpdate`. Response
+`WebsiteEditApplyRead`.
+
+#### Verify
+
+**persists into** `website.menus`, `edit_history`. Must not: menus on
+page PATCH.
+
+#### Fail
+
+`409 edit_history_conflict`. `403` unactivated.
+
+### TestHappyPathV1WebsiteEditorUrlsReturnsUrls
+
+Backend. Go `TestHappyPathV1WebsiteEditorUrlsReturnsUrls`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/editor/urls`. Response `WebsiteUrlRead`.
+
+#### Verify
+
+**reads** `website_urls`. Must not: `POST /pages` from picker.
+
+### TestHappyPathV1WebsiteEditorUrlsCreatesUrl
+
+Backend. Go `TestHappyPathV1WebsiteEditorUrlsCreatesUrl`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/website/editor/urls`. Request `WebsiteUrlCreate`. Response
+`WebsiteUrlRead`.
+
+#### Verify
+
+**persists into** `website_urls`. Must not: create a website page.
+
+### TestHappyPathV1WebsitePublicationsReturnsPublications
+
+Backend. Go `TestHappyPathV1WebsitePublicationsReturnsPublications`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/publications`. Response `WebsitePublicationRead`.
+
+#### Verify
+
+**reads** `website_publications`. Omits onboarding rows in rollback UI.
+Must not: return `website_manifest`.
+
+### TestHappyPathV1WebsitePublicationsCreatesPublication
+
+Backend. Go `TestHappyPathV1WebsitePublicationsCreatesPublication`.
+OpenAPI 1:1. **calls** `websitePublication`.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished 02 rows already present. Owner host `website_addresses`
+row. No `frontend-2`. Worker **container** is up (this op **calls**
+`websitePublication`).
+
+#### Exercise
+
+`POST /v1/website/publications`. Request `WebsitePublicationCreate`.
+Response `WebsitePublicationRead`. **sends**
+`WebsitePublicationRequest`.
+
+#### Verify
+
+**reads** `website_pages`, `website_sections`, `website_slots`,
+`website.menus`, `website_settings`, `website_forms`. **persists into**
+`website_publications` (`published_by=owner`),
+`website_publication_issues`. MinIO `{version_number}/` then `latest/`.
+
+#### Fail
+
+`402 subscription_canceled`.
+
+#### Mocked
+
+LLM, Google, voice, `purge_cache`. Worker real. MinIO is real
+(Testcontainers).
+
+### TestHappyPathV1WebsitePublicationsIdRollback
+
+Backend. Go `TestHappyPathV1WebsitePublicationsIdRollback`. OpenAPI
+1:1. **calls** `websitePublication` (copy that owner version onto that
+host `latest/`).
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Two owner `website_publications` rows (one `active`). No `frontend-2`.
+Worker **container** is up.
+
+#### Exercise
+
+`POST /v1/website/publications/{id}/rollback`. Response
+`WebsitePublicationRead`.
+
+#### Verify
+
+**reads** `website_publications`. **persists into**
+`website_publications` (earlier owner row `active` again). Must not:
+rewrite unpublished rows.
+
+#### Fail
+
+`402`. `409` onboarding id.
+
+#### Mocked
+
+LLM, Google, voice, `purge_cache`. Worker real. MinIO is real
+(Testcontainers).
+
+### TestHappyPathV1WebsiteAddressesReturnsAddresses
+
+Backend. Go `TestHappyPathV1WebsiteAddressesReturnsAddresses`. OpenAPI
+1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/addresses`. Response `WebsiteAddressRead`.
+
+#### Verify
+
+**reads** `website_addresses`. Does not create subdomain.
+
+### TestHappyPathV1WebsiteAddressesCreatesAddress
+
+Backend. Go `TestHappyPathV1WebsiteAddressesCreatesAddress`. OpenAPI
+1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/website/addresses`. Request `WebsiteAddressCreate`. Response
+`WebsiteAddressRead`. `type=custom` only.
+
+#### Verify
+
+**persists into** `website_addresses`. Must not: `type=subdomain`;
+reserve `website_prefix`.
+
+### TestHappyPathV1WebsiteAddressesIdReturnsAddress
+
+Backend. Go `TestHappyPathV1WebsiteAddressesIdReturnsAddress`. OpenAPI
+1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+One `website_addresses` row. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/addresses/{id}`. Response `WebsiteAddressRead`.
+
+#### Verify
+
+**reads** `website_addresses`. DNS rows copyable. Must not: nameserver
+mutation.
+
+### TestHappyPathInternalWebsiteRender
+
+Backend / Worker. Go `TestHappyPathInternalWebsiteRender`. Worker
+OpenAPI 1:1. Extra-keys and swapped-path 4xx:
+[worker-internal.md](pipeline/testing/worker-internal.md).
+
+#### Setup
+
+Backend (`humatest` not on `cmd/api`). Real Worker container. Testcontainers
+MinIO. Unpublished dump + `WebsiteBusinessProfileRead` that can resolve
+Common variables. No `wrangler deploy`.
+
+#### Exercise
+
+`POST /internal/website-render`. Request `WebsiteRenderRequest`.
+Response `WebsiteRenderResponse`.
+
+#### Verify
+
+Website image render (`image`, or `before_image` + `after_image`). Does
+not write R2. Response has no HTML body. Request body has no image
+files. Must not: persist HTML onto unpublished slots;
+`websitePublication`.
+
+#### Fail
+
+Extra keys 4xx.
+
+#### Mocked
+
+`purge_cache`. MinIO is real (Testcontainers). Not the Worker.
+
+### TestHappyPathInternalWebsitePublication
+
+Backend / Worker. Go `TestHappyPathInternalWebsitePublication`. Worker
+OpenAPI 1:1. Extra-keys and swapped-path 4xx:
+[worker-internal.md](pipeline/testing/worker-internal.md).
+
+#### Setup
+
+Backend (`humatest` not on `cmd/api`). Real Worker container. Testcontainers
+MinIO. Unpublished dump + `WebsiteBusinessProfileRead`. No
+`wrangler deploy`.
+
+#### Exercise
+
+`POST /internal/website-publication`. Request
+`WebsitePublicationRequest`. Response `WebsitePublicationResponse`.
+
+#### Verify
+
+Writes the HTML tree (MinIO `{version_number}/` then `latest/`). No
+website image render. Must not: persist HTML onto unpublished slots;
+`websiteRender`.
+
+#### Fail
+
+Extra keys 4xx.
+
+#### Mocked
+
+`purge_cache`. MinIO is real (Testcontainers). Not the Worker.
 
 ### HappyPathWebsiteFull
 

@@ -281,8 +281,7 @@ Per-operation HappyPath is that `###` plus Go `func TestHappyPath*`
 (public vs Worker, two jobs). Two leftover files
 (`leftover_docs.go`, `leftover_tests.go`) until each lands; a heading
 does not shrink the tests leftover, a func does not shrink the docs
-leftover. Pipeline steps are Go
-`TestPipelineHappyPath{Feature}{Step}` plus exactly
+leftover. Pipeline steps are Go`TestPipelineHappyPath{Feature}{Step}` plus exactly
 `TestPipelineHappyPath{Feature}Full`. Frontend completeness is one
 `HappyPath{Feature}Full` owner journey, not OpenAPI or pipeline 1:1.
 Backend flow **Exercise** lists Method+path literals. Frontend

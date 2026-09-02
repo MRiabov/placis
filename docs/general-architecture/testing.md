@@ -92,8 +92,13 @@ Examples:
   `TestHappyPathV1WebsiteEditorPagesReturnsPages` for
   `GET /v1/website/editor/pages`. `TestHappyPathV1MediaAssetsReturnsList`
   for `GET /v1/media-assets`. Also `GET /v1/health`, `GET /openapi.json`.
+  Website’s other public Routes:
+  [website testing](../features/website/testing.md) `## Integration`.
 - **Worker** (internal OpenAPI file):
   `TestHappyPathInternalWebsiteRender` for `POST /internal/website-render`.
+  `TestHappyPathInternalWebsitePublication` for
+  `POST /internal/website-publication`. Specs:
+  [website testing](../features/website/testing.md).
 
 Pipeline (not OpenAPI 1:1). Every `pipeline/` needs **both**:
 
@@ -102,8 +107,8 @@ Pipeline (not OpenAPI 1:1). Every `pipeline/` needs **both**:
   (ETL `google-maps.md`, onboarding `build-profile.md`) use PascalCase of
   the filename. Skip **Do not run** (onboarding `04b`). Skip Persist
   none (onboarding `03`). Skip gatherers and
-  testing-only `worker-internal.md` (Worker OpenAPI 1:1).
-- Whole pipeline: exactly `TestPipelineHappyPath{Feature}Full`
+  testing-only `worker-internal.md` (extra Worker DTO cases; 1:1 is
+  website `testing.md`).- Whole pipeline: exactly `TestPipelineHappyPath{Feature}Full`
   (`TestPipelineHappyPathWebsiteFull`, `OnboardingFull`, `AdsFull`,
   `EtlFull`). Testcontainers Postgres + MinIO. Worker container only if
   that pipeline **calls** `websiteRender` / `websitePublication`. Do not
@@ -130,7 +135,6 @@ Extra frontend HappyPath only for real screen branching. Names include
 
 `### METHOD /path` stays banned. Frontend Full and pipeline `{Feature}Full`
 stay extra `###`; they do not fill a 1:1 row.
-
 ## The rule
 
 At least **one E2E test per feature** that has owner UI — a "feature" is a
