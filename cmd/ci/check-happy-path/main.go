@@ -38,7 +38,8 @@ func run(args []string) error {
 
 	var errs []string
 	if *public {
-		errs = append(errs, checkDocsHappyPath(*docsRoot, tests, docsHappyPathLeftover)...)
+		errs = append(errs, checkTestingHappyPath(*docsRoot, leftoverDocs)...)
+		errs = append(errs, checkDocsHappyPath(*docsRoot, tests, leftoverTests)...)
 		errs = append(errs, checkSpec(*openapiPath, tests, specPublic)...)
 	}
 	if *worker {

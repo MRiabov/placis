@@ -178,7 +178,8 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
    pipeline testing file only names what **that step** reads or persists.
    Do not invent writes in the E2E for tables another test file already
    names. Do not leave a persistence table with no Verify in either
-   place. Do not require a bullet per Routes row. **Do not create** stays
+   place. Do not require a bullet per Routes row; 1:1 Route coverage is
+   `### TestHappyPath*`. **Do not create** stays
    untested. Two-tenant isolation is backend Integration (`humatest`),
    not Playwright. Frontend isolation is SPA 404 / empty / wrong id.
 3. **Every table has a write path.** **Written by** on that table’s
@@ -197,8 +198,10 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
 ### Named verifies
 
 Follows **Persist** / **Must not**, not a mandatory
-table+column+predicate triple. Backend **Verify** names these. Frontend
-**Verify** names UI and MSW Method+path, not Postgres.
+table+column+predicate triple. Backend HappyPath **Verify** is HTTP
+(the Route). Named persistence verifies may supplement. Pipeline
+**Verify** is Persist `SELECT`. Frontend **Verify** names UI and MSW
+Method+path, not Postgres.
 
 - Persist / Inserts names a **River job kind** → testing verifies schema
   `jobs` has a row with that River job kind (already used for
@@ -248,20 +251,35 @@ onboarding, auth, and the media library have none. Intro-only files
 
 **`testing.md`** — H1 + intro, then only `## E2E` and/or `## Integration`.
 Unit tests are not specified here. `###` is one test (open names; ban
-`### METHOD /path`). `####` is closed: **Setup**, **Exercise**, **Verify**
-required in that order; **Fail**, **Mocked**, and **Teardown** optional
-after Verify (that relative order; at most one each). Isolation is
-Integration, not Playwright. Backend isolation is two-tenant
-(`humatest`). Frontend isolation is SPA 404 / empty / wrong id. Ban
-leftover journey `##` (`CMS`, `Onboarding`). CI enforces the closed
-lists.
+`### METHOD /path`). Each structured Routes **Method + path** needs a
+`### TestHappyPath*` under `## Integration` (prefix `TestHappyPath`,
+not `TestPipelineHappyPath`, not frontend `HappyPath*Full`). Suffix
+matches the future Go name. `####` is closed: **Setup**, **Exercise**,
+**Verify** required in that order; **Fail**, **Mocked**, and
+**Teardown** optional after Verify (that relative order; at most one
+each). Isolation is Integration, not Playwright. Backend isolation is
+two-tenant (`humatest`). Frontend isolation is SPA 404 / empty / wrong
+id. Ban leftover journey `##` (`CMS`, `Onboarding`). CI enforces the
+closed lists.
 
 Integration is **one side**. Backend: `humatest` + Testcontainers
 Postgres + Testcontainers MinIO. Frontend: React + router + MSW (not
-screen count). Do not add one `###` per OpenAPI row. Per-operation
-HappyPath is Go `TestHappyPath*` (public vs Worker, two jobs) for every
-structured Routes **Method + path** (leftover until the Go funcs exist).
-Pipeline steps are Go `TestPipelineHappyPath{Feature}{Step}` plus exactly
+screen count). Backend HappyPath covers HTTP paths: if it works over
+`humatest`, it works. **Setup** is backend. **Exercise** names exactly
+one Method+path literal (the leftover join). **Verify** through HTTP
+(create then `GET` and assert it exists; delete then `GET` and assert
+gone; or the Exercise body). Named persistence verifies may supplement;
+they do not show the Route worked. Extra Method+path in Verify
+does not cover another Route. Pipeline **Verify** stays Persist
+`SELECT`. Frontend Full and `TestPipelineHappyPath{Feature}Full` stay
+extra `###`; they do not fill a 1:1 row.
+
+Per-operation HappyPath is that `###` plus Go `func TestHappyPath*`
+(public vs Worker, two jobs). Two leftover files
+(`leftover_docs.go`, `leftover_tests.go`) until each lands; a heading
+does not shrink the tests leftover, a func does not shrink the docs
+leftover. Pipeline steps are Go
+`TestPipelineHappyPath{Feature}{Step}` plus exactly
 `TestPipelineHappyPath{Feature}Full`. Frontend completeness is one
 `HappyPath{Feature}Full` owner journey, not OpenAPI or pipeline 1:1.
 Backend flow **Exercise** lists Method+path literals. Frontend

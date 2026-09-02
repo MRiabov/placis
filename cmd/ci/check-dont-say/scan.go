@@ -183,7 +183,8 @@ func setupAllowed(path string) bool {
 		return true
 	}
 	slash := filepath.ToSlash(path)
-	if strings.Contains(slash, "/check-pipeline-tables/") {
+	if strings.Contains(slash, "/check-pipeline-tables/") ||
+		strings.Contains(slash, "/check-happy-path/") {
 		return true
 	}
 	base := filepath.Base(slash)

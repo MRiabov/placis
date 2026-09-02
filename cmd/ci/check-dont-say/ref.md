@@ -180,8 +180,9 @@ line when that line is not a new list item or heading.
 
 The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`,
 in `docs/docs-conventions.md`, in `docs/general-architecture/ci-cd.md`, and
-in `cmd/ci/check-pipeline-tables/` (the closed `#### Setup` heading). Fixture
-headings stay **Setup** / **Exercise** / **Verify**.
+in `cmd/ci/check-pipeline-tables/` and `cmd/ci/check-happy-path/` (the
+closed `#### Setup` heading). Fixture headings stay **Setup** /
+**Exercise** / **Verify**.
 
 - `docs/features/onboarding/pipeline/testing/01-find-business.md`: “**Setup**:
   …” → **pass**.
