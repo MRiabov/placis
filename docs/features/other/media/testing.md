@@ -1,9 +1,10 @@
 # Media library E2E and integration tests
 
 Playwright e2e drives `frontend-2` against the real Go API and real
-Postgres. Integration is backend-only (`humatest`, real Postgres). LLM
-and MinIO are faked. Clerk is real. Persist names tables from
-[persistence.md](persistence.md).
+Postgres. Integration is **one side**. Backend: `humatest`,
+Testcontainers Postgres and Testcontainers MinIO, fake LLM, prefer fake
+Clerk. Frontend: Vitest `HappyPathMediaFull` (MSW, no Go). Persist names
+tables from [persistence.md](persistence.md).
 
 ## E2E
 
@@ -73,6 +74,89 @@ GET faked. Worker not required (no publication).
 LLM (`describe_image`, cleanup generate). R2. Not Postgres. Not Clerk.
 
 ## Integration
+
+### HappyPathMediaFull
+
+Frontend. Vitest `HappyPathMediaFull`. Not OpenAPI 1:1.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). Tenant active. Empty library in
+MSW fixtures.
+
+#### Exercise
+
+Open `/cms/media`. Empty thumbs. File picker / drop. MSW
+`POST /v1/media-assets/start-upload`, then PUT is the browser (not MSW
+Go). `POST /v1/media-assets/{id}/confirm-upload`. Grid shows. Crop
+click-off. MSW `GET /v1/media-assets`, `PATCH /v1/media-assets/{id}`.
+
+#### Verify
+
+UI: grid tile uses `thumbnail_url`; large view uses `delivery_url`.
+HTTP `MediaAssetRead` has no `media_caption`. MSW saw those
+Method+path strings. Postgres rows are the backend test.
+
+#### Fail
+
+PATCH 4xx: inline error.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### TestHappyPath media (public)
+
+Backend. Go `TestHappyPath*` — one func per [api.md](api.md) **Routes**
+row. Not the Vitest Full. Named persist/job tests below do not fill
+these rows. No `TestHappyPath*` for browser PUT to `upload_url`, River
+`describe_image` / `sweep_stale_media_uploads`, in-process
+`CreateGeneratedMediaAsset` / `ApproveMediaAsset` /
+`WriteCanonicalWebP` / `WriteImageThumbnail`, or attach on website /
+ads / Details / Projects. Skip **Do not create**.
+
+| Go name | Method+path | Response |
+| --- | --- | --- |
+| `TestHappyPathV1MediaAssetsReturnsList` | `GET /v1/media-assets` | `MediaAssetRead[]` |
+| `TestHappyPathV1MediaAssetsStartUpload` | `POST /v1/media-assets/start-upload` | `MediaAssetUploadRead` |
+| `TestHappyPathV1MediaAssetsIdConfirmUpload` | `POST /v1/media-assets/{id}/confirm-upload` | `MediaAssetRead` |
+| `TestHappyPathV1MediaAssetsReturnsItem` | `GET /v1/media-assets/{id}` | `MediaAssetRead` |
+| `TestHappyPathV1MediaAssetsPatch` | `PATCH /v1/media-assets/{id}` | `MediaAssetRead` |
+| `TestHappyPathV1MediaAssetsIdStartReplaceUpload` | `POST /v1/media-assets/{id}/start-replace-upload` | `MediaAssetUploadRead` |
+| `TestHappyPathV1MediaAssetsIdImageEdits` | `POST /v1/media-assets/{id}/image-edits` | child `MediaAssetRead` |
+| `TestHappyPathV1MediaAssetsIdReject` | `POST /v1/media-assets/{id}/reject` | `MediaAssetRejectRead` |
+
+`check-happy-path` has no leftover. Go funcs land with the API. Once
+exported `openapi.json` has these ops, missing tests fail.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
+Prefer fake Clerk. No `frontend-2`. Confirm-upload, image-edits, and
+start-replace-upload need a prior start-upload + PUT (MinIO real).
+Image-edits needs usage credit.
+
+#### Exercise
+
+Each func hits **exactly that one** Method+path as a literal
+(`api.Get("/v1/media-assets")` or
+`"POST /v1/media-assets/start-upload"`).
+
+#### Verify
+
+2xx + that row’s response DTO. HTTP `MediaAssetRead` has `photo_kind`
+and no `media_caption`. Persist details stay on the named tests
+below.
+
+#### Fail
+
+`404` unknown id on item routes. Confirm already-`failed` → `400`.
+Image-edits `402` `usage_credit_exhausted`. Reject `409`
+`not_pending_review` / `in_use`.
+
+#### Mocked
+
+LLM. Not MinIO (Testcontainers). Prefer fake Clerk.
 
 ### Two-tenant isolation
 
