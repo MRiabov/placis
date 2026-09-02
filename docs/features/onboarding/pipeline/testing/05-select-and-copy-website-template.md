@@ -15,7 +15,7 @@ SELECTs both.
   Also complete when the gate fails (required `conflict` /
   `in_progress`).
 - **Verify** (Postgres, after `select_and_copy_website_template` succeeds,
-  **before** 03 runs):
+  **before** website 03 / onboarding 06 runs):
   - `business_profiles.accepted_edit_id` = `last_edit_id` at complete.
   - `onboarding_sessions.status=selecting_and_copying_website_template`
     (wait-end has not run yet).

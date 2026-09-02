@@ -1,7 +1,7 @@
 # 06 — Automatic website copy generation (integration test)
 
-Onboarding owns the lock, wait teaser, unpaid thread, and that this job
-must not block 09. Website 03 does the website slot writes.
+Onboarding owns the lock, wait-end status, unpaid thread, and that this
+job must not block 09. Website 03 does the website slot writes.
 
 - **Setup**: 05 succeeded. Unpublished 02 rows exist. Schema `jobs`: one
   `website_copy_generation` on this `tenant_id`. Onboarding session
