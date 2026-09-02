@@ -1,9 +1,15 @@
 # Worker internal operations (integration test)
 
-Exhaustive on `websiteRender` and `websitePublication`
-([website HTTP](../../api.md)). Real Worker container. Do not fake the
-Worker. Do not `wrangler deploy`. Object storage is Testcontainers
-MinIO. `purge_cache` faked (paid Cloudflare).
+Exhaustive DTO cases on `websiteRender` and `websitePublication`
+([website HTTP](../../api.md)). OpenAPI 1:1 HappyPath is
+[website testing](../../testing.md)
+`TestHappyPathInternalWebsiteRender` /
+`TestHappyPathInternalWebsitePublication`. This file is extra keys,
+swapped paths, and `media_asset_urls` 4xx — not those 1:1 rows.
+
+Real Worker container. Do not fake the Worker. Do not `wrangler deploy`.
+Object storage is Testcontainers MinIO. `purge_cache` faked (paid
+Cloudflare).
 
 - **Setup**: unpublished website dumps and a `WebsiteBusinessProfileRead`
   that can resolve the Common variables on those dumps. Extra-keys
