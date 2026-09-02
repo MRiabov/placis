@@ -36,8 +36,11 @@ HTTP lives in [website testing.md](../../testing.md).
   `purge_cache`. MinIO is real (Testcontainers). Not the Worker when the
   step calls it.
 
-Worker-only DTO cases (OpenAPI 1:1 `TestHappyPathInternal…`, not
-Pipeline): [worker-internal.md](worker-internal.md).
+OpenAPI 1:1 Worker HappyPath:
+[website/testing.md](../../testing.md)
+`TestHappyPathInternalWebsiteRender` /
+`TestHappyPathInternalWebsitePublication`. Extra DTO cases (not those
+1:1 rows): [worker-internal.md](worker-internal.md).
 
 Onboarding DAG tests
 ([05](../../../onboarding/pipeline/testing/05-select-and-copy-website-template.md)
