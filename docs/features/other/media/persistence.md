@@ -135,11 +135,13 @@ present: `low` / `medium` / `high` or null. Tool `clutter` maps to
 column `clutter_severity` (same for the other seven). Auto-run
 tailored light cleanup on first upload from latest `clutter_severity`,
 `busy_background_severity`, `poor_lighting_severity`,
-`color_cast_severity` when not null (high first). Suggest only:
+`color_cast_severity` when not null (high first), only when feature
+flag `media_auto_cleanup` is on (default off). Suggest only:
 `blur`, `overlay_text`, `subject_too_small`, `low_resolution` — no
-auto-upres. First-upload auto-cleanup runs only when latest
-`photo_kind=photo`. Skip `logo` and no classification yet. Owner
-upload and owner replace write `review_status=approved`. Cleanup /
+auto-upres. First-upload auto-cleanup runs only when that flag is on
+**and** latest `photo_kind=photo`. Skip `logo` and no classification
+yet. Owner upload and owner replace write `review_status=approved`.
+Cleanup /
 `CreateGeneratedMediaAsset` write `pending_review` until `ApproveAd` or
 `PublishWebsite` **calls** `ApproveMediaAsset`.
 

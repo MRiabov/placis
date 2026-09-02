@@ -43,4 +43,6 @@ The key rules:
    media_asset_id)`, queue **48**. ETL transform **inserts**
    `describe_image` and continues. `CreateGeneratedMediaAsset`
    **writes** a classification and must not **insert**
-   `describe_image`.
+   `describe_image`. First-upload auto-cleanup **calls**
+   `CleanupMediaAsset` only when feature flag `media_auto_cleanup` is
+   on (default off).

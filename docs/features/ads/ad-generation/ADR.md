@@ -318,7 +318,9 @@ new entries with the next number, the area, and the date.
     decision (same day): prompt form was inline in the field, wrapping with the
     row. (2026-08-28) Short label has no AI orb. (2026-08-30) Same day, later:
     say **inline AI assistance**; **select to edit inline AI assistance** is the
-    span path. Click with no selection stays the whole field.
+    span path. Click with no selection stays the whole field. (2026-09-02)
+    First-upload tailored default is behind feature flag `media_auto_cleanup`
+    (default off); the orb still runs without it.
 
 35. **Review ad format preview is Facebook and Instagram placement** (updated
     2026-08-25) — The selected format is shown as both Facebook and Instagram

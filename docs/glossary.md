@@ -1250,6 +1250,17 @@ In code: `ai_use_ledger`.
 
 ---
 
+### Feature flag
+
+A named bool that turns a shipped behavior on or off for the whole
+`cmd/api` process. Distinct from secrets and from usage credit. Never
+in PRDs or UI.
+
+In code: field on `internal/config`. Named flags:
+[feature-flags.md](general-architecture/feature-flags.md).
+
+---
+
 ### Knowledge base registry
 
 The YAML that names which owner-facing markdown files belong to one assistant’s
