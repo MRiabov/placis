@@ -1,6 +1,6 @@
 # Photo classification — integration test
 
-- **Assert**: found photos get `photo_kind`, `photo_kind_algorithm`, and
+- **Verify**: found photos get `photo_kind`, `photo_kind_algorithm`, and
   `photo_kind_schema_revision`; the same `content_hash` is not classified again
   when `force` is false and `schema_revision` matches; a changed current
   `algorithm` still skips those items when `force` is false; a bumped

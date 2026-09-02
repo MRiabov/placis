@@ -8,10 +8,10 @@
 
 No prior rows.
 
-#### Invoke
+#### Exercise
 
 Create a widget.
 
-#### Assert
+#### Verify
 
 DB: `widget_rows`

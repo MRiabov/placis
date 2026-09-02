@@ -11,11 +11,18 @@ var testingClosedH2 = map[string]bool{
 }
 
 var testingClosedH4 = map[string]bool{
-	"Setup":  true,
-	"Invoke": true,
-	"Assert": true,
-	"Fail":   true,
-	"Mocked": true,
+	"Setup":    true,
+	"Exercise": true,
+	"Verify":   true,
+	"Fail":     true,
+	"Mocked":   true,
+	"Teardown": true,
+}
+
+var testingH4ExtraRank = map[string]int{
+	"Fail":     0,
+	"Mocked":   1,
+	"Teardown": 2,
 }
 
 var testingMethodHeadRe = regexp.MustCompile(`^(GET|POST|PATCH|PUT|DELETE)\s+/`)
@@ -103,9 +110,9 @@ func checkOneTesting(f headingFile) []string {
 }
 
 func checkTestingH4(path, test string, h4 []string) []string {
-	need := []string{"Setup", "Invoke", "Assert"}
+	need := []string{"Setup", "Exercise", "Verify"}
 	if len(h4) < 3 {
-		return []string{fmt.Sprintf("%s: ### %s missing #### Setup / Invoke / Assert", path, test)}
+		return []string{fmt.Sprintf("%s: ### %s missing #### Setup / Exercise / Verify", path, test)}
 	}
 	var errs []string
 	for i, n := range need {
@@ -114,22 +121,23 @@ func checkTestingH4(path, test string, h4 []string) []string {
 			return errs
 		}
 	}
-	seenFail, seenMocked := false, false
+	last := -1
+	seen := map[string]bool{}
 	for _, t := range h4[3:] {
-		switch t {
-		case "Fail":
-			if seenFail || seenMocked {
-				errs = append(errs, fmt.Sprintf("%s: ### %s #### Fail out of order", path, test))
-			}
-			seenFail = true
-		case "Mocked":
-			if seenMocked {
-				errs = append(errs, fmt.Sprintf("%s: ### %s extra heading #### Mocked", path, test))
-			}
-			seenMocked = true
-		default:
+		rank, ok := testingH4ExtraRank[t]
+		if !ok {
 			errs = append(errs, fmt.Sprintf("%s: extra heading #### %s", path, t))
+			continue
 		}
+		if seen[t] {
+			errs = append(errs, fmt.Sprintf("%s: ### %s extra heading #### %s", path, test, t))
+			continue
+		}
+		if rank < last {
+			errs = append(errs, fmt.Sprintf("%s: ### %s #### %s out of order", path, test, t))
+		}
+		seen[t] = true
+		last = rank
 	}
 	return errs
 }

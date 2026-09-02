@@ -14,13 +14,14 @@ asserts name the tables from [persistence.md](persistence.md) (and
 
 #### Setup
 
-Playwright drives `frontend-2` against the real API + real Postgres.
-Worker **container** is up (no `wrangler deploy`). 01/02 already ran
-(`website_pages` / `website_sections` / `website_slots` /
-`website.menus` / `website_forms` / `website_settings` exist). This
-journey does not re-assert 02 Persist.
+E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+real API + real Postgres. Worker **container** is up (no
+`wrangler deploy`). 01/02 already ran (`website_pages` /
+`website_sections` / `website_slots` / `website.menus` /
+`website_forms` / `website_settings` exist). This journey does not
+re-assert 02 Persist.
 
-#### Invoke
+#### Exercise
 
 1. **Open the website editor** — the owner opens the website editor.
 2. **Edit** — the owner edits a website section's text and swaps an
@@ -38,7 +39,7 @@ journey does not re-assert 02 Persist.
 7. **Website form → website lead** — a website visitor submits a
    website form (reads existing `website_forms` from 02).
 
-#### Assert
+#### Verify
 
 1. **Open** — UI: the website page list renders. DB: reads
    `website_pages` for the tenant.
@@ -82,3 +83,60 @@ Saving an invalid prop is rejected. UI: inline error next to the field.
 
 LLM. Cloudflare R2 / Custom Hostnames / `purge_cache`. Worker is real
 (container).
+
+## Integration
+
+### HappyPathWebsiteFull
+
+Frontend. Vitest `HappyPathWebsiteFull`. Not OpenAPI 1:1, not pipeline
+01–04.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). Tenant active. Unpublished
+website pages already in MSW fixtures (01/02 already ran).
+
+#### Exercise
+
+Open `/cms/website`. Edit a website section. Publish. MSW:
+`GET /v1/website/editor/pages`, `PATCH /v1/website/editor/pages/{page_id}`,
+`POST /v1/website/publications`.
+
+#### Verify
+
+UI: canvas shows the edit; Publish succeeds. MSW saw those Method+path
+strings. Postgres rows are the backend test.
+
+#### Fail
+
+PATCH 4xx: inline error. Leave while copy-out in flight: confirm
+discard.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### TestPipelineHappyPathWebsiteFull
+
+Backend. Go `TestPipelineHappyPathWebsiteFull`. Per-step names live in
+[pipeline/testing](pipeline/testing/README.md).
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-2`.
+Do not start the Worker container until 03/04 **call** `websiteRender`
+/ `websitePublication`.
+
+#### Exercise
+
+Ordered website pipeline 01→04 on this tenant.
+
+#### Verify
+
+Postgres holds each step’s Persist plus the 04 handoff. MinIO keys for
+publication objects (not an in-memory R2 stub).
+
+#### Mocked
+
+LLM, Google, voice, `purge_cache`. Worker real on 03/04. MinIO is real
+(Testcontainers).

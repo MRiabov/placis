@@ -4,34 +4,99 @@
 
 Three tiers, and they are not interchangeable:
 
-- **Unit** — one function/service in isolation; internal collaborators are
-  faked. No DB, no network.
-- **Integration** — asserts the API on one side, with
-  **internal services real, not mocked**: **backend-only** (handler → service →
-  sqlc → real Postgres, no frontend; HTTP via `humatest`) or
-  **frontend-only** (the frontend asserting against the API). Only Google,
-  the LLM, voice, and Stripe are
-  faked. The contractor-website **Worker** is real (container; no)
-  `wrangler deploy`) when the test calls `websiteRender` or
-  `websitePublication`. R2 / `purge_cache` are faked (paid Cloudflare).
-- **E2E** — **both sides real**: Playwright drives `frontend-2` against the real
-  Go API + real Postgres. A full contractor/owner/website-visitor journey.
-  Website / onboarding E2E that hit 03 or 04 start the Worker container.
-  Live GET does not call Go. R2 / `purge_cache` stay faked.
+- **Unit** — one function or helper with I/O cut off. No DB, no network, no
+  router. Not specified in feature `testing.md` (drop Auth gate /
+  `AuthGate.test.tsx`).
+- **Integration** — **one side**, not both.
+  - **Backend** (`humatest`, no `frontend-2`): handler → service → sqlc is
+    real. **Testcontainers Postgres** and **Testcontainers MinIO** (throwaway
+    containers, not `just servers-up` MinIO). Product language can still say
+    R2 keys; integration storage is MinIO. Always fake the LLM. Prefer fake
+    Clerk (SDK-boundary `Principal`) — real Clerk slows the suite. Still fake
+    Google, voice, and Cloudflare `purge_cache`. Stripe test-mode SDK is
+    allowed. Do **not** start the Worker container on the general backend
+    job. Start it only when that test **calls** `websiteRender` or
+    `websitePublication` (Worker job).
+  - **Frontend** (jsdom / Vitest, no Go): real React, real router, MSW. The
+    unit is not “two or more screens.” One route is still integration
+    (`/cms/website`). Completeness is one owner-journey **HappyPath Full**
+    per feature that has contractor UI. Not one Vitest file per OpenAPI
+    op, not one per pipeline step. **Verify** is UI plus MSW saw the
+    Method+path — not Postgres.
+  - **Worker** — HappyPath of the Worker, different CI job: real Worker
+    container, `TestHappyPathInternalWebsiteRender` for
+    `POST /internal/website-render`. Path-filter:
+    `apps/contractor-website/`, the Worker internal OpenAPI file, and Go
+    callers of `websiteRender` / `websitePublication`.
+- **E2E** — **both sides real**: Playwright drives `frontend-2` against the
+  real Go API + real Postgres. A full contractor/owner/website-visitor
+  journey. Website / onboarding E2E that hit 03 or 04 start the Worker
+  container. Live GET does not call Go. E2E storage may still fake paid
+  Cloudflare; MinIO is the **integration** rule.
 
 Agents must not substitute a unit test where an integration or E2E test is
 required — stubbing an E2E with unit tests is a failure, not a pass.
 
+A feature is **more complete** when its HappyPath tests pass. Edge cases
+(`#### Fail`, isolation, 4xx) come after.
+
+## HappyPath matrices
+
+Two OpenAPI specs. Each public or Worker operation needs a dedicated
+`func TestHappyPath*` that hits **exactly that one** Method+path as a
+literal (`api.Get("/v1/…")` or `"GET /v1/…"`). Flow tests also hit some
+paths; they do not replace the 1:1 row. `TestPipelineHappyPath*` is not a
+1:1 row (`TestHappyPath` prefix only). CI: `cmd/ci/check-happy-path`
+`--public` / `--worker`. No leftover: a missing spec file no-ops; once the
+exported spec has ops, missing tests fail.
+
+- **Public** (`GET /openapi.json` / exported `openapi.json`):
+  `TestHappyPathV1WebsiteEditorPagesReturnsPages` for
+  `GET /v1/website/editor/pages`. Also `GET /v1/health`, `GET /openapi.json`.
+- **Worker** (internal OpenAPI file):
+  `TestHappyPathInternalWebsiteRender` for `POST /internal/website-render`.
+
+Pipeline (not OpenAPI 1:1). Every `pipeline/` needs **both**:
+
+- Per paired step: `TestPipelineHappyPathWebsite01SelectWebsiteTemplate`
+  ↔ `pipeline/testing/01-select-website-template.md`. Unnumbered stems
+  (ETL `google-maps.md`, onboarding `build-profile.md`) use PascalCase of
+  the filename. Skip **Do not run** (onboarding `04b`). Skip gatherers and
+  testing-only `worker-internal.md` (Worker OpenAPI 1:1).
+- Whole pipeline: exactly `TestPipelineHappyPath{Feature}Full`
+  (`TestPipelineHappyPathWebsiteFull`, `OnboardingFull`, `AdsFull`,
+  `EtlFull`). Testcontainers Postgres + MinIO. Worker container only if
+  that pipeline **calls** `websiteRender` / `websitePublication`. Do not
+  name a step file `full.md`.
+
+CI: `check-pipeline-tables` leftover of current names until the Go funcs
+exist (extras may only shrink).
+
+Frontend completeness (documented, not CI-asserted this pass):
+
+| Feature | Vitest HappyPath Full | Not required |
+| --- | --- | --- |
+| Ads | `HappyPathAdsFull` — list → download | 01–04 Vitest files |
+| Onboarding | `HappyPathOnboardingFull` — Find → preview/pay | 01–09 Vitest files |
+| Website | `HappyPathWebsiteFull` — website editor → Publish | one test per website Route |
+| ETL | none (no owner UI) | |
+
+Extra frontend HappyPath only for real screen branching. Names include
+**HappyPath**; **Full** only on that journey.
+
+Do **not** add one `###` per OpenAPI row in `testing.md`. `### METHOD /path`
+stays banned.
+
 ## The rule
 
-At least **one E2E test per feature** — a "feature" is a directory under
-`docs/features/`. E2E is **full-stack**: a Playwright test drives `frontend-2`
-(the real UI) against the real Go API and a real Postgres (Testcontainers), with
-migrations run. Only Google, the LLM, and voice are faked. Website /
-onboarding E2E that hit 03 or 04 also run the Worker container. Each E2E
-asserts both
-what the UI shows and the DB rows. A feature does not pass without its E2E test
-green.
+At least **one E2E test per feature** that has owner UI — a "feature" is a
+directory under `docs/features/`. ETL has no owner UI (onboarding E2E covers
+02). E2E is **full-stack**: Playwright drives `frontend-2` against the real
+Go API and a real Postgres (Testcontainers), with migrations run. Only
+Google, the LLM, and voice are faked. Website / onboarding E2E that hit 03
+or 04 also run the Worker container. Each E2E verifies both what the UI
+shows and the DB rows. A feature with owner UI does not pass without its
+E2E test green.
 
 Each feature defines its E2E and/or integration tests in its own
 `testing.md` (`## E2E` / `## Integration`; unit tests are not specified
@@ -52,11 +117,11 @@ a bullet per Routes row. Pipeline integration tests pair
 
 ## Cross-tenant isolation
 
-Every feature that stores tenant-owned rows must have an **integration**
-test that creates two tenants and asserts reads, writes, and **files**
-are blocked across them. This is backend-only (`humatest` → real
-Postgres). Do not specify it as Playwright. This is in addition to the
-per-feature E2E rule above. Auth spells out the two-tenant case in
+Every feature that stores tenant-owned rows must have a **backend
+integration** test that creates two tenants and verifies reads, writes, and
+**files** are blocked across them (`humatest` → real Postgres). Do not
+specify it as Playwright. This is in addition to the per-feature E2E rule
+above. Auth spells out the two-tenant case in
 [auth testing](../features/other/auth/testing.md) `## Integration`.
 
 A feature's E2E must run when **that** feature's UI or API changed. Unrelated
@@ -114,18 +179,16 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
 
 ## Notes
 
-- **Clerk** is the one external dependency that is *not* faked in Playwright.
-  Backend humatest tenancy uses an SDK-boundary test double (`Sessions().Verify`
-  mapped to a programmed `Principal`); it does not decode JWTs. App code uses
-  the official Clerk Go SDK (`Sessions().Verify`, `Users().Create`,
-  `Organizations().Create`) — never a hand-rolled JWT or JWKS. Playwright
-  **testing tokens** (bot-protection, `__clerk_testing_token`) are a different
-  path: create once per CI job (`clerkSetup()` or the Backend API), put
-  `CLERK_TESTING_TOKEN` in the job env, and reuse it. Attaching that token to a
-  new Playwright page is fine; fetching a new token per spec or worker is not.
-  Signed-in Playwright tests write `storageState` once per job, then
-  `test.use({ storageState })`. Do not re-sign-in per spec. Do not restore
-  `storageState` across jobs.
+- **Clerk** — default **fake** on backend integration (SDK-boundary
+  `Principal`; does not decode JWTs). App code uses the official Clerk Go SDK
+  (`Sessions().Verify`, `Users().Create`, `Organizations().Create`) — never a
+  hand-rolled JWT or JWKS. Playwright is the one place Clerk is *not* faked:
+  **testing tokens** (bot-protection, `__clerk_testing_token`) once per CI job
+  (`clerkSetup()` or the Backend API), `CLERK_TESTING_TOKEN` in the job env,
+  reuse it. Attaching that token to a new Playwright page is fine; fetching a
+  new token per spec or worker is not. Signed-in Playwright tests write
+  `storageState` once per job, then `test.use({ storageState })`. Do not
+  re-sign-in per spec. Do not restore `storageState` across jobs.
 - **Stripe** uses test mode the same way: real SDK + test keys, no real charge.
 - **`humatest`** — backend-only tests that hit the API use Huma's
   `humatest` (the faster in-process API: `api.Get` / `api.Post`, no
@@ -133,3 +196,4 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
   E2E still drives `frontend-2` against the real Go process.
 - Fakes for Google, the LLM, Stripe, and voice live in the repo (see
   [ci-cd.md](ci-cd.md)); tests never spend money or reach production APIs.
+  Integration object storage is MinIO. `purge_cache` stays faked.

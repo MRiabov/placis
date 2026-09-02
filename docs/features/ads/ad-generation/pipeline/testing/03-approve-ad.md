@@ -6,8 +6,8 @@ Checkpoint only. Review PATCH / rewrite are not this invoke.
   `ad_variants` (`status=ad_needs_review`), `ad_copy_variants`,
   `ad_image_placements` on uploaded `media_assets` (`file_id` set, not
   `failed`), `ad_lead_forms`. Zero `ad_reviews` for this ad.
-- **Invoke**: `POST /v1/ads/{ad_id}/approve` (`ApproveAd`).
-- **Assert**:
+- **Exercise**: `POST /v1/ads/{ad_id}/approve` (`ApproveAd`).
+- **Verify**:
   - `ads.status=ad_ready_to_post`.
   - `ad_variants.status=approved`. Same `ad_variants` id as 01/02.
   - `ad_reviews`: one row, transition to `ad_ready_to_post`.

@@ -1,6 +1,6 @@
 # Projects from source — integration test
 
-- **Assert**: Facebook / Instagram posts and crawled sources that are a past
+- **Verify**: Facebook / Instagram posts and crawled sources that are a past
   named job insert `business_profile.projects` `status=active` with origin and
   ≥1 `project_sources` row; a Maps Details review usable as a Project (work
   type, one past job) inserts with empty cover; scrape photos on **that** review
