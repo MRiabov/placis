@@ -46,7 +46,6 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
     const src = URL.createObjectURL(file);
     const item: MediaLibraryItem = {
       by: "owner",
-      caption: "",
       id: src,
       ratio: "landscape",
       src,
@@ -194,7 +193,6 @@ export function ProjectPage({ projectId }: ProjectPageProps): ReactNode {
                     items={library}
                     onPick={(item) => {
                       setCover(item.src);
-                      setCaption(item.caption);
                       setPicker(false);
                     }}
                     onUpload={(file) => {

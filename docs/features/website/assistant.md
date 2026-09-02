@@ -187,7 +187,9 @@ Onboarding 06 does not call this tool.
 Last resort when nothing in GET `media_assets[]` fits (work-photo
 slots). 03 must not call this for a logo slot or a portrait / About /
 leadership slot (leave empty). Writes `media_library`
-immediately (`supplied_by=ai`, pending review). Canvas attach still follows Ask
+immediately (`CreateGeneratedMediaAsset`; `supplied_by=ai`,
+`created_by=ai`, pending review; classification
+`algorithm=copy_requested_media_caption`). Canvas attach still follows Ask
 first vs instant apply.
 
 ```text
@@ -237,13 +239,15 @@ Planner: a named real photo → **attach first** (`update_slot` +
 are the media library key.
 
 `generate_image`: the model supplies a prompt + media caption; the backend
-creates a generated media library item (`supplied_by=ai`, pending review) and
-may attach **that new item** to an image website slot on the unpublished canvas
-(convenience). It does not attach an existing library photo — that is
-`update_slot`. The canvas always surfaces a warning on that image. Owner
-approval makes the media library item approved and permanent. Website
-publication and the live website still require approved media library items. Ads
-stay approved-only.
+**calls** `CreateGeneratedMediaAsset`, which persists the tool
+`media_caption` as `media_asset_classifications` (`photo_kind=photo`,
+`algorithm=copy_requested_media_caption`) and must not **insert**
+`describe_image`. The canvas may attach **that new item** to an image
+website slot on the unpublished canvas (convenience). It does not attach
+an existing library photo — that is `update_slot`. The canvas always
+surfaces a warning on that image. Owner approval makes the media library
+item approved and permanent. Website publication and the live website
+still require approved media library items. Ads stay approved-only.
 
 `refinement_plan` is the plan-workflow text (no mutation). It is confirmation
 text, not a required schema of affected pages / assumptions / acceptance

@@ -40,21 +40,29 @@ GET faked. Worker not required (no publication).
 - After start-upload, before confirm: list omits the row; local file
   URL on the tile; `GetMediaAsset` still returns `uploading`.
 - After confirm: `delivery_url` and `thumbnail_url` non-null and
-  **different**. Image thumbnail is a second `files` row, not
-  `/cdn-cgi/image/` on the original. `review_status=approved`.
+  **different**. Three `files` rows: `original_file_id` (PUT file;
+  `content_type` need not be WebP), `file_id` and `thumbnail_file_id`
+  `image/webp`. Image thumbnail is not `/cdn-cgi/image/` on the
+  original. `review_status=approved`. HTTP `MediaAssetRead` has no
+  `media_caption`.
 - After `DescribeImage`: latest `media_asset_classifications` has
   `media_caption` set, `photo_kind` `logo` or `photo`;
-  `media_assets.processing_status=ready`. Large view uses
-  `delivery_url`; grid tile uses `thumbnail_url`.
+  `media_assets.processing_status=ready`. HTTP `MediaAssetRead` has
+  `photo_kind` and no `media_caption`. Large view uses `delivery_url`;
+  grid tile uses `thumbnail_url`.
 - Website slot `media_asset_id` is the attached id.
 - Crop of the attached row inserts a child; parent crop unchanged;
   website slot still on the parent until retargeted. Child has a
   copied `media_asset_classifications` row (same `content_hash`, no
-  new LLM).
+  new LLM). Child shares `original_file_id`, `file_id`, and
+  `thumbnail_file_id`.
 - Replace child: `parent_media_asset_id` set, `review_status=approved`,
   new `file_id` after confirm; parent `file_id` unchanged.
 - Cleanup child: `pending_review`, new `file_id`,
-  `ai_use_ledger_entries` `entry_kind=spend` `usage_category=image`.
+  `cleaned_up_with_ai=true`, `supplied_by` / `created_by` match
+  parent, `ai_use_ledger_entries` `entry_kind=spend`
+  `usage_category=image`. Schema `jobs` has `describe_image` on the
+  child.
 - Reject: child `status=archived`, `review_status=rejected`; website
   slot retargets to parent; response `MediaAssetRejectRead`.
 - Ads auto-approve of a cleanup copy is ads e2e (`ApproveAd`), not
@@ -71,8 +79,8 @@ LLM (`describe_image`, cleanup generate). R2. Not Postgres. Not Clerk.
 #### Setup
 
 Two activated tenants A and B. A has completed start-upload +
-confirm-upload (A’s `media_assets` + original `files` +
-image-thumbnail `files`). B has zero `media_assets`.
+confirm-upload (A’s `media_assets` + original `files` + canonical
+WebP `files` + image-thumbnail `files`). B has zero `media_assets`.
 
 #### Invoke
 
@@ -112,8 +120,10 @@ Request `MediaAssetCreate`.
 - `media_assets`: one row, `asset_type=image`, `source=upload`,
   `supplied_by=owner`, `status=active`, `review_status=approved`,
   `processing_status=uploading`, `file_id` null, `thumbnail_file_id`
-  null, `crop_mode=full`, `focal_x=0.5`, `focal_y=0.5`.
-- `files`: one row, `scan_status=pending`.
+  null, `original_file_id` null, `cleaned_up_with_ai=false`,
+  `created_by=owner`, `crop_mode=full`, `focal_x=0.5`, `focal_y=0.5`.
+- `files`: one row, `scan_status=pending`, `owner_type=media_asset`,
+  `owner_id` = that `media_assets.id`.
 - Response `MediaAssetUploadRead`: `id` of that row, `upload_url` set.
 - `GET /v1/media-assets` omits this row.
 - `GET /v1/media-assets/{id}` returns it (`uploading`).
@@ -152,11 +162,14 @@ Nothing (no LLM). Object-storage PUT is the browser, not this invoke.
 
 #### Assert
 
-- Same `media_assets` id: `file_id` set, `thumbnail_file_id` set,
-  `processing_status=processing`, `review_status=approved`.
-- `files`: original `scan_status=clean`; second row for the image
-  thumbnail. `thumbnail_url` ≠ `delivery_url`. `thumbnail_url` is not
-  a `/cdn-cgi/image/` URL.
+- Same `media_assets` id: `original_file_id` set, `file_id` set,
+  `thumbnail_file_id` set, `processing_status=processing`,
+  `review_status=approved`.
+- `files`: original `scan_status=clean`; canonical WebP
+  (`file_id`, `image/webp`); image thumbnail (`thumbnail_file_id`,
+  `image/webp`). `thumbnail_url` ≠ `delivery_url`. `thumbnail_url` is
+  not a `/cdn-cgi/image/` URL. HTTP `MediaAssetRead` has no
+  `media_caption`.
 - Schema `jobs`: one `describe_image` (`tenant_id`, `media_asset_id`).
 - HTTP returns before `DescribeImage` finishes. Still zero
   `media_asset_classifications`.
@@ -171,10 +184,12 @@ Nothing (no LLM). Object-storage PUT is the browser, not this invoke.
 
 #### Fail
 
-Scan fail (no PUT, or dirty scan) → `processing_status=failed`; no
-`describe_image`; `file_id` still null. Unknown id → `404`; no extra
-row. **Try again** is another `POST /v1/media-assets/start-upload`
-(new id); the `failed` row remains until Reject / sweep.
+Scan fail (no PUT, or dirty scan) → upload failed
+(`processing_status=failed`; no `describe_image`; `file_id` still
+null). Decode/encode fail → same. Already-`failed` confirm → `400`.
+Unknown id → `404`; no extra row. **Try again** is another
+`POST /v1/media-assets/start-upload` (new id); the `failed` row remains
+until Reject / sweep.
 
 #### Mocked
 
@@ -207,9 +222,10 @@ River worker for `describe_image` (`DescribeImage`).
 - Auto-cleanup (latest `photo_kind=photo` and clutter / busy
   background / poor lighting / color cast not null): second
   `media_assets` row, `parent_media_asset_id` = original, new
-  `file_id`, `pending_review`, `thumbnail_file_id` set. Original still
-  `ready` + `approved`. Child has a `describe_image` job (new
-  classification after that job).
+  `file_id`, `pending_review`, `cleaned_up_with_ai=true`,
+  `supplied_by` / `created_by` match original, `thumbnail_file_id`
+  set. Original still `ready` + `approved`. Child has a
+  `describe_image` job (new classification after that job).
 - Latest `photo_kind=logo`: still one `media_assets` row.
 
 #### Cases
@@ -217,53 +233,78 @@ River worker for `describe_image` (`DescribeImage`).
 - Two `processing` rows, same tenant: both jobs run; unique
   `(tenant_id, media_asset_id)`; not serialized on `tenant_id`.
 - ETL path: transform inserts `media_assets` + `files`, **calls**
-  `WriteImageThumbnail`, **inserts** `describe_image`, returns without
-  waiting. No classification yet was the insert condition. Latest
-  classification exists → skip insert.
+  `WriteCanonicalWebP` then `WriteImageThumbnail`, **inserts**
+  `describe_image`, returns without waiting. No classification yet was
+  the insert condition. Latest classification exists → skip insert.
 - Latest classification already matches `algorithm` +
-  `schema_revision` and `force` is false: skip (no second generate).
-- Latest `algorithm=human`: skip (no second generate).
+  `schema_revision`: skip (no second generate).
 
 #### Fail
 
 LLM error → row stays `processing`; no `media_asset_classifications`
-row; retries same `media_asset_id`; sibling photos unchanged.
+row; retries same `media_asset_id`; sibling photos unchanged. Retries
+exhaust → captioning-failed (`processing_status=failed`, `file_id`
+set); no classification row; sweep must not delete this row.
 
 #### Mocked
 
 LLM (media caption + `submit_image_visual_issues`). Cleanup generate
 when auto-cleanup runs.
 
-### Patch media caption
+### PATCH crop / focal
 
 #### Setup
 
 A `ready` + `approved` owner row with one `media_asset_classifications`
-row (`algorithm` not `human`). Unreferenced (no website slot / ad
-placement).
+row. Unreferenced (no website slot / ad placement). A second row
+referenced by a website slot.
 
 #### Invoke
 
-`PATCH /v1/media-assets/{id}` (`UpdateMediaAsset`) with
-`media_caption` only.
+`PATCH /v1/media-assets/{id}` (`UpdateMediaAsset`) with crop / focal
+only. Second invoke: same body on the referenced row. Third invoke:
+body includes `media_caption`.
 
 #### Assert
 
-- Second `media_asset_classifications` row: `algorithm=human`, new
-  `media_caption`, same `photo_kind` / severities / `content_hash` as
-  the previous latest. `ai_generation_id` null. No LLM.
-- HTTP `MediaAssetRead.media_caption` is the new value.
-  `photo_kind` unchanged.
-- `media_assets` crop / focal / `file_id` unchanged. One
-  `media_assets` row (unreferenced; no copy-on-write).
-
-#### Fail
-
-Empty `media_caption` → `400`; still one classification row.
+- Unreferenced: mutate crop/focal in place; one `media_assets` row;
+  classification row count unchanged.
+- Referenced: copy-on-write child; website slot stays on the parent;
+  child has a copied classification (same `content_hash`, no LLM).
+- Body with `media_caption` → rejected (field gone). No
+  `algorithm=human` row. GET / list `MediaAssetRead` has no
+  `media_caption`.
 
 #### Mocked
 
 Nothing (no LLM).
+
+### Create generated media asset
+
+#### Setup
+
+Activated tenant. Zero `media_assets`. Schema `jobs`: no
+`describe_image`.
+
+#### Invoke
+
+`CreateGeneratedMediaAsset` (website 03 / assistant `generate_image`).
+Tool `media_caption` set.
+
+#### Assert
+
+- `media_assets`: `asset_type=generated_image`, `source=generated`,
+  `supplied_by=ai`, `created_by=ai`, `pending_review`,
+  `processing_status=ready`, `cleaned_up_with_ai=false`.
+- One `media_asset_classifications` row:
+  `algorithm=copy_requested_media_caption`, `photo_kind=photo`,
+  `media_caption` = tool value, severities null.
+- Zero `describe_image`. HTTP `MediaAssetRead` has `photo_kind=photo`
+  and no `media_caption`.
+
+#### Mocked
+
+Image generate. Not the captioning LLM.
 
 ### Replace after ready
 
@@ -314,8 +355,10 @@ non-empty prompt.
 #### Cases
 
 Usage credit remaining: child `pending_review`, new `file_id`,
+`cleaned_up_with_ai=true`, `WriteCanonicalWebP` then
 `WriteImageThumbnail` on the child, spend row `usage_category=image`.
-**inserts** `describe_image` on the child. Does not retarget uses.
+**inserts** `describe_image` on the child. Does not retarget website
+slots or ad placements.
 Empty prompt → `400`; no child.
 
 #### Mocked
@@ -336,8 +379,9 @@ website slot (or `ad_image_placements`) points at the child.
 #### Assert
 
 Child `status=archived`, `review_status=rejected`. `files` rows kept.
-Uses retarget to parent. Response `MediaAssetRejectRead` (parent +
-`rejected_media_asset_id`). Already archived+rejected → `200`.
+Website slots and ad placements retarget to parent. Response
+`MediaAssetRejectRead` (parent + `rejected_media_asset_id`). Already
+archived+rejected → `200`.
 
 #### Fail
 
@@ -354,7 +398,9 @@ Nothing.
 
 One `media_assets` `uploading`, `file_id` null, `created_at` older
 than the website-editor leave-guard window. One fresh `uploading` +
-null `file_id` inside the window. One `ready` row.
+null `file_id` inside the window. One `ready` row. One upload-failed
+(`failed` + null `file_id`) older than the window. One
+captioning-failed (`failed` + `file_id` set) older than the window.
 
 #### Invoke
 
@@ -363,8 +409,9 @@ workers, not crontab).
 
 #### Assert
 
-Stale row deleted. Fresh `uploading` row kept. `ready` row kept. List
-still omits in-flight rows without this job (no age math in list).
+Stale `uploading` row deleted. Stale upload-failed row deleted. Fresh
+`uploading` row kept. `ready` row kept. Captioning-failed row kept.
+List still omits in-flight rows without this job (no age math in list).
 
 #### Mocked
 

@@ -56,7 +56,7 @@ export function MediaThumbs({
       ) : null}
       {items.map((item) => (
         <button
-          aria-label={item.caption}
+          aria-label="Photo"
           className={cn(
             "relative mb-2 block w-full break-inside-avoid overflow-hidden rounded-[10px] bg-zinc-200",
             ratioClass[item.ratio],
