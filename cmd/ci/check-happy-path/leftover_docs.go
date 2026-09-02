@@ -16,6 +16,8 @@ var leftoverDocs = []string{
 	"GET /v1/billing/usage",
 	"GET /v1/health",
 	"GET /v1/me",
+	"GET /v1/media-assets",
+	"GET /v1/media-assets/{id}",
 	"GET /v1/onboarding/activation/status",
 	"GET /v1/onboarding/assistant/thread",
 	"GET /v1/onboarding/events/stream",
