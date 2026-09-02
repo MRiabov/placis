@@ -1,6 +1,6 @@
 # Facebook — integration test
 
-- **Assert**: extract writes `etl.facebook_fetches`; skip when scheduled with no
+- **Verify**: extract writes `etl.facebook_fetches`; skip when scheduled with no
   Facebook page URL (`status=insufficient_data_for_lookup`); onboarding does
   not insert this run until `facebook_page_url` is a detail, then
   `insufficient_data_for_lookup` if nothing

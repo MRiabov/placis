@@ -240,7 +240,7 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     `/cms/details` edit the same Details fields with the same controls and the
     same `business_profile_*` writes. If Details gains, drops, or changes a
     field, the client interview does too. Do not keep a parallel onboarding-only
-    widget for a Details field (no textarea for services, no free-text service
+    control for a Details field (no textarea for services, no free-text service
     area, no second hours picker). Allowed differences only: white `.onb-card`
     vs the Details panel; legal identity stays on Review (03) and is not
     repeated; interview may add photos, certifications, reviews, extra notes,
@@ -299,3 +299,19 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     from 06 automatic website copy generation (the River job) and from 08 share
     (R2). 09 does not wait for more prompts. HTTP:
     [website-editor.md](website-editor.md). (2026-08-30)
+
+25. **OAuth modal; Clerk user from `founder_name`; org is the business on
+    checkout/09** — The 09 island and `/login` are **Sign in with Google**
+    (Clerk OAuth / social), not typed SignUp, not magic link, not
+    OrgProvisionStep. `CreateClerkUser` sets the Clerk user name from
+    `founder_name`. After that the owner can change it in the Clerk UI in
+    the app; do not overwrite. `CreateClerkOrganization` names/badges the Clerk
+    organization as the **business** (business logo when present). Checkout
+    **calls** `AttachClerkOrganization` and returns `clerk_org_id` for
+    `setActive`; 09 **calls** it if still null, then
+    `InsertOwnerMembership`. There is no `POST /v1/me/clerk-organization`.
+    ADR 22 still holds: `/me` may return unactivated `TenantRead` after
+    attach — attach is checkout, not that POST. Tenant ↔ Clerk org is 1-1;
+    Clerk users on that tenant are 1-many. Same day, later: `MeRead` and
+    checkout return `clerk_org_id` (not `pending_clerk_org_id`). Frontend
+    `setActive` from that id when the Clerk session has no org yet. (2026-09-02)

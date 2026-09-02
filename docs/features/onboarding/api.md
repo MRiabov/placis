@@ -78,7 +78,7 @@ Unpaid canvas reuses CMS website editor DTOs (`WebsiteEditorGet`,
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `WebsiteActivationCheckoutRead` | `checkout_url` | Checkout URL. **Omit** Stripe bodies |
+| `WebsiteActivationCheckoutRead` | `checkout_url`, `clerk_org_id` | Checkout URL + Clerk org id for `setActive`. **Omit** Stripe bodies |
 | `WebsiteActivationStatusRead` | `payment_status`, `checkout_url` | Poll after checkout |
 
 ### Onboarding assistant (guide)
@@ -148,7 +148,8 @@ Unpaid canvas. Same tails as `/v1/website/editor/…`. CMS website editor
 is active tenant only. Policy: [website-editor.md](website-editor.md).
 GET website pages / website page / top menu and footer: onboarding
 session token or Clerk unactivated. PATCH website pages / top menu and
-footer: Clerk unactivated only. Share: onboarding session token or Clerk
+footer: Clerk unactivated only (tenant from `clerk_user_id` bind until
+org claim). Share: onboarding session token or Clerk
 unactivated. Send / Voice: Clerk only. `status=active` → **403**.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
@@ -175,7 +176,7 @@ First pay (09). Not Usage & billing
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /v1/onboarding/activation/checkout` | strip island; pay CTA on `/onboarding/preview-and-edit/` | | `WebsiteActivationCheckoutRead` | | `website_activations` | First activation also signs up / creates the owner | | Website publication; browser Stripe success URL as truth; `/v1/website-activations/…`; `/v1/billing/subscription/checkout` |
+| `POST /v1/onboarding/activation/checkout` | strip island; pay CTA on `/onboarding/preview-and-edit/` | | `WebsiteActivationCheckoutRead` | `tenants` | `website_activations`, `tenants.clerk_org_id` | **calls** `AttachClerkOrganization`; frontend `setActive` then Stripe; does not set `status=active` | | Website publication; browser Stripe success URL as truth; `/v1/website-activations/…`; `/v1/billing/subscription/checkout`; `POST /v1/me/clerk-organization` |
 | `GET /v1/onboarding/activation/status` | poll after checkout | | `WebsiteActivationStatusRead` | `website_activations` | | Closed `payment_status` + checkout URL if still needed | | |
 | `POST /v1/webhooks/stripe` | Stripe | | | | `stripe_events`, `website_activations` | Verify, persist event; activation Checkout **inserts** `website_activation`; extra usage credit Checkout **inserts** `billing_extra_usage_credit`; subscription / `invoice.paid` **inserts** `billing_subscription_sync` | | Trust browser success URL |
 

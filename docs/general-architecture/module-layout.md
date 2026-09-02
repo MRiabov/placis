@@ -6,12 +6,12 @@ the target.
 ```text
 cmd/
   api/            # HTTP API server + in-process River
-  ci/             # CI/dev checks (not deployed); check-dont-say, check-pipeline-tables, check-docs-code, later folder fan-out, …
+  ci/             # CI/dev checks (not deployed); check-dont-say, check-pipeline-tables, check-docs-code, check-happy-path, later folder fan-out, …
 internal/
   # shared / cross-cutting (small, few files each)
   config/         # typed config from env
   httpapi/        # router, middleware, error mapping, huma API registration
-  auth/           # Clerk SDK (clerk-sdk-go) verification -> Principal
+  auth/           # Clerk SDK (clerk-sdk-go): Sessions().Verify -> Principal; Users().Create; Organizations().Create
   store/          # pgx pool + sqlc-generated queries (queries/*.sql split by domain)
   ai/             # LLMProvider + threads + traces (schema `ai`; no feature tool registries)
   knowledge/      # shared product glossary + Voice pronunciation (listed by both assistants)

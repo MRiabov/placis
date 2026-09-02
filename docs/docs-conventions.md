@@ -53,7 +53,7 @@ A feature directory holds, as applicable:
 | `technical-implementation.md` | pipeline, validation, testing — references `persistence.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
-| `testing.md` | the owner E2E (or ETL integration) with DB asserts at Persist grain. Every persistence table is asserted here and/or in `pipeline/testing/`. |
+| `testing.md` | E2E and/or integration tests of what Persist / Must not names. Unit tests are not specified here. Every persistence table is named here and/or in `pipeline/testing/`. Integration is one side (backend and/or frontend). |
 | `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline). Closed `##` on step files (see Named identifiers). |
 | `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features) |
 
@@ -78,11 +78,11 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   install`. Worktrees share `.git/hooks`. Do not skip hooks. If `rumdl-fmt`
   rewrites staged files, restage and commit again. `rumdl fmt` is optional if
   you want to see wrapping before commit.
-- **CI:** `.github/workflows/rumdl.yml` runs `rumdl fmt --check` then
-  `rumdl check` on pull requests. CI never rewrites files.
+- **CI:** `.github/workflows/docs-gates.yml` runs `rumdl fmt --check` then
+  `rumdl check` before the Go scanners. CI never rewrites files.
 - **Out of scope:** `.agents/` (imported and first-party skills) and
-  `**/testdata/**` (Don’t-say fixtures). New first-party `.md` files are
-  included automatically.
+  `**/testdata/**` (Don’t-say fixtures; `check-dont-say` skips them too). New
+  first-party `.md` files are included automatically.
 - **File size:** after wrap, a doc over 800 lines must be split (hard error at
   1200). Exception: `glossary.md` stays one file (Don’t-say table + ubiquitous
   language).
@@ -169,17 +169,18 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
    `pipeline/` must already live in [jobs.md](general-architecture/jobs.md)
    `## Jobs`. Match the path as written (`GET /v1/…`, later `/v2/…`,
    `POST /internal/…`). Do not match a raw `v1` token.
-2. **Test docs assert every persistence table.** Every table in that
-   feature’s `persistence.md` is asserted at least once in `testing.md`
-   and/or `pipeline/testing/*.md`. Grain follows Persist / Must not (see
-   Named asserts). The same table **may** appear in several files.
-   `testing.md` is the owner journey (ETL: integration, no owner UI). It
-   only asserts what that journey reads or writes. A pipeline testing
-   file only asserts what **that step** reads or persists. Do not invent
-   writes in
-   the E2E for tables another test file already asserts. Do not leave a
-   persistence table with no assert in either place. Do not require a
-   bullet per Routes row. **Do not create** stays untested.
+2. **Test docs name every persistence table.** Every table in that
+   feature’s `persistence.md` is named at least once in `testing.md`
+   and/or `pipeline/testing/*.md`. Named verifies follow Persist / Must
+   not (see Named verifies). The same table **may** appear in several files.
+   `testing.md` is the owner E2E and/or integration tests (ETL:
+   integration, no owner UI). Unit tests are not specified here. A
+   pipeline testing file only names what **that step** reads or persists.
+   Do not invent writes in the E2E for tables another test file already
+   names. Do not leave a persistence table with no Verify in either
+   place. Do not require a bullet per Routes row. **Do not create** stays
+   untested. Two-tenant isolation is backend Integration (`humatest`),
+   not Playwright. Frontend isolation is SPA 404 / empty / wrong id.
 3. **Every table has a write path.** **Written by** on that table’s
    persistence entry: pipeline function, Routes method+path, or job.
 4. **Code only names existing lists.** A path, DTO type name, River job
@@ -193,26 +194,27 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
    and `frontend-2` routes are out of this gate.
    CI: [ci-cd.md](general-architecture/ci-cd.md).
 
-### Named asserts
+### Named verifies
 
-Grain follows **Persist** / **Must not**, not a mandatory
-table+column+predicate triple.
+Follows **Persist** / **Must not**, not a mandatory
+table+column+predicate triple. Backend **Verify** names these. Frontend
+**Verify** names UI and MSW Method+path, not Postgres.
 
-- Persist / Inserts names a **River job kind** → testing asserts schema
-  `jobs` has a row with that River job kind (grain already used for
+- Persist / Inserts names a **River job kind** → testing verifies schema
+  `jobs` has a row with that River job kind (already used for
   `website_copy_generation`).
-- Persist names a **table** → testing asserts that table (row exists,
+- Persist names a **table** → testing verifies that table (row exists,
   empty, unchanged, one row).
-- Persist names **table.column** → testing asserts that column. Add a
+- Persist names **table.column** → testing verifies that column. Add a
   short predicate only if the test would check it (`status=unpublished`,
   empty, unchanged). Not a SQL dump. Not a jsonb tree essay.
-- Must not write a **table** → testing asserts that table stayed empty /
+- Must not write a **table** → testing verifies that table stayed empty /
   unchanged. No column.
 - Prior-step fixture “already from a prior step” names the **tables** that
   step persisted. Do not repeat that step’s column predicates.
-- Non-Postgres objects stay named as themselves (R2 key, Worker op).
+- Non-Postgres objects stay named as themselves (MinIO key, Worker op).
 
-Ban “Assert Details transform lands”, “assert the copy”, “profile posts /
+Ban “Verify Details transform lands”, “verify the copy”, “profile posts /
 reviews” with no table. CI checks **known** table names only (already in
 some `persistence.md`); invented names and columns are writing rules.
 
@@ -229,27 +231,41 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 
 Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
 ratchets leftover extra `##` on undefined features (extras may only shrink).
-Website, billing, ads, assistant, onboarding, and the media library have none.
-Optional `###` groups under `## DTOs` and `## Routes` (glossary terms, same
-titles on both when split; [glossary.md](glossary.md) grain). Not mandatory — split when the
-table is hard to review. `### METHOD /path` overflow still sits under that group
-when a cell would be a paragraph. `## Do not create` stays one list. Persistence
-and `jobs.md` already overflow as `### \`name\``; do not add a second grouping
-layer there.
+Website, billing, ads, assistant, onboarding, auth, and the media
+library have none. Optional `###` groups under `## DTOs` and
+`## Routes` (glossary terms, same titles on both when split;
+[glossary.md](glossary.md)). Not mandatory — split when the
+table is hard to review. `### METHOD /path` overflow still sits under
+that group when a cell would be a paragraph. `## Do not create` stays
+one list. Persistence and `jobs.md` already overflow as
+`### \`name\``; do not add a second grouping layer there.
 
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`. Overflow
 is `###` under a table, not a new `##`. CI ratchets leftover grouping `##` the
 same way as `api.md` (extras may only shrink). Website, billing, ads, assistant,
-onboarding, and the media library have none. Intro-only files (Details,
-Projects) have no `##` yet.
+onboarding, auth, and the media library have none. Intro-only files
+(Details, Projects) have no `##` yet.
 
-**`testing.md`** — H1 `{feature} E2E and integration tests`. Then `## E2E`
-and `## Integration`. Each test is `###` name with `####` sections
-(fixture, Invoke, Assert; optional Fail / Mocked / Cases). Ban `## Routes`,
-`## DTOs`, `## Tables`, `## Do not create`, and `### GET /v1/…`. CI
-ratchets those bans (empty leftover today). A complex pipeline keeps
-pairing files under `pipeline/testing/`. Example without a pipeline:
-[media library testing.md](features/other/media/testing.md).
+**`testing.md`** — H1 + intro, then only `## E2E` and/or `## Integration`.
+Unit tests are not specified here. `###` is one test (open names; ban
+`### METHOD /path`). `####` is closed: **Setup**, **Exercise**, **Verify**
+required in that order; **Fail**, **Mocked**, and **Teardown** optional
+after Verify (that relative order; at most one each). Isolation is
+Integration, not Playwright. Backend isolation is two-tenant
+(`humatest`). Frontend isolation is SPA 404 / empty / wrong id. Ban
+leftover journey `##` (`CMS`, `Onboarding`). CI enforces the closed
+lists.
+
+Integration is **one side**. Backend: `humatest` + Testcontainers
+Postgres + Testcontainers MinIO. Frontend: React + router + MSW (not
+screen count). Do not add one `###` per OpenAPI row. Per-operation
+HappyPath is Go `TestHappyPath*` (public vs Worker, two jobs). Pipeline
+steps are Go `TestPipelineHappyPath{Feature}{Step}` plus exactly
+`TestPipelineHappyPath{Feature}Full`. Frontend completeness is one
+`HappyPath{Feature}Full` owner journey, not OpenAPI or pipeline 1:1.
+Backend flow **Exercise** lists Method+path literals. Frontend
+**Exercise** lists clicks and MSW paths. Setup states backend or
+frontend.
 
 **`jobs.md`** — intro, then only `## Workflows` and `## Jobs`. Overflow is `###`
 with a backticked River job kind under Jobs (retry, leftover, skip). No leftover
@@ -265,9 +281,12 @@ extra `##`.
 `## In code`, `## Routes`, SLO titles, and other essays. Overflow is
 `###` under the matching closed heading. Gatherers are not this list:
 `pipeline/README.md` and `etl/pipeline/etl-run-kind-triggers.md`.
-`pipeline/testing/` keeps bold prior-step
-fixture / **Invoke** / **Assert** / **Fail** / **Mocked** / **Cases**
-labels, not `##`.
+`pipeline/testing/` keeps bold **Setup** / **Exercise** / **Verify** /
+**Fail** / **Mocked** / **Cases** labels, not `##`. **Teardown** is
+optional last. Feature `testing.md` uses the same names as `####`
+(minus **Cases**). Go names: `TestPipelineHappyPath{Feature}{Step}` per
+paired step and `TestPipelineHappyPath{Feature}Full` for the whole
+pipeline. Not Vitest per step.
 
 ### `api.md` shape (defined features)
 
@@ -312,7 +331,7 @@ on the Request DTO.
 `## Indexes` — as billing already does.
 
 Major features that must eventually satisfy this contract: ads, assistant,
-billing, ETL, onboarding, website, media library. Website, ads, assistant,
-onboarding, billing, and the media library are fully defined (DTOs, Routes,
-tables, named services). CI:
+auth, billing, ETL, onboarding, website, media library. Website, ads,
+assistant, onboarding, billing, auth, and the media library are fully
+defined (DTOs, Routes, tables, named services). CI:
 [ci-cd.md](general-architecture/ci-cd.md).

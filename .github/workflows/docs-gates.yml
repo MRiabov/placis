@@ -16,6 +16,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check formatting
+        uses: rvben/rumdl@v0
+        with:
+          version: "0.2.62"
+          command: fmt-check
+
+      - name: Lint
+        uses: rvben/rumdl@v0
+        with:
+          version: "0.2.62"
+          command: check
+
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
@@ -23,7 +35,7 @@ jobs:
           cache-dependency-path: go.mod
 
       - name: Test checkers
-        run: go test ./cmd/ci/check-dont-say ./cmd/ci/docnames ./cmd/ci/check-docs-code ./cmd/ci/check-pipeline-tables
+        run: go test ./cmd/ci/check-dont-say ./cmd/ci/docnames ./cmd/ci/check-docs-code ./cmd/ci/check-pipeline-tables ./cmd/ci/check-happy-path
 
       - name: Don't-say glossary check
         run: go run ./cmd/ci/check-dont-say --all
@@ -39,3 +51,6 @@ jobs:
           fi
           # shellcheck disable=SC2086
           go run ./cmd/ci/check-pipeline-tables --all $changed
+
+      - name: HappyPath OpenAPI 1:1
+        run: go run ./cmd/ci/check-happy-path --public

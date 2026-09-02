@@ -9,10 +9,10 @@ kind `website_copy_generation` on this `tenant_id`. Mapping:
   least two named services on that accepted profile. Media library photos
   may exist; 02 does not attach them. Zero `website_pages`. No
   `website_copy_generation` yet.
-- **Invoke**: copy the website template’s pages onto the unpublished
+- **Exercise**: copy the website template’s pages onto the unpublished
   website (real write). Then, in a second case, insert a later ETL named
   service after this write (do not re-run 02).
-- **Assert** (Postgres after 02, **before** 03 runs):
+- **Verify** (Postgres after 02, **before** 03 runs):
   - `website_pages`: `tenant_id` = the unactivated tenant from 01;
     `status=unpublished`; one `page_type=home`, one `about`, one
     `contact`, one `legal` (privacy policy), and one `service` page per

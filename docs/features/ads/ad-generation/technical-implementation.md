@@ -218,7 +218,7 @@ preferences and never create ad records.
 
 ## Testing Strategy
 
-Grain and named tables: [testing.md](testing.md) and
+Named asserts and tables: [testing.md](testing.md) and
 [pipeline/testing](pipeline/testing/README.md).
 
 Backend tests:

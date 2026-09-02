@@ -6,18 +6,19 @@ Pays, upgrades the tenant, and **calls** website 04 (strip off). Leftover
 
 - **Setup**: unpublished website from 05; wait-end on
   `/onboarding/preview-and-edit/`. 08 share is **optional**. A Clerk
-  testing-token contractor (Clerk organization may be missing).
-  Automatic website copy generation may still be running, or may have
+  testing-token contractor. Checkout **calls** `AttachClerkOrganization`
+  (`tenants.clerk_org_id` set; `status` still `unactivated`) before
+  Stripe. Automatic website copy generation may still be running, or may have
   failed — neither blocks website activation. Record: if 08 ran,
   v1 `website_publications` `active`; the `website_copy_generation` job
   row if still in flight.
-- **Invoke**: `POST /v1/onboarding/activation/checkout` (app origin
+- **Exercise**: `POST /v1/onboarding/activation/checkout` (app origin
   **or** CORS by `Host` /
   `website_prefix` if they shared); deliver
   `checkout.session.completed` (Stripe SDK signature against a test
   key); replay it; attempt a second payer after the first verified
   completion. Also: pay with no prior 08.
-- **Assert** (Postgres):
+- **Verify** (Postgres):
   - `website_activations` written (`tenant_id`,
     `onboarding_session_id`, `payment_status=paid`,
     `checkout_session_id`).
@@ -44,7 +45,7 @@ Pays, upgrades the tenant, and **calls** website 04 (strip off). Leftover
     this pay; CMS assistant POSTs / PATCH are not 409 because 06 is
     running.
   - `/onboarding/preview-and-edit/` redirects to `/cms/website`.
-  - **Spy:** fake R2 `latest/` without the strip; fake purge as
+  - **Spy:** MinIO `latest/` without the strip; fake purge as
     website 04.
   - `billing.subscriptions` (Placis Pro plan, `status=active`,
     `stripe_subscription_id` set). `ai_use_ledger_entries`
@@ -55,4 +56,4 @@ Pays, upgrades the tenant, and **calls** website 04 (strip off). Leftover
 - **Fail**: invalid Stripe signature → no `website_activations` paid
   row; tenant still `unactivated`; no new `website_publications`.
 - **Mocked**: Stripe test mode (no real charge). Website 04 as 08 (real
-  Worker `websitePublication`; R2 / purge faked).
+  Worker `websitePublication`; MinIO real; purge faked).

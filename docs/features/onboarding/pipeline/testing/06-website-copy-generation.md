@@ -7,10 +7,10 @@ must not block 09. Website 03 does the website slot writes.
   `website_copy_generation` on this `tenant_id`. Onboarding session
   `selecting_and_copying_website_template`. Record website slot ids and
   tokenized `value`s.
-- **Invoke**: run that River job (website 03). Also start a second 06;
+- **Exercise**: run that River job (website 03). Also start a second 06;
   also activate (09) while the job is in flight; also wait-end (home
   website page copy done or wait cap) without share.
-- **Assert** (Postgres):
+- **Verify** (Postgres):
   - `onboarding_sessions.status=preview_and_edit` at wait-end, not at 08
     share.
   - Targeted `website_slots`: `origin=website_copy_generation`,

@@ -94,7 +94,7 @@ func TestRiverFilesSkipCI(t *testing.T) {
 
 func TestSQLFilesFromDir(t *testing.T) {
 	dir := t.TempDir()
-	src := "-- +goose Up\nCREATE TABLE IF NOT EXISTS website.website_pages (\n  id uuid\n);\nCREATE TABLE widgets (\n  id uuid\n);\n"
+	src := "-- +goose Up\nCREATE TABLE IF NOT EXISTS website.website_pages (\n  id uuid\n);\nCREATE TABLE samples (\n  id uuid\n);\n"
 	if err := os.WriteFile(filepath.Join(dir, "001.sql"), []byte(src), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -105,8 +105,8 @@ func TestSQLFilesFromDir(t *testing.T) {
 	if len(files["website_pages"]) == 0 || len(files["website.website_pages"]) == 0 {
 		t.Fatalf("tables: %v", files)
 	}
-	if len(files["widgets"]) == 0 {
-		t.Fatal("widgets")
+	if len(files["samples"]) == 0 {
+		t.Fatal("samples")
 	}
 }
 

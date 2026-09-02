@@ -65,7 +65,7 @@ GET does not embed `media_assets[]`; the website editor lists via
 | `MediaAssetListGet` | `status`, `review_status` | Query; `status` defaults `active` (`active` / `archived`); `review_status` optional (`pending_review` / `approved` / `rejected`) |
 | `MediaAssetRead` | `id`, `asset_type`, `source`, `supplied_by`, `parent_media_asset_id`, `status`, `crop_mode`, `crop_x`, `crop_y`, `crop_width`, `crop_height`, `focal_x`, `focal_y`, `review_status`, `processing_status`, `photo_kind`, `cleaned_up_with_ai`, `created_at`, `delivery_url`, `thumbnail_url` | Item hydrate; GET by id; list row; image-edits / PATCH / confirm-upload / reject-parent response. `photo_kind` nullable until a classification exists. Omit `media_caption`, skip keys, `content_hash`, `file_id`, `original_file_id`, `thumbnail_file_id`, `algorithm`, `schema_revision`, `*_severity` |
 | `MediaAssetCreate` | `original_filename`, `content_type` | `start-upload` body. No owner `media_caption`. Always `asset_type=image` |
-| `MediaAssetUploadRead` | `id`, `upload_url` | `start-upload` and `start-replace-upload` response. **PUT** URL, same grain as `AdDownloadRead.url`. Not `delivery_url` |
+| `MediaAssetUploadRead` | `id`, `upload_url` | `start-upload` and `start-replace-upload` response. **PUT** URL, same shape as `AdDownloadRead.url`. Not `delivery_url` |
 | `MediaAssetUpdate` | `crop_mode`, `crop_x`, `crop_y`, `crop_width`, `crop_height`, `focal_x`, `focal_y` | PATCH omit = no change. No file / no `upload_url` / no `media_caption` |
 | `MediaAssetImageEditCreate` | `prompt` | `minLength` 1, `maxLength` 500 |
 | `MediaAssetRejectRead` | parent `MediaAssetRead` fields + `rejected_media_asset_id` | After Reject; UI reselects the parent |
@@ -113,7 +113,7 @@ crop-rect). Default on a new row: `0.5`, `0.5`. Must not include
 
 Referenced (website-section image, `logo_media_asset_id`,
 `ad_image_placements`): insert a child, return it. The `/cms/media`
-widget selects the child. Copy the parent’s latest classification onto
+crop overlay selects the child. Copy the parent’s latest classification onto
 the child’s `media_asset_id` (no LLM). Unreferenced: mutate crop/focal
 **in place**.
 

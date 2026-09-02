@@ -1,7 +1,8 @@
 # 04 — Website publication (integration test)
 
-Persists a website version and HTML in R2. Callers are 08 (strip on),
-09 (strip off), and later CMS Publish.
+Persists a website version and HTML. Integration storage is MinIO
+(R2 in production). Callers are 08 (strip on), 09 (strip off), and
+later CMS Publish.
 
 - **Setup**: unpublished website from 02 (`website_pages` /
   `website_sections` / `website_slots` / `website.menus` /
@@ -13,12 +14,12 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
   `website_prefix` null, zero `website_publications`. For 09-after-08:
   v1 `active` `published_by=onboarding` already exists (strip on). For
   CMS: tenant `status=active`, an owner host `website_addresses` row.
-- **Invoke**: the publication write (real Worker `websitePublication`;
-  R2 and `purge_cache` faked). Call 08 strip on, 09 strip off, and CMS
+- **Exercise**: the publication write (real Worker `websitePublication`;
+  MinIO real; `purge_cache` faked). Call 08 strip on, 09 strip off, and CMS
   Publish as separate cases. Also: required missing var. Also: later
   ETL reviews/projects without another 04. Also: 04 must not call
   `websiteRender`.
-- **Assert** (Postgres + Worker + fakes):
+- **Verify** (Postgres + Worker + fakes):
   - `website_publications`: one new row, `tenant_id` matches,
     `version_number` incremented, `status=published`, `active=true`,
     `published_by=onboarding` (08/09) or `owner` (CMS),
@@ -38,19 +39,19 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
     `website_pages`.
   - Go sent the tokenized dump + `WebsiteBusinessProfileRead` +
     `media_asset_urls` to `websitePublication` (not a live GET, not
-    `websiteRender`). Fake R2 has `{version_number}/` then `latest/`
+    `websiteRender`). MinIO has `{version_number}/` then `latest/`
     keys. Fake `purge_cache` includes live website page URLs, sitemap,
     robots, WebP on that host. Response has no website image render.
   - 08 strip on / 09 strip off / CMS Publish are the same write with
     the caller flag (strip present in 08 HTML, absent in 09/CMS).
   - Later ETL without 04: no new `website_publications` row;
-    fake `latest/` objects unchanged.
+    MinIO `latest/` objects unchanged.
   - Live GET of the host does not call Go.
   - Happy path: `website_publication_issues` empty (post-publication
     rows only when the Worker reports them).
   - `media_assets.review_status=approved` for `pending_review` items
     on that dump (`ApproveMediaAsset`).
-- **Handoff**: live path is R2 `latest/` (fake) + this
+- **Handoff**: live path is MinIO `latest/` + this
   `website_publications` row. Next owner Publish is another 04 on the
   same unpublished tree. Onboarding 09 after 08 archives v1 and writes
   v2 in this table.
@@ -59,4 +60,5 @@ Persists a website version and HTML in R2. Callers are 08 (strip on),
   slots unchanged; `website_publication_issues` is **not** used for this
   pre-write blocker (editor `blockers[]` / throw). Retry the same
   caller.
-- **Mocked**: R2, `purge_cache`. Not the Worker. No live Cloudflare.
+- **Mocked**: `purge_cache`. MinIO is real (Testcontainers). Not the
+  Worker. No live Cloudflare.

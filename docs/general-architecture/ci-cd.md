@@ -115,7 +115,10 @@ decision + date) instead of silently replacing the old entry.
   `apps/placis-website` e2e unless that app (or its shared packages) changed.
   Start the contractor-website **Worker container** (no `wrangler deploy`)
   when `apps/contractor-website/`, the internal OpenAPI file, or Go
-  callers of `websiteRender` / `websitePublication` change.
+  callers of `websiteRender` / `websitePublication` change. Run
+  `check-happy-path --worker` on that job only. Do **not** start that
+  container from the public cmd/api job. `--public` HappyPath and pipeline
+  Go-name pairing run on the general docs/Go job.
 - Non-shallow git (or an explicit fetch of `origin/main`) so `--changed` /
   `--only-changed` can diff against main. Empty Vitest selection is a pass
   (`--passWithNoTests` where needed).
@@ -191,8 +194,8 @@ does). We do **not** hand-roll AST scripts up front:
 - **rumdl** — Markdown format + lint (standard flavor, 80-col wrap, compact
   tables). Config: [`.rumdl.toml`](../../.rumdl.toml). Pre-commit:
   `rumdl-fmt` on staged files, then `rumdl-fmt-check` and `rumdl` on all
-  tracked Markdown (excludes `.agents/`). CI: `.github/workflows/rumdl.yml`
-  runs `rumdl fmt --check` then `rumdl check` on pull requests (not via
+  tracked Markdown (excludes `.agents/`). CI: `.github/workflows/docs-gates.yml`
+  runs `rumdl fmt --check` then `rumdl check` before the Go scanners (not via
   `just`; never `rumdl fmt` in CI). Conventions:
   [docs conventions](../docs-conventions.md).
 - **Don't-say glossary check** (`cmd/ci/check-dont-say`) — see below.
@@ -204,12 +207,21 @@ does). We do **not** hand-roll AST scripts up front:
   exist; pipeline step `##` headings are a closed list; feature `api.md`,
   `persistence.md`, and `testing.md` `##` use a shrink-only leftover list
   (closed `api.md` is DTOs / Routes / Do not create; closed `persistence.md`
-  is Tables / Indexes); `jobs.md` `##` is Workflows / Jobs; backticked
-  River job kind must already live in `jobs.md` `## Jobs`. Missing
-  `testing.md` (leads / Details / Projects) does not
+  is Tables / Indexes); `testing.md` `##` is E2E / Integration and `####`
+  is Setup / Exercise / Verify / Fail / Mocked / Teardown; pipeline Go
+  `TestPipelineHappyPath*` per paired step plus `{Feature}Full` (shrink-only
+  leftover until funcs exist); `jobs.md` `##` is Workflows / Jobs;
+  backticked River job kind must already live in `jobs.md` `## Jobs`.
+  Missing `testing.md` (leads / Details / Projects) does not
   fail; a changed `persistence.md` passed on the command line without
   `testing.md` warns. See
   [docs conventions](../docs-conventions.md#named-identifiers).
+- **HappyPath OpenAPI check** (`cmd/ci/check-happy-path`) — `--public`
+  against exported `openapi.json`; `--worker` against the Worker internal
+  OpenAPI file. Each spec op needs a `func TestHappyPath*` that hits
+  **exactly that one** Method+path literal. Flow tests do not fill a 1:1
+  row. `TestPipelineHappyPath*` is not a 1:1 row. Missing spec file:
+  that mode no-ops. See [testing.md](testing.md).
 - Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen,
   Worker internal OpenAPI export + contractor-website typegen).
 - Later: file-size guard and folder fan-out (`cmd/ci`), documented above, not
@@ -247,7 +259,7 @@ paths). Backticks are not an escape. Home-scoped tokens in a `/`-delimited route
 or file path are not flagged (the URL still uses the short word). Always-ban
 tokens in paths still fail. `apps/contractor-website` is the contractor website
 application directory. `docs/glossary.md` itself is not scanned (it is the
-list). Worked examples:
+list). `**/testdata/**` is skipped (checker fixtures). Worked examples:
 [`cmd/ci/check-dont-say/ref.md`](../../cmd/ci/check-dont-say/ref.md).
 
 #### Tiers
@@ -272,11 +284,11 @@ list). Worked examples:
   trees in full. Paths outside those trees (including `packages/`) are ignored
   even when filenames are passed in. A copied look checkout (`demo.placis.com`)
   uses the same checker with `--glossary glossary.md` over `src/`.
-- CI: `.github/workflows/docs-gates.yml` runs
-  `go test` for Don't-say, docs-code, and pipeline-tables, then
-  `go run ./cmd/ci/check-dont-say --all` (and the other two scanners) in one
-  job so `actions/setup-go` and the stdlib compile are paid once.
-  `--frontend` stays off
+- CI: `.github/workflows/docs-gates.yml` runs rumdl `fmt --check` then
+  `check`, then `go test` for Don't-say, docs-code, pipeline-tables, and
+  check-happy-path, then `go run ./cmd/ci/check-dont-say --all` (and the
+  other scanners) in one job so `actions/setup-go` and the stdlib compile
+  are paid once. `--frontend` stays off
   until frontend work
   starts from the Go backend (see [frontend-debloat.md](frontend-debloat.md)).
 
@@ -302,19 +314,36 @@ This pass: **tables**, **pipeline step headings**,
 Routes paths, not gatherers (`pipeline/README.md`,
 `etl/pipeline/etl-run-kind-triggers.md`). Closed `api.md` `##` is DTOs
 (optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
-and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. A backticked
-River job kind (`River job \`foo\``, `River job kind \`foo\``,
+and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. Closed
+`testing.md` `##` is E2E / Integration; closed `####` is Setup / Exercise /
+Verify / Fail / Mocked / Teardown (`###` is one test; ban
+`### METHOD /path`). Paired pipeline steps require
+`TestPipelineHappyPath{Feature}{Step}` in `internal/**/*_test.go` plus
+exactly `TestPipelineHappyPath{Feature}Full` (leftover list may only
+shrink). Skip **Do not run** testing files. A
+backticked River job kind (`River job \`foo\``, `River job kind \`foo\``,
 `**inserts** \`foo\``) must be a `## Jobs` row. Website, billing, ads, and
 assistant have none. Undefined features keep leftover extra-heading lists
 in `cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
-entry in the same PR). `testing.md` bans `## Routes` / `## DTOs` /
-`## Tables` / `## Do not create` and `### METHOD /path`. Pairing matches
+entry in the same PR). Pairing matches
 **known** table names (already in some `persistence.md`); invented names
 and columns are writing rules. Warn (do not fail) when a changed
 `persistence.md` is passed on the command line and that feature has no
 `testing.md`. `--all` with no extra paths does not warn on untouched files.
 GitHub Actions passes the PR’s changed `persistence.md` paths after `--all`
 so `::warning` can fire.
+
+### HappyPath OpenAPI checker
+
+`cmd/ci/check-happy-path --public` walks exported `openapi.json` and
+`internal/**/*_test.go` for `func TestHappyPath*` (not
+`TestPipelineHappyPath`). `--worker` uses the Worker internal OpenAPI file
+and `/internal/…` ops. A 1:1 test hits exactly one Method+path literal.
+No spec file: that mode passes. Unit tests + `go run`. Pre-commit:
+`--public` with the other docs scanners. `--worker` only on the Worker
+job (do not start the Worker container from the public job). CI:
+`.github/workflows/docs-gates.yml` runs `go test ./cmd/ci/check-happy-path`
+then `go run ./cmd/ci/check-happy-path --public`.
 
 ### Docs–code named identifiers
 

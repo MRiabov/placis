@@ -9,10 +9,10 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
   **not** require 06 to have finished. Record tokenized
   `website_slots.value`. `tenants.website_prefix` null. Zero
   `website_publications`.
-- **Invoke**: `POST /v1/onboarding/website/publications`.
+- **Exercise**: `POST /v1/onboarding/website/publications`.
   Also: 05 retry after a first share; also: collision on
   `display_name`; also: wait-end without this POST.
-- **Assert** (Postgres):
+- **Verify** (Postgres):
   - `tenants.website_prefix` set (collision: locality once, then
     sequential `-2`, `-3`).
   - `website_addresses`: one `type=subdomain`, `status=reserved`,
@@ -30,10 +30,10 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
     `active=false`; new onboarding publication `active` on that
     prefix (strip still on if unpaid).
   - 06 in flight does not insert another `website_publications` row
-    and does not change fake `latest/`.
+    and does not change MinIO `latest/`.
   - Wait-end without this POST: still null `website_prefix`, zero
     `website_publications`.
-  - **Spy:** fake R2 `latest/` objects; fake `purge_cache` for website
+  - **Spy:** MinIO `latest/` objects; fake `purge_cache` for website
     page URLs / sitemap / robots / WebP; GET of host HTML includes the
     website-activation island (strip on).
 - **Handoff to 09**: 09 Pre can SELECT this `active`
@@ -42,6 +42,6 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
 - **Fail**: website 04 required missing var → no new
   `website_publications`; `website_prefix` may already be reserved
   (keep it); unpublished tree unchanged; retry the same POST.
-- **Mocked**: R2, `purge_cache` (website 04). Real Worker
-  (`websitePublication`).
-  No live Cloudflare.
+- **Mocked**: `purge_cache` (website 04). MinIO is real
+  (Testcontainers). Real Worker (`websitePublication`). No live
+  Cloudflare.
