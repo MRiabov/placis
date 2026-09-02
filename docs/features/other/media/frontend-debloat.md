@@ -35,6 +35,8 @@ Shared rules: [planning index](../../../../planning/frontend-debloat.md).
   the sweep. No `/cms/media` field to change the media caption.
 - Leave guard covers an in-flight upload ([editing.md](../../website/editing.md)). Hover the uploading
   thumb: a circle-and-cross button; click it to cancel (same overlay as Ads).
+  After `confirm-upload` 200, the tile uses `thumbnail_url` from that
+  `MediaAssetRead` (same on `/cms/media`, Content drop, ads **+ Add** / drop).
 
 ## Delete
 

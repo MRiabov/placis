@@ -105,11 +105,13 @@ Two surfaces plus global nav, one unpublished website:
   - Everything else — website slots.
   Click an image on the canvas: Content focused on that image (current thumb,
   pick from the media library, **Upload**). Drop onto **Upload** still uploads;
-  the prompt is not drag-and-drop. Thumbs match `/cms/media` (mixed ratio,
-  dozens). SEO stays website-page-level in its own rail
-  panel. Website versions is a workspace item (bottom of the rail): website
-  publications and website-assistant activity, not unpublished checkpoints per
-  website page. Undo/redo stacks are in RAM, seeded from website edit history on
+  the prompt is not drag-and-drop. Handshake is media library `start-upload` →
+  PUT → `confirm-upload`; after 200 the thumb is `thumbnail_url` from that
+  `MediaAssetRead` (not the local file URL). Thumbs match `/cms/media` (mixed
+  ratio, dozens). SEO stays website-page-level in its own rail panel. Website
+  versions is a workspace item (bottom of the rail): website publications and
+  website-assistant activity, not unpublished checkpoints per website page.
+  Undo/redo stacks are in RAM, seeded from website edit history on
   `/cms/website` open; they are not a timeline UI. Onboarding-written website
   versions are omitted (not website-rollback targets).
 

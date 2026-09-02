@@ -40,12 +40,12 @@ GET faked. Worker not required (no publication).
 
 - After start-upload, before confirm: list omits the row; local file
   URL on the tile; `GetMediaAsset` still returns `uploading`.
-- After confirm: `delivery_url` and `thumbnail_url` non-null and
+- After confirm: tile `src` is `thumbnail_url` from that `MediaAssetRead` (not
+  the local file URL). `delivery_url` and `thumbnail_url` non-null and
   **different**. Three `files` rows: `original_file_id` (PUT file;
   `content_type` need not be WebP), `file_id` and `thumbnail_file_id`
-  `image/webp`. Image thumbnail is not `/cdn-cgi/image/` on the
-  original. `review_status=approved`. HTTP `MediaAssetRead` has no
-  `media_caption`.
+  `image/webp`. Image thumbnail is not `/cdn-cgi/image/` on the original.
+  `review_status=approved`. HTTP `MediaAssetRead` has no `media_caption`.
 - After `DescribeImage`: latest `media_asset_classifications` has
   `media_caption` set, `photo_kind` `logo` or `photo`;
   `media_assets.processing_status=ready`. HTTP `MediaAssetRead` has
@@ -58,7 +58,9 @@ GET faked. Worker not required (no publication).
   new LLM). Child shares `original_file_id`, `file_id`, and
   `thumbnail_file_id`.
 - Replace child: `parent_media_asset_id` set, `review_status=approved`,
-  new `file_id` after confirm; parent `file_id` unchanged.
+  new `file_id` after confirm; parent `file_id` unchanged. Child tile
+  uses the child’s `thumbnail_url` from confirm (not the local file
+  URL).
 - Cleanup child: `pending_review`, new `file_id`,
   `cleaned_up_with_ai=true`, `supplied_by` / `created_by` match
   parent, `ai_use_ledger_entries` `entry_kind=spend`
@@ -88,14 +90,16 @@ MSW fixtures.
 
 Open `/cms/media`. Empty thumbs. File picker / drop. MSW
 `POST /v1/media-assets/start-upload`, then PUT is the browser (not MSW
-Go). `POST /v1/media-assets/{id}/confirm-upload`. Grid shows. Crop
-click-off. MSW `GET /v1/media-assets`, `PATCH /v1/media-assets/{id}`.
+Go). Tile is the local file URL. `POST /v1/media-assets/{id}/confirm-upload`.
+Grid shows `thumbnail_url` from that body. Crop click-off. MSW
+`GET /v1/media-assets`, `PATCH /v1/media-assets/{id}`.
 
 #### Verify
 
-UI: grid tile uses `thumbnail_url`; large view uses `delivery_url`.
-HTTP `MediaAssetRead` has no `media_caption`. MSW saw those
-Method+path strings. Postgres rows are the backend test.
+UI: after confirm, grid tile `src` is `thumbnail_url` (not the local
+file URL); large view uses `delivery_url`. HTTP `MediaAssetRead` has no
+`media_caption`. MSW saw those Method+path strings. Postgres rows are
+the backend test.
 
 #### Fail
 
@@ -176,8 +180,9 @@ row (`uploading`). Test PUT to `upload_url` (MinIO real).
 #### Verify
 
 200. Body `processing_status=processing`, `delivery_url` and
-`thumbnail_url` set, no `media_caption`. Then
-`GET /v1/media-assets/{id}` returns the same.
+`thumbnail_url` set and different, no `media_caption`. Then
+`GET /v1/media-assets/{id}` returns the same. Callers paint the tile
+from this body.
 
 #### Fail
 

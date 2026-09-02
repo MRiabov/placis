@@ -153,9 +153,10 @@ One accordion wrapper with two expandable steps; both are visible immediately:
   the ad is not a review chore ([ADR 13](ADR.md)). Owner-added thumbs read
   **Uploading…** only while the photo is uploading (usable in about 10 seconds).
   Hover the thumb: a circle-and-cross button; click it to cancel (same overlay
-  as the media library and the website editor). Ads do not show **Processing…**
-  as a wait-to-use overlay. A failed upload is a warning with an upload sign
-  ("Couldn't upload that photo — try again").
+  as the media library and the website editor). After `confirm-upload` 200, the
+  thumb is `thumbnail_url` from that `MediaAssetRead`. Ads do not show
+  **Processing…** as a wait-to-use overlay. A failed upload is a warning with an
+  upload sign ("Couldn't upload that photo — try again").
 
 The questions and review content:
 
@@ -206,12 +207,13 @@ The questions and review content:
    hover. Until the media caption is written, the thumb has no media caption
    line (not an error). A newly added photo shows **Uploading…** only while the
    photo is uploading; hover the thumb for a circle-and-cross button and click
-   it to cancel (no photo is added). If they do not cancel, it is usable in this
-   ad (about 10 seconds) — captioning continues in the background. The owner is
-   never asked to label it. A failed upload is a warning with an upload sign. "+
-   Add" opens the file picker; dragging a file anywhere on the screen also adds
-   a photo (drop overlay) — a pattern intended to extend across the website
-   editor, Details, Media library, and Ads.
+   it to cancel (no photo is added). If they do not cancel, `confirm-upload`
+   returns `MediaAssetRead` and the thumb is `thumbnail_url` from that body —
+   usable in this ad (about 10 seconds) — captioning continues in the
+   background. The owner is never asked to label it. A failed upload is a
+   warning with an upload sign. "+ Add" opens the file picker; dragging a file
+   anywhere on the screen also adds a photo (drop overlay) — a pattern intended
+   to extend across the website editor, Details, Media library, and Ads.
 6. **Text** — headline (input sized to 40 characters, not full-bleed), primary
    text, short label, button label, and the suggested **ad lead form title**.
    Live character counts against the shared limits; button label from Meta’s
@@ -438,10 +440,10 @@ Mobile is a primary viewport. Ads must work on a mobile device:
   fire; Ctrl+Z restores an LLM rewrite and cleanup Accept; owner-prompted
   details call `update_details` and a notification, Approve is not blocked)
 - media picker scoped to this contractor's photos; new files show Uploading…
-  until the photo is uploaded (hover: circle-and-cross, click to cancel); then
-  they are usable in this ad without waiting on a media caption; cleanup drafts
-  render as before/after and accept/reject per image; photo strip is always
-  shown (single-select on one-image formats; card select on carousel)
+  until `confirm-upload` 200, then the thumb is `thumbnail_url` from that
+  `MediaAssetRead` (usable in this ad without waiting on a media caption);
+  cleanup drafts render as before/after and accept/reject per image; photo strip
+  is always shown (single-select on one-image formats; card select on carousel)
 - combobox: create-new pre-highlight, filtering both blocks, active checkmark
 - Story format mock on a mobile viewport
 - one E2E: create → review/edit → approve → use the ad set (service + download),

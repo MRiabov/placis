@@ -69,7 +69,18 @@ Photos have a processing status on the media item (`processing_status` —
    the local file URL). `sweep_stale_media_uploads` deletes leftovers after the
    leave-guard window. Same overlay on `/cms/media`, the website editor media
    library, and Ads — not an Ads-only control.
-2. **Processing…** — `processing`: Placis is writing the media caption and
+2. **After confirm** — `POST …/confirm-upload` **GET**s the PUT object, scan,
+   **calls** `WriteCanonicalWebP` then `WriteImageThumbnail`, returns **200**
+   `MediaAssetRead` (`thumbnail_url` ≠ `delivery_url`,
+   `processing_status=processing`). Every upload surface (`/cms/media`,
+   website editor drop / file picker, ads **+ Add** / drop, replace confirm
+   on the child) **replaces** the local file URL with `thumbnail_url` from
+   **that body** (not a required extra list GET). Must not wait on the media
+   caption. Overlay **Processing…** on `/cms/media` and the website editor
+   library. Ads: **Uploading…** ends here; no Processing… use-blocker; the
+   photo is usable (`file_id` set). Ready / captioning-failed / auto-cleanup
+   child: poll `GET /v1/media-assets/{id}` this slice.
+3. **Processing…** — `processing`: Placis is writing the media caption and
    classifying visual issues (`submit_image_visual_issues`, parallel with
    captioning). The owner is never asked to label the photo and never sees
    the media caption. This is **not** a wait-to-use overlay in Ads: a
@@ -83,11 +94,11 @@ Photos have a processing status on the media item (`processing_status` —
    parent (crop-only shares the file — no star). Blur, overlay text,
    subject too small, and low resolution are suggestions only — no
    auto-upres.
-3. **Ready** — `ready`: a classification exists (media caption is always
+4. **Ready** — `ready`: a classification exists (media caption is always
    present on that row). This is the pool the ads LLM picks from (LLM
    reads those media captions). Generated items write a classification at
    create, so they are ready immediately.
-4. **Failed** — `failed`: always name which. **Upload failed:** the photo
+5. **Failed** — `failed`: always name which. **Upload failed:** the photo
    did not land (`file_id` null). UI is a warning with an upload sign
    ("Couldn't upload that photo — try again"). Try again is another
    `POST /v1/media-assets/start-upload` (new id). **Captioning failed:**
@@ -101,8 +112,9 @@ requires `ready` + `approved`. Ads: the LLM gallery ad draft uses `ready` +
 (not `failed`), even if captioning is still `processing`.
 
 Thumbs in `/cms/media` and the website editor media library may show Uploading…
-/ Processing…. Ads shows **Uploading…** only while the photo is uploading — not
-Processing… as a use-blocker.
+then, after confirm, `thumbnail_url` plus Processing…. Ads shows **Uploading…**
+only while the photo is uploading — not Processing… as a use-blocker. After
+confirm the ads thumb is `thumbnail_url` from that `MediaAssetRead`.
 
 ## `/cms/media`
 

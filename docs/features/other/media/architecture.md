@@ -96,10 +96,17 @@ Ads does not own a second library.
    `uploading` + `approved` and returns `upload_url`. Browser PUTs.
    List omits the row. `GetMediaAsset` still returns it. Same
    `Idempotency-Key` returns the same id + `upload_url`.
-2. **Confirm upload** — `ConfirmMediaAssetUpload` scans, attaches
-   `original_file_id`, **calls** `WriteCanonicalWebP` then
-   `WriteImageThumbnail`, sets `processing`, **inserts**
-   `describe_image`. Already `failed` → 400.
+2. **Confirm upload** — `ConfirmMediaAssetUpload` **GET**s the PUT
+   object, scans, attaches `original_file_id`, **calls**
+   `WriteCanonicalWebP` then `WriteImageThumbnail` (PUT those WebPs),
+   sets `processing`, **inserts** `describe_image`, returns **200**
+   `MediaAssetRead` (`thumbnail_url` / `delivery_url` set) **before**
+   `DescribeImage`. Already `failed` → 400. `/cms/media`, the website
+   editor drop / file picker, and ads **+ Add** / drop (and replace
+   confirm on the child) swap the local file URL for `thumbnail_url`
+   from that body. Must not wait on the media caption. Must not resend
+   the photo on confirm. Poll `GET /v1/media-assets/{id}` for `ready` /
+   captioning-failed / auto-cleanup child this slice.
 3. **Describe image** — `DescribeImage` **writes** `media_asset_classifications`
    (media caption, `photo_kind` `logo` or `photo`, visual-issue severities),
    sets `ready`, and may **call** `CleanupMediaAsset` for first-upload
