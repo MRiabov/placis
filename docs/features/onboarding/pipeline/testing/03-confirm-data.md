@@ -1,13 +1,14 @@
-# 03 — Review (integration test)
+# 03 — Review (frontend only)
 
-- **Setup**: 01 business lookup returned; 02 jobs still running (at least one
-  `in_progress` fill-status key).
-- **Exercise**: open `/onboarding/review`; Continue immediately (skip); also
-  linger and Continue after some SSE fills.
-- **Verify**: screen renders before 02 jobs finish; Continue with empty /
-  `in_progress` rows is allowed; skip and dwell are both valid; no extra
-  `onboarding_sessions` row; no Review POST; 02 still running after skip; legal
-  identity visible; no `POST /v1/onboarding/interview/complete`.
-- **Fail**: `GET /v1/onboarding/profile` error keeps the token; no replacement
-  `POST`.
-- **Mocked**: none beyond 02 fakes already running.
+**Frontend only.** Persist none. No
+`TestPipelineHappyPathOnboarding03ConfirmData`. See
+[onboarding testing](../../testing.md) `### Review skip and research
+wait`.
+
+- **Setup**: not a backend test.
+- **Exercise**: none (backend).
+- **Verify**: none (backend). Skip, linger, and
+  `research_wait_until` inline wait are the Review extra.
+- **Fail**: `GET /v1/onboarding/profile` error keeps the token; no
+  replacement `POST` (Resume extra).
+- **Mocked**: none.

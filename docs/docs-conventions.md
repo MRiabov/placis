@@ -84,8 +84,10 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   `**/testdata/**` (Don’t-say fixtures; `check-dont-say` skips them too). New
   first-party `.md` files are included automatically.
 - **File size:** after wrap, a doc over 800 lines must be split (hard error at
-  1200). Exception: `glossary.md` stays one file (Don’t-say table + ubiquitous
-  language).
+  1200). Exceptions: `glossary.md` stays one file (Don’t-say table +
+  ubiquitous language);
+  `docs/features/onboarding/testing.md` stays one file (owning
+  `TestHappyPath*` 1:1 plus E2E / Full / extras).
 - **Lint:** default rumdl rules except MD057 (relative link exists). Many
   first-party docs have pre-existing wrong `../` depths; re-enable when those
   links are fixed.
@@ -305,7 +307,8 @@ extra `##`.
 optional last. Feature `testing.md` uses the same names as `####`
 (minus **Cases**). Go names: `TestPipelineHappyPath{Feature}{Step}` per
 paired step and `TestPipelineHappyPath{Feature}Full` for the whole
-pipeline. Not Vitest per step.
+pipeline. Skip **Do not run** and Persist none (onboarding `03`). Not
+Vitest per step.
 
 ### `api.md` shape (defined features)
 
