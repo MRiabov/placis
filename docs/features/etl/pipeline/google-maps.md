@@ -40,7 +40,8 @@ met (Find attach, Parallel, or Places Find). Insert `etl.runs` then.
 
 ## Do — extract (ETL fast extract)
 
-Set `status=extracting`. If there is no `place_id` yet and `trigger=onboarding`,
+`extract/googlemaps.Run` sets `status=extracting`. If there is no `place_id`
+yet and `trigger=onboarding`,
 call Places Find / text search with `display_name` if set, else `legal_name`,
 plus locality (trade location, registered-office locality, or tenant country
 city). One high-confidence hit → persist that `place_id` as a detail (onboarding
@@ -63,7 +64,8 @@ fetch).
 
 ## Do — extract (ETL slow extract)
 
-Scrape remaining reviews / photos for this listing (on the order of 50
+`extract/googlemaps.Run` scrapes remaining reviews / photos for this listing
+(on the order of 50
 reviews). Actor **`scraperlink/google-maps-scraper`** (`id`
 `QaFBMgHDLJzHoOEMf`). Not Compass. Required input (defaults under-fetch):
 `placeIds` = Details `place_id`; `reviews=true`; `maxReviews=50`;
@@ -87,21 +89,23 @@ reviews and photos are this ETL slow extract.
 
 ## Do — listing
 
-Upsert `google_maps_listings` on `place_id` after inserting
+`extract/googlemaps.Run` upserts `google_maps_listings` on `place_id` after
+inserting
 `etl.sources` `source_kind=google_maps_listing` (`source_id` required on the
 listing). Replace child hours on the Details chunk. Insert reviews / photo refs
 whose `external_id` we do not already have (each new review gets
-`source_kind=google_maps_listing_review`). Set `latest_fetch_id` to the newest
-fetch that contributed. Set `country` from Places address country (`ie` / `gb` /
-`us`). Do not parse `listing_address` for country. Persist Places Details
-`location` as `latitude` / `longitude`. Leave both null when Details never ran
-or the response has no location. Do not geocode `registered_office`.
+`source_kind=google_maps_listing_review`). Set `latest_fetch_id` to the
+watermark of the dump that contributed. Set `country` from Places address
+country (`ie` / `gb` / `us`). Do not parse `listing_address` for country.
+Persist Places Details `location` as `latitude` / `longitude`. Leave both
+null when Details never ran or the response has no location. Do not
+geocode `registered_office`.
 
 ## Do — transform
 
-`status=transforming` for the chunk, then back to `extracting` if ETL slow
-extract continues. `SELECT … FOR UPDATE` the profile. Insert only the increments
-this chunk set.
+`transform/googlemaps.Run` sets `status=transforming` for the chunk, then
+back to `extracting` if ETL slow extract continues. `SELECT … FOR UPDATE`
+the profile. Insert only the increments this chunk set.
 
 - Empty scalars fill from the listing (display name, marketing phone, website,
   hours). Each increment cites the listing `source_id`. If Details has a
@@ -126,16 +130,34 @@ this chunk set.
 - Disagreeing owner-typed scalars → research conflict; live profile column is
   not updated.
 
+## Reads
+
+`etl.runs`; `etl.google_maps_fetches` for this `run_id` (retry);
+`google_maps_listings` and listing children; `business_profiles`
+(`SELECT … FOR UPDATE` on transform).
+
+## Calls
+
+`WriteImageThumbnail`. `transform/projects.Run` (transform, after
+reviews usable as a Project).
+
+## Inserts
+
+Extract **inserts** `google_maps_listing_transform` after each chunk.
+Transform **inserts** `google_maps_listing_extract` when scrape chunks
+remain. Transform **inserts** `describe_image` per new imported row with
+no classification yet (do not wait).
+
 ## Persist
 
-`etl.google_maps_fetches` (several rows per run: Details, then scrape
-responses); `etl.sources` (listing + each listing review);
-`etl.google_maps_listings` + hours / reviews / listing photos / review photos;
-`business_profile_edits` + `business_profile_edit_sources` + live profile hours
-/ reviews / contact columns / Projects; media library items +
-`imported_media_sources`; **calls** `WriteImageThumbnail`; **inserts**
-`describe_image` per new imported row with no classification yet.
-`etl.runs.status=succeeded` when ETL fast extract and ETL slow extract are done.
+Extract **persists into** `etl.google_maps_fetches` (several rows per run:
+Details, then scrape responses); `etl.sources` (listing + each listing
+review); `etl.google_maps_listings` + hours / reviews / listing photos /
+review photos. Transform **persists into** `business_profile_edits` +
+`business_profile_edit_sources` + live profile hours / reviews / contact
+columns / Projects; media library items + `imported_media_sources`.
+**Persists into** `etl.runs.status=succeeded` when ETL fast extract and
+ETL slow extract are done.
 
 ## Fail
 
