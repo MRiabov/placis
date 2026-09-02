@@ -113,14 +113,17 @@ Services take `tenantID` explicitly.
 1. `VerifySession` → `Principal`.
 2. If `orgID` set → tenant by `tenants.clerk_org_id` (unactivated or
    active).
-3. Else memberships by `clerk_user_id` → tenant +
-   `pending_clerk_org_id` (post-09, JWT not yet `setActive`). Do not
-   assume a unique `clerk_user_id`.
+3. Else memberships by `clerk_user_id` → tenant. `clerk_org_id` from
+   `tenants.clerk_org_id` when set (post-09, JWT not yet `setActive`).
+   Do not assume a unique `clerk_user_id`.
 4. Else unpaid bind: `onboarding_sessions.clerk_user_id` →
-   unactivated tenant; `pending_clerk_org_id` if
-   `tenants.clerk_org_id` already set (post-checkout, pre-`setActive`).
-5. Else `tenant: null`. `/cms` goes to onboarding. Do not create an
-   org from `/cms`.
+   unactivated tenant; `clerk_org_id` if `tenants.clerk_org_id` already
+   set (post-checkout, pre-`setActive`).
+5. Else `tenant: null`, `clerk_org_id` null. `/cms` goes to onboarding.
+   Do not create an org from `/cms`.
+
+When a tenant is resolved, `MeRead.clerk_org_id` is that row’s
+`tenants.clerk_org_id` (nullable).
 
 ## OAuth and who creates Clerk rows
 
@@ -155,8 +158,8 @@ sequenceDiagram
    `BindClerkUserToOnboardingSession`.
 2. `POST /v1/onboarding/activation/checkout` **calls**
    `AttachClerkOrganization` when `clerk_org_id` is null. Response:
-   `checkout_url`, `clerk_org_id`. Frontend `setActive`, then Stripe.
-   Does not set `status=active`.
+   `checkout_url`, `clerk_org_id`. Frontend `setActive` if `orgId` is
+   unset, then Stripe. Does not set `status=active`.
 3. `website_activation` (09) **calls** `AttachClerkOrganization` if
    still null, then `InsertOwnerMembership`, then `status=active`.
 

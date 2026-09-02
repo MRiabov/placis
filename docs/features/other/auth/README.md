@@ -63,7 +63,11 @@ current stable major). App code maps `Sessions().Verify` into
 
 Checkout and 09 **call** `AttachClerkOrganization` (persist
 `tenants.clerk_org_id`). There is no `POST /v1/me/clerk-organization`.
-The frontend `clerk.setActive` so later JWTs carry the org claim.
+Checkout and `GET /v1/me` return `clerk_org_id` when attached. The
+frontend `clerk.setActive` if the Clerk session has no org yet so later JWTs
+carry the org claim. Clerk **Membership optional** (not required):
+unpaid OAuth exists before org attach. Membership required would force
+a Clerk organization at sign-in (banned).
 
 ## HTTP
 

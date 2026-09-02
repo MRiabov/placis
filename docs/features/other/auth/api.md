@@ -15,7 +15,7 @@ public Route: `GET /v1/me`. Clerk organization attach lives on
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `MeRead` | `owner: OwnerRead`, `platform_role`, `tenant: TenantRead` (nullable), `pending_clerk_org_id` (nullable) | `/me`. Clerk ids omitted except `pending_clerk_org_id` when the JWT has no org claim and `tenants.clerk_org_id` is already set |
+| `MeRead` | `owner: OwnerRead`, `platform_role`, `tenant: TenantRead` (nullable), `clerk_org_id` (nullable) | `/me`. `clerk_org_id` is `tenants.clerk_org_id` when attached (unactivated or active). Null if no org yet. Same spelling as checkout |
 | `OwnerRead` | `display_name` | The signed-in **owner**. Nested on `MeRead.owner`. First write from `founder_name`; later the Clerk UI in the app |
 | `TenantRead` | `id`, `name`, `status`, `subscription_status` | The data tenant. CMS keys off `status`. No `website_prefix` |
 
@@ -23,8 +23,11 @@ public Route: `GET /v1/me`. Clerk organization attach lives on
 `unactivated` / `active` / `suspended`. `subscription_status` is
 `active` / `canceled` / `none`. No `ClerkOrganizationRead` on auth
 HTTP. `clerk_org_id` for `setActive` lives on
-`WebsiteActivationCheckoutRead` (checkout) and on
-`MeRead.pending_clerk_org_id` (refresh / after 09).
+`WebsiteActivationCheckoutRead` (checkout one-shot before Stripe) and
+on `MeRead.clerk_org_id` (`/login`, dropped checkout body, AuthGate).
+Inside `/cms` the Clerk session is usually already `setActive`; `/me` still
+echoes the id. Frontend: `if (!orgId && clerk_org_id) setActive`. Do
+not create a Clerk session token from Go.
 
 `website_prefix` stays on `auth.tenants` and on
 `PreviewWebsiteAddressRead.url`, `WebsiteAddressRead.hostname`,
@@ -35,7 +38,7 @@ internal `WebsitePublicationRequest.website_prefix`. Host → tenant is
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/me` | `AuthGate` / CMS-open; unpaid website preview CMS-closed; `setActive` after checkout if the checkout body was dropped | | `MeRead` | `auth.tenants`, `auth.tenant_memberships`; may read `onboarding_sessions` | | **calls** `GetMe` | | Org chooser; treat tenant non-null as CMS open; dump Clerk claims besides `pending_clerk_org_id`; return `website_prefix` |
+| `GET /v1/me` | `AuthGate` / CMS-open; unpaid website preview CMS-closed; `setActive` after checkout if the checkout body was dropped | | `MeRead` | `auth.tenants`, `auth.tenant_memberships`; may read `onboarding_sessions` | | **calls** `GetMe` | | Org chooser; treat tenant non-null as CMS open; dump Clerk claims besides `clerk_org_id`; return `website_prefix` |
 
 ### GET /v1/me
 
@@ -63,3 +66,5 @@ from `/cms`.
 - Custom impersonation (Clerk native impersonation only)
 - `placis_selected_org` cookie
 - HTTP functions named `Ensure*`
+- `GET /v1/onboarding/me`
+- HTTP that returns a Clerk session token
