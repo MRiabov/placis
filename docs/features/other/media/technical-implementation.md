@@ -10,7 +10,8 @@ Services: `StartMediaAssetUpload`, `ConfirmMediaAssetUpload`,
 `CleanupMediaAsset`, `RejectMediaAsset`, `CreateGeneratedMediaAsset`,
 `ApproveMediaAsset`, `WriteImageThumbnail`. Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
-Pipeline: [pipeline/](pipeline/README.md).
+`describe_image`:
+[jobs.md](../../../general-architecture/jobs.md#describe_image).
 
 Related docs:
 

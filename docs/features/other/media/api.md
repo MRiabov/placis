@@ -53,8 +53,8 @@ There is **no** media approve Route. `ApproveAd` and `PublishWebsite`
 GET does not embed `media_assets[]`; the website editor lists via
 `GET /v1/media-assets`.
 
-`StartMediaAssetUpload` / `ConfirmMediaAssetUpload` /
-`DescribeImage`: [pipeline](pipeline/README.md).
+`DescribeImage` is River job kind `describe_image`
+([jobs.md](../../../general-architecture/jobs.md#describe_image)).
 
 ## DTOs
 
@@ -74,36 +74,58 @@ Extra keys 4xx. List returns `MediaAssetRead[]`.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/media-assets` | `/cms/media`; website editor Content; ads picker (`review_status=approved`); Details logo picker; Projects cover overlay | `MediaAssetListGet` | `MediaAssetRead[]` | `media_assets` | | Unpaginated. `status` defaults `active`. Omits `file_id` null + `processing_status=uploading` (in-flight tile is the local file URL) | | Paginate; embed `media_assets[]` on website page GET; age math for stale uploads |
-| `POST /v1/media-assets/start-upload` | `/cms/media` upload; website editor drop / file picker; ads **+ Add** / drop | `MediaAssetCreate` | `MediaAssetUploadRead` | | `media_assets`, `files` | **calls** `StartMediaAssetUpload`; row `uploading` + `review_status=approved`; `id` + `upload_url`; no photo body | | Collection create; accept the photo; enqueue captioning |
+| `GET /v1/media-assets` | `/cms/media`; website editor Content; ads picker (`review_status=approved`); Details logo picker; Projects cover overlay | `MediaAssetListGet` | `MediaAssetRead[]` | `media_assets`, `media_asset_classifications` | | Unpaginated. `status` defaults `active`. Omits `file_id` null + `processing_status=uploading` (in-flight tile is the local file URL). Hydrates `media_caption` / `photo_kind` from latest classification | | Paginate; embed `media_assets[]` on website page GET; age math for stale uploads |
+| `POST /v1/media-assets/start-upload` | `/cms/media` upload; website editor drop / file picker; ads **+ Add** / drop | `MediaAssetCreate` | `MediaAssetUploadRead` | | `media_assets`, `files` | **calls** `StartMediaAssetUpload`; row `uploading` + `review_status=approved`; `id` + `upload_url`; no photo body | | Collection create; accept the photo; enqueue captioning; set `file_id`; **call** `WriteImageThumbnail` |
 | `POST /v1/media-assets/{id}/confirm-upload` | After PUT succeeds | | `MediaAssetRead` | `media_assets`, `files` | `media_assets`, `files` | **calls** `ConfirmMediaAssetUpload`; empty body; scan; attach `file_id`; **calls** `WriteImageThumbnail`; `processing`; **inserts** `describe_image` | `404`; scan fail → `failed` | Accept the photo; wait for the media caption |
-| `GET /v1/media-assets/{id}` | Poll Uploading… / Processing… / Failed; `/cms/media` selection | | `MediaAssetRead` | `media_assets` | | Still returns an `uploading` row so the uploading browser can poll | `404` | Omit in-flight the way list does |
-| `PATCH /v1/media-assets/{id}` | Crop / focal click-off on `/cms/media`; media caption | `MediaAssetUpdate` | `MediaAssetRead` | `media_assets` | `media_assets` | **calls** `UpdateMediaAsset`; copy-on-write inside the function. **Not** replace | `400` bad crop; `404` | Replace file; `upload_url` on the body |
+| `GET /v1/media-assets/{id}` | Poll Uploading… / Processing… / Failed; `/cms/media` selection | | `MediaAssetRead` | `media_assets`, `media_asset_classifications` | | Still returns an `uploading` row so the uploading browser can poll. Hydrates `media_caption` / `photo_kind` from latest classification | `404` | Omit in-flight the way list does |
+| `PATCH /v1/media-assets/{id}` | Crop / focal click-off on `/cms/media`; media caption | `MediaAssetUpdate` | `MediaAssetRead` | `media_assets`, `media_asset_classifications` | `media_assets`, `media_asset_classifications` | **calls** `UpdateMediaAsset`; copy-on-write inside the function. Caption **inserts** a human classification. **Not** replace | `400` bad crop; `404` | Replace file; `upload_url` on the body |
 | `POST /v1/media-assets/{id}/start-replace-upload` | `/cms/media` replace | | `MediaAssetUploadRead` | `media_assets` | `media_assets`, `files` | **calls** `StartMediaAssetReplaceUpload`; child `approved` + `uploading`; parent `file_id` unchanged; PUT then confirm-upload on the **child** | `404` | Replace parent `file_id`; accept the photo |
 | `POST /v1/media-assets/{id}/image-edits` | `/cms/media` promptable cleanup; assistant `cleanup_image`; ads Review **inline AI assistance** (then ads placement PATCH) | `MediaAssetImageEditCreate` | child `MediaAssetRead` | `media_assets` | `media_assets`, `files`, `ai_use_ledger_entries` | **calls** `CleanupMediaAsset`; **calls** `AssertUsageCredit` then `RecordAIUseSpend` (`usage_category=image`); copy-on-write; child new `file_id`, `pending_review`; **calls** `WriteImageThumbnail` on the child; does not retarget uses | `400` empty prompt; `404`; `402` `usage_credit_exhausted` | Ads cleanup verb; Accept HTTP; first-upload auto (that is `DescribeImage`) |
 | `POST /v1/media-assets/{id}/reject` | `/cms/media` sweep **Reject**; ads Review sweep **Reject** | | `MediaAssetRejectRead` | `media_assets` | `media_assets` | **calls** `RejectMediaAsset`; archives copy; retargets uses to parent | `409` `not_pending_review`; `409` `in_use`; already archived+rejected → `200` | `DELETE`; `PATCH review_status` |
 
+### POST /v1/media-assets/start-upload
+
+No photo body. Inserts `files` (`scan_status=pending`,
+`visibility=public`) and `media_assets` (`asset_type=image`,
+`source=upload`, `supplied_by=owner`, `created_by=owner`,
+`status=active`, `review_status=approved`,
+`processing_status=uploading`, `file_id` null, `thumbnail_file_id`
+null, `crop_mode=full`, `focal_x=0.5`, `focal_y=0.5`). Response
+`MediaAssetUploadRead`. Must not **insert** `describe_image`. Retry is
+a new start-upload (new id). List omits this row; `GetMediaAsset`
+still returns it. Abort is cancel of the PUT. Stale rows:
+`sweep_stale_media_uploads`.
+
 ### PATCH /v1/media-assets/{id}
 
 Omit = no change. `media_caption` `minLength` 1, `maxLength` 500.
-`crop_mode` `full` / `rect`. Crop numbers 0–1; **null** when `full`;
-all four required when `rect`; width/height `> 0`; `x+width ≤ 1`,
-`y+height ≤ 1`. Focal 0–1 in **full-image** coordinates (not
-crop-rect). Default on a new row: `0.5`, `0.5`.
+When the PATCH includes `media_caption`, writes
+`media_asset_classifications` (`algorithm=human`; copy latest
+`photo_kind` / severities / `content_hash`; no LLM). Crop / focal
+mutate `media_assets`. `crop_mode` `full` / `rect`. Crop numbers 0–1;
+**null** when `full`; all four required when `rect`; width/height
+`> 0`; `x+width ≤ 1`, `y+height ≤ 1`. Focal 0–1 in **full-image**
+coordinates (not crop-rect). Default on a new row: `0.5`, `0.5`.
 
 Referenced (website-section image, `logo_media_asset_id`,
 `ad_image_placements`): insert a child, return it. The `/cms/media`
-widget selects the child. Unreferenced: mutate crop/focal **in
-place**.
+widget selects the child. Copy the parent’s latest classification onto
+the child’s `media_asset_id` (no LLM). Unreferenced: mutate crop/focal
+**in place**.
 
 ### POST /v1/media-assets/{id}/confirm-upload
 
-Empty body; does not accept the photo. Already `processing` / `ready` →
-`200` same row; do not insert a second `describe_image`. Scan fail →
-`processing_status=failed`. **Try again** on `failed` is another
+Empty body; does not accept the photo. Go never saw the upload body.
+Scan, attach `file_id`, **calls** `WriteImageThumbnail` (second `files`
+row), set `processing`, **inserts** `describe_image` unique
+`(tenant_id, media_asset_id)` while pending/running. HTTP returns
+`MediaAssetRead` before `DescribeImage` finishes. Already
+`processing` / `ready` → `200` same row; do not insert a second job.
+Scan fail → `processing_status=failed`; no job; `file_id` still null.
+**Try again** on `failed` is another
 `POST /v1/media-assets/start-upload` (new id). The `failed` row stays
 until Reject / `sweep_stale_media_uploads`. List still shows Failed.
-No refresh PUT URL.
+No refresh PUT URL. Owner row stays `review_status=approved`.
 
 ### POST /v1/media-assets/{id}/image-edits
 

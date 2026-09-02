@@ -23,8 +23,7 @@ Do not insert a project draft from this transform.
 Transform for [Facebook](facebook.md), [Instagram](instagram.md), [website
 crawl](website-crawl.md), or [Google Maps](google-maps.md) after source upsert
 
-- photo attach + [photo classification](photo-classification.md) for that
-chunk.
+- photo attach for that chunk. `DescribeImage` writes `photo_kind`.
 
 ## Pre
 
@@ -59,7 +58,7 @@ chunk.
 - Store citations as a generic `table.column` field map.
 - Invent a Facebook page-review extract. Hook Maps reviews. Facebook reviews
   only if some other writer already inserted `business_profile_reviews`.
-- Treat unlabeled `photo_kind=project` photos as Projects.
+- Treat unlabeled photos as Projects.
 - Ride `*-latest`. Pin a dated gateway id for **`glm-5.3-flash`**.
 
 ## Do
@@ -95,7 +94,7 @@ chunk.
    origin `facebook` / `instagram` / `website_crawl` / `review`) **or** attach
    to the sibling crawl source’s Project when that URL’s other `source_kind`
    already has a yes verdict. Cover = the depicting photo on that post / HTML
-   URL when the model (or `photo_kind=project`) confirms it shows the job;
+   URL when the model confirms it shows the job (media caption helps);
    otherwise empty. Insert ≥1 `project_sources` row. Write verdict yes with
    `project_id`. Both crawl sources yes → one Project, two `project_sources`,
    two verdicts with the same `project_id`. A review usable as a Project may

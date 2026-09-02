@@ -11,4 +11,3 @@ group.
 - [Projects from source](projects.md)
 - [Trade registry](trade-registry.md)
 - [Web search](web-search.md)
-- [Photo classification](photo-classification.md)

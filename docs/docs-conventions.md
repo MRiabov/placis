@@ -17,8 +17,9 @@ before adding or editing a doc.
   `backend-stack.md`, `frontend-stack.md`, `module-layout.md`, `processes.md`,
   `package-boundaries.md`, `api.md` (HTTP conventions + index of per-feature
   `api.md` files), `llm-layer.md`, `voice-agent.md`, `audit.md`, `jobs.md`,
-  `files-and-s3.md`, `persistence.md` (conventions + index of per-feature
-  tables), `frontend.md` (`frontend-2` UI rules), `cms/` (The CMS: left nav,
+  `persistence.md` (conventions, classification/prediction tables, index
+  of per-feature tables), `frontend.md` (`frontend-2` UI rules), `cms/`
+  (The CMS: left nav,
   `/cms` two cards, look tokens), `frontend-debloat.md` (cross-cutting port),
   `ci-cd.md`, `testing.md`. Feature-owned capabilities (website
   activation/payments, leads, media library, ETL, business profile, assistant,
@@ -242,10 +243,13 @@ same way as `api.md` (extras may only shrink). Website, billing, ads, assistant,
 onboarding, and the media library have none. Intro-only files (Details,
 Projects) have no `##` yet.
 
-**`testing.md`** — H1 + numbered journey. No required `##`. Optional `##`
-only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
-`## Do not create`, and `### GET /v1/…`. CI ratchets those bans (empty
-leftover today).
+**`testing.md`** — H1 `{feature} E2E and integration tests`. Then `## E2E`
+and `## Integration`. Each test is `###` name with `####` sections
+(fixture, Invoke, Assert; optional Fail / Mocked / Cases). Ban `## Routes`,
+`## DTOs`, `## Tables`, `## Do not create`, and `### GET /v1/…`. CI
+ratchets those bans (empty leftover today). A complex pipeline keeps
+pairing files under `pipeline/testing/`. Example without a pipeline:
+[media library testing.md](features/other/media/testing.md).
 
 **`jobs.md`** — intro, then only `## Workflows` and `## Jobs`. Overflow is `###`
 with a backticked River job kind under Jobs (retry, leftover, skip). No leftover

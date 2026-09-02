@@ -1,8 +1,7 @@
 # ETL — persistence
 
 Conventions: [persistence conventions](../../general-architecture/persistence.md) (Postgres schema `etl`). Transformed
-Facebook / Instagram rows and photo classification live on the
-[business profile](../business-profile/details/persistence.md), not here.
+Facebook / Instagram rows live on the [business profile](../business-profile/details/persistence.md), not here.
 
 `jsonb` is `raw` on each fetch table only.
 
@@ -165,6 +164,10 @@ writes; the listing stays here.
 
 ## Project verdict (skip)
 
+Dedicated prediction table in `etl`, not columns on `etl.sources` and
+not a table in `ai`
+([classifications and predictions](../../general-architecture/persistence.md#classifications-and-predictions)).
+
 - `llm_source_to_project_classifications` — `id`, `tenant_id` fk, `source_id`
   fk unique required → `etl.sources`, `algorithm` nullable,
   `schema_revision` nullable, `usable_as_project` (yes or no), `project_id`
@@ -175,8 +178,8 @@ writes; the listing stays here.
 
   Check: `usable_as_project` iff `project_id` is set. Do **not** copy title,
   description, or cover here. Skip when `algorithm` + `schema_revision` match
-  and `force` is false. Analog of `photo_kind_*` on the classified thing:
-  skip keys on this row; model / prompt / reasoning on `ai_generations`
+  and `force` is false. Skip keys on this row; model / prompt / reasoning on
+  `ai_generations`
   (`thread_kind=etl_project_classify`).
   Must not hang this skip on Facebook / Instagram posts, profile reviews,
   crawl HTML URLs, or `etl.sources`.

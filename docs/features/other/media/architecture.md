@@ -6,15 +6,15 @@ Named identifiers:
 
 ## Named identifiers
 
-Pipeline **Do** functions (same spelling in spec, Go, and tests):
+Named functions (same spelling in spec, Go, and tests):
 
-- `StartMediaAssetUpload` — `internal/media/`
-  ([01](pipeline/01-start-media-asset-upload.md))
-- `ConfirmMediaAssetUpload` — `internal/media/`
-  ([02](pipeline/02-confirm-media-asset-upload.md)); **calls**
-  `WriteImageThumbnail`
+- `StartMediaAssetUpload` — `internal/media/`. Route
+  `POST /v1/media-assets/start-upload`.
+- `ConfirmMediaAssetUpload` — `internal/media/`; **calls**
+  `WriteImageThumbnail`. Route
+  `POST /v1/media-assets/{id}/confirm-upload`.
 - `DescribeImage` — River job kind `describe_image`
-  ([03](pipeline/03-describe-image.md))
+  ([jobs.md](../../../general-architecture/jobs.md#describe_image)).
 
 CMS HTTP: one function per Routes verb+noun (`ListMediaAssets`,
 `GetMediaAsset`, `UpdateMediaAsset`, `StartMediaAssetReplaceUpload`,
@@ -50,8 +50,13 @@ do not copy the file.
 
 - **media asset** — `media_assets`: `asset_type` (`image` /
   `generated_image`), `source`, `supplied_by`, `status`,
-  `review_status`, `processing_status`, media caption, crop, focal,
-  `photo_kind`.
+  `review_status`, `processing_status`, crop, focal. No media caption
+  / photo kind columns.
+- **media asset classification** — `media_asset_classifications`:
+  media caption, `photo_kind` (`logo` / `photo`), visual-issue
+  severities. Current = latest `created_at`. HTTP hydrates
+  `media_caption` / `photo_kind` from this join. No pointer on
+  `media_assets`.
 - **File** — `files`: original file (`file_id`) and image-thumbnail
   file (`thumbnail_file_id`). HTTP `delivery_url` /
   `thumbnail_url`.
@@ -77,20 +82,17 @@ Ads does not own a second library.
 
 1. **Start upload** — `StartMediaAssetUpload` inserts
    `uploading` + `approved` and returns `upload_url`. Browser PUTs.
-   List omits the row. `GetMediaAsset` still returns it
-   ([01](pipeline/01-start-media-asset-upload.md)).
+   List omits the row. `GetMediaAsset` still returns it.
 2. **Confirm upload** — `ConfirmMediaAssetUpload` scans, attaches
    `file_id`, **calls** `WriteImageThumbnail`, sets `processing`,
-   **inserts** `describe_image`
-   ([02](pipeline/02-confirm-media-asset-upload.md)).
-3. **Describe image** — `DescribeImage` writes the media caption and
-   visual-issue severities, sets `ready`, and may **call**
-   `CleanupMediaAsset` for first-upload auto-cleanup (skip
-   `photo_kind=logo`). ETL transform **inserts** the same job per new
-   imported row
-   ([03](pipeline/03-describe-image.md)).
-4. **Edit** — crop / replace / cleanup / Reject are Routes, not a
-   further pipeline step.
+   **inserts** `describe_image`.
+3. **Describe image** — `DescribeImage` writes
+   `media_asset_classifications` (media caption, `photo_kind` `logo`
+   or `photo`, visual-issue severities), sets `ready`, and may **call**
+   `CleanupMediaAsset` for first-upload auto-cleanup when latest
+   `photo_kind=photo`. Skip `logo`. ETL transform **inserts** the same
+   job per new imported row with no classification yet.
+4. **Edit** — crop / replace / cleanup / Reject are Routes.
 
 Abort Uploading… is cancel of that PUT. No abort Route.
 `sweep_stale_media_uploads` deletes leftover `uploading` + null

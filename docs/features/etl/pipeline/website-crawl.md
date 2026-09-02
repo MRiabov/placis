@@ -138,10 +138,9 @@ founder, marketing email, existing site URL from Extract markdown + HTML via
 cites ≥1 crawl `source_id`; both sources when both dumps informed the value).
 Write discovered Facebook URLs and Instagram handles as details (empty columns
 only) so those ETL run kinds may start on this enqueue (do not scrape them from
-this ETL run kind). Then
-photos + [photo classification](photo-classification.md); **calls**
-`WriteImageThumbnail`; **inserts** `describe_image` per new row with empty
-`media_caption` (do not wait). Then
+this ETL run kind). Then attach photos; **calls**
+`WriteImageThumbnail`; **inserts** `describe_image` per new row with no
+classification yet (do not wait). Then
 [projects.md](projects.md) per crawl source (depicting photo on that HTML URL
 required). Same URL, both sources usable as a Project → one Project, two cites.
 Disagreeing owner-typed scalars → research conflict.
@@ -155,7 +154,7 @@ Disagreeing owner-typed scalars → research conflict.
 `imported_media_sources`; `business_profile_edits` +
 `business_profile_edit_sources` + live profile / list rows / Projects.
 **calls** `WriteImageThumbnail`; **inserts** `describe_image` per new imported
-row with empty `media_caption`.
+row with no classification yet.
 `etl.runs.status=succeeded` when homepage and remainder are done.
 
 ## Fail
