@@ -37,6 +37,12 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    not unstructured founder jsonb. (2026-08-19; 2026-08-27:
    `business_research_sources` removed.)
 
+   (2026-09-02): The four `brand_*` columns are gone. Founder columns and
+   `logo_media_asset_id` remain. Site colors / type live on
+   [website styles](../../website/styles.md) / `website_settings`. No
+   `trading_name` / `legal_form` / `company_status` on the live profile
+   (Find typeahead may still show registry status).
+
 4. **Reviews have origin, top, archive, and citation** — each
    `business_profile_reviews` row has `origin` (`google_maps_listing` /
    `facebook_business_page` / `owner`), `is_top` + `top_position` (dense 1…n, n
@@ -56,6 +62,13 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    records whether the current top set may still be replaced by ranking
    (true), is done for this enqueue or owner-locked (false), or was
    never ranked (null). Not a skip key. Not on each review row.
+
+   (2026-09-02): Ranking is not a column on the review or the profile.
+   `is_top` / `top_position` / `provisional` live on insert-only
+   `business_profile_review_rankings` (current = latest `created_at` per
+   review). HTTP / ads hydrate from that join. The review row stays the
+   imported or owner-written text. No `top_reviews_provisional` on
+   `business_profiles`.
 
 5. **Facebook and Google Maps listing are Details links** — Business details
    owns `facebook_profile_url` and `google_maps_listing_url`.

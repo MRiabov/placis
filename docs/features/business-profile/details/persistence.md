@@ -34,8 +34,7 @@ on every call.
 ### `business_profiles`
 
 - **Columns:** `id` uuid pk, `tenant_id` fk, `trade` text, `display_name`
-  text, `trading_name` text, `legal_name` text, `legal_form` text,
-  `company_status` text, `description` text, `established_year` int
+  text, `legal_name` text, `description` text, `established_year` int
   nullable, `company_number` text nullable, `vat_number` text nullable,
   `vat_registration_status` text nullable, `incorporation_date` date
   nullable, `registered_office` text nullable, `contact_name` text
@@ -47,26 +46,19 @@ on every call.
   `founder_nationality` text nullable, `founder_country_of_residence`
   text nullable, `founder_appointed_on` date nullable,
   `founder_media_asset_id` uuid nullable fk, `logo_media_asset_id` uuid
-  nullable fk, `brand_tone` text nullable, `brand_typography` text
-  nullable, `brand_primary_color` text nullable, `brand_accent_color`
-  text nullable, `top_reviews_provisional` bool nullable,
-  `last_edit_id` uuid nullable fk, `accepted_edit_id` uuid nullable fk,
-  `created_at` timestamptz, `updated_at` timestamptz
+  nullable fk, `last_edit_id` uuid nullable fk, `accepted_edit_id` uuid
+  nullable fk, `created_at` timestamptz, `updated_at` timestamptz
 - **Enums:** none closed. `trade` is open text (`minLength` 1,
   `maxLength` 80)
 - **Uniques:** `tenant_id` (required; the unactivated tenant created at
   business lookup, same row later activated)
 - **Written by:** `ApplyBusinessProfileIncrement` (`UpdateBusinessProfile`,
-  `update_details`, `UndoBusinessProfileEdit`); `UpdateBusinessProfileReviews`
-  (`top_reviews_provisional=false`); onboarding client interview; ETL
-  transform
-- **Notes:** `top_reviews_provisional` null = never ranked; true = this
-  top set may still be replaced by another `reviews_ranking_for_display`
-  for this enqueue; false = ranking for this enqueue is done, or owner
-  PATCH. Not a skip key: ranking still overwrites unless
-  `algorithm=human`. Not on each review row. Ranking columns on this
-  row are the TODO on
-  [classifications and predictions](../../../general-architecture/persistence.md#classifications-and-predictions).
+  `update_details`, `UndoBusinessProfileEdit`); onboarding client
+  interview; ETL transform
+- **Notes:** No `trading_name` / `legal_form` / `company_status`. No
+  `brand_*` — website look is
+  [`website_settings`](../../website/persistence.md). No ranking
+  columns — pins live on `business_profile_review_rankings`.
 
 ### `business_profile_edits`
 
@@ -79,17 +71,15 @@ on every call.
   `created_at` timestamptz
 - **Enums:** `op` → `set` / `clear` / `add` / `remove` / `update`;
   `field` (when `op` is `set` / `clear`) → `trade` / `display_name` /
-  `trading_name` / `legal_name` / `legal_form` / `company_status` /
-  `description` / `established_year` / `company_number` / `vat_number` /
-  `vat_registration_status` / `incorporation_date` /
+  `legal_name` / `description` / `established_year` / `company_number` /
+  `vat_number` / `vat_registration_status` / `incorporation_date` /
   `registered_office` / `contact_name` / `marketing_phone` /
   `emergency_phone` / `marketing_email` / `existing_site_url` /
   `google_maps_listing_url` / `facebook_profile_url` / `founder_name` /
   `founder_role` / `founder_occupation` / `founder_nationality` /
   `founder_country_of_residence` / `founder_appointed_on` /
-  `founder_media_asset_id` / `logo_media_asset_id` / `brand_tone` /
-  `brand_typography` / `brand_primary_color` / `brand_accent_color` /
-  `top_reviews_provisional`; `list` (when the op is a list change) →
+  `founder_media_asset_id` / `logo_media_asset_id`; `list` (when the op
+  is a list change) →
   `services` / `service_areas` / `opening_hours` / `reviews` /
   `certifications` / `facebook_posts` / `instagram_posts` / `projects`;
   `created_by` → `business_research` / `voice` / `text` / `human` /
@@ -110,7 +100,8 @@ on every call.
   profile edits (the increment row, not the junction). Generic
   `audit_events` stays for website publication / website activation /
   etc. Profile-history list ops for `reviews` include `update` for top
-  pin/reorder.
+  pin/reorder (the increment names the list change; live pins are
+  `business_profile_review_rankings`).
 
 ### Write
 
@@ -191,42 +182,69 @@ profile, to show Profile history, or to reconstruct the profile as of
   `facebook_page_review_external_id` text nullable, `author_name`
   text, `rating` int, `body` text, `citation` text, `published_at`
   timestamptz nullable, `language` text nullable, `origin` text,
-  `is_top` bool, `top_position` int nullable, `status` text,
-  `position` int
+  `status` text
 - **Enums:** `origin` → `google_maps_listing` /
   `facebook_business_page` / `owner`; `status` → `in_pool` /
   `archived`
 - **Uniques:** nullable unique
-  `(business_profile_id, facebook_page_review_external_id)` when set;
-  partial unique `(business_profile_id, top_position) WHERE
-  top_position IS NOT NULL`
+  `(business_profile_id, facebook_page_review_external_id)` when set
 - **Written by:** `CreateBusinessProfileReview`;
-  `ImportBusinessProfileReviews`; `UpdateBusinessProfileReviews`;
-  `ArchiveBusinessProfileReview`; `UnarchiveBusinessProfileReview`;
-  River job `reviews_ranking_for_display`
-  ([jobs](../../../general-architecture/jobs.md)); ETL transform
-- **Notes:** `rating` 1–5. Imported `body` is full text; owner-written
-  `maxLength` 500. `citation` `maxLength` 500 (about two or three
-  sentences; what cards, the website, and ads paint; fallback `body`
-  if empty). `top_position` only when `is_top`; dense order 1…n,
-  **n ≤ 30**; 1 is most featured. Check: `is_top` iff `top_position`
-  is set, and `top_position` is 1–30. Unique 1–30 is the cap — two
-  rows cannot share a number. Writers never assign a single
-  `top_position`. They replace the whole ordered id list in one
-  transaction (`SELECT … FOR UPDATE` the profile row, then densify
-  1…n from that list). Same transaction writes
-  `business_profiles.top_reviews_provisional`. River job
-  `reviews_ranking_for_display` and Certifications and reviews PATCH
-  do the same pin replace, not a merge. PATCH also sets
-  `top_reviews_provisional=false` and `algorithm=human`.
-  Orchestration:
+  `ImportBusinessProfileReviews`; `ArchiveBusinessProfileReview`;
+  `UnarchiveBusinessProfileReview`; ETL transform
+- **Notes:** The review row is imported or owner-written text. No
+  `is_top` / `top_position` / `position` — pins live on
+  `business_profile_review_rankings`. `rating` 1–5. Imported `body` is
+  full text; owner-written `maxLength` 500. `citation` `maxLength` 500
+  (about two or three sentences; what cards, the website, and ads
+  paint; fallback `body` if empty). Archive is not delete: archived
+  imported rows stay so re-import does not duplicate that external id;
+  archive also drops that id from every website section array and
+  inserts a ranking row with `is_top=false` so latest is not a stale
+  pin. Website sections hold their own ordered ids via
+  `website_slot_reviews`. Ads hydrate `is_top` from the latest ranking
+  join. They do not copy the text except at website publication
+  (citation baked into the website manifest).
+
+### `business_profile_review_rankings`
+
+- **Columns:** `id` uuid pk, `tenant_id` fk, `business_profile_id` fk,
+  `review_id` fk → `business_profile_reviews`, `is_top` bool,
+  `top_position` int nullable, `provisional` bool, `algorithm` text,
+  `schema_revision` int, `ai_generation_id` uuid nullable fk →
+  `ai.ai_generations`, `created_at` timestamptz
+- **Enums:** `algorithm` is the ranking job identity, or `human` when
+  the contractor pinned
+- **Uniques:** `id`. Not unique on `review_id` (many rows per review)
+- **Written by:** `UpdateBusinessProfileReviews`;
+  `ArchiveBusinessProfileReview`; River job
+  `reviews_ranking_for_display`
+  ([jobs](../../../general-architecture/jobs.md))
+- **Notes:** Ranking prediction about a review, not a column on the
+  review
+  ([classifications and predictions](../../../general-architecture/persistence.md#classifications-and-predictions)).
+  Insert only. Current = latest `created_at` for that `review_id`. No
+  pointer on the review or profile. HTTP / ads / Certifications
+  hydrate `is_top` / `top_position` from this join.
+  `top_reviews_provisional` on `ReviewListRead` is the latest ranking
+  batch’s `provisional` (same `created_at` / `ai_generation_id` for
+  that replace). Ranking job and owner PATCH insert one row per
+  `in_pool` review in that replace (`SELECT … FOR UPDATE` the profile
+  row). Unpinned `in_pool` rows get `is_top=false` / `top_position`
+  null so latest is not a stale pin. `top_position` only when
+  `is_top`; dense order 1…n on the **current** batch, **n ≤ 30**; 1 is
+  most featured. Check: `is_top` iff `top_position` is set, and
+  `top_position` is 1–30. Writers never assign a single
+  `top_position`. `provisional=true` when overlapping ETL for this
+  onboarding enqueue is still running; `false` when that enqueue’s ETL
+  is done, on scheduled ranking, or on owner PATCH
+  (`algorithm=human`). Not a skip key. Skip overwrite when latest
+  ranking for that review is `algorithm=human`. ETL finish with no
+  extra `in_pool` rows: insert a copy of the latest batch with
+  `provisional=false`, no LLM (same pattern as copying a
+  classification onto a crop child). Orchestration:
   [build-profile](../../onboarding/pipeline/build-profile.md).
-  Website sections hold their own ordered ids via
-  `website_slot_reviews`. Ads use `is_top`. They do not copy the text
-  except at website publication (citation baked into the website
-  manifest). Archive is not delete: archived imported rows stay so
-  re-import does not duplicate that external id; archive also drops
-  that id from every website section array.
+  `ai_generation_id` is the ranking LLM call (omit on a copy or owner
+  PATCH).
 
 ### `facebook_profiles`
 
@@ -322,9 +340,11 @@ Lookup: `(tenant_id)` on `business_profiles` (also unique). Lookup:
 `(edit_id, source_id)`. Unique: `facebook_profiles.business_profile_id`;
 `instagram_profiles.business_profile_id`. Unique:
 `facebook_posts` `(facebook_profile_id, external_id)`;
-`instagram_posts` `(instagram_profile_id, external_id)`. Partial unique:
-`business_profile_reviews` `(business_profile_id, top_position)
-WHERE top_position IS NOT NULL`. Unique weekday:
+`instagram_posts` `(instagram_profile_id, external_id)`. Lookup:
+`business_profile_review_rankings` `(review_id, created_at)`;
+`(business_profile_id, created_at)`. Unique weekday:
 `business_profile_opening_hours` `(business_profile_id, day_of_week)`.
 Unique: `business_profile_certification_selections`
-`(business_profile_id, certification_id)`.
+`(business_profile_id, certification_id)`. The current ranking batch’s
+dense `top_position` 1…n (n ≤ 30) is an invariant on latest rows, not
+a unique on this table (insert-only history).

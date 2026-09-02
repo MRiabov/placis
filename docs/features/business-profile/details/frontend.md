@@ -89,7 +89,7 @@ Same link pattern (`google_maps_listing_url`). When linked, the same card from
 that listing (name, photo, rating, review count) — same one-row layout as
 Facebook. Certifications and reviews imports from that listing.
 
-Do not add unless asked: founder columns, brand tone / typography / colors.
+Do not add unless asked: founder columns.
 
 See [README.md](README.md) for the rest of what it edits.
 

@@ -168,6 +168,9 @@ Status: decided (2026-08-16, product owner + engineering).
     `reviews_ranking_for_display` ([build-profile](../onboarding/pipeline/build-profile.md), [jobs](../../general-architecture/jobs.md)). Owner Content /
     `update_reviews` can still override a section later.
 
+    (2026-09-02): Ranking inserts `business_profile_review_rankings`. Website
+    still hydrates `{{reviews.N}}` from that join. It does not own ranking.
+
     (2026-08-26): Certification definitions and selections are Details /
     business-profile tables (`certification_definitions`,
     `business_profile_certification_selections`), not `website_certification_*`.

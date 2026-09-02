@@ -92,7 +92,7 @@ matches; a bumped `schema_revision` extracts / classifies without
 `force`; `algorithm=human` is not overwritten. After that scheduled run
 **succeeds** and new `in_pool` review rows landed: schema `jobs` has
 one `reviews_ranking_for_display` on that `tenant_id` (once, not per
-chunk). After the job: `top_reviews_provisional=false`. Transform did
+chunk). After the job: latest ranking batch `provisional=false`. Transform did
 not rank. If the scheduled run added no new `in_pool` rows, no ranking
 job.
 

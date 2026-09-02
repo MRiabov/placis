@@ -31,7 +31,7 @@
     still `extracting`.
   - **Must not**: extract write `business_profile_*`; transform call the
     Maps adapter; transform enqueue `reviews_ranking_for_display` or
-    write `is_top` / `top_position`; `etl_run_kind=review` or
+    write `business_profile_review_rankings`; `etl_run_kind=review` or
     `etl_run_kind=photo`.
 - **Cases**:
   - Retry of the same `run_id` does not refetch Details when that fetch
