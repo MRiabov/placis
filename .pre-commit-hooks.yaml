@@ -16,10 +16,10 @@
 
 - id: check-happy-path
   name: HappyPath OpenAPI 1:1
-  description: Fail if a public OpenAPI operation has no 1:1 TestHappyPath* that hits exactly that Method+path. No-ops when openapi.json is absent.
+  description: Fail if a structured api.md Route or public OpenAPI operation has no 1:1 TestHappyPath* that hits exactly that Method+path. Docs leftover may only shrink. Spec walk no-ops when openapi.json is absent.
   entry: go run ./cmd/ci/check-happy-path --public
   language: system
-  files: '^internal/.*_test\.go$|^openapi\.json$|^cmd/ci/check-happy-path/'
+  files: '^internal/.*_test\.go$|^openapi\.json$|^cmd/ci/check-happy-path/|^docs/.*/api\.md$'
   pass_filenames: false
 
 - id: check-docs-code

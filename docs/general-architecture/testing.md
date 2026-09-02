@@ -42,13 +42,20 @@ A feature is **more complete** when its HappyPath tests pass. Edge cases
 
 ## HappyPath matrices
 
-Two OpenAPI specs. Each public or Worker operation needs a dedicated
-`func TestHappyPath*` that hits **exactly that one** Method+path as a
-literal (`api.Get("/v1/…")` or `"GET /v1/…"`). Flow tests also hit some
-paths; they do not replace the 1:1 row. `TestPipelineHappyPath*` is not a
-1:1 row (`TestHappyPath` prefix only). CI: `cmd/ci/check-happy-path`
-`--public` / `--worker`. No leftover: a missing spec file no-ops; once the
-exported spec has ops, missing tests fail.
+Two OpenAPI specs and structured `api.md` Routes. Each public or Worker
+operation needs a dedicated `func TestHappyPath*` that hits **exactly that
+one** Method+path as a literal (`api.Get("/v1/…")` or `"GET /v1/…"`).
+Required ops come from **Method + path** cells in defined feature
+`api.md` (website, billing, ads, assistant, onboarding, auth, media
+library) plus HTTP conventions `GET /v1/health` and
+`GET /openapi.json`. Skip **Do not create**. Skip unstructured leftover
+extra-`##` files (Details, Projects, website leads). Flow tests also hit
+some paths; they do not replace the 1:1 row. `TestPipelineHappyPath*` is
+not a 1:1 row (`TestHappyPath` prefix only). CI:
+`cmd/ci/check-happy-path` `--public` / `--worker`. Docs Routes use a
+shrink-only leftover until the Go funcs exist. A missing spec file
+no-ops that walk; docs leftover still runs. Once a spec has ops, missing
+tests fail with no leftover.
 
 - **Public** (`GET /openapi.json` / exported `openapi.json`):
   `TestHappyPathV1WebsiteEditorPagesReturnsPages` for

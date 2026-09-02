@@ -64,6 +64,11 @@ func TestHappyPathWebsiteEditorFlow(t *testing.T) {
 }
 `
 
+func emptyDocs(t *testing.T) string {
+	t.Helper()
+	return t.TempDir()
+}
+
 func TestPublicCoversHealthIgnoresInternal(t *testing.T) {
 	dir := writeTree(t, map[string]string{
 		"openapi.json":             healthSpec,
@@ -71,6 +76,7 @@ func TestPublicCoversHealthIgnoresInternal(t *testing.T) {
 	})
 	err := run([]string{
 		"--public",
+		"--docs", emptyDocs(t),
 		"--openapi", filepath.Join(dir, "openapi.json"),
 		"--internal", filepath.Join(dir, "internal"),
 	})
@@ -85,6 +91,7 @@ func TestPublicMissingFails(t *testing.T) {
 	})
 	err := run([]string{
 		"--public",
+		"--docs", emptyDocs(t),
 		"--openapi", filepath.Join(dir, "openapi.json"),
 		"--internal", filepath.Join(dir, "internal"),
 	})
@@ -100,6 +107,7 @@ func TestFlowDoesNotFillOneToOne(t *testing.T) {
 	})
 	err := run([]string{
 		"--public",
+		"--docs", emptyDocs(t),
 		"--openapi", filepath.Join(dir, "openapi.json"),
 		"--internal", filepath.Join(dir, "internal"),
 	})
@@ -127,6 +135,7 @@ func TestMissingSpecNoops(t *testing.T) {
 	dir := t.TempDir()
 	err := run([]string{
 		"--public",
+		"--docs", emptyDocs(t),
 		"--openapi", filepath.Join(dir, "missing.json"),
 		"--internal", filepath.Join(dir, "internal"),
 	})
@@ -147,6 +156,7 @@ func TestPipelineHappyPathWebsiteFull(t *testing.T) {
 	})
 	err := run([]string{
 		"--public",
+		"--docs", emptyDocs(t),
 		"--openapi", filepath.Join(dir, "openapi.json"),
 		"--internal", filepath.Join(dir, "internal"),
 	})
