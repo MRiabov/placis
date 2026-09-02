@@ -33,10 +33,11 @@ asserts both
 what the UI shows and the DB rows. A feature does not pass without its E2E test
 green.
 
-Each feature defines its E2E test in its own `testing.md`, spelling out the
-tables that journey reads and writes that Persist / Must not names (from that
-feature's `persistence.md`). Every table in that persistence file must appear
-in `testing.md` and/or `pipeline/testing/`
+Each feature defines its E2E and/or integration tests in its own
+`testing.md` (`## E2E` / `## Integration`; unit tests are not specified
+there), spelling out the tables those tests read and write that Persist /
+Must not names (from that feature's `persistence.md`). Every table in
+that persistence file must appear in `testing.md` and/or `pipeline/testing/`
 ([docs conventions](../docs-conventions.md#named-identifiers)). Do not require
 a bullet per Routes row. Pipeline integration tests pair
 `pipeline/<name>.md` ↔ `pipeline/testing/<name>.md` (step tables).
@@ -51,11 +52,12 @@ a bullet per Routes row. Pipeline integration tests pair
 
 ## Cross-tenant isolation
 
-Every feature that stores tenant-owned rows must have an **integration** test
-that creates two tenants and asserts reads, writes, and **files** are blocked
-across them. This is in addition to the per-feature E2E rule above. Auth spells
-out the two-tenant case in
-[auth testing](../features/other/auth/testing.md).
+Every feature that stores tenant-owned rows must have an **integration**
+test that creates two tenants and asserts reads, writes, and **files**
+are blocked across them. This is backend-only (`humatest` → real
+Postgres). Do not specify it as Playwright. This is in addition to the
+per-feature E2E rule above. Auth spells out the two-tenant case in
+[auth testing](../features/other/auth/testing.md) `## Integration`.
 
 A feature's E2E must run when **that** feature's UI or API changed. Unrelated
 features may stay skipped. Incremental selection is a feedback optimization — it

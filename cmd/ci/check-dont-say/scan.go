@@ -178,8 +178,23 @@ func isTestingDoc(path string) bool {
 	return base == "testing.md" || strings.Contains(slash, "/testing/")
 }
 
+func setupAllowed(path string) bool {
+	if isTestingDoc(path) {
+		return true
+	}
+	slash := filepath.ToSlash(path)
+	if strings.Contains(slash, "/check-pipeline-tables/") {
+		return true
+	}
+	base := filepath.Base(slash)
+	if base == "docs-conventions.md" {
+		return true
+	}
+	return strings.HasSuffix(slash, "/general-architecture/ci-cd.md")
+}
+
 func appliesTo(tok compiledToken, path string) bool {
-	if strings.EqualFold(tok.phrase, "setup") && isTestingDoc(path) {
+	if strings.EqualFold(tok.phrase, "setup") && setupAllowed(path) {
 		return false
 	}
 	switch tok.class {

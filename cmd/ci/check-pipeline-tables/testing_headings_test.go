@@ -1,0 +1,126 @@
+package main
+
+import (
+	"strings"
+	"testing"
+)
+
+func okTesting(atx ...atxHead) headingFile {
+	return headingFile{
+		path: "docs/features/widget/testing.md",
+		rel:  "widget/testing.md",
+		atx:  atx,
+	}
+}
+
+func TestTestingHeadingsClosedOK(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "E2E"},
+		atxHead{3, "Widget"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Invoke"},
+		atxHead{4, "Assert"},
+		atxHead{4, "Fail"},
+		atxHead{4, "Mocked"},
+		atxHead{2, "Integration"},
+		atxHead{3, "Two-tenant isolation"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Invoke"},
+		atxHead{4, "Assert"},
+	)
+	if errs := checkTestingHeadings(report{testingFiles: []headingFile{f}}); len(errs) != 0 {
+		t.Fatalf("closed: %v", errs)
+	}
+}
+
+func TestTestingHeadingsBanRoutes(t *testing.T) {
+	f := okTesting(atxHead{2, "Routes"})
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) == 0 {
+		t.Fatal("expected extra heading")
+	}
+	joined := strings.Join(errs, "\n")
+	if !strings.Contains(joined, "Routes") {
+		t.Fatalf("ban routes: %v", errs)
+	}
+}
+
+func TestTestingHeadingsBanJourneyH2(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "CMS"},
+		atxHead{3, "Hydrate"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Invoke"},
+		atxHead{4, "Assert"},
+	)
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "## CMS") {
+		t.Fatalf("journey h2: %v", errs)
+	}
+}
+
+func TestTestingHeadingsBanMethodH3(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "E2E"},
+		atxHead{3, "GET /v1/website/editor/pages"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Invoke"},
+		atxHead{4, "Assert"},
+	)
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) != 1 || !strings.Contains(errs[0], "### GET") {
+		t.Fatalf("method h3: %v", errs)
+	}
+}
+
+func TestTestingHeadingsBanExtraH4(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "E2E"},
+		atxHead{3, "Widget"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Invoke"},
+		atxHead{4, "Assert"},
+		atxHead{4, "Find"},
+	)
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "#### Find") {
+		t.Fatalf("extra h4: %v", errs)
+	}
+}
+
+func TestTestingHeadingsRequireSetupInvokeAssert(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "E2E"},
+		atxHead{3, "Widget"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Assert"},
+	)
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "Setup / Invoke / Assert") {
+		t.Fatalf("required h4: %v", errs)
+	}
+}
+
+func TestTestingHeadingsMissingH2(t *testing.T) {
+	f := okTesting()
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) != 1 || !strings.Contains(errs[0], "missing ## E2E") {
+		t.Fatalf("missing h2: %v", errs)
+	}
+}
+
+func TestTestingHeadingsH4Order(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "E2E"},
+		atxHead{3, "Widget"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Invoke"},
+		atxHead{4, "Assert"},
+		atxHead{4, "Mocked"},
+		atxHead{4, "Fail"},
+	)
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "Fail out of order") {
+		t.Fatalf("h4 order: %v", errs)
+	}
+}

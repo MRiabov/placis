@@ -471,6 +471,12 @@ func TestSetupAllowedInTestingDocs(t *testing.T) {
 	if hits := writeScan("testdata/docs/features/onboarding/testing.md", "Setup the fixtures.\n"); len(hits) != 0 {
 		t.Fatalf("feature testing.md setup should pass, got %v", hits)
 	}
+	if hits := writeScan("testdata/docs/docs-conventions.md", "#### Setup\n"); len(hits) != 0 {
+		t.Fatalf("docs-conventions Setup heading should pass, got %v", hits)
+	}
+	if hits := writeScan("testdata/cmd/ci/check-pipeline-tables/testing_headings.go", `"Setup": true,`+"\n"); len(hits) != 0 {
+		t.Fatalf("pipeline-tables Setup heading should pass, got %v", hits)
+	}
 	if hits := writeScan("testdata/docs/features/onboarding/technical-implementation.md", "after setup\n"); len(hits) == 0 {
 		t.Fatal("non-testing setup should fail")
 	}
