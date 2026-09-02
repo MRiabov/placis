@@ -1,9 +1,10 @@
 # Auth — E2E test
 
 One full-stack E2E when Clerk lands. DB asserts name the tables from
-[persistence.md](persistence.md). Public 1:1 is `GET /v1/me` → Go
-`TestHappyPath*` when OpenAPI exists. No Go tests in this docs PR. Auth
-has no pipeline (`TestPipelineHappyPathAuth*` does not exist).
+[persistence.md](persistence.md). Public 1:1 is `### TestHappyPathV1Me`
+for `GET /v1/me`. Go `func TestHappyPathV1Me` is leftover until that
+func exists (`leftover_tests.go` only). Auth has no pipeline
+(`TestPipelineHappyPathAuth*` does not exist).
 
 ## E2E
 
@@ -53,10 +54,33 @@ Stripe test webhook. Clerk is real.
 
 ## Integration
 
+### TestHappyPathV1Me
+
+1:1. Exercise names exactly one Method+path.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). SDK-boundary double
+(programmed `Principal`; does not decode JWTs). Prefer fake Clerk. No
+Playwright. No Worker.
+
+#### Exercise
+
+Signed-in GetMe. `GET /v1/me`.
+
+#### Verify
+
+Through HTTP: Response `MeRead`. No bind → `tenant: null`,
+`clerk_org_id` null. Persistence may supplement but this Verify is the
+HTTP body.
+
+#### Mocked
+
+Clerk SDK-boundary `Principal`.
+
 ### GetMe through activation
 
-Backend flow. Not OpenAPI 1:1 (`GET /v1/me` is the public `TestHappyPath*`
-row when OpenAPI exists).
+Backend flow. Does not replace the 1:1 row (`TestHappyPathV1Me`).
 
 #### Setup
 
