@@ -204,16 +204,15 @@ does). We do **not** hand-roll AST scripts up front:
   step files pair with `pipeline/testing/<name>.md`; **known** persistence
   tables in a step appear in that testing file; every persistence table
   appears in `testing.md` and/or `pipeline/testing/` when those files
-  exist; pipeline step `##` headings are a closed list; feature `api.md`
-  and `persistence.md` `##` use a shrink-only leftover list (closed
-  `api.md` is DTOs / Routes / Do not create; closed `persistence.md` is
-  Tables / Indexes); `testing.md` `##` is E2E / Integration and `####`
+  exist; pipeline step `##` headings are a closed list; feature `api.md`,
+  `persistence.md`, and `testing.md` `##` use a shrink-only leftover list
+  (closed `api.md` is DTOs / Routes / Do not create; closed `persistence.md`
+  is Tables / Indexes); `testing.md` `##` is E2E / Integration and `####`
   is Setup / Exercise / Verify / Fail / Mocked / Teardown; pipeline Go
   `TestPipelineHappyPath*` per paired step plus `{Feature}Full` (shrink-only
-  leftover until funcs exist); `jobs.md` `##` is
-  Workflows / Jobs; backticked River job kind must already live in
-  `jobs.md` `## Jobs`. Missing
-  `testing.md` (media library / leads / Details / Projects) does not
+  leftover until funcs exist); `jobs.md` `##` is Workflows / Jobs;
+  backticked River job kind must already live in `jobs.md` `## Jobs`.
+  Missing `testing.md` (leads / Details / Projects) does not
   fail; a changed `persistence.md` passed on the command line without
   `testing.md` warns. See
   [docs conventions](../docs-conventions.md#named-identifiers).

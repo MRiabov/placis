@@ -131,7 +131,7 @@ export function MediaPage(): ReactNode {
             ) : (
               <div className="relative h-full min-h-80" ref={stillRef}>
                 <img
-                  alt={item.caption}
+                  alt=""
                   className="h-full w-full object-cover"
                   src={item.src}
                 />
@@ -208,7 +208,7 @@ export function MediaPage(): ReactNode {
               />
             </Field>
             <p className="text-xs text-muted-foreground">
-              {item.caption} · supplied by {who} · {item.status}
+              supplied by {who} · {item.status}
             </p>
             {compare ? (
               <div className="flex gap-2">

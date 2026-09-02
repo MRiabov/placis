@@ -134,7 +134,9 @@ show Profile history, or to reconstruct the profile as of `accepted_edit_id`
   ([jobs](../../../general-architecture/jobs.md)) and Certifications and
   reviews PATCH do the same pin replace, not a merge. PATCH also sets
   `top_reviews_provisional=false` and `algorithm=human`. Orchestration:
-  [build-profile](../../onboarding/pipeline/build-profile.md).
+  [build-profile](../../onboarding/pipeline/build-profile.md). Ranking
+  columns on this row are the TODO on
+  [classifications and predictions](../../../general-architecture/persistence.md#classifications-and-predictions).
 
 Website sections hold their own ordered ids via `website_slot_reviews`. Ads use
 `is_top`. They do not copy the text except at website publication (citation
@@ -163,9 +165,10 @@ include `update` for top pin/reorder.
 ETL transform upserts these on source `external_id` unless `algorithm=human`.
 Raw stays on the fetch tables. Skip / `force` / `human`: [ETL pipeline](../../etl/pipeline/README.md).
 
-Photo classification (hero / project / service / founder / logo) is `photo_kind`
-on [`media_assets`](../../other/media/persistence.md) used by this profile. There is no
-`etl.photo_classifications` table.
+Photo kind (`logo` / `photo`) is latest `photo_kind` on
+[`media_asset_classifications`](../../other/media/persistence.md),
+written by `DescribeImage`. There is no `etl.photo_classifications`
+table.
 
 - `certification_definitions` — global (not tenant): `id`, `name`,
   `short_label`, `trades`, `country`, `badge` (file or URL), `registry_url`.

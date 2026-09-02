@@ -94,8 +94,11 @@ Object and mapping: [catalog.md](catalog.md).
    ([02](pipeline/02-copy-website-template-pages.md));
 4. **automatic website copy generation** — prose, SEO, and **photo
    selection**: attach first when **media caption** fits that image
-   website slot; `generate_image` when nothing fits (founder / logo photo
-   kinds exclusive; do not filter on `hero` / `project` / `service`)
+   website slot. Logo slots are `photo_kind=logo` only (else leave the
+   token; no `generate_image`). Portrait slots attach a photo whose
+   **media caption** is a person portrait, or stay empty (no
+   `generate_image` of a face). Other image slots: `generate_image`
+   when nothing fits.
    ([03](pipeline/03-website-copy-generation.md));
 5. reviews website sections keep `{{reviews.1}}` … from the ranked pool.
    Website does not rank. River job kind `reviews_ranking_for_display`

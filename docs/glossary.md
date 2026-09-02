@@ -308,8 +308,8 @@ Distinct from: Projects (photos of their work).
 
 A Project is a named job with title, description, and cover, shown on the
 website and edited at Profile. It is normally a **past** job (work already
-completed). Distinct from a media library item whose photo kind is project (a
-picture of their work that is not itself a Project).
+completed). Distinct from a media library item that happens to show that
+work (a photo is not itself a Project).
 
 Use “projects” in product docs and UI. Do not say “portfolio”.
 
@@ -364,7 +364,7 @@ Website edit history (unpublished website edits).
 
 #### Media library
 
-The photo library: the contractor’s work, logos, and documents. Never say bare
+The photo library: the contractor’s work and logos. Never say bare
 “media” for this library. Reached from Profile. The website editor attaches from
 the same library.
 
@@ -374,7 +374,9 @@ Internal: Media asset, File. Do not say bare “asset” in product docs.
 
 #### Media caption
 
-The alt text on a media item. Never say bare “caption”.
+The classifier text on a media item (ads generate and website 03 slot
+match). Internal; not owner HTTP and not a `/cms/media` field. Never
+say bare “caption”.
 
 ---
 
@@ -1381,23 +1383,53 @@ Positioning, not a domain object.
 
 One item in the media library. Never say bare “asset” (a website is not this).
 Distinct from: Media library (the library), File (the stored photo or document),
-Supplied by (who originated the picture).
+Supplied by (who originated the picture), Media asset classification
+(caption / photo kind / visual issues).
+
+---
+
+#### Media asset classification
+
+One classifier output for a media library item: media caption,
+photo kind, visual-issue severities, `content_hash`, `algorithm`,
+`schema_revision`. Many rows per item; current is the latest
+`created_at`. No pointer on the media library item. Distinct from:
+Media asset (the item), Photo kind (the `logo` / `photo` label on a
+classification row).
+
+In code: `media_asset_classifications`.
 
 ---
 
 #### Photo kind
 
-The classifier label on a media library item: hero, project, service, founder,
-or logo. Never bare **kind**. Distinct from: Imported media kind.
+The label on a media asset classification: **logo** (a wordmark) or
+**photo** (everything else). Null until `DescribeImage` inserts the
+first row. Never `hero` / `project` / `service` / `founder` /
+`person`. Never bare **kind**. Distinct from: Imported media kind,
+Media asset classification (the classification row).
 
-In code: `media_assets.photo_kind`.
+In code: `media_asset_classifications.photo_kind` (latest join).
 
 ---
 
 ### File
 
 The stored photo or document. Distinct from: Media asset (the media library
+item), Image thumbnail (the compressed grid-tile copy of that photo).
+
+---
+
+### Image thumbnail
+
+The small compressed WebP of **that media library item’s file**, used as CMS /
+ads / Details / Projects **grid tiles**. Never say **preview** for this (website
+preview, preview website address, ads format preview, and website image render
+are other things). Distinct from: File (the original), Media asset (the library
 item).
+
+In code: `media_assets.thumbnail_file_id`, HTTP `thumbnail_url`,
+`WriteImageThumbnail`.
 
 ---
 

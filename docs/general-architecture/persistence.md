@@ -59,7 +59,7 @@ Uniques, Written by, Notes
 | [details](../features/business-profile/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews, Facebook / Instagram profile and posts, `certification_definitions`, `business_profile_certification_selections`) |
 | [projects](../features/business-profile/projects/persistence.md) | `business_profile` | `projects` |
 | [website](../features/website/persistence.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions) |
-| [media library](../features/other/media/persistence.md) | `media_library` | `media_assets` |
+| [media library](../features/other/media/persistence.md) | `media_library` | `media_assets`, `media_asset_classifications` |
 | [ads](../features/ads/persistence.md) | `ads` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
 | [leads](../features/other/leads/persistence.md) | `leads` | `leads` |
 | [files](files-and-s3.md) | `files` | `files` |
@@ -71,3 +71,42 @@ Uniques, Written by, Notes
 
 `tenants` and `media_assets` stay out of `website` / `ads`. Those are the real
 intersections.
+
+## Classifications and predictions
+
+A label, media caption, ranking, usable-as-a-Project verdict, or other
+generated prediction **about** a persisted subject is never a column on
+that subject. It lives on a dedicated table in the **same feature
+Postgres schema**. `ai` is traces only (`threads`, `ai_generations`,
+`ai_generation_tool_revisions`) — not product predictions
+([LLM layer](llm-layer.md)).
+
+- **Many rows per subject.** Current = latest `created_at` for that
+  subject id. No current-id pointer on the subject. HTTP / attach /
+  skip hydrate from the join.
+- **Insert only.** Never UPDATE an old prediction. A new algorithm,
+  `schema_revision`, owner edit (`algorithm=human`), or new
+  `content_hash` inserts a row. Previous predictions stay.
+- **Trace pointer, not a dump.** Nullable `ai_generation_id` →
+  `ai.ai_generations`. Reasoning, output, and tool calls stay on that
+  trace.
+- **Not this.** Live product rows (unpublished website slots,
+  owner-typed details, the Project title/description) **are** the
+  stored product. Raw extract dumps stay on fetch `raw`. Transform
+  skip keys (`algorithm` / `schema_revision`) on a live profile copy
+  are not a prediction-about-raw table.
+
+Examples that already split: `media_library.media_asset_classifications`
+(`media_assets`); `etl.llm_source_to_project_classifications`
+(`etl.sources`). New prediction tables follow many-rows-per-subject
+(the media library shape). Do not add new prediction columns to the
+subject.
+
+**TODO:** Reviews ranking writes `is_top` / `top_position` on
+`business_profile_reviews` (and `algorithm=human` on owner PATCH).
+Move that ranking onto a dedicated table in the details schema —
+many rows per review, current = latest `created_at`, insert only,
+nullable `ai_generation_id`. HTTP / ads / Certifications hydrate from
+the join. The review row stays the imported or owner-written text.
+Until then the live columns stay
+([details persistence](../features/business-profile/details/persistence.md)).

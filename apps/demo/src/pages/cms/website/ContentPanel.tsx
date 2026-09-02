@@ -164,7 +164,6 @@ export function ContentPanel({
                   const src = URL.createObjectURL(file);
                   const item: MediaLibraryItem = {
                     by: "owner",
-                    caption: "",
                     id: src,
                     ratio: "landscape",
                     src,

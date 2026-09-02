@@ -14,7 +14,6 @@ var pipelineHappyPathLeftover = []string{
 	"TestPipelineHappyPathEtlFull",
 	"TestPipelineHappyPathEtlGoogleMaps",
 	"TestPipelineHappyPathEtlInstagram",
-	"TestPipelineHappyPathEtlPhotoClassification",
 	"TestPipelineHappyPathEtlProjects",
 	"TestPipelineHappyPathEtlTradeRegistry",
 	"TestPipelineHappyPathEtlWebSearch",

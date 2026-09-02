@@ -43,25 +43,28 @@ Strip on/off is a caller flag.
 
 ## Do
 
-`PublishWebsite` **calls** `websitePublication`. Same write for
+`PublishWebsite` **calls** `ApproveMediaAsset` for `pending_review`
+items on that dump, then **calls** `websitePublication`. Same write for
 onboarding 08/09 and later CMS Publish.
 
-1. Validate every website section against its website component contract.
+1. **calls** `ApproveMediaAsset` for `pending_review` items on that
+   dump.
+2. Validate every website section against its website component contract.
    A required missing var is a publication blocker.
-2. Go `POST`s `websitePublication` ([website HTTP](../api.md)): tokenized
+3. Go `POST`s `websitePublication` ([website HTTP](../api.md)): tokenized
    `website.v1` dump (`pages[]` still a list) plus
    `WebsiteBusinessProfileRead`, `media_asset_urls`, `strip`,
    `website_prefix`, `version_number`. Authenticated internal (shared
    secret / service binding). Not a live GET. Not public OpenAPI. Not
    `websiteRender`.
-3. Worker resolves website placeholders from that profile (exact match →
+4. Worker resolves website placeholders from that profile (exact match →
    typed value, substring → substituted) and writes HTML to R2.
-4. Then persist: write `{version_number}/`, copy onto `latest/`, convert
+5. Then persist: write `{version_number}/`, copy onto `latest/`, convert
    approved live-path images to same-host WebP, refresh host pointers,
    `purge_cache` for page URLs, sitemap, robots, WebP URLs. Purge exists so
    live visitors (Workers Cache then R2) see the new `latest/` immediately.
    03 never purges.
-5. Insert / archive `website_publications` as 08/09/CMS already specify
+6. Insert / archive `website_publications` as 08/09/CMS already specify
    (`published_by`, strip, `active`).
 
 ## Loads
@@ -81,14 +84,15 @@ Unpublished `website_pages`, `website_sections`, `website_slots`,
 
 ## Calls
 
-`websitePublication`.
+`ApproveMediaAsset`, then `websitePublication`.
 
 ## Persist
 
 `website_publications` (tokenized dump on the row; HTML snapshot in R2);
-`website_publication_issues` post-publication only. R2 `{version_number}/`
-and `latest/`; purge. Caller-owned host rows (`website_addresses`,
-`website_prefix`) stay in 08/09/CMS.
+`website_publication_issues` post-publication only; `media_assets.review_status`
+for `pending_review` items on that dump. R2 `{version_number}/` and `latest/`;
+purge. Caller-owned host rows (`website_addresses`, `website_prefix`) stay in
+08/09/CMS.
 
 ## Fail
 

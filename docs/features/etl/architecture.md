@@ -15,7 +15,7 @@ StartRun(trigger, tenant, force=false)  # onboarding: ETL run kinds; scheduled: 
   → **inserts** `{etl_run_kind}_transform` that chunk
   → transform **inserts** the next extract when ETL slow extract chunks remain
   → new details (place_id, website_url, handles) re-check the table (same enqueue)
-       → live business profile / Facebook and Instagram posts / Projects / photo classification
+       → live business profile / Facebook and Instagram posts / Projects
          (etl.sources + typed junctions; Project skip on llm_source_to_project_classifications)
 ```
 
