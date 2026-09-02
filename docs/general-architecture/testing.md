@@ -42,9 +42,25 @@ A feature is **more complete** when its HappyPath tests pass. Edge cases
 
 ## HappyPath matrices
 
+Backend HappyPath integration covers HTTP paths. If the API works over
+`humatest` (`api.Get` / `api.Post`, handler → service → sqlc), it
+works. A Postgres `SELECT` after a write does not prove the matching
+read Route. Pipeline tests prove Persist, not Routes.
+
 Two OpenAPI specs and structured `api.md` Routes. Each public or Worker
-operation needs a dedicated `func TestHappyPath*` that hits **exactly that
-one** Method+path as a literal (`api.Get("/v1/…")` or `"GET /v1/…"`).
+operation needs both:
+
+1. `### TestHappyPath*` in the owning `testing.md` under
+   `## Integration` (prefix `TestHappyPath`, not
+   `TestPipelineHappyPath`, not frontend `HappyPath*Full`). **Setup** is
+   backend. **Exercise** names exactly one Method+path literal. **Verify**
+   through HTTP (create then `GET` and assert it exists; delete then
+   `GET` and assert gone; or the Exercise body). Named persistence
+   verifies may supplement. Extra Method+path in Verify does not cover
+   another Route.
+2. `func TestHappyPath*` that hits **exactly that one** Method+path as a
+   literal (`api.Get("/v1/…")` or `"GET /v1/…"`).
+
 Required ops come from **Method + path** cells in defined feature
 `api.md` (website, billing, ads, assistant, onboarding, auth, media
 library) plus HTTP conventions `GET /v1/health` and
@@ -52,10 +68,25 @@ library) plus HTTP conventions `GET /v1/health` and
 extra-`##` files (Details, Projects, website leads). Flow tests also hit
 some paths; they do not replace the 1:1 row. `TestPipelineHappyPath*` is
 not a 1:1 row (`TestHappyPath` prefix only). CI:
-`cmd/ci/check-happy-path` `--public` / `--worker`. Docs Routes use a
-shrink-only leftover until the Go funcs exist. A missing spec file
-no-ops that walk; docs leftover still runs. Once a spec has ops, missing
-tests fail with no leftover.
+`cmd/ci/check-happy-path` `--public` / `--worker`. Two leftover files:
+`leftover_docs.go` (`###` missing) and `leftover_tests.go` (`func`
+missing). A heading does not shrink the tests leftover; a func does
+not shrink the docs leftover. A missing spec file no-ops that walk;
+docs leftover still runs. Once a spec has ops, missing tests fail with
+no leftover.
+
+Owning `testing.md` (ads Routes live in `ads/api.md` but tests live
+under ad-generation):
+
+- website → `docs/features/website/testing.md` (includes
+  `/internal/…`)
+- ads → `docs/features/ads/ad-generation/testing.md`
+- billing / assistant / onboarding → that feature’s `testing.md`
+- auth / media library → `docs/features/other/{auth,media}/testing.md`
+- `GET /v1/health`, `GET /openapi.json` → this file. Do not add
+  `## Integration` until those leftover rows drop.
+
+Examples:
 
 - **Public** (`GET /openapi.json` / exported `openapi.json`):
   `TestHappyPathV1WebsiteEditorPagesReturnsPages` for
@@ -93,8 +124,8 @@ Frontend completeness (documented, not CI-asserted this pass):
 Extra frontend HappyPath only for real screen branching. Names include
 **HappyPath**; **Full** only on that journey.
 
-Do **not** add one `###` per OpenAPI row in `testing.md`. `### METHOD /path`
-stays banned.
+`### METHOD /path` stays banned. Frontend Full and pipeline `{Feature}Full`
+stay extra `###`; they do not fill a 1:1 row.
 
 ## The rule
 
@@ -113,7 +144,9 @@ there), spelling out the tables those tests read and write that Persist /
 Must not names (from that feature's `persistence.md`). Every table in
 that persistence file must appear in `testing.md` and/or `pipeline/testing/`
 ([docs conventions](../docs-conventions.md#named-identifiers)). Do not require
-a bullet per Routes row. Pipeline integration tests pair
+a bullet per Routes row; each structured Route needs
+`### TestHappyPath*` (leftover until the heading lands). Pipeline
+integration tests pair
 `pipeline/<name>.md` ↔ `pipeline/testing/<name>.md` (step tables).
 
 - [assistant](../features/assistant/testing.md)
