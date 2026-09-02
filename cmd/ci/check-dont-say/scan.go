@@ -252,6 +252,8 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	case strings.Contains(slash, "cmd/ci/check-dont-say/") || strings.Contains(slash, "ci/check-dont-say/"):
 		return true
+	case strings.Contains(slash, "/testdata/") || strings.HasPrefix(slash, "testdata/"):
+		return true
 	case strings.HasSuffix(slash, "generated/api-types.ts"):
 		return true
 	default:

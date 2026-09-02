@@ -241,7 +241,7 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     `/cms/details` edit the same Details fields with the same controls and the
     same `business_profile_*` writes. If Details gains, drops, or changes a
     field, the client interview does too. Do not keep a parallel onboarding-only
-    widget for a Details field (no textarea for services, no free-text service
+    control for a Details field (no textarea for services, no free-text service
     area, no second hours picker). Allowed differences only: white `.onb-card`
     vs the Details panel; legal identity stays on Review (03) and is not
     repeated; interview may add photos, certifications, reviews, extra notes,
