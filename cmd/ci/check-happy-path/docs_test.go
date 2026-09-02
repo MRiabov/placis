@@ -45,11 +45,11 @@ const adsWriteAPI = `# Ads HTTP
 - ` + "`/v1/nope`" + `
 `
 
-const detailsAPI = `# Details HTTP
+const leadsAPI = `# Leads HTTP
 
 ## Serve only types on HTTP
 
-### GET /v1/business-profile
+### POST /v1/website-forms/{form_id}/submissions
 
 Essay.
 
@@ -60,6 +60,78 @@ No table.
 ## Do not create
 
 - ` + "`/v1/old`" + `
+`
+
+const detailsAPI = `# Details HTTP
+
+## DTOs
+
+| DTO | Fields |
+| --- | --- |
+| ` + "`BusinessProfileRead`" + ` | ` + "`trade`" + ` |
+
+## Routes
+
+| Method + path | Callers | Request | Response |
+| --- | --- | --- | --- |
+| ` + "`GET /v1/business-profile`" + ` | | | |
+
+## Do not create
+
+- ` + "`/v1/old`" + `
+`
+
+const detailsHeading = `## Integration
+
+### TestHappyPathV1BusinessProfile
+
+#### Setup
+
+Backend.
+
+#### Exercise
+
+` + "`GET /v1/business-profile`" + `
+
+#### Verify
+
+The HTTP body is BusinessProfileRead.
+`
+
+const projectsAPI = `# Projects HTTP
+
+## DTOs
+
+| DTO | Fields |
+| --- | --- |
+| ` + "`ProjectRead`" + ` | ` + "`id`" + ` |
+
+## Routes
+
+| Method + path | Callers | Request | Response |
+| --- | --- | --- | --- |
+| ` + "`GET /v1/projects`" + ` | | | |
+
+## Do not create
+
+- ` + "`/v1/old`" + `
+`
+
+const projectsHeading = `## Integration
+
+### TestHappyPathV1Projects
+
+#### Setup
+
+Backend.
+
+#### Exercise
+
+` + "`GET /v1/projects`" + `
+
+#### Verify
+
+The HTTP body lists projects.
 `
 
 const healthHeading = `## Integration
@@ -166,13 +238,57 @@ func TestDocsStaleLeftover(t *testing.T) {
 
 func TestDocsSkipUnstructured(t *testing.T) {
 	dir := writeTree(t, map[string]string{
-		"docs/features/business-profile/details/api.md": detailsAPI,
+		"docs/features/other/leads/api.md": leadsAPI,
 	})
 	if errs := checkDocsHappyPath(filepath.Join(dir, "docs"), nil, nil); len(errs) != 0 {
-		t.Fatalf("skip details: %v", errs)
+		t.Fatalf("skip leads: %v", errs)
 	}
 	if errs := checkTestingHappyPath(filepath.Join(dir, "docs"), nil); len(errs) != 0 {
-		t.Fatalf("skip details testing: %v", errs)
+		t.Fatalf("skip leads testing: %v", errs)
+	}
+}
+
+func TestDetailsOwnsTesting(t *testing.T) {
+	wrong := writeTree(t, map[string]string{
+		"docs/features/business-profile/details/api.md": detailsAPI,
+		"docs/features/business-profile/certifications-and-reviews/testing.md": `## Integration
+
+### TestHappyPathV1BusinessProfile
+
+#### Setup
+
+Backend.
+
+#### Exercise
+
+` + "`GET /v1/business-profile`" + `
+
+#### Verify
+
+Wrong owner.
+`,
+	})
+	errs := checkTestingHappyPath(filepath.Join(wrong, "docs"), nil)
+	joined := strings.Join(errs, "\n")
+	if !strings.Contains(joined, "GET /v1/business-profile") {
+		t.Fatalf("certifications testing.md must not own details Routes: %v", errs)
+	}
+	ok := writeTree(t, map[string]string{
+		"docs/features/business-profile/details/api.md":     detailsAPI,
+		"docs/features/business-profile/details/testing.md": detailsHeading,
+	})
+	if errs := checkTestingHappyPath(filepath.Join(ok, "docs"), nil); len(errs) != 0 {
+		t.Fatalf("details/testing.md should own details Routes: %v", errs)
+	}
+}
+
+func TestProjectsOwnsTesting(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"docs/features/business-profile/projects/api.md":     projectsAPI,
+		"docs/features/business-profile/projects/testing.md": projectsHeading,
+	})
+	if errs := checkTestingHappyPath(filepath.Join(dir, "docs"), nil); len(errs) != 0 {
+		t.Fatalf("projects/testing.md should own projects Routes: %v", errs)
 	}
 }
 

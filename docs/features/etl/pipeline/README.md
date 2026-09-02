@@ -93,8 +93,9 @@ calls `StartRun`.
   Imported files insert ≥1 `imported_media_sources`. Never a nullable
   `source_id` column. Client interview / owner writes have no junction rows.
 - **Reviews: insert only.** Transform writes `business_profile_reviews`
-  (`in_pool`). It does not rank, does not write `is_top` / `top_position`,
-  and does not enqueue `reviews_ranking_for_display`. Report that N new
+  (`in_pool`). It does not rank, does not write
+  `business_profile_review_rankings`, and does not enqueue
+  `reviews_ranking_for_display`. Report that N new
   `in_pool` rows landed. Onboarding and scheduled-ETL **succeeded** enqueue
   that River job ([build-profile](../../onboarding/pipeline/build-profile.md),
   [jobs](../../../general-architecture/jobs.md)). Incremental LLM rerank as

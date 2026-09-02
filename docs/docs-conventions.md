@@ -237,7 +237,7 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
 ratchets leftover extra `##` on undefined features (extras may only shrink).
 Website, billing, ads, assistant, onboarding, auth, the media library,
-and ETL have none. Optional `###` groups under `## DTOs` and
+ETL, Details, and Projects have none. Optional `###` groups under `## DTOs` and
 `## Routes` (glossary terms, same titles on both when split;
 [glossary.md](glossary.md)). Not mandatory — split when the
 table is hard to review. `### METHOD /path` overflow still sits under
@@ -248,9 +248,7 @@ one list. Persistence and `jobs.md` already overflow as
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`. Overflow
 is `###` under a table, not a new `##`. CI ratchets leftover grouping `##` the
 same way as `api.md` (extras may only shrink). Website, billing, ads, assistant,
-onboarding, auth, the media library, and ETL have none. Intro-only files
-(Projects) have no `##` yet. Details has `## Tables` / `## Indexes` for
-Facebook / Instagram profile and post rows only.
+onboarding, auth, the media library, ETL, Details, and Projects have none.
 
 **`testing.md`** — H1 + intro, then only `## E2E` and/or `## Integration`.
 Unit tests are not specified here. `###` is one test (open names; ban

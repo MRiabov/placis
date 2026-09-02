@@ -38,7 +38,7 @@
   `research_wait_until` succeeds. After Details transform writes
   `in_pool` reviews: schema `jobs` has one
   `reviews_ranking_for_display` on this `tenant_id` (orchestration, not
-  transform). Transform does not write `is_top` / `top_position`.
+  transform). Transform does not write `business_profile_review_rankings`.
 - **Fail**: job error → `etl.runs.status=error`; onboarding session stays
   `client_interviewing`; prior live business profile kept. Enqueue cap
   is not this Fail.

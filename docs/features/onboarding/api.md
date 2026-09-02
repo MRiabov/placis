@@ -47,7 +47,7 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 | `OnboardingProfileRead` | `id`, `status`, `research_wait_until`, `preview_website_address`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead`, `profile: OnboardingLiveBusinessProfileRead` | Resume / Review hydrate. Not Details GET |
 | `OnboardingFillStatusRead` | `key`, `status` | Derived fill. `status` → `empty` / `in_progress` / `conflict` / `filled_by_user` / `filled_by_research` / `skipped` / `not_applicable` |
 | `OnboardingResearchConflictRead` | `key`, `live_value`, `research_value` | Research conflict (both values). Not a write |
-| `OnboardingLiveBusinessProfileRead` | `display_name`, `trade`, `description`, `founder_name`, `legal_name`, `company_number`, `registered_office`, `company_status`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `reviews`, `facebook_profile_url` | Live columns the onboarding screens show. Same row as Details; onboarding session token |
+| `OnboardingLiveBusinessProfileRead` | `display_name`, `trade`, `description`, `founder_name`, `legal_name`, `company_number`, `registered_office`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `reviews`, `facebook_profile_url` | Live columns the onboarding screens show. Same row as Details; onboarding session token. No `company_status` |
 
 ### Client interview
 
