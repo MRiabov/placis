@@ -1,9 +1,10 @@
 package main
 
-// docsHappyPathLeftover is structured Routes Method+path strings that do
-// not yet have a 1:1 TestHappyPath*. An op may only disappear in the same
-// PR that adds the func. A new structured Routes cell fails immediately.
-var docsHappyPathLeftover = []string{
+// leftoverTests is structured Routes Method+path strings that do not yet
+// have a 1:1 func TestHappyPath*. An op may only disappear in the same
+// PR that adds the func. A ### heading does not shrink this list. A
+// new structured Routes cell fails immediately.
+var leftoverTests = []string{
 	"DELETE /v1/ads/{ad_id}",
 	"GET /openapi.json",
 	"GET /v1/ads",

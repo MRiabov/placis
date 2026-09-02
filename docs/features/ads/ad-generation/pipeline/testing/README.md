@@ -8,7 +8,8 @@ names:
 LLM and ad platforms are faked. There is no Worker.
 
 A step does not pass because a collaborator was called. It passes when
-**Postgres holds the writes**.
+**Postgres holds the writes**. Route HappyPath (`TestHappyPath*`)
+Verify through HTTP lives in [ads testing.md](../testing.md).
 
 ## Contract
 
