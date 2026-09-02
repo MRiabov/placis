@@ -1,11 +1,11 @@
 # 02 — Business research (integration test)
 
 - **Setup**: 01 business lookup has returned; `online_research_consent_at` set.
-- **Invoke**: business lookup returns; `StartRun` **inserts** each ETL run
+- **Exercise**: business lookup returns; `StartRun` **inserts** each ETL run
   kind’s extract River job kind, then the matching transform River job kind,
   as background jobs. Also: attach/change sources six times inside 30 minutes on
   the same tenant.
-- **Assert**: Review / `GET /v1/onboarding/profile` reads succeed before jobs
+- **Verify**: Review / `GET /v1/onboarding/profile` reads succeed before jobs
   finish; one `enqueue_id` per `StartRun`; `etl.runs` rows exist for ETL run
   kinds that could start (never `directory`, `review`, or `photo`); Maps-only
   Find starts `trade_registry` from `display_name` + country; Maps starts from

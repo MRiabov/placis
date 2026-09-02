@@ -1,7 +1,9 @@
 # ETL pipeline — tests
 
-Integration (real Postgres, adapters faked). One file per source / operation
-group.
+Integration (Testcontainers Postgres, adapters faked). One file per
+source / operation group. Go names: `TestPipelineHappyPathEtlGoogleMaps`
+(and the other source stems) plus `TestPipelineHappyPathEtlFull`. Do not
+require Vitest (no owner UI).
 
 - [ETL run kind triggers](etl-run-kind-triggers.md)
 - [Google Maps](google-maps.md)

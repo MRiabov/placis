@@ -1,10 +1,10 @@
 # 01 — Find the business (integration test)
 
 - **Setup**: no Clerk sign-in (onboarding is unauthenticated).
-- **Invoke**: search company registry (parquet) and Google Maps autocomplete for
-  country `IE`; select a company registry record and/or a place; confirm online
-  research consent.
-- **Assert**: one `tenants` row (`status=unactivated`, `clerk_org_id` null,
+- **Exercise**: search company registry (parquet) and Google Maps
+  autocomplete for country `IE`; select a company registry record
+  and/or a place; confirm online research consent.
+- **Verify**: one `tenants` row (`status=unactivated`, `clerk_org_id` null,
   `website_prefix` null, `country=ie`); one `onboarding_sessions` row
   (`started_from`, `status=client_interviewing`, `token`,
   `online_research_consent_at`, `tenant_id` = that tenant, `clerk_user_id` null)

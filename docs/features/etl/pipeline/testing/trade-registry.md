@@ -1,6 +1,6 @@
 # Trade registry — integration test
 
-- **Assert**: onboarding starts `trade_registry` when `company_number` + country
+- **Verify**: onboarding starts `trade_registry` when `company_number` + country
   **or** `display_name` + country is a detail (Maps-only Find too).
   Lookup uses `company_number` + tenant country when a company registry record
   is attached, else `display_name` + country. Writes

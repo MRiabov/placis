@@ -41,7 +41,13 @@ repos:
         language: system
         entry: go run ./cmd/ci/check-pipeline-tables
         pass_filenames: true
-        files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$|^docs/general-architecture/jobs.md$'
+        files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$|^docs/general-architecture/jobs.md$|^internal/.*_test\.go$'
+      - id: check-happy-path
+        name: HappyPath OpenAPI 1:1
+        language: system
+        entry: go run ./cmd/ci/check-happy-path --public
+        pass_filenames: false
+        files: '^internal/.*_test\.go$|^openapi\.json$|^cmd/ci/check-happy-path/'
       - id: check-docs-code
         name: Docs–code named identifiers
         language: system

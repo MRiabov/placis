@@ -9,12 +9,12 @@ SELECTs both.
   profile. Zero `website_settings` / `website_pages` /
   `website_publications`. Production-ready website templates exist in the
   website template catalog.
-- **Invoke**: `POST /v1/onboarding/interview/complete` (**inserts**
+- **Exercise**: `POST /v1/onboarding/interview/complete` (**inserts**
   `select_and_copy_website_template`). 01 is real
   occupancy + hash (no LLM). 02 write is real.
   Also complete when the gate fails (required `conflict` /
   `in_progress`).
-- **Assert** (Postgres, after `select_and_copy_website_template` succeeds,
+- **Verify** (Postgres, after `select_and_copy_website_template` succeeds,
   **before** 03 runs):
   - `business_profiles.accepted_edit_id` = `last_edit_id` at complete.
   - `onboarding_sessions.status=selecting_and_copying_website_template`

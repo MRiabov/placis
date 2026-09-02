@@ -20,8 +20,8 @@ var apiHeadingLeftover = map[string][]string{
 		"`update_details` (one governed tool)",
 	},
 	"business-profile/projects/api.md": {"Routes — projects"},
-	"other/leads/api.md": {"Serve only types on HTTP"},
-	"other/media/api.md": {"Serve only types on HTTP"},
+	"other/leads/api.md":               {"Serve only types on HTTP"},
+	"other/media/api.md":               {"Serve only types on HTTP"},
 }
 
 func checkAPIHeadings(r report) []string {

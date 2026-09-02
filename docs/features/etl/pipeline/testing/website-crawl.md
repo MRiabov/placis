@@ -1,6 +1,6 @@
 # Website crawl — integration test
 
-- **Assert**: onboarding `StartRun` with `website_crawl` writes
+- **Verify**: onboarding `StartRun` with `website_crawl` writes
   `etl.website_crawl_fetches` with `fetched_from` (`parallel_extract` and
   `http_get` for the homepage first; `robots_txt` / `sitemap` for discovery;
   remainder HTML URLs as they complete). Live `etl.website_crawl_pages`

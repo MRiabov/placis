@@ -1,13 +1,13 @@
 # 04a — Text client interview (integration test)
 
 - **Setup**: 01+03 done (03 may have been skipped); 02 may still be running.
-- **Invoke**: `PUT /v1/onboarding/interview`;
+- **Exercise**: `PUT /v1/onboarding/interview`;
   `POST /v1/onboarding/interview/complete` (optional last dirty answers on
   the same body); also attempt complete with a required `conflict` /
   `empty` / `in_progress` key;
   `POST /v1/onboarding/projects/{projectId}/archive` on a client interview
   card.
-- **Assert**: `client_interview_submissions`; `business_profile_edits` for saved
+- **Verify**: `client_interview_submissions`; `business_profile_edits` for saved
   fields only; `channel=text`; complete rejected until the build-profile gate;
   skip 03 does not relax the gate; marking a required key `skipped` then
   complete succeeds; complete sets `accepted_edit_id` and **inserts**
