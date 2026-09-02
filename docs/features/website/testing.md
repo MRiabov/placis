@@ -9,8 +9,9 @@ asserts name the tables from [persistence.md](persistence.md) (and
 [leads](../other/leads/persistence.md) for the website form).
 
 Public and Worker 1:1 HappyPath specs live under `## Integration` (one
-`### TestHappyPath*` per [api.md](api.md) Routes row). They do not
-replace this E2E or pipeline Full. **Do not create** paths are omitted.
+`### TestHappyPath*` per [api.md](api.md) Routes row). **Verify** through
+HTTP. They do not replace this E2E or pipeline Full. **Do not create**
+paths are omitted. Go funcs stay on `leftover_tests.go`.
 
 ## E2E
 
@@ -107,7 +108,8 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-**reads** `website_pages`. Must not: preview host GET.
+Exercise body: `WebsitePageSummaryRead` lists unpublished pages. Must
+not: preview host GET. **reads** `website_pages` may supplement.
 
 #### Fail
 
@@ -129,7 +131,8 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-**persists into** `website_pages`, `website.menus` (append menu node).
+`GET /v1/website/editor/pages` lists the created page. **persists into**
+`website_pages`, `website.menus` (append menu node) may supplement.
 
 ### TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage
 
@@ -148,10 +151,9 @@ Response `WebsitePageRead`.
 
 #### Verify
 
-**reads** `website_pages`, `website_sections`, `website_slots`,
-`website.menus`, `website_settings`, `website_forms`,
-`website_slot_reviews`, `website_publications`. Must not: `/pages/{id}/seo`;
-`slot_type=json`; return `website_manifest`; both query flags.
+Exercise body: `WebsitePageRead` hydrates the canvas. Must not:
+`/pages/{id}/seo`; `slot_type=json`; return `website_manifest`; both
+query flags. Named **reads** may supplement.
 
 #### Fail
 
@@ -174,11 +176,12 @@ Response `WebsiteEditApplyRead`.
 
 #### Verify
 
-**reads** `website_pages`, `website_settings`, `edit_history`.
+`GET /v1/website/editor/pages/{page_id}` shows the dirty-key edit.
 **persists into** `website_slots`, `website_sections`, `website_pages`,
 `website_forms`, `website_form_fields`, `website_form_field_options`,
-`website.menus`, `edit_history`, `website_settings.edit_history_head`.
-Must not: predecessor `POST …/sections` (see [api.md](api.md) overflow).
+`website.menus`, `edit_history`, `website_settings.edit_history_head`
+may supplement. Must not: predecessor `POST …/sections` (see
+[api.md](api.md) overflow).
 
 #### Fail
 
@@ -201,7 +204,7 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-**reads** `website_settings`. Must not: logo on this body.
+Exercise body: `WebsiteSettingsRead`. Must not: logo on this body.
 
 #### Fail
 
@@ -224,7 +227,8 @@ Response `WebsiteEditApplyRead`.
 
 #### Verify
 
-**persists into** `website_settings`, `edit_history`.
+`GET /v1/website/editor/settings` shows the applied styles.
+**persists into** `website_settings`, `edit_history` may supplement.
 
 #### Fail
 
@@ -247,7 +251,7 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-**reads** `website.menus`. Must not: `/top-menu` or `/footer`.
+Exercise body: `WebsiteMenusRead`. Must not: `/top-menu` or `/footer`.
 
 #### Fail
 
@@ -270,8 +274,9 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-**persists into** `website.menus`, `edit_history`. Must not: menus on
-page PATCH.
+`GET /v1/website/editor/menus` shows the updated trees. **persists into**
+`website.menus`, `edit_history` may supplement. Must not: menus on page
+PATCH.
 
 #### Fail
 
@@ -292,7 +297,8 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-**reads** `website_urls`. Must not: `POST /pages` from picker.
+Exercise body: `WebsiteUrlRead` list. Must not: `POST /pages` from
+picker.
 
 ### TestHappyPathV1WebsiteEditorUrlsCreatesUrl
 
@@ -310,7 +316,8 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-**persists into** `website_urls`. Must not: create a website page.
+`GET /v1/website/editor/urls` lists the created URL. Must not: create a
+website page. **persists into** `website_urls` may supplement.
 
 ### TestHappyPathV1WebsitePublicationsReturnsPublications
 
@@ -328,8 +335,8 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-**reads** `website_publications`. Omits onboarding rows in rollback UI.
-Must not: return `website_manifest`.
+Exercise body: `WebsitePublicationRead` list omits onboarding rows. Must
+not: return `website_manifest`.
 
 ### TestHappyPathV1WebsitePublicationsCreatesPublication
 
@@ -351,10 +358,9 @@ Response `WebsitePublicationRead`. **sends**
 
 #### Verify
 
-**reads** `website_pages`, `website_sections`, `website_slots`,
-`website.menus`, `website_settings`, `website_forms`. **persists into**
-`website_publications` (`published_by=owner`),
-`website_publication_issues`. MinIO `{version_number}/` then `latest/`.
+`GET /v1/website/publications` lists the new owner row
+(`published_by=owner`). MinIO `{version_number}/` then `latest/`. Named
+**persists into** may supplement.
 
 #### Fail
 
@@ -384,9 +390,9 @@ Worker **container** is up.
 
 #### Verify
 
-**reads** `website_publications`. **persists into**
-`website_publications` (earlier owner row `active` again). Must not:
-rewrite unpublished rows.
+`GET /v1/website/publications` shows the earlier owner row `active`
+again. Must not: rewrite unpublished rows. Named **persists into** may
+supplement.
 
 #### Fail
 
@@ -413,7 +419,7 @@ No `frontend-2`. No Worker.
 
 #### Verify
 
-**reads** `website_addresses`. Does not create subdomain.
+Exercise body: `WebsiteAddressRead` list. Does not create subdomain.
 
 ### TestHappyPathV1WebsiteAddressesCreatesAddress
 
@@ -432,8 +438,9 @@ No `frontend-2`. No Worker.
 
 #### Verify
 
-**persists into** `website_addresses`. Must not: `type=subdomain`;
-reserve `website_prefix`.
+`GET /v1/website/addresses` lists the custom host. Must not:
+`type=subdomain`; reserve `website_prefix`. **persists into**
+`website_addresses` may supplement.
 
 ### TestHappyPathV1WebsiteAddressesIdReturnsAddress
 
@@ -451,8 +458,8 @@ One `website_addresses` row. No `frontend-2`. No Worker.
 
 #### Verify
 
-**reads** `website_addresses`. DNS rows copyable. Must not: nameserver
-mutation.
+Exercise body: `WebsiteAddressRead`. DNS rows copyable. Must not:
+nameserver mutation.
 
 ### TestHappyPathInternalWebsiteRender
 
@@ -473,9 +480,9 @@ Response `WebsiteRenderResponse`.
 
 #### Verify
 
-Website image render (`image`, or `before_image` + `after_image`). Does
-not write R2. Response has no HTML body. Request body has no image
-files. Must not: persist HTML onto unpublished slots;
+Exercise body: website image render (`image`, or `before_image` +
+`after_image`). Does not write R2. Response has no HTML body. Request
+body has no image files. Must not: persist HTML onto unpublished slots;
 `websitePublication`.
 
 #### Fail
@@ -505,9 +512,9 @@ MinIO. Unpublished dump + `WebsiteBusinessProfileRead`. No
 
 #### Verify
 
-Writes the HTML tree (MinIO `{version_number}/` then `latest/`). No
-website image render. Must not: persist HTML onto unpublished slots;
-`websiteRender`.
+Exercise body: no website image render. Writes the HTML tree (MinIO
+`{version_number}/` then `latest/`). Must not: persist HTML onto
+unpublished slots; `websiteRender`.
 
 #### Fail
 

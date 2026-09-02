@@ -135,6 +135,7 @@ Extra frontend HappyPath only for real screen branching. Names include
 
 `### METHOD /path` stays banned. Frontend Full and pipeline `{Feature}Full`
 stay extra `###`; they do not fill a 1:1 row.
+
 ## The rule
 
 At least **one E2E test per feature** that has owner UI — a "feature" is a

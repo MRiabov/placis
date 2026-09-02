@@ -323,9 +323,7 @@ paths, not gatherers (`pipeline/README.md`,
 and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. Closed
 `testing.md` `##` is E2E / Integration; closed `####` is Setup / Exercise /
 Verify / Fail / Mocked / Teardown (`###` is one test; ban
-`### METHOD /path`). Website Integration documents one `TestHappyPath*`
-`###` per Routes row; heading is the func name, not `METHOD /path`.
-Paired pipeline steps require
+`### METHOD /path`). Paired pipeline steps require
 `TestPipelineHappyPath{Feature}{Step}` in `internal/**/*_test.go` plus
 exactly `TestPipelineHappyPath{Feature}Full` (leftover list may only
 shrink). Skip **Do not run** testing files. Skip Persist none
