@@ -1,3 +1,17 @@
 # Widget E2E
 
-- DB: `widget_rows`
+## E2E
+
+### Widget
+
+#### Setup
+
+No prior rows.
+
+#### Invoke
+
+Create a widget.
+
+#### Assert
+
+DB: `widget_rows`

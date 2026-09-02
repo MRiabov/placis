@@ -178,10 +178,13 @@ line when that line is not a new list item or heading.
 
 ## `setup` in testing docs
 
-The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`.
-Fixture headings stay **Setup** / Invoke / Assert.
+The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`,
+in `docs/docs-conventions.md`, in `docs/general-architecture/ci-cd.md`, and
+in `cmd/ci/check-pipeline-tables/` (the closed `#### Setup` heading). Fixture
+headings stay **Setup** / Invoke / Assert.
 
 - `docs/features/onboarding/pipeline/testing/01-find-business.md`: “**Setup**:
   …” → **pass**.
+- `docs/docs-conventions.md`: “`####` is closed: **Setup**” → **pass**.
 - `docs/features/onboarding/technical-implementation.md`: “setup” → **fail**.
   Say **onboarding**.

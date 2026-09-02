@@ -12,39 +12,87 @@ Parity / look renders may still pin empty `VITE_CLERK_PUBLISHABLE_KEY`
 
 DB asserts name the tables from [persistence.md](persistence.md).
 
-1. **Humatest + real Postgres (CI).** SDK-boundary double (programmed
-   `Principal`; does not decode JWTs).
-   - `/me` with no bind → `tenant: null`.
-   - Bind + `CreateClerkUser` from `founder_name` →
-     `onboarding_sessions.clerk_user_id` set.
-   - Checkout **calls** `AttachClerkOrganization` →
-     `tenants.clerk_org_id` set; `status` still `unactivated`.
-   - 09 **calls** `InsertOwnerMembership` then `status=active`.
-   - DB: `auth.tenants`, `auth.tenant_memberships` (`role=owner`). No
-     second tenant row.
+## E2E
 
-2. **Two-tenant isolation (humatest).** Two programmed `Principal`s.
-   Not two real Clerk orgs in Playwright. As tenant A, read/write
-   website pages and files that belong to B → 404 or forbidden; B’s
-   `website_pages` and `files` rows unchanged. Repeat as B against A.
+### Playwright + Clerk
 
-3. **Frontend Vitest (CI).** `AuthGate.test.tsx`. Delete
-   OrgProvisionStep tests. CMS-open is `status === "active"`.
+#### Setup
 
-4. **Playwright + Clerk (PR job).** Generate **one** Testing Token
-   once per PR job (`clerkSetup()` or `npx clerk api testing_tokens
-   -X POST` / Backend API). Put `CLERK_TESTING_TOKEN` in that job env
-   and reuse it. Needs `CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` as
-   job secrets. Signed-in Playwright: `storageState` **once per job**,
-   then `test.use({ storageState })`. Do **not** restore `storageState`
-   / cookies across jobs
-   ([ci-cd.md](../../../general-architecture/ci-cd.md)). Clerk-hitting
-   specs: serial project `workers: 1`. Official: `clerkSetup()` once
-   when the suite starts, then `setupClerkTestingToken` on each
-   Playwright page that hits Clerk UI.
-   - OAuth modal (Sign in with Google, no name fields).
-   - Programmatic `founder_name` / business org.
-   - Frontend `setActive` from checkout `clerk_org_id` or
-     `MeRead.clerk_org_id` if the Clerk session has no org yet.
-   - After 09, `/cms` opens (`status=active`).
-   - DB: same `tenants` / `tenant_memberships` asserts as beat 1.
+Generate **one** Testing Token once per PR job (`clerkSetup()` or
+`npx clerk api testing_tokens -X POST` / Backend API). Put
+`CLERK_TESTING_TOKEN` in that job env and reuse it. Needs
+`CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` as job secrets. Signed-in
+Playwright: `storageState` **once per job**, then
+`test.use({ storageState })`. Do **not** restore `storageState` /
+cookies across jobs
+([ci-cd.md](../../../general-architecture/ci-cd.md)). Clerk-hitting
+specs: serial project `workers: 1`. Official: `clerkSetup()` once when
+the suite starts, then `setupClerkTestingToken` on each Playwright page
+that hits Clerk UI.
+
+#### Invoke
+
+OAuth modal (Sign in with Google, no name fields). Programmatic
+`founder_name` / business org. Frontend `setActive` from checkout
+`clerk_org_id` or `MeRead.clerk_org_id` if the Clerk session has no org
+yet. After 09, `/cms` opens.
+
+#### Assert
+
+`/cms` opens (`status=active`). DB: `tenants` / `tenant_memberships`
+same asserts as Humatest + real Postgres.
+
+## Integration
+
+### Humatest + real Postgres
+
+#### Setup
+
+SDK-boundary double (programmed `Principal`; does not decode JWTs).
+Real Postgres. No Playwright.
+
+#### Invoke
+
+`/me` with no bind. Bind + `CreateClerkUser` from `founder_name`.
+Checkout **calls** `AttachClerkOrganization`. 09 **calls**
+`InsertOwnerMembership` then `status=active`.
+
+#### Assert
+
+`/me` with no bind → `tenant: null`. Bind →
+`onboarding_sessions.clerk_user_id` set. Checkout →
+`tenants.clerk_org_id` set; `status` still `unactivated`. After 09:
+`auth.tenants`, `auth.tenant_memberships` (`role=owner`). No second
+tenant row.
+
+### Two-tenant isolation
+
+#### Setup
+
+Two programmed `Principal`s. Not two real Clerk orgs in Playwright.
+`humatest` + real Postgres.
+
+#### Invoke
+
+As tenant A, read/write website pages and files that belong to B.
+Repeat as B against A.
+
+#### Assert
+
+404 or forbidden; B’s `website_pages` and `files` rows unchanged. Same
+block the other way.
+
+### Auth gate
+
+#### Setup
+
+Frontend Vitest. No Clerk testing token. Parity / look renders may pin
+empty `VITE_CLERK_PUBLISHABLE_KEY` (no-auth); that is not this test.
+
+#### Invoke
+
+`AuthGate.test.tsx`. Delete OrgProvisionStep tests.
+
+#### Assert
+
+CMS-open is `status === "active"`.

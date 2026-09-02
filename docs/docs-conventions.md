@@ -52,8 +52,7 @@ A feature directory holds, as applicable:
 | `technical-implementation.md` | pipeline, validation, testing — references `persistence.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
-| `testing.md` | the owner E2E (or ETL integration) with DB asserts of what Persist / Must not names. Every persistence table is asserted here and/or in `pipeline/testing/`. |
-| `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline). Closed `##` on step files (see Named identifiers). |
+| `testing.md` | E2E and/or integration tests with DB asserts of what Persist / Must not names. Unit tests are not specified here. Every persistence table is asserted here and/or in `pipeline/testing/`. || `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline). Closed `##` on step files (see Named identifiers). |
 | `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features) |
 
 Not every file is needed — a feature uses only the ones it has content for. A
@@ -172,13 +171,14 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
    feature’s `persistence.md` is asserted at least once in `testing.md`
    and/or `pipeline/testing/*.md`. Asserts follow Persist / Must not (see
    Named asserts). The same table **may** appear in several files.
-   `testing.md` is the owner journey (ETL: integration, no owner UI). It
-   only asserts what that journey reads or writes. A pipeline testing
-   file only asserts what **that step** reads or persists. Do not invent
-   writes in
+   `testing.md` is the owner E2E and/or integration tests (ETL:
+   integration, no owner UI). Unit tests are not specified here. It only
+   asserts what those tests read or write. A pipeline testing file only
+   asserts what **that step** reads or persists. Do not invent writes in
    the E2E for tables another test file already asserts. Do not leave a
    persistence table with no assert in either place. Do not require a
-   bullet per Routes row. **Do not create** stays untested.
+   bullet per Routes row. **Do not create** stays untested. Two-tenant
+   isolation is Integration (`humatest`), not Playwright.
 3. **Every table has a write path.** **Written by** on that table’s
    persistence entry: pipeline function, Routes method+path, or job.
 4. **Code only names existing lists.** A path, DTO type name, River job
@@ -242,10 +242,13 @@ same way as `api.md` (extras may only shrink). Website, billing, ads, assistant,
 onboarding, and auth have none. Intro-only files (media library, Details,
 Projects) have no `##` yet.
 
-**`testing.md`** — H1 + numbered journey. No required `##`. Optional `##`
-only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
-`## Do not create`, and `### GET /v1/…`. CI ratchets those bans (empty
-leftover today).
+**`testing.md`** — H1 + intro, then only `## E2E` and/or `## Integration`.
+Unit tests are not specified here. `###` is one test (open names; ban
+`### METHOD /path`). `####` is closed: **Setup**, **Invoke**, **Assert**
+required in that order; **Fail** and **Mocked** optional after Assert
+(Fail then Mocked). Isolation is Integration (`humatest`), not
+Playwright. Ban leftover journey `##` (`CMS`, `Onboarding`). CI enforces
+the closed lists.
 
 **`jobs.md`** — intro, then only `## Workflows` and `## Jobs`. Overflow is `###`
 with a backticked River job kind under Jobs (retry, leftover, skip). No leftover
@@ -263,7 +266,8 @@ extra `##`.
 `pipeline/README.md` and `etl/pipeline/etl-run-kind-triggers.md`.
 `pipeline/testing/` keeps bold prior-step
 fixture / **Invoke** / **Assert** / **Fail** / **Mocked** / **Cases**
-labels, not `##`.
+labels, not `##`. Feature `testing.md` uses the same names as `####`
+(minus **Cases**).
 
 ### `api.md` shape (defined features)
 

@@ -201,11 +201,13 @@ does). We do **not** hand-roll AST scripts up front:
   step files pair with `pipeline/testing/<name>.md`; **known** persistence
   tables in a step appear in that testing file; every persistence table
   appears in `testing.md` and/or `pipeline/testing/` when those files
-  exist; pipeline step `##` headings are a closed list; feature `api.md`,
-  `persistence.md`, and `testing.md` `##` use a shrink-only leftover list
-  (closed `api.md` is DTOs / Routes / Do not create; closed `persistence.md`
-  is Tables / Indexes); `jobs.md` `##` is Workflows / Jobs; backticked
-  River job kind must already live in `jobs.md` `## Jobs`. Missing
+  exist; pipeline step `##` headings are a closed list; feature `api.md`
+  and `persistence.md` `##` use a shrink-only leftover list (closed
+  `api.md` is DTOs / Routes / Do not create; closed `persistence.md` is
+  Tables / Indexes); `testing.md` `##` is E2E / Integration and `####`
+  is Setup / Invoke / Assert / Fail / Mocked; `jobs.md` `##` is
+  Workflows / Jobs; backticked River job kind must already live in
+  `jobs.md` `## Jobs`. Missing
   `testing.md` (media library / leads / Details / Projects) does not
   fail; a changed `persistence.md` passed on the command line without
   `testing.md` warns. See
@@ -301,13 +303,14 @@ This pass: **tables**, **pipeline step headings**,
 Routes paths, not gatherers (`pipeline/README.md`,
 `etl/pipeline/etl-run-kind-triggers.md`). Closed `api.md` `##` is DTOs
 (optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
-and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. A backticked
-River job kind (`River job \`foo\``, `River job kind \`foo\``,
+and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. Closed
+`testing.md` `##` is E2E / Integration; closed `####` is Setup / Invoke /
+Assert / Fail / Mocked (`###` is one test; ban `### METHOD /path`). A
+backticked River job kind (`River job \`foo\``, `River job kind \`foo\``,
 `**inserts** \`foo\``) must be a `## Jobs` row. Website, billing, ads, and
 assistant have none. Undefined features keep leftover extra-heading lists
 in `cmd/ci/check-pipeline-tables`; extras may only shrink (drop the leftover
-entry in the same PR). `testing.md` bans `## Routes` / `## DTOs` /
-`## Tables` / `## Do not create` and `### METHOD /path`. Pairing matches
+entry in the same PR). Pairing matches
 **known** table names (already in some `persistence.md`); invented names
 and columns are writing rules. Warn (do not fail) when a changed
 `persistence.md` is passed on the command line and that feature has no
