@@ -50,11 +50,13 @@ is a later caller.
     gutter-cleaning image website slots got the matching unused
     `photo_kind=photo` items (not each other’s, not `logo`); no reuse. A
     portrait slot with no matching **media caption** stayed empty (no
-    `generate_image`).
-    (b) `tool_calls` includes `generate_image`; a new media library item
-    `supplied_by=ai` pending review is attached — not a leftover unmatched
-    photo. That write **persists into** `media_assets` (`supplied_by=ai`,
-    pending review). Logo image website slots stay `{{logo_url}}` (no
+    `generate_image`). (b) `tool_calls` includes `generate_image`; a new media
+    library item `supplied_by=ai` pending review is attached — not a leftover
+    unmatched photo. That write **persists into** `media_assets`
+    (`CreateGeneratedMediaAsset`; `supplied_by=ai`, `created_by=ai`, pending
+    review) and `media_asset_classifications`
+    (`algorithm=copy_requested_media_caption`, `photo_kind=photo`). Zero
+    `describe_image`. Logo image website slots stay `{{logo_url}}` (no
     `generate_image`).
   - While unactivated: `ai.threads` `thread_kind=cms_assistant`
     `status=current`; `assistant.runs` one `running` on that thread

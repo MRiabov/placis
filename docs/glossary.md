@@ -371,7 +371,9 @@ Internal: Media asset, File. Do not say bare “asset” in product docs.
 
 #### Media caption
 
-The alt text on a media item. Never say bare “caption”.
+The classifier text on a media item (ads generate and website 03 slot
+match). Internal; not owner HTTP and not a `/cms/media` field. Never
+say bare “caption”.
 
 ---
 

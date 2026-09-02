@@ -6,12 +6,14 @@ Postgres schema `files`. Access always goes through a signed URL, and only after
 a tenant + visibility check. Public delivery URLs are not expiring signed URLs.
 
 The media library ([media library](../features/other/media/persistence.md)) and website form uploads store files here;
-`media_assets.file_id` points at the original `files` row;
+`media_assets.original_file_id` points at the scanned PUT/import (Internal
+backup; not served); `media_assets.file_id` points at the canonical WebP;
 `media_assets.thumbnail_file_id` points at the image-thumbnail WebP. HTTP upload
-is [media library](../features/other/media/api.md) (`/v1/media-assets`); there is no `/v1/files` route. Media
-library 01/02 persist the original `files` row; `WriteImageThumbnail` persists
-the image-thumbnail `files` row (in-process Go WebP; not Cloudflare Image
-Resizing). Ad-set zip download is a short-lived signed URL
+is [media library](../features/other/media/api.md) (`/v1/media-assets`); there is no `/v1/files` route.
+`owner_type=media_asset`; `owner_id` = that `media_assets.id`.
+`WriteCanonicalWebP` persists the canonical `files` row; `WriteImageThumbnail`
+persists the image-thumbnail `files` row (in-process Go WebP; not Cloudflare
+Image Resizing). Ad-set zip download is a short-lived signed URL
 (`AdDownloadRead.url`), not a public URL
 ([ads HTTP](../features/ads/api.md),
 [04](../features/ads/ad-generation/pipeline/04-export-ad-set.md)). Website form file fields: [leads HTTP](../features/other/leads/api.md). CMS Voice recordings after a

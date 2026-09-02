@@ -1,16 +1,14 @@
 # Media Technical Implementation
 
-Status: proposed implementation plan.
-
 Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
 Services: `StartMediaAssetUpload`, `ConfirmMediaAssetUpload`,
 `DescribeImage` (River job `describe_image`), `ListMediaAssets`,
 `GetMediaAsset`, `UpdateMediaAsset`, `StartMediaAssetReplaceUpload`,
 `CleanupMediaAsset`, `RejectMediaAsset`, `CreateGeneratedMediaAsset`,
-`ApproveMediaAsset`, `WriteImageThumbnail`. Tables:
-[persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
-`describe_image`:
+`ApproveMediaAsset`, `WriteCanonicalWebP`, `WriteImageThumbnail`.
+Tables: [persistence.md](persistence.md). DTOs and Routes:
+[api.md](api.md). `describe_image`:
 [jobs.md](../../../general-architecture/jobs.md#describe_image).
 
 Related docs:
@@ -26,7 +24,8 @@ Related docs:
 The media library owns photos and image editing. Website slots and ads
 placements reference `media_asset_id`. Upload is a two-hop handshake
 plus a browser PUT; Go never sees the body. Captioning is a per-item
-River job so ETL imports fan out.
+River job so ETL imports fan out. Media caption is Internal (not owner
+HTTP).
 
 The key rules:
 
@@ -35,9 +34,13 @@ The key rules:
 2. **Owner upload is approved**: cleanup / generate stay
    `pending_review` until `ApproveAd` / `PublishWebsite` **call**
    `ApproveMediaAsset`.
-3. **Image thumbnail in-process**: `WriteImageThumbnail` encodes WebP
-   in the Go request or transform. Not River. Not Cloudflare Images /
-   Image Resizing. Extra `files` row; `thumbnail_file_id`.
+3. **Canonical WebP then thumbnail in-process**: after scan, attach
+   `original_file_id` (kept; not served). `WriteCanonicalWebP` then
+   `WriteImageThumbnail`. Not River. Not Cloudflare Images / Image
+   Resizing. Three `files` rows; `delivery_url` / `thumbnail_url` are
+   the WebPs.
 4. **`describe_image` is per item**: unique `(tenant_id,
-   media_asset_id)`, queue **48**. ETL transform **inserts** and
-   continues.
+   media_asset_id)`, queue **48**. ETL transform **inserts**
+   `describe_image` and continues. `CreateGeneratedMediaAsset`
+   **writes** a classification and must not **insert**
+   `describe_image`.

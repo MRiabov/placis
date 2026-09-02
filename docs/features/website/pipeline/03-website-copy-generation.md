@@ -105,8 +105,11 @@ unpublished website slots. River job kind `website_copy_generation`.
      when **media caption** matches that website slot’s intent (roof
      repairs → people working on a roof; gutter cleaning → people
      cleaning gutters). A job-site photo with crew in it is still a
-     photo. If nothing fits: **`generate_image`** (`supplied_by=ai`,
-     pending review; unpublished canvas warning; website publication
+     photo. If nothing fits: **`generate_image`** (`CreateGeneratedMediaAsset`;
+     `supplied_by=ai`, `created_by=ai`, pending review; persists the tool
+     `media_caption` as `media_asset_classifications`
+     (`photo_kind=photo`, `algorithm=copy_requested_media_caption`); no
+     `describe_image`; unpublished canvas warning; website publication
      still requires approved media library items).
    - Do not reuse an already-attached photo on a later image website slot
      (**this page**, later slots; not site-global; GET hydrates one page).
@@ -166,7 +169,9 @@ Unpublished `website_pages`, `website_sections`, `website_slots`,
 ## Persist
 
 `website_slots`; `website_pages` SEO columns; `media_assets` from
-`generate_image` (`supplied_by=ai`, pending review); `edit_history`
+`generate_image` (`CreateGeneratedMediaAsset`; `supplied_by=ai`,
+`created_by=ai`, pending review) and `media_asset_classifications`
+(`algorithm=copy_requested_media_caption`); `edit_history`
 agent batches; `ai_generations` for tool batches
 (`thread_kind=website_copy_generation` thread,
 `prompt_id=website_copy_generation`); `ai.threads`
