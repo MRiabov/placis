@@ -112,16 +112,18 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
 
 ## Notes
 
-- **Clerk** is the one external dependency that is *not* faked. Backend tests
-  use the official Clerk Go SDK (`Sessions().Verify`, `Organizations().Create`,
-  and so on) — never a fake verifier, never hand-rolled JWT or JWKS. The SDK
-  fetches and caches JWKS; app and test code must not decode tokens. Playwright
+- **Clerk** is the one external dependency that is *not* faked in Playwright.
+  Backend humatest tenancy uses an SDK-boundary test double (`Sessions().Verify`
+  mapped to a programmed `Principal`); it does not decode JWTs. App code uses
+  the official Clerk Go SDK (`Sessions().Verify`, `Users().Create`,
+  `Organizations().Create`) — never a hand-rolled JWT or JWKS. Playwright
   **testing tokens** (bot-protection, `__clerk_testing_token`) are a different
   path: create once per CI job (`clerkSetup()` or the Backend API), put
   `CLERK_TESTING_TOKEN` in the job env, and reuse it. Attaching that token to a
   new Playwright page is fine; fetching a new token per spec or worker is not.
   Signed-in Playwright tests write `storageState` once per job, then
-  `test.use({ storageState })`. Do not re-sign-in per spec.
+  `test.use({ storageState })`. Do not re-sign-in per spec. Do not restore
+  `storageState` across jobs.
 - **Stripe** uses test mode the same way: real SDK + test keys, no real charge.
 - **`humatest`** — backend-only tests that hit the API use Huma's
   `humatest` (the faster in-process API: `api.Get` / `api.Post`, no

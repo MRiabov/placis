@@ -228,7 +228,7 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 
 Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
 ratchets leftover extra `##` on undefined features (extras may only shrink).
-Website, billing, ads, assistant, and onboarding have none. Optional `###`
+Website, billing, ads, assistant, onboarding, and auth have none. Optional `###`
 groups under `## DTOs` and `## Routes` (glossary terms, same titles on both when
 split; [glossary.md](glossary.md) grain). Not mandatory — split when the table is hard to
 review. `### METHOD /path` overflow still sits under that group when a cell
@@ -239,8 +239,8 @@ there.
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`. Overflow
 is `###` under a table, not a new `##`. CI ratchets leftover grouping `##` the
 same way as `api.md` (extras may only shrink). Website, billing, ads, assistant,
-and onboarding have none. Intro-only files (media library, Details, Projects)
-have no `##` yet.
+onboarding, and auth have none. Intro-only files (media library, Details,
+Projects) have no `##` yet.
 
 **`testing.md`** — H1 + numbered journey. No required `##`. Optional `##`
 only to split journeys (`## CMS`). Ban `## Routes`, `## DTOs`, `## Tables`,
@@ -308,6 +308,6 @@ on the Request DTO.
 `## Indexes` — as billing already does.
 
 Major features that must eventually satisfy this contract: ads, assistant,
-billing, ETL, onboarding, website. Website, ads, assistant, onboarding, and
-billing are fully defined (DTOs, Routes, tables, named services).
+auth, billing, ETL, onboarding, website. Website, ads, assistant, onboarding,
+billing, and auth are fully defined (DTOs, Routes, tables, named services).
 CI: [ci-cd.md](general-architecture/ci-cd.md).

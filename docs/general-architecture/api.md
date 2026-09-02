@@ -151,8 +151,11 @@ Named once here. Feature `api.md` files name the mode, they do not redefine it.
 Clerk JWT + unactivated tenant on the **app** origin (unpublished GET/PATCH
 on `/v1/onboarding/website/editor/…`,
 `/v1/onboarding/website/assistant/…` send/Voice) is the same Clerk
-verification as mode 3 without the active gate. Not a sixth mode. Onboarding
-session token (mode 2) may GET unpublished website
+verification as mode 3 without the active gate. Not a sixth mode. Tenant
+lookup before org attach is `onboarding_sessions.clerk_user_id` (unpaid
+bind). After checkout / `setActive`, lookup is the org claim →
+`tenants.clerk_org_id` (unactivated or active). Onboarding session token
+(mode 2) may GET unpublished website
 (`/v1/onboarding/website/editor/…`) and GET
 `/v1/onboarding/website/assistant/thread`; it must not PATCH and must
 not send.
@@ -162,7 +165,10 @@ checkout/status. HTML GET never reaches Go, so it is not a sixth auth mode.
 
 Clerk ids (`clerk_org_id`, `clerk_user_id`, `clerk_subject`) are Postgres
 columns and JWT claims. The Clerk SDK verifies the sign-in. They are not an HTTP
-union and are not on `GET /v1/me` as a dump.
+union. The one Clerk id allowed on `GET /v1/me` is
+`pending_clerk_org_id` (JWT has no org claim yet; `tenants.clerk_org_id`
+is already set). Checkout also returns `clerk_org_id` on
+`WebsiteActivationCheckoutRead` for `setActive`.
 
 ## Errors
 
