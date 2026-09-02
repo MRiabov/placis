@@ -16,7 +16,7 @@ public Route: `GET /v1/me`. Clerk organization attach lives on
 | DTO | Fields | Description |
 | --- | --- | --- |
 | `MeRead` | `owner: OwnerRead`, `platform_role`, `tenant: TenantRead` (nullable), `pending_clerk_org_id` (nullable) | `/me`. Clerk ids omitted except `pending_clerk_org_id` when the JWT has no org claim and `tenants.clerk_org_id` is already set |
-| `OwnerRead` | `display_name` | The signed-in **owner**. Nested on `MeRead.owner` |
+| `OwnerRead` | `display_name` | The signed-in **owner**. Nested on `MeRead.owner`. First write from `founder_name`; later the Clerk UI in the app |
 | `TenantRead` | `id`, `name`, `status`, `subscription_status` | The data tenant. CMS keys off `status`. No `website_prefix` |
 
 `platform_role` is `none` / `platform_admin`. `status` is

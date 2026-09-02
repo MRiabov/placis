@@ -44,6 +44,8 @@ Website activation Clerk + Stripe is owned by
 - `setActive` from checkout `clerk_org_id` or
   `MeRead.pending_clerk_org_id`.
 - `CmsAccountMenu` = Clerk **business** org profile, not a switcher.
+- Owner display name: first write from `founder_name`; later overridable
+  in the Clerk UI in the app (Clerk human name on the account menu).
 
 ## Delete
 
