@@ -8,11 +8,19 @@
 
 - id: check-pipeline-tables
   name: Pipeline table and heading check
-  description: Pair pipeline steps with testing files, require persistence tables in testing.md or pipeline/testing, close pipeline step headings, and ratchet feature api.md headings.
+  description: Pair pipeline steps with testing files, require persistence tables in testing.md or pipeline/testing, close pipeline step headings, ratchet feature api.md headings, and require TestPipelineHappyPath* (leftover until Go tests exist).
   entry: go run ./cmd/ci/check-pipeline-tables
   language: system
-  files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$|^docs/general-architecture/jobs.md$'
+  files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$|^docs/general-architecture/jobs.md$|^internal/.*_test\.go$'
   pass_filenames: true
+
+- id: check-happy-path
+  name: HappyPath OpenAPI 1:1
+  description: Fail if a public OpenAPI operation has no 1:1 TestHappyPath* that hits exactly that Method+path. No-ops when openapi.json is absent.
+  entry: go run ./cmd/ci/check-happy-path --public
+  language: system
+  files: '^internal/.*_test\.go$|^openapi\.json$|^cmd/ci/check-happy-path/'
+  pass_filenames: false
 
 - id: check-docs-code
   name: Docs–code named identifiers

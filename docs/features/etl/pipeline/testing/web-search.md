@@ -1,6 +1,6 @@
 # Web search — integration test
 
-- **Assert**: onboarding starts `etl_run_kind=web_search` when a **Starts when**
+- **Verify**: onboarding starts `etl_run_kind=web_search` when a **Starts when**
   tuple is met and some discoverable detail is still empty (Maps Find, company
   registry Find, or both). Does **not** start when `place_id`, `website_url`,
   Facebook URL, and Instagram handle are already set. Parallel **Search** is

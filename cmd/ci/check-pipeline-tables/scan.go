@@ -38,11 +38,17 @@ type stepFile struct {
 	tables   []string
 }
 
+type atxHead struct {
+	level int
+	title string
+}
+
 type headingFile struct {
 	path  string
 	rel   string
 	heads []string
 	h3    []string
+	atx   []atxHead
 }
 
 type report struct {

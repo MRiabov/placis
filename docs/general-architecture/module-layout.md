@@ -6,7 +6,7 @@ the target.
 ```text
 cmd/
   api/            # HTTP API server + in-process River
-  ci/             # CI/dev checks (not deployed); check-dont-say, check-pipeline-tables, check-docs-code, later folder fan-out, …
+  ci/             # CI/dev checks (not deployed); check-dont-say, check-pipeline-tables, check-docs-code, check-happy-path, later folder fan-out, …
 internal/
   # shared / cross-cutting (small, few files each)
   config/         # typed config from env

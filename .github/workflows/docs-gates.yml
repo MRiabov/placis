@@ -35,7 +35,7 @@ jobs:
           cache-dependency-path: go.mod
 
       - name: Test checkers
-        run: go test ./cmd/ci/check-dont-say ./cmd/ci/docnames ./cmd/ci/check-docs-code ./cmd/ci/check-pipeline-tables
+        run: go test ./cmd/ci/check-dont-say ./cmd/ci/docnames ./cmd/ci/check-docs-code ./cmd/ci/check-pipeline-tables ./cmd/ci/check-happy-path
 
       - name: Don't-say glossary check
         run: go run ./cmd/ci/check-dont-say --all
@@ -51,3 +51,6 @@ jobs:
           fi
           # shellcheck disable=SC2086
           go run ./cmd/ci/check-pipeline-tables --all $changed
+
+      - name: HappyPath OpenAPI 1:1
+        run: go run ./cmd/ci/check-happy-path --public

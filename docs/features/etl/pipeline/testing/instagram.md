@@ -1,6 +1,6 @@
 # Instagram — integration test
 
-- **Assert**: extract writes `etl.instagram_fetches`; skip when scheduled with
+- **Verify**: extract writes `etl.instagram_fetches`; skip when scheduled with
   no handle (`status=insufficient_data_for_lookup`); onboarding does not insert
   this run until `instagram_handle` is a detail, then
   `insufficient_data_for_lookup` if nothing left can

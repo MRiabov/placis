@@ -15,14 +15,14 @@ is a later caller.
   caption** matches those named services; (b) no matching media caption
   in that pool (founder / logo photos only, or a media caption that does
   not match).
-- **Invoke**: run that River job. Fake the website-editor-tool LLM to a
+- **Exercise**: run that River job. Fake the website-editor-tool LLM to a
   small `update_slot` / `update_seo` batch (no `create_page`, no
   `update_reviews`). In (a) also `update_slot` + `media_asset_id` attach
   of the matching photos. In (b) also `generate_image` for a service
   image website slot. Real Worker (`websiteRender`). Also: start a second
   03; also: run 09 (activate) while the job is in flight; also: wait-end
   (home website page copy done or wait cap) without 08/09.
-- **Assert** (Postgres + Worker):
+- **Verify** (Postgres + Worker):
   - **Worker:** turn 1 asked **one** Worker `websiteRender` of the
     unpublished tree + `WebsiteBusinessProfileRead` + `media_asset_urls`
     (tokens still in `pages`; map `{}` unless an image website slot
