@@ -426,6 +426,9 @@ func TestEnabledTrees(t *testing.T) {
 	if !shouldSkipPath("packages/website-components/src/registry/hero/type_first/docs.md", false) {
 		t.Fatal("packages markdown should be skipped")
 	}
+	if !shouldSkipPath("cmd/ci/check-pipeline-tables/testdata/ok/sample/testing.md", false) {
+		t.Fatal("checker testdata should be skipped")
+	}
 	got := filterEnabledFiles([]string{
 		"packages/website-components/src/x.md",
 		"apps/contractor-website/README.md",

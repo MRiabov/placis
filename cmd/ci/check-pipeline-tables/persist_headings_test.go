@@ -50,8 +50,8 @@ func TestPersistHeadingsNewExtraFails(t *testing.T) {
 
 func TestPersistHeadingsTablesNeedIndexes(t *testing.T) {
 	p := persistFile{
-		path:  "docs/features/widget/persistence.md",
-		rel:   "widget/persistence.md",
+		path:  "docs/features/sample/persistence.md",
+		rel:   "sample/persistence.md",
 		heads: []string{"Tables"},
 	}
 	errs := checkPersistHeadings(report{persistFiles: []persistFile{p}})

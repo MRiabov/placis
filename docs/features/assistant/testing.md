@@ -151,10 +151,11 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
    Click DustOrb retries. Voice does not stay on. `POST …/realtime-connection`
    was not called.
 
-   DB (this story, Persist grain): `onboarding.assistant_conversation_items`,
-   `onboarding.assistant_runs`, `ai.threads`
-   (`thread_kind=onboarding_assistant`, unique per `onboarding_session_id`).
-   Voice/LLM faked; Go + Postgres + `frontend-2` not mocked.
+   DB (this story; what Persist names):
+   `onboarding.assistant_conversation_items`, `onboarding.assistant_runs`,
+   `ai.threads` (`thread_kind=onboarding_assistant`, unique per
+   `onboarding_session_id`). Voice/LLM faked; Go + Postgres + `frontend-2` not
+   mocked.
 
 ## Onboarding website editor
 

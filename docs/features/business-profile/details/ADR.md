@@ -92,7 +92,7 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    hours picker). Paste of service names may split into rows; do not combine
    them with an LLM in the wait. (2026-08-28) Onboarding Details == Business
    details: same fields, same controls, same writes; do not keep a parallel
-   onboarding widget for a Details field. (2026-08-28)
+   onboarding control for a Details field. (2026-08-28)
    Service areas are an addable list (`business_profile_service_areas`), not one
    field.
 

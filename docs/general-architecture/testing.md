@@ -34,7 +34,7 @@ what the UI shows and the DB rows. A feature does not pass without its E2E test
 green.
 
 Each feature defines its E2E test in its own `testing.md`, spelling out the
-tables that journey reads and writes at Persist grain (names come from that
+tables that journey reads and writes that Persist / Must not names (from that
 feature's `persistence.md`). Every table in that persistence file must appear
 in `testing.md` and/or `pipeline/testing/`
 ([docs conventions](../docs-conventions.md#named-identifiers)). Do not require
@@ -69,10 +69,10 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
 [ci-cd.md](ci-cd.md) for cache paths and flags both runners must share.
 
 - **Go** — `go test ./...` in package-list mode caches successful packages in
-  `GOCACHE`. A hit prints `ok (cached)` and does not re-run the binary. Grain is
-  the package, not `TestFoo`. Do not pass `-count=1` on the ordinary PR job
-  (that flag disables the cache). `go test` with no package args, or
-  `go test foo_test.go`, never caches. Failures always rerun. Unchanged
+  `GOCACHE`. A hit prints `ok (cached)` and does not re-run the binary. The
+  cache unit is the package, not `TestFoo`. Do not pass `-count=1` on the
+  ordinary PR job (that flag disables the cache). `go test` with no package
+  args, or `go test foo_test.go`, never caches. Failures always rerun. Unchanged
   Testcontainers packages skip starting Postgres; that is intended. A cached
   pass will not re-run an unchanged flaky package — accept that for PR cost; use
   `-count=1` when a full suite is required.
