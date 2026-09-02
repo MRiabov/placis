@@ -145,26 +145,6 @@ stay so re-import does not duplicate that external id; archive also drops that
 id from every website section array. Profile-history list ops for `reviews`
 include `update` for top pin/reorder.
 
-- `facebook_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique,
-  `source_id` fk required → `etl.sources` (`source_kind=facebook_profile`),
-  Facebook page id / URL, handle, `algorithm`, `schema_revision`,
-  `latest_fetch_id` nullable fk → `etl.facebook_fetches`
-- `facebook_posts` — `id`, `tenant_id` fk, `facebook_profile_id` fk,
-  `source_id` fk required → `etl.sources` (`source_kind=facebook_post`),
-  `external_id` unique per profile, body / media library refs, `published_at`
-  nullable, `algorithm`, `schema_revision`
-- `instagram_profiles` — `id`, `tenant_id` fk, `business_profile_id` fk unique,
-  `source_id` fk required → `etl.sources` (`source_kind=instagram_profile`),
-  handle, Instagram user, `algorithm`, `schema_revision`, `latest_fetch_id`
-  nullable fk → `etl.instagram_fetches`
-- `instagram_posts` — `id`, `tenant_id` fk, `instagram_profile_id` fk,
-  `source_id` fk required → `etl.sources` (`source_kind=instagram_post`),
-  `external_id` unique per profile, body / media library refs, `published_at`
-  nullable, `algorithm`, `schema_revision`
-
-ETL transform upserts these on source `external_id` unless `algorithm=human`.
-Raw stays on the fetch tables. Skip / `force` / `human`: [ETL pipeline](../../etl/pipeline/README.md).
-
 Photo kind (`logo` / `photo`) is latest `photo_kind` on
 [`media_asset_classifications`](../../other/media/persistence.md),
 written by `DescribeImage`. There is no `etl.photo_classifications`
@@ -182,3 +162,60 @@ table.
 The website and ads read selected certifications from these rows. They do not
 copy the definitions except at website publication (slim `certifications[]` in
 the website manifest).
+
+Facebook / Instagram profile and post rows (tenant-owned) live here. ETL
+transform upserts these on source `external_id` unless `algorithm=human`.
+Raw stays on the fetch tables. Skip / `force` / `human`:
+[ETL pipeline](../../etl/pipeline/README.md).
+
+## Tables
+
+### `facebook_profiles`
+
+- **Columns:** `id` uuid, `tenant_id` fk, `business_profile_id` fk,
+  `source_id` fk → `etl.sources`, `facebook_page_id` text,
+  `facebook_profile_url` text, `handle` text, `algorithm` text,
+  `schema_revision` int, `latest_fetch_id` uuid nullable fk →
+  `etl.facebook_fetches`
+- **Uniques:** `business_profile_id`
+- **Written by:** `transform/facebook.Run`
+- **Notes:** `source_kind=facebook_profile`. `latest_fetch_id` is the
+  watermark of the dump that contributed, not newest `fetched_at`.
+
+### `facebook_posts`
+
+- **Columns:** `id` uuid, `tenant_id` fk, `facebook_profile_id` fk,
+  `source_id` fk → `etl.sources`, `external_id` text, body / media
+  library refs, `published_at` timestamptz nullable, `algorithm` text,
+  `schema_revision` int
+- **Uniques:** `(facebook_profile_id, external_id)`
+- **Written by:** `transform/facebook.Run`
+- **Notes:** `source_kind=facebook_post`.
+
+### `instagram_profiles`
+
+- **Columns:** `id` uuid, `tenant_id` fk, `business_profile_id` fk,
+  `source_id` fk → `etl.sources`, `handle` text, `instagram_user` text,
+  `algorithm` text, `schema_revision` int, `latest_fetch_id` uuid
+  nullable fk → `etl.instagram_fetches`
+- **Uniques:** `business_profile_id`
+- **Written by:** `transform/instagram.Run`
+- **Notes:** `source_kind=instagram_profile`. `latest_fetch_id` is the
+  watermark of the dump that contributed, not newest `fetched_at`.
+
+### `instagram_posts`
+
+- **Columns:** `id` uuid, `tenant_id` fk, `instagram_profile_id` fk,
+  `source_id` fk → `etl.sources`, `external_id` text, body / media
+  library refs, `published_at` timestamptz nullable, `algorithm` text,
+  `schema_revision` int
+- **Uniques:** `(instagram_profile_id, external_id)`
+- **Written by:** `transform/instagram.Run`
+- **Notes:** `source_kind=instagram_post`.
+
+## Indexes
+
+Unique: `facebook_profiles.business_profile_id`;
+`instagram_profiles.business_profile_id`;
+`(facebook_profile_id, external_id)` on `facebook_posts`;
+`(instagram_profile_id, external_id)` on `instagram_posts`.

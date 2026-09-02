@@ -63,6 +63,9 @@ crawl](website-crawl.md), or [Google Maps](google-maps.md) after source upsert
 
 ## Do
 
+`transform/projects.Run` classifies each source in this chunk as usable as
+a Project or not.
+
 1. Ensure `etl.sources` for each source in this chunk (Extract markdown **and**
    goquery HTML for a crawled URL; Apify is the crawled HTML when GET failed).
 2. Skip a `source_id` whose verdict row matches `algorithm` +
@@ -100,12 +103,20 @@ crawl](website-crawl.md), or [Google Maps](google-maps.md) after source upsert
    two verdicts with the same `project_id`. A review usable as a Project may
    insert with empty cover.
 
-## Persist
+## Reads
 
 `etl.sources`; `etl.llm_source_to_project_classifications`;
+`etl.website_crawl_pages`; Facebook / Instagram posts; listing reviews;
+`media_assets`; `business_profiles`.
+
+## Persist
+
+**Persists into** `etl.sources`;
+`etl.llm_source_to_project_classifications`;
 `business_profile.projects`; `business_profile.project_sources`;
-`business_profile_edits.list=projects` + ≥1 `business_profile_edit_sources`.
-`etl.runs` stays succeeded from the calling ETL run kind.
+`business_profile_edits.list=projects` + ≥1
+`business_profile_edit_sources`. `etl.runs` stays succeeded from the
+calling ETL run kind.
 
 ## Fail
 
