@@ -1,51 +1,50 @@
 # Auth — E2E tests
 
-Two full-stack E2E tests. Both drive `frontend-2` (Playwright) against the real
-API + real Postgres, using a real Clerk testing token — never a fake verifier.
-DB asserts name the tables from
-[persistence.md](persistence.md).
+Auth tenancy is humatest + real Postgres in default CI (SDK-boundary
+test double for `Sessions().Verify`). Playwright + Clerk uses one
+[Testing Token](https://clerk.com/docs/guides/development/testing/overview)
+per PR job. Testing Tokens bypass bot detection
+(`__clerk_testing_token` on the Frontend API). They are **not** Go
+`Sessions().Verify`. Do not create a token per spec or worker (Backend
+testing-token create is rate-limited: **2 requests per second**).
+Parity / look renders may still pin empty `VITE_CLERK_PUBLISHABLE_KEY`
+(no-auth). That is not the auth E2E.
 
-## 1. Access control (`/cms`)
+DB asserts name the tables from [persistence.md](persistence.md).
 
-1. **Before sign-in** — open `/cms`.
-   - UI: redirected to authenticate; not into the CMS.
-2. **After sign-in, not activated** — a contractor with a Clerk organization
-   attached to an unactivated tenant (or no org yet).
-   - UI: routed to onboarding or `/onboarding/preview-and-edit/` if already
-     there, not `/cms`. `/me.tenant` may be `null` (no org) or `TenantRead`
-     `status=unactivated`. CMS keys off `status === "active"`. If this browser
-     has a stored onboarding session token, restore that onboarding session
-     (do not start Find from scratch). Clerk does not list incomplete
-     onboarding sessions.
-3. **After sign-in, activated** — a contractor whose Clerk organization maps to
-   an **active** tenant.
-   - UI: lands in `/cms`; the Clerk profile icon shows; a read operation (the
-     website page list) renders data.
-   - DB: `tenants` (`clerk_org_id`, `status=active`) and `tenant_memberships`
-     (`owner`) are populated; the website page list reads `website_pages` for
-     that `tenant_id`.
+1. **Humatest + real Postgres (CI).** SDK-boundary double (programmed
+   `Principal`; does not decode JWTs).
+   - `/me` with no bind → `tenant: null`.
+   - Bind + `CreateClerkUser` from `founder_name` →
+     `onboarding_sessions.clerk_user_id` set.
+   - Checkout **calls** `AttachClerkOrganization` →
+     `tenants.clerk_org_id` set; `status` still `unactivated`.
+   - 09 **calls** `InsertOwnerMembership` then `status=active`.
+   - DB: `auth.tenants`, `auth.tenant_memberships` (`role=owner`). No
+     second tenant row.
 
-## 2. Clerk organization created without re-entering the name
+2. **Two-tenant isolation (humatest).** Two programmed `Principal`s.
+   Not two real Clerk orgs in Playwright. As tenant A, read/write
+   website pages and files that belong to B → 404 or forbidden; B’s
+   `website_pages` and `files` rows unchanged. Repeat as B against A.
 
-1. **Authenticated, no Clerk organization, onboarding details present** — a
-   contractor who already confirmed onboarding (unactivated tenant + business
-   name on the profile).
-   - Action: website activation creates the Clerk organization
-     **programmatically from the known name** and **upgrades** that unactivated
-     tenant; the contractor is not asked to type the name again.
-   - UI: `/me` returns `TenantRead` `status=unactivated` after
-     `POST /v1/me/clerk-organization`; CMS stays closed. After 09 it returns
-     the **same** tenant id with `status=active`.
-   - DB: the existing `tenants` row gets `clerk_org_id` and `status=active`;
-     `tenant_memberships` (`owner`) is written; no second tenant row.
+3. **Frontend Vitest (CI).** `AuthGate.test.tsx`. Delete
+   OrgProvisionStep tests. CMS-open is `status === "active"`.
 
-## 3. Two-tenant isolation
-
-1. **Two activated tenants** — create tenant A and tenant B (separate Clerk
-   organizations, separate `tenant_id`s), each with at least one website page
-   and one file.
-2. **As tenant A**, read/write website pages and files that belong to B.
-   - API: 404 or forbidden; never B's rows.
-   - DB: A's queries include `tenant_id = A`; B's `website_pages` and `files`
-     rows are unchanged.
-3. Repeat as tenant B against A's rows. Same block.
+4. **Playwright + Clerk (PR job).** Generate **one** Testing Token
+   once per PR job (`clerkSetup()` or `npx clerk api testing_tokens
+   -X POST` / Backend API). Put `CLERK_TESTING_TOKEN` in that job env
+   and reuse it. Needs `CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` as
+   job secrets. Signed-in Playwright: `storageState` **once per job**,
+   then `test.use({ storageState })`. Do **not** restore `storageState`
+   / cookies across jobs
+   ([ci-cd.md](../../../general-architecture/ci-cd.md)). Clerk-hitting
+   specs: serial project `workers: 1`. Official: `clerkSetup()` once
+   when the suite starts, then `setupClerkTestingToken` on each
+   Playwright page that hits Clerk UI.
+   - OAuth modal (Sign in with Google, no name fields).
+   - Programmatic `founder_name` / business org.
+   - Frontend `setActive` from checkout `clerk_org_id` or
+     `pending_clerk_org_id`.
+   - After 09, `/cms` opens (`status=active`).
+   - DB: same `tenants` / `tenant_memberships` asserts as beat 1.

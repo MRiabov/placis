@@ -2,16 +2,18 @@
 
 The contractor pays on the **website preview** (`/onboarding/preview-and-edit/`)
 or on the **preview website address** strip if they shared (FQDN in
-[cloudflare.md](../../website/cloudflare.md)). Clerk **create account** if needed (modal island); an existing
-Clerk session skips to pay. Then Stripe checkout (island POSTs
-`POST /v1/onboarding/activation/checkout` to `cmd/api`, CORS by `Host` /
-`website_prefix` on the preview website address; on the app origin CORS is the
-app. Not `/v1/website-previews/{token}/…`; do not bake a Checkout Session URL
-into R2 HTML). The website-activation strip is
-**sticky to the bottom of the viewport** while the website scrolls
-([frontend.md](../frontend.md), [design decision](../design-decision-record.md) 10). Website activation **upgrades** the
-existing unactivated tenant (`status=active`); it does not insert a second
-tenant. Does **not** wait for 06. Does **not** require a prior 08 share.
+[cloudflare.md](../../website/cloudflare.md)). Clerk **Sign in with Google** if needed (OAuth modal island;
+not magic link, not SignUp name); an existing Clerk session skips to pay. Then
+Stripe checkout (island POSTs `POST /v1/onboarding/activation/checkout` to
+`cmd/api`, CORS by `Host` / `website_prefix` on the preview website address; on
+the app origin CORS is the app. Not `/v1/website-previews/{token}/…`; do not
+bake a Checkout Session URL into R2 HTML). Checkout **calls**
+`AttachClerkOrganization` and returns `clerk_org_id` for `setActive` before
+Stripe. The website-activation strip is **sticky to the bottom of the viewport**
+while the website scrolls ([frontend.md](../frontend.md), [design decision](../design-decision-record.md) 10). Website
+activation **upgrades** the existing unactivated tenant (`status=active`); it
+does not insert a second tenant. Does **not** wait for 06. Does **not** require
+a prior 08 share.
 
 Stripe (via `stripe-go`) handles this checkout only. Amount is the activation
 price (predecessor: EUR 4900). `checkout.session.completed` is accepted only
@@ -58,9 +60,10 @@ This step **is** River job kind `website_activation`. Set
 
 1. Load the unactivated [tenant](../../other/auth/persistence.md) on
    `onboarding_sessions.tenant_id`.
-2. Resolve or create the Clerk organization; set `tenants.clerk_org_id`. Tenant
-   name is the **business**; Clerk organization name is the **person**.
-3. `tenant_memberships` (`owner`) for the paying owner.
+2. **Calls** `AttachClerkOrganization` if `tenants.clerk_org_id` is still
+   null (checkout usually already did). Clerk organization name and logo
+   are the **business** (business logo when present).
+3. **Calls** `InsertOwnerMembership` (`role=owner`) for the paying owner.
 4. `tenants.status=active`. Onboarding session → `activated`. In the
    **same transaction**, complete `ai.threads` `thread_kind=cms_assistant`
    `current` and end any `assistant.runs` `running` ([website editor](../website-editor.md)).
@@ -142,7 +145,9 @@ See [billing](../../billing/README.md).
 ## Invariants
 
 - Same `tenant_id` as 01.
-- Same `website_prefix` as 08.
-- `/me` tenant only when `status=active`.
-- Clerk organization 1-1 for **active** tenants only.
+- Same `website_prefix` as 08 (or reserved here if they never shared).
+- `/me` may return unactivated `TenantRead` after checkout attach; CMS
+  keys off `status=active`.
+- Clerk organization 1-1 with the tenant (not active-only); named as the
+  business.
 - v1 and v2 are never website-rollback targets.

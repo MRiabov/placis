@@ -6,8 +6,9 @@ Pays, upgrades the tenant, and **calls** website 04 (strip off). Leftover
 
 - **Setup**: unpublished website from 05; wait-end on
   `/onboarding/preview-and-edit/`. 08 share is **optional**. A Clerk
-  testing-token contractor (Clerk organization may be missing).
-  Automatic website copy generation may still be running, or may have
+  testing-token contractor. Checkout **calls** `AttachClerkOrganization`
+  (`tenants.clerk_org_id` set; `status` still `unactivated`) before
+  Stripe. Automatic website copy generation may still be running, or may have
   failed — neither blocks website activation. Record: if 08 ran,
   v1 `website_publications` `active`; the `website_copy_generation` job
   row if still in flight.
