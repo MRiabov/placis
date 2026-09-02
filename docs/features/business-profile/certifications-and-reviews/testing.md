@@ -9,15 +9,15 @@ This screen’s PATCH. Ranking enqueue and two-pass:
 
 #### Setup
 
-`in_pool` reviews exist; some already pinned by
-`reviews_ranking_for_display`.
+Backend (`humatest`, Testcontainers Postgres). `in_pool` reviews exist;
+some already pinned by `reviews_ranking_for_display`.
 
-#### Invoke
+#### Exercise
 
 PATCH ordered `review_ids[]` (featured-first, max 30). Then run
 `reviews_ranking_for_display` again.
 
-#### Assert
+#### Verify
 
 PATCH wrote `is_top` / `top_position` with `algorithm=human` and
 `top_reviews_provisional=false`. The later ranking job does not

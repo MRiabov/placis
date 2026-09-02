@@ -8,19 +8,44 @@ the checklist and writes `etl.*` rows. This feature’s own tests are
 
 ## Integration
 
+### TestPipelineHappyPathEtlFull
+
+Backend. Go `TestPipelineHappyPathEtlFull`. Per-source names:
+[pipeline/testing](pipeline/testing/README.md). No frontend Full (no
+owner UI).
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Adapters faked. No
+`frontend-2`. No Worker.
+
+#### Exercise
+
+Onboarding `StartRun` through the extract/transform sources this
+pipeline owns.
+
+#### Verify
+
+Postgres holds each source file’s Persist. No owner UI.
+
+#### Mocked
+
+Maps / Facebook / Instagram / crawl / LLM.
+
 ### Bootstrap
 
 #### Setup
 
-01 details that let some ETL run kinds start
+Backend (`humatest`, Testcontainers Postgres). 01 details that let some
+ETL run kinds start
 ([ETL run kind triggers](pipeline/etl-run-kind-triggers.md); never
-`directory`, `review`, or `photo`). Real Postgres.
+`directory`, `review`, or `photo`).
 
-#### Invoke
+#### Exercise
 
 `StartRun` with `trigger=onboarding`.
 
-#### Assert
+#### Verify
 
 `etl.runs` only for started ETL run kinds (shared `enqueue_id`),
 `etl.sources`, `google_maps_fetches` / `facebook_fetches` /
@@ -48,15 +73,16 @@ Maps / Facebook / Instagram / LLM.
 
 #### Setup
 
-Bootstrap already ran. Owner typed a marketing phone. Real Postgres.
+Backend (`humatest`, Testcontainers Postgres). Bootstrap already ran.
+Owner typed a marketing phone.
 
-#### Invoke
+#### Exercise
 
 Second `StartRun` with `trigger=scheduled` and a new review, a new
 Instagram post, a new photo, and a different marketing phone than the
 owner typed.
 
-#### Assert
+#### Verify
 
 New review / post / photo on the business profile; owner-typed
 marketing phone unchanged (research conflict); photo kind not rewritten
@@ -65,7 +91,7 @@ matches; a bumped `schema_revision` extracts / classifies without
 `force`; `algorithm=human` is not overwritten. After that scheduled run
 **succeeds** and new `in_pool` review rows landed: schema `jobs` has
 one `reviews_ranking_for_display` on that `tenant_id` (once, not per
-chunk). After invoke: `top_reviews_provisional=false`. Transform did
+chunk). After the job: `top_reviews_provisional=false`. Transform did
 not rank. If the scheduled run added no new `in_pool` rows, no ranking
 job.
 
@@ -77,13 +103,14 @@ Maps / Facebook / Instagram / LLM.
 
 #### Setup
 
-Five onboarding `enqueue_id`s in 30 minutes. Real Postgres.
+Backend (`humatest`, Testcontainers Postgres). Five onboarding
+`enqueue_id`s in 30 minutes.
 
-#### Invoke
+#### Exercise
 
 A sixth `StartRun(trigger=onboarding)`.
 
-#### Assert
+#### Verify
 
 Does not insert runs.
 
@@ -95,15 +122,16 @@ Maps / Facebook / Instagram / LLM.
 
 #### Setup
 
-Scheduled Instagram with no handle. Scheduled Maps with no `place_id`.
-Onboarding Instagram with no handle detail yet. Real Postgres.
+Backend (`humatest`, Testcontainers Postgres). Scheduled Instagram with
+no handle. Scheduled Maps with no `place_id`. Onboarding Instagram with
+no handle detail yet.
 
-#### Invoke
+#### Exercise
 
 Scheduled Instagram `StartRun`. Scheduled Maps `StartRun`. Onboarding
 Instagram until a handle detail exists.
 
-#### Assert
+#### Verify
 
 Scheduled Instagram → `status=insufficient_data_for_lookup`
 immediately, no fetch. Scheduled Maps → `insufficient_data_for_lookup`,
@@ -118,13 +146,14 @@ Maps / Facebook / Instagram / LLM.
 
 #### Setup
 
-Two tenants via `humatest` + real Postgres. No Playwright.
+Backend (`humatest`, Testcontainers Postgres). Two tenants. No
+Playwright.
 
-#### Invoke
+#### Exercise
 
 Each tenant reads the other’s `etl.runs`, fetches, or profile posts.
 
-#### Assert
+#### Verify
 
 Each cannot read the other’s `etl.runs`, fetches, or profile posts.
 

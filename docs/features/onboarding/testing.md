@@ -14,12 +14,12 @@ this journey. DB asserts use [persistence.md](persistence.md) and
 
 #### Setup
 
-Playwright drives `frontend-2` against the real API + real Postgres.
-Google Maps / company registry / Facebook / crawl and the LLM are faked.
-Worker **container** is up when 03/04 run (no `wrangler deploy`). No
-Clerk sign-in until website activation.
+E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+real API + real Postgres. Google Maps / company registry / Facebook /
+crawl and the LLM are faked. Worker **container** is up when 03/04 run
+(no `wrangler deploy`). No Clerk sign-in until website activation.
 
-#### Invoke
+#### Exercise
 
 1. **Find** — country, registry and/or Google Maps, online research
    consent, business lookup (`POST /v1/onboarding/business-lookup`).
@@ -56,7 +56,7 @@ Clerk sign-in until website activation.
    UI: lands in `/cms/website`. `/onboarding/preview-and-edit/`
    redirects there.
 
-#### Assert
+#### Verify
 
 1. **Find** — `tenants` (`status=unactivated`, `country` from Find);
    `onboarding_sessions` (`status=client_interviewing`, token,
@@ -106,19 +106,134 @@ webhook. Worker is real (container). R2 / `purge_cache` faked.
 
 ## Integration
 
+### HappyPathOnboardingFull
+
+Frontend. Vitest `HappyPathOnboardingFull`. Not nine files named 01–09.
+02 has no screen. 05/06 are the wait teaser.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go).
+
+#### Exercise
+
+Find → Review → Interview → wait teaser → preview/pay. MSW fixtures /
+profile / SSE (`POST /v1/onboarding/business-lookup`,
+`GET /v1/onboarding/profile`, `GET /v1/onboarding/events/stream`,
+`POST /v1/onboarding/interview/complete`,
+`POST /v1/onboarding/activation/checkout`).
+
+#### Verify
+
+UI routes through those screens. MSW saw those Method+path strings.
+Postgres rows are the backend test.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### Find consent and Maps
+
+Frontend branching. Not `Full`.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/find`.
+
+#### Exercise
+
+Registry and/or Maps. Consent required before business lookup.
+
+#### Verify
+
+Lookup disabled without consent. With consent, MSW
+`POST /v1/onboarding/business-lookup`.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### Interview live fill
+
+Frontend branching. Not `Full`.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/interview`. SSE
+still filling.
+
+#### Exercise
+
+Owner-typed field vs research increment on another field.
+
+#### Verify
+
+Typed field kept. Untouched field takes live fill. MSW SSE /
+`PUT /v1/onboarding/interview`.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### Wait teaser cap
+
+Frontend branching. Not `Full`.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/preview`.
+
+#### Exercise
+
+06 done before ~15s vs cap first.
+
+#### Verify
+
+Navigates to `/onboarding/preview-and-edit/` in both cases.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### TestPipelineHappyPathOnboardingFull
+
+Backend. Go `TestPipelineHappyPathOnboardingFull`. Per-step names:
+[pipeline/testing](pipeline/testing/README.md). Skip 04b (**Do not
+run**).
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-2`.
+Worker container only when a step **calls** `websiteRender` /
+`websitePublication`.
+
+#### Exercise
+
+Ordered onboarding DAG 01→09 (04b out) on Testcontainers.
+
+#### Verify
+
+Postgres holds each step’s Persist. MinIO keys on 08/09 publication
+objects. `purge_cache` faked.
+
+#### Mocked
+
+Google, registry, Facebook, crawl, LLM, Stripe test-mode, `purge_cache`.
+MinIO is real (Testcontainers).
+
 ### Two-tenant isolation
 
 #### Setup
 
-Two onboarding sessions (second unactivated tenant) via `humatest` +
-real Postgres. No Playwright. No `frontend-2`.
+Backend (`humatest`, Testcontainers Postgres). Two onboarding sessions
+(second unactivated tenant). No Playwright. No `frontend-2`.
 
-#### Invoke
+#### Exercise
 
 Read the first tenant's profile and website pages as the second tenant,
 before and after the first tenant's website activation.
 
-#### Assert
+#### Verify
 
 The first tenant's profile and website pages are not readable under the
 second tenant. First tenant's `business_profiles` / `website_pages`

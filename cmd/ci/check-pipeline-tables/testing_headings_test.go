@@ -7,8 +7,8 @@ import (
 
 func okTesting(atx ...atxHead) headingFile {
 	return headingFile{
-		path: "docs/features/widget/testing.md",
-		rel:  "widget/testing.md",
+		path: "docs/features/sample/testing.md",
+		rel:  "sample/testing.md",
 		atx:  atx,
 	}
 }
@@ -16,20 +16,35 @@ func okTesting(atx ...atxHead) headingFile {
 func TestTestingHeadingsClosedOK(t *testing.T) {
 	f := okTesting(
 		atxHead{2, "E2E"},
-		atxHead{3, "Widget"},
+		atxHead{3, "Sample"},
 		atxHead{4, "Setup"},
-		atxHead{4, "Invoke"},
-		atxHead{4, "Assert"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
 		atxHead{4, "Fail"},
 		atxHead{4, "Mocked"},
+		atxHead{4, "Teardown"},
 		atxHead{2, "Integration"},
 		atxHead{3, "Two-tenant isolation"},
 		atxHead{4, "Setup"},
-		atxHead{4, "Invoke"},
-		atxHead{4, "Assert"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
 	)
 	if errs := checkTestingHeadings(report{testingFiles: []headingFile{f}}); len(errs) != 0 {
 		t.Fatalf("closed: %v", errs)
+	}
+}
+
+func TestTestingHeadingsTeardownOnly(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "Integration"},
+		atxHead{3, "Sample"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
+		atxHead{4, "Teardown"},
+	)
+	if errs := checkTestingHeadings(report{testingFiles: []headingFile{f}}); len(errs) != 0 {
+		t.Fatalf("teardown only: %v", errs)
 	}
 }
 
@@ -50,8 +65,8 @@ func TestTestingHeadingsBanJourneyH2(t *testing.T) {
 		atxHead{2, "CMS"},
 		atxHead{3, "Hydrate"},
 		atxHead{4, "Setup"},
-		atxHead{4, "Invoke"},
-		atxHead{4, "Assert"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
 	)
 	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
 	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "## CMS") {
@@ -64,8 +79,8 @@ func TestTestingHeadingsBanMethodH3(t *testing.T) {
 		atxHead{2, "E2E"},
 		atxHead{3, "GET /v1/website/editor/pages"},
 		atxHead{4, "Setup"},
-		atxHead{4, "Invoke"},
-		atxHead{4, "Assert"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
 	)
 	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
 	if len(errs) != 1 || !strings.Contains(errs[0], "### GET") {
@@ -76,10 +91,10 @@ func TestTestingHeadingsBanMethodH3(t *testing.T) {
 func TestTestingHeadingsBanExtraH4(t *testing.T) {
 	f := okTesting(
 		atxHead{2, "E2E"},
-		atxHead{3, "Widget"},
+		atxHead{3, "Sample"},
 		atxHead{4, "Setup"},
-		atxHead{4, "Invoke"},
-		atxHead{4, "Assert"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
 		atxHead{4, "Find"},
 	)
 	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
@@ -88,15 +103,15 @@ func TestTestingHeadingsBanExtraH4(t *testing.T) {
 	}
 }
 
-func TestTestingHeadingsRequireSetupInvokeAssert(t *testing.T) {
+func TestTestingHeadingsRequireSetupExerciseVerify(t *testing.T) {
 	f := okTesting(
 		atxHead{2, "E2E"},
-		atxHead{3, "Widget"},
+		atxHead{3, "Sample"},
 		atxHead{4, "Setup"},
-		atxHead{4, "Assert"},
+		atxHead{4, "Verify"},
 	)
 	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
-	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "Setup / Invoke / Assert") {
+	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "Setup / Exercise / Verify") {
 		t.Fatalf("required h4: %v", errs)
 	}
 }
@@ -112,15 +127,31 @@ func TestTestingHeadingsMissingH2(t *testing.T) {
 func TestTestingHeadingsH4Order(t *testing.T) {
 	f := okTesting(
 		atxHead{2, "E2E"},
-		atxHead{3, "Widget"},
+		atxHead{3, "Sample"},
 		atxHead{4, "Setup"},
-		atxHead{4, "Invoke"},
-		atxHead{4, "Assert"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
 		atxHead{4, "Mocked"},
 		atxHead{4, "Fail"},
 	)
 	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
 	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "Fail out of order") {
 		t.Fatalf("h4 order: %v", errs)
+	}
+}
+
+func TestTestingHeadingsTeardownBeforeMocked(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "E2E"},
+		atxHead{3, "Sample"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
+		atxHead{4, "Teardown"},
+		atxHead{4, "Mocked"},
+	)
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "Mocked out of order") {
+		t.Fatalf("teardown order: %v", errs)
 	}
 }

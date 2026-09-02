@@ -12,11 +12,11 @@ the tables from [persistence.md](../persistence.md).
 
 #### Setup
 
-Playwright drives `frontend-2` against the real API + real Postgres.
-`tenants` (`status=active`). `business_profiles` with at least the
-details Review copy can read.
+E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+real API + real Postgres. `tenants` (`status=active`).
+`business_profiles` with at least the details Review copy can read.
 
-#### Invoke
+#### Exercise
 
 1. **Create** — the owner clicks "create an ad". UI: routed to
    `/cms/ads/new`.
@@ -38,7 +38,7 @@ details Review copy can read.
 5. **Download** — the owner downloads the ad set. Request
    `AdGenerateRequest`; `ExportAdSet`; Response `AdDownloadRead`.
 
-#### Assert
+#### Verify
 
 1. **Enter details** — **persists into** `ads` (`status=draft`,
    `ad_goal`, `icp_age_min` / `icp_age_max` / `icp_household` /
@@ -76,3 +76,58 @@ details Review copy can read.
 #### Mocked
 
 LLM.
+
+## Integration
+
+### HappyPathAdsFull
+
+Frontend. Vitest `HappyPathAdsFull`. Not four files named 01–04.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). Active tenant. Profile details
+Review copy can read.
+
+#### Exercise
+
+List → new → About the ad → generate (MSW delayed) → Review unlocks →
+approve → download. MSW: `POST /v1/ads`, `POST /v1/ads/{ad_id}/generate`,
+`POST /v1/ads/{ad_id}/approve`, `POST /v1/ads/{ad_id}/ad-set` /
+download.
+
+#### Verify
+
+UI: list, workspace accordion, drafting, Review unlocked, download.
+MSW saw those Method+path strings. Postgres rows are the backend test.
+
+#### Fail
+
+Empty prompt does not fire. Generate still drafting: leave and return.
+Approve 4xx.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### TestPipelineHappyPathAdsFull
+
+Backend. Go `TestPipelineHappyPathAdsFull`. Per-step names:
+[pipeline/testing](pipeline/testing/README.md).
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-2`.
+No Worker.
+
+#### Exercise
+
+Ordered ads pipeline 01→04.
+
+#### Verify
+
+Postgres holds each step’s Persist plus the export signed URL. Ad
+tables unchanged on 04.
+
+#### Mocked
+
+LLM, ad platforms.

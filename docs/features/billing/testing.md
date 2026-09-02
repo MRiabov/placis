@@ -10,11 +10,11 @@ not wall-clock. DB asserts name the tables from
 
 #### Setup
 
-Playwright drives `frontend-2` against the real API + real Postgres.
-Website activation (08) already succeeded so `ActivateSubscription` can
-run.
+E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+real API + real Postgres. Website activation (08) already succeeded so
+`ActivateSubscription` can run.
 
-#### Invoke
+#### Exercise
 
 1. **Activate** — website activation succeeds (08).
    `website_activation` **calls** `ActivateSubscription`.
@@ -39,7 +39,7 @@ run.
    `CancelSubscription`. **Keep subscription** (`KeepSubscription`)
    clears the flag. After `current_period_end`.
 
-#### Assert
+#### Verify
 
 1. **Activate** — **persists into** `billing.subscriptions`
    (`subscription_tier=pro`, `status=active`,
@@ -76,3 +76,28 @@ run.
 #### Mocked
 
 Stripe and the LLM.
+
+## Integration
+
+### HappyPathBillingFull
+
+Frontend. Vitest `HappyPathBillingFull`. Not OpenAPI 1:1.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). Tenant active after website
+activation.
+
+#### Exercise
+
+Usage & billing: activate through cancel on the CMS screens. MSW
+billing Routes (`GET /v1/billing/usage`, checkout, cancel / keep).
+
+#### Verify
+
+UI: usage bar, out-of-credit, Publish blocked when canceled. MSW saw
+those Method+path strings. Postgres rows are the backend test.
+
+#### Mocked
+
+All HTTP via MSW.

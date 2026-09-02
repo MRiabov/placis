@@ -9,14 +9,15 @@ the built files served locally. It does not drive `frontend-2`.
 
 #### Setup
 
-Playwright against the built files served locally. No Go. No Postgres.
+E2E (Playwright against the built files served locally). No Go. No
+Postgres.
 
-#### Invoke
+#### Exercise
 
 Open `/`, `/contact/`, `/support/`, `/pricing/`, and an unknown path.
 Submit the prompt box on `/`. Choose a plan. Contact sales.
 
-#### Assert
+#### Verify
 
 1. **Home** — `/` shows Built for, the prompt box, Try now →
    `https://app.placis.com/onboarding/find`, Login →

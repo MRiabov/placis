@@ -22,11 +22,11 @@ summary (not 409). Voice after 20 tool rounds does not execute more tools.
 
 #### Setup
 
-Playwright drives `frontend-2` against the real API + real Postgres.
-Activated tenant. Voice/LLM faked. Go + Postgres + `frontend-2` not
-mocked.
+E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+real API + real Postgres. Activated tenant. Voice/LLM faked. Go +
+Postgres + `frontend-2` not mocked.
 
-#### Invoke
+#### Exercise
 
 1. **Hydrate** — `GetAssistantThread` on website editor / Ads / Details
    / `/cms` (bottom-right **Assistant**). Visiting `/cms` without
@@ -81,7 +81,7 @@ mocked.
     assemble again (same rules as the 12h job). Voice **create**
     seed-too-large compact-then-seed.
 
-#### Assert
+#### Verify
 
 1. **Hydrate** — Response `AssistantThreadRead` (`items`, not
    `thread_items`). **reads** `ai.threads` / `thread_items`. No
@@ -177,11 +177,11 @@ Voice and LLM.
 
 #### Setup
 
-Playwright drives `frontend-2` against the real API + real Postgres on
-an unactivated onboarding session. Voice/LLM faked. Go + Postgres +
-`frontend-2` not mocked.
+E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+real API + real Postgres on an unactivated onboarding session.
+Voice/LLM faked. Go + Postgres + `frontend-2` not mocked.
 
-#### Invoke
+#### Exercise
 
 1. **Guide hydrate** — Bottom-right DustOrb visible, voice off, cue
    **Click to turn on voice**. `GET /v1/onboarding/assistant/thread`.
@@ -202,7 +202,7 @@ an unactivated onboarding session. Voice/LLM faked. Go + Postgres +
 8. **Denied microphone** — Cue **Allow microphone access in your
    browser**. Click DustOrb retries.
 
-#### Assert
+#### Verify
 
 1. **Guide hydrate** — Conversation is onboarding-session-scoped.
    `GET` returns that thread (`items: []` until the first utterance).
@@ -245,11 +245,11 @@ Voice and LLM.
 
 #### Setup
 
-Playwright drives `frontend-2` against the real API + real Postgres.
-Unpublished website from 05; 06 may still be running.
-[website-editor.md](../onboarding/website-editor.md).
+E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+real API + real Postgres. Unpublished website from 05; 06 may still be
+running. [website-editor.md](../onboarding/website-editor.md).
 
-#### Invoke
+#### Exercise
 
 **Wait → website preview → prompt → pay** — Wait teaser
 `/onboarding/preview` then `/onboarding/preview-and-edit/`. Unsigned
@@ -257,7 +257,7 @@ land hydrates `GET …/thread` (onboarding session token). Sign up. One
 signed-in owner prompt after 06 idle. Canvas updates via website-editor
 PATCH (instant apply). Pay (09).
 
-#### Assert
+#### Verify
 
 Unsigned land shows 06 `tool_summary` while copy is still running.
 `/cms/website` shows the unpublished change. CMS
@@ -268,3 +268,27 @@ Sixth unpaid prompt is out of this story (pay CTA, not 402).
 #### Mocked
 
 LLM. Voice unused.
+
+## Integration
+
+### HappyPathAssistantFull
+
+Frontend. Vitest `HappyPathAssistantFull`. CMS dock, not pipeline 1:1.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). Activated tenant.
+
+#### Exercise
+
+Open website editor, call Assistant, send one owner message. MSW
+`GET /v1/assistant/thread`, `POST /v1/assistant/messages`.
+
+#### Verify
+
+UI: thread hydrates; owner message appears. MSW saw those Method+path
+strings. Postgres rows are the backend test.
+
+#### Mocked
+
+All HTTP via MSW.

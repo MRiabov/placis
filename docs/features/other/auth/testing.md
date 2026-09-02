@@ -18,7 +18,8 @@ DB asserts name the tables from [persistence.md](persistence.md).
 
 #### Setup
 
-Generate **one** Testing Token once per PR job (`clerkSetup()` or
+E2E (Playwright + real Clerk testing token). Generate **one** Testing
+Token once per PR job (`clerkSetup()` or
 `npx clerk api testing_tokens -X POST` / Backend API). Put
 `CLERK_TESTING_TOKEN` in that job env and reuse it. Needs
 `CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` as job secrets. Signed-in
@@ -30,14 +31,14 @@ specs: serial project `workers: 1`. Official: `clerkSetup()` once when
 the suite starts, then `setupClerkTestingToken` on each Playwright page
 that hits Clerk UI.
 
-#### Invoke
+#### Exercise
 
 OAuth modal (Sign in with Google, no name fields). Programmatic
 `founder_name` / business org. Frontend `setActive` from checkout
 `clerk_org_id` or `MeRead.clerk_org_id` if the Clerk session has no org
 yet. After 09, `/cms` opens.
 
-#### Assert
+#### Verify
 
 `/cms` opens (`status=active`). DB: `tenants` / `tenant_memberships`
 same asserts as Humatest + real Postgres.
@@ -48,18 +49,19 @@ same asserts as Humatest + real Postgres.
 
 #### Setup
 
-SDK-boundary double (programmed `Principal`; does not decode JWTs).
-Real Postgres. No Playwright.
+Backend (`humatest`, Testcontainers Postgres). SDK-boundary double
+(programmed `Principal`; does not decode JWTs). Prefer fake Clerk. No
+Playwright.
 
-#### Invoke
+#### Exercise
 
-`/me` with no bind. Bind + `CreateClerkUser` from `founder_name`.
-Checkout **calls** `AttachClerkOrganization`. 09 **calls**
-`InsertOwnerMembership` then `status=active`.
+`GET /v1/me` with no bind. Bind + `CreateClerkUser` from
+`founder_name`. Checkout **calls** `AttachClerkOrganization`. 09
+**calls** `InsertOwnerMembership` then `status=active`.
 
-#### Assert
+#### Verify
 
-`/me` with no bind → `tenant: null`. Bind →
+`GET /v1/me` with no bind → `tenant: null`. Bind →
 `onboarding_sessions.clerk_user_id` set. Checkout →
 `tenants.clerk_org_id` set; `status` still `unactivated`. After 09:
 `auth.tenants`, `auth.tenant_memberships` (`role=owner`). No second
@@ -69,30 +71,16 @@ tenant row.
 
 #### Setup
 
-Two programmed `Principal`s. Not two real Clerk orgs in Playwright.
-`humatest` + real Postgres.
+Backend (`humatest`, Testcontainers Postgres). Two programmed
+`Principal`s. Not two real Clerk orgs in Playwright.
 
-#### Invoke
+#### Exercise
 
 As tenant A, read/write website pages and files that belong to B.
-Repeat as B against A.
+Repeat as B against A. Method+path as in those Routes (website pages,
+files).
 
-#### Assert
+#### Verify
 
 404 or forbidden; B’s `website_pages` and `files` rows unchanged. Same
 block the other way.
-
-### Auth gate
-
-#### Setup
-
-Frontend Vitest. No Clerk testing token. Parity / look renders may pin
-empty `VITE_CLERK_PUBLISHABLE_KEY` (no-auth); that is not this test.
-
-#### Invoke
-
-`AuthGate.test.tsx`. Delete OrgProvisionStep tests.
-
-#### Assert
-
-CMS-open is `status === "active"`.

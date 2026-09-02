@@ -1,10 +1,10 @@
 # Build the profile (integration test)
 
 - **Setup**: 01 created the profile; 02 and 04a write concurrently.
-- **Invoke**: overlapping research increment and contractor edit on different
+- **Exercise**: overlapping research increment and contractor edit on different
   fields; disagreeing values on the same field; registry then Maps on legal
   identity.
-- **Assert**: both distinct-field increments persist; same-field disagreement →
+- **Verify**: both distinct-field increments persist; same-field disagreement →
   `conflict` and the live profile column **is not updated**; contractor edit
   sets `algorithm=human` and later ETL does not overwrite it; registry beats
   Maps for legal identity; no silent overwrite; `last_edit_id` advances;

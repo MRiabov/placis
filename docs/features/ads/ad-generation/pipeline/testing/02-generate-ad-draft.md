@@ -6,9 +6,9 @@ Fills the 01 stub. Next step is 03 (after owner Review on Routes).
   stub `ad_variants` (`format=feed_square`). Ready + approved
   `media_assets` with media captions exist (enough for that format).
   Zero `ad_copy_variants` / `ad_image_placements`.
-- **Invoke**: `POST /v1/ads/{ad_id}/generate` then the `ads_generate`
+- **Exercise**: `POST /v1/ads/{ad_id}/generate` then the `ads_generate`
   worker (faked LLM).
-- **Assert** (Postgres after 02):
+- **Verify** (Postgres after 02):
   - `ad_copy_variants`: `source=ai_proposal`; headline / primary_text /
     description / `cta_label`.
   - `ad_image_placements`: `media_asset_id` in the ready+approved
