@@ -90,7 +90,8 @@ Examples:
 
 - **Public** (`GET /openapi.json` / exported `openapi.json`):
   `TestHappyPathV1WebsiteEditorPagesReturnsPages` for
-  `GET /v1/website/editor/pages`. Also `GET /v1/health`, `GET /openapi.json`.
+  `GET /v1/website/editor/pages`. `TestHappyPathV1MediaAssetsReturnsList`
+  for `GET /v1/media-assets`. Also `GET /v1/health`, `GET /openapi.json`.
 - **Worker** (internal OpenAPI file):
   `TestHappyPathInternalWebsiteRender` for `POST /internal/website-render`.
 
@@ -120,6 +121,8 @@ Frontend completeness (documented, not CI-asserted this pass):
 | Website | `HappyPathWebsiteFull` — website editor → Publish | one test per website Route |
 | Auth | `HappyPathAuthFull` — `/login` → `setActive` → `/cms` | `AuthGate.test.tsx` |
 | Billing | `HappyPathBillingFull` — Usage & billing → cancel / keep / pay-again | one test per billing Route |
+| Assistant | `HappyPathAssistantFull` — CMS dock | one test per assistant Route |
+| Media library | `HappyPathMediaFull` — `/cms/media` upload → crop | one test per media library Route |
 | ETL | none (no owner UI) | |
 
 Extra frontend HappyPath only for real screen branching. Names include
