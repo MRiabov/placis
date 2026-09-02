@@ -64,6 +64,24 @@ line when that line is not a new list item or heading.
 - GitHub `github.com/.../blob/...` → **pass** (`/blob/`; extra-allowed).
 - `new Blob(...)` / `response.blob()` → **pass** (Web API; extra-allowed).
 
+## Banned synonym (unmarked) — grain
+
+- `docs/docs-conventions.md`: “Persist grain” / “Grain follows Persist” →
+  **fail**. Say **what Persist / Must not names**.
+- `docs/general-architecture/testing.md`: “Grain is the package” → **fail**.
+  Say **the cache unit is the package**.
+- `docs/general-architecture/jobs.md`: “persist grain, not this unique key”
+  → **fail**. Say **`website_activations`**.
+
+## Banned synonym (unmarked) — widget
+
+- `docs/features/other/media/README.md`: “**Widget:** Crop is a rect overlay”
+  → **fail**. Say **Crop / focal**.
+- `docs/features/onboarding/ADR.md`: “onboarding-only widget for a Details
+  field” → **fail**. Say **control**.
+- `docs/features/placis-website/ADR.md`: “interactive widgets share a file”
+  → **fail**. Say **islands**.
+
 ## Self-understood at home — website `page`
 
 - `docs/features/website/architecture.md`: “each page has sections” → **pass**
@@ -160,10 +178,13 @@ line when that line is not a new list item or heading.
 
 ## `setup` in testing docs
 
-The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`.
-Fixture headings stay **Setup** / Invoke / Assert.
+The onboarding Don't-say token is skipped in `testing.md` and `**/testing/**`,
+in `docs/docs-conventions.md`, in `docs/general-architecture/ci-cd.md`, and
+in `cmd/ci/check-pipeline-tables/` (the closed `#### Setup` heading). Fixture
+headings stay **Setup** / **Exercise** / **Verify**.
 
 - `docs/features/onboarding/pipeline/testing/01-find-business.md`: “**Setup**:
   …” → **pass**.
+- `docs/docs-conventions.md`: “`####` is closed: **Setup**” → **pass**.
 - `docs/features/onboarding/technical-implementation.md`: “setup” → **fail**.
   Say **onboarding**.

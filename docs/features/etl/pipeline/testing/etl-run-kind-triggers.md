@@ -1,6 +1,6 @@
 # ETL run kind triggers — integration test
 
-- **Assert**: onboarding `StartRun` inserts `etl.runs` only for ETL run kinds
+- **Verify**: onboarding `StartRun` inserts `etl.runs` only for ETL run kinds
   whose **Starts when** tuple is met; does not pre-insert Facebook / Instagram /
   crawl with no URL. Maps starts from `place_id` **or** Places Find
   (`display_name` if set, else `legal_name`, plus locality, one confident hit).

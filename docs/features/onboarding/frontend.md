@@ -159,7 +159,7 @@ thread on land (`GET …/thread` with the onboarding session token). While 06 is
 still writing, a six-dot spinner sits under the thread. No Content,
 no website styles rail, no click-to-edit, no design controls. Signed-out: view
 and switch website pages; hydrate the thread; prompt box visible; send and
-Voice need **Sign up with Google**.
+Voice need **Sign in with Google**.
 
 **Share** (optional) runs [08](pipeline/08-preview-website-address.md): preview
 website address with website-activation strip. Pay on the website preview **or**

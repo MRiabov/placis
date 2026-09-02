@@ -426,6 +426,9 @@ func TestEnabledTrees(t *testing.T) {
 	if !shouldSkipPath("packages/website-components/src/registry/hero/type_first/docs.md", false) {
 		t.Fatal("packages markdown should be skipped")
 	}
+	if !shouldSkipPath("cmd/ci/check-pipeline-tables/testdata/ok/sample/testing.md", false) {
+		t.Fatal("checker testdata should be skipped")
+	}
 	got := filterEnabledFiles([]string{
 		"packages/website-components/src/x.md",
 		"apps/contractor-website/README.md",
@@ -467,6 +470,12 @@ func TestSetupAllowedInTestingDocs(t *testing.T) {
 	}
 	if hits := writeScan("testdata/docs/features/onboarding/testing.md", "Setup the fixtures.\n"); len(hits) != 0 {
 		t.Fatalf("feature testing.md setup should pass, got %v", hits)
+	}
+	if hits := writeScan("testdata/docs/docs-conventions.md", "#### Setup\n"); len(hits) != 0 {
+		t.Fatalf("docs-conventions Setup heading should pass, got %v", hits)
+	}
+	if hits := writeScan("testdata/cmd/ci/check-pipeline-tables/testing_headings.go", `"Setup": true,`+"\n"); len(hits) != 0 {
+		t.Fatalf("pipeline-tables Setup heading should pass, got %v", hits)
 	}
 	if hits := writeScan("testdata/docs/features/onboarding/technical-implementation.md", "after setup\n"); len(hits) == 0 {
 		t.Fatal("non-testing setup should fail")

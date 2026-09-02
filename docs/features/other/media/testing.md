@@ -2,7 +2,7 @@
 
 Playwright e2e drives `frontend-2` against the real Go API and real
 Postgres. Integration is backend-only (`humatest`, real Postgres). LLM
-and R2 are faked. Clerk is real. Persist grain names tables from
+and MinIO are faked. Clerk is real. Persist names tables from
 [persistence.md](persistence.md).
 
 ## E2E
@@ -15,7 +15,7 @@ Activated tenant. Unpublished website page with an image website slot
 (from website 02). Zero `media_assets`. Playwright. LLM faked. R2 PUT /
 GET faked. Worker not required (no publication).
 
-#### Invoke
+#### Exercise
 
 1. Open `/cms/media`. Empty thumbs.
 2. File picker / drop. `MediaAssetCreate` → `MediaAssetUploadRead`.
@@ -35,7 +35,7 @@ GET faked. Worker not required (no publication).
 7. Prompted cleanup (`CleanupMediaAsset`). Sweep **Reject**
    (`RejectMediaAsset`). Accept is not HTTP.
 
-#### Assert
+#### Verify
 
 - After start-upload, before confirm: list omits the row; local file
   URL on the tile; `GetMediaAsset` still returns `uploading`.
@@ -82,13 +82,13 @@ Two activated tenants A and B. A has completed start-upload +
 confirm-upload (A’s `media_assets` + original `files` + canonical
 WebP `files` + image-thumbnail `files`). B has zero `media_assets`.
 
-#### Invoke
+#### Exercise
 
 As B: `GET /v1/media-assets`, `GET /v1/media-assets/{A’s id}`,
 `POST …/{A’s id}/confirm-upload`, PUT A’s `upload_url`,
 `PATCH` / `image-edits` / `reject` / `start-replace-upload` on A’s id.
 
-#### Assert
+#### Verify
 
 404 or forbidden. Never A’s `MediaAssetRead`. B’s list empty. A’s
 `media_assets` and `files` rows unchanged. A’s
@@ -110,12 +110,12 @@ R2. Not Postgres.
 `tenants` (`status=active`). Zero `media_assets`. Schema `jobs`: no
 `describe_image`.
 
-#### Invoke
+#### Exercise
 
 `POST /v1/media-assets/start-upload` (`StartMediaAssetUpload`).
 Request `MediaAssetCreate`.
 
-#### Assert
+#### Verify
 
 - `media_assets`: one row, `asset_type=image`, `source=upload`,
   `supplied_by=owner`, `status=active`, `review_status=approved`,
@@ -129,8 +129,6 @@ Request `MediaAssetCreate`.
 - `GET /v1/media-assets/{id}` returns it (`uploading`).
 - No `describe_image` job. `file_id` still null. Zero
   `media_asset_classifications`.
-
-#### Cases
 
 `POST /v1/media-assets/{id}/start-replace-upload` while the parent is
 still `uploading` inserts a second `media_assets` row
@@ -155,12 +153,12 @@ Nothing (no LLM). Object-storage PUT is the browser, not this invoke.
 `file_id` null) and `files`. Test PUTs the photo to `upload_url`
 (faked object storage).
 
-#### Invoke
+#### Exercise
 
 `POST /v1/media-assets/{id}/confirm-upload`
 (`ConfirmMediaAssetUpload`). Empty body.
 
-#### Assert
+#### Verify
 
 - Same `media_assets` id: `original_file_id` set, `file_id` set,
   `thumbnail_file_id` set, `processing_status=processing`,
@@ -173,9 +171,6 @@ Nothing (no LLM). Object-storage PUT is the browser, not this invoke.
 - Schema `jobs`: one `describe_image` (`tenant_id`, `media_asset_id`).
 - HTTP returns before `DescribeImage` finishes. Still zero
   `media_asset_classifications`.
-
-#### Cases
-
 - Second confirm while job pending/running: `200` same row; still one
   `describe_image`.
 - Two confirms on two ids, same tenant: two `describe_image` jobs
@@ -204,11 +199,11 @@ Object-storage GET/scan. Not the LLM (that is `DescribeImage`).
 `describe_image` in schema `jobs`. No `ai.threads` / `ai_generations`
 for `media_cleanup` yet.
 
-#### Invoke
+#### Exercise
 
 River worker for `describe_image` (`DescribeImage`).
 
-#### Assert
+#### Verify
 
 - Original: one `media_asset_classifications` row (`media_caption`
   set, `photo_kind` `logo` or `photo`, every `*_severity` present
@@ -227,9 +222,6 @@ River worker for `describe_image` (`DescribeImage`).
   set. Original still `ready` + `approved`. Child has a
   `describe_image` job (new classification after that job).
 - Latest `photo_kind=logo`: still one `media_assets` row.
-
-#### Cases
-
 - Two `processing` rows, same tenant: both jobs run; unique
   `(tenant_id, media_asset_id)`; not serialized on `tenant_id`.
 - ETL path: transform inserts `media_assets` + `files`, **calls**
@@ -259,13 +251,13 @@ A `ready` + `approved` owner row with one `media_asset_classifications`
 row. Unreferenced (no website slot / ad placement). A second row
 referenced by a website slot.
 
-#### Invoke
+#### Exercise
 
 `PATCH /v1/media-assets/{id}` (`UpdateMediaAsset`) with crop / focal
 only. Second invoke: same body on the referenced row. Third invoke:
 body includes `media_caption`.
 
-#### Assert
+#### Verify
 
 - Unreferenced: mutate crop/focal in place; one `media_assets` row;
   classification row count unchanged.
@@ -286,12 +278,12 @@ Nothing (no LLM).
 Activated tenant. Zero `media_assets`. Schema `jobs`: no
 `describe_image`.
 
-#### Invoke
+#### Exercise
 
 `CreateGeneratedMediaAsset` (website 03 / assistant `generate_image`).
 Tool `media_caption` set.
 
-#### Assert
+#### Verify
 
 - `media_assets`: `asset_type=generated_image`, `source=generated`,
   `supplied_by=ai`, `created_by=ai`, `pending_review`,
@@ -313,12 +305,12 @@ Image generate. Not the captioning LLM.
 A `ready` + `approved` owner row with `file_id` and `thumbnail_file_id`
 set.
 
-#### Invoke
+#### Exercise
 
 `POST /v1/media-assets/{id}/start-replace-upload` then PUT then
 `confirm-upload` on the **child**.
 
-#### Assert
+#### Verify
 
 Child `parent_media_asset_id` = parent, `review_status=approved`,
 `uploading` then `processing`. New `file_id` after confirm. Parent
@@ -342,17 +334,15 @@ R2 PUT. Not the LLM until confirm inserts `describe_image`.
 A `ready` + `approved` row. Remaining usage credit 0
 (`AssertUsageCredit` would 402).
 
-#### Invoke
+#### Exercise
 
 `POST /v1/media-assets/{id}/image-edits` (`CleanupMediaAsset`) with a
 non-empty prompt.
 
-#### Assert
+#### Verify
 
 `402` `usage_credit_exhausted`. No child `media_assets`. No
 `ai_use_ledger_entries` spend. Parent `file_id` unchanged.
-
-#### Cases
 
 Usage credit remaining: child `pending_review`, new `file_id`,
 `cleaned_up_with_ai=true`, `WriteCanonicalWebP` then
@@ -372,11 +362,11 @@ LLM on the success case only.
 Cleanup child `pending_review` with `parent_media_asset_id` set. A
 website slot (or `ad_image_placements`) points at the child.
 
-#### Invoke
+#### Exercise
 
 `POST /v1/media-assets/{child}/reject` (`RejectMediaAsset`).
 
-#### Assert
+#### Verify
 
 Child `status=archived`, `review_status=rejected`. `files` rows kept.
 Website slots and ad placements retarget to parent. Response
@@ -402,12 +392,12 @@ null `file_id` inside the window. One `ready` row. One upload-failed
 (`failed` + null `file_id`) older than the window. One
 captioning-failed (`failed` + `file_id` set) older than the window.
 
-#### Invoke
+#### Exercise
 
 River job kind `sweep_stale_media_uploads` (in-process `cmd/api`
 workers, not crontab).
 
-#### Assert
+#### Verify
 
 Stale `uploading` row deleted. Stale upload-failed row deleted. Fresh
 `uploading` row kept. `ready` row kept. Captioning-failed row kept.

@@ -53,15 +53,31 @@ func parseHeadingFile(root, path string) (headingFile, error) {
 	if err != nil {
 		return headingFile{}, err
 	}
+	text := string(src)
 	return headingFile{
 		path:  filepath.ToSlash(path),
 		rel:   relToRoot(root, path),
-		heads: headingTitles(string(src)),
-		h3:    h3Titles(string(src)),
+		heads: headingTitles(text),
+		h3:    h3Titles(text),
+		atx:   atxHeads(text),
 	}, nil
 }
 
-var h3Re = regexp.MustCompile(`(?m)^### (.+)$`)
+var (
+	h3Re  = regexp.MustCompile(`(?m)^### (.+)$`)
+	atxRe = regexp.MustCompile(`(?m)^(#{2,4}) (.+)$`)
+)
+
+func atxHeads(src string) []atxHead {
+	var out []atxHead
+	for _, m := range atxRe.FindAllStringSubmatch(src, -1) {
+		out = append(out, atxHead{
+			level: len(m[1]),
+			title: strings.TrimSpace(m[2]),
+		})
+	}
+	return out
+}
 
 func h3Titles(src string) []string {
 	var out []string

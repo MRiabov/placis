@@ -79,7 +79,7 @@ the asset. Current = latest row for that `media_asset_id` by
 - **Crop / focal** (`UpdateMediaAsset`) — child keeps the parent’s
   `original_file_id`, `file_id`, and `thumbnail_file_id`. Stay
   `approved` if the parent is. Copy `cleaned_up_with_ai`. If this row
-  is unreferenced, mutate crop/focal in place (the widget click-off
+  is unreferenced, mutate crop/focal in place (the crop overlay click-off
   must not stack unused copies). If referenced (website-section image,
   `logo_media_asset_id`, `ad_image_placements`), insert the child;
   website slots and ad placements keep the parent until retargeted.

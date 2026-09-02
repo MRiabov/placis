@@ -178,8 +178,23 @@ func isTestingDoc(path string) bool {
 	return base == "testing.md" || strings.Contains(slash, "/testing/")
 }
 
+func setupAllowed(path string) bool {
+	if isTestingDoc(path) {
+		return true
+	}
+	slash := filepath.ToSlash(path)
+	if strings.Contains(slash, "/check-pipeline-tables/") {
+		return true
+	}
+	base := filepath.Base(slash)
+	if base == "docs-conventions.md" {
+		return true
+	}
+	return strings.HasSuffix(slash, "/general-architecture/ci-cd.md")
+}
+
 func appliesTo(tok compiledToken, path string) bool {
-	if strings.EqualFold(tok.phrase, "setup") && isTestingDoc(path) {
+	if strings.EqualFold(tok.phrase, "setup") && setupAllowed(path) {
 		return false
 	}
 	switch tok.class {
@@ -252,6 +267,8 @@ func shouldSkipPath(path string, frontend bool) bool {
 		return true
 	case strings.Contains(slash, "cmd/ci/check-dont-say/") || strings.Contains(slash, "ci/check-dont-say/"):
 		return true
+	case strings.Contains(slash, "/testdata/") || strings.HasPrefix(slash, "testdata/"):
+		return true
 	case strings.HasSuffix(slash, "generated/api-types.ts"):
 		return true
 	default:
@@ -301,6 +318,8 @@ var extraAllowed = []string{
 	"user access token",
 	"facebook user",
 	"instagram user",
+	"clerk user",
+	"clerk users",
 	"playwright page",
 	"actions/setup-go",
 	"preview.placis.com",

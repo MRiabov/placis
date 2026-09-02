@@ -4,11 +4,11 @@
   `/onboarding/preview-and-edit/` (home website page copy done or wait
   cap). 06 may still be running.
   Clerk testing-token contractor (or unsigned hydrate only).
-- **Invoke**: `GET /v1/onboarding/website/assistant/thread` (onboarding
+- **Exercise**: `GET /v1/onboarding/website/assistant/thread` (onboarding
   session token). After 06 idle, signed-in Send (or Voice) that PATCHes
   `PATCH /v1/onboarding/website/editor/pages/{page_id}`. Also Send while 06 is
   `running`. Also a sixth owner prompt.
-- **Assert**: hydrate returns 06 `tool_summary` without Clerk. Send while 06
+- **Verify**: hydrate returns 06 `tool_summary` without Clerk. Send while 06
   `running` is **409** `in_flight_run`. After idle, one owner prompt applies
   (unpublished PATCH; Follow). Sixth prompt is **409** `unpaid_prompt_cap`, not
   402. Onboarding session stays `preview_and_edit`. No `website_publications`

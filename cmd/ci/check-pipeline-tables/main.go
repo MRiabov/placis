@@ -21,6 +21,7 @@ func run(args []string) error {
 	root := flags.String("root", "docs/features", "features docs root")
 	jobs := flags.String("jobs", "docs/general-architecture/jobs.md", "path to jobs.md")
 	docs := flags.String("docs", "docs", "docs root for known River job kind names")
+	internal := flags.String("internal", "internal", "Go internal packages for TestPipelineHappyPath")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
@@ -38,6 +39,11 @@ func run(args []string) error {
 	errs = append(errs, checkTestingHeadings(rep)...)
 	errs = append(errs, checkPipelinePairing(rep)...)
 	errs = append(errs, checkCoverage(rep)...)
+	funcs, err := collectPipelineHappyPathFuncs(*internal)
+	if err != nil {
+		return err
+	}
+	errs = append(errs, checkPipelineHappyPath(rep, funcs, pipelineHappyPathLeftover)...)
 	if fileExists(*jobs) {
 		cat, err := parseJobsCatalog(*jobs)
 		if err != nil {

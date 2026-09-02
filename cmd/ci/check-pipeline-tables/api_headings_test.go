@@ -76,12 +76,20 @@ func TestAPIHeadingsStaleLeftoverFails(t *testing.T) {
 	if errs := checkOneAPI(f); len(errs) != 0 {
 		t.Fatalf("closed onboarding: %v", errs)
 	}
+	f = headingFile{
+		path:  "docs/features/other/auth/api.md",
+		rel:   "other/auth/api.md",
+		heads: []string{"DTOs", "Routes", "Do not create"},
+	}
+	if errs := checkOneAPI(f); len(errs) != 0 {
+		t.Fatalf("closed auth: %v", errs)
+	}
 }
 
 func TestAPIHeadingsMissingRoutes(t *testing.T) {
 	f := headingFile{
-		path:  "docs/features/widget/api.md",
-		rel:   "widget/api.md",
+		path:  "docs/features/sample/api.md",
+		rel:   "sample/api.md",
 		heads: []string{"Do not create"},
 	}
 	errs := checkOneAPI(f)

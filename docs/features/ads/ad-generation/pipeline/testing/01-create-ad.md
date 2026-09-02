@@ -8,9 +8,9 @@ Does not enqueue generate. Next step is 02, which SELECTs the stub
   `ad_lead_forms` / `ad_copy_variants` / `ad_image_placements` /
   `ad_reviews`. No `ai.threads` / `ai_generations` for ads. Schema
   `jobs`: no `ads_generate`.
-- **Invoke**: `POST /v1/ads` (`CreateAd`). Request `AdCreate` with
+- **Exercise**: `POST /v1/ads` (`CreateAd`). Request `AdCreate` with
   `format=feed_square` and lead-form include flags.
-- **Assert** (Postgres after 01, **before** 02 runs):
+- **Verify** (Postgres after 01, **before** 02 runs):
   - `ads`: one row, `status=draft`, `ad_goal`, ideal customer profile
     columns, `origin`, `platform_status=not_connected`, `platform_refs`
     empty.

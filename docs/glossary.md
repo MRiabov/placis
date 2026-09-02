@@ -49,11 +49,14 @@ is acceptable: page, section, slot; copy, variant; session. Do not use the short
 word in a mixed or product-facing sentence where it could mean something else.
 
 Do not say **user**, **frozen**, bare **session**, **provider**,
-**instantiate**, **population**, **mint**, **fold**, **bytes**, **bag**, or
-**blob**. Say contractor, owner, or website visitor; name Google Maps, the LLM,
-or Stripe; say copy the website template’s pages onto the unpublished website;
-say create or use for ephemeral tokens and ids; say live business profile or
-unpublished website; say photo, image, file, or binary; name the typed payload.
+**instantiate**, **population**, **mint**, **fold**, **bytes**, **bag**,
+**blob**, **grain**, or **widget**. Say contractor, owner, or website
+visitor; name Google Maps, the LLM, or Stripe; say copy the website
+template’s pages onto the unpublished website; say create or use for
+ephemeral tokens and ids; say live business profile or unpublished
+website; say photo, image, file, or binary; name the typed payload; name
+the unit (what Persist / Must not names, the Go package, or the grouping);
+name the control (crop overlay, Details field, or island).
 
 ---
 
@@ -1201,8 +1204,8 @@ code snake_cases the Domain term.
 
 Placis’s tenancy record for one contractor. Created at business lookup as an
 **unactivated** tenant; website activation makes it an **activated** tenant. One
-**activated** tenant maps to one Clerk organization. The tenant name is the
-business. Never in PRDs.
+tenant maps to one Clerk organization (1-1), including while unactivated after
+org attach. The tenant name is the business. Never in PRDs.
 
 Domain: (none — never in PRDs). Distinct from: Business profile, Clerk
 organization.
@@ -1230,9 +1233,9 @@ continuous workflow; Cloudflare Workflows.
 
 ### Clerk organization
 
-The Clerk organization, 1-1 with an **activated** tenant, named after the person
-(the account owner), not the business. Never say bare “organization”.
-Unactivated tenants have no Clerk organization yet.
+The Clerk organization, 1-1 with the data tenant (including while
+unactivated after attach). Named and badged as the **business**, not the
+owner. Never say bare “organization”.
 
 Domain: (none — never in PRDs as a synonym for the contractor).
 
@@ -1851,6 +1854,8 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | wait-end clock | wait-end, wait teaser, or wait cap |
 | bag / bags | typed struct or named fields (not a freeform object) |
 | blob / blobs | name the payload (HTML, instructions, jsonb column, file) |
+| grain | name the unit (what Persist / Must not names, Go package, grouping) |
+| widget / widgets | name the control (crop overlay, Details field, island) |
 
 ## Code naming rules
 

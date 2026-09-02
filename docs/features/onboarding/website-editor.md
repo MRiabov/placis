@@ -69,11 +69,13 @@ Prefix `/v1/onboarding/website/assistant`. Same DTO names as
 
 Auth: **GET `…/thread`** allows the onboarding session token or Clerk +
 unactivated tenant (app origin). Send, text `…/thread/ws`, and Voice are
-**Clerk JWT** only; tenant from the attached Clerk org; `status=unactivated`;
-app origin. Onboarding session token must **not** send, PATCH, or call Voice.
-`status=active` → **403** (use `/v1/assistant/…`). The preview website address
-never calls this tree. Activated owners **403**. Unactivated **403**
-`tenant_unactivated` on `/v1/assistant/…`.
+**Clerk JWT** only; tenant from `onboarding_sessions.clerk_user_id` bind
+until the JWT has an org claim, then from the attached Clerk org;
+`status=unactivated`; app origin. Onboarding session token must **not**
+send, PATCH, or call Voice. `status=active` → **403** (use
+`/v1/assistant/…`). The preview website address never calls this tree.
+Activated owners **403**. Unactivated **403** `tenant_unactivated` on
+`/v1/assistant/…`.
 
 Over five unpaid prompts: **409** `unpaid_prompt_cap`, pay CTA, **not** 402.
 Empty / cancelled / `in_flight_run` does not count. Cap is per unpublished
@@ -128,12 +130,16 @@ Tool results → canvas projection →
 does not upsert unpublished rows on that turn. No click-to-edit UI. No Content /
 website styles rail / design controls / owner Plan switch.
 
-Signed-in unactivated PATCH on the **app** is allowed (this apply path). Do not
-403 “human vs Assistant” on that route. Signed-out PATCH **403**. Preview
-website address PATCH **403**. Onboarding session token must not PATCH.
+Signed-in unactivated PATCH on the **app** is allowed (this apply path).
+Tenant from `onboarding_sessions.clerk_user_id` bind until the JWT has
+an org claim, then from the attached Clerk org. First Clerk request
+**calls** `BindClerkUserToOnboardingSession`. Do not 403 “human vs
+Assistant” on that route. Signed-out PATCH **403**. Preview website
+address PATCH **403**. Onboarding session token must not PATCH.
 
-Unpublished **GET**: onboarding session (mode 2) and/or Clerk + unactivated
-tenant, app origin.
+Unpublished **GET**: onboarding session (mode 2) and/or Clerk +
+unactivated tenant, app origin. Clerk unpaid lookup is the same bind /
+org-claim order as PATCH.
 
 ## Five prompts
 
@@ -179,7 +185,7 @@ Voice create still loads `internal/knowledge/voice_pronunciation.yaml`.
 **`/onboarding/preview-and-edit/`** — wait-teaser landing. Signed-out: view the
 canvas from the onboarding session token; switch website pages (custom top-left
 control); hydrate the Assistant thread (`GET …/thread`); compact text composer
-visible; send and Voice need **Sign up with Google**. Signed-in unpaid: live
+visible; send and Voice need **Sign in with Google**. Signed-in unpaid: live
 canvas, nested website page list + canvas top-menu/footer website page clicks
 stay on this route, Assistant thread + compact text composer (**Voice** switch),
 sticky website-activation strip, **Share**. After **09**, redirect to
@@ -193,9 +199,9 @@ sticky website-activation strip.
 Assistant starts as text (compact docked composer, max-width 32rem on a wide
 pane, in front of the website-activation strip’s lift shadow) with the CMS
 Assistant thread above it (expand / reduce; no Plan / Ask first / Clear
-context). **Voice** is a switch in that composer. Send and Voice need **Sign up
+context). **Voice** is a switch in that composer. Send and Voice need **Sign in
 with Google**. No owner Plan switch. Instant apply. 06 `tool_summary` fills the
-thread on land. After Sign up, Send and Voice on the look demo snap the canvas
+thread on land. After Sign in, Send and Voice on the look demo snap the canvas
 to the website page being edited (Follow) and apply copy. Reuse CMS Assistant
 tokens.
 
