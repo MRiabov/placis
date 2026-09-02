@@ -184,7 +184,9 @@ Onboarding 06 does not call this tool.
 
 ### `generate_image`
 
-Last resort when nothing in GET `media_assets[]` fits. Writes `media_library`
+Last resort when nothing in GET `media_assets[]` fits (work-photo
+slots). 03 must not call this for a logo slot or a portrait / About /
+leadership slot (leave empty). Writes `media_library`
 immediately (`supplied_by=ai`, pending review). Canvas attach still follows Ask
 first vs instant apply.
 

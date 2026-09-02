@@ -20,8 +20,10 @@
   until a URL/handle detail exists (Maps, crawl, Parallel, or 04a paste), then
   `insufficient_data_for_lookup` if nothing left can produce that detail;
   contractor paste of `existing_site_url` starts crawl on the same enqueue; each
-  job clears in-progress on fill status; photo classification tags found photos
-  (`photo_kind`); profile increments go through transform / build-profile
+  job clears in-progress on fill status; `DescribeImage` inserts
+  `media_asset_classifications` (`photo_kind` `logo` / `photo`) on
+  found photos; profile increments go
+  through transform / build-profile
   (conflict does not update the live business profile). Enqueues 1–5 insert
   `etl.runs` for started ETL run kinds. The 6th enqueue in 30 minutes does
   **not** call `StartRun`, does **not** call Maps / Parallel / Facebook / crawl,

@@ -11,10 +11,11 @@ is a later caller.
   selection. `business_profiles`. At least two named services (roof
   repairs and gutter cleaning). Record website page ids, website slot
   ids, and tokenized `website_slots.value` before invoke. Two cases for
-  photo selection: (a) unused non-founder/non-logo photos whose **media
-  caption** matches those named services; (b) no matching media caption
-  in that pool (founder / logo photos only, or a media caption that does
-  not match).
+  photo selection: (a) unused `photo_kind=photo` (not `logo`) whose
+  **media caption** matches those named services; (b) no matching media
+  caption in that pool (`logo` only, or a media caption that does not
+  match). A portrait website slot with no matching person-portrait
+  **media caption** stays empty (no `generate_image`).
 - **Invoke**: run that River job. Fake the website-editor-tool LLM to a
   small `update_slot` / `update_seo` batch (no `create_page`, no
   `update_reviews`). In (a) also `update_slot` + `media_asset_id` attach
@@ -41,19 +42,20 @@ is a later caller.
     (no `create_page`). `website.menus` trees unchanged. Look sections
     (`page_id` null) unchanged.
   - `website_slot_reviews`: still zero.
-  - `ai.threads`: `thread_kind=website_copy_generation` for that
-    tenant; `ai_generations` on it with `prompt_id=website_copy_generation`,
-    `input`, `internal_reasoning`,
-    `output`, `tool_calls` all present (`status=succeeded` for the
-    batch). `tool_calls` includes `update_slot` / `update_seo` and does
-    **not** include `create_page` or `update_reviews`. (a) roof-repairs
-    vs gutter-cleaning image website slots got the matching unused
-    non-founder/non-logo photos (not each other’s, not founder/logo);
-    no reuse. (b) `tool_calls` includes `generate_image`; a new media
-    library item `supplied_by=ai` pending review is attached — not a
-    leftover unmatched photo. That write **persists into** `media_assets`
-    (`supplied_by=ai`, pending review). Logo image website slots stay
-    `{{logo_url}}` (no `generate_image`).
+  - `ai.threads`: `thread_kind=website_copy_generation` for that tenant;
+    `ai_generations` on it with `prompt_id=website_copy_generation`, `input`,
+    `internal_reasoning`, `output`, `tool_calls` all present (`status=succeeded`
+    for the batch). `tool_calls` includes `update_slot` / `update_seo` and does
+    **not** include `create_page` or `update_reviews`. (a) roof-repairs vs
+    gutter-cleaning image website slots got the matching unused
+    `photo_kind=photo` items (not each other’s, not `logo`); no reuse. A
+    portrait slot with no matching **media caption** stayed empty (no
+    `generate_image`).
+    (b) `tool_calls` includes `generate_image`; a new media library item
+    `supplied_by=ai` pending review is attached — not a leftover unmatched
+    photo. That write **persists into** `media_assets` (`supplied_by=ai`,
+    pending review). Logo image website slots stay `{{logo_url}}` (no
+    `generate_image`).
   - While unactivated: `ai.threads` `thread_kind=cms_assistant`
     `status=current`; `assistant.runs` one `running` on that thread
     (`unique` running); `assistant.thread_items` `tool_summary` for

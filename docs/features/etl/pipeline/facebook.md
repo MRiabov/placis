@@ -47,10 +47,10 @@ post. Upsert `facebook_profiles` on this contractor’s Facebook page id unless
 `algorithm` matches **and** `schema_revision` matches, or is `human`). Fill
 empty `facebook_profile_url` (cite the profile `source_id` on that increment).
 Attach new photos into the media library (`imported_media_sources` → post
-`source_id`); **calls** `WriteImageThumbnail`; then [photo classification](photo-classification.md); then
-**inserts** `describe_image` per new row with empty `media_caption` (do not
-wait); then [projects.md](projects.md) for posts that are a past named job (depicting photo
-required). Write `algorithm` and `schema_revision` on rows this transform set.
+`source_id`); **calls** `WriteImageThumbnail`; then **inserts** `describe_image`
+per new row with no classification yet (do not wait); then [projects.md](projects.md) for
+posts that are a past named job (depicting photo required). Write `algorithm`
+and `schema_revision` on rows this transform set.
 
 ## Persist
 
@@ -58,7 +58,7 @@ required). Write `algorithm` and `schema_revision` on rows this transform set.
 `business_profile_edits` + `business_profile_edit_sources` when a live profile
 URL / photo increment is set; `imported_media_sources`; **calls**
 `WriteImageThumbnail`; **inserts** `describe_image` per new imported row with
-empty `media_caption`; Projects when a post
+no classification yet; Projects when a post
 is usable as a Project. `etl.runs.status=succeeded`.
 
 ## Fail

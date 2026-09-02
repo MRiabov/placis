@@ -69,9 +69,9 @@ Pause remaining expensive chunks when only `human` scalars remain
   rows transform writes.
 - Integration: bootstrap `StartRun` then a second scheduled `StartRun`; new
   reviews / posts / photos land; owner-confirmed marketing phone does not change
-  (`algorithm=human`); photo kind is not rewritten for the same content hash
-  when `force` is false and `schema_revision` matches; a bumped
-  `schema_revision` extracts / classifies without `force`; `force=true` does not
-  overwrite `human`.
+  (`algorithm=human`); a bumped `schema_revision` extracts without
+  `force`; `force=true` does not overwrite `human`. `DescribeImage`
+  inserts `media_asset_classifications` (`photo_kind` `logo` /
+  `photo`) on imported rows.
 - Onboarding E2E still proves 02 fills the checklist as chunks arrive, not only
   when the ETL run kind succeeded ([onboarding testing](../onboarding/testing.md)).

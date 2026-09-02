@@ -66,7 +66,7 @@ calls `StartRun`.
   (`PARALLEL_API_KEY`) from [website crawl](website-crawl.md). Do not call
   Parallel Search HTTP from crawl.
 - **`algorithm` and `schema_revision` on every transform schema** — each live
-  profile increment, Facebook / Instagram profile or post, `photo_kind`, and
+  profile increment, Facebook / Instagram profile or post, and
   `etl.llm_source_to_project_classifications` store both. Skip when
   `algorithm` matches, `schema_revision` matches, and `force` is false. A
   **new algorithm** does not auto-rerun (cost) until `force=true`. A **bumped
@@ -80,8 +80,8 @@ calls `StartRun`.
   Details wrote this value. ETL transform must not overwrite it, including when
   `force=true` or `schema_revision` bumped (empty new fields may still fill). A
   later override is a **manual transform**, not the schedule.
-- **Cheap multimodal default** — usable-as-a-Project classify, photo
-  classification, and parse of crawl markdown into trade/services/etc. use
+- **Cheap multimodal default** — usable-as-a-Project classify and parse of
+  crawl markdown into trade/services/etc. use
   **`glm-5.3-flash`** (dated gateway id; do not ride `*-latest`). Same model
   when input is text-only. Image on `input` when a depicting photo exists.
   Record reasoning, owner-visible output, and tool calls. Crawl parse uses an
@@ -116,5 +116,3 @@ calls `StartRun`.
 - [Trade registry](trade-registry.md) — accreditations (02 only)
 - [ETL run kind triggers](etl-run-kind-triggers.md) — starts when, fire / skip / pause
 - [Web search](web-search.md) — Parallel **Search** (02 only; one ETL run kind)
-- [Photo classification](photo-classification.md) — photo kinds on media
-  library items (transform after attach; not an ETL run kind)

@@ -20,22 +20,22 @@ and search share Vercel; there is no OpenRouter hop.
   generate / Review **inline AI assistance** in `ads`; media library cleanup in
   the media package; project title/description **inline AI assistance** in
   projects; onboarding 06 in onboarding; reviews ranking for display in
-  `profile`; ETL usable-as-a-Project classify / photo classification / crawl
-  parse in the ETL package. ETL extract/transform generation uses
-  **`glm-5.3-flash`** (dated gateway id; do not ride `*-latest`) via
-  `LLMProvider` — same cheap multimodal model when the input is text-only. Do
-  not put product prompt prose in Go strings, and do not keep one global
-  `internal/ai/prompts.yaml`. `ai` is `LLMProvider` + traces; it records
-  `prompt_id` / `prompt_version` from that file (id + format revision).
-  Assistant **product knowledge** is a separate **knowledge base registry**
-  (YAML + markdown `go:embed` in the assistant packages), not `prompts.yaml` and
-  not RAG. CMS and onboarding both list the shared product glossary
-  (`internal/knowledge/product_glossary.md`: Domain + Enums + Don't say). Voice
-  pronunciation / keyterms are `internal/knowledge/voice_pronunciation.yaml`,
-  not `prompts.yaml`. Interpolate with `{{var}}`. Nested fields (business
-  profile has many) use a dotted path: `{{aaa.bbb}}`. Same spelling as a
-  [website placeholder](../features/website/variables.md) when the value is a profile detail; prompts.yaml is not
-  unpublished website copy. Go fills `{{var}}`; it does not own the prompt text.
+  `profile`; ETL usable-as-a-Project classify / crawl parse in the ETL package.
+  ETL extract/transform generation uses **`glm-5.3-flash`** (dated gateway id;
+  do not ride `*-latest`) via `LLMProvider` — same cheap multimodal model when
+  the input is text-only. Do not put product prompt prose in Go strings, and do
+  not keep one global `internal/ai/prompts.yaml`. `ai` is `LLMProvider` +
+  traces; it records `prompt_id` / `prompt_version` from that file (id + format
+  revision). Assistant **product knowledge** is a separate
+  **knowledge base registry** (YAML + markdown `go:embed` in the assistant
+  packages), not `prompts.yaml` and not RAG. CMS and onboarding both list the
+  shared product glossary (`internal/knowledge/product_glossary.md`: Domain +
+  Enums + Don't say). Voice pronunciation / keyterms are
+  `internal/knowledge/voice_pronunciation.yaml`, not `prompts.yaml`. Interpolate
+  with `{{var}}`. Nested fields (business profile has many) use a dotted path:
+  `{{aaa.bbb}}`. Same spelling as a [website placeholder](../features/website/variables.md) when the value is a
+  profile detail; prompts.yaml is not unpublished website copy. Go fills
+  `{{var}}`; it does not own the prompt text.
 - Output is parsed against a schema before it enters the app. A mismatch is
   **repaired under a bounded contract**: repair only the smallest subtree that
   fails (never regenerate the whole answer), discard or reject unknown fields
@@ -81,7 +81,6 @@ thread_kind text NOT NULL CHECK (thread_kind IN (
   'website_copy_generation',
   'reviews_ranking_for_display',
   'etl_project_classify',
-  'etl_photo_classify',
   'etl_crawl_parse',
   'media_cleanup',
   'project_inline_assistance',
@@ -174,7 +173,10 @@ package `internal/ai/`. Image **files** stay in `files` / `media_library`.
 
 `input`, `internal_reasoning`, `output`, `tool_calls`, and `applied_changes`
 stay jsonb so a call can be reconstructed. Usage and cost are columns. Tool and
-skill format revisions are rows, not a map dump.
+skill format revisions are rows, not a map dump. Product classifications and
+other predictions are **not** these tables — they live in the feature
+Postgres schema
+([persistence conventions](persistence.md#classifications-and-predictions)).
 
 ## AI tools
 
@@ -213,3 +215,5 @@ mutating tool registries.
 - A complex pipeline (onboarding, website, ads) is described step by step in
   `features/<feature>/pipeline/*.md`; the AI steps live inside those steps, so
   no `ai-layer.md`.
+- Media library captioning is River job kind `describe_image` in
+  [jobs.md](jobs.md). No `pipeline/`, no `ai-layer.md`.

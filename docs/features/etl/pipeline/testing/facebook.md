@@ -9,7 +9,7 @@
   responses arrive (do not wait for the last post); duplicate post id left
   alone; `algorithm=human` is not overwritten; extract does not write
   `business_profile_*`; transform does not call the Facebook fake. Posts that
-  are a past named job insert Projects after photo classification (`etl.sources`
+  are a past named job insert Projects after photo attach (`etl.sources`
   - `project_sources`; skip on the verdict table). No Facebook page-review
   extract into `business_profile_reviews`.
 - **Fake**: Facebook lookup. Never Graph API, Parallel’s API, Exa, Perplexity,

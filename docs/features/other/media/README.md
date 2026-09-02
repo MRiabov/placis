@@ -6,15 +6,15 @@ an image is selected on the canvas (same rows). Crop, focal point, and cleanup
 stay on `/cms/media`. Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
 
-- [persistence.md](persistence.md) — `media_assets`
+- [persistence.md](persistence.md) — `media_assets`,
+  `media_asset_classifications`
 - [api.md](api.md) — HTTP (`/v1/media-assets`)
 - [architecture.md](architecture.md) — content model; `StartMediaAssetUpload`,
   `ConfirmMediaAssetUpload`, `DescribeImage`
-- [pipeline/](pipeline/README.md) — start-upload, confirm-upload, describe image
 - [technical-implementation.md](technical-implementation.md) — named services,
   image thumbnail encode
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
-- [testing.md](testing.md) — the media library E2E test
+- [testing.md](testing.md) — E2E and integration tests
 
 ## What it is
 
@@ -69,12 +69,12 @@ Photos have a processing status on the media item (`processing_status` —
    wait-to-use overlay in Ads: a photo the owner just added to an ad does not
    need a media caption to be used there. If clutter / busy background / poor
    lighting / color cast is not null, a tailored default light cleanup runs on
-   first upload (high first; skip `photo_kind=logo`). That is **two rows**: the
-   original stays `ready` + `approved`; the child is `pending_review`.
-   `/cms/media` lists both and selects the child. A star on the tile when
-   `parent_media_asset_id` is set **and** `file_id` ≠ parent (crop-only shares
-   the file — no star). Blur, overlay text, subject too small, and low
-   resolution are suggestions only — no auto-upres.
+   first upload when latest `photo_kind=photo` (high first; skip `logo`). That
+   is **two rows**: the original stays `ready` + `approved`; the child is
+   `pending_review`. `/cms/media` lists both and selects the child. A star on
+   the tile when `parent_media_asset_id` is set **and** `file_id` ≠ parent
+   (crop-only shares the file — no star). Blur, overlay text, subject too small,
+   and low resolution are suggestions only — no auto-upres.
 3. **Ready** — `ready`: the media caption is always present. This is the pool
    the ads LLM picks from (LLM reads those media captions).
 4. **Failed** — `failed`: the upload did not land. UI is a warning with an

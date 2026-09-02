@@ -218,13 +218,39 @@ inline extract.
 
 ### `describe_image`
 
-Media library [03](../features/other/media/pipeline/03-describe-image.md). Owner
-`POST /v1/media-assets/{id}/confirm-upload` **or** an ETL transform
-**inserts** this River job kind (one per new `media_assets` row with
-empty `media_caption`; skip if the media caption is already set). Do not wait
-inside transform. Unique `(tenant_id, media_asset_id)` while
-pending/running — not `tenant_id` alone. Dedicated queue, max workers
-**48**. Fail → retry that id only. `thread_kind=media_cleanup`.
+Owner `POST /v1/media-assets/{id}/confirm-upload` **or** an ETL transform
+**inserts** this River job kind (one per new `media_assets` row with no
+classification yet; skip if latest `media_asset_classifications` matches
+`algorithm` + `schema_revision` and `force` is false, or latest is
+`algorithm=human`). Do not wait inside transform. Unique
+`(tenant_id, media_asset_id)` while pending/running — not `tenant_id`
+alone. Dedicated queue, max workers **48**. Fail → retry that id only;
+row stays `processing` until success or retries exhaust → `failed`.
+Sibling photos are other job ids.
+
+`DescribeImage` **sends** media caption + `submit_image_visual_issues`
+(`parallel_tool_calls=true`) and writes
+`media_asset_classifications` (`photo_kind` `logo` or `photo`,
+`content_hash` of this `file_id`, `algorithm`, `schema_revision`,
+`ai_generation_id`). Never updates an old classification. Then sets
+`media_assets.processing_status=ready`. Record reasoning, output, and
+tool calls on `ai_generations`. Insert / reuse `ai.threads`
+`thread_kind=media_cleanup` for this item. Must not write `hero` /
+`project` / `service` / `founder` / `person`. Must not write
+`pending_review` on the original owner or ETL row. Must not auto-upres
+(`blur` / `overlay_text` / `subject_too_small` / `low_resolution` are
+suggestions only). `WriteImageThumbnail` already ran in confirm-upload
+/ ETL insert.
+
+First-upload auto-cleanup when **latest** `photo_kind=photo` **and**
+`clutter` / `busy_background` / `poor_lighting` / `color_cast` is not
+null (high first): **calls** `CleanupMediaAsset` (no owner prompt).
+Skip when latest is `logo` or there is no classification yet. Original
+stays `ready` + `approved`. Child: new `file_id`, `pending_review`,
+`parent_media_asset_id`. `CleanupMediaAsset` **calls**
+`WriteImageThumbnail` on the child and **inserts** `describe_image` on
+the child.
+Routes: [media library HTTP](../features/other/media/api.md).
 
 ### `sweep_stale_media_uploads`
 

@@ -305,8 +305,8 @@ Distinct from: Projects (photos of their work).
 
 A Project is a named job with title, description, and cover, shown on the
 website and edited at Profile. It is normally a **past** job (work already
-completed). Distinct from a media library item whose photo kind is project (a
-picture of their work that is not itself a Project).
+completed). Distinct from a media library item that happens to show that
+work (a photo is not itself a Project).
 
 Use “projects” in product docs and UI. Do not say “portfolio”.
 
@@ -1378,16 +1378,33 @@ Positioning, not a domain object.
 
 One item in the media library. Never say bare “asset” (a website is not this).
 Distinct from: Media library (the library), File (the stored photo or document),
-Supplied by (who originated the picture).
+Supplied by (who originated the picture), Media asset classification
+(caption / photo kind / visual issues).
+
+---
+
+#### Media asset classification
+
+One classifier output for a media library item: media caption,
+photo kind, visual-issue severities, `content_hash`, `algorithm`,
+`schema_revision`. Many rows per item; current is the latest
+`created_at`. No pointer on the media library item. Distinct from:
+Media asset (the item), Photo kind (the `logo` / `photo` label on a
+classification row).
+
+In code: `media_asset_classifications`.
 
 ---
 
 #### Photo kind
 
-The classifier label on a media library item: hero, project, service, founder,
-or logo. Never bare **kind**. Distinct from: Imported media kind.
+The label on a media asset classification: **logo** (a wordmark) or
+**photo** (everything else). Null until `DescribeImage` inserts the
+first row. Never `hero` / `project` / `service` / `founder` /
+`person`. Never bare **kind**. Distinct from: Imported media kind,
+Media asset classification (the classification row).
 
-In code: `media_assets.photo_kind`.
+In code: `media_asset_classifications.photo_kind` (latest join).
 
 ---
 

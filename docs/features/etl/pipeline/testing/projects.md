@@ -11,7 +11,7 @@
   inserts. Rank in build-profile: cover, then title+description length, then
   newer `created_at`. Client interview cards / 05 gallery use the top 4. Skip
   when the verdict `algorithm` + `schema_revision` match. `algorithm=human` is
-  not overwritten. Unlabeled `photo_kind=project` photos do not become Projects.
+  not overwritten. Unlabeled photos do not become Projects.
   No `project_from_source_*` on posts / reviews / crawl HTML URLs. No nullable
   `source_id` on Projects. ETL Details increments have ≥1
   `business_profile_edit_sources`. Paid Maps / LLM faked.

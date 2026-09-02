@@ -19,9 +19,9 @@ Contractor is on `/onboarding/interview` with `onboarding_sessions.channel=text`
 ## Must not
 
 - Voice realtime connection, realtime tools, transcript replay.
-- Parallel / research jobs / photo classification (photo kinds are ETL
-  transform). The onboarding **guide** does not Archive or edit Project cards
-  (`tools=[]`).
+- Parallel / research jobs (`DescribeImage` is the media library, not
+  this interview). The onboarding **guide** does not Archive or edit
+  Project cards (`tools=[]`).
 - Edit title / description / cover on interview Project cards. No Approve.
   Archive is the contractor click below, not `/v1/projects/{id}/archive`.
 - `POST` a new onboarding session on Resume.
