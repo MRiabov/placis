@@ -77,8 +77,8 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   install`. Worktrees share `.git/hooks`. Do not skip hooks. If `rumdl-fmt`
   rewrites staged files, restage and commit again. `rumdl fmt` is optional if
   you want to see wrapping before commit.
-- **CI:** `.github/workflows/rumdl.yml` runs `rumdl fmt --check` then
-  `rumdl check` on pull requests. CI never rewrites files.
+- **CI:** `.github/workflows/docs-gates.yml` runs `rumdl fmt --check` then
+  `rumdl check` before the Go scanners. CI never rewrites files.
 - **Out of scope:** `.agents/` (imported and first-party skills) and
   `**/testdata/**` (Don’t-say fixtures). New first-party `.md` files are
   included automatically.
