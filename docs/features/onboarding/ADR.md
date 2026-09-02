@@ -305,7 +305,8 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     checkout/09** — The 09 island and `/login` are **Sign in with Google**
     (Clerk OAuth / social), not typed SignUp, not magic link, not
     OrgProvisionStep. `CreateClerkUser` sets the Clerk user name from
-    `founder_name`. `CreateClerkOrganization` names/badges the Clerk
+    `founder_name`. After that the owner can change it in the Clerk UI in
+    the app; do not overwrite. `CreateClerkOrganization` names/badges the Clerk
     organization as the **business** (business logo when present). Checkout
     **calls** `AttachClerkOrganization` and returns `clerk_org_id` for
     `setActive`; 09 **calls** it if still null, then

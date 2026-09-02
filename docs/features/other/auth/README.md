@@ -21,8 +21,10 @@ Clerk owns identity. Placis never builds password auth.
 - **Clerk users** to a tenant (and its Clerk org) are **1-many**
   (`tenant_memberships`). Currently we insert one owner; that is usage,
   not a unique.
-- **Clerk user** = **owner** (the person). Not “contractor”. Name is set
-  from `founder_name`. They sign in with **OAuth** (Sign in with Google).
+- **Clerk user** = **owner** (the person). Not “contractor”. First write
+  of the name is `founder_name`. After that the owner can change it in
+  the Clerk UI in the app. They sign in with **OAuth** (Sign in with
+  Google).
 
 An **unactivated** tenant exists from business lookup. An **activated**
 tenant is that same row after website activation (`status=active`).
@@ -52,8 +54,9 @@ current stable major). App code maps `Sessions().Verify` into
 `Principal`; it does not decode or validate tokens itself.
 
 - `Sessions().Verify` — sign-in verification
-- `Users().Create` (and update) — `CreateClerkUser`; name from
-  `founder_name`; email is the OAuth account email
+- `Users().Create` (and update on first bind) — `CreateClerkUser`;
+  name from `founder_name` on that first write only; later overridable
+  in the Clerk UI in the app; email is the OAuth account email
 - `Organizations().Create` — `CreateClerkOrganization`; name from the
   business; image from the **business logo** when present; `CreatedBy`
   that Clerk user

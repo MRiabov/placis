@@ -25,9 +25,11 @@ Packages: `internal/auth` (Clerk SDK → `Principal`) and
 - **Clerk user** = **owner** (the person) on the first insert. Not
   “contractor”. First write of the owner display name is
   **programmatic** from
-  **`founder_name`**. They authenticate with **OAuth** (Sign in with
+  **`founder_name`**. After that the owner can change it in the Clerk
+  UI in the app. Do not overwrite a later Clerk edit with
+  `founder_name`. They authenticate with **OAuth** (Sign in with
   Google; same shape for other Clerk social providers if enabled).
-  Email is the Google account email. They can change name later.
+  Email is the Google account email.
 - **Today’s usage** (not a constraint): we only insert one owner.
   **TBD:** office / admin staff on the same tenant with **equal**
   permissions. Keep `role` as `owner` only. Do not invent `admin` /
@@ -42,9 +44,11 @@ HTTP (same spelling in spec, Go, and tests):
 - `VerifySession` — Clerk SDK `Sessions().Verify` →
   `Principal{userID, orgID, platformRole, actor}`. `actor` is Clerk
   native impersonation. Not on HTTP.
-- `CreateClerkUser` — Clerk SDK `Users().Create` (or update if the
-  OAuth account already exists). Name from `founder_name`. Email is the
-  OAuth account email. No SQL. Not an HTTP function.
+- `CreateClerkUser` — Clerk SDK `Users().Create` (or update on first
+  bind if the OAuth account already exists). Name from `founder_name`
+  on that first write only. Later the owner changes it in the Clerk UI
+  in the app; do not overwrite. Email is the OAuth account email. No
+  SQL. Not an HTTP function.
 - `CreateClerkOrganization` — Clerk SDK `Organizations().Create`
   (`CreatedBy` that owner, name from the **business**, image from the
   **business logo** when that media library item exists).
