@@ -185,7 +185,7 @@ request returns. Worker: onboarding
 [09](../features/onboarding/pipeline/09-website-activation.md) (Clerk /
 `tenants.status=active`, then **calls** `PublishWebsite` strip off, then
 **calls** `ActivateSubscription`). Replay
-does not activate twice (persist grain, not this unique key).
+does not activate twice (`website_activations`, not this unique key).
 
 ### `billing_extra_usage_credit`
 
