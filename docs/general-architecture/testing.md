@@ -102,17 +102,17 @@ Examples:
 
 Pipeline (not OpenAPI 1:1). Every `pipeline/` needs **both**:
 
-- Per paired step: `TestPipelineHappyPathWebsite01SelectWebsiteTemplate`
-  ↔ `pipeline/testing/01-select-website-template.md`. Unnumbered stems
-  (ETL `google-maps.md`, onboarding `build-profile.md`) use PascalCase of
-  the filename. Skip **Do not run** (onboarding `04b`). Skip Persist
-  none (onboarding `03`). Skip gatherers and
-  testing-only `worker-internal.md` (extra Worker DTO cases; 1:1 is
-  website `testing.md`).- Whole pipeline: exactly `TestPipelineHappyPath{Feature}Full`
-  (`TestPipelineHappyPathWebsiteFull`, `OnboardingFull`, `AdsFull`,
-  `EtlFull`). Testcontainers Postgres + MinIO. Worker container only if
-  that pipeline **calls** `websiteRender` / `websitePublication`. Do not
-  name a step file `full.md`.
+- Per paired step: `TestPipelineHappyPathWebsite01SelectWebsiteTemplate` ↔
+  `pipeline/testing/01-select-website-template.md`. Unnumbered stems (ETL
+  `google-maps.md`, onboarding `build-profile.md`) use PascalCase of the
+  filename. Skip **Do not run** (onboarding `04b`). Skip Persist none
+  (onboarding `03`). Skip gatherers and testing-only `worker-internal.md` (extra
+  Worker DTO cases; 1:1 is website `testing.md`).
+- Whole pipeline: exactly
+  `TestPipelineHappyPath{Feature}Full` (`TestPipelineHappyPathWebsiteFull`,
+  `OnboardingFull`, `AdsFull`, `EtlFull`). Testcontainers Postgres + MinIO.
+  Worker container only if that pipeline **calls** `websiteRender` /
+  `websitePublication`. Do not name a step file `full.md`.
 
 CI: `check-pipeline-tables` leftover of current names until the Go funcs
 exist (extras may only shrink).
