@@ -80,6 +80,7 @@ Frontend completeness (documented, not CI-asserted this pass):
 | Onboarding | `HappyPathOnboardingFull` — Find → preview/pay | 01–09 Vitest files |
 | Website | `HappyPathWebsiteFull` — website editor → Publish | one test per website Route |
 | Auth | `HappyPathAuthFull` — `/login` → `setActive` → `/cms` | `AuthGate.test.tsx` |
+| Billing | `HappyPathBillingFull` — Usage & billing → cancel / keep / pay-again | one test per billing Route |
 | ETL | none (no owner UI) | |
 
 Extra frontend HappyPath only for real screen branching. Names include
