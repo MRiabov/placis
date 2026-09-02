@@ -191,8 +191,8 @@ does). We do **not** hand-roll AST scripts up front:
 - **rumdl** — Markdown format + lint (standard flavor, 80-col wrap, compact
   tables). Config: [`.rumdl.toml`](../../.rumdl.toml). Pre-commit:
   `rumdl-fmt` on staged files, then `rumdl-fmt-check` and `rumdl` on all
-  tracked Markdown (excludes `.agents/`). CI: `.github/workflows/rumdl.yml`
-  runs `rumdl fmt --check` then `rumdl check` on pull requests (not via
+  tracked Markdown (excludes `.agents/`). CI: `.github/workflows/docs-gates.yml`
+  runs `rumdl fmt --check` then `rumdl check` before the Go scanners (not via
   `just`; never `rumdl fmt` in CI). Conventions:
   [docs conventions](../docs-conventions.md).
 - **Don't-say glossary check** (`cmd/ci/check-dont-say`) — see below.
@@ -272,11 +272,10 @@ list). Worked examples:
   trees in full. Paths outside those trees (including `packages/`) are ignored
   even when filenames are passed in. A copied look checkout (`demo.placis.com`)
   uses the same checker with `--glossary glossary.md` over `src/`.
-- CI: `.github/workflows/docs-gates.yml` runs
-  `go test` for Don't-say, docs-code, and pipeline-tables, then
-  `go run ./cmd/ci/check-dont-say --all` (and the other two scanners) in one
-  job so `actions/setup-go` and the stdlib compile are paid once.
-  `--frontend` stays off
+- CI: `.github/workflows/docs-gates.yml` runs rumdl `fmt --check` then
+  `check`, then `go test` for Don't-say, docs-code, and pipeline-tables,
+  then `go run ./cmd/ci/check-dont-say --all` (and the other two scanners)
+  in one job. `--frontend` stays off
   until frontend work
   starts from the Go backend (see [frontend-debloat.md](frontend-debloat.md)).
 
