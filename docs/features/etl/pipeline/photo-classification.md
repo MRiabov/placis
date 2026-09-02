@@ -8,8 +8,10 @@ step. Shared extract / transform rules: [pipeline README](README.md). Classifier
 
 Labels: hero / project / service / founder / logo. Written as `photo_kind` on
 the business profile’s media library items. Captioning and visual-issue tools
-stay on
-[media library persistence](../../other/media/persistence.md).
+are River job kind `describe_image`
+([media library 03](../../other/media/pipeline/03-describe-image.md)); this step
+writes `photo_kind*` only. Transform **calls** this, then **inserts**
+`describe_image`.
 
 The skip keys are **`algorithm`** and **`schema_revision`**, stored on the media
 library item next to the hash — same skip as every other transform schema

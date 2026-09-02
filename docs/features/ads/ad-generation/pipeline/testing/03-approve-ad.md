@@ -12,6 +12,8 @@ Checkpoint only. Review PATCH / rewrite are not this invoke.
   - `ad_variants.status=approved`. Same `ad_variants` id as 01/02.
   - `ad_reviews`: one row, transition to `ad_ready_to_post`.
   - `audit_events` for this approve.
+  - `media_assets.review_status=approved` for `pending_review`
+    placements (`ApproveMediaAsset`).
   - `ad_copy_variants` / `ad_image_placements` / `ad_lead_forms`
     unchanged except `ads.updated_at`.
 - **Cases**:

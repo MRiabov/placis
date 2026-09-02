@@ -14,7 +14,8 @@ on Routes. This step only moves the ad to **ad ready to post**.
 - This ad's format has a complete variant.
 - Every placement has an uploaded photo (`file_id` present, not
   `failed`). A media caption is **not** required for a photo the owner
-  added to this ad. A cleanup copy counts only once `approved`.
+  added to this ad. Placements may still be `pending_review`;
+  `ApproveAd` **calls** `ApproveMediaAsset`.
 - Copy satisfies character limits. `cta_label` is in the allowed set.
 - An `ad_lead_forms` row exists (suggestions never block).
 
@@ -35,7 +36,9 @@ on Routes. This step only moves the ad to **ad ready to post**.
 2. Set `ads.status=ad_ready_to_post`,
    `ad_variants.status=approved`.
 3. Insert `ad_reviews` (actor, transition to `ad_ready_to_post`).
-4. Write `audit_events`.
+4. **calls** `ApproveMediaAsset` for `pending_review` items on this
+   ad’s placements (large format preview already shown).
+5. Write `audit_events`.
 
 ## Reads
 
@@ -45,8 +48,8 @@ on Routes. This step only moves the ad to **ad ready to post**.
 ## Persist
 
 `ads.status=ad_ready_to_post`, `ad_variants.status=approved`,
-`ad_reviews`, `audit_events`. Copy and placements unchanged except
-`ads.updated_at`.
+`ad_reviews`, `audit_events`, `media_assets.review_status`. Copy and
+placements unchanged except `ads.updated_at`.
 
 ## Fail
 
