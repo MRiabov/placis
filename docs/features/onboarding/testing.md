@@ -138,7 +138,8 @@ onboarding session. No second onboarding session.
 
 #### Fail
 
-Sixth enqueue in 30 minutes → `429` `research_wait_until`.
+Sixth enqueue in 30 minutes → `429` `research_wait_until`. Activated
+owner leftover onboarding session token → `403`.
 
 #### Mocked
 
@@ -160,6 +161,10 @@ No `frontend-2`.
 Response `OnboardingProfileRead` (`fill`, `conflicts`, nested live
 business profile, `research_wait_until` when set). No ETL fetch `raw`.
 
+#### Fail
+
+Activated owner leftover onboarding session token → `403`.
+
 #### Mocked
 
 None beyond lookup fakes.
@@ -179,6 +184,10 @@ Backend (`humatest`, Testcontainers Postgres). Onboarding session
 
 Response `OnboardingProfileRead`. Autosave persisted. Succeeds when the
 complete gate would fail.
+
+#### Fail
+
+Activated owner leftover onboarding session token → `403`.
 
 #### Mocked
 
@@ -205,7 +214,8 @@ handoff (`accepted_edit_id`; status
 #### Fail
 
 Required `conflict` / `empty` / `in_progress` → `409`; status stays
-`client_interviewing`.
+`client_interviewing`. Activated owner leftover onboarding session
+token → `403`.
 
 #### Mocked
 
@@ -226,6 +236,10 @@ business-research origin Project on this tenant. No `frontend-2`.
 
 Create then GET profile: that Project is `archived`,
 `algorithm=human`. Next-ranked `active` may appear.
+
+#### Fail
+
+Activated owner leftover onboarding session token → `403`.
 
 #### Mocked
 
@@ -248,6 +262,10 @@ Huma SSE events `business_profile` / `timeline_step` /
 `research_wait_until` / `website_preview_ready` as the onboarding
 session moves.
 No unconstrained `payload`.
+
+#### Fail
+
+Activated owner leftover onboarding session token → `403`.
 
 #### Mocked
 
@@ -726,13 +744,17 @@ Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/find`.
 
 Registry and/or Maps. Consent required before business lookup. Opening
 Find with no stored token does not POST. Stored token restores instead
-of a second lookup.
+of a second lookup. Typeahead debounce: registry and Maps search do
+not fire per keystroke.
 
 #### Verify
 
 Lookup disabled without consent. With consent, MSW
 `POST /v1/onboarding/business-lookup`. Mount does not POST. Restore
-uses `GET /v1/onboarding/profile`.
+uses `GET /v1/onboarding/profile`. Debounced typeahead uses MSW
+`GET /v1/onboarding/find/search/company-registry` and
+`GET /v1/onboarding/find/search/google-maps`; those GETs are not
+per keystroke.
 
 #### Mocked
 
@@ -773,12 +795,45 @@ still filling.
 
 #### Exercise
 
-Owner-typed field vs research increment on another field.
+Owner-typed field vs research increment on another field. Zero
+`active` Projects omits the Project block. Archive an `active`
+Project. The onboarding guide does not Archive.
 
 #### Verify
 
-Typed field kept. Untouched field takes live fill. MSW SSE /
+Typed field kept. Untouched field takes live fill. Zero `active`
+omits the Project block. Archive uses MSW
+`POST /v1/onboarding/projects/{projectId}/archive`; next-ranked
+`active` may appear. The onboarding guide does not Archive. MSW SSE /
 `PUT /v1/onboarding/interview`.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### Interview lists and photos
+
+Frontend branching. Not `Full`. Contractor only.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/interview`. SSE
+still filling.
+
+#### Exercise
+
+Paste one-per-line or comma-separated service names. Maps territory
+cards for service areas. Upload photos. Find more online / Create a
+stand-in only when photos are not enough (`photos_fill`). Extra notes
+are contractor-only.
+
+#### Verify
+
+Paste splits into list rows with no LLM. Territory cards render from
+Maps areas (`locality` + `radius_km`). **Upload photos** is always
+shown. **Find more online** and **Create a stand-in** only when
+`photos_fill` says photos are not enough. Extra notes stay
+contractor-only. MSW SSE / `PUT /v1/onboarding/interview`.
 
 #### Mocked
 
@@ -804,6 +859,27 @@ Navigates to `/onboarding/preview-and-edit/` in both cases.
 
 All HTTP via MSW.
 
+### Share
+
+Frontend branching. Not `Full`.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/preview-and-edit/`.
+
+#### Exercise
+
+Click Share. Skip Share and pay (Full already pays without 08).
+
+#### Verify
+
+Share uses MSW `POST /v1/onboarding/website/publications`. Preview
+website address shown. Skip Share still reaches pay.
+
+#### Mocked
+
+All HTTP via MSW.
+
 ### Resume
 
 Frontend branching. Not `Full`. Screen map:
@@ -817,14 +893,16 @@ hint.
 #### Exercise
 
 Restore each onboarding session status. Restore with failing profile
-GET.
+GET. Reload while `selecting_and_copying_website_template` or
+copy-failed.
 
 #### Verify
 
 No token → `/onboarding/find`. `client_interviewing` with no interview
 started → `/onboarding/review`. Interview in progress →
 `/onboarding/interview`. Selecting / copy-failed →
-`/onboarding/preview`. `preview_and_edit` →
+`/onboarding/preview`, reconnects SSE, finishes the same remaining
+wait-teaser cap (not a new ~15s). `preview_and_edit` →
 `/onboarding/preview-and-edit/`. `activated` → clear storage,
 `/cms/website`. Profile GET failing: keep the token, loading
 placeholder, retry; no replacement POST.
