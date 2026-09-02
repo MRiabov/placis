@@ -20,7 +20,6 @@ var pipelineHappyPathLeftover = []string{
 	"TestPipelineHappyPathEtlWebsiteCrawl",
 	"TestPipelineHappyPathOnboarding01FindBusiness",
 	"TestPipelineHappyPathOnboarding02BusinessResearch",
-	"TestPipelineHappyPathOnboarding03ConfirmData",
 	"TestPipelineHappyPathOnboarding04aTextClientInterview",
 	"TestPipelineHappyPathOnboarding05SelectAndCopyWebsiteTemplate",
 	"TestPipelineHappyPathOnboarding06WebsiteCopyGeneration",

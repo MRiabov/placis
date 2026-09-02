@@ -104,6 +104,47 @@ func skipDoNotRun(testPath string) bool {
 	return strings.Contains(string(src), doNotRunMark)
 }
 
+func headingBody(src, title string) string {
+	prefix := "## " + title
+	lines := strings.Split(src, "\n")
+	start := -1
+	for i, line := range lines {
+		if line == prefix {
+			start = i + 1
+			break
+		}
+	}
+	if start < 0 {
+		return ""
+	}
+	var b strings.Builder
+	for _, line := range lines[start:] {
+		if strings.HasPrefix(line, "## ") {
+			break
+		}
+		b.WriteString(line)
+		b.WriteByte('\n')
+	}
+	return b.String()
+}
+
+func persistNone(stepPath string) bool {
+	src, err := os.ReadFile(stepPath)
+	if err != nil {
+		return false
+	}
+	body := strings.TrimSpace(headingBody(string(src), "Persist"))
+	if body == "" {
+		return false
+	}
+	first, _, _ := strings.Cut(body, "\n")
+	return strings.HasPrefix(strings.ToLower(strings.TrimSpace(first)), "none")
+}
+
+func skipPipelineHappyPath(s stepFile) bool {
+	return skipDoNotRun(s.testPath) || persistNone(s.path)
+}
+
 func happyPathCovered(funcs map[string]bool, prefix string, exact bool) bool {
 	if exact {
 		return funcs[prefix]
@@ -145,7 +186,7 @@ func checkPipelineHappyPath(r report, funcs map[string]bool, leftover []string) 
 		if feature == "" || canonical == "" {
 			continue
 		}
-		if skipDoNotRun(s.testPath) {
+		if skipPipelineHappyPath(s) {
 			continue
 		}
 		features[feature] = true
