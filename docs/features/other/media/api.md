@@ -55,8 +55,8 @@ No freeform jsonb on these DTOs. Upload signed URL is `string` + `maxLength`
 - **Crop / focal copy-on-write:** child keeps the parent’s `file_id`; stays
   `approved` if this row is. Uses keep the parent until retargeted.
   - Referenced (website-section image, `logo_media_asset_id`,
-    `ad_image_placements`): insert a child, return it. The `/cms/media` widget
-    selects the child.
+    `ad_image_placements`): insert a child, return it. The `/cms/media` crop /
+    focal view selects the child.
   - Unreferenced: mutate crop/focal **in place** (click-off must not stack
     unused copies).
 - **Replace:** a new file inserts a copy (`parent_media_asset_id`); parent

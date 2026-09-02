@@ -29,7 +29,7 @@ Contractor is on `/onboarding/interview` with `onboarding_sessions.channel=text`
   `conflict`.
 - Run a second complete (exactly one complete → 05).
 - Repeat legal-identity fields (shown on 03).
-- A parallel onboarding-only widget for a Details field (services textarea,
+- A parallel onboarding-only control for a Details field (services textarea,
   free-text service area, a second hours picker). Onboarding Details ==
   `/cms/details`.
 - Combine services or service areas with an LLM in the wait after Continue. 06

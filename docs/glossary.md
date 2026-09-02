@@ -49,11 +49,14 @@ is acceptable: page, section, slot; copy, variant; session. Do not use the short
 word in a mixed or product-facing sentence where it could mean something else.
 
 Do not say **user**, **frozen**, bare **session**, **provider**,
-**instantiate**, **population**, **mint**, **fold**, **bytes**, **bag**, or
-**blob**. Say contractor, owner, or website visitor; name Google Maps, the LLM,
-or Stripe; say copy the website template’s pages onto the unpublished website;
-say create or use for ephemeral tokens and ids; say live business profile or
-unpublished website; say photo, image, file, or binary; name the typed payload.
+**instantiate**, **population**, **mint**, **fold**, **bytes**, **bag**,
+**blob**, **grain**, or **widget**. Say contractor, owner, or website
+visitor; name Google Maps, the LLM, or Stripe; say copy the website
+template’s pages onto the unpublished website; say create or use for
+ephemeral tokens and ids; say live business profile or unpublished
+website; say photo, image, file, or binary; name the typed payload; name
+the unit (what Persist / Must not names, the Go package, or the grouping);
+name the control (crop overlay, Details field, or island).
 
 ---
 
@@ -1819,6 +1822,8 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | wait-end clock | wait-end, wait teaser, or wait cap |
 | bag / bags | typed struct or named fields (not a freeform object) |
 | blob / blobs | name the payload (HTML, instructions, jsonb column, file) |
+| grain | name the unit (what Persist / Must not names, Go package, grouping) |
+| widget / widgets | name the control (crop overlay, Details field, island) |
 
 ## Code naming rules
 

@@ -12,9 +12,9 @@ retargeted to the copy. That copy-on-write is an invariant of those functions
 [README.md](README.md)).
 
 - **Crop / focal** — child keeps the parent’s `file_id`. Stay `approved` if the
-  parent is. If this row is unreferenced, mutate crop/focal in place (the widget
-  click-off must not stack unused copies). If referenced, insert the child; uses
-  keep the parent until retargeted.
+  parent is. If this row is unreferenced, mutate crop/focal in place (crop /
+  focal click-off must not stack unused copies). If referenced, insert the
+  child; uses keep the parent until retargeted.
 - **AI cleanup** — child gets a new `file_id`, `pending_review`, inherits
   `supplied_by`. Reject archives that copy (`status=archived`,
   `review_status=rejected`) and retargets uses to the parent. Accept is not a

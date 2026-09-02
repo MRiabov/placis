@@ -52,7 +52,7 @@ A feature directory holds, as applicable:
 | `technical-implementation.md` | pipeline, validation, testing — references `persistence.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
-| `testing.md` | the owner E2E (or ETL integration) with DB asserts at Persist grain. Every persistence table is asserted here and/or in `pipeline/testing/`. |
+| `testing.md` | the owner E2E (or ETL integration) with DB asserts of what Persist / Must not names. Every persistence table is asserted here and/or in `pipeline/testing/`. |
 | `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline). Closed `##` on step files (see Named identifiers). |
 | `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features) |
 
@@ -80,8 +80,8 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
 - **CI:** `.github/workflows/docs-gates.yml` runs `rumdl fmt --check` then
   `rumdl check` before the Go scanners. CI never rewrites files.
 - **Out of scope:** `.agents/` (imported and first-party skills) and
-  `**/testdata/**` (Don’t-say fixtures). New first-party `.md` files are
-  included automatically.
+  `**/testdata/**` (Don’t-say fixtures; `check-dont-say` skips them too). New
+  first-party `.md` files are included automatically.
 - **File size:** after wrap, a doc over 800 lines must be split (hard error at
   1200). Exception: `glossary.md` stays one file (Don’t-say table + ubiquitous
   language).
@@ -170,7 +170,7 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
    `POST /internal/…`). Do not match a raw `v1` token.
 2. **Test docs assert every persistence table.** Every table in that
    feature’s `persistence.md` is asserted at least once in `testing.md`
-   and/or `pipeline/testing/*.md`. Grain follows Persist / Must not (see
+   and/or `pipeline/testing/*.md`. Asserts follow Persist / Must not (see
    Named asserts). The same table **may** appear in several files.
    `testing.md` is the owner journey (ETL: integration, no owner UI). It
    only asserts what that journey reads or writes. A pipeline testing
@@ -194,11 +194,11 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
 
 ### Named asserts
 
-Grain follows **Persist** / **Must not**, not a mandatory
+Assert what **Persist** / **Must not** names, not a mandatory
 table+column+predicate triple.
 
 - Persist / Inserts names a **River job kind** → testing asserts schema
-  `jobs` has a row with that River job kind (grain already used for
+  `jobs` has a row with that River job kind (already used for
   `website_copy_generation`).
 - Persist names a **table** → testing asserts that table (row exists,
   empty, unchanged, one row).
@@ -230,7 +230,7 @@ Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
 ratchets leftover extra `##` on undefined features (extras may only shrink).
 Website, billing, ads, assistant, onboarding, and auth have none. Optional `###`
 groups under `## DTOs` and `## Routes` (glossary terms, same titles on both when
-split; [glossary.md](glossary.md) grain). Not mandatory — split when the table is hard to
+split; see [glossary.md](glossary.md)). Not mandatory — split when the table is hard to
 review. `### METHOD /path` overflow still sits under that group when a cell
 would be a paragraph. `## Do not create` stays one list. Persistence and
 `jobs.md` already overflow as `### \`name\``; do not add a second grouping layer
