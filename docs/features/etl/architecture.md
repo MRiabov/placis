@@ -32,8 +32,8 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
 River job kinds **call** those functions
 ([jobs](../../general-architecture/jobs.md)). Tables:
 [persistence.md](persistence.md). `StartRun` is orchestration only (not a
-pipeline step file). Transform **inserts** `describe_image` (media
-`DescribeImage`); there is no `transform/photo`.
+pipeline step file). Transform **inserts** `describe_image`
+(media library `DescribeImage`); there is no `transform/photo`.
 
 An **ETL run kind** (`etl.runs.etl_run_kind`) starts when it has the details it
 needs. Registry: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md).
