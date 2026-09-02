@@ -143,12 +143,20 @@ When onboarding and scheduled ETL enqueue:
 per-website-section pick when copying the website template’s pages. Do
 not use `website_reviews_picker`.
 
+**`media_cleanup`** — captioning pass and image-edits / first-upload
+cleanup. River job kind `describe_image`
+([jobs](jobs.md)). Insert a thread before the first generate on that
+item; reuse it for schema-repair retries and for `CleanupMediaAsset`.
+Do not hydrate on GET thread. `prompt_id` matches `media_cleanup` in
+the media package `prompts.yaml`. Do not add a second generate factory
+or a `thread_kind=media_process`.
+
 ## `ai_generations`
 
 Shared by automatic website copy generation, the CMS assistant, the onboarding
-assistant, ads, and ETL post-text extract. One table, not copied into feature
-persistence docs. Postgres schema **`ai`** (not `llm`). Go package
-`internal/ai/`. Image **files** stay in `files` / `media_library`.
+assistant, ads, media captioning, and ETL post-text extract. One table, not
+copied into feature persistence docs. Postgres schema **`ai`** (not `llm`). Go
+package `internal/ai/`. Image **files** stay in `files` / `media_library`.
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `thread_id` required fk →
   `ai.threads` (hydrate never joins), `trace_type` (`prod`/`eval`),

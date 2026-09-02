@@ -206,7 +206,7 @@ does). We do **not** hand-roll AST scripts up front:
   (closed `api.md` is DTOs / Routes / Do not create; closed `persistence.md`
   is Tables / Indexes); `jobs.md` `##` is Workflows / Jobs; backticked
   River job kind must already live in `jobs.md` `## Jobs`. Missing
-  `testing.md` (media library / leads / Details / Projects) does not
+  `testing.md` (leads / Details / Projects) does not
   fail; a changed `persistence.md` passed on the command line without
   `testing.md` warns. See
   [docs conventions](../docs-conventions.md#named-identifiers).

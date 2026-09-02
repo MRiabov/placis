@@ -77,6 +77,8 @@ step.
 | `billing_extra_usage_credit` | Stripe checkout session id | checkout session id while pending/running | `ApplyExtraUsageCredit` |
 | `billing_subscription_sync` | Stripe subscription id | Stripe subscription id while pending/running | `SyncSubscriptionFromStripe`; on `canceled` **calls** `UnpublishWebsite`; on `invoice.paid` **calls** `AddIncludedUsageCredit` |
 | `scheduled_etl` | none | `tenant_id` while pending/running | **calls** `StartRun(trigger=scheduled)` |
+| `describe_image` | `tenant_id`, `media_asset_id` | `(tenant_id, media_asset_id)` while pending/running | `DescribeImage` |
+| `sweep_stale_media_uploads` | none | one global row while pending/running | delete stale `uploading` + null `file_id` |
 
 Extract **must not** write `business_profile_*`. Transform **must not** call
 source networks. Retry of this `run_id` reuses a fetch that already landed
@@ -213,3 +215,23 @@ the Stripe subscription-updated event alone). `status=canceled`: **calls**
 Monday / Wednesday / Friday. Stagger activated tenants. **Calls**
 `StartRun(trigger=scheduled)` ([ETL](../features/etl/README.md)). Does not
 inline extract.
+
+### `describe_image`
+
+Media library [03](../features/other/media/pipeline/03-describe-image.md). Owner
+`POST /v1/media-assets/{id}/confirm-upload` **or** an ETL transform
+**inserts** this River job kind (one per new `media_assets` row with
+empty `media_caption`; skip if the media caption is already set). Do not wait
+inside transform. Unique `(tenant_id, media_asset_id)` while
+pending/running — not `tenant_id` alone. Dedicated queue, max workers
+**48**. Fail → retry that id only. `thread_kind=media_cleanup`.
+
+### `sweep_stale_media_uploads`
+
+Periodic insert from the same `cmd/api` in-process River workers as
+`scheduled_etl`. Not crontab. Not list/GET handler deletes. Args none;
+unique one global row while pending/running. **Do:** delete
+`media_assets` with `file_id` null, `processing_status=uploading`,
+`created_at` older than the website-editor leave-guard window
+([editing.md](../features/website/editing.md)). Age lives only here.
+`ListMediaAssets` omits those in-flight rows immediately.

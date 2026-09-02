@@ -361,7 +361,7 @@ Website edit history (unpublished website edits).
 
 #### Media library
 
-The photo library: the contractor’s work, logos, and documents. Never say bare
+The photo library: the contractor’s work and logos. Never say bare
 “media” for this library. Reached from Profile. The website editor attaches from
 the same library.
 
@@ -1394,7 +1394,20 @@ In code: `media_assets.photo_kind`.
 ### File
 
 The stored photo or document. Distinct from: Media asset (the media library
+item), Image thumbnail (the compressed grid-tile copy of that photo).
+
+---
+
+### Image thumbnail
+
+The small compressed WebP of **that media library item’s file**, used as CMS /
+ads / Details / Projects **grid tiles**. Never say **preview** for this (website
+preview, preview website address, ads format preview, and website image render
+are other things). Distinct from: File (the original), Media asset (the library
 item).
+
+In code: `media_assets.thumbnail_file_id`, HTTP `thumbnail_url`,
+`WriteImageThumbnail`.
 
 ---
 

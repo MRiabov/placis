@@ -44,7 +44,9 @@ must not sit on CMS `assistant.runs`; leftover 03 is River-only on
 - `generate_image` for a logo website slot. Leave `{{logo_url}}`.
 - Attach a photo whose photo kind is `founder` or `logo` on a home hero,
   service page, or home service-card image website slot.
-- Reuse an already-attached photo on a later image website slot.
+- Reuse an already-attached photo on a later image website slot
+  (**this page**, later slots; not site-global; parent vs cleanup child
+  are two ids).
 - Attach a leftover photo whose **media caption** does not match that
   website slot’s intent (a van photo on gutter cleaning).
 - Persist Worker HTML onto unpublished website slots.
@@ -101,7 +103,8 @@ unpublished website slots. River job kind `website_copy_generation`.
    - If nothing fits: **`generate_image`** (`supplied_by=ai`, pending review;
      unpublished canvas warning; website publication still requires approved
      media library items). That fills the gap for the owner.
-   - Do not reuse an already-attached photo on a later image website slot.
+   - Do not reuse an already-attached photo on a later image website slot
+     (**this page**, later slots; not site-global; GET hydrates one page).
 3. After each `update_slot`, the same `websiteRender` for the affected
    website page (`before_pages` + `pages`). `media_asset_urls` is the
    exact set for that body (new attach included). Put `before_image` and
