@@ -48,10 +48,11 @@ larger than this screen (reviews, certifications, projects):
 Editing Details changes the website and the next ad draft. If ad copy conflicts
 with these details, prefer updating Details rather than leaving a second truth
 only in the ad. Ads and the Assistant write a detail by calling
-**`update_details`** (one tool, one implementation — [api.md](api.md)); the owner sees
+**`update_details`** (one tool, one implementation —
+[architecture.md](architecture.md)); the owner sees
 the shared **notification** (OK keeps it; Revert undoes that increment).
 
 How the owner reaches it: [CMS frontend](../../../general-architecture/cms/frontend.md). This screen: [frontend.md](frontend.md). Port:
 [frontend-debloat.md](frontend-debloat.md). [ADR](ADR.md). Look: [design decision record](design-decision-record.md). HTTP: [api.md](api.md).
-Tables: [persistence.md](persistence.md). Projects:
-[projects HTTP](../projects/api.md).
+Architecture: [architecture.md](architecture.md). Tables: [persistence.md](persistence.md). Tests: [testing.md](testing.md).
+Projects: [projects HTTP](../projects/api.md).

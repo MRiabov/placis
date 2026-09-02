@@ -214,7 +214,7 @@ does). We do **not** hand-roll AST scripts up front:
   `TestPipelineHappyPath*` per paired step plus `{Feature}Full` (shrink-only
   leftover until funcs exist); `jobs.md` `##` is Workflows / Jobs;
   backticked River job kind must already live in `jobs.md` `## Jobs`.
-  Missing `testing.md` (leads / Details / Projects) does not
+  Missing `testing.md` (leads) does not
   fail; a changed `persistence.md` passed on the command line without
   `testing.md` warns. See
   [docs conventions](../docs-conventions.md#named-identifiers).
@@ -225,7 +225,10 @@ does). We do **not** hand-roll AST scripts up front:
   Exercise 1:1 in the owning `testing.md` and a `func TestHappyPath*`
   that hits **exactly that one** Method+path literal. Flow tests do not
   fill a 1:1 row. `TestPipelineHappyPath*` is not a 1:1 row. Two leftover
-  files (`leftover_docs.go`, `leftover_tests.go`) may only shrink. Missing
+  files (`leftover_docs.go`, `leftover_tests.go`) may only shrink. Details
+  and Projects owning files are
+  `docs/features/business-profile/details/testing.md` and
+  `docs/features/business-profile/projects/testing.md`. Missing
   spec file: that walk no-ops. See
   [testing.md](testing.md).
 - Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen,
@@ -353,7 +356,10 @@ that hits that same literal. `--worker` uses the Worker internal
 OpenAPI file and `/internal/…` ops. Two leftover files
 (`leftover_docs.go`, `leftover_tests.go`) may only shrink; a heading
 does not shrink the tests leftover, a func does not shrink the docs
-leftover. A spec op has no leftover. No spec file: that walk passes.
+leftover. Details and Projects owning files are
+`docs/features/business-profile/details/testing.md` and
+`docs/features/business-profile/projects/testing.md`. A spec op has no
+leftover. No spec file: that walk passes.
 Unit tests + `go run`. Pre-commit: `--public` with the other docs
 scanners (also on `docs/**/api.md` and `docs/**/testing.md`).
 `--worker` only on the Worker job (do not start the Worker container

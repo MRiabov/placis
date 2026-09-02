@@ -41,22 +41,22 @@ Status: decided (2026-08-16, product owner + engineering).
    `generate_image` is last resort when nothing in `media_assets[]` fits.
    Overlay look (always-on overlay, reduce-height left / trash right, Apply /
    Reject pills): [assistant](../assistant/README.md). Placement: [design decision record](design-decision-record.md) 18.
-   (2026-08-27): one `update_details` tool ([details HTTP](../business-profile/details/api.md)). Assistant and Ads
-   generator invoke that same tool (one implementation). Applied immediately;
-   the shared notification Revert undoes that increment — not website Reject /
-   `edit_history`. (2026-08-20; assistant configs + Apply/Reject terminal
-   2026-08-23; Ask first 2026-08-23; attach-before-generate + shared
-   media-library functions 2026-08-24; collapse + no dim 2026-08-26; CMS
-   assistant HTTP 2026-08-28) (2026-08-31): automatic website copy generation
-   (03) uses the same tools headless; no `update_reviews`; turn 1 and after each
-   `update_slot` Go `POST`s `websiteRender` (website image render on the
-   inference, not HTML). Go does not emit HTML. 04 is `websitePublication`
-   (website HTML render, no website image render). Select website template is
-   occupancy + hash at 01 (no LLM, no `website_template_picker`), not at
-   copy-pages. (2026-09-01): `WebsiteBusinessProfileRead` is the Common
-   variables struct on canvas hydrate and both Worker requests. (2026-09-02): 03
-   does not `generate_image` a logo or a face. Portrait slots stay empty when no
-   matching media caption.
+   (2026-08-27): one `update_details` tool ([details architecture](../business-profile/details/architecture.md)). Assistant
+   and Ads generator invoke that same tool (one implementation). Applied
+   immediately; the shared notification Revert undoes that increment — not
+   website Reject / `edit_history`. (2026-08-20; assistant configs +
+   Apply/Reject terminal 2026-08-23; Ask first 2026-08-23;
+   attach-before-generate + shared media-library functions 2026-08-24;
+   collapse + no dim 2026-08-26; CMS assistant HTTP 2026-08-28) (2026-08-31):
+   automatic website copy generation (03) uses the same tools headless; no
+   `update_reviews`; turn 1 and after each `update_slot` Go `POST`s
+   `websiteRender` (website image render on the inference, not HTML). Go does
+   not emit HTML. 04 is `websitePublication` (website HTML render, no website
+   image render). Select website template is occupancy + hash at 01 (no LLM, no
+   `website_template_picker`), not at copy-pages. (2026-09-01):
+   `WebsiteBusinessProfileRead` is the Common variables struct on canvas hydrate
+   and both Worker requests. (2026-09-02): 03 does not `generate_image` a logo
+   or a face. Portrait slots stay empty when no matching media caption.
 
 7. **Website publication is kept and can be rolled back** — website publication
    creates a `website_publications` row (a published website copy); website

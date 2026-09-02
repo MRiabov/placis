@@ -9,9 +9,8 @@ var persistClosedHeads = map[string]bool{
 
 // Leftover grouping ## on undefined feature persistence.md files. Ceiling:
 // extras may only shrink. Website, billing, ads, assistant, onboarding,
-// auth, the media library, and ETL have none (## Tables + ## Indexes).
-// Intro-only files (Projects) have no ## yet. Details has Tables + Indexes
-// for Facebook / Instagram profile and post rows only.
+// auth, the media library, ETL, Details, and Projects have none
+// (## Tables + ## Indexes).
 var persistHeadingLeftover = map[string][]string{}
 
 func checkPersistHeadings(r report) []string {
