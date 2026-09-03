@@ -23,6 +23,7 @@ slow extract). There is no owner-facing CMS screen in this slice.
 - [persistence.md](persistence.md) — `etl` tables
 - [technical-implementation.md](technical-implementation.md)
 - [testing.md](testing.md)
+- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
 
 Business profile tables: [details persistence](../business-profile/details/persistence.md). Onboarding 02 only starts runs:
 [02](../onboarding/pipeline/02-business-research.md).

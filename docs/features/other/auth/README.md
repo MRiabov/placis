@@ -3,7 +3,8 @@
 Identity, sign-in, Clerk organizations, and tenant resolution — a
 mostly-internal feature with a small owner-facing surface (`GET /v1/me`).
 The schema lives in [persistence.md](persistence.md). Named functions:
-[architecture.md](architecture.md). HTTP: [api.md](api.md).
+[architecture.md](architecture.md). HTTP: [api.md](api.md). Unused-spec
+punch list: [sep-3-issue-list.md](sep-3-issue-list.md) (2026-09-03).
 
 Clerk owns identity. Placis never builds password auth.
 
