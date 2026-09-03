@@ -33,6 +33,10 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
   doc gap / drop); index of per-feature lists
 
-Payments live with [website activation](../features/onboarding/pipeline/09-website-activation.md). Website leads live in
-[features/other/leads](../features/other/leads/README.md). Public-source extract: [ETL](../features/other/etl/README.md). Onboarding session
+One-time activation Checkout lives with
+[website activation](../features/onboarding/pipeline/09-website-activation.md).
+Stripe Subscription and extra usage credit live with
+[billing](../features/billing/README.md). Website leads live in
+[features/other/leads](../features/other/leads/README.md). Public-source
+extract: [ETL](../features/other/etl/README.md). Onboarding session
 progress events: [pipeline README](../features/onboarding/pipeline/README.md).

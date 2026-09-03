@@ -33,10 +33,11 @@ website is
    (hero trade timer), PlacisPromptBox (hero; drop Clerk `useAuth` / paywall;
    submit and Try now / Login go to `app.placis.com`), `/contact` mailto
    (validate, then `mailto:`), `/pricing/` month / year toggle (PricingGrid;
-   Choose goes to `app.placis.com`; no Stripe). Markup only: news,
+   Choose goes to `app.placis.com`; no Stripe; Choose does not set
+   `subscription_tier`). Markup only: news,
    getting-started, footer, `/support`, legal. Theme follows
    `prefers-color-scheme` in CSS, not `next-themes`. (2026-08-23; Pricing island
-   2026-08-29)
+   2026-08-29; Choose does not set `subscription_tier` 2026-09-03)
 
 6. **Onboarding and Clerk are not on this origin** — CTAs that were `/sign-up` /
    `/sign-in` go to `https://app.placis.com` (`/onboarding/find` and sign-in).

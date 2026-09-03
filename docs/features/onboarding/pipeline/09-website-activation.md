@@ -15,10 +15,13 @@ activation **upgrades** the existing unactivated tenant (`status=active`); it
 does not insert a second tenant. Does **not** wait for 06. Does **not** require
 a prior 08 share.
 
-Stripe (via `stripe-go`) handles this checkout only. Amount is the activation
-price (predecessor: EUR 4900). `checkout.session.completed` is accepted only
-after the SDK verifies the signature (`webhook.ConstructEvent`) and the metadata
-matches (`tenant_id`, authenticated Clerk subject). The raw payload is saved on
+Stripe (via `stripe-go`) handles **this** checkout only (the one-time
+activation price). The Stripe Subscription is
+`ActivateSubscription` after this job, not this checkout. Amount is the
+activation price (predecessor: EUR 4900).
+`checkout.session.completed` is accepted only after the SDK verifies
+the signature (`webhook.ConstructEvent`) and the metadata matches
+(`tenant_id`, authenticated Clerk subject). The raw payload is saved on
 `stripe_events`, the webhook **inserts** River job kind `website_activation`,
 and the request returns. Activation can be replayed safely and is never
 triggered by a browser success URL alone.
@@ -123,8 +126,11 @@ subscription to host the website**.
    epic).
 2. Then a **subscription price** on a **subscription tier** (provisional
    catalogue: [billing PRD](../../billing/prd.md)). This step **calls**
-   `ActivateSubscription` (Placis Pro plan; Stripe Subscription, not this
-   Checkout). If they stop paying, **calls** `UnpublishWebsite` and they cannot
+   `ActivateSubscription` (always Placis Pro plan this step; public
+   Pricing Choose does not set `subscription_tier`). Stripe
+   Subscription, not this Checkout. Plus / Max / year is Change plan
+   after they are `active`. If they stop paying, **calls**
+   `UnpublishWebsite` and they cannot
    **Publish** until the subscription is active again
    ([billing](../../billing/architecture.md)). CMS edit stays open
    (`tenants.status=active`).

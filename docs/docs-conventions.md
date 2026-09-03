@@ -23,8 +23,8 @@ before adding or editing a doc.
   (The CMS: left nav,
   `/cms` two cards, look tokens), `frontend-debloat.md` (cross-cutting port),
   `ci-cd.md`, `testing.md`. Feature-owned capabilities (website
-  activation/payments, leads, media library, ETL, business profile, assistant,
-  billing) live under `features/`, not here.
+  activation (one-time Checkout), billing (Stripe Subscription), leads, media
+  library, ETL, business profile, assistant) live under `features/`, not here.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that
   feature's docs in one place). `features/business-profile/` holds Details,
   Projects, and Certifications and reviews as child view dirs. `features/other/`
