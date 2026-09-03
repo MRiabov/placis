@@ -8,7 +8,7 @@ the checklist and writes `etl.*` rows. This feature’s own tests are
 
 ## Integration
 
-### TestPipelineHappyPathEtlFull
+### TestPipelineHappyPathEtlFull — pipeline Full
 
 Backend. Go `TestPipelineHappyPathEtlFull`. Per-source names:
 [pipeline/testing](pipeline/testing/README.md). No frontend Full (no

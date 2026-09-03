@@ -41,7 +41,7 @@ LLM unused.
 
 ## Integration
 
-### TestHappyPathV1Projects
+### TestHappyPathV1Projects — Route
 
 #### Setup
 
@@ -58,7 +58,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant. One
 200. Body lists non-archived (`draft` + `active`). Archived omitted
 unless `status=archived`.
 
-### TestHappyPathV1ProjectsCreate
+### TestHappyPathV1ProjectsCreate — Route
 
 #### Setup
 
@@ -73,7 +73,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 200. Then `GET /v1/projects` includes it `status=draft`. **persists
 into** `projects`. No `project_sources`.
 
-### TestHappyPathV1ProjectsGet
+### TestHappyPathV1ProjectsGet — Route
 
 #### Setup
 
@@ -92,7 +92,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant. One
 
 Unknown id / other-tenant → `404`.
 
-### TestHappyPathV1ProjectsPatch
+### TestHappyPathV1ProjectsPatch — Route
 
 #### Setup
 
@@ -113,7 +113,7 @@ description / cover). Response `ProjectRead`.
 
 Body includes `status` → 4xx.
 
-### TestHappyPathV1ProjectsApprove
+### TestHappyPathV1ProjectsApprove — Route
 
 #### Setup
 
@@ -134,7 +134,7 @@ project draft.
 Not a project draft (`active` / `archived`) → `409`. Already
 `active` on retry → **200**.
 
-### TestHappyPathV1ProjectsArchive
+### TestHappyPathV1ProjectsArchive — Route
 
 #### Setup
 
@@ -157,7 +157,7 @@ sections (then compact).
 
 Unknown / other-tenant → `409`. Already `archived` → **200**.
 
-### TestHappyPathV1ProjectsUnarchive
+### TestHappyPathV1ProjectsUnarchive — Route
 
 #### Setup
 
@@ -194,7 +194,7 @@ approve.
 
 404 / forbidden. Tenant B `projects` unchanged.
 
-### HappyPathProjectsFull
+### HappyPathProjectsFull — frontend Full
 
 Frontend. Vitest `HappyPathProjectsFull`. Not OpenAPI 1:1.
 

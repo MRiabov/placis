@@ -55,7 +55,7 @@ webhook. Worker is real (container). R2 / `purge_cache` faked.
 
 ## Integration
 
-### TestHappyPathV1OnboardingBusinessLookup
+### TestHappyPathV1OnboardingBusinessLookup — Route
 
 #### Setup
 
@@ -81,7 +81,7 @@ Missing consent or missing both sources → 4xx; no tenant.
 
 Registry parquet. Google Maps autocomplete.
 
-### TestHappyPathV1OnboardingFindSearchCompanyRegistry
+### TestHappyPathV1OnboardingFindSearchCompanyRegistry — Route
 
 #### Setup
 
@@ -100,7 +100,7 @@ Response `CompanyRegistryRecordRead` rows. **Omit** `raw`. No persist.
 
 Registry parquet.
 
-### TestHappyPathV1OnboardingFindSearchGoogleMaps
+### TestHappyPathV1OnboardingFindSearchGoogleMaps — Route
 
 #### Setup
 
@@ -120,7 +120,7 @@ Response `GoogleMapsListingRead` rows. **Omit** Maps `raw`. No
 
 Google Maps autocomplete.
 
-### TestHappyPathV1OnboardingSources
+### TestHappyPathV1OnboardingSources — Route
 
 #### Setup
 
@@ -145,7 +145,7 @@ owner leftover onboarding session token → `403`.
 
 Registry. Maps. ETL adapters.
 
-### TestHappyPathV1OnboardingProfile
+### TestHappyPathV1OnboardingProfile — Route
 
 #### Setup
 
@@ -169,7 +169,7 @@ Activated owner leftover onboarding session token → `403`.
 
 None beyond lookup fakes.
 
-### TestHappyPathV1OnboardingInterview
+### TestHappyPathV1OnboardingInterview — Route
 
 #### Setup
 
@@ -193,7 +193,7 @@ Activated owner leftover onboarding session token → `403`.
 
 None required for text path.
 
-### TestHappyPathV1OnboardingInterviewComplete
+### TestHappyPathV1OnboardingInterviewComplete — Route
 
 #### Setup
 
@@ -221,7 +221,7 @@ token → `403`.
 
 None required for text path.
 
-### TestHappyPathV1OnboardingProjectsArchive
+### TestHappyPathV1OnboardingProjectsArchive — Route
 
 #### Setup
 
@@ -245,7 +245,7 @@ Activated owner leftover onboarding session token → `403`.
 
 None.
 
-### TestHappyPathV1OnboardingEventsStream
+### TestHappyPathV1OnboardingEventsStream — Route
 
 #### Setup
 
@@ -271,7 +271,7 @@ Activated owner leftover onboarding session token → `403`.
 
 ETL adapters. LLM.
 
-### TestHappyPathV1OnboardingWebsiteEditorPages
+### TestHappyPathV1OnboardingWebsiteEditorPages — Route
 
 #### Setup
 
@@ -294,7 +294,7 @@ Activated owner → `403`.
 
 None.
 
-### TestHappyPathV1OnboardingWebsiteEditorPage
+### TestHappyPathV1OnboardingWebsiteEditorPage — Route
 
 #### Setup
 
@@ -318,7 +318,7 @@ Activated → `403`. Missing website page → `404`/`400`.
 
 None.
 
-### TestHappyPathV1OnboardingWebsiteEditorPagePatch
+### TestHappyPathV1OnboardingWebsiteEditorPagePatch — Route
 
 #### Setup
 
@@ -342,7 +342,7 @@ Onboarding session token PATCH → `403`. `409 edit_history_conflict`.
 
 None.
 
-### TestHappyPathV1OnboardingWebsiteEditorMenus
+### TestHappyPathV1OnboardingWebsiteEditorMenus — Route
 
 #### Setup
 
@@ -365,7 +365,7 @@ Activated → `403`.
 
 None.
 
-### TestHappyPathV1OnboardingWebsiteEditorMenusPatch
+### TestHappyPathV1OnboardingWebsiteEditorMenusPatch — Route
 
 #### Setup
 
@@ -388,7 +388,7 @@ Onboarding session token PATCH → `403`. `409 edit_history_conflict`.
 
 None.
 
-### TestHappyPathV1OnboardingWebsitePublications
+### TestHappyPathV1OnboardingWebsitePublications — Route
 
 #### Setup
 
@@ -409,7 +409,7 @@ pages still lists unpublished website pages. Prefix reserved.
 
 `purge_cache`. MinIO is real. Worker is real.
 
-### TestHappyPathV1OnboardingWebsiteAssistantThread
+### TestHappyPathV1OnboardingWebsiteAssistantThread — Route
 
 #### Setup
 
@@ -433,7 +433,7 @@ Activated → `403`.
 
 None.
 
-### TestHappyPathV1OnboardingWebsiteAssistantThreadWs
+### TestHappyPathV1OnboardingWebsiteAssistantThreadWs — Route
 
 #### Setup
 
@@ -458,7 +458,7 @@ Onboarding session token send → `403`. Sixth prompt → `409`
 
 Assistant LLM.
 
-### TestHappyPathV1OnboardingWebsiteAssistantVoiceRealtimeConnection
+### TestHappyPathV1OnboardingWebsiteAssistantVoiceRealtimeConnection — Route
 
 #### Setup
 
@@ -482,7 +482,7 @@ Onboarding session token Voice → `403`. Cap → `409`
 
 Voice.
 
-### TestHappyPathV1OnboardingWebsiteAssistantVoiceToolCalls
+### TestHappyPathV1OnboardingWebsiteAssistantVoiceToolCalls — Route
 
 #### Setup
 
@@ -505,7 +505,7 @@ Activated → `403`.
 
 Voice. Assistant tools.
 
-### TestHappyPathV1OnboardingWebsiteAssistantVoiceTranscripts
+### TestHappyPathV1OnboardingWebsiteAssistantVoiceTranscripts — Route
 
 #### Setup
 
@@ -525,7 +525,7 @@ HTTP 2xx. Create then GET unpaid thread includes transcript items
 
 Voice.
 
-### TestHappyPathV1OnboardingWebsiteAssistantVoiceRecordings
+### TestHappyPathV1OnboardingWebsiteAssistantVoiceRecordings — Route
 
 #### Setup
 
@@ -548,7 +548,7 @@ Activated → `403`. Guide Voice must not use this Route.
 
 Voice. Object storage for the signed URL.
 
-### TestHappyPathV1OnboardingWebsiteAssistantVoiceRecordingComplete
+### TestHappyPathV1OnboardingWebsiteAssistantVoiceRecordingComplete — Route
 
 #### Setup
 
@@ -571,7 +571,7 @@ Activated → `403`.
 
 Voice.
 
-### TestHappyPathV1OnboardingActivationCheckout
+### TestHappyPathV1OnboardingActivationCheckout — Route
 
 #### Setup
 
@@ -592,7 +592,7 @@ not paid yet.
 
 Stripe test-mode. Clerk fake Principal for org attach.
 
-### TestHappyPathV1OnboardingActivationStatus
+### TestHappyPathV1OnboardingActivationStatus — Route
 
 #### Setup
 
@@ -612,7 +612,7 @@ Response `WebsiteActivationStatusRead` (`payment_status`,
 
 Stripe test-mode.
 
-### TestHappyPathV1WebhooksStripe
+### TestHappyPathV1WebhooksStripe — Route
 
 #### Setup
 
@@ -638,7 +638,7 @@ Invalid signature → no paid `website_activations`; tenant still
 
 Stripe test-mode. `purge_cache`. Worker is real. MinIO is real.
 
-### TestHappyPathV1OnboardingAssistantVoiceRealtimeConnection
+### TestHappyPathV1OnboardingAssistantVoiceRealtimeConnection — Route
 
 #### Setup
 
@@ -662,7 +662,7 @@ Activated → `403`. Second in-flight → `409` `in_flight_run`.
 
 Voice.
 
-### TestHappyPathV1OnboardingAssistantVoiceTranscripts
+### TestHappyPathV1OnboardingAssistantVoiceTranscripts — Route
 
 #### Setup
 
@@ -682,7 +682,7 @@ HTTP 200 (settlement). Create then GET guide thread includes items
 
 Voice.
 
-### TestHappyPathV1OnboardingAssistantThread
+### TestHappyPathV1OnboardingAssistantThread — Route
 
 #### Setup
 
@@ -706,7 +706,7 @@ Activated → `403`.
 
 None.
 
-### HappyPathOnboardingFull
+### HappyPathOnboardingFull — frontend Full
 
 Frontend. Vitest `HappyPathOnboardingFull`. Not nine files named 01–09.
 Not a 1:1 row. 02 has no screen. 05/06 are the wait teaser.
@@ -911,7 +911,7 @@ placeholder, retry; no replacement POST.
 
 All HTTP via MSW.
 
-### TestPipelineHappyPathOnboardingFull
+### TestPipelineHappyPathOnboardingFull — pipeline Full
 
 Backend. Go `TestPipelineHappyPathOnboardingFull`. Per-step names:
 [pipeline/testing](pipeline/testing/README.md). Skip 04b (**Do not

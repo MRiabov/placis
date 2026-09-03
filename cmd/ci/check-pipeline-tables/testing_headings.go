@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"strings"
 )
 
 var testingClosedH2 = map[string]bool{
@@ -26,6 +27,36 @@ var testingH4ExtraRank = map[string]int{
 }
 
 var testingMethodHeadRe = regexp.MustCompile(`^(GET|POST|PATCH|PUT|DELETE)\s+/`)
+
+const testingSuffixSep = " — "
+
+func checkTestingTitleSuffix(path, title string) string {
+	ident, suffix, hasSuffix := strings.Cut(title, testingSuffixSep)
+	if !hasSuffix {
+		ident = title
+	}
+	want := ""
+	switch {
+	case strings.HasPrefix(ident, "TestPipelineHappyPath"):
+		want = "pipeline"
+		if strings.HasSuffix(ident, "Full") {
+			want = "pipeline Full"
+		}
+	case strings.HasPrefix(ident, "TestHappyPath"):
+		want = "Route"
+	case strings.HasPrefix(ident, "HappyPath") && strings.HasSuffix(ident, "Full"):
+		want = "frontend Full"
+	default:
+		return ""
+	}
+	if !hasSuffix {
+		return fmt.Sprintf("%s: ### %s missing — %s", path, title, want)
+	}
+	if suffix != want {
+		return fmt.Sprintf("%s: ### %s expected — %s", path, title, want)
+	}
+	return ""
+}
 
 func checkTestingHeadings(r report) []string {
 	var errs []string
@@ -87,6 +118,9 @@ func checkOneTesting(f headingFile) []string {
 			}
 			if testingMethodHeadRe.MatchString(h.title) {
 				errs = append(errs, fmt.Sprintf("%s: extra heading ### %s", f.path, h.title))
+			}
+			if msg := checkTestingTitleSuffix(f.path, h.title); msg != "" {
+				errs = append(errs, msg)
 			}
 			h3 = h.title
 			h4 = nil

@@ -271,7 +271,7 @@ LLM. Voice unused.
 
 ## Integration
 
-### HappyPathAssistantFull
+### HappyPathAssistantFull — frontend Full
 
 Frontend. Vitest `HappyPathAssistantFull`. CMS dock, not pipeline 1:1.
 

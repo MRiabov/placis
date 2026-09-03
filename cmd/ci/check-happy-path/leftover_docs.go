@@ -1,10 +1,10 @@
 package main
 
 // leftoverDocs is structured Routes Method+path strings that do not yet
-// have a ### TestHappyPath* whose Exercise is that one Method+path. An
-// op may only disappear in the same PR that adds the heading. A Go
-// func does not shrink this list. A new structured Routes cell fails
-// immediately.
+// have a ### TestHappyPath* — Route whose Exercise is that one
+// Method+path. An op may only disappear in the same PR that adds the
+// heading. A Go func does not shrink this list. A new structured Routes
+// cell fails immediately.
 var leftoverDocs = []string{
 	"DELETE /v1/ads/{ad_id}",
 	"GET /openapi.json",
