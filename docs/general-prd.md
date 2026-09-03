@@ -34,10 +34,12 @@ channel into the same tools (not a separate product). How slices land:
 - [Onboarding](features/onboarding/prd.md) — business research and the business profile; [pipeline](features/onboarding/pipeline/README.md);
   [onboarding assistant](features/onboarding/assistant.md) (guide)
 - [Assistant](features/assistant/prd.md) — CMS chat and voice after website activation
-- [Billing](features/billing/prd.md) — usage credit, Usage & billing, Pricing
+- [Billing](features/billing/prd.md) — usage credit, Stripe Subscription
+  after activation, Usage & billing, Pricing (display-only; Choose does
+  not set `subscription_tier`)
 - [ETL](features/etl/README.md) — extract and transform; Monday / Wednesday / Friday refresh
 - [Website](features/website/prd.md) — website templates, website editor, website publication
-- [Website activation](features/onboarding/pipeline/09-website-activation.md) — pay-and-activate (Stripe)
+- [Website activation](features/onboarding/pipeline/09-website-activation.md) — one-time activation Checkout (Stripe)
 - [Ads](features/ads/ad-generation/prd.md) — ad generation; terminal Ad status is **ad ready to post** (no ad
   posting)
 - [Leads](features/other/leads/README.md) — website form contacts

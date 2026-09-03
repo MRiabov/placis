@@ -23,11 +23,13 @@ the Placis website has no Pricing.
 
 1. Show **Pricing** on the Placis website: Placis Pro plan, Placis Pro Plus
    plan, Placis Pro Max plan, and Enterprise plan (contact sales). Choose goes
-   to `app.placis.com`. No checkout on `placis.com`.
-2. After website activation, the owner has a subscription tier. The
-   subscription price includes monthly usage credit. Unused usage credit
-   carries over to the next month (the new included amount is added; remaining
-   is not zeroed).
+   to `app.placis.com` with no plan parameter (does not set
+   `subscription_tier`). No checkout on `placis.com`.
+2. After website activation, the owner has a subscription tier (first
+   `ActivateSubscription` is Placis Pro plan). The subscription price
+   includes monthly usage credit. Unused usage credit carries over to
+   the next month (the new included amount is added; remaining is not
+   zeroed).
 3. Let the owner buy **extra usage credit** into the same pool. No auto-reload.
 4. **Usage & billing** shows remaining usage credit and **one bar**: the
    current pool (including carry-over); filled is spent this period (their
@@ -87,7 +89,8 @@ superseded for the monthly fee.
 ## Acceptance
 
 1. Pricing is on the Placis website at `/pricing/`, linked from the top bar
-   and footer. Self-serve Choose goes to `app.placis.com`. Enterprise plan is
+   and footer. Self-serve Choose goes to `app.placis.com` with no plan
+   parameter. First subscription is Placis Pro plan. Enterprise plan is
    contact sales.
 2. Usage & billing is not a left-nav peer of Sites / Ads. It is on the account
    menu. Settings and Log out stay hidden.

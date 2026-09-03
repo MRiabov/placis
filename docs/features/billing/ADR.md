@@ -50,7 +50,9 @@ new entries with the next number, the area, and the date.
 9. **Pricing is the Placis website page** — Astro static, `placis.com/pricing/`.
    Usage & billing is the in-app screen. Checkout is not on `placis.com`.
    Change plan and Cancel subscription are not on `placis.com`.
-   (2026-08-29)
+   (2026-08-29) Choose does not set `subscription_tier` (no plan
+   parameter). First `ActivateSubscription` is Placis Pro plan. Plus /
+   Max / year is Change plan after they are `active`. (2026-09-03)
 
 10. **Usage & billing shows one bar of owner-cost spend** — Current pool
     (including carry-over) vs spent this period; spent segments colored by

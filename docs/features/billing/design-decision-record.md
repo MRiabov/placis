@@ -22,10 +22,13 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
 3. **Pricing clones the placis-web pricing grid** — Three self-serve cards plus
    an Enterprise plan row. Month / year toggle. Blurb + feature list. Included
    usage credit is USD (`$100` / `$400` / `$1,500` a month). Choose goes to
-   `app.placis.com`. Contact sales goes to `/support/`. No Stripe on
-   `placis.com`. Do not port predecessor dashboard Usage & billing copy.
-   Don't say: build credits. (2026-08-29) Previous (2026-08-29):
-   included usage credit only, as a unitless count, no feature list.
+   `app.placis.com` with no plan parameter (does not set
+   `subscription_tier`). Contact sales goes to `/support/`. No Stripe
+   on `placis.com`. Do not port predecessor dashboard Usage & billing
+   copy. Don't say: build credits.
+   (2026-08-29; Choose does not set `subscription_tier` 2026-09-03)
+   Previous (2026-08-29): included usage credit only, as a unitless
+   count, no feature list.
 
 4. **20% and empty share the shared notification** — Fixed bottom-right. Not
    the Details OK / Revert pair. 20% warns. Empty: **you are out of usage

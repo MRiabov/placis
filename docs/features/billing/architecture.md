@@ -186,5 +186,7 @@ Change plan Checkout: new Stripe subscription, `status=active`,
 ## Pricing
 
 Pricing is on the Placis website (`/pricing/`). Display only. Choose →
-`app.placis.com`. Enterprise plan → contact sales. No Stripe on
-`placis.com`.
+`app.placis.com` with no plan parameter. It does not set
+`subscription_tier`. First `ActivateSubscription` is Placis Pro plan.
+Plus / Max / year is Change plan on Usage & billing. Enterprise plan →
+contact sales. No Stripe on `placis.com`.
