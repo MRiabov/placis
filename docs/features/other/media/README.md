@@ -76,7 +76,8 @@ Photos have a processing status on the media item (`processing_status` —
    photo the owner just added to an ad does not need a media caption to
    be used there. If clutter / busy background / poor lighting / color
    cast is not null, a tailored default light cleanup runs on first
-   upload when latest `photo_kind=photo` (high first; skip `logo`). That
+   upload when feature flag `media_auto_cleanup` is on (default off)
+   and latest `photo_kind=photo` (high first; skip `logo`). That
    is **two rows**: the original stays `ready` + `approved`; the child is
    `pending_review`. `/cms/media` lists both and selects the child. A star
    on the tile when `parent_media_asset_id` is set **and** `file_id` ≠
@@ -117,13 +118,14 @@ view on a wide screen and **under** it on a narrow screen — not Ads Review
 **inline AI assistance**. Same light cleanup as ads / the assistant
 `cleanup_image` (declutter, tidy background; not invent work). Required
 **inline AI assistance prompt**, `maxLength` 500, on `POST …/image-edits`. Empty
-prompt is rejected. First upload may already have run a tailored default; this
-prompt is a **different** cleanup. Cleanup takes **5–10 seconds**. The large
-view stays on the photo with **Cleaning up…**, a scan across the photo, and a
-filling bar. Then the view is the ads **before/after sweep** (drag the divider
-to clip, not resize) with **Accept** / **Reject**. Accept keeps the copy
-(`pending_review`) — no Accept HTTP, not `POST …/approve`. Reject is
-`POST …/reject` (archives the copy).
+prompt is rejected. First upload may already have run a tailored default when
+feature flag `media_auto_cleanup` is on (default off); this prompt is a
+**different** cleanup. Cleanup takes **5–10 seconds**. The large view stays on
+the photo with **Cleaning up…**, a scan across the photo, and a filling bar.
+Then the view is the ads **before/after sweep** (drag the divider to clip, not
+resize) with **Accept** / **Reject**. Accept keeps the copy (`pending_review`) —
+no Accept HTTP, not `POST …/approve`. Reject is `POST …/reject` (archives the
+copy).
 
 **Thumbs.** Twenty to forty photos is expected. Up to ten: **3** columns on a
 wide screen, **2** on a narrow screen. More than ten: **4** columns on a wide

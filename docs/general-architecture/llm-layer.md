@@ -183,7 +183,8 @@ per-website-section pick when copying the website template’s pages. Do
 not use `website_reviews_picker`.
 
 **`media_cleanup`** — captioning pass and image-edits / first-upload
-cleanup. River job kind `describe_image`
+cleanup when feature flag `media_auto_cleanup` is on (default off).
+River job kind `describe_image`
 ([jobs](jobs.md)). Insert a thread before the first generate on that
 item; reuse it for schema-repair retries and for `CleanupMediaAsset`.
 Do not hydrate on GET thread. `prompt_id` matches `media_cleanup` in

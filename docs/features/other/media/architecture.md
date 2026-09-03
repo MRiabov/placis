@@ -106,8 +106,9 @@ Ads does not own a second library.
    `describe_image`. Already `failed` → 400.
 3. **Describe image** — `DescribeImage` **writes** `media_asset_classifications`
    (media caption, `photo_kind` `logo` or `photo`, visual-issue severities),
-   sets `ready`, and may **call** `CleanupMediaAsset` for first-upload
-   auto-cleanup when latest `photo_kind=photo`. Skip `logo`. ETL transform
+   sets `ready`, and **calls** `CleanupMediaAsset` for first-upload
+   auto-cleanup only when feature flag `media_auto_cleanup` is on
+   (default off) **and** latest `photo_kind=photo`. Skip `logo`. ETL transform
    **inserts** `describe_image` per new imported row with no classification yet.
    Worker skips a new LLM row when latest matches `algorithm`+`schema_revision`.
 4. **Generate** — `CreateGeneratedMediaAsset` **writes** the
@@ -139,9 +140,10 @@ Do not invent a lineage Route or a second `media_assets` type.
    **that** website page. Home first; other website pages **in parallel**. Same
    id on Home and a service website page is allowed. GET hydrates one website
    page.
-3. **Ads LLM pool vs first-upload cleanup.** Pool is `ready` +
+3. **Ads LLM pool vs first-upload cleanup.** When feature flag
+   `media_auto_cleanup` is on, the ads LLM pool is `ready` +
    `approved`, so until `ApproveAd` **calls** `ApproveMediaAsset` the
    cleaned child is invisible to generate and the uncleaned original
    is the pick. Consistent with pending-review; odd next to
    auto-cleanup. Same follow-up as (1) if generate should prefer the
-   child.
+   child. Flag off (default): no child.
