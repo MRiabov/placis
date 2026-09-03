@@ -105,7 +105,9 @@ inventing it.
     (website publication). The strip is gone on the host. **Why:** one has
     paid, so it should transfer us to the website editor with the option
     to actually deploy.
-    (2026-08-28)
+    (2026-08-28) Later (2026-09-03): strip amount is the cached activation
+    Price (EUR, not a Go 4900). 09 Checkout is that Price plus Placis Pro
+    plan / month on the same pay, not a second ~€50 month.
 
 11. **Delight is “this is already my business, and something is happening”** —
     Not extra wrapper. Wait fill is frame-smooth (design decision 7). Reviews

@@ -30,7 +30,7 @@ Same mode as Find search ([auth modes](../../general-architecture/api.md)).
 | DTO | Fields | Description |
 | --- | --- | --- |
 | `BillingCatalogRead` | `prices: []BillingCatalogPriceRead` | Choosable Prices for Pricing bake |
-| `BillingCatalogPriceRead` | `subscription_tier`, `billing_interval`, `amount_eur`, `included_usage_credit_eur` | Public catalogueue row; their cost |
+| `BillingCatalogPriceRead` | `subscription_tier`, `billing_interval`, `amount_eur`, `included_usage_credit_eur` | Public catalogue row; their cost |
 | `BillingUsageRead` | `subscription_status`, `subscription_tier`, `subscription_price_eur`, `billing_interval`, `current_period_end`, `cancel_at_period_end`, `remaining_usage_credit_eur`, `pool_usage_credit_eur`, `spent_this_period_eur`, `spent_voice_eur`, `spent_image_eur`, `spent_text_eur` | Usage & billing; their cost |
 | `BillingExtraUsageCreditCreate` | `amount_eur` | Extra usage credit Checkout |
 | `BillingSubscriptionCheckoutCreate` | | Pay-again (Pro month). Empty body |

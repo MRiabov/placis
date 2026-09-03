@@ -140,6 +140,6 @@ new entries with the next number, the area, and the date.
     stays `active`. First payer stays owner; refund does not reopen 09.
     Extra usage credit row stays. (2026-09-03)
 
-21. **Public catalogueue GET is unauthenticated** — Choosable Prices only
+21. **Public catalogue GET is unauthenticated** — Choosable Prices only
     (Pro month). No `stripe_customer_id`. No activation Price. CI `astro build`
     bakes `/pricing/` from that GET. (2026-09-03)
