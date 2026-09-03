@@ -253,17 +253,22 @@ auto-upres (`blur` / `overlay_text` / `subject_too_small` /
 `low_resolution` are suggestions only). `WriteCanonicalWebP` and
 `WriteImageThumbnail` already ran in confirm-upload / ETL insert.
 
-First-upload auto-cleanup when **latest** `photo_kind=photo` **and**
+First-upload auto-cleanup only when feature flag `media_auto_cleanup`
+is on (default off). Then when **latest** `photo_kind=photo` **and**
 `clutter_severity` / `busy_background_severity` /
 `poor_lighting_severity` / `color_cast_severity` is not null (high
 first): **calls** `CleanupMediaAsset` (no owner prompt). Skip when
-latest is `logo` or there is no classification yet. Original stays
-`ready` + `approved`. Child: new original + canonical + thumbnail,
+the flag is off, latest is `logo`, or there is no classification yet.
+When the flag is off: classify, set `ready`, **do not** **call**
+`CleanupMediaAsset`. No child. Auto path does not **call**
+`AssertUsageCredit`. When it **calls**: original stays `ready` +
+`approved`. Child: new original + canonical + thumbnail,
 `pending_review`, `parent_media_asset_id`, inherit `supplied_by` /
 `created_by`, `cleaned_up_with_ai=true`. `CleanupMediaAsset` **calls**
 `WriteCanonicalWebP` then `WriteImageThumbnail` on the child and
 **inserts** `describe_image` on the child.
 Routes: [media library HTTP](../features/other/media/api.md).
+Named flags: [feature flags](feature-flags.md).
 
 ### `sweep_stale_media_uploads`
 

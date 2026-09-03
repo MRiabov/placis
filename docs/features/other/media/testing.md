@@ -22,9 +22,8 @@ GET faked. Worker not required (no publication).
 2. File picker / drop. `MediaAssetCreate` → `MediaAssetUploadRead`.
    Browser PUT `upload_url`. `POST …/confirm-upload`.
 3. Faked `describe_image` writes `media_asset_classifications`
-   and sets `processing_status=ready`. If auto-cleanup ran, the child
-   is selected (star when `parent_media_asset_id` set and `file_id` ≠
-   parent).
+   and sets `processing_status=ready`. Feature flag
+   `media_auto_cleanup` is off (default): no auto-cleanup child.
 4. Open `/cms/website`. Content attach of that item onto the image
    website slot (same `media_assets` rows as `/cms/media`). Discrete
    PATCH, not text click-off.
@@ -451,7 +450,8 @@ Object-storage GET/scan. Not the LLM (that is `DescribeImage`).
 `ConfirmMediaAssetUpload` already wrote `media_assets` (`processing`,
 `file_id` set, `thumbnail_file_id` set, `review_status=approved`) and
 `describe_image` in schema `jobs`. No `ai.threads` / `ai_generations`
-for `media_cleanup` yet.
+for `media_cleanup` yet. Feature flag `media_auto_cleanup` off
+(default) unless a Verify case turns it on.
 
 #### Exercise
 
@@ -468,9 +468,13 @@ River worker for `describe_image` (`DescribeImage`).
   `media_assets.media_caption` / `media_assets.photo_kind`.
 - `ai.threads` / `ai_generations`: `thread_kind=media_cleanup`
   (reasoning + output + tool calls).
-- Auto-cleanup (latest `photo_kind=photo` and clutter / busy
-  background / poor lighting / color cast not null): second
-  `media_assets` row, `parent_media_asset_id` = original, new
+- Feature flag `media_auto_cleanup` off (default): still one
+  `media_assets` row even when latest `photo_kind=photo` and clutter /
+  busy background / poor lighting / color cast is not null. No child
+  `describe_image`.
+- Feature flag `media_auto_cleanup` on, latest `photo_kind=photo` and
+  clutter / busy background / poor lighting / color cast not null:
+  second `media_assets` row, `parent_media_asset_id` = original, new
   `file_id`, `pending_review`, `cleaned_up_with_ai=true`,
   `supplied_by` / `created_by` match original, `thumbnail_file_id`
   set. Original still `ready` + `approved`. Child has a
@@ -495,7 +499,7 @@ set); no classification row; sweep must not delete this row.
 #### Mocked
 
 LLM (media caption + `submit_image_visual_issues`). Cleanup generate
-when auto-cleanup runs.
+when auto-cleanup runs (feature flag `media_auto_cleanup` on).
 
 ### PATCH crop / focal
 

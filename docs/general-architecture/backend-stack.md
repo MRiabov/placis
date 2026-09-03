@@ -16,7 +16,7 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 | Migrations | `goose` (plain SQL) |
 | Database | PostgreSQL (one database; [Postgres schemas as feature namespaces](persistence.md#postgres-schemas-namespaces)) |
 | Background jobs | `River` (Postgres-backed, typed args, safe retries) |
-| Config | env → typed struct, validated once at startup |
+| Config | env → typed struct, validated once at startup. Feature flags: [feature flags](feature-flags.md) |
 | Logging | `log/slog` (structured) + request ids |
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
 | LLM | `LLMProvider`; Vercel AI SDK for generation; open-web search is Parallel as a Vercel AI Gateway server tool ([LLM layer](llm-layer.md)) |

@@ -187,9 +187,10 @@ The questions and review content:
    picker as the rest of the app, e.g. the projects media picker — no duplicated
    gallery or tokens), with framing adjustments and light cleanup drafts
    (reviewable **before/after sweep viewer** — drag the divider to clip, not
-   resize, the photo — with Accept/Reject). First upload already ran a tailored
-   default cleanup from visual-issue classification (ranked hints on Cleanup
-   edit). After generate, an inline AI assistance asks for a **different**
+   resize, the photo — with Accept/Reject). First upload may already have
+   run a tailored default cleanup from visual-issue classification when
+   feature flag `media_auto_cleanup` is on (default off). After generate,
+   an inline AI assistance asks for a **different**
    cleanup (required prompt, overlay) and POSTs
    `/v1/media-assets/{id}/image-edits` (same as the assistant `cleanup_image`) —
    not a photo picker and not `POST /v1/ads/…/cleanup`. Reject is
