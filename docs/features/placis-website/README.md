@@ -11,6 +11,7 @@ copy or design PRD. The app lives in `apps/placis-website/`. This origin has
 - [cloudflare.md](cloudflare.md) — Astro static build, R2 origin, zone hosts
 - [testing.md](testing.md) — Playwright against the static build
 - Pricing: `/pricing/` ([billing](../billing/README.md))
+- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
 
 Visual and copy source: `github.com/bongagift/placis-web` marketing files
 (`frontend/src/components/public-website/`). That repo’s Next.js app, Clerk,
