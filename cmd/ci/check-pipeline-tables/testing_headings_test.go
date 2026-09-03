@@ -155,3 +155,52 @@ func TestTestingHeadingsTeardownBeforeMocked(t *testing.T) {
 		t.Fatalf("teardown order: %v", errs)
 	}
 }
+
+func TestTestingHeadingsTitleSuffixOK(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "Integration"},
+		atxHead{3, "TestHappyPathV1Me — Route"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
+		atxHead{3, "TestPipelineHappyPathAdsFull — pipeline Full"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
+		atxHead{3, "HappyPathAdsFull — frontend Full"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
+	)
+	if errs := checkTestingHeadings(report{testingFiles: []headingFile{f}}); len(errs) != 0 {
+		t.Fatalf("title suffix ok: %v", errs)
+	}
+}
+
+func TestTestingHeadingsTitleSuffixMissing(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "Integration"},
+		atxHead{3, "TestHappyPathV1Me"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
+	)
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "missing — Route") {
+		t.Fatalf("missing suffix: %v", errs)
+	}
+}
+
+func TestTestingHeadingsTitleSuffixWrong(t *testing.T) {
+	f := okTesting(
+		atxHead{2, "Integration"},
+		atxHead{3, "TestPipelineHappyPathAdsFull — Route"},
+		atxHead{4, "Setup"},
+		atxHead{4, "Exercise"},
+		atxHead{4, "Verify"},
+	)
+	errs := checkTestingHeadings(report{testingFiles: []headingFile{f}})
+	if len(errs) == 0 || !strings.Contains(strings.Join(errs, "\n"), "expected — pipeline Full") {
+		t.Fatalf("wrong suffix: %v", errs)
+	}
+}

@@ -84,7 +84,7 @@ LLM.
 
 ## Integration
 
-### TestHappyPathV1AdsReturnsList
+### TestHappyPathV1AdsReturnsList — Route
 
 Backend. Go `TestHappyPathV1AdsReturnsList`. OpenAPI 1:1.
 
@@ -102,7 +102,7 @@ One draft ad and one `status=archived` ad. No `frontend-2`. No Worker.
 Exercise body: `AdRead[]` omits `status=archived`. The draft is
 present. Must not: campaign metrics. Named **reads** may supplement.
 
-### TestHappyPathV1AdsCreatesAd
+### TestHappyPathV1AdsCreatesAd — Route
 
 Backend. Go `TestHappyPathV1AdsCreatesAd`. OpenAPI 1:1. **calls**
 `CreateAd`.
@@ -128,7 +128,7 @@ generate; write copy.
 
 Missing `format` → 400.
 
-### TestHappyPathV1AdsAdIdReturnsAd
+### TestHappyPathV1AdsAdIdReturnsAd — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdReturnsAd`. OpenAPI 1:1.
 
@@ -150,7 +150,7 @@ Exercise body: `AdRead` hydrates the workspace. Must not: return
 
 `404`.
 
-### TestHappyPathV1AdsAdIdUpdatesAd
+### TestHappyPathV1AdsAdIdUpdatesAd — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdUpdatesAd`. OpenAPI 1:1.
 
@@ -174,7 +174,7 @@ write a Published ad; enqueue generate.
 
 `409`.
 
-### TestHappyPathV1AdsAdIdDeletesAd
+### TestHappyPathV1AdsAdIdDeletesAd — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdDeletesAd`. OpenAPI 1:1.
 
@@ -196,7 +196,7 @@ supplement. Must not: Archive.
 
 `409` if not `draft`.
 
-### TestHappyPathV1AdsAdIdVariantsReturnsVariant
+### TestHappyPathV1AdsAdIdVariantsReturnsVariant — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdVariantsReturnsVariant`. OpenAPI
 1:1.
@@ -219,7 +219,7 @@ list. Named **reads** may supplement.
 
 `404`.
 
-### TestHappyPathV1AdsAdIdVariantsVariantIdUpdatesVariant
+### TestHappyPathV1AdsAdIdVariantsVariantIdUpdatesVariant — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdVariantsVariantIdUpdatesVariant`.
 OpenAPI 1:1.
@@ -245,7 +245,7 @@ supplement. Must not: `POST …/cleanup`.
 
 `409`.
 
-### TestHappyPathV1AdsAdIdVariantsVariantIdRewrite
+### TestHappyPathV1AdsAdIdVariantsVariantIdRewrite — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdVariantsVariantIdRewrite`. OpenAPI
 1:1. **calls** `RewriteAdCopy`.
@@ -277,7 +277,7 @@ Exercise body: rewritten `headline` / `primary_text`. Then
 
 LLM. Prefer fake Clerk.
 
-### TestHappyPathV1AdsAdIdGenerate
+### TestHappyPathV1AdsAdIdGenerate — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdGenerate`. OpenAPI 1:1.
 
@@ -308,7 +308,7 @@ write `ad_ready_to_post`. Copy and placement Persist is pipeline 02.
 
 LLM. Prefer fake Clerk.
 
-### TestHappyPathV1AdsAdIdApprove
+### TestHappyPathV1AdsAdIdApprove — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdApprove`. OpenAPI 1:1. **calls**
 `ApproveAd`.
@@ -334,7 +334,7 @@ supplement. Must not: ad posting.
 
 `400` blockers. `409`.
 
-### TestHappyPathV1AdsAdIdAdSet
+### TestHappyPathV1AdsAdIdAdSet — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdAdSet`. OpenAPI 1:1. **calls**
 `ExportAdSet`.
@@ -359,7 +359,7 @@ Exercise body: `AdSetRead`. Must not: ad posting; write ad tables.
 
 `409` if not `ad_ready_to_post`.
 
-### TestHappyPathV1AdsAdIdDownload
+### TestHappyPathV1AdsAdIdDownload — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdDownload`. OpenAPI 1:1. **calls**
 `ExportAdSet`.
@@ -389,7 +389,7 @@ posting.
 
 Ad platforms. MinIO is real (Testcontainers). Prefer fake Clerk.
 
-### TestHappyPathV1AdsAdIdArchive
+### TestHappyPathV1AdsAdIdArchive — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdArchive`. OpenAPI 1:1.
 
@@ -413,7 +413,7 @@ delete.
 
 `409`.
 
-### TestHappyPathV1AdsAdIdUnarchive
+### TestHappyPathV1AdsAdIdUnarchive — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdUnarchive`. OpenAPI 1:1.
 
@@ -437,7 +437,7 @@ Response `AdRead`.
 
 `409`.
 
-### HappyPathAdsFull
+### HappyPathAdsFull — frontend Full
 
 Frontend. Vitest `HappyPathAdsFull`. Not four files named 01–04.
 
@@ -467,7 +467,7 @@ Approve 4xx.
 
 All HTTP via MSW.
 
-### TestPipelineHappyPathAdsFull
+### TestPipelineHappyPathAdsFull — pipeline Full
 
 Backend. Go `TestPipelineHappyPathAdsFull`. Per-step names:
 [pipeline/testing](pipeline/testing/README.md).

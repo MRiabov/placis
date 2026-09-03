@@ -44,7 +44,7 @@ LLM unused. Prefer fake Google Maps territory lookup.
 
 ## Integration
 
-### TestHappyPathV1BusinessProfile
+### TestHappyPathV1BusinessProfile — Route
 
 #### Setup
 
@@ -66,7 +66,7 @@ URL so `facebook_profiles` can hydrate. No `frontend-2`.
 `facebook_profiles`. No profile-history timeline. Distinct from
 `WebsiteBusinessProfileRead` and `OnboardingLiveBusinessProfileRead`.
 
-### TestHappyPathV1BusinessProfilePatch
+### TestHappyPathV1BusinessProfilePatch — Route
 
 #### Setup
 
@@ -94,7 +94,7 @@ write `facebook_posts`, `instagram_posts`, `instagram_profiles`, or
 
 Full-row dump / extra keys → 4xx.
 
-### TestHappyPathV1BusinessProfileEditsUndo
+### TestHappyPathV1BusinessProfileEditsUndo — Route
 
 #### Setup
 
@@ -116,7 +116,7 @@ row on `business_profile_edits`. Live columns restored.
 
 Already undone, or not the named increment → `409`.
 
-### TestHappyPathV1BusinessProfileCertifications
+### TestHappyPathV1BusinessProfileCertifications — Route
 
 #### Setup
 
@@ -134,7 +134,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 200. Body has `available[]` (`CertificationDefinitionRead`) and
 `selected[]`. Do not key `available[]` off a closed trade enum.
 
-### TestHappyPathV1BusinessProfileCertificationsPut
+### TestHappyPathV1BusinessProfileCertificationsPut — Route
 
 #### Setup
 
@@ -153,7 +153,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 selected set. Unchecked rows are `status=removed` on
 `business_profile_certification_selections`.
 
-### TestHappyPathV1BusinessProfileReviews
+### TestHappyPathV1BusinessProfileReviews — Route
 
 #### Setup
 
@@ -172,7 +172,7 @@ pool). Response `ReviewListRead`.
 first, plus `top_reviews_provisional`. Archived rows omitted unless
 `status=archived`.
 
-### TestHappyPathV1BusinessProfileReviewsPatch
+### TestHappyPathV1BusinessProfileReviewsPatch — Route
 
 #### Setup
 
@@ -197,7 +197,7 @@ inserted; review pin columns unchanged (none). Does not rewrite
 
 Longer than 30, a duplicate id, or an id not `in_pool` → `400`.
 
-### TestHappyPathV1BusinessProfileReviewsArchive
+### TestHappyPathV1BusinessProfileReviewsArchive — Route
 
 #### Setup
 
@@ -216,7 +216,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant. An
 Row `status=archived` on `business_profile_reviews`. Dropped from
 every `website_slot_reviews` array (then compact). Not deleted.
 
-### TestHappyPathV1BusinessProfileReviewsUnarchive
+### TestHappyPathV1BusinessProfileReviewsUnarchive — Route
 
 #### Setup
 
@@ -233,7 +233,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant. An
 200. Then `GET /v1/business-profile/reviews` includes it in the pool.
 Not automatically top. Not automatically back onto website sections.
 
-### TestHappyPathV1BusinessProfileReviewsCreate
+### TestHappyPathV1BusinessProfileReviewsCreate — Route
 
 #### Setup
 
@@ -253,7 +253,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 
 `rating` outside 1–5 or `body` over 500 → `400`.
 
-### TestHappyPathV1BusinessProfileReviewsImport
+### TestHappyPathV1BusinessProfileReviewsImport — Route
 
 #### Setup
 
@@ -297,7 +297,7 @@ writes.
 404 / forbidden. Tenant B `business_profiles` /
 `business_profile_reviews` unchanged.
 
-### HappyPathDetailsFull
+### HappyPathDetailsFull — frontend Full
 
 Frontend. Vitest `HappyPathDetailsFull`. Not OpenAPI 1:1.
 

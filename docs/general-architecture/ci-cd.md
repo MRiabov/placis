@@ -221,8 +221,9 @@ does). We do **not** hand-roll AST scripts up front:
 - **HappyPath OpenAPI check** (`cmd/ci/check-happy-path`) — `--public`
   leftover-checks structured `api.md` Routes (public and `/internal/…`)
   plus exported `openapi.json` when present; `--worker` against the
-  Worker internal OpenAPI file. Each op needs a `### TestHappyPath*`
-  Exercise 1:1 in the owning `testing.md` and a `func TestHappyPath*`
+  Worker internal OpenAPI file. Each op needs a
+  `### TestHappyPath* — Route` Exercise 1:1 in the owning `testing.md`
+  and a `func TestHappyPath*`
   that hits **exactly that one** Method+path literal. Flow tests do not
   fill a 1:1 row. `TestPipelineHappyPath*` is not a 1:1 row. Two leftover
   files (`leftover_docs.go`, `leftover_tests.go`) may only shrink. Details
@@ -349,7 +350,7 @@ so `::warning` can fire.
 `cmd/ci/check-happy-path --public` leftover-checks structured `api.md`
 Routes **Method + path** cells (and HTTP conventions `GET /v1/health` /
 `GET /openapi.json`) plus exported `openapi.json` when present. The
-owning `testing.md` must have a `### TestHappyPath*` (not
+owning `testing.md` must have a `### TestHappyPath* — Route` (not
 `TestPipelineHappyPath`) whose **Exercise** is exactly that one
 Method+path. `internal/**/*_test.go` must have a `func TestHappyPath*`
 that hits that same literal. `--worker` uses the Worker internal
