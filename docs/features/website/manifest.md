@@ -29,8 +29,7 @@ Root:
 - `website_styles` (preset id + bounded overrides: `primary`, `neutral`,
   `accent`, `radius`, `density` — see [styles.md](styles.md))
 - website-level SEO fallback: `seo_title`, `seo_description`, `seo_og_title`,
-  `seo_og_description`, `seo_canonical_url`, `seo_noindex`,
-  `seo_primary_keyword`
+  `seo_og_description`, `seo_canonical_url`, `seo_noindex`
 - `pages[]`
 - `top_menu[]` — resolved tree: `id`, `menu_node_kind`, `label`, `path` or
   `href`, `children` (depth 2). Page nodes bake path/title from `website_pages`.
@@ -70,7 +69,7 @@ Per website section:
 - blog / careers collections (deferred)
 - predecessor project-as-blog collection (body, markdown, status, visibility)
 - template keys, `created_by`, how the unpublished website was copied
-- unpublished-only fields: `origin`, slot `status`, `validation_errors`,
+- unpublished-only fields: `origin`, `validation_errors`,
   `has_unpublished_changes`
 - Clerk / tenant internals, file ids, signed-URL machinery (resolved public URLs
   only)

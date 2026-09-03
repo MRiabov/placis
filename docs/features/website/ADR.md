@@ -11,7 +11,9 @@ Status: decided (2026-08-16, product owner + engineering).
 
 2. **The unpublished website is the source of truth; the website manifest is the
    read model** — `website_manifest` is built at website publication only; it is
-   never the editable source.
+   never the editable source. (2026-09-03): public SEO fields are
+   `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
+   `seo_canonical_url`, `seo_noindex`. No `seo_primary_keyword`.
 
 3. **Website component contracts are one typed struct each, dumped to JSON** —
    under `catalog/`, consumed by both the TypeScript renderer for the contractor
@@ -64,6 +66,11 @@ Status: decided (2026-08-16, product owner + engineering).
    deleting profile history. Onboarding-written rows (`published_by=onboarding`,
    including 07 v1, 08 v2, and 05-retry writes) are never website-rollback
    targets. (2026-08-16; onboarding drafts excluded 2026-08-25)
+   (2026-09-03): no `website_publication_issues` table. The Worker
+   publication response is empty. Pre-publish blockers are computed
+   `blockers[]` on the editor GET. (2026-09-03): `blockers[]` is per
+   website page (`WebsitePageRead`). The Publish dropdown displays the
+   aggregate.
 
 8. **Deferred: blog posts + careers** — no `blog_post` website page type or
    `website_career_*` tables in the first pass; re-add only when needed.
@@ -85,7 +92,9 @@ Status: decided (2026-08-16, product owner + engineering).
 
 11. **Website page status is `unpublished` / `archived`** — publication is
     website-level (`website_publications`). There is no page-level `approved` or
-    `published`. (2026-08-20)
+    `published`. (2026-08-20) (2026-09-03): website slots have no `status`
+    column. `slot_type` is `text` / `rich_text` / `image` / `link` / `list`
+    (no `json`).
 
 12. **No unpublished snapshot per edit** — the unpublished website is in-place
     `UPDATE` of unpublished rows. Website edit history (`edit_history`) is typed
@@ -111,10 +120,19 @@ Status: decided (2026-08-16, product owner + engineering).
     Save 2026-08-23; local-first PATCH 2026-08-23; click-off 2026-08-23; send
     timer + leave guard 2026-08-23; PATCH delta 64 KB 2026-08-23; no Saving
     indicator + 10s copy-out error 2026-08-23; website edit history 2026-08-23)
+    (2026-09-03): checkout of an owner publication is `GET` with
+    `publication_id` (page list and page hydrate), then ordinary PATCH of the
+    substituted projection. No restore-unpublished POST. That copy-out may
+    send a full dirty set (64 KB does not forbid it). Rollback stays live-only
+    and does not rewrite unpublished rows.
 
 13. **Website styles live on `website_settings`** — one row per tenant, copied
     into the website manifest at website publication. Not per website page.
-    (2026-08-20)
+    (2026-08-20) (2026-09-03): hydrate is the website page GET
+    `website_styles`. Apply is `PATCH /v1/website/editor/settings`.
+    There is no `GET /settings`. Top menu and footer hydrate is the
+    website page GET `menus`; apply is `PATCH /menus`. There is no
+    `GET /menus`.
 
 14. **Live website is the published website copy** — Details, Projects,
     certifications and reviews, and website styles update the website editor
@@ -188,6 +206,10 @@ Status: decided (2026-08-16, product owner + engineering).
     object is 404, not a render from Postgres. Drop leftover
     `GET /v1/public/site/resolve` (it was the token website preview). Tests
     assert R2 keys, not resolve. (2026-08-21; token preview dropped 2026-08-25)
+    (2026-09-03): live GET is that host’s tree
+    (`sites/hosts/{hostname}/latest/`). The prefix tree is unpaid Preview
+    website address / Website activation until the first owner
+    publication on that preview host.
 
 19. **R2 tree is keyed by the website prefix** — `tenants.website_prefix`,
     **reserved at 07** from `display_name`. A website address maps
@@ -203,8 +225,11 @@ Status: decided (2026-08-16, product owner + engineering).
     own R2 tree (`sites/hosts/{hostname}/latest/` and `…/{version_number}/`).
     Hosts can diverge. The **host row** is the Publish click
     (`website_address_id` on POST). Rollback and purge are per that host. Keep
-    `sites/{website_prefix}/…` as the unactivated 08/09 write until the first
-    owner publication on that preview host.
+    `sites/{website_prefix}/…` as the unactivated Preview website address
+    / Website activation write until the first owner publication on
+    that preview host. (2026-09-03): Locks and the live serve path match
+    this: one `latest/` per host; leftover “one shared tree” is
+    superseded.
 
 20. **Website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS
@@ -228,7 +253,12 @@ Status: decided (2026-08-16, product owner + engineering).
     (`page_id` null). No `top_menu_items` / `footer_items` tables. The assistant
     uses `update_menus`, not `update_nav`. Where the owner edits the trees is in
     [design decision record](design-decision-record.md). (2026-08-23) Also `show_contact` (bar CTA to the
-    Contact website page). (2026-08-26)
+    Contact website page). (2026-08-26) (2026-09-03): Copy website template
+    pages copies **site-wide** catalog `top_menu` / `footer` when the website
+    template includes them (`url` nodes → `website_urls` rows). The
+    [menu constant](catalog.md#menu-constant) is the page+text default when the template omits menus. Do
+    not copy a top menu onto every website page. Owner
+    `POST /v1/website/editor/urls` and menus PATCH stay.
 
 23. **Website publication requires an active subscription** — After they stop
     paying the subscription price, unpublish. `POST /publications` and live

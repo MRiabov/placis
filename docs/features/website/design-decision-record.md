@@ -123,11 +123,15 @@ numbers are HTML comments so later entries keep their numbers.
    (2026-08-27)
 
 9. **Website versions: Preview on live, rollback on earlier** — The live website
-   version has **Preview** (opens the live website). It does not say Continue
-   editing and has no rollback. Earlier owner website versions have a silent
-   **website rollback** icon. Assistant activity is not a website version.
+   version has **Preview** (opens the live website). It does
+   not say Continue editing and has no rollback. Earlier owner website
+   versions have a silent **checkout** (GET with `publication_id`, then
+   ordinary PATCH of the substituted projection) and a silent **website
+   rollback** icon (live `latest/` only; unpublished unchanged). Assistant
+   activity is not a website version.
    (2026-08-26) The list is a workspace item at the bottom of the rail, not an
-   editing-panel tab. (2026-08-26)
+   editing-panel tab. (2026-08-26) (2026-09-03): checkout is a Website versions
+   control.
 
 10. **Content head has no website-section picker** — Click the canvas to select.
     The head is the website section name, hide, and move up/down. No “Website
@@ -176,7 +180,10 @@ numbers are HTML comments so later entries keep their numbers.
     of the sheet title. The whole title row hides the sheet (Add a website page
     and Content controls stay their own hits). The row is compact, in line with
     the list. That hides the sheet back to the bottom bar so the canvas is not
-    covered. (2026-08-27)
+    covered. (2026-08-27) (2026-09-03): website-page SEO is public
+    metadata only: `seo_title`, `seo_description`, `seo_og_title`,
+    `seo_og_description`, `seo_canonical_url`, `seo_noindex`. No
+    `seo_primary_keyword`.
 
 13. **The website editor control is Publish** — Owner copy is the verb
     **Publish** (toolbar dropdown), not the noun **website publication**.
