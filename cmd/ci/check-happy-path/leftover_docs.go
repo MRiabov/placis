@@ -7,15 +7,5 @@ package main
 // cell fails immediately.
 var leftoverDocs = []string{
 	"GET /openapi.json",
-	"GET /v1/assistant/thread",
-	"GET /v1/assistant/thread/ws",
 	"GET /v1/health",
-	"POST /v1/assistant/record-apply",
-	"POST /v1/assistant/record-reject",
-	"POST /v1/assistant/thread/new",
-	"POST /v1/assistant/voice/realtime-connection",
-	"POST /v1/assistant/voice/recordings",
-	"POST /v1/assistant/voice/recordings/{id}/complete",
-	"POST /v1/assistant/voice/tool-calls",
-	"POST /v1/assistant/voice/transcripts",
 }

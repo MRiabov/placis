@@ -3,10 +3,11 @@
 One full-stack E2E: Find → Review → text client interview → wait teaser →
 website preview → website activation. Guide Voice is a **separate**
 full-stack E2E in [assistant testing](../assistant/testing.md)
-`### Onboarding` (`assistant_conversation_items`, `assistant_runs`,
-`ai.threads` `thread_kind=onboarding_assistant`). Unpaid website editor
-prompt → PATCH → pay is `### Onboarding website editor` there. Do not
-include those journeys here. Route 1:1 is `### TestHappyPath*` below.
+`### Onboarding` (journey, not Route 1:1;
+`assistant_conversation_items`, `assistant_runs`, `ai.threads`
+`thread_kind=onboarding_assistant`). Unpaid website editor prompt →
+PATCH → pay is `### Onboarding website editor` there. Do not include
+those journeys here. Route 1:1 is `### TestHappyPath*` below.
 Pipeline Persist is [pipeline/testing](pipeline/testing/README.md).
 
 ## E2E
