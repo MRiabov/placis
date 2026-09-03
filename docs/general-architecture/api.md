@@ -101,7 +101,7 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 
 | Location | Persistence | HTTP to `frontend-2` / contractor website |
 | --- | --- | --- |
-| Website slot `value` | jsonb | Discriminated union on `slot_type`: `text`/`rich_text` → string + `maxLength`; `image` → media library item id + crop/focal; `link` → url + label; `list` → typed array (e.g. project ids). **Do not expose `slot_type=json`.** Project galleries and reviews are ids / `website_slot_reviews`, not unconstrained JSON. |
+| Website slot `value` | jsonb | Discriminated union on `slot_type`: `text`/`rich_text` → string + `maxLength`; `image` → media library item id + crop/focal; `link` → url + label; `list` → typed array (e.g. project ids). Project galleries and reviews are ids / `website_slot_reviews`, not unconstrained JSON. |
 | Website section `props` | jsonb | `oneOf` by `component_id` from the website component catalog. Extra keys 4xx. Unknown `component_id` → `unsupported_component` flag + no props object. |
 | Website section `design` | jsonb | Named design-control fields (enum/bool options from the same website component catalog). Extra keys 4xx. |
 | Website edit history `before`/`after` | jsonb (one website slot or field) | Same union as the live field (`entity_type` + `field` / website slot key). |
@@ -123,7 +123,6 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 
 - Don't say: `JsonRecord`, `JsonObjectPayload`, `PublicSite*` objects,
   `props: object`, `value: object` without discriminator
-- `slot_type=json` on GET/PATCH
 - String fields documented as JSON
 - SSE `payload` as unconstrained object
 - Returning ETL fetch `raw`, Stripe raw, or `ai_generations`

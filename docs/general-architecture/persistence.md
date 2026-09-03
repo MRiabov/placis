@@ -9,7 +9,7 @@ Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic
 dumps: website component `props` / `design`, website slot `value`, ETL fetch
 `raw` (one column per extract-type fetch table), Stripe and website preview
 event payloads, `ai_generations` traces (`input` / `internal_reasoning` /
-`output` / `tool_calls` / `applied_changes`), audit `before` / `after`, website
+`output` / `tool_calls`), audit `before` / `after`, website
 edit history `before` / `after` (one field or website slot), and ads
 `platform_refs`. `website_manifest` is jsonb because it is a published website
 copy (`website.v1`), not because the tree is polymorphic. Structural data is

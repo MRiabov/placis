@@ -38,17 +38,19 @@ later CMS Publish.
     still tokens (Worker resolve did not write back). No new
     `website_pages`.
   - Go sent the tokenized dump + `WebsiteBusinessProfileRead` +
-    `media_asset_urls` to `websitePublication` (not a live GET, not
+    `media_asset_urls`, `hostname` to `websitePublication` (not a live GET, not
     `websiteRender`). MinIO has `{version_number}/` then `latest/`
-    keys. Fake `purge_cache` includes live website page URLs, sitemap,
-    robots, WebP on that host. Response has no website image render.
+    under `sites/hosts/{hostname}/` for CMS Publish (unpaid Preview
+    website address / Website activation still use
+    `sites/{website_prefix}/` until that preview host’s first owner
+    publication). Fake `purge_cache` includes live website page URLs,
+    sitemap, robots, WebP on **that** host. Response has no website image
+    render.
   - 08 strip on / 09 strip off / CMS Publish are the same write with
     the caller flag (strip present in 08 HTML, absent in 09/CMS).
   - Later ETL without 04: no new `website_publications` row;
     MinIO `latest/` objects unchanged.
   - Live GET of the host does not call Go.
-  - Happy path: `website_publication_issues` empty (post-publication
-    rows only when the Worker reports them).
   - `media_assets.review_status=approved` for `pending_review` items
     on that dump (`ApproveMediaAsset`).
 - **Handoff**: live path is MinIO `latest/` + this
@@ -57,8 +59,9 @@ later CMS Publish.
   v2 in this table.
 - **Fail**: required missing var → no new `website_publications` row
   (or none `active`); previous `latest/` kept; unpublished website
-  slots unchanged; `website_publication_issues` is **not** used for this
-  pre-write blocker (editor `blockers[]` / throw). Retry the same
+  slots unchanged; pre-write blockers are
+  `WebsitePublicationBlockers` (editor `blockers[]` / throw),
+  not a publication-issues table. Retry the same
   caller.
 - **Mocked**: `purge_cache`. MinIO is real (Testcontainers). Not the
   Worker. No live Cloudflare.

@@ -1807,6 +1807,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | media (media) | media library |
 | editor (website) | website editor |
 | inspector | Content (workspace list from a canvas click) |
+| jump / jumps / jumping / jumpable | navigate / navigate to |
 | go live (website) | Publish (owner UI). Specs: website publication |
 | registry record | company registry record |
 | placeholder (website) | website placeholder or loading placeholder |

@@ -6,7 +6,8 @@ Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 Services: `SelectWebsiteTemplate`, `CopyWebsiteTemplatePages`,
 `GenerateWebsiteCopy` (River job kind `website_copy_generation`),
-`PublishWebsite` (**calls** `websitePublication`). Tables:
+`PublishWebsite` (**calls** `WebsitePublicationBlockers`, then
+`websitePublication`). Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 
 Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture.md), [persistence](persistence.md), [manifest](manifest.md),
@@ -31,9 +32,11 @@ enqueues. This feature owns the tables 02 writes.
    `go:embed` dump under `catalog/` ([catalog.md](catalog.md)). Do not load
    `packages/website-components/src/blueprints/` as the catalog.
 2. Validate website component ids, props, design controls, website page paths,
-   and website forms against the website component contract structs. Derive
-   top menu / footer from the [menu constant](catalog.md#menu-constant); do
-   not copy a catalog menu JSON.
+   and website forms against the website component contract structs. Copy
+   site-wide catalog `top_menu` / `footer` when the website template
+   includes them; otherwise derive from the
+   [menu constant](catalog.md#menu-constant). Do not copy a top menu onto
+   every website page.
 3. Keep website placeholders in the unpublished website;
    `websitePublication` is a website HTML render; `websiteRender` is a
    website image render for 03. Go does not fill tokens.
@@ -94,7 +97,8 @@ Website form POST is [leads HTTP](../other/leads/api.md). Connect website addres
 `POST /v1/website/addresses` (`type=custom` only). Website rollback is owner
 rows only. Media library, Details, Projects, and website form submit are other
 features' `api.md` files. CMS unpublished writes are editor `POST`/`PATCH` only.
-Reset to an owner website version is editor GET `publication_id`, then PATCH.
+Reset to an owner website version is editor GET `publication_id`, then PATCH
+(Website versions checkout).
 
 Do not create `/v1/public/site/…`, leftover `/preview/{token}/`, or
 `/v1/tenants/{website_prefix}/website/…`.

@@ -51,7 +51,7 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
 - **Columns:** `id`, `tenant_id` fk, `path`, `title`, `page_type`,
   `status`, `seo_title`, `seo_description`, `seo_og_title`,
   `seo_og_description`, `seo_canonical_url`, `seo_noindex`,
-  `seo_primary_keyword`, timestamps
+  timestamps
 - **Enums:** `page_type` → `home` / `about` / `service` / `contact` /
   `legal`; `status` → `unpublished` / `archived`
 - **Uniques:** `(tenant_id, path)`
@@ -78,11 +78,10 @@ sitemap and canonical: the subdomain host until a `type=custom` row is
 ### `website_slots`
 
 - **Columns:** `id`, `tenant_id` fk, `section_id` fk, `slot_key`,
-  `slot_type`, `value` jsonb oneOf `slot_type`, `status`, `origin`,
+  `slot_type`, `value` jsonb oneOf `slot_type`, `origin`,
   `validation_errors`
 - **Enums:** `slot_type` → `text` / `rich_text` / `image` / `link` /
-  `list` / `json`; `status` → `unpublished` / `reviewed` / `approved` /
-  `rejected`; `origin` → `website_template` /
+  `list`; `origin` → `website_template` /
   `website_copy_generation` / `owner` / `business_research`
 - **Uniques:** `(section_id, slot_key)`
 - **Written by:** `CopyWebsiteTemplatePages`; `GenerateWebsiteCopy`;
@@ -172,14 +171,10 @@ may replace a whole tree. Assistant `remove_entries` max 4.
   `POST /v1/website/publications/{id}/rollback`; `UnpublishWebsite`
   (clears `active`)
 - **Notes:** Rollback lists `published_by=owner` only on that host.
-
-### `website_publication_issues`
-
-- **Columns:** `id`, `publication_id` fk, `code`, `message`,
-  `entity_type` nullable, `entity_id` nullable
-- **Written by:** `PublishWebsite` (post-publication only)
-- **Notes:** Unpublished jumpable blockers are computed on the editor
-  GET (`blockers[]`), not rows here.
+  Pre-publish blockers: `WebsitePublicationBlockers`. Callers: list
+  GET (per website page), page GET, page PATCH ack, and
+  `GET /v1/website/editor/blockers`. `PublishWebsite` **calls** it as
+  the hard gate. There is no `website_publication_issues` table.
 
 ### `website_slot_reviews`
 

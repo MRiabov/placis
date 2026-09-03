@@ -73,7 +73,8 @@ home gallery, projects website page, categories), and certifications.
 3. `GenerateWebsiteCopy` **sends** `WebsiteRenderRequest` (`profile`
    `WebsiteBusinessProfileRead`, `pages`, `media_asset_urls`) to
    `websiteRender`. **Website publication (04)** **sends**
-   `WebsitePublicationRequest` (`dump` plus `WebsiteBusinessProfileRead`)
+   `WebsitePublicationRequest` (`dump` plus `WebsiteBusinessProfileRead`,
+   `hostname`)
    to `websitePublication`. The Worker
    resolves every variable — exact match → typed value, substring →
    substituted — and writes HTML to R2. Go does not fill tokens.

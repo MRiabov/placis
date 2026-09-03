@@ -70,7 +70,7 @@ real API + real Postgres. Website activation (09) already succeeded so
    is the holding HTML. `POST /v1/website/publications` and live
    website rollback **402** `subscription_canceled` (not
    `usage_credit_exhausted`). UI: Publish dropdown **Publishing is
-   blocked:** jump to Usage & billing. Website editor PATCH still
+   blocked:** navigate to Usage & billing. Website editor PATCH still
    works. Pay-again: new `stripe_subscription_id`; `status=active`;
    `canceled_at` cleared. Publish succeeds.
 7. **Change plan** — `subscriptions.subscription_tier` updates; no
@@ -355,7 +355,8 @@ activation (09).
 #### Exercise
 
 Account menu → Usage & billing. Extra usage credit. Change plan.
-Cancel. Keep subscription. Publish blocked jump. Remaining 0: billed
+Cancel. Keep subscription. Publish blocked navigate to Usage &
+billing. Remaining 0: billed
 composer and Voice stop (cannot send / cannot start Voice). Website
 editor copy PATCH via MSW **200**. MSW:
 `GET /v1/billing/usage`,
@@ -370,7 +371,8 @@ canceled).
 
 UI: usage bar, **you are out of usage credit**, billed composer and
 Voice stop, link to Usage & billing. Change plan **Current**,
-**Cancels on**, Keep clears the flag, Publish blocked jump. Website
+**Cancels on**, Keep clears the flag, Publish blocked navigate to
+Usage & billing. Website
 editor still accepts copy PATCH via MSW **200**. MSW saw those
 Method+path strings. Postgres rows are the backend test.
 

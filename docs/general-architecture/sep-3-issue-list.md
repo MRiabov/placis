@@ -28,15 +28,13 @@ Index of feature lists:
    - [README.md](README.md) (Public-source extract still links
      `features/other/etl/README.md`)
 
-2. **`ai_generations.approval_status` and `applied_changes`**
-   Issue: persistence. Action: drop. Real gates are
-   `runs.ask_first_status` and `edit_history`.
-   Where:
-
-   - [llm-layer.md](llm-layer.md) lines 167–168, 174
-   - [persistence.md](persistence.md) line 12
-
-   Risk: an agent builds a generic AI-approval queue.
+2. **Three of five `audit.md` actions have no owner**
+   Issue: audit. Action: list what actually writes: website publication,
+   website activation, ad approve.
+   Where: [audit.md](audit.md) lines 3–6 (also impersonating, refunds,
+   data export/deletion). Impersonation is Clerk-native
+   ([../features/other/auth/README.md](../features/other/auth/README.md));
+   Go never sees it. No refund or GDPR spec exists.
 
 3. **`files.scan_status` has no scanner**
    Issue: persistence. Action: name scanner + job, or drop.
@@ -58,10 +56,16 @@ Index of feature lists:
 7. **`files.visibility=owner_visible` unreachable**
    Issue: persistence. Action: drop the enum value.
    Where: [files-and-s3.md](files-and-s3.md) line 26.
+   Comment: **do not drop private / public.** Raw owner uploads and
+   Voice recordings are `private`. Canonical WebP and thumbnails are
+   `public`. `owner_visible` is the unused third; keep it until a third
+   visibility is needed or ruled out.
 
 8. **`tool_revision_kind` includes `skill`**
    Issue: persistence. Action: drop `skill`; tools are unversioned.
    Where: [llm-layer.md](llm-layer.md).
+   Comment: **not now.** No agent skills this pass (prompts only). Keep
+   `skill` on the enum; migrate when a skill feature exists.
 
 9. **One-step “workflows” duplicate `## Jobs`**
    Issue: docs. Action: drop
@@ -101,3 +105,8 @@ Index of feature lists:
 - Voice: no provisioned phone numbers, no inbound, no SMS, no receptionist.
 - Predecessor CRM language in this tree is almost all **negative** spec —
   keep those bans.
+- Apply / reject and Ask first are per-feature, not
+  `ai_generations.approval_status`.
+- Files: `private` (raw / Voice) vs `public` (WebP). `owner_visible`
+  stays until a third visibility is needed or ruled out.
+- `tool_revision_kind=skill` reserved; migrate when agent skills exist.
