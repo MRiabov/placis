@@ -83,7 +83,7 @@ const detailsAPI = `# Details HTTP
 
 const detailsHeading = `## Integration
 
-### TestHappyPathV1BusinessProfile
+### TestHappyPathV1BusinessProfile — Route
 
 #### Setup
 
@@ -119,7 +119,7 @@ const projectsAPI = `# Projects HTTP
 
 const projectsHeading = `## Integration
 
-### TestHappyPathV1Projects
+### TestHappyPathV1Projects — Route
 
 #### Setup
 
@@ -135,6 +135,23 @@ The HTTP body lists projects.
 `
 
 const healthHeading = `## Integration
+
+### TestHappyPathHealth — Route
+
+#### Setup
+
+Backend.
+
+#### Exercise
+
+` + "`GET /v1/health`" + `
+
+#### Verify
+
+The HTTP body has ok.
+`
+
+const healthHeadingNoSuffix = `## Integration
 
 ### TestHappyPathHealth
 
@@ -153,7 +170,7 @@ The HTTP body has ok.
 
 const flowHeading = `## Integration
 
-### TestHappyPathFlow
+### TestHappyPathFlow — Route
 
 #### Setup
 
@@ -171,7 +188,7 @@ Both returned.
 
 const verifyHTTPHeading = `## Integration
 
-### TestHappyPathCreateAd
+### TestHappyPathCreateAd — Route
 
 #### Setup
 
@@ -253,7 +270,7 @@ func TestDetailsOwnsTesting(t *testing.T) {
 		"docs/features/business-profile/details/api.md": detailsAPI,
 		"docs/features/business-profile/certifications-and-reviews/testing.md": `## Integration
 
-### TestHappyPathV1BusinessProfile
+### TestHappyPathV1BusinessProfile — Route
 
 #### Setup
 
@@ -315,6 +332,18 @@ func TestTestingHeadingCovers(t *testing.T) {
 	})
 	if errs := checkTestingHappyPath(filepath.Join(dir, "docs"), nil); len(errs) != 0 {
 		t.Fatalf("heading covers: %v", errs)
+	}
+}
+
+func TestTestingHeadingWithoutSuffixDoesNotCover(t *testing.T) {
+	dir := writeTree(t, map[string]string{
+		"docs/features/website/api.md":     routesAPI,
+		"docs/features/website/testing.md": healthHeadingNoSuffix,
+	})
+	errs := checkTestingHappyPath(filepath.Join(dir, "docs"), nil)
+	joined := strings.Join(errs, "\n")
+	if !strings.Contains(joined, "GET /v1/health") {
+		t.Fatalf("missing — Route must not cover: %v", errs)
 	}
 }
 
@@ -398,7 +427,7 @@ func TestAdsOwnsAdGenerationTesting(t *testing.T) {
 		"docs/features/ads/api.md": adsWriteAPI,
 		"docs/features/ads/testing.md": `## Integration
 
-### TestHappyPathAds
+### TestHappyPathAds — Route
 
 #### Setup
 
@@ -422,7 +451,7 @@ The HTTP body lists ads.
 		"docs/features/ads/api.md": adsWriteAPI,
 		"docs/features/ads/ad-generation/testing.md": `## Integration
 
-### TestHappyPathAdsGet
+### TestHappyPathAdsGet — Route
 
 #### Setup
 
@@ -436,7 +465,7 @@ Backend.
 
 The HTTP body lists ads.
 
-### TestHappyPathAdsCreate
+### TestHappyPathAdsCreate — Route
 
 #### Setup
 
@@ -461,7 +490,7 @@ func TestPipelineHeadingDoesNotCover(t *testing.T) {
 		"docs/features/website/api.md": routesAPI,
 		"docs/features/website/testing.md": `## Integration
 
-### TestPipelineHappyPathWebsiteFull
+### TestPipelineHappyPathWebsiteFull — pipeline Full
 
 #### Setup
 
