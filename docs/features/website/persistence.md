@@ -171,8 +171,10 @@ may replace a whole tree. Assistant `remove_entries` max 4.
   `POST /v1/website/publications/{id}/rollback`; `UnpublishWebsite`
   (clears `active`)
 - **Notes:** Rollback lists `published_by=owner` only on that host.
-  Pre-publish blockers are computed on the editor GET (`blockers[]`).
-  There is no `website_publication_issues` table.
+  Pre-publish blockers: `WebsitePublicationBlockers`. Callers: list
+  GET (per website page), page GET, page PATCH ack, and
+  `GET /v1/website/editor/blockers`. `PublishWebsite` **calls** it as
+  the hard gate. There is no `website_publication_issues` table.
 
 ### `website_slot_reviews`
 

@@ -43,8 +43,9 @@ Strip on/off is a caller flag.
 
 ## Do
 
-`PublishWebsite` **calls** `ApproveMediaAsset` for `pending_review`
-items on that dump, then **calls** `websitePublication`. Same write for
+`PublishWebsite` **calls** `WebsitePublicationBlockers`, then
+`ApproveMediaAsset` for `pending_review` items on that dump, then
+**calls** `websitePublication`. Same write for
 onboarding 08/09 and later CMS Publish.
 
 1. **calls** `ApproveMediaAsset` for `pending_review` items on that

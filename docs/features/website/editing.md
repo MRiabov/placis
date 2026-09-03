@@ -24,18 +24,20 @@ select, edit, see it update, then website publication.
    [api.md](api.md)) **copies** the change to unpublished rows. It is persistence, not
    the render path. Do not `GET` after each PATCH. Do not replace the whole
    projection from the PATCH response (that is frontend → backend → frontend).
-   Merge only `{ edit_history_head, batch_id }` (plus assigned ids on create).
-   Typing does **not** PATCH. Copy-out for `text` / `rich_text` / SEO happens on
-   **click-off** (leave the field). Discrete actions (image swap, reorder,
-   add/remove a website section) queue a PATCH immediately. The frontend has a
-   **safety timer**: at most one website-editor PATCH in flight, and at most one
-   send every **500ms**, coalescing queued click-offs and discrete actions into
-   the next body. That is why `429` should be rare. Also flush on route change,
-   website publication, and page hide / unload so a close-tab without blur is
-   not lost. If a copy-out or media-library upload is queued or in flight, or
-   the focused field is dirty, the website editor **blocks leaving** until it
-   finishes or the owner confirms discard (in-app confirm plus `beforeunload` on
-   tab close / reload).
+   Merge `{ edit_history_head, batch_id }` (plus assigned ids on create). Page
+   PATCH also merges `blockers[]` for that website page (same as
+   `edit_history_head` — not a replacement of the projection). Menus and
+   settings PATCH omit `blockers`. Typing does **not** PATCH. Copy-out for
+   `text` / `rich_text` / SEO happens on **click-off** (leave the field).
+   Discrete actions (image swap, reorder, add/remove a website section) queue a
+   PATCH immediately. The frontend has a **safety timer**: at most one
+   website-editor PATCH in flight, and at most one send every **500ms**,
+   coalescing queued click-offs and discrete actions into the next body. That is
+   why `429` should be rare. Also flush on route change, website publication,
+   and page hide / unload so a close-tab without blur is not lost. If a copy-out
+   or media-library upload is queued or in flight, or the focused field is
+   dirty, the website editor **blocks leaving** until it finishes or the owner
+   confirms discard (in-app confirm plus `beforeunload` on tab close / reload).
 5. The backend validates the change against the website component contract and
    **upserts** the unpublished website rows, appends `edit_history` for that
    copy-out, and advances `edit_history_head`. The body is only the changed
@@ -147,8 +149,10 @@ plus required
 `base_edit_history_head` (the acked head; null only if the stack is empty).
 Dirty keys unchanged — including keys dirtied by in-memory undo/redo.
 Assistant copy-out adds `ai_generation_id` on those dirty keys. Success
-returns **only** `{ edit_history_head, batch_id }` — not the projection,
-not the log. To update a website slot you send:
+returns `{ edit_history_head, batch_id }`. Page PATCH also returns
+`blockers[]` for that whole website page (not per website section). Not
+the projection, not the log. Menus / settings stay
+`{ edit_history_head, batch_id }` only. To update a website slot you send:
 
 ```json
 { "sections": [ { "id": "<section id>", "slots": [
@@ -279,9 +283,15 @@ database stores the unpublished website (live unpublished rows) and the
    gone; undo still walks the hydrated record.
 4. Empty stack: no-op. Live website rollback is unrelated. Undo is not Reject.
 
-After PATCH / Apply: do not re-GET the log. Merge only `batch_id` and
-`edit_history_head`. After in-memory undo/redo, the following PATCH is the same
-merge. Do not replace the projection from the PATCH body.
+After PATCH / Apply: do not re-GET the log. Merge `batch_id` and
+`edit_history_head`. Page PATCH also merges `blockers[]` for that
+website page. After in-memory undo/redo, the following PATCH is the same
+merge. Do not replace the projection from the PATCH body. List GET
+per-row `blockers[]` seeds website pages not yet on the canvas. Opening
+the Publish dropdown calls `GET /v1/website/editor/blockers` (not a
+timer). After that website page’s first PATCH, the ack wins for that
+page until the next open-Publish GET. Do not recompute from the catalog
+while typing; click-off PATCH is enough for text.
 
 ## What each action does
 

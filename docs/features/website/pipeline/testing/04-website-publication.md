@@ -59,7 +59,8 @@ later CMS Publish.
   v2 in this table.
 - **Fail**: required missing var → no new `website_publications` row
   (or none `active`); previous `latest/` kept; unpublished website
-  slots unchanged; pre-write blockers are editor `blockers[]` / throw,
+  slots unchanged; pre-write blockers are
+  `WebsitePublicationBlockers` (editor `blockers[]` / throw),
   not a publication-issues table. Retry the same
   caller.
 - **Mocked**: `purge_cache`. MinIO is real (Testcontainers). Not the

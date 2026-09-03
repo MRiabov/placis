@@ -113,7 +113,7 @@ inventing it.
     ads (design decision 5). The wait-teaser hero uses the same job-site photo
     as the site they will open. The wait timeline moves from writing the website
     pages to opening the site as the cap ends. `prefers-reduced-motion`: no
-    carousel loop, bar jumps in second steps, no spin. Product later: found-%
+    carousel loop, bar advances in second steps, no spin. Product later: found-%
     eases in with research SSE; client interview footer flashes Saved after
     autosave; Find empty loading placeholder is not a filled demo name; wait
     carousel uses real website components; hours copy-forward on the first open

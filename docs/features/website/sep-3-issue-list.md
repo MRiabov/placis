@@ -66,49 +66,20 @@ lines stay as audit suggestions until resolved.
    from the home website page at publication. Do not drop from
    `website.v1` only because styles have no SEO columns.
 
-9. **Publish blockers: never-loaded website pages + stale after edits**
-   Issue: functionality. `blockers[]` is per website page
-   (`WebsitePageRead`). The Publish dropdown concatenates. Two holes:
-
-    1. Never-loaded website pages are not in the in-memory projection,
-       so their blockers never appear in the aggregate until that
-       website page is GET.
-    2. After hydrate, the working copy is local-first. PATCH returns
-       `{ edit_history_head, batch_id }` only. Do not GET after PATCH.
-       GET-time `blockers[]` stays after they fill a required slot (or
-       approve a media library item, or pay). The jump does not clear.
-
-   Action: seed blockers for website pages not yet on the canvas (list
-   GET, per-row). Recompute the dropdown from the working copy as they
-   edit (same catalog rules). No GET-after-PATCH. `POST /publications`
-   stays the hard gate.
+9. **`{{existing_site_url}}` as a website variable**
+   Issue: functionality. Action: remove from Common variables.
    Where:
-
-    - [api.md](api.md) `WebsitePageRead.blockers[]`
-    - [editing.md](editing.md) (GET once; PATCH ack is not the
-      projection)
-    - [frontend.md](frontend.md) (Publish dropdown jumps)
-    - [ADR.md](ADR.md) 7, 12; design decision 3
-
-   Comment: not unused-spec. Unit is per website page; display is the
-   aggregate. Do not drop the pre-flight list. Subscription and
-   unapproved media library items not on the canvas are not per
-   website page.
-
-10. **`{{existing_site_url}}` as a website variable**
-    Issue: functionality. Action: remove from Common variables.
-    Where:
 
     - [variables.md](variables.md) line 51
 
-    That is the contractor's **old** site (ETL crawl input). Catalog
-    production-ready CI requires every Common variable to appear, so this
-    becomes a hard template requirement.
-    Comment: **false alarm** (same shape as URL menus). Details persist
-    `existing_site_url`. ADR 6: `WebsiteBusinessProfileRead` is the
-    Common variables struct. Templates may paint it. The hard template
-    requirement is the catalog CI gate (item 21), not a reason to
-    drop the variable.
+   That is the contractor's **old** site (ETL crawl input). Catalog
+   production-ready CI requires every Common variable to appear, so this
+   becomes a hard template requirement.
+   Comment: **false alarm** (same shape as URL menus). Details persist
+   `existing_site_url`. ADR 6: `WebsiteBusinessProfileRead` is the
+   Common variables struct. Templates may paint it. The hard template
+   requirement is the catalog CI gate (item 21), not a reason to
+   drop the variable.
 
 ## Medium
 

@@ -6,7 +6,8 @@ Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 Services: `SelectWebsiteTemplate`, `CopyWebsiteTemplatePages`,
 `GenerateWebsiteCopy` (River job kind `website_copy_generation`),
-`PublishWebsite` (**calls** `websitePublication`). Tables:
+`PublishWebsite` (**calls** `WebsitePublicationBlockers`, then
+`websitePublication`). Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 
 Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture.md), [persistence](persistence.md), [manifest](manifest.md),

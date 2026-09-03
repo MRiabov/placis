@@ -132,7 +132,7 @@ put the website-activation strip on this route (it lives in the host HTML after
 Share). The wait-teaser hero uses the same job-site photo as the site they will
 open. The wait timeline moves to “Opening the site” as the cap ends
 ([design decision](design-decision-record.md) 11). `prefers-reduced-motion` stops the carousel loop and
-jumps the bar in second steps.
+advances the bar in second steps.
 
 The look export’s **Skip generation** and `?scene=generated` are mock-only
 ([design decision](design-decision-record.md) 8). That mock includes the sticky

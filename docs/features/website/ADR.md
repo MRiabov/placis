@@ -70,7 +70,16 @@ Status: decided (2026-08-16, product owner + engineering).
    publication response is empty. Pre-publish blockers are computed
    `blockers[]` on the editor GET. (2026-09-03): `blockers[]` is per
    website page (`WebsitePageRead`). The Publish dropdown displays the
-   aggregate.
+   aggregate. (2026-09-03): one function `WebsitePublicationBlockers`
+   (required website slot cannot resolve; live-path media library item
+   not approved; subscription not `active`). Do not duplicate those
+   `code` values per route. Editor routes return `blockers[]`: list
+   GET per-row page-scoped, page GET hydrate, page PATCH ack
+   (`WebsiteEditApplyRead`; menus / settings omit),
+   `GET /v1/website/editor/blockers` when the Publish dropdown opens
+   (tenant-scoped: all website pages plus subscription and off-canvas
+   unapproved media library items). `PublishWebsite` **calls** it as
+   the hard gate.
 
 8. **Deferred: blog posts + careers** — no `blog_post` website page type or
    `website_career_*` tables in the first pass; re-add only when needed.
