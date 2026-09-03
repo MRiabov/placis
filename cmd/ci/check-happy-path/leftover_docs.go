@@ -9,7 +9,6 @@ var leftoverDocs = []string{
 	"GET /openapi.json",
 	"GET /v1/assistant/thread",
 	"GET /v1/assistant/thread/ws",
-	"GET /v1/billing/usage",
 	"GET /v1/health",
 	"POST /v1/assistant/record-apply",
 	"POST /v1/assistant/record-reject",
@@ -19,8 +18,4 @@ var leftoverDocs = []string{
 	"POST /v1/assistant/voice/recordings/{id}/complete",
 	"POST /v1/assistant/voice/tool-calls",
 	"POST /v1/assistant/voice/transcripts",
-	"POST /v1/billing/extra-usage-credit/checkout",
-	"POST /v1/billing/subscription/cancel",
-	"POST /v1/billing/subscription/checkout",
-	"POST /v1/billing/subscription/keep",
 }
