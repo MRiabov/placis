@@ -75,7 +75,7 @@ LLM (`describe_image`, cleanup generate). R2. Not Postgres. Not Clerk.
 
 ## Integration
 
-### HappyPathMediaFull
+### HappyPathMediaFull — frontend Full
 
 Frontend. Vitest `HappyPathMediaFull`. Not OpenAPI 1:1.
 
@@ -105,7 +105,7 @@ PATCH 4xx: inline error.
 
 All HTTP via MSW.
 
-### TestHappyPathV1MediaAssetsReturnsList
+### TestHappyPathV1MediaAssetsReturnsList — Route
 
 Backend. Go `TestHappyPathV1MediaAssetsReturnsList`. OpenAPI 1:1.
 
@@ -130,7 +130,7 @@ is omitted.
 
 LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
 
-### TestHappyPathV1MediaAssetsStartUpload
+### TestHappyPathV1MediaAssetsStartUpload — Route
 
 Backend. Go `TestHappyPathV1MediaAssetsStartUpload`. OpenAPI 1:1.
 
@@ -158,7 +158,7 @@ Missing `content_type` → 400.
 
 LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
 
-### TestHappyPathV1MediaAssetsIdConfirmUpload
+### TestHappyPathV1MediaAssetsIdConfirmUpload — Route
 
 Backend. Go `TestHappyPathV1MediaAssetsIdConfirmUpload`. OpenAPI 1:1.
 
@@ -187,7 +187,7 @@ Already-`failed` → `400`. Unknown id → `404`.
 
 LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
 
-### TestHappyPathV1MediaAssetsReturnsItem
+### TestHappyPathV1MediaAssetsReturnsItem — Route
 
 Backend. Go `TestHappyPathV1MediaAssetsReturnsItem`. OpenAPI 1:1.
 
@@ -213,7 +213,7 @@ Unknown id → `404`.
 
 LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
 
-### TestHappyPathV1MediaAssetsPatch
+### TestHappyPathV1MediaAssetsPatch — Route
 
 Backend. Go `TestHappyPathV1MediaAssetsPatch`. OpenAPI 1:1.
 
@@ -241,7 +241,7 @@ Bad crop → `400`. Unknown id → `404`.
 
 LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
 
-### TestHappyPathV1MediaAssetsIdStartReplaceUpload
+### TestHappyPathV1MediaAssetsIdStartReplaceUpload — Route
 
 Backend. Go `TestHappyPathV1MediaAssetsIdStartReplaceUpload`. OpenAPI
 1:1.
@@ -270,7 +270,7 @@ Unknown id → `404`.
 
 LLM unused. Not MinIO (Testcontainers). Prefer fake Clerk.
 
-### TestHappyPathV1MediaAssetsIdImageEdits
+### TestHappyPathV1MediaAssetsIdImageEdits — Route
 
 Backend. Go `TestHappyPathV1MediaAssetsIdImageEdits`. OpenAPI 1:1.
 
@@ -300,7 +300,7 @@ Empty prompt → `400`. `402` `usage_credit_exhausted`. Unknown id →
 LLM (cleanup generate). Not MinIO (Testcontainers). Prefer fake
 Clerk.
 
-### TestHappyPathV1MediaAssetsIdReject
+### TestHappyPathV1MediaAssetsIdReject — Route
 
 Backend. Go `TestHappyPathV1MediaAssetsIdReject`. OpenAPI 1:1.
 

@@ -79,7 +79,7 @@ LLM.
 
 ## Integration
 
-### HappyPathAdsFull
+### HappyPathAdsFull — frontend Full
 
 Frontend. Vitest `HappyPathAdsFull`. Not four files named 01–04.
 
@@ -109,7 +109,7 @@ Approve 4xx.
 
 All HTTP via MSW.
 
-### TestPipelineHappyPathAdsFull
+### TestPipelineHappyPathAdsFull — pipeline Full
 
 Backend. Go `TestPipelineHappyPathAdsFull`. Per-step names:
 [pipeline/testing](pipeline/testing/README.md).

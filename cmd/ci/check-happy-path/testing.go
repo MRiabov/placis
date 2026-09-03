@@ -8,12 +8,18 @@ import (
 var markdownOpRe = regexp.MustCompile(`(?:GET|POST|PUT|PATCH|DELETE) /[^\s` + "`" + `]+`)
 var apiCallRe = regexp.MustCompile(`\.(Get|Post|Put|Patch|Delete|GET|POST|PUT|PATCH|DELETE)\("(/[^"]+)"\)`)
 
+const testingSuffixSep = " — "
+
 func isDocsHappyPathTitle(title string) bool {
 	t := strings.TrimSpace(title)
-	if strings.HasPrefix(t, "TestPipelineHappyPath") {
+	ident, suffix, ok := strings.Cut(t, testingSuffixSep)
+	if !ok || suffix != "Route" {
 		return false
 	}
-	return strings.HasPrefix(t, "TestHappyPath")
+	if strings.HasPrefix(ident, "TestPipelineHappyPath") {
+		return false
+	}
+	return strings.HasPrefix(ident, "TestHappyPath")
 }
 
 func parseTestingHappyPath(path, text string) []happyPathTest {
