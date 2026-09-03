@@ -109,9 +109,11 @@ Two surfaces plus global nav, one unpublished website:
   dozens). SEO stays website-page-level in its own rail
   panel. Website versions is a workspace item (bottom of the rail): website
   publications and website-assistant activity, not unpublished checkpoints per
-  website page. Undo/redo stacks are in RAM, seeded from website edit history on
-  `/cms/website` open; they are not a timeline UI. Onboarding-written website
-  versions are omitted (not website-rollback targets).
+  website page. Earlier owner versions: checkout (`GET` `publication_id`, then
+  PATCH) and live rollback. Undo/redo stacks are in RAM, seeded from website
+  edit history on `/cms/website` open; they are not a timeline UI.
+  Onboarding-written website versions are omitted (not website-rollback
+  targets).
 
 Website styles are tenant-wide (`website_settings`), shown on the website page
 GET, applied only on explicit apply. Top menu and footer are edited in
@@ -161,9 +163,11 @@ body. Rollback is on **earlier owner website versions**, not the live one.
 The same subscription pay gate as Publish: **402** `subscription_canceled` and
 the Usage & billing jump. **Preview** on the live website version opens the
 live website in a new tab. Do not label that **Continue editing**, and do not
-call it a website preview (that is the sales stage). Loading an owner website
-version into the unpublished canvas (`GET` with `publication_id`, then PATCH)
-is not a Website versions control in this UI.
+call it a website preview (that is the sales stage). Earlier owner website
+versions have a silent **checkout** (`GET` with `publication_id`, then
+ordinary PATCH) and a silent **website rollback** icon. Checkout replaces
+unpublished (in-memory projection, then PATCH). Rollback changes live
+`latest/` only.
 
 Rows:
 

@@ -27,3 +27,9 @@ Onboarding does **not** store Voice recordings.
   (`pending`/`clean`/`failed`/`skipped`), `created_at`
 
 Lookup: `(tenant_id, owner_type, owner_id)`.
+
+`visibility`: `private` is the raw owner upload (Internal backup
+original on `media_assets.original_file_id`) and Voice recordings.
+`public` is the canonical WebP and image-thumbnail WebP
+(`media_assets.file_id` / `thumbnail_file_id`) served on the live path.
+Keep `owner_visible` until a third visibility is needed or ruled out.

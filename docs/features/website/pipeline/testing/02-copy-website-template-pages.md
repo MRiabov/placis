@@ -23,8 +23,8 @@ kind `website_copy_generation` on this `tenant_id`. Mapping:
     `origin=website_template`; exactly two `page_id` null look sections
     (top-menu look, footer look) from the website template. No extra look
     rows.
-  - `website_slots`: `origin=website_template`; `status` is not
-    `approved`. `value` jsonb still contains website placeholders
+  - `website_slots`: `origin=website_template`. `value` jsonb still
+    contains website placeholders
     (`{{business_name}}`, `{{marketing_phone}}`, `{{reviews.1}}`,
     `{{projects.featured}}` / `{{projects.*}}` as the template uses). Go
     did not rewrite those tokens into profile strings. Image website slots
@@ -36,8 +36,9 @@ kind `website_copy_generation` on this `tenant_id`. Mapping:
     Services (same children), Contact, Legal (text heading) + privacy
     policy child. Legal is not on `top_menu`. `show_phone=true`,
     `show_email=false`, `show_contact=true`. Trees are not a catalog menu
-    JSON. Bar CTA values stay `{{marketing_phone}}` /
-    `{{marketing_email}}`.
+    `{{marketing_email}}`. When the template includes site-wide menus,
+    those trees (and `website_urls` for `url` nodes) instead of the
+    constant.
   - `website_forms` / `website_form_fields` / `website_form_field_options`:
     present iff the website template has form website sections; `form_key`
     matches the catalog form key; `tenant_id` matches.
@@ -45,12 +46,12 @@ kind `website_copy_generation` on this `tenant_id`. Mapping:
   - `website_settings` unchanged from 01 (`website_template_id`,
     `preset_id`).
   - **Must not**: zero `website_slot_reviews`. Zero
-    `website_publications`. Zero `website_publication_issues`. No slot
+    `website_publications`. No slot
     `origin=website_copy_generation` yet. No `edit_history` batch from
     this copy. No `ai.threads` / `ai_generations` for 01/02.
   - Same pick + same accepted profile, second tenant (or replay on a
     clean tenant): same `website_pages` paths / `page_type` set and the
-    same derived `website.menus` trees.
+    same `website.menus` trees.
   - Later ETL named service: `website_pages` where `page_type=service`
     count **unchanged**.
 - **Handoff to 03**: schema `jobs` has one `website_copy_generation`;

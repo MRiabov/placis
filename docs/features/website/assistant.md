@@ -77,8 +77,7 @@ update_seo(
   seo_og_title?,
   seo_og_description?,
   seo_canonical_url?,
-  seo_noindex?,
-  seo_primary_keyword?
+  seo_noindex?
 )
 ```
 
@@ -175,8 +174,7 @@ create_page(
   seo_og_title?,
   seo_og_description?,
   seo_canonical_url?,
-  seo_noindex?,
-  seo_primary_keyword?
+  seo_noindex?
 )
 ```
 

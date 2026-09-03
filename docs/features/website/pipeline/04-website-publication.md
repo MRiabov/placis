@@ -54,16 +54,19 @@ onboarding 08/09 and later CMS Publish.
 3. Go `POST`s `websitePublication` ([website HTTP](../api.md)): tokenized
    `website.v1` dump (`pages[]` still a list) plus
    `WebsiteBusinessProfileRead`, `media_asset_urls`, `strip`,
-   `website_prefix`, `version_number`. Authenticated internal (shared
-   secret / service binding). Not a live GET. Not public OpenAPI. Not
-   `websiteRender`.
+   `website_prefix`, `hostname` (destination `Host`), `version_number`.
+   Authenticated internal (shared secret / service binding). Not a live GET.
+   Not public OpenAPI. Not `websiteRender`.
 4. Worker resolves website placeholders from that profile (exact match →
    typed value, substring → substituted) and writes HTML to R2.
-5. Then persist: write `{version_number}/`, copy onto `latest/`, convert
-   approved live-path images to same-host WebP, refresh host pointers,
-   `purge_cache` for page URLs, sitemap, robots, WebP URLs. Purge exists so
-   live visitors (Workers Cache then R2) see the new `latest/` immediately.
-   03 never purges.
+5. Then persist: write `{version_number}/`, copy onto `latest/` for
+   **that** hostname (`sites/hosts/{hostname}/…` for CMS Publish and
+   after cutover on the preview host; unpaid Preview website address /
+   Website activation still write `sites/{website_prefix}/…` until
+   that cutover), convert approved live-path images to same-host WebP,
+   `purge_cache` for website page URLs, sitemap, robots, WebP URLs on **that**
+   Host. Purge exists so live visitors (Workers Cache then R2) see the
+   new `latest/` immediately. Generate website copy never purges.
 6. Insert / archive `website_publications` as 08/09/CMS already specify
    (`published_by`, strip, `active`).
 
@@ -89,10 +92,11 @@ Unpublished `website_pages`, `website_sections`, `website_slots`,
 ## Persist
 
 `website_publications` (tokenized dump on the row; HTML snapshot in R2);
-`website_publication_issues` post-publication only; `media_assets.review_status`
-for `pending_review` items on that dump. R2 `{version_number}/` and `latest/`;
-purge. Caller-owned host rows (`website_addresses`, `website_prefix`) stay in
-08/09/CMS.
+`media_assets.review_status` for `pending_review` items on that dump.
+R2 `{version_number}/` and `latest/` for **that** hostname; purge
+that Host. Caller-owned host rows (`website_addresses`,
+`website_prefix`) stay in Preview website address / Website activation /
+CMS.
 
 ## Fail
 

@@ -66,7 +66,9 @@ Delete this file when empty.
 7. **`files.visibility=owner_visible` is unreachable** Issue: persistence.
    Action: drop the enum value. Where:
    [../../general-architecture/files-and-s3.md](../../general-architecture/files-and-s3.md) line 26. Media writes `public`;
-   voice recordings `private`.
+   voice recordings `private`. Comment: **do not drop private / public.** Same
+   as general-architecture item 7. Raw originals `private`; WebP `public`. Keep
+   `owner_visible` until a third visibility is needed or ruled out.
 
 8. **`CreateGeneratedMediaAsset` usage-credit debit is unspecified**
    Issue: gap. Action: same `AssertUsageCredit` as cleanup, matching
