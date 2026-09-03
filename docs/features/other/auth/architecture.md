@@ -14,14 +14,14 @@ Packages: `internal/auth` (Clerk SDK → `Principal`) and
 
 - **Data tenant** = `auth.tenants` row. `tenant_id` on every
   tenant-owned row.
-- **Clerk organization** = that tenant, **1-1**. That is the only
-  1-1. Name and logo are the **business** (`tenants.name` / profile
+- **Clerk organization** = that tenant, **1-1** (`tenants.clerk_org_id`
+  unique). Name and logo are the **business** (`tenants.name` / profile
   `display_name`, business logo). Not the owner’s personal name.
 - **Clerk users** to a tenant (and its Clerk org) are **1-many**.
-  Schema is `tenant_memberships` (many rows per `tenant_id`). Do
-  **not** unique `clerk_user_id` or `tenant_id`. Do **not** write
-  resolvers that assume one membership per tenant or one tenant per
-  owner.
+  Schema is `tenant_memberships` (many rows per `tenant_id`; do not
+  unique `tenant_id`). Unique `clerk_user_id`: one Google account, one
+  tenant. `GetMe` by `clerk_user_id` is 0 or 1. Do **not** write
+  resolvers that assume one membership per tenant.
 - **Clerk user** = **owner** (the person) on the first insert. Not
   “contractor”. First write of the owner display name is
   **programmatic** from
@@ -43,7 +43,8 @@ HTTP (same spelling in spec, Go, and tests):
 
 - `VerifySession` — Clerk SDK `Sessions().Verify` →
   `Principal{userID, orgID, platformRole, actor}`. `actor` is Clerk
-  native impersonation. Not on HTTP.
+  native impersonation (prod trail on the Clerk session). Not on
+  HTTP. Deferred as a Placis product; unused until a later one.
 - `CreateClerkUser` — Clerk SDK `Users().Create` (or update on first
   bind if the OAuth account already exists). Name from `founder_name`
   on that first write only. Later the owner changes it in the Clerk UI
@@ -70,16 +71,19 @@ HTTP (same spelling in spec, Go, and tests):
   `onboarding_sessions.clerk_user_id` → unactivated `tenant_id`
   (unpaid PATCH/Voice)
 - `RequireActiveTenant` — `403` `tenant_unactivated` when `status` is
-  not `active` (also `suspended`)
+  not `active`
 - `InsertOwnerMembership` — 09 **calls** this (`role=owner`). Extra
-  office members are **TBD**; this insert is the first owner row, not
-  a 1-1 unique.
+  office members are **TBD**; this insert is the first owner row.
+  Unique `clerk_user_id` rejects a second tenant for that Google
+  account.
 
 **`internal/onboarding`**
 
 - `BindClerkUserToOnboardingSession` — **calls** `CreateClerkUser`
   when `clerk_user_id` is null; **persists into**
-  `onboarding_sessions.clerk_user_id`
+  `onboarding_sessions.clerk_user_id`. Nullable unique
+  `clerk_user_id`: cannot attach one Google account to a second
+  onboarding session/tenant.
 - Activation checkout **calls** `AttachClerkOrganization`, returns
   `clerk_org_id` on `WebsiteActivationCheckoutRead`
 
@@ -113,9 +117,9 @@ Services take `tenantID` explicitly.
 1. `VerifySession` → `Principal`.
 2. If `orgID` set → tenant by `tenants.clerk_org_id` (unactivated or
    active).
-3. Else memberships by `clerk_user_id` → tenant. `clerk_org_id` from
-   `tenants.clerk_org_id` when set (post-09, JWT not yet `setActive`).
-   Do not assume a unique `clerk_user_id`.
+3. Else memberships by unique `clerk_user_id` → tenant (0 or 1).
+   `clerk_org_id` from `tenants.clerk_org_id` when set (post-09, JWT
+   not yet `setActive`).
 4. Else unpaid bind: `onboarding_sessions.clerk_user_id` →
    unactivated tenant; `clerk_org_id` if `tenants.clerk_org_id` already
    set (post-checkout, pre-`setActive`).

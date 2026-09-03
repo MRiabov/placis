@@ -38,7 +38,7 @@ Website activation Clerk + Stripe is owned by
   (no-auth). That is not the auth E2E.
 - `/login` and the 09 modal island: **Sign in with Google** (OAuth).
   No name / workspace / magic-link fields.
-- `/me` as `{owner, platform_role, tenant, clerk_org_id}`.
+- `/me` as `{owner, tenant, clerk_org_id}`.
   CMS-open is `status === "active"`, not tenant non-null.
 - `/cms` with no active tenant → onboarding.
 - `setActive` from checkout `clerk_org_id` or `MeRead.clerk_org_id`

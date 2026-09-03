@@ -18,9 +18,10 @@ they never shared. Website activation **upgrades** that row
 return unactivated `TenantRead` after Clerk org attach. CMS still
 opens only when `status=active`.
 
-The only **1-1** is data tenant ↔ Clerk organization
-(`tenants.clerk_org_id` unique). Clerk users to a tenant (and its
-Clerk org) are **1-many** (`tenant_memberships`).
+The only tenant↔org **1-1** is data tenant ↔ Clerk organization
+(`tenants.clerk_org_id` unique). Clerk users on a tenant (and its
+Clerk org) are **1-many** (`tenant_memberships`). A Clerk user is on
+**at most one** tenant (`clerk_user_id` unique).
 
 ## Tables
 
@@ -30,7 +31,7 @@ Clerk org) are **1-many** (`tenant_memberships`).
   `website_prefix` text unique nullable, `name` text, `status` text,
   `subscription_status` text, `country` text, `created_at`
   timestamptz, `updated_at` timestamptz
-- **Enums:** `status` → `unactivated` / `active` / `suspended`;
+- **Enums:** `status` → `unactivated` / `active`;
   `subscription_status` → `active` / `canceled` / `none`; `country` →
   `ie` / `gb` / `us`
 - **Uniques:** nullable unique `clerk_org_id`; nullable unique
@@ -48,22 +49,23 @@ Clerk org) are **1-many** (`tenant_memberships`).
   Find country at business lookup (Voice region fallback). Do **not**
   store remaining usage credit here — billing owns the AI use ledger
   ([billing](../../billing/persistence.md)). Do **not** invent
-  `SuspendTenant` (`suspended` stays on the enum).
+  `SuspendTenant` or a `suspended` status. Cancelled billing is
+  `subscription_status`, not `status`.
 
 ### `auth.tenant_memberships`
 
 - **Columns:** `id` uuid pk, `tenant_id` fk, `clerk_user_id` text,
   `role` text, `created_at` timestamptz
 - **Enums:** `role` → `owner`
-- **Uniques:** `(tenant_id, clerk_user_id)` only
+- **Uniques:** `clerk_user_id`
 - **Written by:** `InsertOwnerMembership` (09)
-- **Notes:** 1-many members per tenant, not owner↔org 1-1. Do not unique
-  `clerk_user_id` or `tenant_id`. Currently one owner row; that is
-  usage. Extra office / admin members (equal permissions) are **TBD**.
-  Do not add a second role or invite HTTP.
+- **Notes:** 1-many members per tenant (do not unique `tenant_id`).
+  Unique `clerk_user_id`: one Google account, one tenant. Currently
+  one owner row; extra office / admin members (equal permissions) are
+  **TBD**. Do not add a second role or invite HTTP.
 
 ## Indexes
 
 Unique: `tenants.clerk_org_id`, `tenants.website_prefix` (nullable;
 many unactivated rows may have null — Postgres unique allows that).
-Unique: `tenant_memberships` `(tenant_id, clerk_user_id)`.
+Unique: `tenant_memberships.clerk_user_id`.

@@ -14,7 +14,6 @@ Index of feature lists:
 - [Billing](../features/billing/sep-3-issue-list.md)
 - [Business profile](../features/business-profile/sep-3-issue-list.md)
 - [Media library](../features/other/media/sep-3-issue-list.md)
-- [Auth](../features/other/auth/sep-3-issue-list.md)
 - [Leads](../features/other/leads/sep-3-issue-list.md)
 - [ETL](../features/etl/sep-3-issue-list.md)
 - [Placis website](../features/placis-website/sep-3-issue-list.md)
@@ -39,27 +38,19 @@ Index of feature lists:
 
    Risk: an agent builds a generic AI-approval queue.
 
-3. **Three of five `audit.md` actions have no owner**
-   Issue: audit. Action: list what actually writes: website publication,
-   website activation, ad approve.
-   Where: [audit.md](audit.md) lines 3–6 (also impersonating, refunds,
-   data export/deletion). Impersonation is Clerk-native
-   ([../features/other/auth/README.md](../features/other/auth/README.md));
-   Go never sees it. No refund or GDPR spec exists.
-
-4. **`files.scan_status` has no scanner**
+3. **`files.scan_status` has no scanner**
    Issue: persistence. Action: name scanner + job, or drop.
    Where: [files-and-s3.md](files-and-s3.md) line 26;
    [jobs.md](jobs.md) (no scan job);
    [../features/other/media/testing.md](../features/other/media/testing.md)
    line 166 (asserts `clean`).
 
-5. **`thread_kind` CHECK lists `website_copy_generation` twice and includes
+4. **`thread_kind` CHECK lists `website_copy_generation` twice and includes
    `eval`** Issue: schema. Action: one literal; drop `eval` until an eval
    feature exists (`threads.tenant_id` nullable was for eval). Where:
    [llm-layer.md](llm-layer.md) lines 75–88, and `trace_type` `prod`/`eval`.
 
-6. **`web_search_transform` job with no work** Issue: jobs. See
+5. **`web_search_transform` job with no work** Issue: jobs. See
    [../features/etl/sep-3-issue-list.md](../features/etl/sep-3-issue-list.md) item 2. Where: [jobs.md](jobs.md) lines 29, 64.
 
 ## Medium
