@@ -285,7 +285,8 @@ Backend (`humatest`, Testcontainers Postgres). Unpublished website from
 
 #### Verify
 
-Response `WebsitePageSummaryRead` list. No `publication_id`.
+Response `WebsitePageSummaryRead` list. Per website page `blockers[]`.
+No `publication_id`.
 
 #### Fail
 
@@ -332,35 +333,14 @@ Unpublished website from 05. A `page_id`. No `frontend-2`.
 
 #### Verify
 
-Response `WebsiteEditApplyRead`. Create then GET that website page
+Response `WebsiteEditApplyRead` (website page PATCH includes
+`blockers[]`).
+Create then GET that website page
 shows the patched slots.
 
 #### Fail
 
 Onboarding session token PATCH → `403`. `409 edit_history_conflict`.
-
-#### Mocked
-
-None.
-
-### TestHappyPathV1OnboardingWebsiteEditorMenus — Route
-
-#### Setup
-
-Backend (`humatest`, Testcontainers Postgres). Unpublished website from
-05. Token or Clerk unactivated. No `frontend-2`.
-
-#### Exercise
-
-`GET /v1/onboarding/website/editor/menus`
-
-#### Verify
-
-Response `WebsiteMenusRead`.
-
-#### Fail
-
-Activated → `403`.
 
 #### Mocked
 
@@ -379,7 +359,8 @@ Unpublished website from 05. No `frontend-2`.
 
 #### Verify
 
-Response `WebsiteEditApplyRead`. Create then GET menus shows the patch.
+Response `WebsiteEditApplyRead`. Create then GET that website page
+shows the patched menus. Must not: `GET /v1/onboarding/website/editor/menus`.
 
 #### Fail
 

@@ -28,12 +28,15 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
 - Website address uses **Cloudflare for SaaS Custom Hostnames**, not Cloudflare
   Pages project hostnames.
 - Owner-facing default live host after website publication is
-  `{website_prefix}.preview.placis.com` (our-zone wildcard → the one Worker). R2
-  is still keyed by `tenants.website_prefix`. Do not advertise
-  `{website_prefix}.placis.com` (no `preview.placis.com` suffix). Apex
-  `placis.com` is the [Placis website](../placis-website/cloudflare.md) (R2), not this Worker.
-- One `latest/` tree. Publication destinations share it; they are not
-  independent website versions.
+  `{website_prefix}.preview.placis.com` (our-zone wildcard → the one Worker).
+  Live R2 after the first owner publication on a host is
+  `sites/hosts/{hostname}/latest/`. Unpaid Preview website address / Website
+  activation may still write `sites/{website_prefix}/latest/` until that preview
+  host’s first owner publication. Do not advertise `{website_prefix}.placis.com`
+  (no `preview.placis.com` suffix). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md)
+  (R2), not this Worker.
+- One `latest/` tree **per host**. Hosts can diverge. Publish writes and
+  purges **that** host.
 
 Go never emits HTML. Astro in `apps/contractor-website` writes HTML at
 `websitePublication` (website HTML render) into R2, and returns a website
@@ -100,12 +103,14 @@ apex.
 
 ```text
 Host {website_prefix}.preview.placis.com
-  → strip the `.preview.placis.com` suffix
-  → R2 sites/{website_prefix}/latest/{path}/index.html
+  → unpaid / no owner publication on this preview host:
+       R2 sites/{website_prefix}/latest/{path}/index.html
+  → after first owner publication on this preview host:
+       R2 sites/hosts/{hostname}/latest/{path}/index.html
+         ({hostname} is {website_prefix}.preview.placis.com)
 
 Host (website address)
-  → R2 sites/hosts/{hostname}  =  {website_prefix}
-  → R2 sites/{website_prefix}/latest/{path}/index.html
+  → R2 sites/hosts/{hostname}/latest/{path}/index.html
 ```
 
 Home is `index.html`. Unknown live path is prebuilt `404.html`. `{tenant_id}`
@@ -194,12 +199,14 @@ The publication job:
 
 1. Renders HTML for each live website page plus sitemap and robots.
 2. Converts approved live-path images to same-host WebP.
-3. Writes `{version_number}/`, copies onto `latest/`.
-4. Writes or refreshes `sites/hosts/{hostname}` for every **active** website
-   address.
-5. Purges (Cloudflare zone `purge_cache`; **fakes in tests**): each live website
-   page URL, sitemap, robots, rewritten WebP URLs, for
-   `{website_prefix}.preview.placis.com` and every active website address.
+3. Writes `{version_number}/` and copies onto `latest/` for **that**
+   hostname only (`sites/hosts/{hostname}/…` for CMS Publish and after
+   cutover on the preview host; unpaid Preview website address / Website
+   activation still write `sites/{website_prefix}/…` until that
+   cutover).
+4. Purges (Cloudflare zone `purge_cache`; **fakes in tests**): each live
+   website page URL, sitemap, robots, rewritten WebP URLs, for **that**
+   Host.
 
 Choosing a publication destination writes **that host’s** HTML tree. Do not keep
 the Placis host on website version *n* while `acme.ie` stays on *n−1* **unless**

@@ -24,18 +24,20 @@ select, edit, see it update, then website publication.
    [api.md](api.md)) **copies** the change to unpublished rows. It is persistence, not
    the render path. Do not `GET` after each PATCH. Do not replace the whole
    projection from the PATCH response (that is frontend → backend → frontend).
-   Merge only `{ edit_history_head, batch_id }` (plus assigned ids on create).
-   Typing does **not** PATCH. Copy-out for `text` / `rich_text` / SEO happens on
-   **click-off** (leave the field). Discrete actions (image swap, reorder,
-   add/remove a website section) queue a PATCH immediately. The frontend has a
-   **safety timer**: at most one website-editor PATCH in flight, and at most one
-   send every **500ms**, coalescing queued click-offs and discrete actions into
-   the next body. That is why `429` should be rare. Also flush on route change,
-   website publication, and page hide / unload so a close-tab without blur is
-   not lost. If a copy-out or media-library upload is queued or in flight, or
-   the focused field is dirty, the website editor **blocks leaving** until it
-   finishes or the owner confirms discard (in-app confirm plus `beforeunload` on
-   tab close / reload).
+   Merge `{ edit_history_head, batch_id }` (plus assigned ids on create). Page
+   PATCH also merges `blockers[]` for that website page (same as
+   `edit_history_head` — not a replacement of the projection). Menus and
+   settings PATCH omit `blockers`. Typing does **not** PATCH. Copy-out for
+   `text` / `rich_text` / SEO happens on **click-off** (leave the field).
+   Discrete actions (image swap, reorder, add/remove a website section) queue a
+   PATCH immediately. The frontend has a **safety timer**: at most one
+   website-editor PATCH in flight, and at most one send every **500ms**,
+   coalescing queued click-offs and discrete actions into the next body. That is
+   why `429` should be rare. Also flush on route change, website publication,
+   and page hide / unload so a close-tab without blur is not lost. If a copy-out
+   or media-library upload is queued or in flight, or the focused field is
+   dirty, the website editor **blocks leaving** until it finishes or the owner
+   confirms discard (in-app confirm plus `beforeunload` on tab close / reload).
 5. The backend validates the change against the website component contract and
    **upserts** the unpublished website rows, appends `edit_history` for that
    copy-out, and advances `edit_history_head`. The body is only the changed
@@ -89,7 +91,7 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 - `tenant` (id, website address, name); `page` (id, path / website page path,
   title, page_type, status, validation status, unpublished `blockers[]`).
 - `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
-  `seo_canonical_url`, `seo_noindex`, `seo_primary_keyword`; tenant
+  `seo_canonical_url`, `seo_noindex`; tenant
   **website styles** (preset + overrides from `website_settings`, shown here,
   stored once per tenant).
 - `sections[]` — each: `id`, `page_id`, `component_id` (+ `component_version`,
@@ -119,15 +121,18 @@ batch: `batch_id`, `edited_by`, `ai_generation_id`, rows of target / `op` /
 Switching website page: the same GET with the query off. Unpublished website
 only. Do not re-download `edit_history`.
 
-Reset to an owner website version: `publication_id` on this GET (same `*Read`).
-Paint the in-memory projection, then the ordinary PATCH (and `/menus` /
-`/settings` if those trees differ). Compare `GET /pages` with and without
-`publication_id`: extra unpublished pages PATCH `status=archived`; a page in
-that website version with no unpublished row is `POST /pages` then PATCH.
-`include_edit_history` is unpublished hydrate only.
+Reset to an owner website version (checkout): `publication_id` on
+`GET /v1/website/editor/pages` (page list) and
+`GET /v1/website/editor/pages/{page_id}` (same `*Read`). Paint the
+in-memory projection, then the ordinary PATCH immediately (`/menus` /
+`/settings` if those trees differ). Extra unpublished pages PATCH
+`status=archived`; a page in that website version with no unpublished row
+is `POST /pages` then PATCH. Checkout PATCH may send the substituted
+projection (full dirty set). `include_edit_history` is unpublished
+hydrate only.
 
 A **website slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`,
-`required`, `max_length`, `value` (typed), `status`, `origin`,
+`required`, `max_length`, `value` (typed), `origin`,
 `validation_errors`.
 
 A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`,
@@ -144,16 +149,18 @@ plus required
 `base_edit_history_head` (the acked head; null only if the stack is empty).
 Dirty keys unchanged — including keys dirtied by in-memory undo/redo.
 Assistant copy-out adds `ai_generation_id` on those dirty keys. Success
-returns **only** `{ edit_history_head, batch_id }` — not the projection,
-not the log. To update a website slot you send:
+returns `{ edit_history_head, batch_id }`. Page PATCH also returns
+`blockers[]` for that whole website page (not per website section). Not
+the projection, not the log. Menus / settings stay
+`{ edit_history_head, batch_id }` only. To update a website slot you send:
 
 ```json
 { "sections": [ { "id": "<section id>", "slots": [
-    { "key": "headline", "type": "text", "value": "Roof repairs across Dublin", "status": "unpublished" }
+    { "key": "headline", "type": "text", "value": "Roof repairs across Dublin" }
 ] } ] }
 ```
 
-- **website slot patch** — `key`, `type`, `value`, `status` (`label` optional).
+- **website slot patch** — `key`, `type`, `value` (`label` optional).
 - **website section patch** — `id`, `component_id` (optional swap),
   `component_version`, `visible`, `design`, `slots[]`.
 - **website section create** — `component_id`, `component_version`, `position`,
@@ -187,11 +194,13 @@ upload / replace, not this body.
 Typical PATCH is **under 10 KB** (one headline is a few hundred characters; a
 rich-text click-off is a few KB). A busy coalesced window stays in that band. A
 **1 MB** body would mean we shipped the whole unpublished website or a `data:`
-image — both are bugs. The API rejects a PATCH body over **64 KB** (`413`); slot
-`max_length` and typed structs reject earlier. `GET` hydrates one website page
-(tens of KB of JSON: copy, ids, public URLs). Website publication is a small
-POST; Go builds the website manifest from Postgres and writes R2 — the owner
-does not upload HTML.
+image — both are bugs. The API rejects a PATCH body over **64 KB** (`413`);
+slot `max_length` and typed structs reject earlier. **Checkout** of an owner
+publication (GET `publication_id`, then PATCH of the substituted projection)
+may send a full dirty set; that copy-out is not the 64 KB click-off budget.
+`GET` hydrates one website page (tens of KB of JSON: copy, ids, public URLs).
+Website publication is a small POST; Go builds the website manifest from
+Postgres and writes R2 — the owner does not upload HTML.
 
 Typing (`text` / `rich_text` website slots, SEO copy, website form field
 labels): PATCH on **click-off** (blur), not per keystroke and not on an
@@ -274,9 +283,15 @@ database stores the unpublished website (live unpublished rows) and the
    gone; undo still walks the hydrated record.
 4. Empty stack: no-op. Live website rollback is unrelated. Undo is not Reject.
 
-After PATCH / Apply: do not re-GET the log. Merge only `batch_id` and
-`edit_history_head`. After in-memory undo/redo, the following PATCH is the same
-merge. Do not replace the projection from the PATCH body.
+After PATCH / Apply: do not re-GET the log. Merge `batch_id` and
+`edit_history_head`. Page PATCH also merges `blockers[]` for that
+website page. After in-memory undo/redo, the following PATCH is the same
+merge. Do not replace the projection from the PATCH body. List GET
+per-row `blockers[]` seeds website pages not yet on the canvas. Opening
+the Publish dropdown calls `GET /v1/website/editor/blockers` (not a
+timer). After that website page’s first PATCH, the ack wins for that
+page until the next open-Publish GET. Do not recompute from the catalog
+while typing; click-off PATCH is enough for text.
 
 ## What each action does
 

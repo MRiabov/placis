@@ -47,6 +47,11 @@ Each website page in the template: default path, `page_type`, seo,
 ordered website sections (`component_id`, design, website slot values as
 `{{…}}` from [variables.md](variables.md) Common variables).
 
+The website template may include site-wide `top_menu` / `footer`
+(page / text / URL nodes). Copy website template pages copies those onto
+`website.menus`. When omitted, the [menu constant](#menu-constant) is
+the page+text default.
+
 ## Copy onto the unpublished website (02)
 
 1. Load the website template by `website_settings.website_template_id`.
@@ -74,8 +79,11 @@ ordered website sections (`component_id`, design, website slot values as
    website section.
 6. Look website sections come from the website template (not empty
    synthesized rows).
-7. Derive `website.menus` from the [menu constant](#menu-constant). Do
-   not copy catalog menu JSON.
+7. If the website template includes site-wide `top_menu` / `footer`,
+   copy those trees onto `website.menus` (`url` nodes → `website_urls`
+   rows + `url_id` on the tree). Otherwise derive from the
+   [menu constant](#menu-constant). Never copy a top menu onto every
+   website page.
 8. Validate against website component contracts before the unpublished
    website is kept.
 

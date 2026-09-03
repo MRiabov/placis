@@ -14,11 +14,18 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   ([02](pipeline/02-copy-website-template-pages.md))
 - `GenerateWebsiteCopy` — River job kind `website_copy_generation`
   ([03](pipeline/03-website-copy-generation.md))
-- `PublishWebsite` — **calls** `websitePublication`
+- `PublishWebsite` — **calls** `WebsitePublicationBlockers`, then
+  `websitePublication`
   ([04](pipeline/04-website-publication.md))
 - `UnpublishWebsite` — holding page on R2 `latest/`; clears
   `website_publications.active`. Billing **calls** this when the
   subscription is `canceled`.
+
+`WebsitePublicationBlockers` is not a pipeline step. Required website
+slot cannot resolve; live-path media library item not approved;
+subscription not `active`. Page-scoped or tenant-scoped. Editor
+routes return `blockers[]`. `PublishWebsite` **calls** it as the
+hard gate.
 
 CMS HTTP: one function per Routes verb+noun (`GetWebsitePage`,
 `UpdateWebsitePage`, `CreateWebsitePublication`, …). Tables:
@@ -87,7 +94,9 @@ Object and mapping: [catalog.md](catalog.md).
    website placeholders stay, including image website slots
    (`{{images.*}}` / `{{logo_url}}`). Named services on the confirmed
    profile become service pages (one layout copied N times, N ≥ 1). Page
-   set is then static. Derive `website.menus` from the
+   set is then static. Copy site-wide catalog `top_menu` / `footer` when
+   the website template includes them (`url` nodes → `website_urls`).
+   Otherwise derive `website.menus` from the
    [menu constant](catalog.md#menu-constant). Do not insert
    `website_slot_reviews`. Do not bake ranked-top-4 project ids. Do not
    attach `media_asset_id`
@@ -193,9 +202,10 @@ rollback reactivates an earlier **owner** website version (copies it onto
 That control is on earlier owner website versions (Website versions
 workspace item and the publication dropdown), not on the live website
 version.
-**Preview** opens the live website. Loading an owner website version into the
-unpublished canvas (`GET` with `publication_id`, then PATCH) is not a Website
-versions control in this UI ([api.md](api.md)). That is not website rollback.
+**Preview** opens the live website. Checkout of an owner website version
+(`GET` with `publication_id`, then PATCH) is a Website versions control
+([design decision record](design-decision-record.md) 9). That is not
+website rollback.
 
 Website publication and live website rollback require
 `tenants.subscription_status=active`. If they stopped paying,

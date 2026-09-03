@@ -36,7 +36,8 @@ re-assert 02 Persist.
 3. **Assistant** — the owner asks the assistant to improve copy.
    **Apply** PATCHes dirty keys then `record-apply`.
 4. **Website publication** — Request `WebsitePublicationCreate`;
-   `PublishWebsite` **calls** `websitePublication` and **sends**
+   `PublishWebsite` **calls** `WebsitePublicationBlockers`, then
+   `websitePublication` and **sends**
    `WebsitePublicationRequest`.
 5. **Live website** — GET the published website copy in `latest/`.
 6. **Website rollback** — the owner does a website rollback to an
@@ -61,9 +62,10 @@ re-assert 02 Persist.
    `website_publications` / R2. **persists into**
    `website_publications` (`status=published`, `active=true`,
    `website_manifest`, `version_number` — a website version). Fake R2
-   keys `sites/{website_prefix}/{version_number}/` then `…/latest/`,
-   plus `purge_cache` for live website page URLs (and sitemap, robots,
-   WebP) on every active hostname. No live Cloudflare. No website image
+   keys `sites/hosts/{hostname}/{version_number}/` then `…/latest/`
+   (CMS Publish; that destination `Host`). Fake `purge_cache` for
+   live website page URLs (and sitemap, robots, WebP) on **that** host.
+   No live Cloudflare. No website image
    render on the publication response. UI: the live website is shown
    when a website address is `active`; otherwise the owner still uses
    the preview website address.
@@ -108,8 +110,12 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-Exercise body: `WebsitePageSummaryRead` lists unpublished pages. Must
-not: preview host GET. **reads** `website_pages` may supplement.
+Exercise body: `WebsitePageSummaryRead` lists unpublished pages. Per-row
+page-scoped `blockers[]`. Must
+not: preview host GET. Optional `publication_id` is checkout of that
+owner publication’s page list. **reads** `website_pages`,
+`website_sections`, `website_slots`, `media_assets` may
+supplement.
 
 #### Fail
 
@@ -152,8 +158,9 @@ Response `WebsitePageRead`.
 #### Verify
 
 Exercise body: `WebsitePageRead` hydrates the canvas. Must not:
-`/pages/{id}/seo`; `slot_type=json`; return `website_manifest`; both
-query flags. Named **reads** may supplement.
+`/pages/{id}/seo`; `/settings` GET; `/menus` GET; return
+`website_manifest`; both query flags. Optional `publication_id` alone
+is checkout. Named **reads** may supplement.
 
 #### Fail
 
@@ -177,6 +184,7 @@ Response `WebsiteEditApplyRead`.
 #### Verify
 
 `GET /v1/website/editor/pages/{page_id}` shows the dirty-key edit.
+Ack `blockers[]` is that website page (page-scoped).
 **persists into** `website_slots`, `website_sections`, `website_pages`,
 `website_forms`, `website_form_fields`, `website_form_field_options`,
 `website.menus`, `edit_history`, `website_settings.edit_history_head`
@@ -186,29 +194,6 @@ may supplement. Must not: predecessor `POST …/sections` (see
 #### Fail
 
 `409 edit_history_conflict`. `413`. `429`. `403` unactivated.
-
-### TestHappyPathV1WebsiteEditorSettingsReturnsSettings — Route
-
-Backend. Go `TestHappyPathV1WebsiteEditorSettingsReturnsSettings`.
-OpenAPI 1:1.
-
-#### Setup
-
-Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
-
-#### Exercise
-
-`GET /v1/website/editor/settings`. Request `WebsiteEditorGet`. Response
-`WebsiteSettingsRead`.
-
-#### Verify
-
-Exercise body: `WebsiteSettingsRead`. Must not: logo on this body.
-
-#### Fail
-
-`409` / `400`.
 
 ### TestHappyPathV1WebsiteEditorSettingsUpdatesSettings — Route
 
@@ -227,35 +212,13 @@ Response `WebsiteEditApplyRead`.
 
 #### Verify
 
-`GET /v1/website/editor/settings` shows the applied styles.
-**persists into** `website_settings`, `edit_history` may supplement.
+`GET /v1/website/editor/pages/{page_id}` `website_styles` shows the
+applied styles. **persists into** `website_settings`, `edit_history`
+may supplement. Must not: `GET /v1/website/editor/settings`.
 
 #### Fail
 
 `409 edit_history_conflict`.
-
-### TestHappyPathV1WebsiteEditorMenusReturnsMenus — Route
-
-Backend. Go `TestHappyPathV1WebsiteEditorMenusReturnsMenus`. OpenAPI
-1:1.
-
-#### Setup
-
-Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
-
-#### Exercise
-
-`GET /v1/website/editor/menus`. Request `WebsiteEditorGet`. Response
-`WebsiteMenusRead`.
-
-#### Verify
-
-Exercise body: `WebsiteMenusRead`. Must not: `/top-menu` or `/footer`.
-
-#### Fail
-
-`409` / `400`. `403` unactivated.
 
 ### TestHappyPathV1WebsiteEditorMenusUpdatesMenus — Route
 
@@ -274,13 +237,42 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-`GET /v1/website/editor/menus` shows the updated trees. **persists into**
-`website.menus`, `edit_history` may supplement. Must not: menus on page
+`GET /v1/website/editor/pages/{page_id}` `menus` shows the updated
+trees. **persists into** `website.menus`, `edit_history` may
+supplement. Must not: `GET /v1/website/editor/menus`; menus on page
 PATCH.
 
 #### Fail
 
 `409 edit_history_conflict`. `403` unactivated.
+
+### TestHappyPathV1WebsiteEditorBlockersReturnsBlockers — Route
+
+Backend. Go `TestHappyPathV1WebsiteEditorBlockersReturnsBlockers`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished Copy website template pages rows already present. No
+`frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/editor/blockers`. Response `WebsiteEditorBlockersRead`.
+
+#### Verify
+
+Exercise body: `WebsiteEditorBlockersRead` `blockers[]` is the flat
+set (all website pages plus subscription and off-canvas unapproved
+media library items). Codes `required_slot_unresolved`,
+`media_not_approved`,
+`subscription_canceled`. Must not: canvas hydrate; `website_manifest`;
+`publication_id`. Named **reads** may supplement.
+
+#### Fail
+
+`403` unactivated.
 
 ### TestHappyPathV1WebsiteEditorUrlsReturnsUrls — Route
 
@@ -341,7 +333,8 @@ not: return `website_manifest`.
 ### TestHappyPathV1WebsitePublicationsCreatesPublication — Route
 
 Backend. Go `TestHappyPathV1WebsitePublicationsCreatesPublication`.
-OpenAPI 1:1. **calls** `websitePublication`.
+OpenAPI 1:1. **calls** `WebsitePublicationBlockers`; **calls**
+`websitePublication`.
 
 #### Setup
 
@@ -359,8 +352,8 @@ Response `WebsitePublicationRead`. **sends**
 #### Verify
 
 `GET /v1/website/publications` lists the new owner row
-(`published_by=owner`). MinIO `{version_number}/` then `latest/`. Named
-**persists into** may supplement.
+(`published_by=owner`). MinIO `sites/hosts/{hostname}/{version_number}/`
+then `…/latest/`. Named **persists into** may supplement.
 
 #### Fail
 
@@ -513,8 +506,10 @@ MinIO. Unpublished dump + `WebsiteBusinessProfileRead`. No
 #### Verify
 
 Exercise body: no website image render. Writes the HTML tree (MinIO
-`{version_number}/` then `latest/`). Must not: persist HTML onto
-unpublished slots; `websiteRender`.
+`sites/hosts/{hostname}/{version_number}/` then `…/latest/` for CMS;
+unpaid Preview website address / Website activation use
+`sites/{website_prefix}/` until cutover). Must not: persist HTML onto
+unpublished slots; `websiteRender`; write every active hostname.
 
 #### Fail
 

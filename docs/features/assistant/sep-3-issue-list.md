@@ -41,37 +41,27 @@ Delete this file when empty.
    - [ADR.md](ADR.md) line 144 (24h discard that was its only consumer is
      dead; compaction keys off `last_activity_at`)
 
-4. **`ai_generations.approval_status` and `applied_changes`**
-   Issue: persistence. Action: drop. Real gate is
-   `runs.ask_first_status`.
-   Where: owned in
-   [../../general-architecture/llm-layer.md](../../general-architecture/llm-layer.md)
-   lines 167–168, 174 and
-   [../../general-architecture/persistence.md](../../general-architecture/persistence.md)
-   line 12. Listed here because implementers will build an approval
-   queue on assistant traces.
-
-5. **`AssistantWebsiteWorkingCopy` ships the same data three times** Issue: DTO.
+4. **`AssistantWebsiteWorkingCopy` ships the same data three times** Issue: DTO.
    Action: current website page sections and website slots, not every
    `WebsitePageRead` (which already embeds website styles, menus, website forms,
    profile, blockers). Where: [api.md](api.md) lines 47–48, 64, 66.
 
-6. **`get_website_styles` is a fourth copy of website styles**
+5. **`get_website_styles` is a fourth copy of website styles**
    Issue: tool. Action: drop; website styles are on the working copy for
    `website_editor`.
    Where: [architecture.md](architecture.md) lines 228–229, 248;
    [ADR.md](ADR.md) line 34.
 
-7. **`AssistantOwnerMessage.type` is a one-member discriminator**
+6. **`AssistantOwnerMessage.type` is a one-member discriminator**
    Issue: DTO. Action: drop inbound `type`; outbound union still needs
    it.
    Where: [api.md](api.md) line 47.
 
-8. **`AssistantThreadRead.status` is always `current`**
+7. **`AssistantThreadRead.status` is always `current`**
    Issue: DTO. Action: drop, or stop claiming `completed`.
    Where: [api.md](api.md).
 
-9. **Phantom identifiers**
+8. **Phantom identifiers**
    Issue: contradiction. Action: delete.
    Where:
 
@@ -80,13 +70,13 @@ Delete this file when empty.
    - [../website/assistant.md](../website/assistant.md) names
      `refinement_plan` and `assistant_plan` (no registry)
 
-10. **`GET /v1/onboarding/assistant/thread` has no screen**
-    Issue: API. Action: drop, or stop testing empty `items: []` as if a
-    UI exists.
-    Where: [../onboarding/api.md](../onboarding/api.md) line 194. Guide is
-    Voice-only, no thread display.
+9. **`GET /v1/onboarding/assistant/thread` has no screen**
+   Issue: API. Action: drop, or stop testing empty `items: []` as if a
+   UI exists.
+   Where: [../onboarding/api.md](../onboarding/api.md) line 194. Guide is
+   Voice-only, no thread display.
 
-11. **Ads `cleanup_image` duplicates Review inline cleanup**
+10. **Ads `cleanup_image` duplicates Review inline cleanup**
     Issue: tool. Action: drop; Ads assistant stays guide.
     Where: [README.md](README.md) lines 9–11;
     [../ads/ad-generation/frontend.md](../ads/ad-generation/frontend.md).

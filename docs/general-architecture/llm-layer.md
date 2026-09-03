@@ -205,19 +205,20 @@ package `internal/ai/`. Image **files** stay in `files` / `media_library`.
   `knowledge_format_revision` nullable (knowledge base registry; not `prompt_id`
   / `prompt_version`), `input` jsonb, `internal_reasoning` jsonb, `output`
   jsonb, `tool_calls` jsonb, `input_tokens`, `output_tokens`, `cost_amount`,
-  `cost_currency`, `latency_ms`, `approval_status`
-  (`pending_review`/`approved`/`applied`/`rejected`/`failed`), `applied_changes`
-  jsonb, `status` (`running`/`succeeded`/`failed`), `error` nullable,
-  `created_at`
+  `cost_currency`, `latency_ms`, `status` (`running`/`succeeded`/`failed`),
+  `error` nullable, `created_at`
 - `ai_generation_tool_revisions` — `id`, `ai_generation_id` fk,
   `tool_revision_kind` (`tool`/`skill`), `name`, `format_revision`
 
-`input`, `internal_reasoning`, `output`, `tool_calls`, and `applied_changes`
-stay jsonb so a call can be reconstructed. Usage and cost are columns. Tool and
+`input`, `internal_reasoning`, `output`, and `tool_calls` stay jsonb so a
+call can be reconstructed. Usage and cost are columns. Tool and
 skill format revisions are rows, not a map dump. Product classifications and
 other predictions are **not** these tables — they live in the feature
 Postgres schema
 ([persistence conventions](persistence.md#classifications-and-predictions)).
+Apply / reject and Ask first are per-feature (`runs.ask_first_status`,
+website `edit_history`, media library `review_status`). Do not put an
+approval queue on `ai_generations`.
 
 ## AI tools
 

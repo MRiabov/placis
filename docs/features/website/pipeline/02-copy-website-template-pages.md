@@ -33,8 +33,10 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 - Website publication.
 - `create_page` (this write already has the page set, including service
   pages from named services).
-- Copy a catalog top menu / footer JSON. The trees are the [menu constant](../catalog.md#menu-constant), not
-  a second website template copy.
+- Copy a predecessor per-page top menu / footer onto every website page.
+  Site-wide catalog `top_menu` / `footer` (including `url` nodes) is
+  the Copy website template pages write. When the template omits menus,
+  trees are the [menu constant](../catalog.md#menu-constant).
 - Bake raw profile strings into website slots that should stay tokens.
 - Invent a hotlink URL for an image website slot.
 - Attach `media_asset_id` or run photo selection (`generate_image`). That
@@ -62,11 +64,14 @@ pick. Tokens stay.
    path and title from that service name). N ≥ 1. Fail if zero named
    services at this copy. `{{about.intro_paragraphs}}` is a placeholder
    namespace, not a page type.
-2. **Derive** `website.menus` (`top_menu` + `footer`) from the
-   [menu constant](../catalog.md#menu-constant). Same pick + same named
-   services → same website pages → same trees. Persist the row because
-   that is the CMS store (`update_menus` can diverge later). 03 does not
-   invent website pages, so it does not invent menu nodes.
+2. **Menus.** If the website template includes site-wide `top_menu` /
+   `footer`, copy those trees onto `website.menus` (`url` nodes →
+   `website_urls` + `url_id`). Otherwise **derive** `website.menus` from
+   the [menu constant](../catalog.md#menu-constant) (same pick + same
+   named services → same website pages → same trees). Persist the row
+   because that is the CMS store (`update_menus` can diverge later).
+   Generate website copy does not invent website pages, so it does not
+   invent menu nodes.
 3. Page set is then **static**. They already confirmed or disproved
    services in questioning. Later business research does not add service
    pages; owner / assistant `create_page` can (and then appends to the
@@ -83,8 +88,8 @@ pick. Tokens stay.
    `website_urls` iff the template menus have `url` nodes.
 7. Validate against website component contracts before the unpublished
    website is kept.
-8. Same pick + same profile → same website pages (and the same derived
-   menus).
+8. Same pick + same profile → same website pages (and the same menus:
+   catalog when the template ships them, else the menu constant).
 9. **Inserts** `website_copy_generation`. `/onboarding/preview` (wait teaser)
    waits until the **home** website page has 03 copy, or the wait cap (~15s).
    Other website pages finish in parallel. Then wait-end:
@@ -140,4 +145,5 @@ Onboarding 07 after the wait. 06 async automatic website copy generation.
 - No `website_publications` in this step (08 writes v1).
 - Page set is static at client interview complete. N ≥ 1 service website
   pages. One `page_type=about` website page.
-- Top menu and footer at 02 equal the menu constant for that page set.
+- Top menu and footer equal the catalog menus when the template ships
+  them, otherwise the menu constant for that page set.

@@ -31,9 +31,10 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    the Details OK / Revert pair. 20% warns. Empty: **you are out of usage
    credit**, with a path to extra usage credit. (2026-08-29)
 
-5. **Stopped paying is a Publish jump, not a notification** — **Publishing is
-   blocked:** **Pay the subscription price to Publish** → Usage & billing.
-   Not the 20% / empty notification. (2026-08-29)
+5. **Stopped paying navigates Publish to Usage & billing, not a
+   notification** — **Publishing is blocked:** **Pay the subscription
+   price to Publish** **navigates to** Usage & billing. Not the 20% /
+   empty notification. (2026-08-29)
 
 6. **Change plan is the Pricing card grid; cancel is quiet** — Under extra
    usage credit: month / year, three self-serve cards, Enterprise plan row.
