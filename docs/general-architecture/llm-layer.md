@@ -65,14 +65,16 @@ and search share Vercel; there is no OpenRouter hop.
 
 ## BillUsageMode
 
-Every `ai` vendor method takes **`bill_usage: BillUsageMode`**
-([glossary](../glossary.md#billusagemode)) and `thread_id`. **Who** to
-debit is `threads.tenant_id`. Do not pass `bill_tenant`. Do not pass a
-`billed` / `unbilled` bool. Omit / zero = `billed`. Require
-`usage_category` when recording **their usage**. Features **must not**
-**call** `RecordAIUseSpend` after an `ai` call.
+[`BillUsageMode`](../glossary.md#billusagemode) is the generic spend
+enum, not AI-only. `ai` vendor methods take **`bill_usage`** and
+`thread_id`. ETL `StartRun` takes it too (currently `unbilled`). Do not
+pass `bill_tenant`. Do not pass a `billed` / `unbilled` bool. Omit /
+zero = `billed`. **Who** to debit for an `ai` call is
+`threads.tenant_id`. Require `usage_category` when recording **their
+usage**. Features **must not** **call** `RecordAIUseSpend` after an
+`ai` call (or after `StartRun`’s LLM).
 
-Two records:
+Two records on an `ai` vendor-hit:
 
 - **Our usage** — vendor-hit **writes** `ai_generations` (`cost_amount`
   / tokens, or Voice minutes + text-item fees). All three modes do this
@@ -89,7 +91,8 @@ Two records:
 
 No vendor call (skip LLM) → neither record. `internal/ai`
 **calls** `AssertUsageCredit` / `RecordAIUseSpend` (`internal/billing`).
-`billing` must not import feature tool packages.
+ETL billed later uses the same remaining-0 rules (job fail, not HTTP
+**402**). `billing` must not import feature tool packages.
 
 **`billed`:** CMS assistant text, CMS Voice, `CleanupMediaAsset` /
 image-edits, ads generate/rewrite, project inline AI, CMS
