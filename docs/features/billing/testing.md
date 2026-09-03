@@ -21,8 +21,8 @@ real API + real Postgres. Website activation (09) already succeeded so
 1. **Activate** — website activation succeeds (09). River job kind
    `website_activation` **calls** `ActivateSubscription`.
 2. **Billed work** — assistant text, image generate, and Voice minutes
-   **call** `AssertUsageCredit` then `RecordAIUseSpend` (×5; usage
-   categories Voice / Image / text edits).
+   use `bill_usage=billed` (usage categories Voice / Image / text
+   edits).
 3. **Carry-over** — `invoice.paid` on `POST /v1/webhooks/stripe`
    **inserts** `billing_subscription_sync`; **calls**
    `AddIncludedUsageCredit`. Remaining is not zeroed.
@@ -86,6 +86,46 @@ Stripe and the LLM.
 
 ## Integration
 
+### BillUsage modes
+
+Backend. Does not replace billing Route 1:1 rows.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Tenant already
+`status=active` with `billing.subscriptions` from 09 fixture. Fake LLM
+with **known our cost** (×5 their-cost is a known `#`). Fake Stripe.
+No `frontend-2`.
+
+#### Exercise
+
+1. **`billed`** — CMS text generate (`bill_usage=billed`). Then
+   `GET /v1/billing/usage`.
+2. **`billed` empty** — remaining 0. Same generate.
+3. **`unbilled`** — ETL generate (`bill_usage=unbilled`). Then
+   `GET /v1/billing/usage`.
+4. **`bill-allow-out-of-balance`** — owner `DescribeImage` with remaining.
+   Then remaining 0; **calls** `DescribeImage` again.
+5. **Voice** — `POST /v1/assistant/voice/transcripts` (`bill_usage=billed`,
+   `usage_category=voice`).
+
+#### Verify
+
+1. **`billed`** — `ai_generations.cost_amount` (**our usage**). AI use
+   ledger spend; remaining dropped by that `#` (**their usage**).
+2. **`billed` empty** — out of usage credit (**402**). No vendor call.
+   Neither row.
+3. **`unbilled`** — **our usage** only. Remaining unchanged.
+4. **`bill-allow-out-of-balance`** — remaining > 0: debit `image`. Remaining
+   0: vendor still runs; **our usage** only; not captioning-failed from
+   usage credit.
+5. **Voice** — remaining dropped by the known voice `#`. Settlement
+   **200**.
+
+#### Mocked
+
+Stripe. LLM. Voice usage body.
+
 ### Humatest billing
 
 Backend flow. Not OpenAPI 1:1 (those rows are Go `TestHappyPath*` when
@@ -95,14 +135,13 @@ OpenAPI exists).
 
 Backend (`humatest`, Testcontainers Postgres). Tenant already
 `status=active` with `billing.subscriptions` from 09 fixture. Fake
-Stripe. No `frontend-2`. No Playwright. No billed LLM: spend **calls**
-`RecordAIUseSpend` or **persists into** `ai_use_ledger_entries`, not
-assistant HTTP.
+Stripe. No `frontend-2`. No Playwright. Spend is a billed `ai` generate
+(`bill_usage=billed`), not Playwright.
 
 #### Exercise
 
 1. **Usage** — `GET /v1/billing/usage`.
-2. **Spend** — **calls** `RecordAIUseSpend`. Then
+2. **Spend** — billed `ai` generate (`bill_usage=billed`). Then
    `GET /v1/billing/usage`.
 3. **Extra usage credit** — `POST /v1/billing/extra-usage-credit/checkout`.
    Paid `POST /v1/webhooks/stripe` **inserts**

@@ -84,15 +84,15 @@ suggested ad lead form title (Review copy, [ADR 38](ad-generation/ADR.md)).
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GET /v1/ads/{ad_id}/variants` | workspace | | `AdVariantRead` | `ad_variants`, `ad_image_placements` | | One row | `404` | Multi-format list |
 | `PATCH /v1/ads/{ad_id}/variants/{variant_id}` | Review crop / swap | `AdVariantUpdate` | `AdVariantRead` | `ad_variants`, `ad_image_placements` | `ad_image_placements`, `ads.updated_at` | After media library cleanup, retarget `media_asset_id` | `409` | `POST …/cleanup` |
-| `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` | Review inline AI assistance | `AdRewriteRequest` | `AdCopyVariantRead` | `ad_copy_variants` | `ad_copy_variants`, `ai_generations`, `ads.updated_at`, `ai_use_ledger_entries` | **calls** `AssertUsageCredit` then `RewriteAdCopy` then `RecordAIUseSpend`; `thread_kind=ads_inline_assistance`; omit selection = whole field | `400` empty prompt; `409`; `402 usage_credit_exhausted` | Rewrite `cta_label` / short label; `/regenerate` |
-| `POST /v1/ads/{ad_id}/generate` | Create ad and generate; Generate again | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `jobs` (`ads_generate`) | **calls** `AssertUsageCredit`; **calls** `GenerateAdDraft`; 409 while that job is pending/running | `409`; empty format; `402 usage_credit_exhausted` | Write `ad_ready_to_post` |
+| `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` | Review inline AI assistance | `AdRewriteRequest` | `AdCopyVariantRead` | `ad_copy_variants` | `ad_copy_variants`, `ai_generations`, `ads.updated_at`, `ai_use_ledger_entries` | **calls** `RewriteAdCopy`; `bill_usage=billed` (`usage_category=text`); `thread_kind=ads_inline_assistance`; omit selection = whole field | `400` empty prompt; `409`; `402 usage_credit_exhausted` | Rewrite `cta_label` / short label; `/regenerate` |
+| `POST /v1/ads/{ad_id}/generate` | Create ad and generate; Generate again | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `jobs` (`ads_generate`) | **calls** `GenerateAdDraft`; remaining 0 → **402** before enqueue; `bill_usage=billed` on the job generate; 409 while that job is pending/running | `409`; empty format; `402 usage_credit_exhausted` | Write `ad_ready_to_post` |
 
 ### POST /v1/ads/{ad_id}/generate
 
 Enqueues River job `ads_generate`. Retry while Ad draft / Ad needs
 review returns the cached generation. After `ad_ready_to_post`, or if
 the result would duplicate a Published ad, roll `prompt_version`.
-`GenerateAdDraft` **calls** `RecordAIUseSpend`. See
+`GenerateAdDraft` uses `bill_usage=billed` (`usage_category=text`). See
 [02](ad-generation/pipeline/02-generate-ad-draft.md).
 
 ### Ad set

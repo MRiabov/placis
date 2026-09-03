@@ -202,7 +202,9 @@ generate_image(
 ```
 
 Does not attach an existing library photo — that is `update_slot`. Stays
-website-editor unless a later pass says otherwise.
+website-editor unless a later pass says otherwise. CMS
+`generate_image` is `bill_usage=billed` (`usage_category=image`).
+Onboarding unpaid five is `unbilled`.
 
 **Owner action = assistant action.** Each tool is another caller of the same
 website-editor / media-library / Details / Projects execution the owner already

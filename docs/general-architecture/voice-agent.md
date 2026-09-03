@@ -2,7 +2,8 @@
 
 Voice is a **channel into the same governed tools as text**, not a later
 milestone and not a separate product. Everything sits behind a
-voice-service-neutral interface; the concrete voice service is swappable. Text
+voice-service-neutral interface in `internal/ai`; the concrete voice service is
+swappable. Text
 and voice both write through the same tools. Never say “activate” for the voice
 agent — that word is website activation. The owner turns it on.
 
@@ -77,7 +78,14 @@ The adapter (not the browser) is responsible for:
    `session.update` after the Voice connection opens. Do not `session.update`
    those mid-call. That live Voice connection is the STT: committed transcript
    events go to `POST …/voice/transcripts`. Do not call `POST /v1/stt`.
-6. Close / drop the connection on CMS **402** `usage_credit_exhausted`.
+6. CMS create uses `bill_usage=billed`: **call** `AssertUsageCredit`
+   inside this adapter; remaining 0 → **402** `usage_credit_exhausted`
+   (do not open the connection). Settlement **calls** `RecordAIUseSpend`
+   (`usage_category=voice`) inside this adapter. Onboarding create uses
+   `bill_usage=unbilled`. Close / drop the CMS connection when remaining
+   hits 0. Nested image/cleanup from a Voice tool is a **second** `ai`
+   call (`bill_usage=billed`, `usage_category=image`). Do not debit
+   wall-clock.
 
 ## xAI region (business country)
 

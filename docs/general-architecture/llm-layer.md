@@ -1,8 +1,10 @@
 # LLM layer
 
 The LLM sits behind `LLMProvider` so prompts, model names, response shapes, and
-cost logging never leak into domain logic. Shared `ai` is that interface and its
-implementation.
+cost logging never leak into domain logic. Shared `ai` owns **every vendor
+AI interface** (`LLMProvider` generate, Voice adapter, image generate/cleanup
+on that generate) and its implementation. Open-web search is the same
+generate with a Gateway web-search tool, not a second billed call.
 
 Generation uses the Vercel AI SDK.
 **Open-web search is Parallel as a Vercel AI Gateway server tool**
@@ -24,9 +26,9 @@ and search share Vercel; there is no OpenRouter hop.
   ETL extract/transform generation uses **`glm-5.3-flash`** (dated gateway id;
   do not ride `*-latest`) via `LLMProvider` — same cheap multimodal model when
   the input is text-only. Do not put product prompt prose in Go strings, and do
-  not keep one global `internal/ai/prompts.yaml`. `ai` is `LLMProvider` +
-  traces; it records `prompt_id` / `prompt_version` from that file (id + format
-  revision). Assistant **product knowledge** is a separate
+  not keep one global `internal/ai/prompts.yaml`. `ai` is those vendor
+  interfaces + traces; it records `prompt_id` / `prompt_version` from that file
+  (id + format revision). Assistant **product knowledge** is a separate
   **knowledge base registry** (YAML + markdown `go:embed` in the assistant
   packages), not `prompts.yaml` and not RAG. CMS and onboarding both list the
   shared product glossary (`internal/knowledge/product_glossary.md`: Domain +
@@ -60,6 +62,40 @@ and search share Vercel; there is no OpenRouter hop.
   (`ai_generations.thread_id` required) so a schema mismatch can retry on the
   same thread (failed row stays; the next attempt is another generation).
   `LLMProvider` always receives `thread_id`.
+
+## BillUsageMode
+
+Every `ai` vendor method takes **`bill_usage: BillUsageMode`**
+([glossary](../glossary.md#billusagemode)) and `thread_id`. **Who** to
+debit is `threads.tenant_id`. Do not pass `bill_tenant`. Do not pass a
+`billed` / `unbilled` bool. Omit / zero = `billed`. Require
+`usage_category` when recording **their usage**. Features **must not**
+**call** `RecordAIUseSpend` after an `ai` call.
+
+Two records:
+
+- **Our usage** — vendor-hit **writes** `ai_generations` (`cost_amount`
+  / tokens, or Voice minutes + text-item fees). All three modes do this
+  when the vendor ran. Usage & billing never shows this.
+- **Their usage** — `RecordAIUseSpend` (`entry_kind=spend`, ×5) on that
+  thread’s tenant. Skip when `bill_usage=unbilled`, or `threads.tenant_id`
+  is null (`eval`), or `tenants.status=unactivated`.
+
+| `bill_usage` | Remaining 0 | Remaining > 0 |
+| --- | --- | --- |
+| `billed` | No vendor call. Out of usage credit (**402** / job fail) | Vendor; **our usage** + **their usage** |
+| `unbilled` | Vendor; **our usage** only | Vendor; **our usage** only |
+| `bill-allow-out-of-balance` | Vendor; **our usage** only; must not fail | Vendor; **our usage** + **their usage** |
+
+No vendor call (skip LLM) → neither record. `internal/ai`
+**calls** `AssertUsageCredit` / `RecordAIUseSpend` (`internal/billing`).
+`billing` must not import feature tool packages.
+
+**`billed`:** CMS assistant text, CMS Voice, `CleanupMediaAsset` /
+image-edits, ads generate/rewrite, project inline AI, CMS
+`generate_image`. **`bill-allow-out-of-balance`:** compaction;
+owner `DescribeImage`. **`unbilled`:** onboarding; `eval`; ETL (not
+billed yet).
 
 ## Threads
 

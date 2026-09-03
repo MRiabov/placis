@@ -9,7 +9,9 @@ Callers do not inline either step. Named identifiers:
 
 Pipeline **Do** functions (same spelling in spec, Go, and tests):
 
-- `StartRun` — `internal/etl` (`run.go`)
+- `StartRun` — `internal/etl` (`run.go`). `bill_usage: BillUsageMode`
+  (currently `unbilled`; pass through to transform LLM and ETL-inserted
+  `describe_image`)
 - `extract/googlemaps.Run` —
   [Google Maps](pipeline/google-maps.md)
 - `transform/googlemaps.Run` —
@@ -39,7 +41,7 @@ An **ETL run kind** (`etl.runs.etl_run_kind`) starts when it has the details it
 needs. Registry: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md).
 
 ```text
-StartRun(trigger, tenant, force=false)  # onboarding: ETL run kinds; scheduled: Maps/FB/IG
+StartRun(trigger, tenant, force=false, bill_usage=unbilled)  # onboarding: ETL run kinds; scheduled: Maps/FB/IG
   → enqueue_id; copy 01 attach + live profile details
   → for each ETL run kind that can start: insert etl.runs + **inserts** `{etl_run_kind}_extract`
   → extract/<etl_run_kind> chunk          # not inlined in StartRun
