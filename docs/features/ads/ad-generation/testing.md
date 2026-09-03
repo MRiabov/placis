@@ -110,8 +110,8 @@ Backend. Go `TestHappyPathV1AdsCreatesAd`. OpenAPI 1:1. **calls**
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-`business_profiles` with at least one named service. Zero `ads`. No
-`frontend-2`. No Worker.
+`business_profiles` with at least one named service. One draft ad and
+one `status=archived` ad. No `frontend-2`. No Worker.
 
 #### Exercise
 
@@ -119,9 +119,10 @@ Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 
 #### Verify
 
-`GET /v1/ads/{ad_id}` hydrates the draft (`status=draft`).
-**persists into** `ads`, `ad_lead_forms`, `ad_variants` may
-supplement. Must not: enqueue generate; write copy.
+`GET /v1/ads/{ad_id}` hydrates the new draft (`status=draft`). Prior
+draft and archived rows remain. **persists into** `ads`,
+`ad_lead_forms`, `ad_variants` may supplement. Must not: enqueue
+generate; write copy.
 
 #### Fail
 
