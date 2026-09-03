@@ -2,9 +2,11 @@
 
 One full-stack E2E when `internal/billing` lands. Voice settlement is
 not wall-clock. DB asserts name the tables from
-[persistence.md](persistence.md). Public 1:1 is Go `TestHappyPath*`
-when OpenAPI exists. No Go tests in this docs PR. Billing has no
-pipeline (`TestPipelineHappyPathBilling*` does not exist).
+[persistence.md](persistence.md). Public 1:1 is the five
+`### TestHappyPath* — Route` below. Extra Integration asserts spend. Go
+`func TestHappyPath*` leftover until they exist. No Go tests in this
+docs PR. Billing has no pipeline (`TestPipelineHappyPathBilling*`
+does not exist).
 
 ## E2E
 
@@ -86,50 +88,192 @@ Stripe and the LLM.
 
 ## Integration
 
+### TestHappyPathV1BillingUsage — Route
+
+1:1. Exercise names exactly one Method+path.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
+active tenant. `billing.subscriptions` from 09 fixture. No
+`frontend-2`.
+
+#### Exercise
+
+`GET /v1/billing/usage`.
+
+#### Verify
+
+200 `BillingUsageRead`. Remaining is the AI use ledger sum (not our
+cost). `subscription_status=active`.
+
+#### Mocked
+
+Stripe.
+
+### TestHappyPathV1BillingExtraUsageCreditCheckout — Route
+
+1:1. Exercise names exactly one Method+path.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
+active tenant. `billing.subscriptions` from 09 fixture. No
+`frontend-2`.
+
+#### Exercise
+
+`POST /v1/billing/extra-usage-credit/checkout`. Request
+`BillingExtraUsageCreditCreate`. Response `BillingCheckoutRead`.
+
+#### Verify
+
+200. `checkout_url` set. Does not **persist into**
+`ai_use_ledger_entries` on this POST. No webhook in Exercise.
+
+#### Mocked
+
+Stripe.
+
+### TestHappyPathV1BillingSubscriptionCheckout — Route
+
+1:1. Exercise names exactly one Method+path. Active change-plan.
+Pay-again stays on `### Humatest billing`.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
+active tenant. `billing.subscriptions` from 09 fixture
+(`status=active`). No `frontend-2`.
+
+#### Exercise
+
+`POST /v1/billing/subscription/checkout`. Request
+`BillingSubscriptionCheckoutCreate`. Response `BillingCheckoutRead`.
+
+#### Verify
+
+200. `subscriptions.subscription_tier` updates. No extra
+`included_usage_credit` mid-period.
+
+#### Mocked
+
+Stripe.
+
+### TestHappyPathV1BillingSubscriptionCancel — Route
+
+1:1. Exercise names exactly one Method+path.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
+active tenant. `billing.subscriptions` from 09 fixture
+(`status=active`). No `frontend-2`.
+
+#### Exercise
+
+`POST /v1/billing/subscription/cancel`. Response `BillingUsageRead`.
+
+#### Verify
+
+200. `cancel_at_period_end=true`, `status=active`.
+
+#### Fail
+
+`status=canceled` → **409**.
+
+#### Mocked
+
+Stripe.
+
+### TestHappyPathV1BillingSubscriptionKeep — Route
+
+1:1. Exercise names exactly one Method+path.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
+active tenant. `billing.subscriptions` from 09 fixture
+(`status=active`, `cancel_at_period_end=true`). No `frontend-2`.
+
+#### Exercise
+
+`POST /v1/billing/subscription/keep`. Response `BillingUsageRead`.
+
+#### Verify
+
+200. `cancel_at_period_end` cleared. `status=active`.
+
+#### Fail
+
+`status=canceled` → **409**.
+
+#### Mocked
+
+Stripe.
+
 ### BillUsage modes
 
 Backend integration
 ([test types](../../general-architecture/testing.md#test-types)).
 Handler → service → sqlc is real. Not a unit test of
-`BillUsageMode`. Does not replace billing Route 1:1 rows.
+`BillUsageMode`. Does not replace billing Route 1:1 rows. Numbered
+remaining drops live here.
 
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Tenant already
-`status=active` with `billing.subscriptions` from 09 fixture. Fake LLM
-with **known our cost** (×5 their-cost is a known `#`). Fake Stripe.
-Prefer fake Clerk. No `frontend-2`. No Worker container.
+`status=active` with `billing.subscriptions` from 09 fixture.
+Remaining is included usage credit. Fake LLM with **known our cost**
+(×5 their-cost is a known `#`). Fake Stripe. Prefer fake Clerk. Fake
+voice `AssistantVoiceUsage`. No `frontend-2`. No Worker container.
 
 #### Exercise
 
-1. **`billed`** — `GET /v1/assistant/thread/ws` (CMS text). Then
+1. **Balance** — `GET /v1/billing/usage`.
+2. **`billed`** — `GET /v1/assistant/thread/ws` (CMS text). Then
    `GET /v1/billing/usage`.
-2. **`billed` empty** — remaining 0. Same
-   `GET /v1/assistant/thread/ws`.
-3. **`unbilled`** — **calls** `StartRun` (`bill_usage=unbilled`). Then
+3. **Voice** — `POST /v1/assistant/voice/transcripts`. Then
    `GET /v1/billing/usage`.
 4. **`bill-allow-out-of-balance`** —
    `POST /v1/media-assets/{id}/confirm-upload` **inserts**
    `describe_image`; wait-end `DescribeImage`. Then
    `GET /v1/billing/usage`. Remaining 0; wait-end `DescribeImage`
    again.
-5. **Voice** — `POST /v1/assistant/voice/transcripts`. Then
+5. **`unbilled`** — **calls** `StartRun` (`bill_usage=unbilled`). Then
    `GET /v1/billing/usage`.
 
 #### Verify
 
-1. **`billed`** — `BillingUsageRead.remaining_usage_credit_usd_cents`
+1. **Balance** — `BillingUsageRead` remaining is the AI use ledger
+   sum (included usage credit; not our cost).
+2. **`billed`** — `BillingUsageRead.remaining_usage_credit_usd_cents`
    dropped by the known text `#`. `spent_text_usd_cents` that `#`.
    Persistence may supplement: `ai_generations.cost_amount` (**our
    usage**); spend row (**their usage**).
-2. **`billed` empty** — **402** `usage_credit_exhausted` on the WS.
-   Remaining unchanged on `GET /v1/billing/usage`.
-3. **`unbilled`** — remaining unchanged on `GET /v1/billing/usage`.
+3. **Voice** — remaining dropped by the known voice `#`.
+   `spent_voice_usd_cents` that `#`. Settlement **200**.
 4. **`bill-allow-out-of-balance`** — remaining > 0: remaining dropped
    by the known image `#`. Remaining 0: wait-end still succeeds (not
    captioning-failed); remaining unchanged that beat.
-5. **Voice** — remaining dropped by the known voice `#`. Settlement
-   **200**.
+5. **`unbilled`** — remaining unchanged on `GET /v1/billing/usage`.
+
+#### Fail
+
+Remaining already 0. Billed edits stop; website copy PATCH does not.
+
+- `GET /v1/assistant/thread/ws` → **402** `usage_credit_exhausted`
+  (no vendor; remaining unchanged on `GET /v1/billing/usage`).
+- `POST /v1/assistant/voice/realtime-connection` → **402**.
+  Transcripts settlement still **200** if a connection had already
+  run.
+- `POST /v1/media-assets/{id}/image-edits` → **402**.
+- `POST /v1/ads/{ad_id}/generate` and
+  `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` → **402**
+  (generate **402** before enqueue).
+- Owner `DescribeImage` at remaining 0 is Verify beat 4, not this
+  Fail.
+- `PATCH /v1/website/editor/pages/{page_id}` still **200**.
 
 #### Mocked
 
@@ -137,15 +281,14 @@ Stripe. LLM. Voice usage body. Clerk.
 
 ### Humatest billing
 
-Backend flow. Not OpenAPI 1:1 (those rows are Go `TestHappyPath*` when
-OpenAPI exists).
+Backend flow. Does not replace the 1:1 rows. Numbered remaining drops
+are `### BillUsage modes`.
 
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Tenant already
 `status=active` with `billing.subscriptions` from 09 fixture. Fake
-Stripe. No `frontend-2`. No Playwright. Spend is a billed `ai` generate
-(`bill_usage=billed`), not Playwright.
+Stripe. No `frontend-2`. No Playwright.
 
 #### Exercise
 
@@ -212,7 +355,9 @@ activation (09).
 #### Exercise
 
 Account menu → Usage & billing. Extra usage credit. Change plan.
-Cancel. Keep subscription. Publish blocked jump. MSW:
+Cancel. Keep subscription. Publish blocked jump. Remaining 0: billed
+composer and Voice stop (cannot send / cannot start Voice). Website
+editor copy PATCH via MSW **200**. MSW:
 `GET /v1/billing/usage`,
 `POST /v1/billing/extra-usage-credit/checkout`,
 `POST /v1/billing/subscription/checkout`,
@@ -223,9 +368,11 @@ canceled).
 
 #### Verify
 
-UI: usage bar, out-of-credit, Change plan **Current**, **Cancels on**,
-Keep clears the flag, Publish blocked jump. MSW saw those Method+path
-strings. Postgres rows are the backend test.
+UI: usage bar, **you are out of usage credit**, billed composer and
+Voice stop, link to Usage & billing. Change plan **Current**,
+**Cancels on**, Keep clears the flag, Publish blocked jump. Website
+editor still accepts copy PATCH via MSW **200**. MSW saw those
+Method+path strings. Postgres rows are the backend test.
 
 #### Mocked
 
