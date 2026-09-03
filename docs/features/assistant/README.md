@@ -25,6 +25,7 @@ Named identifiers:
 - [api.md](api.md) — DTOs and Routes (`/v1/assistant/…`; text
   `GET /v1/assistant/thread/ws`; voice under `/v1/assistant/voice/`)
 - [testing.md](testing.md)
+- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
 
 Onboarding guide: [onboarding assistant](../onboarding/assistant.md). Unpaid
 website preview:

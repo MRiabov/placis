@@ -16,6 +16,7 @@ stay on `/cms/media`. Named identifiers:
   image thumbnail encode
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [testing.md](testing.md) — E2E and integration tests
+- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
 
 ## What it is
 

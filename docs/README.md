@@ -34,6 +34,8 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 16. [CI and delivery](general-architecture/ci-cd.md) — file-size guard, folder fan-out, external API isolation,
     generated-code freshness
 17. [Testing](general-architecture/testing.md) — the per-feature E2E tests
+18. [Sep 3 unused-spec punch lists](general-architecture/sep-3-issue-list.md) —
+    per-feature issues to cut before implementation
 
 ## Canonical references
 

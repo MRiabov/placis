@@ -22,6 +22,8 @@ Details the screen is a subset of the business profile). Postgres schema
 
 How the owner reaches them: [CMS frontend](../../general-architecture/cms/frontend.md) (left nav).
 
+- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
+
 ## Not here
 
 - [Media library](../other/media/README.md) — Profile child and a shared photo library; not a
