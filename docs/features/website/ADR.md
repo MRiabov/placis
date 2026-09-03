@@ -277,8 +277,11 @@ Status: decided (2026-08-16, product owner + engineering).
     paying the subscription price, unpublish. `POST /publications` and live
     website rollback are **402** `subscription_canceled` until
     `subscription_status=active`. Not `usage_credit_exhausted`. CMS edit stays
-    open. (2026-08-29) (2026-09-03): `UnpublishWebsite` walks **every** website
-    for that tenant.
+    open. (2026-08-29) Later (2026-09-03): unpublish and that **402** start
+    after three calendar months of non-payment, or when an owner-scheduled
+    cancel reaches period end — not on the first failed invoice.
+    `UnpublishWebsite` walks **every** website for that tenant.
+    [Billing](../billing/architecture.md).
 
 24. **Unpublished GET/PATCH on the app for unactivated** — Onboarding session
     token or Clerk may GET unpublished website on the app origin (website

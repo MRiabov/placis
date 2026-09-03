@@ -10,7 +10,9 @@ copy or design PRD. The app lives in `apps/placis-website/`. This origin has
 - [ADR](ADR.md) — architectural decision record
 - [cloudflare.md](cloudflare.md) — Astro static build, R2 origin, zone hosts
 - [testing.md](testing.md) — Playwright against the static build
-- Pricing: `/pricing/` ([billing](../billing/README.md))
+- Pricing: `/pricing/` ([billing](../billing/README.md)) — bake amounts
+  at `astro build` from `GET /v1/billing/catalog`. No Stripe on this
+  origin.
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
   doc gap / drop)
 

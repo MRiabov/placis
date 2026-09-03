@@ -28,7 +28,10 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    copy. Don't say: build credits.
    (2026-08-29; Choose does not set `subscription_tier` 2026-09-03)
    Previous (2026-08-29): included usage credit only, as a unitless
-   count, no feature list.
+   count, no feature list. Later (2026-09-03): bake EUR amounts at
+   `astro build` from `GET /v1/billing/catalog`. No year toggle. Choose
+   on Placis Pro plan / month goes to 09. Plus / Max unspecified (no
+   Choose). No Stripe JS / Worker on `placis.com`.
 
 4. **20% and empty share the shared notification** — Fixed bottom-right. Not
    the Details OK / Revert pair. 20% warns. Empty: **you are out of usage
@@ -46,7 +49,9 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    Checkout stays on this screen. **Cancel subscription** is secondary.
    While cancel is scheduled: **Keep subscription**. (2026-08-29) Previous
    (2026-08-29): compact name/price list, then included usage credit only with
-   no feature list.
+   no feature list. Later (2026-09-03): Change plan while `active` is
+   deferred. Pay-again after `canceled` is Pro month Checkout (no access
+   fee). Cancel / Keep stay. Money is EUR.
 
 7. **Usage & billing is a pool card, then the plan grid** — Remaining is a
    large USD figure in a raised card with the bar (unfilled track is remaining)
@@ -55,4 +60,6 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    active, **Choose** is the primary. Cancel sits after a hairline as quiet
    text; **Keep subscription** is ink. (2026-08-29) Previous (2026-08-29):
    remaining and the bar sat loose above the grid; Cancel was an outline
-   button under the cards.
+   button under the cards. Later (2026-09-03): remaining is a large EUR
+   figure. No month / year row. When not `active`, **Choose** is Pro
+   month pay-again.

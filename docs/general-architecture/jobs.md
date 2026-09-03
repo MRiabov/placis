@@ -75,7 +75,9 @@ step.
 | `assistant_thread_compaction` | `thread_id` | `thread_id` while pending/running | compact `ai.threads` in place |
 | `website_activation` | `tenant_id`, `checkout_session_id` | `tenant_id` while pending/running | `tenants.status=active`; **calls** `PublishWebsite` on the onboarding website; **calls** `ActivateSubscription` |
 | `billing_extra_usage_credit` | Stripe checkout session id | checkout session id while pending/running | `ApplyExtraUsageCredit` |
-| `billing_subscription_sync` | Stripe subscription id | Stripe subscription id while pending/running | `SyncSubscriptionFromStripe`; on `canceled` **calls** `UnpublishWebsite`; on `invoice.paid` **calls** `AddIncludedUsageCredit` |
+| `billing_subscription_sync` | Stripe subscription id | Stripe subscription id while pending/running | `SyncSubscriptionFromStripe`; `invoice.paid` **calls** `AddIncludedUsageCredit`; `invoice.payment_failed` sets `nonpayment_started_at`; owner cancel at period end **calls** `UnpublishWebsite` |
+| `billing_catalog_sync` | `event_id` or full-list | `event_id` when set; one global full-list while pending/running | `SyncCatalogFromStripe` (payload upsert, or one `Prices.List` on full-list) |
+| `billing_nonpayment_unpublish` | none | one global row while pending/running | retrieve Stripe; unpaid after 3 calendar months → `canceled` + **calls** `UnpublishWebsite` |
 | `scheduled_etl` | none | `tenant_id` while pending/running | **calls** `StartRun(trigger=scheduled)` |
 | `describe_image` | `tenant_id`, `media_asset_id` | `(tenant_id, media_asset_id)` while pending/running | `DescribeImage` |
 | `sweep_stale_media_uploads` | none | one global row while pending/running | delete stale `uploading` or upload-failed (`failed` + null `file_id`) |
@@ -193,11 +195,14 @@ the CMS assistant, per website page).
 ### `website_activation`
 
 Stripe `checkout.session.completed` **inserts** this River job kind and the
-request returns. Worker: onboarding
+request returns when the Checkout is 09 activation (not extra usage, not
+pay-again). Worker: onboarding
 [09](../features/onboarding/pipeline/09-website-activation.md) (Clerk /
 `tenants.status=active`, then **calls** `PublishWebsite` strip off, then
-**calls** `ActivateSubscription`). Replay
-does not activate twice (`website_activations`, not this unique key).
+**calls** `ActivateSubscription` to **persist** `billing.subscriptions`
+from that Checkout; it does not create a second Stripe Subscription).
+Replay does not activate twice (`website_activations`, not this unique
+key).
 
 ### `billing_extra_usage_credit`
 
@@ -210,16 +215,49 @@ second row. Not website activation. Routes:
 
 ### `billing_subscription_sync`
 
-Stripe subscription created / updated / deleted and `invoice.paid` (billing).
-Webhook **inserts** this River job kind. Unique on Stripe subscription id while
-pending/running (serialize). Worker **calls** `SyncSubscriptionFromStripe`.
-New paid period: **calls** `AddIncludedUsageCredit` (safe to retry via
-`stripe_events.event_id`; do not insert a second `included_usage_credit` from
-the Stripe subscription-updated event alone). `status=canceled`: **calls**
-`status=canceled`: **calls** `UnpublishWebsite` (every website on that
-tenant). Pay-again Checkout paid: new `stripe_subscription_id`,
-`status=active`, `canceled_at` cleared. Routes:
+Stripe subscription updated / deleted, `invoice.paid`, and
+`invoice.payment_failed` (billing). Webhook **inserts** this River job
+kind. Unique on Stripe subscription id while pending/running
+(serialize). Worker **calls** `SyncSubscriptionFromStripe`.
+
+New paid period: **calls** `AddIncludedUsageCredit` (unique
+`stripe_invoice_id`; do not insert a second `included_usage_credit` from
+`checkout.session.completed` or from subscription-updated alone).
+`invoice.paid` also clears `nonpayment_started_at`.
+`invoice.payment_failed` sets `nonpayment_started_at` if null; does
+**not** unpublish.
+
+Owner-scheduled cancel at period end (`cancel_at_period_end` completed):
+`status=canceled`, set `canceled_at`, **calls** `UnpublishWebsite`
+(every website on that tenant). Unpaid dunning is **not** this immediate
+unpublish — that is `billing_nonpayment_unpublish`.
+
+Pay-again Checkout paid: new `stripe_subscription_id`, `status=active`,
+`canceled_at` cleared, `stripe_customer_id` kept. Routes:
 [billing HTTP](../features/billing/api.md).
+
+### `billing_catalog_sync`
+
+`product.*` / `price.*` on `POST /v1/webhooks/stripe` **inserts** this
+River job kind with that `event_id`. Worker **reads**
+`stripe_events.payload` and upserts/deactivates **that** Price /
+Product. Not `Prices.List` per webhook. Empty `billing.prices` / boot
+**inserts** one full-list job (one `Prices.List`; upsert all; deactivate
+missing). Not on Checkout, catalogue GET, or `invoice.paid`. Worker
+**calls** `SyncCatalogFromStripe`.
+
+### `billing_nonpayment_unpublish`
+
+Daily. Unique one global row while pending/running. For each
+`billing.subscriptions` row whose `nonpayment_started_at` plus three
+calendar months has elapsed: **retrieve** the Stripe Subscription and
+latest invoice. If Stripe shows paid (missed webhook): clear
+`nonpayment_started_at`, **calls** `AddIncludedUsageCredit` if that
+invoice was not yet applied, do **not** unpublish. If still unpaid: set
+`canceled` / `canceled_at` and **calls** `UnpublishWebsite` (every
+website on that tenant). This Stripe GET is only here, not on Publish.
+`billing_subscription_sync` also evaluates the clock when a webhook
+lands. Website 01 occupancy (6 months after `canceled_at`) is unchanged.
 
 ### `scheduled_etl`
 

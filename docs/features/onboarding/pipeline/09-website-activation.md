@@ -15,10 +15,14 @@ activation **upgrades** the existing unactivated tenant (`status=active`); it
 does not insert a second tenant. Does **not** wait for 06. Does **not** require
 a prior 08 share.
 
-Stripe (via `stripe-go`) handles **this** checkout only (the one-time
-activation price). The Stripe Subscription is
-`ActivateSubscription` after this job, not this checkout. Amount is the
-activation price (predecessor: EUR 4900).
+Stripe (via `stripe-go`) handles **this** Checkout:
+`mode=subscription` plus a one-time activation Price (access-to-Placis
+fee) and the choosable Placis Pro plan / month Price. Amounts **read** from
+`billing.prices` (Stripe Prices), not a Go 4900. Missing activation or
+Placis Pro plan / month Price fails the POST (no ad-hoc `price_data`).
+`ActivateSubscription` **persists** `billing.subscriptions` from this
+Checkout; it does not create a second Stripe Subscription. Access fee
+is never charged again.
 `checkout.session.completed` is accepted only after the SDK verifies
 the signature (`webhook.ConstructEvent`) and the metadata matches
 (`tenant_id`, authenticated Clerk subject). The raw payload is saved on
@@ -54,6 +58,8 @@ that already lost.
 - Treat the browser success URL as activation.
 - Leave v1 as a website-rollback target (archive it).
 - Take the host down (not a 404).
+- Charge the access fee again after a refund.
+- Un-activate the tenant or reopen this step after a refund.
 
 ## Do
 
@@ -96,14 +102,18 @@ kind).
 `tenant_memberships`; complete unpaid `ai.threads` `thread_kind=cms_assistant`
 `current` + end `running`; `website_publications` live (no strip) + archive
 strip v1 if it existed; R2 `latest/` without the strip;
-`billing.subscriptions` (Placis Pro plan, `status=active`);
-`ai_use_ledger_entries` `entry_kind=included_usage_credit`
-(`ActivateSubscription`).
+`billing.subscriptions` (Placis Pro plan / month, `status=active`,
+`stripe_customer_id`, `stripe_subscription_id` from this Checkout;
+`ActivateSubscription`). First-month `included_usage_credit` is
+`invoice.paid` / `AddIncludedUsageCredit` (unique Stripe invoice id),
+not this job.
 
 ## Fail
 
 Signature/metadata mismatch → ignore / 4xx; do not activate. Replay does not
 activate twice. A second payer after the first verified completion is refused.
+A refund after pay records `payment_status=refunded` and does not reopen
+this step.
 
 ## Out
 
@@ -118,34 +128,35 @@ version and the first rollback-eligible website version.
 ### After website activation (billing)
 
 Unpaid access to the application (never website-activated) is **forbidden**.
-After activation, stopping the subscription price unpublishes the website and
-blocks Publish; they can still edit. Copy later: **keep your Placis Pro plan
-subscription to host the website**.
+After activation, stopping the subscription price unpublishes the website
+after three calendar months and blocks Publish; they can still edit. Copy
+later: **keep your Placis Pro plan subscription to host the website**.
 
-1. **One upfront pay** (this checkout; predecessor EUR 4900 stays until that
-   epic).
-2. Then a **subscription price** on a **subscription tier** (provisional
-   catalogue: [billing PRD](../../billing/prd.md)). This step **calls**
-   `ActivateSubscription` (always Placis Pro plan this step; public
-   Pricing Choose does not set `subscription_tier`). Stripe
-   Subscription, not this Checkout. Plus / Max / year is Change plan
-   after they are `active`. If they stop paying, **calls**
-   `UnpublishWebsite` and they cannot
-   **Publish** until the subscription is active again
+1. **One Checkout** (this step): one-time **activation Price** (access
+   fee) plus **Placis Pro plan / month**. Amounts from Stripe Prices
+   (Postgres cache). Access fee never charged again. First pay includes
+   one month of included usage credit (`invoice.paid` /
+   `AddIncludedUsageCredit`; unique Stripe invoice id — do not grant
+   twice from `checkout.session.completed`). This step **calls**
+   `ActivateSubscription` to **persist** `billing.subscriptions` from
+   that Checkout (not a second Stripe Subscription). Public Pricing
+   Choose on Placis Pro plan goes here. Plus / Max / year are deferred. If they
+   stop paying, the three-month clock then **calls**
+   `UnpublishWebsite` and they cannot **Publish** until the
+   subscription is active again
    ([billing](../../billing/architecture.md)). CMS edit stays open
-   (`tenants.status=active`).
-3. **Do not commit to Clerk Billing yet.** Optimistic DB cache of subscription
-   status; refresh when expected.
-4. Monthly **usage credit** is visible on **Usage & billing** as **$**. Unused
-   usage credit carries over. Our cost is **×5** to the owner: $50 shown ⇒ they
-   can spend **$10** of our cost. Token / per-image invoices and **Voice** (xAI
-   per-minute audio plus text-item fees) debit the same pool —
-   [billing architecture](../../billing/architecture.md). Persist remaining
-   usage credit on the AI use ledger; check it before billed work and before a
-   billed realtime connection.
-
-Currency for the website-activation pay stays as 09 specifies until that epic.
-Usage credit display is **$** (provisional USD catalogue).
+   (`tenants.status=active`). Refunds are money-only: tenant stays
+   `active`; first payer stays owner; this step does not reopen.
+2. **Do not commit to Clerk Billing yet.** Optimistic DB cache of
+   subscription status; refresh when expected.
+3. Monthly **usage credit** is visible on **Usage & billing** as **€**.
+   Unused usage credit carries over. Our cost is **×5** to the owner:
+   €50 shown ⇒ they can spend **€10** of our cost. Token / per-image
+   invoices and **Voice** (xAI per-minute audio plus text-item fees)
+   debit the same pool —
+   [billing architecture](../../billing/architecture.md). Persist
+   remaining usage credit on the AI use ledger; check it before billed
+   work and before a billed realtime connection.
 
 See [billing](../../billing/README.md).
 

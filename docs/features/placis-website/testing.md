@@ -26,8 +26,7 @@ Submit the prompt box on `/`. Choose a plan. Contact sales.
 2. **Contact** — `/contact/` shows Send a message (mailto, no Go
    write).
 3. **Support** — `/support/` is `mailto:help@placis.com`.
-4. **Pricing** — `/pricing/` shows Placis Pro plan / Placis Pro Plus
-   plan / Placis Pro Max plan / Enterprise plan. Included usage credit
-   is USD. Choose → `app.placis.com`. Contact sales → `/support/`. No
-   Stripe on this origin.
+4. **Pricing** — `/pricing/` shows baked Placis Pro plan / month
+   (EUR). Choose → `app.placis.com`. Enterprise plan contact sales →
+   `/support/`. No Stripe on this origin. No year toggle.
 5. **Unknown path** — `404.html` from the same build.
