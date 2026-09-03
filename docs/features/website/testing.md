@@ -91,7 +91,7 @@ LLM. Cloudflare R2 / Custom Hostnames / `purge_cache`. Worker is real
 
 ## Integration
 
-### TestHappyPathV1WebsiteEditorPagesReturnsPages
+### TestHappyPathV1WebsiteEditorPagesReturnsPages — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorPagesReturnsPages`. OpenAPI
 1:1.
@@ -115,7 +115,7 @@ not: preview host GET. **reads** `website_pages` may supplement.
 
 `409` onboarding row. `403` unactivated.
 
-### TestHappyPathV1WebsiteEditorPagesCreatesPage
+### TestHappyPathV1WebsiteEditorPagesCreatesPage — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorPagesCreatesPage`. OpenAPI 1:1.
 
@@ -134,7 +134,7 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 `GET /v1/website/editor/pages` lists the created page. **persists into**
 `website_pages`, `website.menus` (append menu node) may supplement.
 
-### TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage
+### TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage`.
 OpenAPI 1:1.
@@ -159,7 +159,7 @@ query flags. Named **reads** may supplement.
 
 `404` / `409` / `400`. `403` unactivated.
 
-### TestHappyPathV1WebsiteEditorPagesPageIdUpdatesPage
+### TestHappyPathV1WebsiteEditorPagesPageIdUpdatesPage — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorPagesPageIdUpdatesPage`.
 OpenAPI 1:1.
@@ -187,7 +187,7 @@ may supplement. Must not: predecessor `POST …/sections` (see
 
 `409 edit_history_conflict`. `413`. `429`. `403` unactivated.
 
-### TestHappyPathV1WebsiteEditorSettingsReturnsSettings
+### TestHappyPathV1WebsiteEditorSettingsReturnsSettings — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorSettingsReturnsSettings`.
 OpenAPI 1:1.
@@ -210,7 +210,7 @@ Exercise body: `WebsiteSettingsRead`. Must not: logo on this body.
 
 `409` / `400`.
 
-### TestHappyPathV1WebsiteEditorSettingsUpdatesSettings
+### TestHappyPathV1WebsiteEditorSettingsUpdatesSettings — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorSettingsUpdatesSettings`.
 OpenAPI 1:1.
@@ -234,7 +234,7 @@ Response `WebsiteEditApplyRead`.
 
 `409 edit_history_conflict`.
 
-### TestHappyPathV1WebsiteEditorMenusReturnsMenus
+### TestHappyPathV1WebsiteEditorMenusReturnsMenus — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorMenusReturnsMenus`. OpenAPI
 1:1.
@@ -257,7 +257,7 @@ Exercise body: `WebsiteMenusRead`. Must not: `/top-menu` or `/footer`.
 
 `409` / `400`. `403` unactivated.
 
-### TestHappyPathV1WebsiteEditorMenusUpdatesMenus
+### TestHappyPathV1WebsiteEditorMenusUpdatesMenus — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorMenusUpdatesMenus`. OpenAPI
 1:1.
@@ -282,7 +282,7 @@ PATCH.
 
 `409 edit_history_conflict`. `403` unactivated.
 
-### TestHappyPathV1WebsiteEditorUrlsReturnsUrls
+### TestHappyPathV1WebsiteEditorUrlsReturnsUrls — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorUrlsReturnsUrls`. OpenAPI 1:1.
 
@@ -300,7 +300,7 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 Exercise body: `WebsiteUrlRead` list. Must not: `POST /pages` from
 picker.
 
-### TestHappyPathV1WebsiteEditorUrlsCreatesUrl
+### TestHappyPathV1WebsiteEditorUrlsCreatesUrl — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorUrlsCreatesUrl`. OpenAPI 1:1.
 
@@ -319,7 +319,7 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 `GET /v1/website/editor/urls` lists the created URL. Must not: create a
 website page. **persists into** `website_urls` may supplement.
 
-### TestHappyPathV1WebsitePublicationsReturnsPublications
+### TestHappyPathV1WebsitePublicationsReturnsPublications — Route
 
 Backend. Go `TestHappyPathV1WebsitePublicationsReturnsPublications`.
 OpenAPI 1:1.
@@ -338,7 +338,7 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 Exercise body: `WebsitePublicationRead` list omits onboarding rows. Must
 not: return `website_manifest`.
 
-### TestHappyPathV1WebsitePublicationsCreatesPublication
+### TestHappyPathV1WebsitePublicationsCreatesPublication — Route
 
 Backend. Go `TestHappyPathV1WebsitePublicationsCreatesPublication`.
 OpenAPI 1:1. **calls** `websitePublication`.
@@ -371,7 +371,7 @@ Response `WebsitePublicationRead`. **sends**
 LLM, Google, voice, `purge_cache`. Worker real. MinIO is real
 (Testcontainers).
 
-### TestHappyPathV1WebsitePublicationsIdRollback
+### TestHappyPathV1WebsitePublicationsIdRollback — Route
 
 Backend. Go `TestHappyPathV1WebsitePublicationsIdRollback`. OpenAPI
 1:1. **calls** `websitePublication` (copy that owner version onto that
@@ -403,7 +403,7 @@ supplement.
 LLM, Google, voice, `purge_cache`. Worker real. MinIO is real
 (Testcontainers).
 
-### TestHappyPathV1WebsiteAddressesReturnsAddresses
+### TestHappyPathV1WebsiteAddressesReturnsAddresses — Route
 
 Backend. Go `TestHappyPathV1WebsiteAddressesReturnsAddresses`. OpenAPI
 1:1.
@@ -421,7 +421,7 @@ No `frontend-2`. No Worker.
 
 Exercise body: `WebsiteAddressRead` list. Does not create subdomain.
 
-### TestHappyPathV1WebsiteAddressesCreatesAddress
+### TestHappyPathV1WebsiteAddressesCreatesAddress — Route
 
 Backend. Go `TestHappyPathV1WebsiteAddressesCreatesAddress`. OpenAPI
 1:1.
@@ -442,7 +442,7 @@ No `frontend-2`. No Worker.
 `type=subdomain`; reserve `website_prefix`. **persists into**
 `website_addresses` may supplement.
 
-### TestHappyPathV1WebsiteAddressesIdReturnsAddress
+### TestHappyPathV1WebsiteAddressesIdReturnsAddress — Route
 
 Backend. Go `TestHappyPathV1WebsiteAddressesIdReturnsAddress`. OpenAPI
 1:1.
@@ -461,7 +461,7 @@ One `website_addresses` row. No `frontend-2`. No Worker.
 Exercise body: `WebsiteAddressRead`. DNS rows copyable. Must not:
 nameserver mutation.
 
-### TestHappyPathInternalWebsiteRender
+### TestHappyPathInternalWebsiteRender — Route
 
 Backend / Worker. Go `TestHappyPathInternalWebsiteRender`. Worker
 OpenAPI 1:1. Extra-keys and swapped-path 4xx:
@@ -493,7 +493,7 @@ Extra keys 4xx.
 
 `purge_cache`. MinIO is real (Testcontainers). Not the Worker.
 
-### TestHappyPathInternalWebsitePublication
+### TestHappyPathInternalWebsitePublication — Route
 
 Backend / Worker. Go `TestHappyPathInternalWebsitePublication`. Worker
 OpenAPI 1:1. Extra-keys and swapped-path 4xx:
@@ -524,7 +524,7 @@ Extra keys 4xx.
 
 `purge_cache`. MinIO is real (Testcontainers). Not the Worker.
 
-### HappyPathWebsiteFull
+### HappyPathWebsiteFull — frontend Full
 
 Frontend. Vitest `HappyPathWebsiteFull`. Not OpenAPI 1:1, not pipeline
 01–04.
@@ -554,7 +554,7 @@ discard.
 
 All HTTP via MSW.
 
-### TestPipelineHappyPathWebsiteFull
+### TestPipelineHappyPathWebsiteFull — pipeline Full
 
 Backend. Go `TestPipelineHappyPathWebsiteFull`. Per-step names live in
 [pipeline/testing](pipeline/testing/README.md).

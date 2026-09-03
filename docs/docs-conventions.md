@@ -252,10 +252,15 @@ onboarding, auth, the media library, ETL, Details, and Projects have none.
 
 **`testing.md`** — H1 + intro, then only `## E2E` and/or `## Integration`.
 Unit tests are not specified here. `###` is one test (open names; ban
-`### METHOD /path`). Each structured Routes **Method + path** needs a
-`### TestHappyPath*` under `## Integration` (prefix `TestHappyPath`,
-not `TestPipelineHappyPath`, not frontend `HappyPath*Full`). Suffix
-matches the future Go name. `####` is closed: **Setup**, **Exercise**,
+`### METHOD /path`). Prefixed `###` is the Go identifier first, then
+space-emdash-space, then a closed suffix: Route (`TestHappyPath*`),
+pipeline Full (`TestPipelineHappyPath{Feature}Full`), frontend Full
+(`HappyPath{Feature}Full`). A paired step heading in feature
+`testing.md` uses pipeline (no Full). Do not put the suffix in front of
+the identifier. Each structured Routes **Method + path** needs
+`### TestHappyPathV1Me — Route` under `## Integration` (prefix
+`TestHappyPath`, not `TestPipelineHappyPath`, not frontend
+`HappyPath*Full`). `####` is closed: **Setup**, **Exercise**,
 **Verify** required in that order; **Fail**, **Mocked**, and
 **Teardown** optional after Verify (that relative order; at most one
 each). Isolation is Integration, not Playwright. Backend isolation is
@@ -272,8 +277,8 @@ one Method+path literal (the leftover join). **Verify** through HTTP
 gone; or the Exercise body). Named persistence verifies may supplement;
 they do not show the Route worked. Extra Method+path in Verify
 does not cover another Route. Pipeline **Verify** stays Persist
-`SELECT`. Frontend Full and `TestPipelineHappyPath{Feature}Full` stay
-extra `###`; they do not fill a 1:1 row.
+`SELECT`. Frontend Full and `TestPipelineHappyPath{Feature}Full — pipeline Full`
+stay extra `###`; they do not fill a 1:1 row.
 
 Per-operation HappyPath is that `###` plus Go `func TestHappyPath*`
 (public vs Worker, two jobs). Two leftover files
