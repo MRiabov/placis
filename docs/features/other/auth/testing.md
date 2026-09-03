@@ -54,7 +54,7 @@ Stripe test webhook. Clerk is real.
 
 ## Integration
 
-### TestHappyPathV1Me
+### TestHappyPathV1Me — Route
 
 1:1. Exercise names exactly one Method+path.
 
@@ -115,7 +115,7 @@ Playwright. No Worker.
 
 Clerk SDK-boundary `Principal`.
 
-### HappyPathAuthFull
+### HappyPathAuthFull — frontend Full
 
 Frontend. Vitest `HappyPathAuthFull`. Not OpenAPI 1:1.
 
