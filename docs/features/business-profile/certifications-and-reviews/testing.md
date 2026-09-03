@@ -79,7 +79,7 @@ Tenant A JWT against tenant B’s review archive / pin ids.
 
 404 / forbidden. Tenant B pins unchanged.
 
-### HappyPathCertificationsAndReviewsFull
+### HappyPathCertificationsAndReviewsFull — frontend Full
 
 Frontend. Vitest `HappyPathCertificationsAndReviewsFull`. Not
 OpenAPI 1:1.
