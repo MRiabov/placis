@@ -15,6 +15,10 @@ Named functions (same spelling in spec, Go, and tests):
   `POST /v1/media-assets/{id}/confirm-upload`.
 - `DescribeImage` — River job kind `describe_image`
   ([jobs.md](../../../general-architecture/jobs.md#describe_image)).
+  Owner / `CleanupMediaAsset` insert of this job:
+  `bill_usage=bill-allow-out-of-balance`. ETL insert:
+  `bill_usage=unbilled`. Cleanup generate itself is
+  `bill_usage=billed` (image-edits).
 
 CMS HTTP: one function per Routes verb+noun (`ListMediaAssets`,
 `GetMediaAsset`, `UpdateMediaAsset`, `StartMediaAssetReplaceUpload`,

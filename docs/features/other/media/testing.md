@@ -590,7 +590,7 @@ R2 PUT. Not the LLM until confirm inserts `describe_image`.
 #### Setup
 
 A `ready` + `approved` row. Remaining usage credit 0
-(`AssertUsageCredit` would 402).
+(`bill_usage=billed` would 402).
 
 #### Exercise
 
