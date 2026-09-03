@@ -58,3 +58,10 @@ decision + date) instead of silently replacing the old entry.
    scheduled ETL after `succeeded` when new `in_pool` rows landed):
    [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../../../general-architecture/jobs.md). Website consumes the ranked pool (`{{reviews.N}}`);
    it does not own ranking.
+
+   (2026-09-02): Ranking writes insert-only `business_profile_review_rankings`
+   (not columns on the review or profile). HTTP / ads hydrate `is_top` /
+   `top_position` from the latest row per review.
+   `ReviewListRead.top_reviews_provisional` is that batch’s `provisional`. Owner
+   PATCH inserts `algorithm=human` / `provisional=false`. Skip overwrite when
+   latest ranking is `algorithm=human`.

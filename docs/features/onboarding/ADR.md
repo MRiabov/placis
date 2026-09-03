@@ -100,7 +100,9 @@ Extract is known-URL crawl text, not a Projects-only hop.)
    [details ADR](../business-profile/details/ADR.md). Same day: founder and brand are columns on
    `business_profiles`, not jsonb. Contact was already columns. Remaining jsonb
    on onboarding is Stripe and event payloads. ETL fetch `raw` lives in schema
-   `etl`. (2026-08-27.)
+   `etl`. (2026-08-27.) (2026-09-02: the four `brand_*` columns are gone;
+   founder columns and `logo_media_asset_id` remain; website look is
+   `website_settings`. See [details ADR](../business-profile/details/ADR.md) 3.)
 
 7. **Conflicting answers are surfaced, not resolved** — what the contractor said
    vs. what we found are shown side by side; the system never picks one

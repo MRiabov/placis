@@ -31,23 +31,36 @@ certification on Find
 
 ## Do — extract
 
-Set `status=extracting`. Trade-registry lookup. Insert
-`etl.trade_registry_fetches` (UUID, registry id, `raw`, `run_id`, `fetched_at`).
-Retry of this `run_id` does not insert a second fetch for a registry id that
-already landed. Transform as soon as that fetch exists.
+`extract/traderegistry.Run` sets `status=extracting`. Trade-registry
+lookup. Insert `etl.trade_registry_fetches` (UUID,
+`trade_registry_record_id`, `raw`, `run_id`, `fetched_at`). Retry of this
+`run_id` does not insert a second fetch for a `trade_registry_record_id`
+that already landed. Transform as soon as that fetch exists.
 
 ## Do — transform
 
-`status=transforming`. Insert `etl.sources` `source_kind=trade_registry_record`
-when this extract writes profile columns. Write accreditation list / notes (each
-increment cites that `source_id`). Trade registry wins the same way registry
-wins legal identity ([build-profile](../../onboarding/pipeline/build-profile.md)).
+`transform/traderegistry.Run` sets `status=transforming`. Insert
+`etl.sources` `source_kind=trade_registry_record` when this extract writes
+profile columns. Write accreditation list / notes (each increment cites
+that `source_id`). Trade registry wins the same way the company registry
+record wins legal identity
+([build-profile](../../onboarding/pipeline/build-profile.md)).
+
+## Reads
+
+`etl.runs`; `etl.trade_registry_fetches` for this `run_id` (retry);
+`business_profiles`.
+
+## Inserts
+
+Extract **inserts** `trade_registry_transform` after the fetch lands.
 
 ## Persist
 
-`etl.trade_registry_fetches`; `etl.sources`; `business_profile_edits` +
+Extract **persists into** `etl.trade_registry_fetches`; `etl.sources`.
+Transform **persists into** `business_profile_edits` +
 `business_profile_edit_sources` + accreditation live profile / list.
-`etl.runs.status=succeeded`.
+**Persists into** `etl.runs.status=succeeded`.
 
 ## Fail
 

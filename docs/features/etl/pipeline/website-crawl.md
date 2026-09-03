@@ -49,10 +49,10 @@ does not enable this ETL run kind.
 
 ## Do — extract (homepage, ETL fast extract)
 
-Set `status=extracting`. Known website URL (Maps, Find, or already on the
-onboarding session): start now.
+`extract/crawl.Run` sets `status=extracting`. Known website URL (Maps,
+Find, or already on the onboarding session): start now.
 
-For the homepage / canonical URL only, run **in parallel**:
+For the homepage `html_url` only, run **in parallel**:
 
 - Parallel Extract (one URL) → `etl.website_crawl_fetches`
   `fetched_from=parallel_extract`
@@ -72,16 +72,16 @@ is the crawled HTML when GET failed). Transform immediately. Do not wait for
 sitemap or the remainder. If GET and Apify both fail, text-only transform from
 Extract markdown is allowed (no cover; one extract source only).
 
-Retry of this `run_id` does not re-Extract / re-GET a `(canonical URL,
+Retry of this `run_id` does not re-Extract / re-GET a `(requested_url,
 fetched_from)` that already has a fetch.
 
 ## Do — extract (discovery)
 
-In parallel with the homepage, or immediately after: GET `robots.txt`
-(`fetched_from=robots_txt`) and sitemap(s) (`fetched_from=sitemap`:
-`robots.txt` `Sitemap:` lines, `/sitemap.xml`, `/sitemap_index.xml`).
-`encoding/xml` for sitemaps; line parse for robots. Persist `raw`; retry
-re-parses; do not GET again.
+`extract/crawl.Run` GETs `robots.txt` (`fetched_from=robots_txt`) and
+sitemap(s) (`fetched_from=sitemap`: `robots.txt` `Sitemap:` lines,
+`/sitemap.xml`, `/sitemap_index.xml`) in parallel with the homepage, or
+immediately after. `encoding/xml` for sitemaps; line parse for robots.
+Persist `raw`; retry re-parses; do not GET again.
 
 Not live HTML URLs. No `etl.sources` for robots/sitemaps, no photos, no
 Project verdicts. **Not in the 20 HTML cap.** `sitemap_index.xml`: GET child
@@ -97,10 +97,11 @@ Placis’s own public `/sitemap` is unrelated.
 
 ## Do — extract (remainder)
 
-Cap **20 HTML URLs** including homepage. Skip URLs that already have a live HTML
-URL. Remaining HTML URLs: **one** Parallel Extract request (API max 20 URLs) and
-concurrent own GETs (same remainder extract). Transform each **HTML URL** when
-that URL’s Extract + HTML (or Apify) have both landed.
+`extract/crawl.Run` caps **20 HTML URLs** including homepage. Skip URLs
+that already have a live `html_url`. Remaining HTML URLs: **one** Parallel
+Extract request (API max 20 URLs) and concurrent own GETs (same remainder
+extract). Transform each HTML URL when that URL’s Extract + HTML (or
+Apify) have both landed.
 
 A second remainder extract only if needed: links on first-remainder HTML that
 were not in the sitemap, still under the cap, still parallel. Then stop.
@@ -118,8 +119,8 @@ Glossary **ETL slow crawl** is this parallel remainder extract.
 
 ## Do — parse (extract, not transform)
 
-GET is still `net/http` (or the shared HTTP client). goquery does not replace
-GET. Transform must not call networks.
+`extract/crawl.Run` still uses `net/http` (or the shared HTTP client) for
+GET. goquery does not replace GET. Transform must not call networks.
 
 Image GETs: bounded concurrency (**8**), timeouts, max body size so one
 gallery cannot fill RAM. Skip logos, icon gifs, SVGs, cookie-banner assets.
@@ -131,31 +132,50 @@ website. SSE is not p90 of request handlers. CI does not measure p90.
 
 ## Do — transform
 
-`status=transforming` for the HTML URL, then back to `extracting` if remainder
-extract continues. Fill empty trade, description, services, service areas,
-founder, marketing email, existing site URL from Extract markdown + HTML via
+`transform/crawl.Run` sets `status=transforming` for the HTML URL, then
+back to `extracting` if remainder extract continues. Fill empty trade,
+description, services, service areas, founder, marketing email, existing
+site URL from Extract markdown + HTML via
 [build-profile](../../onboarding/pipeline/build-profile.md) (each increment
-cites ≥1 crawl `source_id`; both sources when both dumps informed the value).
-Write discovered Facebook URLs and Instagram handles as details (empty columns
-only) so those ETL run kinds may start on this enqueue (do not scrape them from
-this ETL run kind). Then attach photos; **calls**
-`WriteImageThumbnail`; **inserts** `describe_image` per new row with no
-classification yet (do not wait). Then
-[projects.md](projects.md) per crawl source (depicting photo on that HTML URL
-required). Same URL, both sources usable as a Project → one Project, two cites.
-Disagreeing owner-typed scalars → research conflict.
+cites ≥1 crawl `source_id`; both sources when both dumps informed the
+value). Write discovered Facebook URLs and Instagram handles as details
+(empty columns only) so those ETL run kinds may start on this enqueue
+(do not scrape them from this ETL run kind). Then attach photos;
+**calls** `WriteImageThumbnail`; **inserts** `describe_image` per new
+row with no classification yet (do not wait). Then
+[projects.md](projects.md) per crawl source (depicting photo on that HTML
+URL required). Same URL, both sources usable as a Project → one Project,
+two cites. Disagreeing owner-typed scalars → research conflict.
+
+## Reads
+
+`etl.runs`; `etl.website_crawl_fetches` for this `run_id` (retry);
+`etl.website_crawl_pages` by `html_url`; `business_profiles`.
+
+## Calls
+
+`WriteImageThumbnail`. `transform/projects.Run` (transform, after crawl
+sources usable as a Project).
+
+## Inserts
+
+Extract **inserts** `website_crawl_transform` after each HTML URL chunk.
+Transform **inserts** `website_crawl_extract` when remainder chunks
+remain. Transform **inserts** `describe_image` per new imported row with
+no classification yet (do not wait).
 
 ## Persist
 
-`etl.website_crawl_fetches` (`fetched_from` as above);
-`etl.sources` (extract + HTML); `etl.website_crawl_pages`;
+Extract **persists into** `etl.website_crawl_fetches` (`fetched_from` as
+above); `etl.sources` (extract + HTML); `etl.website_crawl_pages`
+(`html_url`; `latest_extract_fetch_id` / `latest_html_fetch_id` /
+`latest_apify_fetch_id` watermarks of the dumps that contributed);
 `etl.website_crawl_page_photos`; `etl.imported_media`
-`imported_media_kind=website_crawl` +
-`imported_media_sources`; `business_profile_edits` +
+`imported_media_kind=website_crawl` + `imported_media_sources`. Transform
+**persists into** `business_profile_edits` +
 `business_profile_edit_sources` + live profile / list rows / Projects.
-**calls** `WriteImageThumbnail`; **inserts** `describe_image` per new imported
-row with no classification yet.
-`etl.runs.status=succeeded` when homepage and remainder are done.
+**Persists into** `etl.runs.status=succeeded` when homepage and remainder
+are done.
 
 ## Fail
 

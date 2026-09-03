@@ -113,9 +113,10 @@ Canonical detail: [frontend.md](../frontend.md), [onboarding assistant](../assis
 ## Tests
 
 Each step has a matching integration test in
-[testing/](testing/01-find-business.md). Those tests are backend
-integration (real Go + real Postgres). Prior-step rows are already in
-Postgres. Assert is every table that step writes, plus the next-step
-handoff in Postgres. Paid / external collaborators are faked. They do
-not defer to another file with “asserts hold”. Playwright E2E is
-[onboarding/testing.md](../testing.md).
+[testing/](testing/README.md). Those tests are backend integration
+(real Go + real Postgres), except 03 (Persist none; frontend extra) and
+04b (**Do not run**). Prior-step rows are already in Postgres. Assert
+is every table that step writes, plus the next-step handoff in
+Postgres. Paid / external collaborators are faked. They do not defer to
+another file with “asserts hold”. Route HappyPath Verify through HTTP
+and Playwright E2E are [onboarding/testing.md](../testing.md).

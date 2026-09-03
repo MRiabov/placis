@@ -49,9 +49,10 @@ ETL run kinds start
 
 `etl.runs` only for started ETL run kinds (shared `enqueue_id`),
 `etl.sources`, `google_maps_fetches` / `facebook_fetches` /
-`instagram_fetches`, `google_maps_listings`, `facebook_posts` /
-`instagram_posts`, media library photos via `imported_media` /
-`imported_media_sources`. `business_profile_opening_hours` has rows,
+`instagram_fetches` / `web_search_fetches`, `google_maps_listings`,
+`facebook_posts` / `instagram_posts`, media library photos via
+`imported_media` / `imported_media_sources`.
+`business_profile_opening_hours` has rows,
 `business_profiles.marketing_phone` is set, and first
 `business_profile_reviews` exist while scrape `etl.runs.status` is
 still in flight; later scrape **persists into** further
@@ -91,7 +92,7 @@ matches; a bumped `schema_revision` extracts / classifies without
 `force`; `algorithm=human` is not overwritten. After that scheduled run
 **succeeds** and new `in_pool` review rows landed: schema `jobs` has
 one `reviews_ranking_for_display` on that `tenant_id` (once, not per
-chunk). After the job: `top_reviews_provisional=false`. Transform did
+chunk). After the job: latest ranking batch `provisional=false`. Transform did
 not rank. If the scheduled run added no new `in_pool` rows, no ranking
 job.
 

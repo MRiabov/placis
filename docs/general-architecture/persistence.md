@@ -55,8 +55,8 @@ Uniques, Written by, Notes
 | --- | --- | --- |
 | [auth](../features/other/auth/persistence.md) | `auth` | `tenants`, `tenant_memberships` |
 | [onboarding](../features/onboarding/persistence.md) | `onboarding` | onboarding sessions, client interview submissions, website activations, `stripe_events` |
-| [ETL](../features/etl/persistence.md) | `etl` | `runs`, `sources`, `llm_source_to_project_classifications`, per-type fetches, `google_maps_listings` (hours, reviews, listing photos, review photos), `website_crawl_pages` (+ photos), `imported_media` |
-| [details](../features/business-profile/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews, Facebook / Instagram profile and posts, `certification_definitions`, `business_profile_certification_selections`) |
+| [ETL](../features/etl/persistence.md) | `etl` | `runs`, `sources`, `llm_source_to_project_classifications`, per-type fetches (including `web_search_fetches`), `google_maps_listings` (hours, reviews, listing photos, review photos), `website_crawl_pages` (+ photos), `imported_media` |
+| [details](../features/business-profile/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews, `business_profile_review_rankings`, Facebook / Instagram profile and posts, `certification_definitions`, `business_profile_certification_selections`) |
 | [projects](../features/business-profile/projects/persistence.md) | `business_profile` | `projects` |
 | [website](../features/website/persistence.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions) |
 | [media library](../features/other/media/persistence.md) | `media_library` | `media_assets`, `media_asset_classifications` |
@@ -98,15 +98,7 @@ Postgres schema**. `ai` is traces only (`threads`, `ai_generations`,
 
 Examples that already split: `media_library.media_asset_classifications`
 (`media_assets`); `etl.llm_source_to_project_classifications`
-(`etl.sources`). New prediction tables follow many-rows-per-subject
-(the media library shape). Do not add new prediction columns to the
-subject.
-
-**TODO:** Reviews ranking writes `is_top` / `top_position` on
-`business_profile_reviews` (and `algorithm=human` on owner PATCH).
-Move that ranking onto a dedicated table in the details schema —
-many rows per review, current = latest `created_at`, insert only,
-nullable `ai_generation_id`. HTTP / ads / Certifications hydrate from
-the join. The review row stays the imported or owner-written text.
-Until then the live columns stay
-([details persistence](../features/business-profile/details/persistence.md)).
+(`etl.sources`); `details.business_profile_review_rankings`
+(`business_profile_reviews`). New prediction tables follow
+many-rows-per-subject (the media library shape). Do not add new
+prediction columns to the subject.
