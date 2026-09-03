@@ -20,24 +20,25 @@ select, edit, see it update, then website publication.
    upload has not succeeded after **10 seconds**, show a visible error. Keep the
    local edit and keep retrying. The leave guard still applies — the change is
    still uncopied.
-4. A schema-validated **PATCH** (`/v1/website/editor/pages/{page_id}` —
-   [api.md](api.md)) **copies** the change to unpublished rows. It is persistence, not
-   the render path. Do not `GET` after each PATCH. Do not replace the whole
-   projection from the PATCH response (that is frontend → backend → frontend).
-   Merge `{ edit_history_head, batch_id }` (plus assigned ids on create). Page
-   PATCH also merges `blockers[]` for that website page (same as
-   `edit_history_head` — not a replacement of the projection). Menus and
-   settings PATCH omit `blockers`. Typing does **not** PATCH. Copy-out for
-   `text` / `rich_text` / SEO happens on **click-off** (leave the field).
-   Discrete actions (image swap, reorder, add/remove a website section) queue a
-   PATCH immediately. The frontend has a **safety timer**: at most one
-   website-editor PATCH in flight, and at most one send every **500ms**,
-   coalescing queued click-offs and discrete actions into the next body. That is
-   why `429` should be rare. Also flush on route change, website publication,
-   and page hide / unload so a close-tab without blur is not lost. If a copy-out
-   or media-library upload is queued or in flight, or the focused field is
-   dirty, the website editor **blocks leaving** until it finishes or the owner
-   confirms discard (in-app confirm plus `beforeunload` on tab close / reload).
+ 4. A schema-validated **PATCH**
+    (`/v1/websites/{website_prefix}/editor/pages/{page_id}` — [api.md](api.md))
+    **copies** the change to unpublished rows. It is persistence, not the render
+    path. Do not `GET` after each PATCH. Do not replace the whole projection from
+    the PATCH response (that is frontend → backend → frontend). Merge
+    `{ edit_history_head, batch_id }` (plus assigned ids on create). Page PATCH
+    also merges `blockers[]` for that website page (same as `edit_history_head`
+    — not a replacement of the projection). Menus and settings PATCH omit
+    `blockers`. Typing does **not** PATCH. Copy-out for `text` / `rich_text` / SEO
+    happens on **click-off** (leave the field). Discrete actions (image swap,
+    reorder, add/remove a website section) queue a PATCH immediately. The frontend
+    has a **safety timer**: at most one website-editor PATCH in flight, and at
+    most one send every **500ms**, coalescing queued click-offs and discrete
+    actions into the next body. That is why `429` should be rare. Also flush on
+    route change, website publication, and page hide / unload so a close-tab
+    without blur is not lost. If a copy-out or media-library upload is queued or
+    in flight, or the focused field is dirty, the website editor **blocks
+    leaving** until it finishes or the owner confirms discard (in-app confirm
+    plus `beforeunload` on tab close / reload).
 5. The backend validates the change against the website component contract and
    **upserts** the unpublished website rows, appends `edit_history` for that
    copy-out, and advances `edit_history_head`. The body is only the changed
@@ -86,14 +87,13 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 
 ### Read — the website editor projection
 
-`GET /v1/website/editor/pages/{page_id}` returns:
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` returns:
 
 - `tenant` (id, website address, name); `page` (id, path / website page path,
   title, page_type, status, validation status, unpublished `blockers[]`).
 - `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
-  `seo_canonical_url`, `seo_noindex`; tenant
-  **website styles** (preset + overrides from `website_settings`, shown here,
-  stored once per tenant).
+  `seo_canonical_url`, `seo_noindex`; **website styles** (preset +
+  overrides from `website_settings`, shown here, stored once per website).
 - `sections[]` — each: `id`, `page_id`, `component_id` (+ `component_version`,
   `schema_version`, `family`, `variant`), `position`, `status`, `visible`,
   `props`, `design`, `slots[]`, `design_controls[]`, `origin`,
@@ -110,20 +110,20 @@ No extra hydrate query besides optional `include_edit_history=true` and optional
 
 **Open hydrate** (enter `/cms/website`, full reload, or after `409`
 `edit_history_conflict`):
-`GET /v1/website/editor/pages/{page_id}?include_edit_history=true` — the
-unpublished website for the selected website page **and** tenant-scoped website
-edit history (last 200 batches). A batch can be website styles, a website form,
-or another website page, so the log is not a per-page slice. Extra fields:
-`edit_history_head` (uuid, null if the stack is empty), `edit_history[]` (each
-batch: `batch_id`, `edited_by`, `ai_generation_id`, rows of target / `op` /
-`before` / `after`).
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}?include_edit_history=true`
+— the unpublished website for the selected website page **and**
+website edit history (last 200 batches, per website). A batch can be website styles, a
+website form, or another website page, so the log is not a per-page slice. Extra
+fields: `edit_history_head` (uuid, null if the stack is empty), `edit_history[]`
+(each batch: `batch_id`, `edited_by`, `ai_generation_id`, rows of target / `op`
+/ `before` / `after`).
 
 Switching website page: the same GET with the query off. Unpublished website
 only. Do not re-download `edit_history`.
 
 Reset to an owner website version (checkout): `publication_id` on
-`GET /v1/website/editor/pages` (page list) and
-`GET /v1/website/editor/pages/{page_id}` (same `*Read`). Paint the
+`GET /v1/websites/{website_prefix}/editor/pages` (page list) and
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` (same `*Read`). Paint the
 in-memory projection, then the ordinary PATCH immediately (`/menus` /
 `/settings` if those trees differ). Extra unpublished pages PATCH
 `status=archived`; a page in that website version with no unpublished row
@@ -140,19 +140,18 @@ A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`,
 
 ### Write — the patch
 
-`PATCH /v1/website/editor/pages/{page_id}` Request `WebsitePageUpdate`,
-Response `WebsiteEditApplyRead`. It **persists into** `website_slots` /
-`website_sections` / `website_pages` / `website_forms` /
+`PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}` Request
+`WebsitePageUpdate`, Response `WebsiteEditApplyRead`. It **persists into**
+`website_slots` / `website_sections` / `website_pages` / `website_forms` /
 `website_form_fields` / `website_form_field_options` / `website.menus` /
-`edit_history` and `website_settings.edit_history_head`. Body: dirty keys
-plus required
-`base_edit_history_head` (the acked head; null only if the stack is empty).
-Dirty keys unchanged — including keys dirtied by in-memory undo/redo.
-Assistant copy-out adds `ai_generation_id` on those dirty keys. Success
-returns `{ edit_history_head, batch_id }`. Page PATCH also returns
-`blockers[]` for that whole website page (not per website section). Not
-the projection, not the log. Menus / settings stay
-`{ edit_history_head, batch_id }` only. To update a website slot you send:
+`edit_history` and `website_settings.edit_history_head`. Body: dirty keys plus
+required `base_edit_history_head` (the acked head; null only if the stack is
+empty). Dirty keys unchanged — including keys dirtied by in-memory undo/redo.
+Assistant copy-out adds `ai_generation_id` on those dirty keys. Success returns
+`{ edit_history_head, batch_id }`. Page PATCH also returns `blockers[]` for that
+whole website page (not per website section). Not the projection, not the log.
+Menus / settings stay `{ edit_history_head, batch_id }` only. To update a
+website slot you send:
 
 ```json
 { "sections": [ { "id": "<section id>", "slots": [
@@ -172,14 +171,14 @@ the projection, not the log. Menus / settings stay
   `fields[]` (typed form field rows), `privacy_notice`.
 
 Top menu and footer writes are **not** on this PATCH. They are
-`PATCH /v1/website/editor/menus` (Request `WebsiteMenusUpdate`, Response
-`WebsiteEditApplyRead`; **persists into** `website.menus` / `edit_history`):
-`base_edit_history_head` plus dirty keys (`top_menu` and/or `footer` and/or
-`show_phone` / `show_email` / `show_contact`). Omit a field = no change. Human
-PATCH may replace a whole tree (including a wipe). Assistant writes use
-`update_menus` ([assistant.md](assistant.md)), then the website editor copies out on `/menus`
-like any other dirty keys. Same `{ edit_history_head, batch_id }` response and
-`409 edit_history_conflict`.
+`PATCH /v1/websites/{website_prefix}/editor/menus` (Request
+`WebsiteMenusUpdate`, Response `WebsiteEditApplyRead`; **persists into**
+`website.menus` / `edit_history`): `base_edit_history_head` plus dirty keys
+(`top_menu` and/or `footer` and/or `show_phone` / `show_email` /
+`show_contact`). Omit a field = no change. Human PATCH may replace a whole tree
+(including a wipe). Assistant writes use `update_menus` ([assistant.md](assistant.md)), then
+the website editor copies out on `/menus` like any other dirty keys. Same
+`{ edit_history_head, batch_id }` response and `409 edit_history_conflict`.
 
 Coalesce means the **dirty keys since the last successful copy-out**, not the
 full draft. Do not send sibling website slots, `media_assets[]`, the website
@@ -234,7 +233,7 @@ queued keys — that is local-first, not a bug. Two tabs, Apply, or another devi
 moving the head are the mismatch cases. No timer ping. The next copy-out after a
 long hide still carries `base_edit_history_head`.
 
-The API allows **30** website-editor PATCH requests per tenant per
+The API allows **30** website-editor PATCH requests per website per
 **10 seconds**. Above that: `429` and `Retry-After`. That cap is a backstop
 (second tab, assistant burst). A single website editor must not hit it: the
 500ms safety timer tops out around 20 sends / 10s. On `429` the website editor
@@ -288,7 +287,7 @@ After PATCH / Apply: do not re-GET the log. Merge `batch_id` and
 website page. After in-memory undo/redo, the following PATCH is the same
 merge. Do not replace the projection from the PATCH body. List GET
 per-row `blockers[]` seeds website pages not yet on the canvas. Opening
-the Publish dropdown calls `GET /v1/website/editor/blockers` (not a
+the Publish dropdown calls `GET /v1/websites/{website_prefix}/editor/blockers` (not a
 timer). After that website page’s first PATCH, the ack wins for that
 page until the next open-Publish GET. Do not recompute from the catalog
 while typing; click-off PATCH is enough for text.

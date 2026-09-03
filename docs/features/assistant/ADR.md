@@ -32,7 +32,10 @@ instead of silently replacing it.
    voice. (2026-08-28) Same day, later: Ads write tool is `cleanup_image` (media
    library), not ads generate / revise / rewrite. `get_ad` and
    `get_website_styles` are always executable. Allowed-set reject is **409**
-   `allowed_set_rejected`. (2026-08-28)
+   `allowed_set_rejected`. (2026-08-28) (2026-09-03): **amend** —
+   `get_website_styles` / `update_website_styles` are **that** website from
+   Assistant screen context (ADR 30). `get_website_styles` is not
+   always-executable with no id.
 
 4. **One CMS thread per activated tenant** — Not per assistant screen. Hydrate
    when an overlay assistant screen mounts — not on `/cms`. Clear context starts
@@ -340,3 +343,17 @@ instead of silently replacing it.
     prior share: if they never shared, 09 reserves the prefix if needed and
     writes the first live R2 without strip. Apex `preview.placis.com` is not a
     tenant site (404). (2026-08-30)
+
+30. **`open_website` twins `open_ad`; website styles are the open website** —
+    `open_website(website_id)` is always executable; unknown / other-tenant id
+    is **404**. After it succeeds, the rest of that run uses that website.
+    Navigates to `/cms/website/{website_prefix}`. Owner leaving the website
+    editor (or wait-end on `websites/new/`) is an Assistant screen switch on
+    the next owner turn. `get_website_styles` / `update_website_styles` read
+    Assistant screen context `website_id`. Off a website editor without that
+    context: **409** `allowed_set_rejected`. Do not dump all websites’
+    website styles.
+    One CMS thread per tenant. Pointer list of websites in screen context
+    (ids + preview website address or website address). CMS knowledge: more
+    than one website; tools apply to the open website; `open_website` to
+    change. (2026-09-03)

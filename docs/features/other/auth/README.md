@@ -40,7 +40,8 @@ Resolved once per request from one of:
 
 1. Clerk org claim → `tenants.clerk_org_id` (unactivated **or** active,
    after checkout / `setActive`)
-2. Contractor `Host` / `website_prefix`
+2. Contractor `Host` → `website_addresses` or
+   `{website_prefix}.preview.placis.com` → `websites` → `tenant_id`
 3. Onboarding session token (GET unpublished; must not PATCH)
 4. Unpaid Clerk JWT → `onboarding_sessions.clerk_user_id` (PATCH / Voice
    on the app origin **before** org attach)

@@ -33,7 +33,7 @@ internal/
                   #   projects/ — live business profile, posts,
                   #   Projects from source; after each extract chunk
   profile/        # profile.go, profile_edits.go, services.go, areas.go, hours.go, certifications.go
-  website/        # root: types.go, service.go
+  website/        # root owns websites.go (parent row + prefix)
     pages/        #   handler.go, service.go, model.go
     sections/
     slots/

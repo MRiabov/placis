@@ -56,6 +56,9 @@ sections). Voice also loads `internal/knowledge/voice_pronunciation.yaml`
 (keyterms + `replace`) at connection create — not into text `LLMProvider`
 prompts.
 
+CMS knowledge: a contractor may have more than one website. Website editor
+tools apply to the open website. `open_website` changes it.
+
 YAML fields: `id` (`assistant.knowledge` / `onboarding.assistant.knowledge`),
 `format_revision`, ordered `files`. Concatenate
 **only listed files, in YAML order**, into the text-turn system prompt and the
@@ -225,13 +228,21 @@ does not navigate and does not authorize that screen’s write tools.
 
 `get_ad(ad_id)` is a separate fat read. It is **not** screen-gated (the model
 does not know ad ids unless the ads list or this peek gave them). Unknown /
-other-tenant id is **404**. `get_website_styles` has no id — tenant website
-styles; always allowed. Do not stuff `get_website_styles` into peek.
+other-tenant id is **404**. `open_website(website_id)` is the same shape:
+always executable; 404 unknown; navigates to
+`/cms/website/{website_prefix}`; the rest of that run uses that website.
+`get_website_styles` has no id on the wire — it reads Assistant screen
+context `website_id`. Off a website editor without that context: **409**
+`allowed_set_rejected`. Do not dump all websites’ website styles. Do not stuff
+`get_website_styles` into peek.
+
+Pointer list of websites in website-editor screen context (ids + preview
+website address or website address), like the Ads pointer list.
 
 `switch_assistant_screen(screen)` asks the frontend to open that screen (same
 notification + context as left-nav). Do not name the tool
-`switch_user_facing_screen`. Optional `open_ad` / `open_website_page` navigate;
-they are not a substitute for ids.
+`switch_user_facing_screen`. Optional `open_ad` / `open_website` /
+`open_website_page` navigate; they are not a substitute for ids.
 
 **Follow** is always on. Canvas **navigates to** the website slot or field the
 agent is looking at. Owner cannot turn it off. Not a WS / HTTP request field. A
@@ -245,7 +256,9 @@ Do not swap the list on assistant screen switch. **Always executable** is the
 subset Go will run on any screen, not “the only tools the model sees.”
 
 **Always executable:** `update_details`, `switch_assistant_screen`,
-`get_context_about_screen`, `get_ad` (404 unknown id), `get_website_styles`.
+`get_context_about_screen`, `get_ad` (404 unknown id), `open_website`
+(404 unknown id). `get_website_styles` needs website-editor screen
+context (else **409** `allowed_set_rejected`).
 
 **Allowed only with that screen loaded** (else **409** `allowed_set_rejected`):
 

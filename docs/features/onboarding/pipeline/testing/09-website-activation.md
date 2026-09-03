@@ -36,12 +36,12 @@ Pays, upgrades the tenant, and **calls** website 04 (strip off). Leftover
     `published_by=onboarding`, `active=true`, `website_manifest`
     still tokenized. If they shared: prior v1 `archived` /
     `active=false`; this is v2. If they never shared:
-    `tenants.website_prefix` reserved here; this is v1 without strip.
+    `websites.website_prefix` already reserved; this is v1 without strip.
   - Unpublished website slots still tokens (no HTML write-back).
   - Replay does not insert a second `website_activations` paid row /
     does not activate twice. Second payer refused.
   - In-flight 06: schema `jobs` still has that unique-key job on
-    `tenant_id` (not cancelled); no new `assistant.thread_items` from
+    `website_id` (not cancelled); no new `assistant.thread_items` from
     this pay; CMS assistant POSTs / PATCH are not 409 because 06 is
     running.
   - **Spy:** MinIO `latest/` without the strip; fake purge as

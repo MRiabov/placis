@@ -18,7 +18,8 @@ profile and profile history), [ETL](../etl/persistence.md),
 ### `onboarding_sessions`
 
 - **Columns:** `id`, `tenant_id` fk (required; unactivated tenant from
-  business lookup), `started_from`, `channel` nullable, `status`,
+  business lookup), `website_id` fk nullable → `websites.id`,
+  `started_from`, `channel` nullable, `status`,
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at`
   nullable timestamptz, `place_id` nullable (Maps attach),
   `company_number` nullable (registry attach; trade-registry key with
@@ -39,13 +40,15 @@ profile and profile history), [ETL](../etl/persistence.md),
   `select_and_copy_website_template_failed`); River job kind
   `website_activation` (`status=activated`; `clerk_user_id` if still
   unset); `BindClerkUserToOnboardingSession`
-  (`clerk_user_id` on the first Clerk request)
+  (`clerk_user_id` on the first Clerk request); Select and copy website
+  template (`website_id`)
 - **Notes:** `research_wait_until` is derived from `etl.runs`
   (`trigger=onboarding`, distinct `enqueue_id` in the last 30
   minutes), not a column. Nullable unique `clerk_user_id`: one Google
   account cannot bind to a second onboarding session / tenant
   (`BindClerkUserToOnboardingSession`). Postgres unique allows many
-  nulls.
+  nulls. `website_id` is the onboarding website 05 inserts. Unpaid
+  website editor HTTP uses this fk (no id in the path).
 
 ### No extract tables
 

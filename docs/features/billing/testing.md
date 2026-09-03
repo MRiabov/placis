@@ -67,7 +67,7 @@ real API + real Postgres. Website activation (09) already succeeded so
    `jobs` `billing_extra_usage_credit`; `extra_usage_credit` row after
    paid Checkout.
 6. **Stopped paying** — no `website_publications.active`; R2 `latest/`
-   is the holding HTML. `POST /v1/website/publications` and live
+   is the holding HTML. `POST /v1/websites/{website_prefix}/publications` and live
    website rollback **402** `subscription_canceled` (not
    `usage_credit_exhausted`). UI: Publish dropdown **Publishing is
    blocked:** navigate to Usage & billing. Website editor PATCH still
@@ -329,7 +329,7 @@ not a billing Route.
 7. **Keep** — `cancel_at_period_end` cleared.
 8. **Stopped paying** — `subscriptions.status=canceled`,
    `tenants.subscription_status=canceled`, `canceled_at` set. No
-   `website_publications.active`. `POST /v1/website/publications` **402**
+   `website_publications.active`. `POST /v1/websites/{website_prefix}/publications` **402**
    `subscription_canceled`.
 9. **Pay-again** — new `stripe_subscription_id`; `status=active`;
    `canceled_at` cleared.
@@ -364,7 +364,7 @@ editor copy PATCH via MSW **200**. MSW:
 `POST /v1/billing/subscription/checkout`,
 `POST /v1/billing/subscription/cancel`,
 `POST /v1/billing/subscription/keep`,
-`POST /v1/website/publications` (**402** `subscription_canceled` when
+`POST /v1/websites/{website_prefix}/publications` (**402** `subscription_canceled` when
 canceled).
 
 #### Verify

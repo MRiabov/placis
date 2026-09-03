@@ -6,14 +6,14 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
 - **Setup**: unpublished website from 05 (website 02). Wait-end already
   wrote `onboarding_sessions.status=preview_and_edit` (home website page
   copy done or wait cap). Do **not** require 06 to have finished.
-  Record tokenized `website_slots.value`. `tenants.website_prefix` null.
-  Zero `website_publications`.
+  Record tokenized `website_slots.value`. `websites.website_prefix` already
+  set. Zero `website_publications`.
 - **Exercise**: `POST /v1/onboarding/website/publications`.
   Also: 05 retry after a first share; also: collision on
   `display_name`; also: wait-end without this POST.
 - **Verify** (Postgres):
-  - `tenants.website_prefix` set (collision: locality once, then
-    sequential `-2`, `-3`).
+  - `websites.website_prefix` already set (collision: locality once, then
+    sequential `-2`, `-3` at insert).
   - `website_addresses`: one `type=subdomain`, `status=reserved`,
     `is_primary=true`, `tenant_id` matches, hostname uses that prefix.
   - `website_publications`: `version_number=1`,

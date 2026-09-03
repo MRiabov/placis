@@ -7,7 +7,7 @@ is a later caller.
 - **Setup**: 02 rows exist (`website_pages` / `website_sections` /
   `website_slots` / `website.menus` / `website_forms`; `website_settings`
   from 01). Schema `jobs`: one `website_copy_generation` on this
-  `tenant_id`. `onboarding_sessions`. `media_assets` may exist for photo
+  `website_id`. `onboarding_sessions`. `media_assets` may exist for photo
   selection. `business_profiles`. At least two named services (roof
   repairs and gutter cleaning). Record website page ids, website slot
   ids, and tokenized `website_slots.value` before invoke. Two cases for
@@ -64,13 +64,13 @@ is a later caller.
     applied tools.
   - `onboarding_sessions.status=preview_and_edit` at wait-end (home
     website page copy done or wait cap), not at 08 share.
-  - **Must not:** zero `website_publications`. `tenants.website_prefix`
-    still null if 08 never ran. Second 03 start is **409** from River
+  - **Must not:** zero `website_publications`. `websites.website_prefix`
+    already set. Second Website copy generation start is **409** from River
     unique-insert; still one `website_copy_generation` row for that
-    `tenant_id`.
+    `website_id`.
   - After 09 while in flight: `assistant.runs` has no `running` on CMS
     `cms_assistant`; leftover job still in schema `jobs` on the same
-    `tenant_id` (not deleted, not cancelled). Further 03 website slot
+    `website_id` (not deleted, not cancelled). Further 03 website slot
     writes may land; they do **not** insert `website_publications` and
     do **not** rewrite R2. CMS PATCH / assistant HTTP are not 409
     because this job is running.
