@@ -174,8 +174,6 @@ Delete this file when empty.
 16. **Stale ADR / debloat / billing step numbers** Issue: contradiction. Action:
     correct the current sentences (where things stand). Where:
 
-    - [ADR.md](ADR.md) 22 still names `POST /v1/me/clerk-organization`;
-      ADR 25 says there is no such route
     - [ADR.md](ADR.md) 12, 16 still number activation as 08
     - [frontend-debloat.md](frontend-debloat.md) “Done when: website
       activation copy and routes match 07”
