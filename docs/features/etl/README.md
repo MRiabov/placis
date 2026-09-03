@@ -10,8 +10,9 @@ Transformed contractor-only rows live on the business profile. ETL is not
 extract-only: transform is the business logic that writes the profile.
 
 Onboarding 02 and a Monday / Wednesday / Friday schedule both call
-`etl.StartRun`. Extract chunks transform as they arrive (ETL fast extract p95 ≤
-5s, then ETL slow extract). There is no owner-facing CMS screen in this slice.
+`etl.StartRun` (`bill_usage=unbilled` until ETL is billed). Extract
+chunks transform as they arrive (ETL fast extract p95 ≤ 5s, then ETL
+slow extract). There is no owner-facing CMS screen in this slice.
 
 - [ADR](ADR.md) — architectural decision record
 - [architecture.md](architecture.md) — extract vs transform, ETL run kind

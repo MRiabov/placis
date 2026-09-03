@@ -98,8 +98,9 @@ prompt above that span. Tools: [ADR](ADR.md) 4. Same HTTP as `/cms/projects/{id}
 - **Cover** — pick, not inline AI assistance.
 
 Prompt required. Other owner edits are kept. Record reasoning, owner-visible
-output, and tool calls (`thread_kind=project_inline_assistance` thread). Usage
-debit is the AI use ledger. Tool names never appear.
+output, and tool calls (`thread_kind=project_inline_assistance` thread).
+`bill_usage=billed` (`usage_category=text`). Remaining 0 → **402**.
+Tool names never appear.
 
 ## Description Ask first (inline diff)
 

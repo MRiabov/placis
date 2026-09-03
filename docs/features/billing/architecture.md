@@ -22,10 +22,18 @@ HTTP (same spelling in spec, Go, and tests), `internal/billing/`:
 
 Called from other packages:
 
-- `AssertUsageCredit` — billed HTTP / Voice realtime **calls** this
-  first; exhausted → **402** `usage_credit_exhausted`
-- `RecordAIUseSpend` — **persists into** `ai_use_ledger_entries`
-  (`entry_kind=spend`)
+- `AssertUsageCredit` — `internal/ai` **calls** this when
+  `bill_usage=billed` (and when `bill-allow-out-of-balance` and
+  remaining > 0) before the vendor call; exhausted on `billed` → **402**
+  `usage_credit_exhausted`
+- `RecordAIUseSpend` — `internal/ai` **persists into**
+  `ai_use_ledger_entries` (`entry_kind=spend`) after a vendor-hit that
+  records **their usage**. Features **must not** **call** this after an
+  `ai` call
+- `BillUsageMode` / `bill_usage` —
+  [glossary](../../glossary.md#billusagemode). Generic external spend
+  (AI and ETL). How `ai` applies remaining 0:
+  [LLM layer](../../general-architecture/llm-layer.md#billusagemode)
 - `ActivateSubscription` — `website_activation` **calls** this after
   `tenants.status=active`
 - `ApplyExtraUsageCredit` — River job kind `billing_extra_usage_credit`
@@ -109,10 +117,10 @@ Go never sees PCM. Settle from `AssistantVoiceUsage` on
 `POST /v1/assistant/voice/transcripts` (including a usage-only POST when Voice
 turns off with no new visible text): `audio_seconds_sent`,
 `audio_seconds_received`, `billed_text_item_count`
-([assistant HTTP](../assistant/api.md)). Extra keys 4xx. **Calls**
-`RecordAIUseSpend`. Do **not** debit wall-clock of an open socket (silence
-is not AI voice vendor cost). Do not add `input_tokens` / `output_tokens`
-on that body.
+([assistant HTTP](../assistant/api.md)). Extra keys 4xx. Voice adapter
+**calls** `RecordAIUseSpend`. Do **not** debit wall-clock of an open
+socket (silence is not AI voice vendor cost). Do not add
+`input_tokens` / `output_tokens` on that body.
 
 Seed knowledge and profile in the realtime-connection **instructions**,
 not as a stack of billed text items. Do not replay the assistant thread
@@ -141,10 +149,11 @@ pool.
 - Remaining is 0: **you are out of usage credit**. Billed composer and
   Voice stop. Link to Usage & billing to buy extra usage credit.
 
-**Calls** `AssertUsageCredit` before billed HTTP and before creating a
-billed realtime connection. Exhausted → **402** `usage_credit_exhausted`.
+**Calls** `AssertUsageCredit` inside `ai` when `bill_usage=billed`
+before billed HTTP generate and before creating a billed realtime
+connection. Exhausted → **402** `usage_credit_exhausted`.
 Drop that connection when remaining hits 0. Transcripts settlement
-**calls** `RecordAIUseSpend` and stays **200**.
+**calls** `RecordAIUseSpend` inside the Voice adapter and stays **200**.
 
 ## Subscription
 

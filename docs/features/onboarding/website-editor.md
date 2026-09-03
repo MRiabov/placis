@@ -104,8 +104,8 @@ tools, `open_ad`. Peek (`get_website_styles`, `get_context_about_screen`): omit.
 
 `create_page` allowed for owner prompts; 06 still must not. After `create_page`,
 the canvas follows `open_website_page` (or the same path the website editor
-uses). `generate_image` in the five is **not billed**. `update_details` allowed;
-whoever pays owns those profile rows.
+uses). `generate_image` in the five is `bill_usage=unbilled`.
+`update_details` allowed; whoever pays owns those profile rows.
 
 ## Thread
 
