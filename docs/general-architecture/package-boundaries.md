@@ -57,12 +57,14 @@ Package ownership. Workflows live in the feature docs this list points at.
    Ads tools stay in `ads`. [Ads](../features/ads/README.md).
 7. `ai` is every vendor AI interface (`LLMProvider` generate, Voice
    adapter, image generate/cleanup on that generate): `thread_id`,
-   `bill_usage: BillUsageMode`, traces / `ai_generations`. Open-web
-   search is a tool on generate. The implementation **calls**
-   `AssertUsageCredit` / `RecordAIUseSpend`. No website or ads business
-   rules, no tool registries that mutate product rows, and no product
-   prompt prose (`prompts.yaml` lives in the feature that calls the
-   LLM). Postgres schema `ai`. [LLM layer](llm-layer.md).
+   `bill_usage` (same [`BillUsageMode`](../glossary.md#billusagemode)
+   as ETL `StartRun` and any external spend), traces /
+   `ai_generations`. Open-web search is a tool on generate. The
+   implementation **calls** `AssertUsageCredit` / `RecordAIUseSpend`.
+   No website or ads business rules, no tool registries that mutate
+   product rows, and no product prompt prose (`prompts.yaml` lives in
+   the feature that calls the LLM). Postgres schema `ai`.
+   [LLM layer](llm-layer.md).
 8. `billing` owns the AI use ledger and Usage & billing. Stripe website
    activation checkout stays in onboarding. Extra usage credit checkout, Change
    plan, cancel, and keep live here. [Billing](../features/billing/README.md).

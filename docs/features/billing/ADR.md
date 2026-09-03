@@ -73,7 +73,9 @@ new entries with the next number, the area, and the date.
     call **writes** `ai_generations` (**our usage**). **Their usage** is
     `RecordAIUseSpend` from that implementation when `bill_usage` is
     `billed` or `bill-allow-out-of-balance` with remaining > 0. Argument
-    `bill_usage: BillUsageMode`. Tenant is `threads.tenant_id`. Features
-    do not debit after an `ai` call. Compaction and owner `DescribeImage`
-    use `bill-allow-out-of-balance`. Onboarding / `eval` / ETL (for now)
+    `bill_usage: BillUsageMode` is the generic spend enum (not AI-only;
+    ETL `StartRun` takes it too). Tenant for an `ai` call is
+    `threads.tenant_id`. Features do not debit after an `ai` call.
+    Compaction and owner `DescribeImage` use
+    `bill-allow-out-of-balance`. Onboarding / `eval` / ETL (for now)
     use `unbilled`. (2026-09-03)

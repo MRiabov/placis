@@ -30,7 +30,10 @@ Called from other packages:
   `ai_use_ledger_entries` (`entry_kind=spend`) after a vendor-hit that
   records **their usage**. Features **must not** **call** this after an
   `ai` call
-- `BillUsageMode` / `bill_usage` — [LLM layer](../../general-architecture/llm-layer.md#billusagemode)
+- `BillUsageMode` / `bill_usage` —
+  [glossary](../../glossary.md#billusagemode). Generic external spend
+  (AI and ETL). How `ai` applies remaining 0:
+  [LLM layer](../../general-architecture/llm-layer.md#billusagemode)
 - `ActivateSubscription` — `website_activation` **calls** this after
   `tenants.status=active`
 - `ApplyExtraUsageCredit` — River job kind `billing_extra_usage_credit`

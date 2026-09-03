@@ -88,43 +88,52 @@ Stripe and the LLM.
 
 ### BillUsage modes
 
-Backend. Does not replace billing Route 1:1 rows.
+Backend integration
+([test types](../../general-architecture/testing.md#test-types)).
+Handler → service → sqlc is real. Not a unit test of
+`BillUsageMode`. Does not replace billing Route 1:1 rows.
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres). Tenant already
+Backend (`humatest`, Testcontainers Postgres + MinIO). Tenant already
 `status=active` with `billing.subscriptions` from 09 fixture. Fake LLM
 with **known our cost** (×5 their-cost is a known `#`). Fake Stripe.
-No `frontend-2`.
+Prefer fake Clerk. No `frontend-2`. No Worker container.
 
 #### Exercise
 
-1. **`billed`** — CMS text generate (`bill_usage=billed`). Then
+1. **`billed`** — `GET /v1/assistant/thread/ws` (CMS text). Then
    `GET /v1/billing/usage`.
-2. **`billed` empty** — remaining 0. Same generate.
-3. **`unbilled`** — ETL generate (`bill_usage=unbilled`). Then
+2. **`billed` empty** — remaining 0. Same
+   `GET /v1/assistant/thread/ws`.
+3. **`unbilled`** — **calls** `StartRun` (`bill_usage=unbilled`). Then
    `GET /v1/billing/usage`.
-4. **`bill-allow-out-of-balance`** — owner `DescribeImage` with remaining.
-   Then remaining 0; **calls** `DescribeImage` again.
-5. **Voice** — `POST /v1/assistant/voice/transcripts` (`bill_usage=billed`,
-   `usage_category=voice`).
+4. **`bill-allow-out-of-balance`** —
+   `POST /v1/media-assets/{id}/confirm-upload` **inserts**
+   `describe_image`; wait-end `DescribeImage`. Then
+   `GET /v1/billing/usage`. Remaining 0; wait-end `DescribeImage`
+   again.
+5. **Voice** — `POST /v1/assistant/voice/transcripts`. Then
+   `GET /v1/billing/usage`.
 
 #### Verify
 
-1. **`billed`** — `ai_generations.cost_amount` (**our usage**). AI use
-   ledger spend; remaining dropped by that `#` (**their usage**).
-2. **`billed` empty** — out of usage credit (**402**). No vendor call.
-   Neither row.
-3. **`unbilled`** — **our usage** only. Remaining unchanged.
-4. **`bill-allow-out-of-balance`** — remaining > 0: debit `image`. Remaining
-   0: vendor still runs; **our usage** only; not captioning-failed from
-   usage credit.
+1. **`billed`** — `BillingUsageRead.remaining_usage_credit_usd_cents`
+   dropped by the known text `#`. `spent_text_usd_cents` that `#`.
+   Persistence may supplement: `ai_generations.cost_amount` (**our
+   usage**); spend row (**their usage**).
+2. **`billed` empty** — **402** `usage_credit_exhausted` on the WS.
+   Remaining unchanged on `GET /v1/billing/usage`.
+3. **`unbilled`** — remaining unchanged on `GET /v1/billing/usage`.
+4. **`bill-allow-out-of-balance`** — remaining > 0: remaining dropped
+   by the known image `#`. Remaining 0: wait-end still succeeds (not
+   captioning-failed); remaining unchanged that beat.
 5. **Voice** — remaining dropped by the known voice `#`. Settlement
    **200**.
 
 #### Mocked
 
-Stripe. LLM. Voice usage body.
+Stripe. LLM. Voice usage body. Clerk.
 
 ### Humatest billing
 

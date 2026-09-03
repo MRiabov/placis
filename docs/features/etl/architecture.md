@@ -10,8 +10,8 @@ Callers do not inline either step. Named identifiers:
 Pipeline **Do** functions (same spelling in spec, Go, and tests):
 
 - `StartRun` — `internal/etl` (`run.go`). `bill_usage: BillUsageMode`
-  (currently `unbilled`; pass through to transform LLM and ETL-inserted
-  `describe_image`)
+  (same generic spend enum as `ai`; currently `unbilled`; pass through
+  to transform LLM and ETL-inserted `describe_image`)
 - `extract/googlemaps.Run` —
   [Google Maps](pipeline/google-maps.md)
 - `transform/googlemaps.Run` —

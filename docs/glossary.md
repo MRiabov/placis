@@ -1252,9 +1252,10 @@ In code: `ai_use_ledger`.
 
 ### BillUsageMode
 
-How an `ai` vendor call treats usage credit: debit **their cost**, skip
-that debit, or debit only when remaining is not empty and still run when
-it is empty. Never in PRDs or UI.
+How a paid external call treats usage credit: debit **their cost**,
+skip that debit, or debit only when remaining is not empty and still
+run when it is empty. Any external spend (AI vendor, ETL fetch, later
+paid APIs). Never in PRDs or UI.
 
 In code: `BillUsageMode`. Argument: `bill_usage`. Values: `billed`,
 `unbilled`, `bill-allow-out-of-balance`. Omit / zero is `billed`.

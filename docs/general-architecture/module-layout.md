@@ -13,7 +13,7 @@ internal/
   httpapi/        # router, middleware, error mapping, huma API registration
   auth/           # Clerk SDK (clerk-sdk-go): Sessions().Verify -> Principal; Users().Create; Organizations().Create
   store/          # pgx pool + sqlc-generated queries (queries/*.sql split by domain)
-  ai/             # vendor AI interfaces + threads + traces (schema `ai`; bill_usage; no feature tool registries)
+  ai/             # vendor AI interfaces + threads + traces (schema `ai`; same bill_usage enum as ETL; no feature tool registries)
   knowledge/      # shared product glossary + Voice pronunciation (listed by both assistants)
   files/          # object storage, signed URLs
   jobs/           # River job args + workers
