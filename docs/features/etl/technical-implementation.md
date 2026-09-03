@@ -8,8 +8,9 @@ Related: [ADR](ADR.md), [persistence](persistence.md),
 
 ## StartRun
 
-`StartRun(trigger, tenant, force=false)` (onboarding 02 also passes
-`onboarding_session_id`). Create `enqueue_id`. For `trigger=onboarding`, count
+`StartRun(trigger, tenant, force=false, bill_usage=unbilled)`
+(onboarding 02 also passes `onboarding_session_id`). Create
+`enqueue_id`. For `trigger=onboarding`, count
 distinct `enqueue_id` in the last 30 minutes; 5 or more → do not insert runs (02
 already counted so business lookup stays 200 and a later source-change stays
 `429`). Copy 01 attach and live-profile details. For each ETL run kind that can

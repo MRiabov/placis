@@ -66,7 +66,7 @@ approved), details / projects / top reviews.
 ## Calls
 
 `update_details` when copy includes a detail. Media library cleanup HTTP
-for proposed light cleanup copies. **Calls** `RecordAIUseSpend`
+for proposed light cleanup copies. Job generate `bill_usage=billed`
 (`usage_category=text`).
 
 ## Persist

@@ -353,12 +353,13 @@ it will end — look TBD. Go does not enforce this idle timer.
 generate. **Our cost** is the **AI vendor cost** invoice; **their cost** is ×5
 on Usage & billing. Voice is **AI voice vendor cost** (audio minutes + text-item
 fees), same ×5. Nested
-image/cleanup from a voice tool is another billed LLM/image call. **Calls**
-`AssertUsageCredit` before the billed text LLM call, before CMS
-realtime-connection create, and before a billed tool. Exhausted is **402**
+image/cleanup from a voice tool is another billed LLM/image call.
+`bill_usage=billed` on those `ai` calls. Exhausted is **402**
 `usage_credit_exhausted`. Drop the CMS realtime connection when usage credit is
-exhausted. Transcripts settlement **calls** `RecordAIUseSpend` and stays **200**
-so the debit can land. Do not debit wall-clock. Onboarding is not billed.
+exhausted. Transcripts settlement records **their usage** inside the Voice
+adapter and stays **200**
+so the debit can land. Do not debit wall-clock. Onboarding is
+`bill_usage=unbilled`.
 
 ## When rows are written
 

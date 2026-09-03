@@ -12,7 +12,7 @@ Named identifiers:
 River job kind list: [jobs](../../../general-architecture/jobs.md).
 
 ```text
-StartRun(trigger, tenant, force=false)
+StartRun(trigger, tenant, force=false, bill_usage=unbilled)
   → enqueue_id; start each ETL run kind that has the details it needs (shared enqueue_id)
   → **inserts** `{etl_run_kind}_extract` → persist fetch → **inserts** `{etl_run_kind}_transform`
     (repeat per chunk; not inlined in StartRun)

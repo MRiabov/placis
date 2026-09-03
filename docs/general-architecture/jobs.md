@@ -132,8 +132,9 @@ writes **false** (the run already `succeeded`). No pass field. No
 `internal/jobs` worker **calls** the profile function. LLM:
 `thread_kind=reviews_ranking_for_display`,
 `prompt_id=reviews_ranking_for_display` in the profile package
-`prompts.yaml`. Input: current `in_pool` rows (id, citation/body, rating,
-origin, `published_at`). Output: ordered `review_ids[]`, length 1–30,
+`prompts.yaml`. `bill_usage=unbilled` until ETL is billed. Input:
+current `in_pool` rows (id, citation/body, rating, origin,
+`published_at`). Output: ordered `review_ids[]`, length 1–30,
 each id in that pool. Prompt prose, ranking heuristics, and dated model
 id are unspecified. Not stars or recency.
 [LLM layer](llm-layer.md).
@@ -166,8 +167,10 @@ Keep the last **3 owner** and last **3 assistant** `thread_items` (plus
 Voice items keep `offset_seconds` and `provider_event`. Summarize with a
 cheap flash model (DeepSeek V4 Flash or current Qwen Flash — **pin a dated
 id**, not `*-latest`). Write a new `ai_generations` row for that call (on
-that `cms_assistant` thread). Does **not** debit usage credit (maintenance,
-not an owner turn). Does not rewrite existing `ai_generations` rows.
+that `cms_assistant` thread). `bill_usage=bill-allow-out-of-balance`
+(`usage_category=text`): debit when remaining > 0; remaining 0 still
+compacts (**our usage** only). Does not rewrite existing
+`ai_generations` rows.
 Compaction prompt is assistant `prompts.yaml` (not Go). It does **not**
 include a pending Ask-first reject notice as a special case. It **does**
 include the Voice transcription notice when the thread has a
@@ -234,7 +237,12 @@ photos are other job ids.
 (`parallel_tool_calls=true`) and **writes**
 `media_asset_classifications` (`photo_kind` `logo` or `photo`,
 `content_hash` of this canonical `file_id`, `algorithm`,
-`schema_revision`, `ai_generation_id`). Tool `clutter` maps to column
+`schema_revision`, `ai_generation_id`). Owner / `CleanupMediaAsset`
+insert of this job: `bill_usage=bill-allow-out-of-balance`
+(`usage_category=image`) — remaining 0 still classifies (**our usage**
+only; not captioning-failed from usage credit). ETL insert:
+`bill_usage=unbilled` from `StartRun`. Cleanup generate itself is
+`bill_usage=billed`. Tool `clutter` maps to column
 `clutter_severity` (same for the other seven). Never updates an old
 classification. Then sets `media_assets.processing_status=ready`.
 Record reasoning, output, and tool calls on `ai_generations`. Insert /
