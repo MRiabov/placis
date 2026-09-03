@@ -200,7 +200,7 @@ not a billing Route.
 
 Stripe.
 
-### HappyPathBillingFull
+### HappyPathBillingFull — frontend Full
 
 Frontend. Vitest `HappyPathBillingFull`. Not OpenAPI 1:1.
 

@@ -50,14 +50,15 @@ read Route. Pipeline tests prove Persist, not Routes.
 Two OpenAPI specs and structured `api.md` Routes. Each public or Worker
 operation needs both:
 
-1. `### TestHappyPath*` in the owning `testing.md` under
+1. `### TestHappyPath* — Route` in the owning `testing.md` under
    `## Integration` (prefix `TestHappyPath`, not
    `TestPipelineHappyPath`, not frontend `HappyPath*Full`). **Setup** is
    backend. **Exercise** names exactly one Method+path literal. **Verify**
    through HTTP (create then `GET` and assert it exists; delete then
    `GET` and assert gone; or the Exercise body). Named persistence
    verifies may supplement. Extra Method+path in Verify does not cover
-   another Route.
+   another Route. The Go identifier is first; the closed suffix is Route,
+   pipeline Full, or frontend Full.
 2. `func TestHappyPath*` that hits **exactly that one** Method+path as a
    literal (`api.Get("/v1/…")` or `"GET /v1/…"`).
 
@@ -92,14 +93,16 @@ under ad-generation):
 Examples:
 
 - **Public** (`GET /openapi.json` / exported `openapi.json`):
-  `TestHappyPathV1WebsiteEditorPagesReturnsPages` for
-  `GET /v1/website/editor/pages`. `TestHappyPathV1MediaAssetsReturnsList`
-  for `GET /v1/media-assets`. Also `GET /v1/health`, `GET /openapi.json`.
+  `TestHappyPathV1WebsiteEditorPagesReturnsPages — Route` for
+  `GET /v1/website/editor/pages`.
+  `TestHappyPathV1MediaAssetsReturnsList — Route` for
+  `GET /v1/media-assets`. Also `GET /v1/health`, `GET /openapi.json`.
   Website’s other public Routes:
   [website testing](../features/website/testing.md) `## Integration`.
 - **Worker** (internal OpenAPI file):
-  `TestHappyPathInternalWebsiteRender` for `POST /internal/website-render`.
-  `TestHappyPathInternalWebsitePublication` for
+  `TestHappyPathInternalWebsiteRender — Route` for
+  `POST /internal/website-render`.
+  `TestHappyPathInternalWebsitePublication — Route` for
   `POST /internal/website-publication`. Specs:
   [website testing](../features/website/testing.md).
 
@@ -112,8 +115,9 @@ Pipeline (not OpenAPI 1:1). Every `pipeline/` needs **both**:
   (onboarding `03`). Skip gatherers and testing-only `worker-internal.md` (extra
   Worker DTO cases; 1:1 is website `testing.md`).
 - Whole pipeline: exactly
-  `TestPipelineHappyPath{Feature}Full` (`TestPipelineHappyPathWebsiteFull`,
-  `OnboardingFull`, `AdsFull`, `EtlFull`). Testcontainers Postgres + MinIO.
+  `TestPipelineHappyPath{Feature}Full — pipeline Full`
+  (`TestPipelineHappyPathWebsiteFull`, `OnboardingFull`, `AdsFull`,
+  `EtlFull`). Testcontainers Postgres + MinIO.
   Worker container only if that pipeline **calls** `websiteRender` /
   `websitePublication`. Do not name a step file `full.md`.
 
@@ -139,8 +143,9 @@ Frontend completeness (documented, not CI-asserted this pass):
 Extra frontend HappyPath only for real screen branching. Names include
 **HappyPath**; **Full** only on that journey.
 
-`### METHOD /path` stays banned. Frontend Full and pipeline `{Feature}Full`
-stay extra `###`; they do not fill a 1:1 row.
+`### METHOD /path` stays banned. Frontend Full
+(`### HappyPath{Feature}Full — frontend Full`) and pipeline
+`{Feature}Full` stay extra `###`; they do not fill a 1:1 row.
 
 ## The rule
 
