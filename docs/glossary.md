@@ -971,7 +971,8 @@ Distinct from: Website lead.
 Usage credit, subscription price, and the Usage & billing screen. The owner
 spends usage credit on billed work in the website editor, Ads, and Voice.
 
-Distinct from: Website activation (the one-time pay).
+Distinct from: Website activation (access fee plus Placis Pro plan /
+month on one Checkout).
 
 ---
 
@@ -1025,7 +1026,8 @@ credit.
 Do not say “generation hop”, “hop”, “AI credit”, or bare “credit”.
 
 Distinct from: Extra usage credit (a purchase that adds to this pool),
-Subscription price (the monthly fee), Website activation (the one-time pay).
+Subscription price (the monthly fee), Website activation (access fee
+plus Placis Pro plan / month on one Checkout).
 
 In code: `usage_credit` (error `usage_credit_exhausted`).
 
@@ -1049,7 +1051,8 @@ again.
 
 Do not say “retainer”. Never say “subscription shelf”.
 
-Distinct from: Website activation (one-time pay), Usage credit, Extra usage
+Distinct from: Website activation (access fee plus Placis Pro plan /
+month on one Checkout), Usage credit, Extra usage
 credit, Placis Pro plan / Placis Pro Plus plan / Placis Pro Max plan /
 Enterprise plan (the tiers).
 
