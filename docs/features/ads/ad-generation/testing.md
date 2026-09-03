@@ -6,6 +6,11 @@ download. Pipeline 01–04 asserts are
 re-assert 01 Persist beyond the handoff the UI needs. DB asserts name
 the tables from [persistence.md](../persistence.md).
 
+Public 1:1 HappyPath specs live under `## Integration` (one
+`### TestHappyPath*` per [api.md](../api.md) Routes row). **Verify**
+through HTTP. They do not replace this E2E or pipeline Full. **Do not
+create** paths are omitted. Go funcs stay on `leftover_tests.go`.
+
 ## E2E
 
 ### Create through download
@@ -79,6 +84,359 @@ LLM.
 
 ## Integration
 
+### TestHappyPathV1AdsReturnsList — Route
+
+Backend. Go `TestHappyPathV1AdsReturnsList`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+One draft ad and one `status=archived` ad. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/ads`. Request `AdListGet`. Response `AdRead[]`.
+
+#### Verify
+
+Exercise body: `AdRead[]` omits `status=archived`. The draft is
+present. Must not: campaign metrics. Named **reads** may supplement.
+
+### TestHappyPathV1AdsCreatesAd — Route
+
+Backend. Go `TestHappyPathV1AdsCreatesAd`. OpenAPI 1:1. **calls**
+`CreateAd`.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+`business_profiles` with at least one named service. One draft ad and
+one `status=archived` ad. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/ads`. Request `AdCreate`. Response `AdRead`.
+
+#### Verify
+
+`GET /v1/ads/{ad_id}` hydrates the new draft (`status=draft`). Prior
+draft and archived rows remain. **persists into** `ads`,
+`ad_lead_forms`, `ad_variants` may supplement. Must not: enqueue
+generate; write copy.
+
+#### Fail
+
+Missing `format` → 400.
+
+### TestHappyPathV1AdsAdIdReturnsAd — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdReturnsAd`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+One draft ad. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/ads/{ad_id}`. Response `AdRead`.
+
+#### Verify
+
+Exercise body: `AdRead` hydrates the workspace. Must not: return
+`platform_refs`. Named **reads** may supplement.
+
+#### Fail
+
+`404`.
+
+### TestHappyPathV1AdsAdIdUpdatesAd — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdUpdatesAd`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+One draft ad. `base_updated_at` is that row’s `ads.updated_at`. No
+`frontend-2`. No Worker.
+
+#### Exercise
+
+`PATCH /v1/ads/{ad_id}`. Request `AdUpdate`. Response `AdRead`.
+
+#### Verify
+
+`GET /v1/ads/{ad_id}` shows the click-off save. **persists into**
+`ads`, `ad_variants`, `ad_lead_forms` may supplement. Must not:
+write a Published ad; enqueue generate.
+
+#### Fail
+
+`409`.
+
+### TestHappyPathV1AdsAdIdDeletesAd — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdDeletesAd`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+One draft ad. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`DELETE /v1/ads/{ad_id}`. Request `AdGenerateRequest`.
+
+#### Verify
+
+`GET /v1/ads/{ad_id}` is `404`. **persists into** `ads` (delete) may
+supplement. Must not: Archive.
+
+#### Fail
+
+`409` if not `draft`.
+
+### TestHappyPathV1AdsAdIdVariantsReturnsVariant — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdVariantsReturnsVariant`. OpenAPI
+1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+One ad with a stub variant. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/ads/{ad_id}/variants`. Response `AdVariantRead`.
+
+#### Verify
+
+Exercise body: `AdVariantRead` is one row. Must not: multi-format
+list. Named **reads** may supplement.
+
+#### Fail
+
+`404`.
+
+### TestHappyPathV1AdsAdIdVariantsVariantIdUpdatesVariant — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdVariantsVariantIdUpdatesVariant`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+01/02 already wrote copy and placements (`ad_needs_review`). No
+`frontend-2`. No Worker.
+
+#### Exercise
+
+`PATCH /v1/ads/{ad_id}/variants/{variant_id}`. Request
+`AdVariantUpdate`. Response `AdVariantRead`.
+
+#### Verify
+
+`GET /v1/ads/{ad_id}/variants` shows the retargeted placement.
+**persists into** `ad_image_placements`, `ads.updated_at` may
+supplement. Must not: `POST …/cleanup`.
+
+#### Fail
+
+`409`.
+
+### TestHappyPathV1AdsAdIdVariantsVariantIdRewrite — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdVariantsVariantIdRewrite`. OpenAPI
+1:1. **calls** `RewriteAdCopy`.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+01/02 already wrote copy. Usage credit available. No `frontend-2`. No
+Worker.
+
+#### Exercise
+
+`POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite`. Request
+`AdRewriteRequest`. Response `AdCopyVariantRead`.
+
+#### Verify
+
+Exercise body: rewritten `headline` / `primary_text`. Then
+`GET /v1/ads/{ad_id}` copy matches. **persists into**
+`ad_copy_variants`, `ai_generations`, `ads.updated_at`,
+`ai_use_ledger_entries` may supplement. Must not: rewrite
+`cta_label` / short label; `/regenerate`.
+
+#### Fail
+
+`400` empty prompt. `409`. `402 usage_credit_exhausted`.
+
+#### Mocked
+
+LLM. Prefer fake Clerk.
+
+### TestHappyPathV1AdsAdIdGenerate — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdGenerate`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+01 stub exists (`ads.status=draft`, stub `ad_variants.format`). Ready
+and approved `media_assets` for that format. Usage credit available.
+Schema `jobs`: no pending `ads_generate`. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/ads/{ad_id}/generate`. Request `AdGenerateRequest`. Response
+`AdRead`.
+
+#### Verify
+
+Exercise body: `AdRead`. Then `GET /v1/ads/{ad_id}` the ad exists.
+**persists into** `jobs` (`ads_generate`) may supplement. Must not:
+write `ad_ready_to_post`. Copy and placement Persist is pipeline 02.
+
+#### Fail
+
+`409` while that job is pending/running. Empty format.
+`402 usage_credit_exhausted`.
+
+#### Mocked
+
+LLM. Prefer fake Clerk.
+
+### TestHappyPathV1AdsAdIdApprove — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdApprove`. OpenAPI 1:1. **calls**
+`ApproveAd`.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+02 already wrote `ads` (`status=ad_needs_review`), copy, and
+placements on uploaded `media_assets`. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/ads/{ad_id}/approve`. Request `AdGenerateRequest`. Response
+`AdRead`.
+
+#### Verify
+
+`GET /v1/ads/{ad_id}` shows `status=ad_ready_to_post`. **persists
+into** `ads`, `ad_variants`, `ad_reviews`, `audit_events` may
+supplement. Must not: ad posting.
+
+#### Fail
+
+`400` blockers. `409`.
+
+### TestHappyPathV1AdsAdIdAdSet — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdAdSet`. OpenAPI 1:1. **calls**
+`ExportAdSet`.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+03 already wrote `ads` (`status=ad_ready_to_post`). No `frontend-2`.
+No Worker.
+
+#### Exercise
+
+`POST /v1/ads/{ad_id}/ad-set`. Request `AdGenerateRequest`. Response
+`AdSetRead`.
+
+#### Verify
+
+Exercise body: `AdSetRead`. Must not: ad posting; write ad tables.
+**persists into** `audit_events` may supplement.
+
+#### Fail
+
+`409` if not `ad_ready_to_post`.
+
+### TestHappyPathV1AdsAdIdDownload — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdDownload`. OpenAPI 1:1. **calls**
+`ExportAdSet`.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+03 already wrote `ads` (`status=ad_ready_to_post`). Source
+`media_assets` files exist. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/ads/{ad_id}/download`. Request `AdGenerateRequest`. Response
+`AdDownloadRead`.
+
+#### Verify
+
+Exercise body: `AdDownloadRead.url` is a signed URL. **persists into**
+`files`, `audit_events` may supplement. Must not: public URL; ad
+posting.
+
+#### Fail
+
+`409` if not `ad_ready_to_post`.
+
+#### Mocked
+
+Ad platforms. MinIO is real (Testcontainers). Prefer fake Clerk.
+
+### TestHappyPathV1AdsAdIdArchive — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdArchive`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+One ad that is not archived. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/ads/{ad_id}/archive`. Request `AdGenerateRequest`. Response
+`AdRead`.
+
+#### Verify
+
+`GET /v1/ads/{ad_id}` shows `status=archived`. **persists into**
+`ads`, `ad_reviews`, `audit_events` may supplement. Must not: hard
+delete.
+
+#### Fail
+
+`409`.
+
+### TestHappyPathV1AdsAdIdUnarchive — Route
+
+Backend. Go `TestHappyPathV1AdsAdIdUnarchive`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+One archived ad. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`POST /v1/ads/{ad_id}/unarchive`. Request `AdGenerateRequest`.
+Response `AdRead`.
+
+#### Verify
+
+`GET /v1/ads/{ad_id}` shows `draft` when no approved variant, else
+`ad_ready_to_post`. **persists into** `ads`, `ad_reviews`,
+`audit_events` may supplement.
+
+#### Fail
+
+`409`.
+
 ### HappyPathAdsFull — frontend Full
 
 Frontend. Vitest `HappyPathAdsFull`. Not four files named 01–04.
@@ -131,3 +489,32 @@ tables unchanged on 04.
 #### Mocked
 
 LLM, ad platforms.
+
+### Two-tenant isolation
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Two activated
+tenants A and B. A has one ad. B has zero `ads`. No Playwright. No
+`frontend-2`.
+
+#### Exercise
+
+As B: `GET /v1/ads`, `GET /v1/ads/{A’s id}`,
+`PATCH /v1/ads/{A’s id}`, generate / rewrite / approve / archive /
+download on A’s id.
+
+#### Verify
+
+404 or forbidden. Never A’s `AdRead`. B’s list empty. A’s `ads` /
+`ad_variants` / `ad_copy_variants` / `ad_image_placements` /
+`ad_lead_forms` / `ad_reviews` unchanged. A’s queries stay
+`tenant_id = A`.
+
+#### Fail
+
+B must not receive A’s copy or `AdDownloadRead.url`.
+
+#### Mocked
+
+LLM. Prefer fake Clerk. MinIO is real (Testcontainers).
