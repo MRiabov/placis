@@ -4,6 +4,7 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 [general-prd.md](../general-prd.md).
 
 - [backend-stack.md](backend-stack.md) — stack, type layers
+- [feature-flags.md](feature-flags.md) — named config bools (`internal/config`)
 - [frontend-stack.md](frontend-stack.md) — `frontend-2` stack, folders, typegen
 - [module-layout.md](module-layout.md) — Go package tree, file-size guard, folder fan-out
 - [processes.md](processes.md) — `cmd/api`, `frontend-2`, contractor website, Placis website,
