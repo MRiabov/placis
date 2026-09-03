@@ -14,19 +14,18 @@ the thin trigger (onboarding session / DAG / unpaid thread lock).
 ## Trigger
 
 02 succeeded. One River job kind `website_copy_generation`. Lock key:
-`tenant_id` (unactivated tenant already exists). A second 03 start is
-**409** from River unique-insert on that key (do not HTTP-check before
-insert). While
-unactivated, 03 also holds `assistant.runs` `running` on the
-onboarding-website-editor thread
-([website editor](../../onboarding/website-editor.md)). After 09 that lock
-must not sit on CMS `assistant.runs`; leftover 03 is River-only on
-`tenant_id`.
+`website_id`. A second start for that website is **409** from River
+unique-insert on that key (do not HTTP-check before insert). While unactivated,
+Website copy generation also holds `assistant.runs` `running` on the
+onboarding-website-editor thread ([website editor](../../onboarding/website-editor.md)). After Website activation
+that lock must not sit on CMS `assistant.runs`; leftover copy generation is
+River-only on `website_id`.
 
 ## Pre
 
-- Unpublished website from 02 exists.
-- Live business profile as of `accepted_edit_id` at job start.
+- Unpublished website from Copy the website template’s pages exists.
+- Live business profile as of `accepted_edit_id` at job start (onboarding)
+  or the live profile (CMS `POST /v1/websites`).
 
 ## Must not
 

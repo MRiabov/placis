@@ -7,9 +7,13 @@ Unpublished website, website editor tools, website publication, Connect
 website address. Field authority for the website-editor PATCH body
 remains [editing.md](editing.md); this file locks DTO names and routes.
 
+The parent in nested CMS paths is `website_prefix`
+([ADR](ADR.md) 27). Uuid `website_id` is internal. Unpaid canvas stays
+[onboarding website editor](../onboarding/api.md) with no prefix in the
+path (`onboarding_sessions.website_id`).
+
 **Auth default:** Clerk JWT, active tenant. Mutating Routes send
-`Idempotency-Key`. Unactivated **403** on this tree (unpaid canvas is
-[onboarding website editor](../onboarding/api.md)). Settings / styles /
+`Idempotency-Key`. Unactivated **403** on this tree. Settings / styles /
 publication stay active tenant. Preview website address: no
 website-editor GET/PATCH.
 
@@ -20,8 +24,9 @@ Projects: [projects](../business-profile/projects/api.md). Media library:
 
 Live HTML GET on `{website_prefix}.preview.placis.com` never calls Go.
 Go **calls** two Worker operations (not on `cmd/api`, not public
-OpenAPI, not a live GET): `websiteRender` (03) and `websitePublication`
-(04). Same Astro engine. Not one union with a flag.
+OpenAPI, not a live GET): `websiteRender` (Website copy generation) and
+`websitePublication` (Website publication). Same Astro engine. Not one
+union with a flag.
 
 Serve-only jsonb (not a DTO field dump): slot `value` is a union on
 `slot_type` (`text`/`rich_text` → string; `image` → media library item
@@ -36,12 +41,27 @@ from website-editor GET/PATCH. LLM traces omit. Worker
 spare, image file in the JSON, or expiring signed URL is 4xx).
 
 CMS unpublished `website_*` / `website.menus` / `website_settings`
-writes are only `POST` / `PATCH` on `/v1/website/editor/…` from
-`frontend-2` (active tenant). Unpaid canvas is
-`PATCH /v1/onboarding/website/editor/…`. Onboarding 05/06 write them in
-River, not via these routes.
+writes are only `POST` / `PATCH` on `/v1/websites/{website_prefix}/editor/…`
+(active tenant). Unpaid canvas is
+`PATCH /v1/onboarding/website/editor/…`. Select and copy website template
+and Website copy generation write them in River, not via these routes.
+
+Website editor PATCH 429 cap (30 / 10s) is **per website**.
 
 ## DTOs
+
+### Websites
+
+| DTO | Fields | Description |
+| --- | --- | --- |
+| `WebsiteRead` | `id`, `website_prefix`, `website_template_id`, `copy_generation_status` | List/create/poll row |
+| `WebsiteCreate` | `website_template_id` | CMS create |
+| `WebsiteTemplateRead` | `id`, catalog fields the pick UI needs | Production-ready catalog row |
+
+`copy_generation_status` → `running` / `done` / `failed`. Wait-end on
+`websites/new/` is home website page website copy generation `done`, or
+wait cap. Retry a failed row with the same `website_id` (do not `POST` a
+second row). Extra keys 4xx.
 
 ### Website editor
 
@@ -69,7 +89,7 @@ River, not via these routes.
 `website_business_profile` is required. Nested profile objects match
 dotted Common variable paths. Extra keys 4xx. Not the Details
 `GET /v1/business-profile` `*Read`. Do **not** create
-`/v1/website/editor/business-profile`.
+`/v1/websites/{website_prefix}/editor/business-profile`.
 
 ### WebsitePageBlockerRead
 
@@ -89,7 +109,7 @@ navigate target.
 
 List GET, page GET, and page PATCH ack each **calls**
 `WebsitePublicationBlockers` for **that website page** (the first two
-codes; not subscription). `GET /v1/website/editor/blockers` **calls**
+codes; not subscription). `GET /v1/websites/{website_prefix}/editor/blockers` **calls**
 it for the tenant (every website page, off-canvas unapproved media
 library items, and subscription). `PublishWebsite` **calls** it as
 the hard gate. Do not duplicate the three `code` values per route.
@@ -116,21 +136,30 @@ the hard gate. Do not duplicate the three `code` values per route.
 
 ## Routes
 
+### Websites
+
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `GET /v1/websites` | CMS | | `WebsiteRead[]` | `websites` | | This tenant | | Fat unpublished dump |
+| `GET /v1/website-templates` | `websites/new/` | | `WebsiteTemplateRead[]` | catalog | | Production-ready only | Extra keys 4xx | Occupancy pick |
+| `POST /v1/websites` | `websites/new/` | `WebsiteCreate` | `WebsiteRead` | `websites`, `billing.subscriptions` | `websites`, `website_settings`; **inserts** copy-pages + `website_copy_generation` (`bill_usage=billed`) | Reserve `website_prefix`; count + insert one transaction; no occupancy | `400` unknown / not production-ready id; `402 website_limit_reached`; `402 usage_credit_exhausted` (no row) | Duplicate; empty unpublished website |
+| `GET /v1/websites/{website_prefix}` | wait-end poll | | `WebsiteRead` | `websites` | | Copy-generation status | `404` | Onboarding SSE wait teaser |
+
 ### Website editor
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/website/editor/pages` | CMS workspace | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets` | | Optional `publication_id` (checkout page list). Per-row page-scoped `blockers[]` | `409` onboarding row; `403` unactivated | Preview host GET |
-| `POST /v1/website/editor/pages` | add page | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | Append menu node | | |
-| `GET /v1/website/editor/pages/{page_id}` | canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications`, `media_assets` | | Optional `publication_id` (checkout) or `include_edit_history`. Page-scoped `blockers[]` | `404`/`409`/`400`; `403` unactivated | `/pages/{id}/seo`; `/settings` GET; `/menus` GET; return `website_manifest`; both query flags |
-| `PATCH /v1/website/editor/pages/{page_id}` | website editor | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history`, `website_sections`, `website_slots`, `media_assets` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Dirty keys only; 500ms coalesce. Checkout may send the substituted projection. Ack `blockers[]` for that whole website page | `409 edit_history_conflict`, `413`, `429`; `403` unactivated | See overflow |
-| `PATCH /v1/website/editor/settings` | Website styles apply | `WebsiteSettingsUpdate` | `WebsiteEditApplyRead` | | `website_settings`, `edit_history` | Explicit apply. Hydrate is the website page GET `website_styles`. Omit `blockers` | `409 edit_history_conflict` | `GET /settings` |
-| `PATCH /v1/website/editor/menus` | menu editors | `WebsiteMenusUpdate` | `WebsiteEditApplyRead` | | `website.menus`, `edit_history` | One row. Omit `blockers` | `409 edit_history_conflict`; `403` unactivated | `GET /menus`; menus on page PATCH |
-| `GET /v1/website/editor/urls` | URL combobox | | `WebsiteUrlRead` | `website_urls` | | | | `POST /pages` from picker |
-| `POST /v1/website/editor/urls` | type to create | `WebsiteUrlCreate` | `WebsiteUrlRead` | | `website_urls` | | | Create a website page |
-| `GET /v1/website/editor/blockers` | Publish dropdown open | | `WebsiteEditorBlockersRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets`, `tenants` | | **calls** `WebsitePublicationBlockers` (tenant). Flat `blockers[]` for all website pages plus subscription and off-canvas unapproved media library items. Clerk, activated | `403` unactivated | Canvas hydrate; `website_manifest`; `publication_id`; unactivated; onboarding `/blockers` |
+| `GET /v1/websites/{website_prefix}/editor/pages` | CMS workspace | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets` | | Optional `publication_id` (checkout page list). Per-row page-scoped `blockers[]` | `409` onboarding row; `403` unactivated; `404` | Preview host GET |
+| `POST /v1/websites/{website_prefix}/editor/pages` | add page | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | Append menu node | | |
+| `GET /v1/websites/{website_prefix}/editor/pages/{page_id}` | canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications`, `media_assets` | | Optional `publication_id` (checkout) or `include_edit_history`. Page-scoped `blockers[]` | `404`/`409`/`400`; `403` unactivated | `/pages/{id}/seo`; `/settings` GET; `/menus` GET; return `website_manifest`; both query flags |
+| `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}` | website editor | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history`, `website_sections`, `website_slots`, `media_assets` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Dirty keys only; 500ms coalesce; 429 per website. Checkout may send the substituted projection. Ack `blockers[]` for that whole website page | `409 edit_history_conflict`, `413`, `429`; `403` unactivated | See overflow |
+| `PATCH /v1/websites/{website_prefix}/editor/settings` | Website styles apply | `WebsiteSettingsUpdate` | `WebsiteEditApplyRead` | | `website_settings`, `edit_history` | Explicit apply. Hydrate is the website page GET `website_styles`. Omit `blockers` | `409 edit_history_conflict` | `GET /settings` |
+| `PATCH /v1/websites/{website_prefix}/editor/menus` | menu editors | `WebsiteMenusUpdate` | `WebsiteEditApplyRead` | | `website.menus`, `edit_history` | One row. Omit `blockers` | `409 edit_history_conflict`; `403` unactivated | `GET /menus`; menus on page PATCH |
+| `GET /v1/websites/{website_prefix}/editor/urls` | URL combobox | | `WebsiteUrlRead` | `website_urls` | | | | `POST /pages` from picker |
+| `POST /v1/websites/{website_prefix}/editor/urls` | type to create | `WebsiteUrlCreate` | `WebsiteUrlRead` | | `website_urls` | | | Create a website page |
+| `GET /v1/websites/{website_prefix}/editor/blockers` | Publish dropdown open | | `WebsiteEditorBlockersRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets`, `tenants` | | **calls** `WebsitePublicationBlockers` (tenant). Flat `blockers[]` for all website pages plus subscription and off-canvas unapproved media library items. Clerk, activated | `403` unactivated | Canvas hydrate; `website_manifest`; `publication_id`; unactivated; onboarding `/blockers` |
 
-### PATCH /v1/website/editor/pages/{page_id}
+### PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}
 
 Dirty keys only. Archive of a website page strips that page node from
 `website.menus`. Body cap 64 KB except checkout of an owner publication
@@ -146,7 +175,7 @@ Must not: predecessor `POST …/sections`,
 `POST …/slots/{key}/asset`. Top menu / footer are `/menus`. Unactivated
 **403** (use `/v1/onboarding/website/editor/…`).
 
-### GET /v1/website/editor/blockers
+### GET /v1/websites/{website_prefix}/editor/blockers
 
 Call when the Publish dropdown **opens**, not on a timer. Flat
 `blockers[]` the dropdown concatenates: every website page’s required
@@ -162,45 +191,48 @@ the same function as the hard gate.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/website/publications` | publication dropdown | | `WebsitePublicationRead` | `website_publications` | | Omit onboarding rows in rollback UI | | Return `website_manifest` |
-| `POST /v1/website/publications` | CMS Publish | `WebsitePublicationCreate` | `WebsitePublicationRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms` | `website_publications` | **calls** `WebsitePublicationBlockers`; **calls** `websitePublication`; **sends** `WebsitePublicationRequest` (`hostname` from that `website_address_id`); `published_by=owner` | `402 subscription_canceled` | |
-| `POST /v1/website/publications/{id}/rollback` | live rollback | | `WebsitePublicationRead` | `website_publications` | `website_publications` | Copy that owner version onto that host `latest/` | `402`, `409` onboarding id | Rewrite unpublished rows |
-| `GET /v1/website/addresses` | dropdown + Connect | | `WebsiteAddressRead` | `website_addresses` | | Does not create subdomain | | |
-| `POST /v1/website/addresses` | Connect modal | `WebsiteAddressCreate` | `WebsiteAddressRead` | | `website_addresses` | `type=custom` only | | `type=subdomain`; reserve `website_prefix` |
-| `GET /v1/website/addresses/{id}` | poll until `active` | | `WebsiteAddressRead` | `website_addresses` | | DNS rows copyable | | Nameserver mutation |
+| `GET /v1/websites/{website_prefix}/publications` | publication dropdown | | `WebsitePublicationRead` | `website_publications` | | Omit onboarding rows in rollback UI | | Return `website_manifest` |
+| `POST /v1/websites/{website_prefix}/publications` | CMS Publish | `WebsitePublicationCreate` | `WebsitePublicationRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms` | `website_publications` | **calls** `WebsitePublicationBlockers`; **calls** `websitePublication`; **sends** `WebsitePublicationRequest` (`hostname` from that `website_address_id`); `published_by=owner` | `402 subscription_canceled` | |
+| `POST /v1/websites/{website_prefix}/publications/{id}/rollback` | live rollback | | `WebsitePublicationRead` | `website_publications` | `website_publications` | Copy that owner version onto that host `latest/` | `402`, `409` onboarding id | Rewrite unpublished rows |
+| `GET /v1/websites/{website_prefix}/addresses` | dropdown + Connect | | `WebsiteAddressRead` | `website_addresses` | | Does not create subdomain | | |
+| `POST /v1/websites/{website_prefix}/addresses` | Connect modal | `WebsiteAddressCreate` | `WebsiteAddressRead` | | `website_addresses` | `type=custom` only | | `type=subdomain`; reserve `website_prefix` |
+| `GET /v1/websites/{website_prefix}/addresses/{id}` | poll until `active` | | `WebsiteAddressRead` | `website_addresses` | | DNS rows copyable | | Nameserver mutation |
 
 ### Worker
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /internal/website-render` | website 03 | `WebsiteRenderRequest` | `WebsiteRenderResponse` | | | Worker op `websiteRender` | Extra keys 4xx | Write R2; persist HTML onto slots; image files in JSON; `websitePublication` |
-| `POST /internal/website-publication` | website 04 | `WebsitePublicationRequest` | `WebsitePublicationResponse` | | R2 that host `latest/` | Worker op `websitePublication`; write `sites/hosts/{hostname}/` (CMS / after preview-host cutover) or `sites/{website_prefix}/` (unpaid until cutover) | Extra keys 4xx | Return image render; persist HTML onto slots; image files in JSON; `websiteRender`; write every active hostname |
+| `POST /internal/website-render` | Website copy generation | `WebsiteRenderRequest` | `WebsiteRenderResponse` | | | Worker op `websiteRender` | Extra keys 4xx | Write R2; persist HTML onto slots; image files in JSON; `websitePublication` |
+| `POST /internal/website-publication` | Website publication | `WebsitePublicationRequest` | `WebsitePublicationResponse` | | R2 that host `latest/` | Worker op `websitePublication`; write `sites/hosts/{hostname}/` (CMS / after preview-host cutover) or `sites/{website_prefix}/` (unpaid until cutover) | Extra keys 4xx | Return image render; persist HTML onto slots; image files in JSON; `websiteRender`; write every active hostname |
 
 Worker auth is out of the JSON body (shared secret / service binding).
 Not on `cmd/api`. Not `GET /openapi.json`. Maps are keyed by website
 page id → typed page schema (`additionalProperties` is that schema,
-never `true`).
+never `true`). `website_prefix` on `WebsitePublicationRequest` is
+`websites.website_prefix`.
 
 ## Do not create
 
+- `/v1/website/…` (flat tree; nest under `{website_prefix}`)
 - `/v1/tenants/{website_prefix}/website/…`
 - `/v1/public/site/…` (including resolve, meta, sitemap, assets)
 - leftover `/preview/{token}/` HTML or `GET …/public/site/resolve`
-- unactivated `/v1/website/editor/…` (use
+- unactivated `/v1/websites/{website_prefix}/editor/…` (use
   `/v1/onboarding/website/editor/…`)
-- `POST /v1/website/addresses` with `type=subdomain`
+- `{website_id}` uuid in CMS paths
+- `POST /v1/websites/{website_prefix}/addresses` with `type=subdomain`
 - blueprints, posts, careers
 - `/undo` `/redo` `/edit-history`
-- `POST /v1/website/publications/{id}/restore-unpublished`
-- `GET /v1/website/publications/{id}/pages`
-- `/v1/website/editor/top-menu`, `/v1/website/editor/footer`
-- `GET /v1/website/editor/settings`, `GET /v1/website/editor/menus`
+- `POST /v1/websites/{website_prefix}/publications/{id}/restore-unpublished`
+- `GET /v1/websites/{website_prefix}/publications/{id}/pages`
+- `/v1/websites/{website_prefix}/editor/top-menu`, `…/footer`
+- `GET /v1/websites/{website_prefix}/editor/settings`, `GET /v1/websites/{website_prefix}/editor/menus`
   (hydrate is the website page GET `website_styles` / `menus`)
-- `/v1/website/editor/assistant` and `…/clear` — routes live in
+- `/v1/websites/{website_prefix}/editor/assistant` and `…/clear` — routes live in
   [assistant HTTP](../assistant/api.md)
-- `/v1/website/editor/assistant/record-apply` and `…/record-reject` —
+- `/v1/websites/{website_prefix}/editor/assistant/record-apply` and `…/record-reject` —
   routes live in [assistant HTTP](../assistant/api.md)
-- `/v1/website/editor/pages/{page_id}/assistant` and `…/record-apply` /
+- `/v1/websites/{website_prefix}/editor/pages/{page_id}/assistant` and `…/record-apply` /
   `…/record-reject`
 - per-website-page website publication
 - `POST …/pages/{id}/sections`, `PATCH …/sections/order`,
@@ -209,5 +241,5 @@ never `true`).
 - leftover realtime-voice HTTP path
 - `content-contract` as an HTTP resource
 - `/certification-selections`
-- `/v1/website/editor/assets`, `/v1/website/editor/files/…`
-- `/v1/website/editor/business-profile`
+- `/v1/websites/{website_prefix}/editor/assets`, `…/editor/files/…`
+- `/v1/websites/{website_prefix}/editor/business-profile`

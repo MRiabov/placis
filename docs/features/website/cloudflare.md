@@ -36,7 +36,7 @@ Related: [architecture.md](architecture.md), [ADR.md](ADR.md),
   (no `preview.placis.com` suffix). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md)
   (R2), not this Worker.
 - One `latest/` tree **per host**. Hosts can diverge. Publish writes and
-  purges **that** host.
+  purges **that** host. R2 is keyed by `websites.website_prefix`.
 
 Go never emits HTML. Astro in `apps/contractor-website` writes HTML at
 `websitePublication` (website HTML render) into R2, and returns a website
@@ -51,8 +51,9 @@ image render from `websiteRender` without writing R2.
   `latest/` + website-activation strip until 09. After 09 it is still a preview
   website address (same zone) and the live default (strip gone) — never call it
   website preview. Apex `preview.placis.com` (no prefix) is **404**.
-- **Website prefix** — `tenants.website_prefix`, the reserved DNS label and R2
-  key, **fixed at first 08 share or at 09** from `display_name`. Not a URL.
+- **Website prefix** — `websites.website_prefix`, the reserved DNS label and R2
+  key, **fixed when the `websites` row is inserted** from `display_name` (onboarding 05
+  / `POST /v1/websites`). Not a URL.
 - **Website publication** — writes `website_publications` + HTML files. Not a
   Worker deploy. Onboarding 08 share / 09 call this write (strip on, then strip
   off). Owner CMS publish is later versions.
@@ -160,7 +161,7 @@ One bucket per environment: `placis-contractor-websites` /
 | `sites/{website_prefix}/latest/…` | Onboarding 08/09 unactivated write until the first owner publication on the preview host |
 
 `{website_prefix}` is unique, URL-safe, the label in
-`{website_prefix}.preview.placis.com`, **fixed at 07**. Do not rename it when
+`{website_prefix}.preview.placis.com`, **fixed when the `websites` row is inserted**. Do not rename it when
 Details change. Not the live business name, not `tenant_id`, not
 `business_profiles.id`.
 

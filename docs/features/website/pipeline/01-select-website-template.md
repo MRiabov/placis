@@ -34,19 +34,21 @@ Onboarding 05 after client interview complete
 
 ## Do
 
-`SelectWebsiteTemplate` picks a production-ready website template. No
-LLM. No unpublished pages.
+`SelectWebsiteTemplate(tenantID, websiteID)` picks a production-ready
+website template. No LLM. No unpublished pages. **Onboarding only.** HTTP
+create does not call this; the owner’s `website_template_id` is already on
+`website_settings`.
 
-1. If this tenant already has `website_settings.website_template_id`, reuse
-   that pick (retry of the same tenant). Stop.
-2. Load **production-ready** website templates only
-   (`production_ready=true`). Internal, stub, and predecessor source-backed
-   dumps are not 01 picks. Predecessor per-page `production_selectable` is
-   not this flag. Empty production-ready set → Fail.
+1. If this `website_id` already has `website_settings.website_template_id`,
+   reuse that pick (retry of the same website). Stop.
+2. Load **production-ready** website templates only (`production_ready=true`).
+   Internal, stub, and predecessor source-backed dumps are not Select website
+   template picks. Predecessor per-page `production_selectable` is not this
+   flag. Empty production-ready set → Fail.
 3. Website styles for the pick = that website template’s associated website
    style catalog preset (`preset_id`). Not a second hash. Not an LLM. The
-   owner may change Website styles later in the CMS; 01 does not. Live
-   storage is `website_settings.preset_id`, not a field 02 reads off the
+   owner may change Website styles later in the CMS; this step does not. Live
+   storage is `website_settings.preset_id`, not a field copy-pages reads off the
    website template JSON.
 4. **Occupancy** (who counts in 250 km): other tenants who **paid** and have
    not been in nonpayment for **6 months**. Unactivated, abandoned, and
@@ -56,7 +58,7 @@ LLM. No unpublished pages.
    - In: `billing.subscriptions.status=canceled` and now is **less than 6
      months** after `canceled_at` (set when status becomes `canceled`, after
      `current_period_end`).
-   - Out: nonpayment **≥ 6 months**. Live website is already unpublished;
+   - Out: nonpayment **≥ 6 months**. Live websites are already unpublished;
      occupancy uses this clock, not `tenants.status=active` (that stays
      `active` after cancel).
 5. Coordinates: `google_maps_listings.latitude` /
@@ -67,13 +69,15 @@ LLM. No unpublished pages.
    production-ready website templates) over shrinking the radius.
    Service-area `locality` / `radius_km` is where they work, not HQ — do not
    use it. No coords → skip geo; hash over all production-ready ids. Do not
-   block 01 on ETL. Do not geocode `registered_office`.
-6. Among production-ready ids, count occupying tenants within 250 km who
-   already have that `website_template_id`. Pick the **lowest** count (0 =
+   block Select website template on ETL. Do not geocode `registered_office`.
+6. Among production-ready ids, count occupying **websites** within 250 km
+   who already have that `website_template_id` (every website on occupying
+   tenants, including HTTP-created websites). Pick the **lowest** count (0 =
    unused in radius). Tie-break: sort those ids, then
    `sorted[hash(tenant_id) % len]`. Hash, not a dice roll. Collision is
    least-used in radius, not “pick any.”
-7. Persist the pick. Do not copy pages (that is 02).
+7. Persist the pick on **this** `website_id`. Do not copy pages (that is
+   Copy the website template’s pages onto the unpublished website).
 
 ## Loads
 
@@ -83,14 +87,14 @@ Production-ready website templates from the website template catalog
 ## Reads
 
 `tenants`, `billing.subscriptions`, `google_maps_listings` (coords when
-Maps ran), existing `website_settings` on retry.
+Maps ran), existing `website_settings` on retry of this `website_id`.
 
 ## Persist
 
-One `website_settings` row on that `tenant_id`: `website_template_id` =
+One `website_settings` row on that `website_id`: `website_template_id` =
 production-ready website template catalog id (string), `preset_id` = that
-website template’s associated website style catalog preset. 02 SELECTs that
-row. No `website_copy_generation` yet. No `ai.threads` /
+website template’s associated website style catalog preset. Copy-pages
+SELECTs that row. No `website_copy_generation` yet. No `ai.threads` /
 `ai_generations` for this step.
 
 ## Fail

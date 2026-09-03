@@ -50,7 +50,7 @@ Ads
 
 | Label | Role | Route |
 | -- | -- | -- |
-| Sites | destination | `/cms/website` |
+| Sites | destination | `/cms/website` (redirects to `/cms/website/{website_prefix}` for the onboarding website) |
 | Profile | disclosure | none |
 | Business details | destination under Profile | `/cms/details` |
 | Projects | destination under Profile | `/cms/projects` |

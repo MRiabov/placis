@@ -62,7 +62,9 @@ new entries with the next number, the area, and the date.
     `subscription_canceled` until `subscription_status=active`. Not
     `usage_credit_exhausted` (that sends them to extra usage credit). Not 08
     (tenant stays `status=active`; they can still edit). Resume pay from Usage
-    & billing. Status enum is `canceled`. (2026-08-29)
+    & billing. Status enum is `canceled`. (2026-08-29) (2026-09-03): unpublish
+    every website (ADR 16). Nested publication HTTP is
+    `/v1/websites/{website_prefix}/publications`.
 
 12. **Change plan and cancel are Usage & billing** — Not the placis.com Pricing
     grid and not predecessor dashboard Usage & billing copy. Cancel is
@@ -79,3 +81,20 @@ new entries with the next number, the area, and the date.
     Compaction and owner `DescribeImage` use
     `bill-allow-out-of-balance`. Onboarding / `eval` / ETL (for now)
     use `unbilled`. (2026-09-03)
+
+14. **Website count cap (self-serve)** — Count of `websites` rows: Placis Pro
+    plan 1, Placis Pro Plus plan 3, Placis Pro Max plan 5. `POST /v1/websites`
+    at the cap is **402** `website_limit_reached` (not `subscription_canceled`,
+    not `usage_credit_exhausted`) so Usage & billing can send them to Change
+    plan. Count + insert in one transaction. Onboarding’s first website is
+    always allowed on Placis Pro plan. Downgrade while over the cap does not
+    delete websites. Enterprise plan 20 is deferred (no `subscription_tier`
+    value). Catalogue: [plans.md](plans.md). (2026-09-03)
+
+15. **CMS website copy generation is billed** — `POST /v1/websites` inserts
+    `website_copy_generation` with `bill_usage=billed`. Empty usage credit →
+    **402** `usage_credit_exhausted` and no `websites` row. Onboarding stays
+    unbilled (ADR 4). (2026-09-03)
+
+16. **Unpublish walks every website** — Amend 11: when they stop paying,
+    `UnpublishWebsite` holding-pages every website for that tenant. (2026-09-03)

@@ -8,12 +8,13 @@ Related: [PRD](prd.md), [editing.md](editing.md), [assistant.md](assistant.md), 
 
 ## Purpose
 
-The contractor-facing website editor in `frontend-2`, under `/cms/website`
-(left-nav **Sites**). Details, Projects, and Certifications and reviews still
-appear on website pages; they are edited on their own screens
-([business profile](../business-profile/README.md)), not in this website editor. The media library is
-`/cms/media`. Attach and pick from Content when an image is selected on the
-canvas. Ads and the live contractor website are separate.
+The contractor-facing website editor in `frontend-2`, under
+`/cms/website/{website_prefix}` (left-nav **Sites** opens the onboarding
+website; there is no picker among existing websites). Details, Projects, and
+Certifications and reviews still appear on website pages; they are edited on
+their own screens ([business profile](../business-profile/README.md)), not in this website editor. The media
+library is `/cms/media`. Attach and pick from Content when an image is selected
+on the canvas. Ads and the live contractor website are separate.
 
 Stack: Vite + React + TanStack Router, generated API types. The canvas renders
 unpublished website sections through the shared contractor-website component
@@ -28,10 +29,11 @@ copy-out or upload has not succeeded after 10 seconds, show a visible error
 ([editing.md](editing.md)). If a copy-out or upload is in flight or has failed, leaving is
 blocked until it succeeds or the owner confirms discard. It does not accumulate
 unpublished documents in memory. Edits do not keep a second unpublished copy.
-Opening `/cms/website` hydrates undo/redo stacks from website edit history (last
-200 batches). Switching website page GETs the unpublished website only. Ctrl+Z
-is in-memory, then the ordinary PATCH. No `/undo` or `/redo` routes. The
-predecessor `EditorHeader` Save control is dropped.
+Opening `/cms/website/{website_prefix}` hydrates undo/redo stacks from website
+edit history (last 200 batches **per website**). Switching website page GETs the
+unpublished website only. Ctrl+Z is in-memory, then the ordinary PATCH. No
+`/undo` or `/redo` routes. The predecessor `EditorHeader` Save control is
+dropped.
 
 Loading placeholders: every screen, per field / row / website slot — not
 swapping the whole panel
@@ -41,16 +43,25 @@ swapping the whole panel
 
 | Route | Purpose |
 | -- | -- |
-| `/cms/website` | Website editor (workspace, canvas, assistant after they call, website publication) |
+| `/cms/website` | Redirect to the onboarding website (`/cms/website/{website_prefix}`) |
+| `/cms/website/{website_prefix}` | Website editor (workspace, canvas, assistant after they call, website publication) |
+| `/cms/websites/new` | Pick a production-ready website template; `POST /v1/websites`; wait until wait-end; then the website editor for that prefix |
 
-Left nav, `/cms` two cards, `/cms/details`, `/cms/projects`,
-`/cms/certifications-and-reviews`, `/cms/media`, `/cms/ads`:
-[The CMS (sidebar + main area)](../../general-architecture/cms/frontend.md).
+Left nav **Sites** destination is `/cms/website` (redirects to the onboarding
+website). `websites/new/` is spec’d; where the owner opens it is deferred.
+Do not add a Sites list of websites.
 
-No `/cms/proof`. No `/cms/profile` (Profile is a disclosure). Attach from
-Content when an image is selected. See [media library](../other/media/README.md).
+## `websites/new/`
 
-## Website editor (`/cms/website`)
+Pick one production-ready website template (`GET /v1/website-templates`).
+Submit `POST /v1/websites`. Wait on this route until wait-end (home website
+page website copy generation `done`, or wait cap). Poll
+`GET /v1/websites/{website_prefix}`. Then redirect to
+`/cms/website/{website_prefix}`. Not `/onboarding/preview`. Look can land
+later. Cap **402** `website_limit_reached` points at Change plan. Empty
+usage credit is **402** `usage_credit_exhausted` (no row).
+
+## Website editor (`/cms/website/{website_prefix}`)
 
 Two surfaces plus global nav, one unpublished website:
 
@@ -64,15 +75,16 @@ Two surfaces plus global nav, one unpublished website:
   That is not a back to Website pages. On a **wide** screen it is a left rail
   plus one list. **Workspace items** on the rail: website pages, SEO, website
   styles, website versions. Selecting one **opens** the workspace list. Default
-  on `/cms/website` is rail-only (list closed). **Website versions** is pinned
-  to the end of the rail (bottom on a wide screen, trailing on a narrow screen).
-  **SEO** is its own rail panel and always shows the current website page (the
-  one on the canvas). It is not under Website pages and not a tab. There is no
-  media library rail item; attach / pick / drop-on-image live in **Content**
-  when an image is selected (same library as `/cms/media`). Crop / focal /
-  cleanup and Ads / Details logo stay on `/cms/media` ([media library](../other/media/README.md): large
-  view, promptable cleanup, dense mixed-ratio thumbs). Top menu and footer are
-  **not** workspace items; select the bar on the canvas and edit it in Content.
+  on `/cms/website/{website_prefix}` is rail-only (list closed).
+  **Website versions** is pinned to the end of the rail (bottom on a wide
+  screen, trailing on a narrow screen). **SEO** is its own rail panel and always
+  shows the current website page (the one on the canvas). It is not under
+  Website pages and not a tab. There is no media library rail item; attach /
+  pick / drop-on-image live in **Content** when an image is selected (same
+  library as `/cms/media`). Crop / focal / cleanup and Ads / Details logo stay
+  on `/cms/media` ([media library](../other/media/README.md): large view, promptable cleanup, dense
+  mixed-ratio thumbs). Top menu and footer are **not** workspace items; select
+  the bar on the canvas and edit it in Content.
 - **Content** is not a rail item. Click a website section or an image on the
   canvas and the workspace list **replaces** with Content (the closed union
   below). There is no right-hand editing panel and no **Edit** handle. There is
@@ -162,8 +174,8 @@ enough for text. After a successful website publication,
 `has_unpublished_changes` is false until the next edit. The POST sends
 `website_address_id`: that host’s R2 tree, then purge **that** host ([api.md](api.md),
 [cloudflare.md](cloudflare.md)). The **host row** is the Publish click. Hosts can diverge.
-After website activation (09), `/cms/website` opens with **Publish**; first
-owner website publication is v3+.
+After website activation, `/cms/website/{website_prefix}` (onboarding website)
+opens with **Publish**; first owner website publication is v3+.
 
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that
 publication `*Read`; the dropdown and Website versions list update from the

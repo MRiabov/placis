@@ -1,22 +1,22 @@
 # 01 — Select website template (integration test)
 
 Does not write unpublished website pages. Next step is 02, which SELECTs
-`website_settings` on this tenant.
+`website_settings` on this `website_id`.
 
-- **Setup**: `tenants` (`status=unactivated`, `website_prefix` null,
-  `subscription_status=none`). `onboarding_sessions`
-  (`status=selecting_and_copying_website_template`, that `tenant_id`).
-  `business_profiles.accepted_edit_id` set (client interview complete). Named
-  services already on that accepted profile. Zero `website_pages` /
-  `website_sections` / `website_slots` / `website.menus` /
+- **Setup**: `tenants` (`status=unactivated`, `subscription_status=none`).
+  `websites` row with `website_prefix` reserved. `onboarding_sessions`
+  (`status=selecting_and_copying_website_template`, that `tenant_id`,
+  `website_id`). `business_profiles.accepted_edit_id` set (client interview
+  complete). Named services already on that accepted profile. Zero
+  `website_pages` / `website_sections` / `website_slots` / `website.menus` /
   `website_settings` / `website_publications`. Production-ready website
-  templates exist (`production_ready=true`). WIP ids
-  (`production_ready=false`) exist and must not be chosen.
+  templates exist (`production_ready=true`). WIP ids (`production_ready=false`)
+  exist and must not be chosen.
 - **Exercise**: website 01 in River job kind
   `select_and_copy_website_template` (no LLM). Cases below share that
   invoke.
 - **Verify** (Postgres after 01, **before** 02 runs):
-  - `website_settings`: one row, `tenant_id` = that tenant,
+  - `website_settings`: one row, `website_id` = that website,
     `website_template_id` in the production-ready set, `preset_id` = that
     website template’s associated website style catalog preset.
     `edit_history_head` null.
@@ -26,8 +26,8 @@ Does not write unpublished website pages. Next step is 02, which SELECTs
     `website_slot_reviews`, `website_publications`, `edit_history` all stay
     empty for that tenant. Schema `jobs`: no `website_copy_generation` yet.
     `onboarding_sessions.status` still
-    `selecting_and_copying_website_template`. `tenants.website_prefix` still
-    null. `website_template_id` is never a `production_ready=false` id.
+    `selecting_and_copying_website_template`. `websites.website_prefix`
+    already set. `website_template_id` is never a `production_ready=false` id.
 - **Cases**:
   - Two occupying tenants (`subscription_status=active`, coords 100 km
     apart) already hold distinct production-ready ids. This tenant with

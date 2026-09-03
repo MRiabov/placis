@@ -34,8 +34,8 @@ that already lost.
 
 ## Pre
 
-- `tenants.website_prefix` reserved at 08 **or** reserved in this step if they
-  never shared.
+- `websites.website_prefix` already reserved at Select and copy website
+  template.
 - If they shared: `website_publications` v1 `active` (strip on) or a later
   onboarding write on that prefix.
 - Authenticated Clerk subject (the payer).
@@ -55,8 +55,9 @@ that already lost.
 ## Do
 
 This step **is** River job kind `website_activation`. Set
-`tenants.status=active`, then **calls** `PublishWebsite` (strip off), then
-**calls** `ActivateSubscription`.
+`tenants.status=active`, then **calls** `PublishWebsite` on the
+**onboarding website** (earliest `websites.created_at`; strip off), then
+**calls** `ActivateSubscription`. Must not publish every website.
 
 1. Load the unactivated [tenant](../../other/auth/persistence.md) on
    `onboarding_sessions.tenant_id`.
@@ -68,12 +69,12 @@ This step **is** River job kind `website_activation`. Set
    **same transaction**, complete `ai.threads` `thread_kind=cms_assistant`
    `current` and end any `assistant.runs` `running` ([website editor](../website-editor.md)).
 5. Write **`website_publications`** without the website-activation strip,
-   `published_by=onboarding`, `active`. If they never shared: reserve
-   `website_prefix` (same rules as 08) and write the **first** live R2
+   `published_by=onboarding`, `active`, on the onboarding website. Prefix is
+   already on that row. If they never shared: write the **first** live R2
    **without** strip. If they already shared: archive v1 (strip on) and write
    live v2. HTML write is website
-   [04](../../website/pipeline/04-website-publication.md) (strip flag off).
-   Host stays up. Website address is a later CMS modal.
+   [Website publication](../../website/pipeline/04-website-publication.md)
+   (strip flag off). Host stays up. Website address is a later CMS modal.
 6. In-flight 06 **continues** on the same `tenant_id` as River-only. Do not
    cancel it. Do not append Assistant thread items. CMS assistant / PATCH are
    not 409-blocked for leftover 06. Host HTML stays the 08/09 R2 `latest/` (06

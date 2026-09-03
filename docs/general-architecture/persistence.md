@@ -58,7 +58,7 @@ Uniques, Written by, Notes
 | [ETL](../features/etl/persistence.md) | `etl` | `runs`, `sources`, `llm_source_to_project_classifications`, per-type fetches (including `web_search_fetches`), `google_maps_listings` (hours, reviews, listing photos, review photos), `website_crawl_pages` (+ photos), `imported_media` |
 | [details](../features/business-profile/details/persistence.md) | `details` | `business_profiles` and related (services, areas, hours, reviews, `business_profile_review_rankings`, Facebook / Instagram profile and posts, `certification_definitions`, `business_profile_certification_selections`) |
 | [projects](../features/business-profile/projects/persistence.md) | `business_profile` | `projects` |
-| [website](../features/website/persistence.md) | `website` | `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions) |
+| [website](../features/website/persistence.md) | `website` | `websites`, `website_addresses`, website pages, website sections, website slots, website forms, website form fields, `menus`, website settings, website edit history, website publications (website versions) |
 | [media library](../features/other/media/persistence.md) | `media_library` | `media_assets`, `media_asset_classifications` |
 | [ads](../features/ads/persistence.md) | `ads` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
 | [leads](../features/other/leads/persistence.md) | `leads` | `leads` |

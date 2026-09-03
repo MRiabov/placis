@@ -10,15 +10,15 @@ copying the website template is owned by [website](../website/api.md);
 this feature only **inserts** it.
 
 **Auth default:** onboarding session token (request header; token uniquely
-identifies the `onboarding_sessions` row). **None:** business lookup
-and Find typeahead. **Clerk JWT** Host / `website_prefix` or Clerk
-unactivated on the app origin: activation checkout / status.
-**Stripe signature:** `POST /v1/webhooks/stripe`. Activated owner:
-**403** on `/v1/onboarding/assistant/…`, `/v1/onboarding/website/…`,
-and leftover onboarding session token routes. Mutating Routes send
-`Idempotency-Key`. Token-auth Routes have **no** onboarding-session
-`{id}` in the path. Unactivated **403** on `/v1/website/editor` and
-`/v1/assistant/…`.
+identifies the `onboarding_sessions` row). **None:** business lookup and Find
+typeahead. **Clerk JWT** Host / `website_prefix` or Clerk unactivated on the app
+origin: activation checkout / status. **Stripe signature:**
+`POST /v1/webhooks/stripe`. Activated owner: **403** on
+`/v1/onboarding/assistant/…`, `/v1/onboarding/website/…`, and leftover
+onboarding session token routes. Mutating Routes send `Idempotency-Key`.
+Token-auth Routes have **no** onboarding-session `{id}` in the path. Unactivated
+**403** on `/v1/websites/{website_prefix}/editor` and `/v1/assistant/…`. Unpaid
+website editor uses `onboarding_sessions.website_id`.
 
 Serve-only jsonb (not a DTO field dump): company registry / Maps
 search **omit** `raw`; ETL fetch `raw` **omit**; Stripe event body
@@ -144,8 +144,8 @@ complete → 05.
 
 ### Website
 
-Unpaid canvas. Same tails as `/v1/website/editor/…`. CMS website editor
-is active tenant only. Policy: [website-editor.md](website-editor.md).
+Unpaid canvas. Same tails as `/v1/websites/{website_prefix}/editor/…`. CMS
+website editor is active tenant only. Policy: [website-editor.md](website-editor.md).
 GET website pages / website page: onboarding session token or Clerk
 unactivated. Top menu and footer hydrate is that website page GET.
 PATCH website pages / top menu and footer: Clerk unactivated only
@@ -155,11 +155,11 @@ session token or Clerk unactivated. Send / Voice: Clerk only.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/onboarding/website/editor/pages` | `/onboarding/preview-and-edit/` | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets` | | Same as CMS list (per website page `blockers[]`). No `publication_id` | `403` activated | `/v1/website/editor`; contractor host GET |
-| `GET /v1/onboarding/website/editor/pages/{page_id}` | canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications`, `media_assets` | | Same as CMS hydrate. No `publication_id` | `403` activated; `404`/`400` | `/v1/website/editor`; `/settings` GET; `/menus` GET; `website_manifest` |
+| `GET /v1/onboarding/website/editor/pages` | `/onboarding/preview-and-edit/` | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets` | | Same as CMS list (per website page `blockers[]`). No `publication_id` | `403` activated | `/v1/websites/{website_prefix}/editor`; contractor host GET |
+| `GET /v1/onboarding/website/editor/pages/{page_id}` | canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications`, `media_assets` | | Same as CMS hydrate. No `publication_id` | `403` activated; `404`/`400` | `/v1/websites/{website_prefix}/editor`; `/settings` GET; `/menus` GET; `website_manifest` |
 | `PATCH /v1/onboarding/website/editor/pages/{page_id}` | Assistant apply; canvas | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history`, `website_sections`, `website_slots`, `media_assets` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Same as CMS PATCH. Clerk only. Ack `blockers[]` for that website page | `403`; `409 edit_history_conflict`; `413`; `429` | Onboarding session token PATCH |
 | `PATCH /v1/onboarding/website/editor/menus` | top menu / footer | `WebsiteMenusUpdate` | `WebsiteEditApplyRead` | | `website.menus`, `edit_history` | Same as CMS menus PATCH. Clerk only. Hydrate is the website page GET `menus`. Omit `blockers` | `403`; `409 edit_history_conflict` | Onboarding session token PATCH; `GET /menus`; top menu / footer on website page PATCH |
-| `POST /v1/onboarding/website/publications` | **Share** on `/onboarding/preview-and-edit/` | | `PreviewWebsiteAddressRead` | `onboarding_sessions`, `website_settings` | `website_addresses`, `website_publications` | **calls** `SharePreviewWebsiteAddress` (08) | | Require website activation; auto-run at wait-end; `/v1/website-previews/{token}/…`; CMS `POST /v1/website/publications` |
+| `POST /v1/onboarding/website/publications` | **Share** on `/onboarding/preview-and-edit/` | | `PreviewWebsiteAddressRead` | `onboarding_sessions`, `website_settings` | `website_addresses`, `website_publications` | **calls** `SharePreviewWebsiteAddress` (08) | | Require website activation; auto-run at wait-end; `/v1/website-previews/{token}/…`; CMS `POST /v1/websites/{website_prefix}/publications` |
 | `GET /v1/onboarding/website/assistant/thread` | unsigned land; hydrate | | `AssistantThreadRead` | `ai.threads`, `assistant.thread_items` | `ai.threads` | Lazy-create empty `current`. Omits `runs` | `403` activated | `/v1/assistant/…`; `/v1/onboarding/assistant/…` |
 | `GET /v1/onboarding/website/assistant/thread/ws` | text chat | | | `ai.threads` | `assistant.thread_items`, `assistant.runs` | CMS text socket. Clerk only | `403`; `409` `unpaid_prompt_cap` | Onboarding session token send |
 | `POST /v1/onboarding/website/assistant/voice/realtime-connection` | Voice on | | `AssistantVoiceRealtimeConnectionRead` | | `assistant.runs` | Clerk only | `403`; `409` `unpaid_prompt_cap` | Onboarding session token Voice |
@@ -213,7 +213,7 @@ Policy: [onboarding assistant](assistant.md).
 - `POST /v1/onboarding/preview-website-address`
 - `/v1/onboarding/website-editor/…`
 - `/v1/onboarding/website/editor/blockers`
-- `/v1/website/editor/…` while unactivated (use
+- `/v1/websites/{website_prefix}/editor/…` while unactivated (use
   `/v1/onboarding/website/editor/…`)
 - the whole `/v1/onboarding-sessions/…` tree (including `{id}` on
   token-auth routes)

@@ -7,13 +7,14 @@ owner CMS Publish. Go sends a **tokenized** dump plus
 HTML and does not resolve `{{…}}`. 04 must not call `websiteRender`.
 
 Onboarding [08](../../onboarding/pipeline/08-preview-website-address.md) /
-[09](../../onboarding/pipeline/09-website-activation.md) keep reserve-prefix,
-Clerk, and Stripe. This step is the HTML write.
+[09](../../onboarding/pipeline/09-website-activation.md) keep skip-if-set
+prefix, Clerk, and Stripe. Prefix was reserved when `websites` was inserted.
+This step is the HTML write. `PublishWebsite` takes `websiteID`.
 
 ## Trigger
 
 - Onboarding 08 **Share** (strip on).
-- Onboarding 09 pay (strip off; reserve prefix here if they never shared).
+- Onboarding 09 pay (strip off; prefix already on the onboarding website).
 - Later CMS **Publish** (same write; first owner publication is the first
   rollback-eligible website version).
 

@@ -72,8 +72,9 @@ Do not say `slug` in paths or fields (website prefix / website page path).
 Do not say **fold** in `api.md` or path names. Say **live business profile** and
 **unpublished website**.
 
-CMS unpublished website writes are `POST`/`PATCH` on `/v1/website/editor/…`
-(active tenant) or `/v1/onboarding/website/editor/…` (unactivated)
+CMS unpublished website writes are `POST`/`PATCH` on
+`/v1/websites/{website_prefix}/editor/…` (active tenant) or
+`/v1/onboarding/website/editor/…` (unactivated)
 ([website HTTP](../features/website/api.md),
 [onboarding HTTP](../features/onboarding/api.md)).
 
@@ -144,7 +145,9 @@ Named once here. Feature `api.md` files name the mode, they do not redefine it.
    `/v1/me.tenant` non-null (`/me` may return unactivated `TenantRead`).
 4. **Clerk JWT, Host / `website_prefix`** — unactivated tenant allowed. Website
    activation checkout and status on the preview website address. Tenant comes
-   from the contractor `Host`, not from `/me.tenant`.
+   from the contractor `Host` (website address or
+   `{website_prefix}.preview.placis.com` → `websites` → `tenant_id`), not from
+   `/me.tenant`.
 5. **Stripe webhook signature**.
 
 Clerk JWT + unactivated tenant on the **app** origin (unpublished GET/PATCH
@@ -178,13 +181,21 @@ Named fields: `code`, `message`, optional `retry_after`.
   `GET /v1/assistant/thread/ws` text send,
   `POST /v1/assistant/voice/realtime-connection`, and
   `POST /v1/assistant/voice/tool-calls` when that tool is a billed LLM or image
-  call. Not 403 (lifecycle) and not 409 (in-flight lock / allowed-set /
-  Ask-first). Usage settlement (`POST /v1/assistant/voice/transcripts`) stays
-  `200` so the debit can land.
+  call. Also `POST /v1/websites` when CMS website copy generation would be
+  billed and remaining usage credit is 0 (no `websites` row). Not 403
+  (lifecycle) and not 409 (in-flight lock / allowed-set / Ask-first). Usage
+  settlement (`POST /v1/assistant/voice/transcripts`) stays `200` so the debit
+  can land.
 - `402 subscription_canceled` — website publication or live website rollback
   when the subscription is not active (`subscription_status=canceled`). Not
   `usage_credit_exhausted`. Named on
   [website publication](../features/website/api.md).
+- `402 website_limit_reached` — `POST /v1/websites` when this tenant already
+  has as many `websites` rows as the self-serve plan allows
+  ([plans.md](../features/billing/plans.md)). Subscription is still active.
+  Not `subscription_canceled` (that unpublishes) and not
+  `usage_credit_exhausted` (that is extra usage credit). Usage & billing
+  Change plan.
 - `409 edit_history_conflict` — unpublished website PATCH when
   `base_edit_history_head` is stale. `frontend-2` re-GETs with
   `include_edit_history=true`.
