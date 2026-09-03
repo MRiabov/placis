@@ -3,8 +3,7 @@
 Identity, sign-in, Clerk organizations, and tenant resolution — a
 mostly-internal feature with a small owner-facing surface (`GET /v1/me`).
 The schema lives in [persistence.md](persistence.md). Named functions:
-[architecture.md](architecture.md). HTTP: [api.md](api.md). Unused-spec
-punch list: [sep-3-issue-list.md](sep-3-issue-list.md) (2026-09-03).
+[architecture.md](architecture.md). HTTP: [api.md](api.md).
 
 Clerk owns identity. Placis never builds password auth.
 
@@ -20,8 +19,9 @@ Clerk owns identity. Placis never builds password auth.
   unique). Name and logo are the **business**, not the owner’s personal
   name.
 - **Clerk users** to a tenant (and its Clerk org) are **1-many**
-  (`tenant_memberships`). Currently we insert one owner; that is usage,
-  not a unique.
+  (`tenant_memberships`). Unique `clerk_user_id`: one Google account,
+  one tenant. Currently we insert one owner; extra office members are
+  **TBD**.
 - **Clerk user** = **owner** (the person). Not “contractor”. First write
   of the name is `founder_name`. After that the owner can change it in
   the Clerk UI in the app. They sign in with **OAuth** (Sign in with
@@ -88,14 +88,16 @@ Do not resurrect: `POST /v1/tenants`,
 ## Roles
 
 `tenant_memberships.role`: `owner`. Currently one owner insert per
-tenant; the table is 1-many. Extra office / admin members with **equal**
-permissions are **TBD** (whether we build them). Do not add a second
-role or invite HTTP.
+tenant; the table is 1-many members per tenant. Unique `clerk_user_id`
+(one Google account, one tenant). Extra office / admin members with
+**equal** permissions are **TBD** (whether we build them). Do not add
+a second role or invite HTTP.
 
 Platform admins work across tenants through Clerk's **native
-impersonation** (sign in as a contractor from the Clerk Dashboard or
-Backend API, which records an `actor` on the Clerk session for the audit
-trail). Placis does not build its own impersonation mechanism.
+impersonation** in prod (sign in as a contractor from the Clerk
+Dashboard or Backend API, which records an `actor` on the Clerk
+session). Deferred as a Placis product; Placis does not build its own
+mechanism or write `audit_events` for it.
 
 - [architecture.md](architecture.md) — named functions, locators, `GetMe`
 - [testing.md](testing.md) — humatest tenancy, two-tenant, Vitest, Playwright
