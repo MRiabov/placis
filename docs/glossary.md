@@ -1264,13 +1264,14 @@ In code: `ai_use_ledger`.
 
 ---
 
-### Pricing catalog
+### Price list
 
 Where charged activation and subscription Prices live for Pricing and
 Checkout. Never in PRDs or UI.
 
-Distinct from: Pricing (the Placis website `/pricing/` route), Website
-template catalog, Website component catalog, Website style catalog.
+Distinct from: Pricing (the Placis website `/pricing/` route),
+Subscription price, Website template catalog, Website component
+catalog, Website style catalog, `Prices.List`.
 
 In code: `billing.prices`, `GetBillingCatalog`, `GET /v1/billing/catalog`.
 
@@ -1836,7 +1837,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | go live (website) | Publish (owner UI). Specs: website publication |
 | registry record | company registry record |
 | placeholder (website) | website placeholder or loading placeholder |
-| catalog (website) | website template catalog, website component catalog, website style catalog, or pricing catalog |
+| catalog (website) | website template catalog, website component catalog, website style catalog, or price list |
 | component (website) | website component |
 | our site / our website | Placis website |
 | public site / public-site runtime | contractor website or Placis website (whose site) |
