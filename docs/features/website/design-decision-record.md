@@ -71,21 +71,22 @@ numbers are HTML comments so later entries keep their numbers.
    Default is closed. Overlay / Voice orb still use this canvas geometry after
    they call. Same day, later: the call is bottom-right of the main pane.
 
-3. **Website publication blockers are jumps** — The dropdown heading is
-   **Website publication is blocked:** then one **silent** (no background)
+3. **Website publication blockers are navigable.** — The dropdown heading is
+   **Publishing is blocked:** then one **silent** (no background)
    button per blocker, with a Lucide **ArrowUpRight**. A required heading, text,
-   or image that cannot resolve jumps to that website section (canvas + editing
-   panel). Owner copy does not say slot. A media library item on the live path
-   that is not approved jumps to that media library item. (2026-08-26) After 12:
-   a required heading, text, or image jumps to that website section’s
-   **Content** on the left; an unapproved library item not on the canvas jumps
-   to `/cms/media`. (2026-08-26) Owner heading is **Publishing is blocked:**
-   (see 13). (2026-08-26) Host rows and New URL stay one group of actions (open
-   a host, Connect). Blockers sit after that group, not between website
+   or image that cannot resolve **navigates to** that website section’s
+   **Content** on the left. Owner copy does not say slot. A media library item
+   on the live path that is not approved: Content if on the canvas; else
+   `/cms/media`. (2026-08-26) Host rows and New URL stay one group of actions
+   (open a host, Connect). Blockers sit after that group, not between website
    addresses and New URL. The dropdown is actions, not a status card of labels.
-   (2026-08-27) (2026-08-29) When the subscription is not active, a third jump:
-   **Pay the subscription price to Publish** → Usage & billing. Not extra usage
-   credit. Live website rollback uses the same jump.
+   (2026-08-27) (2026-08-29) When the subscription is not active, a third
+   control: **Pay the subscription price to Publish** **navigates to**
+   Usage & billing. Not extra usage credit. Live website rollback uses the
+   same navigate. (2026-09-03) One function; editor routes return
+   `blockers[]` (list GET per-row, page PATCH ack,
+   `GET /v1/website/editor/blockers` when the dropdown opens).
+   Interaction unchanged from 2026-08-26.
 
 <!-- placeholder - insert design decision 4 here -->
 

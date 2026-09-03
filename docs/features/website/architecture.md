@@ -14,11 +14,18 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   ([02](pipeline/02-copy-website-template-pages.md))
 - `GenerateWebsiteCopy` — River job kind `website_copy_generation`
   ([03](pipeline/03-website-copy-generation.md))
-- `PublishWebsite` — **calls** `websitePublication`
+- `PublishWebsite` — **calls** `WebsitePublicationBlockers`, then
+  `websitePublication`
   ([04](pipeline/04-website-publication.md))
 - `UnpublishWebsite` — holding page on R2 `latest/`; clears
   `website_publications.active`. Billing **calls** this when the
   subscription is `canceled`.
+
+`WebsitePublicationBlockers` is not a pipeline step. Required website
+slot cannot resolve; live-path media library item not approved;
+subscription not `active`. Page-scoped or tenant-scoped. Editor
+routes return `blockers[]`. `PublishWebsite` **calls** it as the
+hard gate.
 
 CMS HTTP: one function per Routes verb+noun (`GetWebsitePage`,
 `UpdateWebsitePage`, `CreateWebsitePublication`, …). Tables:

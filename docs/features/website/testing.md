@@ -36,7 +36,8 @@ re-assert 02 Persist.
 3. **Assistant** — the owner asks the assistant to improve copy.
    **Apply** PATCHes dirty keys then `record-apply`.
 4. **Website publication** — Request `WebsitePublicationCreate`;
-   `PublishWebsite` **calls** `websitePublication` and **sends**
+   `PublishWebsite` **calls** `WebsitePublicationBlockers`, then
+   `websitePublication` and **sends**
    `WebsitePublicationRequest`.
 5. **Live website** — GET the published website copy in `latest/`.
 6. **Website rollback** — the owner does a website rollback to an
@@ -109,9 +110,11 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-Exercise body: `WebsitePageSummaryRead` lists unpublished pages. Must
+Exercise body: `WebsitePageSummaryRead` lists unpublished pages. Per-row
+page-scoped `blockers[]`. Must
 not: preview host GET. Optional `publication_id` is checkout of that
-owner publication’s page list. **reads** `website_pages` may
+owner publication’s page list. **reads** `website_pages`,
+`website_sections`, `website_slots`, `media_assets` may
 supplement.
 
 #### Fail
@@ -181,6 +184,7 @@ Response `WebsiteEditApplyRead`.
 #### Verify
 
 `GET /v1/website/editor/pages/{page_id}` shows the dirty-key edit.
+Ack `blockers[]` is that website page (page-scoped).
 **persists into** `website_slots`, `website_sections`, `website_pages`,
 `website_forms`, `website_form_fields`, `website_form_field_options`,
 `website.menus`, `edit_history`, `website_settings.edit_history_head`
@@ -242,6 +246,34 @@ PATCH.
 
 `409 edit_history_conflict`. `403` unactivated.
 
+### TestHappyPathV1WebsiteEditorBlockersReturnsBlockers — Route
+
+Backend. Go `TestHappyPathV1WebsiteEditorBlockersReturnsBlockers`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Unpublished Copy website template pages rows already present. No
+`frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/website/editor/blockers`. Response `WebsiteEditorBlockersRead`.
+
+#### Verify
+
+Exercise body: `WebsiteEditorBlockersRead` `blockers[]` is the flat
+set (all website pages plus subscription and off-canvas unapproved
+media library items). Codes `required_slot_unresolved`,
+`media_not_approved`,
+`subscription_canceled`. Must not: canvas hydrate; `website_manifest`;
+`publication_id`. Named **reads** may supplement.
+
+#### Fail
+
+`403` unactivated.
+
 ### TestHappyPathV1WebsiteEditorUrlsReturnsUrls — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorUrlsReturnsUrls`. OpenAPI 1:1.
@@ -301,7 +333,8 @@ not: return `website_manifest`.
 ### TestHappyPathV1WebsitePublicationsCreatesPublication — Route
 
 Backend. Go `TestHappyPathV1WebsitePublicationsCreatesPublication`.
-OpenAPI 1:1. **calls** `websitePublication`.
+OpenAPI 1:1. **calls** `WebsitePublicationBlockers`; **calls**
+`websitePublication`.
 
 #### Setup
 

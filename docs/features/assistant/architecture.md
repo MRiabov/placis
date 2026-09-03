@@ -233,9 +233,9 @@ notification + context as left-nav). Do not name the tool
 `switch_user_facing_screen`. Optional `open_ad` / `open_website_page` navigate;
 they are not a substitute for ids.
 
-**Follow** is always on. Canvas jumps to the website slot or field the agent is
-looking at. Owner cannot turn it off. Not a WS / HTTP request field. A request
-with `follow: false` → plain **400**.
+**Follow** is always on. Canvas **navigates to** the website slot or field the
+agent is looking at. Owner cannot turn it off. Not a WS / HTTP request field. A
+request with `follow: false` → plain **400**.
 
 ## Tool registry vs allowed set
 

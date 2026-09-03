@@ -145,12 +145,20 @@ website still lays out at the native width. Do not reflow Mobile or Tablet
 past 1. Publish is blocked while required website slots cannot resolve, media
 library items on the live path are not approved, or the subscription is not
 `active`. Blockers in the dropdown are a short heading
-(**Publishing is blocked:**) plus **one silent jump per blocker** (no
-background): the website section in Content, `/cms/media` for an unapproved
-library item not on the canvas, or **Usage & billing** when they must pay the
-subscription price again. Each jump uses a Lucide **ArrowUpRight**. Subscription
-copy: **Pay the subscription price to Publish**. Do not send them to extra usage
-credit for this blocker. After a successful website publication,
+(**Publishing is blocked:**) plus **one silent control per blocker** (no
+background) that **navigates to** the website section in Content, `/cms/media`
+for an unapproved library item not on the canvas, or **Usage & billing** when
+they must pay the subscription price again. Each control uses a Lucide
+**ArrowUpRight**. Subscription copy: **Pay the subscription price to Publish**.
+Do not send them to extra usage credit for this blocker. Per-row `blockers[]` on
+`GET /v1/website/editor/pages` seeds website pages not on the canvas. Website
+page PATCH ack `blockers[]` replaces that website page’s list (merge like
+`edit_history_head`; not a GET after PATCH). Opening the Publish dropdown calls
+`GET /v1/website/editor/blockers` (not a timer): flat list for all website pages
+plus subscription and off-canvas unapproved media library items. After
+`/cms/media` approve, pay, or menus, that GET is the current full list. Do not
+recompute from the website component catalog while typing; click-off PATCH is
+enough for text. After a successful website publication,
 `has_unpublished_changes` is false until the next edit. The POST sends
 `website_address_id`: that host’s R2 tree, then purge **that** host ([api.md](api.md),
 [cloudflare.md](cloudflare.md)). The **host row** is the Publish click. Hosts can diverge.
@@ -159,15 +167,14 @@ owner website publication is v3+.
 
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that
 publication `*Read`; the dropdown and Website versions list update from the
-body. Rollback is on **earlier owner website versions**, not the live one.
-The same subscription pay gate as Publish: **402** `subscription_canceled` and
-the Usage & billing jump. **Preview** on the live website version opens the
-live website in a new tab. Do not label that **Continue editing**, and do not
-call it a website preview (that is the sales stage). Earlier owner website
-versions have a silent **checkout** (`GET` with `publication_id`, then
-ordinary PATCH) and a silent **website rollback** icon. Checkout replaces
-unpublished (in-memory projection, then PATCH). Rollback changes live
-`latest/` only.
+body. Rollback is on **earlier owner website versions**, not the live one. The
+same subscription pay gate as Publish: **402** `subscription_canceled` and
+**navigates to** Usage & billing. **Preview** on the live website version opens
+the live website in a new tab. Do not label that **Continue editing**, and do
+not call it a website preview (that is the sales stage). Earlier owner website
+versions have a silent **checkout** (`GET` with `publication_id`, then ordinary
+PATCH) and a silent **website rollback** icon. Checkout replaces unpublished
+(in-memory projection, then PATCH). Rollback changes live `latest/` only.
 
 Rows:
 
@@ -184,10 +191,10 @@ Rows:
 3. **New URL** — not a website publication. Opens the
    **Connect website address** modal.
 
-Those three rows are one group. **Publishing is blocked:** jumps sit **after**
-that group, not between website addresses and New URL. Host rows are actions
-(open in a new tab, or reopen Connect while waiting). New URL is Connect, with a
-plus. Do not lay this out as a status card of labels.
+Those three rows are one group. **Publishing is blocked:** controls sit
+**after** that group, not between website addresses and New URL. Host rows are
+actions (open in a new tab, or reopen Connect while waiting). New URL is
+Connect, with a plus. Do not lay this out as a status card of labels.
 
 **Connect website address** is the point-their-hostname-at-us flow. It is a
 **modal over the website editor** on `/cms/website` (overlay, no new route, no

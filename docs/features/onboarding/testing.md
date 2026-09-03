@@ -285,7 +285,8 @@ Backend (`humatest`, Testcontainers Postgres). Unpublished website from
 
 #### Verify
 
-Response `WebsitePageSummaryRead` list. No `publication_id`.
+Response `WebsitePageSummaryRead` list. Per website page `blockers[]`.
+No `publication_id`.
 
 #### Fail
 
@@ -332,7 +333,9 @@ Unpublished website from 05. A `page_id`. No `frontend-2`.
 
 #### Verify
 
-Response `WebsiteEditApplyRead`. Create then GET that website page
+Response `WebsiteEditApplyRead` (website page PATCH includes
+`blockers[]`).
+Create then GET that website page
 shows the patched slots.
 
 #### Fail
