@@ -11,11 +11,14 @@ Details the screen is a subset of the business profile). Postgres schema
 
 - [details/](details/README.md) — Business details (`/cms/details`). Owns `business_profiles` and
   list tables (services, areas, hours, reviews, Facebook / Instagram,
-  certification ticks).
+  certification ticks). HTTP: [details/api.md](details/api.md). Increment writer:
+  [details/architecture.md](details/architecture.md). Tests: [details/testing.md](details/testing.md).
 - [projects/](projects/README.md) — Projects (`/cms/projects`). Table: `business_profile.projects`.
+  HTTP: [projects/api.md](projects/api.md). Tests: [projects/testing.md](projects/testing.md).
 - [certifications-and-reviews/](certifications-and-reviews/README.md) — Certifications and reviews
   (`/cms/certifications-and-reviews`). Persistence and HTTP stay on [details](details/persistence.md) /
-  [details HTTP](details/api.md).
+  [details HTTP](details/api.md). Screen tests: [certifications-and-reviews/testing.md](certifications-and-reviews/testing.md) (HTTP
+  1:1 is Details).
 
 How the owner reaches them: [CMS frontend](../../general-architecture/cms/frontend.md) (left nav).
 

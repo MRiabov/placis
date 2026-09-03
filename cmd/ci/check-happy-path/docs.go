@@ -13,23 +13,23 @@ import (
 // Unstructured leftover extra-## api.md files. Duplicate of
 // check-pipeline-tables apiHeadingLeftover keys. Do not import that package.
 var docsRouteSkipRel = map[string]bool{
-	"business-profile/details/api.md":  true,
-	"business-profile/projects/api.md": true,
-	"other/leads/api.md":               true,
+	"other/leads/api.md": true,
 }
 
 // docsTestingRel maps ParseAPIFile rel to a path under docsRoot.
 // Duplicate of the owning-file convention; do not import
 // check-pipeline-tables.
 var docsTestingRel = map[string]string{
-	"website/api.md":              "features/website/testing.md",
-	"ads/api.md":                  "features/ads/ad-generation/testing.md",
-	"billing/api.md":              "features/billing/testing.md",
-	"assistant/api.md":            "features/assistant/testing.md",
-	"onboarding/api.md":           "features/onboarding/testing.md",
-	"other/auth/api.md":           "features/other/auth/testing.md",
-	"other/media/api.md":          "features/other/media/testing.md",
-	"general-architecture/api.md": "general-architecture/testing.md",
+	"website/api.md":                   "features/website/testing.md",
+	"ads/api.md":                       "features/ads/ad-generation/testing.md",
+	"billing/api.md":                   "features/billing/testing.md",
+	"assistant/api.md":                 "features/assistant/testing.md",
+	"onboarding/api.md":                "features/onboarding/testing.md",
+	"other/auth/api.md":                "features/other/auth/testing.md",
+	"other/media/api.md":               "features/other/media/testing.md",
+	"business-profile/details/api.md":  "features/business-profile/details/testing.md",
+	"business-profile/projects/api.md": "features/business-profile/projects/testing.md",
+	"general-architecture/api.md":      "general-architecture/testing.md",
 }
 
 func structuredDocsOps(d docnames.Docs) map[string]bool {

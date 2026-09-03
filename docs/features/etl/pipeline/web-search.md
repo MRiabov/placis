@@ -34,29 +34,48 @@ Wednesday / Friday does not enable this ETL run kind.
 
 ## Do — extract
 
-Set `status=extracting`. Call Parallel through Vercel AI Gateway
-(`gateway.tools.parallelSearch()`, any model). Seed from what is already known:
-company registry identity (`legal_name`, `company_number`, country,
-`registered_office`) and/or Maps `display_name` + country. Company number alone
-is enough to discover a `place_id` and website URL. A Maps pick is enough to
-discover Facebook / Instagram / a missing website URL. Parallel is not instant.
-Persist each **new** empty detail as it arrives (onboarding session attach and
-live profile when that column was empty). Evaluator starts Maps / crawl /
-Facebook / Instagram on this enqueue when they can start. A generation call over
-retrieved text (no search tools) may classify that text; it is not the fast
-extract of Maps / crawl. Retry of this `run_id` does not search again for a
-result that already landed.
+`extract/websearch.Run` sets `status=extracting`. Call Parallel through
+Vercel AI Gateway (`gateway.tools.parallelSearch()`, any model). Seed
+from what is already known: company registry identity (`legal_name`,
+`company_number`, country, `registered_office`) and/or Maps
+`display_name` + country. Company number alone is enough to discover a
+`place_id` and website URL. A Maps pick is enough to discover Facebook /
+Instagram / a missing website URL. Parallel is not instant. Persist each
+**new** empty detail as it arrives (onboarding session attach and live
+profile when that column was empty). Evaluator starts Maps / crawl /
+Facebook / Instagram on this enqueue when they can start. A generation
+call over retrieved text (no search tools) may classify that text; it is
+not the ETL fast extract of Maps / crawl. Retry of this `run_id` does not
+search again for a result that already landed (reuse
+`web_search_fetches`).
 
 ## Do — transform
 
-Do not write Parallel prose onto the profile. New details are enough. Maps that
-already have `place_id` keep extracting in parallel with Search.
+`transform/websearch.Run` does not write Parallel prose onto the profile.
+New details are enough. Maps that already have `place_id` keep extracting
+in parallel with Search.
+
+## Reads
+
+`etl.runs`; `etl.web_search_fetches` for this `run_id` (retry); onboarding
+session attach and live profile empty columns.
+
+## Calls
+
+`gateway.tools.parallelSearch()`.
+
+## Inserts
+
+Extract **inserts** `web_search_transform` after the fetch lands.
 
 ## Persist
 
-`etl.runs` timestamps / error. New empty `place_id` / `website_url` / Facebook /
-Instagram details on the onboarding session attach (and live profile columns
-when empty).
+Extract **persists into** `web_search_fetches` (Parallel gateway dumps;
+retry of this `run_id` reuses a fetch that already landed) and
+`etl.runs` timestamps / error. Transform **persists into** new empty
+`place_id` / `website_url` / Facebook / Instagram details on the
+onboarding session attach (and live profile columns when empty). Transform
+must not write Parallel prose onto the profile.
 
 ## Fail
 

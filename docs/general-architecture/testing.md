@@ -63,9 +63,9 @@ operation needs both:
 
 Required ops come from **Method + path** cells in defined feature
 `api.md` (website, billing, ads, assistant, onboarding, auth, media
-library) plus HTTP conventions `GET /v1/health` and
+library, Details, Projects) plus HTTP conventions `GET /v1/health` and
 `GET /openapi.json`. Skip **Do not create**. Skip unstructured leftover
-extra-`##` files (Details, Projects, website leads). Flow tests also hit
+extra-`##` files (website leads). Flow tests also hit
 some paths; they do not replace the 1:1 row. `TestPipelineHappyPath*` is
 not a 1:1 row (`TestHappyPath` prefix only). CI:
 `cmd/ci/check-happy-path` `--public` / `--worker`. Two leftover files:
@@ -83,6 +83,9 @@ under ad-generation):
 - ads → `docs/features/ads/ad-generation/testing.md`
 - billing / assistant / onboarding → that feature’s `testing.md`
 - auth / media library → `docs/features/other/{auth,media}/testing.md`
+- Details → `docs/features/business-profile/details/testing.md`
+  (includes certifications and reviews HTTP)
+- Projects → `docs/features/business-profile/projects/testing.md`
 - `GET /v1/health`, `GET /openapi.json` → this file. Do not add
   `## Integration` until those leftover rows drop.
 
@@ -92,21 +95,27 @@ Examples:
   `TestHappyPathV1WebsiteEditorPagesReturnsPages` for
   `GET /v1/website/editor/pages`. `TestHappyPathV1MediaAssetsReturnsList`
   for `GET /v1/media-assets`. Also `GET /v1/health`, `GET /openapi.json`.
+  Website’s other public Routes:
+  [website testing](../features/website/testing.md) `## Integration`.
 - **Worker** (internal OpenAPI file):
   `TestHappyPathInternalWebsiteRender` for `POST /internal/website-render`.
+  `TestHappyPathInternalWebsitePublication` for
+  `POST /internal/website-publication`. Specs:
+  [website testing](../features/website/testing.md).
 
 Pipeline (not OpenAPI 1:1). Every `pipeline/` needs **both**:
 
-- Per paired step: `TestPipelineHappyPathWebsite01SelectWebsiteTemplate`
-  ↔ `pipeline/testing/01-select-website-template.md`. Unnumbered stems
-  (ETL `google-maps.md`, onboarding `build-profile.md`) use PascalCase of
-  the filename. Skip **Do not run** (onboarding `04b`). Skip gatherers and
-  testing-only `worker-internal.md` (Worker OpenAPI 1:1).
-- Whole pipeline: exactly `TestPipelineHappyPath{Feature}Full`
-  (`TestPipelineHappyPathWebsiteFull`, `OnboardingFull`, `AdsFull`,
-  `EtlFull`). Testcontainers Postgres + MinIO. Worker container only if
-  that pipeline **calls** `websiteRender` / `websitePublication`. Do not
-  name a step file `full.md`.
+- Per paired step: `TestPipelineHappyPathWebsite01SelectWebsiteTemplate` ↔
+  `pipeline/testing/01-select-website-template.md`. Unnumbered stems (ETL
+  `google-maps.md`, onboarding `build-profile.md`) use PascalCase of the
+  filename. Skip **Do not run** (onboarding `04b`). Skip Persist none
+  (onboarding `03`). Skip gatherers and testing-only `worker-internal.md` (extra
+  Worker DTO cases; 1:1 is website `testing.md`).
+- Whole pipeline: exactly
+  `TestPipelineHappyPath{Feature}Full` (`TestPipelineHappyPathWebsiteFull`,
+  `OnboardingFull`, `AdsFull`, `EtlFull`). Testcontainers Postgres + MinIO.
+  Worker container only if that pipeline **calls** `websiteRender` /
+  `websitePublication`. Do not name a step file `full.md`.
 
 CI: `check-pipeline-tables` leftover of current names until the Go funcs
 exist (extras may only shrink).
@@ -122,6 +131,9 @@ Frontend completeness (documented, not CI-asserted this pass):
 | Billing | `HappyPathBillingFull` — Usage & billing → cancel / keep / pay-again | one test per billing Route |
 | Assistant | `HappyPathAssistantFull` — CMS dock | one test per assistant Route |
 | Media library | `HappyPathMediaFull` — `/cms/media` upload → crop | one test per media library Route |
+| Details | `HappyPathDetailsFull` — Business details click-off → Revert / OK | one test per Details Route |
+| Projects | `HappyPathProjectsFull` — project draft → approve → archive → unarchive | one test per Projects Route |
+| Certifications and reviews | `HappyPathCertificationsAndReviewsFull` — ticks / pin / archive | HTTP 1:1 (those rows live in Details `testing.md`) |
 | ETL | none (no owner UI) | |
 
 Extra frontend HappyPath only for real screen branching. Names include
@@ -159,6 +171,9 @@ integration tests pair
 - [ads](../features/ads/ad-generation/testing.md)
 - [media library](../features/other/media/testing.md)
 - [auth](../features/other/auth/testing.md)
+- [Details](../features/business-profile/details/testing.md)
+- [Projects](../features/business-profile/projects/testing.md)
+- [Certifications and reviews](../features/business-profile/certifications-and-reviews/testing.md) — screen pin / ranking; HTTP 1:1 is Details
 - [Placis website](../features/placis-website/testing.md) — static origin only (no Go / Postgres)
 
 ## Cross-tenant isolation

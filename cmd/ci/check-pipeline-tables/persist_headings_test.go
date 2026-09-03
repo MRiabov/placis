@@ -16,23 +16,14 @@ func TestPersistHeadingsClosed(t *testing.T) {
 	}
 }
 
-func TestPersistHeadingsLeftoverOK(t *testing.T) {
+func TestPersistHeadingsEtlClosed(t *testing.T) {
 	p := persistFile{
-		path: "docs/features/etl/persistence.md",
-		rel:  "etl/persistence.md",
-		heads: []string{
-			"Runs",
-			"Sources (live extract identity)",
-			"Fetches (append-only, one table per extract type)",
-			"Website crawled URLs (live row, no `raw`)",
-			"`imported_media`",
-			"Google Maps listing (live row, no `raw`)",
-			"Project verdict (skip)",
-			"Indexes",
-		},
+		path:  "docs/features/etl/persistence.md",
+		rel:   "etl/persistence.md",
+		heads: []string{"Tables", "Indexes"},
 	}
 	if errs := checkPersistHeadings(report{persistFiles: []persistFile{p}}); len(errs) != 0 {
-		t.Fatalf("leftover: %v", errs)
+		t.Fatalf("etl closed: %v", errs)
 	}
 }
 

@@ -293,7 +293,7 @@ publication writes a website version.
 | archive a website page | `website_pages.status=archived`; strip that page node from `website.menus` |
 | edit top menu / footer tree or bar CTAs | `website.menus` (`top_menu` / `footer` / `show_phone` / `show_email` / `show_contact`) — Content, not a workspace item |
 | add / remove / reorder reviews on one reviews website section (Content or `update_reviews`) | rewrite that section’s unpublished `website_slot_reviews` (ordered pool ids, ≤ website component max) |
-| pin / unpin / reorder **top reviews** (Certifications and reviews) | `business_profile_reviews.is_top` / `top_position` only — does not rewrite website sections |
+| pin / unpin / reorder **top reviews** (Certifications and reviews) | insert `business_profile_review_rankings` — does not rewrite website sections |
 | archive a review | leave the pool and top reviews; drop that id from every `website_slot_reviews` array, then compact |
 | swap a website component | `website_sections.component_id` (preserving compatible website slots) |
 | change the website style catalog preset | `website_settings` (applied only on explicit apply) |

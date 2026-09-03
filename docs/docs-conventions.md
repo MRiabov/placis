@@ -85,8 +85,10 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   `**/testdata/**` (Don’t-say fixtures; `check-dont-say` skips them too). New
   first-party `.md` files are included automatically.
 - **File size:** after wrap, a doc over 800 lines must be split (hard error at
-  1200). Exception: `glossary.md` stays one file (Don’t-say table + ubiquitous
-  language).
+  1200). Exceptions: `glossary.md` stays one file (Don’t-say table +
+  ubiquitous language);
+  `docs/features/onboarding/testing.md` stays one file (owning
+  `TestHappyPath*` 1:1 plus E2E / Full / extras).
 - **Lint:** default rumdl rules except MD057 (relative link exists). Many
   first-party docs have pre-existing wrong `../` depths; re-enable when those
   links are fixed.
@@ -235,8 +237,8 @@ rows that are not in [HTTP conventions](general-architecture/api.md)), then only
 
 Ban at `##`: `Complete`, `Serve only types on HTTP`, per-type essays. CI
 ratchets leftover extra `##` on undefined features (extras may only shrink).
-Website, billing, ads, assistant, onboarding, auth, and the media
-library have none. Optional `###` groups under `## DTOs` and
+Website, billing, ads, assistant, onboarding, auth, the media library,
+ETL, Details, and Projects have none. Optional `###` groups under `## DTOs` and
 `## Routes` (glossary terms, same titles on both when split;
 [glossary.md](glossary.md)). Not mandatory — split when the
 table is hard to review. `### METHOD /path` overflow still sits under
@@ -247,8 +249,7 @@ one list. Persistence and `jobs.md` already overflow as
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`. Overflow
 is `###` under a table, not a new `##`. CI ratchets leftover grouping `##` the
 same way as `api.md` (extras may only shrink). Website, billing, ads, assistant,
-onboarding, auth, and the media library have none. Intro-only files
-(Details, Projects) have no `##` yet.
+onboarding, auth, the media library, ETL, Details, and Projects have none.
 
 **`testing.md`** — H1 + intro, then only `## E2E` and/or `## Integration`.
 Unit tests are not specified here. `###` is one test (open names; ban
@@ -306,7 +307,8 @@ extra `##`.
 optional last. Feature `testing.md` uses the same names as `####`
 (minus **Cases**). Go names: `TestPipelineHappyPath{Feature}{Step}` per
 paired step and `TestPipelineHappyPath{Feature}Full` for the whole
-pipeline. Not Vitest per step.
+pipeline. Skip **Do not run** and Persist none (onboarding `03`). Not
+Vitest per step.
 
 ### `api.md` shape (defined features)
 
@@ -353,5 +355,6 @@ on the Request DTO.
 Major features that must eventually satisfy this contract: ads, assistant,
 auth, billing, ETL, onboarding, website, media library. Website, ads,
 assistant, onboarding, billing, auth, and the media library are fully
-defined (DTOs, Routes, tables, named services). CI:
+defined (DTOs, Routes, tables, named services). ETL is fully defined
+(tables and named services; no owner HTTP). CI:
 [ci-cd.md](general-architecture/ci-cd.md).
