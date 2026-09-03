@@ -46,7 +46,9 @@ Clerk org) are **1-many** (`tenant_memberships`). A Clerk user is on
   else empty until business research fills it. `country` is
   Find country at business lookup (Voice region fallback). Do **not**
   store remaining usage credit here — billing owns the AI use ledger
-  ([billing](../../billing/persistence.md)). Do **not** invent
+  ([billing](../../billing/persistence.md)). Do **not** put Price ids
+  on `tenants`. `subscription_status` stays `active` during the
+  three-calendar-month non-payment window. Do **not** invent
   `SuspendTenant` or a `suspended` status. Cancelled billing is
   `subscription_status`, not `status`. Do **not** store `website_prefix`
   here.

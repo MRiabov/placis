@@ -17,6 +17,8 @@ new entries with the next number, the area, and the date.
 2. **Website activation checkout stays in 08** — Billing does not steal
    `website_activations` or activation Stripe.
    ([09](../onboarding/pipeline/09-website-activation.md)). (2026-08-29)
+   Later (2026-09-03): activation Checkout is 09. Line items are the
+   activation Price plus Pro month (not activation-only).
 
 3. **Do not commit to Clerk Billing yet** — Already decided in 08. Optimistic
    subscription status in Postgres; refresh when expected. (2026-08-29)
@@ -45,7 +47,9 @@ new entries with the next number, the area, and the date.
    Extra usage credit checkout, Change plan / cancel / keep live here.
    Activation Stripe stays on 08. 20% / empty is frontend from
    `BillingUsageRead`. (2026-08-29; subscription-tier checkout on this package
-   2026-08-29; named HTTP 2026-09-01)
+   2026-08-29; named HTTP 2026-09-01) Later (2026-09-03): Change plan
+   while `active` is deferred; pay-again / cancel / keep stay. Activation
+   Checkout is 09, not 08.
 
 9. **Pricing is the Placis website page** — Astro static, `placis.com/pricing/`.
    Usage & billing is the in-app screen. Checkout is not on `placis.com`.
@@ -53,6 +57,10 @@ new entries with the next number, the area, and the date.
    (2026-08-29) Choose does not set `subscription_tier` (no plan
    parameter). First `ActivateSubscription` is Placis Pro plan. Plus /
    Max / year is Change plan after they are `active`. (2026-09-03)
+   Later (2026-09-03): amounts from Stripe Prices (Postgres cache).
+   Choose on Placis Pro plan goes to 09 (Pro month). Yearly and
+   Change plan to other tiers are deferred. CI bakes `/pricing/` from
+   `GET /v1/billing/catalog`. No Stripe JS on `placis.com`.
 
 10. **Usage & billing shows one bar of owner-cost spend** — Current pool
     (including carry-over) vs spent this period; spent segments colored by
@@ -64,14 +72,19 @@ new entries with the next number, the area, and the date.
     `subscription_canceled` until `subscription_status=active`. Not
     `usage_credit_exhausted` (that sends them to extra usage credit). Not 08
     (tenant stays `status=active`; they can still edit). Resume pay from Usage
-    & billing. Status enum is `canceled`. (2026-08-29) (2026-09-03): unpublish
-    every website (ADR 16). Nested publication HTTP is
-    `/v1/websites/{website_prefix}/publications`.
+    & billing. Status enum is `canceled`. (2026-08-29) Later
+    (2026-09-03): unpublish after **three calendar months** of
+    non-payment (`nonpayment_started_at`), not on the first failed
+    invoice. Deadline job **retrieves** Stripe before
+    `UnpublishWebsite`. Unpublish walks every website (ADR 16). Nested
+    publication HTTP is `/v1/websites/{website_prefix}/publications`.
 
 12. **Change plan and cancel are Usage & billing** — Not the placis.com Pricing
     grid and not predecessor dashboard Usage & billing copy. Cancel is
     `cancel_at_period_end`; Keep subscription undoes it. Pay-again after
-    `canceled` is Change plan checkout. (2026-08-29)
+    `canceled` is Change plan checkout. (2026-08-29) Later (2026-09-03):
+    pay-again is Pro month Checkout (no activation Price). Change plan
+    while `active` is deferred.
 
 13. **`ai` records our usage and their usage** — Every vendor-hit `ai`
     call **writes** `ai_generations` (**our usage**). **Their usage** is
@@ -99,4 +112,34 @@ new entries with the next number, the area, and the date.
     unbilled (ADR 4). (2026-09-03)
 
 16. **Unpublish walks every website** — Amend 11: when they stop paying,
-    `UnpublishWebsite` holding-pages every website for that tenant. (2026-09-03)
+    `UnpublishWebsite` holding-pages every website for that tenant. After
+    three calendar months of non-payment, or owner-scheduled cancel at
+    period end — not on the first failed invoice. (2026-09-03)
+
+17. **Stripe Prices are the catalogue** — Charged amounts live on
+    Stripe Product + Price. Postgres `billing.prices` is the cache
+    Checkout and catalogue GET **read**. `product.*` / `price.*`
+    webhooks **insert** `billing_catalog_sync` (`event_id`); worker
+    applies that payload. Empty cache / boot **inserts** one full-list
+    sync. Not `Prices.List` on Checkout or GET catalogue. Not Clerk
+    Billing. Not Stripe meters. (2026-09-03)
+
+18. **09 Checkout is activation Price plus Pro month** — One Checkout
+    (`mode=subscription` + one-time line). Access fee never charged
+    again. First pay includes one month of included usage credit
+    (`invoice.paid` / `AddIncludedUsageCredit`; unique Stripe invoice
+    id). `ActivateSubscription` **persists** `billing.subscriptions`
+    from that Checkout; it does not create a second Stripe
+    Subscription. (2026-09-03)
+
+19. **Owner-facing money is EUR numeric** — Not integer cents. AI use ledger
+    `amount_eur` has scale for ×5 of sub-cent vendor invoices. Stripe
+    `unit_amount` converts at the adapter. (2026-09-03)
+
+20. **Refunds are money-only** — `payment_status=refunded`. Tenant
+    stays `active`. First payer stays owner; refund does not reopen 09.
+    Extra usage credit row stays. (2026-09-03)
+
+21. **Public catalogueue GET is unauthenticated** — Choosable Prices only
+    (Pro month). No `stripe_customer_id`. No activation Price. CI `astro build`
+    bakes `/pricing/` from that GET. (2026-09-03)

@@ -35,11 +35,12 @@ channel into the same tools (not a separate product). How slices land:
   [onboarding assistant](features/onboarding/assistant.md) (guide)
 - [Assistant](features/assistant/prd.md) — CMS chat and voice after website activation
 - [Billing](features/billing/prd.md) — usage credit, Stripe Subscription
-  after activation, Usage & billing, Pricing (display-only; Choose does
-  not set `subscription_tier`)
+  from 09 Checkout, Usage & billing, Pricing (bake at `astro build`;
+  Choose on Placis Pro plan / month goes to 09)
 - [ETL](features/etl/README.md) — extract and transform; Monday / Wednesday / Friday refresh
 - [Website](features/website/prd.md) — website templates, website editor, website publication
-- [Website activation](features/onboarding/pipeline/09-website-activation.md) — one-time activation Checkout (Stripe)
+- [Website activation](features/onboarding/pipeline/09-website-activation.md) — activation Price plus Placis Pro plan / month Checkout
+  (Stripe)
 - [Ads](features/ads/ad-generation/prd.md) — ad generation; terminal Ad status is **ad ready to post** (no ad
   posting)
 - [Leads](features/other/leads/README.md) — website form contacts

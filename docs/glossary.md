@@ -1017,7 +1017,7 @@ Distinct from: Our cost.
 #### Usage credit
 
 The credit the owner spends on billed work (assistant text, image
-generate/cleanup, ads generate, Voice). Shown in **USD** (their cost), not a
+generate/cleanup, ads generate, Voice). Shown in **EUR** (their cost), not a
 unitless count. The subscription includes a monthly amount; they may also buy
 **extra usage credit**. One pool. When it is empty they are out of usage
 credit.
@@ -1043,8 +1043,9 @@ Distinct from: Usage credit (the pool), Subscription price.
 #### Subscription price
 
 The monthly amount for the current subscription tier. The subscription includes
-usage credit. If they stop paying, the website is unpublished and they cannot
-Publish until they pay again.
+usage credit. If they stop paying, the website stays published for three
+calendar months; then it is unpublished and they cannot Publish until they pay
+again.
 
 Do not say “retainer”. Never say “subscription shelf”.
 
@@ -1094,20 +1095,21 @@ Distinct from: Placis Pro plan, Placis Pro Plus plan, Placis Pro Max plan.
 #### Usage & billing
 
 The screen that shows the current subscription tier, subscription price,
-remaining usage credit, buying extra usage credit, **Change plan**, **Cancel
-subscription**, and **one bar** of this period’s usage credit (spent vs
-remaining; spent colored Voice / Image / text edits). Not public marketing
-pricing. Reached from the account menu (user icon), not from the left nav.
+remaining usage credit, buying extra usage credit, **Cancel
+subscription**, pay-again after cancel, and **one bar** of this period’s
+usage credit (spent vs remaining; spent colored Voice / Image / text
+edits). Not public marketing pricing. Reached from the account menu
+(user icon), not from the left nav.
 
 Distinct from: Website activation (the pay-and-activate step), Profile (the
-left-nav group), Pricing (the Placis website page).
+left-nav group), Pricing (on the Placis website).
 
 ---
 
 #### Pricing
 
-The Placis website page that shows subscription tiers and subscription prices.
-Not Usage & billing. Not website activation.
+The Placis website `/pricing/` route that shows subscription tiers and
+subscription prices. Not Usage & billing. Not website activation.
 
 Distinct from: Usage & billing (the screen in the application), Placis website
 (the whole site).

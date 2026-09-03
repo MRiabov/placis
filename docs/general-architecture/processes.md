@@ -20,13 +20,16 @@ to the API. The Placis website is a separate static origin and does not call Go.
    in [website Cloudflare](../features/website/cloudflare.md), strip on). After website activation the same host
    stays up without the strip. Locked serve path: [website Cloudflare](../features/website/cloudflare.md).
 4. **Placis website** (`apps/placis-website`) — Astro static build uploaded to
-   R2; hostname `placis.com`. No Worker. Locked serve path:
+   R2; hostname `placis.com`. No Worker. `astro build` bakes `/pricing/` from
+   `GET /v1/billing/catalog`. Locked serve path:
    [Placis website Cloudflare](../features/placis-website/cloudflare.md).
 
 Webhooks are verified with the Stripe Go SDK (`webhook.ConstructEvent`), the raw
 payload saved, the work enqueued, and the request returned — see
-[website activation](../features/onboarding/pipeline/09-website-activation.md). Every background job can be retried safely (an explicit
-key) — see [jobs](jobs.md).
+[website activation](../features/onboarding/pipeline/09-website-activation.md)
+and [billing HTTP](../features/billing/api.md). Closed event list:
+[onboarding HTTP](../features/onboarding/api.md). Every background job can be
+retried safely (an explicit key) — see [jobs](jobs.md).
 
 Onboarding session progress events stream over SSE — see [pipeline README](../features/onboarding/pipeline/README.md) and
 [onboarding frontend](../features/onboarding/frontend.md). Anyone with the host URL opens the preview website

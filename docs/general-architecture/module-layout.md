@@ -48,7 +48,7 @@ internal/
   assistant/      # CMS thread, dispatcher, /v1/assistant HTTP, knowledge YAML
   ads/            # ad.go, variant.go, generate.go
   media/          # media_assets
-  billing/        # AI use ledger, Usage & billing HTTP
+  billing/        # AI use ledger, Price cache, Usage & billing HTTP
   leads/          # leads.go
 migrations/       # goose SQL migrations (greenfield)
 apps/

@@ -394,6 +394,8 @@ var extraAllowed = []string{
 	".blob(",
 	"prompt catalog",
 	"checkout.session",
+	"customer.subscription",
+	"/v1/billing/catalog",
 	"openapi-fetch client",
 	"google chrome",
 	"**preview**",

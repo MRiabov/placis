@@ -12,7 +12,8 @@ Feature `api.md` files:
   `api.md`)
 - [Assistant](../features/assistant/api.md) (CMS `/v1/assistant/…`; voice under
   `/v1/assistant/voice/`; text `GET /v1/assistant/thread/ws`)
-- [Billing](../features/billing/api.md) (usage credit, Usage & billing)
+- [Billing](../features/billing/api.md) (usage credit, Usage & billing,
+  public catalogue)
 - [Website](../features/website/api.md) (unpublished website, website publication, Connect website address)
 - [Details](../features/business-profile/details/api.md) (live business profile, certifications, reviews)
 - [Projects](../features/business-profile/projects/api.md)
@@ -138,7 +139,8 @@ an HTTP excuse.
 
 Named once here. Feature `api.md` files name the mode, they do not redefine it.
 
-1. **none** — Find search + business lookup.
+1. **none** — Find search + business lookup + public billing catalogue
+   (`GET /v1/billing/catalog`).
 2. **onboarding session token** — request header or query as specified on the
    onboarding `api.md`.
 3. **Clerk JWT, active tenant only** — `tenants.status=active`. Not

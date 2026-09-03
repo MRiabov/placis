@@ -18,15 +18,16 @@ ads; the owner can do the same edits and ads themselves in the CMS.
    layer, audit, jobs, files, `frontend-2` UI
 6. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization 1-1
 7. [Onboarding](features/onboarding/README.md) — business research and business-profile building;
-   [website activation](features/onboarding/pipeline/09-website-activation.md) is one-time activation Checkout
+   [website activation](features/onboarding/pipeline/09-website-activation.md) is activation Price plus Placis Pro plan / month
+   Checkout
 8. [ETL](features/etl/README.md) — extract and transform (Google Maps, Facebook, Instagram); Monday /
    Wednesday / Friday refresh
 9. [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
 10. [Website](features/website/README.md) — website templates, selecting and
     copying them, editing, website publication
 11. [Assistant](features/assistant/README.md) — assistant (guide and doer); onboarding guide is a sibling
-12. [Billing](features/billing/README.md) — usage credit, Stripe Subscription after activation, Usage &
-    billing, Pricing (display-only)
+12. [Billing](features/billing/README.md) — usage credit, Stripe Subscription from 09 Checkout, Usage &
+    billing, Pricing (bake at `astro build`)
 13. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)
 14. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in
     [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/)

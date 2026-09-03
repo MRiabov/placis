@@ -91,8 +91,8 @@ profile columns. Live business profile via
 ### `website_activations`
 
 - **Columns:** `id`, `tenant_id` fk, `onboarding_session_id` fk,
-  `clerk_subject`, `checkout_session_id`, `payment_status`, `amount`,
-  `currency`, `failure_reason` nullable, `activated_at` nullable,
+  `clerk_subject`, `checkout_session_id`, `payment_status`,
+  `amount_eur`, `failure_reason` nullable, `activated_at` nullable,
   `created_at`
 - **Enums:** `payment_status` → `pending` / `paid` / `failed` /
   `refunded`
@@ -102,7 +102,10 @@ profile columns. Live business profile via
 - **Notes:** No `website_previews` / `token_hash`. The website preview
   is `/onboarding/preview-and-edit/`. The preview website address is
   reserved at 08. Website publications live on
-  [website persistence](../website/persistence.md).
+  [website persistence](../website/persistence.md). `amount_eur` is the
+  activation Price amount at POST checkout (not a Go 4900). Currency
+  is EUR. `refunded` is money-only: tenant stays `status=active`; first
+  payer stays owner; 09 does not reopen.
 
 ### `stripe_events`
 
@@ -110,7 +113,10 @@ profile columns. Live business profile via
   `processed` bool, `created_at`
 - **Uniques:** `event_id`
 - **Written by:** `POST /v1/webhooks/stripe`
-- **Notes:** `payload` is **omit** from HTTP.
+- **Notes:** `payload` is **omit** from HTTP. `processed` is set when
+  the webhook has inserted the River job (or decided this type needs
+  none). Replay key is `event_id`. Catalogue workers **read** `payload`
+  for that `event_id`.
 
 ## Indexes
 
