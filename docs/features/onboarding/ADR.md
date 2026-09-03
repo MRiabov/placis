@@ -286,7 +286,9 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     Unpaid website-preview PATCH and onboarding website-editor Assistant
     send/Voice are Clerk JWT + unactivated tenant on the app origin (not a
     sixth auth mode). Onboarding session token may GET unpublished website; it
-    must not PATCH. (2026-08-30)
+    must not PATCH. (2026-08-30. 2026-09-03: attach is checkout /
+    `AttachClerkOrganization`, not `POST /v1/me/clerk-organization`. See
+    ADR 25.)
 
 23. **09 completes the unpaid Assistant thread** — In the same transaction as
     `tenants.status=active`, complete `ai.threads` `thread_kind=cms_assistant`
