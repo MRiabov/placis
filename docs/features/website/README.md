@@ -42,6 +42,7 @@ Named identifiers:
   screens; website page content edited there)
 - [media library](../other/media/README.md) — the media library + image editing
 - [testing.md](testing.md) — the website E2E test
+- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
 - [look app](../../../apps/demo/README.md) — `/cms/website` in `apps/demo/`
 
 Profile screens (Details, Projects, Certifications and reviews, media library)
