@@ -29,7 +29,7 @@ profile and profile history), [ETL](../etl/persistence.md),
   `created` / `client_interviewing` /
   `selecting_and_copying_website_template` / `preview_and_edit` /
   `activated` / `select_and_copy_website_template_failed`
-- **Uniques:** `token`
+- **Uniques:** `token`; nullable unique `clerk_user_id`
 - **Written by:** `LookupBusiness`
   (`POST /v1/onboarding/business-lookup`); `UpdateOnboardingSources`
   (`PUT /v1/onboarding/sources`); `SaveTextClientInterview`
@@ -42,7 +42,10 @@ profile and profile history), [ETL](../etl/persistence.md),
   (`clerk_user_id` on the first Clerk request)
 - **Notes:** `research_wait_until` is derived from `etl.runs`
   (`trigger=onboarding`, distinct `enqueue_id` in the last 30
-  minutes), not a column.
+  minutes), not a column. Nullable unique `clerk_user_id`: one Google
+  account cannot bind to a second onboarding session / tenant
+  (`BindClerkUserToOnboardingSession`). Postgres unique allows many
+  nulls.
 
 ### No extract tables
 

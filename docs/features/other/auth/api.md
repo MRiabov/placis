@@ -15,12 +15,11 @@ public Route: `GET /v1/me`. Clerk organization attach lives on
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `MeRead` | `owner: OwnerRead`, `platform_role`, `tenant: TenantRead` (nullable), `clerk_org_id` (nullable) | `/me`. `clerk_org_id` is `tenants.clerk_org_id` when attached (unactivated or active). Null if no org yet. Same spelling as checkout |
+| `MeRead` | `owner: OwnerRead`, `tenant: TenantRead` (nullable), `clerk_org_id` (nullable) | `/me`. `clerk_org_id` is `tenants.clerk_org_id` when attached (unactivated or active). Null if no org yet. Same spelling as checkout. No `platform_role` until an admin surface exists |
 | `OwnerRead` | `display_name` | The signed-in **owner**. Nested on `MeRead.owner`. First write from `founder_name`; later the Clerk UI in the app |
 | `TenantRead` | `id`, `name`, `status`, `subscription_status` | The data tenant. CMS keys off `status`. No `website_prefix` |
 
-`platform_role` is `none` / `platform_admin`. `status` is
-`unactivated` / `active` / `suspended`. `subscription_status` is
+`status` is `unactivated` / `active`. `subscription_status` is
 `active` / `canceled` / `none`. No `ClerkOrganizationRead` on auth
 HTTP. `clerk_org_id` for `setActive` lives on
 `WebsiteActivationCheckoutRead` (checkout one-shot before Stripe) and
