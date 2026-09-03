@@ -1264,6 +1264,18 @@ In code: `ai_use_ledger`.
 
 ---
 
+### Pricing catalog
+
+Where charged activation and subscription Prices live for Pricing and
+Checkout. Never in PRDs or UI.
+
+Distinct from: Pricing (the Placis website `/pricing/` route), Website
+template catalog, Website component catalog, Website style catalog.
+
+In code: `billing.prices`, `GetBillingCatalog`, `GET /v1/billing/catalog`.
+
+---
+
 ### BillUsageMode
 
 How a paid external call treats usage credit: debit **their cost**,
@@ -1824,7 +1836,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | go live (website) | Publish (owner UI). Specs: website publication |
 | registry record | company registry record |
 | placeholder (website) | website placeholder or loading placeholder |
-| catalog (website) | website template catalog, website component catalog, or website style catalog |
+| catalog (website) | website template catalog, website component catalog, website style catalog, or pricing catalog |
 | component (website) | website component |
 | our site / our website | Placis website |
 | public site / public-site runtime | contractor website or Placis website (whose site) |

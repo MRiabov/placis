@@ -393,6 +393,7 @@ var extraAllowed = []string{
 	"new blob",
 	".blob(",
 	"prompt catalog",
+	"pricing catalog",
 	"checkout.session",
 	"customer.subscription",
 	"/v1/billing/catalog",
