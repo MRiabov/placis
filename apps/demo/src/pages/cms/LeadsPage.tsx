@@ -1,4 +1,5 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import { Inbox } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
@@ -222,9 +223,7 @@ export function LeadsPage(): ReactNode {
             </Field>
           </div>
           {rows.length === 0 ? (
-            <p className="mt-8 text-sm text-muted-foreground">
-              {emptyCopy(source, adId)}
-            </p>
+            <EmptyPanel copy={emptyCopy(source, adId)} />
           ) : (
             <>
               <table className="mt-6 hidden w-full min-[1101px]:table">
@@ -344,6 +343,25 @@ function LeadStackedRow({
       <div className="mt-2 max-w-[12rem]">
         <StatusSelect onStatus={onStatus} status={status} />
       </div>
+    </div>
+  );
+}
+
+function EmptyPanel({ copy }: { copy: string }): ReactNode {
+  return (
+    <div
+      className="mt-8 grid place-items-center rounded-[18px] border border-dashed border-stone-300 px-6 py-16 text-center"
+      role="status"
+    >
+      <span className="grid size-12 place-items-center rounded-full bg-zinc-100 text-zinc-500">
+        <Inbox aria-hidden="true" className="size-5" strokeWidth={1.6} />
+      </span>
+      <p className="mt-4 text-sm font-semibold tracking-tight">
+        Nothing here yet
+      </p>
+      <p className="mt-1 max-w-sm text-sm leading-snug text-muted-foreground">
+        {copy}
+      </p>
     </div>
   );
 }

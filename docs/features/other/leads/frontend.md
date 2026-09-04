@@ -34,7 +34,8 @@ New is the urgent mark.
 
 Narrow: stacked rows, not a five-column table.
 
-Empty: one quiet line for the current source filter.
+Empty: dashed panel with the Inbox mark, **Nothing here yet**, and
+copy that names the current source filter. No create control.
 
 Loading placeholders sit in rows, not a whole-table swap
 ([frontend conventions](../../../general-architecture/frontend.md)).
