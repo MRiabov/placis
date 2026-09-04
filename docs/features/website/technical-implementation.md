@@ -17,7 +17,7 @@ Related: [PRD](prd.md), [ADR](ADR.md), [website component contract](architecture
 
 See [persistence.md](persistence.md). Media assets are
 [media library](../other/media/persistence.md). Business profile:
-[details](../business-profile/details/persistence.md). Projects:
+[business profile](../business-profile/details/persistence.md). Projects:
 [projects](../business-profile/projects/persistence.md).
 
 ## Select and copy the website template

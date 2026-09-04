@@ -78,7 +78,10 @@ activation). Not an onboarding session column. Navigate UI to Review
 (same `tenant_id`) then registry / Maps-autocomplete increments via
 [build-profile](build-profile.md).
 
-Schemas: [persistence.md](../persistence.md), [ETL](../../etl/persistence.md), [details](../../business-profile/details/persistence.md). Do not re-define them here.
+Schemas: [persistence.md](../persistence.md),
+[ETL](../../etl/persistence.md),
+[business profile](../../business-profile/details/persistence.md). Do not
+re-define them here.
 
 ## Fail
 

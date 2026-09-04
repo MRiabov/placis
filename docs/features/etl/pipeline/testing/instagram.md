@@ -1,16 +1,16 @@
 # Instagram — integration test
 
-- **Setup**: `tenants`. `business_profiles` for that `tenant_id`.
-  Onboarding: `instagram_handle` is a detail, or it is not yet. Scheduled:
-  no handle.
+- **Setup**: `tenants`. `business_profile.business_profiles` for that
+  `tenant_id`. Onboarding: `instagram_handle` is a detail, or it is not yet.
+  Scheduled: no handle.
 - **Exercise**: `StartRun` with `etl_run_kind=instagram`, then
   `extract/instagram.Run` then `transform/instagram.Run`.
 - **Verify** (Postgres):
   - `etl.runs` for this ETL run kind when it starts.
   - Extract **persists into** `etl.instagram_fetches`; `etl.sources`.
-  - Transform **persists into** `instagram_profiles` /
-    `instagram_posts` on `external_id` as responses arrive (do not wait
-    for the last Instagram post); duplicate post id left alone;
+  - Transform **persists into** `business_profile.instagram_profiles` /
+    `business_profile.instagram_posts` on `external_id` as responses arrive (do
+    not wait for the last Instagram post); duplicate post id left alone;
     `algorithm=human` is not overwritten.
   - Media library items + `imported_media_sources`.
   - Posts that are a past named job insert Projects after photo attach
@@ -26,4 +26,5 @@
 - **Mocked**: Instagram scrape. Never Graph API, Parallel’s API, Exa,
   Perplexity, Tako, `:online`, OpenRouter web search.
 
-Named tables: `business_profiles`, `etl.runs`, `imported_media_sources`.
+Named tables: `business_profile.business_profiles`, `etl.runs`,
+`imported_media_sources`.

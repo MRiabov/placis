@@ -73,7 +73,7 @@ Response `BusinessLookupRead` (`token`, `status=client_interviewing`).
 Create then GET profile returns that onboarding session on the same
 token. Named persist may supplement: `tenants` (`status=unactivated`),
 `onboarding_sessions` (`browser_safety_session_id`), empty
-`business_profiles`.
+`business_profile.business_profiles`.
 
 #### Fail
 
@@ -950,7 +950,7 @@ activation (08/09 MinIO keys).
 #### Verify
 
 The first tenant's profile, website pages, and files are not readable
-under the second tenant. First tenant's `business_profiles` /
+under the second tenant. First tenant's `business_profile.business_profiles` /
 `website_pages` / MinIO keys unchanged.
 
 #### Mocked

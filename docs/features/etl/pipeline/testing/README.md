@@ -12,8 +12,8 @@ A step does not pass because a collaborator was called. It passes when
 
 ## Contract
 
-- **Setup** — tenant + `business_profiles` + the **Starts when** details
-  (or their absence).
+- **Setup** — tenant + `business_profile.business_profiles` + the
+  **Starts when** details (or their absence).
 - **Exercise** — the real write path (`StartRun` and/or
   `extract/<pkg>.Run` then `transform/<pkg>.Run`).
 - **Verify** — `SELECT` every table this step’s Persist names. Must-not

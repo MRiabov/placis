@@ -1,8 +1,8 @@
 # Website crawl — integration test
 
-- **Setup**: `tenants`. `business_profiles` for that `tenant_id`.
-  Onboarding: `website_url` is a detail. Scheduled: this ETL run kind is
-  not in the Monday / Wednesday / Friday set.
+- **Setup**: `tenants`. `business_profile.business_profiles` for that
+  `tenant_id`. Onboarding: `website_url` is a detail. Scheduled: this ETL run
+  kind is not in the Monday / Wednesday / Friday set.
 - **Exercise**: onboarding `StartRun` with `website_crawl`, then
   `extract/crawl.Run` then `transform/crawl.Run`.
 - **Verify** (Postgres):
@@ -17,9 +17,10 @@
     `latest_apify_fetch_id` watermarks of the dumps that contributed;
     `etl.website_crawl_page_photos`; `etl.imported_media`
     `imported_media_kind=website_crawl` + `imported_media_sources`.
-  - Transform **persists into** live profile increments (trade /
-    services / service area) after the homepage transform;
-    `business_profile_edits` + `business_profile_edit_sources`.
+  - Transform **persists into** live profile increments (trade / services /
+    service area) after the homepage transform;
+    `business_profile.business_profile_edits` +
+    `business_profile.business_profile_edit_sources`.
   - Cap is **20 HTML URLs** (sitemap/robots GETs do not count). Image
     GETs are bounded (8).
   - Project skip lives on `etl.llm_source_to_project_classifications`,
@@ -40,6 +41,7 @@
   measure API p90 during crawl (SLO is operational:
   [processes](../../../../general-architecture/processes.md)).
 
-Named tables: `business_profile_edit_sources`, `business_profile_edits`,
-`business_profiles`, `etl.imported_media`, `etl.runs`,
-`etl.website_crawl_page_photos`, `imported_media_sources`.
+Named tables: `business_profile.business_profile_edit_sources`,
+`business_profile.business_profile_edits`, `business_profile.business_profiles`,
+`etl.imported_media`, `etl.runs`, `etl.website_crawl_page_photos`,
+`imported_media_sources`.
