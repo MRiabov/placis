@@ -18,7 +18,9 @@ pipeline docs; then delete this file.
 - Persistence and nested CMS HTTP are ready for N websites
   ([ADR](ADR.md) 26–27).
 - Onboarding **Select and copy website template** inserts the first
-  `websites` row and reserves `website_prefix`.
+  `websites` row, reserves `website_prefix`, and inserts
+  `website_addresses` `type=subdomain` in the same transaction.
+  Later `POST /v1/websites` does the same.
 - Bare `/cms/website` redirects to the onboarding website
   ([ADR](ADR.md) 28).
 - Self-serve website counts: Placis Pro plan 1, Plus 3, Max 5
@@ -32,9 +34,13 @@ pipeline docs; then delete this file.
 - Keep `GET /v1/websites`, `POST /v1/websites`,
   `GET /v1/websites/{website_prefix}`, and `/cms/websites/new` as the
   later contract. Do not cut them in an unused-spec sweep.
-- When a create wait exists: wait-end is home website page website copy
-  generation `done` (same as onboarding). Other website pages continue
-  in parallel. Cap duration and post-cap UX are **TBD** below.
+- There is **no CMS create wait screen**. After `POST /v1/websites`,
+  route to the deferred website list (Ads `/cms/ads`: pick existing or
+  create; copy generation continues in the background). Do not fatten
+  `WebsiteRead` for home-page wait-end. `copy_generation_status` may
+  stay as a list-row badge. Later, an in-progress list row may show a
+  spinner or progress bar — look **TBD**, not this pass. Onboarding
+  wait teaser is unchanged.
 - CMS create copy generation is `bill_usage=billed` when that path
   ships. Onboarding 06 stays unbilled.
 - Intended later entry: an Ads/Projects-style list of the business’s
@@ -54,7 +60,6 @@ decision.
   Plus).
 - The deferred list screen itself (cards vs rows, empty state, sort).
 - Owner-facing website label (`name` column).
-- Wait look on `/cms/websites/new`. Not `/onboarding/preview`.
 - Demo-app scene for create.
 
 ### Questionnaire
@@ -68,8 +73,9 @@ decision.
 
 ### Website template
 
-- How the template is chosen (occupancy + hash like onboarding **01
-  Select website template**, a questionnaire answer, or something else).
+- How the template is chosen (occupancy + `website_id % len` like
+  onboarding **01 Select website template**, a questionnaire answer, or
+  something else).
 - `WebsiteCreate` payload. Not `website_template_id` on the wire until
   decided — the pick UI is cut.
 
@@ -84,14 +90,12 @@ decision.
 - Occupancy: run it on HTTP create or not.
 - Retry of a failed row: route vs Idempotency-Key vs River; same
   `website_id` vs a second `POST`; reuse questionnaire answers or not.
-- Wait cap duration and what happens when the cap fires (open the
-  website editor anyway, keep polling, other).
 - Poll: `GET /v1/websites/{website_prefix}` vs something else.
+  `copy_generation_status` on the list row is enough for a later
+  spinner; do not poll a wait screen.
 
 ### After create
 
-- Redirect to `/cms/website/{website_prefix}` after wait-end: assumed,
-  not specified.
 - Isolation E2E of a second website: later Go slice, after this flow
   exists.
 

@@ -17,11 +17,11 @@ Three tiers, and they are not interchangeable:
     allowed. Do **not** start the Worker container on the general backend
     job. Start it only when that test **calls** `websiteRender` or
     `websitePublication` (Worker job).
-  - **Frontend** (jsdom / Vitest, no Go): real React, real router, MSW. The
-    unit is not “two or more screens.” One route is still integration
-    (`/cms/website`). Completeness is one owner-journey **HappyPath Full**
-    per feature that has contractor UI. Not one Vitest file per OpenAPI
-    op, not one per pipeline step. **Verify** is UI plus MSW saw the
+  - **Frontend** (jsdom / Vitest, no Go): real React, real router, MSW. The unit
+    is not “two or more screens.” One route is still integration
+    (`/cms/website/{website_prefix}`). Completeness is one owner-journey
+    **HappyPath Full** per feature that has contractor UI. Not one Vitest file
+    per OpenAPI op, not one per pipeline step. **Verify** is UI plus MSW saw the
     Method+path — not Postgres.
   - **Worker** — HappyPath of the Worker, different CI job: real Worker
     container, `TestHappyPathInternalWebsiteRender` for
@@ -61,6 +61,11 @@ operation needs both:
    pipeline Full, or frontend Full.
 2. `func TestHappyPath*` that hits **exactly that one** Method+path as a
    literal (`api.Get("/v1/…")` or `"GET /v1/…"`).
+
+When one Route has more than one owner-real 200, that same
+`TestHappyPath*` lists closed **cases** (query, body, or fixture).
+Go is `t.Run` inside that func. Cases are not extra `###`. 4xx stay
+`#### Fail`. Do not repeat the Method+path per case.
 
 Required ops come from **Method + path** cells in defined feature
 `api.md` (website, billing, ads, assistant, onboarding, auth, media

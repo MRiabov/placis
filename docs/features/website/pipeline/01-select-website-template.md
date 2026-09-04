@@ -69,13 +69,15 @@ create is deferred; occupancy vs owner pick **TBD**
    200 construction companies on the island. Prefer uniqueness (more
    production-ready website templates) over shrinking the radius.
    Service-area `locality` / `radius_km` is where they work, not HQ — do not
-   use it. No coords → skip geo; hash over all production-ready ids. Do not
+   use it. No coords → skip geo; `website_id % len` over all
+   production-ready ids. Do not
    block Select website template on ETL. Do not geocode `registered_office`.
 6. Among production-ready ids, count occupying **websites** within 250 km
    who already have that `website_template_id` (every website on occupying
    tenants, including HTTP-created websites). Pick the **lowest** count (0 =
    unused in radius). Tie-break: sort those ids, then
-   `sorted[hash(tenant_id) % len]`. Hash, not a dice roll. Collision is
+   `sorted[website_id % len]` (`website_id` as an integer, not a hash
+   function, not a dice roll). Collision is
    least-used in radius, not “pick any.”
 7. Persist the pick on **this** `website_id`. Do not copy pages (that is
    Copy the website template’s pages onto the unpublished website).

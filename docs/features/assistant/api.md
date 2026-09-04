@@ -45,7 +45,7 @@ WebSocket. Extra keys 4xx. Field name is **`items`**, not
 | `AssistantThreadRead` | `id`, `status`, `last_activity_at`, `items: []AssistantThreadItemRead` | Hydrate / new thread |
 | `AssistantThreadItemRead` | `thread_item_kind`, `body`, `icon`, `offset_seconds`, `created_at` | One `items[]` row; omit `provider_event` |
 | `AssistantOwnerMessage` | `type`, `body`, `assistant_screen`, `plan`, `ask_first`, `website_working_copy: AssistantWebsiteWorkingCopy` | WS inbound; `type=owner_message` |
-| `AssistantWebsiteWorkingCopy` | `pages: []WebsitePageRead`, `menus: WebsiteMenusRead`, `website_styles: WebsiteSettingsRead` | Omit off `website_editor` |
+| `AssistantWebsiteWorkingCopy` | `website_prefix`, `pages: []WebsitePageRead`, `menus: WebsiteMenusRead`, `website_styles: WebsiteSettingsRead` | Omit off `website_editor`. `website_prefix` must match the open `/cms/website/{website_prefix}` |
 | `AssistantTokenDelta` | `type`, `delta` | WS outbound; `type=token_delta` |
 | `AssistantThinkingEvent` | `type`, `body` | WS outbound; `type=thinking` |
 | `AssistantToolActivityEvent` | `type`, `status`, `summary`, `icon` | WS outbound; `type=tool_activity` |
@@ -55,8 +55,10 @@ WebSocket. Extra keys 4xx. Field name is **`items`**, not
 
 Omit `website_working_copy` off `website_editor`. `plan` / `ask_first`
 only when `assistant_screen` is `website_editor`. **Follow** is not a
-field; `follow: false` → **400**. No website pointer list this pass
-(`open_website` deferred).
+field; `follow: false` → **400**. `website_prefix` on the working copy
+must match the open website editor prefix; mismatch is **409**
+`website_prefix_mismatch` (Apply / Voice tools / text WS). No website
+pointer list this pass (`open_website` deferred).
 
 ### Voice
 
@@ -84,7 +86,7 @@ Do **not** add `input_tokens` / `output_tokens` on
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/assistant/thread/ws` | CMS Assistant text composer after hydrate | `AssistantOwnerMessage` | `AssistantTokenDelta`, `AssistantThinkingEvent`, `AssistantToolActivityEvent`, `AssistantWsError` | `ai.threads`, `thread_items` | `thread_items`, `runs`, `ai_generations`, `ai_use_ledger_entries` | Text chat pipe; `StreamAssistantThread`; `bill_usage=billed` (`usage_category=text`) | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `allowed_set_rejected`; `400` `follow: false` | Hydrate; `/thread/new`; voice HTTP; `record-apply` / `record-reject`; dump `ai_generations` |
+| `GET /v1/assistant/thread/ws` | CMS Assistant text composer after hydrate | `AssistantOwnerMessage` | `AssistantTokenDelta`, `AssistantThinkingEvent`, `AssistantToolActivityEvent`, `AssistantWsError` | `ai.threads`, `thread_items` | `thread_items`, `runs`, `ai_generations`, `ai_use_ledger_entries` | Text chat pipe; `StreamAssistantThread`; `bill_usage=billed` (`usage_category=text`) | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `allowed_set_rejected`; `409` `website_prefix_mismatch`; `400` `follow: false` | Hydrate; `/thread/new`; voice HTTP; `record-apply` / `record-reject`; dump `ai_generations` |
 | `GET /v1/assistant/thread` | Bottom-right **Assistant**; visiting `/cms` without calling does not hydrate | | `AssistantThreadRead` | `ai.threads`, `thread_items` | `ai.threads` | No `current` → insert empty `current`; empty is `items: []` | `403` `tenant_unactivated` | Field `thread_items`; return `runs`, `provider_event`, recording URLs |
 | `POST /v1/assistant/thread/new` | **New thread** / clear context | | `AssistantThreadRead` | | `ai.threads` | Previous `status=completed`; `items: []`; does not drop Voice | `403` `tenant_unactivated`; `409` `thread_current_exists`; `409` `in_flight_run` | `/thread/clear`; `status=cleared` |
 | `POST /v1/assistant/record-apply` | Ask first **Apply** after website PATCH | `AssistantRecordApplyCreate` | | `runs` | `runs.ask_first_status` | Empty 200; metadata only | `403` `tenant_unactivated`; `409` `ask_first_not_pending` | Website slot payload; upsert unpublished website rows |
@@ -106,8 +108,8 @@ failed activity event on this socket.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /v1/assistant/voice/realtime-connection` | CMS Assistant after microphone granted | `AssistantVoiceRealtimeConnectionCreate` | `AssistantVoiceRealtimeConnectionRead` | | `runs`, `ai_generations` | Always Ask first on the run; `CreateAssistantVoiceRealtimeConnection`; Voice adapter `bill_usage=billed`; **calls** xAI region from business country | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run` | Long-lived voice API key; browser-chosen region or host; Go WebSocket |
-| `POST /v1/assistant/voice/tool-calls` | Browser after voice-service `function_call` | `AssistantVoiceToolCallsCreate` | `AssistantVoiceToolEventRead` | `runs` | `thread_items`, `ai_generations`, `ai_use_ledger_entries` | `CreateAssistantVoiceToolCalls`; nested image / ads `ai` calls `bill_usage=billed`; `in_flight_run` is a second start; after 20 tool rounds do not execute more tools | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `allowed_set_rejected` | Freeform tool registry; wait on the text WS; upsert unpublished website rows |
+| `POST /v1/assistant/voice/realtime-connection` | CMS Assistant after microphone granted | `AssistantVoiceRealtimeConnectionCreate` | `AssistantVoiceRealtimeConnectionRead` | | `runs`, `ai_generations` | Always Ask first on the run; `CreateAssistantVoiceRealtimeConnection`; Voice adapter `bill_usage=billed`; **calls** xAI region from business country | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `website_prefix_mismatch` | Long-lived voice API key; browser-chosen region or host; Go WebSocket |
+| `POST /v1/assistant/voice/tool-calls` | Browser after voice-service `function_call` | `AssistantVoiceToolCallsCreate` | `AssistantVoiceToolEventRead` | `runs` | `thread_items`, `ai_generations`, `ai_use_ledger_entries` | `CreateAssistantVoiceToolCalls`; nested image / ads `ai` calls `bill_usage=billed`; `in_flight_run` is a second start; after 20 tool rounds do not execute more tools | `403` `tenant_unactivated`; `402` `usage_credit_exhausted`; `409` `in_flight_run`; `409` `allowed_set_rejected`; `409` `website_prefix_mismatch` | Freeform tool registry; wait on the text WS; upsert unpublished website rows |
 | `POST /v1/assistant/voice/transcripts` | Committed utterances; usage-only when Voice turns off | `AssistantVoiceTranscriptsCreate` | | | `thread_items`, `ai_use_ledger_entries` | `CreateAssistantVoiceTranscripts`; Voice adapter records **their usage** (`usage_category=voice`); settlement 200; `in_flight_run` is a second start | `403` `tenant_unactivated` | PCM; `.updated` / `.delta`; `POST /v1/stt`; recording file; invent `offset_seconds`; `thread_item_kind=system` |
 | `POST /v1/assistant/voice/recordings` | CMS Voice off (including idle) | `AssistantVoiceRecordingCreate` | `AssistantVoiceRecordingRead` | `runs` | `files` | Signed URL; browser PUT; then complete | `403` `tenant_unactivated`; `404` bad `run_id`; `409` already has a recording; `413` `byte_size` | Recording file on this POST; `/v1/media-assets` |
 | `POST /v1/assistant/voice/recordings/{id}/complete` | After PUT succeeds | | | `files` | `runs.recording_file_id` | `CompleteAssistantVoiceRecording` | `403` `tenant_unactivated`; `404` not this tenant’s voice recording | Recording file on this POST |

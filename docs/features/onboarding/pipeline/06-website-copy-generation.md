@@ -16,12 +16,14 @@ onboarding-website-editor thread
 ([website editor](../website-editor.md)). After 09 that lock must not sit
 on CMS `assistant.runs`; leftover 06 is River-only on `website_id`.
 
-**Defensive check.** Before enqueue, assert the tenant has exactly one
-`websites` row for this run (the onboarding website). If more than one exists
-(should not happen this pass), fail the job rather than enqueue copy
-generation for an ambiguous website. The `website_id` unique lock already
-guards against two concurrent 06 runs for the same website; this check guards
-against keying the lock on the wrong website.
+**Permanent onboarding invariant.** Onboarding never creates a second
+website. Before enqueue, assert the tenant has exactly one `websites`
+row (the onboarding website). If more than one exists, fail the job
+rather than enqueue copy generation for an ambiguous website. The
+`website_id` unique lock already guards against two concurrent 06 runs
+for the same website; this check guards against keying the lock on the
+wrong website. Owner create of a later website is a different HTTP
+path and does not run this job.
 
 ## Pre
 
@@ -65,4 +67,5 @@ optional.
 
 - Lock = `website_id` before and after 09. While unactivated, also
   `assistant.runs` unique running. After 09, not on CMS `assistant.runs`.
-  Before enqueue, assert exactly one `websites` row for the tenant.
+  Before enqueue, assert exactly one `websites` row (permanent
+  onboarding invariant; this job never runs for a later website).

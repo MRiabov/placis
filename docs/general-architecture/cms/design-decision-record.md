@@ -73,12 +73,14 @@ inventing it.
    (2026-08-27) Website editor canvas widths, workspace bottom bar, assistant
    default, Mobile default: [website design decision 16](../../features/website/design-decision-record.md). (2026-08-27): Overlay
    rows drop New chat. Product overlay is Sites, Profile children, Ads.
-   (2026-08-28): Overlay keeps the nested Profile object. Profile is a
-   disclosure on narrow too (Sites / Profile / Ads); Business details, Projects,
-   Certifications and reviews, and Media library stay children, not overlay
-   peers. Tapping Profile on the overlay expands or collapses the group.
-   (2026-08-28) On narrow, Ads heading is **Ads**, inline with Open
-   destinations. The list does not repeat **Your ads**.
+   (2026-09-04): Viewport controls stay on `/cms/website/{website_prefix}` (bare
+   `/cms/website` is the Sites redirect). (2026-08-28): Overlay keeps the nested
+   Profile object. Profile is a disclosure on narrow too (Sites / Profile /
+   Ads); Business details, Projects, Certifications and reviews, and Media
+   library stay children, not overlay peers. Tapping Profile on the overlay
+   expands or collapses the group. (2026-08-28) On narrow, Ads heading is
+   **Ads**, inline with Open destinations. The list does not repeat
+   **Your ads**.
 
 5. **The CMS (sidebar + main area) clones the placis-web dashboard theme** —
    Satoshi, body tracking `-0.01em`, light weights (`400` / `450` / `500` /

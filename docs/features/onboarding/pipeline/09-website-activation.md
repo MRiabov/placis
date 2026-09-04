@@ -84,7 +84,7 @@ This step **is** River job kind `website_activation`. Set
    live v2. HTML write is website
    [Website publication](../../website/pipeline/04-website-publication.md)
    (strip flag off). Host stays up. Website address is a later CMS modal.
-6. In-flight 06 **continues** on the same `tenant_id` as River-only. Do not
+6. In-flight 06 **continues** on the same `website_id` as River-only. Do not
    cancel it. Do not append Assistant thread items. CMS assistant / PATCH are
    not 409-blocked for leftover 06. Host HTML stays the 08/09 R2 `latest/` (06
    does not live-update R2 after 08). Same website-slot overlap: last-write /
@@ -121,7 +121,8 @@ this step.
 Clerk org attach, then `status=active` after this step.
 `/onboarding/preview-and-edit/` redirects to `/cms/website`. The preview website
 address stays up without the strip (live website). If they never shared, 09
-created that host. Unpublished website from 05 (+ 06 + 07 PATCHes)
+writes live HTML onto the `type=subdomain` row 05 already inserted
+(skip-if-set). Unpublished website from 05 (+ 06 + 07 PATCHes)
 is what they edit. First **owner** website publication is the next website
 version and the first rollback-eligible website version.
 
@@ -163,7 +164,7 @@ See [billing](../../billing/README.md).
 ## Invariants
 
 - Same `tenant_id` as 01.
-- Same `website_prefix` as 08 (or reserved here if they never shared).
+- Same `website_prefix` as 05 (subdomain skip-if-set).
 - `/me` may return unactivated `TenantRead` after checkout attach; CMS
   keys off `status=active`.
 - Clerk organization 1-1 with the tenant (not active-only); named as the

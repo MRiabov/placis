@@ -102,7 +102,9 @@ instead of silently replacing it.
    Same day, later: drop “06 in flight → CMS 409”. CMS lock is `assistant.runs`
    (voice + text) only. 06 is River `tenant_id`, not this table. CMS is not
    409-blocked for leftover 06. Same website-slot overlap is last-write /
-   `edit_history_conflict`. (2026-08-28) Same day, later (2026-08-29): failed
+   `edit_history_conflict`. (2026-08-28)
+   (2026-09-04): leftover 06 is River `website_id`, not `tenant_id`.
+   Same day, later (2026-08-29): failed
    Voice tool writes `function_call_output`, not `tool_result`. `in_flight_run`
    on `…/voice/tool-calls` is a second start, not the current voice run.
 
@@ -359,7 +361,9 @@ instead of silently replacing it.
     Share is optional on-demand 08 (R2 + strip). 09 does **not** require a
     prior share: if they never shared, 09 reserves the prefix if needed and
     writes the first live R2 without strip. Apex `preview.placis.com` is not a
-    tenant site (404). (2026-08-30)
+    tenant site (404). (2026-08-30) Later (2026-09-03): 05 reserved the
+    prefix; 09 skip-if-set and writes the first live R2 without strip
+    when they never shared.
 
 30. **`open_website` twins `open_ad`; website styles are the open website** —
     `get_website_styles` / `update_website_styles` read Assistant screen

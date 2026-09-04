@@ -157,7 +157,7 @@ func publicArmed(rel string, f *docnames.FileAPI, c Code) bool {
 	}
 	switch rel {
 	case "website/api.md":
-		return hasURLPrefix(c.PublicOps, "/v1/website")
+		return hasURLPrefix(c.PublicOps, "/v1/websites")
 	case "billing/api.md":
 		return f.HasDTOTable() && hasURLPrefix(c.PublicOps, "/v1/billing")
 	case "general-architecture/api.md":

@@ -65,3 +65,8 @@ decision + date) instead of silently replacing the old entry.
    `ReviewListRead.top_reviews_provisional` is that batch’s `provisional`. Owner
    PATCH inserts `algorithm=human` / `provisional=false`. Skip overwrite when
    latest ranking is `algorithm=human`.
+
+   (2026-09-04): v1 stays one tenant pool on this screen. Ads use
+   **top reviews**. Whether this picker later becomes per website and per ads
+   (different certification selections and review sets) is **TBD**.
+   [website ADR](../../website/ADR.md) 16 and 26.

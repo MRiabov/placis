@@ -47,7 +47,8 @@ find (company registry and/or Google Maps) + online research consent
   → Review (skippable; extra seconds for research)
   → client interview (text, 04a; voice writer 04b is **out**)
   → profile history accumulates as sources and answers arrive
-  → client interview complete → select then copy the website template (occupancy + hash pick; write is deterministic)
+  → client interview complete → select then copy the website template
+    (occupancy + `website_id % len` pick; write is deterministic)
   → automatic website copy generation starts (async; `/onboarding/preview`
     waits until the home website page has copy, or the wait cap; other
     website pages finish in parallel)
@@ -72,7 +73,8 @@ Client-interview-complete **inserts** River job kind
 **Copying the website template’s pages is deterministic**: accepted profile +
 chosen website template → the same unpublished website, website placeholders
 kept. **Selecting** the website template is occupancy within 250 km among
-production-ready website templates, then hash tie-break — not an LLM, not a
+production-ready website templates, then `website_id % len` tie-break —
+not an LLM, not a
 trade table. Website styles ship with that website template’s associated
 website style catalog preset. 02 copies the website template (home, about, named
 service pages, contact, privacy policy) and derives the top menu and footer.
@@ -96,9 +98,9 @@ publication).
 Website activation (09): the webhook **inserts** River job kind
 `website_activation`, which **upgrades** the existing unactivated tenant (Clerk
 organization, owner membership, `status=active`). It does not create a tenant
-and does not invent `website_prefix` (08 reserved it if they shared; otherwise
-09 reserves). 09 writes website publication without the strip (v2 if they
-shared, else the first live write). The host stays up. Owner CMS website
+and does not invent `website_prefix` (05 reserved it). 09 writes website
+publication without the strip (v2 if they shared, else the first live
+write). The host stays up. Owner CMS website
 publication is the next website version.
 
 ## Progressive progress (SSE)

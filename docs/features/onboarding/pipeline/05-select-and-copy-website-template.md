@@ -39,12 +39,14 @@ Do not say apply the website template in prose.
 ## Do
 
 This step **is** River job kind `select_and_copy_website_template`.
-Inserts `websites` (reserve `website_prefix` in the same transaction),
+Inserts `websites` (reserve `website_prefix` and insert
+`website_addresses` `type=subdomain` in the same transaction),
 sets `onboarding_sessions.website_id`, then **calls**
 `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages`.
 
-1. Insert `websites` + reserve prefix (choose-rule unchanged). Persist
-   `onboarding_sessions.website_id`.
+1. Insert `websites` + reserve prefix + `website_addresses`
+   `type=subdomain` for `{website_prefix}.preview.placis.com`
+   (choose-rule unchanged). Persist `onboarding_sessions.website_id`.
 2. Set `accepted_edit_id` to current `last_edit_id`. Select website
    template and copy-pages read the live business profile as of that edit.
    Later business-research writes must not mutate this live business profile
@@ -65,8 +67,9 @@ sets `onboarding_sessions.website_id`, then **calls**
 
 Onboarding session stays `selecting_and_copying_website_template` until
 wait-end, then `preview_and_edit`. `business_profiles.accepted_edit_id` at
-complete. `websites` + `website_prefix`; `website_settings` (Select website
-template) and unpublished website + `website_copy_generation` (copy-pages).
+complete. `websites` + `website_prefix` + `website_addresses`
+`type=subdomain`; `website_settings` (Select website template)
+and unpublished website + `website_copy_generation` (copy-pages).
 No `ai_generations` for the pick (Select website template is occupancy +
 hash, not an LLM).
 
