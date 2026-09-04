@@ -93,7 +93,8 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    `website_certification_*`. HTTP stays
    `GET`/`PUT /v1/business-profile/certifications`. The website paints selected
    rows at website publication; ads read the same live business profile.
-   (2026-08-26)
+   (2026-08-26) (2026-09-04): Schema renamed to `business_profile`
+   ([ETL ADR 9](../../etl/ADR.md)).
 
 8. **Trade is open text** — `business_profiles.trade` is not a closed enum.
    Certification `available[]` by trade/country must not depend on a closed
