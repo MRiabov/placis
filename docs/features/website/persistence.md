@@ -5,7 +5,7 @@ footer, website publications (each row is a website version), website
 settings, website edit history, and live hostnames (`website_addresses`).
 The parent row is `websites` ([ADR](ADR.md) 26). Conventions:
 [persistence conventions](../../general-architecture/persistence.md)
-(Postgres schema `website`). Named identifiers:
+(Postgres schema `websites`). Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 
 Media assets are owned by

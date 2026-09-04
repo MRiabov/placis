@@ -45,6 +45,7 @@ from a decided rule but never explicitly accepted.
 | MW-19 | Shared profile | confirm | Logo is tenant-shared |
 | MW-20 | Shared profile | confirm | Near-duplicate content across a business's websites |
 | MW-21 | Website HTTP | resolved | Editor hydrate `tenant` block → `website` (keyed to `website_id`) |
+| MW-22 | General (schema) | resolved (docs) | Postgres schema `website` → `websites`; goose migration is later Go slice |
 
 ---
 
@@ -384,6 +385,34 @@ now "per website":
   Mechanical defect surfaced while checking MW-8.
 
 **Confidence: high.**
+
+### MW-22 — Goose migration: rename Postgres schema `website` → `websites`
+
+**Resolved in docs (2026-09-04); migration is a later Go slice.**
+
+The API / parent table are now `websites`, so the Postgres schema namespace is
+`websites`, not `website`. Docs updated to match (this checkout has no
+`migrations/`). The **goose migration itself is not written here** — it is a
+later implementation slice (plan "Later implementation" #1: goose `websites` +
+`website_id` FKs / uniques; sqlc).
+
+- docs/features/website/persistence.md:8 — "(Postgres schema `website`)" →
+  "(Postgres schema `websites`)".
+- docs/general-architecture/persistence.md:61 — schemas table row `website` →
+  `websites`.
+- docs/general-architecture/persistence.md:72 — "`tenants` and `media_assets`
+  stay out of `website` / `ads`" → "out of `websites` / `ads`".
+- docs/features/assistant/persistence.md:24 — "(website schema)" →
+  "(websites schema)".
+
+**Migration scope (Go slice, not this PR):** `ALTER SCHEMA website RENAME TO
+websites`; create `websites` parent row; add `website_id` FKs + move uniques
+off `tenant_id`; backfill one `websites` row per existing tenant that has
+`website_settings` / `website_prefix`; drop `tenants.website_prefix`; sqlc.
+
+**Confidence: high** that the schema namespace is `websites`; the migration
+must be part of the later Go slice (plan lines 379–389, "Later
+implementation").
 
 ---
 
