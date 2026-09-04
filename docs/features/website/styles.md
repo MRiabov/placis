@@ -4,7 +4,7 @@ A **website style catalog preset** is the website's visual skin — one choice
 that sets colors, typography, radius, density, spacing, and motion across every
 website section. The `website_manifest` carries a `website_styles` field (preset
 id + bounded overrides), and the contractor website applies it to all website
-components. Unpublished storage is `website_settings` (one row per tenant).
+components. Unpublished storage is `website_settings` (one row per website).
 
 ## What a preset controls
 
