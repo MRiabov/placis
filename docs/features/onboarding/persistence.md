@@ -11,7 +11,16 @@ Referenced, not owned here:
 [details](../business-profile/details/persistence.md) (live business
 profile and profile history), [ETL](../etl/persistence.md),
 [LLM layer](../../general-architecture/llm-layer.md) (`ai.threads`),
+[assistant](../assistant/persistence.md) (`thread_items`, `runs`),
 [website](../website/persistence.md).
+
+Guide conversation overlay is `assistant.thread_items` /
+`assistant.runs`. Isolation is `ai.threads`
+(`thread_kind=onboarding_assistant`, unique per
+`onboarding_session_id`). Never migrated after website activation. Do
+**not** keep `assistant_conversations` or onboarding copies of items /
+runs. Unpaid website-editor Voice uses `thread_kind=cms_assistant` on
+those same overlay tables.
 
 ## Tables
 
@@ -20,10 +29,11 @@ profile and profile history), [ETL](../etl/persistence.md),
 - **Columns:** `id`, `tenant_id` fk (required; unactivated tenant from
   business lookup), `started_from`, `channel` nullable, `status`,
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at`
-  nullable timestamptz, `place_id` nullable (Maps attach),
-  `company_number` nullable (registry attach; trade-registry key with
-  `tenants.country`), `website_url` nullable (known existing-site URL;
-  crawl key), timestamps
+  nullable timestamptz, `browser_safety_session_id` uuid (Find lookup
+  cap; not unique; not the onboarding session token), `place_id`
+  nullable (Maps attach), `company_number` nullable (registry attach;
+  trade-registry key with `tenants.country`), `website_url` nullable
+  (known existing-site URL; crawl key), timestamps
 - **Enums:** `started_from` → `google_maps_listing` /
   `company_registry`; `channel` → `text` / `voice`; `status` →
   `created` / `client_interviewing` /
@@ -40,12 +50,14 @@ profile and profile history), [ETL](../etl/persistence.md),
   `website_activation` (`status=activated`; `clerk_user_id` if still
   unset); `BindClerkUserToOnboardingSession`
   (`clerk_user_id` on the first Clerk request)
-- **Notes:** `research_wait_until` is derived from `etl.runs`
-  (`trigger=onboarding`, distinct `enqueue_id` in the last 30
-  minutes), not a column. Nullable unique `clerk_user_id`: one Google
-  account cannot bind to a second onboarding session / tenant
-  (`BindClerkUserToOnboardingSession`). Postgres unique allows many
-  nulls.
+- **Notes:** Lookup cap counts rows with this
+  `browser_safety_session_id` and `created_at > now() - 30 minutes`
+  (fool protection; not IP). Per-tenant enqueue cap is derived from
+  `etl.runs` (`trigger=onboarding`, distinct `enqueue_id` in the last
+  30 minutes), not a column, not a DTO field. Nullable unique
+  `clerk_user_id`: one Google account cannot bind to a second
+  onboarding session / tenant (`BindClerkUserToOnboardingSession`).
+  Postgres unique allows many nulls.
 
 ### No extract tables
 
@@ -59,8 +71,7 @@ profile columns. Live business profile via
 ### `client_interview_submissions`
 
 - **Columns:** `id`, `onboarding_session_id` fk, `submission_kind`,
-  `photos_fill` nullable, `reviews_unavailable` bool,
-  `additional_notes`, `created_at`
+  `photos_fill` nullable, `additional_notes`, `created_at`
 - **Enums:** `submission_kind` → `autosave` / `final`; `photos_fill`
   → `source_from_internet` / `ai` (only when found + uploaded photos
   are not enough)
@@ -72,41 +83,6 @@ profile columns. Live business profile via
 - **Notes:** Profile answers are `business_profile_edits`, not a
   payload dump on this row. Interview-only fields live here. Found
   photos live in the media library.
-
-### `assistant_conversation_items`
-
-- **Columns:** `id`, `onboarding_session_id` fk, `thread_id` fk →
-  `ai.threads`, `thread_item_kind`, `body`, `icon`, `offset_seconds`
-  int nullable (`>= 0`; Voice utterances; seconds from
-  `audio_start_ms` on paired `speech_started` when present; null if
-  none), `provider_event` jsonb nullable (forwarded xAI JSON; Voice
-  only; omit from GET), `created_at`
-- **Enums:** `thread_item_kind` → `owner` / `assistant` /
-  `tool_summary` / `thinking`
-- **Written by:** `POST /v1/onboarding/assistant/voice/transcripts`
-- **Notes:** Same shapes as CMS thread items.
-
-### Guide isolation
-
-Isolated from CMS `cms_assistant` threads. Never migrated after
-website activation. Thread identity is
-[`ai.threads`](../../general-architecture/llm-layer.md)
-(`thread_kind=onboarding_assistant`, unique per
-`onboarding_session_id`). Do **not** keep `assistant_conversations` as
-an identity table. Unpaid website-editor Voice uses
-`thread_kind=cms_assistant` on CMS overlay tables, not these rows.
-
-### `assistant_runs`
-
-- **Columns:** `id`, `onboarding_session_id` fk, `thread_id` fk →
-  `ai.threads`, `status`, `channel`, `ai_generation_id` uuid nullable,
-  timestamps
-- **Enums:** `status` → `running` / `succeeded` / `failed`; `channel`
-  → `text` / `voice`
-- **Uniques:** `(onboarding_session_id) WHERE status = 'running'`
-- **Written by:**
-  `POST /v1/onboarding/assistant/voice/realtime-connection`;
-  `POST /v1/onboarding/assistant/voice/transcripts`
 
 ### `website_activations`
 
@@ -134,8 +110,8 @@ an identity table. Unpaid website-editor Voice uses
 
 ## Indexes
 
-Lookup: `(tenant_id, status, created_at)` on `onboarding_sessions`.
-Unique: `onboarding_sessions.token`; `stripe_events.event_id`;
-`(onboarding_session_id) WHERE status = 'running'` on
-`assistant_runs`. Onboarding thread uniqueness lives on `ai.threads`.
-Lookup: `(thread_id, created_at)` on `assistant_conversation_items`.
+Lookup: `(tenant_id, status, created_at)` on `onboarding_sessions`;
+`(browser_safety_session_id, created_at)` on `onboarding_sessions`.
+Unique: `onboarding_sessions.token`; `stripe_events.event_id`.
+Onboarding thread uniqueness and guide running lock live on
+`ai.threads` / `assistant.runs`.

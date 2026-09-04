@@ -16,8 +16,7 @@ started (`channel` unset, no autosave) also lands here.
 
 - Onboarding session `status=client_interviewing`.
 - Stored token restores via `GET /v1/onboarding/profile`.
-- 02 may be in flight (`in_progress` rows), or `research_wait_until` may be in
-  the future.
+- 02 may be in flight (`in_progress` rows).
 
 ## Must not
 
@@ -26,8 +25,7 @@ started (`channel` unset, no autosave) also lands here.
 - `POST /v1/onboarding/interview/complete` or select and copy the website
   template.
 - Wait for 02 to finish before Continue is enabled.
-- Turn the research wait into a modal, a full-screen stop, or a disabled
-  Continue.
+- A research-wait modal, full-screen stop, or disabled Continue.
 - Define a second copy of the complete-gate keys (owned by [build-profile](build-profile.md)).
 - Treat skip as Fail.
 
@@ -38,12 +36,7 @@ started (`channel` unset, no autosave) also lands here.
 2. Legal identity from the registry is shown here; the text client interview
    (04a) does not repeat those fields.
 3. Continue is always enabled. Skip = the same Continue with zero dwell.
-4. If `research_wait_until` is in the future, show a **quiet inline wait** on
-   this screen (and on 04 if they Continue): we’ll look the business up again
-   then; not a modal, not a full-screen block, not a disabled Continue. Copy
-   stays product language (“We’ll look the business up again in a few minutes”)
-   — see [frontend.md](../frontend.md).
-5. Out → 04a (`/onboarding/interview`). 02 keeps running when an ETL run
+4. Out → 04a (`/onboarding/interview`). 02 keeps running when an ETL run
    is in flight.
 
 ## Persist

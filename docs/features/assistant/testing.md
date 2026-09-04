@@ -134,8 +134,7 @@ Voice/LLM faked. Go + Postgres + `frontend-2` not mocked.
    granted. After pay, UI is CMS, not the guide.
 
 DB (this story; what Persist names):
-`onboarding.assistant_conversation_items`,
-`onboarding.assistant_runs`, `ai.threads`
+`assistant.thread_items`, `assistant.runs`, `ai.threads`
 (`thread_kind=onboarding_assistant`, unique per
 `onboarding_session_id`).
 

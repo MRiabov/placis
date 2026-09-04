@@ -49,7 +49,7 @@ is Continue (submit): optional last answers, complete gate, **inserts**
 2. Click-off writes `business_profile_edits` for the fields this save set, plus
    `client_interview_submissions` `submission_kind=autosave` (interview-only:
    photo uploads, optional source-from-internet / AI photo when there are not
-   enough photos, reviews unavailable, extra notes).
+   enough photos, extra notes).
 3. Fields: **Details == `/cms/details`** (identity, contact and presence,
    services, service areas, opening hours — same controls and writes). Do not
    repeat legal identity from 03. Plus interview-only: contact name,

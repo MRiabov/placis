@@ -17,6 +17,7 @@ token.
   POST” path (see Resume).
 - Country selected. At least one of: company registry record, Google Maps place.
 - Online research consent checkbox on.
+- `browser_safety_session_id` on the body (UUID the browser creates once).
 
 ## Must not
 
@@ -31,16 +32,20 @@ token.
 
 ## Do
 
-`LookupBusiness` inserts the unactivated tenant and onboarding session,
-then returns immediately.
+`LookupBusiness` counts `onboarding_sessions` with this
+`browser_safety_session_id` and `created_at > now() - 30 minutes`
+first: five already → Fail (`429` `browser_safety_cap`). Else it
+inserts the unactivated tenant and onboarding session, then returns
+immediately.
 
 1. Insert [unactivated tenant](../../other/auth/persistence.md): `tenants.status=unactivated`, `clerk_org_id`
    null, `website_prefix` null, `name` = known legal/display name or empty,
    `country` = Find country (`ie` / `gb` / `us`).
 2. Insert `onboarding_sessions`: `status=created` then immediately
    `client_interviewing`; unique `token`; `tenant_id` that tenant;
-   `clerk_user_id` null; `channel` unset; `started_from` = `company_registry` /
-   `google_maps_listing` / both via sources; typed attach keys from the
+   `clerk_user_id` null; `channel` unset; `started_from` =
+   `company_registry` / `google_maps_listing` / both via sources;
+   `browser_safety_session_id` from the body; typed attach keys from the
    selected records (`place_id`, `company_number`, `website_url` — all
    nullable).
 3. Record `online_research_consent_at`.
@@ -54,21 +59,21 @@ then returns immediately.
    autocomplete Read may fill `display_name` (no listing upsert, no fetch row).
    Both: registry wins legal identity. Contact fields that Details will confirm
    (marketing phone, hours, website) wait for 02.
-6. Enqueue 02 **if** this `tenant_id` has fewer than 5 onboarding ETL
-   `enqueue_id`s in the last 30 minutes ([02](02-business-research.md)). Otherwise persist sources, do
-   not enqueue 02, and expose `research_wait_until`. Navigate UI to Review
-   (`/onboarding/review`) either way. Attaching or changing sources on this
-   onboarding session later is a new `StartRun` (same cap).
+6. Enqueue 02 (per-tenant StartRun cap is a silent skip; a first lookup
+   never hits it). Attaching or changing sources on this onboarding
+   session later is a new `StartRun` (same silent cap).
 
 Lookups are debounced (no request per keystroke). Country is a search parameter
 **and** is persisted on `tenants.country` (Voice region fallback after website
-activation). Not an onboarding session column.
+activation). Not an onboarding session column. Navigate UI to Review
+(`/onboarding/review`) after a successful lookup.
 
 ## Persist
 
 `tenants` (`status=unactivated`, `country`); `onboarding_sessions` (`token`,
-`tenant_id`, `online_research_consent_at`, `status=client_interviewing`,
-`place_id` / `company_number` / `website_url`); empty `business_profiles`
+`tenant_id`, `online_research_consent_at`, `browser_safety_session_id`,
+`status=client_interviewing`, `place_id` / `company_number` /
+`website_url`); empty `business_profiles`
 (same `tenant_id`) then registry / Maps-autocomplete increments via
 [build-profile](build-profile.md).
 
@@ -76,26 +81,31 @@ Schemas: [persistence.md](../persistence.md), [ETL](../../etl/persistence.md), [
 
 ## Fail
 
-- Missing consent or missing both sources → 4xx; no tenant, no onboarding
-  session, no 02.
+- Missing consent, missing both sources, or missing
+  `browser_safety_session_id` → 4xx; no tenant, no onboarding session,
+  no 02.
 - Registry/Maps lookup error → show miss; do not invent a business.
 - Restore path: stored token + `GET /v1/onboarding/profile` failing → loading
   placeholder; keep the token; retry; do not `POST`.
-- 02 enqueue cap ([02](02-business-research.md)): business lookup still succeeds; 02 is not enqueued;
-  `research_wait_until` is set. Not this Fail.
+- Sixth business lookup in 30 minutes with the same
+  `browser_safety_session_id` → **429** `browser_safety_cap`; no tenant,
+  no onboarding session, no 02. Optional `Retry-After`. Stay on Find.
+  Not IP. Clearing site data bypasses it.
 
 ## Out
 
-02 running, or `research_wait_until` set. UI `/onboarding/review`. SSE on the
+02 running when enqueued. UI `/onboarding/review`. SSE on the
 onboarding session stream.
 
 ## Invariants
 
 - Business lookup runs once per browser token.
+- At most **5** business lookups per `browser_safety_session_id` per
+  rolling 30 minutes.
 - Find mount never `POST`s.
 - 02 does not start without `online_research_consent_at`.
 - 02 does not start a 6th onboarding `StartRun` for this tenant inside 30
-  minutes.
+  minutes (silent skip on source change).
 - Find does not upsert `etl.google_maps_listings` or insert fetch rows.
 - No `website_pages` / `website_prefix` yet.
 - `/me` still has no tenant (`status=unactivated`).
