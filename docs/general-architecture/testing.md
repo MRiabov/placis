@@ -62,6 +62,11 @@ operation needs both:
 2. `func TestHappyPath*` that hits **exactly that one** Method+path as a
    literal (`api.Get("/v1/…")` or `"GET /v1/…"`).
 
+When one Route has more than one owner-real 200, that same
+`TestHappyPath*` lists closed **cases** (query, body, or fixture).
+Go is `t.Run` inside that func. Cases are not extra `###`. 4xx stay
+`#### Fail`. Do not repeat the Method+path per case.
+
 Required ops come from **Method + path** cells in defined feature
 `api.md` (website, billing, ads, assistant, onboarding, auth, media
 library, Details, Projects) plus HTTP conventions `GET /v1/health` and

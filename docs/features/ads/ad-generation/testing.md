@@ -95,12 +95,17 @@ One draft ad and one `status=archived` ad. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/ads`. Request `AdListGet`. Response `AdRead[]`.
+`GET /v1/ads`. Request `AdListGet`. Response `AdRead[]`. Cases:
+
+- `archived` omitted / false — list.
+- `archived=true` — Archive.
 
 #### Verify
 
-Exercise body: `AdRead[]` omits `status=archived`. The draft is
-present. Must not: campaign metrics. Named **reads** may supplement.
+Must not: campaign metrics. Named **reads** may supplement.
+
+- Omitted / false: draft present; `status=archived` omitted.
+- `archived=true`: archived present; draft omitted.
 
 ### TestHappyPathV1AdsCreatesAd — Route
 

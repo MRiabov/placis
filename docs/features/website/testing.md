@@ -178,21 +178,26 @@ Backend. Go `TestHappyPathV1WebsiteEditorPagesReturnsPages`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. One owner
+`website_publications` row on this `{website_prefix}`. No
+`frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/websites/{website_prefix}/editor/pages`. Request `WebsiteEditorGet`.
-Response `WebsitePageSummaryRead`.
+`GET /v1/websites/{website_prefix}/editor/pages`. Request
+`WebsiteEditorGet`. Response `WebsitePageSummaryRead`. Cases:
+
+- No query — unpublished page list.
+- `publication_id` — that owner publication’s page list.
 
 #### Verify
 
-Exercise body: `WebsitePageSummaryRead` lists unpublished pages. Per-row
-page-scoped `blockers[]`. Must
-not: preview host GET. Optional `publication_id` is checkout of that
-owner publication’s page list. **reads** `website_pages`,
-`website_sections`, `website_slots`, `media_assets` may
-supplement.
+- No query: `WebsitePageSummaryRead` lists unpublished pages.
+  Per-row page-scoped `blockers[]`. Must not: preview host GET.
+- `publication_id`: body is that owner publication’s pages, not
+  the unpublished tree.
+Named **reads** `website_pages`, `website_sections`,
+`website_slots`, `media_assets` may supplement.
 
 #### Fail
 
@@ -227,19 +232,27 @@ OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. One owner
+`website_publications` row on this `{website_prefix}`.
+`edit_history` on that website page. No `frontend-2`. No Worker.
 
 #### Exercise
 
 `GET /v1/websites/{website_prefix}/editor/pages/{page_id}`. Request
-`WebsiteEditorGet`. Response `WebsitePageRead`.
+`WebsiteEditorGet`. Response `WebsitePageRead`. Cases:
+
+- No query — unpublished canvas.
+- `publication_id` — checkout of that owner publication.
+- `include_edit_history=true` — hydrate with undo stacks.
 
 #### Verify
 
-Exercise body: `WebsitePageRead` hydrates the canvas. Must not:
-`/pages/{id}/seo`; `/settings` GET; `/menus` GET; return
-`website_manifest`; both query flags. Optional `publication_id` alone
-is checkout. Named **reads** may supplement.
+- No query: `WebsitePageRead` hydrates the unpublished canvas.
+- `publication_id`: checkout body of that owner publication.
+- `include_edit_history=true`: undo stacks present.
+Must not: `/pages/{id}/seo`; `/settings` GET; `/menus` GET;
+return `website_manifest`; both query flags. Named **reads** may
+supplement.
 
 #### Fail
 
@@ -591,14 +604,19 @@ MinIO. Unpublished dump + `WebsiteBusinessProfileRead`. No
 
 `POST /internal/website-publication`. Request
 `WebsitePublicationRequest`. Response `WebsitePublicationResponse`.
+Cases:
+
+- CMS — host tree.
+- Unpaid until cutover — prefix tree.
 
 #### Verify
 
-Exercise body: no website image render. Writes the HTML tree (MinIO
-`sites/hosts/{hostname}/{version_number}/` then `…/latest/` for CMS;
-unpaid Preview website address / Website activation use
-`sites/{website_prefix}/` until cutover). Must not: persist HTML onto
+Exercise body: no website image render. Must not: persist HTML onto
 unpublished slots; `websiteRender`; write every active hostname.
+
+- CMS: MinIO `sites/hosts/{hostname}/{version_number}/` then
+  `…/latest/`.
+- Unpaid until cutover: `sites/{website_prefix}/`.
 
 #### Fail
 

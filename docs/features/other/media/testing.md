@@ -111,19 +111,29 @@ Backend. Go `TestHappyPathV1MediaAssetsReturnsList`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. Tenant active. One `ready` item
-and one `uploading` item (`file_id` null).
+Prefer fake Clerk. No `frontend-2`. Tenant active. One `ready` +
+`approved` item, one `uploading` item (`file_id` null), one
+`archived` item, and one `pending_review` child.
 
 #### Exercise
 
 `GET /v1/media-assets`. Request `MediaAssetListGet`. Response
-`MediaAssetRead[]`.
+`MediaAssetRead[]`. Cases:
+
+- Default (`status=active`) — ready present; uploading omitted;
+  archived omitted.
+- `status=archived` — archived present; active omitted.
+- `review_status=approved` — ads picker; omit `pending_review`.
 
 #### Verify
 
-200. Body is `MediaAssetRead[]`. The `ready` item is present
-(`photo_kind` set or null; no `media_caption`). The `uploading` item
-is omitted.
+200. Body is `MediaAssetRead[]`. No `media_caption`.
+
+- Default: the `ready` item is present (`photo_kind` set or
+  null). The `uploading` item is omitted. Archived omitted.
+- `status=archived`: archived present; `ready` omitted.
+- `review_status=approved`: approved present; `pending_review`
+  omitted.
 
 #### Mocked
 
@@ -220,17 +230,26 @@ Backend. Go `TestHappyPathV1MediaAssetsPatch`. OpenAPI 1:1.
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
 Prefer fake Clerk. No `frontend-2`. A `ready` + `approved`
-unreferenced item.
+unreferenced item. A second `ready` + `approved` item referenced
+from a website-section image (or `logo_media_asset_id` or
+`ad_image_placements`).
 
 #### Exercise
 
 `PATCH /v1/media-assets/{id}`. Request `MediaAssetUpdate`. Response
-`MediaAssetRead`.
+`MediaAssetRead`. Cases:
+
+- Unreferenced — mutate crop / focal in place.
+- Referenced — insert a child; return it.
 
 #### Verify
 
-200. Then `GET /v1/media-assets/{id}` returns the new crop / focal.
 No `media_caption` on the body.
+
+- Unreferenced: 200. Then
+  `GET /v1/media-assets/{id}` returns the new crop / focal.
+- Referenced: 200 child `MediaAssetRead`. Parent file unchanged.
+  Overlay selects the child.
 
 #### Fail
 
