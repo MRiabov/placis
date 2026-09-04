@@ -361,3 +361,14 @@ new entries with the next number, the area, and the date.
     ads leave the list. Unarchive returns the row to the list. Toast Undo is
     unarchive. `DELETE /v1/ads/{id}` stays ad draft only. Look: [design
     decision 1](design-decision-record.md). (2026-08-29)
+
+40. **Ideal customer profile picker is hidden** (2026-09-04) — About
+    the ad does not let the owner pick or create an ideal customer
+    profile. The look shows the default **"Married couples, 35–45"**
+    as read-only copy (existing-ad Audience: "Not editable yet.").
+    Location (Where they are) stays a SearchableCombobox over
+    `business_profile_service_areas`. Product has not decided whether a
+    non-technical ads owner should pick an audience at all; do not add
+    an audiences collection or HTTP until that is decided. Previous:
+    ADR 8 / 37 specified Who-it's-for comboboxes for profile and area;
+    stored default remains married couples 30–40 (ADR 8).

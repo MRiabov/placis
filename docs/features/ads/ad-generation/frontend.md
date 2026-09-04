@@ -163,14 +163,24 @@ The questions and review content:
    picker over the contractor's known services and goals (pre-filled from
    onboarding), with a conditional "create new" when the typed text matches
    nothing. No re-typing known data.
-2. **Who it's for** — the ideal customer profile and location, both the same
-   searchable combobox as services (create-new: "profile", "area"). On a new ad
-   they are filled from the last ad the owner created; first ad uses the default
-   married couples aged 30-40 and the service area on the business profile
-   ([ADR 37](ADR.md)). The owner can still pick another. First we decide who the ad
-   speaks to. The ideal customer profile is loose: it steers tone and imagery —
-   not precise targeting (that comes with ad posting) — and it never appears in
-   the copy itself.
+2. **Who it's for** — location from a searchable combobox over the
+   contractor's service areas (create-new: "area"). First ad uses the
+   service area on the business profile; later ads copy
+   `icp_location_focus` from the last ad ([ADR 37](ADR.md)). The owner
+   can still pick or type another. Typed text that is not a service
+   area writes `ads.icp_location_focus` only — it does not insert a
+   `business_profile_service_areas` row (those are Google Maps
+   territories). There is no `locations` table. Do not parse that text
+   into targeting.
+
+   The ideal customer profile is **not** a picker in this slice
+   ([ADR 40](ADR.md)). About the ad and the existing-ad Audience block
+   display the default **"Married couples, 35–45"** as read-only copy.
+   The owner cannot pick or create a profile. Stored `icp_*` defaults
+   remain married couples 30–40 ([ADR 8](ADR.md)) until product decides
+   whether the owner should pick an audience at all. The profile is
+   loose: it steers tone and imagery — not precise targeting (that
+   comes with ad posting) — and it never appears in the copy itself.
 3. **How people get in touch** — the **ad lead form** questions: a
    **fixed set of standard fields** (phone number, full name, postcode, email)
    with include/exclude toggles; each field maps to a Meta ad lead form field at
@@ -310,8 +320,9 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
   contacted ones are muted. Dividers between rows only — the last ad lead has
   no bottom line ([look](design-decision-record.md) 2). This is in scope, not
   deferred.
-- **Audience** — the ideal customer profile with the "steers tone/imagery,
-  targeting comes with ad posting" note. Audience-match detection ("are we
+- **Audience** — read-only default **"Married couples, 35–45"** with
+  the "steers tone/imagery, targeting comes with ad posting" note. Not
+  a picker ([ADR 40](ADR.md)). Audience-match detection ("are we
   hitting the right audience?") is **disabled/deferred**.
 
 ### States
@@ -336,10 +347,9 @@ needs it):
 - LoadingBar (inline generation progress, leave-and-return note)
 - InlineError (validation shown next to the field it belongs to)
 - ApproveBlock (actions only: approve/download, closing the screen)
-- **SearchableCombobox** — the picker for offers, services, the ideal customer
-  profile, and location (create-new per field). Full control spec below.
-- IdealCustomerProfileEditor (default + free text + async suggestion display;
-  steers generation, not targeting)
+- **SearchableCombobox** — the picker for services and location
+  (create-new for location only). Not offers. Not the ideal customer
+  profile ([ADR 40](ADR.md)). Full control spec below.
 - AdLeadFormQuestions (About the ad: a fixed set of standard fields: phone
   number, full name, postcode, email, include/exclude toggles; each maps to a
   Meta ad lead form field, no custom questions)
@@ -372,11 +382,24 @@ needs it):
 
 ### SearchableCombobox (searchable select with create-new)
 
-Used for offers, services, the ideal customer profile, and location. Behavior:
+Used for services and location. Offer is `ads.offer` free text, not this
+control. The ideal customer profile is read-only default copy
+([ADR 40](ADR.md)).
+
+**Data sources:**
+
+- **Services** — `GET /v1/business-profile` → `services[]`
+  (`business_profile_services`). Stored as `service_focus_id`. The list
+  is the options, not a created value ([ADR 37](ADR.md)).
+- **Location / area** — `GET /v1/business-profile` → `service_areas[]`
+  (`business_profile_service_areas`). Stored as `ads.icp_location_focus`.
+  Create-new writes that field only; it does not insert a service area.
+
+Behavior:
 
 - **Trigger field**: single-line text input, full width, hint text like "Select
   or type to create a new service…" (the noun follows the field: service /
-  profile / area); typing filters the list in real time. No extra icons in the
+  area); typing filters the list in real time. No extra icons in the
   field.
 - **Dropdown panel** (closed by default, opens below the input on focus/click):
   - *Create-new block* (top): the dropdown always shows a visible prompt — "✎
@@ -404,6 +427,10 @@ Used for offers, services, the ideal customer profile, and location. Behavior:
 
 - Consumes the typed generated API types for `/v1/ads/*` (list, create, get,
   patch, variant patch, rewrite, cleanup, approve, ad-set, download).
+  Service and location pickers read `GET /v1/business-profile`
+  (`services[]`, `service_areas[]`). Do not call
+  `GET /v1/ads/audiences`, `POST /v1/ads/audiences`, `GET /v1/offers`,
+  or `GET /v1/locations`.
 - **Prefetch early + cache**: the ads list and ad-platform connection status are
   fetched as soon as the app loads and **cached in the browser** (query cache),
   so `/ads` renders instantly — cards and connect buttons are already resolved,
