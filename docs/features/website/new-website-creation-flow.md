@@ -114,4 +114,4 @@ screens / cap, CMS knowledge copy, Assistant screen switch at wait-end.
 Archive / delete is already true above. Enterprise plan cap 20:
 [plans.md](../billing/plans.md). Ads privacy URL **TBD**:
 [creatives and lead forms](../ads/ad-application/meta/03-creatives-and-lead-forms.md).
-Leads console: later ([leads HTTP](../other/leads/api.md)).
+Leads: [leads HTTP](../other/leads/api.md) (`GET /v1/leads`).

@@ -128,6 +128,8 @@ func homePrefixes(home string) []string {
 	switch home {
 	case "media":
 		return []string{"docs/features/other/media", "internal/media"}
+	case "leads":
+		return []string{"docs/features/other/leads", "internal/leads"}
 	case "details":
 		return []string{"docs/features/business-profile/details", "internal/details"}
 	case "website":

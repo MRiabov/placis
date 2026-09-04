@@ -36,9 +36,7 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 One-time activation Checkout (access fee plus Placis Pro plan / month) lives
 with
 [website activation](../features/onboarding/pipeline/09-website-activation.md).
-Stripe Subscription after that Checkout, extra usage credit, and the
-Price cache live with [billing](../features/billing/README.md). Website
-leads live in
-[features/other/leads](../features/other/leads/README.md). Public-source
-extract: [ETL](../features/other/etl/README.md). Onboarding session
-progress events: [pipeline README](../features/onboarding/pipeline/README.md).
+Stripe Subscription after that Checkout, extra usage credit, and the Price cache
+live with [billing](../features/billing/README.md). Website leads and ad leads live in [features/other/leads](../features/other/leads/README.md).
+Public-source extract: [ETL](../features/other/etl/README.md). Onboarding session progress events:
+[pipeline README](../features/onboarding/pipeline/README.md).

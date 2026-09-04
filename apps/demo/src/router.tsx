@@ -15,6 +15,7 @@ import { BillingPage } from "@/pages/cms/BillingPage";
 import { CertificationsPage } from "@/pages/cms/CertificationsPage";
 import { DetailsPage } from "@/pages/cms/DetailsPage";
 import { HomePage } from "@/pages/cms/HomePage";
+import { LeadsPage } from "@/pages/cms/LeadsPage";
 import { MediaPage } from "@/pages/cms/MediaPage";
 import { ProjectPage } from "@/pages/cms/ProjectPage";
 import { ProjectsPage } from "@/pages/cms/ProjectsPage";
@@ -38,13 +39,22 @@ function searchFlag(value: unknown): string | undefined {
 }
 
 type RawSearch = {
-  dev?: unknown;
-  shot?: unknown;
-  empty?: unknown;
-  archive?: unknown;
+  ad_id?: unknown;
   archived?: unknown;
-  picker?: unknown;
+  archive?: unknown;
+  compact?: unknown;
+  connected?: unknown;
+  dev?: unknown;
   diff?: unknown;
+  empty?: unknown;
+  picker?: unknown;
+  review?: unknown;
+  scene?: unknown;
+  shot?: unknown;
+  source?: unknown;
+  status?: unknown;
+  view?: unknown;
+  website_prefix?: unknown;
 };
 
 function demoSearch(search: Record<string, unknown>): {
@@ -220,6 +230,24 @@ const adsDetailRoute = createRoute({
   component: AdsDetail,
 });
 
+const leadsRoute = createRoute({
+  getParentRoute: () => cmsRoute,
+  path: "leads",
+  component: LeadsPage,
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = search as RawSearch;
+    return {
+      ad_id: searchFlag(raw.ad_id),
+      dev: searchFlag(raw.dev),
+      empty: searchFlag(raw.empty),
+      shot: searchFlag(raw.shot),
+      source: searchFlag(raw.source),
+      status: searchFlag(raw.status),
+      website_prefix: searchFlag(raw.website_prefix),
+    };
+  },
+});
+
 const billingRoute = createRoute({
   getParentRoute: () => cmsRoute,
   path: "billing",
@@ -289,6 +317,7 @@ const routeTree = rootRoute.addChildren([
     ]),
     certificationsRoute,
     mediaRoute,
+    leadsRoute,
     adsRoute.addChildren([
       adsIndexRoute,
       adsNewRoute,

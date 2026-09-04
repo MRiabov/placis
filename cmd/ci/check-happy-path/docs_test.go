@@ -47,19 +47,38 @@ const adsWriteAPI = `# Ads HTTP
 
 const leadsAPI = `# Leads HTTP
 
-## Serve only types on HTTP
+## DTOs
 
-### POST /v1/website-forms/{form_id}/submissions
-
-Essay.
+| DTO | Fields |
+| --- | --- |
+| ` + "`LeadRead`" + ` | ` + "`id`" + ` |
 
 ## Routes
 
-No table.
+| Method + path | Callers | Request | Response |
+| --- | --- | --- | --- |
+| ` + "`GET /v1/leads`" + ` | | | |
 
 ## Do not create
 
 - ` + "`/v1/old`" + `
+`
+
+const leadsHeading = `## Integration
+
+### TestHappyPathV1Leads — Route
+
+#### Setup
+
+Backend.
+
+#### Exercise
+
+` + "`GET /v1/leads`" + `
+
+#### Verify
+
+The HTTP body is LeadListRead.
 `
 
 const detailsAPI = `# Details HTTP
@@ -253,15 +272,13 @@ func TestDocsStaleLeftover(t *testing.T) {
 	}
 }
 
-func TestDocsSkipUnstructured(t *testing.T) {
+func TestDocsLeadsOwnsTesting(t *testing.T) {
 	dir := writeTree(t, map[string]string{
-		"docs/features/other/leads/api.md": leadsAPI,
+		"docs/features/other/leads/api.md":     leadsAPI,
+		"docs/features/other/leads/testing.md": leadsHeading,
 	})
-	if errs := checkDocsHappyPath(filepath.Join(dir, "docs"), nil, nil); len(errs) != 0 {
-		t.Fatalf("skip leads: %v", errs)
-	}
 	if errs := checkTestingHappyPath(filepath.Join(dir, "docs"), nil); len(errs) != 0 {
-		t.Fatalf("skip leads testing: %v", errs)
+		t.Fatalf("leads/testing.md should own leads Routes: %v", errs)
 	}
 }
 

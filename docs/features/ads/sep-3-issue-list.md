@@ -38,14 +38,17 @@ posting. Bold numbers are original audit ids (not compacted).
   targeting arrives with ad posting, without extra data entry.
   Action: none. Do not collapse to `icp_notes`.
 
-## Doc gap
+## Closed
 
 - **2. Per-ad ad leads list**
   Comment: ADR 27: per-ad ad leads **in scope**. `leads` has no
   `ad_id`; leads HTTP has no CMS list; PRD Post-MVP 6 still says
   future.
-  Action: add `leads.ad_id` + `source=ad` and a per-ad read, or
-  amend ADR 27. Do not silently drop the UI.
+  Action taken: `leads.ad_id` + `GET /v1/leads?source=ad`; ads detail
+  is a New-ad-leads count that links to Leads (ADR 41). Ingest later.
+  Closed: 2026-09-04.
+
+## Doc gap
 
 - **4. Connect Meta / Connect Google Ads**
   Comment: ADR 26 + CMS frontend: Connect lives on Ads. ADR 19

@@ -1,8 +1,13 @@
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
+import { Inbox } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
+
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { ads } from "@/pages/cms/ads/AdsList";
 import { adsSearch } from "@/pages/cms/ads/search";
+import { MarketingPhoneLink } from "@/pages/cms/leads/MarketingPhoneLink";
+import { newAdLeadLabel, newAdLeads } from "@/pages/cms/leads/rows";
+import { leadsSearch } from "@/pages/cms/leads/search";
 import { Button } from "@/ui/Button";
 import { Field, TextInput } from "@/ui/Field";
 import { PageHeading } from "@/ui/PageHeading";
@@ -117,119 +122,84 @@ export function AdsDetail(): ReactNode {
           </div>
           <div className="grid gap-6 pt-4 min-[801px]:p-4">
             <div className="grid gap-6 min-[801px]:grid-cols-2">
-              <div className="grid gap-4">
-                <div>
-                  <b className="text-sm">Images</b>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    This ad uses one photo. Edit to pick a different one.
-                  </p>
-                  <div
-                    className="h-[200px] rounded-xl bg-cover bg-[position:50%_32%] min-[721px]:h-[280px]"
-                    style={{ backgroundImage: `url("${ad.image}")` }}
-                  />
-                </div>
-                <div>
-                  <b className="text-sm">Budget</b>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    Disabled until ad posting is connected.
-                  </p>
-                  <div className="grid items-start gap-3 sm:grid-cols-2">
-                    <Field label="Daily budget">
-                      <TextInput className="h-11" disabled value="€15" />
-                    </Field>
-                    <Field label="Duration">
-                      <TextInput
-                        className="h-11 py-0"
-                        disabled
-                        lang="en-IE"
-                        min={startIso}
-                        onChange={(event) => setEndIso(event.target.value)}
-                        type="date"
-                        value={endIso}
-                      />
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        <b className="text-foreground">{left}</b> (
-                        {monthDay(startIso)} to {monthDay(endIso)})
-                      </p>
-                    </Field>
-                  </div>
-                </div>
-                <div>
-                  <b className="text-sm">Audience</b>
-                  <p className="text-xs text-muted-foreground">
-                    Not editable yet.
-                  </p>
-                  <p className="text-sm">Married couples, 35–45</p>
-                </div>
-                <div>
-                  <b className="text-sm">Area</b>
-                  <p className="text-xs text-muted-foreground">
-                    Not editable yet.
-                  </p>
-                  <p className="text-sm">Kildare area</p>
-                </div>
+              <div className="min-[801px]:col-start-1 min-[801px]:row-start-1">
+                <b className="text-sm">Images</b>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  This ad uses one photo. Edit to pick a different one.
+                </p>
+                <div
+                  className="h-[200px] rounded-xl bg-cover bg-[position:50%_32%] min-[721px]:h-[280px]"
+                  style={{ backgroundImage: `url("${ad.image}")` }}
+                />
               </div>
-              <div className="grid gap-4">
-                <div>
-                  <b className="text-sm">Performance</b>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    Appears once ad posting is connected.
-                  </p>
-                  <div className="flex flex-wrap gap-6 grayscale opacity-45">
-                    {[
-                      "Impressions",
-                      "Clicks",
-                      "Spend",
-                      "Results",
-                      "Cost per ad lead",
-                    ].map((label) => (
-                      <div key={label}>
-                        <span className="block text-xs text-muted-foreground">
-                          {label}
-                        </span>
-                        <b className="block text-lg font-semibold tracking-tight">
-                          —
-                        </b>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    At this spend, we expect <b>—</b> more ad leads in the next
-                    30 days.
-                  </p>
-                </div>
-                <div>
-                  <b className="text-sm">Ad leads</b>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    Ad leads from this ad — uncontacted ones are marked.
-                  </p>
+              <div className="min-[801px]:col-start-2 min-[801px]:row-start-1">
+                <b className="text-sm">Performance</b>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  Appears once ad posting is connected.
+                </p>
+                <div className="flex flex-wrap gap-6 grayscale opacity-45">
                   {[
-                    ["John Murphy", "087 123 4567 · Roofing replacement", true],
-                    ["Anne Doyle", "086 222 3344 · Roof repair", false],
-                    ["Declan Byrne", "085 999 8877 · Gutter cleaning", true],
-                  ].map(([who, meta, uncontacted]) => (
-                    <div
-                      className="flex items-center justify-between gap-2 border-b border-border py-2 text-sm last:border-b-0"
-                      key={String(who)}
-                    >
-                      <span>
-                        <b className="block">{who}</b>
-                        <span className="text-xs text-muted-foreground">
-                          {meta}
-                        </span>
+                    "Impressions",
+                    "Clicks",
+                    "Spend",
+                    "Results",
+                    "Cost per ad lead",
+                  ].map((label) => (
+                    <div key={label}>
+                      <span className="block text-xs text-muted-foreground">
+                        {label}
                       </span>
-                      <span
-                        className={
-                          uncontacted
-                            ? "rounded-lg border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs text-amber-800"
-                            : "rounded-lg border border-border px-2 py-0.5 text-xs"
-                        }
-                      >
-                        {uncontacted ? "Uncontacted" : "Contacted"}
-                      </span>
+                      <b className="block text-lg font-semibold tracking-tight">
+                        —
+                      </b>
                     </div>
                   ))}
                 </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  At this spend, we expect <b>—</b> more ad leads in the next 30
+                  days.
+                </p>
+              </div>
+              <AdLeadsPanel adId={adId} />
+              <div className="min-[801px]:col-start-1 min-[801px]:row-start-2">
+                <b className="text-sm">Budget</b>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  Disabled until ad posting is connected.
+                </p>
+                <div className="grid items-start gap-3 sm:grid-cols-2">
+                  <Field label="Daily budget">
+                    <TextInput className="h-11" disabled value="€15" />
+                  </Field>
+                  <Field label="Duration">
+                    <TextInput
+                      className="h-11 py-0"
+                      disabled
+                      lang="en-IE"
+                      min={startIso}
+                      onChange={(event) => setEndIso(event.target.value)}
+                      type="date"
+                      value={endIso}
+                    />
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      <b className="text-foreground">{left}</b> (
+                      {monthDay(startIso)} to {monthDay(endIso)})
+                    </p>
+                  </Field>
+                </div>
+              </div>
+              <div className="min-[801px]:col-start-1 min-[801px]:row-start-3">
+                <b className="text-sm">Audience</b>
+                <p className="text-xs text-muted-foreground">
+                  Not editable yet.
+                </p>
+                <p className="text-sm">Married couples, 35–45</p>
+              </div>
+              <div className="min-[801px]:col-start-1 min-[801px]:row-start-4">
+                <b className="text-sm">Area</b>
+                <p className="text-xs text-muted-foreground">
+                  Not editable yet.
+                </p>
+                <p className="text-sm">Kildare area</p>
               </div>
             </div>
             <Button
@@ -247,6 +217,76 @@ export function AdsDetail(): ReactNode {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function AdLeadsPanel({ adId }: { adId: string }): ReactNode {
+  const rows = newAdLeads(adId);
+  const search = leadsSearch({
+    ad_id: adId,
+    source: "ad",
+  });
+  if (rows.length === 0) {
+    return (
+      <Link
+        className="rounded-[18px] border border-dashed border-stone-300 px-4 py-5 hover:bg-zinc-50 min-[801px]:col-start-2 min-[801px]:row-start-2"
+        search={search}
+        to="/cms/leads"
+      >
+        <span className="flex items-start gap-3">
+          <span className="grid size-12 shrink-0 place-items-center rounded-full bg-zinc-100 text-zinc-500">
+            <Inbox aria-hidden="true" className="size-5" strokeWidth={1.6} />
+          </span>
+          <span className="min-w-0">
+            <b className="block text-sm font-semibold tracking-tight">
+              Nothing here yet
+            </b>
+            <span className="mt-1 block text-sm leading-snug text-muted-foreground">
+              No ad leads from this ad yet.
+            </span>
+          </span>
+        </span>
+      </Link>
+    );
+  }
+  return (
+    <div className="relative rounded-[18px] border border-hairline bg-white px-4 py-3 shadow-prompt min-[801px]:col-start-2 min-[801px]:row-start-2">
+      <Link
+        aria-label="Open on Leads"
+        className="absolute inset-0 rounded-[18px] hover:bg-zinc-50"
+        search={search}
+        to="/cms/leads"
+      />
+      <span className="flex items-center justify-between gap-2">
+        <b className="text-sm font-semibold tracking-tight">
+          {newAdLeadLabel(adId)}
+        </b>
+        <span className="rounded-lg border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800">
+          New
+        </span>
+      </span>
+      {rows.map((row) => (
+        <span
+          className="mt-2 block border-b border-hairline py-2 last:border-b-0 last:pb-0"
+          key={row.id}
+        >
+          <b className="block text-sm font-semibold tracking-tight">
+            {row.contactName}
+          </b>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            <MarketingPhoneLink
+              className="relative z-10"
+              marketingPhone={row.marketingPhone}
+            />
+            {" · "}
+            {row.marketingEmail}
+          </span>
+        </span>
+      ))}
+      <span className="mt-2 block text-xs text-muted-foreground">
+        Open on Leads
+      </span>
     </div>
   );
 }

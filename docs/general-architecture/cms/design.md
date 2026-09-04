@@ -1,7 +1,7 @@
 # CMS design tokens
 
 The CMS (sidebar + main area): `/cms` two-card chooser, website editor, Details,
-Ads list. Not the contractor website look — that is [website styles](../../features/website/styles.md).
+Ads list, Leads. Not the contractor website look — that is [website styles](../../features/website/styles.md).
 [Design decision record](design-decision-record.md). Editable look: [`apps/demo/`](../../../apps/demo/README.md)
 (`src/styles/theme.css`). CMS wins when they disagree. Owner field controls,
 buttons, combobox, labels, and the mock-only yellow strip live in the look app

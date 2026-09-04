@@ -23,14 +23,12 @@ old paths, operation ids, or unconstrained JSON. Contractor website API cutover:
 | [projects](../features/business-profile/projects/frontend-debloat.md) | `/cms/projects` |
 | [certifications and reviews](../features/business-profile/certifications-and-reviews/frontend-debloat.md) | `/cms/certifications-and-reviews` |
 | [ads](../features/ads/ad-generation/frontend-debloat.md) | `/cms/ads` (no UI today; do not port campaign leftovers) |
+| [leads](../features/other/leads/frontend-debloat.md) | `/cms/leads` (no predecessor console; do not port CRM) |
 | [media library](../features/other/media/frontend-debloat.md) | `/cms/media` + Content attach |
 | [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, OAuth, `/me` |
 | [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
 | [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover: website form POST + `website.v1`; no predecessor OpenAPI |
 | [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
-
-No leads instruction file: website forms persist website leads; there is no CMS
-leads console.
 
 ## Shared contract rules
 
