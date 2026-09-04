@@ -55,7 +55,8 @@ pick. Tokens stay.
 
 1. Deterministic copy from the website template: unpublished
    `website_pages` / `website_sections` / `website_slots`. Explode each
-   website section’s `editable_slots`. Non-slot layout props may stay on
+   website section’s `editable_slots`. `omit_if_unresolved` stays on the
+   website component contract. Non-slot layout props may stay on
    section `props` jsonb. Copy the two site-wide look website sections
    from the website template (`page_id` null — look: logo, density). Copy
    the **about** website page (`page_type=about`). Copy the **privacy

@@ -194,7 +194,8 @@
       "type": "image",
       "label": "Logo",
       "required": false,
-      "max_length": null
+      "max_length": null,
+      "omit_if_unresolved": ["logo_url"]
     },
     {
       "key": "links",
@@ -222,21 +223,24 @@
       "type": "text",
       "label": "Company registration number",
       "required": false,
-      "max_length": null
+      "max_length": null,
+      "omit_if_unresolved": ["company_registration_number"]
     },
     {
       "key": "vat_number",
       "type": "text",
       "label": "VAT number",
       "required": false,
-      "max_length": null
+      "max_length": null,
+      "omit_if_unresolved": ["vat_number"]
     },
     {
       "key": "registered_office",
       "type": "text",
       "label": "Registered office",
       "required": false,
-      "max_length": null
+      "max_length": null,
+      "omit_if_unresolved": ["registered_office"]
     }
   ],
   "default_values": [

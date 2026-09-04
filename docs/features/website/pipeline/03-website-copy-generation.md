@@ -65,6 +65,10 @@ River-only on `website_id`.
   items, not approved copy website slots.
 - Bake raw detail values into copy that should stay a token
   (`{{business_name}}`, `{{marketing_phone}}`, …).
+- Wrap optional-omit Common variables in required prose (a required
+  heading that is only `VAT {{vat_number}}`). Leave those details on
+  exact labeled website slots
+  ([variables.md](../variables.md#optional-omit)).
 - Wait for pay / 09. After 09 the same job **continues** on the same
   `tenant_id` as River-only (no `assistant.runs`, no new thread items). Do
   not cancel 03 at pay. CMS PATCH / assistant HTTP are **not** 409 because

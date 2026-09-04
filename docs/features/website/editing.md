@@ -103,7 +103,11 @@ The website editor is one typed **projection** (read) and one **patch** (write).
   `unsupported_component`.
 - `media_assets[]`, `forms[]` (website forms), `menus` (`top_menu` and `footer`
   trees plus `show_phone` / `show_email` / `show_contact` — [persistence.md](persistence.md)).
-- `publication` (active website version + `has_unpublished_changes`),
+- `publication` (active website version), `has_unpublished_changes`
+  (true when live HTML would change on republish, including Details /
+  Projects / certifications writes after `website_publications.published_at`;
+  compare `business_profile_edits.created_at` / `last_edit_id`, not only
+  website-slot PATCH),
   `validation`.
 - `preview_url`, live website URL. The website editor canvas is not a website
   preview.
