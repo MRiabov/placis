@@ -27,6 +27,8 @@ write.
   `human` (ETL, including `force=true`). A later override is a manual transform.
 - Fabricate a value with no source (registry, Maps, crawl, business research, or
   the contractor).
+- Persist `"no vat number"` or `"—"` in `vat_number` when they are not
+  VAT-registered.
 - Insert an ETL `business_profile_edits` increment without ≥1
   `business_profile_edit_sources` row.
 - Write `registered_office` into `business_profile_service_areas` or the
@@ -61,9 +63,12 @@ rows.
 - **Accreditations:** trade registry wins the same way.
 - **Anti-fabrication:** unverifiable fields stay empty and become a targeted
   question. Registry “not found” is recorded, not papered over.
-- **VAT:** `vat_registration_status` marks whether they are VAT-registered; the
-  VAT number is required (and later website publication may block) only when
-  that status is set.
+- **VAT:** `vat_registration_status` marks whether they are VAT-registered.
+  The VAT number is required **only if** that status is set; otherwise
+  leave `vat_number` null. Never persist `"no vat number"` or `"—"`.
+  Empty VAT is not a website publication blocker. Worker omit of the
+  footer VAT line:
+  [website variables](../../website/variables.md).
 
 ### Complete-gate keys
 
@@ -79,6 +84,8 @@ gaps.
 | `legal_name` | legal | `legal_name` | registry only | required if registry |
 | `company_number` | legal | `company_number` | registry only | required if registry |
 | `registered_office` | legal | `registered_office` | registry only | required if registry |
+| `vat_registration_status` | legal | `vat_registration_status` | — | optional |
+| `vat_number` | legal | `vat_number` | — | required if `vat_registration_status` is set |
 | `contact_name` | contact | `contact_name` | — | required |
 | `marketing_phone` | contact | `marketing_phone` | Maps | required |
 | `marketing_email` | contact | `marketing_email` | crawl | required |
