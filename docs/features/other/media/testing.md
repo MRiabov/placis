@@ -553,7 +553,8 @@ Nothing (no LLM).
 #### Setup
 
 Activated tenant. Zero `media_assets`. Schema `jobs`: no
-`describe_image`.
+`describe_image`. Remaining usage credit > 0. CMS billed path
+(`bill_usage=billed`, `thread_id` of `cms_assistant`).
 
 #### Exercise
 
@@ -570,6 +571,10 @@ Tool `media_caption` set.
   `media_caption` = tool value, severities null.
 - Zero `describe_image`. HTTP `MediaAssetRead` has `photo_kind=photo`
   and no `media_caption`.
+- Spend row `usage_category=image` (`ai_use_ledger_entries`).
+
+Onboarding unpaid five / onboarding 06 (`bill_usage=unbilled`): same
+library rows; remaining 0 still creates; no spend.
 
 #### Mocked
 
@@ -631,6 +636,38 @@ Empty prompt → `400`; no child.
 #### Mocked
 
 LLM on the success case only.
+
+### Generated media usage credit
+
+#### Setup
+
+Activated tenant. Zero `media_assets`. Remaining usage credit 0
+(`bill_usage=billed` would 402).
+
+#### Exercise
+
+CMS assistant `generate_image` (`CreateGeneratedMediaAsset`,
+`bill_usage=billed`, `thread_id` of `cms_assistant`). Tool
+`media_caption` set.
+
+#### Verify
+
+`402` `usage_credit_exhausted`. Zero `media_assets`. No
+`ai_use_ledger_entries` spend. Zero `describe_image`.
+
+Usage credit remaining: same as Create generated media asset (row +
+spend `usage_category=image`).
+
+Onboarding unpaid five remaining 0 (`bill_usage=unbilled`): creates
+the row; no spend; not 402.
+
+Billed website 03 remaining 0: job fail, not HTTP 402; zero
+`media_assets`; no spend.
+
+#### Mocked
+
+Nothing on the 402 / job-fail cases. Image generate on the remaining
+path only.
 
 ### Reject
 

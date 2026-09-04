@@ -12,7 +12,7 @@ reviews), [projects](../business-profile/projects/persistence.md),
 [media library](../other/media/persistence.md)
 (`ad_image_placements.media_asset_id`),
 [leads](../other/leads/persistence.md) (attribution). LLM traces:
-[LLM layer](../../general-architecture/llm-layer.md)
+[AI layer](../../general-architecture/ai-layer.md)
 (`thread_kind=ads_generate` / `ads_inline_assistance`). Sensitive
 mutations also write [audit](../../general-architecture/audit.md).
 

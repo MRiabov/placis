@@ -109,8 +109,9 @@ unpublished website slots. River job kind `website_copy_generation`.
      `supplied_by=ai`, `created_by=ai`, pending review; persists the tool
      `media_caption` as `media_asset_classifications`
      (`photo_kind=photo`, `algorithm=copy_requested_media_caption`); no
-     `describe_image`; unpublished canvas warning; website publication
-     still requires approved media library items).
+     `describe_image`; inherits this job’s `bill_usage`; unpublished
+     canvas warning; website publication still requires approved media
+     library items).
    - Do not reuse an already-attached photo on a later image website slot
      (**this page**, later slots; not site-global; GET hydrates one page).
 3. After each `update_slot`, the same `websiteRender` for the affected
@@ -174,7 +175,8 @@ Unpublished `website_pages`, `website_sections`, `website_slots`,
 
 `website_slots`; `website_pages` SEO columns; `media_assets` from
 `generate_image` (`CreateGeneratedMediaAsset`; `supplied_by=ai`,
-`created_by=ai`, pending review) and `media_asset_classifications`
+`created_by=ai`, pending review; inherits this job’s `bill_usage`)
+and `media_asset_classifications`
 (`algorithm=copy_requested_media_caption`); `edit_history`
 agent batches; `ai_generations` for tool batches
 (`thread_kind=website_copy_generation` thread per website page,
@@ -190,6 +192,8 @@ Keep the unpublished website from 02. Onboarding session stays
 `selecting_and_copying_website_template` or `preview_and_edit`. Retry is safe
 (River key; safe to retry). Copy fail must not fail 05 or block 09. Share (08)
 still writes current unpublished rows if they share after the cap.
+Billed remaining 0 on `generate_image` fails the job (not HTTP **402**).
+Onboarding 06 is `unbilled`.
 
 ## Out
 

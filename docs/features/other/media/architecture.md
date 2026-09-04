@@ -31,10 +31,18 @@ Prompts: `internal/media/prompts.yaml` (`prompt_id` matches
 
 - `CreateGeneratedMediaAsset` — assistant / website 03
   `generate_image` **calls** this (`supplied_by=ai`, `created_by=ai`,
-  `pending_review`). **calls** `WriteCanonicalWebP` then
-  `WriteImageThumbnail`. **writes** `media_asset_classifications`
+  `pending_review`). Takes caller `bill_usage` and `thread_id` (no
+  new `thread_kind`: CMS assistant / Voice use `cms_assistant`;
+  website 03 uses `website_copy_generation`). CMS billed
+  (`usage_category=image`); onboarding unbilled; website 03 inherits
+  the job `bill_usage`. **calls** `AssertUsageCredit` on billed (via
+  `ai` image generate). Remaining 0 billed: HTTP **402**
+  `usage_credit_exhausted` on assistant; job fail on billed website
+  03. **calls** `WriteCanonicalWebP` then `WriteImageThumbnail`.
+  **writes** `media_asset_classifications`
   (`algorithm=copy_requested_media_caption`, `photo_kind=photo`). Must
-  not **insert** `describe_image`. No
+  not **insert** `describe_image`. Must not **call**
+  `RecordAIUseSpend` (that is `ai`). No
   `POST /v1/media-assets/generate`.
 - `ApproveMediaAsset` — not media HTTP. `ApproveAd` **calls** it for
   `pending_review` items on that ad’s placements. `PublishWebsite`
@@ -114,7 +122,8 @@ Ads does not own a second library.
 4. **Generate** — `CreateGeneratedMediaAsset` **writes** the
    classification from the tool `media_caption` (`photo_kind=photo`,
    `algorithm=copy_requested_media_caption`) and is `ready` without
-   `describe_image`.
+   `describe_image`. Caller `bill_usage`: CMS billed; onboarding
+   unbilled.
 5. **Edit** — crop / replace / cleanup / Reject are Routes. PATCH is
    crop / focal only.
 

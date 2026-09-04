@@ -77,7 +77,7 @@ Rules:
 - Shared types live in exactly one package — no forked duplicates.
 - Each feature that calls the LLM owns `prompts.yaml` in that package, not
   prompt strings in Go. Variables are `{{var}}` and dotted `{{aaa.bbb}}`.
-  [LLM layer](llm-layer.md).
+  [AI layer](ai-layer.md).
 - Route handlers validate input (huma) and call service functions; services own
   business rules and transactions; models are persistence only.
 - Service functions accept `tenantID` explicitly; they never infer it from

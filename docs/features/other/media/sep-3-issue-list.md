@@ -13,18 +13,6 @@ are original audit ids (not compacted).
   Action: say “recorded, no v1 surface”, or name the surface. Do not
   drop (that changes the tool contract).
 
-- **6. `files.scan_status` has no named scanner**
-  Comment: `confirm-upload` already branches on scan fail. Lifecycle
-  is load-bearing.
-  Action: name the scanner (in-process vs job). Same as
-  [../../../general-architecture/sep-3-issue-list.md](../../../general-architecture/sep-3-issue-list.md)
-  item 3.
-
-- **8. `CreateGeneratedMediaAsset` usage-credit debit**
-  Comment: cleanup calls `AssertUsageCredit`; generate is silent;
-  `llm-layer.md` lists CMS `generate_image` as billed.
-  Action: same assert + 402 as cleanup.
-
 ## Actually drop
 
 - **1. `media_assets.source_url`**
@@ -43,9 +31,22 @@ are original audit ids (not compacted).
 
 ## False alarms (closed)
 
+- **8. `CreateGeneratedMediaAsset` usage-credit debit** —
+  CMS `generate_image` **calls** `AssertUsageCredit` (via `ai`) with
+  `bill_usage=billed`; remaining 0 is **402**. Onboarding stays
+  `unbilled`.
 - **Website editor crop/focal “disowned”** — README is the **UI**
   (crop stays on `/cms/media`). Image website slot PATCH is the same
   attach/crop/focal function after Content pick. Tighten README;
   keep both.
 - **`files.visibility=owner_visible`** — keep until a third
   visibility is needed (`files-and-s3.md` already says so).
+
+## Deferred
+
+- **6. `files.scan_status` has no named scanner**
+  Comment: `confirm-upload` already branches on scan fail. Not this
+  pass. If AV lands later it is an edge/API product, not a Go/River
+  job. Same as
+  [../../../general-architecture/sep-3-issue-list.md](../../../general-architecture/sep-3-issue-list.md)
+  item 3.

@@ -36,7 +36,7 @@ Called from other packages:
 - `BillUsageMode` / `bill_usage` —
   [glossary](../../glossary.md#billusagemode). Generic external spend
   (AI and ETL). How `ai` applies remaining 0:
-  [LLM layer](../../general-architecture/llm-layer.md#billusagemode)
+  [AI layer](../../general-architecture/ai-layer.md#billusagemode)
 - `ActivateSubscription` — `website_activation` **calls** this after
   `tenants.status=active`. **Persists** `billing.subscriptions` from the 09
   Checkout (`stripe_customer_id`, `stripe_subscription_id`, Pro month). Does

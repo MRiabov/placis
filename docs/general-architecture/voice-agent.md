@@ -176,7 +176,7 @@ Go does **not** upsert unpublished website rows on tool-calls.
 
 There is no structured-instruction handoff.
 
-Record reasoning, owner-visible output, and tool calls ([llm-layer](llm-layer.md)). Assistant
+Record reasoning, owner-visible output, and tool calls ([AI layer](ai-layer.md)). Assistant
 thinking is `thread_items.thread_item_kind=thinking` at turn time.
 `ai_generations.internal_reasoning` is audit only (empty if the voice service
 did not emit it). Hydrate never reads audit.

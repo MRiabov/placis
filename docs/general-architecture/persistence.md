@@ -64,7 +64,7 @@ Uniques, Written by, Notes
 | [leads](../features/other/leads/persistence.md) | `leads` | `leads` |
 | [files](files-and-s3.md) | `files` | `files` |
 | [audit](audit.md) | `audit` | `audit_events` |
-| [LLM layer](llm-layer.md) | `ai` | `threads` (identity for every generate factory), `ai_generations`, `ai_generation_tool_revisions` |
+| [AI layer](ai-layer.md) | `ai` | `threads` (identity for every generate factory), `ai_generations`, `ai_generation_tool_revisions` |
 | [Assistant](../features/assistant/persistence.md) | `assistant` | `thread_items`, `runs` (in-flight lock; not hydrate). Thread identity is `ai.threads`. |
 | [Billing](../features/billing/persistence.md) | `billing` | `prices`, `subscriptions`, `ai_use_ledger_entries` |
 | [jobs](jobs.md) | `jobs` | River-managed tables |
@@ -79,7 +79,7 @@ generated prediction **about** a persisted subject is never a column on
 that subject. It lives on a dedicated table in the **same feature
 Postgres schema**. `ai` is traces only (`threads`, `ai_generations`,
 `ai_generation_tool_revisions`) — not product predictions
-([LLM layer](llm-layer.md)).
+([AI layer](ai-layer.md)).
 
 - **Many rows per subject.** Current = latest `created_at` for that
   subject id. No current-id pointer on the subject. HTTP / attach /

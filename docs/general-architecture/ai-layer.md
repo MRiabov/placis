@@ -1,4 +1,4 @@
-# LLM layer
+# AI layer
 
 The LLM sits behind `LLMProvider` so prompts, model names, response shapes, and
 cost logging never leak into domain logic. Shared `ai` owns **every vendor
@@ -94,7 +94,8 @@ ETL billed later uses the same remaining-0 rules (job fail, not HTTP
 
 **`billed`:** CMS assistant text, CMS Voice, `CleanupMediaAsset` /
 image-edits, ads generate/rewrite, project inline AI, CMS
-`generate_image`. **`bill-allow-out-of-balance`:** compaction;
+`generate_image` (`CreateGeneratedMediaAsset` with
+`bill_usage=billed`). **`bill-allow-out-of-balance`:** compaction;
 owner `DescribeImage`. **`unbilled`:** onboarding; `eval`; ETL (not
 billed yet).
 
