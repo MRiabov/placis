@@ -117,7 +117,6 @@ thread_kind text NOT NULL CHECK (thread_kind IN (
   'ads_generate',
   'ads_inline_assistance',
   'website_copy_generation',
-  'website_copy_generation',
   'reviews_ranking_for_display',
   'etl_project_classify',
   'etl_crawl_parse',
