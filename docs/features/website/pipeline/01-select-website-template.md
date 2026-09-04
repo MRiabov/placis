@@ -56,16 +56,10 @@ create is deferred; occupancy vs owner pick **TBD**
    pool.
    - In: `tenants.subscription_status=active`.
    - In: `billing.subscriptions.status=canceled` and now is **less than 6
-<<<<<<< HEAD
-     months** after `canceled_at` (set when status becomes `canceled`, after
-     `current_period_end`).
-   - Out: nonpayment **≥ 6 months**. Live websites are already unpublished;
-=======
      months** after `canceled_at` (set when status becomes `canceled`:
      owner cancel at `current_period_end`, or
      `billing_nonpayment_unpublish`).
-   - Out: nonpayment **≥ 6 months**. Live website is already unpublished;
->>>>>>> 1c8aba1 (Spell leftover Stripe catalogue notes on 09 tests and occupancy.)
+   - Out: nonpayment **≥ 6 months**. Live websites are already unpublished;
      occupancy uses this clock, not `tenants.status=active` (that stays
      `active` after cancel).
 5. Coordinates: `google_maps_listings.latitude` /
