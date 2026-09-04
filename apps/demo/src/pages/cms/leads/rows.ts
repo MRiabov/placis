@@ -95,7 +95,7 @@ export const leadRows: LeadRow[] = [
   },
 ];
 
-function newAdLeadCount(adId: string): number {
+export function newAdLeadCount(adId: string): number {
   return leadRows.filter(
     (row) => row.origin === "ad" && row.adId === adId && row.status === "new",
   ).length;

@@ -1,9 +1,11 @@
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
+import { Inbox } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
+
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { ads } from "@/pages/cms/ads/AdsList";
 import { adsSearch } from "@/pages/cms/ads/search";
-import { newAdLeadLabel } from "@/pages/cms/leads/rows";
+import { newAdLeadCount, newAdLeadLabel } from "@/pages/cms/leads/rows";
 import { leadsSearch } from "@/pages/cms/leads/search";
 import { Button } from "@/ui/Button";
 import { Field, TextInput } from "@/ui/Field";
@@ -119,103 +121,84 @@ export function AdsDetail(): ReactNode {
           </div>
           <div className="grid gap-6 pt-4 min-[801px]:p-4">
             <div className="grid gap-6 min-[801px]:grid-cols-2">
-              <div className="grid gap-4">
-                <div>
-                  <b className="text-sm">Images</b>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    This ad uses one photo. Edit to pick a different one.
-                  </p>
-                  <div
-                    className="h-[200px] rounded-xl bg-cover bg-[position:50%_32%] min-[721px]:h-[280px]"
-                    style={{ backgroundImage: `url("${ad.image}")` }}
-                  />
+              <div className="min-[801px]:col-start-1 min-[801px]:row-start-1">
+                <b className="text-sm">Images</b>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  This ad uses one photo. Edit to pick a different one.
+                </p>
+                <div
+                  className="h-[200px] rounded-xl bg-cover bg-[position:50%_32%] min-[721px]:h-[280px]"
+                  style={{ backgroundImage: `url("${ad.image}")` }}
+                />
+              </div>
+              <div className="min-[801px]:col-start-2 min-[801px]:row-start-1">
+                <b className="text-sm">Performance</b>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  Appears once ad posting is connected.
+                </p>
+                <div className="flex flex-wrap gap-6 grayscale opacity-45">
+                  {[
+                    "Impressions",
+                    "Clicks",
+                    "Spend",
+                    "Results",
+                    "Cost per ad lead",
+                  ].map((label) => (
+                    <div key={label}>
+                      <span className="block text-xs text-muted-foreground">
+                        {label}
+                      </span>
+                      <b className="block text-lg font-semibold tracking-tight">
+                        —
+                      </b>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <b className="text-sm">Budget</b>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    Disabled until ad posting is connected.
-                  </p>
-                  <div className="grid items-start gap-3 sm:grid-cols-2">
-                    <Field label="Daily budget">
-                      <TextInput className="h-11" disabled value="€15" />
-                    </Field>
-                    <Field label="Duration">
-                      <TextInput
-                        className="h-11 py-0"
-                        disabled
-                        lang="en-IE"
-                        min={startIso}
-                        onChange={(event) => setEndIso(event.target.value)}
-                        type="date"
-                        value={endIso}
-                      />
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        <b className="text-foreground">{left}</b> (
-                        {monthDay(startIso)} to {monthDay(endIso)})
-                      </p>
-                    </Field>
-                  </div>
-                </div>
-                <div>
-                  <b className="text-sm">Audience</b>
-                  <p className="text-xs text-muted-foreground">
-                    Not editable yet.
-                  </p>
-                  <p className="text-sm">Married couples, 35–45</p>
-                </div>
-                <div>
-                  <b className="text-sm">Area</b>
-                  <p className="text-xs text-muted-foreground">
-                    Not editable yet.
-                  </p>
-                  <p className="text-sm">Kildare area</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  At this spend, we expect <b>—</b> more ad leads in the next 30
+                  days.
+                </p>
+              </div>
+              <AdLeadsPanel adId={adId} />
+              <div className="min-[801px]:col-start-1 min-[801px]:row-start-2">
+                <b className="text-sm">Budget</b>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  Disabled until ad posting is connected.
+                </p>
+                <div className="grid items-start gap-3 sm:grid-cols-2">
+                  <Field label="Daily budget">
+                    <TextInput className="h-11" disabled value="€15" />
+                  </Field>
+                  <Field label="Duration">
+                    <TextInput
+                      className="h-11 py-0"
+                      disabled
+                      lang="en-IE"
+                      min={startIso}
+                      onChange={(event) => setEndIso(event.target.value)}
+                      type="date"
+                      value={endIso}
+                    />
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      <b className="text-foreground">{left}</b> (
+                      {monthDay(startIso)} to {monthDay(endIso)})
+                    </p>
+                  </Field>
                 </div>
               </div>
-              <div className="grid gap-4">
-                <div>
-                  <b className="text-sm">Performance</b>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    Appears once ad posting is connected.
-                  </p>
-                  <div className="flex flex-wrap gap-6 grayscale opacity-45">
-                    {[
-                      "Impressions",
-                      "Clicks",
-                      "Spend",
-                      "Results",
-                      "Cost per ad lead",
-                    ].map((label) => (
-                      <div key={label}>
-                        <span className="block text-xs text-muted-foreground">
-                          {label}
-                        </span>
-                        <b className="block text-lg font-semibold tracking-tight">
-                          —
-                        </b>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    At this spend, we expect <b>—</b> more ad leads in the next
-                    30 days.
-                  </p>
-                </div>
-                <div>
-                  <b className="text-sm">Ad leads</b>
-                  <p className="mb-2 text-xs text-muted-foreground">
-                    New ad leads for this ad open on Leads.
-                  </p>
-                  <Link
-                    className="text-sm font-medium underline-offset-2 hover:underline"
-                    search={leadsSearch({
-                      ad_id: adId,
-                      source: "ad",
-                    })}
-                    to="/cms/leads"
-                  >
-                    {newAdLeadLabel(adId)}
-                  </Link>
-                </div>
+              <div className="min-[801px]:col-start-1 min-[801px]:row-start-3">
+                <b className="text-sm">Audience</b>
+                <p className="text-xs text-muted-foreground">
+                  Not editable yet.
+                </p>
+                <p className="text-sm">Married couples, 35–45</p>
+              </div>
+              <div className="min-[801px]:col-start-1 min-[801px]:row-start-4">
+                <b className="text-sm">Area</b>
+                <p className="text-xs text-muted-foreground">
+                  Not editable yet.
+                </p>
+                <p className="text-sm">Kildare area</p>
               </div>
             </div>
             <Button
@@ -234,5 +217,36 @@ export function AdsDetail(): ReactNode {
         </div>
       </div>
     </div>
+  );
+}
+
+function AdLeadsPanel({ adId }: { adId: string }): ReactNode {
+  const count = newAdLeadCount(adId);
+  const empty = count === 0;
+  return (
+    <Link
+      className="rounded-[18px] border border-dashed border-stone-300 px-4 py-5 hover:bg-zinc-50 min-[801px]:col-start-2 min-[801px]:row-start-2"
+      search={leadsSearch({
+        ad_id: adId,
+        source: "ad",
+      })}
+      to="/cms/leads"
+    >
+      <span className="flex items-start gap-3">
+        <span className="grid size-12 shrink-0 place-items-center rounded-full bg-zinc-100 text-zinc-500">
+          <Inbox aria-hidden="true" className="size-5" strokeWidth={1.6} />
+        </span>
+        <span className="min-w-0">
+          <b className="block text-sm font-semibold tracking-tight">
+            {empty ? "Nothing here yet" : newAdLeadLabel(adId)}
+          </b>
+          <span className="mt-1 block text-sm leading-snug text-muted-foreground">
+            {empty
+              ? "No ad leads from this ad yet."
+              : "New ad leads for this ad open on Leads."}
+          </span>
+        </span>
+      </span>
+    </Link>
   );
 }

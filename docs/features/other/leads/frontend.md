@@ -45,7 +45,7 @@ Loading placeholders sit in rows, not a whole-table swap
 | Route | Purpose |
 | --- | --- |
 | `/cms/leads` | Leads table. Query matches `LeadListQuery`. |
-| `/cms/ads/{id}` | Count of New ad leads linking here with `source=ad` and that `ad_id`. |
+| `/cms/ads/{id}` | Inbox panel of **New** ad leads, or empty copy, linking here with `source=ad` and that `ad_id`. |
 
 ## Left nav
 
