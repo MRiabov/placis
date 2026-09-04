@@ -72,7 +72,7 @@ markdown land with the Go implementation; this feature specifies the contract.
 
 CMS Assistant prompt text (wrap-up notice, reject notice, Voice transcription
 notice, compaction, Voice seed prompt) lives in this feature’s `prompts.yaml`
-with `{{var}}` / `{{aaa.bbb}}` slots, not in Go. [LLM layer](../../general-architecture/llm-layer.md).
+with `{{var}}` / `{{aaa.bbb}}` slots, not in Go. [AI layer](../../general-architecture/ai-layer.md).
 
 Keep it small enough to inject every turn. `get_context_about_screen` is live
 assistant screen context, not this copy.

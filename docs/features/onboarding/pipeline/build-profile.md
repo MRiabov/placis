@@ -140,7 +140,7 @@ not enqueue. Website does not enqueue. Persist columns:
 [certifications-and-reviews ADR](../../business-profile/certifications-and-reviews/ADR.md).
 Job, `thread_kind`, `prompt_id`, I/O:
 [jobs](../../../general-architecture/jobs.md),
-[LLM layer](../../../general-architecture/llm-layer.md).
+[AI layer](../../../general-architecture/ai-layer.md).
 `{{reviews.1}}` … resolve from that order. This is not
 `website_reviews_picker` when copying the website template’s pages.
 

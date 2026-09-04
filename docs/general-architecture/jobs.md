@@ -146,7 +146,7 @@ current `in_pool` rows (id, citation/body, rating, origin,
 `published_at`). Output: ordered `review_ids[]`, length 1–30,
 each id in that pool. Prompt prose, ranking heuristics, and dated model
 id are unspecified. Not stars or recency.
-[LLM layer](llm-layer.md).
+[AI layer](ai-layer.md).
 
 **Onboarding** insert: [build-profile](../features/onboarding/pipeline/build-profile.md) (after ETL fast extract has `in_pool`
 reviews; again when that enqueue’s overlapping ETL runs finish if additional

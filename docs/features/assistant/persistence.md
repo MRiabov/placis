@@ -5,9 +5,9 @@ CMS assistant overlay tables. Conventions:
 (Postgres schema `assistant`). Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 
-Thread **identity** is [`ai.threads`](../../general-architecture/llm-layer.md) (`thread_kind=cms_assistant` or
+Thread **identity** is [`ai.threads`](../../general-architecture/ai-layer.md) (`thread_kind=cms_assistant` or
 `onboarding_assistant`). This feature owns overlay items and the in-flight run.
-Shared AI traces: [LLM layer](../../general-architecture/llm-layer.md) (`ai.ai_generations`). Guide isolation:
+Shared AI traces: [AI layer](../../general-architecture/ai-layer.md) (`ai.ai_generations`). Guide isolation:
 [onboarding assistant](../onboarding/assistant.md). Usage credit: [billing](../billing/persistence.md). Website last-writer:
 [website edit history](../website/persistence.md)
 (`edit_history.ai_generation_id`). Voice recordings:

@@ -66,7 +66,7 @@ Package ownership. Workflows live in the feature docs this list points at.
    No website or ads business rules, no tool registries that mutate
    product rows, and no product prompt prose (`prompts.yaml` lives in
    the feature that calls the LLM). Postgres schema `ai`.
-   [LLM layer](llm-layer.md).
+   [AI layer](ai-layer.md).
 8. `billing` owns the AI use ledger, the Stripe Subscription after 09,
    the Price cache, and Usage & billing. Stripe website activation
    Checkout (activation Price plus Placis Pro plan / month) stays in onboarding.

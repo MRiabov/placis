@@ -30,11 +30,6 @@ Auth punch list was applied in #86 (file removed).
   [README.md](README.md); delete the duplicate PRD bullet (also the
   stale Mon/Wed/Fri source set).
 
-- **3. `files.scan_status` — name the scanner**
-  Comment: `confirm-upload` already branches on scan fail. Do not
-  drop the lifecycle.
-  Action: name in-process vs job. Same as media item 6.
-
 - **13. `module-layout.md` transform list**
   Action: add `traderegistry/` **and** `websearch/` (ETL item 3:
   transform has work).
@@ -42,7 +37,7 @@ Auth punch list was applied in #86 (file removed).
 ## Actually drop
 
 - **4a. Duplicate `'website_copy_generation'` in the CHECK**
-  Comment: [llm-layer.md](llm-layer.md) lists the literal twice. One
+  Comment: [ai-layer.md](ai-layer.md) lists the literal twice. One
   stays.
 
 - **9. One-step rows under `## Workflows`**
@@ -87,3 +82,10 @@ Auth punch list was applied in #86 (file removed).
   `ai_generations.approval_status`.
 - Files: `private` (raw / Voice) vs `public` (WebP).
 - Voice: no provisioned phone numbers, no inbound, no receptionist.
+
+## Deferred
+
+- **3. `files.scan_status` — name the scanner**
+  Comment: `confirm-upload` already branches on scan fail. Not this
+  pass. If AV lands later it is an edge/API product, not a Go/River
+  job. Same as media item 6.
