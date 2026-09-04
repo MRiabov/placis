@@ -44,11 +44,12 @@ Package ownership. Workflows live in the feature docs this list points at.
    `thread_items` / `runs`, `/v1/assistant/…` HTTP). Thread **identity** is
    `ai.threads` (`thread_kind=cms_assistant`). Unactivated tenants get 403
    `tenant_unactivated` on `/v1/assistant/…`. `onboarding/assistant` owns the
-   onboarding guide items/runs and `/v1/onboarding/assistant/…` (thread
-   `thread_kind=onboarding_assistant`). `onboarding/websiteeditor` owns unpaid
-   website preview Assistant HTTP. Knowledge YAML lives in those packages
-   (`go:embed`). Shared product glossary and Voice pronunciation live in
-   `internal/knowledge/` (onboarding must not import `internal/assistant`).
+   onboarding guide HTTP and knowledge (`/v1/onboarding/assistant/…`, thread
+   `thread_kind=onboarding_assistant`) and writes the shared overlay SQL
+   (`assistant.thread_items` / `assistant.runs`). `onboarding/websiteeditor`
+   owns unpaid website preview Assistant HTTP. Knowledge YAML lives in those
+   packages (`go:embed`). Shared product glossary and Voice pronunciation live
+   in `internal/knowledge/` (onboarding must not import `internal/assistant`).
    [Assistant](../features/assistant/README.md). [Onboarding website editor](../features/onboarding/website-editor.md).
 6. `ads` is a standalone service (the `/cms/ads` workspace is one owner). It
    reads the profile + approved media library items, proposes copy + image

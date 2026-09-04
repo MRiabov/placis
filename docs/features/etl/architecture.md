@@ -68,10 +68,11 @@ Triggers:
 - **Onboarding 02** — `trigger=onboarding`. ETL run kinds:
   [ETL run kind triggers](pipeline/etl-run-kind-triggers.md) (never `directory`, `review`, or `photo`). Cap: 5
   distinct `enqueue_id` per tenant per rolling 30 minutes. 02 counts first
-  (200 + `research_wait_until` on business lookup; `429` on a later source
-  change). `StartRun` counts again and inserts nothing if called over the cap.
-  ETL fast extract then ETL slow extract is why ETL run kinds fire in parallel
-  from 01 seeds, not a job deadline.
+  (source change over the cap stays 200 and skips `StartRun`). `StartRun` counts
+  again and inserts nothing if called over the cap. Find lookup cap is
+  `browser_safety_session_id` on 01 (`429` `browser_safety_cap`). ETL fast
+  extract then ETL slow extract is why ETL run kinds fire in parallel from 01
+  seeds, not a job deadline.
 - **Monday / Wednesday / Friday** — `trigger=scheduled`. Activated tenants
   only. ETL run kinds: Google Maps, Facebook, Instagram. Stagger tenants. No
   matching **Starts when** tuple → `status=insufficient_data_for_lookup`

@@ -5,10 +5,10 @@ CMS assistant overlay tables. Conventions:
 (Postgres schema `assistant`). Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 
-Thread **identity** is [`ai.threads`](../../general-architecture/llm-layer.md) (`thread_kind=cms_assistant`). This
-feature owns overlay items and the in-flight run. Shared AI traces: [LLM layer](../../general-architecture/llm-layer.md)
-(`ai.ai_generations`). Onboarding conversation: [onboarding persistence](../onboarding/persistence.md). Usage
-credit: [billing](../billing/persistence.md). Website last-writer:
+Thread **identity** is [`ai.threads`](../../general-architecture/llm-layer.md) (`thread_kind=cms_assistant` or
+`onboarding_assistant`). This feature owns overlay items and the in-flight run.
+Shared AI traces: [LLM layer](../../general-architecture/llm-layer.md) (`ai.ai_generations`). Guide isolation:
+[onboarding assistant](../onboarding/assistant.md). Usage credit: [billing](../billing/persistence.md). Website last-writer:
 [website edit history](../website/persistence.md)
 (`edit_history.ai_generation_id`). Voice recordings:
 [files](../../general-architecture/files-and-s3.md). Logic:
@@ -39,39 +39,49 @@ Do **not** keep leftover `website_assistant_threads` /
 - **Written by:** `GET /v1/assistant/thread/ws`;
   `POST /v1/assistant/voice/transcripts`;
   `POST /v1/assistant/voice/tool-calls`;
-  `POST /v1/assistant/record-reject`; `CompactAssistantThread`
+  `POST /v1/assistant/record-reject`; `CompactAssistantThread`;
+  `POST /v1/onboarding/assistant/voice/transcripts`
 - **Notes:** Do not store the recording file. Do not bake `[m:ss …]`
-  into `body`.
+  into `body`. Compaction is `cms_assistant` only. Guide items share
+  this table (`thread_kind=onboarding_assistant` on `ai.threads`).
 
 ### `runs`
 
 - **Columns:** `id`, `tenant_id` fk, `thread_id` fk → `ai.threads`,
-  `status`, `channel`, `assistant_screen`, `ask_first_status`,
-  `ai_generation_id` uuid nullable (audit row for this run; **not** a
-  thread FK), `recording_file_id` uuid nullable fk (`files`; CMS voice
-  only), timestamps
+  `onboarding_session_id` nullable fk (`onboarding.onboarding_sessions`;
+  required when the thread is `onboarding_assistant`; null on CMS /
+  unpaid website editor), `status`, `channel`, `assistant_screen`,
+  `ask_first_status`, `ai_generation_id` uuid nullable (audit row for
+  this run; **not** a thread FK), `recording_file_id` uuid nullable fk
+  (`files`; CMS voice only), timestamps
 - **Enums:** `status` → `running` / `succeeded` / `failed`; `channel` →
   `text` / `voice`; `ask_first_status` → `pending` / `applied` /
   `rejected` / null; `assistant_screen` → CMS v1 closed enum
-- **Uniques:** `(tenant_id) WHERE status = 'running'`
+- **Uniques:** `(tenant_id) WHERE status = 'running' AND
+  onboarding_session_id IS NULL`; `(onboarding_session_id) WHERE
+  status = 'running'`
 - **Written by:** `GET /v1/assistant/thread/ws`;
   `POST /v1/assistant/voice/realtime-connection`;
   `POST /v1/assistant/record-apply`;
   `POST /v1/assistant/record-reject`;
-  `POST /v1/assistant/voice/recordings/{id}/complete`
+  `POST /v1/assistant/voice/recordings/{id}/complete`;
+  `POST /v1/onboarding/assistant/voice/realtime-connection`;
+  `POST /v1/onboarding/assistant/voice/transcripts`
 - **Notes:** Unactivated 06 / `GenerateWebsiteCopy` also holds
-  `running` on this unique while unpaid
+  `running` on the CMS unique while unpaid
   ([website 03](../website/pipeline/03-website-copy-generation.md)).
-  Onboarding voice runs have no `recording_file_id`. Instant apply never
+  Guide runs set `onboarding_session_id` and leave `assistant_screen` /
+  `ask_first_status` / `recording_file_id` null. Instant apply never
   writes `ask_first_status=pending`.
 
 ## Indexes
 
-Unique: `(tenant_id) WHERE status = 'running'` on `runs`. Unique current
-CMS thread lives on `ai.threads`. Lookup: `(thread_id, created_at)` on
-`thread_items`; compaction on `ai.threads.last_activity_at` and
-`ai.threads.last_assistant_edit_at` (`thread_kind=cms_assistant`; tool
-events, not a discard timer).
+Unique: `(tenant_id) WHERE status = 'running' AND onboarding_session_id
+IS NULL` on `runs`; `(onboarding_session_id) WHERE status = 'running'`
+on `runs`. Unique current CMS thread lives on `ai.threads`. Lookup:
+`(thread_id, created_at)` on `thread_items`; compaction on
+`ai.threads.last_activity_at` and `ai.threads.last_assistant_edit_at`
+(`thread_kind=cms_assistant`; tool events, not a discard timer).
 
 River job `CompactAssistantThread`:
 [jobs](../../general-architecture/jobs.md). Same function on text 128K
