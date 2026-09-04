@@ -89,7 +89,7 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 
 `GET /v1/websites/{website_prefix}/editor/pages/{page_id}` returns:
 
-- `website` (id, `website_prefix`, website address, name); `page` (id, path /
+- `website` (id, `website_prefix`, website address); `page` (id, path /
   website page path, title, page_type, status, validation status, unpublished
   `blockers[]`).
 - `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,

@@ -99,15 +99,17 @@ Same job as onboarding [06](../features/onboarding/pipeline/06-website-copy-gene
 pending/running. A second insert while pending/running is a River unique
 conflict → HTTP **409**. Do not HTTP-check uniqueness before insert (it races).
 Onboarding 06 is `bill_usage=unbilled`. CMS `POST /v1/websites` inserts this job
-with `bill_usage=billed`. After Website activation the leftover onboarding job
-stays in schema `jobs` on that `website_id` (not cancelled). CMS PATCH /
-assistant HTTP are **not** 409 because this job is running (`assistant.runs` is
-a different lock).
+with `bill_usage=billed` when create ships. After Website activation the
+leftover onboarding job stays in schema `jobs` on that `website_id` (not
+cancelled). CMS PATCH / assistant HTTP are **not** 409 because this job is
+running (`assistant.runs` is a different lock).
 
 `thread_kind=website_copy_generation`, `prompt_id=website_copy_generation` in
 the onboarding package `prompts.yaml` (onboarding) or the website package (CMS).
-One `ai.threads` row per website. Worker: website copy generation
-(`websiteRender`). Routes: [website HTTP](../features/website/api.md).
+Insert one `ai.threads` row per website page before the first generate; reuse
+that uuid only for schema-repair on that agent. Parallel website pages are
+parallel threads. `ai_generations.thread_id` required. Worker: website copy
+generation (`websiteRender`). Routes: [website HTTP](../features/website/api.md).
 
 ### `ads_generate`
 
@@ -184,9 +186,9 @@ discard. **Skip** threads whose tenant is `status=unactivated` (onboarding
 website editor unpaid `current` must not compact — 12h, 128K overflow, or
 compact-before-seed would refill the five unpaid prompts).
 
-Onboarding 06 stays River job kind `website_copy_generation` with its own
-cap (3 steps / 12 calls / 4 website pages), not the CMS agent’s 20 model
-turns.
+Onboarding 06 stays River job kind `website_copy_generation`. Each
+website page’s agent is **20** tool-using model turns (same constant as
+the CMS assistant, per website page).
 
 ### `website_activation`
 

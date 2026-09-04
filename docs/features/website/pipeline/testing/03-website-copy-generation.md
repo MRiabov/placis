@@ -42,8 +42,10 @@ is a later caller.
     (no `create_page`). `website.menus` trees unchanged. Look sections
     (`page_id` null) unchanged.
   - `website_slot_reviews`: still zero.
-  - `ai.threads`: `thread_kind=website_copy_generation` for that tenant;
-    `ai_generations` on it with `prompt_id=website_copy_generation`, `input`,
+  - `ai.threads`: one `thread_kind=website_copy_generation` per website
+    page that generated; not one tenant singleton;
+    `ai_generations` on those threads with
+    `prompt_id=website_copy_generation`, `input`,
     `internal_reasoning`, `output`, `tool_calls` all present (`status=succeeded`
     for the batch). `tool_calls` includes `update_slot` / `update_seo` and does
     **not** include `create_page` or `update_reviews`. (a) roof-repairs vs

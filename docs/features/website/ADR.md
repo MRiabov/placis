@@ -309,7 +309,11 @@ Status: decided (2026-08-16, product owner + engineering).
     Business profile, Projects, reviews, media library, Ads, billing, Clerk
     organization, and the CMS Assistant thread stay tenant-scoped. Equal
     websites: no distinguished-website flag. `is_primary` hostname is per
-    website. (2026-09-03)
+    website. (2026-09-03) (2026-09-04): Logo is Details
+    `logo_media_asset_id` (tenant-shared). Whether a second website can
+    have its own logo is **TBD**. Websites copy from the same business
+    profile. SEO / copy duplication across a business’s websites is
+    **TBD**.
 
 27. **Website prefix at insert; path key is prefix** — Reserve
     `websites.website_prefix` in the same transaction as the `websites` row
@@ -328,14 +332,29 @@ Status: decided (2026-08-16, product owner + engineering).
 
 29. **River unique keys for copy jobs are `website_id`** — Pending/running
     `select_and_copy_website_template` and `website_copy_generation` unique on
-    `website_id`. Copy-generation `ai.threads` is one thread per website.
+    `website_id`. Copy-generation `ai.threads` is one thread per website
+    (storage unique **TBD**).
     `cms_assistant` stays unique current per tenant. `website_activation`
-    stays unique on `tenant_id`. (2026-09-03)
+    stays unique on `tenant_id`. (2026-09-03) (2026-09-04): Copy-generation
+    `ai.threads` follow the generate-factory rule: insert a uuid before
+    the first generate for that website page’s agent; reuse that uuid only
+    for schema-repair on that agent. Parallel website pages are parallel
+    threads (`thread_kind=website_copy_generation`). Not one row per
+    website. Do not add `website_id` on `ai.threads`. Uniques stay only
+    on `cms_assistant` current and `onboarding_assistant` per
+    `onboarding_session_id`.
+    River unique stays `website_id`. Previous (2026-09-03): one
+    copy-generation thread per website (storage unique TBD).
 
 30. **Occupancy counts every website** — Select website template occupancy
     counts websites with that `website_template_id` among occupying tenants,
-    including HTTP-created websites. HTTP create does not run occupancy; the
-    owner supplies `website_template_id`. (2026-09-03)
+    including HTTP-created websites when that path exists. **HTTP create**
+    is **deferred** (2026-09-04): first contractors use onboarding’s one
+    website. Everything about that flow is **TBD**:
+    [new-website-creation-flow.md](new-website-creation-flow.md). Do not
+    specify `website_template_id` on the wire this pass. Previous
+    (2026-09-03): HTTP create does not run occupancy; the owner supplies
+    `website_template_id`.
 
 31. **Host resolves to a website** — Host → `website_addresses.hostname` or
     `{website_prefix}.preview.placis.com` → `websites` → `tenant_id`. Do not

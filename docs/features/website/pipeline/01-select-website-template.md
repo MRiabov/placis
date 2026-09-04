@@ -36,8 +36,8 @@ Onboarding 05 after client interview complete
 
 `SelectWebsiteTemplate(tenantID, websiteID)` picks a production-ready
 website template. No LLM. No unpublished pages. **Onboarding only.** HTTP
-create does not call this; the owner’s `website_template_id` is already on
-`website_settings`.
+create is deferred; occupancy vs owner pick **TBD**
+([new-website-creation-flow.md](../new-website-creation-flow.md)).
 
 1. If this `website_id` already has `website_settings.website_template_id`,
    reuse that pick (retry of the same website). Stop.
