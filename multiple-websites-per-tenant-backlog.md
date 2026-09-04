@@ -35,7 +35,7 @@ from a decided rule but never explicitly accepted.
 | MW-9 | Editing / persistence | mechanical | 429 cap stated "per tenant" in editing.md |
 | MW-10 | Editing / persistence | resolved | Styles / edit history now "per website" (was "per tenant" ×3) |
 | MW-11 | Onboarding / hosting | mechanical | Prefix reserve timing stale in cloudflare.md |
-| MW-12 | General (llm-layer) | mechanical | `thread_kind` enum lists `website_copy_generation` twice |
+| MW-12 | General (llm-layer) | resolved | `thread_kind` enum lists `website_copy_generation` once (was twice) |
 | MW-13 | Website create | deferred | Owner-facing website label (no `name` column) |
 | MW-14 | Billing / cap | deferred | Archive / delete website (failed rows count toward cap) |
 | MW-15 | Website create | deferred | Website list screen (Ads/Projects-style) — pick existing or create new |
@@ -381,8 +381,10 @@ now "per website":
 
 ### MW-12 — llm-layer `thread_kind` enum lists `website_copy_generation` twice
 
+**Resolved (2026-09-04).** Removed the duplicate
+`thread_kind=website_copy_generation` CHECK value. The enum now lists it once.
+
 - docs/general-architecture/llm-layer.md:119–120 — duplicate CHECK value.
-  Mechanical defect surfaced while checking MW-8.
 
 **Confidence: high.**
 
@@ -491,8 +493,8 @@ each would close them.
    interacts with MW-14 (failed rows count toward the cap).
 2. **MW-4** — `websites/new/` wait cap value and post-cap behavior, needed to
    build the create screen (wait-end itself is settled — MW-3).
-3. **Editing (MW-9–10), llm-layer (MW-12)** — mechanical, fold into the next
-   docs commit. (MW-7 is resolved — 06 keys on `website_id`.)
+3. **Editing (MW-9)** — mechanical, fold into the next docs commit. (MW-7,
+   MW-10, and MW-12 are resolved.)
 4. **Assistant (MW-6, MW-8)** — contract-shaping; answer before Go work
    starts. (MW-5 and MW-21 are resolved.)
 5. **Shared profile (MW-19–20)** — one-line confirms, then close.
