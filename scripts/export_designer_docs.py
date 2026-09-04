@@ -25,6 +25,7 @@ DOCS = REPO / "docs"
 
 BACKEND_NAMES = {
     "ADR.md",
+    "ai-layer.md",
     "api.md",
     "architecture.md",
     "assistant.md",
@@ -40,7 +41,6 @@ BACKEND_NAMES = {
     "frontend-debloat.md",
     "frontend-stack.md",
     "jobs.md",
-    "llm-layer.md",
     "manifest.md",
     "module-layout.md",
     "package-boundaries.md",

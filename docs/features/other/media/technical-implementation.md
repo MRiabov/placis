@@ -46,3 +46,7 @@ The key rules:
    `describe_image`. First-upload auto-cleanup **calls**
    `CleanupMediaAsset` only when feature flag `media_auto_cleanup` is
    on (default off).
+5. **Generate is an `ai` image call**: `CreateGeneratedMediaAsset`
+   takes caller `bill_usage` and `thread_id`. CMS billed; onboarding
+   unbilled. `ai` **calls** `AssertUsageCredit` /
+   `RecordAIUseSpend`. Media must not **call** `RecordAIUseSpend`.

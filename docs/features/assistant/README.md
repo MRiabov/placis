@@ -32,5 +32,5 @@ Onboarding guide: [onboarding assistant](../onboarding/assistant.md). Unpaid
 website preview:
 [onboarding website editor](../onboarding/website-editor.md). Usage credit:
 [billing](../billing/README.md). LLM traces:
-[LLM layer](../../general-architecture/llm-layer.md) (schema `ai`). Voice
+[AI layer](../../general-architecture/ai-layer.md) (schema `ai`). Voice
 transport: [voice agent](../../general-architecture/voice-agent.md).
