@@ -21,7 +21,7 @@ Does not enqueue generate. Next step is 02, which SELECTs the stub
     step. No `ads_generate` job.
 - **Cases**:
   - Omit ideal customer profile: `icp_household=married_couples`,
-    `icp_age_min=30`, `icp_age_max=40`, `icp_source=default`.
+    `icp_age_min=30`, `icp_age_max=40`, `icp_source=static`.
   - `PATCH /v1/ads/{ad_id}` changes `format` on the same stub row; row
     count stays 1.
   - Same `tenant_id` second `POST /v1/ads` inserts a second ad, not a

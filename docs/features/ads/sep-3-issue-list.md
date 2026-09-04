@@ -34,9 +34,17 @@ posting. Bold numbers are original audit ids (not compacted).
 
 - **17. Structured ideal customer profile columns**
   Comment: ADR 8 default is married couples 30–40, stored as
-  `icp_household` / `icp_age_min` / `icp_age_max`. ADR 22: precise
-  targeting arrives with ad posting, without extra data entry.
+  `icp_household` / `icp_age_min` / `icp_age_max`,
+  `icp_source=static`. ADR 22: precise targeting arrives with ad
+  posting, without extra data entry.
   Action: none. Do not collapse to `icp_notes`.
+
+- **6. `icp_review_status` / `icp_source=llm_suggested` (deferred
+  stub)**
+  Comment: ADR 8 (updated 2026-09-04): LLM suggestion job is later.
+  CreateAd writes `icp_source=static` (married couples 30–40). Columns
+  and `llm_suggested` stay. No River job in this slice.
+  Action: none until that later slice. Do not drop the column.
 
 ## Closed
 
@@ -63,19 +71,14 @@ posting. Bold numbers are original audit ids (not compacted).
   Action: answer question 2, then delete or define values. Not an
   auditor drop.
 
-- **6. `icp_review_status` / `icp_source=llm_suggested`**
-  Comment: ADR 8: LLM suggests asynchronously, reviewable. Backend
-  test 15 exists. No River job kind.
-  Action: spec the suggestion job and closed `icp_review_status`
-  values. Do not drop the column.
-
 - **Audience picker (deferred)**
   Comment: frontend had a SearchableCombobox for the ideal customer
   profile. Product is unsure the owner should pick an audience at
   all. [ADR 40](ad-generation/ADR.md) hides the picker; the default
-  is displayed. Location uses `business_profile_service_areas`.
+  is displayed. Location uses `business_profile_service_areas`. The
+  LLM suggestion job is Keep item 6, not this picker.
   Action: do not add an `audiences` collection or options endpoint
-  until that product question is decided. Item 6 stays deferred.
+  until that product question is decided.
 
 - **7. `ads.origin` writers unnamed**
   Comment: `AdCreate` cannot set it. `owner` / `done_for_you` have
