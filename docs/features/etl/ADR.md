@@ -54,7 +54,8 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    `details` schema) and that profile’s media library items. `etl` keeps raw
    fetches, runs, and the Google Maps listing (hours / reviews on `place_id`).
    (2026-08-27; 2026-09-02: photo kind is `logo` / `photo` on
-   `DescribeImage`, not a 5-way ETL classifier.)
+   `DescribeImage`, not a 5-way ETL classifier.) (2026-09-04: schema is
+   `business_profile`, not `details`.)
 
 6. **Scheduled refresh is Monday, Wednesday, Friday** — Activated tenants.
    Sources: Google Maps, Facebook, Instagram (public scrape; Graph API later).
@@ -84,6 +85,8 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
 9. **Later: rename schema `details`** — Details the screen is a subset of the
    business profile. Rename Postgres schema `details` to `business_profile` or
    `profile` in a later slice. Do not rename it in this docs pass. (2026-08-27)
+   (2026-09-04): Renamed to `business_profile`. Details remains the screen.
+   Projects already lived in this namespace.
 
 10. **Transform skip is `algorithm` + `schema_revision`; `human` is never
     overwritten by ETL** — Every transform-written schema stores `algorithm` and

@@ -3,16 +3,15 @@
 The live `business_profiles` row plus the list tables below **is** the
 business profile (except projects:
 [projects persistence](../projects/persistence.md)). Details the screen
-edits a subset; this file still owns the tables because schema
-`details` is not renamed yet ([ETL ADR #9](../../etl/ADR.md)).
-Onboarding and ETL transform write these rows; the website shows them;
-ads read them.
+edits a subset; this file still owns those tables. Postgres schema is
+`business_profile` (same namespace as projects;
+[ETL ADR 9](../../etl/ADR.md)). Onboarding and ETL transform write these
+rows; the website shows them; ads read them.
 
 Conventions:
 [persistence conventions](../../../general-architecture/persistence.md)
-(Postgres schema `details`). Named identifiers:
+(Postgres schema `business_profile`). Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
-Later: rename this schema to `business_profile` or `profile`.
 [ADR](ADR.md). Facebook / Instagram profile and post rows live here
 (tenant-owned). The Google Maps listing stays in
 [ETL](../../etl/persistence.md).
@@ -313,8 +312,8 @@ table.
 - **Enums:** none closed
 - **Uniques:** `id`
 - **Written by:** catalogue seed (not tenant HTTP)
-- **Notes:** Global (not tenant). Postgres schema `details`, not
-  `website`. `available[]` on certifications HTTP.
+- **Notes:** Global (not tenant). Postgres schema `business_profile`,
+  not `website`. `available[]` on certifications HTTP.
 
 ### `business_profile_certification_selections`
 

@@ -7,8 +7,8 @@ later CMS Publish.
 - **Setup**: unpublished website from 02 (`website_pages` /
   `website_sections` / `website_slots` / `website.menus` /
   `website_forms`; `website_settings` from 01). Live
-  `business_profiles`. `media_assets` as needed for `media_asset_urls`.
-  Optional 03 copy already in website slots. Record
+  `business_profile.business_profiles`. `media_assets` as needed for
+  `media_asset_urls`. Optional 03 copy already in website slots. Record
   `website_slots.value` (still tokenized where required). For 08:
   onboarding session `preview_and_edit`,
   `websites.website_prefix` and `type=subdomain` already from 05,

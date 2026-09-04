@@ -5,17 +5,16 @@ off a publication row. Wait-end is onboarding session `preview_and_edit`. 04
 is a later caller.
 
 - **Setup**: 02 rows exist (`website_pages` / `website_sections` /
-  `website_slots` / `website.menus` / `website_forms`; `website_settings`
-  from 01). Schema `jobs`: one `website_copy_generation` on this
-  `website_id`. `onboarding_sessions`. `media_assets` may exist for photo
-  selection. `business_profiles`. At least two named services (roof
-  repairs and gutter cleaning). Record website page ids, website slot
-  ids, and tokenized `website_slots.value` before invoke. Two cases for
-  photo selection: (a) unused `photo_kind=photo` (not `logo`) whose
-  **media caption** matches those named services; (b) no matching media
-  caption in that pool (`logo` only, or a media caption that does not
-  match). A portrait website slot with no matching person-portrait
-  **media caption** stays empty (no `generate_image`).
+  `website_slots` / `website.menus` / `website_forms`; `website_settings` from
+  01). Schema `jobs`: one `website_copy_generation` on this `website_id`.
+  `onboarding_sessions`. `media_assets` may exist for photo selection.
+  `business_profile.business_profiles`. At least two named services (roof
+  repairs and gutter cleaning). Record website page ids, website slot ids, and
+  tokenized `website_slots.value` before invoke. Two cases for photo selection:
+  (a) unused `photo_kind=photo` (not `logo`) whose **media caption** matches
+  those named services; (b) no matching media caption in that pool (`logo` only,
+  or a media caption that does not match). A portrait website slot with no
+  matching person-portrait **media caption** stays empty (no `generate_image`).
 - **Exercise**: run that River job. Fake the website-editor-tool LLM to a
   small `update_slot` / `update_seo` batch (no `create_page`, no
   `update_reviews`). In (a) also `update_slot` + `media_asset_id` attach

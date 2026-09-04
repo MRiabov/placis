@@ -17,7 +17,8 @@ path (`onboarding_sessions.website_id`).
 publication stay active tenant. Preview website address: no
 website-editor GET/PATCH.
 
-Live business profile: [details](../business-profile/details/api.md).
+Live business profile:
+[business profile HTTP](../business-profile/details/api.md).
 Projects: [projects](../business-profile/projects/api.md). Media library:
 [media library](../other/media/api.md). Website form submit:
 [leads](../other/leads/api.md).
