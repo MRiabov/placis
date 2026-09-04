@@ -28,7 +28,7 @@ Inside `/cms` the Clerk session is usually already `setActive`; `/me` still
 echoes the id. Frontend: `if (!orgId && clerk_org_id) setActive`. Do
 not create a Clerk session token from Go.
 
-`website_prefix` stays on `auth.tenants` and on
+`website_prefix` lives on `websites` and on
 `PreviewWebsiteAddressRead.url`, `WebsiteAddressRead.hostname`,
 internal `WebsitePublicationRequest.website_prefix`. Host → tenant is
 `ResolveTenantFromHost` from the request `Host`, not from `/me`.

@@ -145,8 +145,9 @@ Deferred. `POST /v1/websites`. Request `WebsiteCreate`. Response
 
 #### Verify
 
-When create ships: **persists into** `websites`, `website_settings`.
-Prefix reserved. Copy generation billed. Isolation vs the onboarding
+When create ships: **persists into** `websites`, `website_settings`,
+`website_addresses` (`type=subdomain`). Prefix reserved in the same
+transaction. Copy generation billed. Isolation vs the onboarding
 website. Fail: `402 website_limit_reached` at cap; `402
 usage_credit_exhausted` (no row).
 

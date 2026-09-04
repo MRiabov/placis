@@ -6,7 +6,7 @@
   Also: Maps-only, registry-only, and both. Also: a second lookup with
   the stored token.
 - **Verify**: one `tenants` row (`status=unactivated`, `clerk_org_id`
-  null, `website_prefix` null, `country=ie`); one `onboarding_sessions`
+  null, `country=ie`); one `onboarding_sessions`
   row (`started_from`, `status=client_interviewing`, `token`,
   `browser_safety_session_id`, `online_research_consent_at`,
   `tenant_id` = that tenant,
@@ -19,8 +19,7 @@
   `company_number` / `website_url` match the selected records;
   without online research consent, business research does not start; a
   second business lookup with a stored token does not insert another
-  `onboarding_sessions` row; no `website_pages` and no
-  `website_prefix` yet.
+  `onboarding_sessions` row; no `website_pages` and no `websites` row.
 - **Fail**: missing consent, missing both sources, or missing
   `browser_safety_session_id` → 4xx; no tenant, no onboarding session.
   Sixth lookup in 30 minutes with the same `browser_safety_session_id`

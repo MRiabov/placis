@@ -98,9 +98,9 @@ publication).
 Website activation (09): the webhook **inserts** River job kind
 `website_activation`, which **upgrades** the existing unactivated tenant (Clerk
 organization, owner membership, `status=active`). It does not create a tenant
-and does not invent `website_prefix` (08 reserved it if they shared; otherwise
-09 reserves). 09 writes website publication without the strip (v2 if they
-shared, else the first live write). The host stays up. Owner CMS website
+and does not invent `website_prefix` (05 reserved it). 09 writes website
+publication without the strip (v2 if they shared, else the first live
+write). The host stays up. Owner CMS website
 publication is the next website version.
 
 ## Progressive progress (SSE)

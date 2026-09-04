@@ -8,7 +8,7 @@ when empty.
 
 Round 1 parked create, Assistant multi-website knowledge, logo, and SEO
 duplication in canonical docs. Round 2 patched N-ready wording (2026-09-04).
-Remaining rows are parked-as-intended or waiting on another PR.
+Remaining rows are parked-as-intended.
 
 Language: [glossary](../../glossary.md). Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
@@ -53,7 +53,7 @@ Ads-style list. Onboarding wait teaser is unchanged.
 | MW-33 | Frontend | resolved | Website editor HTTP and CMS routes are prefix-keyed; bare `/cms/website` is the Sites redirect |
 | MW-34 | Look | parked | Demo app `/cms/website` waits on create |
 | MW-35 | CI | resolved | Docs-code website ratchet arms on `/v1/websites` |
-| MW-36 | Billing | wait | Billing tests and ADR still POST `/v1/website/publications` until [PR #88](https://github.com/MRiabov/placis/pull/88) |
+| MW-36 | Billing | resolved | Nested publication and website editor HTTP after [PR #88](https://github.com/MRiabov/placis/pull/88) |
 | MW-37 | Create UX | resolved | No CMS wait screen; after create, the Ads-style list |
 | MW-38 | Leads | resolved | Console filters via `website_forms.website_id` (no `leads.website_id`) |
 | MW-39 | Website editor | resolved | Projection keyed on `{website_prefix}`; working copy has `website_prefix` |
@@ -87,18 +87,9 @@ Parked with create. [`apps/demo/`](../../../apps/demo/README.md)
 
 ---
 
-## Waiting
-
-### MW-36 — Billing still names flat `/v1/website/publications`
-
-Do not touch billing ADR or billing testing this pass. Rebase after
-[PR #88](https://github.com/MRiabov/placis/pull/88).
-
----
-
 ## Open questions
 
-Answered 2026-09-04 (patched in canonical docs unless parked / wait):
+Answered 2026-09-04 (patched in canonical docs unless parked):
 
 1. **Publish blockers scope.** This `website_id`.
    `subscription_canceled` tenant-wide. (MW-22)
@@ -127,4 +118,4 @@ Answered 2026-09-04 (patched in canonical docs unless parked / wait):
 
 Still open (not this pass): logo override, SEO steering, ads privacy
 URL, certifications/reviews per website vs ads, isolation E2E of a
-second website, MW-36 after #88.
+second website.
