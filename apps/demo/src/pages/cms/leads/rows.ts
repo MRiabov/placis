@@ -95,10 +95,14 @@ export const leadRows: LeadRow[] = [
   },
 ];
 
-export function newAdLeadCount(adId: string): number {
+export function newAdLeads(adId: string): LeadRow[] {
   return leadRows.filter(
     (row) => row.origin === "ad" && row.adId === adId && row.status === "new",
-  ).length;
+  );
+}
+
+function newAdLeadCount(adId: string): number {
+  return newAdLeads(adId).length;
 }
 
 export function newAdLeadLabel(adId: string): string {

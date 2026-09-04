@@ -5,7 +5,7 @@ import { type ReactNode, useMemo, useState } from "react";
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { ads } from "@/pages/cms/ads/AdsList";
 import { adsSearch } from "@/pages/cms/ads/search";
-import { newAdLeadCount, newAdLeadLabel } from "@/pages/cms/leads/rows";
+import { newAdLeadLabel, newAdLeads } from "@/pages/cms/leads/rows";
 import { leadsSearch } from "@/pages/cms/leads/search";
 import { Button } from "@/ui/Button";
 import { Field, TextInput } from "@/ui/Field";
@@ -221,31 +221,63 @@ export function AdsDetail(): ReactNode {
 }
 
 function AdLeadsPanel({ adId }: { adId: string }): ReactNode {
-  const count = newAdLeadCount(adId);
-  const empty = count === 0;
-  return (
-    <Link
-      className="rounded-[18px] border border-dashed border-stone-300 px-4 py-5 hover:bg-zinc-50 min-[801px]:col-start-2 min-[801px]:row-start-2"
-      search={leadsSearch({
-        ad_id: adId,
-        source: "ad",
-      })}
-      to="/cms/leads"
-    >
-      <span className="flex items-start gap-3">
-        <span className="grid size-12 shrink-0 place-items-center rounded-full bg-zinc-100 text-zinc-500">
-          <Inbox aria-hidden="true" className="size-5" strokeWidth={1.6} />
-        </span>
-        <span className="min-w-0">
-          <b className="block text-sm font-semibold tracking-tight">
-            {empty ? "Nothing here yet" : newAdLeadLabel(adId)}
-          </b>
-          <span className="mt-1 block text-sm leading-snug text-muted-foreground">
-            {empty
-              ? "No ad leads from this ad yet."
-              : "New ad leads for this ad open on Leads."}
+  const rows = newAdLeads(adId);
+  const search = leadsSearch({
+    ad_id: adId,
+    source: "ad",
+  });
+  if (rows.length === 0) {
+    return (
+      <Link
+        className="rounded-[18px] border border-dashed border-stone-300 px-4 py-5 hover:bg-zinc-50 min-[801px]:col-start-2 min-[801px]:row-start-2"
+        search={search}
+        to="/cms/leads"
+      >
+        <span className="flex items-start gap-3">
+          <span className="grid size-12 shrink-0 place-items-center rounded-full bg-zinc-100 text-zinc-500">
+            <Inbox aria-hidden="true" className="size-5" strokeWidth={1.6} />
+          </span>
+          <span className="min-w-0">
+            <b className="block text-sm font-semibold tracking-tight">
+              Nothing here yet
+            </b>
+            <span className="mt-1 block text-sm leading-snug text-muted-foreground">
+              No ad leads from this ad yet.
+            </span>
           </span>
         </span>
+      </Link>
+    );
+  }
+  return (
+    <Link
+      className="rounded-[18px] border border-hairline bg-white px-4 py-3 shadow-prompt hover:bg-zinc-50 min-[801px]:col-start-2 min-[801px]:row-start-2"
+      search={search}
+      to="/cms/leads"
+    >
+      <span className="flex items-center justify-between gap-2">
+        <b className="text-sm font-semibold tracking-tight">
+          {newAdLeadLabel(adId)}
+        </b>
+        <span className="rounded-lg border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800">
+          New
+        </span>
+      </span>
+      {rows.map((row) => (
+        <span
+          className="mt-2 block border-b border-hairline py-2 last:border-b-0 last:pb-0"
+          key={row.id}
+        >
+          <b className="block text-sm font-semibold tracking-tight">
+            {row.contactName}
+          </b>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            {row.marketingPhone} · {row.marketingEmail}
+          </span>
+        </span>
+      ))}
+      <span className="mt-2 block text-xs text-muted-foreground">
+        Open on Leads
       </span>
     </Link>
   );
