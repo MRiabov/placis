@@ -158,7 +158,8 @@ to the parent. Response: parent `MediaAssetRead` when a parent exists
 
 **Not media HTTP** (other resources, or in-process **calls**):
 
-- **Attach** — website `PATCH /v1/website/editor/pages/{page_id}` /
+- **Attach** — website
+  `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}` /
   assistant `update_slot`; ads
   `PATCH …/variants/{variant_id}`; Details
   `PATCH /v1/business-profile` (`logo_media_asset_id` /
@@ -182,8 +183,8 @@ to the parent. Response: parent `MediaAssetRead` when a parent exists
 ## Do not create
 
 - `/v1/files`
-- `/v1/website/editor/assets`
-- `/v1/website/editor/files/…`
+- `/v1/websites/{website_prefix}/editor/assets`
+- `/v1/websites/{website_prefix}/editor/files/…`
 - a second ads-only library
 - `POST /v1/ads/{ad_id}/variants/{variant_id}/cleanup`
 - `POST /v1/ads/…/reject` or `/accept`

@@ -298,8 +298,9 @@ instead of silently replacing it.
     `/onboarding/preview-and-edit/` only (policy wrapper in
     `internal/onboarding/websiteeditor`). Contractor copy is **Assistant** on
     all three. Do not relax unactivated **403** `tenant_unactivated` on
-    `/v1/assistant/…`. Do not add `/v1/website/editor/assistant`. CMS HTTP must
-    not import `onboarding/websiteeditor`. (2026-08-30)
+    `/v1/assistant/…`. Do not add
+    `/v1/websites/{website_prefix}/editor/assistant`. CMS HTTP must not import
+    `onboarding/websiteeditor`. (2026-08-30)
 
 26. **Onboarding website editor reuses `ai.threads`
     (`thread_kind=cms_assistant`)** — Same overlay `thread_items` / `runs`. No

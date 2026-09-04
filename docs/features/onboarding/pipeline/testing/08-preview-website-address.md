@@ -36,7 +36,7 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
     page URLs / sitemap / robots / WebP; GET of host HTML includes the
     website-activation island (strip on).
 - **Handoff to 09**: 09 Pre can SELECT this `active`
-  `published_by=onboarding` row and `tenants.website_prefix`. Pay
+  `published_by=onboarding` row and `websites.website_prefix`. Pay
   writes v2 via website 04 (strip off) and archives this v1.
 - **Fail**: website 04 required missing var → no new
   `website_publications`; `website_prefix` may already be reserved

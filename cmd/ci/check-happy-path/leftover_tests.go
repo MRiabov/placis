@@ -32,7 +32,6 @@ var leftoverTests = []string{
 	"GET /v1/onboarding/website/editor/pages/{page_id}",
 	"GET /v1/projects",
 	"GET /v1/projects/{id}",
-	"GET /v1/website-templates",
 	"GET /v1/websites",
 	"GET /v1/websites/{website_prefix}",
 	"GET /v1/websites/{website_prefix}/addresses",

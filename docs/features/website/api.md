@@ -56,7 +56,6 @@ Website editor PATCH 429 cap (30 / 10s) is **per website**.
 | --- | --- | --- |
 | `WebsiteRead` | `id`, `website_prefix`, `website_template_id`, `copy_generation_status` | List/create/poll row |
 | `WebsiteCreate` | `website_template_id` | CMS create |
-| `WebsiteTemplateRead` | `id`, catalog fields the pick UI needs | Production-ready catalog row |
 
 `copy_generation_status` → `running` / `done` / `failed`. Wait-end on
 `websites/new/` is home website page website copy generation `done`, or
@@ -141,7 +140,6 @@ the hard gate. Do not duplicate the three `code` values per route.
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GET /v1/websites` | CMS | | `WebsiteRead[]` | `websites` | | This tenant | | Fat unpublished dump |
-| `GET /v1/website-templates` | `websites/new/` | | `WebsiteTemplateRead[]` | catalog | | Production-ready only | Extra keys 4xx | Occupancy pick |
 | `POST /v1/websites` | `websites/new/` | `WebsiteCreate` | `WebsiteRead` | `websites`, `billing.subscriptions` | `websites`, `website_settings`; **inserts** copy-pages + `website_copy_generation` (`bill_usage=billed`) | Reserve `website_prefix`; count + insert one transaction; no occupancy | `400` unknown / not production-ready id; `402 website_limit_reached`; `402 usage_credit_exhausted` (no row) | Duplicate; empty unpublished website |
 | `GET /v1/websites/{website_prefix}` | wait-end poll | | `WebsiteRead` | `websites` | | Copy-generation status | `404` | Onboarding SSE wait teaser |
 

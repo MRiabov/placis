@@ -89,8 +89,9 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 
 `GET /v1/websites/{website_prefix}/editor/pages/{page_id}` returns:
 
-- `tenant` (id, website address, name); `page` (id, path / website page path,
-  title, page_type, status, validation status, unpublished `blockers[]`).
+- `website` (id, `website_prefix`, website address, name); `page` (id, path /
+  website page path, title, page_type, status, validation status, unpublished
+  `blockers[]`).
 - `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
   `seo_canonical_url`, `seo_noindex`; **website styles** (preset +
   overrides from `website_settings`, shown here, stored once per website).

@@ -8,13 +8,20 @@ write is website
 ## Trigger
 
 05 succeeded. One River job kind `website_copy_generation`. Lock key:
-`tenant_id` (unactivated tenant already exists). A second 06 start is
-**409** from River unique-insert on that key (do not HTTP-check before
+`website_id` (the website 05 inserted; a second 06 start for that website is
+**409** from River unique-insert on that key — do not HTTP-check before
 insert). While
 unactivated, 06 also holds `assistant.runs` `running` on the
 onboarding-website-editor thread
 ([website editor](../website-editor.md)). After 09 that lock must not sit
-on CMS `assistant.runs`; leftover 06 is River-only on `tenant_id`.
+on CMS `assistant.runs`; leftover 06 is River-only on `website_id`.
+
+**Defensive check.** Before enqueue, assert the tenant has exactly one
+`websites` row for this run (the onboarding website). If more than one exists
+(should not happen this pass), fail the job rather than enqueue copy
+generation for an ambiguous website. The `website_id` unique lock already
+guards against two concurrent 06 runs for the same website; this check guards
+against keying the lock on the wrong website.
 
 ## Pre
 
@@ -56,5 +63,6 @@ optional.
 
 ## Invariants
 
-- Lock = `tenant_id` before and after 09. While unactivated, also
+- Lock = `website_id` before and after 09. While unactivated, also
   `assistant.runs` unique running. After 09, not on CMS `assistant.runs`.
+  Before enqueue, assert exactly one `websites` row for the tenant.
