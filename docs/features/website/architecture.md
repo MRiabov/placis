@@ -215,8 +215,10 @@ version.
 website rollback.
 
 Website publication and live website rollback require
-`tenants.subscription_status=active`. If they stopped paying,
-`UnpublishWebsite` already replaced R2 `latest/` with the holding page
+`tenants.subscription_status=active`. That status stays `active` during
+the three-calendar-month non-payment window. After owner cancel at
+period end, or after `billing_nonpayment_unpublish`,
+`UnpublishWebsite` already replaced R2 `latest/` with the holding HTML
 and cleared `website_publications.active`; POST is **402**
 `subscription_canceled`. Website editor PATCH still works. Usage &
 billing is how they pay again

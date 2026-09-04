@@ -132,7 +132,7 @@ Frontend completeness (documented, not CI-asserted this pass):
 | Onboarding | `HappyPathOnboardingFull` — Find → preview/pay | 01–09 Vitest files |
 | Website | `HappyPathWebsiteFull` — website editor → Publish | one test per website Route |
 | Auth | `HappyPathAuthFull` — `/login` → `setActive` → `/cms` | `AuthGate.test.tsx` |
-| Billing | `HappyPathBillingFull` — Usage & billing → cancel / keep / pay-again | one test per billing Route |
+| Billing | `HappyPathBillingFull` — Usage & billing → cancel / keep / pay-again | one test per billing Route (including catalogue GET) |
 | Assistant | `HappyPathAssistantFull` — CMS dock | one test per assistant Route |
 | Media library | `HappyPathMediaFull` — `/cms/media` upload → crop | one test per media library Route |
 | Details | `HappyPathDetailsFull` — Business details click-off → Revert / OK | one test per Details Route |

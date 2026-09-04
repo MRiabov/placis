@@ -78,7 +78,7 @@ usually a **doc gap**, not a drop.
   (08)” with no note. Billing ADR 2/8 and frontend-debloat “match 07”
   are downstream errors.
   Action: dated amendment on onboarding ADR 16; correct
-  frontend-debloat and (until #88) billing PRD.
+  frontend-debloat. Billing PRD activation is 09.
 
 - **18. `OnboardingProfileRead.preview_website_address` reader
   unnamed**
@@ -98,7 +98,7 @@ usually a **doc gap**, not a drop.
   Comment: webhook is `checkout.session.completed` only. Keep
   `amount` / `currency` (billing ADR 2: billing does not own this
   row) and `stripe_events.processed` (09 Website activation test
-  asserts it). #88 keeps `refunded` (billing ADR 17: refunds are
+  asserts it). This spec keeps `refunded` (billing ADR 20: refunds are
   money-only).
   Action: drop `failed`, `failure_reason`, `activated_at`. Name a
   source for `WebsiteActivationStatusRead.checkout_url` or drop that

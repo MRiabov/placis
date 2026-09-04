@@ -6,14 +6,16 @@ Tables: [persistence.md](persistence.md). HTTP: [api.md](api.md). Look:
 [design decision record](design-decision-record.md). Decisions:
 [ADR.md](ADR.md).
 
-Website activation (one-time pay) is
+Website activation Checkout (activation Price plus Pro month) is
 [09](../onboarding/pipeline/09-website-activation.md). This feature owns
-usage credit after that.
+usage credit after that, catalogue cache, pay-again, cancel / keep, and
+the non-payment unpublish clock.
 
 ## Named identifiers
 
 HTTP (same spelling in spec, Go, and tests), `internal/billing/`:
 
+- `GetBillingCatalog`
 - `GetBillingUsage`
 - `CreateExtraUsageCreditCheckout`
 - `CreateSubscriptionCheckout`
@@ -29,20 +31,29 @@ Called from other packages:
 - `RecordAIUseSpend` — `internal/ai` **persists into**
   `ai_use_ledger_entries` (`entry_kind=spend`) after a vendor-hit that
   records **their usage**. Features **must not** **call** this after an
-  `ai` call
+  `ai` call. Debit is `amount_eur` (dated FX from the vendor invoice
+  currency at debit; do not invent the FX source here)
 - `BillUsageMode` / `bill_usage` —
   [glossary](../../glossary.md#billusagemode). Generic external spend
   (AI and ETL). How `ai` applies remaining 0:
   [LLM layer](../../general-architecture/llm-layer.md#billusagemode)
 - `ActivateSubscription` — `website_activation` **calls** this after
-  `tenants.status=active`
+  `tenants.status=active`. **Persists** `billing.subscriptions` from the 09
+  Checkout (`stripe_customer_id`, `stripe_subscription_id`, Pro month). Does
+  **not** create a second Stripe Subscription. Does **not** insert
+  `included_usage_credit` (that is `invoice.paid` / `AddIncludedUsageCredit`)
 - `ApplyExtraUsageCredit` — River job kind `billing_extra_usage_credit`
 - `AddIncludedUsageCredit` — new-period `included_usage_credit` row
+  (unique Stripe invoice id). **Reads** invoice / Checkout metadata
+  `tenant_id` (may race `website_activation`)
 - `SyncSubscriptionFromStripe` — River job kind
   `billing_subscription_sync`
-- `UnpublishWebsite` — website package; billing **calls** it when
-  `status` becomes `canceled` (clears `website_publications.active` on
-  every website; R2 `latest/` is holding HTML)
+- `SyncCatalogFromStripe` — River job kind `billing_catalog_sync`
+- `UnpublishWebsite` — website package; billing **calls** it when the
+  non-payment deadline job sets `status=canceled`, and when an
+  owner-scheduled cancel reaches period end (clears
+  `website_publications.active` on every website; R2 `latest/` is holding
+  HTML)
 
 Tables: [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 River job kinds: [jobs.md](../../general-architecture/jobs.md).
@@ -53,14 +64,25 @@ Usage credit is **only** `ai_use_ledger_entries`. Remaining, ×5, Voice /
 Image / text edits, 20% / empty, and **402** `usage_credit_exhausted`
 never live on Stripe.
 
-Stripe is payment and the subscription-price clock: 09 activation
-Checkout; extra usage credit Checkout; Stripe Subscription for the
-subscription price; webhooks (`invoice.paid`, subscription
-updated/deleted). Do **not** store remaining usage credit on Stripe
-(meters, usage records, Stripe balance, or Clerk Billing).
+Stripe Product + Price is the charged amount. Postgres `billing.prices`
+is the cache Checkout and `GetBillingCatalog` **read**. `product.*` /
+`price.*` webhooks **insert** `billing_catalog_sync` (`event_id`); the
+worker **reads** `stripe_events.payload` and upserts/deactivates **that**
+row. Empty cache / boot **inserts** one full-list
+`billing_catalog_sync`. Not `Prices.List` on Checkout or catalogue GET.
+Not Clerk Billing. Not Stripe meters.
+
+Stripe is also payment and the subscription-price clock: 09 Checkout
+(`mode=subscription` plus one-time activation Price); extra usage credit
+Checkout (`mode=payment`); pay-again Checkout (Pro month only); webhooks
+(`invoice.paid`, `invoice.payment_failed`, subscription updated/deleted,
+`charge.refunded`). Do **not** store remaining usage credit on Stripe.
 `invoice.paid` **calls** `AddIncludedUsageCredit`. Optimistic
-`tenants.subscription_status` and `billing.subscriptions` are product
-status; Stripe is refreshed when a webhook lands.
+`tenants.subscription_status` and `billing.subscriptions` are the
+product row (tenant ↔ `stripe_customer_id` / Subscription, 3-month clock,
+occupancy) — not a Stripe JSON cache. Stripe is refreshed when a
+webhook lands. The daily `billing_nonpayment_unpublish` job **retrieves**
+Stripe at the deadline only (not on Publish).
 
 ## Pool
 
@@ -69,15 +91,17 @@ record of included usage credit, extra usage credit purchases, and
 spends. Remaining is the sum of `included_usage_credit` and
 `extra_usage_credit` minus `spend`. Do not store remaining on `tenants`.
 
-At the start of a subscription period, **calls**
-`AddIncludedUsageCredit` for the current subscription tier. Do **not**
-zero remaining. Unused usage credit carries over. Extra usage credit is
-already in the pool, so it carries too. No expiry. No carry-over cap.
-`amount_usd_cents` is the catalogue included usage credit at insert time
-(Placis Pro plan $100 / Plus $400 / Max $1,500).
+At each paid monthly invoice, **calls** `AddIncludedUsageCredit` for the
+cached Price’s `included_usage_credit_eur`. Do **not** zero remaining.
+Unused usage credit carries over. Extra usage credit is already in the
+pool, so it carries too. No expiry. No carry-over cap. The first 09 pay
+includes one month of included usage credit (that same `invoice.paid`;
+do not grant twice from `checkout.session.completed`). The access fee
+does not add a second grant.
 
-Owner markup is **×5** on **our cost**. Usage & billing shows **their
-cost**, never ours. $50 shown ⇒ they can spend **$10** of our cost.
+Owner markup is **×5** on **our cost** after conversion to EUR. Usage &
+billing shows **their cost**, never ours. €50 shown ⇒ they can spend
+**€10** of our cost.
 
 Onboarding, including the onboarding guide, is **not** billed.
 
@@ -86,7 +110,10 @@ Onboarding, including the onboarding guide, is **not** billed.
 Same ×5 into the pool.
 
 **AI vendor cost** (OpenRouter / model / image invoices) — assistant
-text, image generate/cleanup, ads generate. Not Voice minutes.
+text, image generate/cleanup, ads generate. Not Voice minutes. Vendor
+invoices are often USD; `ai_generations.cost_amount` /
+`cost_currency` stay as invoiced. `RecordAIUseSpend` **persists into**
+`amount_eur` at that scale (dated FX at debit).
 
 **AI voice vendor cost** (xAI Speech to Speech) — not tokens and not
 wall-clock of an open socket. xAI invoices
@@ -114,8 +141,8 @@ ads generate) is **additional** ×5, tagged Image or Text, not rolled
 into the minute.
 
 Go never sees PCM. Settle from `AssistantVoiceUsage` on
-`POST /v1/assistant/voice/transcripts` (including a usage-only POST when Voice
-turns off with no new visible text): `audio_seconds_sent`,
+`POST /v1/assistant/voice/transcripts` (including a usage-only POST when
+Voice turns off with no new visible text): `audio_seconds_sent`,
 `audio_seconds_received`, `billed_text_item_count`
 ([assistant HTTP](../assistant/api.md)). Extra keys 4xx. Voice adapter
 **calls** `RecordAIUseSpend`. Do **not** debit wall-clock of an open
@@ -137,6 +164,7 @@ generate during Voice are Image or Text.
 The bar is the **current pool** (remaining + spent this period),
 including carry-over. Filled length is spent this period (their cost),
 split by usage category color. Unfilled is remaining. Informational.
+Display may round; the AI use ledger does not.
 
 ## 20% and empty
 
@@ -158,33 +186,60 @@ Drop that connection when remaining hits 0. Transcripts settlement
 ## Subscription
 
 Optimistic `subscription_status` on `tenants` (`active` / `canceled` /
-`none`). `ActivateSubscription` creates the Stripe Subscription (not
-the 09 activation Checkout), **persists into** `subscriptions`
-(`subscription_tier=pro`, `status=active`, `stripe_subscription_id`) and
-the first `included_usage_credit`. If they stop paying the subscription
-price, **calls** `UnpublishWebsite`. They cannot do a **website
-publication** (or live website rollback) until the subscription is
-`active` again. That is **402** `subscription_canceled`, not
-`usage_credit_exhausted`, and not 09 website activation (the tenant
-stays `status=active`; CMS edit stays open). Self-serve tiers: Placis
-Pro plan / Placis Pro Plus plan / Placis Pro Max plan. Enterprise plan
+`none`). It stays `active` during the three-calendar-month non-payment
+window. Do not put remaining usage credit or Price ids on `tenants`.
+
+09 Checkout creates the Stripe `stripe_customer_id` and the Stripe Subscription.
+`ActivateSubscription` **persists** that into `billing.subscriptions`
+(`subscription_tier=pro`, `billing_interval=month`, `status=active`,
+`stripe_customer_id`, `stripe_subscription_id`). One `stripe_customer_id` per
+tenant; extra usage and pay-again attach to it.
+
+**Failed pay** does not unpublish on the first
+`invoice.payment_failed`. That event sets `nonpayment_started_at` if
+null. `invoice.paid` clears the clock. After three calendar months,
+daily `billing_nonpayment_unpublish` **retrieves** the Stripe
+Subscription (and latest invoice). If Stripe shows paid (missed
+webhook): clear `nonpayment_started_at`, grant included credit if that
+invoice was not yet applied, do **not** unpublish. If still unpaid: set
+`canceled` / `canceled_at` and **calls** `UnpublishWebsite`. Publish
+still works during the window (**not** **402** `subscription_canceled`
+until then). This Stripe GET is only on that job, not on Publish.
+
+**Owner cancel** is still `cancel_at_period_end`. Until
+`current_period_end` they stay `active` (Publish still works). **Keep
+subscription** clears that flag. When the period ends after a scheduled
+cancel, `status=canceled`, set `canceled_at`, **calls**
+`UnpublishWebsite`, **402** `subscription_canceled`. That path is not
+the three-month non-payment clock.
+
+Website 01 occupancy: a canceled tenant still occupies until 6 months
+after `canceled_at`. Unchanged and separate from the three-month clock.
+
+**Pay-again** after `canceled` is `CreateSubscriptionCheckout`: Pro
+month Checkout only (no activation Price). New Stripe Subscription,
+`status=active`, `canceled_at` cleared, `stripe_subscription_id`
+replaced, `stripe_customer_id` kept. Access fee is never charged again.
+
+**Change plan** while `active` (Plus / Max / year / proration) is
+deferred. Only Placis Pro plan / month is self-serve. Enterprise plan
 is sales-led.
 
-**Change plan** and **Cancel subscription** are on Usage & billing, not
-on placis.com. Change plan is a Stripe subscription update (or Checkout
-when status is not `active`). The next `included_usage_credit` uses the
-new subscription tier; do not insert a second `included_usage_credit`
-mid-period. Cancel **persists into** `cancel_at_period_end`. Until
-`current_period_end` they stay `active` (Publish still works). **Keep
-subscription** clears that flag. When the period ends without pay,
-`status=canceled`, set `canceled_at`, **calls** `UnpublishWebsite`,
-**402** `subscription_canceled`. Website 01 occupancy: a canceled
-tenant still occupies until 6 months after `canceled_at`. Pay-again is
-Change plan Checkout: new Stripe subscription, `status=active`,
-`canceled_at` cleared, `stripe_subscription_id` replaced.
+**Refunds** are money-only. `payment_status=refunded` on
+`website_activations`. Tenant stays `status=active`. First payer stays
+owner; refund does not reopen 09. Extra usage credit rows stay.
 
 ## Pricing
 
-Pricing is on the Placis website (`/pricing/`). Display only. Choose →
-`app.placis.com`. Enterprise plan → contact sales. No Stripe on
-`placis.com`.
+Pricing is on the Placis website (`/pricing/`). Astro static → R2. CI
+`astro build` bakes choosable amounts from `GET /v1/billing/catalog`.
+No Worker, no Stripe JS, no Go HTTP on `placis.com`. The website visitor never
+hits Stripe or Go. Checkout is not on `placis.com`.
+
+Choose on Placis Pro plan goes to `app.placis.com` (09 Checkout is
+activation Price plus that Pro month Price). Yearly toggle is out of
+this spec. Plus / Max are unspecified (`choosable=false` if cache rows
+exist; no Choose). Enterprise plan → contact sales.
+
+`GetBillingCatalog` **reads** `billing.prices` (choosable only). No
+`stripe_customer_id`. No activation Price. Unauthenticated (auth mode **none**).

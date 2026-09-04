@@ -56,8 +56,9 @@ create is deferred; occupancy vs owner pick **TBD**
    pool.
    - In: `tenants.subscription_status=active`.
    - In: `billing.subscriptions.status=canceled` and now is **less than 6
-     months** after `canceled_at` (set when status becomes `canceled`, after
-     `current_period_end`).
+     months** after `canceled_at` (set when status becomes `canceled`:
+     owner cancel at `current_period_end`, or
+     `billing_nonpayment_unpublish`).
    - Out: nonpayment **≥ 6 months**. Live websites are already unpublished;
      occupancy uses this clock, not `tenants.status=active` (that stays
      `active` after cancel).

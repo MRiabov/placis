@@ -7,7 +7,7 @@ audit ids (not compacted). Per-feature lists:
 - [Onboarding](../features/onboarding/sep-3-issue-list.md)
 - [Ads](../features/ads/sep-3-issue-list.md)
 - [Assistant](../features/assistant/sep-3-issue-list.md)
-- [Billing](../features/billing/sep-3-issue-list.md) (#88 open)
+- [Billing](../features/billing/sep-3-issue-list.md) (#88)
 - [Business profile](../features/business-profile/sep-3-issue-list.md)
 - [Media library](../features/other/media/sep-3-issue-list.md)
 - [Leads](../features/other/leads/sep-3-issue-list.md)

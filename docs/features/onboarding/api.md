@@ -176,18 +176,44 @@ Clerk only. `status=active` → **403**.
 
 First pay (09). Not Usage & billing
 `POST /v1/billing/subscription/checkout`. Table/DTOs stay
-`website_activations` / `WebsiteActivation*`.
+`website_activations` / `WebsiteActivation*`. Line items **read**
+`billing.prices`. Success/cancel URLs named for preview website
+address vs app origin. Frontend follows `checkout_url` to hosted
+Checkout. **Omit** Stripe bodies.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /v1/onboarding/activation/checkout` | strip island; pay CTA on `/onboarding/preview-and-edit/` | | `WebsiteActivationCheckoutRead` | `tenants` | `website_activations`, `tenants.clerk_org_id` | **calls** `AttachClerkOrganization`; frontend `setActive` then Stripe; does not set `status=active` | | Website publication; browser Stripe success URL as truth; `/v1/website-activations/…`; `/v1/billing/subscription/checkout`; `POST /v1/me/clerk-organization` |
+| `POST /v1/onboarding/activation/checkout` | strip island; pay CTA on `/onboarding/preview-and-edit/` | | `WebsiteActivationCheckoutRead` | `tenants`, `billing.prices` | `website_activations`, `tenants.clerk_org_id` | **calls** `AttachClerkOrganization`; frontend `setActive` then hosted Checkout; line items: active activation Price + Placis Pro plan / month Price; metadata / `client_reference_id` = `tenant_id`; does not set `status=active` | missing Price | Website publication; browser Stripe success URL as truth; `/v1/website-activations/…`; `/v1/billing/subscription/checkout`; `POST /v1/me/clerk-organization`; ad-hoc `price_data` |
 | `GET /v1/onboarding/activation/status` | poll after checkout | | `WebsiteActivationStatusRead` | `website_activations` | | Closed `payment_status` + checkout URL if still needed | | |
-| `POST /v1/webhooks/stripe` | Stripe | | | | `stripe_events`, `website_activations` | Verify, persist event; activation Checkout **inserts** `website_activation`; extra usage credit Checkout **inserts** `billing_extra_usage_credit`; subscription / `invoice.paid` **inserts** `billing_subscription_sync` | | Trust browser success URL |
+| `POST /v1/webhooks/stripe` | Stripe | | | | `stripe_events`, `website_activations` | See overflow | | Trust browser success URL |
 
 Checkout / status auth: Clerk JWT, Host / `website_prefix`
 (unactivated allowed) **or** (checkout only) Clerk JWT unactivated
 tenant on the **app** origin. Webhook: Stripe signature. Never
 `frontend-2`.
+
+### POST /v1/webhooks/stripe
+
+Verify (`webhook.ConstructEvent`), **persist into** `stripe_events`
+(`event_id` unique; `processed` when the River job is inserted or the
+type needs no job). Closed event list:
+
+- `checkout.session.completed` — discriminate: 09 activation **inserts**
+  `website_activation`; extra usage credit **inserts**
+  `billing_extra_usage_credit`; pay-again **inserts**
+  `billing_subscription_sync`
+- `checkout.session.expired`
+- `customer.subscription.updated` / `deleted` — **inserts**
+  `billing_subscription_sync`
+- `invoice.paid` / `invoice.payment_failed` — **inserts**
+  `billing_subscription_sync`
+- `product.*` / `price.*` — **inserts** `billing_catalog_sync`
+  (`event_id`)
+- `charge.refunded` — `website_activations.payment_status=refunded`
+  (money-only; does not un-activate; extra usage credit row stays)
+
+Do not grant `included_usage_credit` from `checkout.session.completed`
+(that is `invoice.paid`). Omit Stripe bodies from HTTP.
 
 ### Onboarding assistant (guide)
 
