@@ -60,6 +60,55 @@ home gallery, projects website page, categories), and certifications.
 | `{{certifications}}` | certifications |
 | `{{images.*}}`, `{{about.intro_paragraphs}}`, `{{about.feature_paragraphs}}` | images / about copy |
 
+## Optional-omit
+
+Some Common variables are **optional-omit**. The website component
+contract may list them on `editable_slots[].omit_if_unresolved` (bare
+names, no `{{…}}`). **Absent list = never omit that website slot**
+(about copy that mentions `{{vat_number}}` stays). AND: Worker / canvas
+omit that website slot’s **paint** only when every listed var is empty
+on `WebsiteBusinessProfileRead`. Pass `null` / omit the prop — not
+`""`, not leftover `{{vat_number}}`. Unpublished `website_slots.value`
+stays the token.
+
+Closed set (exact labeled website slots only):
+
+- `{{vat_number}}`
+- `{{legal_name}}`, `{{company_registration_number}}`,
+  `{{registered_office}}` (complete-gate required **if registry**; omit
+  the labeled line when there is no registry row)
+- `{{address}}`
+- `{{opening_hours}}` (drop a whole `Opening hours: {{opening_hours}}`
+  website slot, including predecessor substring labels)
+- `{{existing_site_url}}`
+- `{{established_year}}`, `{{incorporation_date}}` (if that website slot
+  is the labeled date)
+- `{{logo_url}}` / `{{images.logo}}` (hide the img; do not hide the
+  footer / nav)
+- `{{facebook_profile_url}}` (social / contact link website slot if
+  present)
+- `{{certifications}}` on an accreditations **items** website slot that
+  is not `required` (not the whole accreditations website section)
+
+Do **not** put omit lists on: required complete-gate keys
+(`{{business_name}}`, `{{trade}}`, `{{marketing_phone}}`,
+`{{marketing_email}}`, `{{emergency_phone}}`, `{{services.*}}`,
+`{{service_area}}` / `{{service_region}}`); about / copy
+(`{{description}}`, `{{about.intro_paragraphs}}`,
+`{{about.feature_paragraphs}}`); empty reviews / projects website
+sections (keep the website component); menu `show_phone` /
+`show_email`; eyebrow / title / intro layout website slots.
+
+`required: true` + unresolved → `required_slot_unresolved`. Listed omit
+and empty → hide that website slot’s output; not a publication blocker.
+Production-ready CI still requires `{{vat_number}}` once per website
+template (exact footer website slot).
+
+This pass annotates existing matching `editable_slots` on
+`packages/website-components/src/registry/footer/standard/contract.json`,
+`footer/logo_nav`, `contact/panel` (`opening_hours`), and logo website
+slots. Do not infer omit from every `{{…}}` in `value`.
+
 ## Flow
 
 1. `CopyWebsiteTemplatePages` **persists into** `website_pages` /
@@ -80,6 +129,9 @@ home gallery, projects website page, categories), and certifications.
    substituted — and writes HTML to R2. Go does not fill tokens.
 4. A missing variable stays as a `{{var}}` token in the unpublished website;
    a *required* website slot whose variable can't resolve becomes a
-   **website publication blocker**.
+   **website publication blocker**. Listed `omit_if_unresolved` + empty
+   → omit that website slot’s paint; not a blocker.
 5. Live R2 is a snapshot. Later business research does not rewrite
-   `latest/` until the next 04.
+   `latest/` until the next 04. Canvas hydrate uses the live
+   `WebsiteBusinessProfileRead` on the website page GET. Live `latest/`
+   waits for the next 04 Website publication (or unpaid 08 Share).

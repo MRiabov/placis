@@ -37,6 +37,10 @@ Strip on/off is a caller flag.
   resolves.
 - Call `websiteRender` from this step.
 - Persist resolved HTML onto unpublished `website_slots`.
+- Infer `omit_if_unresolved` from every `{{…}}` in a website slot
+  `value`.
+- Persist a website slot or website section hide for empty VAT.
+- Enqueue this step from Details PATCH.
 - Return a website image render to the model.
 - Put image files or expiring signed URLs on `websitePublication`.
 - Make onboarding-written rows website-rollback targets
@@ -52,7 +56,11 @@ onboarding 08/09 and later CMS Publish.
 1. **calls** `ApproveMediaAsset` for `pending_review` items on that
    dump.
 2. Validate every website section against its website component contract.
-   A required missing var is a publication blocker.
+   A required missing var is a publication blocker. Empty optional-omit
+   Common variables (`omit_if_unresolved`, every listed var empty) are
+   **not** a blocker. Worker omits that website slot’s paint (`null` /
+   omit the prop — not `""`, not leftover `{{vat_number}}`). Unpublished
+   row unchanged.
 3. Go `POST`s `websitePublication` ([website HTTP](../api.md)): tokenized
    `website.v1` dump (`pages[]` still a list) plus
    `WebsiteBusinessProfileRead`, `media_asset_urls`, `strip`,
@@ -60,7 +68,9 @@ onboarding 08/09 and later CMS Publish.
    Authenticated internal (shared secret / service binding). Not a live GET.
    Not public OpenAPI. Not `websiteRender`.
 4. Worker resolves website placeholders from that profile (exact match →
-   typed value, substring → substituted) and writes HTML to R2.
+   typed value, substring → substituted) and writes HTML to R2. Honor
+   `omit_if_unresolved` on that website component contract
+   ([variables.md](../variables.md#optional-omit)).
 5. Then persist: write `{version_number}/`, copy onto `latest/` for
    **that** hostname (`sites/hosts/{hostname}/…` for CMS Publish and
    after cutover on the preview host; unpaid Preview website address /
@@ -103,7 +113,8 @@ CMS.
 ## Fail
 
 No new `latest/` (or previous `latest/` kept). Required missing var blocks
-this write. Retry the same caller (share / pay / Publish).
+this write. Empty optional-omit Common variables do not. Retry the same
+caller (share / pay / Publish).
 
 ## Out
 

@@ -19,6 +19,8 @@
   No Clerk `/v1/projects/{id}/archive`. While 02 is still running: an empty
   marketing-phone column fills when Details transform lands; a marketing phone
   the contractor already saved is unchanged; scrape reviews and Projects persist
-  without a second complete.
+  without a second complete. VAT: `ClientInterviewUpdate` writes
+  `vat_registration_status` / `vat_number`; not-registered complete
+  leaves `vat_number` null; registered without a number is rejected.
 - **Fail**: invalid complete keeps `client_interviewing`.
 - **Mocked**: none required for text path.

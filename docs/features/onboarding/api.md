@@ -47,13 +47,13 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 | `OnboardingProfileRead` | `id`, `status`, `preview_website_address`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead`, `profile: OnboardingLiveBusinessProfileRead` | Resume / Review hydrate. Not Details GET |
 | `OnboardingFillStatusRead` | `key`, `status` | Derived fill. `status` → `empty` / `in_progress` / `conflict` / `filled_by_user` / `filled_by_research` / `skipped` / `not_applicable` |
 | `OnboardingResearchConflictRead` | `key`, `live_value`, `research_value` | Research conflict (both values). Not a write |
-| `OnboardingLiveBusinessProfileRead` | `display_name`, `trade`, `description`, `founder_name`, `legal_name`, `company_number`, `registered_office`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `reviews`, `facebook_profile_url` | Live columns the onboarding screens show. Same row as Details; onboarding session token. No `company_status` |
+| `OnboardingLiveBusinessProfileRead` | `display_name`, `trade`, `description`, `founder_name`, `legal_name`, `company_number`, `registered_office`, `vat_registration_status`, `vat_number`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `reviews`, `facebook_profile_url` | Live columns the onboarding screens show. Same row as Details; onboarding session token. No `company_status` |
 
 ### Client interview
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `ClientInterviewUpdate` | `display_name`, `trade`, `description`, `founder_name`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `photos_fill`, `additional_notes`, `skipped` | Dirty keys only. PUT click-off; optional POST complete body. Extra keys 4xx |
+| `ClientInterviewUpdate` | `display_name`, `trade`, `description`, `founder_name`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `vat_registration_status`, `vat_number`, `services`, `service_areas`, `accreditations`, `photos_fill`, `additional_notes`, `skipped` | Dirty keys only. PUT click-off; optional POST complete body. Extra keys 4xx |
 
 ### Progress
 

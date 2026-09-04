@@ -56,7 +56,8 @@
       "type": "image",
       "label": "Logo",
       "required": false,
-      "max_length": null
+      "max_length": null,
+      "omit_if_unresolved": ["logo_url"]
     },
     {
       "key": "links",
