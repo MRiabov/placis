@@ -55,7 +55,8 @@ WebSocket. Extra keys 4xx. Field name is **`items`**, not
 
 Omit `website_working_copy` off `website_editor`. `plan` / `ask_first`
 only when `assistant_screen` is `website_editor`. **Follow** is not a
-field; `follow: false` → **400**.
+field; `follow: false` → **400**. No website pointer list this pass
+(`open_website` deferred).
 
 ### Voice
 

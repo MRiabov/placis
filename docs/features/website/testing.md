@@ -95,30 +95,17 @@ LLM. Cloudflare R2 / Custom Hostnames / `purge_cache`. Worker is real
 
 #### Setup
 
-Same as Edit through website form. Tenant on Placis Pro Plus plan.
-Onboarding website already exists.
+Deferred. **TBD:**
+[new-website-creation-flow.md](new-website-creation-flow.md). Keep
+`POST /v1/websites` as the later contract.
 
 #### Exercise
 
-1. `POST /v1/websites` with a production-ready `website_template_id`.
-2. Poll `GET /v1/websites/{website_prefix}` until wait-end.
-3. Open `/cms/website/{website_prefix}`. Edit a website section. Publish.
+Deferred.
 
 #### Verify
 
-Second website has its own unpublished pages, `website_prefix`, and
-website publication. Onboarding website rows unchanged. Must not: share
-`website.menus` / `website_settings` / `(path)` uniqueness across
-websites.
-
-#### Fail
-
-`402 website_limit_reached` when already at the plan cap.
-
-#### Mocked
-
-LLM. Cloudflare R2 / Custom Hostnames / `purge_cache`. Worker is real
-(container).
+Deferred.
 
 ## Integration
 
@@ -142,24 +129,26 @@ Exercise body lists this tenant’s websites. Must not: fat unpublished dump.
 ### TestHappyPathV1WebsitesCreatesWebsite — Route
 
 Backend. Go `TestHappyPathV1WebsitesCreatesWebsite`. OpenAPI 1:1.
+**Deferred.** Do not run this pass. **TBD:**
+[new-website-creation-flow.md](new-website-creation-flow.md).
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant on
-Placis Pro Plus plan (cap 3). Onboarding website already present. Usage
-credit remaining. No `frontend-2`. Worker up (copy generation).
+Deferred. When create ships: active tenant on Placis Pro Plus plan (cap
+3). Onboarding website already present. Usage credit remaining. Worker
+up (copy generation).
 
 #### Exercise
 
-`POST /v1/websites`. Request `WebsiteCreate`. Response `WebsiteRead`.
+Deferred. `POST /v1/websites`. Request `WebsiteCreate`. Response
+`WebsiteRead`.
 
 #### Verify
 
-**persists into** `websites`, `website_settings`. Prefix reserved. Copy
-generation billed. Isolation: second website’s pages/prefix/publications
-do not collide with the onboarding website. Fail: `400` unknown template;
-`402 website_limit_reached` at cap; `402 usage_credit_exhausted` (no
-row).
+When create ships: **persists into** `websites`, `website_settings`.
+Prefix reserved. Copy generation billed. Isolation vs the onboarding
+website. Fail: `402 website_limit_reached` at cap; `402
+usage_credit_exhausted` (no row).
 
 ### TestHappyPathV1WebsitesWebsitePrefixReturnsWebsite — Route
 

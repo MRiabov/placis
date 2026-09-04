@@ -56,8 +56,12 @@ sections). Voice also loads `internal/knowledge/voice_pronunciation.yaml`
 (keyterms + `replace`) at connection create — not into text `LLMProvider`
 prompts.
 
-CMS knowledge: a contractor may have more than one website. Website editor
-tools apply to the open website. `open_website` changes it.
+CMS knowledge: this pass do **not** tell the Assistant a contractor may
+have more than one website. No `open_website`. No website pointer list.
+Website editor tools apply to the website open in the website editor
+(the onboarding website / the prefix in the URL).
+`open_website` and multi-website knowledge are deferred with
+[new website creation flow](../website/new-website-creation-flow.md).
 
 YAML fields: `id` (`assistant.knowledge` / `onboarding.assistant.knowledge`),
 `format_revision`, ordered `files`. Concatenate
@@ -110,9 +114,9 @@ instructions mid-call. Do **not** inject wrap-up via billed
 `conversation.item.create`. No Go 128K / 12K on the live Voice connection.
 
 Onboarding Voice guide: `tools=[]`, so the 20-count is idle. No Go 128K / 12K on
-that connection. Onboarding 06 is River job kind `website_copy_generation`
-with its own cap (**3 steps / 12
-calls / 4 website pages**) — not this 20.
+that connection. Onboarding 06 / website 03 copy-generation is **20**
+tool-using model turns **per website page** (same constant as this CMS
+agent).
 
 `in_flight_run` locks the **whole** agent run (all those turns), not one
 inference.
@@ -222,27 +226,26 @@ does not navigate and does not authorize that screen’s write tools.
 
 - **Ads:** `id`, title, status, `updated_at` (pointer list, not fat ads rows).
 - **Website editor:** working copy is already on the turn / voice create; do
-  not dump the whole unpublished website again.
+  not dump the whole unpublished website again. No website pointer list
+  this pass (`open_website` deferred).
 - **Details:** notification only.
 - **`cms` and other guide screens:** no write context.
 
 `get_ad(ad_id)` is a separate fat read. It is **not** screen-gated (the model
 does not know ad ids unless the ads list or this peek gave them). Unknown /
-other-tenant id is **404**. `open_website(website_id)` is the same shape:
-always executable; 404 unknown; navigates to
-`/cms/website/{website_prefix}`; the rest of that run uses that website.
-`get_website_styles` has no id on the wire — it reads Assistant screen
-context `website_id`. Off a website editor without that context: **409**
-`allowed_set_rejected`. Do not dump all websites’ website styles. Do not stuff
-`get_website_styles` into peek.
+other-tenant id is **404**. `open_website` is **deferred** (one owner-facing
+website this pass). `get_website_styles` has no id on the wire — it reads
+Assistant screen context `website_id`. Off a website editor without that
+context: **409** `allowed_set_rejected`. Do not dump website styles. Do not
+stuff `get_website_styles` into peek.
 
-Pointer list of websites in website-editor screen context (ids + preview
-website address or website address), like the Ads pointer list.
+No website pointer list this pass.
 
 `switch_assistant_screen(screen)` asks the frontend to open that screen (same
 notification + context as left-nav). Do not name the tool
-`switch_user_facing_screen`. Optional `open_ad` / `open_website` /
-`open_website_page` navigate; they are not a substitute for ids.
+`switch_user_facing_screen`. Optional `open_ad` /
+`open_website_page` navigate; they are not a substitute for ids. Do not
+add `open_website` this pass.
 
 **Follow** is always on. Canvas **navigates to** the website slot or field the
 agent is looking at. Owner cannot turn it off. Not a WS / HTTP request field. A
@@ -256,9 +259,9 @@ Do not swap the list on assistant screen switch. **Always executable** is the
 subset Go will run on any screen, not “the only tools the model sees.”
 
 **Always executable:** `update_details`, `switch_assistant_screen`,
-`get_context_about_screen`, `get_ad` (404 unknown id), `open_website`
-(404 unknown id). `get_website_styles` needs website-editor screen
-context (else **409** `allowed_set_rejected`).
+`get_context_about_screen`, `get_ad` (404 unknown id). `get_website_styles`
+needs website-editor screen context (else **409** `allowed_set_rejected`).
+Do not add `open_website` this pass.
 
 **Allowed only with that screen loaded** (else **409** `allowed_set_rejected`):
 

@@ -54,13 +54,12 @@ Website editor PATCH 429 cap (30 / 10s) is **per website**.
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `WebsiteRead` | `id`, `website_prefix`, `website_template_id`, `copy_generation_status` | List/create/poll row |
-| `WebsiteCreate` | `website_template_id` | CMS create |
+| `WebsiteRead` | `id`, `website_prefix`, `website_template_id`, `copy_generation_status` | List/poll row |
+| `WebsiteCreate` | **TBD** | CMS create. [new-website-creation-flow.md](new-website-creation-flow.md) |
 
-`copy_generation_status` → `running` / `done` / `failed`. Wait-end on
-`websites/new/` is home website page website copy generation `done`, or
-wait cap. Retry a failed row with the same `website_id` (do not `POST` a
-second row). Extra keys 4xx.
+`copy_generation_status` → `running` / `done` / `failed`. Extra keys 4xx.
+Create wait-end / retry **TBD**:
+[new-website-creation-flow.md](new-website-creation-flow.md).
 
 ### Website editor
 
@@ -140,8 +139,8 @@ duplicate the three `code` values per route.
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GET /v1/websites` | CMS | | `WebsiteRead[]` | `websites` | | This tenant | | Fat unpublished dump |
-| `POST /v1/websites` | `websites/new/` | `WebsiteCreate` | `WebsiteRead` | `websites`, `billing.subscriptions` | `websites`, `website_settings`; **inserts** copy-pages + `website_copy_generation` (`bill_usage=billed`) | Reserve `website_prefix`; count + insert one transaction; no occupancy | `400` unknown / not production-ready id; `402 website_limit_reached`; `402 usage_credit_exhausted` (no row) | Duplicate; empty unpublished website |
-| `GET /v1/websites/{website_prefix}` | wait-end poll | | `WebsiteRead` | `websites` | | Copy-generation status | `404` | Onboarding SSE wait teaser |
+| `POST /v1/websites` | deferred create | `WebsiteCreate` | `WebsiteRead` | `websites`, `billing.subscriptions` | `websites`, `website_settings`; **inserts** copy-pages + `website_copy_generation` (`bill_usage=billed`) | **Not this pass.** Keep the route. Body / questionnaire / template / retry **TBD** ([new-website-creation-flow.md](new-website-creation-flow.md)) | `402 website_limit_reached`; `402 usage_credit_exhausted` (no row) | Duplicate; empty unpublished website |
+| `GET /v1/websites/{website_prefix}` | CMS; deferred create poll | | `WebsiteRead` | `websites` | | Copy-generation status | `404` | Onboarding SSE wait teaser |
 
 ### Website editor
 

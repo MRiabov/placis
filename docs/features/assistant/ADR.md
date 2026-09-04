@@ -245,6 +245,8 @@ instead of silently replacing it.
     owner input is **characters** (text 4000, owner utterance 5000). Text agent
     back and forth is **tokens** (128K context / 12K generation). Do not use
     5000 characters as the agent output cap. Voice still has no Go token cap.
+    (2026-09-04): website copy generation is **20** tool-using model turns
+    **per website page** (same constant as this CMS agent, not 3/12/4).
 
 22. **Voice → text STT caveat** — First CMS text assembly after a completed
     `channel=voice` run injects a typed notice: those owner lines were
@@ -346,15 +348,15 @@ instead of silently replacing it.
     tenant site (404). (2026-08-30)
 
 30. **`open_website` twins `open_ad`; website styles are the open website** —
-    `open_website(website_id)` is always executable; unknown / other-tenant id
-    is **404**. After it succeeds, the rest of that run uses that website.
-    Navigates to `/cms/website/{website_prefix}`. Owner leaving the website
-    editor (or wait-end on `websites/new/`) is an Assistant screen switch on
-    the next owner turn. `get_website_styles` / `update_website_styles` read
-    Assistant screen context `website_id`. Off a website editor without that
-    context: **409** `allowed_set_rejected`. Do not dump all websites’
-    website styles.
-    One CMS thread per tenant. Pointer list of websites in screen context
-    (ids + preview website address or website address). CMS knowledge: more
-    than one website; tools apply to the open website; `open_website` to
-    change. (2026-09-03)
+    `get_website_styles` / `update_website_styles` read Assistant screen
+    context `website_id`. Off a website editor without that context: **409**
+    `allowed_set_rejected`. One CMS thread per tenant.
+    **Deferred (2026-09-04):** `open_website`, the website pointer list, and
+    CMS knowledge that a contractor may have more than one website. This
+    pass there is one owner-facing website; the Assistant does not know
+    about others. Do not add `open_website` to `tools=`. Previous
+    (2026-09-03): `open_website(website_id)` always executable; 404
+    unknown; navigates to `/cms/website/{website_prefix}`; pointer list
+    in screen context; CMS knowledge more than one website; tools apply
+    to the open website; `open_website` to change. (2026-09-03;
+    defer 2026-09-04)

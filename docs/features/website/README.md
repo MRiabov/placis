@@ -21,7 +21,8 @@ Named identifiers:
 - [api.md](api.md) — HTTP (`/v1/websites`, nested `{website_prefix}` editor /
   publication / address, Worker `websiteRender` / `websitePublication`)
 - [frontend.md](frontend.md) — `/cms/website/{website_prefix}` (publication dropdown +
-  Connect modal); `/cms/websites/new`
+  Connect modal). Post-onboarding create: [new-website-creation-flow.md](new-website-creation-flow.md)
+  (**TBD**).
 - [manifest.md](manifest.md) — `website.v1` keep / keep-out
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget

@@ -163,7 +163,10 @@ above still applies; this is the persistence for a further agentic retry.
 06 / website 03). River job kind `website_copy_generation`
 ([jobs](jobs.md)). `prompt_id=website_copy_generation` in the onboarding
 package `prompts.yaml`. Writes existing unpublished website slots. Do not
-`create_page` or `update_reviews`.
+`create_page` or `update_reviews`. Same insert rule as every other
+`thread_kind`: one thread per website page; parallel website pages =
+parallel threads; `ai_generations.thread_id` required. Not one row per website
+([website ADR](../features/website/ADR.md) 29).
 
 **`reviews_ranking_for_display`** — **LLM ranking** of the reviews pool
 (not stars or recency) for display (website tokens, Certifications cards,

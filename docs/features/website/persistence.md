@@ -30,13 +30,14 @@ on `website_id`.
   timestamps
 - **Uniques:** `website_prefix` (global); `id`
 - **Written by:** onboarding **Select and copy website template** (insert
-  - reserve prefix); `POST /v1/websites` (same, after website activation)
+  - reserve prefix); `POST /v1/websites` (same; deferred create flow)
 - **Notes:** Prefix reserved in the same transaction as the insert
   ([ADR](ADR.md) 27). Never renamed. Never null on a live row. Count of
   rows per tenant is the subscription website cap
   ([plans.md](../billing/plans.md)). Failed copy-generation keeps the row
-  (retry that `website_id`; it still counts toward the cap). No owner-facing
-  label column this pass. The **onboarding website** (Internal) is the
+  (retry that `website_id` when create ships; it still counts toward the
+  cap). No owner-facing label column this pass. The **onboarding website**
+  (Internal) is the
   earliest `created_at` on that tenant ([ADR](ADR.md) 28).
 
 ### `website_addresses`
@@ -173,11 +174,11 @@ may replace a whole tree. Assistant `remove_entries` max 4.
   `radius`, `density`, `edit_history_head` uuid nullable, timestamps
 - **Uniques:** `website_id`
 - **Written by:** `SelectWebsiteTemplate` (onboarding); `POST /v1/websites`
-  (owner pick + that template’s preset); `PATCH
+  (deferred create; that template’s preset); `PATCH
   /v1/websites/{website_prefix}/editor/settings`
 - **Notes:** Copy-pages SELECTs `website_template_id` here, not
   `ai_generations`. Logo is `business_profiles.logo_media_asset_id`, not a
-  column here.
+  column here. Whether a second website can have its own logo is **TBD**.
 
 ### `website_publications`
 

@@ -10,7 +10,8 @@ Related: [PRD](prd.md), [editing.md](editing.md), [assistant.md](assistant.md), 
 
 The contractor-facing website editor in `frontend-2`, under
 `/cms/website/{website_prefix}` (left-nav **Sites** opens the onboarding
-website; there is no picker among existing websites). Details, Projects, and
+website). Owner create of another website and a Sites list of websites are
+**deferred** ([new-website-creation-flow.md](new-website-creation-flow.md)). Details, Projects, and
 Certifications and reviews still appear on website pages; they are edited on
 their own screens ([business profile](../business-profile/README.md)), not in this website editor. The media
 library is `/cms/media`. Attach and pick from Content when an image is selected
@@ -45,21 +46,16 @@ swapping the whole panel
 | -- | -- |
 | `/cms/website` | Redirect to the onboarding website (`/cms/website/{website_prefix}`) |
 | `/cms/website/{website_prefix}` | Website editor (workspace, canvas, assistant after they call, website publication) |
-| `/cms/websites/new` | Create a website questionnaire; `POST /v1/websites`; wait until wait-end; then the website editor for that prefix |
+| `/cms/websites/new` | Deferred. [new-website-creation-flow.md](new-website-creation-flow.md) (**TBD**) |
 
 Left nav **Sites** destination is `/cms/website` (redirects to the onboarding
-website). `websites/new/` is spec’d; where the owner opens it is deferred.
-Do not add a Sites list of websites.
+website). Do not add a Sites list of websites this pass.
 
-## `websites/new/`
+## `websites/new/` (deferred)
 
-A create questionnaire (shape pending; no website template pick shown). Submit
-`POST /v1/websites`. Wait on this route until wait-end (home website page
-website copy generation `done`, or wait cap). Poll
-`GET /v1/websites/{website_prefix}`. Then redirect to
-`/cms/website/{website_prefix}`. Not `/onboarding/preview`. Look can land
-later. Cap **402** `website_limit_reached` points at Change plan. Empty
-usage credit is **402** `usage_credit_exhausted` (no row).
+Owner create of another website is **not this pass**. Onboarding still
+creates the first website. Everything about that flow is **TBD**:
+[new-website-creation-flow.md](new-website-creation-flow.md).
 
 ## Website editor (`/cms/website/{website_prefix}`)
 
