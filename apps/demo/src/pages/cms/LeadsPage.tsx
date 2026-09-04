@@ -5,6 +5,7 @@ import { type ReactNode, useMemo, useState } from "react";
 import { DevStrip } from "@/dev/DevStrip";
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { cn } from "@/lib/cn";
+import { MarketingPhoneLink } from "@/pages/cms/leads/MarketingPhoneLink";
 import {
   demoWebsite,
   type LeadRow,
@@ -295,7 +296,9 @@ function LeadTableRow({
         </span>
       </td>
       <td className="py-3 pr-3 align-top text-sm">
-        <span className="block">{row.marketingPhone}</span>
+        <span className="block">
+          <MarketingPhoneLink marketingPhone={row.marketingPhone} />
+        </span>
         <span className="mt-0.5 block text-xs text-muted-foreground">
           {row.marketingEmail}
         </span>
@@ -336,7 +339,7 @@ function LeadStackedRow({
         </span>
       </div>
       <p className="mt-2 text-sm">
-        {row.marketingPhone}
+        <MarketingPhoneLink marketingPhone={row.marketingPhone} />
         <span className="text-muted-foreground"> · {row.marketingEmail}</span>
       </p>
       <p className="mt-1 text-sm">{sourceLabel(row)}</p>

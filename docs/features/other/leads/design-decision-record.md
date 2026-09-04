@@ -33,3 +33,6 @@ rather than inventing it.
    copy that names the current filter. Not a quiet line under the
    filters. No create control: website visitors and ads send people
    here. (2026-09-04)
+
+7. **Marketing phone is a tel: link** — The number on Leads and in the
+   ads-detail New panel opens the dialer. (2026-09-04)

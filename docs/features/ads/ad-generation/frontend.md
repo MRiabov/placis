@@ -318,9 +318,9 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
 - **Ad leads** — not the old full per-ad list
   ([ads ADR 41](ADR.md)). **New** ad leads (name + contact) in a filled
   card; empty is the dashed Inbox panel (**Nothing here yet** / no ad
-  leads from this ad). The whole panel opens `/cms/leads` with
-  `source=ad` and this `ad_id`. Contacted and Closed stay on Leads.
-  Never say uncontacted.
+  leads from this ad). Marketing phone is a `tel:` link; the rest of
+  the filled card opens `/cms/leads` with `source=ad` and this
+  `ad_id`. Contacted and Closed stay on Leads. Never say uncontacted.
 - **Audience** — read-only default **"Married couples, 35–45"** with
   the "steers tone/imagery, targeting comes with ad posting" note. Not
   a picker ([ADR 40](ADR.md)). Audience-match detection ("are we
