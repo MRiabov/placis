@@ -966,6 +966,15 @@ Distinct from: Website lead.
 
 ---
 
+### Leads
+
+The destination that lists website leads and ad leads together. The
+source filter picks a **website** or **Ads**, not a third origin type.
+
+Distinct from: Website lead, Ad lead (the rows). Never say CRM.
+
+---
+
 ### Billing
 
 Usage credit, subscription price, and the Usage & billing screen. The owner
@@ -1163,6 +1172,20 @@ A standard size an ad is produced in.
 Square feed, Portrait feed, and Carousel are **posts**. Story is **stories**.
 One ad is one format — a single creative is a single ad. Feed is one photo; a
 carousel is several cards; a story is almost always one image.
+
+---
+
+### Leads
+
+#### Lead states
+
+Where a website lead or an ad lead stands on Leads:
+
+- **New** — not yet followed up. The urgent mark. Never say uncontacted.
+- **Contacted** — the owner got in touch.
+- **Closed** — done, not a live follow-up.
+
+Persistence: `new` / `contacted` / `closed`.
 
 ---
 
@@ -1404,10 +1427,10 @@ call a website preview signed.
 
 ### The CMS
 
-The app where the owner edits marketing: website, ads, Profile (Details,
-Projects, Certifications and reviews, Media library), and Usage & billing
-(account menu). Umbrella name, not a synonym for the website editor. Never in
-PRDs as if it were a domain object.
+The app where the owner edits marketing: website, ads, Leads, Profile
+(Details, Projects, Certifications and reviews, Media library), and
+Usage & billing (account menu). Umbrella name, not a synonym for the
+website editor. Never in PRDs as if it were a domain object.
 
 ---
 
@@ -1828,7 +1851,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | template (website) | website template |
 | page (website) / section (website) / styles (website) | website page / website section / website style or website styles |
 | slot (website) | heading, text, or image on that website section. Internal: website slot |
-| form (website, ads) | website form or ad lead form |
+| form (website, ads, leads) | website form or ad lead form |
 | caption (media) | media caption |
 | media (media) | media library |
 | editor (website) | website editor |
@@ -1873,12 +1896,12 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | website-prefix | website prefix |
 | user | contractor, owner, or website visitor |
 | visitor | website visitor |
-| lead (website, ads) | website lead or ad lead |
+| lead (website, ads, leads) | website lead or ad lead |
 | client / customer | contractor |
 | portfolio | projects |
 | ICP | ideal customer profile |
 | session | client interview, sign-in, or onboarding |
-| CMS (in a PRD) | website editor, Details, Projects, Media library, or Ads as appropriate |
+| CMS (in a PRD) | website editor, Details, Projects, Media library, Ads, or Leads as appropriate |
 | profile tab | Profile |
 | knob / knobs | option (product); field / variable (technical) |
 | `Demo`-prefixed ops; `save` vs `update`; `Projection`/`Read`/`Summary` aliases | one verb (`Create/Update/Get/List/Delete`), one `*Read` response suffix |

@@ -1,9 +1,9 @@
 # The CMS
 
-The CMS is the whole owner app (sidebar + main area): website, ads, and Profile.
-It is not a domain object and not a vertical feature. This directory owns the
-**CMS (sidebar + main area)** — left nav, `/cms` two-card chooser, look tokens,
-and the CMS-wide design decision record.
+The CMS is the whole owner app (sidebar + main area): website, ads, Leads, and
+Profile. It is not a domain object and not a vertical feature. This directory
+owns the **CMS (sidebar + main area)** — left nav, `/cms` two-card chooser, look
+tokens, and the CMS-wide design decision record.
 
 Visual mock: [`apps/demo/`](../../../apps/demo/README.md) (`cd apps/demo && pnpm install && pnpm dev`). Specs
 win over the mock.
@@ -20,5 +20,6 @@ Destinations:
 - [Website editor](../../features/website/README.md)
 - [Assistant](../../features/assistant/README.md)
 - [Ads](../../features/ads/README.md)
+- [Leads](../../features/other/leads/README.md)
 - [Business profile](../../features/business-profile/README.md) — Details, Projects, Certifications and reviews
 - [Media library](../../features/other/media/README.md) — Profile child; not under business-profile/

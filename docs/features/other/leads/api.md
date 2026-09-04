@@ -1,38 +1,52 @@
 # Leads HTTP
 
-Conventions: [HTTP conventions](../../../general-architecture/api.md). Website visitors submit website forms. No CMS
-website-leads console in this slice. Website E2E covers website form → website
-lead ([website testing](../../website/testing.md)).
+Conventions: [HTTP conventions](../../../general-architecture/api.md).
+Named identifiers:
+[docs conventions](../../../docs-conventions.md#named-identifiers).
 
-## Serve only types on HTTP
+**Auth default:** Clerk JWT, active tenant. Mutating Routes send
+`Idempotency-Key`.
 
-Website form website visitor POST: named fields matching that website form’s
-`fields[]`. Extra keys 4xx. No leftover “values object”. Uploads compose the
-`files` table under this resource, not `/v1/files`.
+**Auth none:** website-form POST. CORS allows the contractor website
+`Host`. Worker does not proxy the POST.
+
+Website form website visitor POST: named fields matching that website
+form’s `fields[]`. Extra keys 4xx. No leftover “values object”.
+Uploads compose the `files` table under this resource, not `/v1/files`.
+
+The list query **is** the source filter. Do not invent a second “by
+website vs ads” route. HTTP `source` is `website` / `ad`. Persistence
+`source` is `website_form` / `ad`.
+
+## DTOs
+
+| DTO | Fields | Description |
+| --- | --- | --- |
+| `LeadListQuery` | `source`, `website_prefix`, `ad_id`, `status` | List query. `source` optional `website` / `ad`. `status` optional `new` / `contacted` / `closed` |
+| `LeadRead` | `id`, `source`, `website_prefix`, `ad_id`, `contact_name`, `marketing_phone`, `marketing_email`, `message`, `status`, `created_at` | List row. `source` is `website` / `ad`. `website_prefix` nullable. `ad_id` nullable |
+| `LeadListRead` | `items: []LeadRead` | Newest first |
+| `LeadUpdate` | `status` | `new` / `contacted` / `closed` |
+| `WebsiteFormSubmissionCreate` | named fields for that website form | Public POST body |
+| `WebsiteFormUploadRead` | `upload_url` | Signed URL (`string` + `maxLength`) |
 
 ## Routes
 
-### POST /v1/website-forms/{form_id}/submissions
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `POST /v1/website-forms/{form_id}/submissions` | contractor website React island (website form) | `WebsiteFormSubmissionCreate` | `LeadRead` | `website_forms`, `website_form_fields` | `leads` | Insert `source=website_form`, `status=new`, contact name, marketing phone, marketing email, message | Extra keys 4xx | Values object; Worker proxy |
+| `POST /v1/website-forms/{form_id}/uploads` | website form file fields | | `WebsiteFormUploadRead` | `website_forms` | `files` | Signed URL. Completes onto a `files` row owned by this submission path | | `/v1/files` |
+| `GET /v1/leads` | Leads; ads-detail link | `LeadListQuery` | `LeadListRead` | `leads`, `website_forms`, `websites`, `ads` | | See overflow | `source=website` without `website_prefix` 4xx; `source=website` with `ad_id` 4xx; `source=ad` with `website_prefix` 4xx | A second list route |
+| `PATCH /v1/leads/{lead_id}` | Leads row status | `LeadUpdate` | `LeadRead` | `leads` | `leads.status` | Status only | Unknown id 404 | Contact fields; `source` |
 
-- **Auth:** none. CORS allows the contractor website `Host`.
-- **Callers:** contractor website React island (website form). Worker does not
-  proxy the POST.
-- **Idempotency-Key:** yes.
-- **Request:** named fields for that website form (`text` / `textarea` / `email`
-  / `marketing_phone` / …). Extra keys 4xx.
-- **Behavior:** insert `leads` row (source, website form, contact name,
-  marketing phone, marketing email, message, status).
+### GET /v1/leads
 
-### POST /v1/website-forms/{form_id}/uploads
-
-- **Auth:** none. Same CORS as submissions.
-- **Callers:** website form file fields.
-- **Idempotency-Key:** yes.
-- **Response:** signed URL (`string` + `maxLength`). Completes onto a `files`
-  row owned by this submission path.
+Omit `source` for All. `source=website` **reads** `websites` where
+`website_prefix` matches (required). `source=ad` lists ad leads;
+`ad_id` optional (omit = every ad). `status` is secondary. Newest
+`created_at` first.
 
 ## Do not create
 
 - `/v1/public/forms/…`
 - `/v1/files`
-- CMS website-leads list/detail HTTP (later)
+- A per-ad list route besides `GET /v1/leads?source=ad&ad_id=`

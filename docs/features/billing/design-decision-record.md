@@ -9,11 +9,11 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
 ## Decisions
 
 1. **Usage & billing is an account-menu screen** — Click the user icon (Clerk
-   photo / `cms-account-trigger`). The popover includes **Usage & billing**.
-   Not a left-nav peer of Sites / Ads. Hide the stub **Usage** rail item. Do
-   not unhide Settings or Log out. Overlay destinations stay Sites / Profile
-   children / Ads. (2026-08-29) Previous (2026-08-28): left-nav place unset;
-   “Usage is a CMS assistant screen”.
+   photo / `cms-account-trigger`). The popover includes **Usage & billing**. Not
+   a left-nav peer of Sites / Ads. Hide the stub **Usage** rail item. Do not
+   unhide Settings or Log out. Overlay destinations stay Sites / Profile
+   children / Ads / Leads. (2026-08-29; Leads 2026-09-04) Previous (2026-08-28):
+   left-nav place unset; “Usage is a CMS assistant screen”.
 
 2. **Spend is one bar** — Current pool (including carry-over) vs spent this
    period. Filled segments colored Voice / Image / text edits. Unfilled is

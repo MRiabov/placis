@@ -34,7 +34,8 @@ inventing it.
    [website design decision 1](../../features/website/design-decision-record.md).
    (2026-08-29) Profile and its nested children default **expanded** whenever
    labels are visible. The owner may still collapse the group. Collapsed icon
-   rail still hides children.
+   rail still hides children. (2026-09-04) **Leads** (`/cms/leads`) is a
+   top-level peer after Ads. Inbox icon. Not a Profile child.
 
 2. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
    [`apps/demo/`](../../../apps/demo/README.md) (copy-out blocked, Ask first pending, pages, publication, and
@@ -80,7 +81,8 @@ inventing it.
    library stay children, not overlay peers. Tapping Profile on the overlay
    expands or collapses the group. (2026-08-28) On narrow, Ads heading is
    **Ads**, inline with Open destinations. The list does not repeat
-   **Your ads**.
+   **Your ads**. (2026-09-04) Overlay product rows are Sites, Profile children,
+   Ads, Leads. Leads heading on narrow is **Leads**.
 
 5. **The CMS (sidebar + main area) clones the placis-web dashboard theme** —
    Satoshi, body tracking `-0.01em`, light weights (`400` / `450` / `500` /

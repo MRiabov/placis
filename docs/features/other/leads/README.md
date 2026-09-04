@@ -1,15 +1,22 @@
 # Leads
 
-A **website lead** is a website visitor who got in touch. Website forms persist
-a minimal `leads` row (source, website form, contact name, marketing phone,
-marketing email, message, status) for ad attribution and done-for-you follow-up.
+**Leads** is the destination that lists website leads and ad leads
+together. A website visitor who submits a website form becomes a
+website lead. A person who got in touch through an ad lead form becomes
+an ad lead. Both persist into the same `leads` row. The owner filters
+by origin: one of their websites, or Ads.
 
-This is not a CRM: there are no quotes, invoices, jobs, or pipelines. The
-website E2E covers website form → website lead ([website testing](../../website/testing.md)). Ads read the
-same rows for attribution ([ads](../../ads/README.md)).
+This is not a CRM: there are no quotes, invoices, jobs, or pipelines.
+The website E2E covers website form → website lead
+([website testing](../../website/testing.md)). Ads detail links into
+Leads with the same list query ([ads](../../ads/README.md)).
 
-The schema lives in [persistence.md](persistence.md). HTTP: [api.md](api.md).
-Sep 3 issue list (keep / doc gap / drop):
-[sep-3-issue-list.md](sep-3-issue-list.md)
-(2026-09-03). A Leads screen is later work (not a website editor side
-panel); until then the table is the whole product surface.
+- [prd.md](prd.md) — filter by website or Ads; mark Lead states
+- [frontend.md](frontend.md) — `/cms/leads`
+- [design-decision-record.md](design-decision-record.md)
+- [ADR.md](ADR.md)
+- [persistence.md](persistence.md)
+- [api.md](api.md)
+- [testing.md](testing.md)
+- [frontend-debloat.md](frontend-debloat.md)
+- [sep-3-issue-list.md](sep-3-issue-list.md)

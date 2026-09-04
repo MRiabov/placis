@@ -358,8 +358,8 @@ on the Request DTO.
 `## Indexes` — as billing already does.
 
 Major features that must eventually satisfy this contract: ads, assistant,
-auth, billing, ETL, onboarding, website, media library. Website, ads,
-assistant, onboarding, billing, auth, and the media library are fully
+auth, billing, ETL, onboarding, website, media library, leads. Website, ads,
+assistant, onboarding, billing, auth, the media library, and leads are fully
 defined (DTOs, Routes, tables, named services). ETL is fully defined
 (tables and named services; no owner HTTP). CI:
 [ci-cd.md](general-architecture/ci-cd.md).

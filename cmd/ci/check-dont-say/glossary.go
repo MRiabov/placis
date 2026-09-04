@@ -21,7 +21,7 @@ const (
 	classSkip
 )
 
-var knownHomes = []string{"website", "ads", "onboarding", "media", "details", "billing", "assistant", "projects"}
+var knownHomes = []string{"website", "ads", "onboarding", "media", "details", "billing", "assistant", "projects", "leads"}
 
 type token struct {
 	raw    string

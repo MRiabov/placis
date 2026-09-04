@@ -80,9 +80,8 @@ uploaded (~10 seconds); captioning is not a gate.
   `Draft / Creative ready / Published / Archived` ("Creative ready" = the ad is
   done; "Published" is the next Ad status once ad posting exists).
 
-Website leads from website forms (and later ad lead forms) are a separate
-surface:
-[leads](../other/leads/README.md).
+Website leads and ad leads are a separate surface:
+[leads](../other/leads/README.md) (`/cms/leads`).
 
 See the full spec in `ad-generation/`.
 

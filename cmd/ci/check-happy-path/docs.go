@@ -12,9 +12,7 @@ import (
 
 // Unstructured leftover extra-## api.md files. Duplicate of
 // check-pipeline-tables apiHeadingLeftover keys. Do not import that package.
-var docsRouteSkipRel = map[string]bool{
-	"other/leads/api.md": true,
-}
+var docsRouteSkipRel = map[string]bool{}
 
 // docsTestingRel maps ParseAPIFile rel to a path under docsRoot.
 // Duplicate of the owning-file convention; do not import
@@ -26,6 +24,7 @@ var docsTestingRel = map[string]string{
 	"assistant/api.md":                 "features/assistant/testing.md",
 	"onboarding/api.md":                "features/onboarding/testing.md",
 	"other/auth/api.md":                "features/other/auth/testing.md",
+	"other/leads/api.md":               "features/other/leads/testing.md",
 	"other/media/api.md":               "features/other/media/testing.md",
 	"business-profile/details/api.md":  "features/business-profile/details/testing.md",
 	"business-profile/projects/api.md": "features/business-profile/projects/testing.md",

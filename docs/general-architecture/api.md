@@ -19,7 +19,8 @@ Feature `api.md` files:
 - [Projects](../features/business-profile/projects/api.md)
 - [Media library](../features/other/media/api.md)
 - [Ads](../features/ads/api.md)
-- [Leads](../features/other/leads/api.md) (website form submit)
+- [Leads](../features/other/leads/api.md) (website form submit; list
+  `GET /v1/leads`)
 
 The [Placis website](../features/placis-website/README.md) has no Go HTTP. Live contractor website HTML is Cache then
 R2; it never calls Go.
