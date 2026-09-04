@@ -33,7 +33,7 @@ from a decided rule but never explicitly accepted.
 | MW-7 | Onboarding | resolved | 06 lock key → `website_id` (+ defensive one-website check) |
 | MW-8 | Assistant | open | "One copy-generation thread per website" has no storage rule |
 | MW-9 | Editing / persistence | mechanical | 429 cap stated "per tenant" in editing.md |
-| MW-10 | Editing / persistence | mechanical | Styles / edit history still "per tenant" ×3 |
+| MW-10 | Editing / persistence | resolved | Styles / edit history now "per website" (was "per tenant" ×3) |
 | MW-11 | Onboarding / hosting | mechanical | Prefix reserve timing stale in cloudflare.md |
 | MW-12 | General (llm-layer) | mechanical | `thread_kind` enum lists `website_copy_generation` twice |
 | MW-13 | Website create | deferred | Owner-facing website label (no `name` column) |
@@ -357,15 +357,20 @@ reuses; (b) drop the "one per website" claim to "threads are per run" and let
 
 ### MW-10 — Website styles / edit history still "per tenant" in three places
 
-- docs/features/website/editing.md:94–95 — styles "stored once per tenant".
+**Resolved (2026-09-04).** All "per tenant" wording for website-owned rows is
+now "per website":
+
+- docs/features/website/editing.md:94–95 — styles "stored once per tenant" →
+  "stored once per website" (fixed during rebase).
 - docs/features/website/editing.md:113–115 — "tenant-scoped website edit
-  history (last 200 batches)" (retention is per website:
-  docs/features/website/persistence.md:236, plan line 214).
-- docs/features/website/frontend.md:128 — "Website styles are tenant-wide".
+  history (last 200 batches)" → "website edit history (last 200 batches, per
+  website)" (fixed during rebase).
+- docs/features/website/frontend.md:130 — "Website styles are tenant-wide" →
+  "Website styles are per website".
 - docs/features/website/styles.md:7 — "`website_settings` (one row per
-  tenant)".
-- Superseding decision: docs/features/website/ADR.md:115–118 (ADR 13
-  superseded by 26), plan lines 79–83.
+  tenant)" → "one row per website".
+- docs/features/website/ADR.md:80 — flat `GET /v1/website/editor/blockers`
+  path → nested `GET /v1/websites/{website_prefix}/editor/blockers`.
 
 **Confidence: high.**
 

@@ -76,9 +76,9 @@ Status: decided (2026-08-16, product owner + engineering).
    `code` values per route. Editor routes return `blockers[]`: list
    GET per-row page-scoped, page GET hydrate, page PATCH ack
    (`WebsiteEditApplyRead`; menus / settings omit),
-   `GET /v1/website/editor/blockers` when the Publish dropdown opens
-   (tenant-scoped: all website pages plus subscription and off-canvas
-   unapproved media library items). `PublishWebsite` **calls** it as
+   `GET /v1/websites/{website_prefix}/editor/blockers` when the Publish
+   dropdown opens (tenant-scoped: all website pages plus subscription and
+   off-canvas unapproved media library items). `PublishWebsite` **calls** it as
    the hard gate.
 
 8. **Deferred: blog posts + careers** — no `blog_post` website page type or

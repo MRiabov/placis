@@ -127,7 +127,7 @@ Two surfaces plus global nav, one unpublished website:
   Onboarding-written website versions are omitted (not website-rollback
   targets).
 
-Website styles are tenant-wide (`website_settings`), shown on the website page
+Website styles are per website (`website_settings`), shown on the website page
 GET, applied only on explicit apply. Top menu and footer are edited in
 **Content** as a **depth-2 tree** (bar + one dropdown; website page / text / URL
 nodes). Website page picks from website pages; URL is a combobox (existing or
