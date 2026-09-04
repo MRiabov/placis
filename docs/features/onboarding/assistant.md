@@ -7,8 +7,9 @@ Project cards, and does **not** share the CMS
 thread, tool registry, or assistant screen context.
 
 CMS dispatcher, allowed set, and voice transport: [assistant](../assistant/README.md). This file is the
-onboarding-specific isolation. HTTP: [api.md](api.md). Tables:
-[persistence.md](persistence.md).
+onboarding-specific isolation. HTTP: [api.md](api.md). Overlay tables:
+[assistant persistence](../assistant/persistence.md). Isolation:
+[onboarding persistence](persistence.md).
 
 Website preview on `/onboarding/preview-and-edit/` is **not** this assistant.
 That surface is the [onboarding website editor](website-editor.md).
@@ -16,8 +17,8 @@ That surface is the [onboarding website editor](website-editor.md).
 ## Isolation
 
 - Conversation is **onboarding-session-scoped** (the onboarding session token),
-  not `tenant_id`. Tables under schema `onboarding`. Never hydrate from the CMS
-  thread.
+  not `tenant_id`. Overlay rows are `assistant.thread_items` /
+  `assistant.runs`. Never hydrate from the CMS thread.
 - One conversation per onboarding session. There is no `/thread/new` and no
   `completed` chain.
 - After website activation those routes **403**. Do not migrate the conversation
@@ -33,7 +34,7 @@ That surface is the [onboarding website editor](website-editor.md).
   `onboarding_assistant` thread). Voice create stores the exact instructions
   on `ai_generations.input` (reconstructable; hydrate omits it). Usage on
   transcripts is recorded, not debited.
-- In-flight lock is `onboarding.assistant_runs`, unique running per
+- In-flight lock is `assistant.runs`, unique running per
   `onboarding_session_id` (not `tenant_id`). Voice lock starts at
   realtime-connection create and ends on close / crash. A second
   realtime-connection create while running is **409** `in_flight_run`. No

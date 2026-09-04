@@ -64,6 +64,13 @@ instead of silently replacing it.
    `thread_items` and `runs` only. Onboarding drops `assistant_conversations`;
    items/runs FK `ai.threads`. Hydrate still reads overlay items only (never
    joins `ai_generations`). No FK from thread items to generations.
+   (2026-09-04): Guide overlay items/runs live on `assistant.thread_items` /
+   `assistant.runs`. Isolation is `thread_kind=onboarding_assistant` plus unique
+   `onboarding_session_id` on `ai.threads`. Do not keep
+   `onboarding.assistant_conversation_items` / `onboarding.assistant_runs`.
+   Split running uniques: CMS `(tenant_id) WHERE status = 'running' AND
+   onboarding_session_id IS NULL`; guide `(onboarding_session_id) WHERE
+   status = 'running'`.
 
 6. **Voice is typed HTTP of finals** — No Go WebSocket for audio, VAD, playback,
    or transcript deltas. `POST …/tool-calls` and `POST …/transcripts` append the
@@ -157,7 +164,9 @@ instead of silently replacing it.
     **Onboarding does not store Voice recordings.** Persist committed utterance
     **text** on `assistant_conversation_items`. No `files` row, no
     `recording_file_id`, no `POST /v1/onboarding/assistant/voice/recordings`.
-    CMS recordings stay. Online research consent is not this. Same day, later:
+    CMS recordings stay. Online research consent is not this. (2026-09-04):
+    those utterance rows are `assistant.thread_items` (same overlay as CMS).
+    Same day, later:
     Voice utterances store **`offset_seconds`** (seconds from that Voice run’s
     start). Reconstruct `[m:ss owner]` / `[m:ss assistant]` + `body`. Never say
     **user**. `created_at` is the row insert time. (2026-08-30) Same day, later:
@@ -302,7 +311,11 @@ instead of silently replacing it.
     all three. Do not relax unactivated **403** `tenant_unactivated` on
     `/v1/assistant/…`. Do not add
     `/v1/websites/{website_prefix}/editor/assistant`. CMS HTTP must not import
-    `onboarding/websiteeditor`. (2026-08-30)
+    `onboarding/websiteeditor`. (2026-08-30) (2026-09-04): guide
+    and unpaid website editor reuse CMS voice DTO names and fields
+    (`AssistantVoiceTranscriptsCreate`, `secret`, `internal_reasoning`).
+    Server derives `offset_seconds`. No `client_secret` / request
+    `offset_seconds` / `reasoning`.
 
 26. **Onboarding website editor reuses `ai.threads`
     (`thread_kind=cms_assistant`)** — Same overlay `thread_items` / `runs`. No
@@ -322,10 +335,11 @@ instead of silently replacing it.
     `assistant.runs` `running` (`channel=text`) and appends `tool_summary`.
     The website preview follows 06 via onboarding SSE + unpublished GET, not the
     Assistant text socket. Owner send is **409** `in_flight_run` until 06 is
-    idle. After 09, leftover 06 is River-only (`tenant_id` lock, no
+    idle. After 09, leftover 06 is River-only (`website_id` lock, no
     `assistant.runs`, no new thread items). CMS Assistant / PATCH stay not 409
-    because 06 is running (testing §15). 06 cap stays 3 / 12 / 4. 06 still must
-    not `create_page`. (2026-08-30)
+    because 06 is running (testing §15). 06 cap is **20** tool-using model
+    turns per website page. 06 still must not `create_page`. (2026-08-30)
+    (2026-09-04): cap was 3 / 12 / 4.
 
 28. **Unpaid instant apply via website PATCH** — Text and Voice on the
     onboarding website editor force instant apply (ignore `ask_first` / `plan`

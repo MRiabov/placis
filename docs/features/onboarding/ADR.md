@@ -337,3 +337,12 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     **PublishWebsite** is the onboarding website (earliest `websites.created_at`
     on that tenant; strip off). Must not walk every website. Two websites at
     activation should not happen; the rule still holds. (2026-09-03)
+
+29. **`browser_safety_session_id` caps Find lookup** —
+    `BusinessLookupCreate.browser_safety_session_id` is a UUID the browser
+    creates once in `localStorage`. Five lookups in 30 minutes create
+    tenants; the 6th is
+    **429** `browser_safety_cap` (no tenant). Easily bypassable (clear site
+    data). Not IP. Not the onboarding session token. Per-tenant 5-enqueue
+    `StartRun` stays a silent skip on `PUT /v1/onboarding/sources`. No
+    `research_wait_until` on DTOs, SSE, or Review. (2026-09-04)

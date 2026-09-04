@@ -410,8 +410,8 @@ context.
   PUT does not fail transcripts or billing settlement. GET thread never returns
   the URL and never plays it. Compaction does **not** delete the object or the
   `files` row. **Onboarding does not store Voice recordings.** Persist committed
-  utterance text on `assistant_conversation_items` (`body` + `offset_seconds`
-  from `audio_start_ms` when present; `provider_event` jsonb). Reconstruct
+  utterance text on `assistant.thread_items` (`body` + `offset_seconds` from
+  `audio_start_ms` when present; `provider_event` jsonb). Reconstruct
   `[m:ss owner]` / `[m:ss assistant]` from typed `thread_item_kind` +
   `offset_seconds`. No `files` row, no `recording_file_id`, no onboarding
   recordings HTTP. `created_at` is the row insert time, not the conversation
@@ -435,9 +435,10 @@ so New thread is 409 until Apply or Reject. There is always a `current` row
 
 ## In-flight lock
 
-One run per **CMS** assistant. Unique `(tenant_id) WHERE status = 'running'` on
-`runs` is the lock. Voice + text share it: **409** `in_flight_run` on a second
-text send or second Voice create. Voice lock **starts** at
+One run per **CMS** assistant. Unique `(tenant_id) WHERE status = 'running'
+AND onboarding_session_id IS NULL` on `runs` is that lock. Voice + text
+share it: **409** `in_flight_run` on a second text send or second Voice
+create. Voice lock **starts** at
 `POST /v1/assistant/voice/realtime-connection` (`channel=voice`) and **ends** on
 close / usage credit drop / crash (`failed` or `succeeded`). No cancel HTTP.
 
