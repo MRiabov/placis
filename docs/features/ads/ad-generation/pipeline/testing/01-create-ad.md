@@ -3,11 +3,10 @@
 Does not enqueue generate. Next step is 02, which SELECTs the stub
 `ad_variants.format`.
 
-- **Setup**: `tenants` (`status=active`). `business_profiles` with at
-  least one named service. Zero `ads` / `ad_variants` /
-  `ad_lead_forms` / `ad_copy_variants` / `ad_image_placements` /
-  `ad_reviews`. No `ai.threads` / `ai_generations` for ads. Schema
-  `jobs`: no `ads_generate`.
+- **Setup**: `tenants` (`status=active`). `business_profile.business_profiles`
+  with at least one named service. Zero `ads` / `ad_variants` / `ad_lead_forms`
+  / `ad_copy_variants` / `ad_image_placements` / `ad_reviews`. No `ai.threads` /
+  `ai_generations` for ads. Schema `jobs`: no `ads_generate`.
 - **Exercise**: `POST /v1/ads` (`CreateAd`). Request `AdCreate` with
   `format=feed_square` and lead-form include flags.
 - **Verify** (Postgres after 01, **before** 02 runs):

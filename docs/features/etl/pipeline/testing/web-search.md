@@ -1,10 +1,10 @@
 # Web search — integration test
 
-- **Setup**: `tenants`. `business_profiles` for that `tenant_id`.
-  Onboarding: a **Starts when** tuple is met and some discoverable
-  detail is still empty (Maps Find, company registry Find, or both) —
-  or `place_id`, `website_url`, Facebook URL, and Instagram handle are
-  already set. Scheduled: this ETL run kind is absent.
+- **Setup**: `tenants`. `business_profile.business_profiles` for that
+  `tenant_id`. Onboarding: a **Starts when** tuple is met and some discoverable
+  detail is still empty (Maps Find, company registry Find, or both) — or
+  `place_id`, `website_url`, Facebook URL, and Instagram handle are already set.
+  Scheduled: this ETL run kind is absent.
 - **Exercise**: `StartRun` with `etl_run_kind=web_search`, then
   `extract/websearch.Run` then `transform/websearch.Run`.
 - **Verify** (Postgres):

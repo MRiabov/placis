@@ -6,10 +6,10 @@ Does not write unpublished website pages. Next step is 02, which SELECTs
 - **Setup**: `tenants` (`status=unactivated`, `subscription_status=none`).
   `websites` row with `website_prefix` reserved. `onboarding_sessions`
   (`status=selecting_and_copying_website_template`, that `tenant_id`,
-  `website_id`). `business_profiles.accepted_edit_id` set (client interview
-  complete). Named services already on that accepted profile. Zero
-  `website_pages` / `website_sections` / `website_slots` / `website.menus` /
-  `website_settings` / `website_publications`. Production-ready website
+  `website_id`). `business_profile.business_profiles.accepted_edit_id` set
+  (client interview complete). Named services already on that accepted profile.
+  Zero `website_pages` / `website_sections` / `website_slots` / `website.menus`
+  / `website_settings` / `website_publications`. Production-ready website
   templates exist (`production_ready=true`). WIP ids (`production_ready=false`)
   exist and must not be chosen.
 - **Exercise**: website 01 in River job kind

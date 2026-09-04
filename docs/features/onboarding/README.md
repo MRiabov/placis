@@ -26,4 +26,5 @@ Onboarding turns a spoken or typed description of a business into a clear
 Auth is interleaved with onboarding (website activation), but auth and tenancy
 are owned by the [auth feature](../other/auth/README.md). Stripe checkout lives in [website activation](pipeline/09-website-activation.md).
 HTTP: [api.md](api.md). The schema lives in [persistence.md](persistence.md) (onboarding sessions),
-[ETL](../etl/persistence.md) (extract), and [details](../business-profile/details/persistence.md) (business profile).
+[ETL](../etl/persistence.md) (extract), and
+[business profile](../business-profile/details/persistence.md).

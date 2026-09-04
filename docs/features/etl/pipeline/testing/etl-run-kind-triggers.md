@@ -1,9 +1,8 @@
 # ETL run kind triggers — integration test
 
-- **Setup**: `tenants`. `business_profiles` for that `tenant_id`.
-  Onboarding: **Starts when** details present or absent per case.
-  Scheduled: `place_id` present or absent; matching tuple present or
-  absent.
+- **Setup**: `tenants`. `business_profile.business_profiles` for that
+  `tenant_id`. Onboarding: **Starts when** details present or absent per case.
+  Scheduled: `place_id` present or absent; matching tuple present or absent.
 - **Exercise**: `StartRun` (`trigger=onboarding` or `scheduled`).
 - **Verify** (Postgres):
   - Onboarding `StartRun` inserts `etl.runs` only for ETL run kinds

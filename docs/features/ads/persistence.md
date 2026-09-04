@@ -6,9 +6,8 @@ Conventions:
 (Postgres schema `ads`). Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 
-Referenced, not owned here:
-[details](../business-profile/details/persistence.md) (profile, services,
-reviews), [projects](../business-profile/projects/persistence.md),
+Referenced, not owned here: [business profile](../business-profile/details/persistence.md) (profile, services, reviews),
+[projects](../business-profile/projects/persistence.md),
 [media library](../other/media/persistence.md)
 (`ad_image_placements.media_asset_id`),
 [leads](../other/leads/persistence.md) (attribution). LLM traces:

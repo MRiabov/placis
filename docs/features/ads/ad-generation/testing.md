@@ -17,9 +17,10 @@ create** paths are omitted. Go funcs stay on `leftover_tests.go`.
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the
-real API + real Postgres. `tenants` (`status=active`).
-`business_profiles` with at least the details Review copy can read.
+E2E (Playwright, both sides). Playwright drives `frontend-2` against the real
+API + real Postgres. `tenants` (`status=active`).
+`business_profile.business_profiles` with at least the details Review copy can
+read.
 
 #### Exercise
 
@@ -115,8 +116,8 @@ Backend. Go `TestHappyPathV1AdsCreatesAd`. OpenAPI 1:1. **calls**
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-`business_profiles` with at least one named service. One draft ad and
-one `status=archived` ad. No `frontend-2`. No Worker.
+`business_profile.business_profiles` with at least one named service. One draft
+ad and one `status=archived` ad. No `frontend-2`. No Worker.
 
 #### Exercise
 

@@ -8,7 +8,7 @@ Conventions:
 (Postgres schema `business_profile`). Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
 Live-profile tables share this namespace
-([details persistence](../details/persistence.md)). Cover photos are
+([business profile persistence](../details/persistence.md)). Cover photos are
 [media library](../../other/media/persistence.md) items. Extract
 identity and Project skip:
 [ETL persistence](../../etl/persistence.md).

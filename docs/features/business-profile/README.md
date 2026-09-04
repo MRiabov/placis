@@ -16,9 +16,9 @@ projects share Postgres schema `business_profile`.
 - [projects/](projects/README.md) — Projects (`/cms/projects`). Table: `business_profile.projects`.
   HTTP: [projects/api.md](projects/api.md). Tests: [projects/testing.md](projects/testing.md).
 - [certifications-and-reviews/](certifications-and-reviews/README.md) — Certifications and reviews
-  (`/cms/certifications-and-reviews`). Persistence and HTTP stay on [details](details/persistence.md) /
-  [details HTTP](details/api.md). Screen tests: [certifications-and-reviews/testing.md](certifications-and-reviews/testing.md) (HTTP
-  1:1 is Details).
+  (`/cms/certifications-and-reviews`). Persistence and HTTP stay on
+  [business profile persistence](details/persistence.md) / [details HTTP](details/api.md). Screen tests:
+  [certifications-and-reviews/testing.md](certifications-and-reviews/testing.md) (HTTP 1:1 is Details).
 
 How the owner reaches them: [CMS frontend](../../general-architecture/cms/frontend.md) (left nav).
 

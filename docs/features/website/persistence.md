@@ -11,7 +11,7 @@ The parent row is `websites` ([ADR](ADR.md) 26). Conventions:
 Media assets are owned by
 [media library](../other/media/persistence.md). The business profile the
 website templates fill is
-[details](../business-profile/details/persistence.md). Projects:
+[business profile](../business-profile/details/persistence.md). Projects:
 [projects](../business-profile/projects/persistence.md). Website forms
 write [leads](../other/leads/persistence.md). The dump shape of a website
 publication is [manifest.md](manifest.md). The reserved DNS label is

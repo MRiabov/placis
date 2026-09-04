@@ -2,7 +2,7 @@
 
 The Profile screen at `/cms/certifications-and-reviews`: certification ticks and
 the **All reviews** / **top reviews** picker (ads). The review and certification
-**rows** live on [details persistence](../details/persistence.md). HTTP:
+**rows** live on [business profile persistence](../details/persistence.md). HTTP:
 [details HTTP](../details/api.md).
 
 How the owner reaches it: [CMS frontend](../../../general-architecture/cms/frontend.md). Screen: [frontend.md](frontend.md). [ADR](ADR.md). Look:
