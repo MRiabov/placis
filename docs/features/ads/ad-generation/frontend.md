@@ -308,18 +308,18 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
     under the picker (`4 days left (15 Aug to 29 Aug)`), not a length like "2
     weeks". Both disabled until ad posting. Then **Audience** and **Area**
     (read-only, not editable yet, below the images).
-  - **Right (outputs)**: Performance with a New-ad-leads count under it
-    (stacks to one column on narrow screens).
+  - **Right (outputs)**: Performance, then Ad leads (Inbox panel). On
+    a **narrow** screen those two follow Images, before Budget.
 - **Archive** — red outline, after the two-column body, not ink. Same as
   projects. Returns to the list with toast Undo. (2026-08-29)
 - **Performance** — impressions, clicks, spend, results, cost per ad lead
   (grayed stub until ad posting connects) plus the projection line: "At this
   spend, we expect X more ad leads in the next 30 days."
 - **Ad leads** — not a list on this screen
-  ([ads ADR 41](ADR.md)). A count of **New** ad leads for this ad links
-  to `/cms/leads` with `source=ad` and this `ad_id`
-  ([leads frontend](../../other/leads/frontend.md)). New is the urgent
-  mark. Never say uncontacted.
+  ([ads ADR 41](ADR.md)). Dashed Inbox panel (same empty mark as
+  Leads). **New** count, or **Nothing here yet** / no ad leads from
+  this ad. The whole panel opens `/cms/leads` with `source=ad` and this
+  `ad_id`. Never say uncontacted.
 - **Audience** — read-only default **"Married couples, 35–45"** with
   the "steers tone/imagery, targeting comes with ad posting" note. Not
   a picker ([ADR 40](ADR.md)). Audience-match detection ("are we

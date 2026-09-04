@@ -30,3 +30,8 @@ inventing it.
 3. **Wide ad detail keeps status left of the actions** — **Creative ready**
    sits left of Publish / Download / Edit on a wide screen. Narrow still
    puts the badge last, after the buttons. (2026-08-29)
+
+4. **Ad leads is the Inbox panel** — Same dashed empty mark as Leads.
+   The whole panel opens `/cms/leads` with `source=ad` and that `ad_id`.
+   On a narrow screen Performance and Ad leads follow Images, before
+   Budget. (2026-09-04)
