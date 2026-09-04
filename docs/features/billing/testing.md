@@ -81,13 +81,13 @@ a choosable Pro month Price.
 6. **Failed pay (window)** — live websites still published. Publish
    **200**. `nonpayment_started_at` set.
 7. **Stopped paying (deadline)** — no `website_publications.active`; R2
-   `latest/` is the holding HTML. `POST /v1/websites/{website_prefix}/publications`
-   and live website rollback **402** `subscription_canceled` (not
-   `usage_credit_exhausted`). UI: Publish dropdown **Publishing is
-   blocked:** navigate to Usage & billing. Website editor PATCH still
-   works. Pay-again: new `stripe_subscription_id`; same
-   `stripe_customer_id`; `status=active`; `canceled_at` cleared; no
-   activation Price on that Checkout. Publish succeeds.
+   `latest/` is the holding HTML.
+   `POST /v1/websites/{website_prefix}/publications` and live website rollback
+   **402** `subscription_canceled` (not `usage_credit_exhausted`). UI: Publish
+   dropdown **Publishing is blocked:** navigate to Usage & billing. Website
+   editor PATCH still works. Pay-again: new `stripe_subscription_id`; same
+   `stripe_customer_id`; `status=active`; `canceled_at` cleared; no activation
+   Price on that Checkout. Publish succeeds.
 8. **Cancel** — `cancel_at_period_end=true`, `status=active`. UI:
    **Cancels on** the period end. Publish still works.
 9. **Keep** — `cancel_at_period_end` cleared. After
