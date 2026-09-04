@@ -110,25 +110,25 @@ func TestGateAKnownRiverAndSQL(t *testing.T) {
 func TestGateBLeftoverShrink(t *testing.T) {
 	f := &docnames.FileAPI{
 		Rel:         "website/api.md",
-		PublicPaths: map[string]bool{"GET /v1/website/editor/pages": true, "GET /v1/website/editor/urls": true},
+		PublicPaths: map[string]bool{"GET /v1/websites/{website_prefix}/editor/pages": true, "GET /v1/websites/{website_prefix}/editor/urls": true},
 		PublicDTOs:  map[string]bool{"WebsitePageRead": true},
 	}
 	d := docnames.Docs{ByFile: map[string]*docnames.FileAPI{"website/api.md": f}}
 	c := emptyCode()
 	c.PublicFile = "openapi.json"
-	c.PublicOps["GET /v1/website/editor/pages"] = true
+	c.PublicOps["GET /v1/websites/{website_prefix}/editor/pages"] = true
 	c.PublicDTOs["WebsitePageRead"] = true
 	leftover := map[string][]string{
-		"website/api.md": {"GET /v1/website/editor/urls"},
+		"website/api.md": {"GET /v1/websites/{website_prefix}/editor/urls"},
 	}
 	if errs := gateB(d, c, leftover); len(errs) != 0 {
 		t.Fatalf("leftover ok: %v", errs)
 	}
 	errs := gateB(d, c, nil)
-	if len(errs) != 1 || !strings.Contains(errs[0], "GET /v1/website/editor/urls") {
+	if len(errs) != 1 || !strings.Contains(errs[0], "GET /v1/websites/{website_prefix}/editor/urls") {
 		t.Fatalf("missing leftover: %v", errs)
 	}
-	c.PublicOps["GET /v1/website/editor/urls"] = true
+	c.PublicOps["GET /v1/websites/{website_prefix}/editor/urls"] = true
 	errs = gateB(d, c, leftover)
 	if len(errs) != 1 || !strings.Contains(errs[0], "remove it from the leftover list") {
 		t.Fatalf("stale leftover: %v", errs)
@@ -138,14 +138,14 @@ func TestGateBLeftoverShrink(t *testing.T) {
 func TestGateBWorkerSplit(t *testing.T) {
 	f := &docnames.FileAPI{
 		Rel:           "website/api.md",
-		PublicPaths:   map[string]bool{"GET /v1/website/editor/pages": true},
+		PublicPaths:   map[string]bool{"GET /v1/websites/{website_prefix}/editor/pages": true},
 		InternalPaths: map[string]bool{"POST /internal/website-render": true},
 		InternalDTOs:  map[string]bool{"WebsiteRenderRequest": true},
 	}
 	d := docnames.Docs{ByFile: map[string]*docnames.FileAPI{"website/api.md": f}}
 	c := emptyCode()
 	c.PublicFile = "openapi.json"
-	c.PublicOps["GET /v1/website/editor/pages"] = true
+	c.PublicOps["GET /v1/websites/{website_prefix}/editor/pages"] = true
 	c.WorkerFile = "apps/contractor-website/openapi.json"
 	c.WorkerOps["POST /internal/website-render"] = true
 	c.WorkerDTOs["WebsiteRenderRequest"] = true

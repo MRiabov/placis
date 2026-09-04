@@ -29,10 +29,12 @@ on `website_id`.
 - **Columns:** `id` uuid pk, `tenant_id` fk, `website_prefix` text unique,
   timestamps
 - **Uniques:** `website_prefix` (global); `id`
-- **Written by:** onboarding **Select and copy website template** (insert
-  - reserve prefix); `POST /v1/websites` (same; deferred create flow)
+- **Written by:** onboarding **Select and copy website template**
+  (insert, reserve prefix, and `type=subdomain`); `POST /v1/websites`
+  (same; deferred create flow)
 - **Notes:** Prefix reserved in the same transaction as the insert
-  ([ADR](ADR.md) 27). Never renamed. Never null on a live row. Count of
+  ([ADR](ADR.md) 27). That transaction also inserts `website_addresses`
+  `type=subdomain`. Never renamed. Never null on a live row. Count of
   rows per tenant is the subscription website cap
   ([plans.md](../billing/plans.md)). Failed copy-generation keeps the row
   (retry that `website_id` when create ships; it still counts toward the
@@ -50,11 +52,14 @@ on `website_id`.
 - **Enums:** `type` → `subdomain` / `custom`; `status` → `reserved` /
   `pending` / `active` / `failed`
 - **Uniques:** `hostname`; at most one `is_primary=true` per `website_id`
-- **Written by:** `POST /v1/onboarding/website/publications` and
-  Website activation (`type=subdomain` on the onboarding website);
-  `POST /v1/websites/{website_prefix}/addresses` (`type=custom`)
+- **Written by:** every `websites` insert (`type=subdomain` in the same
+  transaction as prefix reserve: onboarding **Select and copy website
+  template** and `POST /v1/websites`);
+  `POST /v1/websites/{website_prefix}/addresses` (`type=custom`).
+  Preview website address / Website activation skip-if-set.
 - **Notes:** Custom Hostnames columns are Connect website address, not
-  website publication.
+  website publication. A website may Publish only to **its**
+  `{website_prefix}.preview.placis.com` and **its** `type=custom` hosts.
 
 ### Preview vs custom host
 
@@ -197,8 +202,11 @@ may replace a whole tree. Assistant `remove_entries` max 4.
 - **Notes:** Rollback lists `published_by=owner` only on that host.
   Pre-publish blockers: `WebsitePublicationBlockers`. Callers: list
   GET (per website page), page GET, page PATCH ack, and
-  `GET /v1/website/editor/blockers`. `PublishWebsite` **calls** it as
-  the hard gate. There is no `website_publication_issues` table.
+  `GET /v1/websites/{website_prefix}/editor/blockers` (this
+  `website_id`). `PublishWebsite` **calls** it as the hard gate for
+  this website. There is no `website_publication_issues` table.
+  `publication_id` / `website_address_id` that do not belong to this
+  `{website_prefix}` are **404**.
 
 ### `website_slot_reviews`
 

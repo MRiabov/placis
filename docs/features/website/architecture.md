@@ -22,8 +22,9 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   **calls** this when the subscription is `canceled`.
 
 `WebsitePublicationBlockers` is not a pipeline step. Required website
-slot cannot resolve; live-path media library item not approved;
-subscription not `active`. Page-scoped or tenant-scoped. Editor
+slot cannot resolve; live-path media library item not approved on
+**this** website; subscription not `active`. Page-scoped or
+website-scoped; `subscription_canceled` is tenant-wide. Editor
 routes return `blockers[]`. `PublishWebsite` **calls** it as the
 hard gate.
 
@@ -92,9 +93,9 @@ Object and mapping: [catalog.md](catalog.md).
 1. take the details from the business profile (services, service areas,
    certifications, projects, contact);
 2. **select website template** — occupancy within 250 km among
-   production-ready website templates, then hash tie-break. Website styles
-   = that website template’s associated website style catalog preset. No
-   LLM. Do not write unpublished pages
+   production-ready website templates, then `website_id % len`
+   tie-break. Website styles = that website template’s associated
+   website style catalog preset. No LLM. Do not write unpublished pages
    ([01](pipeline/01-select-website-template.md));
 3. **copy the website template’s pages onto the unpublished website** —
    unpublished `website_pages` / `website_sections` / `website_slots` —
@@ -158,17 +159,18 @@ The website editor is one workspace with two surfaces plus global nav
   handle. No Design tab (look is Website styles). No Website versions tab. No
   Website forms tab.
 
-Edits mutate the in-memory website editor projection first, then PATCH copies
-them to unpublished rows. There is no Save action; do not re-render from the
-PATCH response. Text copies out on click-off, not while typing; the frontend
-safety timer paces sends (500ms, coalesce of dirty keys, typically under 10 KB)
-so `429` stays a backstop. PATCH is not the whole unpublished website; reject
-over 64 KB. Leaving while a copy-out is in flight confirms discard. Opening the
-website editor hydrates undo/redo from website edit history; Ctrl+Z is
-in-memory, then PATCH. See [editing.md](editing.md). Assistant edits follow [assistant.md](assistant.md):
-Ask first waits for Apply / Reject (website editor PATCH, then record metadata);
-instant apply is the website editor PATCHing as tools succeed. Website
-publication writes a website version. **Details**, **Projects**,
+Edits mutate the in-memory website editor projection first
+(**one per `{website_prefix}`**), then PATCH copies them to unpublished rows.
+There is no Save action; do not re-render from the PATCH response. Text copies
+out on click-off, not while typing; the frontend safety timer paces sends
+(500ms, coalesce of dirty keys, typically under 10 KB) so `429` stays a
+backstop. PATCH is not the whole unpublished website; reject over 64 KB. Leaving
+while a copy-out is in flight confirms discard. Changing prefix is leaving.
+Opening the website editor hydrates undo/redo from website edit history; Ctrl+Z
+is in-memory, then PATCH. See [editing.md](editing.md). Assistant edits follow
+[assistant.md](assistant.md): Ask first waits for Apply / Reject (website editor PATCH, then
+record metadata); instant apply is the website editor PATCHing as tools succeed.
+Website publication writes a website version. **Details**, **Projects**,
 **Certifications and reviews**, and the **media library** are website page
 content (placeholders, project galleries, reviews, photos) edited on
 [business profile](../business-profile/README.md) and [media library](../other/media/README.md) screens. They are separate entities.

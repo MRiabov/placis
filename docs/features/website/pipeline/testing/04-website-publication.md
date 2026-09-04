@@ -11,7 +11,8 @@ later CMS Publish.
   Optional 03 copy already in website slots. Record
   `website_slots.value` (still tokenized where required). For 08:
   onboarding session `preview_and_edit`,
-  `website_prefix` null, zero `website_publications`. For 09-after-08:
+  `websites.website_prefix` and `type=subdomain` already from 05,
+  zero `website_publications`. For 09-after-08:
   v1 `active` `published_by=onboarding` already exists (strip on). For
   CMS: tenant `status=active`, an owner host `website_addresses` row.
 - **Exercise**: the publication write (real Worker `websitePublication`;

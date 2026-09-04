@@ -380,20 +380,21 @@ internal OpenAPI file when present. CI:
 `go run ./cmd/ci/check-docs-code --all` in the same job as the other docs
 scanners.
 
-- **Gate A (always on):** a path, DTO type name, River job kind, or SQL
+- **Always:** a path, DTO type name, River job kind, or SQL
   table in public OpenAPI, Worker internal OpenAPI, Go under `internal/`
   and `cmd/` (not `cmd/ci`), or `CREATE TABLE` in `migrations/` must
   already live in docs. Missing trees are skipped. Empty code does not
   fail. Public OpenAPI must not list `/internal/…`. A **Do not create**
   path in OpenAPI fails even if the string appears in docs.
-- **Gate B (ratchet after OpenAPI exists):** when a feature’s paths
+- **After OpenAPI exists for that feature:** when a feature’s paths
   appear in OpenAPI, that file’s documented public Routes and
   route-linked DTOs must be in the spec, except a shrink-only leftover
-  list in `cmd/ci/check-docs-code`. Website public arms on `/v1/website`;
-  Worker internal arms on `/internal/website-`; billing public arms on
-  `/v1/billing` once that prefix exists in OpenAPI; `GET /v1/health` and
-  `GET /openapi.json` are required once public OpenAPI exists. Undefined
-  `api.md` files stay out of Gate B.
+  list in `cmd/ci/check-docs-code`. Website public arms on
+  `/v1/websites`; Worker internal arms on `/internal/website-`; billing
+  public arms on `/v1/billing` once that prefix exists in OpenAPI;
+  `GET /v1/health` and `GET /openapi.json` are required once public
+  OpenAPI exists. Feature `api.md` files with no matching OpenAPI prefix
+  stay out of this ratchet.
 
 Shared parsers live in `cmd/ci/docnames`. This pass does not check DTO
 field constraints or `frontend-2` routes.

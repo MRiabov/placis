@@ -21,17 +21,20 @@ Stack: Vite + React + TanStack Router, generated API types. The canvas renders
 unpublished website sections through the shared contractor-website component
 package — the same package the live website uses.
 
-The frontend holds **one** website editor projection in React. Edits mutate that
+The frontend holds **one** website editor projection **per `{website_prefix}`**
+in React (the CMS path key; uuid `website_id` stays internal). Edits mutate that
 working copy first; the canvas paints it. PATCH copies the change to the
 backend; it does not round-trip the projection to re-render ([editing.md](editing.md)). Text
 copies out on click-off, not while typing. A 500ms safety timer coalesces sends
 so `429` is rare. There is **no Save** and no Saving / Saved indicator. If a
 copy-out or upload has not succeeded after 10 seconds, show a visible error
 ([editing.md](editing.md)). If a copy-out or upload is in flight or has failed, leaving is
-blocked until it succeeds or the owner confirms discard. It does not accumulate
-unpublished documents in memory. Edits do not keep a second unpublished copy.
-Opening `/cms/website/{website_prefix}` hydrates undo/redo stacks from website
-edit history (last 200 batches **per website**). Switching website page GETs the
+blocked until it succeeds or the owner confirms discard. Changing
+`{website_prefix}` is leaving: the leave guard, then hydrate the other website.
+Do not keep two dirty copies. It does not accumulate unpublished documents in
+memory. Edits do not keep a second unpublished copy. Opening
+`/cms/website/{website_prefix}` hydrates undo/redo stacks from website edit
+history (last 200 batches **per website**). Switching website page GETs the
 unpublished website only. Ctrl+Z is in-memory, then the ordinary PATCH. No
 `/undo` or `/redo` routes. The predecessor `EditorHeader` Save control is
 dropped.
@@ -59,7 +62,7 @@ creates the first website. Everything about that flow is **TBD**:
 
 ## Website editor (`/cms/website/{website_prefix}`)
 
-Two surfaces plus global nav, one unpublished website:
+Two surfaces plus global nav, the open website:
 
 - **Canvas** — the selected website page, live from its website sections. Not a
   website preview.
@@ -114,12 +117,12 @@ Two surfaces plus global nav, one unpublished website:
   Click an image on the canvas: Content focused on that image (current thumb,
   pick from the media library, **Upload**). Drop onto **Upload** still uploads;
   the prompt is not drag-and-drop. Thumbs match `/cms/media` (mixed ratio,
-  dozens). SEO stays website-page-level in its own rail
-  panel. Website versions is a workspace item (bottom of the rail): website
-  publications and website-assistant activity, not unpublished checkpoints per
-  website page. Earlier owner versions: checkout (`GET` `publication_id`, then
-  PATCH) and live rollback. Undo/redo stacks are in RAM, seeded from website
-  edit history on `/cms/website` open; they are not a timeline UI.
+  dozens). SEO stays website-page-level in its own rail panel. Website versions
+  is a workspace item (bottom of the rail): website publications and
+  website-assistant activity, not unpublished checkpoints per website page.
+  Earlier owner versions: checkout (`GET` `publication_id`, then PATCH) and live
+  rollback. Undo/redo stacks are in RAM, seeded from website edit history on
+  `/cms/website/{website_prefix}` open; they are not a timeline UI.
   Onboarding-written website versions are omitted (not website-rollback
   targets).
 
@@ -159,19 +162,20 @@ for an unapproved library item not on the canvas, or **Usage & billing** when
 they must pay the subscription price again. Each control uses a Lucide
 **ArrowUpRight**. Subscription copy: **Pay the subscription price to Publish**.
 Do not send them to extra usage credit for this blocker. Per-row `blockers[]` on
-`GET /v1/website/editor/pages` seeds website pages not on the canvas. Website
-page PATCH ack `blockers[]` replaces that website page’s list (merge like
-`edit_history_head`; not a GET after PATCH). Opening the Publish dropdown calls
-`GET /v1/website/editor/blockers` (not a timer): flat list for all website pages
-plus subscription and off-canvas unapproved media library items. After
-`/cms/media` approve, pay, or menus, that GET is the current full list. Do not
-recompute from the website component catalog while typing; click-off PATCH is
-enough for text. After a successful website publication,
-`has_unpublished_changes` is false until the next edit. The POST sends
-`website_address_id`: that host’s R2 tree, then purge **that** host ([api.md](api.md),
-[cloudflare.md](cloudflare.md)). The **host row** is the Publish click. Hosts can diverge.
-After website activation, `/cms/website/{website_prefix}` (onboarding website)
-opens with **Publish**; first owner website publication is v3+.
+`GET /v1/websites/{website_prefix}/editor/pages` seeds website pages not on the
+canvas. Website page PATCH ack `blockers[]` replaces that website page’s list
+(merge like `edit_history_head`; not a GET after PATCH). Opening the Publish
+dropdown calls `GET /v1/websites/{website_prefix}/editor/blockers` (not a
+timer): flat list for this website’s pages plus subscription and live-path
+unapproved media library items on this website. After `/cms/media` approve, pay,
+or menus, that GET is the current full list. Do not recompute from the website
+component catalog while typing; click-off PATCH is enough for text. After a
+successful website publication, `has_unpublished_changes` is false until the
+next edit. The POST sends `website_address_id`: that host’s R2 tree, then purge
+**that** host ([api.md](api.md), [cloudflare.md](cloudflare.md)). The **host row** is the Publish
+click. Hosts can diverge. After website activation,
+`/cms/website/{website_prefix}` (onboarding website) opens with **Publish**;
+first owner website publication is v3+.
 
 Live **website rollback** (`POST …/publications/{id}/rollback`) returns that
 publication `*Read`; the dropdown and Website versions list update from the
@@ -205,19 +209,19 @@ actions (open in a new tab, or reopen Connect while waiting). New URL is
 Connect, with a plus. Do not lay this out as a status card of labels.
 
 **Connect website address** is the point-their-hostname-at-us flow. It is a
-**modal over the website editor** on `/cms/website` (overlay, no new route, no
-left-nav item). The owner types `acme.ie` or `www.acme.ie`. The API creates the
-Cloudflare custom hostname and returns copyable DNS rows (type, Host, Value):
-TXT for the certificate, and CNAME (or ALIAS / later Apex Proxying `A`) as in
-[cloudflare.md](cloudflare.md). Each row shows Host and Value as separate large fields with
-Copy; status is not mixed into the value. On-screen how-to: add these at the DNS
-panel where the domain already lives (GoDaddy, Porkbun, or Squarespace) — copy
-Host into name/host and Value into value/points-to; do not move nameservers to
-Placis. Status in the modal: waiting for DNS → waiting for certificate → active
-(the website editor polls Go; Go polls Cloudflare). Close returns to the website
-editor. The host then appears as row 2; it is enabled when active. Re-open the
-modal from New URL or from a still-waiting host to copy records again. Website
-publication does **not** attach a website address.
+**modal over the website editor** on `/cms/website/{website_prefix}` (overlay,
+no new route, no left-nav item). The owner types `acme.ie` or `www.acme.ie`. The
+API creates the Cloudflare custom hostname and returns copyable DNS rows (type,
+Host, Value): TXT for the certificate, and CNAME (or ALIAS / later Apex Proxying
+`A`) as in [cloudflare.md](cloudflare.md). Each row shows Host and Value as separate large
+fields with Copy; status is not mixed into the value. On-screen how-to: add
+these at the DNS panel where the domain already lives (GoDaddy, Porkbun, or
+Squarespace) — copy Host into name/host and Value into value/points-to; do not
+move nameservers to Placis. Status in the modal: waiting for DNS → waiting for
+certificate → active (the website editor polls Go; Go polls Cloudflare). Close
+returns to the website editor. The host then appears as row 2; it is enabled
+when active. Re-open the modal from New URL or from a still-waiting host to copy
+records again. Website publication does **not** attach a website address.
 
 Do not advertise `{website_prefix}.placis.com` as a live URL.
 

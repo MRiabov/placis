@@ -48,7 +48,7 @@ re-assert 02 Persist.
 #### Verify
 
 1. **Open** — UI: the website page list renders. DB: reads
-   `website_pages` for the tenant.
+   `website_pages` for **this** `website_id`.
 2. **Edit** — **persists into** `website_slots.value` (new text and, on
    image swap, `media_asset_id`); `edit_history` has a human batch;
    `website_settings.edit_history_head` moved. UI: the edit is visible
@@ -145,8 +145,9 @@ Deferred. `POST /v1/websites`. Request `WebsiteCreate`. Response
 
 #### Verify
 
-When create ships: **persists into** `websites`, `website_settings`.
-Prefix reserved. Copy generation billed. Isolation vs the onboarding
+When create ships: **persists into** `websites`, `website_settings`,
+`website_addresses` (`type=subdomain`). Prefix reserved in the same
+transaction. Copy generation billed. Isolation vs the onboarding
 website. Fail: `402 website_limit_reached` at cap; `402
 usage_credit_exhausted` (no row).
 
@@ -177,25 +178,31 @@ Backend. Go `TestHappyPathV1WebsiteEditorPagesReturnsPages`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. One owner
+`website_publications` row on this `{website_prefix}`. No
+`frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/websites/{website_prefix}/editor/pages`. Request `WebsiteEditorGet`.
-Response `WebsitePageSummaryRead`.
+`GET /v1/websites/{website_prefix}/editor/pages`. Request
+`WebsiteEditorGet`. Response `WebsitePageSummaryRead`. Cases:
+
+- No query — unpublished page list.
+- `publication_id` — that owner publication’s page list.
 
 #### Verify
 
-Exercise body: `WebsitePageSummaryRead` lists unpublished pages. Per-row
-page-scoped `blockers[]`. Must
-not: preview host GET. Optional `publication_id` is checkout of that
-owner publication’s page list. **reads** `website_pages`,
-`website_sections`, `website_slots`, `media_assets` may
-supplement.
+- No query: `WebsitePageSummaryRead` lists unpublished pages.
+  Per-row page-scoped `blockers[]`. Must not: preview host GET.
+- `publication_id`: body is that owner publication’s pages, not
+  the unpublished tree.
+Named **reads** `website_pages`, `website_sections`,
+`website_slots`, `media_assets` may supplement.
 
 #### Fail
 
-`409` onboarding row. `403` unactivated.
+`409` onboarding row. `403` unactivated. `404` `publication_id` that
+is not a publication of this `{website_prefix}`.
 
 ### TestHappyPathV1WebsiteEditorPagesCreatesPage — Route
 
@@ -225,23 +232,32 @@ OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. One owner
+`website_publications` row on this `{website_prefix}`.
+`edit_history` on that website page. No `frontend-2`. No Worker.
 
 #### Exercise
 
 `GET /v1/websites/{website_prefix}/editor/pages/{page_id}`. Request
-`WebsiteEditorGet`. Response `WebsitePageRead`.
+`WebsiteEditorGet`. Response `WebsitePageRead`. Cases:
+
+- No query — unpublished canvas.
+- `publication_id` — checkout of that owner publication.
+- `include_edit_history=true` — hydrate with undo stacks.
 
 #### Verify
 
-Exercise body: `WebsitePageRead` hydrates the canvas. Must not:
-`/pages/{id}/seo`; `/settings` GET; `/menus` GET; return
-`website_manifest`; both query flags. Optional `publication_id` alone
-is checkout. Named **reads** may supplement.
+- No query: `WebsitePageRead` hydrates the unpublished canvas.
+- `publication_id`: checkout body of that owner publication.
+- `include_edit_history=true`: undo stacks present.
+Must not: `/pages/{id}/seo`; `/settings` GET; `/menus` GET;
+return `website_manifest`; both query flags. Named **reads** may
+supplement.
 
 #### Fail
 
-`404` / `409` / `400`. `403` unactivated.
+`404` / `409` / `400`. `403` unactivated. `404` `publication_id` that
+is not a publication of this `{website_prefix}`.
 
 ### TestHappyPathV1WebsiteEditorPagesPageIdUpdatesPage — Route
 
@@ -340,8 +356,8 @@ Unpublished Copy website template pages rows already present. No
 #### Verify
 
 Exercise body: `WebsiteEditorBlockersRead` `blockers[]` is the flat
-set (all website pages plus subscription and off-canvas unapproved
-media library items). Codes `required_slot_unresolved`,
+set (this website’s pages plus subscription and live-path unapproved
+media library items on this website). Codes `required_slot_unresolved`,
 `media_not_approved`,
 `subscription_canceled`. Must not: canvas hydrate; `website_manifest`;
 `publication_id`. Named **reads** may supplement.
@@ -434,7 +450,10 @@ row. No `frontend-2`. Worker **container** is up (this op **calls**
 
 #### Fail
 
-`402 subscription_canceled`.
+`402 subscription_canceled`. `404` `website_address_id` missing,
+other-website, or a `type=subdomain` row whose hostname is not this
+prefix. Must not: Publish onto another website’s
+`{prefix}.preview.placis.com`.
 
 #### Mocked
 
@@ -466,7 +485,8 @@ supplement.
 
 #### Fail
 
-`402`. `409` onboarding id.
+`402`. `409` onboarding id. `404` publication or host that is not
+this `{website_prefix}`.
 
 #### Mocked
 
@@ -532,6 +552,10 @@ One `website_addresses` row. No `frontend-2`. No Worker.
 Exercise body: `WebsiteAddressRead`. DNS rows copyable. Must not:
 nameserver mutation.
 
+#### Fail
+
+`404` other-website `website_address_id`.
+
 ### TestHappyPathInternalWebsiteRender — Route
 
 Backend / Worker. Go `TestHappyPathInternalWebsiteRender`. Worker
@@ -580,14 +604,19 @@ MinIO. Unpublished dump + `WebsiteBusinessProfileRead`. No
 
 `POST /internal/website-publication`. Request
 `WebsitePublicationRequest`. Response `WebsitePublicationResponse`.
+Cases:
+
+- CMS — host tree.
+- Unpaid until cutover — prefix tree.
 
 #### Verify
 
-Exercise body: no website image render. Writes the HTML tree (MinIO
-`sites/hosts/{hostname}/{version_number}/` then `…/latest/` for CMS;
-unpaid Preview website address / Website activation use
-`sites/{website_prefix}/` until cutover). Must not: persist HTML onto
+Exercise body: no website image render. Must not: persist HTML onto
 unpublished slots; `websiteRender`; write every active hostname.
+
+- CMS: MinIO `sites/hosts/{hostname}/{version_number}/` then
+  `…/latest/`.
+- Unpaid until cutover: `sites/{website_prefix}/`.
 
 #### Fail
 
@@ -609,7 +638,8 @@ website pages already in MSW fixtures (01/02 already ran).
 
 #### Exercise
 
-Open `/cms/website`. Edit a website section. Publish. MSW:
+Open `/cms/website` (redirects to
+`/cms/website/{website_prefix}`). Edit a website section. Publish. MSW:
 `GET /v1/websites/{website_prefix}/editor/pages`,
 `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`,
 `POST /v1/websites/{website_prefix}/publications`.

@@ -1,21 +1,22 @@
 # 08 — Preview website address (integration test)
 
-Reserves the prefix and calls website 04 (strip on). Next step is 09
-(optional; archives this v1).
+Skip-if-set for prefix and `type=subdomain`, then **calls** website 04
+(strip on). Next step is 09 (optional; archives this v1).
 
 - **Setup**: unpublished website from 05 (website 02). Wait-end already
   wrote `onboarding_sessions.status=preview_and_edit` (home website page
   copy done or wait cap). Do **not** require 06 to have finished.
-  Record tokenized `website_slots.value`. `websites.website_prefix` already
-  set. Zero `website_publications`.
+  Record tokenized `website_slots.value`. `websites.website_prefix`
+  already set. `website_addresses` `type=subdomain` already from 05.
+  Zero `website_publications`.
 - **Exercise**: `POST /v1/onboarding/website/publications`.
-  Also: 05 retry after a first share; also: collision on
-  `display_name`; also: wait-end without this POST.
+  Also: 05 retry after a first share; also: wait-end without this POST.
 - **Verify** (Postgres):
-  - `websites.website_prefix` already set (collision: locality once, then
-    sequential `-2`, `-3` at insert).
+  - `websites.website_prefix` already set (from 05). Collision on
+    `display_name` is 05 insert, not this POST.
   - `website_addresses`: one `type=subdomain`, `status=reserved`,
-    `is_primary=true`, `tenant_id` matches, hostname uses that prefix.
+    `is_primary=true`, `tenant_id` matches, hostname uses that prefix
+    (skip-if-set from 05).
   - `website_publications`: `version_number=1`,
     `published_by=onboarding`, `status=published`, `active=true`,
     `website_address_id` = that subdomain row, `website_manifest`
@@ -30,8 +31,8 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
     prefix (strip still on if unpaid).
   - 06 in flight does not insert another `website_publications` row
     and does not change MinIO `latest/`.
-  - Wait-end without this POST: still null `website_prefix`, zero
-    `website_publications`.
+  - Wait-end without this POST: prefix and `type=subdomain` still from
+    05; zero `website_publications`; no MinIO `latest/`.
   - **Spy:** MinIO `latest/` objects; fake `purge_cache` for website
     page URLs / sitemap / robots / WebP; GET of host HTML includes the
     website-activation island (strip on).
@@ -39,8 +40,8 @@ Reserves the prefix and calls website 04 (strip on). Next step is 09
   `published_by=onboarding` row and `websites.website_prefix`. Pay
   writes v2 via website 04 (strip off) and archives this v1.
 - **Fail**: website 04 required missing var → no new
-  `website_publications`; `website_prefix` may already be reserved
-  (keep it); unpublished tree unchanged; retry the same POST.
+  `website_publications`; prefix and subdomain already from 05 (keep
+  them); unpublished tree unchanged; retry the same POST.
 - **Mocked**: `purge_cache` (website 04). MinIO is real
   (Testcontainers). Real Worker (`websitePublication`). No live
   Cloudflare.
