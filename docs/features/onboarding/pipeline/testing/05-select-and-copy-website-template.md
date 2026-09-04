@@ -6,12 +6,12 @@ SELECTs both.
 - **Setup**: 04a complete gate passed. `tenants`
   (`status=unactivated`). `onboarding_sessions`
   (`status=client_interviewing` until complete). Named services on the
-  profile. Zero `websites` / `website_settings` / `website_pages` /
-  `website_publications`. Production-ready website templates exist in the
-  website template catalog.
+  profile. Zero `websites` / `website_addresses` / `website_settings` /
+  `website_pages` / `website_publications`. Production-ready website
+  templates exist in the website template catalog.
 - **Exercise**: `POST /v1/onboarding/interview/complete` (**inserts**
   `select_and_copy_website_template`). 01 is real
-  occupancy + hash (no LLM). 02 write is real.
+  occupancy + `website_id % len` (no LLM). 02 write is real.
   Also complete when the gate fails (required `conflict` /
   `in_progress`).
 - **Verify** (Postgres, after `select_and_copy_website_template` succeeds,
@@ -20,6 +20,8 @@ SELECTs both.
   - `onboarding_sessions.status=selecting_and_copying_website_template`
     (wait-end has not run yet).
   - `websites` row + `onboarding_sessions.website_id` set.
+    `website_addresses` `type=subdomain` for
+    `{website_prefix}.preview.placis.com`.
     `website_settings.website_template_id` in the production-ready set and
     `preset_id` = that website template’s associated website style catalog
     preset. **Must not**: `ai.threads` / `ai_generations` for this step

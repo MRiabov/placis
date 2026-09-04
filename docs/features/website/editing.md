@@ -38,13 +38,15 @@ select, edit, see it update, then website publication.
     close-tab without blur is not lost. If a copy-out or media-library upload is
     queued or in flight, or the focused field is dirty, the website editor
     **blocks leaving** until it finishes or the owner confirms discard (in-app
-    confirm plus `beforeunload` on tab close / reload).
+    confirm plus `beforeunload` on tab close / reload). Changing
+    `{website_prefix}` is leaving.
 4. The backend validates the change against the website component contract and
    **upserts** the unpublished website rows, appends `edit_history` for that
    copy-out, and advances `edit_history_head`. The body is only the changed
    website slots / website sections — not the whole unpublished website.
-   Over-chatty PATCH from one tenant is `429` with `Retry-After`; the website
-   editor retries with backoff and **keeps the local edit**. Do not write
+   Over-chatty PATCH from one `{website_prefix}` is `429` with
+   `Retry-After`; the website editor retries with backoff and **keeps the
+   local edit**. Do not write
    `audit_events` per website slot edit. Last writer is `edit_history` only
    ([assistant.md](assistant.md)). There is no `POST /undo` or `POST /redo`.
 
@@ -109,8 +111,8 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 No extra hydrate query besides optional `include_edit_history=true` and optional
 `publication_id` on this same GET.
 
-**Open hydrate** (enter `/cms/website`, full reload, or after `409`
-`edit_history_conflict`):
+**Open hydrate** (enter `/cms/website/{website_prefix}`, full reload, or after
+`409` `edit_history_conflict`):
 `GET /v1/websites/{website_prefix}/editor/pages/{page_id}?include_edit_history=true`
 — the unpublished website for the selected website page **and** website edit
 history (last 200 batches, per website). A batch can be website styles, a
@@ -321,5 +323,6 @@ The contractor website application (`apps/contractor-website`) does
 the in-memory projection, then copies unpublished rows via PATCH; the live
 website changes only on website publication. The website editor canvas renders
 the unpublished website (React + that package), not through Astro. That canvas
-is not a website preview. The frontend holds one working projection; it does not
-accumulate unpublished documents in memory.
+is not a website preview. The frontend holds one working projection
+**per `{website_prefix}`**; changing prefix is leaving (leave guard, then
+hydrate). It does not accumulate unpublished documents in memory.

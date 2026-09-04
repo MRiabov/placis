@@ -326,7 +326,7 @@ already did. Success / `409` `edit_history_conflict` match any other PATCH
 **One in-flight CMS assistant run per tenant** (`assistant.runs`). See
 [assistant](../assistant/architecture.md). A second CMS start is `409` until the current run finishes or
 fails. There is no cancel HTTP. Two tabs or voice + text must not both start a
-CMS run. Onboarding 06 is a separate River `tenant_id` lock — it does **not**
+CMS run. Onboarding 06 is a separate River `website_id` lock — it does **not**
 409 CMS PATCH or CMS assistant HTTP. Same website-slot overlap after pay is
 last-write / `edit_history_conflict`. While a CMS run is in flight, PATCH is
 allowed — that is the apply path.

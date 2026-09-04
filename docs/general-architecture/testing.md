@@ -17,11 +17,11 @@ Three tiers, and they are not interchangeable:
     allowed. Do **not** start the Worker container on the general backend
     job. Start it only when that test **calls** `websiteRender` or
     `websitePublication` (Worker job).
-  - **Frontend** (jsdom / Vitest, no Go): real React, real router, MSW. The
-    unit is not “two or more screens.” One route is still integration
-    (`/cms/website`). Completeness is one owner-journey **HappyPath Full**
-    per feature that has contractor UI. Not one Vitest file per OpenAPI
-    op, not one per pipeline step. **Verify** is UI plus MSW saw the
+  - **Frontend** (jsdom / Vitest, no Go): real React, real router, MSW. The unit
+    is not “two or more screens.” One route is still integration
+    (`/cms/website/{website_prefix}`). Completeness is one owner-journey
+    **HappyPath Full** per feature that has contractor UI. Not one Vitest file
+    per OpenAPI op, not one per pipeline step. **Verify** is UI plus MSW saw the
     Method+path — not Postgres.
   - **Worker** — HappyPath of the Worker, different CI job: real Worker
     container, `TestHappyPathInternalWebsiteRender` for

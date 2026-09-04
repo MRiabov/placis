@@ -85,8 +85,10 @@ numbers are HTML comments so later entries keep their numbers.
    Usage & billing. Not extra usage credit. Live website rollback uses the
    same navigate. (2026-09-03) One function; editor routes return
    `blockers[]` (list GET per-row, page PATCH ack,
-   `GET /v1/website/editor/blockers` when the dropdown opens).
+   `GET /v1/websites/{website_prefix}/editor/blockers` when the dropdown opens).
    Interaction unchanged from 2026-08-26.
+   (2026-09-04): open-Publish GET is nested under `{website_prefix}`;
+   blockers for **this** website.
 
 <!-- placeholder - insert design decision 4 here -->
 

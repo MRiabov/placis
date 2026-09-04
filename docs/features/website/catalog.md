@@ -189,7 +189,7 @@ status, and DB-oracle tests stay as they are.
 page, testimonials website page, terms of service, cookies.
 
 **Website 01 picker.** Occupancy within 250 km among production-ready
-website templates, then hash tie-break. No LLM. No
+website templates, then `website_id % len` tie-break. No LLM. No
 `thread_kind=website_template_picker`. `website_template_id` is the
 website template catalog id (string). Spec:
 [01](pipeline/01-select-website-template.md).

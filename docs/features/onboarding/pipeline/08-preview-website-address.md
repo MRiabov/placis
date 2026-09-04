@@ -46,8 +46,10 @@ website and **calls** `PublishWebsite` with the website-activation strip on.
 
 1. **Skip reserve** if `websites.website_prefix` is already set (Select and
    copy website template reserved it). Do not rename.
-2. Write `website_addresses` (`type=subdomain`, `status=reserved`,
-   `is_primary=true`) if missing. Wildcard on **our** `placis.com` zone already
+2. **Skip-if-set** for `website_addresses` `type=subdomain` (Select and
+   copy website template inserted it). If a leftover row is missing,
+   write `type=subdomain`, `status=reserved`, `is_primary=true`.
+   Wildcard on **our** `placis.com` zone already
    points at the Worker. FQDN: [cloudflare.md](../../website/cloudflare.md).
 3. Insert **`website_publications` v1**: `published_by=onboarding`,
    `active`, strip **on**. HTML write is website

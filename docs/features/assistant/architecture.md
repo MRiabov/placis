@@ -206,7 +206,9 @@ Same assistant screen as last **owner** request: no extra notice. An
 **assistant screen switch** is relative to the last owner request, not to clicks
 during the current run. Inject an assistant screen switch notification plus that
 screen’s assistant screen context (typed per screen, not unconstrained JSON).
-Website editor working copy from the frontend (local-first projection). Ads from
+Website editor working copy from the frontend (local-first projection),
+including `website_prefix`. Mismatch with the open website editor prefix is
+**409** `website_prefix_mismatch`. Ads from
 Go.
 Details: notification only — profile is already loaded.
 
@@ -449,7 +451,7 @@ text send, second Voice create → 409. Same Voice connection may continue.
 
 Onboarding 06 while unactivated **does** hold this table’s unique `running` on
 the unpaid website-preview thread. After 09 leftover 06 is River with a
-`tenant_id` lock only. CMS is not 409-blocked while leftover 06 finishes. Same
+`website_id` lock only. CMS is not 409-blocked while leftover 06 finishes. Same
 website-slot overlap after pay is last-write / website PATCH
 `edit_history_conflict`.
 
