@@ -28,3 +28,8 @@ rather than inventing it.
 
 5. **New is the urgent mark** — Do not say uncontacted. Contacted and
    Closed are quiet. (2026-09-04)
+
+6. **Empty is a dashed panel** — Inbox mark, **Nothing here yet**, then
+   copy that names the current filter. Not a quiet line under the
+   filters. No create control: website visitors and ads send people
+   here. (2026-09-04)
