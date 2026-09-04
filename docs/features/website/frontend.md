@@ -45,7 +45,7 @@ swapping the whole panel
 | -- | -- |
 | `/cms/website` | Redirect to the onboarding website (`/cms/website/{website_prefix}`) |
 | `/cms/website/{website_prefix}` | Website editor (workspace, canvas, assistant after they call, website publication) |
-| `/cms/websites/new` | Pick a production-ready website template; `POST /v1/websites`; wait until wait-end; then the website editor for that prefix |
+| `/cms/websites/new` | Create a website questionnaire; `POST /v1/websites`; wait until wait-end; then the website editor for that prefix |
 
 Left nav **Sites** destination is `/cms/website` (redirects to the onboarding
 website). `websites/new/` is spec’d; where the owner opens it is deferred.
@@ -53,9 +53,9 @@ Do not add a Sites list of websites.
 
 ## `websites/new/`
 
-Pick one production-ready website template (`GET /v1/website-templates`).
-Submit `POST /v1/websites`. Wait on this route until wait-end (home website
-page website copy generation `done`, or wait cap). Poll
+A create questionnaire (shape pending; no website template pick shown). Submit
+`POST /v1/websites`. Wait on this route until wait-end (home website page
+website copy generation `done`, or wait cap). Poll
 `GET /v1/websites/{website_prefix}`. Then redirect to
 `/cms/website/{website_prefix}`. Not `/onboarding/preview`. Look can land
 later. Cap **402** `website_limit_reached` points at Change plan. Empty

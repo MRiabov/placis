@@ -6,16 +6,49 @@ commit `37588a4`). This file is **not canonical spec** — like the sep-3 issue
 lists, it is a punch list. Delete items as they are decided/fixed; delete the
 file when empty.
 
-Line numbers are as of 2026-09-03 (post `37588a4` plus the stale-reference
-sweep). Re-verify before acting; they will drift.
+Line numbers are as of 2026-09-04 (post `37588a4` plus the stale-reference
+sweep and the `GET /v1/website-templates` drop). Re-verify before acting; they
+will drift.
 
 Confidence: **high** = verified against current files, decision genuinely
 missing. **medium** = likely open, but may be resolvable by reading more of the
 affected feature. **low** = speculative; verify before treating as real.
 
+Status: **open** = no decision in the spec. **mechanical** = decision made,
+wording drifted. **deferred** = logged plan deferral. **confirm** = follows
+from a decided rule but never explicitly accepted.
+
 ---
 
-## A. Decisions needed (nothing in the spec answers these)
+## Index
+
+| MW | Area | Status | One-line |
+| --- | --- | --- | --- |
+| MW-1 | Website create | open | Create flow ill-defined (no questionnaire, no retry) |
+| MW-2 | Website create | open (partly resolved) | Template-pick endpoint/DTO dropped; template rule + payload fold into MW-1 |
+| MW-3 | Website HTTP | resolved | Wait-end = home-page `done` (matches onboarding ADR 13); other jobs continue |
+| MW-4 | Website create | open | `websites/new/` wait cap value + post-cap behavior |
+| MW-5 | Website HTTP | resolved | `GET /v1/websites` caller = deferred list screen (MW-15); do not cut |
+| MW-6 | Assistant | open | Website pointer list is prose, not a contract |
+| MW-7 | Onboarding | resolved | 06 lock key → `website_id` (+ defensive one-website check) |
+| MW-8 | Assistant | open | "One copy-generation thread per website" has no storage rule |
+| MW-9 | Editing / persistence | mechanical | 429 cap stated "per tenant" in editing.md |
+| MW-10 | Editing / persistence | mechanical | Styles / edit history still "per tenant" ×3 |
+| MW-11 | Onboarding / hosting | mechanical | Prefix reserve timing stale in cloudflare.md |
+| MW-12 | General (llm-layer) | mechanical | `thread_kind` enum lists `website_copy_generation` twice |
+| MW-13 | Website create | deferred | Owner-facing website label (no `name` column) |
+| MW-14 | Billing / cap | deferred | Archive / delete website (failed rows count toward cap) |
+| MW-15 | Website create | deferred | Website list screen (Ads/Projects-style) — pick existing or create new |
+| MW-16 | Billing | deferred | Enterprise plan cap 20 |
+| MW-17 | Ads | deferred | Ads privacy page canonical URL "per tenant" |
+| MW-18 | Website create | deferred | Wait look; demo app; leads console |
+| MW-19 | Shared profile | confirm | Logo is tenant-shared |
+| MW-20 | Shared profile | confirm | Near-duplicate content across a business's websites |
+| MW-21 | Website HTTP | resolved | Editor hydrate `tenant` block → `website` (keyed to `website_id`) |
+
+---
+
+## Website create (`/cms/websites/new`, questionnaire)
 
 ### MW-1 — Website create is ill-defined: no questionnaire, no retry contract
 
@@ -72,21 +105,20 @@ the least-specified part of the whole change.
 
 ### MW-2 — `GET /v1/website-templates` and the template-pick DTO don't exist
 
-**Claim.** The spec ships a `GET /v1/website-templates` route and a
-`WebsiteTemplateRead` DTO, but the frontend never shows a template pick and the
-endpoint does not exist. The questionnaire (MW-1) replaces the pick, so the
-route + DTO + `website_template_id`-only `WebsiteCreate` are likely dead spec.
+**Claim.** The spec shipped a `GET /v1/website-templates` route and a
+`WebsiteTemplateRead` DTO, but the frontend never showed a template pick and the
+endpoint did not exist. The questionnaire (MW-1) replaces the pick, so the
+route + DTO + `website_template_id`-only `WebsiteCreate` were dead spec.
 
 **Evidence.**
 
 - docs/features/website/api.md:59 — `WebsiteTemplateRead` | "`id`, catalog
-  fields the pick UI needs".
+  fields the pick UI needs" (removed).
 - docs/features/website/api.md:120 — `GET /v1/website-templates` (caller
-  `websites/new/`).
-- docs/features/website/testing.md:152 — happy-path for that route.
-- docs/features/website/frontend.md:54–62 — `websites/new/` is currently
-  specced as "pick one production-ready website template, submit" — the pick
-  never shows.
+  `websites/new/`) (removed).
+- docs/features/website/testing.md:152 — happy-path for that route (removed).
+- docs/features/website/frontend.md:54–62 — `websites/new/` was specced as
+  "pick one production-ready website template, submit" — the pick never shows.
 - docs/features/website/catalog.md:13–22 defines what a website template is
   (id, pages, menu constant, `production_ready`) — no owner-facing pick fields,
   because there is no pick.
@@ -108,33 +140,6 @@ rule and the `WebsiteCreate` payload fold into MW-1.
 product; removing them is an active-spec cut (same family as the sep-3
 unused-spec punch list, commit `3d41fea`).
 
-### MW-3 — Wait-end granularity: job `done` vs home-page `done`
-
-**Claim.** `WebsiteRead.copy_generation_status` is job-level
-(`running`/`done`/`failed`), but wait-end is defined as "home website page
-website copy generation `done`". If 03 does pages in parallel/batches, job
-`done` and home-page `done` are different moments. The poll DTO cannot express
-the page-level condition.
-
-**Evidence.**
-
-- docs/features/website/api.md:57 — `WebsiteRead` fields include
-  `copy_generation_status`; api.md:61–63 — "`copy_generation_status` →
-  `running` / `done` / `failed`. Wait-end on `websites/new/` is home website
-  page website copy generation `done`, or wait cap."
-- docs/features/website/frontend.md:57–58 — same home-page wait-end wording,
-  polled via `GET /v1/websites/{website_prefix}`.
-- Plan lines 127–128 and 248–250 use the home-page phrasing ("home website
-  page website copy generation done vs still running").
-- Nothing defines 03's per-page completion order or a home-page-specific
-  status field.
-
-**Options.** (a) Wait-end = job `done` (amend frontend/api wording — simpler);
-(b) add a home-page status signal to `WebsiteRead`.
-
-**Confidence: high** that the two definitions diverge; **medium** that it
-matters in practice (03 may be effectively atomic for the home page).
-
 ### MW-4 — `websites/new/` wait cap value and post-cap behavior
 
 **Claim.** The wait cap for `/cms/websites/new` has no number and no defined
@@ -155,30 +160,133 @@ with a longer cap (owner already waited for onboarding once).
 
 **Confidence: high.**
 
+### MW-15 — Website list screen (pick existing or create new) — deferred
+
+**Resolved direction (2026-09-04).** The entry point is a screen visually
+similar to **Ads** (`/cms/ads`) or **Projects** (`/cms/projects`): a list of
+the business's websites where the owner picks an existing website or creates a
+new one. This is **explicitly deferred** (not built this pass), but it is the
+intended shape. It also supersedes the earlier "no picker among existing
+websites" reading — the pick-existing list exists, just later.
+
+**Implications.**
+
+- **MW-5 (`GET /v1/websites` no caller) is effectively resolved** — this list
+  screen is the caller. The route is not dead; it is deferred with the screen.
+  Keep it (do not cut it in the unused-spec sweep).
+- Plan lines 469, 515 deferred this under "Sites vs hidden until Plus" — the
+  concrete direction is the Ads/Projects-style list screen, not a bare button.
+- docs/features/website/frontend.md:50–51 — "`websites/new/` is spec'd; where
+  the owner opens it is deferred." Deferral stands; the shape is now known.
+
+### MW-13 — Owner-facing website label (no `name` column)
+
+- docs/features/website/persistence.md:38–39 — "No owner-facing label column
+  this pass." Plan lines 195–196, 488. Deferred with the picker.
+
+### MW-18 — Wait look; demo app; leads console
+
+- Plan line 470: "Look for the wait; demo app; ads privacy website page; leads
+  console" — all explicitly out of this pass.
+
+---
+
+## Website HTTP & API contract
+
+### MW-3 — Wait-end granularity: job `done` vs home-page `done`
+
+**Resolved (2026-09-04).** Wait-end is **home website page** website copy
+generation `done` — the same rule onboarding already uses. The other website
+pages and the assistant thread(s) continue in parallel, including after
+wait-end. The `copy_generation_status` on `WebsiteRead` is still the poll
+signal, but it is not the wait-end predicate; wait-end is the home-page
+condition.
+
+**Evidence (now the decided rule).**
+
+- docs/features/website/pipeline/03-website-copy-generation.md:8–10 — "Wait
+  teaser waits until the **home** website page has copy, or the wait cap — not
+  the full 03 job. Other website pages finish in parallel (including after
+  wait-end)."
+- docs/features/onboarding/pipeline/06-website-copy-generation.md:42–43 —
+  onboarding session `selecting_and_copying_website_template` until wait-end
+  "(home website page copy done or wait cap)", then `preview_and_edit`.
+- docs/features/onboarding/ADR.md:180–184 — ADR 13: website copy generation is
+  async and does not block website activation; 07 waits until copy finishes
+  **or** a ~15s cap; 08 does not wait for 06.
+- docs/features/website/api.md:57,61–63 — `WebsiteRead.copy_generation_status`
+  (`running`/`done`/`failed`) and wait-end wording — the poll DTO is job-level,
+  which stays, but the wait-end predicate is the home page.
+
+**Confidence: high.** The rule already exists in onboarding (ADR 13) and in
+website 03; it just needed confirming for the CMS `websites/new/` case.
+
 ### MW-5 — `GET /v1/websites` has no caller
 
-**Claim.** The list route's only named caller is "CMS", but the frontend spec
-forbids a Sites list of websites and no screen consumes it. It is currently an
-unused-spec endpoint — exactly what the unused-spec punch-list culture (commit
-`3d41fea`) says to cut before implementation.
+**Resolved (2026-09-04).** The deferred website list screen (MW-15) — visually
+like Ads/Projects, pick existing or create new — is the caller for
+`GET /v1/websites`. The route is not dead; it is deferred with that screen.
+**Do not cut it** in the unused-spec sweep; keep it as the list contract.
 
 **Evidence.**
 
-- docs/features/website/api.md:119 — Caller column: "CMS".
+- docs/features/website/api.md:119 — Caller column: "CMS" (the deferred list
+  screen is that caller).
 - docs/features/website/frontend.md:50–51 — "`websites/new/` is spec'd; where
   the owner opens it is deferred. Do not add a Sites list of websites."
 - docs/general-architecture/cms/frontend.md:53 — Sites is a redirect, not a
-  list.
+  list (today; the list screen lands later).
 - Server-side cap counting reads `websites` directly; it does not need the
   route.
 
-**Options.** (a) Drop `GET /v1/websites` until the picker exists (re-add
-then); (b) keep it as the future picker's contract and accept the unused-spec
-debt; (c) keep and make it the wait-end poll source (it is not — the poll is
-`GET /v1/websites/{website_prefix}`, api.md:122).
+**aConfidence: high.** Caller-less today, but the deferred list screen (MW-15)
+is the intended consumer.
 
-**Confidence: high** that it is caller-less today; the keep/drop call is a
-product-process decision.
+### MW-21 — Editor hydrate `tenant` block under N websites
+
+- docs/features/website/editing.md:90 — the page GET returns "`tenant` (id,
+  website address, name)". With N websites, which website address does the
+  `tenant` block show — the current website's preview address/primary, or the
+  tenant's "first"? Unspecified. **Confidence: medium** — likely "current
+  website's", but the DTO is tenant-shaped and should probably become
+  website-shaped.
+
+---
+
+## Onboarding
+
+### MW-7 — Onboarding 06 lock key contradicts ADR 29 / jobs.md
+
+**Resolved (2026-09-04).** Retarget onboarding 06 to `website_id` — it was the
+only doc still keying the `website_copy_generation` lock on `tenant_id`.
+`website_id` is already a job arg (`jobs.md:60`) so keying on it costs nothing,
+and it is the consistent parent (ADR 26 / ADR 29 / website 03). During
+onboarding there is one website per tenant, so no behavior change.
+
+**Applied.** docs/features/onboarding/pipeline/06-website-copy-generation.md —
+Trigger + Invariants lock now `website_id`. Added a **defensive check**: before
+enqueue, assert the tenant has exactly one `websites` row; if more than one
+exists, fail the job rather than enqueue copy generation for an ambiguous
+website (the `website_id` unique lock already guards concurrent 06 runs for the
+same website; this guards keying the lock on the wrong website).
+
+**Confidence: high.**
+
+### MW-11 — Prefix reserve timing stale in cloudflare.md
+
+- docs/features/website/cloudflare.md:52 — "fixed at first 08 share or at 09".
+- docs/features/website/cloudflare.md:158 — "**fixed at 07**".
+- Decided: reserved when the `websites` row is inserted (onboarding 05 /
+  `POST /v1/websites`): docs/features/website/ADR.md:276–280 (ADR 27),
+  onboarding ADR 26 (docs/features/onboarding/ADR.md:321–326), and
+  docs/features/onboarding/pipeline/08-preview-website-address.md:47 (skip
+  reserve if already set).
+
+**Confidence: high.**
+
+---
+
+## Assistant
 
 ### MW-6 — Assistant website pointer list is prose, not a contract
 
@@ -205,30 +313,6 @@ include it.
 
 **Confidence: high.**
 
-### MW-7 — Onboarding 06 lock key contradicts ADR 29 / jobs.md
-
-**Claim.** `onboarding/pipeline/06` says the River lock key is `tenant_id`;
-website 03, `jobs.md`, and website ADR 29 all say `website_id`. Today they are
-equivalent (onboarding has exactly one website), but the docs fork.
-
-**Evidence.**
-
-- docs/features/onboarding/pipeline/06-website-copy-generation.md:10–11 —
-  "Lock key: `tenant_id` (unactivated tenant already exists)"; line 17
-  "River-only on `tenant_id`"; line 59 "Lock = `tenant_id` before and after
-  09".
-- docs/general-architecture/jobs.md:60 — `website_copy_generation` unique key
-  "`website_id` while pending/running".
-- docs/features/website/ADR.md:291–293 — ADR 29: unique on `website_id`.
-- docs/features/website/pipeline/03-website-copy-generation.md:16–17 — "Lock
-  key: `website_id`".
-
-**Fix direction.** Retarget 06 to `website_id` (its own ADR 26–28 already
-moved everything else onto the website row). Mechanical, no product input
-needed — but it is a real spec contradiction, so it belongs here.
-
-**Confidence: high.**
-
 ### MW-8 — "One copy-generation thread per website" has no storage rule
 
 **Claim.** ADR 29 asserts copy-generation `ai.threads` is one thread per
@@ -245,10 +329,11 @@ reuses the thread or starts a new one.
   and uses a separate `thread_kind=website_copy_generation` thread for LLM
   calls; no unique stated.
 - docs/general-architecture/llm-layer.md:114–125 — `thread_kind` CHECK list
-  includes `website_copy_generation` (and note: the value is **duplicated on
-  lines 119–120** — a mechanical defect); the per-thread uniqueness rules in
-  the assistant docs (e.g. docs/features/assistant/architecture.md:425–426)
-  cover only `cms_assistant` current.
+  includes `website_copy_generation` (and note: the value is
+  **duplicated on lines 119–120** — a mechanical defect, MW-12); the per-thread
+  uniqueness rules in the assistant docs (e.g.
+  docs/features/assistant/architecture.md:425–426) cover only `cms_assistant`
+  current.
 
 **Options.** (a) State the unique (e.g. `(tenant_id, website_id)` WHERE
 `thread_kind='website_copy_generation'` AND `status='current'`) + retry
@@ -259,7 +344,7 @@ reuses; (b) drop the "one per website" claim to "threads are per run" and let
 
 ---
 
-## B. Stale text (decision made; wording drifted) — mechanical fixes
+## Editing / persistence
 
 ### MW-9 — 429 cap stated "per tenant" in editing.md
 
@@ -284,17 +369,9 @@ reuses; (b) drop the "one per website" claim to "threads are per run" and let
 
 **Confidence: high.**
 
-### MW-11 — Prefix reserve timing stale in cloudflare.md
+---
 
-- docs/features/website/cloudflare.md:52 — "fixed at first 08 share or at 09".
-- docs/features/website/cloudflare.md:158 — "**fixed at 07**".
-- Decided: reserved when the `websites` row is inserted (onboarding 05 /
-  `POST /v1/websites`): docs/features/website/ADR.md:276–280 (ADR 27),
-  onboarding ADR 26 (docs/features/onboarding/ADR.md:321–326), and
-  docs/features/onboarding/pipeline/08-preview-website-address.md:47 (skip
-  reserve if already set).
-
-**Confidence: high.**
+## General (llm-layer / jobs)
 
 ### MW-12 — llm-layer `thread_kind` enum lists `website_copy_generation` twice
 
@@ -305,14 +382,7 @@ reuses; (b) drop the "one per website" claim to "threads are per run" and let
 
 ---
 
-## C. Deferred by plan — reconfirm the deferral is still right
-
-These are logged decisions, not gaps. Reconfirm only if scope changes.
-
-### MW-13 — Owner-facing website label (no `name` column)
-
-- docs/features/website/persistence.md:38–39 — "No owner-facing label column
-  this pass." Plan lines 195–196, 488. Deferred with the picker.
+## Billing / website cap
 
 ### MW-14 — Archive / delete website
 
@@ -320,15 +390,14 @@ These are logged decisions, not gaps. Reconfirm only if scope changes.
   489). No archive/delete this pass. Consequence: a tenant that burns its cap
   on failed rows is stuck until MW-1's retry works — raises MW-1's priority.
 
-### MW-15 — Where the owner opens `/cms/websites/new`
-
-- docs/features/website/frontend.md:51 — "where the owner opens it is
-  deferred." Plan lines 469, 515 (Sites vs hidden until Plus).
-
 ### MW-16 — Enterprise plan cap 20
 
 - docs/features/billing/plans.md:28–32; plan lines 137–139, 509. No
   `subscription_tier` value this pass.
+
+---
+
+## Ads
 
 ### MW-17 — Ads privacy page: canonical privacy URL "per tenant"
 
@@ -339,14 +408,9 @@ These are logged decisions, not gaps. Reconfirm only if scope changes.
   26 equal-websites clause). Retargeting the ads doc is deferred with the
   ads-privacy-page work (plan line 470).
 
-### MW-18 — Look for the wait; demo app; leads console
-
-- Plan line 470: "Look for the wait; demo app; ads privacy website page; leads
-  console" — all explicitly out of this pass.
-
 ---
 
-## D. Consequences of "shared business profile" — confirm accepted
+## Shared business profile consequences (confirm)
 
 The plan decided the shared profile is enough (plan lines 101–106, 490–491).
 These follow from it and are nowhere stated as accepted; a one-line confirm
@@ -370,18 +434,9 @@ each would close them.
   docs/features/website/persistence.md:251–252). Accepted for v1?
   **Confidence: medium** — may be a non-issue at 1–5 sites.
 
-### MW-21 — Editor hydrate `tenant` block under N websites
-
-- docs/features/website/editing.md:90 — the page GET returns "`tenant` (id,
-  website address, name)". With N websites, which website address does the
-  `tenant` block show — the current website's preview address/primary, or the
-  tenant's "first"? Unspecified. **Confidence: medium** — likely "current
-  website's", but the DTO is tenant-shaped and should probably become
-  website-shaped.
-
 ---
 
-## E. Interplay with the sep-3 punch lists (tracked there, note here)
+## Interplay with the sep-3 punch lists (tracked there, note here)
 
 - **Settings GET drop** (docs/features/website/sep-3-issue-list.md:33–40):
   plan line 256–257 made the nested settings GET conditional on that drop
@@ -397,11 +452,13 @@ each would close them.
 
 ## Priority read
 
-1. **MW-1** (questionnaire) + **MW-2** (dead template-pick endpoint) — create
-   is ill-defined end to end, and the specced pick route/DTO don't exist. They
-   block `/cms/websites/new` and interact with MW-14 (failed rows count toward
-   the cap).
-2. **MW-3, MW-4** block building `/cms/websites/new` at all.
-3. **MW-7, MW-9–12** are mechanical — fold into the next docs commit.
-4. **MW-5, MW-6, MW-8** are contract-shaping; answer before Go work starts.
-5. **MW-19–21** need one-line confirms, then close.
+1. **Website create** (MW-1 + MW-2) — create is ill-defined end to end, and
+   the specced pick route/DTO are gone. Blocks `/cms/websites/new` and
+   interacts with MW-14 (failed rows count toward the cap).
+2. **MW-4** — `websites/new/` wait cap value and post-cap behavior, needed to
+   build the create screen (wait-end itself is settled — MW-3).
+3. **Editing (MW-9–10), llm-layer (MW-12)** — mechanical, fold into the next
+   docs commit. (MW-7 is resolved — 06 keys on `website_id`.)
+4. **Assistant (MW-6, MW-8)** — contract-shaping; answer before Go work
+   starts. (MW-5 and MW-21 are resolved.)
+5. **Shared profile (MW-19–20)** — one-line confirms, then close.

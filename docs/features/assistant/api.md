@@ -6,7 +6,7 @@ Named identifiers:
 Logic: [architecture.md](architecture.md). Tables:
 [persistence.md](persistence.md). Website-editor apply is website PATCH
 then `record-apply` / `record-reject`; those routes live here, not under
-`/v1/website/editor/pages/{page_id}/assistant`.
+`/v1/websites/{website_prefix}/editor/pages/{page_id}/assistant`.
 
 **Auth default:** Clerk JWT, active tenant. Mutating unary Routes send
 `Idempotency-Key` (not the text WebSocket). Unactivated tenant: **403**
@@ -136,7 +136,7 @@ Voice create (not this POST).
 
 ## Do not create
 
-- `/v1/website/editor/pages/{page_id}/assistant` (moved here)
+- `/v1/websites/{website_prefix}/editor/pages/{page_id}/assistant` (moved here)
 - `/v1/assistant/tool/*` per-tool paths
 - `/v1/assistant/apply` that writes unpublished rows (use `record-apply` +
   PATCH)

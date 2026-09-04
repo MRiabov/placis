@@ -145,7 +145,7 @@ transform; empty review citation falls back to `body` until then.
 
 ## Do not create
 
-- `/v1/website/editor/business-profile`
+- `/v1/websites/{website_prefix}/editor/business-profile`
 - `/v1/certification-selections`, `/v1/certifications`
 - profile-history / replay HTTP (except
   `POST /v1/business-profile/edits/{id}/undo`)
