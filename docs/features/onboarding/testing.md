@@ -561,7 +561,9 @@ Voice.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Wait-end. Clerk JWT
-unactivated (app origin or Host / `website_prefix`). No `frontend-2`.
+unactivated (app origin or Host / `website_prefix`). `billing.prices`
+has an active activation Price and a choosable Placis Pro plan / month
+Price. No `frontend-2`.
 
 #### Exercise
 
@@ -571,7 +573,13 @@ unactivated (app origin or Host / `website_prefix`). No `frontend-2`.
 
 Response `WebsiteActivationCheckoutRead` (`checkout_url`,
 `clerk_org_id`). Tenant still `unactivated`. Create then GET status is
-not paid yet.
+not paid yet. Checkout line items are the cached activation Price plus
+Placis Pro plan / month Price (no ad-hoc `price_data`).
+
+#### Fail
+
+Missing activation or Placis Pro plan / month Price → Checkout is not
+created (no `price_data`).
 
 #### Mocked
 
@@ -602,8 +610,9 @@ Stripe test-mode.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Checkout pending.
-Stripe test signature. Worker container (**calls**
-`websitePublication` on activation). No `frontend-2`.
+`billing.prices` has activation + Placis Pro plan / month Prices. Stripe
+test signature. Worker container (**calls** `websitePublication` on
+activation). No `frontend-2`.
 
 #### Exercise
 
@@ -612,7 +621,11 @@ Stripe test signature. Worker container (**calls**
 #### Verify
 
 HTTP 2xx. Create then GET activation status is `paid`. Replay is safe
-to retry.
+to retry. `billing.subscriptions` **persists** from that Checkout
+(`stripe_customer_id`, `stripe_subscription_id`; Placis Pro plan /
+month). No second Stripe Subscription. This event does not insert
+`included_usage_credit` (that is `invoice.paid` /
+`AddIncludedUsageCredit`, unique Stripe invoice id).
 
 #### Fail
 

@@ -159,7 +159,8 @@ decision + date) instead of silently replacing the old entry.
     account id, zone id for `placis.com`, API token (Workers + R2 + Cache Purge;
     Custom Hostnames write is the Go API, not this workflow), contractor R2
     bucket name. Serve path: [website Cloudflare](../features/website/cloudflare.md).
-  - `deploy placis website` — `astro build` and upload `dist/` to the Placis
+  - `deploy placis website` — `astro build` (bakes `/pricing/` amounts
+    from `GET /v1/billing/catalog`) and upload `dist/` to the Placis
     website R2 bucket (`placis-website` | `placis-website-staging`), then purge
     cache. Workflow YAML is not in this PR. Serve path:
     [Placis website Cloudflare](../features/placis-website/cloudflare.md).

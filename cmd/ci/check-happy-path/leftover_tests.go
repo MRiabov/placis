@@ -12,6 +12,7 @@ var leftoverTests = []string{
 	"GET /v1/ads/{ad_id}/variants",
 	"GET /v1/assistant/thread",
 	"GET /v1/assistant/thread/ws",
+	"GET /v1/billing/catalog",
 	"GET /v1/billing/usage",
 	"GET /v1/business-profile",
 	"GET /v1/business-profile/certifications",

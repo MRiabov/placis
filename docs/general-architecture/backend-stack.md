@@ -20,7 +20,7 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 | Logging | `log/slog` (structured) + request ids |
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
 | LLM | `LLMProvider`; Vercel AI SDK for generation; open-web search is Parallel as a Vercel AI Gateway server tool ([LLM layer](llm-layer.md)) |
-| Payments | Stripe via `stripe-go` SDK (activation checkout only) |
+| Payments | Stripe via `stripe-go` SDK: 09 Checkout (activation Price plus Placis Pro plan / month), extra usage credit Checkout, pay-again Checkout. Catalogue cache from `product.*` / `price.*`. Not meters / remaining. Not Clerk Billing |
 | Frontend (`frontend-2`) | CMS + onboarding. Stack: [frontend stack](frontend-stack.md) |
 | Contractor website (`apps/contractor-website`) | Astro with React islands — that app renders website HTML; live GET is CDN cache then R2 (Worker is write-thin, never Go). No per-request unpublished render. Serve path: [website Cloudflare](../features/website/cloudflare.md). Website components in `packages/website-components` |
 | Placis website (`apps/placis-website`) | Astro `output: 'static'` — Placis’s own site; `astro build` uploaded to R2. Serve path: [Placis website Cloudflare](../features/placis-website/cloudflare.md) |

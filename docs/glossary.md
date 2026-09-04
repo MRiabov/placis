@@ -971,7 +971,8 @@ Distinct from: Website lead.
 Usage credit, subscription price, and the Usage & billing screen. The owner
 spends usage credit on billed work in the website editor, Ads, and Voice.
 
-Distinct from: Website activation (the one-time pay).
+Distinct from: Website activation (access fee plus Placis Pro plan /
+month on one Checkout).
 
 ---
 
@@ -1017,7 +1018,7 @@ Distinct from: Our cost.
 #### Usage credit
 
 The credit the owner spends on billed work (assistant text, image
-generate/cleanup, ads generate, Voice). Shown in **USD** (their cost), not a
+generate/cleanup, ads generate, Voice). Shown in **EUR** (their cost), not a
 unitless count. The subscription includes a monthly amount; they may also buy
 **extra usage credit**. One pool. When it is empty they are out of usage
 credit.
@@ -1025,7 +1026,8 @@ credit.
 Do not say “generation hop”, “hop”, “AI credit”, or bare “credit”.
 
 Distinct from: Extra usage credit (a purchase that adds to this pool),
-Subscription price (the monthly fee), Website activation (the one-time pay).
+Subscription price (the monthly fee), Website activation (access fee
+plus Placis Pro plan / month on one Checkout).
 
 In code: `usage_credit` (error `usage_credit_exhausted`).
 
@@ -1043,12 +1045,14 @@ Distinct from: Usage credit (the pool), Subscription price.
 #### Subscription price
 
 The monthly amount for the current subscription tier. The subscription includes
-usage credit. If they stop paying, the website is unpublished and they cannot
-Publish until they pay again.
+usage credit. If they stop paying, the website stays published for three
+calendar months; then it is unpublished and they cannot Publish until they pay
+again.
 
 Do not say “retainer”. Never say “subscription shelf”.
 
-Distinct from: Website activation (one-time pay), Usage credit, Extra usage
+Distinct from: Website activation (access fee plus Placis Pro plan /
+month on one Checkout), Usage credit, Extra usage
 credit, Placis Pro plan / Placis Pro Plus plan / Placis Pro Max plan /
 Enterprise plan (the tiers).
 
@@ -1094,20 +1098,21 @@ Distinct from: Placis Pro plan, Placis Pro Plus plan, Placis Pro Max plan.
 #### Usage & billing
 
 The screen that shows the current subscription tier, subscription price,
-remaining usage credit, buying extra usage credit, **Change plan**, **Cancel
-subscription**, and **one bar** of this period’s usage credit (spent vs
-remaining; spent colored Voice / Image / text edits). Not public marketing
-pricing. Reached from the account menu (user icon), not from the left nav.
+remaining usage credit, buying extra usage credit, **Cancel
+subscription**, pay-again after cancel, and **one bar** of this period’s
+usage credit (spent vs remaining; spent colored Voice / Image / text
+edits). Not public marketing pricing. Reached from the account menu
+(user icon), not from the left nav.
 
 Distinct from: Website activation (the pay-and-activate step), Profile (the
-left-nav group), Pricing (the Placis website page).
+left-nav group), Pricing (on the Placis website).
 
 ---
 
 #### Pricing
 
-The Placis website page that shows subscription tiers and subscription prices.
-Not Usage & billing. Not website activation.
+The Placis website `/pricing/` route that shows subscription tiers and
+subscription prices. Not Usage & billing. Not website activation.
 
 Distinct from: Usage & billing (the screen in the application), Placis website
 (the whole site).
@@ -1256,6 +1261,19 @@ The record of usage credit granted, purchased, and spent on billed work. Never
 in PRDs. Domain: (none). Distinct from: Usage credit, Extra usage credit.
 
 In code: `ai_use_ledger`.
+
+---
+
+### Price list
+
+Where charged activation and subscription Prices live for Pricing and
+Checkout. Never in PRDs or UI.
+
+Distinct from: Pricing (the Placis website `/pricing/` route),
+Subscription price, Website template catalog, Website component
+catalog, Website style catalog, `Prices.List`.
+
+In code: `billing.prices`, `GetBillingCatalog`, `GET /v1/billing/catalog`.
 
 ---
 
@@ -1819,7 +1837,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | go live (website) | Publish (owner UI). Specs: website publication |
 | registry record | company registry record |
 | placeholder (website) | website placeholder or loading placeholder |
-| catalog (website) | website template catalog, website component catalog, or website style catalog |
+| catalog (website) | website template catalog, website component catalog, website style catalog, or price list |
 | component (website) | website component |
 | our site / our website | Placis website |
 | public site / public-site runtime | contractor website or Placis website (whose site) |

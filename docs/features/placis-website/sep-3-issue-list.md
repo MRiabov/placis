@@ -1,8 +1,7 @@
 # Sep 3 issue list — Placis website
 
-Reclassified 2026-09-03 against [ADR.md](ADR.md). Billing #88 (open)
-will close Pricing Choose. Bold numbers are original audit ids (not
-compacted).
+Reclassified 2026-09-03 against [ADR.md](ADR.md). Billing #88 closed
+Pricing Choose. Bold numbers are original audit ids (not compacted).
 
 ## Keep (ADR)
 
@@ -24,4 +23,4 @@ compacted).
 - **Pricing Choose does not carry the tier** — ADR 5 and billing
   architecture: display only; Choose → `app.placis.com`. 09 Website
   activation Pro/month is the v1 choosable Price (billing ADR 9 /
-  #88). Same as billing item 1.
+  18). Same as billing item 1. Bake `/pricing/` at `astro build`.

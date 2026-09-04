@@ -66,7 +66,7 @@ Uniques, Written by, Notes
 | [audit](audit.md) | `audit` | `audit_events` |
 | [LLM layer](llm-layer.md) | `ai` | `threads` (identity for every generate factory), `ai_generations`, `ai_generation_tool_revisions` |
 | [Assistant](../features/assistant/persistence.md) | `assistant` | `thread_items`, `runs` (in-flight lock; not hydrate). Thread identity is `ai.threads`. |
-| [Billing](../features/billing/persistence.md) | `billing` | `subscriptions`, `ai_use_ledger_entries` |
+| [Billing](../features/billing/persistence.md) | `billing` | `prices`, `subscriptions`, `ai_use_ledger_entries` |
 | [jobs](jobs.md) | `jobs` | River-managed tables |
 
 `tenants` and `media_assets` stay out of `websites` / `ads`. Those are the real
