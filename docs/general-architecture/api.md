@@ -202,8 +202,9 @@ Named fields: `code`, `message`, optional `retry_after`.
 - `409` ads — `base_updated_at` mismatch. `frontend-2` re-GETs.
 - `413` — oversize PATCH (website editor body cap 64 KB). Oversize CMS voice
   recording (`byte_size` over the cap on `POST /v1/assistant/voice/recordings`).
-- `429` — onboarding ETL enqueue cap or over-chatty PATCH. `Retry-After` /
-  `research_wait_until`.
+- `429` — onboarding Find lookup cap (`browser_safety_cap`) or
+  over-chatty PATCH. Optional `Retry-After`. Per-tenant ETL enqueue cap
+  is a silent skip, not this 429.
 
 ## Retries
 

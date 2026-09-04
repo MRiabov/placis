@@ -32,8 +32,8 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `BusinessLookupCreate` | `country`, `online_research_consent`, `company_number`, `place_id`, `website_url` | Create unactivated tenant + onboarding session. `country` default `ie`. Consent required. Registry and/or Maps. Extra keys 4xx |
-| `BusinessLookupRead` | `id`, `token`, `status`, `research_wait_until` | Lookup response. `id` for logs. Token → `localStorage`. `research_wait_until` when enqueue cap hit |
+| `BusinessLookupCreate` | `country`, `online_research_consent`, `company_number`, `place_id`, `website_url`, `browser_safety_session_id` | Create unactivated tenant + onboarding session. `country` default `ie`. Consent required. Registry and/or Maps. `browser_safety_session_id` required UUID (Find lookup cap). Extra keys 4xx |
+| `BusinessLookupRead` | `id`, `token`, `status` | Lookup response. `id` for logs. Token → `localStorage` |
 | `CompanyRegistrySearchGet` | `country`, `q` | Find typeahead query |
 | `CompanyRegistryRecordRead` | `company_number`, `legal_name`, `registered_office`, `company_status` | Typeahead row. **Omit** `raw` |
 | `GoogleMapsSearchGet` | `country`, `q` | Find typeahead query |
@@ -44,7 +44,7 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `OnboardingProfileRead` | `id`, `status`, `research_wait_until`, `preview_website_address`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead`, `profile: OnboardingLiveBusinessProfileRead` | Resume / Review hydrate. Not Details GET |
+| `OnboardingProfileRead` | `id`, `status`, `preview_website_address`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead`, `profile: OnboardingLiveBusinessProfileRead` | Resume / Review hydrate. Not Details GET |
 | `OnboardingFillStatusRead` | `key`, `status` | Derived fill. `status` → `empty` / `in_progress` / `conflict` / `filled_by_user` / `filled_by_research` / `skipped` / `not_applicable` |
 | `OnboardingResearchConflictRead` | `key`, `live_value`, `research_value` | Research conflict (both values). Not a write |
 | `OnboardingLiveBusinessProfileRead` | `display_name`, `trade`, `description`, `founder_name`, `legal_name`, `company_number`, `registered_office`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `reviews`, `facebook_profile_url` | Live columns the onboarding screens show. Same row as Details; onboarding session token. No `company_status` |
@@ -53,7 +53,7 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `ClientInterviewUpdate` | `display_name`, `trade`, `description`, `founder_name`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `photos_fill`, `reviews_unavailable`, `additional_notes`, `skipped` | Dirty keys only. PUT click-off; optional POST complete body. Extra keys 4xx |
+| `ClientInterviewUpdate` | `display_name`, `trade`, `description`, `founder_name`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `photos_fill`, `additional_notes`, `skipped` | Dirty keys only. PUT click-off; optional POST complete body. Extra keys 4xx |
 
 ### Progress
 
@@ -61,7 +61,6 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 | --- | --- | --- |
 | `OnboardingBusinessProfileEvent` | `profile: OnboardingLiveBusinessProfileRead`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead` | SSE `business_profile` |
 | `OnboardingTimelineStepEvent` | `step` | SSE `timeline_step` |
-| `OnboardingResearchWaitUntilEvent` | `research_wait_until` | SSE `research_wait_until` |
 | `OnboardingWebsitePreviewReadyEvent` | `ready` | SSE `website_preview_ready` |
 
 ### Website
@@ -86,14 +85,15 @@ Unpaid canvas reuses CMS website editor DTOs (`WebsiteEditorGet`,
 | DTO | Fields | Description |
 | --- | --- | --- |
 | `OnboardingGuideRealtimeConnectionCreate` | `step`, `visible_fields` | Voice create. Current onboarding step + visible fields. No unpublished website |
-| `AssistantVoiceRealtimeConnectionRead` | `client_secret`, `expires_at`, `realtime_url` | Browser-safe secret + expiry + `wss://{region}.api.x.ai/v1/realtime`. CMS shape |
-| `AssistantVoiceTranscriptCreate` | `events`, `offset_seconds`, `reasoning`, `usage` | Closed union of committed xAI Voice events. CMS shape. **Omit** PCM |
-| `AssistantThreadRead` | `id`, `status`, `last_activity_at`, `items: []AssistantThreadItemRead` | Guide hydrate. Empty is `items: []` |
-| `AssistantThreadItemRead` | `thread_item_kind`, `body`, `icon`, `offset_seconds`, `created_at` | Ordered item. **Omit** `provider_event` |
+| `AssistantVoiceRealtimeConnectionRead` | `secret`, `expires_at`, `realtime_url` | Same CMS DTO. Browser-safe secret + expiry + `wss://{region}.api.x.ai/v1/realtime` |
+| `AssistantVoiceTranscriptsCreate` | `events`, `usage`, `internal_reasoning` | Same CMS DTO. Closed union of committed xAI Voice events. **Omit** PCM. Server derives `offset_seconds` |
+| `AssistantThreadRead` | `id`, `status`, `last_activity_at`, `items: []AssistantThreadItemRead` | Same CMS DTO. Guide hydrate. Empty is `items: []` |
+| `AssistantThreadItemRead` | `thread_item_kind`, `body`, `icon`, `offset_seconds`, `created_at` | Same CMS DTO. Ordered item. **Omit** `provider_event` |
 
-Unpaid website assistant reuses these CMS thread/voice `*Read` shapes
-as-is (no `OnboardingWebsiteEditor*` aliases). GET thread **omits**
-`runs`.
+Unpaid website assistant and the guide reuse CMS thread/voice DTO names
+and fields as-is (no `OnboardingWebsiteEditor*` aliases; no
+`AssistantVoiceTranscriptCreate` / `client_secret` / request
+`offset_seconds` / `reasoning`). GET thread **omits** `runs`.
 
 ## Routes
 
@@ -101,10 +101,10 @@ as-is (no `OnboardingWebsiteEditor*` aliases). GET thread **omits**
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /v1/onboarding/business-lookup` | `/onboarding/find` once | `BusinessLookupCreate` | `BusinessLookupRead` | | `tenants`, `onboarding_sessions`, `business_profiles` | **calls** `LookupBusiness`; **inserts** 02 if under cap | | Select or copy the website template; wait for 02; mount/keystroke POST; second tenant for same token |
+| `POST /v1/onboarding/business-lookup` | `/onboarding/find` once | `BusinessLookupCreate` | `BusinessLookupRead` | | `tenants`, `onboarding_sessions`, `business_profiles` | **calls** `LookupBusiness`; **inserts** 02 if under per-tenant cap | `429` `browser_safety_cap`; 400 missing `browser_safety_session_id` | Select or copy the website template; wait for 02; mount/keystroke POST; second tenant for same token; IP cap |
 | `GET /v1/onboarding/find/search/company-registry` | Find typeahead | `CompanyRegistrySearchGet` | `CompanyRegistryRecordRead` | | | Debounced. **Omit** `raw` | | Persist; upsert listings |
 | `GET /v1/onboarding/find/search/google-maps` | Find typeahead | `GoogleMapsSearchGet` | `GoogleMapsListingRead` | | | Debounced. **Omit** Maps `raw` | | Upsert `etl.google_maps_listings`; insert fetches |
-| `PUT /v1/onboarding/sources` | attach/change Maps or registry | `OnboardingSourcesUpdate` | `OnboardingProfileRead` | `onboarding_sessions` | `onboarding_sessions` | Safe-to-retry replace of attach keys; may **call** `StartBusinessResearch` (same cap) | `429` `research_wait_until` | Create a new onboarding session; business lookup |
+| `PUT /v1/onboarding/sources` | attach/change Maps or registry | `OnboardingSourcesUpdate` | `OnboardingProfileRead` | `onboarding_sessions` | `onboarding_sessions` | Safe-to-retry replace of attach keys; may **call** `StartBusinessResearch`; over per-tenant cap skip `StartRun`, still 200 | | Create a new onboarding session; business lookup |
 
 Auth on lookup and Find search: none. `PUT /v1/onboarding/sources`:
 onboarding session token.
@@ -113,14 +113,19 @@ onboarding session token.
 
 **Create** the unactivated tenant + onboarding session (once per
 browser token). Consent is this body field, not a `/research-consent`
-resource. Country persists on `tenants.country`. Over the 5-enqueue cap
-→ still 200 with `research_wait_until`.
+resource. Country persists on `tenants.country`. Required
+`browser_safety_session_id` (UUID the browser creates once into
+`localStorage`). Five lookups in 30 minutes with that id create tenants;
+the 6th is **429** `browser_safety_cap` (no tenant, optional
+`Retry-After`). Per-tenant `StartRun` cap on this first lookup does
+not fire; a later source change over that cap stays **200** and skips
+enqueue.
 
 ### Profile
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/onboarding/profile` | Resume; Review | | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles`, `etl.runs` | | Nested live business profile + research conflict + fill status + `research_wait_until` | | ETL fetch `raw`; checklist resource |
+| `GET /v1/onboarding/profile` | Resume; Review | | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles`, `etl.runs` | | Nested live business profile + research conflict + fill status | | ETL fetch `raw`; checklist resource |
 
 ### Client interview
 
@@ -140,7 +145,7 @@ complete → 05.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/onboarding/events/stream` | `/onboarding/preview`; Review while 02 runs; `/onboarding/preview-and-edit/` while 06 runs | | `OnboardingBusinessProfileEvent` / `OnboardingTimelineStepEvent` / `OnboardingResearchWaitUntilEvent` / `OnboardingWebsitePreviewReadyEvent` | `etl.runs`, `business_profiles`, `onboarding_sessions` | | Huma `sse.Register`. Event names `business_profile`, `timeline_step`, `research_wait_until`, `website_preview_ready` | | Unconstrained `payload`; `checklist_row`; contractor host |
+| `GET /v1/onboarding/events/stream` | `/onboarding/preview`; Review while 02 runs; `/onboarding/preview-and-edit/` while 06 runs | | `OnboardingBusinessProfileEvent` / `OnboardingTimelineStepEvent` / `OnboardingWebsitePreviewReadyEvent` | `etl.runs`, `business_profiles`, `onboarding_sessions` | | Huma `sse.Register`. Event names `business_profile`, `timeline_step`, `website_preview_ready` | | Unconstrained `payload`; `checklist_row`; contractor host; `research_wait_until` |
 
 ### Website
 
@@ -163,7 +168,7 @@ Clerk only. `status=active` → **403**.
 | `GET /v1/onboarding/website/assistant/thread/ws` | text chat | | | `ai.threads` | `assistant.thread_items`, `assistant.runs` | CMS text socket. Clerk only | `403`; `409` `unpaid_prompt_cap` | Onboarding session token send |
 | `POST /v1/onboarding/website/assistant/voice/realtime-connection` | Voice on | | `AssistantVoiceRealtimeConnectionRead` | | `assistant.runs` | Clerk only | `403`; `409` `unpaid_prompt_cap` | Onboarding session token Voice |
 | `POST /v1/onboarding/website/assistant/voice/tool-calls` | Voice tools | | | | | CMS tools; Clerk only | `403`; `409` | |
-| `POST /v1/onboarding/website/assistant/voice/transcripts` | committed utterances | `AssistantVoiceTranscriptCreate` | | | `assistant.thread_items` | Clerk only | `403` | |
+| `POST /v1/onboarding/website/assistant/voice/transcripts` | committed utterances | `AssistantVoiceTranscriptsCreate` | | | `assistant.thread_items` | Clerk only | `403` | |
 | `POST /v1/onboarding/website/assistant/voice/recordings` | Voice recording | | | | `assistant_voice` | CMS `assistant_voice`. Clerk only | `403` | Onboarding guide recordings |
 | `POST /v1/onboarding/website/assistant/voice/recordings/{id}/complete` | finish recording | | | | `assistant_voice` | Clerk only | `403` | |
 
@@ -188,9 +193,9 @@ tenant on the **app** origin. Webhook: Stripe signature. Never
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /v1/onboarding/assistant/voice/realtime-connection` | turn **voice guide** on | `OnboardingGuideRealtimeConnectionCreate` | `AssistantVoiceRealtimeConnectionRead` | `onboarding_sessions`, `ai.threads` | `assistant_runs`, `ai.threads` | Go picks region from business country. `tools=[]` | `403` activated; `409` `in_flight_run` | Long-lived voice API key; browser-chosen region; Find mount; profile writer |
-| `POST /v1/onboarding/assistant/voice/transcripts` | committed utterances; usage-only when Voice turns off | `AssistantVoiceTranscriptCreate` | | | `assistant_conversation_items`, `assistant_runs` | Same shape as CMS transcripts. Go sets `created_at`. Settlement **200** | `403` activated | PCM; ASR/TTS deltas; recording file; `POST /v1/stt` |
-| `GET /v1/onboarding/assistant/thread` | reload, resume, later Voice turn | | `AssistantThreadRead` | `ai.threads`, `assistant_conversation_items` | | Empty is `200` with `items: []` | `403` activated | `thread_items` field; `runs`; `provider_event`; recording URLs |
+| `POST /v1/onboarding/assistant/voice/realtime-connection` | turn **voice guide** on | `OnboardingGuideRealtimeConnectionCreate` | `AssistantVoiceRealtimeConnectionRead` | `onboarding_sessions`, `ai.threads` | `assistant.runs`, `ai.threads` | Go picks region from business country. `tools=[]` | `403` activated; `409` `in_flight_run` | Long-lived voice API key; browser-chosen region; Find mount; profile writer |
+| `POST /v1/onboarding/assistant/voice/transcripts` | committed utterances; usage-only when Voice turns off | `AssistantVoiceTranscriptsCreate` | | | `assistant.thread_items`, `assistant.runs` | Same CMS DTO. Go sets `created_at` and `offset_seconds`. Settlement **200** | `403` activated | PCM; ASR/TTS deltas; recording file; `POST /v1/stt`; request `offset_seconds` |
+| `GET /v1/onboarding/assistant/thread` | reload, resume, later Voice turn | | `AssistantThreadRead` | `ai.threads`, `assistant.thread_items` | | Empty is `200` with `items: []` | `403` activated | `thread_items` field; `runs`; `provider_event`; recording URLs |
 
 Policy: [onboarding assistant](assistant.md).
 

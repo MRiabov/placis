@@ -34,7 +34,10 @@ larger than field labels ([design decision](design-decision-record.md) 9).
   browser has no token), starts business research, goes to Review. Does not
   select or copy the website template or write the host yet. Opening Find with
   nothing stored must not `POST` an onboarding session. Opening Find with a
-  stored token restores (see Resume).
+  stored token restores (see Resume). Create a UUID once in `localStorage` as
+  `browser_safety_session_id` (shared across tabs; not the onboarding session
+  token) and send it on lookup. **429** `browser_safety_cap`: stay on Find;
+  quiet inline copy; not a modal.
 
 ### 2. Review — `/onboarding/review`
 
@@ -42,11 +45,6 @@ Found vs missing (who they are, legal, contact, services, service area,
 certifications and reviews, photos). Business research may still be filling rows
 (SSE). **Continue** in the shared footer. No missing-topics queue or “next:
 client interview” aside ([design decision](design-decision-record.md) 2).
-
-When `research_wait_until` is in the future, a quiet inline wait on this screen
-(and on the client interview if they Continue): “We’ll look the business up
-again in a few minutes.” Not a modal, not a full-screen stop, Continue stays
-enabled. Same field on `GET /v1/onboarding/profile` and SSE.
 
 ### 3. Client interview — `/onboarding/interview`
 
