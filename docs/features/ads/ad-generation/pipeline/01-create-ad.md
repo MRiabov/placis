@@ -30,7 +30,7 @@ the pill.
 `CreateAd` persists the ad draft and a stub variant.
 
 1. Insert `ads` (`status=draft`, ideal customer profile defaults if
-   omitted: married couples aged 30–40, `icp_source=default`,
+   omitted: married couples aged 30–40, `icp_source=static`,
    `platform_status=not_connected`, `platform_refs` empty).
 2. Insert `ad_lead_forms` (include flags; `include_marketing_phone`
    default true; `title` empty).
