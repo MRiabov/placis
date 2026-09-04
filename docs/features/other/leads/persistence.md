@@ -12,3 +12,7 @@ Website leads (and later ad leads) persist here. Conventions:
 ## Indexes
 
 Lookup: `(tenant_id, status, created_at)`.
+
+Later console filters website leads by website via join
+`leads.website_form_id` → `website_forms.website_id`. Do not add
+`leads.website_id`.

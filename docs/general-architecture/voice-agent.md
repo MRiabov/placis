@@ -11,12 +11,12 @@ Dictation / manual ASR / TTS is **not kept**: it's legacy, dropped for latency.
 
 ## Surfaces (v1)
 
-- **Website editor** (`/cms/website`): empty composer turns DustOrb on.
-  First Voice start plays the prerecorded greeting; starting Voice again more
-  than **5 seconds** after that greeting began does not replay it.
+- **Website editor** (`/cms/website/{website_prefix}`): empty composer turns
+  DustOrb on. First Voice start plays the prerecorded greeting; starting Voice
+  again more than **5 seconds** after that greeting began does not replay it.
   `POST /v1/assistant/voice/realtime-connection` only after the microphone is
-  granted. Governed website editor tools. Also
-  **explains the current screen** from the product knowledge base.
+  granted. Governed website editor tools. Also **explains the current screen**
+  from the product knowledge base.
 - **Ads** (`/cms/ads` list and workspace): product **guide** plus media-library
   `cleanup_image` (then placement PATCH). Generate / revise / rewrite stay Ads
   UI (Create ad and generate, Revise, Review **inline AI assistance**). Existing

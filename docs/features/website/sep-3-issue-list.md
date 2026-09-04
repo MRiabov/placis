@@ -215,7 +215,7 @@ lines stay as audit suggestions until resolved.
 26. **`published_by` on HTTP so the browser can hide onboarding rows**
     Issue: DTO. Action: filter server-side; drop `published_by` from the
     DTO; cap the publications list.
-    Where: [api.md](api.md) (`GET /v1/website/publications`).
+    Where: [api.md](api.md) (`GET /v1/websites/{website_prefix}/publications`).
 
     Comment: ADR 7 keeps `published_by` on the row (onboarding rows are
     never rollback targets). Do not drop the column. Filtering the list

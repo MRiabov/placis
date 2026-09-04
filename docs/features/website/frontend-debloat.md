@@ -27,26 +27,27 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
   leftovers.
 - Queries: `frontend-2/src/features/cms/queries.ts` (`useSaveEditorPage`,
   `useEditorPosts`, `usePublishEditorPage`).
-- Route: `/cms/website` in `routing.ts` + `app/router/index.tsx`.
+- Route: `/cms/website` (Sites redirect) and
+  `/cms/website/{website_prefix}` in `routing.ts` + `app/router/index.tsx`.
 
 ## Keep
 
-- `/cms/website` two surfaces: canvas (wide by default), workspace rail (list
-  closed until a workspace item is opened or a canvas section/image is
-  selected). On a narrow screen the rail is a bottom bar (Sites only). Content
-  is the list after that canvas click (closed union by website component). SEO
-  is its own rail panel, always the current website page. Website versions is a
-  workspace item at the end of the rail. No Design tab. No Website forms tab.
-  Top menu / footer trees live in Content. No right-hand editing panel. No media
-  library rail item. No Home crumb on the website-editor toolbar; viewport +
-  Publish stay one row. On narrow, Open destinations sits inline with
-  **Website editor**. On narrow, Desktop / Tablet / Mobile are icons so Publish
-  fits. Canvas native widths Desktop 1080 / Tablet 760 / Mobile 390; scale down
-  to fit the stage (`transform: scale`, never above 1). Do not reflow the
-  contractor website to the CMS width. Canvas website scroll pad clears the
-  Assistant so last sections stay reachable. On narrow, the open list /
-  Content title row is compact; the whole row hides the sheet (Add a website
-  page stays its own hit).
+- `/cms/website/{website_prefix}` two surfaces: canvas (wide by default),
+  workspace rail (list closed until a workspace item is opened or a canvas
+  section/image is selected). On a narrow screen the rail is a bottom bar (Sites
+  only). Content is the list after that canvas click (closed union by website
+  component). SEO is its own rail panel, always the current website page.
+  Website versions is a workspace item at the end of the rail. No Design tab. No
+  Website forms tab. Top menu / footer trees live in Content. No right-hand
+  editing panel. No media library rail item. No Home crumb on the website-editor
+  toolbar; viewport + Publish stay one row. On narrow, Open destinations sits
+  inline with **Website editor**. On narrow, Desktop / Tablet / Mobile are icons
+  so Publish fits. Canvas native widths Desktop 1080 / Tablet 760 / Mobile 390;
+  scale down to fit the stage (`transform: scale`, never above 1). Do not reflow
+  the contractor website to the CMS width. Canvas website scroll pad clears the
+  Assistant so last sections stay reachable. On narrow, the open list / Content
+  title row is compact; the whole row hides the sheet (Add a website page stays
+  its own hit).
 - Look clones the placis-web dashboard theme ([CMS design.md](../../general-architecture/cms/design.md),
   [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5). Predecessor `src/styles/cms/` tokens that
   fight this go (cross-cutting file).
@@ -108,17 +109,18 @@ Contractor website API: [port-contractor-website.md](port-contractor-website.md)
 
 | Today | Constrained API |
 | --- | --- |
-| `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/website/editor/pages…`; GET may pass `publication_id` (Website versions checkout: load that owner publication, then PATCH). PATCH body is dirty keys including page `status`; checkout PATCH may send the substituted projection; response `{ edit_history_head, batch_id }` plus page-scoped `blockers[]` and assigned ids. Open Publish: `GET /v1/website/editor/blockers` |
-| `POST …/publish` | `POST /v1/website/publications` with `website_address_id`. **402** `subscription_canceled` when the subscription is not active. Live website rollback: `POST /v1/website/publications/{id}/rollback` (that host; same 402). Do not port restore-unpublished. |
-| Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/website/editor/menus`; URL combobox `/v1/website/editor/urls`; assistant under `/v1/assistant/…`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
+| `GET/PATCH /api/v1/website/editor/pages…` | `GET/PATCH /v1/websites/{website_prefix}/editor/pages…`; GET may pass `publication_id` (Website versions checkout: load that owner publication, then PATCH). PATCH body is dirty keys including page `status`; checkout PATCH may send the substituted projection; response `{ edit_history_head, batch_id }` plus page-scoped `blockers[]` and assigned ids. Open Publish: `GET /v1/websites/{website_prefix}/editor/blockers` |
+| `POST …/publish` | `POST /v1/websites/{website_prefix}/publications` with `website_address_id`. **402** `subscription_canceled` when the subscription is not active. Live website rollback: `POST /v1/websites/{website_prefix}/publications/{id}/rollback` (that host; same 402). Do not port restore-unpublished. |
+| Sections/slots/assets/assistant | fields on the page PATCH; top menu / footer on `/v1/websites/{website_prefix}/editor/menus`; URL combobox `/v1/websites/{website_prefix}/editor/urls`; assistant under `/v1/assistant/…`; Apply/Reject are `record-apply` / `record-reject` (metadata) plus the same PATCH. Media library: `/v1/media-assets` |
 | `GET/PATCH …/business-profile` | `/v1/business-profile` (Details) |
 
-Unactivated owners **403** on `/v1/website/editor`. Unpaid canvas uses
-`/v1/onboarding/website/editor/…`
+Unactivated owners **403** on `/v1/websites/{website_prefix}/editor`. Unpaid
+canvas uses `/v1/onboarding/website/editor/…`
 ([onboarding frontend-debloat](../onboarding/frontend-debloat.md)).
 
-Connect website address is a **modal on `/cms/website`** (no extra route). Add
-with the website Go phase (Cloudflare custom hostname + DNS rows).
+Connect website address is a **modal on `/cms/website/{website_prefix}`** (no
+extra route). Add with the website Go phase (Cloudflare custom hostname + DNS
+rows).
 
 `/cms/media` is owned by [media library](../other/media/frontend-debloat.md).
 
@@ -150,10 +152,11 @@ with the website Go phase (Cloudflare custom hostname + DNS rows).
 
 ## Done when
 
-- No Save / Saving / Saved on `/cms/website`.
-- Projection is hydrated once; PATCH does not round-trip the unpublished
-  website.
+- No Save / Saving / Saved on `/cms/website/{website_prefix}`.
+- Projection is hydrated once **per `{website_prefix}`**; PATCH does not
+  round-trip the unpublished website.
 - `cms.ts` has no blog, careers, or leftover website-template-apply wrappers.
 - Don't say inspector: no leftover folder or type names in this feature.
 - Publication dropdown + blockers panel match [frontend.md](frontend.md).
-- `/cms/website` type and color match [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5.
+- `/cms/website/{website_prefix}` type and color match
+  [CMS design decision record](../../general-architecture/cms/design-decision-record.md) 5.

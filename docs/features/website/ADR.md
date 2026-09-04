@@ -80,6 +80,11 @@ Status: decided (2026-08-16, product owner + engineering).
    dropdown opens (tenant-scoped: all website pages plus subscription and
    off-canvas unapproved media library items). `PublishWebsite` **calls** it as
    the hard gate.
+   (2026-09-04): open-Publish GET and `PublishWebsite` are **this
+   `website_id`**. `subscription_canceled` stays tenant-wide.
+   `media_not_approved` is live-path on **this** website (join website
+   slots → `media_assets`), not off-canvas tenant-wide. Previous
+   (2026-09-03): tenant-scoped open-Publish GET.
 
 8. **Deferred: blog posts + careers** — no `blog_post` website page type or
    `website_career_*` tables in the first pass; re-add only when needed.
@@ -199,6 +204,12 @@ Status: decided (2026-08-16, product owner + engineering).
     (2026-09-02): Ranking inserts `business_profile_review_rankings`. Website
     still hydrates `{{reviews.N}}` from that join. It does not own ranking.
 
+    (2026-09-04): v1 stays this Profile picker and one tenant pool. Ads use
+    **top reviews**; a reviews website section may already order a subset
+    (`website_slot_reviews`). Whether certifications, the pool, and
+    **top reviews** later become per website and per ads (different sets per
+    application) is **TBD**.
+
     (2026-08-26): Certification definitions and selections are Details /
     business-profile tables (`certification_definitions`,
     `business_profile_certification_selections`), not `website_certification_*`.
@@ -252,7 +263,7 @@ Status: decided (2026-08-16, product owner + engineering).
     records need Apex Proxying (later, Enterprise). (2026-08-21; Connect modal
     2026-08-23; Host/Value copy 2026-08-27)
 
-21. **Website publication is a destination dropdown** —
+21. **Website publication destination is selectable** —
     `{website_prefix}.preview.placis.com`, each connected website address, or
     New URL (Connect website address). Not a Worker deploy. Owner copy is
     **Publish**. See [frontend.md](frontend.md). (2026-08-23; owner copy Publish 2026-08-26)
@@ -304,6 +315,13 @@ Status: decided (2026-08-16, product owner + engineering).
     ([catalog.md](catalog.md)). Predecessor LLM picker collapsed; this
     algorithm does not. (2026-08-31) Occupancy **counts** every website’s
     `website_template_id` (ADR 30). (2026-09-03)
+    (2026-09-04): tie-break `hash(website_id)` so two websites of one
+    tenant do not pick the same website template on a tie. Retry of the
+    same website still reuses `website_settings`. Previous: `hash(tenant_id)`.
+    (2026-09-04, later): tie-break `sorted[website_id % len]`
+    (`website_id` as an integer). The uuid is already random; do not
+    hash it. No coords: same modulo over the production-ready set.
+    Previous that day: `hash(website_id)`.
 
 26. **One business has N websites** — Parent is `websites.id` (`website_id`
     uuid). Website-owned uniques are on `website_id`, never on `tenant_id`
@@ -316,7 +334,10 @@ Status: decided (2026-08-16, product owner + engineering).
     `logo_media_asset_id` (tenant-shared). Whether a second website can
     have its own logo is **TBD**. Websites copy from the same business
     profile. SEO / copy duplication across a business’s websites is
-    **TBD**.
+    **TBD**. (2026-09-04, later): Whether certifications and reviews
+    (pool and **top reviews**) stay tenant-shared or ads / each website
+    get their own set is **TBD**. v1 stays the Profile picker
+    (16).
 
 27. **Website prefix at insert; path key is prefix** — Reserve
     `websites.website_prefix` in the same transaction as the `websites` row
@@ -327,6 +348,11 @@ Status: decided (2026-08-16, product owner + engineering).
     `/v1/websites/{website_prefix}/…`. Uuid stays internal (FKs, River,
     Assistant screen context). Preview website address / Website activation
     skip reserve if already set. (2026-09-03)
+    (2026-09-04): the same transaction inserts `website_addresses`
+    `type=subdomain` for `{website_prefix}.preview.placis.com`. 08 / 09
+    skip-if-set. HTML is written only to **this** prefix host and this
+    website’s `type=custom` hosts — never another website’s internal
+    Placis prefix.
 
 28. **Onboarding website (Internal)** — The website with the earliest
     `websites.created_at` on that tenant. Bare `/cms/website` redirects there.

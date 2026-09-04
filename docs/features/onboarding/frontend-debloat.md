@@ -68,8 +68,9 @@ Default client interview is **text**. Voice is listed and deferred ([04a](pipeli
 - Don't say setup: `/api/v1/setup-sessions` and `…/profile/facts`.
 - Voice as the first-pass client interview. Guide Voice
   (`/v1/onboarding/assistant/…`) stays listed + deferred.
-- CMS `POST /v1/website/publications` (or list / rollback) from the unpaid
-  canvas. Share is `POST /v1/onboarding/website/publications`. Do not invent
+- CMS `POST /v1/websites/{website_prefix}/publications` (or list /
+  rollback) from the unpaid canvas. Share is
+  `POST /v1/onboarding/website/publications`. Do not invent
   `/v1/onboarding/website-editor/…` or
   `POST /v1/onboarding/preview-website-address`.
 - CRM / quotes / invoices / jobs leftover types on the website preview sandbox.
@@ -88,7 +89,7 @@ Named Routes and auth: [api.md](api.md). This table is predecessor → path.
 | Text client interview autosave + submissions | `PUT /v1/onboarding/interview`; `POST /v1/onboarding/interview/complete` |
 | Interview Project Archive | `POST /v1/onboarding/projects/{projectId}/archive` |
 | Don't say setup: `GET …/events/stream` | `GET /v1/onboarding/events/stream` |
-| Unpaid canvas `GET/PATCH` leftover website editor | `GET/PATCH /v1/onboarding/website/editor/pages…` and `…/menus` (not `/v1/website/editor` while unactivated; PATCH Clerk only) |
+| Unpaid canvas `GET/PATCH` leftover website editor | `GET/PATCH /v1/onboarding/website/editor/pages…` and `…/menus` (not `/v1/websites/{website_prefix}/editor` while unactivated; PATCH Clerk only) |
 | Unpaid canvas Assistant hydrate / send / Voice | `GET /v1/onboarding/website/assistant/thread` (onboarding session token or Clerk); send and Voice same prefix, Clerk only. Not `/v1/assistant/…` |
 | Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | `POST /v1/onboarding/activation/checkout` (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
 | Don't say claim: `GET …/claim/status` | `GET /v1/onboarding/activation/status` |

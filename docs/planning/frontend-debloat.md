@@ -40,12 +40,11 @@ leads console.
   second schema to generate from.
 - Keep as Go DTOs in current glossary names (fields may change): `/me`, health,
   onboarding session + profile + events stream (SSE outside huma), CMS website
-  editor GET/PATCH (`/v1/website/editor/…`), unpaid website editor GET/PATCH
-  (`/v1/onboarding/website/editor/…`), CMS publication, Connect website
-  address, 08 preview website address (host), website activation checkout /
-  status, media library, ads when that slice exists. Contractor website public
-  routes: website form submit (see
-  [port-contractor-website.md](../features/website/port-contractor-website.md)).
+  editor GET/PATCH (`/v1/websites/{website_prefix}/editor/…`), unpaid website
+  editor GET/PATCH (`/v1/onboarding/website/editor/…`), CMS publication, Connect
+  website address, 08 preview website address (host), website activation
+  checkout / status, media library, ads when that slice exists. Contractor
+  website public routes: website form submit (see [port-contractor-website.md](../features/website/port-contractor-website.md)).
 - Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
   `/v1/tenants/{website_prefix}/website/…`, blog, careers,
   website-template-apply leftovers, unconstrained JSON in UI-facing schemas.
@@ -62,14 +61,14 @@ leads console.
   Every DTO field is constrained (`minLength`/`maxLength`, `minimum`/`maximum`,
   enums). No unconstrained JSON in UI code. The generated file must not
   reintroduce predecessor-only paths.
-- CMS calls `/v1/website/editor/…` only. Do not call
+- CMS calls `/v1/websites/{website_prefix}/editor/…` only. Do not call
   `/v1/tenants/{website_prefix}/website/…`. Unactivated **403** on that
   prefix.
 - Onboarding Find / Review / client interview:
   `POST /v1/onboarding/business-lookup`, `GET /v1/onboarding/profile`,
   `GET /v1/onboarding/events/stream`.
 - Onboarding unpaid canvas calls `/v1/onboarding/website/editor/…` (not
-  `/v1/website/editor` while unactivated) and
+  `/v1/websites/{website_prefix}/editor` while unactivated) and
   `/v1/onboarding/website/assistant/…`. Share is
   `POST /v1/onboarding/website/publications`. First pay is
   `POST /v1/onboarding/activation/checkout`.
@@ -77,7 +76,8 @@ leads console.
   is the preview website address (not `/preview/{token}/…`, not an SSE
   endpoint). Website activation uses public checkout / status (Host /
   `website_prefix`; not a browser success URL alone).
-- Website editor: one in-memory projection; PATCH copies dirty keys; merge only
+- Website editor: one in-memory projection **per `{website_prefix}`**; changing
+  prefix is leaving; PATCH copies dirty keys; merge only
   `{ edit_history_head, batch_id }`; no GET-after-PATCH; text copies out on
   click-off; 500ms coalesce; leave guard. See [editing.md](../features/website/editing.md).
 - Ads (when they exist): explicit mutations + `base_updated_at` / `409` re-GET;

@@ -164,7 +164,7 @@ items as they land — that is the in-flight copy UI. Do not invent `run_status`
 on hydrate. Do not use the Assistant text socket as the 06 progress bus. Owner
 send is **409** `in_flight_run` until 06 is idle.
 
-After 09, leftover 06 continues as River-only: lock `tenant_id`, not
+After 09, leftover 06 continues as River-only: lock `website_id`, not
 `assistant.runs`. It must not append thread items. CMS assistant / PATCH stay
 **not** 409 because 06 is running ([assistant testing](../assistant/testing.md)
 §15). Same website-slot overlap: last-write / `edit_history_conflict`.

@@ -48,7 +48,7 @@ re-assert 02 Persist.
 #### Verify
 
 1. **Open** — UI: the website page list renders. DB: reads
-   `website_pages` for the tenant.
+   `website_pages` for **this** `website_id`.
 2. **Edit** — **persists into** `website_slots.value` (new text and, on
    image swap, `media_asset_id`); `edit_history` has a human batch;
    `website_settings.edit_history_head` moved. UI: the edit is visible
@@ -195,7 +195,8 @@ supplement.
 
 #### Fail
 
-`409` onboarding row. `403` unactivated.
+`409` onboarding row. `403` unactivated. `404` `publication_id` that
+is not a publication of this `{website_prefix}`.
 
 ### TestHappyPathV1WebsiteEditorPagesCreatesPage — Route
 
@@ -241,7 +242,8 @@ is checkout. Named **reads** may supplement.
 
 #### Fail
 
-`404` / `409` / `400`. `403` unactivated.
+`404` / `409` / `400`. `403` unactivated. `404` `publication_id` that
+is not a publication of this `{website_prefix}`.
 
 ### TestHappyPathV1WebsiteEditorPagesPageIdUpdatesPage — Route
 
@@ -340,8 +342,8 @@ Unpublished Copy website template pages rows already present. No
 #### Verify
 
 Exercise body: `WebsiteEditorBlockersRead` `blockers[]` is the flat
-set (all website pages plus subscription and off-canvas unapproved
-media library items). Codes `required_slot_unresolved`,
+set (this website’s pages plus subscription and live-path unapproved
+media library items on this website). Codes `required_slot_unresolved`,
 `media_not_approved`,
 `subscription_canceled`. Must not: canvas hydrate; `website_manifest`;
 `publication_id`. Named **reads** may supplement.
@@ -434,7 +436,10 @@ row. No `frontend-2`. Worker **container** is up (this op **calls**
 
 #### Fail
 
-`402 subscription_canceled`.
+`402 subscription_canceled`. `404` `website_address_id` missing,
+other-website, or a `type=subdomain` row whose hostname is not this
+prefix. Must not: Publish onto another website’s
+`{prefix}.preview.placis.com`.
 
 #### Mocked
 
@@ -466,7 +471,8 @@ supplement.
 
 #### Fail
 
-`402`. `409` onboarding id.
+`402`. `409` onboarding id. `404` publication or host that is not
+this `{website_prefix}`.
 
 #### Mocked
 
@@ -531,6 +537,10 @@ One `website_addresses` row. No `frontend-2`. No Worker.
 
 Exercise body: `WebsiteAddressRead`. DNS rows copyable. Must not:
 nameserver mutation.
+
+#### Fail
+
+`404` other-website `website_address_id`.
 
 ### TestHappyPathInternalWebsiteRender — Route
 
@@ -609,7 +619,8 @@ website pages already in MSW fixtures (01/02 already ran).
 
 #### Exercise
 
-Open `/cms/website`. Edit a website section. Publish. MSW:
+Open `/cms/website` (redirects to
+`/cms/website/{website_prefix}`). Edit a website section. Publish. MSW:
 `GET /v1/websites/{website_prefix}/editor/pages`,
 `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`,
 `POST /v1/websites/{website_prefix}/publications`.

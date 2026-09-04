@@ -40,7 +40,7 @@ Does not write unpublished website pages. Next step is 02, which SELECTs
   - Coords 300 km from the only occupying tenant: may share that website
     template.
   - No Maps listing / no lat/lng on `google_maps_listings`: skip geo; pick is
-    `sorted_production_ready[hash(tenant_id) % len]`.
+    `sorted_production_ready[website_id % len]`.
   - Same `tenant_id` retry: same `website_settings` row, unchanged ids.
 - **Handoff to 02**: 02 Pre can SELECT this `website_settings` row. No
   unpublished tree yet.
