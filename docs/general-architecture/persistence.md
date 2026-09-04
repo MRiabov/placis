@@ -15,9 +15,10 @@ edit history `before` / `after` (one field or website slot), and ads
 copy (`website.v1`), not because the tree is polymorphic. Structural data is
 real columns. Where a website slot or website section value came from is
 `origin` (not unstructured jsonb, not profile details). Profile history is typed
-`business_profile_edits` increments; the live profile is the current
-`business_profiles` row. A media library item records `supplied_by` and, when it
-is a copy, `parent_media_asset_id`; its `file_id` is never replaced.
+`business_profile.business_profile_edits` increments; the live profile is the
+current `business_profile.business_profiles` row. A media library item records
+`supplied_by` and, when it is a copy, `parent_media_asset_id`; its `file_id` is
+never replaced.
 
 Those jsonb columns are storage. What HTTP returns for them is
 [HTTP conventions](api.md) (typed union/struct or omit).

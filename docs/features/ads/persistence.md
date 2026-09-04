@@ -6,7 +6,9 @@ Conventions:
 (Postgres schema `ads`). Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 
-Referenced, not owned here: [business profile](../business-profile/details/persistence.md) (profile, services, reviews),
+Referenced, not owned here:
+[business profile](../business-profile/details/persistence.md)
+(profile, services, reviews),
 [projects](../business-profile/projects/persistence.md),
 [media library](../other/media/persistence.md)
 (`ad_image_placements.media_asset_id`),
@@ -57,10 +59,12 @@ this 30–40 default. No `audiences` table. No `audience_id` on `ads`.
 
 - **No `offers` or `locations` table** — `offer` is a free-text string
   on `ads`. Location is per-ad `icp_location_focus`, not a collection.
-  Location suggestions come from `business_profile_service_areas`
+  Location suggestions come from
+  `business_profile.business_profile_service_areas`
   (`GET /v1/business-profile`). Typed text that is not a service area
   writes `icp_location_focus` only; it does not insert a service area.
-- **`service_focus_id`** is the FK to `business_profile_services`.
+- **`service_focus_id`** is the FK to
+  `business_profile.business_profile_services`.
 - Ideal customer profile stays the inline `icp_*` columns on `ads`
   (issue 17). Do not add an audiences collection until product decides
   the owner should pick one.

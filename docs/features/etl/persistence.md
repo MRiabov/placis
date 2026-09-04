@@ -79,8 +79,9 @@ do not. Images are not `etl.sources` rows. Crawl HTML URL stays one URL
 and its photos; Extract markdown and goquery visible text are **two**
 sources (same `html_url`, two `source_kind`s, two `source_id`s). Apify
 stands in for the crawled HTML when GET fails — not a third source.
-`business_profile_reviews` is a copy of the listing review: cite the
-listing-review `source_id` on the edit that inserted the profile review.
+`business_profile.business_profile_reviews` is a copy of the listing
+review: cite the listing-review `source_id` on the edit that inserted
+the profile review.
 
 ### Fetch tables (append-only)
 
