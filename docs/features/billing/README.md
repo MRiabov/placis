@@ -30,4 +30,5 @@ and Cancel subscription are on Usage & billing.
 - [design decision record](design-decision-record.md)
 - [testing.md](testing.md)
 - Placis website [ADR](../placis-website/ADR.md) — **Pricing** at `/pricing/`
-- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
+- [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
+  doc gap / drop)

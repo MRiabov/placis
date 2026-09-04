@@ -1,201 +1,155 @@
 # Sep 3 issue list — Onboarding
 
-Punch list from the 2026-09-03 unused-spec audit. Not canonical. Line
-numbers are as of that audit. Fix the cited spec, then delete the item.
-Delete this file when empty.
+Reclassified 2026-09-03 against [ADR.md](ADR.md) and
+[../assistant/ADR.md](../assistant/ADR.md). Not a drop list. Bold
+numbers are original audit ids (not compacted). Fix the cited spec,
+then delete the item. Delete this file when empty.
 
-## High
+Later dated ADR / design decision is source of truth. Missing reader is
+usually a **doc gap**, not a drop.
 
-1. **Guide has its own copies of assistant thread tables**
-   Issue: duplicate persistence. Action: drop
-   `onboarding.assistant_conversation_items` and
-   `onboarding.assistant_runs`; store on `assistant.thread_items` /
-   `assistant.runs` with `thread_kind=onboarding_assistant`.
-   Where:
+## Keep (ADR)
 
-   - [persistence.md](persistence.md) line 73 (`assistant_conversation_items`)
-   - [../assistant/persistence.md](../assistant/persistence.md)
-     (`thread_items`, `runs`)
-   - [website-editor.md](website-editor.md) (unpaid website editor: **no new
-     persistence models**)
-   - [api.md](api.md) lines 193–194 (writes the onboarding copies)
+- **1. Guide conversation tables stay under schema `onboarding`**
+  Comment: [../assistant/ADR.md](../assistant/ADR.md) 5 (items/runs
+  stay onboarding-scoped). Thread *identity* is `ai.threads`
+  (`thread_kind=onboarding_assistant`). Unpaid website editor “no new
+  models” is a different surface (`cms_assistant`).
+  Action: cite assistant ADR 5 next to the tables. Do not merge into
+  `assistant.thread_items`.
 
-   Isolation is already `thread_kind` + `onboarding_session_id`.
+- **12. `channel` stays (04b Voice client interview out tombstone)**
+  Comment: [ADR.md](ADR.md) 2: voice is a channel; 04b writer is out.
+  `assistant.md` already says the column stays. Resume uses `channel`
+  unset vs `text`. Keep the `voice` enum value as the 04b tombstone.
 
-2. **`reviews_unavailable` has no consumer**
-   Issue: persistence + DTO. Action: delete column and DTO field.
-   Where:
+- **17. `visible_fields` on the guide realtime connection**
+  Comment: [ADR.md](ADR.md) 14 seeds current step + visible fields.
+  That is the guide (no writer tools). Keep `step` and
+  `visible_fields`.
 
-   - [persistence.md](persistence.md) line 59
-   - [api.md](api.md) line 56 (`ClientInterviewUpdate`)
+## Doc gap
 
-   Reviews are optional in the complete gate. The “no online reviews yet”
-   copy is derived from the pool, not this flag.
+- **3. `photos_fill` — controls exist; job and threshold do not**
+  Comment: frontend, 04a Text client interview, complete-gate
+  `photos`, and testing all depend on it.
+  [../../general-architecture/jobs.md](../../general-architecture/jobs.md)
+  has no consumer. “Enough photos” is undefined.
+  Action: name the River job kind and a number in
+  [pipeline/build-profile.md](pipeline/build-profile.md). Do not drop
+  the field.
 
-3. **`photos_fill` is written and never read**
-   Issue: persistence + DTO + UI. Action: cut the two controls, the
-   column, and the DTO field — or name the consuming River job and the
-   photo threshold.
-   Where:
+- **4. VAT paragraph — website paints `{{vat_number}}`; onboarding
+  never writes it**
+  Comment: Details `BusinessProfileRead` carries VAT;
+  `ClientInterviewUpdate` does not. “Publication may block” names no
+  blocker on [../website/api.md](../website/api.md).
+  Action: put VAT on the client interview / Details write path; name
+  or delete the blocker sentence.
 
-   - [persistence.md](persistence.md) lines 59, 61
-   - [api.md](api.md) line 56
-   - [pipeline/04a-text-client-interview.md](pipeline/04a-text-client-interview.md)
-     (Do 2–3)
-   - [frontend.md](frontend.md) (“Find more online” / “Create a stand-in”)
-   - [pipeline/build-profile.md](pipeline/build-profile.md) (`photos` gate)
+- **6. Research cap is real; `BusinessLookupRead.research_wait_until`
+  is not reachable**
+  Comment: cap counts `etl.runs` per `tenant_id`; lookup creates a
+  **new** tenant ([ADR.md](ADR.md) 16). `PUT /v1/onboarding/sources`
+  on the *same* tenant can hit the cap — keep that `429` and Review
+  wait copy.
+  Action: drop `research_wait_until` from `BusinessLookupRead`;
+  document a per-browser / per-IP limit on lookup. Do not delete the
+  per-tenant cap.
 
-   No photo-search / photo-generation job is triggered from this field.
-   “Enough photos” is undefined.
+- **7. Guide voice DTO names drifted from CMS**
+  Comment: assistant ADR 25 / 13: one shape; `offset_seconds` is
+  derived from `audio_start_ms`, not a browser clock. Onboarding
+  `api.md` uses `Transcript` / `reasoning` / `client_secret`.
+  Action: same DTO names and field set as
+  [../assistant/api.md](../assistant/api.md). Keep the persistence
+  column `offset_seconds`.
 
-4. **VAT rule in build-profile has no writer, reader, or gate**
-   Issue: orphan rule. Action: delete the VAT paragraph, or add the writer
-   and the publication blocker.
-   Where:
+- **9. `PUT /v1/onboarding/sources` has no screen**
+  Comment: 01 Find business Do 4: wrong company is **not** a new run.
+  Dropping the route leaves no recovery (ADR 16: one onboarding per
+  browser token).
+  Action: add “change the business” on Review. Do not drop the route.
 
-   - [pipeline/build-profile.md](pipeline/build-profile.md) line 64
-   - Columns live on
-     [../business-profile/details/persistence.md](../business-profile/details/persistence.md)
-     line 29 (`vat_number`, `vat_registration_status`)
+- **11. 06 Generate website copy vs website 03 Generate website copy
+  lock paragraph duplicated**
+  Comment: tools/render/SLO are already forbidden in 06 Must not.
+  Trigger/lock sentences still appear in both files plus
+  website-editor.md and assistant ADR 27.
+  Action: one owner (06); website 03 links. Not a deletion of 06.
 
-   Not a complete-gate key, not on `ClientInterviewUpdate`, not on
-   `OnboardingLiveBusinessProfileRead`.
+- **13. Unpaid `create_page` / `update_details` allowed; HTTP is 403**
+  Comment: website-editor.md and website 03 both allow unpaid
+  `create_page`. Details PATCH is active-tenant.
+  Action: onboarding-prefixed POST website pages, and an unactivated
+  `update_details` path — or remove both from Allowed tools **and**
+  website 03. Do not leave pipeline vs HTTP disagreeing.
 
-5. **`onboarding_sessions.started_from` is write-only**
-   Issue: persistence. Action: drop; derive from `place_id` /
-   `company_number`.
-   Where:
+- **14. `OnboardingLiveBusinessProfileRead` missing projects and
+  photos**
+  Comment: ADR 11 / 04a Text client interview / frontend / E2E all
+  live-fill them over SSE.
+  Action: add nested reads, or name the separate route.
 
-   - [persistence.md](persistence.md) lines 21, 27
-   - [pipeline/01-find-business.md](pipeline/01-find-business.md) line 42
-   - [pipeline/testing/01-find-business.md](pipeline/testing/01-find-business.md)
-     line 9
+- **15. Client interview photo upload has no route**
+  Comment: `photos` is a **required** complete-gate key; onboarding
+  runs before an active tenant; media library HTTP is active-tenant.
+  Action: onboarding media library wrapper (onboarding token, same
+  three hops). Do not drop upload unless the gate key changes too.
 
-   Enum cannot express “both”; 01 says sources can be both.
+- **16. Stale “08” / “07” sentences after ADR 21**
+  Comment: ADR 21 moved share to 08 Preview website address and
+  activation to 09 Website activation. ADR 12 already has a dated
+  amendment (keep old text). ADR 16 still says “Website activation
+  (08)” with no note. Billing ADR 2/8 and frontend-debloat “match 07”
+  are downstream errors.
+  Action: dated amendment on onboarding ADR 16; correct
+  frontend-debloat and (until #88) billing PRD.
 
-6. **5-enqueue research cap + `research_wait_until`**
-   Issue: over-specified / unreachable. Action: cap at
-   `POST /v1/onboarding/business-lookup` (per browser / IP); keep
-   per-tenant as a silent server check; cut `research_wait_until` from
-   DTOs, SSE, and Review wait copy.
-   Where:
+- **18. `OnboardingProfileRead.preview_website_address` reader
+  unnamed**
+  Comment: Share is optional (ADR 21). After reload, profile GET is
+  the only hydrate that can re-show the URL.
+  Action: name that resume behaviour in frontend.md §5.
 
-   - [pipeline/02-business-research.md](pipeline/02-business-research.md)
-     lines 75–77, 101, 113
-   - [api.md](api.md) lines 36, 47, 64, 107, 117, 123, 143
-   - [frontend.md](frontend.md) line 46
-   - [pipeline/03-confirm-data.md](pipeline/03-confirm-data.md) lines 19, 41
+## Actually drop
 
-   Lookup mints a **new** unactivated tenant, so a per-tenant cap does
-   not stop “find again”. The only re-enqueue on that onboarding is item 9.
+- **2. `reviews_unavailable`**
+  Comment: reviews are optional; UI derives emptiness from the pool;
+  no control sets the flag.
+  Action: delete column, DTO field, 04a Text client interview mention.
 
-7. **Onboarding-guide voice DTOs contradict CMS DTOs**
-   Issue: DTO. Action: one name and one field set; remove `offset_seconds`
-   from the request.
-   Where:
+- **5. `onboarding_sessions.started_from`**
+  Comment: ADR 2 is “either or both”; the enum cannot say both;
+  attach keys already hold it; `PUT /v1/onboarding/sources` would
+  stale it.
+  Action: drop column; derive from `place_id` / `company_number`.
 
-   - [api.md](api.md) (Onboarding assistant DTO table:
-     `AssistantVoiceTranscriptCreate` with `events`, `offset_seconds`,
-     `reasoning`, `usage`; `client_secret`)
-   - [../assistant/api.md](../assistant/api.md)
-     (`AssistantVoiceTranscriptsCreate` with `events`, `usage`,
-     `internal_reasoning`; `secret`)
+- **8. `website_activations` dead enum values**
+  Comment: webhook is `checkout.session.completed` only. Keep
+  `amount` / `currency` (billing ADR 2: billing does not own this
+  row) and `stripe_events.processed` (09 Website activation test
+  asserts it). #88 keeps `refunded` (billing ADR 17: refunds are
+  money-only).
+  Action: drop `failed`, `failure_reason`, `activated_at`. Name a
+  source for `WebsiteActivationStatusRead.checkout_url` or drop that
+  field.
 
-8. **`website_activations` unused columns and enum values**
-   Issue: persistence. Action: `payment_status` → `pending` / `paid`;
-   drop `refunded`, `failed`, `failure_reason`, `amount`, `currency`,
-   `activated_at`, `stripe_events.processed`.
-   Where:
+- **18a. `BusinessLookupRead.id` (“for logs”)**
+  Comment: token-auth Routes have no `{id}` in the path. Drop.
 
-   - [persistence.md](persistence.md) lines 112, 124
-   - [api.md](api.md) line 181 (webhook handles
-     `checkout.session.completed` only)
-   - [pipeline/testing/09-website-activation.md](pipeline/testing/09-website-activation.md)
-     line 25 (`processed` asserted)
+## False alarms (closed)
 
-   Related: `WebsiteActivationStatusRead.checkout_url` has no column;
-   the browser already holds the URL from POST checkout.
+- **10. Two website preview routes** — ADR 21 and design decision 13:
+  wait teaser then `/onboarding/preview-and-edit/`. Do not merge them.
+- **Duplicate thread tables** as “merge into CMS tables” — closed as
+  Keep (ADR) item 1.
 
-## Medium
+## Keep (scope)
 
-9. **`PUT /v1/onboarding/sources` has no screen**
-   Issue: API. Action: add “change the business” to Review, or drop the
-   route.
-   Where:
-
-   - [api.md](api.md) lines 107, 109
-   - [pipeline/01-find-business.md](pipeline/01-find-business.md) line 49
-   - [frontend-debloat.md](frontend-debloat.md) line 86
-   - [frontend.md](frontend.md) Screens (no control)
-
-10. **Two website preview routes do one job**
-    Issue: duplication. Action: consider landing on
-    `/onboarding/preview-and-edit/` at 05 completion.
-    Where: [frontend.md](frontend.md) §4 and §5;
-    [website-editor.md](website-editor.md) Surfaces.
-
-11. **Onboarding 06 restates website 03**
-    Issue: spec duplication. Action: 06 = trigger + DAG position; lock
-    and invariants stay in website 03.
-    Where:
-    [pipeline/06-website-copy-generation.md](pipeline/06-website-copy-generation.md);
-    [../website/pipeline/03-website-copy-generation.md](../website/pipeline/03-website-copy-generation.md).
-
-12. **`channel` is degenerate (04b is out)**
-    Issue: persistence. Action: drop `voice` from the enums this pass;
-    consider dropping `onboarding_sessions.channel`.
-    Where: [persistence.md](persistence.md) (`onboarding_sessions.channel`,
-    `assistant_runs.channel`).
-
-13. **Unpaid `create_page` and `update_details` are dead paths**
-    Issue: contradiction. Action: drop from the unpaid allowed set (409
-    `allowed_set_rejected`).
-    Where: [website-editor.md](website-editor.md) Allowed tools;
-    [api.md](api.md) Website route table (no unpaid POST pages);
-    [../website/api.md](../website/api.md) (`POST /v1/website/editor/pages`
-    is 403 unactivated);
-    [../business-profile/details/api.md](../business-profile/details/api.md)
-    (`update_details` = active-tenant PATCH).
-
-14. **`OnboardingLiveBusinessProfileRead` missing projects and photos**
-    Issue: gap (missing field, not spare). Action: add them, or name the
-    separate route.
-    Where: [api.md](api.md) line 50 vs
-    [pipeline/04a-text-client-interview.md](pipeline/04a-text-client-interview.md)
-    live fill; [frontend.md](frontend.md) §3; [testing.md](testing.md)
-    Exercise 3.
-
-15. **Client interview photo upload has no route** Issue: gap. Action:
-    onboarding media library wrapper, or drop upload from 04a. Where:
-    [frontend.md](frontend.md) §3 (“Upload photos is always available”);
-    [../other/media/api.md](../other/media/api.md) (Clerk JWT, **active** tenant); onboarding [api.md](api.md)
-    (no media library routes).
-
-16. **Stale ADR / debloat / billing step numbers** Issue: contradiction. Action:
-    correct the current sentences (where things stand). Where:
-
-    - [ADR.md](ADR.md) 12, 16 still number activation as 08
-    - [frontend-debloat.md](frontend-debloat.md) “Done when: website
-      activation copy and routes match 07”
-    - [../billing/prd.md](../billing/prd.md) non-goal 1 still says 08
-
-17. **`OnboardingGuideRealtimeConnectionCreate.visible_fields`**
-    Issue: DTO. Action: keep `step`; drop `visible_fields`.
-    Where: [api.md](api.md); [assistant.md](assistant.md).
-
-18. **Write-only leftovers**
-    - `BusinessLookupRead.id` — [api.md](api.md) line 36 (“`id` for logs”).
-      Drop.
-    - `OnboardingProfileRead.preview_website_address` — [api.md](api.md)
-      line 47. Name the reader or drop.
-
-## Keep
-
-- Core loop 01–09. Keep 04b files as **out** tombstones.
-- Complete gate, research conflicts, derived fill status (no
-  `checklist_rows`).
-- Unpaid website editor as a policy wrapper (auth, allowlist, instant
-  apply, five-prompt cap).
-- Stripe surface: checkout POST, status GET, signed webhook. No
-  `preview_claims` / `website_previews` resurrection.
+- Core loop 01–09. 04b Voice client interview files as **out**
+  tombstones.
+- Complete gate, research conflicts, derived fill status.
+- Unpaid website editor as a policy wrapper.
+- Stripe: checkout POST, status GET, signed webhook.
 - `POST /v1/onboarding/projects/{projectId}/archive`.

@@ -24,7 +24,8 @@ Named identifiers:
 - [ads look](../../../apps/demo/README.md) — `/cms/ads` in the look app
 - [ad-application/meta](ad-application/meta/) — investigation for future ad posting to Meta (not the
   spec)
-- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
+- [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
+  doc gap / drop)
 
 ## Positioning (done-for-you + DIY)
 

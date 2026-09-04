@@ -9,6 +9,7 @@ website E2E covers website form → website lead ([website testing](../../websit
 same rows for attribution ([ads](../../ads/README.md)).
 
 The schema lives in [persistence.md](persistence.md). HTTP: [api.md](api.md).
-Unused-spec punch list: [sep-3-issue-list.md](sep-3-issue-list.md)
+Sep 3 issue list (keep / doc gap / drop):
+[sep-3-issue-list.md](sep-3-issue-list.md)
 (2026-09-03). A Leads screen is later work (not a website editor side
 panel); until then the table is the whole product surface.

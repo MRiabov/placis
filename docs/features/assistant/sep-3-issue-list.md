@@ -1,151 +1,99 @@
 # Sep 3 issue list — Assistant
 
-Punch list from the 2026-09-03 unused-spec audit. Not canonical. Line
-numbers are as of that audit. Fix the cited spec, then delete the item.
-Delete this file when empty.
+Reclassified 2026-09-03 against [ADR.md](ADR.md). Website #87 already
+closed overlapping website-editor items. Not a drop list. Bold numbers
+are original audit ids (not compacted).
 
-## High
+## Keep (ADR)
 
-1. **CMS Voice recordings — write-only audio of the owner**
-   Issue: API + persistence. Action: drop the whole path (CMS and unpaid
-   website editor twins).
-   Where:
+- **1. CMS Voice recordings**
+  Comment: ADR 6 / 13: browser PUTs the object; CMS keeps it;
+  onboarding does not. “GET thread never returns the URL” is the
+  decision. Dropping is a privacy product call, not unused-spec.
 
-   - [api.md](api.md) lines 73–74, 111–112
-   - [architecture.md](architecture.md) lines 25–27, 387–395 (GET
-     thread never returns the URL, never plays it, do not transcribe)
-   - [persistence.md](persistence.md) line 61 (`recording_file_id`)
-   - [ADR.md](ADR.md) lines 152, 156, 194
-   - [../onboarding/api.md](../onboarding/api.md) lines 168–169, 245
-   - [../onboarding/website-editor.md](../onboarding/website-editor.md)
-     lines 65–66
-   - [../../general-architecture/files-and-s3.md](../../general-architecture/files-and-s3.md)
-     line 20
-   - [testing.md](testing.md) (CMS §14 / verify §11)
+- **2. `AssistantVoiceUsage.billed_text_item_count`**
+  Comment: ADR 9 / 14: AI voice vendor cost is audio **plus**
+  `conversation.item.create`. v1 always sends 0 because every path
+  bans that event.
+  Action: say “always 0 this pass” on the DTO. Do not delete the
+  field.
 
-   Reconstructability is `provider_event` + `ai_generations`. Onboarding
-   already stores text, not audio.
+- **3. `ai.threads.last_assistant_edit_at`**
+  Comment: ADR 12 kept it when it killed the 24h discard (written on
+  tool events, not a discard timer).
+  Action: stop listing it as a compaction index. Keep the column.
 
-2. **`AssistantVoiceUsage.billed_text_item_count` is always zero**
-   Issue: DTO. Action: debit `audio_seconds_sent` /
-   `audio_seconds_received` only.
-   Where: [api.md](api.md) line 69. Spec paths ban
-   `conversation.item.create`.
+- **5. `get_website_styles` always executable**
+  Comment: ADR 3. Working copy is omitted off `website_editor`, so
+  this is the website-styles read on guide screens.
 
-3. **`ai.threads.last_assistant_edit_at` is written and never read**
-   Issue: persistence. Action: drop.
-   Where:
+- **9. `GET /v1/onboarding/assistant/thread`**
+  Comment: ADR 18: may hydrate for a later Voice turn.
+  Action: stop testing `items: []` as if a thread UI existed.
 
-   - [persistence.md](persistence.md) line 73
-   - [architecture.md](architecture.md) line 407
-   - [ADR.md](ADR.md) line 144 (24h discard that was its only consumer is
-     dead; compaction keys off `last_activity_at`)
+- **10. Ads `cleanup_image`**
+  Comment: ADR 3 / 15: that is the Ads write tool; it shares the
+  media library function with Review. Not a duplicate to drop.
 
-4. **`AssistantWebsiteWorkingCopy` ships the same data three times** Issue: DTO.
-   Action: current website page sections and website slots, not every
-   `WebsitePageRead` (which already embeds website styles, menus, website forms,
-   profile, blockers). Where: [api.md](api.md) lines 47–48, 64, 66.
+- **12. Plan vs Ask first**
+  Comment: website ADR 6: default is plan + Ask first. Assistant
+  ADR 17 only removes Plan from Voice. Do not collapse.
 
-5. **`get_website_styles` is a fourth copy of website styles**
-   Issue: tool. Action: drop; website styles are on the working copy for
-   `website_editor`.
-   Where: [architecture.md](architecture.md) lines 228–229, 248;
-   [ADR.md](ADR.md) line 34.
+- **14. `assistant_screen` eight values**
+  Comment: ADR 10 includes `cms`; allowed set and
+  `switch_assistant_screen` key off each value.
 
-6. **`AssistantOwnerMessage.type` is a one-member discriminator**
-   Issue: DTO. Action: drop inbound `type`; outbound union still needs
-   it.
-   Where: [api.md](api.md) line 47.
+- **15. Onboarding conversation tables**
+  Comment: ADR 1 / 5 / 25: isolated context. See
+  [../onboarding/sep-3-issue-list.md](../onboarding/sep-3-issue-list.md)
+  item 1. Dead columns *inside* those tables (guide `tools=[]`) stay
+  an onboarding drop if any.
 
-7. **`AssistantThreadRead.status` is always `current`**
-   Issue: DTO. Action: drop, or stop claiming `completed`.
-   Where: [api.md](api.md).
+- **16. Voice on the unpaid website editor**
+  Comment: ADR 28: text and Voice, forced instant apply. “E2E says
+  Voice unused” is a testing gap.
 
-8. **Phantom identifiers**
-   Issue: contradiction. Action: delete.
-   Where:
+## Doc gap
 
-   - [testing.md](testing.md) exercises `POST /v1/assistant/messages`
-     (does not exist; sibling of banned `POST /v1/assistant/turns`)
-   - [../website/assistant.md](../website/assistant.md) names
-     `refinement_plan` and `assistant_plan` (no registry)
+- **4. `AssistantWebsiteWorkingCopy` repeats `WebsitePageRead`
+  fields**
+  Comment: website page GET already embeds website styles, menus,
+  website forms, and the profile. No ADR froze this shape.
+  Action: slim working copy (current website page’s website sections
+  and website slots; website styles and menus once).
 
-9. **`GET /v1/onboarding/assistant/thread` has no screen**
-   Issue: API. Action: drop, or stop testing empty `items: []` as if a
-   UI exists.
-   Where: [../onboarding/api.md](../onboarding/api.md) line 194. Guide is
-   Voice-only, no thread display.
+- **8. `refinement_plan` / `assistant_plan` in website assistant.md**
+  Comment: `POST /v1/assistant/messages` is already gone from
+  testing.md. Remaining: two names with no registry entry.
+  Action: say they are plan-workflow text, not tools.
 
-10. **Ads `cleanup_image` duplicates Review inline cleanup**
-    Issue: tool. Action: drop; Ads assistant stays guide.
-    Where: [README.md](README.md) lines 9–11;
-    [../ads/ad-generation/frontend.md](../ads/ad-generation/frontend.md).
+- **18. Expand-a-call has no DTO**
+  Comment: website assistant.md promises targets + before/after;
+  `AssistantThreadItemRead` has none.
+  Action: serve from `edit_history` (website ADR 12) or cut expand.
 
-## Medium
+- **19. Clear context vs pending Ask first**
+  Comment: website frontend trash “Discards pending Ask-first”
+  vs ADR 16/19: `/thread/new` is **409** `in_flight_run`.
+  Action: ADRs win; fix frontend copy.
 
-12. **Plan vs Ask first vs Apply (LLM drafts; the contractor publishes)** Issue:
-    over-specified. Action: collapse to Ask first; drop `plan` from
-    `AssistantOwnerMessage`. Where: [api.md](api.md) line 47; [../website/assistant.md](../website/assistant.md)
-    (“Never `on_confirm`”).
+## Actually drop
 
-13. **Projects write tools gated to `website_editor`**
-    Issue: functionality. Action: keep `create_project` only if a gallery
-    needs it; cut the other five.
-    Where: [../website/assistant.md](../website/assistant.md).
+- **17. `status=skipped` / unused hydrate fields**
+  Comment: `AssistantToolActivityEvent.status=skipped` has no
+  producer. `AssistantThreadRead.last_activity_at` has no HTTP
+  consumer (column stays on `ai.threads`). `thread_items.icon` is
+  derivable — keep the DTO field, derive it.
 
-14. **`assistant_screen` enum has eight values and four behaviors**
-    Issue: DTO. Action: collapse to
-    `website_editor | ads | details | guide`.
-    Where: [api.md](api.md); [architecture.md](architecture.md).
+- **20. DustOrb in the voice `replace` table**
+  Comment: drop the `DustOrb → Dust Orb` pronunciation row. Keep
+  the filename in frontend files.
 
-15. **Onboarding duplicate conversation tables**
-    Issue: persistence. See
-    [../onboarding/sep-3-issue-list.md](../onboarding/sep-3-issue-list.md)
-    item 1. Dead columns inside those tables regardless: `icon`,
-    `thread_item_kind` `tool_summary` / `thinking`, `channel=text`,
-    `ai_generation_id`.
+## False alarms (closed)
 
-16. **Voice on the unpaid onboarding website editor**
-    Issue: API. Action: consider cutting Voice there (five of seven
-    routes; E2E says Voice unused; five-prompt cap).
-    Where: [../onboarding/website-editor.md](../onboarding/website-editor.md);
-    [testing.md](testing.md).
-
-17. **Smaller dead contract**
-    - `AssistantToolActivityEvent.status=skipped` — never produced
-    - `AssistantThreadRead.last_activity_at` — no consumer
-    - `thread_items.icon` — derivable from `thread_item_kind`
-    Where: [api.md](api.md); [persistence.md](persistence.md).
-
-18. **Expand-a-call UI with no DTO behind it**
-    Issue: gap. Action: cut the expand behavior, or say what serves
-    targets / before/after.
-    Where: [../website/assistant.md](../website/assistant.md) vs
-    `AssistantThreadItemRead` in [api.md](api.md).
-
-19. **Clear context vs pending Ask first**
-    Issue: contradiction. Action: pick one.
-    Where: website editor frontend trash “Discards pending Ask-first” vs ADR
-    `/thread/new` is **409** `in_flight_run` while Ask-first is pending.
-
-20. **DustOrb leakage**
-    Issue: wording. Action: keep the DustOrb filename in frontend
-    files; cut the voice `replace` table entry that would speak it.
-    Where: [design-decision-record.md](design-decision-record.md);
-    [../../general-architecture/voice-agent.md](../../general-architecture/voice-agent.md).
-
-## Keep
-
-- One `cms_assistant` thread per tenant, `thread_items`, `runs`,
-  in-flight lock.
-- Apply after the LLM drafts; `record-apply` / `record-reject`.
-- `ai_generations` three-way recording (reasoning, output, tool
-  calls).
-- `offset_seconds` reconstruction; transcripts settlement at 200.
-- Compaction (12h / 128K / seed-too-large).
-- Voice as a channel: no Go WebSocket, no provisioned phone numbers, no
-  receptionist.
-- Onboarding guide: Voice-only, `tools=[]`, not billed, 403 after
-  activation.
-- Error map (`tenant_unactivated`, `usage_credit_exhausted`,
-  `in_flight_run`, `allowed_set_rejected`).
+- **`AssistantOwnerMessage.type`** — one-member inbound union is the
+  typed contract (same as website `submit_action`).
+- **`AssistantThreadRead.status`** — `completed` is real on
+  `ai.threads` (ADR 4 / 26). Hydrate returns `current`; note that.
+- **Projects tools on the website editor** — website #87 / Projects
+  ADR 4.

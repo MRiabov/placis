@@ -1,175 +1,125 @@
 # Sep 3 issue list — Ads
 
-Punch list from the 2026-09-03 unused-spec audit. Not canonical. Line
-numbers are as of that audit. Fix the cited spec, then delete the item.
-Delete this file when empty.
+Reclassified 2026-09-03 against
+[ad-generation/ADR.md](ad-generation/ADR.md). Not a drop list. Ads
+never post. Disabled stubs that ADR 27/29 specify stay until ad
+posting. Bold numbers are original audit ids (not compacted).
 
-Ads never post. Terminal status is **ad ready to post**. The leak is
-an ads-manager surface in `ad-generation/frontend.md` with no API or
-columns.
+## Keep (ADR)
 
-## High
+- **1. Performance strip / projection (disabled stub)**
+  Comment: ADR 27/29 put Performance + expected-ad-lead line on the
+  existing-ad detail. `frontend.md` forbids *live* metrics and allows
+  disabled stubs. No metric DTO is required for dashes.
+  Action: say first slice renders dashes; real metrics are Post-MVP.
 
-1. **Performance block and projection line**
-   Issue: functionality (out of scope). Action: cut the block.
-   Where:
+- **3. Daily budget + duration (disabled stub)**
+  Comment: ADR 29: disabled until ad posting. No budgets HTTP is
+  consistent. PRD line 220 wrongly puts budget in the create flow;
+  About the ad is offer / audience / format (ADR 21/29).
+  Action: amend the PRD sentence. Do not drop the stub.
 
-   - [ad-generation/frontend.md](ad-generation/frontend.md) line 93
-     (list-card performance strip)
-   - [ad-generation/frontend.md](ad-generation/frontend.md) line 304
-     (impressions, clicks, spend, results, cost per ad lead)
-   - [ad-generation/prd.md](ad-generation/prd.md) line 115
-   - [ad-generation/technical-implementation.md](ad-generation/technical-implementation.md)
-     line 139
-   - Same file line 453: “no … live performance UIs”
+- **8. `platform_refs` / `platform_status` reservation**
+  Comment: ADR 6: stable ids from day one. DTOs already omit
+  `platform_refs`. Keep both tables’ columns.
 
-   No metric DTO. No metric column.
+- **13. One `ad_variants` row per ad**
+  Comment: ADR 12 (ad + variants storage) + ADR 32 (one format). Not
+  a leftover. `hidden` / `position` already went.
 
-2. **Per-ad “Ad leads” list**
-   Issue: functionality. Action: defer with attribution, or spec `ad_id`
-   - route.
-   Where:
-   - [ad-generation/frontend.md](ad-generation/frontend.md) (uncontacted
-     ad leads in urgent red)
-   - [ad-generation/prd.md](ad-generation/prd.md) Post-MVP 6 (attribution
-     is future)
-   - [../other/leads/persistence.md](../other/leads/persistence.md) (no
-     `ad_id`; `source` = `website_form`; later `ad`)
-   - [../other/leads/api.md](../other/leads/api.md) line 38 (no CMS leads
-     HTTP)
-   - [README.md](README.md) (leads are a separate surface)
+- **15. `POST /v1/ads/{ad_id}/ad-set`**
+  Comment: ADR 6 / PRD: another internal caller can get the ad set
+  without Ads. The route *is* that surface.
+  Action: name the expected internal caller next to the route.
 
-3. **Budget and duration controls**
-   Issue: functionality (ads manager). Action: drop until ad posting.
-   Where:
+- **17. Structured ideal customer profile columns**
+  Comment: ADR 8 default is married couples 30–40, stored as
+  `icp_household` / `icp_age_min` / `icp_age_max`. ADR 22: precise
+  targeting arrives with ad posting, without extra data entry.
+  Action: none. Do not collapse to `icp_notes`.
 
-   - [ad-generation/prd.md](ad-generation/prd.md) line 220 (daily budget
-     shown but disabled)
-   - [ad-generation/frontend.md](ad-generation/frontend.md) lines 295–296
-   - [ad-generation/frontend.md](ad-generation/frontend.md) line 453
-     (forbids live performance UIs including daily budget)
+## Doc gap
 
-4. **Connect Meta / Connect Google Ads**
-   Issue: functionality. Action: drop both; Google Ads is not even planned.
-   Where:
+- **2. Per-ad ad leads list**
+  Comment: ADR 27: per-ad ad leads **in scope**. `leads` has no
+  `ad_id`; leads HTTP has no CMS list; PRD Post-MVP 6 still says
+  future.
+  Action: add `leads.ad_id` + `source=ad` and a per-ad read, or
+  amend ADR 27. Do not silently drop the UI.
 
-   - [ad-generation/frontend.md](ad-generation/frontend.md) line 113
-   - [ad-generation/prd.md](ad-generation/prd.md) line 291 (Link your
-     Facebook is Details, not Ads Connect Meta)
-   - [api.md](api.md) (no connection endpoint; external API keys are
-     future)
-   - [ad-application/meta/](ad-application/meta/) is investigation, not
-     the spec
+- **4. Connect Meta / Connect Google Ads**
+  Comment: ADR 26 + CMS frontend: Connect lives on Ads. ADR 19
+  defers Google Ads *ad posting*, not the button. No
+  connection-status endpoint in this slice.
+  Action: first slice: buttons cannot render (say so). Spec the
+  status endpoint with ad posting.
 
-5. **`ads.review_status` and `ad_variants.review_status`**
-   Issue: persistence. Action: delete both.
-   Where:
+- **5. `ads.review_status` / `ad_variants.review_status`**
+  Comment: README open question 2. `status` is the lifecycle;
+  `ad_reviews` is the trail.
+  Action: answer question 2, then delete or define values. Not an
+  auditor drop.
 
-   - [persistence.md](persistence.md) lines 26, 51, 57, 67
-   - [README.md](README.md) lines 98–101 (open question: leftover of
-     `status`?)
+- **6. `icp_review_status` / `icp_source=llm_suggested`**
+  Comment: ADR 8: LLM suggests asynchronously, reviewable. Backend
+  test 15 exists. No River job kind.
+  Action: spec the suggestion job and closed `icp_review_status`
+  values. Do not drop the column.
 
-6. **`icp_review_status` and `icp_source=llm_suggested`**
-   Issue: persistence + DTO. Action: spec the job, or drop column, enum
-   value, DTO field, and backend test 15.
-   Where:
+- **7. `ads.origin` writers unnamed**
+  Comment: `AdCreate` cannot set it. `owner` / `done_for_you` have
+  product basis. `business_profile` has no writer.
+  Action: derive from actor; drop `business_profile`; keep `llm`
+  only if the suggestion pipeline is written down.
 
-   - [persistence.md](persistence.md) lines 26, 49
-   - [api.md](api.md) line 37
-   - [ad-generation/testing.md](ad-generation/testing.md) line 46
-   - No River job in [../../general-architecture/jobs.md](../../general-architecture/jobs.md)
+- **10. Disabled Ad posting control labelled Publish**
+  Comment: `frontend-debloat.md` keeps a disabled **ad posting**
+  control. ADR 28 reserves Published. Design decision 1/3 still say
+  Publish.
+  Action: rename the row. Keep the button.
 
-7. **Three of four `ads.origin` values**
-   Issue: persistence. Action: `owner` only (plus `done_for_you` if that
-   actor is real), or drop the column.
-   Where:
+- **16. `AdSetRead.format_number` vs PRD “revision number”**
+  Comment: ADR 5 requires an ad set format number (the ad set
+  contract id). PRD wording collides.
+  Action: glossary + fix PRD. Separate field if a per-ad revision is
+  wanted.
 
-   - [persistence.md](persistence.md) (`origin` → `owner` / `llm` /
-     `done_for_you` / `business_profile`)
-   - [api.md](api.md) line 37 (`origin` on `AdRead`; not on `AdCreate`)
+- **19. List filter vs `AdListGet`**
+  Comment: ADR 25: spend sort **replaces** created-time once
+  performance exists — that sentence stays. Gap: “filter by status,
+  search by name” vs `AdListGet` only `archived`.
+  Action: say browser-side over the prefetched cache, or add query
+  fields.
 
-8. **Posting reservation columns**
-   Issue: persistence. Action: at most one forward-compat column on
-   `ads`; drop `ad_variants.platform_refs`.
-   Where:
+- **20. DTO hygiene (`AdImagePlacementRead` on PATCH,
+  `AdGenerateRequest` on DELETE)**
+  Comment: ADR 31 needs `base_updated_at` on mutates. Write type for
+  placements; shared conflict-token request (not a DELETE body).
+  Action: write DTOs.
 
-   - [persistence.md](persistence.md) lines 27, 43, 57, 68
-   - [api.md](api.md) lines 15, 37, 70, 132 (omit from DTOs)
-   - [ad-generation/pipeline/01-create-ad.md](ad-generation/pipeline/01-create-ad.md)
-     line 34 (assert empty)
+## Actually drop
 
-9. **`ad_reviews.note`**
-   Issue: persistence. Action: drop.
-   Where: [persistence.md](persistence.md) line 123. Approve / archive
-   take no note; no DTO carries one.
+- **9. `ad_reviews.note`**
+  Comment: insert is actor + transition only; no DTO. Drop the
+  column.
 
-10. **Disabled “Ad posting” / “Publish” on detail**
-    Issue: UI. Action: drop the control. Do not say Publish for ads.
-    Where: [ad-generation/frontend.md](ad-generation/frontend.md) §2
-    approve block and §3 top bar.
+- **11. `AdImagePlacementRead.media_caption`**
+  Comment: media library omits media caption on owner HTTP (ADR 13).
+  Keep the **column** (generate/export notes). Drop the DTO field.
 
-## Medium
+- **12. `ad_image_placements.format`**
+  Comment: ADR 32: one ad, one format. Renderer uses variant format.
+  Action: drop the placement column.
 
-11. **`AdImagePlacementRead.media_caption`**
-    Issue: DTO. Action: omit (media library already omits `media_caption`).
-    Where: ads API vs [../other/media/api.md](../other/media/api.md).
+- **14. `GET /v1/ads/{ad_id}/variants`**
+  Comment: `GET /v1/ads/{ad_id}` already hydrates `variant`. No
+  screen needs the extra GET.
+  Action: drop the route; tests re-read via the ad GET.
 
-12. **`ad_image_placements.format` redundant with `ad_variants.format`**
-    Issue: persistence. Action: one place.
-    Where: [persistence.md](persistence.md).
+## False alarms (closed)
 
-13. **Variant layer is vestigial (one variant per ad)**
-    Issue: persistence. Action: consider collapsing to `ads` + one copy
-    row.
-    Where: [persistence.md](persistence.md) (`ad_variants` unique per
-    `ad_id`).
-
-14. **`GET /v1/ads/{ad_id}/variants`**
-    Issue: API. Action: drop; `GET /v1/ads/{ad_id}` already hydrates
-    `variant`.
-    Where: [api.md](api.md).
-
-15. **`POST /v1/ads/{ad_id}/ad-set` as public HTTP**
-    Issue: API. Action: keep `ExportAdSet`; question the public route
-    until a second caller exists (CMS uses `/download`).
-    Where: [api.md](api.md).
-
-16. **`AdSetRead.format_number`**
-    Issue: DTO. Action: glossary name or drop. PRD says “revision number”.
-    Where: [api.md](api.md); [ad-generation/prd.md](ad-generation/prd.md).
-
-17. **Structured ideal customer profile targeting fields**
-    Issue: over-specified. Action: `icp_notes` + `icp_location_focus` may
-    be enough to steer generation.
-    Where: [persistence.md](persistence.md) (`icp_age_min` / `icp_age_max`
-    / `icp_household`).
-
-18. **`docs/features/ads/ad-application/meta/` treated as spec**
-    Issue: docs placement. Action: keep as investigation outside the
-    authority path, or one file. Spec authority is `ad-generation/`.
-    Where: [README.md](README.md) already says investigation.
-
-19. **Spend-based sorting / status filter vs `AdListGet`**
-    Issue: DTO. Action: say browser-only, or add query fields. Drop
-    spend-based sorting until posting.
-    Where: [ad-generation/frontend.md](ad-generation/frontend.md) §1;
-    [api.md](api.md) (`AdListGet` is `archived` only).
-
-20. **DTO hygiene**
-    - `AdVariantUpdate` accepts `[]AdImagePlacementRead` (Read type with
-      server `id`) as a request body.
-    - `AdGenerateRequest` reused as body of approve, archive, unarchive,
-      ad-set, download, and `DELETE /v1/ads/{ad_id}`.
-    Action: write types + a mutate request that is not a DELETE body.
-    Where: [api.md](api.md).
-
-## Keep
-
-- Create → generate → review → approve → export zip.
-- Inputs by reference (profile, services, projects, reviews, approved
-  photos). No parallel photo store.
-- Four formats as Meta placements (Instagram is not a second platform).
-- `ad_lead_forms` as suggestions that never block approval.
-- Inline rewrite, cleanup via media library HTTP, `base_updated_at` / 409,
-  archive, `/download`.
-- No ad questions in onboarding.
+- **`ad-application/meta/` as spec** — README and ADR 14 already say
+  investigation, not the spec. No change.
+- **Variant layer / ad posting reservation / structured ideal
+  customer profile / disabled performance and budget stubs** — Keep
+  (ADR) above.
