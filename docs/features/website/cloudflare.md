@@ -52,8 +52,8 @@ image render from `websiteRender` without writing R2.
   website address (same zone) and the live default (strip gone) — never call it
   website preview. Apex `preview.placis.com` (no prefix) is **404**.
 - **Website prefix** — `websites.website_prefix`, the reserved DNS label and R2
-  key, **fixed when the `websites` row is inserted** from `display_name` (onboarding 05
-  / `POST /v1/websites`). Not a URL.
+  key, **fixed when the `websites` row is inserted** from `display_name`
+  (onboarding 05 / `POST /v1/websites`). Not a URL.
 - **Website publication** — writes `website_publications` + HTML files. Not a
   Worker deploy. Onboarding 08 share / 09 call this write (strip on, then strip
   off). Owner CMS publish is later versions.
@@ -161,9 +161,9 @@ One bucket per environment: `placis-contractor-websites` /
 | `sites/{website_prefix}/latest/…` | Onboarding 08/09 unactivated write until the first owner publication on the preview host |
 
 `{website_prefix}` is unique, URL-safe, the label in
-`{website_prefix}.preview.placis.com`, **fixed when the `websites` row is inserted**. Do not rename it when
-Details change. Not the live business name, not `tenant_id`, not
-`business_profiles.id`.
+`{website_prefix}.preview.placis.com`,
+**fixed when the `websites` row is inserted**. Do not rename it when Details
+change. Not the live business name, not `tenant_id`, not `business_profiles.id`.
 
 **Cutover (per host).** Write `{version_number}/` to completion, copy objects
 onto that host’s `latest/`, then purge **that** host. No extra HEAD pointer. A

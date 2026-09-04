@@ -273,10 +273,10 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 `GET /v1/websites/{website_prefix}/editor/pages/{page_id}` shows the dirty-key
 edit. Ack `blockers[]` is that website page (page-scoped). **persists into**
-`website_slots`, `website_sections`, `website_pages`,
-`website_forms`, `website_form_fields`, `website_form_field_options`,
-`website.menus`, `edit_history`, `website_settings.edit_history_head` may
-supplement. Must not: predecessor `POST …/sections` (see [api.md](api.md) overflow).
+`website_slots`, `website_sections`, `website_pages`, `website_forms`,
+`website_form_fields`, `website_form_field_options`, `website.menus`,
+`edit_history`, `website_settings.edit_history_head` may supplement. Must not:
+predecessor `POST …/sections` (see [api.md](api.md) overflow).
 
 #### Fail
 
@@ -299,9 +299,9 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Verify
 
-`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` `website_styles` shows
-the applied styles. **persists into** `website_settings`, `edit_history` may
-supplement. Must not: `GET /v1/websites/{website_prefix}/editor/settings`.
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` `website_styles`
+shows the applied styles. **persists into** `website_settings`, `edit_history`
+may supplement. Must not: `GET /v1/websites/{website_prefix}/editor/settings`.
 
 #### Fail
 
@@ -345,7 +345,8 @@ Unpublished Copy website template pages rows already present. No
 
 #### Exercise
 
-`GET /v1/websites/{website_prefix}/editor/blockers`. Response `WebsiteEditorBlockersRead`.
+`GET /v1/websites/{website_prefix}/editor/blockers`. Response
+`WebsiteEditorBlockersRead`.
 
 #### Verify
 

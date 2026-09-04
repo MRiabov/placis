@@ -20,26 +20,26 @@ select, edit, see it update, then website publication.
    upload has not succeeded after **10 seconds**, show a visible error. Keep the
    local edit and keep retrying. The leave guard still applies — the change is
    still uncopied.
- 4. A schema-validated **PATCH**
+ 1. A schema-validated **PATCH**
     (`/v1/websites/{website_prefix}/editor/pages/{page_id}` — [api.md](api.md))
     **copies** the change to unpublished rows. It is persistence, not the render
-    path. Do not `GET` after each PATCH. Do not replace the whole projection from
-    the PATCH response (that is frontend → backend → frontend). Merge
+    path. Do not `GET` after each PATCH. Do not replace the whole projection
+    from the PATCH response (that is frontend → backend → frontend). Merge
     `{ edit_history_head, batch_id }` (plus assigned ids on create). Page PATCH
     also merges `blockers[]` for that website page (same as `edit_history_head`
     — not a replacement of the projection). Menus and settings PATCH omit
-    `blockers`. Typing does **not** PATCH. Copy-out for `text` / `rich_text` / SEO
-    happens on **click-off** (leave the field). Discrete actions (image swap,
-    reorder, add/remove a website section) queue a PATCH immediately. The frontend
-    has a **safety timer**: at most one website-editor PATCH in flight, and at
-    most one send every **500ms**, coalescing queued click-offs and discrete
-    actions into the next body. That is why `429` should be rare. Also flush on
-    route change, website publication, and page hide / unload so a close-tab
-    without blur is not lost. If a copy-out or media-library upload is queued or
-    in flight, or the focused field is dirty, the website editor **blocks
-    leaving** until it finishes or the owner confirms discard (in-app confirm
-    plus `beforeunload` on tab close / reload).
-5. The backend validates the change against the website component contract and
+    `blockers`. Typing does **not** PATCH. Copy-out for `text` / `rich_text` /
+    SEO happens on **click-off** (leave the field). Discrete actions (image
+    swap, reorder, add/remove a website section) queue a PATCH immediately. The
+    frontend has a **safety timer**: at most one website-editor PATCH in flight,
+    and at most one send every **500ms**, coalescing queued click-offs and
+    discrete actions into the next body. That is why `429` should be rare. Also
+    flush on route change, website publication, and page hide / unload so a
+    close-tab without blur is not lost. If a copy-out or media-library upload is
+    queued or in flight, or the focused field is dirty, the website editor
+    **blocks leaving** until it finishes or the owner confirms discard (in-app
+    confirm plus `beforeunload` on tab close / reload).
+4. The backend validates the change against the website component contract and
    **upserts** the unpublished website rows, appends `edit_history` for that
    copy-out, and advances `edit_history_head`. The body is only the changed
    website slots / website sections — not the whole unpublished website.
@@ -112,8 +112,8 @@ No extra hydrate query besides optional `include_edit_history=true` and optional
 **Open hydrate** (enter `/cms/website`, full reload, or after `409`
 `edit_history_conflict`):
 `GET /v1/websites/{website_prefix}/editor/pages/{page_id}?include_edit_history=true`
-— the unpublished website for the selected website page **and**
-website edit history (last 200 batches, per website). A batch can be website styles, a
+— the unpublished website for the selected website page **and** website edit
+history (last 200 batches, per website). A batch can be website styles, a
 website form, or another website page, so the log is not a per-page slice. Extra
 fields: `edit_history_head` (uuid, null if the stack is empty), `edit_history[]`
 (each batch: `batch_id`, `edited_by`, `ai_generation_id`, rows of target / `op`
@@ -124,13 +124,12 @@ only. Do not re-download `edit_history`.
 
 Reset to an owner website version (checkout): `publication_id` on
 `GET /v1/websites/{website_prefix}/editor/pages` (page list) and
-`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` (same `*Read`). Paint the
-in-memory projection, then the ordinary PATCH immediately (`/menus` /
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` (same `*Read`). Paint
+the in-memory projection, then the ordinary PATCH immediately (`/menus` /
 `/settings` if those trees differ). Extra unpublished pages PATCH
-`status=archived`; a page in that website version with no unpublished row
-is `POST /pages` then PATCH. Checkout PATCH may send the substituted
-projection (full dirty set). `include_edit_history` is unpublished
-hydrate only.
+`status=archived`; a page in that website version with no unpublished row is
+`POST /pages` then PATCH. Checkout PATCH may send the substituted projection
+(full dirty set). `include_edit_history` is unpublished hydrate only.
 
 A **website slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`,
 `required`, `max_length`, `value` (typed), `origin`,
@@ -284,14 +283,14 @@ database stores the unpublished website (live unpublished rows) and the
 4. Empty stack: no-op. Live website rollback is unrelated. Undo is not Reject.
 
 After PATCH / Apply: do not re-GET the log. Merge `batch_id` and
-`edit_history_head`. Page PATCH also merges `blockers[]` for that
-website page. After in-memory undo/redo, the following PATCH is the same
-merge. Do not replace the projection from the PATCH body. List GET
-per-row `blockers[]` seeds website pages not yet on the canvas. Opening
-the Publish dropdown calls `GET /v1/websites/{website_prefix}/editor/blockers` (not a
-timer). After that website page’s first PATCH, the ack wins for that
-page until the next open-Publish GET. Do not recompute from the catalog
-while typing; click-off PATCH is enough for text.
+`edit_history_head`. Page PATCH also merges `blockers[]` for that website page.
+After in-memory undo/redo, the following PATCH is the same merge. Do not replace
+the projection from the PATCH body. List GET per-row `blockers[]` seeds website
+pages not yet on the canvas. Opening the Publish dropdown calls
+`GET /v1/websites/{website_prefix}/editor/blockers` (not a timer). After that
+website page’s first PATCH, the ack wins for that page until the next
+open-Publish GET. Do not recompute from the catalog while typing; click-off
+PATCH is enough for text.
 
 ## What each action does
 

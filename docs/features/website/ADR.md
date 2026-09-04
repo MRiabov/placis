@@ -267,11 +267,10 @@ Status: decided (2026-08-16, product owner + engineering).
     [design decision record](design-decision-record.md). (2026-08-23) Also `show_contact` (bar CTA to the
     Contact website page). (2026-08-26) (2026-09-03): **superseded by ADR 26**
     for uniqueness — one `website.menus` row per website, not per tenant. Tree
-    shape is unchanged. Copy website template pages copies **site-wide**
-    catalog `top_menu` / `footer` when the website template includes them
-    (`url` nodes → `website_urls` rows). The
-    [menu constant](catalog.md#menu-constant) is the page+text default when the template omits menus. Do
-    not copy a top menu onto every website page. Owner
+    shape is unchanged. Copy website template pages copies **site-wide** catalog
+    `top_menu` / `footer` when the website template includes them (`url` nodes →
+    `website_urls` rows). The [menu constant](catalog.md#menu-constant) is the page+text default when the
+    template omits menus. Do not copy a top menu onto every website page. Owner
     `POST /v1/websites/{website_prefix}/editor/urls` and menus PATCH stay.
 
 23. **Website publication requires an active subscription** — After they stop

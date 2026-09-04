@@ -107,11 +107,11 @@ navigate target.
   Usage & billing. Not extra usage credit.
 
 List GET, page GET, and page PATCH ack each **calls**
-`WebsitePublicationBlockers` for **that website page** (the first two
-codes; not subscription). `GET /v1/websites/{website_prefix}/editor/blockers` **calls**
-it for the tenant (every website page, off-canvas unapproved media
-library items, and subscription). `PublishWebsite` **calls** it as
-the hard gate. Do not duplicate the three `code` values per route.
+`WebsitePublicationBlockers` for **that website page** (the first two codes; not
+subscription). `GET /v1/websites/{website_prefix}/editor/blockers` **calls** it
+for the tenant (every website page, off-canvas unapproved media library items,
+and subscription). `PublishWebsite` **calls** it as the hard gate. Do not
+duplicate the three `code` values per route.
 
 ### Website publication
 
@@ -224,14 +224,15 @@ never `true`). `website_prefix` on `WebsitePublicationRequest` is
 - `POST /v1/websites/{website_prefix}/publications/{id}/restore-unpublished`
 - `GET /v1/websites/{website_prefix}/publications/{id}/pages`
 - `/v1/websites/{website_prefix}/editor/top-menu`, `…/footer`
-- `GET /v1/websites/{website_prefix}/editor/settings`, `GET /v1/websites/{website_prefix}/editor/menus`
-  (hydrate is the website page GET `website_styles` / `menus`)
-- `/v1/websites/{website_prefix}/editor/assistant` and `…/clear` — routes live in
-  [assistant HTTP](../assistant/api.md)
-- `/v1/websites/{website_prefix}/editor/assistant/record-apply` and `…/record-reject` —
-  routes live in [assistant HTTP](../assistant/api.md)
-- `/v1/websites/{website_prefix}/editor/pages/{page_id}/assistant` and `…/record-apply` /
-  `…/record-reject`
+- `GET /v1/websites/{website_prefix}/editor/settings`,
+  `GET /v1/websites/{website_prefix}/editor/menus` (hydrate is the website page
+  GET `website_styles` / `menus`)
+- `/v1/websites/{website_prefix}/editor/assistant` and `…/clear` — routes live
+  in [assistant HTTP](../assistant/api.md)
+- `/v1/websites/{website_prefix}/editor/assistant/record-apply` and
+  `…/record-reject` — routes live in [assistant HTTP](../assistant/api.md)
+- `/v1/websites/{website_prefix}/editor/pages/{page_id}/assistant` and
+  `…/record-apply` / `…/record-reject`
 - per-website-page website publication
 - `POST …/pages/{id}/sections`, `PATCH …/sections/order`,
   `DELETE …/sections/{id}`, `POST …/slots/{key}/asset`

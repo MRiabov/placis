@@ -145,13 +145,12 @@ complete → 05.
 ### Website
 
 Unpaid canvas. Same tails as `/v1/websites/{website_prefix}/editor/…`. CMS
-website editor is active tenant only. Policy: [website-editor.md](website-editor.md).
-GET website pages / website page: onboarding session token or Clerk
-unactivated. Top menu and footer hydrate is that website page GET.
-PATCH website pages / top menu and footer: Clerk unactivated only
-(tenant from `clerk_user_id` bind until org claim). Share: onboarding
-session token or Clerk unactivated. Send / Voice: Clerk only.
-`status=active` → **403**.
+website editor is active tenant only. Policy: [website-editor.md](website-editor.md). GET website
+pages / website page: onboarding session token or Clerk unactivated. Top menu
+and footer hydrate is that website page GET. PATCH website pages / top menu and
+footer: Clerk unactivated only (tenant from `clerk_user_id` bind until org
+claim). Share: onboarding session token or Clerk unactivated. Send / Voice:
+Clerk only. `status=active` → **403**.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
