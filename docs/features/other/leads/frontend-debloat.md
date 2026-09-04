@@ -31,8 +31,9 @@ product access is `/cms/leads`.
 
 - CRM / quotes / invoices / jobs / crew / workflows.
 - A website-editor side panel of website leads.
-- A duplicate per-ad ad-leads list on `/cms/ads/{id}`. That screen
-  links to `/cms/leads?source=ad&ad_id=`.
+- A duplicate full per-ad list on `/cms/ads/{id}` (Contacted / Closed).
+  That screen shows **New** ad leads in the Inbox panel and opens
+  `/cms/leads?source=ad&ad_id=`.
 
 ## Retarget
 

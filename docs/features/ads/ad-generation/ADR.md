@@ -380,3 +380,6 @@ new entries with the next number, the area, and the date.
     (`GET /v1/leads`, [leads ADR 3](../../other/leads/ADR.md)). New is
     the urgent mark. Do not say uncontacted. Keep decision 27’s
     performance projection and audience; drop the inline list.
+    (2026-09-04, later) Ads detail shows **New** ad leads in that panel
+    (name + contact). Contacted and Closed stay on Leads. Empty uses
+    the dashed Inbox panel. Still not a second product surface.

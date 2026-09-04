@@ -25,7 +25,8 @@ inventing it.
    a trailing line looks like a table edge. (2026-08-29) (2026-09-04) The
    per-ad list left this screen ([ads ADR 41](ADR.md)). Dividers apply on
    **Leads** if a stacked ad-lead list is shown there; ads detail is a
-   count + link.
+   count + link. (2026-09-04, later) **New** rows in the ads-detail
+   panel: last row has no bottom line. Empty stays the dashed panel.
 
 3. **Wide ad detail keeps status left of the actions** — **Creative ready**
    sits left of Publish / Download / Edit on a wide screen. Narrow still
@@ -34,4 +35,6 @@ inventing it.
 4. **Ad leads is the Inbox panel** — Same dashed empty mark as Leads.
    The whole panel opens `/cms/leads` with `source=ad` and that `ad_id`.
    On a narrow screen Performance and Ad leads follow Images, before
-   Budget. (2026-09-04)
+   Budget. (2026-09-04) Later the same day: when there are **New** ad
+   leads, the panel is a filled card (name + contact, New mark), not
+   the dashed empty well. Empty copy stays dashed.
