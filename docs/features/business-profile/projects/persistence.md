@@ -7,8 +7,8 @@ Conventions:
 [persistence conventions](../../../general-architecture/persistence.md)
 (Postgres schema `business_profile`). Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
-Schema `details` still holds `business_profiles` and the other list
-tables until [ETL ADR 9](../../etl/ADR.md). Cover photos are
+Live-profile tables share this namespace
+([details persistence](../details/persistence.md)). Cover photos are
 [media library](../../other/media/persistence.md) items. Extract
 identity and Project skip:
 [ETL persistence](../../etl/persistence.md).

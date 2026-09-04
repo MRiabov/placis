@@ -4,8 +4,8 @@ The live record website and ads read. Onboarding and ETL transform write it. The
 owner edits it on Profile screens in The CMS.
 
 **Details** is one screen on this record, not the record itself ([ETL ADR 9](../etl/ADR.md):
-Details the screen is a subset of the business profile). Postgres schema
-`details` is **not** renamed in this pass.
+Details the screen is a subset of the business profile). Live-profile tables and
+projects share Postgres schema `business_profile`.
 
 ## Screens
 

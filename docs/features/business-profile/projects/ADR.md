@@ -13,7 +13,9 @@ decision + date) instead of silently replacing the old entry.
 2. **The table is `business_profile.projects`** — Ads and the website read it.
    It is not `website.projects`. Schema `details` is not renamed in this pass
    ([ETL ADR 9](../../etl/ADR.md)); this is the first table in the intended `business_profile`
-   namespace. (2026-08-27)
+   namespace. (2026-08-27) (2026-09-04): Schema `details` renamed to
+   `business_profile`. Live-profile tables share this namespace; `projects` is
+   no longer the only table in it.
 
 3. **Archive is not delete** — `status` is `active` / `archived`. Archive /
    Unarchive HTTP, not `DELETE`. Archive drops that id from every
