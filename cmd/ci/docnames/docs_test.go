@@ -13,8 +13,8 @@ func TestParseAPIFileWebsite(t *testing.T) {
 	}
 	f := ParseAPIFile("website/api.md", string(src))
 	wantPaths := []string{
-		"GET /v1/website/editor/pages",
-		"PATCH /v1/website/editor/pages/{page_id}",
+		"GET /v1/websites/{website_prefix}/editor/pages",
+		"PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}",
 		"POST /internal/website-render",
 		"POST /internal/website-publication",
 	}
@@ -23,7 +23,7 @@ func TestParseAPIFileWebsite(t *testing.T) {
 			t.Fatalf("missing path %s", p)
 		}
 	}
-	if !f.PublicPaths["GET /v1/website/editor/pages"] {
+	if !f.PublicPaths["GET /v1/websites/{website_prefix}/editor/pages"] {
 		t.Fatal("public path")
 	}
 	if !f.InternalPaths["POST /internal/website-render"] {
