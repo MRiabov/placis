@@ -1,42 +1,27 @@
 # Sep 3 issue list — Placis website
 
-Punch list from the 2026-09-03 unused-spec audit. Not canonical. Line
-numbers are as of that audit. Fix the cited spec, then delete the item.
-Delete this file when empty.
+Reclassified 2026-09-03 against [ADR.md](ADR.md). Billing #88 (open)
+will close Pricing Choose. Bold numbers are original audit ids (not
+compacted).
 
-## Medium
+## Keep (ADR)
 
-1. **Pricing Choose does not carry the tier into onboarding** Issue:
-   functionality. Action: query param that 09 honors, or say on Pricing that the
-   grid is display-only. Where:
+- **3. Staging bucket / `staging.placis.com`**
+  Comment: ADR 3 + [cloudflare.md](cloudflare.md):
+  `workflow_dispatch` `environment staging | production`. Not
+  unused.
 
-   - [ADR.md](ADR.md) line 36 (Choose → `app.placis.com`)
-   - [testing.md](testing.md) lines 18, 31
-   - [../billing/architecture.md](../billing/architecture.md) lines 179–181
-   - [../onboarding/pipeline/09-website-activation.md](../onboarding/pipeline/09-website-activation.md)
-     line 125 (hardcodes Placis Pro plan)
+## Doc gap
 
-   Same item as billing punch list item 1.
+- **2. Legal routes**
+  Comment: ADR 5: legal is markup, no island. README “no legal
+  routes until copy exists” is a gate, not a second decision.
+  Action: reword README to “ships when copy is reviewed;
+  markup-only”.
 
-2. **Legal routes contradict each other**
-   Issue: contradiction. Action: pick one.
-   Where:
+## False alarms (closed)
 
-   - [README.md](README.md) line 19 (no legal routes until copy exists)
-   - [ADR.md](ADR.md) line 37 (legal under markup)
-   - [cloudflare.md](cloudflare.md) line 73 (legal listed)
-
-3. **Staging bucket / `staging.placis.com` may be v1-unnecessary**
-   Issue: ops. Action: drop if deploys stay `workflow_dispatch` with no PR
-   previews; or name the consumer.
-   Where: [cloudflare.md](cloudflare.md) lines 110, 113, 135; [ADR.md](ADR.md)
-   decision 3.
-
-## Keep
-
-- Islands list (TopBar, RotatingWord, PlacisPromptBox, `/contact`
-  mailto, pricing toggle).
-- Do-not-port: OrbDemo, DustOrb, voice, enrichment, geo detection, Clerk
-  sign-in on this origin, dashboard.
-- `/support` and `/contact` as `mailto:` with no Go POST.
-- No Go HTTP on this origin.
+- **Pricing Choose does not carry the tier** — ADR 5 and billing
+  architecture: display only; Choose → `app.placis.com`. 09 Website
+  activation Pro/month is the v1 choosable Price (billing ADR 9 /
+  #88). Same as billing item 1.

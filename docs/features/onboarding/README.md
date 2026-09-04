@@ -20,7 +20,8 @@ Onboarding turns a spoken or typed description of a business into a clear
 - [assistant.md](assistant.md) — Find / Review / interview Assistant
 - [website-editor.md](website-editor.md) — unpaid website preview Assistant
 - [testing.md](testing.md) — the onboarding E2E test
-- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
+- [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
+  doc gap / drop)
 
 Auth is interleaved with onboarding (website activation), but auth and tenancy
 are owned by the [auth feature](../other/auth/README.md). Stripe checkout lives in [website activation](pipeline/09-website-activation.md).

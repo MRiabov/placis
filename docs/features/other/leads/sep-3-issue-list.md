@@ -1,53 +1,31 @@
 # Sep 3 issue list — Leads
 
-Punch list from the 2026-09-03 unused-spec audit. Not canonical. Line
-numbers are as of that audit. Fix the cited spec, then delete the item.
-Delete this file when empty.
+Reclassified 2026-09-03. Website #87 already refused shrinking website
+form `field_type` (website template catalog contracts). Leads side
+remains. Bold numbers are original audit ids (not compacted).
 
-## High
+## Doc gap
 
-1. **`leads.status` is a CRM pipeline with no writer except insert=`new`**
-   Issue: persistence. Action: drop `contacted` / `closed` and the
-   status index until a Leads screen or ad-leads slice exists.
-   Where:
+- **3. Website form field types vs four website lead columns**
+  Comment: website item 7: do not cut `field_type`. Answers to
+  `address` / `select` / `date` / `checkbox` still have nowhere to
+  land.
+  Action: child answers table, or say first-pass website forms are
+  website-lead-only fields.
 
-   - [persistence.md](persistence.md) lines 7–9, 14
-     (`new` / `contacted` / `closed`; index
-     `(tenant_id, status, created_at)`)
-   - [api.md](api.md) lines 23–24, 34–38 (insert `status=new`; do not
-     create CMS list/detail HTTP)
-   - [README.md](README.md) lines 11–13 (Leads screen is later)
+- **4. README overstates ads attribution**
+  Comment: no `ad_id`; `source=ad` has no writer. Ads ADR 27 still
+  wants per-ad ad leads (ads item 2).
+  Action: soften to “when ad leads exist”, or add `ad_id` with that
+  ads item.
 
-2. **`POST /v1/website-forms/{form_id}/uploads` has no field type**
-   Issue: API. Action: drop until `field_type` includes `file`.
-   Where:
+## Actually drop
 
-   - [api.md](api.md) lines 10–11, 26–32
-   - [../../website/persistence.md](../../website/persistence.md)
-     lines 107–108 (no `file` in `field_type`)
-   - [../../../general-architecture/files-and-s3.md](../../../general-architecture/files-and-s3.md)
-     (cross-references the route)
+- **1. `leads.status` `contacted` / `closed`**
+  Comment: only writer is insert `new`. Leads screen is later.
+  Action: drop those values and the status index; re-add with the
+  screen (CHECK swap).
 
-3. **Four website form field types have nowhere to land**
-   Issue: contradiction (website forms and this table). Action: shrink
-   website `field_type`, or add a child answers table. See
-   [../../website/sep-3-issue-list.md](../../website/sep-3-issue-list.md)
-   item 7.
-   Where: [api.md](api.md) lines 21–24 (accepts named fields, inserts
-   four columns); [persistence.md](persistence.md) lines 7–9.
-
-## Medium
-
-4. **README overstates ads attribution** Issue: docs. Action: stop claiming ads
-   read these rows until `ad_id` exists. Where: [README.md](README.md) line 8;
-   [../../ads/persistence.md](../../ads/persistence.md) (“Referenced, not owned here”); no ads doc
-   actually reads leads. `source=ad` has no writer ([persistence.md](persistence.md) line 7).
-
-## Keep
-
-- Nine-column minimal row: `id`, `tenant_id`, `source`,
-  `website_form_id`, `contact_name`, `marketing_phone`,
-  `marketing_email`, `message`, `created_at`.
-- `POST /v1/website-forms/{form_id}/submissions` Auth none, CORS on
-  contractor Host, Idempotency-Key. Worker does not proxy.
-- No quotes / invoices / jobs / crew tables.
+- **2. `POST /v1/website-forms/{form_id}/uploads`**
+  Comment: no `file` `field_type`, so “file fields” cannot call it.
+  Action: drop the route until `file` exists.

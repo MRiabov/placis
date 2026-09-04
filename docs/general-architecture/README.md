@@ -30,8 +30,8 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [ci-cd.md](ci-cd.md) — delivery gates (file-size, folder fan-out), GitHub Checks,
   Don't-say checker
 - [testing.md](testing.md) — unit / integration / E2E tiers and the per-feature E2E rule
-- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03); index of
-  per-feature lists
+- [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
+  doc gap / drop); index of per-feature lists
 
 Payments live with [website activation](../features/onboarding/pipeline/09-website-activation.md). Website leads live in
 [features/other/leads](../features/other/leads/README.md). Public-source extract: [ETL](../features/other/etl/README.md). Onboarding session
