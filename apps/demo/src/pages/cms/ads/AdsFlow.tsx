@@ -20,16 +20,6 @@ const serviceOptions = [
   },
 ];
 
-const profileOptions = [
-  { id: "married", title: "Married couples, 30–40", hint: "most contractors" },
-  {
-    id: "homeowners",
-    title: "Homeowners, 40–55",
-    hint: "repairs and upgrades",
-  },
-  { id: "newlyweds", title: "Newlyweds, 25–35", hint: "first home" },
-];
-
 const areaOptions = [
   { id: "kildare", title: "Kildare area", hint: "your service area" },
   { id: "west-dublin", title: "West Dublin", hint: "nearby" },
@@ -78,7 +68,6 @@ export function AdsFlow({
   approved,
   generatedOnce,
 }: AdsFlowProps): ReactNode {
-  const [profile, setProfile] = useState("Married couples, 30–40");
   const [area, setArea] = useState("Kildare area");
   const [svcErr, setSvcErr] = useState(false);
   const [fmtErr, setFmtErr] = useState(false);
@@ -129,14 +118,9 @@ export function AdsFlow({
             <p className="text-[13px] text-zinc-600">Who it&apos;s for</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Ideal customer profile">
-                <Combo
-                  createKind="profile"
-                  groupLabel="Common profiles"
-                  onChange={setProfile}
-                  options={[...profileOptions]}
-                  placeholder="Select or type to create a new profile…"
-                  value={profile}
-                />
+                <p className="flex min-h-11 items-center text-sm text-foreground">
+                  Married couples, 35–45
+                </p>
               </Field>
               <Field label="Where they are">
                 <Combo

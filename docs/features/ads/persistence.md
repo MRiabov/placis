@@ -50,6 +50,21 @@ now; precise targeting comes with ad posting. `icp_review_status` has no
 closed values yet; an LLM suggestion is reviewable and never
 auto-publishes. `review_status` has no values specified — see
 [Open questions](README.md#open-questions); `status` is the lifecycle.
+The picker is deferred ([ADR 40](ad-generation/ADR.md)): look displays
+**"Married couples, 35–45"** as read-only copy; stored columns stay
+this 30–40 default. No `audiences` table. No `audience_id` on `ads`.
+
+### Pickers and their sources
+
+- **No `offers` or `locations` table** — `offer` is a free-text string
+  on `ads`. Location is per-ad `icp_location_focus`, not a collection.
+  Location suggestions come from `business_profile_service_areas`
+  (`GET /v1/business-profile`). Typed text that is not a service area
+  writes `icp_location_focus` only; it does not insert a service area.
+- **`service_focus_id`** is the FK to `business_profile_services`.
+- Ideal customer profile stays the inline `icp_*` columns on `ads`
+  (issue 17). Do not add an audiences collection until product decides
+  the owner should pick one.
 
 ### `ad_variants`
 

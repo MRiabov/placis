@@ -33,9 +33,12 @@ rewrite stay Ads UI
 An **ad** is one offer in one ad format. Records reference the business
 profile, media library, and projects by id — they do not copy them.
 
-- **ad** — `ads`: name, offer, goal, service focus, ideal customer
-  profile, `status`, `platform_status`. `platform_refs` stays empty
-  until ad posting.
+- **ad** — `ads`: name, offer (free-text on the ad, not a
+  collection), goal, service focus, ideal customer profile (stored
+  default on the ad, not a picker; [ADR 40](ad-generation/ADR.md)),
+  location as per-ad `icp_location_focus` (suggestions from
+  `business_profile_service_areas`), `status`, `platform_status`.
+  `platform_refs` stays empty until ad posting.
 - **ad variant** — `ad_variants`: one row per ad; `format` is chosen
   before generate. 01 writes a stub; 02 fills copy and placements.
 - **ad copy variant** — `ad_copy_variants`: headline, primary text,
@@ -51,11 +54,12 @@ profile, media library, and projects by id — they do not copy them.
 
 ## Create, draft, approve, export
 
-1. **Create ad** — About the ad (offer, goal, service focus, ideal
-   customer profile, ad lead form include flags, exactly one format).
-   `CreateAd` persists `ads` + `ad_lead_forms` + stub `ad_variants`.
-   Save on click-off. Does not call an LLM
-   ([01](ad-generation/pipeline/01-create-ad.md)).
+1. **Create ad** — About the ad (offer, goal, service focus, location,
+   displayed ideal customer profile default, ad lead form include
+   flags, exactly one format). The owner does not pick a profile
+   ([ADR 40](ad-generation/ADR.md)). `CreateAd` persists `ads` +
+   `ad_lead_forms` + stub `ad_variants`. Save on click-off. Does not
+   call an LLM ([01](ad-generation/pipeline/01-create-ad.md)).
 2. **Generate ad draft** — **Create ad and generate** enqueues
    `ads_generate`. The LLM drafts copy and an image gallery from ready
    approved media captions, with light cleanup as reviewable copies.

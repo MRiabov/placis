@@ -41,8 +41,10 @@ the pill.
 
 ## Reads
 
-`business_profiles` (service picker). Existing `ads` when filling the
-ideal customer profile from the last ad ([ADR 37](../ADR.md)).
+`business_profiles` (service picker and service-area location
+suggestions). Existing `ads` when filling `icp_location_focus` from
+the last ad ([ADR 37](../ADR.md)). Ideal customer profile is the
+stored default, not a picker ([ADR 40](../ADR.md)).
 
 ## Persist
 
