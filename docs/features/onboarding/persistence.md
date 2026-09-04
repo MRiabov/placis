@@ -8,8 +8,8 @@ activation tables. Conventions:
 
 Referenced, not owned here:
 [auth](../other/auth/persistence.md) (`tenants`),
-[details](../business-profile/details/persistence.md) (live business
-profile and profile history), [ETL](../etl/persistence.md),
+[business profile](../business-profile/details/persistence.md) (live
+business profile and profile history), [ETL](../etl/persistence.md),
 [AI layer](../../general-architecture/ai-layer.md) (`ai.threads`),
 [assistant](../assistant/persistence.md) (`thread_items`, `runs`),
 [website](../website/persistence.md).
@@ -84,7 +84,8 @@ profile columns. Live business profile via
   `CompleteClientInterview`
   (`POST /v1/onboarding/interview/complete`, `submission_kind=final`
   when last answers persist)
-- **Notes:** Profile answers are `business_profile_edits`, not a
+- **Notes:** Profile answers are
+  `business_profile.business_profile_edits`, not a
   payload dump on this row. Interview-only fields live here. Found
   photos live in the media library.
 

@@ -1,8 +1,8 @@
 # Projects from source — integration test
 
-- **Setup**: `tenants`. `business_profiles` for that `tenant_id`.
-  Facebook / Instagram posts, crawled sources, or Maps listing reviews
-  already upserted for this chunk; photos attached (`media_assets`).
+- **Setup**: `tenants`. `business_profile.business_profiles` for that
+  `tenant_id`. Facebook / Instagram posts, crawled sources, or Maps listing
+  reviews already upserted for this chunk; photos attached (`media_assets`).
   `etl.website_crawl_pages` `status=fetched` when the source is crawl.
 - **Exercise**: `transform/projects.Run` after the calling ETL run
   kind’s photo attach.
@@ -23,7 +23,8 @@
   - Skip when the verdict `algorithm` + `schema_revision` match.
     `algorithm=human` is not overwritten. Unlabeled photos do not
     become Projects.
-  - ETL Details increments have ≥1 `business_profile_edit_sources`.
+  - ETL Details increments have ≥1
+    `business_profile.business_profile_edit_sources`.
   - `etl.sources`; `etl.runs` stays succeeded from the calling ETL run
     kind.
   - **Must not**: `project_from_source_*` on posts / reviews / crawl
@@ -33,6 +34,6 @@
 - **Mocked**: Maps Details / scrape, LLM (`glm-5.3-flash` dated id),
   crawl Extract/GET. Never live Google / OpenRouter / Parallel Search.
 
-Named tables: `business_profile_reviews`, `business_profiles`, `etl.runs`,
-`etl.sources`, `etl.website_crawl_pages`, `google_maps_listing_photos`,
-`media_assets`.
+Named tables: `business_profile.business_profile_reviews`,
+`business_profile.business_profiles`, `etl.runs`, `etl.sources`,
+`etl.website_crawl_pages`, `google_maps_listing_photos`, `media_assets`.

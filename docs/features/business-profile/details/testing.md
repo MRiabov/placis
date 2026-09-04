@@ -3,8 +3,9 @@
 Playwright e2e drives `frontend-2` against the real API and real
 Postgres. Integration is **one side**. Backend: `humatest`,
 Testcontainers Postgres. Frontend: Vitest `HappyPathDetailsFull` (MSW,
-no Go). Persist names tables from [persistence.md](persistence.md).
-Public 1:1 is specified as `### TestHappyPath*` here; Go funcs are
+no Go). Persist names tables from [persistence.md](persistence.md)
+(Postgres schema `business_profile`). Public 1:1 is specified as
+`### TestHappyPath*` here; Go funcs are
 `leftover_tests.go` until implementation. No pipeline
 (`TestPipelineHappyPathDetails*` does not exist). No Go tests in this
 docs PR.
@@ -20,7 +21,7 @@ Certifications and reviews HTTP 1:1 lives here (ADR 7), not in
 
 E2E (Playwright, both sides). Playwright drives `frontend-2` against
 the real API + real Postgres. Activated tenant with a live
-`business_profiles` row. LLM unused.
+`business_profile.business_profiles` row. LLM unused.
 
 #### Exercise
 
@@ -30,12 +31,13 @@ the real API + real Postgres. Activated tenant with a live
 
 #### Verify
 
-1. Click-off **persists into** `business_profile_edits` and
-   `business_profiles`. UI shows the new name.
+1. Click-off **persists into** `business_profile.business_profile_edits` and
+   `business_profile.business_profiles`. UI shows the new name.
 2. Revert: compensating increment; live `display_name` restored.
    `GET /v1/business-profile` matches.
-3. **OK** keeps the service write on `business_profile_services`.
-   `business_profile_edit_sources` stays empty for these owner
+3. **OK** keeps the service write on
+   `business_profile.business_profile_services`.
+   `business_profile.business_profile_edit_sources` stays empty for these owner
    increments.
 
 #### Mocked
@@ -49,8 +51,9 @@ LLM unused. Prefer fake Google Maps territory lookup.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Activated tenant. Live
-`business_profiles` row with services, areas, hours. Linked Facebook
-URL so `facebook_profiles` can hydrate. No `frontend-2`.
+`business_profile.business_profiles` row with services, areas, hours. Linked
+Facebook URL so `business_profile.facebook_profiles` can hydrate. No
+`frontend-2`.
 
 #### Exercise
 
@@ -59,11 +62,11 @@ URL so `facebook_profiles` can hydrate. No `frontend-2`.
 #### Verify
 
 200. Body is `BusinessProfileRead` (scalars, `services` from
-`business_profile_services`, `service_areas` from
-`business_profile_service_areas`, `opening_hours` from
-`business_profile_opening_hours`). When the Facebook URL is linked,
-`linked_facebook` has name / photo / rating / review count from
-`facebook_profiles`. No profile-history timeline. Distinct from
+`business_profile.business_profile_services`, `service_areas` from
+`business_profile.business_profile_service_areas`, `opening_hours` from
+`business_profile.business_profile_opening_hours`). When the Facebook URL is
+linked, `linked_facebook` has name / photo / rating / review count from
+`business_profile.facebook_profiles`. No profile-history timeline. Distinct from
 `WebsiteBusinessProfileRead` and `OnboardingLiveBusinessProfileRead`.
 
 ### TestHappyPathV1BusinessProfilePatch — Route
@@ -71,8 +74,9 @@ URL so `facebook_profiles` can hydrate. No `frontend-2`.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Activated tenant. Live
-`business_profiles` row. Existing `facebook_posts` /
-`instagram_posts` / `instagram_profiles` fixture rows from ETL.
+`business_profile.business_profiles` row. Existing
+`business_profile.facebook_posts` / `business_profile.instagram_posts` /
+`business_profile.instagram_profiles` fixture rows from ETL.
 
 #### Exercise
 
@@ -83,12 +87,14 @@ keys only, including a service list-item op). Response
 #### Verify
 
 200. Then `GET /v1/business-profile` shows those dirty keys.
-**persists into** `business_profile_edits` and `business_profiles`
-(and `business_profile_services` /
-`business_profile_service_areas` /
-`business_profile_opening_hours` when that list op ran). Must not
-write `facebook_posts`, `instagram_posts`, `instagram_profiles`, or
-`business_profile_edit_sources`.
+**persists into** `business_profile.business_profile_edits` and
+`business_profile.business_profiles` (and
+`business_profile.business_profile_services` /
+`business_profile.business_profile_service_areas` /
+`business_profile.business_profile_opening_hours` when that list op ran). Must
+not write `business_profile.facebook_posts`, `business_profile.instagram_posts`,
+`business_profile.instagram_profiles`, or
+`business_profile.business_profile_edit_sources`.
 
 #### Fail
 
@@ -98,8 +104,8 @@ Full-row dump / extra keys → 4xx.
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres). Activated tenant. A
-named `business_profile_edits` increment from a prior PATCH (the
+Backend (`humatest`, Testcontainers Postgres). Activated tenant. A named
+`business_profile.business_profile_edits` increment from a prior PATCH (the
 notification id).
 
 #### Exercise
@@ -110,7 +116,7 @@ notification id).
 #### Verify
 
 200. Then `GET /v1/business-profile` shows the inverse. Compensating
-row on `business_profile_edits`. Live columns restored.
+row on `business_profile.business_profile_edits`. Live columns restored.
 
 #### Fail
 
@@ -121,8 +127,8 @@ Already undone, or not the named increment → `409`.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Activated tenant.
-`certification_definitions` seeded for that country. Some
-`business_profile_certification_selections` `selected`.
+`business_profile.certification_definitions` seeded for that country. Some
+`business_profile.business_profile_certification_selections` `selected`.
 
 #### Exercise
 
@@ -139,7 +145,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Activated tenant.
-`certification_definitions` seeded.
+`business_profile.certification_definitions` seeded.
 
 #### Exercise
 
@@ -151,15 +157,15 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 
 200. Then `GET /v1/business-profile/certifications` shows the new
 selected set. Unchecked rows are `status=removed` on
-`business_profile_certification_selections`.
+`business_profile.business_profile_certification_selections`.
 
 ### TestHappyPathV1BusinessProfileReviews — Route
 
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Activated tenant.
-`in_pool` and `archived` `business_profile_reviews` rows. Some
-pinned via `business_profile_review_rankings`.
+`in_pool` and `archived` `business_profile.business_profile_reviews` rows. Some
+pinned via `business_profile.business_profile_review_rankings`.
 
 #### Exercise
 
@@ -213,8 +219,8 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant. An
 #### Verify
 
 200. Then `GET /v1/business-profile/reviews` omits it from the pool.
-Row `status=archived` on `business_profile_reviews`. Dropped from
-every `website_slot_reviews` array (then compact). Not deleted.
+Row `status=archived` on `business_profile.business_profile_reviews`. Dropped
+from every `website_slot_reviews` array (then compact). Not deleted.
 
 ### TestHappyPathV1BusinessProfileReviewsUnarchive — Route
 
@@ -247,7 +253,7 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 #### Verify
 
 200. Then `GET /v1/business-profile/reviews` includes the row
-`origin=owner`, `status=in_pool` on `business_profile_reviews`.
+`origin=owner`, `status=in_pool` on `business_profile.business_profile_reviews`.
 
 #### Fail
 
@@ -285,7 +291,7 @@ Google Maps listing reviews. Facebook page reviews.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Two activated tenants,
-each with a `business_profiles` row.
+each with a `business_profile.business_profiles` row.
 
 #### Exercise
 
@@ -294,8 +300,8 @@ writes.
 
 #### Verify
 
-404 / forbidden. Tenant B `business_profiles` /
-`business_profile_reviews` unchanged.
+404 / forbidden. Tenant B `business_profile.business_profiles` /
+`business_profile.business_profile_reviews` unchanged.
 
 ### HappyPathDetailsFull — frontend Full
 

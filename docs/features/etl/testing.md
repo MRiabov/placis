@@ -47,20 +47,19 @@ ETL run kinds start
 
 #### Verify
 
-`etl.runs` only for started ETL run kinds (shared `enqueue_id`),
-`etl.sources`, `google_maps_fetches` / `facebook_fetches` /
-`instagram_fetches` / `web_search_fetches`, `google_maps_listings`,
-`facebook_posts` / `instagram_posts`, media library photos via
-`imported_media` / `imported_media_sources`.
-`business_profile_opening_hours` has rows,
-`business_profiles.marketing_phone` is set, and first
-`business_profile_reviews` exist while scrape `etl.runs.status` is
-still in flight; later scrape **persists into** further
-`business_profile_reviews` / `google_maps_listing_reviews` /
-`google_maps_listing_review_photos` /
-`google_maps_listing_opening_hours` / `website_crawl_page_photos`. ETL
-increments have `business_profile_edit_sources`. Facebook / Instagram
-are not inserted until a URL/handle detail exists.
+`etl.runs` only for started ETL run kinds (shared `enqueue_id`), `etl.sources`,
+`google_maps_fetches` / `facebook_fetches` / `instagram_fetches` /
+`web_search_fetches`, `google_maps_listings`, `business_profile.facebook_posts`
+/ `business_profile.instagram_posts`, media library photos via `imported_media`
+/ `imported_media_sources`. `business_profile.business_profile_opening_hours`
+has rows, `business_profile.business_profiles.marketing_phone` is set, and first
+`business_profile.business_profile_reviews` exist while scrape `etl.runs.status`
+is still in flight; later scrape **persists into** further
+`business_profile.business_profile_reviews` / `google_maps_listing_reviews` /
+`google_maps_listing_review_photos` / `google_maps_listing_opening_hours` /
+`website_crawl_page_photos`. ETL increments have
+`business_profile.business_profile_edit_sources`. Facebook / Instagram are not
+inserted until a URL/handle detail exists.
 
 #### Fail
 

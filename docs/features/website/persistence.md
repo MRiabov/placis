@@ -11,7 +11,7 @@ The parent row is `websites` ([ADR](ADR.md) 26). Conventions:
 Media assets are owned by
 [media library](../other/media/persistence.md). The business profile the
 website templates fill is
-[details](../business-profile/details/persistence.md). Projects:
+[business profile](../business-profile/details/persistence.md). Projects:
 [projects](../business-profile/projects/persistence.md). Website forms
 write [leads](../other/leads/persistence.md). The dump shape of a website
 publication is [manifest.md](manifest.md). The reserved DNS label is
@@ -182,7 +182,8 @@ may replace a whole tree. Assistant `remove_entries` max 4.
   (deferred create; that template’s preset); `PATCH
   /v1/websites/{website_prefix}/editor/settings`
 - **Notes:** Copy-pages SELECTs `website_template_id` here, not
-  `ai_generations`. Logo is `business_profiles.logo_media_asset_id`, not a
+  `ai_generations`. Logo is
+  `business_profile.business_profiles.logo_media_asset_id`, not a
   column here. Whether a second website can have its own logo is **TBD**.
 
 ### `website_publications`

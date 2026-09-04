@@ -82,7 +82,7 @@ top of this service rather than in the website editor.
 See [persistence.md](../persistence.md). Package `internal/ads/` (goose +
 sqlc; no SQLAlchemy). Media assets:
 [media library](../../other/media/persistence.md). Business profile:
-[details](../../business-profile/details/persistence.md). Projects:
+[business profile](../../business-profile/details/persistence.md). Projects:
 [projects](../../business-profile/projects/persistence.md). There is no ad
 destination on `ads` for now.
 
