@@ -22,7 +22,8 @@ Details the screen is a subset of the business profile). Postgres schema
 
 How the owner reaches them: [CMS frontend](../../general-architecture/cms/frontend.md) (left nav).
 
-- [sep-3-issue-list.md](sep-3-issue-list.md) — unused-spec punch list (2026-09-03)
+- [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
+  doc gap / drop)
 
 ## Not here
 

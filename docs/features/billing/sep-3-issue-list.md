@@ -1,122 +1,72 @@
 # Sep 3 issue list — Billing
 
-Punch list from the 2026-09-03 unused-spec audit. Not canonical. Line
-numbers are as of that audit. Fix the cited spec, then delete the item.
-Delete this file when empty.
+Reclassified 2026-09-03 against [ADR.md](ADR.md). Open PR
+[#88](https://github.com/MRiabov/placis/pull/88) (Stripe Prices /
+09 Website activation Checkout subscribes) closes several items; do
+not re-open those as drops. Bold numbers are original audit ids (not
+compacted).
 
-Usage-credit half is tight. Waste is the subscription half vs “Stripe is
-activation checkout only”, plus Pricing that nothing reads.
+Usage credit is tight. The subscription half is **ADR 5 / 11 / 12**,
+not unused-spec.
 
-## High
+## Keep (ADR)
 
-1. **Public Pricing tier + month/year selection has no consumer**
-   Issue: functionality. Action: mark Pricing display-only (already
-   almost said), or pass the choice into onboarding 09.
-   Where:
+- **7. Three tiers (included usage credit amount)**
+  Comment: ADR 5: tier sets the monthly included usage credit, not a
+  capability gate. Keep Pro / Plus / Max + sales-led Enterprise.
+  In-app switching while `active` is deferred in #88 (`409`).
 
-   - [prd.md](prd.md) lines 24–26, 89–90
-   - [architecture.md](architecture.md) lines 179–181 (“Display only.
-     Choose → `app.placis.com`”)
-   - [design-decision-record.md](design-decision-record.md) lines 24, 39
-   - [../onboarding/pipeline/09-website-activation.md](../onboarding/pipeline/09-website-activation.md)
-     line 125 (`ActivateSubscription` hardcodes Placis Pro plan)
+- **8. `POST /v1/billing/subscription/keep`**
+  Comment: ADR 12: Cancel is `cancel_at_period_end`; Keep undoes it.
+  Do not make Cancel terminal.
 
-2. **Yearly `billing_interval` has no monthly credit clock**
-   Issue: persistence + DTO. Action: drop `year`, or specify a monthly
-   grant independent of Stripe invoices.
-   Where:
+## Doc gap
 
-   - [persistence.md](persistence.md) lines 26, 31
-   - [api.md](api.md) lines 26–33
-   - [prd.md](prd.md) goal 2 (subscription includes **monthly** usage
-     credit)
-   - Included credit is `invoice.paid` → `AddIncludedUsageCredit`
-     ([../../general-architecture/jobs.md](../../general-architecture/jobs.md))
+- **4. `spent_this_period_*` vs three segments**
+  Comment: under EUR `numeric` (#88) rounded segments need not sum
+  to the bar fill.
+  Action: `api.md`: total is authoritative filled length; segments
+  are display splits. Do not drop the total.
 
-3. **Activation payment leftovers (owned in onboarding persistence)**
-   Issue: persistence. Action: see
-   [../onboarding/sep-3-issue-list.md](../onboarding/sep-3-issue-list.md)
-   item 8. Billing cares because webhook/docs mention them.
-   Where:
+- **5. Clerk Billing / Stripe meters ban restated**
+  Comment: canonical is ADR 3 (and ADR 14 after #88). Echoes in PRD
+  / architecture / README.
+  Action: keep the ADR; trim echoes.
 
-   - `payment_status=refunded` — no refund event
-   - `failure_reason`, `activated_at` — not on
-     `WebsiteActivationStatusRead`
-   - `stripe_events.processed` — unique `event_id` + River keys already
-     replay-safe
-   - `WebsiteActivationStatusRead.checkout_url` duplicates POST checkout
+- **9. `subscription_price_*` looks derivable**
+  Comment: Stripe Prices are never overwritten; archived
+  `billing.prices` rows can differ from today’s choosable Price.
+  Action: `GET /v1/billing/usage` reads the *subscribed* Price row.
 
-4. **`BillingUsageRead.spent_this_period_usd_cents`**
-   Issue: DTO. Action: drop; it is `spent_voice + spent_image + spent_text`.
-   Where: [api.md](api.md) line 26; [architecture.md](architecture.md)
-   (bar uses pool total + three segments).
+- **12. `ai_use_ledger_entries.period_started_at`**
+  Comment: “spent this period” needs a floor. Name the query (latest
+  included usage credit `period_started_at`) in `api.md`.
 
-5. **Clerk Billing / Stripe meters bans restated five times**
-   Issue: docs. Action: keep once (ADR); drop echoes.
-   Where: [prd.md](prd.md) line 46; [ADR.md](ADR.md);
-   [api.md](api.md) lines 62, 65; [architecture.md](architecture.md).
+## Actually drop (onboarding-owned)
 
-## Medium — product call
+- **3. Activation DTO leftovers with no reader**
+  Comment: `failure_reason`, `activated_at`, `failed`,
+  `WebsiteActivationStatusRead.checkout_url`. Tracked as onboarding
+  item 8. #88 keeps `refunded` (ADR 17, money-only) and
+  `stripe_events.processed`.
 
-6. **Subscription lifecycle vs activation-only Stripe**
-   Issue: scope. Action: decide.
+## False alarms (closed)
 
-   If Stripe is activation-checkout-only: cut
-   `billing.subscriptions`, `POST /v1/billing/subscription/checkout`,
-   `/cancel`, `/keep`, `billing_subscription_sync`,
-   `tenants.subscription_status`, `402 subscription_canceled`,
-   `UnpublishWebsite` dunning, occupancy keyed on `canceled_at`. Give
-   included usage credit a new clock (activation grant + extra-credit
-   only).
+- **6. Subscription lifecycle vs “activation-only Stripe”** — ADR 5,
+  11, 12 already decided included usage credit, unpublish on
+  non-payment, cancel/keep/pay-again. #88 ADR 15: 09 Website
+  activation Checkout *is* `mode=subscription`. Delete this item;
+  keep the machinery.
 
-   If subscription is in scope: update
-   [../../general-prd.md](../../general-prd.md) and item 1 (Pricing
-   choice).
+## Closes when #88 merges
 
-   Where: [architecture.md](architecture.md) lines 149–176;
-   [api.md](api.md) lines 41–54; [persistence.md](persistence.md)
-   lines 23–43; [prd.md](prd.md) goals 2, 4, 5.
-
-7. **Three tiers + Change plan overlap extra usage credit**
-   Issue: functionality. Action: keep tiers as sales display; drop
-   in-app tier switching if tier gates no capability.
-   Where: [prd.md](prd.md) catalogue; [architecture.md](architecture.md)
-   line 161. No route or limit is gated on `subscription_tier`.
-
-8. **`POST /v1/billing/subscription/keep`**
-   Issue: API. Action: Cancel terminal-at-period-end + re-subscribe via
-   Change plan removes the route, `cancel_at_period_end`, and two UI
-   states.
-   Where: [api.md](api.md) line 45; [testing.md](testing.md) lines 45,
-   116, 149, 172; [architecture.md](architecture.md) line 21.
-
-9. **`subscription_price_usd_cents` is derivable**
-   Issue: DTO. Action: keep iff grandfathered pricing is real; then the
-   catalogue is not grid truth.
-   Where: [api.md](api.md) line 26.
-
-10. **EUR 4900 activation vs USD catalogue** Issue: contradiction. Action: one
-    currency; drop unused `website_activations.amount` / `currency`. Where:
-    [../onboarding/pipeline/09-website-activation.md](../onboarding/pipeline/09-website-activation.md); [prd.md](prd.md) line 55 (USD).
-
-11. **Stale “08” in billing PRD**
-    Issue: contradiction. Action: activation is 09.
-    Where: [prd.md](prd.md) lines 44, 68; [ADR.md](ADR.md).
-    [README.md](README.md) already says 09.
-
-12. **`ai_use_ledger_entries.period_started_at`**
-    Issue: persistence. Action: name the query, or drop.
-    Where: [persistence.md](persistence.md).
-
-## Keep
-
-- Signature-verified `POST /v1/webhooks/stripe`, `stripe_events`,
-  `website_activation` job. Never trust the browser success URL.
-- Activation checkout POST + status GET.
-- AI use ledger, `AssertUsageCredit`, `402 usage_credit_exhausted`, ×5
-  markup, one pool, carry-over, extra usage credit.
-- `GET /v1/billing/usage` and the one bar.
-- Voice settlement on transcripts POST.
-- No Clerk Billing, no Stripe meters as the pool, no auto-reload, no
-  our-cost on screen.
-- `/pricing/` static, no Stripe on `placis.com`.
+- **1. Pricing Choose** — display only; Pro/month only; no plan
+  parameter. Plus/Max/yearly `choosable=false`.
+- **2. Yearly `billing_interval`** — dropped (`month` only). If #88
+  stalls, do this independently.
+- **7 (partial)** — Change plan while `active` is `409`.
+- **10. EUR vs USD** — owner-facing money EUR; amounts from Stripe
+  Prices.
+- **11. Stale “08” in billing PRD / ADR 2** — activation Checkout is
+  09 Website activation. Residual: onboarding ADR 16 (onboarding
+  item 16).
