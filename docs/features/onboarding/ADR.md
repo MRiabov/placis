@@ -217,7 +217,10 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     onboarding session token. Clerk organization 1-1 holds for active tenants
     only. (2026-08-23: numbered 01a / 07. Same day, later: find is 01; website
     activation is 08. 2026-08-25: `website_prefix` at 07 from `display_name`,
-    not 08. Same day: collision tries locality before `-2`.)
+    not 08. Same day: collision tries locality before `-2`.) Later
+    (2026-09-03): prefix is `websites.website_prefix`, reserved at 05
+    Select and copy website template. 01 does not write a prefix column
+    on `tenants`.
 
 17. **Whoever pays becomes the owner** — unauthenticated visitors may Clerk
     sign-in/sign-up and pay on the host. First verified Stripe

@@ -323,7 +323,8 @@ Remaining already 0. Billed edits stop; website copy PATCH does not.
   (generate **402** before enqueue).
 - Owner `DescribeImage` at remaining 0 is Verify beat 4, not this
   Fail.
-- `PATCH /v1/website/editor/pages/{page_id}` still **200**.
+- `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}` still
+  **200**.
 
 #### Mocked
 

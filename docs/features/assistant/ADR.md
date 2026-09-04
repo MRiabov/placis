@@ -361,7 +361,9 @@ instead of silently replacing it.
     Share is optional on-demand 08 (R2 + strip). 09 does **not** require a
     prior share: if they never shared, 09 reserves the prefix if needed and
     writes the first live R2 without strip. Apex `preview.placis.com` is not a
-    tenant site (404). (2026-08-30)
+    tenant site (404). (2026-08-30) Later (2026-09-03): 05 reserved the
+    prefix; 09 skip-if-set and writes the first live R2 without strip
+    when they never shared.
 
 30. **`open_website` twins `open_ad`; website styles are the open website** —
     `get_website_styles` / `update_website_styles` read Assistant screen

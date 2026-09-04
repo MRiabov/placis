@@ -68,7 +68,8 @@ new entries with the next number, the area, and the date.
     category. Do not expose our cost. (2026-08-29)
 
 11. **Stopped paying blocks website publication** — Unpublish the live website.
-    `POST /v1/website/publications` and live website rollback are **402**
+    `POST /v1/websites/{website_prefix}/publications` and live website
+    rollback are **402**
     `subscription_canceled` until `subscription_status=active`. Not
     `usage_credit_exhausted` (that sends them to extra usage credit). Not 08
     (tenant stays `status=active`; they can still edit). Resume pay from Usage

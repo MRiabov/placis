@@ -38,8 +38,9 @@ first: five already → Fail (`429` `browser_safety_cap`). Else it
 inserts the unactivated tenant and onboarding session, then returns
 immediately.
 
-1. Insert [unactivated tenant](../../other/auth/persistence.md): `tenants.status=unactivated`, `clerk_org_id`
-   null, `website_prefix` null, `name` = known legal/display name or empty,
+1. Insert [unactivated tenant](../../other/auth/persistence.md):
+   `tenants.status=unactivated`, `clerk_org_id`
+   null, `name` = known legal/display name or empty,
    `country` = Find country (`ie` / `gb` / `us`).
 2. Insert `onboarding_sessions`: `status=created` then immediately
    `client_interviewing`; unique `token`; `tenant_id` that tenant;

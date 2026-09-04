@@ -229,7 +229,8 @@ job).
 #### Fail
 
 `403` `tenant_unactivated`. `402` `usage_credit_exhausted`. `409`
-`in_flight_run`. `409` `allowed_set_rejected`. `400` `follow: false`.
+`in_flight_run`. `409` `allowed_set_rejected`. `409`
+`website_prefix_mismatch`. `400` `follow: false`.
 
 #### Mocked
 
@@ -340,8 +341,8 @@ key; browser-chosen region or host; Go WebSocket.
 #### Fail
 
 `403` `tenant_unactivated`. `402` `usage_credit_exhausted`. `409`
-`in_flight_run`. Exhausted usage credit drops the CMS realtime
-connection.
+`in_flight_run`. `409` `website_prefix_mismatch`. Exhausted usage credit
+drops the CMS realtime connection.
 
 #### Mocked
 
@@ -374,9 +375,10 @@ registry; wait on the text WS; upsert unpublished website rows.
 
 `403` `tenant_unactivated`. `402` `usage_credit_exhausted` (nested billed
 LLM or image). `409` `in_flight_run`. `409` `allowed_set_rejected`
-(`update_slot` while on Ads). `get_ad` unknown / other-tenant id is
-**404**, not screen-gate 409. Projects write tools on Ads (or on
-Projects) `409` `allowed_set_rejected`.
+(`update_slot` while on Ads). `409` `website_prefix_mismatch`.
+`get_ad` unknown / other-tenant id is **404**, not screen-gate 409.
+Projects write tools on Ads (or on Projects) `409`
+`allowed_set_rejected`.
 
 #### Mocked
 
