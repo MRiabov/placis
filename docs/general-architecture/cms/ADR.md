@@ -40,8 +40,10 @@ decision + date) instead of silently replacing the old entry.
    name. Look: [assistant design decision 3](../../features/assistant/design-decision-record.md). (2026-08-28): Connect does not
    stay on `/cms`. Cards have destination logos and the prompt-box shade. Google
    Ads / Meta connect lives on Ads. Voice on `/cms` is gone; overlay is the CMS
-   assistant.
+   assistant. (2026-09-04): After they pick, the rail is Sites / Profile / Ads /
+   **Leads**. Overlay includes Leads. Not a third chooser card.
 
 3. **Usage & billing is on the account menu** — Not a left-nav peer of Sites /
-   Ads. Hide the leftover Usage rail item. Settings / Log out stay hidden.
-   Overlay destinations unchanged. (2026-08-29)
+   Ads / Leads. Hide the leftover Usage rail item. Settings / Log out stay
+   hidden. Overlay destinations unchanged except Leads (2026-09-04).
+   (2026-08-29)

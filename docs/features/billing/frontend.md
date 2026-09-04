@@ -18,7 +18,7 @@ icon / Clerk photo). Not a left-nav peer of Sites or Ads. Not public
 Pricing (that is the Placis website).
 
 Settings and Log out stay hidden. Overlay destinations stay Sites /
-Profile children / Ads — no Usage & billing row there.
+Profile children / Ads / Leads — no Usage & billing row there.
 
 ## Design mock
 

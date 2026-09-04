@@ -4,7 +4,7 @@ import {
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
-import { Globe2, Megaphone, PanelLeft, UserRound } from "lucide-react";
+import { Globe2, Inbox, Megaphone, PanelLeft, UserRound } from "lucide-react";
 import { createContext, type ReactNode, useContext, useState } from "react";
 
 import { cn } from "@/lib/cn";
@@ -36,6 +36,7 @@ type CmsPath =
   | "/cms/certifications"
   | "/cms/media"
   | "/cms/ads"
+  | "/cms/leads"
   | "/cms/billing";
 
 const profilePaths = [
@@ -189,6 +190,14 @@ export function CmsLayout(): ReactNode {
             iconOnly={iconOnly}
             label="Ads"
             to="/cms/ads"
+            onNavigate={closeOverlay}
+          />
+          <NavLink
+            active={pathname.startsWith("/cms/leads")}
+            icon={<Inbox className="size-4" />}
+            iconOnly={iconOnly}
+            label="Leads"
+            to="/cms/leads"
             onNavigate={closeOverlay}
           />
         </nav>

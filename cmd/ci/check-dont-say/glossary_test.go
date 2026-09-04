@@ -113,8 +113,8 @@ func TestLeftoverBareIsAlwaysBan(t *testing.T) {
 	if tok.class != classHome || len(tok.homes) != 1 || tok.homes[0] != "website" {
 		t.Fatalf("bare+home: class %v homes %v", tok.class, tok.homes)
 	}
-	tok = classifyToken("form (website, ads)", "website form or ad lead form")
-	if tok.class != classHome || strings.Join(tok.homes, ",") != "website,ads" {
+	tok = classifyToken("form (website, ads, leads)", "website form or ad lead form")
+	if tok.class != classHome || strings.Join(tok.homes, ",") != "website,ads,leads" {
 		t.Fatalf("dual home: class %v homes %v", tok.class, tok.homes)
 	}
 }

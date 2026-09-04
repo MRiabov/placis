@@ -215,8 +215,7 @@ does). We do **not** hand-roll AST scripts up front:
   `TestPipelineHappyPath*` per paired step plus `{Feature}Full` (shrink-only
   leftover until funcs exist); `jobs.md` `##` is Workflows / Jobs;
   backticked River job kind must already live in `jobs.md` `## Jobs`.
-  Missing `testing.md` (leads) does not
-  fail; a changed `persistence.md` passed on the command line without
+  A changed `persistence.md` passed on the command line without
   `testing.md` warns. See
   [docs conventions](../docs-conventions.md#named-identifiers).
 - **HappyPath OpenAPI check** (`cmd/ci/check-happy-path`) — `--public`

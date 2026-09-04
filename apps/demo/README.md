@@ -41,6 +41,7 @@ Serve `dist/` locally with Vite if you need a static host.
 - `/cms/ads/new` — new ad workspace (`?review=1` opens Review)
 - `/cms/ads/:id` — existing ad detail
 - `/cms/ads/:id/edit` — edit workspace
+- `/cms/leads` — website leads and ad leads (source filter)
 - `/cms/billing` — Usage & billing (account menu; not left nav)
 - `/cms/website?subscription=canceled` — Publish blocked until they pay
 - `/onboarding/find` → review → questions → website → generated

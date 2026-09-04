@@ -1,8 +1,10 @@
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { type ReactNode, useMemo, useState } from "react";
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { ads } from "@/pages/cms/ads/AdsList";
 import { adsSearch } from "@/pages/cms/ads/search";
+import { newAdLeadLabel } from "@/pages/cms/leads/rows";
+import { leadsSearch } from "@/pages/cms/leads/search";
 import { Button } from "@/ui/Button";
 import { Field, TextInput } from "@/ui/Field";
 import { PageHeading } from "@/ui/PageHeading";
@@ -201,34 +203,18 @@ export function AdsDetail(): ReactNode {
                 <div>
                   <b className="text-sm">Ad leads</b>
                   <p className="mb-2 text-xs text-muted-foreground">
-                    Ad leads from this ad — uncontacted ones are marked.
+                    New ad leads for this ad open on Leads.
                   </p>
-                  {[
-                    ["John Murphy", "087 123 4567 · Roofing replacement", true],
-                    ["Anne Doyle", "086 222 3344 · Roof repair", false],
-                    ["Declan Byrne", "085 999 8877 · Gutter cleaning", true],
-                  ].map(([who, meta, uncontacted]) => (
-                    <div
-                      className="flex items-center justify-between gap-2 border-b border-border py-2 text-sm last:border-b-0"
-                      key={String(who)}
-                    >
-                      <span>
-                        <b className="block">{who}</b>
-                        <span className="text-xs text-muted-foreground">
-                          {meta}
-                        </span>
-                      </span>
-                      <span
-                        className={
-                          uncontacted
-                            ? "rounded-lg border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs text-amber-800"
-                            : "rounded-lg border border-border px-2 py-0.5 text-xs"
-                        }
-                      >
-                        {uncontacted ? "Uncontacted" : "Contacted"}
-                      </span>
-                    </div>
-                  ))}
+                  <Link
+                    className="text-sm font-medium underline-offset-2 hover:underline"
+                    search={leadsSearch({
+                      ad_id: adId,
+                      source: "ad",
+                    })}
+                    to="/cms/leads"
+                  >
+                    {newAdLeadLabel(adId)}
+                  </Link>
                 </div>
               </div>
             </div>

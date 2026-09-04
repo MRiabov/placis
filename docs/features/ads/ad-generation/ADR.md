@@ -372,3 +372,11 @@ new entries with the next number, the area, and the date.
     an audiences collection or HTTP until that is decided. Previous:
     ADR 8 / 37 specified Who-it's-for comboboxes for profile and area;
     stored default remains married couples 30–40 (ADR 8).
+
+41. **Ad leads are read on Leads, not as a duplicate per-ad list**
+    (2026-09-04) — Decision 27’s per-ad ad-leads list is not a second
+    product surface. Ads detail keeps Performance and a **New ad leads**
+    count that opens `/cms/leads` with `source=ad` and that `ad_id`
+    (`GET /v1/leads`, [leads ADR 3](../../other/leads/ADR.md)). New is
+    the urgent mark. Do not say uncontacted. Keep decision 27’s
+    performance projection and audience; drop the inline list.
