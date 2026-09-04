@@ -29,10 +29,13 @@ CMS Assistant: [assistant](../assistant/README.md).
 ## Persistence
 
 Same overlay as CMS: `ai.threads` (`thread_kind=cms_assistant`) /
-`assistant.thread_items` / `assistant.runs`. Unique `current` / `running` per
-`tenant_id`. The unpaid website preview uses that `current` while
+`assistant.thread_items` / `assistant.runs`. Unique `current` per
+`tenant_id`. Unique `running` per `tenant_id` where
+`onboarding_session_id` is null (guide Voice does not share this lock).
+The unpaid website preview uses that `current` while
 `tenants.status=unactivated`. **No new persistence models.** OpenAPI grows
-**paths**. Reuse CMS thread/voice `*Read` shapes. GET thread **omits** `runs`.
+**paths**. Reuse CMS thread/voice DTO names and fields. GET thread **omits**
+`runs`.
 
 `ai_generations.thread_id` is required. Owner turns set it to this
 `cms_assistant` thread. 06 tool batches use a `website_copy_generation` thread.

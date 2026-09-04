@@ -28,14 +28,12 @@
   `logo` / `photo`) on found photos; profile increments go through
   transform / build-profile (conflict does not update the live
   business profile). Enqueues 1–5 insert `etl.runs` for started ETL
-  run kinds. The 6th enqueue in 30 minutes does **not** call
-  `StartRun`, does **not** call Maps / Parallel / Facebook / crawl,
-  returns `429` with `research_wait_until` = oldest of the five
-  enqueue start times + 30 minutes; prior live business profile stays.
-  After that instant, `GET /v1/onboarding/profile` and SSE include
-  `research_wait_until`. A River retry of an existing ETL run does not
-  create a new `enqueue_id`. A 6th enqueue after
-  `research_wait_until` succeeds. After Details transform writes
+  run kinds. The 6th enqueue in 30 minutes on the same tenant does
+  **not** call `StartRun`, does **not** call Maps / Parallel / Facebook /
+  crawl; `PUT /v1/onboarding/sources` stays **200**; prior live business
+  profile stays. A River retry of an existing ETL run does not
+  create a new `enqueue_id`. A 6th enqueue after 30 minutes succeeds.
+  After Details transform writes
   `in_pool` reviews: schema `jobs` has one
   `reviews_ranking_for_display` on this `tenant_id` (orchestration, not
   transform). Transform does not write `business_profile_review_rankings`.

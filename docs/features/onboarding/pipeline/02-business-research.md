@@ -71,14 +71,14 @@ kind.
 
 **Enqueue cap (before StartRun):** count distinct `enqueue_id` on `etl.runs` for
 this `tenant_id` with `trigger=onboarding` and
-`started_at > now() - 30 minutes`. If **5 or more**, do not call `StartRun`. Set
-`research_wait_until` = oldest of those five enqueue start times + 30 minutes.
-Business lookup and source changes still persist; 01 still returns; UI still
-goes to 03. Profile and SSE carry `research_wait_until`.
+`started_at > now() - 30 minutes`. If **5 or more**, do not call `StartRun`.
+Source changes still persist; the mutating request stays **200**. Find lookup
+over the `browser_safety_session_id` cap is 01 Fail (`429`
+`browser_safety_cap`), not this cap.
 
 `StartRun` counts the same cap and inserts nothing if called over it
-([ETL architecture](../../etl/architecture.md)). 02 checks first so business
-lookup can stay **200** and a later source change can stay **429**.
+([ETL architecture](../../etl/architecture.md)). 02 checks first so a later
+source change can skip enqueue without 429.
 
 If the count is **0–4**, call `StartRun` with the onboarding ETL run kinds. Pass
 `onboarding_session_id` and `force=false`. Copy Find attach and live-profile
@@ -98,9 +98,8 @@ not updated.
 
 `etl.runs` (one per ETL run kind that started, shared `enqueue_id`); fetches and
 listing as extract chunks land; live business profile via transform of each
-chunk (not only when the ETL run kind succeeds). `research_wait_until` is
-derived when the cap is hit; it is not a table. Expose it on
-`GET /v1/onboarding/profile` and the onboarding session SSE.
+chunk (not only when the ETL run kind succeeds). The per-tenant cap is not a
+DTO field and is not on SSE.
 
 ## Fail
 
@@ -108,10 +107,9 @@ Retryable River jobs inside ETL. Fail leaves prior live business profile +
 `etl.runs.status=error`. In-progress fill-status keys clear when the job ends.
 Do not change onboarding session status. Job retry keeps the same `etl.runs.id`.
 
-Enqueue cap: not a pipeline Fail. 01 business lookup still succeeds. A later
-source change that would start a 6th enqueue in 30 minutes does not call
-`StartRun`; the mutating request returns `429` with `research_wait_until`. Prior
-live business profile and in-flight jobs stay.
+Enqueue cap: not a pipeline Fail. A later source change that would start a 6th
+enqueue in 30 minutes does not call `StartRun`; the mutating request returns
+**200**. Prior live business profile and in-flight jobs stay.
 
 ## Out
 
@@ -129,7 +127,8 @@ enqueue’s ETL finishes**
 
 - 02 starts on 01 return, before 03, when the tenant is under the enqueue cap.
 - At most **5 onboarding `enqueue_id`s per `tenant_id` per rolling 30 minutes**.
-  The next enqueue waits until the oldest of those five is 30 minutes old.
+  A 6th `StartRun` in that window is skipped until the oldest of those five is
+  30 minutes old.
 - An enqueue is one `StartRun`, not one ETL run. River retries are not a new
   enqueue.
 - Photo classification is ETL transform, not 04a/04b.

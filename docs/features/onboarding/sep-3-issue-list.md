@@ -10,14 +10,6 @@ usually a **doc gap**, not a drop.
 
 ## Keep (ADR)
 
-- **1. Guide conversation tables stay under schema `onboarding`**
-  Comment: [../assistant/ADR.md](../assistant/ADR.md) 5 (items/runs
-  stay onboarding-scoped). Thread *identity* is `ai.threads`
-  (`thread_kind=onboarding_assistant`). Unpaid website editor “no new
-  models” is a different surface (`cms_assistant`).
-  Action: cite assistant ADR 5 next to the tables. Do not merge into
-  `assistant.thread_items`.
-
 - **12. `channel` stays (04b Voice client interview out tombstone)**
   Comment: [ADR.md](ADR.md) 2: voice is a channel; 04b writer is out.
   `assistant.md` already says the column stays. Resume uses `channel`
@@ -46,24 +38,6 @@ usually a **doc gap**, not a drop.
   blocker on [../website/api.md](../website/api.md).
   Action: put VAT on the client interview / Details write path; name
   or delete the blocker sentence.
-
-- **6. Research cap is real; `BusinessLookupRead.research_wait_until`
-  is not reachable**
-  Comment: cap counts `etl.runs` per `tenant_id`; lookup creates a
-  **new** tenant ([ADR.md](ADR.md) 16). `PUT /v1/onboarding/sources`
-  on the *same* tenant can hit the cap — keep that `429` and Review
-  wait copy.
-  Action: drop `research_wait_until` from `BusinessLookupRead`;
-  document a per-browser / per-IP limit on lookup. Do not delete the
-  per-tenant cap.
-
-- **7. Guide voice DTO names drifted from CMS**
-  Comment: assistant ADR 25 / 13: one shape; `offset_seconds` is
-  derived from `audio_start_ms`, not a browser clock. Onboarding
-  `api.md` uses `Transcript` / `reasoning` / `client_secret`.
-  Action: same DTO names and field set as
-  [../assistant/api.md](../assistant/api.md). Keep the persistence
-  column `offset_seconds`.
 
 - **9. `PUT /v1/onboarding/sources` has no screen**
   Comment: 01 Find business Do 4: wrong company is **not** a new run.
@@ -114,11 +88,6 @@ usually a **doc gap**, not a drop.
 
 ## Actually drop
 
-- **2. `reviews_unavailable`**
-  Comment: reviews are optional; UI derives emptiness from the pool;
-  no control sets the flag.
-  Action: delete column, DTO field, 04a Text client interview mention.
-
 - **5. `onboarding_sessions.started_from`**
   Comment: ADR 2 is “either or both”; the enum cannot say both;
   attach keys already hold it; `PUT /v1/onboarding/sources` would
@@ -142,8 +111,6 @@ usually a **doc gap**, not a drop.
 
 - **10. Two website preview routes** — ADR 21 and design decision 13:
   wait teaser then `/onboarding/preview-and-edit/`. Do not merge them.
-- **Duplicate thread tables** as “merge into CMS tables” — closed as
-  Keep (ADR) item 1.
 
 ## Keep (scope)
 
