@@ -125,7 +125,8 @@ lines stay as audit suggestions until resolved.
 
     Comment: real contradiction, not unused-spec. ADR 12: the
     in-memory projection copies out from GET `*Read`. [api.md](api.md)
-    is the HTTP field list.
+    is the HTTP field list. `has_unpublished_changes` is on
+    `WebsitePageRead` (canvas hydrate).
 
 18. **`WebsitePageUpdate.review_ids`** Issue: DTO. Action: carry
     `review_ids` on the website section, not the website page. Where:

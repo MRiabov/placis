@@ -171,9 +171,12 @@ unapproved media library items on this website. After `/cms/media` approve, pay,
 or menus, that GET is the current full list. Do not recompute from the website
 component catalog while typing; click-off PATCH is enough for text. After a
 successful website publication, `has_unpublished_changes` is false until the
-next edit. The POST sends `website_address_id`: that host’s R2 tree, then purge
-**that** host ([api.md](api.md), [cloudflare.md](cloudflare.md)). The **host row** is the Publish
-click. Hosts can diverge. After website activation,
+next unpublished change (website-slot PATCH, menus / website styles,
+**or** Details / Projects / certifications writes after `published_at`).
+Do not enqueue 04 Website publication from Details PATCH. The POST sends
+`website_address_id`: that host’s R2 tree, then purge **that** host
+([api.md](api.md), [cloudflare.md](cloudflare.md)). The **host row** is
+the Publish click. Hosts can diverge. After website activation,
 `/cms/website/{website_prefix}` (onboarding website) opens with **Publish**;
 first owner website publication is v3+.
 

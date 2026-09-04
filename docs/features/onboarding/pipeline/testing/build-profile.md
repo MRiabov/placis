@@ -11,7 +11,9 @@
   complete sets `accepted_edit_id`; later ETL transform writes do not mutate the
   accepted live business profile in place; no `checklist_rows` table. Optional
   `projects` key; ranked top 4 by cover then text length for client interview
-  (not baked into website 02 gallery slots). After ETL fast extract has written
+  (not baked into website 02 gallery slots). `vat_number` required only if
+  `vat_registration_status` is set; not-registered leaves `vat_number` null
+  (never `"no vat number"`). After ETL fast extract has written
   `in_pool` reviews: schema `jobs` has one River job
   `reviews_ranking_for_display` unique on this `tenant_id`. After invoke:
   `is_top` / `top_position` replaced on

@@ -248,11 +248,17 @@ Unpublished 02 rows already present. One owner
 #### Verify
 
 - No query: `WebsitePageRead` hydrates the unpublished canvas.
+  `has_unpublished_changes` is false right after an owner website
+  publication with no later unpublished change; true after a Details /
+  Projects / certifications write with `created_at` after that row’s
+  `published_at` (no new `website_publications` row).
 - `publication_id`: checkout body of that owner publication.
 - `include_edit_history=true`: undo stacks present.
 Must not: `/pages/{id}/seo`; `/settings` GET; `/menus` GET;
-return `website_manifest`; both query flags. Named **reads** may
-supplement.
+return `website_manifest`; both query flags; enqueue 04 from Details
+PATCH. Named **reads** may supplement
+(`business_profile.business_profiles`,
+`business_profile.business_profile_edits`).
 
 #### Fail
 

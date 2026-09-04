@@ -153,6 +153,13 @@ Status: decided (2026-08-16, product owner + engineering).
     certifications and reviews, and website styles update the website editor
     immediately and need website publication to change what website visitors
     see. (2026-08-20)
+    (2026-09-04): `has_unpublished_changes` is true when live HTML would
+    change on republish, including those Details / Projects /
+    certifications writes after `website_publications.published_at`
+    (compare `business_profile_edits.created_at` / `last_edit_id`, not
+    only website-slot PATCH). Do not enqueue 04 Website publication from
+    Details PATCH. Canvas hydrate uses live
+    `WebsiteBusinessProfileRead`; live `latest/` waits for the next 04.
 
 15. **The contractor website is `apps/contractor-website`** — never the
     predecessor package name. The website component package is keep-and-cut; the
@@ -388,3 +395,17 @@ Status: decided (2026-08-16, product owner + engineering).
 31. **Host resolves to a website** — Host → `website_addresses.hostname` or
     `{website_prefix}.preview.placis.com` → `websites` → `tenant_id`. Do not
     keep `tenants.website_prefix`. (2026-09-03)
+
+32. **Optional-omit Common variables omit paint, not website sections** —
+    Tokens stay on unpublished `website_slots`. Worker / canvas omit that
+    website slot’s output when the website component
+    `editable_slots[].omit_if_unresolved` lists Common variable names
+    and every listed var is empty. Absent list = never omit (about copy
+    that mentions `{{vat_number}}` stays). Pass `null` / omit the prop —
+    not `""`, not leftover `{{vat_number}}`. Owner eye stays
+    `website_sections.status` (`visible` / `hidden`) only. Do not persist
+    a website slot hide; do not infer omit from every `{{…}}` in
+    `value`. Empty VAT is not `required_slot_unresolved`. Live `latest/`
+    updates on the next 04 Website publication (or unpaid 08 Share). No
+    auto-`PublishWebsite` from Details PATCH.
+    [variables.md](variables.md#optional-omit). (2026-09-04)
