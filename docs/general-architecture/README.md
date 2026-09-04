@@ -12,7 +12,7 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [api.md](api.md) — HTTP conventions (versioning, typing, serve only types on HTTP,
   auth modes, errors) and index of per-feature `api.md` files
 - [package-boundaries.md](package-boundaries.md) — which Go package owns which work
-- [llm-layer.md](llm-layer.md) — LLM, AI tools, traceability
+- [ai-layer.md](ai-layer.md) — AI vendor interfaces, tools, traceability
 - [voice-agent.md](voice-agent.md) — voice architecture (short-lived secret, HTTP finals)
 - [audit.md](audit.md) — `audit_events`
 - [jobs.md](jobs.md) — River background jobs (including ETL)

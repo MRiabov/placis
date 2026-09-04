@@ -16,7 +16,7 @@ before adding or editing a doc.
 - `general-architecture/` — cross-cutting architecture no single feature owns:
   `backend-stack.md`, `feature-flags.md`, `frontend-stack.md`,
   `module-layout.md`, `processes.md`, `package-boundaries.md`, `api.md` (HTTP
-  conventions + index of per-feature `api.md` files), `llm-layer.md`,
+  conventions + index of per-feature `api.md` files), `ai-layer.md`,
   `voice-agent.md`, `audit.md`, `jobs.md`, `persistence.md` (conventions,
   classification/prediction tables, index of per-feature tables), `frontend.md`
   (`frontend-2` UI rules), `cms/` (The CMS: left nav, `/cms` two cards, look

@@ -171,6 +171,12 @@ to the parent. Response: parent `MediaAssetRead` when a parent exists
   `media_caption` into `media_asset_classifications`
   (`photo_kind=photo`, `algorithm=copy_requested_media_caption`). Must
   not **insert** `describe_image`. No first-upload auto-cleanup.
+  Caller `bill_usage` and `thread_id`: CMS `billed`
+  (`usage_category=image`); onboarding `unbilled`. Website 03 inherits
+  the job `bill_usage`. **calls** `AssertUsageCredit` on billed (via
+  `ai`). Remaining 0 billed: HTTP **402** `usage_credit_exhausted`;
+  billed 03 job fail. Spend **persists into**
+  `ai_use_ledger_entries` inside `ai`, not media.
 - **`cleanup_image`** — assistant tool **calls** `CleanupMediaAsset`,
   then website or ads PATCH retargets.
 - **Upload the photo** — browser PUT to `upload_url`, not Go.

@@ -3,7 +3,7 @@
 Hard-typed website editor tools the **assistant** (and onboarding 06) may call.
 Assistant look, thread, and HTTP: [assistant](../assistant/README.md). Plan vs continuous and Ask first
 vs instant apply stay **website editor only** (below). Generation and search go
-through `LLMProvider` in `ai` ([LLM layer](../../general-architecture/llm-layer.md)).
+through `LLMProvider` in `ai` ([AI layer](../../general-architecture/ai-layer.md)).
 
 Onboarding [automatic website copy generation](../onboarding/pipeline/06-website-copy-generation.md) ([website 03](pipeline/03-website-copy-generation.md)) reuses these tools
 headless (**continuous** + **instant apply**, no chat UI, no `create_page`, no
@@ -201,8 +201,9 @@ generate_image(
 
 Does not attach an existing library photo — that is `update_slot`. Stays
 website-editor unless a later pass says otherwise. CMS
-`generate_image` is `bill_usage=billed` (`usage_category=image`).
-Onboarding unpaid five is `unbilled`.
+`generate_image` **calls** `CreateGeneratedMediaAsset` with
+`bill_usage=billed` (`usage_category=image`). Remaining 0 → **402**
+`usage_credit_exhausted`. Onboarding unpaid five is `unbilled`.
 
 **Owner action = assistant action.** Each tool is another caller of the same
 website-editor / media-library / Details / Projects execution the owner already
@@ -239,7 +240,8 @@ Planner: a named real photo → **attach first** (`update_slot` +
 are the media library key.
 
 `generate_image`: the model supplies a prompt + media caption; the backend
-**calls** `CreateGeneratedMediaAsset`, which persists the tool
+**calls** `CreateGeneratedMediaAsset` with the caller `bill_usage` and
+`thread_id`, which persists the tool
 `media_caption` as `media_asset_classifications` (`photo_kind=photo`,
 `algorithm=copy_requested_media_caption`) and must not **insert**
 `describe_image`. The canvas may attach **that new item** to an image

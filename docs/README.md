@@ -51,7 +51,7 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 | Auth | [features/other/auth/README.md](features/other/auth/README.md) |
 | Persistence conventions + index | [general-architecture/persistence.md](general-architecture/persistence.md) |
 | HTTP conventions + per-feature `api.md` | [general-architecture/api.md](general-architecture/api.md) |
-| LLM layer, audit, jobs, files, `frontend-2` UI | [general-architecture/](general-architecture/README.md) |
+| AI layer, audit, jobs, files, `frontend-2` UI | [general-architecture/](general-architecture/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
 | ETL (extract + transform) | [features/etl/README.md](features/etl/README.md) |
 | Business profile | [features/business-profile/README.md](features/business-profile/README.md) |
