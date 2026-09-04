@@ -19,16 +19,12 @@ func TestAPIHeadingsClosed(t *testing.T) {
 
 func TestAPIHeadingsLeftoverOK(t *testing.T) {
 	f := headingFile{
-		path: "docs/features/other/leads/api.md",
-		rel:  "other/leads/api.md",
-		heads: []string{
-			"Serve only types on HTTP",
-			"Routes",
-			"Do not create",
-		},
+		path:  "docs/features/other/leads/api.md",
+		rel:   "other/leads/api.md",
+		heads: []string{"DTOs", "Routes", "Do not create"},
 	}
 	if errs := checkOneAPI(f); len(errs) != 0 {
-		t.Fatalf("leftover: %v", errs)
+		t.Fatalf("closed leads: %v", errs)
 	}
 }
 
@@ -37,7 +33,7 @@ func TestAPIHeadingsNewExtraFails(t *testing.T) {
 		path: "docs/features/other/leads/api.md",
 		rel:  "other/leads/api.md",
 		heads: []string{
-			"Serve only types on HTTP",
+			"DTOs",
 			"Routes",
 			"Essay",
 			"Do not create",

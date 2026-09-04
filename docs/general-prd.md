@@ -43,7 +43,8 @@ channel into the same tools (not a separate product). How slices land:
   (Stripe)
 - [Ads](features/ads/ad-generation/prd.md) — ad generation; terminal Ad status is **ad ready to post** (no ad
   posting)
-- [Leads](features/other/leads/README.md) — website form contacts
+- [Leads](features/other/leads/README.md) — website leads and ad leads
+  (`/cms/leads`)
 - [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
 - [Media library](features/other/media/README.md)
 - [ETL](features/other/etl/README.md) — continuing public extract (Facebook posts, photos, reviews)

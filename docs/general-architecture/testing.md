@@ -69,9 +69,8 @@ Go is `t.Run` inside that func. Cases are not extra `###`. 4xx stay
 
 Required ops come from **Method + path** cells in defined feature
 `api.md` (website, billing, ads, assistant, onboarding, auth, media
-library, Details, Projects) plus HTTP conventions `GET /v1/health` and
-`GET /openapi.json`. Skip **Do not create**. Skip unstructured leftover
-extra-`##` files (website leads). Flow tests also hit
+library, Details, Projects, leads) plus HTTP conventions `GET /v1/health`
+and `GET /openapi.json`. Skip **Do not create**. Flow tests also hit
 some paths; they do not replace the 1:1 row. `TestPipelineHappyPath*` is
 not a 1:1 row (`TestHappyPath` prefix only). CI:
 `cmd/ci/check-happy-path` `--public` / `--worker`. Two leftover files:
@@ -88,7 +87,8 @@ under ad-generation):
   `/internal/…`)
 - ads → `docs/features/ads/ad-generation/testing.md`
 - billing / assistant / onboarding → that feature’s `testing.md`
-- auth / media library → `docs/features/other/{auth,media}/testing.md`
+- auth / media library / leads → each feature’s `testing.md` under
+  `docs/features/other/`
 - Details → `docs/features/business-profile/details/testing.md`
   (includes certifications and reviews HTTP)
 - Projects → `docs/features/business-profile/projects/testing.md`

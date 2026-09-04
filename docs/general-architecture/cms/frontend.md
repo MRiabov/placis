@@ -17,10 +17,12 @@ item: image cleanup is `/cms/media`; the assistant is called from the
 bottom-right **Assistant** button on every screen in The CMS. Ads is a
 destination (screens:
 [ads frontend](../../features/ads/ad-generation/frontend.md)).
+Leads is a destination (screens:
+[leads frontend](../../features/other/leads/frontend.md)).
 
 `/cms` is **not** a sidebar destination. After they pick a card, the rail is
-Sites / Profile / Ads. Direct `/cms` (land or go to the URL) still shows the
-chooser.
+Sites / Profile / Ads / Leads. Direct `/cms` (land or go to the URL) still shows
+the chooser.
 
 On a **narrow** screen the destinations are a **full-screen overlay selector**
 (no leftover icon rail). Profile stays a disclosure; the four children stay
@@ -34,6 +36,7 @@ Profile
   Certifications and reviews
   Media library
 Ads
+Leads
 ```
 
 On a **wide** screen the same nested Profile disclosure:
@@ -46,6 +49,7 @@ Profile
   Certifications and reviews
   Media library
 Ads
+Leads
 ```
 
 | Label | Role | Route |
@@ -57,6 +61,7 @@ Ads
 | Certifications and reviews | destination under Profile | `/cms/certifications-and-reviews` |
 | Media library | destination under Profile | `/cms/media` |
 | Ads | destination | `/cms/ads` |
+| Leads | destination | `/cms/leads` |
 
 There is no `/cms/profile` route: **Profile** is a left-nav group, not a
 destination. There is no `/cms/proof`. A top-level Projects or Media library
@@ -99,12 +104,12 @@ Profile is not a route. Clicking it only expands or collapses the group.
   collapses the group. It does not navigate to Business details (that is
   collapsed-rail only). Open destinations is inline with the screen heading.
 
-Headings on Details, Projects, Certifications and reviews, Media library, and
-Ads have no decorative icon. On narrow, Open destinations stays inline with the
-heading. The bottom-right **Assistant** button is pinned on the main pane on
-every screen in The CMS, including `/cms`. Ads on narrow is **Ads** next to Open
-destinations; the list does not repeat **Your ads**. (2026-08-28) Assistant
-button: (2026-08-29).
+Headings on Details, Projects, Certifications and reviews, Media library, Ads,
+and Leads have no decorative icon. On narrow, Open destinations stays inline
+with the heading. The bottom-right **Assistant** button is pinned on the main
+pane on every screen in The CMS, including `/cms`. Ads on narrow is **Ads** next
+to Open destinations; the list does not repeat **Your ads**. Leads on narrow is
+**Leads**. (2026-08-28) Assistant button: (2026-08-29). (2026-09-04) Leads.
 
 ## `/cms` (two cards)
 
@@ -144,13 +149,13 @@ not the business / `tenant.name` and not the Clerk organization string. Never an
 org chooser; never owner copy “Clerk organization”. **Usage & billing** is a
 visible account-menu row ([billing frontend](../../features/billing/frontend.md)). Settings is Clerk account
 handling — hide the tab. No log out for now. Keep that markup in the mock.
-Overlay selector rows stay Sites / Profile children / Ads (no Usage & billing
-row).
+Overlay selector rows stay Sites / Profile children / Ads / Leads (no Usage &
+billing row).
 
 ## Out of scope
 
 - Renaming Sites, adding `/cms/profile`, restoring `/cms/proof` or an
   **AI tools** left-nav item.
 - Destination field specs (Details, Projects, Certifications and reviews,
-  website editor, Ads).
+  website editor, Ads, Leads).
 - Deleting restorable nodes from the look app.
