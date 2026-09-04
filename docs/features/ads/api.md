@@ -135,3 +135,7 @@ prompted it. See [03](ad-generation/pipeline/03-approve-ad.md).
 - `POST /v1/ads/…/reject` or `/accept` for a photo (use
   `POST /v1/media-assets/{id}/reject`)
 - unprompted `POST /v1/ads/{ad_id}/regenerate` (use rewrite)
+- `GET /v1/ads/audiences` / `POST /v1/ads/audiences` (audience picker
+  deferred; [ADR 40](ad-generation/ADR.md))
+- `GET /v1/offers`
+- `GET /v1/locations`

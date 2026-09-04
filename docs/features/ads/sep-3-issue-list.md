@@ -66,6 +66,14 @@ posting. Bold numbers are original audit ids (not compacted).
   Action: spec the suggestion job and closed `icp_review_status`
   values. Do not drop the column.
 
+- **Audience picker (deferred)**
+  Comment: frontend had a SearchableCombobox for the ideal customer
+  profile. Product is unsure the owner should pick an audience at
+  all. [ADR 40](ad-generation/ADR.md) hides the picker; the default
+  is displayed. Location uses `business_profile_service_areas`.
+  Action: do not add an `audiences` collection or options endpoint
+  until that product question is decided. Item 6 stays deferred.
+
 - **7. `ads.origin` writers unnamed**
   Comment: `AdCreate` cannot set it. `owner` / `done_for_you` have
   product basis. `business_profile` has no writer.

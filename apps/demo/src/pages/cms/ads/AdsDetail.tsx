@@ -159,7 +159,7 @@ export function AdsDetail(): ReactNode {
                   <p className="text-xs text-muted-foreground">
                     Not editable yet.
                   </p>
-                  <p className="text-sm">Married couples, 30–40</p>
+                  <p className="text-sm">Married couples, 35–45</p>
                 </div>
                 <div>
                   <b className="text-sm">Area</b>
