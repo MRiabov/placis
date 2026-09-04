@@ -4,7 +4,7 @@ One full-stack E2E: Find → Review → text client interview → wait teaser �
 website preview → website activation. Guide Voice is a **separate**
 full-stack E2E in [assistant testing](../assistant/testing.md)
 `### Onboarding` (journey, not Route 1:1;
-`assistant_conversation_items`, `assistant_runs`, `ai.threads`
+`assistant.thread_items`, `assistant.runs`, `ai.threads`
 `thread_kind=onboarding_assistant`). Unpaid website editor prompt →
 PATCH → pay is `### Onboarding website editor` there. Do not include
 those journeys here. Route 1:1 is `### TestHappyPath*` below.
@@ -72,11 +72,15 @@ Clerk. Consent true. Registry and/or Maps attach keys.
 Response `BusinessLookupRead` (`token`, `status=client_interviewing`).
 Create then GET profile returns that onboarding session on the same
 token. Named persist may supplement: `tenants` (`status=unactivated`),
-`onboarding_sessions`, empty `business_profiles`.
+`onboarding_sessions` (`browser_safety_session_id`), empty
+`business_profiles`.
 
 #### Fail
 
-Missing consent or missing both sources → 4xx; no tenant.
+Missing consent, missing both sources, or missing
+`browser_safety_session_id` → 4xx; no tenant. Sixth lookup in 30
+minutes with the same `browser_safety_session_id` → `429`
+`browser_safety_cap`; no sixth tenant.
 
 #### Mocked
 
@@ -139,8 +143,8 @@ onboarding session. No second onboarding session.
 
 #### Fail
 
-Sixth enqueue in 30 minutes → `429` `research_wait_until`. Activated
-owner leftover onboarding session token → `403`.
+Sixth `StartRun` in 30 minutes on this tenant is skipped; response
+**200**. Activated owner leftover onboarding session token → `403`.
 
 #### Mocked
 
@@ -160,7 +164,7 @@ No `frontend-2`.
 #### Verify
 
 Response `OnboardingProfileRead` (`fill`, `conflicts`, nested live
-business profile, `research_wait_until` when set). No ETL fetch `raw`.
+business profile). No ETL fetch `raw`.
 
 #### Fail
 
@@ -260,8 +264,7 @@ run. No `frontend-2`.
 #### Verify
 
 Huma SSE events `business_profile` / `timeline_step` /
-`research_wait_until` / `website_preview_ready` as the onboarding
-session moves.
+`website_preview_ready` as the onboarding session moves.
 No unconstrained `payload`.
 
 #### Fail
@@ -727,7 +730,8 @@ Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/find`.
 Registry and/or Maps. Consent required before business lookup. Opening
 Find with no stored token does not POST. Stored token restores instead
 of a second lookup. Typeahead debounce: registry and Maps search do
-not fire per keystroke.
+not fire per keystroke. Lookup body includes `browser_safety_session_id`
+from `localStorage`. Sixth lookup in 30 minutes stays on Find.
 
 #### Verify
 
@@ -736,31 +740,29 @@ Lookup disabled without consent. With consent, MSW
 uses `GET /v1/onboarding/profile`. Debounced typeahead uses MSW
 `GET /v1/onboarding/find/search/company-registry` and
 `GET /v1/onboarding/find/search/google-maps`; those GETs are not
-per keystroke.
+per keystroke. `429` `browser_safety_cap` does not navigate.
 
 #### Mocked
 
 All HTTP via MSW.
 
-### Review skip and research wait
+### Review skip
 
 Frontend branching. Not `Full`. 03 Persist none.
 
 #### Setup
 
 Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/review`. SSE may
-still fill. Optional `research_wait_until` in the future.
+still fill.
 
 #### Exercise
 
-Continue immediately (skip). Linger then Continue. Inline wait copy
-when `research_wait_until` is set.
+Continue immediately (skip). Linger then Continue.
 
 #### Verify
 
 Continue enabled in all cases. No Review POST. Skip does not stop 02.
-Inline wait is not a modal and does not disable Continue. MSW
-`GET /v1/onboarding/profile` / SSE.
+No research-wait UI. MSW `GET /v1/onboarding/profile` / SSE.
 
 #### Mocked
 
