@@ -91,7 +91,83 @@ Saving an invalid prop is rejected. UI: inline error next to the field.
 LLM. Cloudflare R2 / Custom Hostnames / `purge_cache`. Worker is real
 (container).
 
+### HTTP create of a second website
+
+#### Setup
+
+Deferred. **TBD:**
+[new-website-creation-flow.md](new-website-creation-flow.md). Keep
+`POST /v1/websites` as the later contract.
+
+#### Exercise
+
+Deferred.
+
+#### Verify
+
+Deferred.
+
 ## Integration
+
+### TestHappyPathV1WebsitesReturnsWebsites — Route
+
+Backend. Go `TestHappyPathV1WebsitesReturnsWebsites`. OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+Onboarding website row present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/websites`. Response `WebsiteRead[]`.
+
+#### Verify
+
+Exercise body lists this tenant’s websites. Must not: fat unpublished dump.
+
+### TestHappyPathV1WebsitesCreatesWebsite — Route
+
+Backend. Go `TestHappyPathV1WebsitesCreatesWebsite`. OpenAPI 1:1.
+**Deferred.** Do not run this pass. **TBD:**
+[new-website-creation-flow.md](new-website-creation-flow.md).
+
+#### Setup
+
+Deferred. When create ships: active tenant on Placis Pro Plus plan (cap
+3). Onboarding website already present. Usage credit remaining. Worker
+up (copy generation).
+
+#### Exercise
+
+Deferred. `POST /v1/websites`. Request `WebsiteCreate`. Response
+`WebsiteRead`.
+
+#### Verify
+
+When create ships: **persists into** `websites`, `website_settings`.
+Prefix reserved. Copy generation billed. Isolation vs the onboarding
+website. Fail: `402 website_limit_reached` at cap; `402
+usage_credit_exhausted` (no row).
+
+### TestHappyPathV1WebsitesWebsitePrefixReturnsWebsite — Route
+
+Backend. Go `TestHappyPathV1WebsitesWebsitePrefixReturnsWebsite`.
+OpenAPI 1:1.
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
+`websites` row present. No `frontend-2`. No Worker.
+
+#### Exercise
+
+`GET /v1/websites/{website_prefix}`. Response `WebsiteRead`.
+
+#### Verify
+
+`copy_generation_status` is `running` / `done` / `failed`. Must not:
+onboarding SSE wait teaser. `404` unknown prefix.
 
 ### TestHappyPathV1WebsiteEditorPagesReturnsPages — Route
 
@@ -105,8 +181,8 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/website/editor/pages`. Request `WebsiteEditorGet`. Response
-`WebsitePageSummaryRead`.
+`GET /v1/websites/{website_prefix}/editor/pages`. Request `WebsiteEditorGet`.
+Response `WebsitePageSummaryRead`.
 
 #### Verify
 
@@ -132,13 +208,14 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`POST /v1/website/editor/pages`. Request `WebsitePageCreate`. Response
-`WebsitePageRead`.
+`POST /v1/websites/{website_prefix}/editor/pages`. Request `WebsitePageCreate`.
+Response `WebsitePageRead`.
 
 #### Verify
 
-`GET /v1/website/editor/pages` lists the created page. **persists into**
-`website_pages`, `website.menus` (append menu node) may supplement.
+`GET /v1/websites/{website_prefix}/editor/pages` lists the created page.
+**persists into** `website_pages`, `website.menus` (append menu node) may
+supplement.
 
 ### TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage — Route
 
@@ -152,8 +229,8 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/website/editor/pages/{page_id}`. Request `WebsiteEditorGet`.
-Response `WebsitePageRead`.
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}`. Request
+`WebsiteEditorGet`. Response `WebsitePageRead`.
 
 #### Verify
 
@@ -178,18 +255,17 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`PATCH /v1/website/editor/pages/{page_id}`. Request `WebsitePageUpdate`.
-Response `WebsiteEditApplyRead`.
+`PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`. Request
+`WebsitePageUpdate`. Response `WebsiteEditApplyRead`.
 
 #### Verify
 
-`GET /v1/website/editor/pages/{page_id}` shows the dirty-key edit.
-Ack `blockers[]` is that website page (page-scoped).
-**persists into** `website_slots`, `website_sections`, `website_pages`,
-`website_forms`, `website_form_fields`, `website_form_field_options`,
-`website.menus`, `edit_history`, `website_settings.edit_history_head`
-may supplement. Must not: predecessor `POST …/sections` (see
-[api.md](api.md) overflow).
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` shows the dirty-key
+edit. Ack `blockers[]` is that website page (page-scoped). **persists into**
+`website_slots`, `website_sections`, `website_pages`, `website_forms`,
+`website_form_fields`, `website_form_field_options`, `website.menus`,
+`edit_history`, `website_settings.edit_history_head` may supplement. Must not:
+predecessor `POST …/sections` (see [api.md](api.md) overflow).
 
 #### Fail
 
@@ -207,14 +283,14 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`PATCH /v1/website/editor/settings`. Request `WebsiteSettingsUpdate`.
-Response `WebsiteEditApplyRead`.
+`PATCH /v1/websites/{website_prefix}/editor/settings`. Request
+`WebsiteSettingsUpdate`. Response `WebsiteEditApplyRead`.
 
 #### Verify
 
-`GET /v1/website/editor/pages/{page_id}` `website_styles` shows the
-applied styles. **persists into** `website_settings`, `edit_history`
-may supplement. Must not: `GET /v1/website/editor/settings`.
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` `website_styles`
+shows the applied styles. **persists into** `website_settings`, `edit_history`
+may supplement. Must not: `GET /v1/websites/{website_prefix}/editor/settings`.
 
 #### Fail
 
@@ -232,15 +308,14 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`PATCH /v1/website/editor/menus`. Request `WebsiteMenusUpdate`. Response
-`WebsiteEditApplyRead`.
+`PATCH /v1/websites/{website_prefix}/editor/menus`. Request
+`WebsiteMenusUpdate`. Response `WebsiteEditApplyRead`.
 
 #### Verify
 
-`GET /v1/website/editor/pages/{page_id}` `menus` shows the updated
-trees. **persists into** `website.menus`, `edit_history` may
-supplement. Must not: `GET /v1/website/editor/menus`; menus on page
-PATCH.
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` `menus` shows the
+updated trees. **persists into** `website.menus`, `edit_history` may supplement.
+Must not: `GET /v1/websites/{website_prefix}/editor/menus`; menus on page PATCH.
 
 #### Fail
 
@@ -259,7 +334,8 @@ Unpublished Copy website template pages rows already present. No
 
 #### Exercise
 
-`GET /v1/website/editor/blockers`. Response `WebsiteEditorBlockersRead`.
+`GET /v1/websites/{website_prefix}/editor/blockers`. Response
+`WebsiteEditorBlockersRead`.
 
 #### Verify
 
@@ -285,7 +361,7 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/website/editor/urls`. Response `WebsiteUrlRead`.
+`GET /v1/websites/{website_prefix}/editor/urls`. Response `WebsiteUrlRead`.
 
 #### Verify
 
@@ -303,13 +379,13 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`POST /v1/website/editor/urls`. Request `WebsiteUrlCreate`. Response
-`WebsiteUrlRead`.
+`POST /v1/websites/{website_prefix}/editor/urls`. Request `WebsiteUrlCreate`.
+Response `WebsiteUrlRead`.
 
 #### Verify
 
-`GET /v1/website/editor/urls` lists the created URL. Must not: create a
-website page. **persists into** `website_urls` may supplement.
+`GET /v1/websites/{website_prefix}/editor/urls` lists the created URL. Must not:
+create a website page. **persists into** `website_urls` may supplement.
 
 ### TestHappyPathV1WebsitePublicationsReturnsPublications — Route
 
@@ -323,7 +399,8 @@ Unpublished 02 rows already present. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/website/publications`. Response `WebsitePublicationRead`.
+`GET /v1/websites/{website_prefix}/publications`. Response
+`WebsitePublicationRead`.
 
 #### Verify
 
@@ -345,15 +422,15 @@ row. No `frontend-2`. Worker **container** is up (this op **calls**
 
 #### Exercise
 
-`POST /v1/website/publications`. Request `WebsitePublicationCreate`.
-Response `WebsitePublicationRead`. **sends**
+`POST /v1/websites/{website_prefix}/publications`. Request
+`WebsitePublicationCreate`. Response `WebsitePublicationRead`. **sends**
 `WebsitePublicationRequest`.
 
 #### Verify
 
-`GET /v1/website/publications` lists the new owner row
-(`published_by=owner`). MinIO `sites/hosts/{hostname}/{version_number}/`
-then `…/latest/`. Named **persists into** may supplement.
+`GET /v1/websites/{website_prefix}/publications` lists the new owner row
+(`published_by=owner`). MinIO `sites/hosts/{hostname}/{version_number}/` then
+`…/latest/`. Named **persists into** may supplement.
 
 #### Fail
 
@@ -378,13 +455,13 @@ Worker **container** is up.
 
 #### Exercise
 
-`POST /v1/website/publications/{id}/rollback`. Response
+`POST /v1/websites/{website_prefix}/publications/{id}/rollback`. Response
 `WebsitePublicationRead`.
 
 #### Verify
 
-`GET /v1/website/publications` shows the earlier owner row `active`
-again. Must not: rewrite unpublished rows. Named **persists into** may
+`GET /v1/websites/{website_prefix}/publications` shows the earlier owner row
+`active` again. Must not: rewrite unpublished rows. Named **persists into** may
 supplement.
 
 #### Fail
@@ -408,7 +485,7 @@ No `frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/website/addresses`. Response `WebsiteAddressRead`.
+`GET /v1/websites/{website_prefix}/addresses`. Response `WebsiteAddressRead`.
 
 #### Verify
 
@@ -426,12 +503,12 @@ No `frontend-2`. No Worker.
 
 #### Exercise
 
-`POST /v1/website/addresses`. Request `WebsiteAddressCreate`. Response
-`WebsiteAddressRead`. `type=custom` only.
+`POST /v1/websites/{website_prefix}/addresses`. Request `WebsiteAddressCreate`.
+Response `WebsiteAddressRead`. `type=custom` only.
 
 #### Verify
 
-`GET /v1/website/addresses` lists the custom host. Must not:
+`GET /v1/websites/{website_prefix}/addresses` lists the custom host. Must not:
 `type=subdomain`; reserve `website_prefix`. **persists into**
 `website_addresses` may supplement.
 
@@ -447,7 +524,8 @@ One `website_addresses` row. No `frontend-2`. No Worker.
 
 #### Exercise
 
-`GET /v1/website/addresses/{id}`. Response `WebsiteAddressRead`.
+`GET /v1/websites/{website_prefix}/addresses/{id}`. Response
+`WebsiteAddressRead`.
 
 #### Verify
 
@@ -532,8 +610,9 @@ website pages already in MSW fixtures (01/02 already ran).
 #### Exercise
 
 Open `/cms/website`. Edit a website section. Publish. MSW:
-`GET /v1/website/editor/pages`, `PATCH /v1/website/editor/pages/{page_id}`,
-`POST /v1/website/publications`.
+`GET /v1/websites/{website_prefix}/editor/pages`,
+`PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`,
+`POST /v1/websites/{website_prefix}/publications`.
 
 #### Verify
 

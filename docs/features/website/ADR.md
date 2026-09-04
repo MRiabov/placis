@@ -76,9 +76,9 @@ Status: decided (2026-08-16, product owner + engineering).
    `code` values per route. Editor routes return `blockers[]`: list
    GET per-row page-scoped, page GET hydrate, page PATCH ack
    (`WebsiteEditApplyRead`; menus / settings omit),
-   `GET /v1/website/editor/blockers` when the Publish dropdown opens
-   (tenant-scoped: all website pages plus subscription and off-canvas
-   unapproved media library items). `PublishWebsite` **calls** it as
+   `GET /v1/websites/{website_prefix}/editor/blockers` when the Publish
+   dropdown opens (tenant-scoped: all website pages plus subscription and
+   off-canvas unapproved media library items). `PublishWebsite` **calls** it as
    the hard gate.
 
 8. **Deferred: blog posts + careers** — no `blog_post` website page type or
@@ -137,11 +137,12 @@ Status: decided (2026-08-16, product owner + engineering).
 
 13. **Website styles live on `website_settings`** — one row per tenant, copied
     into the website manifest at website publication. Not per website page.
-    (2026-08-20) (2026-09-03): hydrate is the website page GET
-    `website_styles`. Apply is `PATCH /v1/website/editor/settings`.
-    There is no `GET /settings`. Top menu and footer hydrate is the
-    website page GET `menus`; apply is `PATCH /menus`. There is no
-    `GET /menus`.
+    (2026-08-20) (2026-09-03): **superseded by ADR 26** — one
+    `website_settings` row per website, not per tenant. Hydrate is the
+    website page GET `website_styles`; apply is
+    `PATCH /v1/websites/{website_prefix}/editor/settings`. There is no
+    `GET /settings`. Top menu and footer hydrate is the website page GET
+    `menus`; apply is `PATCH /menus`. There is no `GET /menus`.
 
 14. **Live website is the published website copy** — Details, Projects,
     certifications and reviews, and website styles update the website editor
@@ -236,9 +237,11 @@ Status: decided (2026-08-16, product owner + engineering).
     (`website_address_id` on POST). Rollback and purge are per that host. Keep
     `sites/{website_prefix}/…` as the unactivated Preview website address
     / Website activation write until the first owner publication on
-    that preview host. (2026-09-03): Locks and the live serve path match
-    this: one `latest/` per host; leftover “one shared tree” is
-    superseded.
+    that preview host. (2026-09-03): prefix lives on
+    `websites.website_prefix`, not `tenants`. Reserved when the `websites` row
+    is inserted (ADR 27). R2 key is still that label. Locks and the live
+    serve path match this: one `latest/` per host; leftover “one shared
+    tree” is superseded.
 
 20. **Website address uses Custom Hostnames, not Pages** —
     `POST /zones/{zone_id}/custom_hostnames` with TXT domain control. CMS
@@ -262,18 +265,20 @@ Status: decided (2026-08-16, product owner + engineering).
     (`page_id` null). No `top_menu_items` / `footer_items` tables. The assistant
     uses `update_menus`, not `update_nav`. Where the owner edits the trees is in
     [design decision record](design-decision-record.md). (2026-08-23) Also `show_contact` (bar CTA to the
-    Contact website page). (2026-08-26) (2026-09-03): Copy website template
-    pages copies **site-wide** catalog `top_menu` / `footer` when the website
-    template includes them (`url` nodes → `website_urls` rows). The
-    [menu constant](catalog.md#menu-constant) is the page+text default when the template omits menus. Do
-    not copy a top menu onto every website page. Owner
-    `POST /v1/website/editor/urls` and menus PATCH stay.
+    Contact website page). (2026-08-26) (2026-09-03): **superseded by ADR 26**
+    for uniqueness — one `website.menus` row per website, not per tenant. Tree
+    shape is unchanged. Copy website template pages copies **site-wide** catalog
+    `top_menu` / `footer` when the website template includes them (`url` nodes →
+    `website_urls` rows). The [menu constant](catalog.md#menu-constant) is the page+text default when the
+    template omits menus. Do not copy a top menu onto every website page. Owner
+    `POST /v1/websites/{website_prefix}/editor/urls` and menus PATCH stay.
 
 23. **Website publication requires an active subscription** — After they stop
     paying the subscription price, unpublish. `POST /publications` and live
     website rollback are **402** `subscription_canceled` until
     `subscription_status=active`. Not `usage_credit_exhausted`. CMS edit stays
-    open. (2026-08-29)
+    open. (2026-08-29) (2026-09-03): `UnpublishWebsite` walks **every** website
+    for that tenant.
 
 24. **Unpublished GET/PATCH on the app for unactivated** — Onboarding session
     token or Clerk may GET unpublished website on the app origin (website
@@ -294,4 +299,63 @@ Status: decided (2026-08-16, product owner + engineering).
     New looks graduate another validated website template; do not hash the 7
     presets. 02 copies the catalog object
     ([catalog.md](catalog.md)). Predecessor LLM picker collapsed; this
-    algorithm does not. (2026-08-31)
+    algorithm does not. (2026-08-31) Occupancy **counts** every website’s
+    `website_template_id` (ADR 30). (2026-09-03)
+
+26. **One business has N websites** — Parent is `websites.id` (`website_id`
+    uuid). Website-owned uniques are on `website_id`, never on `tenant_id`
+    alone. `tenant_id` stays on those rows for isolation only. Website styles
+    (`website_settings`) and `website.menus` are one row **per website**.
+    Business profile, Projects, reviews, media library, Ads, billing, Clerk
+    organization, and the CMS Assistant thread stay tenant-scoped. Equal
+    websites: no distinguished-website flag. `is_primary` hostname is per
+    website. (2026-09-03) (2026-09-04): Logo is Details
+    `logo_media_asset_id` (tenant-shared). Whether a second website can
+    have its own logo is **TBD**. Websites copy from the same business
+    profile. SEO / copy duplication across a business’s websites is
+    **TBD**.
+
+27. **Website prefix at insert; path key is prefix** — Reserve
+    `websites.website_prefix` in the same transaction as the `websites` row
+    (onboarding **Select and copy website template** and `POST /v1/websites`).
+    Choose-rule unchanged (`{business-name}` plus optional area, then `-2` /
+    `-3`). Never renamed. Globally unique. Owner URL
+    `/cms/website/{website_prefix}`; nested CMS HTTP
+    `/v1/websites/{website_prefix}/…`. Uuid stays internal (FKs, River,
+    Assistant screen context). Preview website address / Website activation
+    skip reserve if already set. (2026-09-03)
+
+28. **Onboarding website (Internal)** — The website with the earliest
+    `websites.created_at` on that tenant. Bare `/cms/website` redirects there.
+    That is not a picker. Website activation **PublishWebsite** uses this
+    website only. Not a glossary term. (2026-09-03)
+
+29. **River unique keys for copy jobs are `website_id`** — Pending/running
+    `select_and_copy_website_template` and `website_copy_generation` unique on
+    `website_id`. Copy-generation `ai.threads` is one thread per website
+    (storage unique **TBD**).
+    `cms_assistant` stays unique current per tenant. `website_activation`
+    stays unique on `tenant_id`. (2026-09-03) (2026-09-04): Copy-generation
+    `ai.threads` follow the generate-factory rule: insert a uuid before
+    the first generate for that website page’s agent; reuse that uuid only
+    for schema-repair on that agent. Parallel website pages are parallel
+    threads (`thread_kind=website_copy_generation`). Not one row per
+    website. Do not add `website_id` on `ai.threads`. Uniques stay only
+    on `cms_assistant` current and `onboarding_assistant` per
+    `onboarding_session_id`.
+    River unique stays `website_id`. Previous (2026-09-03): one
+    copy-generation thread per website (storage unique TBD).
+
+30. **Occupancy counts every website** — Select website template occupancy
+    counts websites with that `website_template_id` among occupying tenants,
+    including HTTP-created websites when that path exists. **HTTP create**
+    is **deferred** (2026-09-04): first contractors use onboarding’s one
+    website. Everything about that flow is **TBD**:
+    [new-website-creation-flow.md](new-website-creation-flow.md). Do not
+    specify `website_template_id` on the wire this pass. Previous
+    (2026-09-03): HTTP create does not run occupancy; the owner supplies
+    `website_template_id`.
+
+31. **Host resolves to a website** — Host → `website_addresses.hostname` or
+    `{website_prefix}.preview.placis.com` → `websites` → `tenant_id`. Do not
+    keep `tenants.website_prefix`. (2026-09-03)

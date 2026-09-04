@@ -32,7 +32,10 @@ instead of silently replacing it.
    voice. (2026-08-28) Same day, later: Ads write tool is `cleanup_image` (media
    library), not ads generate / revise / rewrite. `get_ad` and
    `get_website_styles` are always executable. Allowed-set reject is **409**
-   `allowed_set_rejected`. (2026-08-28)
+   `allowed_set_rejected`. (2026-08-28) (2026-09-03): **amend** —
+   `get_website_styles` / `update_website_styles` are **that** website from
+   Assistant screen context (ADR 30). `get_website_styles` is not
+   always-executable with no id.
 
 4. **One CMS thread per activated tenant** — Not per assistant screen. Hydrate
    when an overlay assistant screen mounts — not on `/cms`. Clear context starts
@@ -251,6 +254,8 @@ instead of silently replacing it.
     owner input is **characters** (text 4000, owner utterance 5000). Text agent
     back and forth is **tokens** (128K context / 12K generation). Do not use
     5000 characters as the agent output cap. Voice still has no Go token cap.
+    (2026-09-04): website copy generation is **20** tool-using model turns
+    **per website page** (same constant as this CMS agent, not 3/12/4).
 
 22. **Voice → text STT caveat** — First CMS text assembly after a completed
     `channel=voice` run injects a typed notice: those owner lines were
@@ -304,8 +309,9 @@ instead of silently replacing it.
     `/onboarding/preview-and-edit/` only (policy wrapper in
     `internal/onboarding/websiteeditor`). Contractor copy is **Assistant** on
     all three. Do not relax unactivated **403** `tenant_unactivated` on
-    `/v1/assistant/…`. Do not add `/v1/website/editor/assistant`. CMS HTTP must
-    not import `onboarding/websiteeditor`. (2026-08-30) (2026-09-04): guide
+    `/v1/assistant/…`. Do not add
+    `/v1/websites/{website_prefix}/editor/assistant`. CMS HTTP must not import
+    `onboarding/websiteeditor`. (2026-08-30) (2026-09-04): guide
     and unpaid website editor reuse CMS voice DTO names and fields
     (`AssistantVoiceTranscriptsCreate`, `secret`, `internal_reasoning`).
     Server derives `offset_seconds`. No `client_secret` / request
@@ -329,10 +335,11 @@ instead of silently replacing it.
     `assistant.runs` `running` (`channel=text`) and appends `tool_summary`.
     The website preview follows 06 via onboarding SSE + unpublished GET, not the
     Assistant text socket. Owner send is **409** `in_flight_run` until 06 is
-    idle. After 09, leftover 06 is River-only (`tenant_id` lock, no
+    idle. After 09, leftover 06 is River-only (`website_id` lock, no
     `assistant.runs`, no new thread items). CMS Assistant / PATCH stay not 409
-    because 06 is running (testing §15). 06 cap stays 3 / 12 / 4. 06 still must
-    not `create_page`. (2026-08-30)
+    because 06 is running (testing §15). 06 cap is **20** tool-using model
+    turns per website page. 06 still must not `create_page`. (2026-08-30)
+    (2026-09-04): cap was 3 / 12 / 4.
 
 28. **Unpaid instant apply via website PATCH** — Text and Voice on the
     onboarding website editor force instant apply (ignore `ask_first` / `plan`
@@ -353,3 +360,17 @@ instead of silently replacing it.
     prior share: if they never shared, 09 reserves the prefix if needed and
     writes the first live R2 without strip. Apex `preview.placis.com` is not a
     tenant site (404). (2026-08-30)
+
+30. **`open_website` twins `open_ad`; website styles are the open website** —
+    `get_website_styles` / `update_website_styles` read Assistant screen
+    context `website_id`. Off a website editor without that context: **409**
+    `allowed_set_rejected`. One CMS thread per tenant.
+    **Deferred (2026-09-04):** `open_website`, the website pointer list, and
+    CMS knowledge that a contractor may have more than one website. This
+    pass there is one owner-facing website; the Assistant does not know
+    about others. Do not add `open_website` to `tools=`. Previous
+    (2026-09-03): `open_website(website_id)` always executable; 404
+    unknown; navigates to `/cms/website/{website_prefix}`; pointer list
+    in screen context; CMS knowledge more than one website; tools apply
+    to the open website; `open_website` to change. (2026-09-03;
+    defer 2026-09-04)

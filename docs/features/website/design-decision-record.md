@@ -94,14 +94,14 @@ numbers are HTML comments so later entries keep their numbers.
    the canvas; edit the depth-2 tree in the editing-panel **Content** tab. Look
    (logo, density) is **Website styles**, not a Design tab. Workspace items stay
    website pages, media library, website styles. HTTP is still
-   `PATCH /v1/website/editor/menus`. (2026-08-26) After 12: the same Content
-   list, on the left, after clicking the bar. No media library rail item.
-   (2026-08-26) No Design tab on the editing panel. Density owner copy is
-   Compact / Comfortable / Spacious. (2026-08-26) Primary, Neutral, and Accent
-   are color pickers (the color chip). Hex is not on the field; it is only
-   inside the picker. (2026-08-27) Website versions joined the workspace rail
-   (see 11); it is not an editing-panel tab. (2026-08-26) Website page nodes
-   pick from the website pages list (a dropdown, not free text). Text is a
+   `PATCH /v1/websites/{website_prefix}/editor/menus`. (2026-08-26) After 12:
+   the same Content list, on the left, after clicking the bar. No media library
+   rail item. (2026-08-26) No Design tab on the editing panel. Density owner
+   copy is Compact / Comfortable / Spacious. (2026-08-26) Primary, Neutral, and
+   Accent are color pickers (the color chip). Hex is not on the field; it is
+   only inside the picker. (2026-08-27) Website versions joined the workspace
+   rail (see 11); it is not an editing-panel tab. (2026-08-26) Website page
+   nodes pick from the website pages list (a dropdown, not free text). Text is a
    label. URL is an ads-style combobox: pick an existing URL or type to create
    one. **Show contact** is a bar CTA like Show marketing phone / email (not a
    tree node). Content has no Add below / website-component picker and no

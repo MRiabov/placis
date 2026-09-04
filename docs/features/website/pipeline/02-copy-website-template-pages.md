@@ -17,7 +17,7 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 
 - Website template + website styles pick from 01
   (`website_settings.website_template_id` + `preset_id` on that
-  `tenant_id`).
+  `website_id`).
 - Live business profile as of `accepted_edit_id`.
 - Client interview complete. Named services on that confirmed profile are
   the service list for this write. At least one named service (checklist

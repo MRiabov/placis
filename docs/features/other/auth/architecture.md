@@ -66,7 +66,8 @@ HTTP (same spelling in spec, Go, and tests):
   **calls** `CreateClerkOrganization` when null. Checkout and 09
   **call** this. Not a Route.
 - `ResolveTenantFromClerkOrg` — `Principal.orgID` → tenant
-- `ResolveTenantFromHost` — contractor `Host` / `website_prefix`
+- `ResolveTenantFromHost` — contractor `Host` → `website_addresses` or
+  `{website_prefix}.preview.placis.com` → `websites` → `tenant_id`
 - `ResolveUnpaidTenantFromClerkUser` —
   `onboarding_sessions.clerk_user_id` → unactivated `tenant_id`
   (unpaid PATCH/Voice)
@@ -100,8 +101,9 @@ Resolved once per request from one of:
 
 1. Clerk org claim → `tenants.clerk_org_id` (unactivated **or**
    active, after checkout / `setActive`)
-2. Contractor `Host` / `website_prefix` (preview website address
-   checkout / status)
+2. Contractor `Host` → `website_addresses.hostname` or
+   `{website_prefix}.preview.placis.com` → `websites` → `tenant_id`
+   (preview website address checkout / status)
 3. Onboarding session token (GET unpublished; must not PATCH)
 4. Unpaid Clerk JWT → `onboarding_sessions.clerk_user_id` (PATCH /
    Voice on the app origin **before** org attach)

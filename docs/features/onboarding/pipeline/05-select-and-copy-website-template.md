@@ -12,7 +12,9 @@ then
 [02 copy the website template’s pages onto the unpublished website](../../website/pipeline/02-copy-website-template-pages.md).
 Rows are [website](../../website/persistence.md) +
 [media library](../../other/media/persistence.md) unpublished tables. They
-use the onboarding session’s `tenant_id` (unactivated tenant from 01).
+use the onboarding session’s `tenant_id` (unactivated tenant from Find)
+and `website_id` (this step inserts `websites` before Select website
+template).
 
 Do not say apply the website template in prose.
 
@@ -37,16 +39,23 @@ Do not say apply the website template in prose.
 ## Do
 
 This step **is** River job kind `select_and_copy_website_template`.
-**Calls** `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages`.
+Inserts `websites` (reserve `website_prefix` in the same transaction),
+sets `onboarding_sessions.website_id`, then **calls**
+`SelectWebsiteTemplate` then `CopyWebsiteTemplatePages`.
 
-1. Set `accepted_edit_id` to current `last_edit_id`. 01 and 02 read the
-   live business profile as of that edit. Later 02 business-research
-   writes must not mutate this live business profile in place.
-2. Run website **01** then **02**.
-3. 02 **inserts** `website_copy_generation`. `/onboarding/preview` (wait
-   teaser) waits until the **home** website page has 03 copy, or the wait
-   cap (~15s). Other website pages finish in parallel. Then wait-end. 08
-   writes the host if they share — not immediately.
+1. Insert `websites` + reserve prefix (choose-rule unchanged). Persist
+   `onboarding_sessions.website_id`.
+2. Set `accepted_edit_id` to current `last_edit_id`. Select website
+   template and copy-pages read the live business profile as of that edit.
+   Later business-research writes must not mutate this live business profile
+   in place.
+3. Run website **Select website template** then **Copy the website
+   template’s pages onto the unpublished website** on that `website_id`.
+4. Copy-pages **inserts** `website_copy_generation` (`bill_usage=unbilled`).
+   `/onboarding/preview` (wait teaser) waits until the **home** website page
+   has Website copy generation copy, or the wait cap (~15s). Other website
+   pages finish in parallel. Then wait-end. Preview website address writes
+   the host if they share — not immediately.
 
 ## Inserts
 
@@ -56,15 +65,16 @@ This step **is** River job kind `select_and_copy_website_template`.
 
 Onboarding session stays `selecting_and_copying_website_template` until
 wait-end, then `preview_and_edit`. `business_profiles.accepted_edit_id` at
-complete. `website_settings` (01) and unpublished website +
-`website_copy_generation` (02). No `ai_generations` for the pick (01 is
-occupancy + hash, not an LLM).
+complete. `websites` + `website_prefix`; `website_settings` (Select website
+template) and unpublished website + `website_copy_generation` (copy-pages).
+No `ai_generations` for the pick (Select website template is occupancy +
+hash, not an LLM).
 
 ## Fail
 
 Throw → `select_and_copy_website_template_failed`. No `latest/`. Retry is a
-new `select_and_copy_website_template` (same `website_prefix` if 08 already
-reserved it; new onboarding publication on that prefix).
+new `select_and_copy_website_template` on the **same** `website_id`
+(prefix already reserved).
 
 ## Out
 
@@ -73,5 +83,7 @@ website copy generation.
 
 ## Invariants
 
-- `tenant_id` is the 01 unactivated tenant.
-- No `website_publications` in this step (08 writes v1).
+- `tenant_id` is the Find unactivated tenant; `website_id` is the
+  onboarding website this step inserted.
+- No `website_publications` in this step (Preview website address writes
+  v1).

@@ -93,8 +93,8 @@ under ad-generation):
 Examples:
 
 - **Public** (`GET /openapi.json` / exported `openapi.json`):
-  `TestHappyPathV1WebsiteEditorPagesReturnsPages — Route` for
-  `GET /v1/website/editor/pages`.
+  `TestHappyPathV1WebsitesWebsitePrefixEditorPagesReturnsPages — Route` for
+  `GET /v1/websites/{website_prefix}/editor/pages`.
   `TestHappyPathV1MediaAssetsReturnsList — Route` for
   `GET /v1/media-assets`. Also `GET /v1/health`, `GET /openapi.json`.
   Website’s other public Routes:

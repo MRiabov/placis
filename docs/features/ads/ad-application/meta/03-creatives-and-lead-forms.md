@@ -208,7 +208,8 @@ for `synchronous_ad_review`.
   download.
 - Instant Form creation is a posting step, not an ad-generation step (already
   decided: privacy notice at posting time).
-- We need a canonical **privacy website page** URL per tenant.
+- We need a canonical **privacy website page** URL (**TBD:** per website vs
+  tenant; retarget when the ads privacy website page ships).
 - `call_now` / `message` are not drop-in Instant Form CTAs; decide mapping
   before implementation.
 - Ad leads arrive asynchronously; posting is not "done" when the API returns an

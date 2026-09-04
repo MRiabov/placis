@@ -28,12 +28,17 @@ website forms, top menu, and footer — then website publication.
    publication.
 5. Keep the unpublished website the source of truth; website publication writes
    a published website copy of it.
+6. Let a contractor have **more than one website** (each with its own
+   unpublished website, website prefix, and website publication). Shared
+   business profile. Cap by plan ([plans.md](../billing/plans.md)).
 
 ## Non-goals
 
 - No per-contractor code or deploy — every site runs on one shared renderer.
 - No blog posts, careers, or `landing` website pages in the first pass.
 - No CRM/operations content.
+- Owner create of another website (`/cms/websites/new`) is deferred.
+  **TBD:** [new-website-creation-flow.md](new-website-creation-flow.md).
 
 ## The site is made of
 

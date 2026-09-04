@@ -17,9 +17,9 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
 - `PublishWebsite` — **calls** `WebsitePublicationBlockers`, then
   `websitePublication`
   ([04](pipeline/04-website-publication.md))
-- `UnpublishWebsite` — holding page on R2 `latest/`; clears
-  `website_publications.active`. Billing **calls** this when the
-  subscription is `canceled`.
+- `UnpublishWebsite` — holding page on R2 `latest/` for **every** website
+  on that tenant; clears `website_publications.active` on each. Billing
+  **calls** this when the subscription is `canceled`.
 
 `WebsitePublicationBlockers` is not a pipeline step. Required website
 slot cannot resolve; live-path media library item not approved;
@@ -51,10 +51,17 @@ and editable website slots.
   template pages). Owner Content / `update_reviews` may later set
   `website_slot_reviews` on that section. Ads use **top reviews**. A project
   gallery is tokens (`{{projects.*}}`) until website publication resolves them.
-- **menus** — one `website.menus` row per tenant: `top_menu` and `footer` JSON
+- **menus** — one `website.menus` row per website: `top_menu` and `footer` JSON
   trees (page / text / URL nodes, depth 2) plus `show_phone` / `show_email` /
   `show_contact`.
 - **media asset** — a photo, logo, or document in the media library.
+
+Parent row: `websites` ([ADR](ADR.md) 26). A contractor may have more than
+one website. Each owns unpublished pages, look sections, menus, styles,
+publications, prefix, and website addresses. Business profile and media
+library stay tenant-scoped. Occupancy counts every website’s template.
+Owner create of another website is deferred
+([new-website-creation-flow.md](new-website-creation-flow.md); **TBD**).
 
 ## The website component model
 

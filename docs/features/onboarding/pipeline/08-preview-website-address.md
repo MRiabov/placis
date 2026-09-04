@@ -41,22 +41,11 @@ still `selecting_and_copying_website_template` if they share during the wait
 
 ## Do
 
-`SharePreviewWebsiteAddress` reserves the prefix if needed and **calls**
-`PublishWebsite` with the website-activation strip on.
+`SharePreviewWebsiteAddress` uses the prefix already on the onboarding
+website and **calls** `PublishWebsite` with the website-activation strip on.
 
-1. **Reserve** `tenants.website_prefix` from `display_name` (`{{business_name}}`
-   — Maps / public name, required at client interview complete). Not
-   `legal_name`. Skip reserve if already set.
-   - Lowercase; keep `[a-z0-9]`; hyphens for the rest; collapse/trim hyphens.
-   - Cap length so a locality suffix and a later `-2` still fit a DNS label
-     (63).
-   - Collision: append locality once (`acme-roofing-dublin`) — Maps `locality`,
-     else the first service area. Skip if that locality is already in the label.
-     Still taken, or no locality: sequential `-2`, then `-3` on that result, not
-     random.
-   - Empty/too short: trade + locality, else `site-{id}`.
-   - 05 retry: **keep** the existing label (same host). A new 01 business lookup
-     is a new unactivated tenant → new label.
+1. **Skip reserve** if `websites.website_prefix` is already set (Select and
+   copy website template reserved it). Do not rename.
 2. Write `website_addresses` (`type=subdomain`, `status=reserved`,
    `is_primary=true`) if missing. Wildcard on **our** `placis.com` zone already
    points at the Worker. FQDN: [cloudflare.md](../../website/cloudflare.md).
@@ -79,8 +68,8 @@ endpoint.
 
 ## Persist
 
-`tenants.website_prefix`; `website_addresses`; `website_publications` (v1, strip
-on); R2 `latest/`. No `website_previews`.
+`websites.website_prefix` already set; `website_addresses`;
+`website_publications` (v1, strip on); R2 `latest/`. No `website_previews`.
 
 ## Fail
 

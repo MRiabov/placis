@@ -56,8 +56,8 @@ step.
 
 | River job kind | Args | Unique key | Do |
 | --- | --- | --- | --- |
-| `select_and_copy_website_template` | `tenant_id` | `tenant_id` while pending/running | **calls** `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages` |
-| `website_copy_generation` | `tenant_id` | `tenant_id` while pending/running | `GenerateWebsiteCopy` |
+| `select_and_copy_website_template` | `tenant_id`, `website_id` | `website_id` while pending/running | **calls** `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages` |
+| `website_copy_generation` | `tenant_id`, `website_id` | `website_id` while pending/running | `GenerateWebsiteCopy` |
 | `google_maps_listing_extract` | `run_id` | `run_id` while pending/running | **calls** `extract/googlemaps.Run` |
 | `google_maps_listing_transform` | `run_id` | `run_id` while pending/running | **calls** `transform/googlemaps.Run` |
 | `web_search_extract` | `run_id` | `run_id` while pending/running | **calls** `extract/websearch.Run` |
@@ -73,7 +73,7 @@ step.
 | `reviews_ranking_for_display` | `tenant_id` | `tenant_id` while pending/running | rank `in_pool` reviews for display |
 | `ads_generate` | `tenant_id`, `ad_id` | `(tenant_id, ad_id)` while pending/running | `GenerateAdDraft` |
 | `assistant_thread_compaction` | `thread_id` | `thread_id` while pending/running | compact `ai.threads` in place |
-| `website_activation` | `tenant_id`, `checkout_session_id` | `tenant_id` while pending/running | `tenants.status=active`; **calls** `PublishWebsite`; **calls** `ActivateSubscription` |
+| `website_activation` | `tenant_id`, `checkout_session_id` | `tenant_id` while pending/running | `tenants.status=active`; **calls** `PublishWebsite` on the onboarding website; **calls** `ActivateSubscription` |
 | `billing_extra_usage_credit` | Stripe checkout session id | checkout session id while pending/running | `ApplyExtraUsageCredit` |
 | `billing_subscription_sync` | Stripe subscription id | Stripe subscription id while pending/running | `SyncSubscriptionFromStripe`; on `canceled` **calls** `UnpublishWebsite`; on `invoice.paid` **calls** `AddIncludedUsageCredit` |
 | `scheduled_etl` | none | `tenant_id` while pending/running | **calls** `StartRun(trigger=scheduled)` |
@@ -87,22 +87,29 @@ for that chunk. Transform skip is `algorithm` + `schema_revision`.
 ### `select_and_copy_website_template`
 
 Onboarding [05](../features/onboarding/pipeline/05-select-and-copy-website-template.md). `POST /v1/onboarding/interview/complete` **inserts** this River
-job kind. Website 01 then 02 run in-process. 02 **inserts**
-`website_copy_generation`. Fail → `select_and_copy_website_template_failed`.
-Retry is a new insert of this River job kind (same `website_prefix` if 08
-already reserved it).
+job kind after inserting `websites` + reserving `website_prefix`. Website Select
+website template then Copy the website template’s pages run in-process on that
+`website_id`. Copy-pages **inserts** `website_copy_generation`. Fail →
+`select_and_copy_website_template_failed`. Retry is a new insert of this River
+job kind on the **same** `website_id` (prefix already reserved).
 
 ### `website_copy_generation`
 
-Same job as onboarding [06](../features/onboarding/pipeline/06-website-copy-generation.md) and website [03](../features/website/pipeline/03-website-copy-generation.md). A second insert while
-pending/running is a River unique conflict → HTTP **409**. Do not HTTP-check
-uniqueness before insert (it races). After 09 the leftover job stays in schema
-`jobs` on that `tenant_id` (not cancelled). CMS PATCH / assistant HTTP are
-**not** 409 because this job is running (`assistant.runs` is a different lock).
+Same job as onboarding [06](../features/onboarding/pipeline/06-website-copy-generation.md) and website [03](../features/website/pipeline/03-website-copy-generation.md). Unique on `website_id` while
+pending/running. A second insert while pending/running is a River unique
+conflict → HTTP **409**. Do not HTTP-check uniqueness before insert (it races).
+Onboarding 06 is `bill_usage=unbilled`. CMS `POST /v1/websites` inserts this job
+with `bill_usage=billed` when create ships. After Website activation the
+leftover onboarding job stays in schema `jobs` on that `website_id` (not
+cancelled). CMS PATCH / assistant HTTP are **not** 409 because this job is
+running (`assistant.runs` is a different lock).
 
-`thread_kind=website_copy_generation`, `prompt_id=website_copy_generation`
-in the onboarding package `prompts.yaml`. Worker: website 03
-(`websiteRender`). Routes: [website HTTP](../features/website/api.md).
+`thread_kind=website_copy_generation`, `prompt_id=website_copy_generation` in
+the onboarding package `prompts.yaml` (onboarding) or the website package (CMS).
+Insert one `ai.threads` row per website page before the first generate; reuse
+that uuid only for schema-repair on that agent. Parallel website pages are
+parallel threads. `ai_generations.thread_id` required. Worker: website copy
+generation (`websiteRender`). Routes: [website HTTP](../features/website/api.md).
 
 ### `ads_generate`
 
@@ -179,9 +186,9 @@ discard. **Skip** threads whose tenant is `status=unactivated` (onboarding
 website editor unpaid `current` must not compact — 12h, 128K overflow, or
 compact-before-seed would refill the five unpaid prompts).
 
-Onboarding 06 stays River job kind `website_copy_generation` with its own
-cap (3 steps / 12 calls / 4 website pages), not the CMS agent’s 20 model
-turns.
+Onboarding 06 stays River job kind `website_copy_generation`. Each
+website page’s agent is **20** tool-using model turns (same constant as
+the CMS assistant, per website page).
 
 ### `website_activation`
 
@@ -209,7 +216,8 @@ pending/running (serialize). Worker **calls** `SyncSubscriptionFromStripe`.
 New paid period: **calls** `AddIncludedUsageCredit` (safe to retry via
 `stripe_events.event_id`; do not insert a second `included_usage_credit` from
 the Stripe subscription-updated event alone). `status=canceled`: **calls**
-`UnpublishWebsite`. Pay-again Checkout paid: new `stripe_subscription_id`,
+`status=canceled`: **calls** `UnpublishWebsite` (every website on that
+tenant). Pay-again Checkout paid: new `stripe_subscription_id`,
 `status=active`, `canceled_at` cleared. Routes:
 [billing HTTP](../features/billing/api.md).
 

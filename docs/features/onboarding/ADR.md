@@ -320,7 +320,25 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     checkout return `clerk_org_id` (not `pending_clerk_org_id`). Frontend
     `setActive` from that id when the Clerk session has no org yet. (2026-09-02)
 
-26. **`browser_safety_session_id` caps Find lookup** —
+26. **Website prefix at Select and copy website template** — Amend 16: 01
+    business lookup still inserts `tenants` with `status=unactivated` and
+    `clerk_org_id` null. Do **not** store `website_prefix` on `tenants`.
+    **Select and copy website template** inserts `websites` and reserves
+    `websites.website_prefix` in that transaction. Preview website address and
+    Website activation skip reserve if already set. (2026-09-03)
+
+27. **`onboarding_sessions.website_id`** — The onboarding session points at the
+    website Select and copy website template inserted. Unpaid website editor
+    HTTP stays
+    `/v1/onboarding/website/editor/…` (no id in the path) and uses that fk.
+    (2026-09-03)
+
+28. **Website activation publishes the onboarding website only** — 09
+    **PublishWebsite** is the onboarding website (earliest `websites.created_at`
+    on that tenant; strip off). Must not walk every website. Two websites at
+    activation should not happen; the rule still holds. (2026-09-03)
+
+29. **`browser_safety_session_id` caps Find lookup** —
     `BusinessLookupCreate.browser_safety_session_id` is a UUID the browser
     creates once in `localStorage`. Five lookups in 30 minutes create
     tenants; the 6th is
