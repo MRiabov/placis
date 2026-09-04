@@ -50,10 +50,12 @@ client interview” aside ([design decision](design-decision-record.md) 2).
 
 **Onboarding Details == Business details** ([ADR](ADR.md) 19). The Details block on this
 screen is `/cms/details`: same fields, same controls, same writes. If Details
-changes, this screen changes. Legal identity stays on Review.
-Client-interview-only extras wrap that block (photos, certifications, reviews,
-Projects, extra notes, contact name, `emergency_phone`). Look: white
-`.onb-card`, not the Details panel ([design decision](design-decision-record.md) 12).
+changes, this screen changes. Registry legal identity (`legal_name`, company
+number, registered office) stays on Review. VAT uses the Details legal controls
+already on `/cms/details`. Client-interview-only extras wrap that block (photos,
+certifications, reviews, Projects, extra notes, contact name,
+`emergency_phone`). Look: white `.onb-card`, not the Details panel
+([design decision](design-decision-record.md) 12).
 
 Default surface is **text** (owner: **Write**). Voice is listed and deferred
 ([04a](pipeline/04a-text-client-interview.md), [04b](pipeline/04b-voice-client-interview.md)); owner copy is that voice is coming later, not pipeline phrasing.
@@ -71,8 +73,9 @@ rows appear; existing contractor rows stay. Do not replace a control they are
 editing or have already saved. Extra notes are contractor-only (business
 research does not write them).
 
-- **Your business / contact / opening hours** — Details identity, contact, and
-  hours, same controls as `/cms/details`. Legal identity stays on Review.
+- **Your business / contact / opening hours** — Details identity, contact,
+  hours, and VAT, same controls as `/cms/details`. Registry legal
+  identity stays on Review.
   Hours: one range per day, Closed, copy to following days; no extra time
   block ([design decision](design-decision-record.md) 12). Untouched hours fill
   from Maps; a day they edited is not rewritten.

@@ -31,14 +31,6 @@ usually a **doc gap**, not a drop.
   [pipeline/build-profile.md](pipeline/build-profile.md). Do not drop
   the field.
 
-- **4. VAT paragraph — website paints `{{vat_number}}`; onboarding
-  never writes it**
-  Comment: Details `BusinessProfileRead` carries VAT;
-  `ClientInterviewUpdate` does not. “Publication may block” names no
-  blocker on [../website/api.md](../website/api.md).
-  Action: put VAT on the client interview / Details write path; name
-  or delete the blocker sentence.
-
 - **9. `PUT /v1/onboarding/sources` has no screen**
   Comment: 01 Find business Do 4: wrong company is **not** a new run.
   Dropping the route leaves no recovery (ADR 16: one onboarding per

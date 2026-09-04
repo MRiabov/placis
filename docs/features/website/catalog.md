@@ -52,6 +52,26 @@ The website template may include site-wide `top_menu` / `footer`
 `website.menus`. When omitted, the [menu constant](#menu-constant) is
 the page+text default.
 
+## Editable slots
+
+Each website component `contract.json` lists `editable_slots[]`. Defined
+once per website component. 02 explodes that list onto each website
+section with that `component_id`. Website slot **values** live on
+`website_slots`. Website slot **schema** stays on the contract. Go
+parses a typed model (extra keys rejected).
+
+Fields: `key`, `type`, `label`, `required`, `max_length`, optional
+`omit_if_unresolved` (list of Common variable names). **Absent list =
+never omit that website slot.** AND: omit paint only when every listed
+var is empty. Worker / canvas pass `null` / omit the prop. Unpublished
+row unchanged. Catalog:
+[variables.md](variables.md#optional-omit).
+
+Must not: persist a website slot or website section hide; infer omit
+from every `{{…}}` in `value`; drop a whole website section because one
+child website slot omitted. Owner eye is `website_sections.status`
+only.
+
 ## Copy onto the unpublished website (02)
 
 1. Load the website template by `website_settings.website_template_id`.
@@ -64,6 +84,8 @@ the page+text default.
 3. Explode each website section’s `editable_slots` into `website_slots`
    (`origin=website_template`). Non-slot layout props may stay on
    section `props` jsonb. Tokens stay. Go does not rewrite `{{…}}`.
+   `omit_if_unresolved` stays on the website component contract (not a
+   `website_slots` column). Worker / canvas join `component_id`.
 4. **Image website slots:** if the contract website slot type is image,
    persist `slot_type=image`. Predecessor used a nested image object and
    dotted website slot keys — the image website slot key is `asset_id` on

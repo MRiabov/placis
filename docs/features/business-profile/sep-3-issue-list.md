@@ -62,7 +62,8 @@ original audit ids (not compacted).
 - **`business_profile_reviews.position`** — ranking moved to
   `business_profile_review_rankings` (ADR 4, 2026-09-02).
 - **`vat_registration_status` write-only** — on Read and PATCH dirty
-  keys. Onboarding still needs a writer (onboarding item 4).
+  keys. Onboarding client interview writes the same columns
+  (`ClientInterviewUpdate`).
 - **`top_reviews_provisional`** — moved to the rankings table.
 - **Review `published_at`** — ranking-job input. Only `language` has
   no reader (import metadata, or drop that one column).

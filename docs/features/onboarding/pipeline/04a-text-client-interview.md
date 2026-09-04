@@ -28,7 +28,9 @@ Contractor is on `/onboarding/interview` with `onboarding_sessions.channel=text`
 - Complete while required keys are `empty` / `in_progress` /
   `conflict`.
 - Run a second complete (exactly one complete → 05).
-- Repeat legal-identity fields (shown on 03).
+- Repeat registry legal identity (`legal_name`, `company_number`,
+  `registered_office` — shown on 03 Review). VAT is not registry-won;
+  interview writes `vat_registration_status` / `vat_number`.
 - A parallel onboarding-only control for a Details field (services textarea,
   free-text service area, a second hours picker). Onboarding Details ==
   `/cms/details`.
@@ -51,8 +53,9 @@ is Continue (submit): optional last answers, complete gate, **inserts**
    photo uploads, optional source-from-internet / AI photo when there are not
    enough photos, extra notes).
 3. Fields: **Details == `/cms/details`** (identity, contact and presence,
-   services, service areas, opening hours — same controls and writes). Do not
-   repeat legal identity from 03. Plus interview-only: contact name,
+   services, service areas, opening hours, VAT — same controls and writes). Do
+   not repeat registry legal identity from 03. VAT uses the Details legal
+   controls already on `/cms/details`. Plus interview-only: contact name,
    `emergency_phone`; found photos in the media library plus upload (source from
    the internet / AI photo only if there are not enough); certifications
    (company registry pick locks that business-registry certification) / found

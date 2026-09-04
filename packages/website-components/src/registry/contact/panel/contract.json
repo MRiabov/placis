@@ -73,6 +73,14 @@
       "label": "Service area",
       "required": false,
       "max_length": null
+    },
+    {
+      "key": "opening_hours",
+      "type": "list",
+      "label": "Opening hours",
+      "required": false,
+      "max_length": null,
+      "omit_if_unresolved": ["opening_hours"]
     }
   ],
   "default_values": [

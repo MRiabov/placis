@@ -36,7 +36,9 @@ CMS HTTP: one function per Routes verb+noun (`GetWebsitePage`,
 
 A website is a list of **website pages**; a website page is an ordered list of
 **website sections**; a website section is one **website component** given props
-and editable website slots.
+and editable website slots. Optional-omit lists live on that website
+component contract
+([variables.md](variables.md#optional-omit)).
 
 - **website page** — website page path, title, type
   (`home`/`about`/`service`/`contact`/`legal`), SEO, and an ordered list of
