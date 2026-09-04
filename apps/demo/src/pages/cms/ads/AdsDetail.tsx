@@ -5,6 +5,7 @@ import { type ReactNode, useMemo, useState } from "react";
 import { useCmsLayout } from "@/layout/CmsLayout";
 import { ads } from "@/pages/cms/ads/AdsList";
 import { adsSearch } from "@/pages/cms/ads/search";
+import { MarketingPhoneLink } from "@/pages/cms/leads/MarketingPhoneLink";
 import { newAdLeadLabel, newAdLeads } from "@/pages/cms/leads/rows";
 import { leadsSearch } from "@/pages/cms/leads/search";
 import { Button } from "@/ui/Button";
@@ -250,11 +251,13 @@ function AdLeadsPanel({ adId }: { adId: string }): ReactNode {
     );
   }
   return (
-    <Link
-      className="rounded-[18px] border border-hairline bg-white px-4 py-3 shadow-prompt hover:bg-zinc-50 min-[801px]:col-start-2 min-[801px]:row-start-2"
-      search={search}
-      to="/cms/leads"
-    >
+    <div className="relative rounded-[18px] border border-hairline bg-white px-4 py-3 shadow-prompt min-[801px]:col-start-2 min-[801px]:row-start-2">
+      <Link
+        aria-label="Open on Leads"
+        className="absolute inset-0 rounded-[18px] hover:bg-zinc-50"
+        search={search}
+        to="/cms/leads"
+      />
       <span className="flex items-center justify-between gap-2">
         <b className="text-sm font-semibold tracking-tight">
           {newAdLeadLabel(adId)}
@@ -272,13 +275,18 @@ function AdLeadsPanel({ adId }: { adId: string }): ReactNode {
             {row.contactName}
           </b>
           <span className="mt-0.5 block text-xs text-muted-foreground">
-            {row.marketingPhone} · {row.marketingEmail}
+            <MarketingPhoneLink
+              className="relative z-10"
+              marketingPhone={row.marketingPhone}
+            />
+            {" · "}
+            {row.marketingEmail}
           </span>
         </span>
       ))}
       <span className="mt-2 block text-xs text-muted-foreground">
         Open on Leads
       </span>
-    </Link>
+    </div>
   );
 }

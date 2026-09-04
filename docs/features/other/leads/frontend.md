@@ -28,9 +28,9 @@ filter second: All / New / Contacted / Closed. Search params match
 `LeadListQuery`: `source`, `website_prefix`, `ad_id`, `status`.
 
 Wide: table columns name (message as subtitle), contact (marketing
-phone · marketing email), source (that website’s name, or the ad
-title), status, when. Status on the row is a field-control select.
-New is the urgent mark.
+phone as a `tel:` link · marketing email), source (that website’s
+name, or the ad title), status, when. Status on the row is a
+field-control select. New is the urgent mark.
 
 Narrow: stacked rows, not a five-column table.
 
@@ -45,7 +45,7 @@ Loading placeholders sit in rows, not a whole-table swap
 | Route | Purpose |
 | --- | --- |
 | `/cms/leads` | Leads table. Query matches `LeadListQuery`. |
-| `/cms/ads/{id}` | **New** ad leads (name + contact) in a filled panel, or the dashed empty copy, linking here with `source=ad` and that `ad_id`. |
+| `/cms/ads/{id}` | **New** ad leads (name + contact) in a filled panel, or the dashed empty copy, linking here with `source=ad` and that `ad_id`. Marketing phone is a `tel:` link. |
 
 ## Left nav
 

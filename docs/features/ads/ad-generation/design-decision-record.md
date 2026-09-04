@@ -37,4 +37,6 @@ inventing it.
    On a narrow screen Performance and Ad leads follow Images, before
    Budget. (2026-09-04) Later the same day: when there are **New** ad
    leads, the panel is a filled card (name + contact, New mark), not
-   the dashed empty well. Empty copy stays dashed.
+   the dashed empty well. Empty copy stays dashed. Later: marketing
+   phone is a `tel:` link on top of the Open-on-Leads hit so a tap
+   dials instead of opening Leads.
