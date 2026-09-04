@@ -1,7 +1,7 @@
 # 02 — Copy website template pages (integration test)
 
 Writes the unpublished website. Next step is 03: 02 **inserts** River job
-kind `website_copy_generation` on this `tenant_id`. Mapping:
+kind `website_copy_generation` on this `website_id`. Mapping:
 [catalog.md](../../catalog.md).
 
 - **Setup**: 01 already wrote `website_settings`. No picker
@@ -17,7 +17,7 @@ kind `website_copy_generation` on this `tenant_id`. Mapping:
     `status=unpublished`; one `page_type=home`, one `about`, one
     `contact`, one `legal` (privacy policy), and one `service` page per
     named service on the accepted profile (not per later ETL). Same
-    layout on every service page. Unique `(tenant_id, path)`. No gallery /
+    layout on every service page. Unique `(website_id, path)`. No gallery /
     services-index / testimonials / careers rows.
   - `website_sections`: every page has sections;
     `origin=website_template`; exactly two `page_id` null look sections
@@ -58,11 +58,11 @@ kind `website_copy_generation` on this `tenant_id`. Mapping:
   unique key = that `tenant_id`; job is available / running, not cancelled.
   `onboarding_sessions.status` still `selecting_and_copying_website_template`.
   03 Pre can load unpublished pages for that tenant.
-- **Fail**: website-component contract fail during copy, or zero named
-  services on the accepted profile →
+- **Fail**: website-component contract fail during copy, or zero named services
+  on the accepted profile →
   `onboarding_sessions.status=select_and_copy_website_template_failed`; this
   copy’s unpublished pages / sections / slots / menus are not kept
   (transaction); `website_settings` pick from 01 may remain; **no**
-  `website_copy_generation`; no `website_publications`; `tenants.website_prefix`
-  still null.
+  `website_copy_generation`; no `website_publications`;
+  `websites.website_prefix` already set.
 - **Mocked**: nothing for the write (01 pick already on `website_settings`).

@@ -15,14 +15,16 @@ Named identifiers:
 - [catalog.md](catalog.md) — website template object 01 picks and 02 copies
 - [cloudflare.md](cloudflare.md) — live R2 serve path (`apps/contractor-website` is in this
   repo). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md), not this Worker.
-- [persistence.md](persistence.md) — `website_addresses`, website pages, website sections,
-  website slots, website forms, `website.menus`, website publications, website
-  settings, `edit_history`
-- [api.md](api.md) — HTTP (unpublished website, publication, Connect website
-  address, Worker `websiteRender` / `websitePublication`)
+- [persistence.md](persistence.md) — `websites`, `website_addresses`, website pages, website
+  sections, website slots, website forms, `website.menus`, website publications,
+  website settings, `edit_history`
+- [api.md](api.md) — HTTP (`/v1/websites`, nested `{website_prefix}` editor /
+  publication / address, Worker `websiteRender` / `websitePublication`)
+- [frontend.md](frontend.md) — `/cms/website/{website_prefix}` (publication dropdown +
+  Connect modal). Post-onboarding create: [new-website-creation-flow.md](new-website-creation-flow.md)
+  (**TBD**).
 - [manifest.md](manifest.md) — `website.v1` keep / keep-out
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
-- [frontend.md](frontend.md) — `/cms/website` (publication dropdown + Connect modal)
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
 - [port-contractor-website.md](port-contractor-website.md) — contractor website API cutover (website form
   POST + `website.v1`; no predecessor OpenAPI)

@@ -577,7 +577,7 @@ host), Signed URL.
 The contractor’s site: website pages, website sections, website forms, top menu,
 footer, website styles, built from a website template and the business profile,
 edited in the website editor, shown to website visitors only after website
-publication.
+publication. A contractor may have more than one website.
 
 Say **contractor website** when you need to tell it apart from Placis website.
 
@@ -871,8 +871,8 @@ Distinct from: Website address (`acme.ie`), Website prefix, Website preview
 
 #### Website prefix
 
-The reserved DNS label for their site (`acme-roofing-dublin`). Not a URL. Never
-renamed. Never say `slug` or `website-prefix`.
+The reserved DNS label for that website (`acme-roofing-dublin`). Not a URL.
+Never renamed. Never say `slug` or `website-prefix`.
 
 Distinct from: Website address, Preview website address, Website page path.
 

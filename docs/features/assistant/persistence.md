@@ -21,7 +21,7 @@ Voice `provider_event` is the forwarded xAI JSON (jsonb,
 persistence-only); hydrate omits it.
 
 Do **not** keep leftover `website_assistant_threads` /
-`website_assistant_turns` (website schema). Do **not** keep
+`website_assistant_turns` (websites schema). Do **not** keep
 `assistant.threads` as an identity table.
 
 ## Tables

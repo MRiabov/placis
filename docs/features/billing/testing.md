@@ -66,13 +66,13 @@ real API + real Postgres. Website activation (09) already succeeded so
    (`AssertUsageCredit`). UI: **you are out of usage credit**. Schema
    `jobs` `billing_extra_usage_credit`; `extra_usage_credit` row after
    paid Checkout.
-6. **Stopped paying** — no `website_publications.active`; R2 `latest/`
-   is the holding HTML. `POST /v1/website/publications` and live
+6. **Stopped paying** — no `website_publications.active`; R2 `latest/` is the
+   holding HTML. `POST /v1/websites/{website_prefix}/publications` and live
    website rollback **402** `subscription_canceled` (not
-   `usage_credit_exhausted`). UI: Publish dropdown **Publishing is
-   blocked:** navigate to Usage & billing. Website editor PATCH still
-   works. Pay-again: new `stripe_subscription_id`; `status=active`;
-   `canceled_at` cleared. Publish succeeds.
+   `usage_credit_exhausted`). UI: Publish dropdown **Publishing is blocked:**
+   navigate to Usage & billing. Website editor PATCH still works. Pay-again: new
+   `stripe_subscription_id`; `status=active`; `canceled_at` cleared. Publish
+   succeeds.
 7. **Change plan** — `subscriptions.subscription_tier` updates; no
    extra `included_usage_credit` mid-period. UI: Change plan grid marks
    the new current tier **Current**.
@@ -329,7 +329,8 @@ not a billing Route.
 7. **Keep** — `cancel_at_period_end` cleared.
 8. **Stopped paying** — `subscriptions.status=canceled`,
    `tenants.subscription_status=canceled`, `canceled_at` set. No
-   `website_publications.active`. `POST /v1/website/publications` **402**
+   `website_publications.active`.
+   `POST /v1/websites/{website_prefix}/publications` **402**
    `subscription_canceled`.
 9. **Pay-again** — new `stripe_subscription_id`; `status=active`;
    `canceled_at` cleared.
@@ -354,18 +355,15 @@ activation (09).
 
 #### Exercise
 
-Account menu → Usage & billing. Extra usage credit. Change plan.
-Cancel. Keep subscription. Publish blocked navigate to Usage &
-billing. Remaining 0: billed
-composer and Voice stop (cannot send / cannot start Voice). Website
-editor copy PATCH via MSW **200**. MSW:
-`GET /v1/billing/usage`,
+Account menu → Usage & billing. Extra usage credit. Change plan. Cancel. Keep
+subscription. Publish blocked navigate to Usage & billing. Remaining 0: billed
+composer and Voice stop (cannot send / cannot start Voice). Website editor copy
+PATCH via MSW **200**. MSW: `GET /v1/billing/usage`,
 `POST /v1/billing/extra-usage-credit/checkout`,
 `POST /v1/billing/subscription/checkout`,
-`POST /v1/billing/subscription/cancel`,
-`POST /v1/billing/subscription/keep`,
-`POST /v1/website/publications` (**402** `subscription_canceled` when
-canceled).
+`POST /v1/billing/subscription/cancel`, `POST /v1/billing/subscription/keep`,
+`POST /v1/websites/{website_prefix}/publications` (**402**
+`subscription_canceled` when canceled).
 
 #### Verify
 

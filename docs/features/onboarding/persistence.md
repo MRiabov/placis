@@ -27,7 +27,8 @@ those same overlay tables.
 ### `onboarding_sessions`
 
 - **Columns:** `id`, `tenant_id` fk (required; unactivated tenant from
-  business lookup), `started_from`, `channel` nullable, `status`,
+  business lookup), `website_id` fk nullable → `websites.id`,
+  `started_from`, `channel` nullable, `status`,
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at`
   nullable timestamptz, `browser_safety_session_id` uuid (Find lookup
   cap; not unique; not the onboarding session token), `place_id`
@@ -49,7 +50,8 @@ those same overlay tables.
   `select_and_copy_website_template_failed`); River job kind
   `website_activation` (`status=activated`; `clerk_user_id` if still
   unset); `BindClerkUserToOnboardingSession`
-  (`clerk_user_id` on the first Clerk request)
+  (`clerk_user_id` on the first Clerk request); Select and copy website
+  template (`website_id`)
 - **Notes:** Lookup cap counts rows with this
   `browser_safety_session_id` and `created_at > now() - 30 minutes`
   (fool protection; not IP). Per-tenant enqueue cap is derived from
@@ -57,7 +59,9 @@ those same overlay tables.
   30 minutes), not a column, not a DTO field. Nullable unique
   `clerk_user_id`: one Google account cannot bind to a second
   onboarding session / tenant (`BindClerkUserToOnboardingSession`).
-  Postgres unique allows many nulls.
+  Postgres unique allows many nulls. `website_id` is the onboarding
+  website 05 inserts. Unpaid website editor HTTP uses this fk (no id in
+  the path).
 
 ### No extract tables
 

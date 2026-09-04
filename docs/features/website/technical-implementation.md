@@ -40,7 +40,8 @@ enqueues. This feature owns the tables 02 writes.
 3. Keep website placeholders in the unpublished website;
    `websitePublication` is a website HTML render; `websiteRender` is a
    website image render for 03. Go does not fill tokens.
-4. Create tenant-owned `website_*` records as an unpublished website; never
+4. Create `website_*` records as an unpublished website on that
+   `website_id`; never
    write a live website from this step.
 
 ## Assistant (the LLM drafts; the owner decides)
@@ -94,11 +95,11 @@ enqueues. This feature owns the tables 02 writes.
 
 Routes: [api.md](api.md). Do not re-list them here. Live HTML GET never calls Go.
 Website form POST is [leads HTTP](../other/leads/api.md). Connect website address is
-`POST /v1/website/addresses` (`type=custom` only). Website rollback is owner
-rows only. Media library, Details, Projects, and website form submit are other
-features' `api.md` files. CMS unpublished writes are editor `POST`/`PATCH` only.
-Reset to an owner website version is editor GET `publication_id`, then PATCH
-(Website versions checkout).
+`POST /v1/websites/{website_prefix}/addresses` (`type=custom` only). Website
+rollback is owner rows only. Media library, Details, Projects, and website form
+submit are other features' `api.md` files. CMS unpublished writes are editor
+`POST`/`PATCH` only. Reset to an owner website version is editor GET
+`publication_id`, then PATCH (Website versions checkout).
 
 Do not create `/v1/public/site/…`, leftover `/preview/{token}/`, or
 `/v1/tenants/{website_prefix}/website/…`.

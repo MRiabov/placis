@@ -152,8 +152,8 @@ Other objects:
 - **inserts** — enqueue this River job kind (schema `jobs`). Distinct from
   **persists into** (feature tables) and **calls**.
 
-HTTP example: `PATCH /v1/website/editor/pages/{page_id}` — Request
-`WebsitePageUpdate`, Response `WebsiteEditApplyRead`, persists into
+HTTP example: `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}` —
+Request `WebsitePageUpdate`, Response `WebsiteEditApplyRead`, persists into
 `website_slots` / `edit_history`.
 
 Pipeline example: `GenerateWebsiteCopy` **calls** `websiteRender`,

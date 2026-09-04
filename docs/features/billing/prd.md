@@ -54,16 +54,16 @@ the Placis website has no Pricing.
 Amounts are provisional (from placis-web; the rewrite may change them). Display
 currency is **USD**.
 
-| Subscription tier | Monthly subscription price | Yearly (per month, billed yearly) | Included usage credit / month |
-| --- | --- | --- | --- |
-| Placis Pro plan | $599 | $479 | $100 |
-| Placis Pro Plus plan | $799 | $639 | $400 |
-| Placis Pro Max plan | $1,099 | $879 | $1,500 |
-| Enterprise plan | Contact sales | Contact sales | Contact sales |
+| Subscription tier | Monthly subscription price | Yearly (per month, billed yearly) | Included usage credit / month | Websites |
+| --- | --- | --- | --- | --- |
+| Placis Pro plan | $599 | $479 | $100 | 1 |
+| Placis Pro Plus plan | $799 | $639 | $400 | 3 |
+| Placis Pro Max plan | $1,099 | $879 | $1,500 | 5 |
+| Enterprise plan | Contact sales | Contact sales | Contact sales | Deferred |
 
-Yearly is about 20% off. Pricing cards use a blurb and a feature list (same
-card layout as the placis-web pricing grid). Included usage credit is USD.
-Don't say: build credits.
+Yearly is about 20% off. Website counts: [plans.md](plans.md). Pricing cards
+use a blurb and a feature list (same card layout as the placis-web pricing
+grid). Included usage credit is USD. Don't say: build credits.
 
 Website activation remains a one-time pay in 08. 08’s “~50 EUR / month” is
 superseded for the monthly fee.
@@ -81,7 +81,7 @@ superseded for the monthly fee.
    stops until I buy extra usage credit.
 5. As an owner, I change subscription tier or cancel from Usage & billing. I
    do not go to placis.com for that.
-6. As an owner, if I stop paying the subscription price, the website is
+6. As an owner, if I stop paying the subscription price, every website is
    unpublished and I cannot Publish until I pay again.
 
 ## Acceptance

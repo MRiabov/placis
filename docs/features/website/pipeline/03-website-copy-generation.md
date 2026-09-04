@@ -14,19 +14,19 @@ the thin trigger (onboarding session / DAG / unpaid thread lock).
 ## Trigger
 
 02 succeeded. One River job kind `website_copy_generation`. Lock key:
-`tenant_id` (unactivated tenant already exists). A second 03 start is
-**409** from River unique-insert on that key (do not HTTP-check before
-insert). While
-unactivated, 03 also holds `assistant.runs` `running` on the
-onboarding-website-editor thread
-([website editor](../../onboarding/website-editor.md)). After 09 that lock
-must not sit on CMS `assistant.runs`; leftover 03 is River-only on
-`tenant_id`.
+`website_id`. A second start for that website is **409** from River
+unique-insert on that key (do not HTTP-check before insert). While unactivated,
+Website copy generation also holds `assistant.runs` `running` on the
+onboarding-website-editor thread ([website editor](../../onboarding/website-editor.md)). After Website activation
+that lock must not sit on CMS `assistant.runs`; leftover copy generation is
+River-only on `website_id`.
 
 ## Pre
 
-- Unpublished website from 02 exists.
-- Live business profile as of `accepted_edit_id` at job start.
+- Unpublished website from Copy the website template’s pages exists.
+- Live business profile as of `accepted_edit_id` at job start (onboarding)
+  or the live profile (CMS `POST /v1/websites`, when create ships).
+  Near-duplicate copy / SEO across a business’s websites is **TBD**.
 
 ## Must not
 
@@ -124,14 +124,18 @@ unpublished website slots. River job kind `website_copy_generation`.
    website publication ([variables.md](../variables.md)).
 5. Validate every tool result against website component contracts.
    Whole-and-valid or the batch fails.
-6. Cap steps and tool calls (**3 steps / 12 calls / 4 website pages** at a
-   time). Distinct from the CMS agent’s 20 model turns.
+6. Cap each website page’s agent at **20** tool-using model turns — the
+   same constant as the CMS assistant, **per website page**, not for the
+   whole website. Other website pages generate in parallel (home first
+   for wait-end). No job-level cap on how many website pages generate at
+   once.
 7. Lazy-create `ai.threads` `thread_kind=cms_assistant` `current` for the
    unactivated tenant if needed. Start `assistant.runs` `running`
    `channel=text` on that thread. Append `tool_summary` as tools apply. 03
-   LLM calls use a `thread_kind=website_copy_generation` thread
-   (`ai_generations.thread_id` required). After 09 do not append Assistant
-   thread items.
+   LLM calls insert a `thread_kind=website_copy_generation` thread per
+   website page (`ai_generations.thread_id` required). Parallel website
+   pages = parallel threads. Reuse that uuid only for schema-repair on
+   that agent. After 09 do not append Assistant thread items.
 
 ### Website image render SLO (Go worker round-trip)
 
@@ -173,7 +177,7 @@ Unpublished `website_pages`, `website_sections`, `website_slots`,
 `created_by=ai`, pending review) and `media_asset_classifications`
 (`algorithm=copy_requested_media_caption`); `edit_history`
 agent batches; `ai_generations` for tool batches
-(`thread_kind=website_copy_generation` thread,
+(`thread_kind=website_copy_generation` thread per website page,
 `prompt_id=website_copy_generation`); `ai.threads`
 (`thread_kind=cms_assistant`) / `assistant.thread_items` /
 `assistant.runs` while unactivated. `onboarding_sessions` wait-end
@@ -201,7 +205,7 @@ as this job continues.
 
 ## Invariants
 
-- Lock = `tenant_id` before and after 09. While unactivated, also
+- Lock = `website_id` before and after 09. While unactivated, also
   `assistant.runs` unique running. After 09, not on CMS `assistant.runs`.
 - No `create_page`. No `update_reviews`.
 - Detail tokens that should stay reusable stay in the prose.

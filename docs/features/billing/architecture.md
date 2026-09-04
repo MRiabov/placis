@@ -41,8 +41,8 @@ Called from other packages:
 - `SyncSubscriptionFromStripe` — River job kind
   `billing_subscription_sync`
 - `UnpublishWebsite` — website package; billing **calls** it when
-  `status` becomes `canceled` (clears `website_publications.active`;
-  R2 `latest/` is holding HTML)
+  `status` becomes `canceled` (clears `website_publications.active` on
+  every website; R2 `latest/` is holding HTML)
 
 Tables: [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 River job kinds: [jobs.md](../../general-architecture/jobs.md).

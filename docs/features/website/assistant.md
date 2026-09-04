@@ -33,7 +33,7 @@ xAI-side after instructions seed (xAI region from the **business country**).
 | `update_reviews` | rewrite the ordered pool ids on one reviews website section (same PATCH as Content; length ≤ that website component’s max) |
 | `update_seo` | update bounded unpublished-website SEO metadata for the current website page |
 | `update_form` | update a website form (title, fields, privacy notice) the same way the editor PATCH does |
-| `update_website_styles` | update the tenant website styles (preset + bounded overrides), not per website page |
+| `update_website_styles` | update **that** website’s website styles (preset + bounded overrides), not tenant-wide and not per website page |
 | `set_section_visibility` | show or hide one existing website section |
 | `update_section_design` | update one website section's **design controls** — the per-website-component enum/bool fields (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values from the website component contract |
 | `reorder_sections` | set the full ordered list of website section ids for the website page |
@@ -99,7 +99,7 @@ update_form(
 
 ### `update_website_styles`
 
-Same `PATCH /v1/website/editor/settings` named fields.
+Same `PATCH /v1/websites/{website_prefix}/editor/settings` named fields.
 
 ```text
 update_website_styles(
@@ -161,8 +161,8 @@ Approved website component only.
 
 ### `create_page`
 
-Same as `POST /v1/website/editor/pages`. Also appends a top-level page node on
-the footer, and on the top menu unless legal or cap.
+Same as `POST /v1/websites/{website_prefix}/editor/pages`. Also appends a
+top-level page node on the footer, and on the top menu unless legal or cap.
 
 ```text
 create_page(
