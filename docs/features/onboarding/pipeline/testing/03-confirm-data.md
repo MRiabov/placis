@@ -8,5 +8,5 @@
 - **Exercise**: none (backend).
 - **Verify**: none (backend). Skip and linger are the Review extra.
 - **Fail**: `GET /v1/onboarding/profile` error keeps the token; no
-  replacement `POST` (Resume extra).
+  create `POST` (Resume extra). Change-the-business is 01.
 - **Mocked**: none.

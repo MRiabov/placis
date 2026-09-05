@@ -28,22 +28,19 @@ those same overlay tables.
 
 - **Columns:** `id`, `tenant_id` fk (required; unactivated tenant from
   business lookup), `website_id` fk nullable → `websites.id`,
-  `started_from`, `channel` nullable, `status`,
+  `channel` nullable, `status`,
   `token` unique, `clerk_user_id` nullable, `online_research_consent_at`
-  nullable timestamptz, `browser_safety_session_id` uuid (Find lookup
-  cap; not unique; not the onboarding session token), `place_id`
+  nullable timestamptz, `place_id`
   nullable (Maps attach), `company_number` nullable (registry attach;
   trade-registry key with `tenants.country`), `website_url` nullable
   (known existing-site URL; crawl key), timestamps
-- **Enums:** `started_from` → `google_maps_listing` /
-  `company_registry`; `channel` → `text` / `voice`; `status` →
+- **Enums:** `channel` → `text` / `voice`; `status` →
   `created` / `client_interviewing` /
   `selecting_and_copying_website_template` / `preview_and_edit` /
   `activated` / `select_and_copy_website_template_failed`
 - **Uniques:** `token`; nullable unique `clerk_user_id`
 - **Written by:** `LookupBusiness`
-  (`POST /v1/onboarding/business-lookup`); `UpdateOnboardingSources`
-  (`PUT /v1/onboarding/sources`); `SaveTextClientInterview`
+  (`POST /v1/onboarding/business-lookup`); `SaveTextClientInterview`
   (`channel=text`); `CompleteClientInterview` (`status`); River job
   kind `select_and_copy_website_template` (wait-end
   `preview_and_edit`; fail
@@ -52,16 +49,16 @@ those same overlay tables.
   unset); `BindClerkUserToOnboardingSession`
   (`clerk_user_id` on the first Clerk request); Select and copy website
   template (`website_id`)
-- **Notes:** Lookup cap counts rows with this
-  `browser_safety_session_id` and `created_at > now() - 30 minutes`
-  (fool protection; not IP). Per-tenant enqueue cap is derived from
-  `etl.runs` (`trigger=onboarding`, distinct `enqueue_id` in the last
-  30 minutes), not a column, not a DTO field. Nullable unique
-  `clerk_user_id`: one Google account cannot bind to a second
-  onboarding session / tenant (`BindClerkUserToOnboardingSession`).
-  Postgres unique allows many nulls. `website_id` is the onboarding
-  website 05 inserts. Unpaid website editor HTTP uses this fk (no id in
-  the path).
+- **Notes:** Attach keys (`place_id` / `company_number` / `website_url`) are the
+  source of truth for which business this onboarding session is. Scratch 01 with
+  a valid token replaces them; same keys are safe to retry. Per-tenant enqueue
+  cap is derived from `etl.runs` (`trigger=onboarding`, distinct `enqueue_id` in
+  the last 30 minutes), not a column, not a DTO field. Scratch 01 over that cap
+  is **429** `onboarding_enqueue_cap` (01 Fail). Nullable unique
+  `clerk_user_id`: one Google account cannot bind to a second onboarding session
+  / tenant (`BindClerkUserToOnboardingSession`). Postgres unique allows many
+  nulls. `website_id` is the onboarding website 05 inserts. Unpaid website
+  editor HTTP uses this fk (no id in the path).
 
 ### No extract tables
 
@@ -119,8 +116,7 @@ profile columns. Live business profile via
 
 ## Indexes
 
-Lookup: `(tenant_id, status, created_at)` on `onboarding_sessions`;
-`(browser_safety_session_id, created_at)` on `onboarding_sessions`.
+Lookup: `(tenant_id, status, created_at)` on `onboarding_sessions`.
 Unique: `onboarding_sessions.token`; `stripe_events.event_id`.
 Onboarding thread uniqueness and guide running lock live on
 `ai.threads` / `assistant.runs`.

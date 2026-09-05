@@ -508,15 +508,6 @@ Review, from picking a research conflict. Never say Confirm for this command.
 
 ---
 
-#### Browser safety id
-
-A UUID the browser creates once that groups Find business lookups for the
-lookup cap. Distinct from: Onboarding session token. Not authentication.
-
-In code: `browser_safety_session_id`. Go: `BrowserSafetySessionID`.
-
----
-
 #### Online research consent
 
 The one acknowledgement, on find at business lookup, that Placis may collect

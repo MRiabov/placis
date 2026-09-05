@@ -41,7 +41,7 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
 `InsertOwnerMembership`, then `PublishWebsite` strip off. Activation
 checkout **calls** `AttachClerkOrganization` and returns `clerk_org_id`.
 HTTP: one function per Routes verb+noun (`LookupBusiness`,
-`GetOnboardingProfile`, `UpdateOnboardingSources`, …). Tables:
+`GetOnboardingProfile`, …). Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 
 ## The pipeline
@@ -65,9 +65,9 @@ find (company registry and/or Google Maps) + online research consent
 Step docs: [pipeline/](pipeline/README.md). Numbers are DAG order: 02 starts before 03.
 
 At most five 02 `StartRun` enqueues per tenant per rolling 30 minutes (one
-enqueue = one `StartRun`, not one ETL run). A 6th enqueue waits until the oldest
-of those five is 30 minutes old. Business lookup still returns; the wait is a
-quiet inline note on Review, not a blocker.
+enqueue = one `StartRun`, not one ETL run). A 6th scratch 01 with different
+attach keys is **429** `onboarding_enqueue_cap`. Same attach keys do not
+enqueue. In-flight 02 is not cancelled by Back.
 
 ## Select and copy the website template
 
