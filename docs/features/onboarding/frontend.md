@@ -34,17 +34,22 @@ larger than field labels ([design decision](design-decision-record.md) 9).
   browser has no token), starts business research, goes to Review. Does not
   select or copy the website template or write the host yet. Opening Find with
   nothing stored must not `POST` an onboarding session. Opening Find with a
-  stored token restores (see Resume). Create a UUID once in `localStorage` as
-  `browser_safety_session_id` (shared across tabs; not the onboarding session
-  token) and send it on lookup. **429** `browser_safety_cap`: stay on Find;
-  quiet inline copy; not a modal.
+  stored token restores (see Resume). Send the stored onboarding session
+  token on a later POST. Same attach keys are safe to retry; different keys
+  are scratch 01. **429** `onboarding_enqueue_cap`: stay on the screen; keep
+  the current company; not a modal.
 
 ### 2. Review — `/onboarding/review`
 
 Found vs missing (who they are, legal, contact, services, service area,
 certifications and reviews, photos). Business research may still be filling rows
-(SSE). **Continue** in the shared footer. No missing-topics queue or “next:
-client interview” aside ([design decision](design-decision-record.md) 2).
+(SSE). **Continue** in the shared footer. **Change the business** uses the same
+pickers as Find (`BusinessSourcePanel`); `POST /v1/onboarding/business-lookup`
+with the stored token; stay on Review. Same attach keys leave 02 running;
+different keys scratch 01. **429** `onboarding_enqueue_cap` stays on Review. Do
+not re-show the online research consent checkbox. Do not keep client interview
+answers in `localStorage` for prefill after scratch (deferred). No
+missing-topics queue or “next: client interview” aside ([design decision](design-decision-record.md) 2).
 
 ### 3. Client interview — `/onboarding/interview`
 

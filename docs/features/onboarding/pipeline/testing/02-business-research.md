@@ -4,8 +4,9 @@
   set.
 - **Exercise**: business lookup returns; `StartRun` **inserts** each ETL
   run kind’s extract River job kind, then the matching transform River
-  job kind, as background jobs. Also: attach/change sources six times
-  inside 30 minutes on the same tenant.
+  job kind, as background jobs. Also: six POSTs with the stored token
+  and **different** attach keys inside 30 minutes on the same tenant.
+  Also: a same-keys POST while 02 is in flight.
 - **Verify**: `GET /v1/onboarding/profile` succeeds before jobs finish; one
   `enqueue_id` per `StartRun`; `etl.runs` rows exist for ETL run kinds that
   could start (never `directory`, `review`, or `photo`); Maps-only Find starts
@@ -24,10 +25,12 @@
   `DescribeImage` inserts `media_asset_classifications` (`photo_kind` `logo` /
   `photo`) on found photos; profile increments go through transform /
   build-profile (conflict does not update the live business profile). Enqueues
-  1–5 insert `etl.runs` for started ETL run kinds. The 6th enqueue in 30 minutes
-  on the same tenant does **not** call `StartRun`, does **not** call Maps /
-  Parallel / Facebook / crawl; `PUT /v1/onboarding/sources` stays **200**; prior
-  live business profile stays. A River retry of an existing ETL run does not
+  1–5 insert `etl.runs` for started ETL run kinds. The 6th **different**-keys
+  POST in 30 minutes on the same tenant is **429** `onboarding_enqueue_cap`;
+  does **not** call `StartRun`, does **not** call Maps /
+  Parallel / Facebook / crawl; current live business profile stays. Same-keys
+  POST while 02 is in flight does not wipe and does not create a second
+  `enqueue_id`. A River retry of an existing ETL run does not
   create a new `enqueue_id`. A 6th enqueue after 30 minutes succeeds. After
   Details transform writes `in_pool` reviews: schema `jobs` has one
   `reviews_ranking_for_display` on this `tenant_id` (orchestration, not

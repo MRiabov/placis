@@ -177,7 +177,7 @@ columns and JWT claims. The Clerk SDK verifies the sign-in. They are not an HTTP
 union. The Clerk id allowed on HTTP is `clerk_org_id` on `GET /v1/me`
 (`MeRead`) and on `WebsiteActivationCheckoutRead` (checkout, for
 `setActive` before Stripe). Not a dump of JWT claims. Do not create a
-Clerk session token from Go.
+Clerk onboarding session token from Go.
 
 ## Errors
 
@@ -209,9 +209,9 @@ Named fields: `code`, `message`, optional `retry_after`.
 - `409` ads — `base_updated_at` mismatch. `frontend-3` re-GETs.
 - `413` — oversize PATCH (website editor body cap 64 KB). Oversize CMS voice
   recording (`byte_size` over the cap on `POST /v1/assistant/voice/recordings`).
-- `429` — onboarding Find lookup cap (`browser_safety_cap`) or
-  over-chatty PATCH. Optional `Retry-After`. Per-tenant ETL enqueue cap
-  is a silent skip, not this 429.
+- `429` — onboarding scratch 01 enqueue cap (`onboarding_enqueue_cap`) or
+  over-chatty PATCH. Optional `Retry-After`. Same-keys lookup is safe to retry
+  200, not this 429.
 
 ## Retries
 
