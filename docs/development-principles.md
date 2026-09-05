@@ -38,14 +38,22 @@ slices, and let the gates + glossary catch drift.
 
 ## Workflow: vertical slices
 
-Build one feature at a time, bottom-up, in dependency order:
+Build one feature at a time, bottom-up, in dependency order. The coarse
+loop is:
 
 ```text
 tenancy/auth -> onboarding (source -> client interview -> profile) -> website
   -> website preview/website activation/billing -> ads -> leads
 ```
 
-Each slice is **one PR**, complete and green before the next starts. A slice is:
+The implementable DAG (ETL, files, AI, River, the contractor website
+Worker, `frontend-3`, voice, and per-slice ids) is
+[planning/implementation-strategy.md](planning/implementation-strategy.md).
+Do not implement from this coarse list alone.
+
+Each slice is **one PR**, complete and green before the next starts. A
+slice that has owner UI includes matching `frontend-3` screens. A slice
+is:
 
 1. migrations for that feature's tables only
 2. `sqlc` queries
@@ -53,21 +61,25 @@ Each slice is **one PR**, complete and green before the next starts. A slice is:
    it)
 4. service + handlers
 5. unit + integration tests, plus **one E2E test** (see [testing.md](general-architecture/testing.md) for the
-   per-feature E2E definition)
-6. regenerate the frontend types
-7. CI green -> merge
+   per-feature E2E definition) when this slice closes the owner journey
+6. regenerate the `frontend-3` types from Go `/openapi.json`
+7. `frontend-3` screens from that feature’s `frontend.md` when the slice has
+   owner UI
+8. CI green -> merge
 
-**"Done"** for a slice = green CI + the E2E test + regenerated types. Not
-"scaffolded", not "compiles".
+**"Done"** for a slice = green CI + the named HappyPath / E2E +
+regenerated types. Not "scaffolded", not "compiles".
 
 ## The walking skeleton first
 
 Before the first feature, build the walking skeleton: `cmd/api` (HTTP +
 in-process River), config, `slog`, `huma` + `GET /v1/health`, Postgres +
 `goose` + `sqlc`, and the CI pipeline. A few hundred lines, but it proves the
-whole toolchain (sqlc → huma → OpenAPI → frontend typegen → Testcontainers →
-deploy) end to end. The first real slice after it is **tenancy + auth** —
-everything else FKs into `tenants`.
+whole toolchain (sqlc → huma → OpenAPI → `frontend-3` typegen →
+Testcontainers → deploy) end to end. Next: `frontend-3` scaffold and
+**delete `frontend-2`**, then **tenancy + auth** — everything else FKs
+into `tenants`. Order:
+[implementation strategy](planning/implementation-strategy.md).
 
 ## Rules that keep it from collapsing
 
@@ -96,9 +108,11 @@ everything else FKs into `tenants`.
 
 ## What "good" looks like
 
-Size is not the metric. The cut scope is ~5 features; expect roughly a tenth of
-the old 71k lines, but the point is that every one of those lines lands in a
-**merged, tested, green slice** rather than a pile of half-finished code.
+Size is not the metric. The old “~5 features / a tenth of the 71k-line
+Python app” cut is historical. Every line lands in a **merged, tested,
+green slice** rather than a pile of half-finished code. Per-file 800 /
+hard 1200 is the size control. Order of work:
+[implementation strategy](planning/implementation-strategy.md).
 
 ## Later slice: auditability hardening
 
