@@ -20,13 +20,16 @@ Does not enqueue generate. Next step is 02, which SELECTs the stub
     `ad_reviews` empty. `ai.threads` / `ai_generations` empty for this
     step. No `ads_generate` job.
 - **Cases**:
-  - Omit ideal customer profile: `icp_household=married_couples`,
-    `icp_age_min=30`, `icp_age_max=40`, `icp_source=static`.
+  - No ideal customer profile fields on `AdCreate`:
+    `icp_household=married_couples`, `icp_age_min=30`,
+    `icp_age_max=40`, `icp_source=static`. Sending `icp_age_min` /
+    `icp_age_max` / `icp_household` / `icp_notes` / `icp_source` → 400.
   - `PATCH /v1/ads/{ad_id}` changes `format` on the same stub row; row
     count stays 1.
   - Same `tenant_id` second `POST /v1/ads` inserts a second ad, not a
     second variant on the first.
 - **Handoff to 02**: 02 Pre can SELECT this `ad_variants.format`.
-- **Fail**: missing `format` → 400; zero `ads` / `ad_variants` /
-  `ad_lead_forms`.
+- **Fail**: missing `format` → 400; extra `icp_age_min` /
+  `icp_age_max` / `icp_household` / `icp_notes` / `icp_source` → 400;
+  zero `ads` / `ad_variants` / `ad_lead_forms`.
 - **Mocked**: nothing (no LLM).

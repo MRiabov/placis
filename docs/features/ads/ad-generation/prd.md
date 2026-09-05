@@ -184,8 +184,9 @@ Avoid internal language such as variant payload, crop metadata, or review enum.
 The first implementation should be deliberately small:
 
 1. create an ad from a short owner-facing questionnaire: offer/goal and service
-   focus picked from the contractor's known data, ideal customer profile, and an
-   ad lead form by default
+   focus picked from the contractor's known data, a displayed static ideal
+   customer profile ([ADR 8](ADR.md), [ADR 40](ADR.md)), and an ad lead form by
+   default
 2. the LLM drafts an image gallery from approved photos, applies light cleanup
    where needed, and drafts copy from details in the business profile
 3. the owner reviews the **ad format preview** (Facebook and Instagram) for the

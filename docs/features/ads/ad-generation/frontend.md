@@ -176,9 +176,9 @@ The questions and review content:
    The ideal customer profile is **not** a picker in this slice
    ([ADR 40](ADR.md)). About the ad and the existing-ad Audience block
    display the default **"Married couples, 35–45"** as read-only copy.
-   The owner cannot pick or create a profile. Stored `icp_*` defaults
-   remain married couples 30–40 ([ADR 8](ADR.md)) until product decides
-   whether the owner should pick an audience at all. The profile is
+   The owner cannot pick or create a profile. Stored columns are married
+   couples 30–40 with `icp_source=static` ([ADR 8](ADR.md)) until product
+   decides whether the owner should pick an audience at all. The profile is
    loose: it steers tone and imagery — not precise targeting (that
    comes with ad posting) — and it never appears in the copy itself.
 3. **How people get in touch** — the **ad lead form** questions: a
@@ -384,8 +384,8 @@ needs it):
 ### SearchableCombobox (searchable select with create-new)
 
 Used for services and location. Offer is `ads.offer` free text, not this
-control. The ideal customer profile is read-only default copy
-([ADR 40](ADR.md)).
+control. The ideal customer profile is read-only copy,
+`icp_source=static` ([ADR 8](ADR.md), [ADR 40](ADR.md)).
 
 **Data sources:**
 
