@@ -132,6 +132,13 @@ the same spelling in spec, code, and tests (`website.menus`, not “the menus
 table”; `WebsitePageRead`, not “the page payload”). Do not say **uses** or
 **accepts**.
 
+Named lists must exist and be owner-reviewed before implementation. Every
+changeset starts by editing those docs, not by writing code and documenting
+after. In Plan mode, updating docs is the first step. Agents write or complete
+`persistence.md`, `api.md`, and `testing.md`, then **stop**. Do not write Go,
+goose, Worker, or owner UI code until that review. Agent entry:
+[AGENTS.md](../AGENTS.md).
+
 ### Verbs
 
 Tables:
