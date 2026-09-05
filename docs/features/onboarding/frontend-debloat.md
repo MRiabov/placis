@@ -88,6 +88,7 @@ Named Routes and auth: [api.md](api.md). This table is predecessor → path.
 | `GET …/profile`, checklist | `GET /v1/onboarding/profile` (fill status nested; no checklist, no confirmations) |
 | Text client interview autosave + submissions | `PUT /v1/onboarding/interview`; `POST /v1/onboarding/interview/complete` |
 | Interview Project Archive | `POST /v1/onboarding/projects/{projectId}/archive` |
+| Interview photo list / upload | `GET /v1/onboarding/media-assets`; `POST /v1/onboarding/media-assets/start-upload`; `POST /v1/onboarding/media-assets/{id}/confirm-upload` (not `/v1/media-assets` while unactivated) |
 | Don't say setup: `GET …/events/stream` | `GET /v1/onboarding/events/stream` |
 | Unpaid canvas `GET/PATCH` leftover website editor | `GET/PATCH /v1/onboarding/website/editor/pages…` and `…/menus` (not `/v1/websites/{website_prefix}/editor` while unactivated; PATCH Clerk only) |
 | Unpaid `create_page` leftover CMS POST pages | `POST /v1/onboarding/website/editor/pages` (Clerk only; not CMS POST pages while unactivated) |

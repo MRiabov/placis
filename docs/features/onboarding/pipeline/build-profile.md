@@ -95,14 +95,19 @@ gaps.
 | `services` | work | `business_profile_services` | crawl | required |
 | `service_areas` | work | `business_profile_service_areas` | crawl | required |
 | `accreditations` | certifications | list / notes | trade registry | optional |
-| `photos` | photos | media library | Maps / Facebook photos + ETL transform classification; owner upload | required enough photos (found + uploaded). Source from the internet / AI photo only if still short |
+| `photos` | photos | media library | Maps / Facebook photos + ETL transform classification; owner upload | optional |
 | `reviews` | reviews | `business_profile_reviews` | Maps; ETL transform writes review citations. Facebook page reviews are not an extract this slice. `reviews_ranking_for_display` orders the pool + pins **top reviews** | optional |
 | `projects` | photos | `business_profile.projects` | Facebook / Instagram / website crawl / reviews usable as a Project; rank top 4 for client interview / 05 | optional |
 | `facebook_profile_url` | reviews | `facebook_profile_url` | Facebook | optional |
 
 Found photos are shown in the client interview. There is no `photos_choice`
 question (`use_found` / `source_from_google` / `upload_later` / `use_neutral`).
-Projects is optional (same as `reviews`). Complete does not require Projects.
+Complete does not require photos. Empty work-photo website slots are website
+[03 automatic website copy generation](../../website/pipeline/03-website-copy-generation.md)
+`generate_image` (attach first; logo / face still must not generate). There is
+no photos-fill River job. The no-photos complete warning is frontend-only
+([frontend.md](../frontend.md)). Projects is optional (same as `reviews`).
+Complete does not require Projects.
 
 ### Rank Projects (client interview / 05)
 
