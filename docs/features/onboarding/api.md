@@ -140,7 +140,7 @@ enqueue.
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `PUT /v1/onboarding/interview` | click-off / periodic save | `ClientInterviewUpdate` | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles` | `client_interview_submissions`, `business_profile_edits`, `onboarding_sessions` | **calls** `SaveTextClientInterview`. `submission_kind=autosave`. Succeeds when the complete gate would fail | | Start 05; `/autosave` |
-| `POST /v1/onboarding/interview/complete` | Continue | `ClientInterviewUpdate` | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles` | `client_interview_submissions`, `business_profile_edits`, `business_profiles`, `onboarding_sessions` | **calls** `CompleteClientInterview`. Optional last dirty answers. Gate; `accepted_edit_id`; **inserts** `select_and_copy_website_template` | `409` gate | PUT-then-POST hop; `/submit`; second complete; `generation-runs` from `frontend-2` |
+| `POST /v1/onboarding/interview/complete` | Continue | `ClientInterviewUpdate` | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles` | `client_interview_submissions`, `business_profile_edits`, `business_profiles`, `onboarding_sessions` | **calls** `CompleteClientInterview`. Optional last dirty answers. Gate; `accepted_edit_id`; **inserts** `select_and_copy_website_template` | `409` gate | PUT-then-POST hop; `/submit`; second complete; `generation-runs` from `frontend-3` |
 | `POST /v1/onboarding/projects/{projectId}/archive` | interview Project cards | | | `business_profile.projects` | `business_profile.projects` | `active` → `archived`, `algorithm=human`; `project_sources` kept | | `POST /v1/projects/{id}/archive`; DELETE; interview Approve; guide tool |
 
 ### POST /v1/onboarding/interview/complete
@@ -233,7 +233,7 @@ Checkout. **Omit** Stripe bodies.
 Checkout / status auth: Clerk JWT, Host / `website_prefix`
 (unactivated allowed) **or** (checkout only) Clerk JWT unactivated
 tenant on the **app** origin. Webhook: Stripe signature. Never
-`frontend-2`.
+`frontend-3`.
 
 ### POST /v1/webhooks/stripe
 
@@ -277,7 +277,7 @@ Policy: [onboarding assistant](assistant.md).
 - Don't say: `preview/{token}/module/{module}`
 - Don't say claim: `…/claim`, `…/claim/checkout`, `…/package`,
   `approve-publish`, `request-changes`
-- sandbox-actions, `generation-runs` from `frontend-2`
+- sandbox-actions, `generation-runs` from `frontend-3`
 - `/v1/preview/{token}/…` and `/v1/website-previews/{token}/…`
 - `/v1/website-activations/…` (checkout / status live under
   `/v1/onboarding/activation/…`)

@@ -18,7 +18,7 @@ signature-verified webhooks. Catalogue rows are fixtures in
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+E2E (Playwright, both sides). Playwright drives `frontend-3` against the
 real API + real Postgres. Website activation (09) already succeeded so
 `ActivateSubscription` can run. Cache has an active activation Price and
 a choosable Pro month Price.
@@ -110,7 +110,7 @@ clock.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Fixture choosable Pro
-month row on `billing.prices`. No Clerk JWT. No `frontend-2`.
+month row on `billing.prices`. No Clerk JWT. No `frontend-3`.
 
 #### Exercise
 
@@ -138,7 +138,7 @@ None (no Stripe on this GET).
 
 Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
 active tenant. `billing.subscriptions` from 09 fixture. No
-`frontend-2`.
+`frontend-3`.
 
 #### Exercise
 
@@ -161,7 +161,7 @@ Stripe.
 
 Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
 active tenant. `billing.subscriptions` from 09 fixture. No
-`frontend-2`.
+`frontend-3`.
 
 #### Exercise
 
@@ -188,7 +188,7 @@ Stripe.
 Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
 active tenant. `billing.subscriptions` from 09 fixture
 (`status=canceled`). Choosable Pro month Price in cache. No
-`frontend-2`.
+`frontend-3`.
 
 #### Exercise
 
@@ -217,7 +217,7 @@ Stripe.
 
 Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
 active tenant. `billing.subscriptions` from 09 fixture
-(`status=active`). No `frontend-2`.
+(`status=active`). No `frontend-3`.
 
 #### Exercise
 
@@ -243,7 +243,7 @@ Stripe.
 
 Backend (`humatest`, Testcontainers Postgres). Fake Stripe. Clerk JWT
 active tenant. `billing.subscriptions` from 09 fixture
-(`status=active`, `cancel_at_period_end=true`). No `frontend-2`.
+(`status=active`, `cancel_at_period_end=true`). No `frontend-3`.
 
 #### Exercise
 
@@ -275,7 +275,7 @@ Backend (`humatest`, Testcontainers Postgres + MinIO). Tenant already
 `status=active` with `billing.subscriptions` from 09 fixture.
 Remaining is included usage credit. Fake LLM with **known our cost**
 (×5 their-cost is a known `#` in EUR after dated FX). Fake Stripe.
-Prefer fake Clerk. Fake voice `AssistantVoiceUsage`. No `frontend-2`.
+Prefer fake Clerk. Fake voice `AssistantVoiceUsage`. No `frontend-3`.
 No Worker container.
 
 #### Exercise
@@ -339,7 +339,7 @@ are `### BillUsage modes`.
 
 Backend (`humatest`, Testcontainers Postgres). Tenant already
 `status=active` with `billing.subscriptions` from 09 fixture. Cache
-has activation + Pro month Prices. Fake Stripe. No `frontend-2`. No
+has activation + Pro month Prices. Fake Stripe. No `frontend-3`. No
 Playwright.
 
 #### Exercise

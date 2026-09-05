@@ -1,14 +1,15 @@
 # Website Frontend Specification
 
-Status: proposed frontend specification. Screens already exist under
-`frontend-2/src/features/cms/`; this doc names them against the Go contract.
+Status: proposed frontend specification. Implement in `frontend-3` from this
+doc. Do not open `frontend-2`. Look: [`apps/demo/`](../../../apps/demo/README.md) `/cms/website`. [ADR](../../general-architecture/ADR.md) 3.
 
 Related: [PRD](prd.md), [editing.md](editing.md), [assistant.md](assistant.md), [manifest](manifest.md),
-[design decision record](design-decision-record.md). Port: [frontend-debloat.md](frontend-debloat.md).
+[design decision record](design-decision-record.md). Withdrawn port:
+[frontend-debloat.md](frontend-debloat.md).
 
 ## Purpose
 
-The contractor-facing website editor in `frontend-2`, under
+The contractor-facing website editor in `frontend-3`, under
 `/cms/website/{website_prefix}` (left-nav **Sites** opens the onboarding
 website). Owner create of another website and a Sites list of websites are
 **deferred** ([new-website-creation-flow.md](new-website-creation-flow.md)). Details, Projects, and

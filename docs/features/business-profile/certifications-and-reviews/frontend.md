@@ -9,8 +9,8 @@ not a card.
 
 Left nav: [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md). Look: [design decision record](design-decision-record.md).
 Product: [ADR.md](ADR.md). HTTP: [details HTTP](../details/api.md). Tables: [business profile persistence](../details/persistence.md).
-Port: [frontend-debloat.md](frontend-debloat.md). Headings have no decorative icon. On narrow, Open
-destinations stays inline with the heading.
+Withdrawn port: [frontend-debloat.md](frontend-debloat.md). Headings have no decorative icon. On
+narrow, Open destinations stays inline with the heading.
 
 Editing this screen updates the unpublished website / website editor
 immediately; the live website changes only on the next website publication.

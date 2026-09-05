@@ -12,7 +12,7 @@ func exists (`leftover_tests.go` only). Auth has no pipeline
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+E2E (Playwright, both sides). Playwright drives `frontend-3` against the
 real API + real Postgres. Real Clerk Testing Token: generate **one**
 once per PR job (`clerkSetup()` or
 `npx clerk api testing_tokens -X POST` / Backend API). Put

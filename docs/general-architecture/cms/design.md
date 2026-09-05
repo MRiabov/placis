@@ -82,7 +82,7 @@ two cards sit in one row on a wide screen and stack on a narrow screen.
 
 - Contractor website presets ([website styles](../../features/website/styles.md)) — Radix scales on the live site,
   not The CMS.
-- `frontend-2` predecessor oklch `--secondary` and filled `bg-secondary` — out
+- `frontend-3` predecessor oklch `--secondary` and filled `bg-secondary` — out
   of scope until that port; this table wins.
 - A second CMS breakpoint — keep **1100px** ([design decision record](design-decision-record.md) 4). Prompt
   Paperclip / Voice hide under **640px** (`sm`), not a new product breakpoint.

@@ -10,7 +10,7 @@ Related docs:
 
 ## Purpose
 
-**Usage & billing** in `frontend-2`. The owner sees the current
+**Usage & billing** in `frontend-3`. The owner sees the current
 subscription tier, subscription price, remaining usage credit, extra
 usage credit, **one bar** of the current pool, **Cancel subscription**,
 and pay-again after `canceled`. Reached from the account menu (user
@@ -78,4 +78,4 @@ the Details OK / Revert pair.
 | `/cms` … other destinations | Unchanged. |
 
 Exact path for Usage & billing can be `/cms/usage-and-billing` when
-`frontend-2` lands; the look export uses `/cms/billing`.
+`frontend-3` lands; the look export uses `/cms/billing`.

@@ -12,8 +12,8 @@ project-gallery website section (then compact).
 
 Left nav: [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md). HTTP: [api.md](api.md). Table:
 [persistence.md](persistence.md). Product: [ADR](ADR.md). Look: [design.md](design.md), [design decision record](design-decision-record.md).
-Port: [frontend-debloat.md](frontend-debloat.md). Headings have no decorative icon. On narrow, Open
-destinations stays inline with the heading.
+Withdrawn port: [frontend-debloat.md](frontend-debloat.md). Headings have no decorative icon. On
+narrow, Open destinations stays inline with the heading.
 
 Loading placeholders: every screen, per card / field / photo cell — not a
 whole-panel swap

@@ -5,13 +5,13 @@ Status: remaining cuts (first delete pass is on `main`).
 API/typegen process: [port-contractor-website.md](port-contractor-website.md). This file is the **cut list**
 (keep / delete / Don’t-say).
 
-This is **not** the `frontend-2` call. Split the tree:
+This is **not** the owner SPA call. Split the tree:
 
 - **Website component package — keep and cut.** React website components,
   themes, and CSS. Do not rebuild the visuals.
 - **Astro Worker — write thin.** Live GET is Cache then R2; an R2 miss is 404.
   Website preview token path is gone; 08 writes the same static `latest/` as
-  later CMS website publication.
+  later CMS website publication. Do not reuse the owner SPA.
 
 Do not rewrite the registry JSX/CSS from scratch. Glue (`JsonObject` props,
 `asRecord` / `text()` helpers) retargets onto `catalog/` structs; that is
@@ -22,7 +22,8 @@ plumbing, not a visual rewrite.
 [architecture.md](architecture.md), [cloudflare.md](cloudflare.md),
 [manifest.md](manifest.md), [frontend.md](frontend.md), [styles.md](styles.md).
 Shared rules: [planning index](../../../planning/frontend-debloat.md).
-CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
+Owner SPA is `frontend-3` ([ADR](../../general-architecture/ADR.md) 3);
+[frontend-debloat.md](frontend-debloat.md) is withdrawn.
 
 ## Code today
 
@@ -47,7 +48,7 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
   DESIGN.md or per-folder markdown sidecars.
 - `src/styles.css` concatenates every website style catalog preset plus shared
   dumps (`green-gold-sections.css`, `timbermill-content.css`, …). Live HTML and
-  `frontend-2` both import that one sheet.
+  `frontend-3` both import that one sheet.
 
 ## Keep
 
@@ -65,7 +66,7 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 **Worker:**
 
 - One Worker for every tenant. Astro document + React islands. No per-tenant
-  build. Bundle-boundary: this app must not import `frontend-2`.
+  build. Bundle-boundary: this app must not import `frontend-3`.
 - Live serve: Cache then R2 `latest/`. Go never emits HTML. R2 miss is 404.
 - Website-activation strip island on unactivated hosts (Clerk + Stripe POST
   `activation/checkout`). 08 HTML has no strip.
@@ -85,14 +86,13 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 ## Do not port
 
 - CRM / quotes / invoices / jobs / workflows / crew on website preview.
-- Blog, careers, leftover website-template-apply CMS API wrappers (those are
-  also in the `frontend-2` website file). DESIGN.md and per-folder markdown
-  sidecars (dropped).
+- Blog, careers, leftover website-template-apply CMS API wrappers (out of the
+  owner SPA too). DESIGN.md and per-folder markdown sidecars (dropped).
 - A second HTML engine or per-contractor Cloudflare deploy
   ([cloudflare.md](cloudflare.md)).
 - Predecessor OpenAPI, a full-CMS typegen, leftover predecessor types,
   casts, or `/v1/preview/{token}/module/website`.
-- Don't say public site as the app name. Don't say private app for `frontend-2`.
+- Don't say public site as the app name. Don't say private app for `frontend-3`.
 
 ## Retarget
 
@@ -118,7 +118,7 @@ CMS/editor cuts stay in [frontend-debloat.md](frontend-debloat.md).
 - Don't say setup: `setupPublicNavigation` / `setupPublicCarousels` in the
   Don't say setup: island script (rename to ordinary `bind*` helpers).
 - Don't say private app: leftover `PUBLIC_SITE_*` env names → CMS / website
-  preview origin (`frontend-2`). Default must not be old `frontend/` on 5173.
+  preview origin (`frontend-3`). Default must not be old `frontend/` on 5173.
 
 ## Tests
 

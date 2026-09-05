@@ -267,10 +267,10 @@ no per-request unpublished render for website visitors and no
 Astro owns routing, the Astro document, prerender-at-publication, and metadata;
 React owns interactive islands. One application serves every contractor website
 — no per-tenant build — and imports only the website component package (a
-bundle-boundary check blocks imports from `frontend-2`).
+bundle-boundary check blocks imports from `frontend-3`).
 
 The onboarding wait teaser (`/onboarding/preview`) reuses website components in
-`frontend-2` for **one complete website section** at a time when current
+`frontend-3` for **one complete website section** at a time when current
 profile data can resolve its placeholders. It is not this app and not the
 host. Not the Worker.
 

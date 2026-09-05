@@ -10,7 +10,7 @@ these.
 **Auth default:** Clerk JWT, active tenant. Mutating Routes send
 `Idempotency-Key` and `base_updated_at` (last-seen `ads.updated_at`).
 Match → bump and return the new `updated_at`. Mismatch → `409`;
-`frontend-2` re-GETs. No undo.
+`frontend-3` re-GETs. No undo.
 
 Serve-only jsonb (not a DTO field dump): `platform_refs` is **omit**
 from first-slice DTOs. After ad posting, named fields (`meta_ad_id`,

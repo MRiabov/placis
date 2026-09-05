@@ -1,6 +1,6 @@
 # Details — E2E and integration tests
 
-Playwright e2e drives `frontend-2` against the real API and real
+Playwright e2e drives `frontend-3` against the real API and real
 Postgres. Integration is **one side**. Backend: `humatest`,
 Testcontainers Postgres. Frontend: Vitest `HappyPathDetailsFull` (MSW,
 no Go). Persist names tables from [persistence.md](persistence.md)
@@ -19,7 +19,7 @@ Certifications and reviews HTTP 1:1 lives here (ADR 7), not in
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against
+E2E (Playwright, both sides). Playwright drives `frontend-3` against
 the real API + real Postgres. Activated tenant with a live
 `business_profile.business_profiles` row. LLM unused.
 
@@ -53,7 +53,7 @@ LLM unused. Prefer fake Google Maps territory lookup.
 Backend (`humatest`, Testcontainers Postgres). Activated tenant. Live
 `business_profile.business_profiles` row with services, areas, hours. Linked
 Facebook URL so `business_profile.facebook_profiles` can hydrate. No
-`frontend-2`.
+`frontend-3`.
 
 #### Exercise
 

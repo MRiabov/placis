@@ -33,9 +33,9 @@ does not execute more tools.
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+E2E (Playwright, both sides). Playwright drives `frontend-3` against the
 real API + real Postgres. Activated tenant. Voice/LLM faked. Go +
-Postgres + `frontend-2` not mocked.
+Postgres + `frontend-3` not mocked.
 
 #### Exercise
 
@@ -104,9 +104,9 @@ Voice and LLM.
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+E2E (Playwright, both sides). Playwright drives `frontend-3` against the
 real API + real Postgres on an unactivated onboarding session.
-Voice/LLM faked. Go + Postgres + `frontend-2` not mocked.
+Voice/LLM faked. Go + Postgres + `frontend-3` not mocked.
 
 #### Exercise
 
@@ -150,7 +150,7 @@ Voice and LLM.
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+E2E (Playwright, both sides). Playwright drives `frontend-3` against the
 real API + real Postgres. Unpublished website from 05; 06 may still be
 running. [website-editor.md](../onboarding/website-editor.md).
 
@@ -182,7 +182,7 @@ Backend. Go `TestHappyPathV1AssistantThread`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant. No
-`current`. No `frontend-2`. No Worker.
+`current`. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -206,7 +206,7 @@ Backend. Go `TestHappyPathV1AssistantThreadWs`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Hydrated `current`. No `frontend-2`. No Worker.
+Hydrated `current`. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -243,7 +243,7 @@ Backend. Go `TestHappyPathV1AssistantThreadNew`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Hydrated `current`. No `frontend-2`. No Worker.
+Hydrated `current`. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -268,7 +268,7 @@ Backend. Go `TestHappyPathV1AssistantRecordApply`. OpenAPI 1:1.
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 Pending `ask_first_status=pending` run. Website PATCH already applied
-dirty keys (fixture). No `frontend-2`. No Worker.
+dirty keys (fixture). No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -293,7 +293,7 @@ Backend. Go `TestHappyPathV1AssistantRecordReject`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Pending `ask_first_status=pending` run. No `frontend-2`. No Worker.
+Pending `ask_first_status=pending` run. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -318,7 +318,7 @@ Backend. Go `TestHappyPathV1AssistantVoiceRealtimeConnection`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Microphone granted (fixture). No `frontend-2`. No Worker.
+Microphone granted (fixture). No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -355,7 +355,7 @@ Backend. Go `TestHappyPathV1AssistantVoiceToolCalls`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Voice connection on (current voice run). No `frontend-2`. No Worker.
+Voice connection on (current voice run). No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -391,7 +391,7 @@ Backend. Go `TestHappyPathV1AssistantVoiceTranscripts`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Committed Voice events. No `frontend-2`. No Worker.
+Committed Voice events. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -427,7 +427,7 @@ Backend. Go `TestHappyPathV1AssistantVoiceRecordings`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-CMS Voice off after a turn. No `frontend-2`. No Worker.
+CMS Voice off after a turn. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -459,7 +459,7 @@ Backend. Go `TestHappyPathV1AssistantVoiceRecordingsIdComplete`. OpenAPI
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant. A
 recording id from create. PUT already succeeded (MinIO). No
-`frontend-2`. No Worker.
+`frontend-3`. No Worker.
 
 #### Exercise
 

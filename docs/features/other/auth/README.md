@@ -102,5 +102,5 @@ mechanism or write `audit_events` for it.
 
 - [architecture.md](architecture.md) — named functions, locators, `GetMe`
 - [testing.md](testing.md) — humatest tenancy, two-tenant, Vitest, Playwright
-- [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: Clerk
+- [frontend-debloat.md](frontend-debloat.md) — `frontend-3` port: Clerk
   gate, OAuth, `/me`

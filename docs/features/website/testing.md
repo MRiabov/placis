@@ -19,7 +19,7 @@ paths are omitted. Go funcs stay on `leftover_tests.go`.
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+E2E (Playwright, both sides). Playwright drives `frontend-3` against the
 real API + real Postgres. Worker **container** is up (no
 `wrangler deploy`). 01/02 already ran (`website_pages` /
 `website_sections` / `website_slots` / `website.menus` /
@@ -116,7 +116,7 @@ Backend. Go `TestHappyPathV1WebsitesReturnsWebsites`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Onboarding website row present. No `frontend-2`. No Worker.
+Onboarding website row present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -159,7 +159,7 @@ OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-`websites` row present. No `frontend-2`. No Worker.
+`websites` row present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -180,7 +180,7 @@ Backend. Go `TestHappyPathV1WebsiteEditorPagesReturnsPages`. OpenAPI
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 Unpublished 02 rows already present. One owner
 `website_publications` row on this `{website_prefix}`. No
-`frontend-2`. No Worker.
+`frontend-3`. No Worker.
 
 #### Exercise
 
@@ -211,7 +211,7 @@ Backend. Go `TestHappyPathV1WebsiteEditorPagesCreatesPage`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -238,7 +238,7 @@ OpenAPI 1:1.
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 Unpublished 02 rows already present. One owner
 `website_publications` row on this `{website_prefix}`.
-`edit_history` on that website page. No `frontend-2`. No Worker.
+`edit_history` on that website page. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -277,7 +277,7 @@ OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -305,7 +305,7 @@ OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -330,7 +330,7 @@ Backend. Go `TestHappyPathV1WebsiteEditorMenusUpdatesMenus`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -356,7 +356,7 @@ OpenAPI 1:1.
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 Unpublished Copy website template pages rows already present. No
-`frontend-2`. No Worker.
+`frontend-3`. No Worker.
 
 #### Exercise
 
@@ -383,7 +383,7 @@ Backend. Go `TestHappyPathV1WebsiteEditorUrlsReturnsUrls`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -401,7 +401,7 @@ Backend. Go `TestHappyPathV1WebsiteEditorUrlsCreatesUrl`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -421,7 +421,7 @@ OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Unpublished 02 rows already present. No `frontend-2`. No Worker.
+Unpublished 02 rows already present. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -443,7 +443,7 @@ OpenAPI 1:1. **calls** `WebsitePublicationBlockers`; **calls**
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 Unpublished 02 rows already present. Owner host `website_addresses`
-row. No `frontend-2`. Worker **container** is up (this op **calls**
+row. No `frontend-3`. Worker **container** is up (this op **calls**
 `websitePublication`).
 
 #### Exercise
@@ -479,7 +479,7 @@ host `latest/`).
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-Two owner `website_publications` rows (one `active`). No `frontend-2`.
+Two owner `website_publications` rows (one `active`). No `frontend-3`.
 Worker **container** is up.
 
 #### Exercise
@@ -511,7 +511,7 @@ Backend. Go `TestHappyPathV1WebsiteAddressesReturnsAddresses`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-No `frontend-2`. No Worker.
+No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -529,7 +529,7 @@ Backend. Go `TestHappyPathV1WebsiteAddressesCreatesAddress`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-No `frontend-2`. No Worker.
+No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -550,7 +550,7 @@ Backend. Go `TestHappyPathV1WebsiteAddressesIdReturnsAddress`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-One `website_addresses` row. No `frontend-2`. No Worker.
+One `website_addresses` row. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -675,7 +675,7 @@ Backend. Go `TestPipelineHappyPathWebsiteFull`. Per-step names live in
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-2`.
+Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-3`.
 Do not start the Worker container until 03/04 **call** `websiteRender`
 / `websitePublication`.
 

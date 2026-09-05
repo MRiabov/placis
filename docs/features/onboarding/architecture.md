@@ -4,7 +4,7 @@ The pipeline: find the business, business research in the background, fill the
 gaps, select then copy the website template, automatic website copy generation
 in the
 background, contractor copy improvement on the website preview, pay. Implemented
-in the predecessor (`OnCall`) and `frontend-2`; this is that loop under Placis
+in the predecessor (`OnCall`) and `frontend-3`; this is that loop under Placis
 names.
 
 Named identifiers:

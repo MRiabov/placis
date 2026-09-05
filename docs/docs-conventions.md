@@ -19,8 +19,9 @@ before adding or editing a doc.
   conventions + index of per-feature `api.md` files), `ai-layer.md`,
   `voice-agent.md`, `audit.md`, `jobs.md`, `persistence.md` (conventions,
   classification/prediction tables, index of per-feature tables), `frontend.md`
-  (`frontend-2` UI rules), `cms/` (The CMS: left nav, `/cms` two cards, look
-  tokens), `frontend-debloat.md` (cross-cutting port), `ci-cd.md`, `testing.md`.
+  (`frontend-3` UI rules), `cms/` (The CMS: left nav, `/cms` two cards, look
+  tokens), `frontend-debloat.md` (withdrawn `frontend-2` port stub),
+  `ci-cd.md`, `testing.md`.
   Feature-owned capabilities (website activation (activation Price plus Placis
   Pro plan / month Checkout), billing (Stripe Subscription, Price cache), leads,
   media library, ETL, business profile, assistant) live under `features/`, not
@@ -35,8 +36,10 @@ before adding or editing a doc.
   product/look Markdown via `scripts/export_designer_docs.py`. Specs remain
   canonical. CMS is the token source of truth.
 - `planning/` — proposed, unshipped work; never the canonical source. The
-  `frontend-2` port index is [planning/frontend-debloat.md](planning/frontend-debloat.md); per-feature cut
-  lists live with the feature as `frontend-debloat.md`.
+  `frontend-3` greenfield index is
+  [planning/frontend-debloat.md](planning/frontend-debloat.md)
+  ([ADR](general-architecture/ADR.md) 3). Per-feature `frontend-debloat.md`
+  files are withdrawn stubs.
 
 ## Per-feature structure
 
@@ -53,7 +56,7 @@ A feature directory holds, as applicable:
 | `api.md` | Canonical HTTP for this feature. Defined features: `## DTOs`, `## Routes`, `## Do not create`. Optional `###` groups under DTOs/Routes (glossary terms). Not Go struct bodies. Conventions: [general-architecture/api.md](general-architecture/api.md). |
 | `technical-implementation.md` | pipeline, validation, testing — references `persistence.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
-| `frontend-debloat.md` | port instructions for `frontend-2`: keep / delete / do not port / retarget onto the constrained API. Unshipped. Same headings in every file. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
+| `frontend-debloat.md` | **Withdrawn.** The `frontend-2` port is cancelled ([ADR](general-architecture/ADR.md) 3). Implement from `frontend.md` in `frontend-3`. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
 | `testing.md` | E2E and/or integration tests of what Persist / Must not names. Unit tests are not specified here. Every persistence table is named here and/or in `pipeline/testing/`. Integration is one side (backend and/or frontend). |
 | `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline). Closed `##` on step files (see Named identifiers). |
 | `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features) |
@@ -202,7 +205,7 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
    may only shrink (`cmd/ci/check-docs-code` leftover). Worker
    `POST /internal/…` is not required on public `GET /openapi.json`.
    **Do not create** paths fail if they appear in OpenAPI. DTO **fields**
-   and `frontend-2` routes are out of this gate.
+   and `frontend-3` routes are out of this gate.
    CI: [ci-cd.md](general-architecture/ci-cd.md).
 
 ### Named verifies

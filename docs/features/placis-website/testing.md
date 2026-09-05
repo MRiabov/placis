@@ -1,7 +1,7 @@
 # Placis website — E2E test
 
 This origin has no Go API and no Postgres. The E2E is Playwright against
-the built files served locally. It does not drive `frontend-2`.
+the built files served locally. It does not drive `frontend-3`.
 
 ## E2E
 
