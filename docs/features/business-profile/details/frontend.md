@@ -97,7 +97,9 @@ See [README.md](README.md) for the rest of what it edits.
 
 Not a control on this screen. Ads and the Assistant call the one
 **`update_details`** tool ([api.md](api.md)); the shared **notification** (OK / Revert)
-is [frontend.md](../../../general-architecture/frontend.md). Revert is `POST /v1/business-profile/edits/{id}/undo`.
+is [frontend.md](../../../general-architecture/frontend.md). Revert is `POST /v1/business-profile/edits/{id}/undo` after
+website activation; unpaid Revert is
+`POST /v1/onboarding/business-profile/edits/{id}/undo`.
 
 ## Out of scope
 

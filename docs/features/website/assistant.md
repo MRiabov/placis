@@ -163,6 +163,9 @@ Approved website component only.
 
 Same as `POST /v1/websites/{website_prefix}/editor/pages`. Also appends a
 top-level page node on the footer, and on the top menu unless legal or cap.
+Unpaid owner prompts persist via
+`POST /v1/onboarding/website/editor/pages` (CMS POST stays **403**
+unactivated).
 
 ```text
 create_page(
@@ -226,7 +229,10 @@ Frontend mutates the in-memory projection and PATCHes Request
 PATCHes **persist into** `website_slots` / `website_sections` /
 `website_pages` / `website_forms` / `edit_history` /
 `website_settings.edit_history_head` (and `website.menus` on `/menus`).
-Onboarding 06 writes unpublished rows in River SQL (no `frontend-2`).
+`create_page` is not that PATCH: persist is
+`POST /v1/websites/{website_prefix}/editor/pages` (active tenant) or
+`POST /v1/onboarding/website/editor/pages` (unpaid). Onboarding 06 writes
+unpublished rows in River SQL (no `frontend-2`).
 `generate_image` /
 `cleanup_image` write `media_library` immediately (same as today’s media-library
 HTTP); canvas attach still follows Ask first vs instant apply. Every agent edit
@@ -499,10 +505,14 @@ undo.
 
 ### `update_details`
 
-The shared Details tool ([details architecture](../business-profile/details/architecture.md)) — one implementation, also
-invoked by the Ads generator. Not a second copy here. On this surface: applied
-immediately (not Ask first Apply / Reject, not `edit_history`). Then the shared
-notification. Onboarding 06 does not call it.
+The shared Details tool
+([details architecture](../business-profile/details/architecture.md)) —
+one implementation, also invoked by the Ads generator. Not a second copy
+here. On this surface: applied immediately (not Ask first Apply /
+Reject, not `edit_history`). Then the shared notification. Details Revert is
+`POST /v1/business-profile/edits/{id}/undo`. Unpaid Revert is
+`POST /v1/onboarding/business-profile/edits/{id}/undo`. Onboarding 06
+does not call it.
 
 Activity `summary` example: `Updated Business details`. Never a tool name.
 

@@ -15,7 +15,8 @@ from that screen and do not wait for more prompts.
 
 Wait-end (06 done or the wait cap) navigates to `/onboarding/preview-and-edit/`.
 Onboarding session → `preview_and_edit`. Signed-in contractor may send Assistant
-prompts that PATCH unpublished website.
+prompts that PATCH unpublished website, POST a website page
+(`create_page`), or `update_details`.
 
 ## Pre
 
@@ -42,7 +43,8 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
 2. Follow leftover 06 via the existing onboarding session SSE plus unpublished
    GET. While 06 holds `assistant.runs` `running`, owner Send / Voice is
    **409** `in_flight_run`.
-3. Signed-in Send / Voice: same website editor tools as CMS, **instant apply**,
+3. Signed-in Send / Voice: Allowed tools in
+   [website editor](../website-editor.md), **instant apply**,
    Follow always on, five unpaid prompts. Over five: **409** `unpaid_prompt_cap`
    (pay CTA, not 402).
 4. Share is [08](08-preview-website-address.md). Pay is
@@ -52,6 +54,10 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
 
 Unpublished website PATCH
 (`PATCH /v1/onboarding/website/editor/pages/{page_id}`);
+`POST /v1/onboarding/website/editor/pages` (`create_page`);
+`PATCH /v1/onboarding/business-profile` and
+`POST /v1/onboarding/business-profile/edits/{id}/undo`
+(`update_details`);
 `ai.threads` (`thread_kind=cms_assistant`) /
 `assistant.thread_items` / `assistant.runs`. No `website_publications` from this
 step. Onboarding session stays `preview_and_edit`.
@@ -70,6 +76,7 @@ or block 09.
 ## Invariants
 
 - GET thread hydrate: onboarding session token or Clerk.
-- Send, Voice, PATCH: Clerk + unactivated tenant, app origin.
+- Send, Voice, PATCH, POST website pages, Details write / undo: Clerk +
+  unactivated tenant, app origin.
 - 06 does not count toward the five.
 - This is not a second 06 River job.

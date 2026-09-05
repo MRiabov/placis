@@ -39,8 +39,12 @@ two actions. Details `update_details`: **Revert** + **OK**. Denied microphone:
 a **narrow** screen (≤1100px), sit **above** the Sites workspace bottom bar (not
 under thumbs or the home indicator).
 
-`update_details` ([details architecture](../business-profile/details/architecture.md)): the write is applied; OK keeps it;
-Revert undoes that `business_profile_edits` increment. The Assistant, Ads
+`update_details`
+([details architecture](../business-profile/details/architecture.md)):
+the write is applied; OK keeps it; Revert undoes that
+`business_profile_edits` increment. Details Revert is
+`POST /v1/business-profile/edits/{id}/undo`. Unpaid Revert is
+`POST /v1/onboarding/business-profile/edits/{id}/undo`. The Assistant, Ads
 generator, and later LLM callers invoke **that** tool (one implementation).
 Leaving the screen without clicking keeps the write. Stay until they pick an
 action (timeout later).

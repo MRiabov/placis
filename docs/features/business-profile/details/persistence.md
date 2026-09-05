@@ -52,8 +52,9 @@ on every call.
 - **Uniques:** `tenant_id` (required; the unactivated tenant created at
   business lookup, same row later activated)
 - **Written by:** `ApplyBusinessProfileIncrement` (`UpdateBusinessProfile`,
-  `update_details`, `UndoBusinessProfileEdit`); onboarding client
-  interview; ETL transform
+  `update_details`, `UndoBusinessProfileEdit`,
+  `UpdateOnboardingBusinessProfile`, `UndoOnboardingBusinessProfileEdit`);
+  onboarding client interview; ETL transform
 - **Notes:** No `trading_name` / `legal_form` / `company_status`. No
   `brand_*` — website look is
   [`website_settings`](../../website/persistence.md). No ranking

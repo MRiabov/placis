@@ -90,6 +90,8 @@ Named Routes and auth: [api.md](api.md). This table is predecessor → path.
 | Interview Project Archive | `POST /v1/onboarding/projects/{projectId}/archive` |
 | Don't say setup: `GET …/events/stream` | `GET /v1/onboarding/events/stream` |
 | Unpaid canvas `GET/PATCH` leftover website editor | `GET/PATCH /v1/onboarding/website/editor/pages…` and `…/menus` (not `/v1/websites/{website_prefix}/editor` while unactivated; PATCH Clerk only) |
+| Unpaid `create_page` leftover CMS POST pages | `POST /v1/onboarding/website/editor/pages` (Clerk only; not CMS POST pages while unactivated) |
+| Unpaid `update_details` leftover Details PATCH / Revert | `PATCH /v1/onboarding/business-profile`; `POST /v1/onboarding/business-profile/edits/{id}/undo` (Clerk only; not `/v1/business-profile` while unactivated) |
 | Unpaid canvas Assistant hydrate / send / Voice | `GET /v1/onboarding/website/assistant/thread` (onboarding session token or Clerk); send and Voice same prefix, Clerk only. Not `/v1/assistant/…` |
 | Don't say claim: `POST …/preview/{token}/claim` and `…/claim/checkout` | `POST /v1/onboarding/activation/checkout` (Host / `website_prefix`; not `/v1/website-previews/{token}/…`) |
 | Don't say claim: `GET …/claim/status` | `GET /v1/onboarding/activation/status` |
