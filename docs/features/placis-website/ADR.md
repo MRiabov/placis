@@ -25,7 +25,7 @@ website is
 4. **Canonical host is `https://placis.com`** — `www.placis.com` 301s to apex.
    This origin replaces the predecessor Next.js app on Vercel; do not keep
    Vercel’s www-canonical host or its webhook routes. Stripe and Clerk webhooks
-   move with `frontend-2` / Go. (2026-08-23)
+   move with `frontend-3` / Go. (2026-08-23)
 
 5. **Islands follow the predecessor marketing source** — The predecessor home
    hydrates in the browser because interactive islands share a file with the
@@ -44,6 +44,6 @@ website is
 6. **Onboarding and Clerk are not on this origin** — CTAs that were `/sign-up` /
    `/sign-in` go to `https://app.placis.com` (`/onboarding/find` and sign-in).
    Do not port OrbDemo, DustOrb, voice, enrichment, geo detection, Clerk sign-in
-   / sign-up, or the dashboard. Those stay in `frontend-2`. (2026-08-23)
+   / sign-up, or the dashboard. Those stay in `frontend-3`. (2026-08-23)
 
 See [cloudflare.md](cloudflare.md).

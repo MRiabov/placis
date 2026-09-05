@@ -58,7 +58,7 @@ apps/
 packages/
   website-components/  # website templates, website component renderers + contract.json, website style catalog presets
 catalog/          # later: typed structs dumped to JSON; first-pass JSON sidecars live in packages/website-components
-frontend-2/       # CMS + onboarding including `/onboarding/preview-and-edit/`
+frontend-3/       # CMS + onboarding including `/onboarding/preview-and-edit/`
 docs/
 go.mod
 ```
@@ -72,7 +72,7 @@ Rules:
 - **Folder fan-out** (predecessor `check_folder_fanout`): a nested package dir
   may hold at most **9** entries (tracked files + child dirs). `internal/` root
   may hold at most **15**. Split a fat folder into a nested package. Scope is
-  `internal/` (the old `backend/app`); not `docs/`, `frontend-2/`, or
+  `internal/` (the old `backend/app`); not `docs/`, `frontend-3/`, or
   `packages/` in this pass. See [CI and delivery](ci-cd.md).
 - Shared types live in exactly one package — no forked duplicates.
 - Each feature that calls the LLM owns `prompts.yaml` in that package, not
@@ -85,5 +85,5 @@ Rules:
 - See [CI and delivery](ci-cd.md) for the delivery gates (file-size guard, folder fan-out,
   external API isolation, generated-code freshness).
 
-`frontend-2` keeps its own feature-local structure and is not folded into
+`frontend-3` keeps its own feature-local structure and is not folded into
 `internal/`; the file-size guard applies to it too. Folders: [frontend stack](frontend-stack.md).

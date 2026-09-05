@@ -28,7 +28,7 @@ owner-written; omit it rather than inventing it.
 
 2. **Look is DustOrb** — Empty field fades to the particle orb. Not website
    design decision 18’s “soft glowing circle” HTML stand-in. Not the 44px Ads
-   Review rewrite orb. Canonical file: `frontend-2/src/shared/ui/DustOrb.tsx`
+   Review rewrite orb. Canonical file: `frontend-3/src/shared/ui/DustOrb.tsx`
    (bring across in the frontend pass). (2026-08-28) Same day, later: the look
    app runs the particle orb from [`DustOrb.tsx`](../../../apps/demo/src/ui/DustOrb.tsx). The orb **bounces** when they
    hover or tap it, and while they speak with it. Reduced motion: no bounce.

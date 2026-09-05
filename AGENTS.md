@@ -38,10 +38,10 @@ Do not collapse these into "the frontend". Processes:
   invent a second HTML engine.
 - [`apps/placis-website/`](apps/placis-website/README.md) — Placis's own site.
   Astro static → R2, hostname `placis.com`. No Worker. No Go HTTP.
-- [`frontend-2/`](docs/general-architecture/frontend-stack.md) — present owner
-  CMS and onboarding tree (not under `apps/`). **Keep versus delete is
-  unresolved.** Do not treat port-and-debloat as locked. Do not delete it. Do
-  not start a replacement SPA. Wait for an owner-reviewed spec.
+- [`frontend-3/`](docs/general-architecture/frontend-stack.md) — owner CMS and
+  onboarding (not under `apps/`). Greenfield. Delete `frontend-2/` before the
+  first owner-UI implementation. Do not open `frontend-2`, copy from it, or
+  use it as a reference. [ADR](docs/general-architecture/ADR.md) 3.
 
 Look-only work stays in `apps/demo/`. Do not restyle look in
 `apps/contractor-website` or `apps/placis-website`.

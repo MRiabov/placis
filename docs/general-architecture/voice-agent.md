@@ -241,6 +241,6 @@ Voice is transport, not authority. The agent calls the same governed, typed,
 validated tools as text; it cannot do website publication or bypass validation.
 Failed Go POSTs still return `function_call_output` on the voice-service socket.
 
-Onboarding ADR 2 previously defaulted `frontend-2` to voice during onboarding
+Onboarding ADR 2 previously defaulted the owner SPA to voice during onboarding
 and treated voice as a second client-interview writer. That client-interview
 default is out (2026-08-27); keep the old entry.

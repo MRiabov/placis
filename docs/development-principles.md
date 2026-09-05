@@ -79,7 +79,7 @@ everything else FKs into `tenants`.
   name tables, routes, DTO **types and fields**, and major services
   ([docs conventions](docs-conventions.md#named-identifiers)); implementation
   keeps those names. Do not pre-write OpenAPI YAML or Go struct literals.
-  Predecessor OpenAPI is not a compatibility surface for `frontend-2` or the
+  Predecessor OpenAPI is not a compatibility surface for `frontend-3` or the
   contractor website: do not wrap it, alias old paths, or generate types from
   it.
 - **Two type layers by default** (see [backend-stack.md](general-architecture/backend-stack.md)): sqlc rows + huma

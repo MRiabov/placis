@@ -1,7 +1,7 @@
 # Onboarding Frontend
 
-The contractor-facing onboarding in `frontend-2`. Screens and fields match the
-implemented app (copied from the predecessor). Port: [frontend-debloat.md](frontend-debloat.md).
+The contractor-facing onboarding in `frontend-3`. Screens and fields are this
+spec. Do not open `frontend-2`. Withdrawn port: [frontend-debloat.md](frontend-debloat.md). [ADR](../../general-architecture/ADR.md) 3.
 Look: [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*` ([design.md](design.md),
 [design decision record](design-decision-record.md)).
 
@@ -203,7 +203,7 @@ website address (after share) opens without `localStorage`.
 Restore failure keeps the token and
 retries; it does not `POST` a new onboarding session.
 
-## Components (`frontend-2`)
+## Components (`frontend-3`)
 
 - `BusinessSourcePanel` — country, registry, optional Maps, online research
   consent.

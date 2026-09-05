@@ -234,7 +234,7 @@ public checkout to `cmd/api`; CORS by `Host` / `website_prefix` — not
 HTML. The strip is sticky to the bottom of the viewport while the website
 scrolls. 09 rewrites without the island and purges Cache.
 
-`/onboarding/preview` is the wait carousel in `frontend-2`, not this host.
+`/onboarding/preview` is the wait carousel in `frontend-3`, not this host.
 
 ## Website form POST
 

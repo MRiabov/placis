@@ -8,7 +8,7 @@ Three tiers, and they are not interchangeable:
   router. Not specified in feature `testing.md` (drop Auth gate /
   `AuthGate.test.tsx`).
 - **Integration** — **one side**, not both.
-  - **Backend** (`humatest`, no `frontend-2`): handler → service → sqlc is
+  - **Backend** (`humatest`, no `frontend-3`): handler → service → sqlc is
     real. **Testcontainers Postgres** and **Testcontainers MinIO** (throwaway
     containers, not `just servers-up` MinIO). Product language can still say
     R2 keys; integration storage is MinIO. Always fake the LLM. Prefer fake
@@ -28,7 +28,7 @@ Three tiers, and they are not interchangeable:
     `POST /internal/website-render`. Path-filter:
     `apps/contractor-website/`, the Worker internal OpenAPI file, and Go
     callers of `websiteRender` / `websitePublication`.
-- **E2E** — **both sides real**: Playwright drives `frontend-2` against the
+- **E2E** — **both sides real**: Playwright drives `frontend-3` against the
   real Go API + real Postgres. A full contractor/owner/website-visitor
   journey. Website / onboarding E2E that hit 03 or 04 start the Worker
   container. Live GET does not call Go. E2E storage may still fake paid
@@ -156,7 +156,7 @@ Extra frontend HappyPath only for real screen branching. Names include
 
 At least **one E2E test per feature** that has owner UI — a "feature" is a
 directory under `docs/features/`. ETL has no owner UI (onboarding E2E covers
-02). E2E is **full-stack**: Playwright drives `frontend-2` against the real
+02). E2E is **full-stack**: Playwright drives `frontend-3` against the real
 Go API and a real Postgres (Testcontainers), with migrations run. Only
 Google, the LLM, and voice are faked. Website / onboarding E2E that hit 03
 or 04 also run the Worker container. Each E2E verifies both what the UI
@@ -234,8 +234,8 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
   graph cannot see Go, SQL, or OpenAPI — force the **full** list for that job
   when `internal/`, `cmd/`, `migrations/`, `openapi.json`, the Worker
   internal OpenAPI file, Playwright config, `package.json`, or
-  `pnpm-lock.yaml` change. Path-filter `frontend-2` e2e unless
-  `frontend-2/`, `packages/website-components/`, Go, migrations, or
+  `pnpm-lock.yaml` change. Path-filter `frontend-3` e2e unless
+  `frontend-3/`, `packages/website-components/`, Go, migrations, or
   `openapi.json` changed. Path-filter `apps/placis-website` e2e unless that app
   (or its shared packages) changed. Do not `--shard` until one job with workers
   is still too slow (shards multiply hosted minutes and Clerk traffic). Do not
@@ -264,7 +264,7 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
 - **`humatest`** — backend-only tests that hit the API use Huma's
   `humatest` (the faster in-process API: `api.Get` / `api.Post`, no
   listen). Do not start a real HTTP server for those tests. Playwright
-  E2E still drives `frontend-2` against the real Go process.
+  E2E still drives `frontend-3` against the real Go process.
 - Fakes for Google, the LLM, Stripe, and voice live in the repo (see
   [ci-cd.md](ci-cd.md)); tests never spend money or reach production APIs.
   Integration object storage is MinIO. `purge_cache` stays faked.

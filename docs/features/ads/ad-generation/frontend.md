@@ -8,11 +8,12 @@ Related docs:
 2. [Ad generation technical implementation](technical-implementation.md)
 3. [Ad generation ADR](ADR.md)
 4. [design decision record](design-decision-record.md)
-5. [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
+5. [frontend-debloat.md](frontend-debloat.md) — withdrawn `frontend-2` port.
+   Implement in `frontend-3`. [ADR](../../../general-architecture/ADR.md) 3.
 
 ## Purpose
 
-This spec covers **Ads** in the CMS (`frontend-2/`), under `/cms/ads`. It is the
+This spec covers **Ads** in the CMS (`frontend-3/`), under `/cms/ads`. It is the
 contractor-facing UI for the ad generation service: create an ad, review LLM
 drafts, edit, approve, and download. It is one caller of the service; it is not
 the website editor, not the media library, and not campaign management (which is

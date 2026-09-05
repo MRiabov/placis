@@ -1,6 +1,6 @@
 # Media library E2E and integration tests
 
-Playwright e2e drives `frontend-2` against the real Go API and real
+Playwright e2e drives `frontend-3` against the real Go API and real
 Postgres. Integration is **one side**. Backend: `humatest`,
 Testcontainers Postgres and Testcontainers MinIO, fake LLM, prefer fake
 Clerk. Frontend: Vitest `HappyPathMediaFull` (MSW, no Go). Persist names
@@ -111,7 +111,7 @@ Backend. Go `TestHappyPathV1MediaAssetsReturnsList`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. Tenant active. One `ready` +
+Prefer fake Clerk. No `frontend-3`. Tenant active. One `ready` +
 `approved` item, one `uploading` item (`file_id` null), one
 `archived` item, and one `pending_review` child.
 
@@ -146,7 +146,7 @@ Backend. Go `TestHappyPathV1MediaAssetsStartUpload`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. Tenant active. Zero
+Prefer fake Clerk. No `frontend-3`. Tenant active. Zero
 `media_assets`.
 
 #### Exercise
@@ -174,7 +174,7 @@ Backend. Go `TestHappyPathV1MediaAssetsIdConfirmUpload`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. Start-upload already wrote the
+Prefer fake Clerk. No `frontend-3`. Start-upload already wrote the
 row (`uploading`). Test PUT to `upload_url` (MinIO real).
 
 #### Exercise
@@ -203,7 +203,7 @@ Backend. Go `TestHappyPathV1MediaAssetsReturnsItem`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. An `uploading` row exists
+Prefer fake Clerk. No `frontend-3`. An `uploading` row exists
 (`file_id` null).
 
 #### Exercise
@@ -229,7 +229,7 @@ Backend. Go `TestHappyPathV1MediaAssetsPatch`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. A `ready` + `approved`
+Prefer fake Clerk. No `frontend-3`. A `ready` + `approved`
 unreferenced item. A second `ready` + `approved` item referenced
 from a website-section image (or `logo_media_asset_id` or
 `ad_image_placements`).
@@ -267,7 +267,7 @@ Backend. Go `TestHappyPathV1MediaAssetsIdStartReplaceUpload`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. A `ready` parent.
+Prefer fake Clerk. No `frontend-3`. A `ready` parent.
 
 #### Exercise
 
@@ -295,7 +295,7 @@ Backend. Go `TestHappyPathV1MediaAssetsIdImageEdits`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. A `ready` parent. Usage credit
+Prefer fake Clerk. No `frontend-3`. A `ready` parent. Usage credit
 available.
 
 #### Exercise
@@ -325,7 +325,7 @@ Backend. Go `TestHappyPathV1MediaAssetsIdReject`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Fake LLM.
-Prefer fake Clerk. No `frontend-2`. A `pending_review` child with a
+Prefer fake Clerk. No `frontend-3`. A `pending_review` child with a
 parent.
 
 #### Exercise

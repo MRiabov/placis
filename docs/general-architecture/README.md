@@ -5,9 +5,9 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 
 - [backend-stack.md](backend-stack.md) — stack, type layers
 - [feature-flags.md](feature-flags.md) — named config bools (`internal/config`)
-- [frontend-stack.md](frontend-stack.md) — `frontend-2` stack, folders, typegen
+- [frontend-stack.md](frontend-stack.md) — `frontend-3` stack, folders, typegen
 - [module-layout.md](module-layout.md) — Go package tree, file-size guard, folder fan-out
-- [processes.md](processes.md) — `cmd/api`, `frontend-2`, contractor website, Placis website,
+- [processes.md](processes.md) — `cmd/api`, `frontend-3`, contractor website, Placis website,
   deploy
 - [api.md](api.md) — HTTP conventions (versioning, typing, serve only types on HTTP,
   auth modes, errors) and index of per-feature `api.md` files
@@ -18,15 +18,14 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [jobs.md](jobs.md) — River background jobs (including ETL)
 - [files-and-s3.md](files-and-s3.md) — object storage and the `files` row
 - [ADR.md](ADR.md) — architectural decision record (closed sets are checks, not
-  Postgres enums)
+  Postgres enums; `frontend-3` greenfield)
 - [persistence.md](persistence.md) — conventions and index of per-feature tables
-- [frontend.md](frontend.md) — `frontend-2` loading placeholders and other UI rules that no
+- [frontend.md](frontend.md) — `frontend-3` loading placeholders and other UI rules that no
   single feature owns. Tokens: [CMS design.md](cms/design.md).
 - [cms/](cms/README.md) — The CMS (sidebar + main area): left nav, `/cms` two cards, look
   tokens
-- [frontend-debloat.md](frontend-debloat.md) — cross-cutting `frontend-2` port (generated types,
-  leftover layout names, parity e2e; left nav / `/cms` two cards). Per-feature
-  cut lists live with the feature.
+- [frontend-debloat.md](frontend-debloat.md) — withdrawn `frontend-2` port stub. Greenfield index:
+  [planning/frontend-debloat.md](../planning/frontend-debloat.md).
 - [ci-cd.md](ci-cd.md) — delivery gates (file-size, folder fan-out), GitHub Checks,
   Don't-say checker
 - [testing.md](testing.md) — unit / integration / E2E tiers and the per-feature E2E rule

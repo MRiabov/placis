@@ -1,6 +1,6 @@
 # Projects — E2E and integration tests
 
-Playwright e2e drives `frontend-2` against the real API and real
+Playwright e2e drives `frontend-3` against the real API and real
 Postgres. Integration is **one side**. Backend: `humatest`,
 Testcontainers Postgres. Frontend: Vitest `HappyPathProjectsFull`
 (MSW, no Go). Persist names tables from
@@ -15,7 +15,7 @@ not exist). No Go tests in this docs PR.
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against
+E2E (Playwright, both sides). Playwright drives `frontend-3` against
 the real API + real Postgres. Activated tenant. Zero owner
 `projects` rows.
 

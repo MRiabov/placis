@@ -13,7 +13,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
    entry is always the contractor's Google Maps listing or company registry
    record (Companies House / CRO), either or both. A short client interview then
    fills the gaps. Text and voice are two writers into the same profile;
-   `frontend-2` defaults to voice. Voice is also the voice agent in the CMS
+   `frontend-3` defaults to voice. Voice is also the voice agent in the CMS
    after website activation. (2026-08-17: voice is a channel, not a later add-on
    to the pipeline.) (2026-08-27): **Onboarding client-interview voice is out.**
    Text 04a stays the writer. Do not ship 04b as v1.
@@ -124,7 +124,7 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     separate async job ([06](pipeline/06-website-copy-generation.md)) that uses the website editor tools on that
     unpublished website. The CMS **assistant** is after website activation. The
     LLM never does website publication. (2026-08-17: replaced "no LLM in the
-    loop" — predecessor/`frontend-2` pick website template/website styles with
+    loop" — predecessor/`frontend-3` pick website template/website styles with
     one LLM call, then apply the website template deterministically. Same day:
     website copy generation is an onboarding job, not "the website assistant
     after website activation". 2026-08-19: do not say instantiate / generate /
