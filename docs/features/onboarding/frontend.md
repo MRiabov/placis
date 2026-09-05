@@ -128,10 +128,11 @@ research does not write them).
   `/cms/projects`). If that array is non-empty, show up to four cards (current
   completeness rank: cover, then text length, then newer `created_at`). Same
   card look as `/cms/projects` (cover from `cover_media_asset_id` into the media
-  library list, title, description). One column in the client interview
-  `max-w-xl`. No Project draft badge. Not a link to `/cms/projects/{id}`. Not
-  editable. **Archive** on the card
-  (`POST /v1/onboarding/projects/{projectId}/archive` returns
+  library list, title, description). Two columns in the client interview
+  `max-w-xl` (same gap as `/cms/projects`). No Project draft badge. Not a link
+  to `/cms/projects/{id}`. Not editable. **Archive** is the top-right Archive
+  icon on the card (same hit as certifications / reviews), not a button under
+  the description (`POST /v1/onboarding/projects/{projectId}/archive` returns
   `OnboardingProfileRead` so the list updates without waiting on SSE). Zero
   `active` → omit the whole block. Cards may appear or reorder while business
   research is still running. The onboarding guide does not Archive these cards.
