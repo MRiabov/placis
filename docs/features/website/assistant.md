@@ -229,7 +229,10 @@ Frontend mutates the in-memory projection and PATCHes Request
 PATCHes **persist into** `website_slots` / `website_sections` /
 `website_pages` / `website_forms` / `edit_history` /
 `website_settings.edit_history_head` (and `website.menus` on `/menus`).
-Onboarding 06 writes unpublished rows in River SQL (no `frontend-2`).
+`create_page` is not that PATCH: persist is
+`POST /v1/websites/{website_prefix}/editor/pages` (active tenant) or
+`POST /v1/onboarding/website/editor/pages` (unpaid). Onboarding 06 writes
+unpublished rows in River SQL (no `frontend-2`).
 `generate_image` /
 `cleanup_image` write `media_library` immediately (same as today’s media-library
 HTTP); canvas attach still follows Ask first vs instant apply. Every agent edit
