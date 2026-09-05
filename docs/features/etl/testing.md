@@ -17,7 +17,7 @@ owner UI).
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Adapters faked. No
-`frontend-2`. No Worker.
+`frontend-3`. No Worker.
 
 #### Exercise
 

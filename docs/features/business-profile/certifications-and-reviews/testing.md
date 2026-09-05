@@ -14,7 +14,7 @@ the `TestHappyPath` prefix.
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against
+E2E (Playwright, both sides). Playwright drives `frontend-3` against
 the real API + real Postgres. Activated tenant. `in_pool` reviews
 exist.
 

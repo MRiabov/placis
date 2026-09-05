@@ -6,7 +6,7 @@ select, edit, see it update, then website publication.
 ## The loop
 
 1. `GET` loads the typed **website editor projection** once (page select /
-   reload). That is the only hydrate. The canvas (`frontend-2`) renders that
+   reload). That is the only hydrate. The canvas (`frontend-3`) renders that
    unpublished website through the shared contractor-website component package —
    the same ones the live website (Astro) uses.
 2. The owner edits inline: click-to-edit visible text, swap an image (Content

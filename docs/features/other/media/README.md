@@ -14,7 +14,7 @@ stay on `/cms/media`. Named identifiers:
   `DescribeImage`, `CreateGeneratedMediaAsset`
 - [technical-implementation.md](technical-implementation.md) — named services,
   image thumbnail encode
-- [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
+- [frontend-debloat.md](frontend-debloat.md) — `frontend-3` port: keep / delete / retarget
 - [testing.md](testing.md) — E2E and integration tests
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
   doc gap / drop)

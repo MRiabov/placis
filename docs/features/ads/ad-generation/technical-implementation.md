@@ -291,7 +291,7 @@ Relevant broader checks:
 
 1. `go build ./...` and `go vet ./...`
 2. targeted backend tests for the ads service/routes
-3. `pnpm --dir frontend-2 check`
+3. `pnpm --dir frontend-3 check`
 4. one E2E test: create → generate → review/edit → approve → use the ad set (via
    the service and the human download), with external/paid integrations mocked
    but core domain logic unmocked

@@ -50,7 +50,10 @@ channel into the same tools (not a separate product). How slices land:
 - [ETL](features/other/etl/README.md) — continuing public extract (Facebook posts, photos, reviews)
 - [Placis website](features/placis-website/README.md) — Placis’s own site
 
-`frontend-2` is [reused and debloated](planning/frontend-debloat.md), not rebuilt.
+`frontend-3` is greenfield. Delete `frontend-2` before the first owner-UI
+implementation. Do not use `frontend-2` as a reference.
+[ADR](general-architecture/ADR.md) 3. Stack:
+[frontend-stack.md](general-architecture/frontend-stack.md).
 
 ## Out of scope
 

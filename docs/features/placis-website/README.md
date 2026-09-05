@@ -19,5 +19,5 @@ copy or design PRD. The app lives in `apps/placis-website/`. This origin has
 Visual and copy source: `github.com/bongagift/placis-web` marketing files
 (`frontend/src/components/public-website/`). That repo’s Next.js app, Clerk,
 dashboard, and FastAPI are not this origin. Onboarding, sign-in, and the client
-interview stay in `frontend-2`. Privacy and terms copy was removed there as
+interview stay in `frontend-3`. Privacy and terms copy was removed there as
 unreviewed, so this origin has no legal routes until that copy exists.

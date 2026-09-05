@@ -48,7 +48,7 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    **15**. Split a fat folder into a nested package; that is why `templates` and
    `assistant` nest under `website/` instead of sitting as siblings at
    `internal/` root. Scope is `internal/` only this pass (the predecessor
-   `backend/app` analog) — not `docs/`, `frontend-2/`, or `packages/`.
+   `backend/app` analog) — not `docs/`, `frontend-3/`, or `packages/`.
    Documented as a later `cmd/ci` check; this file does not implement the
    checker. Layout: [module layout](module-layout.md).
 3. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`,
@@ -60,11 +60,11 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    `.github/workflows/frontend-quality.yml` (path filter: `apps/demo/**` and
    that workflow file; Don't-say is the docs-gates job, not this one) and the
    copied `apps/demo/.github/workflows/check.yml` on `demo.placis.com`.
-   `frontend-2` TypeScript + Biome is the same contract once that app is
+   `frontend-3` TypeScript + Biome is the same contract once that app is
    enabled.
 4. **Build + test** — `go build ./...` and `go test ./...` with **no**
    `-count=1` (Testcontainers Postgres; CircleCI uses the machine executor when
-   it is live); `frontend-2` typecheck + `vitest run --changed origin/main` +
+   it is live); `frontend-3` typecheck + `vitest run --changed origin/main` +
    Playwright e2e (`--only-changed=origin/main` unless Go / migrations / OpenAPI
    / Playwright config / lockfile force the full list). Cache paths and worker
    rules: Runner policy below, and [testing.md](testing.md).
@@ -107,12 +107,14 @@ decision + date) instead of silently replacing the old entry.
    `apps/demo/scripts/check-files.mjs` (the checker copies with the look
    export). Why: the look app only grows in complexity when it is integrated
    into `frontend-2`. (2026-08-29)
+   (2026-09-05): owner SPA is `frontend-3`; [ADR](ADR.md) 3. Do not integrate
+   look into `frontend-2`.
 
 ## Runner policy
 
 - Validation runs on **pull-request branches only** and ignores direct `main`
   pushes (merge commits are already validated by the PR checks). Path filtering
-  skips jobs irrelevant to the change: `frontend-2` e2e unless `frontend-2/`,
+  skips jobs irrelevant to the change: `frontend-3` e2e unless `frontend-3/`,
   `packages/website-components/`, Go, migrations, or `openapi.json` changed;
   `apps/placis-website` e2e unless that app (or its shared packages) changed.
   Start the contractor-website **Worker container** (no `wrangler deploy`)
@@ -172,7 +174,7 @@ The `justfile` is the **developer entry point**, and nothing more — only the
 high-frequency dev loop:
 
 - `just servers-up` / `just servers-down` — start/stop the dev environment
-  (Postgres via Docker, migrations, `cmd/api`, `frontend-2`, with env-var + port
+  (Postgres via Docker, migrations, `cmd/api`, `frontend-3`, with env-var + port
   resolution).
 - `just test`, `just lint`, `just fmt`, `just sqlc`, `just typegen`,
   `just check-files` — the fix-it-locally feedback loop.
@@ -289,7 +291,7 @@ list). `**/testdata/**` is skipped (checker fixtures). Worked examples:
   `catalog/`, `apps/contractor-website`, `apps/placis-website`, `scripts/`, and
   `apps/demo/` (Go's build cache keeps this cheap). Markdown, Go, and JavaScript
   (`.js` / `.mjs`) are scanned in those trees. TypeScript (`.ts` / `.tsx`) is
-  scanned in the look app (`apps/demo/`, exported `src/`) only; `frontend-2`
+  scanned in the look app (`apps/demo/`, exported `src/`) only; `frontend-3`
   stays off until `--frontend`. If `docs/glossary.md` is staged, the checker
   scans those trees in full. Paths outside those trees (including `packages/`)
   are ignored even when filenames are passed in. A copied look checkout
@@ -397,4 +399,4 @@ scanners.
   stay out of this ratchet.
 
 Shared parsers live in `cmd/ci/docnames`. This pass does not check DTO
-field constraints or `frontend-2` routes.
+field constraints or `frontend-3` routes.

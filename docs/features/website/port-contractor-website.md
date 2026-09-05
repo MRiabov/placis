@@ -3,7 +3,7 @@
 Status: planning (port process, not shipped Worker code).
 
 How `apps/contractor-website` moves onto the Go contract. Cut list (keep /
-delete / Don’t-say): [contractor-website-debloat.md](contractor-website-debloat.md). `frontend-2` typegen:
+delete / Don’t-say): [contractor-website-debloat.md](contractor-website-debloat.md). `frontend-3` typegen:
 [planning/frontend-debloat.md](../../planning/frontend-debloat.md). HTTP: [website HTTP](api.md), [leads HTTP](../other/leads/api.md).
 
 Product name is **contractor website**. Predecessor OpenAPI is not a

@@ -16,7 +16,7 @@ Pipeline Persist is [pipeline/testing](pipeline/testing/README.md).
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the
+E2E (Playwright, both sides). Playwright drives `frontend-3` against the
 real API + real Postgres. Google Maps / company registry / Facebook /
 crawl and the LLM are faked. Worker **container** is up when **website**
 03/04 run (`websiteRender` / `websitePublication`; no
@@ -60,7 +60,7 @@ webhook. Worker is real (container). R2 / `purge_cache` faked.
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres). No `frontend-2`. No
+Backend (`humatest`, Testcontainers Postgres). No `frontend-3`. No
 Clerk. Consent true. Registry and/or Maps attach keys.
 
 #### Exercise
@@ -90,7 +90,7 @@ Registry parquet. Google Maps autocomplete.
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres). No `frontend-2`. Country
+Backend (`humatest`, Testcontainers Postgres). No `frontend-3`. Country
 `ie`. Query string set.
 
 #### Exercise
@@ -109,7 +109,7 @@ Registry parquet.
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres). No `frontend-2`. Country
+Backend (`humatest`, Testcontainers Postgres). No `frontend-3`. Country
 `ie`. Query string set.
 
 #### Exercise
@@ -130,7 +130,7 @@ Google Maps autocomplete.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Onboarding session token
-from business lookup. No `frontend-2`.
+from business lookup. No `frontend-3`.
 
 #### Exercise
 
@@ -155,7 +155,7 @@ Registry. Maps. ETL adapters.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Onboarding session token.
-No `frontend-2`.
+No `frontend-3`.
 
 #### Exercise
 
@@ -179,7 +179,7 @@ None beyond lookup fakes.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Onboarding session
-`client_interviewing`. Token auth. No `frontend-2`.
+`client_interviewing`. Token auth. No `frontend-3`.
 
 #### Exercise
 
@@ -204,7 +204,7 @@ None required for text path.
 
 Backend (`humatest`, Testcontainers Postgres). Onboarding session
 `client_interviewing`. Complete-gate keys ready (or last dirty answers
-on the body). Token auth. No `frontend-2`.
+on the body). Token auth. No `frontend-3`.
 
 #### Exercise
 
@@ -310,7 +310,7 @@ LLM unused. Not MinIO (Testcontainers).
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Token auth. An `active`
-business-research origin Project on this tenant. No `frontend-2`.
+business-research origin Project on this tenant. No `frontend-3`.
 
 #### Exercise
 
@@ -334,7 +334,7 @@ None.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Token auth. 02 may still
-run. No `frontend-2`.
+run. No `frontend-3`.
 
 #### Exercise
 
@@ -359,7 +359,7 @@ ETL adapters. LLM.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Unpublished website from
-05. Token or Clerk unactivated. No `frontend-2`.
+05. Token or Clerk unactivated. No `frontend-3`.
 
 #### Exercise
 
@@ -407,7 +407,7 @@ None.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Unpublished website from
-05. A `page_id`. Token or Clerk unactivated. No `frontend-2`.
+05. A `page_id`. Token or Clerk unactivated. No `frontend-3`.
 
 #### Exercise
 
@@ -431,7 +431,7 @@ None.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Clerk unactivated.
-Unpublished website from 05. A `page_id`. No `frontend-2`.
+Unpublished website from 05. A `page_id`. No `frontend-3`.
 
 #### Exercise
 
@@ -457,7 +457,7 @@ None.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Clerk unactivated.
-Unpublished website from 05. No `frontend-2`.
+Unpublished website from 05. No `frontend-3`.
 
 #### Exercise
 
@@ -482,7 +482,7 @@ None.
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Wait-end
 (`preview_and_edit`). Token or Clerk unactivated. Worker container
-(**calls** `websitePublication`). No `frontend-2`.
+(**calls** `websitePublication`). No `frontend-3`.
 
 #### Exercise
 
@@ -502,7 +502,7 @@ pages still lists unpublished website pages. Prefix reserved.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Unpublished website from
-05. Onboarding session token. No `frontend-2`.
+05. Onboarding session token. No `frontend-3`.
 
 #### Exercise
 
@@ -526,7 +526,7 @@ None.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Clerk unactivated. 06
-idle. No `frontend-2`.
+idle. No `frontend-3`.
 
 #### Exercise
 
@@ -551,7 +551,7 @@ Assistant LLM.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Clerk unactivated. 06
-idle. No `frontend-2`.
+idle. No `frontend-3`.
 
 #### Exercise
 
@@ -575,7 +575,7 @@ Voice.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Clerk unactivated. Voice
-connection on. No `frontend-2`.
+connection on. No `frontend-3`.
 
 #### Exercise
 
@@ -598,7 +598,7 @@ Voice. Assistant tools.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Clerk unactivated.
-Committed Voice events. No `frontend-2`.
+Committed Voice events. No `frontend-3`.
 
 #### Exercise
 
@@ -618,7 +618,7 @@ Voice.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Clerk unactivated. Voice
-off after a turn. No `frontend-2`.
+off after a turn. No `frontend-3`.
 
 #### Exercise
 
@@ -641,7 +641,7 @@ Voice. Object storage for the signed URL.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Clerk unactivated. A
-recording id from create. No `frontend-2`.
+recording id from create. No `frontend-3`.
 
 #### Exercise
 
@@ -716,7 +716,7 @@ None.
 Backend (`humatest`, Testcontainers Postgres). Wait-end. Clerk JWT
 unactivated (app origin or Host / `website_prefix`). `billing.prices`
 has an active activation Price and a choosable Placis Pro plan / month
-Price. No `frontend-2`.
+Price. No `frontend-3`.
 
 #### Exercise
 
@@ -743,7 +743,7 @@ Stripe test-mode. Clerk fake Principal for org attach.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Checkout already created.
-Clerk JWT. No `frontend-2`.
+Clerk JWT. No `frontend-3`.
 
 #### Exercise
 
@@ -765,7 +765,7 @@ Stripe test-mode.
 Backend (`humatest`, Testcontainers Postgres + MinIO). Checkout pending.
 `billing.prices` has activation + Placis Pro plan / month Prices. Stripe
 test signature. Worker container (**calls** `websitePublication` on
-activation). No `frontend-2`.
+activation). No `frontend-3`.
 
 #### Exercise
 
@@ -794,7 +794,7 @@ Stripe test-mode. `purge_cache`. Worker is real. MinIO is real.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Unactivated onboarding
-session. Token auth. Country from Find. No `frontend-2`.
+session. Token auth. Country from Find. No `frontend-3`.
 
 #### Exercise
 
@@ -818,7 +818,7 @@ Voice.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Token auth. Committed
-guide Voice events. No `frontend-2`.
+guide Voice events. No `frontend-3`.
 
 #### Exercise
 
@@ -838,7 +838,7 @@ Voice.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Token auth. No
-`frontend-2`.
+`frontend-3`.
 
 #### Exercise
 
@@ -1074,7 +1074,7 @@ run**). Skip 03 (Persist none).
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-2`.
+Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-3`.
 Worker container only when a step **calls** `websiteRender` /
 `websitePublication`.
 
@@ -1097,7 +1097,7 @@ MinIO is real (Testcontainers).
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Two onboarding
-sessions (second unactivated tenant). No Playwright. No `frontend-2`.
+sessions (second unactivated tenant). No Playwright. No `frontend-3`.
 
 #### Exercise
 

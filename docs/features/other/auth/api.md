@@ -54,7 +54,7 @@ from `/cms`.
 - OrgProvisionStep / “name your workspace”
 - Clerk SignUp **name** / workspace / email-password / magic-link
   fields on the modal (OAuth only)
-- Accepting a Clerk organization id or org **name** from `frontend-2`
+- Accepting a Clerk organization id or org **name** from `frontend-3`
   as a chooser
 - `/me/orgs`, `/me/tenants`, `/me/selected-org`
 - `POST /v1/tenants`, `PATCH /v1/tenants/{website_prefix}`

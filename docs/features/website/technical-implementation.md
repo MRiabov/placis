@@ -126,7 +126,7 @@ Do not create `/v1/public/site/…`, leftover `/preview/{token}/`, or
 
 ## Frontend
 
-See [frontend.md](frontend.md) and [frontend-debloat.md](frontend-debloat.md). `frontend-2/src/features/cms/**` is
+See [frontend.md](frontend.md) and [frontend-debloat.md](frontend-debloat.md). `frontend-3/src/features/cms/**` is
 the existing website editor. It consumes the regenerated types;
 `/website/editor/*` routes map to the Go side.
 

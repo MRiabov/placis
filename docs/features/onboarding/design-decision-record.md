@@ -161,7 +161,7 @@ inventing it.
 14. **Wait teaser shows a website section when placeholders can resolve** —
     `/onboarding/preview` paints a website section only when current profile
     data can resolve its website placeholders. Do not wait for website copy
-    generation to overwrite prose. Reuse website components in `frontend-2`,
+    generation to overwrite prose. Reuse website components in `frontend-3`,
     not the Worker. (2026-08-31)
 
 15. **Complete warning on Continue with no work photos** — Continue with no

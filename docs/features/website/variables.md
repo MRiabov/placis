@@ -5,7 +5,7 @@ from `WebsiteBusinessProfileRead` ([website HTTP](api.md)). The unpublished
 website keeps the tokens. Go does not rewrite slots. The Worker fills `{{…}}`
 on `websiteRender` (website image render) and on `websitePublication`
 (website HTML render).
-The wait teaser and CMS canvas fill them in `frontend-2` with the shared
+The wait teaser and CMS canvas fill them in `frontend-3` with the shared
 website component package from the same `*Read` (website page GET embed).
 Attached image website slots keep a media library item id in the dump; Go
 sends `media_asset_urls` on both Worker requests so the Worker can GET
@@ -116,7 +116,7 @@ slots. Do not infer omit from every `{{…}}` in `value`.
    **tokenized** values (`{{business_name}}`).
 2. The website editor projection keeps the tokens and shows them as
    **inline variable chips** (with the variable's label), still editable.
-   Wait teaser and CMS canvas resolve for paint through frontend-2 + the
+   Wait teaser and CMS canvas resolve for paint through frontend-3 + the
    website component package when current profile data can fill those
    placeholders.
 3. `GenerateWebsiteCopy` **sends** `WebsiteRenderRequest` (`profile`
