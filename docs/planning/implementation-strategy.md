@@ -13,7 +13,10 @@ River, the contractor website Worker, **frontend-3**, and voice sit
 
 Product Go does not exist yet (`internal/` empty, no `migrations/`).
 Only `cmd/ci` checkers and docs. `frontend-2/` may still sit on disk
-until S02. The walking skeleton is the first work.
+until S02. The walking skeleton is the first work, and it includes the
+first Go GitHub Actions job plus the first Railway deploy of
+`cmd/api`. Docs/demo CI already runs; there is no separate “set up
+CI/CD” development task.
 
 ## Purpose
 
@@ -155,11 +158,21 @@ Each development task is one PR unless a later pack splits Go then UI. Fields:
   ([HTTP conventions](../general-architecture/api.md)), goose
   `CREATE SCHEMA` for the namespaces in
   [persistence](../general-architecture/persistence.md), sqlc,
-  in-process River, Testcontainers Postgres, OpenAPI export
-- **Must not:** product tables, Clerk, Stripe, `frontend-3` screens
+  in-process River, Testcontainers Postgres, OpenAPI export.
+  **CI:** add `.github/workflows/ci.yml` for the Go gates that apply
+  in this development task (`gofmt` / `go vet` / `golangci-lint`,
+  `go test ./...` with Testcontainers, OpenAPI constraints). Live
+  workflows today are docs, `apps/demo`, and contractor-website
+  Cloudflare only — there is no Go `ci.yml` yet.
+  **CD:** first Railway deploy of `cmd/api` from `main` (health
+  only). Release, not a PR check
+  ([CI and delivery](../general-architecture/ci-cd.md))
+- **Must not:** product tables, Clerk, Stripe, `frontend-3`
+  screens, `frontend-3` CI (S02), CircleCI as the live runner
 - **Done when:** `TestHappyPath` for those two Routes
   ([testing](../general-architecture/testing.md)); `go test ./...`
-  green; OpenAPI export has no unconstrained DTO fields
+  green on GitHub Checks; OpenAPI export has no unconstrained DTO
+  fields; Railway serves `GET /v1/health`
 - **Blocked by:** none
 
 ### S02 `frontend-3` scaffold
