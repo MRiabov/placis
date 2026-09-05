@@ -39,7 +39,12 @@ Tables: [persistence.md](persistence.md). DTOs and Routes:
   Ads generator, and later LLM callers invoke **this** tool — not a
   second Ads tool and not a website-assistant copy. Owner click-off
   stays PATCH (not this tool). Onboarding client interview stays its
-  writer. Onboarding 06 does not call it.
+  writer. Onboarding 06 does not call it. Unpaid website editor
+  `update_details` **calls** this same function via
+  `PATCH /v1/onboarding/business-profile` (**calls**
+  `UpdateBusinessProfile`). Unpaid Revert is
+  `POST /v1/onboarding/business-profile/edits/{id}/undo`. CMS
+  `/v1/business-profile` stays **403** unactivated.
 
 ```text
 update_details(
@@ -51,4 +56,5 @@ update_details(
 
 One field or list item per call. Applied immediately. Then the shared
 [notification](../../../general-architecture/frontend.md). Revert is
-`POST /v1/business-profile/edits/{id}/undo`.
+`POST /v1/business-profile/edits/{id}/undo` (CMS) or
+`POST /v1/onboarding/business-profile/edits/{id}/undo` (unpaid).

@@ -9,8 +9,12 @@ Live business profile the rest of the app reads. Projects:
 not this resource.
 
 **Auth default:** Clerk JWT, active tenant. Mutating Routes send
-`Idempotency-Key`. Extra keys 4xx. Validation errors: `string[]` with
-`maxLength` per item.
+`Idempotency-Key`. Unactivated **403** on this tree. Unpaid
+`update_details` / Revert:
+[onboarding HTTP](../../onboarding/api.md)
+(`PATCH /v1/onboarding/business-profile`,
+`POST /v1/onboarding/business-profile/edits/{id}/undo`). Extra keys 4xx.
+Validation errors: `string[]` with `maxLength` per item.
 
 Profile history is typed `business_profile_edits` increments — never a
 `details` jsonb dump. `GET` / `PATCH` fields are the columns and list
@@ -56,8 +60,8 @@ names. Do not reuse `WebsiteBusinessProfileRead` or
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GET /v1/business-profile` | `/cms/details` | | `BusinessProfileRead` | `business_profiles`, `business_profile_services`, `business_profile_service_areas`, `business_profile_opening_hours`, `facebook_profiles` | | Live row. Hydrate linked cards when URLs are set. No timeline | | Website-placeholder resolve; embed on website editor GET |
-| `PATCH /v1/business-profile` | Business details click-off | `BusinessProfileUpdate` | `BusinessProfileRead` | `business_profiles` | `business_profiles`, `business_profile_edits`, `business_profile_services`, `business_profile_service_areas`, `business_profile_opening_hours` | See overflow | | Profile-history timeline HTTP; merge-in-memory rewrite; `facebook_posts`; `instagram_posts`; `PublishWebsite` |
-| `POST /v1/business-profile/edits/{id}/undo` | notification **Revert** after `update_details` | | `BusinessProfileRead` | `business_profile_edits`, `business_profiles` | `business_profiles`, `business_profile_edits` | See overflow | `409` if already undone or not the named increment | Website edit-history undo; a second surface-specific revert route |
+| `PATCH /v1/business-profile` | Business details click-off | `BusinessProfileUpdate` | `BusinessProfileRead` | `business_profiles` | `business_profiles`, `business_profile_edits`, `business_profile_services`, `business_profile_service_areas`, `business_profile_opening_hours` | See overflow | `403` unactivated | Profile-history timeline HTTP; merge-in-memory rewrite; `facebook_posts`; `instagram_posts`; `PublishWebsite`; unpaid `PATCH /v1/onboarding/business-profile` |
+| `POST /v1/business-profile/edits/{id}/undo` | notification **Revert** after `update_details` | | `BusinessProfileRead` | `business_profile_edits`, `business_profiles` | `business_profiles`, `business_profile_edits` | See overflow | `409` if already undone or not the named increment; `403` unactivated | Website edit-history undo; a second surface-specific revert route; unpaid `POST /v1/onboarding/business-profile/edits/{id}/undo` |
 | `GET /v1/business-profile/certifications` | `/cms/certifications-and-reviews` | | `BusinessProfileCertificationListRead` | `certification_definitions`, `business_profile_certification_selections` | | `available[]` for that country plus selected ticks | | `/v1/certification-selections`; `/v1/certifications` as a peer |
 | `PUT /v1/business-profile/certifications` | `/cms/certifications-and-reviews` | `BusinessProfileCertificationsPut` | `BusinessProfileCertificationListRead` | `certification_definitions` | `business_profile_certification_selections`, `business_profile_edits` | See overflow | | Peer certification HTTP; key `available[]` off a closed trade enum |
 | `GET /v1/business-profile/reviews` | Certifications and reviews; website editor reviews Content **add** | `ReviewListGet` | `ReviewListRead` | `business_profile_reviews`, `business_profile_review_rankings` | | See overflow | | Rewrite `website_slot_reviews` |
@@ -73,7 +77,9 @@ Dirty keys only (scalars + list-item ops). **calls**
 `ApplyBusinessProfileIncrement` once per dirty field or list item in
 one transaction (`SELECT … FOR UPDATE` the profile row). Same writer as
 `update_details` ([architecture.md](architecture.md)); owner click-off
-stays this PATCH, not the tool. Response is the live
+stays this PATCH, not the tool. Unpaid `update_details` uses
+`PATCH /v1/onboarding/business-profile` (**calls** `UpdateBusinessProfile`),
+not this Route. Response is the live
 `BusinessProfileRead`. Must not write `facebook_posts` or
 `instagram_posts`. Must not insert `business_profile_edit_sources`
 (owner increments have no junction rows). Must not enqueue 04 Website
@@ -86,7 +92,9 @@ Undo that `business_profile_edits` increment: replay the inverse onto
 the live row, append a compensating increment. **calls**
 `ApplyBusinessProfileIncrement`. **OK** does not call this. Leaving the
 screen without Revert keeps the write. `409` if that id is already
-undone or is not the increment the notification named.
+undone or is not the increment the notification named. Unpaid Revert is
+`POST /v1/onboarding/business-profile/edits/{id}/undo` (**calls**
+`UndoBusinessProfileEdit`), not this Route.
 
 ### PUT /v1/business-profile/certifications
 
@@ -152,3 +160,5 @@ transform; empty review citation falls back to `body` until then.
 - profile-history / replay HTTP (except
   `POST /v1/business-profile/edits/{id}/undo`)
 - a second Details tool or Details-write HTTP for Ads or the Assistant
+- unactivated `/v1/business-profile` (use
+  `/v1/onboarding/business-profile`)

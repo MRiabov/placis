@@ -52,14 +52,19 @@ enqueues. This feature owns the tables 02 writes.
   editor PATCH. `update_details` is the shared Details tool (one implementation;
   Ads generator calls it too).
 - Output is a reviewable diff, validated against website component contracts
-  before the website editor PATCHes (CMS) or the 06 job writes (headless).
+  before the website editor PATCHes (CMS) or the unpaid canvas POSTs / PATCHes
+  ([onboarding website editor](../onboarding/website-editor.md)) or the 06 job
+  writes (headless).
 - Every call records reasoning + output + tool calls via `ai_generations` (CMS
   assistant calls on the `cms_assistant` thread; onboarding 06 on a
   `website_copy_generation` thread).
 - Apply / Reject is one-way; no revert-after-apply
   **on the unpublished website**. `update_details` uses the shared notification
-  Revert (`POST /v1/business-profile/edits/{id}/undo`), not Reject. CMS Apply is
-  the website editor PATCH + `record-apply`. No unpublished snapshot per edit.
+  Revert (`POST /v1/business-profile/edits/{id}/undo` after website activation;
+  `POST /v1/onboarding/business-profile/edits/{id}/undo` unpaid), not Reject.
+  CMS Apply is
+  the website editor PATCH + `record-apply`. Unpaid `create_page` Apply is
+  `POST /v1/onboarding/website/editor/pages`. No unpublished snapshot per edit.
   Website edit history is increments on `edit_history`; undo is in-memory, then
   PATCH. No `/undo`, `/redo`, or `/edit-history` routes.
 

@@ -98,7 +98,7 @@ not write `business_profile.facebook_posts`, `business_profile.instagram_posts`,
 
 #### Fail
 
-Full-row dump / extra keys → 4xx.
+`403` unactivated. Full-row dump / extra keys → 4xx.
 
 ### TestHappyPathV1BusinessProfileEditsUndo — Route
 
@@ -120,7 +120,7 @@ row on `business_profile.business_profile_edits`. Live columns restored.
 
 #### Fail
 
-Already undone, or not the named increment → `409`.
+`403` unactivated. Already undone, or not the named increment → `409`.
 
 ### TestHappyPathV1BusinessProfileCertifications — Route
 

@@ -83,6 +83,7 @@ on that website is `active`, then that website address. See
 - **Uniques:** `(website_id, path)`
 - **Written by:** `CopyWebsiteTemplatePages`; `GenerateWebsiteCopy`
   (SEO columns); `POST /v1/websites/{website_prefix}/editor/pages`;
+  `POST /v1/onboarding/website/editor/pages`;
   `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`;
   `PATCH /v1/onboarding/website/editor/pages/{page_id}`
 
@@ -151,6 +152,7 @@ on that website is `active`, then that website address. See
 - **Uniques:** `website_id`
 - **Written by:** `CopyWebsiteTemplatePages`;
   `POST /v1/websites/{website_prefix}/editor/pages`;
+  `POST /v1/onboarding/website/editor/pages`;
   `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`;
   `PATCH /v1/onboarding/website/editor/pages/{page_id}`;
   `PATCH /v1/websites/{website_prefix}/editor/menus`;

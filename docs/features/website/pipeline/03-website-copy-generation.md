@@ -32,7 +32,8 @@ River-only on `website_id`.
 
 - `create_page` (02 already copied the website page set, including service
   pages from named services). Do not invent the service list. Unpaid owner
-  prompts on the website preview **may** `create_page`.
+  prompts:
+  [onboarding website editor](../../onboarding/website-editor.md).
 - `update_reviews`. Ranked pool order is River job kind
   `reviews_ranking_for_display` ([jobs](../../../general-architecture/jobs.md)), not this River job kind. Do not write
   `website_slot_reviews`. Owner Content / `update_reviews` can still override a

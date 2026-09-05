@@ -224,6 +224,10 @@ Response `WebsitePageRead`.
 **persists into** `website_pages`, `website.menus` (append menu node) may
 supplement.
 
+#### Fail
+
+`403` unactivated.
+
 ### TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage — Route
 
 Backend. Go `TestHappyPathV1WebsiteEditorPagesPageIdReturnsPage`.
