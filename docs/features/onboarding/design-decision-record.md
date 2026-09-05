@@ -183,3 +183,10 @@ inventing it.
     dozens), the onboarding image gallery scrolls in the card. Logo stays the
     identity tile in that panel, not mixed into the work-photo thumbs.
     (2026-09-04)
+
+17. **Interview Project cards are two columns; Archive is a top-right icon** —
+    Ranked interview cards use the same `/cms/projects` card in **two columns**
+    (gap 20px), not a single stacked column. **Archive** is the Archive lucide
+    icon at the top-right of the card (same hit as certifications / reviews),
+    not a full-width button under the description. Still not a link and not
+    editable. (2026-09-05)

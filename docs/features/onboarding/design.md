@@ -55,7 +55,8 @@ columns so tiles stay small. Continue with no work photos opens a complete
 warning ([design decision](design-decision-record.md) 15). Found reviews look like Google reviews
 ([design decision](design-decision-record.md) 4). Project cards reuse the `/cms/projects` card (cover
 `h-44` / `rounded-[18px]`, title, short description, prompt radius + hairline +
-shadow) in one column. **Archive** on the card. Omit the whole Projects block
+shadow) in two columns ([design decision](design-decision-record.md) 17). **Archive** is the top-right icon
+on the card, not a button under the description. Omit the whole Projects block
 when nested `profile.projects` is empty. Extra notes owner copy is
 **Anything else we should know?** with a helper about generating a better
 website or running ads ([design decision](design-decision-record.md) 5). Certifications show the definition

@@ -371,24 +371,17 @@ export function InterviewPage(): ReactNode {
           </OnbPanel>
           {noProjects ? null : (
             <OnbPanel hint="Past jobs we found online." title="Projects">
-              <div className="grid grid-cols-1 gap-5">
+              <div className="grid grid-cols-2 gap-5">
                 {rankedProjects.map((project) => (
                   <ProjectCard
                     description={project.description}
                     image={project.image}
                     key={project.id}
+                    onArchive={() => {
+                      setArchivedIds((ids) => [...ids, project.id]);
+                    }}
                     title={project.title}
-                  >
-                    <Button
-                      className="mt-1"
-                      onClick={() => {
-                        setArchivedIds((ids) => [...ids, project.id]);
-                      }}
-                      variant="outline"
-                    >
-                      Archive
-                    </Button>
-                  </ProjectCard>
+                  />
                 ))}
               </div>
             </OnbPanel>
