@@ -184,7 +184,8 @@ Allowed AI behavior:
 3. apply light cleanup edits to selected images (remove clutter/trash, tidy
    backgrounds) as reviewable copies
 4. suggest an ideal customer profile from the business profile and business
-   research, asynchronously and reviewable
+   research, asynchronously and reviewable — later; this slice writes
+   `icp_source=static` (married couples 30–40) and does not enqueue that job
 5. if copy includes a detail, call `update_details` (one shared tool; also the
    Assistant); do not invent reviews, ratings, years, guarantees
    unprompted
@@ -251,8 +252,9 @@ Backend tests:
     reviewed, and never modify the source media asset
 14. `platform_refs` and `platform_status` default safely (empty /
     `not_connected`) and never affect approval or the ad set format
-15. the ideal customer profile defaults to married couples aged 30-40, and an
-    LLM suggestion is recorded, reviewable, and never auto-publishes
+15. the ideal customer profile defaults to married couples aged 30-40 with
+    `icp_source=static`; an LLM suggestion recorded, reviewable, and never
+    auto-published is later
 16. the ad set always carries suggested ad lead form fields, and they never
     block approval
 

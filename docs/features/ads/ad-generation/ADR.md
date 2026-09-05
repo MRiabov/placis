@@ -61,12 +61,16 @@ new entries with the next number, the area, and the date.
    form (including the privacy notice Meta requires) is finalized at ad posting.
    Suggested fields never block approval.
 
-8. **Ads ask for the ideal customer profile** — The create-an-ad flow asks who
-   the ad targets. The default is married couples aged 30-40, which fits most
-   contractors (about 17 of 20 ads). The LLM suggests an ideal customer profile
-   asynchronously from the business profile and business research, reviewable;
-   ads are targeted to the confirmed ideal customer profile once an ad platform
-   is connected.
+8. **Ads ask for the ideal customer profile** (updated 2026-09-04) — The
+   default is married couples aged 30-40 (`icp_source=static`), which fits
+   most contractors (about 17 of 20 ads). About the ad displays that default
+   as read-only copy; the owner does not pick a profile (decision 40). The
+   LLM suggests an ideal customer profile asynchronously from the business
+   profile and business research, reviewable, never auto-published — that
+   job is later; this slice does not enqueue it. CreateAd writes
+   `icp_source=static`. Ads are targeted to the confirmed ideal customer
+   profile once an ad platform is connected. Previous: the create-an-ad flow
+   asked who the ad targets; the LLM suggestion had no later date.
 
 9. **No ad questions during onboarding** — Onboarding never collects ad
    preferences (no `marketing.ads` profile group). Ads are created on demand in

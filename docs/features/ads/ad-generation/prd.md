@@ -184,8 +184,9 @@ Avoid internal language such as variant payload, crop metadata, or review enum.
 The first implementation should be deliberately small:
 
 1. create an ad from a short owner-facing questionnaire: offer/goal and service
-   focus picked from the contractor's known data, ideal customer profile, and an
-   ad lead form by default
+   focus picked from the contractor's known data, a displayed static ideal
+   customer profile ([ADR 8](ADR.md), [ADR 40](ADR.md)), and an ad lead form by
+   default
 2. the LLM drafts an image gallery from approved photos, applies light cleanup
    where needed, and drafts copy from details in the business profile
 3. the owner reviews the **ad format preview** (Facebook and Instagram) for the
@@ -215,12 +216,13 @@ Ads under `/cms/ads` should expose:
 1. ad list with status badges (Ad draft / Creative ready / Published / Archived)
    and last updated timestamp
 2. create-an-ad flow: offer/goal and service focus picked from the contractor's
-   known data, ideal customer profile and area filled from the last ad
-   ([ADR 37](ADR.md)), ad lead form questions, the ad format as pills before generate
-   ([ADR 33](ADR.md)), and daily budget shown but disabled until ad posting; then
-   generate drafts that one format and the ad opens for review. On an existing
-   ad, duration is remaining days in the run window and the end date is a native
-   browser date picker — both budget and duration stay disabled until ad posting
+   known data, displayed static ideal customer profile ([ADR 8](ADR.md), [ADR 40](ADR.md)), area
+   filled from the last ad ([ADR 37](ADR.md)), ad lead form questions, the ad format as
+   pills before generate ([ADR 33](ADR.md)), and daily budget shown but disabled until
+   ad posting; then generate drafts that one format and the ad opens for review.
+   On an existing ad, duration is remaining days in the run window and the end
+   date is a native browser date picker — both budget and duration stay disabled
+   until ad posting
 3. one **ad format preview** for the format this ad uses, as Facebook and
    Instagram placements ([ADR 35](ADR.md))
 4. image selection from the media library and projects, with crop and focal
@@ -337,24 +339,26 @@ unrelated imagery as the contractor's work.
 
 ## Ideal Customer Profile
 
-The create-an-ad flow asks who the ad should target: the owner's ideal customer
-profile. The default is married couples aged 30-40, which fits most contractors
-(about 17 of 20 ads). The owner can edit the default or answer with their own
-profile. In this workflow we first decide who the ad is for, and only then how
-to reach them — targeting follows the confirmed ideal customer profile, never
-the other way around.
+The create-an-ad flow uses a stored ideal customer profile. The default is
+married couples aged 30-40 (`icp_source=static`), which fits most contractors
+(about 17 of 20 ads). About the ad displays that default as read-only copy;
+the owner does not pick or edit a profile in this slice
+([ADR 40](ADR.md)). The LLM will later suggest an ideal customer profile
+asynchronously from the business profile, services, and business research;
+the suggestion will be reviewable and never auto-published. Until that job
+exists, generation uses the static profile. In this workflow we first decide
+who the ad is for, and only then how to reach them — targeting follows the
+confirmed ideal customer profile, never the other way around.
 
-The LLM suggests an ideal customer profile asynchronously from the business
-profile, services, and business research; the suggestion is reviewable and the
-owner confirms or edits it. The ideal customer profile is a loose profile, not
-precise targeting data. Today its job is steering generation: tone, imagery, and
-the offer are tailored to the confirmed ideal customer profile — but the ideal
-customer profile never appears in the copy itself, so no "ideal for homeowners
-40-55" style marketing statements. Precise targeting on the ideal customer
-profile (age range, household, location) happens at ad posting (future work);
-the ad set carries the ideal customer profile so targeting needs no extra data
-entry later. Internal ad logic outside Meta (custom rules deciding when or how
-an ad runs) is out of scope for now.
+The ideal customer profile is a loose profile, not precise targeting data.
+Today its job is steering generation: tone, imagery, and the offer are
+tailored to the confirmed ideal customer profile — but the ideal customer
+profile never appears in the copy itself, so no "ideal for homeowners 40-55"
+style marketing statements. Precise targeting on the ideal customer profile
+(age range, household, location) happens at ad posting (future work); the ad
+set carries the ideal customer profile so targeting needs no extra data
+entry later. Internal ad logic outside Meta (custom rules deciding when or
+how an ad runs) is out of scope for now.
 
 ## Ad Lead Form
 

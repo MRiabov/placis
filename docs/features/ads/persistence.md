@@ -29,7 +29,7 @@ mutations also write [audit](../../general-architecture/audit.md).
 - **Enums:** `status` → `draft` / `ad_needs_review` /
   `ad_ready_to_post` / `archived`; `ad_goal` → `more_calls` /
   `more_quotes` / `promote_service`; `icp_household` →
-  `married_couples` / `any`; `icp_source` → `default` /
+  `married_couples` / `any`; `icp_source` → `static` /
   `llm_suggested` / `owner`; `origin` → `owner` / `llm` /
   `done_for_you` / `business_profile`; `platform_status` →
   `not_connected` / `synced` / `needs_sync` / `error`
@@ -46,14 +46,16 @@ mutations also write [audit](../../general-architecture/audit.md).
 ### Ideal customer profile defaults
 
 Default is married couples aged 30–40 (`icp_household=married_couples`,
-`icp_age_min=30`, `icp_age_max=40`). Loose by design — steers generation
-now; precise targeting comes with ad posting. `icp_review_status` has no
-closed values yet; an LLM suggestion is reviewable and never
-auto-publishes. `review_status` has no values specified — see
-[Open questions](README.md#open-questions); `status` is the lifecycle.
-The picker is deferred ([ADR 40](ad-generation/ADR.md)): look displays
-**"Married couples, 35–45"** as read-only copy; stored columns stay
-this 30–40 default. No `audiences` table. No `audience_id` on `ads`.
+`icp_age_min=30`, `icp_age_max=40`, `icp_source=static`). Loose by design
+— steers generation now; precise targeting comes with ad posting.
+`icp_review_status` has no closed values yet; an LLM suggestion job is
+later (reviewable, never auto-publishes;
+[ADR 8](ad-generation/ADR.md)). `review_status` has no values specified
+— see [Open questions](README.md#open-questions); `status` is the
+lifecycle. The picker is deferred ([ADR 40](ad-generation/ADR.md)): look
+displays **"Married couples, 35–45"** as read-only copy; stored columns
+stay this 30–40 default. No `audiences` table. No `audience_id` on
+`ads`.
 
 ### Pickers and their sources
 
