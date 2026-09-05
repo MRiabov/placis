@@ -47,3 +47,9 @@ decision + date) instead of silently replacing it.
    Rejected: reuse-and-debloat `frontend-2` (the previous unnumbered stance
    in [frontend-stack.md](frontend-stack.md) and
    [general-prd.md](../general-prd.md)).
+
+   (2026-09-05): Keep `src/features/` as the owner-SPA layout. That split was
+   deliberate and is convenient. Greenfield does not copy `frontend-2`
+   modules; it reuses that folder shape (`onboarding`, `cms`, later ads /
+   leads under the same tree). `src/shared/` and `src/generated/` stay
+   cross-cutting.
