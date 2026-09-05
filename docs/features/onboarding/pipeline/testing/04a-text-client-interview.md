@@ -14,12 +14,13 @@
   complete sets `accepted_edit_id` and **inserts**
   `select_and_copy_website_template`; no second tenant; services and service
   areas are list rows (not a textarea); no LLM combine of services after
-  complete. Zero `active` business research origin Projects → no Projects block.
-  Archive sets `archived` + `algorithm=human`; next-ranked `active` may appear.
-  No Clerk `/v1/projects/{id}/archive`. While 02 is still running: an empty
-  marketing-phone column fills when Details transform lands; a marketing phone
-  the contractor already saved is unchanged; scrape reviews and Projects persist
-  without a second complete. VAT: `ClientInterviewUpdate` writes
+  complete. Complete succeeds with zero photos (photos optional; no
+  `photos_fill`). Zero `active` business research origin Projects → no Projects
+  block. Archive sets `archived` + `algorithm=human`; next-ranked `active` may
+  appear. No Clerk `/v1/projects/{id}/archive`. While 02 is still running: an
+  empty marketing-phone column fills when Details transform lands; a marketing
+  phone the contractor already saved is unchanged; scrape reviews and Projects
+  persist without a second complete. VAT: `ClientInterviewUpdate` writes
   `vat_registration_status` / `vat_number`; not-registered complete
   leaves `vat_number` null; registered without a number is rejected.
 - **Fail**: invalid complete keeps `client_interviewing`.

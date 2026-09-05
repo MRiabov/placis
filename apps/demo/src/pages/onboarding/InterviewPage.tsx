@@ -1,33 +1,94 @@
 import { useNavigate } from "@tanstack/react-router";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
+import { type MediaLibraryItem } from "@/lib/media-library";
 import { siteReviews } from "@/lib/site-copy";
 import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
 import { Button } from "@/ui/Button";
+import { CompleteWarning } from "@/ui/CompleteWarning";
 import { card } from "@/ui/card";
 import { FeaturedServices } from "@/ui/FeaturedServices";
 import { Field, OnbPanel, TextArea, TextInput } from "@/ui/Field";
 import { HoursPicker } from "@/ui/HoursPicker";
+import { MediaThumbs } from "@/ui/MediaThumbs";
 import { ServiceAreas } from "@/ui/ServiceAreas";
 import { VoiceInterviewOverlay } from "@/ui/VoiceInterviewOverlay";
 
-type InterviewState = "text" | "filled" | "few" | "noreviews";
+type InterviewState =
+  | "text"
+  | "filled"
+  | "nophotos"
+  | "manyphotos"
+  | "noreviews";
 type Channel = "text" | "voice";
+
+const fewWorkPhotos: MediaLibraryItem[] = [0, 1, 2].map((index) => ({
+  by: "research",
+  id: `interview-photo-${index}`,
+  ratio: "landscape",
+  src: photo(index),
+  status: "approved",
+}));
+
+const workPhotoRatios: MediaLibraryItem["ratio"][] = [
+  "landscape",
+  "portrait",
+  "landscape",
+  "square",
+];
+
+const manyWorkPhotos: MediaLibraryItem[] = Array.from(
+  { length: 30 },
+  (_, index) => ({
+    by: "research",
+    id: `maps-photo-${index}`,
+    ratio: workPhotoRatios[index % workPhotoRatios.length] ?? "landscape",
+    src: `${photo(index % 4)}?maps=${index}`,
+    status: "approved",
+  }),
+);
 
 export function InterviewPage(): ReactNode {
   const navigate = useNavigate();
   const { setExtraGroups } = useOnboardingDev();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [scene, setScene] = useState<InterviewState>("text");
   const [channel, setChannel] = useState<Channel>("text");
   const [ciri, setCiri] = useState(false);
   const [seai, setSeai] = useState(false);
+  const [warningOpen, setWarningOpen] = useState(false);
+  const [attachedPreviews, setAttachedPreviews] = useState<string[]>([]);
   const filled = scene === "filled";
-  const fewPhotos = scene === "few";
+  const noPhotos = scene === "nophotos";
+  const manyPhotos = scene === "manyphotos";
   const noReviews = scene === "noreviews";
+  const attachedItems: MediaLibraryItem[] = attachedPreviews.map((src) => ({
+    by: "owner",
+    id: src,
+    ratio: "square",
+    src,
+    status: "approved",
+  }));
+  const workPhotos = [
+    ...(noPhotos ? [] : manyPhotos ? manyWorkPhotos : fewWorkPhotos),
+    ...attachedItems,
+  ];
+  const hasWorkPhotos = workPhotos.length > 0;
 
   useEffect(() => {
+    function selectScene(next: InterviewState): void {
+      setScene(next);
+      setWarningOpen(false);
+      setAttachedPreviews((current) => {
+        for (const url of current) {
+          URL.revokeObjectURL(url);
+        }
+        return [];
+      });
+    }
+
     setExtraGroups([
       {
         title: "Questions",
@@ -36,31 +97,53 @@ export function InterviewPage(): ReactNode {
             id: "text",
             label: "Text",
             on: scene === "text",
-            onSelect: () => setScene("text"),
+            onSelect: () => selectScene("text"),
           },
           {
             id: "filled",
             label: "Filled",
             on: filled,
-            onSelect: () => setScene("filled"),
+            onSelect: () => selectScene("filled"),
           },
           {
-            id: "few",
-            label: "Few photos",
-            on: fewPhotos,
-            onSelect: () => setScene("few"),
+            id: "nophotos",
+            label: "No photos",
+            on: noPhotos,
+            onSelect: () => selectScene("nophotos"),
+          },
+          {
+            id: "manyphotos",
+            label: "Many photos",
+            on: manyPhotos,
+            onSelect: () => selectScene("manyphotos"),
           },
           {
             id: "noreviews",
             label: "No reviews",
             on: noReviews,
-            onSelect: () => setScene("noreviews"),
+            onSelect: () => selectScene("noreviews"),
           },
         ],
       },
     ]);
     return () => setExtraGroups([]);
-  }, [setExtraGroups, scene, filled, fewPhotos, noReviews]);
+  }, [setExtraGroups, scene, filled, noPhotos, manyPhotos, noReviews]);
+
+  useEffect(() => {
+    return () => {
+      for (const url of attachedPreviews) {
+        URL.revokeObjectURL(url);
+      }
+    };
+  }, [attachedPreviews]);
+
+  function pickPhotos(): void {
+    fileInputRef.current?.click();
+  }
+
+  function goPreview(): void {
+    void navigate({ to: "/onboarding/preview" });
+  }
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8">
@@ -158,53 +241,30 @@ export function InterviewPage(): ReactNode {
           <OnbPanel hint="When you take calls and jobs." title="Opening hours">
             <HoursPicker />
           </OnbPanel>
-          <OnbPanel hint="Logo plus a few photos of the work." title="Photos">
-            <div className="flex flex-wrap gap-2">
-              <figure className="grid size-20 place-items-center overflow-hidden rounded-lg border border-border bg-white">
-                <img
-                  alt="Bellfield logo"
-                  className="max-h-12 max-w-14 object-contain"
-                  src="/fixtures/bellfield/logo.svg"
-                />
-                <figcaption className="text-[11px] text-muted-foreground">
-                  Logo
-                </figcaption>
-              </figure>
-              {(fewPhotos ? [0] : [0, 1, 2]).map((index) => (
-                <img
-                  alt=""
-                  className="size-20 rounded-lg object-cover"
-                  key={index}
-                  src={photo(index)}
-                />
-              ))}
-              <label className="grid size-20 cursor-pointer place-items-center rounded-lg border border-dashed border-stone-300 text-center text-[11px] text-muted-foreground">
-                <input className="hidden" multiple type="file" />
-                <b className="text-xs text-foreground">Upload photos</b>
-                <span>Add more from this device</span>
-              </label>
-            </div>
-            {fewPhotos ? (
-              <div className="grid gap-2">
-                <p className="text-[13px] text-muted-foreground">
-                  Not enough photos yet. Pick one, or keep uploading.
-                </p>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  <button className={card("p-3 text-left")} type="button">
-                    <b className="block text-sm">Find more online</b>
-                    <span className="text-xs text-muted-foreground">
-                      Pull more listing photos into the media library.
-                    </span>
-                  </button>
-                  <button className={card("p-3 text-left")} type="button">
-                    <b className="block text-sm">Create a stand-in</b>
-                    <span className="text-xs text-muted-foreground">
-                      Draft a photo until you upload approved ones.
-                    </span>
-                  </button>
-                </div>
-              </div>
-            ) : null}
+          <OnbPanel hint="Logo plus photos of the work." title="Photos">
+            <figure className="grid size-20 place-items-center overflow-hidden rounded-lg border border-border bg-white">
+              <img
+                alt="Bellfield logo"
+                className="max-h-12 max-w-14 object-contain"
+                src="/fixtures/bellfield/logo.svg"
+              />
+              <figcaption className="text-[11px] text-muted-foreground">
+                Logo
+              </figcaption>
+            </figure>
+            <MediaThumbs
+              className="max-h-80 overflow-y-auto"
+              columns={4}
+              items={workPhotos}
+              onPick={() => undefined}
+              onUpload={(file) => {
+                setAttachedPreviews((current) => [
+                  ...current,
+                  URL.createObjectURL(file),
+                ]);
+              }}
+              uploadRef={fileInputRef}
+            />
           </OnbPanel>
           <OnbPanel
             hint="Trade listings and badges for the website."
@@ -307,7 +367,11 @@ export function InterviewPage(): ReactNode {
               </Button>
               <Button
                 onClick={() => {
-                  void navigate({ to: "/onboarding/preview" });
+                  if (!hasWorkPhotos) {
+                    setWarningOpen(true);
+                    return;
+                  }
+                  goPreview();
                 }}
               >
                 Continue
@@ -316,6 +380,27 @@ export function InterviewPage(): ReactNode {
           </div>
         </form>
       )}
+      {warningOpen ? (
+        <CompleteWarning
+          onDismiss={() => setWarningOpen(false)}
+          onPrimary={() => {
+            pickPhotos();
+            setWarningOpen(false);
+          }}
+          onSecondary={() => {
+            setWarningOpen(false);
+            goPreview();
+          }}
+          primary="Add photos"
+          secondary="Skip"
+          title="Create a website without photos?"
+        >
+          <p>
+            The results will be much better if you attach photos. You may attach
+            real photos later; we will use AI-generated images.
+          </p>
+        </CompleteWarning>
+      ) : null}
     </div>
   );
 }

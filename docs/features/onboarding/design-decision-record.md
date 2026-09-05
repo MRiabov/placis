@@ -163,3 +163,22 @@ inventing it.
     data can resolve its website placeholders. Do not wait for website copy
     generation to overwrite prose. Reuse website components in `frontend-2`,
     not the Worker. (2026-08-31)
+
+15. **Complete warning on Continue with no work photos** — Continue with no
+    work photos (logo-only counts as none) opens a complete warning before
+    `POST /v1/onboarding/interview/complete`. Title **Create a website without
+    photos?** Body **The results will be much better if you attach photos. You
+    may attach real photos later; we will use AI-generated images.** Primary
+    **Add photos** (file multipicker). Secondary **Skip** (complete). Reuse
+    that dialog (title, body, primary, secondary) for later complete warnings;
+    only photos is wired. Frontend-only. (2026-09-04)
+
+16. **Interview work photos reuse the media library gallery** — The client
+    interview work-photo well is the same gallery as `/cms/media`, website
+    Content, and Projects cover pick (`MediaThumbs`), not a second thumb row
+    and not the Ads review strip. Upload / drop / Add photos use that gallery’s
+    file multipicker. On the interview card the gallery is four columns so
+    tiles stay small (that card is narrower than `/cms/media`; two columns
+    made tiles too large). When many items land (Maps can attach dozens), the
+    well scrolls in the card. Logo stays the identity tile in that panel, not
+    mixed into the work-photo thumbs. (2026-09-04)

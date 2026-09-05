@@ -75,10 +75,8 @@ profile columns. Live business profile via
 ### `client_interview_submissions`
 
 - **Columns:** `id`, `onboarding_session_id` fk, `submission_kind`,
-  `photos_fill` nullable, `additional_notes`, `created_at`
-- **Enums:** `submission_kind` → `autosave` / `final`; `photos_fill`
-  → `source_from_internet` / `ai` (only when found + uploaded photos
-  are not enough)
+  `additional_notes`, `created_at`
+- **Enums:** `submission_kind` → `autosave` / `final`
 - **Written by:** `SaveTextClientInterview`
   (`PUT /v1/onboarding/interview`, `submission_kind=autosave`);
   `CompleteClientInterview`
