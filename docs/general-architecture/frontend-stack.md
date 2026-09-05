@@ -16,7 +16,11 @@ Do not open `frontend-2`, copy from it, or use it as a reference.
 | Routing / data | TanStack Router / Query |
 | Auth | Clerk |
 | API types | `openapi-typescript` from `/openapi.json`; `openapi-fetch` + Clerk token in `src/shared/api/` |
-| Folders | `src/generated/` (types); `src/features/onboarding/`; `src/features/cms/` |
+| Folders | Keep `src/features/` (deliberate). `src/generated/` (types); `src/features/onboarding/`; `src/features/cms/`; `src/shared/` |
+
+The `src/features/` split was deliberate in `frontend-2` and stays in
+`frontend-3`. Do not flatten into one screens tree. Do not copy modules from
+`frontend-2`. [ADR](ADR.md) 3.
 
 Website preview (the unpaid website editor) is
 `/onboarding/preview-and-edit/` in `frontend-3`. The preview website address

@@ -59,8 +59,8 @@ is Continue (submit): optional last answers, complete gate, **inserts**
    `emergency_phone`; found photos in the media library plus **Upload photos**
    (always available; complete does not require photos); certifications (company
    registry pick locks that business-registry certification) / found reviews;
-   **Projects** if any `active` business research origin rows exist —
-   up to four cards, current completeness rank ([build-profile](build-profile.md)), same look as
+   **Projects** if any `active` business research origin rows exist — up to four
+   cards, current completeness rank ([build-profile](build-profile.md)), same look as
    `/cms/projects` (cover, title, description), no Project draft badge, not
    editable, **Archive** on the card. Zero `active` → omit the whole block.
    Cards may appear / reorder over SSE while 02 is still running. Extra notes.
