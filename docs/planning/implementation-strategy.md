@@ -175,8 +175,8 @@ Each development task is one PR unless a later pack splits Go then UI. Fields:
   screens
 - **Done when:** typegen from served `/openapi.json` (health only);
   `frontend-2/` gone; CI path-filters `frontend-3/`
-- **Blocked by:** none (leftover `AGENTS.md` keep-versus-delete text
-  on this tree is stale; this development task is the decision)
+- **Blocked by:** none ([ADR](../general-architecture/ADR.md) 3 is on
+  `main`; this development task deletes `frontend-2/`)
 
 ### S03 Files
 

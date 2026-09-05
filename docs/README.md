@@ -11,10 +11,11 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 
 1. [AGENTS.md](../AGENTS.md) — agent entry: documentation-first gate, `apps/`,
    `frontend-3` greenfield ([ADR](general-architecture/ADR.md) 3)
-2. [Development principles](development-principles.md) — how development tasks are reviewed (read before
-   writing code)
-3. [Implementation strategy](planning/implementation-strategy.md) — development-task order (Go + `frontend-3`);
-   planning, not shipped behavior
+2. [Development principles](development-principles.md) — how
+   development tasks are reviewed (read before writing code)
+3. [Implementation strategy](planning/implementation-strategy.md) —
+   development-task order (Go + `frontend-3`); planning, not shipped
+   behavior
 4. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
 5. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
 6. [Product](general-prd.md) — the loop, product-level in/out of scope
