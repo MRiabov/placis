@@ -43,7 +43,8 @@ Unpublished website from 05 exists. `tenant_id` is the unactivated tenant.
 2. Follow leftover 06 via the existing onboarding session SSE plus unpublished
    GET. While 06 holds `assistant.runs` `running`, owner Send / Voice is
    **409** `in_flight_run`.
-3. Signed-in Send / Voice: same website editor tools as CMS, **instant apply**,
+3. Signed-in Send / Voice: Allowed tools in
+   [website editor](../website-editor.md), **instant apply**,
    Follow always on, five unpaid prompts. Over five: **409** `unpaid_prompt_cap`
    (pay CTA, not 402).
 4. Share is [08](08-preview-website-address.md). Pay is

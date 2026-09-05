@@ -13,9 +13,11 @@
   applies (unpublished PATCH; Follow). Sixth prompt is **409**
   `unpaid_prompt_cap`, not 402. Onboarding session stays
   `preview_and_edit`. No `website_publications` from this step.
-  Onboarding session token cannot PATCH / Send / Voice. CMS
-  `/v1/assistant/…` stays **403** `tenant_unactivated`. 09 still allowed
-  without more prompts.
+  Onboarding session token cannot PATCH / POST website pages / Details
+  write or undo / Send / Voice. CMS `/v1/assistant/…` stays **403**
+  `tenant_unactivated`. 09 still allowed without more prompts.
+  `create_page` / `update_details` HTTP 1:1 is
+  [onboarding testing](../testing.md), not this pipeline test.
 - **Mocked**: the Assistant LLM (website editor tools faked to a small
   `update_slot` batch).
 
