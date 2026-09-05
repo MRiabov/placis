@@ -25,8 +25,8 @@ ads; the owner can do the website edits and ad creation themselves.
 
 Cross-cutting: Clerk identity (tenant == Clerk organization for **active**
 tenants), Postgres multitenancy, LLM + system auditability, and [voice](general-architecture/voice-agent.md) as a
-channel into the same tools (not a separate product). How slices land:
-[development principles](development-principles.md).
+channel into the same tools (not a separate product). How development tasks
+land: [development principles](development-principles.md).
 
 ## Feature PRDs
 
@@ -74,7 +74,7 @@ implementation. Do not use `frontend-2` as a reference.
 
 ## Deferred
 
-Not in the first cut. Do not sneak them into a slice:
+Not in the first cut. Do not sneak them into a development task:
 
 - Custom-capability coding agents
 - Website component marketplace
