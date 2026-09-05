@@ -9,40 +9,43 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 
 ## Reading order
 
-1. [Development principles](development-principles.md) — how work is sliced and reviewed (read before
+1. [AGENTS.md](../AGENTS.md) — agent entry: documentation-first gate, `apps/`,
+   keep-versus-delete on `frontend-2`
+2. [Development principles](development-principles.md) — how work is sliced and reviewed (read before
    writing code)
-2. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
-3. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
-4. [Product](general-prd.md) — the loop, product-level in/out of scope
-5. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes, LLM
+3. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
+4. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
+5. [Product](general-prd.md) — the loop, product-level in/out of scope
+6. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes, LLM
    layer, audit, jobs, files, `frontend-2` UI
-6. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization 1-1
-7. [Onboarding](features/onboarding/README.md) — business research and business-profile building;
+7. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization 1-1
+8. [Onboarding](features/onboarding/README.md) — business research and business-profile building;
    [website activation](features/onboarding/pipeline/09-website-activation.md) is activation Price plus Placis Pro plan / month
    Checkout
-8. [ETL](features/etl/README.md) — extract and transform (Google Maps, Facebook, Instagram); Monday /
+9. [ETL](features/etl/README.md) — extract and transform (Google Maps, Facebook, Instagram); Monday /
    Wednesday / Friday refresh
-9. [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
-10. [Website](features/website/README.md) — website templates, selecting and
+10. [Business profile](features/business-profile/README.md) — Details, Projects, Certifications and reviews
+11. [Website](features/website/README.md) — website templates, selecting and
     copying them, editing, website publication
-11. [Assistant](features/assistant/README.md) — assistant (guide and doer); onboarding guide is a sibling
-12. [Billing](features/billing/README.md) — usage credit, Stripe Subscription from 09 Checkout, Usage &
+12. [Assistant](features/assistant/README.md) — assistant (guide and doer); onboarding guide is a sibling
+13. [Billing](features/billing/README.md) — usage credit, Stripe Subscription from 09 Checkout, Usage &
     billing, Pricing (bake at `astro build`)
-13. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)
-14. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in
+14. [Placis website](features/placis-website/README.md) — Placis’s own site (Astro static → R2)
+15. [Ads](features/ads/README.md) — ad generation (#403); the authoritative spec is in
     [features/ads/ad-generation/](features/ads/ad-generation/ADR.md). Future Meta ad posting: [ad-application/meta](features/ads/ad-application/meta/)
     (investigation, not the spec)
-15. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
-16. [CI and delivery](general-architecture/ci-cd.md) — file-size guard, folder fan-out, external API isolation,
+16. [Leads](features/other/leads/README.md) — website form contacts for attribution and follow-up
+17. [CI and delivery](general-architecture/ci-cd.md) — file-size guard, folder fan-out, external API isolation,
     generated-code freshness
-17. [Testing](general-architecture/testing.md) — the per-feature E2E tests
-18. [Sep 3 issue lists](general-architecture/sep-3-issue-list.md) —
+18. [Testing](general-architecture/testing.md) — the per-feature E2E tests
+19. [Sep 3 issue lists](general-architecture/sep-3-issue-list.md) —
     per-feature keep / doc gap / drop (reclassified 2026-09-03)
 
 ## Canonical references
 
 | Topic | Doc |
 | --- | --- |
+| Agent entry (documentation-first gate) | [AGENTS.md](../AGENTS.md) |
 | Product loop and product-level scope | [general-prd.md](general-prd.md) |
 | Stack, module layout, how processes run | [general-architecture/README.md](general-architecture/README.md) |
 | How work is sliced and reviewed | [development-principles.md](development-principles.md) |
@@ -95,6 +98,8 @@ only (see the glossary Don't-say table).
 
 ## Documentation rules
 
+- Implementation waits on owner-reviewed named lists (`persistence.md`,
+  `api.md`, `testing.md`). See [AGENTS.md](../AGENTS.md).
 - Update canonical docs when contracts, shipped behavior, data models, Google /
   LLM / Stripe / voice boundaries, or validation gates change.
 - Terminology is canonical: `onboarding` (never "setup"), `business_profile`
