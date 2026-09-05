@@ -24,7 +24,7 @@ checkbox. The contractor mostly ticks. No upload-your-badge. Unchecking is
 **Right — reviews:** Google-style cards in a 3–4 column grid (stars, author,
 review citation, origin with the platform mark). Three headings, same look:
 **Top reviews**, **All reviews**, **Archive**. Top reviews and All reviews are
-ordinary sections (not a dashed drop well). **Top reviews** sit first,
+ordinary sections (not a dashed drop target). **Top reviews** sit first,
 featured-first (the first cards in that heading are what **ads** start with).
 Cap **30**. Checking an extra card when 30 are already top is refused (visible
 error). A newly pinned card **appends** (least featured). **All reviews** is

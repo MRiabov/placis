@@ -163,8 +163,11 @@ bind). After checkout / `setActive`, lookup is the org claim →
 (mode 2) may GET unpublished website
 (`/v1/onboarding/website/editor/…`) and GET
 `/v1/onboarding/website/assistant/thread`; it may GET / start-upload /
-confirm-upload `/v1/onboarding/media-assets/…`. It must not PATCH the
-unpublished website and must not send on the unpaid website assistant.
+confirm-upload `/v1/onboarding/media-assets/…`. It may Archive a Project
+card (`POST /v1/onboarding/projects/{projectId}/archive`). It must not
+`GET /v1/projects` or `/v1/media-assets/…` while unactivated. It must not
+PATCH the unpublished website and must not send on the unpaid website
+assistant.
 
 Contractor website `Host` is CORS for website form POST and website activation
 checkout/status. HTML GET never reaches Go, so it is not a sixth auth mode.

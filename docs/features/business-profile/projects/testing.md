@@ -58,6 +58,11 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant. One
 200. Body lists non-archived (`draft` + `active`). Archived omitted
 unless `status=archived`.
 
+#### Fail
+
+Unactivated tenant → `403` (use nested
+`OnboardingLiveBusinessProfileRead.projects`).
+
 ### TestHappyPathV1ProjectsCreate — Route
 
 #### Setup

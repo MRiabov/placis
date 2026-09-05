@@ -23,7 +23,9 @@ onboarding session token routes. Mutating Routes send `Idempotency-Key`.
 Token-auth Routes have **no** onboarding-session `{id}` in the path. Unactivated
 **403** on `/v1/websites/{website_prefix}/editor`, `/v1/assistant/…`, and
 `/v1/business-profile`. Unactivated **403** on `/v1/media-assets/…` (use
-`/v1/onboarding/media-assets/…`). Unpaid website editor uses
+`/v1/onboarding/media-assets/…`) and on `/v1/projects` (use nested
+`profile.projects` and `POST /v1/onboarding/projects/{projectId}/archive`).
+Unpaid website editor uses
 `onboarding_sessions.website_id`.
 
 Serve-only jsonb (not a DTO field dump): company registry / Maps
@@ -50,10 +52,10 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `OnboardingProfileRead` | `id`, `status`, `preview_website_address`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead`, `profile: OnboardingLiveBusinessProfileRead` | Resume / Review hydrate. Not Details GET |
+| `OnboardingProfileRead` | `id`, `status`, `preview_website_address`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead`, `profile: OnboardingLiveBusinessProfileRead` | Resume / Review hydrate. `preview_website_address` after 08 Preview website address; omit before Share. Not Details GET |
 | `OnboardingFillStatusRead` | `key`, `status` | Derived fill. `status` → `empty` / `in_progress` / `conflict` / `filled_by_user` / `filled_by_research` / `skipped` / `not_applicable` |
 | `OnboardingResearchConflictRead` | `key`, `live_value`, `research_value` | Research conflict (both values). Not a write |
-| `OnboardingLiveBusinessProfileRead` | `display_name`, `trade`, `description`, `founder_name`, `legal_name`, `company_number`, `registered_office`, `vat_registration_status`, `vat_number`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `reviews`, `facebook_profile_url` | Live columns the onboarding screens show. Same row as Details; onboarding session token. No `company_status` |
+| `OnboardingLiveBusinessProfileRead` | `display_name`, `trade`, `description`, `founder_name`, `legal_name`, `company_number`, `registered_office`, `vat_registration_status`, `vat_number`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `reviews`, `projects: []ProjectRead`, `facebook_profile_url` | Live columns plus reviews and ranked Project cards. Same row as Details plus `projects` (top 4 `active` business-research origin; [build-profile](pipeline/build-profile.md) rank). Not media library items (`GET /v1/onboarding/media-assets`). Same [`ProjectRead`](../business-profile/projects/api.md) as `/cms/projects`. Cover is `cover_media_asset_id` into that media library list. Empty `projects` → omit the Projects block. Onboarding session token. No `company_status` |
 
 ### Client interview
 
@@ -133,15 +135,15 @@ enqueue.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/onboarding/profile` | Resume; Review | | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles`, `etl.runs` | | Nested live business profile + research conflict + fill status | | ETL fetch `raw`; checklist resource |
+| `GET /v1/onboarding/profile` | Resume; Review; client interview hydrate; re-show `preview_website_address` after 08 Preview website address | | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles`, `business_profile.projects`, `website_publications`, `etl.runs` | | Nested live business profile (including ranked `projects`) + research conflict + fill status. After 08 Preview website address, `preview_website_address` is set so resume can paint the URL again | | ETL fetch `raw`; checklist resource; nest photos / `MediaAssetRead[]` |
 
 ### Client interview
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `PUT /v1/onboarding/interview` | click-off / periodic save | `ClientInterviewUpdate` | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles` | `client_interview_submissions`, `business_profile_edits`, `onboarding_sessions` | **calls** `SaveTextClientInterview`. `submission_kind=autosave`. Succeeds when the complete gate would fail | | Start 05; `/autosave` |
-| `POST /v1/onboarding/interview/complete` | Continue | `ClientInterviewUpdate` | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles` | `client_interview_submissions`, `business_profile_edits`, `business_profiles`, `onboarding_sessions` | **calls** `CompleteClientInterview`. Optional last dirty answers. Gate; `accepted_edit_id`; **inserts** `select_and_copy_website_template` | `409` gate | PUT-then-POST hop; `/submit`; second complete; `generation-runs` from `frontend-3` |
-| `POST /v1/onboarding/projects/{projectId}/archive` | interview Project cards | | | `business_profile.projects` | `business_profile.projects` | `active` → `archived`, `algorithm=human`; `project_sources` kept | | `POST /v1/projects/{id}/archive`; DELETE; interview Approve; guide tool |
+| `PUT /v1/onboarding/interview` | click-off / periodic save | `ClientInterviewUpdate` | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles`, `business_profile.projects` | `client_interview_submissions`, `business_profile_edits`, `onboarding_sessions` | **calls** `SaveTextClientInterview`. `submission_kind=autosave`. Succeeds when the complete gate would fail. Nested `profile.projects` is the same ranked cards as GET profile | | Start 05; `/autosave` |
+| `POST /v1/onboarding/interview/complete` | Continue | `ClientInterviewUpdate` | `OnboardingProfileRead` | `onboarding_sessions`, `business_profiles`, `business_profile.projects` | `client_interview_submissions`, `business_profile_edits`, `business_profiles`, `onboarding_sessions` | **calls** `CompleteClientInterview`. Optional last dirty answers. Gate; `accepted_edit_id`; **inserts** `select_and_copy_website_template`. Nested `profile.projects` is the same ranked cards as GET profile | `409` gate | PUT-then-POST hop; `/submit`; second complete; `generation-runs` from `frontend-3` |
+| `POST /v1/onboarding/projects/{projectId}/archive` | interview Project cards | | `OnboardingProfileRead` | `business_profile.projects` | `business_profile.projects` | `active` → `archived`, `algorithm=human`; `project_sources` kept. Body is the nested live profile with ranked `projects` (archived id gone; next-ranked `active` may appear) | | `POST /v1/projects/{id}/archive`; DELETE; interview Approve; guide tool; `GET /v1/projects` while unactivated |
 
 ### POST /v1/onboarding/interview/complete
 
@@ -151,7 +153,7 @@ complete → 05. Complete does not require photos.
 
 ### Media library (unactivated)
 
-Interview well + first upload. Same tails as
+Onboarding image gallery + first upload. Same tails as
 [`/v1/media-assets/…`](../other/media/api.md) for list and the three
 upload hops. The CMS media library is active tenant only. Policy wrapper:
 onboarding session token; **calls** `ListMediaAssets` /
@@ -162,7 +164,7 @@ sees the body). Do not wrap crop / replace / cleanup / reject.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/onboarding/media-assets` | `/onboarding/interview` well; resume | `MediaAssetListGet` | `MediaAssetRead[]` | `media_assets`, `media_asset_classifications` | | Same as CMS list. Onboarding session token | `403` activated | `/v1/media-assets` while unactivated; paginate |
+| `GET /v1/onboarding/media-assets` | onboarding image gallery; resume; re-GET on each SSE `business_profile` while the client interview is open | `MediaAssetListGet` | `MediaAssetRead[]` | `media_assets`, `media_asset_classifications` | | Same as CMS list. Onboarding session token. Client interview live-fill for photos (not nested on the live profile DTO) | `403` activated | `/v1/media-assets` while unactivated; paginate; nest photos on `OnboardingLiveBusinessProfileRead` |
 | `POST /v1/onboarding/media-assets/start-upload` | **Upload photos**; complete-warning **Add photos** | `MediaAssetCreate` | `MediaAssetUploadRead` | | `media_assets`, `files` | **calls** `StartMediaAssetUpload`. Same `Idempotency-Key` returns the same id + `upload_url` | `403` activated | `/v1/media-assets/start-upload` while unactivated; take the photo body; `/v1/onboarding/media/upload/` |
 | `POST /v1/onboarding/media-assets/{id}/confirm-upload` | After PUT succeeds | | `MediaAssetRead` | `media_assets`, `files` | `media_assets`, `files` | **calls** `ConfirmMediaAssetUpload`; **inserts** `describe_image` | `403` activated; `404`; scan/decode fail | Take the photo body; crop / replace / cleanup |
 
@@ -172,7 +174,7 @@ Auth: onboarding session token. `status=active` → **403**.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/onboarding/events/stream` | `/onboarding/preview`; Review while 02 runs; `/onboarding/preview-and-edit/` while 06 runs | | `OnboardingBusinessProfileEvent` / `OnboardingTimelineStepEvent` / `OnboardingWebsitePreviewReadyEvent` | `etl.runs`, `business_profiles`, `onboarding_sessions` | | Huma `sse.Register`. Event names `business_profile`, `timeline_step`, `website_preview_ready` | | Unconstrained `payload`; `checklist_row`; contractor host; `research_wait_until` |
+| `GET /v1/onboarding/events/stream` | `/onboarding/preview`; Review while 02 runs; `/onboarding/interview` live fill; `/onboarding/preview-and-edit/` while 06 runs | | `OnboardingBusinessProfileEvent` / `OnboardingTimelineStepEvent` / `OnboardingWebsitePreviewReadyEvent` | `etl.runs`, `business_profiles`, `business_profile.projects`, `onboarding_sessions` | | Huma `sse.Register`. Event names `business_profile`, `timeline_step`, `website_preview_ready`. `business_profile.profile` includes ranked `projects`. Photos are not on that payload — interview re-GETs `/v1/onboarding/media-assets` | | Unconstrained `payload`; `checklist_row`; contractor host; `research_wait_until`; nest photos on `profile` |
 
 ### Website
 
@@ -336,3 +338,6 @@ Policy: [onboarding assistant](assistant.md).
 - `PATCH` / replace / cleanup / reject under
   `/v1/onboarding/media-assets/`
 - `photos_fill` on `ClientInterviewUpdate` / `client_interview_submissions`
+- `photos` / `MediaAssetRead[]` on `OnboardingLiveBusinessProfileRead`
+- `GET /v1/projects` while unactivated (use nested `profile.projects`)
+- `GET /v1/onboarding/projects`

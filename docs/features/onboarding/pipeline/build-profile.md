@@ -118,14 +118,16 @@ Among business research origin `business_profile.projects` that are still
 2. Then longer text: `len(description) + len(title)`.
 3. Tie-break: newer `created_at`.
 
-**Top 4** are what 04a shows. Website 02 does **not** bake those ids into
-gallery slots (`{{projects.*}}` stay). SSE may reshuffle as scrape fills
-covers. `/cms/projects` lists all `active` extras. Client interview Archive
-sets `algorithm=human` and `archived` — that row leaves the pool; the
-next-complete `active` business research origin may appear. Later 02 /
-scheduled inserts add Profile rows only; they do not add service pages or
-rewrite a copied gallery token. The next website publication (04) resolves
-`{{projects.*}}` from the live profile.
+**Top 4** are what 04a Text client interview shows, nested on
+`OnboardingLiveBusinessProfileRead.projects` (GET profile, client interview PUT
+/ complete, SSE `business_profile.profile`). Website 02 does **not** bake those
+ids into gallery slots (`{{projects.*}}` stay). SSE may reshuffle as scrape
+fills covers. `/cms/projects` lists all `active` extras. Client interview
+Archive sets `algorithm=human` and `archived` — that row leaves the pool; the
+next-complete `active` business research origin may appear. Later 02 / scheduled
+inserts add Profile rows only; they do not add service pages or rewrite a copied
+gallery token. The next website publication (04) resolves `{{projects.*}}` from
+the live profile.
 
 ### Rank reviews (after ETL fast extract; again when ETL finishes)
 

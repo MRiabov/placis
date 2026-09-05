@@ -14,9 +14,9 @@ Loading placeholders: every screen, per field / row — not a whole-panel swap
 ([frontend.md](../../general-architecture/frontend.md)).
 
 Find, Review, client interview, and the wait teaser share one screen layout
-([design decision](design-decision-record.md) 1): heading and lede, card wells, sticky footer with the
-primary action in the same place. Visible copy is owner language, not PRD or
-pipeline phrasing ([design decision](design-decision-record.md) 6). The wordmark is the Placis orb lockup
+([design decision](design-decision-record.md) 1): heading and lede, cards, sticky footer with the primary
+action in the same place. Visible copy is owner language, not PRD or pipeline
+phrasing ([design decision](design-decision-record.md) 6). The wordmark is the Placis orb lockup
 ([design decision](design-decision-record.md) 3). Each card opens with a heading block that is visibly
 larger than field labels ([design decision](design-decision-record.md) 9).
 
@@ -88,25 +88,29 @@ research does not write them).
   ([ADR](ADR.md) 18). Crawl may add rows they have not already entered.
 - **Photos** — media library items business research has attached so far (logo
   plus work photos). New items appear as extract chunks land. Do not label a
-  photo with the Google Maps listing or Facebook. The work-photo well is the
-  media library gallery (same `MediaThumbs` as `/cms/media`, website Content,
-  and Projects cover pick — not a second grid, not the Ads review strip).
-  **Upload** is always available (file multipicker; drop accepted). Do not ask a
-  photos-choice question. Do not offer **Find more online** or
+  photo with the Google Maps listing or Facebook. The onboarding image gallery
+  is the media library gallery (same `MediaThumbs` as `/cms/media`, website
+  Content, and Projects cover pick — not a second grid, not the Ads review
+  strip). **Upload** is always available (file multipicker; drop accepted). Do
+  not ask a photos-choice question. Do not offer **Find more online** or
   **Create a stand-in**. Complete does not require photos. Maps / Facebook can
-  attach dozens; the well scrolls in the card (`max-height`) and uses four
-  columns so tiles stay small (not `/cms/media`’s 2-then-3/4 count — that card
-  is too narrow for two-column tiles). Continue with no work photos (active
-  media library items whose latest `photo_kind` is not `logo`; unclassified /
-  still-processing owner uploads count) opens a **complete warning**
-  ([design decision](design-decision-record.md) 15): title **Create a website without photos?**; body **The
-  results will be much better if you attach photos. You may attach real photos
-  later; we will use AI-generated images.**; primary **Add photos** (same
-  multipicker as Upload; dismiss; stay on this screen); secondary **Skip**
+  attach dozens; the onboarding image gallery scrolls in the card (`max-height`)
+  and uses four columns so tiles stay small (not `/cms/media`’s 2-then-3/4 count
+  — that card is too narrow for two-column tiles). Continue with no work photos
+  (active media library items whose latest `photo_kind` is not `logo`;
+  unclassified / still-processing owner uploads count) opens a
+  **complete warning** ([design decision](design-decision-record.md) 15): title
+  **Create a website without photos?**; body **The results will be much better
+  if you attach photos. You may attach real photos later; we will use
+  AI-generated images.**; primary **Add photos** (same multipicker as Upload;
+  dismiss; stay on this screen); secondary **Skip**
   (`POST /v1/onboarding/interview/complete`). Frontend-only — complete HTTP does
   not inspect photo count. Reuse that complete-warning control for later
   warnings (title, body, primary, secondary); only photos is wired now. List and
-  upload: [api](api.md) `/v1/onboarding/media-assets/…`.
+  upload: [api](api.md) `/v1/onboarding/media-assets/…`. Hydrate that list on enter,
+  resume, and each SSE `business_profile` while this screen is open ([ADR](ADR.md) 11
+  ~2s cap). Re-GET, not a nested photo array on the live profile DTO and not a
+  second image stream.
 - **Certifications** — trade accreditations with the definition badge, plus
   other certifications. Do not say proof. If they picked the company registry
   record on Find, the matching business-registry certification (CRO in Ireland)
@@ -119,13 +123,20 @@ research does not write them).
   The list grows as scrape / transform inserts. **We do not have online
   reviews yet** only while the pool is still empty (hide that line once the
   first review lands).
-- **Projects** — if business research has `active` business research origin
-  Projects, show up to four cards (current completeness rank: cover, then text
-  length). Same card look as `/cms/projects` (cover, title, description). No
-  Project draft badge. Not editable. **Archive** on the card (onboarding session
-  token; [api](api.md)). Zero `active` → omit the whole block. Cards may appear or
-  reorder while business research is still running. The onboarding guide does
-  not Archive these cards.
+- **Projects** — nested `profile.projects` on GET profile, client interview PUT
+  / complete, and SSE `business_profile.profile` (same [`ProjectRead`](../business-profile/projects/api.md) as
+  `/cms/projects`). If that array is non-empty, show up to four cards (current
+  completeness rank: cover, then text length, then newer `created_at`). Same
+  card look as `/cms/projects` (cover from `cover_media_asset_id` into the media
+  library list, title, description). Two columns in the client interview
+  `max-w-xl` (same gap as `/cms/projects`). No Project draft badge. Not a link
+  to `/cms/projects/{id}`. Not editable. **Archive** is the top-right Archive
+  icon on the card (same hit as certifications / reviews), not a button under
+  the description (`POST /v1/onboarding/projects/{projectId}/archive` returns
+  `OnboardingProfileRead` so the list updates without waiting on SSE). Zero
+  `active` → omit the whole block. Cards may appear or reorder while business
+  research is still running. The onboarding guide does not Archive these cards.
+  Do not `GET /v1/projects` while unactivated.
 - **Anything else we should know?** — extra notes (`additional_notes`).
   Optional. Helper: what would help us generate a better website or run ads
   ([design decision](design-decision-record.md) 5).
@@ -179,8 +190,11 @@ and switch website pages; hydrate the thread; prompt box visible; send and
 Voice need **Sign in with Google**.
 
 **Share** (optional) runs [08](pipeline/08-preview-website-address.md): preview
-website address with website-activation strip. Pay on the website preview **or**
-on that strip ([09](pipeline/09-website-activation.md)). After 09 this route
+website address with website-activation strip. After Share, that URL lives on
+`OnboardingProfileRead.preview_website_address`. Reload on this route calls
+`GET /v1/onboarding/profile` and re-shows it (Share is optional; omit when they
+have not shared). Pay on the website preview **or** on that strip
+([09](pipeline/09-website-activation.md)). After 09 this route
 redirects to `/cms/website` (website editor, **Publish**).
 
 The look export’s unpaid website preview is `apps/demo/`
@@ -197,8 +211,9 @@ onboarding session status and whether `latest/` exists win. Screen map:
 Reload during the wait → stay on `/onboarding/preview`, reconnect SSE, keep
 rotating complete sections, finish the **same** wait (copy done or remaining
 time to the original cap — not a new 15s). Reload after wait-end →
-`/onboarding/preview-and-edit/`. `activated` → `/cms/website`. The preview
-website address (after share) opens without `localStorage`.
+`/onboarding/preview-and-edit/`. If they already shared, that same profile GET
+re-shows `preview_website_address` on the website preview (the host itself
+opens without `localStorage`). `activated` → `/cms/website`.
 
 Restore failure keeps the token and
 retries; it does not `POST` a new onboarding session.
@@ -211,7 +226,8 @@ retries; it does not `POST` a new onboarding session.
 - `TextInterviewForm` — Details block == `/cms/details` (same field controls:
   featured-service list, Maps territory cards, hours picker) plus
   client-interview extras. SSE live-fills untouched controls and enriches
-  lists (reviews, photos, Projects, services) while 02 runs. Extra notes
+  lists (reviews, photos via media library re-GET, Projects on nested
+  `profile.projects`, services) while 02 business research runs. Extra notes
   owner copy: Anything else we should know? Helper: what would help us
   generate a better website or run ads.
 - `AccreditationChecklist` — trade certifications plus other certifications.

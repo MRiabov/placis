@@ -3,7 +3,6 @@ import { type ReactNode, useState } from "react";
 
 import { DevStrip } from "@/dev/DevStrip";
 import { useCmsLayout } from "@/layout/CmsLayout";
-import { cn } from "@/lib/cn";
 import {
   listSearch,
   projectRows,
@@ -11,6 +10,7 @@ import {
 } from "@/pages/cms/project-rows";
 import { Button } from "@/ui/Button";
 import { PageHeading } from "@/ui/PageHeading";
+import { ProjectCard } from "@/ui/ProjectCard";
 
 export function ProjectsPage(): ReactNode {
   const { openDestinations } = useCmsLayout();
@@ -142,32 +142,18 @@ export function ProjectsPage(): ReactNode {
               <div className="grid grid-cols-1 gap-5 min-[1101px]:grid-cols-2">
                 {active.map((project) => (
                   <Link
-                    className={cn(
-                      "block rounded-[28px] border border-stone-200 bg-white",
-                      "p-2.5 text-left shadow-sm hover:bg-zinc-50",
-                    )}
+                    className="block"
                     key={project.id}
                     params={{ projectId: project.id }}
                     search={projectSearch({}, search)}
                     to="/cms/projects/$projectId"
                   >
-                    {project.image ? (
-                      <img
-                        alt=""
-                        className="h-44 w-full rounded-[18px] bg-zinc-100 object-cover object-[50%_32%]"
-                        src={project.image}
-                      />
-                    ) : (
-                      <span className="block h-44 rounded-[18px] bg-zinc-100" />
-                    )}
-                    <span className="grid gap-1.5 px-2 pt-3 pb-2">
-                      <b className="text-[15px] font-semibold tracking-tight">
-                        {project.title}
-                      </b>
-                      <span className="text-[13px] leading-snug text-muted-foreground">
-                        {project.description}
-                      </span>
-                    </span>
+                    <ProjectCard
+                      className="hover:bg-zinc-50"
+                      description={project.description}
+                      image={project.image}
+                      title={project.title}
+                    />
                   </Link>
                 ))}
               </div>
@@ -205,27 +191,12 @@ export function ProjectsPage(): ReactNode {
                     id="archiveList"
                   >
                     {archived.map((project) => (
-                      <div
-                        className="rounded-[28px] border border-stone-200 bg-white p-2.5 shadow-sm"
+                      <ProjectCard
+                        description={project.description}
+                        image={project.image}
                         key={project.id}
+                        title={project.title}
                       >
-                        {project.image ? (
-                          <img
-                            alt=""
-                            className="h-44 w-full rounded-[18px] bg-zinc-100 object-cover object-[50%_32%]"
-                            src={project.image}
-                          />
-                        ) : (
-                          <span className="block h-44 rounded-[18px] bg-zinc-100" />
-                        )}
-                        <div className="grid gap-1.5 px-2 pt-3 pb-2">
-                          <b className="text-[15px] font-semibold tracking-tight">
-                            {project.title}
-                          </b>
-                          <span className="text-[13px] leading-snug text-muted-foreground">
-                            {project.description}
-                          </span>
-                        </div>
                         <Button
                           className="mt-1"
                           onClick={() => {
@@ -239,7 +210,7 @@ export function ProjectsPage(): ReactNode {
                         >
                           Unarchive
                         </Button>
-                      </div>
+                      </ProjectCard>
                     ))}
                   </div>
                 ) : null}
