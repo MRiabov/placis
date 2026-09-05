@@ -13,10 +13,10 @@ River, the contractor website Worker, **frontend-3**, and voice sit
 
 Product Go does not exist yet (`internal/` empty, no `migrations/`).
 Only `cmd/ci` checkers and docs. `frontend-2/` may still sit on disk
-until S02. The walking skeleton is the first work, and it includes the
-first Go GitHub Actions job plus the first Railway deploy of
-`cmd/api`. Docs/demo CI already runs; there is no separate “set up
-CI/CD” development task.
+until S02. The walking skeleton is the first work. It implements
+[CI and delivery](../general-architecture/ci-cd.md) — there is no
+separate CI/CD development task. Docs-gates and look-app CI already
+run; S01 adds the rest of that file.
 
 ## Purpose
 
@@ -159,29 +159,32 @@ Each development task is one PR unless a later pack splits Go then UI. Fields:
   `CREATE SCHEMA` for the namespaces in
   [persistence](../general-architecture/persistence.md), sqlc,
   in-process River, Testcontainers Postgres, OpenAPI export.
-  **CI:** add `.github/workflows/ci.yml` for the Go gates that apply
-  in this development task (`gofmt` / `go vet` / `golangci-lint`,
-  `go test ./...` with Testcontainers, OpenAPI constraints). Live
-  workflows today are docs, `apps/demo`, and contractor-website
-  Cloudflare only — there is no Go `ci.yml` yet.
-  **CD:** first Railway deploy of `cmd/api` from `main` (health
-  only). Release, not a PR check
-  ([CI and delivery](../general-architecture/ci-cd.md))
+  **CI/CD:** implement
+  [CI and delivery](../general-architecture/ci-cd.md). Keep the live
+  docs-gates and look-app jobs (Don’t-say, rumdl, docs–code, pipeline
+  tables, HappyPath `--public`). Add `.github/workflows/ci.yml` and
+  dormant CircleCI YAML. First Railway deploy of `cmd/api` from
+  `main`. Do not invent extra gates. Gates that file defers until
+  `frontend-3`, the Worker, or a website template catalog stay
+  deferred (S02 / S14 / website template catalog).
 - **Must not:** product tables, Clerk, Stripe, `frontend-3`
-  screens, `frontend-3` CI (S02), CircleCI as the live runner
+  screens, enabling `frontend-3` CI (S02), CircleCI as the live
+  runner
 - **Done when:** `TestHappyPath` for those two Routes
-  ([testing](../general-architecture/testing.md)); `go test ./...`
-  green on GitHub Checks; OpenAPI export has no unconstrained DTO
-  fields; Railway serves `GET /v1/health`
+  ([testing](../general-architecture/testing.md)); the ci-cd.md gates
+  that apply without `frontend-3` / Worker / website template catalog
+  are green on GitHub Checks; Railway serves `GET /v1/health`
 - **Blocked by:** none
 
 ### S02 `frontend-3` scaffold
 
 - **Depends on:** S01
 - **Owns:** add `frontend-3/` (Vite + React + TanStack Router / Query +
-  Clerk + `openapi-fetch`); typegen from Go health only; retarget CI,
-  Don’t-say `--frontend`, and Playwright to `frontend-3/`. **Delete the
-  `frontend-2/` tree in this development task or immediately before it.**
+  Clerk + `openapi-fetch`); typegen from Go health only; enable the
+  [CI and delivery](../general-architecture/ci-cd.md) `frontend-3`
+  jobs (Don’t-say `--frontend`, TypeScript + Biome, Playwright).
+  **Delete the `frontend-2/` tree in this development task or
+  immediately before it.**
   ([frontend stack](../general-architecture/frontend-stack.md))
 - **Must not:** open `frontend-2`, copy modules from it, port dumped
   predecessor CSS, promote `apps/demo` to the product app, owner
