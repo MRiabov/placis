@@ -82,6 +82,16 @@ line when that line is not a new list item or heading.
 - `docs/features/placis-website/ADR.md`: “interactive widgets share a file”
   → **fail**. Say **islands**.
 
+## Banned synonym (unmarked) — well (image gallery)
+
+- `docs/features/onboarding/frontend.md`: “the work-photo well” / “the well
+  scrolls” → **fail**. Say **onboarding image gallery**.
+- `docs/features/ads/ad-generation/frontend.md`: “image well” → **fail**. Say
+  **ads image gallery**.
+- `docs/features/website/frontend.md`: “photo well” on Content → **fail**. Say
+  **website editor image gallery**.
+- “as well” / “well-defined” / “reads well” → **pass** (not the UI control).
+
 ## Self-understood at home — website `page`
 
 - `docs/features/website/architecture.md`: “each page has sections” → **pass**

@@ -408,6 +408,10 @@ var extraAllowed = []string{
 	"session.update",
 	"company registry record",
 	"company registry records",
+	"as well",
+	"onboarding image gallery",
+	"ads image gallery",
+	"website editor image gallery",
 }
 
 func inheritsDontSayContext(line string) bool {

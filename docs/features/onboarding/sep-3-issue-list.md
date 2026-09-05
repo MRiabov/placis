@@ -35,12 +35,6 @@ usually a **doc gap**, not a drop.
   website-editor.md and assistant ADR 27.
   Action: one owner (06); website 03 links. Not a deletion of 06.
 
-- **14. `OnboardingLiveBusinessProfileRead` missing projects and
-  photos**
-  Comment: ADR 11 / 04a Text client interview / frontend / E2E all
-  live-fill them over SSE.
-  Action: add nested reads, or name the separate route.
-
 - **16. Stale “08” / “07” sentences after ADR 21**
   Comment: ADR 21 moved share to 08 Preview website address and
   activation to 09 Website activation. ADR 12 already has a dated
@@ -49,12 +43,6 @@ usually a **doc gap**, not a drop.
   are downstream errors.
   Action: dated amendment on onboarding ADR 16; correct
   frontend-debloat. Billing PRD activation is 09.
-
-- **18. `OnboardingProfileRead.preview_website_address` reader
-  unnamed**
-  Comment: Share is optional (ADR 21). After reload, profile GET is
-  the only hydrate that can re-show the URL.
-  Action: name that resume behaviour in frontend.md §5.
 
 ## Actually drop
 

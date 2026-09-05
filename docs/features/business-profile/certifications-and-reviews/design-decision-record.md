@@ -28,8 +28,8 @@ One number is one decision.
    in Top reviews. (2026-08-26)
 
 5. **Top reviews and All reviews look the same** — Plain headings, not a dashed
-   drop well. A drop-target around Top reviews is parked (see mock CSS comment).
-   (2026-08-26)
+   drop target. A drop-target around Top reviews is parked (see mock CSS
+   comment). (2026-08-26)
 
 6. **Archive is a collapsible heading** — Chevron down on the right, default
    collapsed — not a toolbar button. (2026-08-26)

@@ -12,10 +12,10 @@ inventing it.
 ## Decisions
 
 1. **One screen layout** — Find, Review, client interview, and the wait teaser
-   share one layout: heading and lede, then `.onb-card` wells, then a sticky
+   share one layout: heading and lede, then `.onb-card` cards, then a sticky
    footer in the same place. The primary action (Business lookup / Continue)
    always sits in that footer. Inner blocks are not a second card type; they
-   sit inside the well. **Why:** buttons were placed differently on all four
+   sit inside the card. **Why:** buttons were placed differently on all four
    screens, and some sections had cards while others did not.
    (2026-08-28)
 
@@ -174,11 +174,19 @@ inventing it.
     only photos is wired. Frontend-only. (2026-09-04)
 
 16. **Interview work photos reuse the media library gallery** — The client
-    interview work-photo well is the same gallery as `/cms/media`, website
-    Content, and Projects cover pick (`MediaThumbs`), not a second thumb row
-    and not the Ads review strip. Upload / drop / Add photos use that gallery’s
-    file multipicker. On the interview card the gallery is four columns so
-    tiles stay small (that card is narrower than `/cms/media`; two columns
-    made tiles too large). When many items land (Maps can attach dozens), the
-    well scrolls in the card. Logo stays the identity tile in that panel, not
-    mixed into the work-photo thumbs. (2026-09-04)
+    interview onboarding image gallery is the same gallery as `/cms/media`,
+    website Content, and Projects cover pick (`MediaThumbs`), not a second thumb
+    row and not the Ads review strip. Upload / drop / Add photos use that
+    gallery’s file multipicker. On the interview card the gallery is four
+    columns so tiles stay small (that card is narrower than `/cms/media`; two
+    columns made tiles too large). When many items land (Maps can attach
+    dozens), the onboarding image gallery scrolls in the card. Logo stays the
+    identity tile in that panel, not mixed into the work-photo thumbs.
+    (2026-09-04)
+
+17. **Interview Project cards are two columns; Archive is a top-right icon** —
+    Ranked interview cards use the same `/cms/projects` card in **two columns**
+    (gap 20px), not a single stacked column. **Archive** is the Archive lucide
+    icon at the top-right of the card (same hit as certifications / reviews),
+    not a full-width button under the description. Still not a link and not
+    editable. (2026-09-05)

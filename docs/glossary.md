@@ -1931,6 +1931,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | blob / blobs | name the payload (HTML, instructions, jsonb column, file) |
 | grain | name the unit (what Persist / Must not names, Go package, grouping) |
 | widget / widgets | name the control (crop overlay, Details field, island) |
+| the well / image well / photo well / photos well / work-photo well / work photo well / empty well / empty photo well / interview well / drop well / card well / card wells / sunken well | onboarding image gallery, ads image gallery, or website editor image gallery |
 
 ## Code naming rules
 

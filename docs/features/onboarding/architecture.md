@@ -121,7 +121,10 @@ prose. On the website preview the same stream plus unpublished GET Follow
 leftover 06. The stream is a **mirror** — Postgres is authoritative. Business
 research progress reads `etl.runs` **and** the live business profile transform
 already wrote (ETL fast extract results appear before ETL slow extract
-finishes). The contractor host is not an SSE endpoint.
+finishes). Interview photos are not on the `business_profile` payload —
+`/onboarding/interview` re-GETs `/v1/onboarding/media-assets` on each of
+those events. Ranked `projects` **are** on that nested live profile. The
+contractor host is not an SSE endpoint.
 
 ## Where things stand
 
