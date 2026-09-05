@@ -27,9 +27,11 @@ slices, and let the gates + glossary catch drift.
    - [general-prd.md](general-prd.md) — product-level scope
 
    Read the relevant ones before touching a feature. A slice is spec, then
-   owner review, then code — not docs alongside code. Named lists in
-   `persistence.md`, `api.md`, and `testing.md` must exist and be reviewed
-   before Go, goose, or owner UI code. Agent entry: [AGENTS.md](../AGENTS.md).
+   owner review, then code — not docs after code, not docs alongside code.
+   Every changeset starts by editing `docs/`. In Plan mode, updating docs is
+   the first step. Named lists in `persistence.md`, `api.md`, and `testing.md`
+   must exist and be reviewed before Go, goose, or owner UI code. Agent entry:
+   [AGENTS.md](../AGENTS.md).
 2. **The gates** (CI-enforced) catch drift mechanically: file-size guard,
    `golangci-lint`, generated-code freshness, two-layer types, tests isolated
    from Google / the LLM / Stripe / voice, one E2E per feature.

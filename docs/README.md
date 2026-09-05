@@ -99,7 +99,9 @@ only (see the glossary Don't-say table).
 ## Documentation rules
 
 - Implementation waits on owner-reviewed named lists (`persistence.md`,
-  `api.md`, `testing.md`). See [AGENTS.md](../AGENTS.md).
+  `api.md`, `testing.md`). Every changeset starts with those docs, not after
+  code. In Plan mode, updating docs is the first step. See
+  [AGENTS.md](../AGENTS.md).
 - Update canonical docs when contracts, shipped behavior, data models, Google /
   LLM / Stripe / voice boundaries, or validation gates change.
 - Terminology is canonical: `onboarding` (never "setup"), `business_profile`
