@@ -47,10 +47,13 @@ CTA; after pay → website editor, **Publish**). Delight: [design decision](desi
 (wait-teaser hero uses the job-site photo; timeline tracks the 15s cap). The
 wait-teaser canvas is a fake homepage, not the contractor website renderer.
 
-Client interview: found photos (logo plus a few photos of the work) with
-**Upload photos**. Do not paint where a photo came from. Find more online /
-Create a stand-in only when there are not enough. Found reviews look like Google
-reviews ([design decision](design-decision-record.md) 4). Extra notes owner copy is
+Client interview: logo tile plus the media library gallery for work photos (same
+gallery as `/cms/media`, website Content, and Projects cover pick). **Upload**
+on that gallery. Do not paint where a photo came from. Do not offer Find more
+online / Create a stand-in. Many found photos (Maps) scroll in the card; four
+columns so tiles stay small. Continue with no work photos opens a complete
+warning ([design decision](design-decision-record.md) 15). Found reviews look like Google reviews
+([design decision](design-decision-record.md) 4). Extra notes owner copy is
 **Anything else we should know?** with a helper about generating a better
 website or running ads ([design decision](design-decision-record.md) 5). Certifications show the definition
 badge; CRO registered is locked when the company registry record was picked on

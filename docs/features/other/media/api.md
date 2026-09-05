@@ -9,10 +9,13 @@ there is **no** `/v1/files` HTTP. The file on an item is never replaced
 in place; edits copy (`parent_media_asset_id`).
 
 **Auth default:** Clerk JWT, active tenant. Mutating Routes send
-`Idempotency-Key`. No freeform jsonb on these DTOs. Upload `upload_url`
-is `string` + `maxLength` (URL). Crop/focal are bounded numbers (0–1).
-Cleanup prompt is `string` + `minLength` 1 + `maxLength` 500. Media
-caption is not on owner HTTP.
+`Idempotency-Key`. Unactivated onboarding uses
+[`/v1/onboarding/media-assets/…`](../../onboarding/api.md) (list,
+start-upload, confirm-upload; onboarding session token). These CMS
+routes stay **403** unactivated. No freeform jsonb on these DTOs. Upload
+`upload_url` is `string` + `maxLength` (URL). Crop/focal are bounded
+numbers (0–1). Cleanup prompt is `string` + `minLength` 1 +
+`maxLength` 500. Media caption is not on owner HTTP.
 
 Cleanup is this resource. Ads placements and website slots
 **reference** a `media_asset_id`; they do not own a second cleanup

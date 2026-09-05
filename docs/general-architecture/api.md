@@ -162,8 +162,9 @@ bind). After checkout / `setActive`, lookup is the org claim →
 `tenants.clerk_org_id` (unactivated or active). Onboarding session token
 (mode 2) may GET unpublished website
 (`/v1/onboarding/website/editor/…`) and GET
-`/v1/onboarding/website/assistant/thread`; it must not PATCH and must
-not send.
+`/v1/onboarding/website/assistant/thread`; it may GET / start-upload /
+confirm-upload `/v1/onboarding/media-assets/…`. It must not PATCH the
+unpublished website and must not send on the unpaid website assistant.
 
 Contractor website `Host` is CORS for website form POST and website activation
 checkout/status. HTML GET never reaches Go, so it is not a sixth auth mode.

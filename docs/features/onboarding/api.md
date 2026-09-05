@@ -4,7 +4,8 @@ Conventions: [HTTP conventions](../../general-architecture/api.md).
 Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 Business lookup, resume, client interview, SSE, website activation,
-onboarding assistant (guide). Details after website activation:
+onboarding assistant (guide), unpaid media library (interview upload).
+Details after website activation:
 [details HTTP](../business-profile/details/api.md). Unpaid
 `update_details` / Revert: wrappers below, not that tree. Selecting and
 copying the website template is owned by [website](../website/api.md);
@@ -21,7 +22,8 @@ origin: unpaid POST website pages, Details PATCH / undo. **Stripe signature:**
 onboarding session token routes. Mutating Routes send `Idempotency-Key`.
 Token-auth Routes have **no** onboarding-session `{id}` in the path. Unactivated
 **403** on `/v1/websites/{website_prefix}/editor`, `/v1/assistant/…`, and
-`/v1/business-profile`. Unpaid website editor uses
+`/v1/business-profile`. Unactivated **403** on `/v1/media-assets/…` (use
+`/v1/onboarding/media-assets/…`). Unpaid website editor uses
 `onboarding_sessions.website_id`.
 
 Serve-only jsonb (not a DTO field dump): company registry / Maps
@@ -57,7 +59,7 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `ClientInterviewUpdate` | `display_name`, `trade`, `description`, `founder_name`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `vat_registration_status`, `vat_number`, `services`, `service_areas`, `accreditations`, `photos_fill`, `additional_notes`, `skipped` | Dirty keys only. PUT click-off; optional POST complete body. Extra keys 4xx |
+| `ClientInterviewUpdate` | `display_name`, `trade`, `description`, `founder_name`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `vat_registration_status`, `vat_number`, `services`, `service_areas`, `accreditations`, `additional_notes`, `skipped` | Dirty keys only. PUT click-off; optional POST complete body. Extra keys 4xx |
 
 ### Progress
 
@@ -145,7 +147,26 @@ enqueue.
 
 Continue **is** submit. One hop. Optional body empty if click-off
 already saved. Gate fail stays `client_interviewing`. Exactly one
-complete → 05.
+complete → 05. Complete does not require photos.
+
+### Media library (unactivated)
+
+Interview well + first upload. Same tails as
+[`/v1/media-assets/…`](../other/media/api.md) for list and the three
+upload hops. The CMS media library is active tenant only. Policy wrapper:
+onboarding session token; **calls** `ListMediaAssets` /
+`StartMediaAssetUpload` / `ConfirmMediaAssetUpload`. Same DTOs
+(`MediaAssetListGet`, `MediaAssetRead`, `MediaAssetCreate`,
+`MediaAssetUploadRead`). Browser **PUT** to `upload_url` (R2; Go never
+sees the body). Do not wrap crop / replace / cleanup / reject.
+
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `GET /v1/onboarding/media-assets` | `/onboarding/interview` well; resume | `MediaAssetListGet` | `MediaAssetRead[]` | `media_assets`, `media_asset_classifications` | | Same as CMS list. Onboarding session token | `403` activated | `/v1/media-assets` while unactivated; paginate |
+| `POST /v1/onboarding/media-assets/start-upload` | **Upload photos**; complete-warning **Add photos** | `MediaAssetCreate` | `MediaAssetUploadRead` | | `media_assets`, `files` | **calls** `StartMediaAssetUpload`. Same `Idempotency-Key` returns the same id + `upload_url` | `403` activated | `/v1/media-assets/start-upload` while unactivated; take the photo body; `/v1/onboarding/media/upload/` |
+| `POST /v1/onboarding/media-assets/{id}/confirm-upload` | After PUT succeeds | | `MediaAssetRead` | `media_assets`, `files` | `media_assets`, `files` | **calls** `ConfirmMediaAssetUpload`; **inserts** `describe_image` | `403` activated; `404`; scan/decode fail | Take the photo body; crop / replace / cleanup |
+
+Auth: onboarding session token. `status=active` → **403**.
 
 ### Progress
 
@@ -308,3 +329,10 @@ Policy: [onboarding assistant](assistant.md).
 - `/v1/onboarding/website/editor/business-profile`
 - `/v1/business-profile` while unactivated (use
   `/v1/onboarding/business-profile`)
+- `/v1/onboarding/media/upload/`
+- `/v1/media-assets/…` while unactivated (use
+  `/v1/onboarding/media-assets/…` for list / start-upload /
+  confirm-upload)
+- `PATCH` / replace / cleanup / reject under
+  `/v1/onboarding/media-assets/`
+- `photos_fill` on `ClientInterviewUpdate` / `client_interview_submissions`
