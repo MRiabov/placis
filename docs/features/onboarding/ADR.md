@@ -157,6 +157,14 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     enrichable lists (reviews, photos, Projects, services, service areas, empty
     hours days, certifications) grow while 02 runs; dirty / `human` controls are
     not rewritten.)
+    (2026-09-05: photos are **not** nested on
+    `OnboardingLiveBusinessProfileRead` / SSE `business_profile.profile`.
+    Interview hydrates and live-fills the onboarding image gallery with
+    `GET /v1/onboarding/media-assets` on enter, resume, and each
+    `business_profile` event while `/onboarding/interview` is open (same ~2s
+    cap). Re-GET, not a second image stream. Ranked Project cards **are**
+    nested `projects: []ProjectRead` on that live profile DTO, including SSE.
+    Cover is `cover_media_asset_id` into the media library list.)
 
 12. **Website activation writes the strip-off website publication** — 07 already
     wrote `website_publications` **v1** (static HTML on the host,
@@ -194,6 +202,10 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     Reload after 07 → the host. `activated` → `/cms/website`. (2026-08-23.
     2026-08-25: resume during wait vs after 07. 2026-08-28: onboarding assistant
     is a guide; do not seed a writer interview connection.)
+    (2026-09-05: after 08 Preview website address, `GET /v1/onboarding/profile`
+    re-shows `preview_website_address` on `/onboarding/preview-and-edit/`.
+    Omit before Share. The contractor host still opens without
+    `localStorage`.)
 
 15. **The website preview is the preview website address** — `{website_prefix}`
     plus the suffix in [cloudflare.md](../website/cloudflare.md) with static R2 HTML and a

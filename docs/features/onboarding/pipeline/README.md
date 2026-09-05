@@ -72,7 +72,10 @@ its own status.
 Same browser only. `localStorage` holds the onboarding session **token**
 (`onboarding_sessions.token`) plus last UI step. Restore is
 `GET /v1/onboarding/profile`. The stored step is a hint; status and whether
-`latest/` exists win. There is no second token and no server-side resume token.
+`latest/` exists win. After 08 Preview website address, that GET’s
+`preview_website_address` re-shows the share URL on
+`/onboarding/preview-and-edit/` (omit when they have not shared). There is no
+second token and no server-side resume token.
 
 | Onboarding session | Screen |
 | --- | --- |

@@ -115,7 +115,8 @@ Two surfaces plus global nav, the open website:
   - **Projects** — the project gallery for that website section. Title /
     description / cover stay at `/cms/projects` ([projects frontend](../business-profile/projects/frontend.md)).
   - Everything else — website slots.
-  Click an image on the canvas: Content focused on that image (current thumb,
+  Click an image on the canvas: Content focused on that image (website editor
+  image gallery: current thumb,
   pick from the media library, **Upload**). Drop onto **Upload** still uploads;
   the prompt is not drag-and-drop. Thumbs match `/cms/media` (mixed ratio,
   dozens). SEO stays website-page-level in its own rail panel. Website versions

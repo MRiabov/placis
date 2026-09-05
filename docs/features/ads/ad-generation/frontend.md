@@ -194,24 +194,23 @@ The questions and review content:
    carousel is several cards; story is almost always one image with shorter
    overlay copy. Changing format after generate regenerates this ad. Want
    another format? A new ad. Default: Square feed.
-5. **Photos** — approved photos from the **media library** (the same gallery
-   picker as the rest of the app, e.g. the projects media picker — no duplicated
-   gallery or tokens), with framing adjustments and light cleanup drafts
-   (reviewable **before/after sweep viewer** — drag the divider to clip, not
-   resize, the photo — with Accept/Reject). First upload may already have
-   run a tailored default cleanup from visual-issue classification when
-   feature flag `media_auto_cleanup` is on (default off). After generate,
-   an inline AI assistance asks for a **different**
-   cleanup (required prompt, overlay) and POSTs
-   `/v1/media-assets/{id}/image-edits` (same as the assistant `cleanup_image`) —
-   not a photo picker and not `POST /v1/ads/…/cleanup`. Reject is
-   `POST /v1/media-assets/{id}/reject`. The sweep's size follows this ad's
-   format: Square feed and Carousel cards are 1:1, Portrait feed is 4:5, Story
-   is 9:16. The **photo strip is always shown** — the LLM proposes, the owner
-   picks. Square feed, Portrait feed, and Story are **one image**: tapping a
-   thumb uses that photo for the ad (single select). Carousel is several square
-   cards: tapping a thumb picks which card the cleanup viewer shows. Crops
-   follow the selected format automatically from the
+5. **Photos** — approved photos from the **media library** (the ads image
+   gallery, same picker as the rest of the app, e.g. the projects media picker —
+   no duplicated gallery or tokens), with framing adjustments and light cleanup
+   drafts (reviewable **before/after sweep viewer** — drag the divider to clip,
+   not resize, the photo — with Accept/Reject). First upload may already have
+   run a tailored default cleanup from visual-issue classification when feature
+   flag `media_auto_cleanup` is on (default off). After generate, an inline AI
+   assistance asks for a **different** cleanup (required prompt, overlay) and
+   POSTs `/v1/media-assets/{id}/image-edits` (same as the assistant
+   `cleanup_image`) — not a photo picker and not `POST /v1/ads/…/cleanup`.
+   Reject is `POST /v1/media-assets/{id}/reject`. The sweep's size follows this
+   ad's format: Square feed and Carousel cards are 1:1, Portrait feed is 4:5,
+   Story is 9:16. The **photo strip is always shown** — the LLM proposes, the
+   owner picks. Square feed, Portrait feed, and Story are **one image**: tapping
+   a thumb uses that photo for the ad (single select). Carousel is several
+   square cards: tapping a thumb picks which card the cleanup viewer shows.
+   Crops follow the selected format automatically from the
    **photo's stored focal point** (one anchor). Thumbs are the photo only — no
    media caption overlay (alt stays on the image). (2026-08-28) Previous:
    thumbnail labels were the media caption, two lines, full media caption on

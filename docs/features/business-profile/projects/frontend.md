@@ -38,7 +38,7 @@ hits. Large by default. No compact rows. The list sits in the same centered
 Each card is cover, **title** (15px / 600), then a short **description**
 paragraph. Badge **Project draft** on those cards. Active cards stay without a
 badge. No “Updated …”, no performance strip, no category /
-location / date. Missing cover is an empty photo well, not a button.
+location / date. Missing cover is an empty cover, not a button.
 
 **The whole card is the hit.** No **Change cover**, no **Remove**, no other
 controls on the card. Click opens `/cms/projects/{id}`.
@@ -60,7 +60,7 @@ No Profile eyebrow. No “Profile active” pill.
 Back to the list. Heading is the project title, or **New project**. Shared
 field controls:
 
-- **Cover** — current photo or empty well + **Pick from the media library**.
+- **Cover** — current photo or empty cover + **Pick from the media library**.
   Overlay of thumbs from the media library (media caption when present; the
   owner never labels). Landscape, square, and portrait keep their ratio. Two
   columns on a narrow screen; three on a wide screen, four when there are more

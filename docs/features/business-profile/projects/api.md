@@ -12,8 +12,11 @@ library cover pick: [media library](../../other/media/api.md). Tools:
 `/cms/projects/{id}` (owner action = assistant action for the tools).
 
 **Auth default:** Clerk JWT, active tenant. Mutating Routes send
-`Idempotency-Key`. Extra keys 4xx. No description-patches route. No
-`PATCH` with `status`. No PUT.
+`Idempotency-Key`. Unactivated onboarding reads ranked cards on
+[`OnboardingLiveBusinessProfileRead.projects`](../../onboarding/api.md) and Archives via
+`POST /v1/onboarding/projects/{projectId}/archive`. These CMS routes stay
+**403** unactivated. Extra keys 4xx. No description-patches route. No `PATCH`
+with `status`. No PUT.
 
 ## DTOs
 
@@ -31,7 +34,7 @@ returns `ProjectRead[]`.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/projects` | `/cms/projects`; ads and website publication read the same rows | `ProjectListGet` | `ProjectRead[]` | `projects` | | Default lists non-archived (`draft` + `active`). Archived only when listing Archive | | Paginate; nest under website editor |
+| `GET /v1/projects` | `/cms/projects`; ads and website publication read the same rows | `ProjectListGet` | `ProjectRead[]` | `projects` | | Default lists non-archived (`draft` + `active`). Archived only when listing Archive | `403` unactivated | Paginate; nest under website editor; call while unactivated |
 | `POST /v1/projects` | `/cms/projects` first click-off on **New project**; `create_project` | `ProjectCreate` | `ProjectRead` | | `projects` | See overflow | | Insert `active`; copy ETL cites |
 | `GET /v1/projects/{id}` | `/cms/projects/{id}` | | `ProjectRead` | `projects` | | One row | `404` | |
 | `PATCH /v1/projects/{id}` | click-off of title / description / cover; **Apply** of pending hunks; `set_project_title`; `set_project_cover` | `ProjectUpdate` | `ProjectRead` | `projects` | `projects` | See overflow | `404` | Send `status`; description-patches object; Approve |

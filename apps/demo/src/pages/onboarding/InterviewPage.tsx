@@ -3,8 +3,9 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/cn";
 import { photo } from "@/lib/fixtures";
-import { type MediaLibraryItem } from "@/lib/media-library";
+import type { MediaLibraryItem } from "@/lib/media-library";
 import { siteReviews } from "@/lib/site-copy";
+import { interviewProjectRows } from "@/pages/cms/project-rows";
 import { useOnboardingDev } from "@/pages/onboarding/onboarding-dev";
 import { Button } from "@/ui/Button";
 import { CompleteWarning } from "@/ui/CompleteWarning";
@@ -13,6 +14,7 @@ import { FeaturedServices } from "@/ui/FeaturedServices";
 import { Field, OnbPanel, TextArea, TextInput } from "@/ui/Field";
 import { HoursPicker } from "@/ui/HoursPicker";
 import { MediaThumbs } from "@/ui/MediaThumbs";
+import { ProjectCard } from "@/ui/ProjectCard";
 import { ServiceAreas } from "@/ui/ServiceAreas";
 import { VoiceInterviewOverlay } from "@/ui/VoiceInterviewOverlay";
 
@@ -21,7 +23,8 @@ type InterviewState =
   | "filled"
   | "nophotos"
   | "manyphotos"
-  | "noreviews";
+  | "noreviews"
+  | "noprojects";
 type Channel = "text" | "voice";
 
 const fewWorkPhotos: MediaLibraryItem[] = [0, 1, 2].map((index) => ({
@@ -60,10 +63,12 @@ export function InterviewPage(): ReactNode {
   const [seai, setSeai] = useState(false);
   const [warningOpen, setWarningOpen] = useState(false);
   const [attachedPreviews, setAttachedPreviews] = useState<string[]>([]);
+  const [archivedIds, setArchivedIds] = useState<string[]>([]);
   const filled = scene === "filled";
   const noPhotos = scene === "nophotos";
   const manyPhotos = scene === "manyphotos";
   const noReviews = scene === "noreviews";
+  const noProjects = scene === "noprojects";
   const attachedItems: MediaLibraryItem[] = attachedPreviews.map((src) => ({
     by: "owner",
     id: src,
@@ -76,11 +81,15 @@ export function InterviewPage(): ReactNode {
     ...attachedItems,
   ];
   const hasWorkPhotos = workPhotos.length > 0;
+  const rankedProjects = interviewProjectRows
+    .filter((row) => !archivedIds.includes(row.id))
+    .slice(0, 4);
 
   useEffect(() => {
     function selectScene(next: InterviewState): void {
       setScene(next);
       setWarningOpen(false);
+      setArchivedIds([]);
       setAttachedPreviews((current) => {
         for (const url of current) {
           URL.revokeObjectURL(url);
@@ -123,11 +132,25 @@ export function InterviewPage(): ReactNode {
             on: noReviews,
             onSelect: () => selectScene("noreviews"),
           },
+          {
+            id: "noprojects",
+            label: "No projects",
+            on: noProjects,
+            onSelect: () => selectScene("noprojects"),
+          },
         ],
       },
     ]);
     return () => setExtraGroups([]);
-  }, [setExtraGroups, scene, filled, noPhotos, manyPhotos, noReviews]);
+  }, [
+    setExtraGroups,
+    scene,
+    filled,
+    noPhotos,
+    manyPhotos,
+    noReviews,
+    noProjects,
+  ]);
 
   useEffect(() => {
     return () => {
@@ -346,6 +369,30 @@ export function InterviewPage(): ReactNode {
               </div>
             )}
           </OnbPanel>
+          {noProjects ? null : (
+            <OnbPanel hint="Past jobs we found online." title="Projects">
+              <div className="grid grid-cols-1 gap-5">
+                {rankedProjects.map((project) => (
+                  <ProjectCard
+                    description={project.description}
+                    image={project.image}
+                    key={project.id}
+                    title={project.title}
+                  >
+                    <Button
+                      className="mt-1"
+                      onClick={() => {
+                        setArchivedIds((ids) => [...ids, project.id]);
+                      }}
+                      variant="outline"
+                    >
+                      Archive
+                    </Button>
+                  </ProjectCard>
+                ))}
+              </div>
+            </OnbPanel>
+          )}
           <OnbPanel
             hint="Optional. What would help us generate you a better website or run your ads."
             title="Anything else we should know?"
