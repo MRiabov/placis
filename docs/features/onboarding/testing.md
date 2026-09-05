@@ -164,7 +164,9 @@ No `frontend-3`.
 #### Verify
 
 Response `OnboardingProfileRead` (`fill`, `conflicts`, nested live
-business profile). No ETL fetch `raw`.
+business profile including ranked `projects`). After 08 Preview website
+address, `preview_website_address` is set. Before Share it is omitted. No nested
+photos / `MediaAssetRead[]` on that DTO. No ETL fetch `raw`.
 
 #### Fail
 
@@ -318,12 +320,14 @@ business-research origin Project on this tenant. No `frontend-3`.
 
 #### Verify
 
-Create then GET profile: that Project is `archived`,
-`algorithm=human`. Next-ranked `active` may appear.
+Response `OnboardingProfileRead`. Nested `profile.projects` omits the
+archived id; next-ranked `active` may appear. Create then GET profile:
+that Project is `archived`, `algorithm=human`.
 
 #### Fail
 
 Activated owner leftover onboarding session token → `403`.
+`GET /v1/projects` while unactivated → `403`.
 
 #### Mocked
 
@@ -344,7 +348,8 @@ run. No `frontend-3`.
 
 Huma SSE events `business_profile` / `timeline_step` /
 `website_preview_ready` as the onboarding session moves.
-No unconstrained `payload`.
+`business_profile.profile` includes ranked `projects`. Photos are not
+on that payload. No unconstrained `payload`.
 
 #### Fail
 
@@ -951,11 +956,15 @@ Project. The onboarding guide does not Archive.
 
 #### Verify
 
-Typed field kept. Untouched field takes live fill. Zero `active`
-omits the Project block. Archive uses MSW
-`POST /v1/onboarding/projects/{projectId}/archive`; next-ranked
-`active` may appear. The onboarding guide does not Archive. MSW SSE /
-`PUT /v1/onboarding/interview`.
+Typed field kept. Untouched field takes live fill. Nested
+`profile.projects` paints the cards. Zero `active` omits the Project
+block. Archive uses MSW
+`POST /v1/onboarding/projects/{projectId}/archive` (`OnboardingProfileRead`);
+next-ranked `active` may appear. The onboarding guide does not Archive.
+MSW SSE / `PUT /v1/onboarding/interview`. The onboarding image gallery re-GETs
+MSW
+`GET /v1/onboarding/media-assets` on enter and each SSE
+`business_profile`.
 
 #### Mocked
 
@@ -980,15 +989,16 @@ multipicker; **Skip** completes. Extra notes are contractor-only.
 
 #### Verify
 
-Paste splits into list rows with no LLM. Territory cards render from
-Maps areas (`locality` + `radius_km`). Photos well is the media library
-gallery (`MediaThumbs`), four columns so tiles stay small. **Upload** is
-always shown. No **Find more online** / **Create a stand-in**. Continue
-with work photos does not open the complete warning. Continue with no work
-photos opens it; **Skip** `POST /v1/onboarding/interview/complete` succeeds
-(photos optional). Dozens of found photos scroll in the well. Extra notes stay
-contractor-only. MSW SSE / `PUT /v1/onboarding/interview`; MSW
-onboarding media library hops.
+Paste splits into list rows with no LLM. Territory cards render from Maps areas
+(`locality` + `radius_km`). The onboarding image gallery is the media library
+gallery (`MediaThumbs`), four columns so tiles stay small. **Upload** is always
+shown. No **Find more online** / **Create a stand-in**. Continue with work
+photos does not open the complete warning. Continue with no work photos opens
+it; **Skip** `POST /v1/onboarding/interview/complete` succeeds (photos
+optional). Dozens of found photos scroll in the onboarding image gallery. Extra
+notes stay contractor-only. MSW SSE / `PUT /v1/onboarding/interview`; MSW
+onboarding media library hops (list on enter, resume, and each SSE
+`business_profile`; start-upload / confirm-upload on Upload).
 
 #### Mocked
 
@@ -1058,7 +1068,9 @@ started → `/onboarding/review`. Interview in progress →
 `/onboarding/interview`. Selecting / copy-failed →
 `/onboarding/preview`, reconnects SSE, finishes the same remaining
 wait-teaser cap (not a new ~15s). `preview_and_edit` →
-`/onboarding/preview-and-edit/`. `activated` → clear storage,
+`/onboarding/preview-and-edit/`. After Share, MSW profile GET includes
+`preview_website_address` and the website preview re-shows that URL.
+`activated` → clear storage,
 `/cms/website`. Profile GET failing: keep the token, loading
 placeholder, retry; no replacement POST.
 

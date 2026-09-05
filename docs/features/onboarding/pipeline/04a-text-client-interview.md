@@ -59,17 +59,22 @@ is Continue (submit): optional last answers, complete gate, **inserts**
    `emergency_phone`; found photos in the media library plus **Upload photos**
    (always available; complete does not require photos); certifications (company
    registry pick locks that business-registry certification) / found reviews;
-   **Projects** if any `active` business research origin rows exist — up to four
-   cards, current completeness rank ([build-profile](build-profile.md)), same look as
-   `/cms/projects` (cover, title, description), no Project draft badge, not
-   editable, **Archive** on the card. Zero `active` → omit the whole block.
-   Cards may appear / reorder over SSE while 02 is still running. Extra notes.
+   **Projects** if nested `profile.projects` is non-empty (ranked top 4
+   `active` business research origin; [build-profile](build-profile.md)) —
+   same look as `/cms/projects` (cover from `cover_media_asset_id`, title,
+   description), no Project draft badge, not editable, **Archive** on the card
+   (`POST /v1/onboarding/projects/{projectId}/archive` returns
+   `OnboardingProfileRead`). Zero `active` → omit the whole block.
+   Cards may appear / reorder over SSE while 02 business research is still
+   running. Extra notes.
    Paste of one-per-line or comma-separated **service names** may split into
    rows deterministically (no LLM). Do not ask a photos-choice question. Do not
    offer Find more online / Create a stand-in. Complete does not inspect photo
    count (the no-photos warning is frontend-only).
 4. While they stay on this screen, apply [live fill](#do--live-fill-while-02-runs) from the onboarding session
-   SSE (Postgres is authoritative).
+   SSE (Postgres is authoritative). Photos are not on that event — re-GET
+   `/v1/onboarding/media-assets` on enter, resume, and each `business_profile`
+   event. Project cards are on `OnboardingLiveBusinessProfileRead.projects`.
 5. `POST /v1/onboarding/interview/complete` (optional last dirty answers on
    the same body) iff the complete gate (service and service-area list rows
    present, or skipped). May persist `submission_kind=final`. One hop — not
@@ -92,7 +97,8 @@ closed. Same SSE as Review; this screen is also a consumer.
   not rewrite a row they edited:
   services and service areas (new names / localities they have not entered);
   opening-hours days still empty; certifications they did not `removed`;
-  reviews; media library photos; Projects (ranked top 4, Archive stays
+  reviews; media library photos (re-GET `/v1/onboarding/media-assets`);
+  Projects on the nested live profile (ranked top 4, Archive stays
   archived). A `source_id` that already has a yes verdict does not add a
   second Project (ETL skip).
 - Extra notes and `emergency_phone` are contractor-only. Business research

@@ -75,7 +75,7 @@ control still hides when Google Ads and Meta are both connected
 `/cms` chooser cards clone the prompt-box look: `--hairline`,
 `--prompt-radius`, and a readable lift of the prompt shade (`0 1px 2px / 6%`,
 `0 10px 28px / 10%` — `--prompt-shadow` is too faint on this white canvas). Each
-card has a destination logo (Sites globe, Ads megaphone) in a sunken well. The
+card has a destination logo (Sites globe, Ads megaphone) in a sunken inset. The
 two cards sit in one row on a wide screen and stack on a narrow screen.
 
 ## Not these

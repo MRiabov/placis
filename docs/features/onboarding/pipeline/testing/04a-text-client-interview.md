@@ -15,9 +15,15 @@
   `select_and_copy_website_template`; no second tenant; services and service
   areas are list rows (not a textarea); no LLM combine of services after
   complete. Complete succeeds with zero photos (photos optional; no
-  `photos_fill`). Zero `active` business research origin Projects → no Projects
-  block. Archive sets `archived` + `algorithm=human`; next-ranked `active` may
-  appear. No Clerk `/v1/projects/{id}/archive`. While 02 is still running: an
+  `photos_fill`). `GET /v1/onboarding/profile` (and client interview PUT /
+  complete)
+  nested live profile includes ranked `projects` (`ProjectRead[]`; empty omits
+  the interview block). Photos are not on that DTO — interview re-GETs
+  `/v1/onboarding/media-assets` on enter, resume, and each SSE
+  `business_profile`. Zero `active` business research origin Projects → no
+  Projects block. Archive returns `OnboardingProfileRead`; sets `archived` +
+  `algorithm=human`; next-ranked `active` may appear. No Clerk
+  `/v1/projects/{id}/archive`. While 02 business research is still running: an
   empty marketing-phone column fills when Details transform lands; a marketing
   phone the contractor already saved is unchanged; scrape reviews and Projects
   persist without a second complete. VAT: `ClientInterviewUpdate` writes

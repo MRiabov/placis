@@ -98,5 +98,28 @@ export const projectRows: ProjectRow[] = [
   },
 ];
 
+/** Ranked interview seed: cover first, then a no-cover extra so Archive
+ *  can surface the next-ranked card. CMS list still uses `projectRows`. */
+export const interviewProjectRows: ProjectRow[] = [
+  ...projectRows.filter((row) => row.image && !row.archived),
+  {
+    id: "dormer",
+    title: "Dormer, Portmarnock",
+    description: "New dormer and slate make-good.",
+    image: photo(2),
+    caption: "Dormer from the garden",
+    archived: false,
+  },
+  {
+    id: "chimney",
+    title: "Chimney rebuild, Sutton",
+    description: "Rebuilt the stack and flashed the soakers.",
+    image: photo(3),
+    caption: "Rebuilt stack",
+    archived: false,
+  },
+  ...projectRows.filter((row) => !row.image && !row.archived),
+];
+
 export const composedDescription =
   "Replaced the rear slope and flashing after wind damage. New slate on the valley. Completed before the next storm.";
