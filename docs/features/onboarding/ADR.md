@@ -305,7 +305,14 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     generated copy with Assistant (five unpaid prompts, instant apply). Distinct
     from 06 automatic website copy generation (the River job) and from 08 share
     (R2). 09 does not wait for more prompts. HTTP:
-    [website-editor.md](website-editor.md). (2026-08-30)
+    [website-editor.md](website-editor.md). (2026-08-30) (2026-09-05): unpaid
+    `create_page` persists via `POST /v1/onboarding/website/editor/pages`
+    (**calls** `CreateWebsitePage`). Unpaid `update_details` persists via
+    `PATCH /v1/onboarding/business-profile` (**calls**
+    `UpdateBusinessProfile`); Revert is
+    `POST /v1/onboarding/business-profile/edits/{id}/undo`. CMS
+    `POST /v1/websites/{website_prefix}/editor/pages` and
+    `/v1/business-profile` stay **403** unactivated.
 
 25. **OAuth modal; Clerk user from `founder_name`; org is the business on
     checkout/09** — The 09 island and `/login` are **Sign in with Google**

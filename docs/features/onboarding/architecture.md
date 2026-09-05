@@ -28,6 +28,11 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   **persists into** `onboarding_sessions.clerk_user_id`. Nullable
   unique `clerk_user_id`: cannot attach one Google account to a
   second onboarding session/tenant.
+- `CreateOnboardingWebsitePage` — **calls** `CreateWebsitePage`
+  ([website-editor.md](website-editor.md))
+- `UpdateOnboardingBusinessProfile` — **calls** `UpdateBusinessProfile`
+- `UndoOnboardingBusinessProfileEdit` — **calls**
+  `UndoBusinessProfileEdit`
 
 05 **calls** `SelectWebsiteTemplate` then `CopyWebsiteTemplatePages`.
 06 is River job kind `website_copy_generation` / `GenerateWebsiteCopy`.

@@ -44,13 +44,6 @@ usually a **doc gap**, not a drop.
   website-editor.md and assistant ADR 27.
   Action: one owner (06); website 03 links. Not a deletion of 06.
 
-- **13. Unpaid `create_page` / `update_details` allowed; HTTP is 403**
-  Comment: website-editor.md and website 03 both allow unpaid
-  `create_page`. Details PATCH is active-tenant.
-  Action: onboarding-prefixed POST website pages, and an unactivated
-  `update_details` path — or remove both from Allowed tools **and**
-  website 03. Do not leave pipeline vs HTTP disagreeing.
-
 - **14. `OnboardingLiveBusinessProfileRead` missing projects and
   photos**
   Comment: ADR 11 / 04a Text client interview / frontend / E2E all

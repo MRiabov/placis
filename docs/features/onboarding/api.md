@@ -5,20 +5,24 @@ Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 Business lookup, resume, client interview, SSE, website activation,
 onboarding assistant (guide). Details after website activation:
-[details HTTP](../business-profile/details/api.md). Selecting and
+[details HTTP](../business-profile/details/api.md). Unpaid
+`update_details` / Revert: wrappers below, not that tree. Selecting and
 copying the website template is owned by [website](../website/api.md);
 this feature only **inserts** it.
 
 **Auth default:** onboarding session token (request header; token uniquely
 identifies the `onboarding_sessions` row). **None:** business lookup and Find
 typeahead. **Clerk JWT** Host / `website_prefix` or Clerk unactivated on the app
-origin: activation checkout / status. **Stripe signature:**
+origin: activation checkout / status. **Clerk JWT** unactivated on the app
+origin: unpaid POST website pages, Details PATCH / undo. **Stripe signature:**
 `POST /v1/webhooks/stripe`. Activated owner: **403** on
-`/v1/onboarding/assistant/…`, `/v1/onboarding/website/…`, and leftover
+`/v1/onboarding/assistant/…`, `/v1/onboarding/website/…`,
+`/v1/onboarding/business-profile`, and leftover
 onboarding session token routes. Mutating Routes send `Idempotency-Key`.
 Token-auth Routes have **no** onboarding-session `{id}` in the path. Unactivated
-**403** on `/v1/websites/{website_prefix}/editor` and `/v1/assistant/…`. Unpaid
-website editor uses `onboarding_sessions.website_id`.
+**403** on `/v1/websites/{website_prefix}/editor`, `/v1/assistant/…`, and
+`/v1/business-profile`. Unpaid website editor uses
+`onboarding_sessions.website_id`.
 
 Serve-only jsonb (not a DTO field dump): company registry / Maps
 search **omit** `raw`; ETL fetch `raw` **omit**; Stripe event body
@@ -70,8 +74,10 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 | `PreviewWebsiteAddressRead` | `url` | Share (08). Website preview link |
 
 Unpaid canvas reuses CMS website editor DTOs (`WebsiteEditorGet`,
-`WebsitePageSummaryRead`, `WebsitePageRead`, `WebsitePageUpdate`,
-`WebsiteEditApplyRead`, `WebsiteMenusRead`, `WebsiteMenusUpdate`).
+`WebsitePageSummaryRead`, `WebsitePageRead`, `WebsitePageCreate`,
+`WebsitePageUpdate`, `WebsiteEditApplyRead`, `WebsiteMenusRead`,
+`WebsiteMenusUpdate`). Unpaid Details write reuses
+`BusinessProfileUpdate` / `BusinessProfileRead`.
 
 ### Activation
 
@@ -150,16 +156,18 @@ complete → 05.
 ### Website
 
 Unpaid canvas. Same tails as `/v1/websites/{website_prefix}/editor/…`. CMS
-website editor is active tenant only. Policy: [website-editor.md](website-editor.md). GET website
-pages / website page: onboarding session token or Clerk unactivated. Top menu
-and footer hydrate is that website page GET. PATCH website pages / top menu and
-footer: Clerk unactivated only (tenant from `clerk_user_id` bind until org
-claim). Share: onboarding session token or Clerk unactivated. Send / Voice:
-Clerk only. `status=active` → **403**.
+website editor is active tenant only. Policy:
+[website-editor.md](website-editor.md). GET website pages / website page:
+onboarding session token or Clerk unactivated. Top menu and footer hydrate
+is that website page GET. POST website pages, PATCH website pages / top
+menu and footer: Clerk unactivated only (tenant from `clerk_user_id` bind
+until org claim). Share: onboarding session token or Clerk unactivated.
+Send / Voice: Clerk only. `status=active` → **403**.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GET /v1/onboarding/website/editor/pages` | `/onboarding/preview-and-edit/` | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets` | | Same as CMS list (per website page `blockers[]`). No `publication_id` | `403` activated | `/v1/websites/{website_prefix}/editor`; contractor host GET |
+| `POST /v1/onboarding/website/editor/pages` | `create_page` apply | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | **calls** `CreateWebsitePage`. Same as CMS POST. Clerk only. Append a top-level website page node on the footer, and on the top menu unless legal or cap. Canvas follows `open_website_page` | `403`; `409` | Onboarding session token POST; CMS `POST /v1/websites/{website_prefix}/editor/pages` while unactivated |
 | `GET /v1/onboarding/website/editor/pages/{page_id}` | canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications`, `media_assets` | | Same as CMS hydrate. No `publication_id` | `403` activated; `404`/`400` | `/v1/websites/{website_prefix}/editor`; `/settings` GET; `/menus` GET; `website_manifest` |
 | `PATCH /v1/onboarding/website/editor/pages/{page_id}` | Assistant apply; canvas | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history`, `website_sections`, `website_slots`, `media_assets` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Same as CMS PATCH. Clerk only. Ack `blockers[]` for that website page | `403`; `409 edit_history_conflict`; `413`; `429` | Onboarding session token PATCH |
 | `PATCH /v1/onboarding/website/editor/menus` | top menu / footer | `WebsiteMenusUpdate` | `WebsiteEditApplyRead` | | `website.menus`, `edit_history` | Same as CMS menus PATCH. Clerk only. Hydrate is the website page GET `menus`. Omit `blockers` | `403`; `409 edit_history_conflict` | Onboarding session token PATCH; `GET /menus`; top menu / footer on website page PATCH |
@@ -171,6 +179,20 @@ Clerk only. `status=active` → **403**.
 | `POST /v1/onboarding/website/assistant/voice/transcripts` | committed utterances | `AssistantVoiceTranscriptsCreate` | | | `assistant.thread_items` | Clerk only | `403` | |
 | `POST /v1/onboarding/website/assistant/voice/recordings` | Voice recording | | | | `assistant_voice` | CMS `assistant_voice`. Clerk only | `403` | Onboarding guide recordings |
 | `POST /v1/onboarding/website/assistant/voice/recordings/{id}/complete` | finish recording | | | | `assistant_voice` | Clerk only | `403` | |
+
+### Details (unpaid)
+
+Signed-in unpaid `update_details` and notification Revert. Same DTOs as
+[details HTTP](../business-profile/details/api.md). **calls**
+`UpdateBusinessProfile` / `UndoBusinessProfileEdit`. Client interview
+stays `PUT /v1/onboarding/interview`. CMS `/v1/business-profile` stays
+active tenant (**403** unactivated). Clerk unactivated only.
+`status=active` → **403**.
+
+| Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `PATCH /v1/onboarding/business-profile` | unpaid `update_details` | `BusinessProfileUpdate` | `BusinessProfileRead` | `business_profiles` | `business_profiles`, `business_profile_edits`, `business_profile_services`, `business_profile_service_areas`, `business_profile_opening_hours` | **calls** `UpdateBusinessProfile`. Same increment writer as CMS PATCH. Clerk only | `403` | Onboarding session token PATCH; `PUT /v1/onboarding/interview`; `/v1/business-profile` while unactivated |
+| `POST /v1/onboarding/business-profile/edits/{id}/undo` | unpaid notification **Revert** | | `BusinessProfileRead` | `business_profile_edits`, `business_profiles` | `business_profiles`, `business_profile_edits` | **calls** `UndoBusinessProfileEdit`. Clerk only | `403`; `409` if already undone or not the named increment | Onboarding session token; CMS `POST /v1/business-profile/edits/{id}/undo` while unactivated |
 
 ### Activation
 
@@ -264,6 +286,7 @@ Policy: [onboarding assistant](assistant.md).
   `…/apply-website-template-runs`
 - `/v1/onboarding/assistant/…` after website activation (403)
 - `/v1/onboarding/website/…` after website activation (403)
+- `/v1/onboarding/business-profile` after website activation (403)
 - leftover `/v1/onboarding-sessions/…` with an onboarding session
   token after website activation (403)
 - `POST /v1/onboarding/assistant/thread/new` (CMS only)
@@ -282,3 +305,6 @@ Policy: [onboarding assistant](assistant.md).
 - `GET /v1/onboarding/website/editor/menus` (hydrate is the website
   page GET `menus`)
 - `OnboardingWebsiteEditor*` DTO aliases
+- `/v1/onboarding/website/editor/business-profile`
+- `/v1/business-profile` while unactivated (use
+  `/v1/onboarding/business-profile`)

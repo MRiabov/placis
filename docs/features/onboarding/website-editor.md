@@ -10,7 +10,8 @@ route redirects to `/cms/website`.
 
 HTTP: named Routes in [api.md](api.md) (`/v1/onboarding/website/editor/…`,
 `/v1/onboarding/website/assistant/…`,
-`POST /v1/onboarding/website/publications`).
+`POST /v1/onboarding/website/publications`,
+`/v1/onboarding/business-profile`).
 Package `internal/onboarding/websiteeditor` is a **policy wrapper**: same
 [website editor tools](../website/assistant.md), same text/Voice transport,
 same unpublished PATCH (`/v1/onboarding/website/editor/…`),
@@ -105,10 +106,14 @@ Owner prompts may run: `update_slot`, `update_reviews`, `update_seo`,
 `update_website_styles`, `switch_assistant_screen`, all projects writes, Ads
 tools, `open_ad`. Peek (`get_website_styles`, `get_context_about_screen`): omit.
 
-`create_page` allowed for owner prompts; 06 still must not. After `create_page`,
-the canvas follows `open_website_page` (or the same path the website editor
-uses). `generate_image` in the five is `bill_usage=unbilled`.
-`update_details` allowed; whoever pays owns those profile rows.
+`create_page` allowed for owner prompts; 06 still must not. Persist is
+`POST /v1/onboarding/website/editor/pages` (not CMS POST pages). After
+`create_page`, the canvas follows `open_website_page` (or the same path the
+website editor uses). `generate_image` in the five is `bill_usage=unbilled`.
+`update_details` allowed; persist is `PATCH /v1/onboarding/business-profile`
+(**calls** `UpdateBusinessProfile`). Revert is
+`POST /v1/onboarding/business-profile/edits/{id}/undo`. Whoever pays owns
+those profile rows. CMS `/v1/business-profile` stays **403** unactivated.
 
 ## Thread
 
@@ -129,9 +134,11 @@ Server **forces instant apply** on text **and** Voice (ignore `ask_first` /
 `plan` on the wire). Exception to CMS Voice always Ask first (assistant ADR 17).
 Tool results → canvas projection →
 [`PATCH /v1/onboarding/website/editor/…`](api.md)
-(same `WebsitePageUpdate` as CMS). Go
-does not upsert unpublished rows on that turn. No click-to-edit UI. No Content /
-website styles rail / design controls / owner Plan switch.
+(same `WebsitePageUpdate` as CMS). `create_page` persists via
+[`POST /v1/onboarding/website/editor/pages`](api.md) (same
+`WebsitePageCreate` as CMS). Go does not upsert unpublished rows on that
+turn. No click-to-edit UI. No Content / website styles rail / design
+controls / owner Plan switch.
 
 Signed-in unactivated PATCH on the **app** is allowed (this apply path).
 Tenant from `onboarding_sessions.clerk_user_id` bind until the JWT has

@@ -44,8 +44,9 @@ spare, image file in the JSON, or expiring signed URL is 4xx).
 CMS unpublished `website_*` / `website.menus` / `website_settings`
 writes are only `POST` / `PATCH` on `/v1/websites/{website_prefix}/editor/…`
 (active tenant). Unpaid canvas is
-`PATCH /v1/onboarding/website/editor/…`. Select and copy website template
-and Website copy generation write them in River, not via these routes.
+`POST` / `PATCH /v1/onboarding/website/editor/…`. Select and copy website
+template and Website copy generation write them in River, not via these
+routes.
 
 Website editor PATCH 429 cap (30 / 10s) is **per website**.
 
@@ -152,7 +153,7 @@ duplicate the three `code` values per route. Editor GET
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GET /v1/websites/{website_prefix}/editor/pages` | CMS workspace | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets` | | Optional `publication_id` (checkout page list). Per-row page-scoped `blockers[]`. `publication_id` not of this `{website_prefix}` → **404** | `409` onboarding row; `403` unactivated; `404` | Preview host GET |
-| `POST /v1/websites/{website_prefix}/editor/pages` | add page | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | Append menu node | | |
+| `POST /v1/websites/{website_prefix}/editor/pages` | add page | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | Append menu node | `403` unactivated | Unpaid `create_page` (`POST /v1/onboarding/website/editor/pages`) |
 | `GET /v1/websites/{website_prefix}/editor/pages/{page_id}` | canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications`, `media_assets`, `business_profile.business_profiles`, `business_profile.business_profile_edits` | | Optional `publication_id` (checkout) or `include_edit_history`. Page-scoped `blockers[]`. `has_unpublished_changes` true when live HTML would change on republish (unpublished tree vs last dump, or Details / Projects / certifications writes with `created_at` after that row’s `published_at`). `publication_id` not of this `{website_prefix}` → **404** | `404`/`409`/`400`; `403` unactivated | `/pages/{id}/seo`; `/settings` GET; `/menus` GET; return `website_manifest`; both query flags; enqueue 04 from Details PATCH |
 | `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}` | website editor | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history`, `website_sections`, `website_slots`, `media_assets` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Dirty keys only; 500ms coalesce; 429 per website. Checkout may send the substituted projection. Ack `blockers[]` for that whole website page | `409 edit_history_conflict`, `413`, `429`; `403` unactivated | See overflow |
 | `PATCH /v1/websites/{website_prefix}/editor/settings` | Website styles apply | `WebsiteSettingsUpdate` | `WebsiteEditApplyRead` | | `website_settings`, `edit_history` | Explicit apply. Hydrate is the website page GET `website_styles`. Omit `blockers` | `409 edit_history_conflict` | `GET /settings` |
