@@ -120,6 +120,13 @@ and this file win.
   ([glossary](docs/glossary.md)).
 - Two type layers: sqlc rows + huma DTOs
   ([backend stack](docs/general-architecture/backend-stack.md)).
+- Every DTO field is constrained (`minLength`/`maxLength`,
+  `minimum`/`maximum`, enums). No freeform JSON on HTTP
+  ([HTTP conventions](docs/general-architecture/api.md)).
+- `ADR.md` is the architectural decision record.
+  `design-decision-record.md` is look and interaction. Do not say bare
+  **decisions**. Do not invent **Why**
+  ([docs conventions](docs/docs-conventions.md)).
 - Files stay under 800 lines (hard fail at 1200)
   ([module layout](docs/general-architecture/module-layout.md)).
 - Pipeline stages: number and architecture name together (`04 Website
