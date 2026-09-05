@@ -12,7 +12,7 @@ before adding or editing a doc.
   only place names are coined. Domain / Enums / Internal use Say terms;
   Don't-say words belong in the table and in never-say listings, not as the
   surrounding vocabulary. Designers get this file whole.
-- `development-principles.md` — how work is sliced and reviewed.
+- `development-principles.md` — how development tasks are reviewed.
 - `general-prd.md` — product-level loop and in/out of scope (pointers to feature
   PRDs).
 - `general-architecture/` — cross-cutting architecture no single feature owns:

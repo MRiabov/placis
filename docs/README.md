@@ -11,10 +11,10 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 
 1. [AGENTS.md](../AGENTS.md) — agent entry: documentation-first gate, `apps/`,
    `frontend-3` greenfield ([ADR](general-architecture/ADR.md) 3)
-2. [Development principles](development-principles.md) — how work is sliced and reviewed (read before
+2. [Development principles](development-principles.md) — how development tasks are reviewed (read before
    writing code)
-3. [Implementation strategy](planning/implementation-strategy.md) — slice
-   order (Go + `frontend-3`); planning, not shipped behavior
+3. [Implementation strategy](planning/implementation-strategy.md) — development-task order (Go + `frontend-3`);
+   planning, not shipped behavior
 4. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
 5. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
 6. [Product](general-prd.md) — the loop, product-level in/out of scope
@@ -50,7 +50,7 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 | Agent entry (documentation-first gate) | [AGENTS.md](../AGENTS.md) |
 | Product loop and product-level scope | [general-prd.md](general-prd.md) |
 | Stack, module layout, how processes run | [general-architecture/README.md](general-architecture/README.md) |
-| How work is sliced and reviewed | [development-principles.md](development-principles.md) |
+| How development tasks are reviewed | [development-principles.md](development-principles.md) |
 | Implementation order (planning) | [planning/implementation-strategy.md](planning/implementation-strategy.md) |
 | How docs are structured and written | [docs-conventions.md](docs-conventions.md) |
 | Naming / vocabulary | [glossary.md](glossary.md) |

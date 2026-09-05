@@ -1,12 +1,11 @@
 # Implementation strategy
 
-Status: planning. Not shipped behavior. Canonical specs stay in
-`docs/features/` and `docs/general-architecture/`. This file is the
-**order of work**: which slice lands first, what it may depend on, and
-what must wait.
+Status: planning. Not shipped behavior. Canonical specs stay in `docs/features/`
+and `docs/general-architecture/`. This file is the **order of work**: which
+development task lands first, what it may depend on, and what must wait.
 
 The product loop is already specified
-([product](../general-prd.md)). How a slice is reviewed is
+([product](../general-prd.md)). How a development task is reviewed is
 [development principles](../development-principles.md). The DAG here
 is the missing piece: ETL, business profile, media library, files, AI,
 River, the contractor website Worker, **frontend-3**, and voice sit
@@ -18,14 +17,15 @@ until S02. The walking skeleton is the first work.
 
 ## Purpose
 
-Implement from named lists, in this order, one PR per slice. A slice
-that has owner UI includes matching `frontend-3` screens. Do not
+Implement from named lists, in this order, one PR per development
+task. A development task that has owner UI includes matching
+`frontend-3` screens. Do not
 invent tables, routes, DTOs, River job kinds, or tests. Those already
 live in per-feature `persistence.md` / `api.md` / `testing.md` /
 `pipeline/` and [jobs](../general-architecture/jobs.md).
 
 Do not add `epics.md` or `tasks.md` that restate those lists. A fat
-slice may later get a thin pack under `docs/planning/slices/` that
+development task may later get a thin pack under `docs/planning/` that
 **cites** existing names. Do not pre-write those packs.
 
 ## Rules
@@ -35,8 +35,8 @@ Restates, does not replace, [development principles](../development-principles.m
 - Docs first, then owner review, then Go or `frontend-3`. Named lists
   in `persistence.md`, `api.md`, and `testing.md` must exist and be
   reviewed first ([AGENTS.md](../../AGENTS.md)).
-- **Done** = green CI + the slice’s named HappyPath / E2E + regenerated
-  types from Go `/openapi.json`. Not scaffolded, not compiles.
+- **Done** = green CI + the development task’s named HappyPath / E2E +
+  regenerated types from Go `/openapi.json`. Not scaffolded, not compiles.
 - Fake Google, the LLM, Stripe, and voice in tests. Prefer fake Clerk
   (`Principal`). No Clerk testing-token CI unless asked. Playwright
   uses a fresh port (do not `reuseExistingServer` against 5173/5174).
@@ -55,20 +55,20 @@ Restates, does not replace, [development principles](../development-principles.m
   Look is [`apps/demo/`](../../apps/demo/README.md). Do not follow
   [planning/frontend-debloat.md](frontend-debloat.md) as a port order
   (withdrawn).
-- Slice size: finer than a feature, coarser than one table. Never “add
-  website”. Typical slice is one pipeline step or one platform package,
-  plus the `frontend-3` screen that calls those Routes when there is
-  owner UI.
-- If a feature’s HappyPath Full E2E needs later slices, the early
-  slice ships Integration HappyPath only. The E2E lands on the slice
-  that closes the owner journey.
-- Go-only slices still export OpenAPI so `frontend-3` typegen can
-  follow. Do not leave `frontend-3` calling routes that are not in the
-  served spec.
-- Branch / PR names use the slice id (`S04-tenancy-auth`).
+- Size of a development task: finer than a feature, coarser than one
+  table. Never “add website”. Typical development task is one pipeline
+  step or one platform package, plus the `frontend-3` screen that
+  calls those Routes when there is owner UI.
+- If a feature’s HappyPath Full E2E needs later development tasks, the
+  early development task ships Integration HappyPath only. The E2E
+  lands on the development task that closes the owner journey.
+- Go-only development tasks still export OpenAPI so `frontend-3`
+  typegen can follow. Do not leave `frontend-3` calling routes that
+  are not in the served spec.
+- Branch / PR names use the development-task id (`S04-tenancy-auth`).
 
-This file is the queue. The next change is the first slice whose
-**Depends on** is merged and **Blocked by** is empty.
+This file is the queue. The next change is the first development task
+whose **Depends on** is merged and **Blocked by** is empty.
 
 ## Hard dependency graph
 
@@ -142,9 +142,9 @@ flowchart TD
   s22 --> s27
 ```
 
-## Slice list
+## Development-task list
 
-Each slice is one PR unless a later pack splits Go then UI. Fields:
+Each development task is one PR unless a later pack splits Go then UI. Fields:
 **Depends on**, **Owns**, **Must not**, **Done when**, **Blocked by**.
 
 ### S01 Walking skeleton (Go)
@@ -168,7 +168,7 @@ Each slice is one PR unless a later pack splits Go then UI. Fields:
 - **Owns:** add `frontend-3/` (Vite + React + TanStack Router / Query +
   Clerk + `openapi-fetch`); typegen from Go health only; retarget CI,
   Don’t-say `--frontend`, and Playwright to `frontend-3/`. **Delete the
-  `frontend-2/` tree in this slice or immediately before it.**
+  `frontend-2/` tree in this development task or immediately before it.**
   ([frontend stack](../general-architecture/frontend-stack.md))
 - **Must not:** open `frontend-2`, copy modules from it, port dumped
   predecessor CSS, promote `apps/demo` to the product app, owner
@@ -176,7 +176,7 @@ Each slice is one PR unless a later pack splits Go then UI. Fields:
 - **Done when:** typegen from served `/openapi.json` (health only);
   `frontend-2/` gone; CI path-filters `frontend-3/`
 - **Blocked by:** none (leftover `AGENTS.md` keep-versus-delete text
-  on this tree is stale; this slice is the decision)
+  on this tree is stale; this development task is the decision)
 
 ### S03 Files
 
@@ -187,7 +187,7 @@ Each slice is one PR unless a later pack splits Go then UI. Fields:
   `files` row
 - **Done when:** files Integration named in
   [files](../general-architecture/files-and-s3.md) / media library tests
-  that this slice can close (row + MinIO object). No owner UI
+  that this development task can close (row + MinIO object). No owner UI
 - **Blocked by:** none
 
 ### S04 Tenancy and auth (Go)
@@ -239,7 +239,7 @@ Each slice is one PR unless a later pack splits Go then UI. Fields:
   plan
 - **Done when:** billed generate hits 402 when remaining is 0;
   unbilled generate still writes `ai_generations`
-  ([billing testing](../features/billing/testing.md) rows this slice
+  ([billing testing](../features/billing/testing.md) rows this development task
   can close)
 - **Blocked by:** none
 
@@ -355,7 +355,7 @@ search, trade registry, projects-from-source,
 - **Blocked by:** none (Worker binding name is an open question in
   [website template catalog](../features/website/catalog.md); do not
   invent it — stop
-  and ask if the slice cannot land without it)
+  and ask if the development task cannot land without it)
 
 ### S15 03 Generate website copy
 
@@ -475,7 +475,7 @@ search, trade registry, projects-from-source,
   ([ads testing](../features/ads/ad-generation/testing.md))
 - **Blocked by:** ads [open questions](../features/ads/README.md#open-questions)
   (empty format / `review_status`). Answer or explicitly default in
-  docs before this slice. Does not block S01–S22
+  docs before this development task. Does not block S01–S22
 
 ### S24 Leads
 
@@ -522,9 +522,9 @@ search, trade registry, projects-from-source,
   ([audit](../general-architecture/audit.md),
   [AI layer](../general-architecture/ai-layer.md))
 - **Must not:** new product features
-- **Done when:** every LLM call in the shipped slices is
+- **Done when:** every LLM call in the shipped development tasks is
   reconstructable (reasoning, visible output, tool calls)
-- **Blocked by:** none. Later slice
+- **Blocked by:** none. Later development task
   ([development principles](../development-principles.md))
 
 ## Parallel tracks
@@ -545,7 +545,7 @@ There is no `frontend-2` port track.
 
 ## Blocked and not this pass
 
-### Doc gaps (close in docs PRs before the named slice)
+### Doc gaps (close in docs PRs before the named development task)
 
 - Onboarding sep-3 **9** — Review “change the business” for
   `PUT /v1/onboarding/sources` — blocks S11 / S12
@@ -563,7 +563,7 @@ the pipeline README.
 
 ### Not this pass
 
-Do not sneak these into a slice
+Do not sneak these into a development task
 ([product](../general-prd.md), feature ADRs):
 
 - 04b Voice client interview writer
