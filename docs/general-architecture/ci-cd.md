@@ -285,15 +285,16 @@ list). `**/testdata/**` is skipped (checker fixtures). Worked examples:
 - Install once per clone: `pre-commit install`. Git worktrees share
   `.git/hooks`.
 - Pre-commit: `.pre-commit-config.yaml` runs `go run ./cmd/ci/check-dont-say` on
-  staged files under `docs/`, `internal/`, `cmd/`, `migrations/`, `catalog/`,
-  `apps/contractor-website`, `apps/placis-website`, `scripts/`, and `apps/demo/`
-  (Go's build cache keeps this cheap). Markdown, Go, and JavaScript (`.js` /
-  `.mjs`) are scanned in those trees. TypeScript (`.ts` / `.tsx`) is scanned
-  in the look app (`apps/demo/`, exported `src/`) only; `frontend-2` stays off
-  until `--frontend`. If `docs/glossary.md` is staged, the checker scans those
-  trees in full. Paths outside those trees (including `packages/`) are ignored
-  even when filenames are passed in. A copied look checkout (`demo.placis.com`)
-  uses the same checker with `--glossary glossary.md` over `src/`.
+  staged files under `AGENTS.md`, `docs/`, `internal/`, `cmd/`, `migrations/`,
+  `catalog/`, `apps/contractor-website`, `apps/placis-website`, `scripts/`, and
+  `apps/demo/` (Go's build cache keeps this cheap). Markdown, Go, and JavaScript
+  (`.js` / `.mjs`) are scanned in those trees. TypeScript (`.ts` / `.tsx`) is
+  scanned in the look app (`apps/demo/`, exported `src/`) only; `frontend-2`
+  stays off until `--frontend`. If `docs/glossary.md` is staged, the checker
+  scans those trees in full. Paths outside those trees (including `packages/`)
+  are ignored even when filenames are passed in. A copied look checkout
+  (`demo.placis.com`) uses the same checker with `--glossary glossary.md` over
+  `src/`.
 - CI: `.github/workflows/docs-gates.yml` runs rumdl `fmt --check` then
   `check`, then `go test` for Don't-say, docs-code, pipeline-tables, and
   check-happy-path, then `go run ./cmd/ci/check-dont-say --all` (and the

@@ -10,6 +10,7 @@ import (
 )
 
 var defaultRoots = []string{
+	"AGENTS.md",
 	"docs",
 	"internal",
 	"cmd",

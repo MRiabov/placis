@@ -39,13 +39,18 @@ Use this skill to keep Placis work reviewable, branch-isolated, documented, and 
 
 ## Documentation
 
-Before or alongside implementation, decide whether docs need to change.
+Docs first, then owner review, then implementation. Every changeset starts by
+editing canonical docs; do not implement first and document after. In Plan
+mode, updating docs is the first step. Missing or ill-defined canonical docs
+(`persistence.md`, `api.md`, `testing.md` when they apply) block code until
+the owner reviews. See repository `AGENTS.md`. If a change would invent a
+name, stop and write the docs first.
 
 - Update `docs/` when shipped behavior, architecture, APIs, provider boundaries, data models, setup flows, frontend generation, eval gates, or operational procedures change.
 - Update `docs/migrations/implementation-packs/` when adding, completing, or changing scoped delivery packs or user-story implementation details.
 - Use `docs/migrations/` for investigations, bakeoffs, experiments, and proposed work that is not yet canonical architecture.
 - Keep docs, implementation pack names, branch names, and PR titles aligned when they are part of the same feature.
-- If code changes make existing docs inaccurate, update or explicitly mark the gap in the same PR.
+- If a change would make existing docs inaccurate, edit the docs first in that changeset. Do not land code and patch the docs afterward.
 - Pre-commit `rumdl-fmt` wraps staged first-party Markdown on commit;
   `rumdl-fmt-check` and `rumdl` then check all tracked Markdown. Do not skip
   hooks. CI runs `rumdl fmt --check` then `rumdl check`. Do not format
