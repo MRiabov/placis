@@ -51,6 +51,16 @@ Look-only work stays in `apps/demo/`. Do not restyle look in
 This repository is documentation-first. Missing or ill-defined docs **block
 implementation** until the owner reviews them.
 
+**Every changeset starts with docs.** Do not implement first and document
+after. The first edits are canonical `docs/` (or a design decision record for
+look-only `apps/demo/` work). Go, goose, Worker, owner UI, and test code come
+after those docs exist — and, when identifiers are new, after owner review.
+
+**Plan mode:** when Plan mode is selected, the first step is always updating
+docs. Do not write a plan that defers the spec to implementation. Name the
+tables, routes, jobs, and verifies in `docs/` first. The plan is how those
+named lists will be built, not a substitute for them.
+
 Before Go, goose, sqlc, huma, Worker, owner UI, or test **code**:
 
 - The change exists in canonical `docs/` (not only `docs/planning/`).
