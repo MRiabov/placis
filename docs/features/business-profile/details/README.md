@@ -42,8 +42,9 @@ larger than this screen (reviews, certifications, projects):
 - **The website** shows them — including on the contact website page and service
   website pages (top menu and footer are edited in the website editor).
 - **Ads** read them — the business name, trade, marketing phone, marketing
-  email, and services become the ad copy, and the ideal customer profile starts
-  from the same details.
+  email, and services become the ad copy. The ideal customer profile is a
+  static married-couples 30–40 default on the ad (`icp_source=static`), not
+  derived from Details ([ADR 8](../../ads/ad-generation/ADR.md)).
 
 Editing Details changes the website and the next ad draft. If ad copy conflicts
 with these details, prefer updating Details rather than leaving a second truth

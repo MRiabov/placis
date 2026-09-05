@@ -23,28 +23,34 @@ the pill.
 - Write `ad_copy_variants` / `ad_image_placements`.
 - Write `ad_ready_to_post` or `ad_needs_review`.
 - Write a lead-form `title` (Review copy; [ADR 38](../ADR.md)).
+- Write owner-supplied `icp_age_min` / `icp_age_max` / `icp_household`
+  / `icp_notes` / `icp_source` (not on `AdCreate` / `AdUpdate`; extra
+  keys 4xx). Location `icp_location_focus` stays on the body.
 - Ad posting. Campaign objects. An ad destination.
 
 ## Do
 
 `CreateAd` persists the ad draft and a stub variant.
 
-1. Insert `ads` (`status=draft`, ideal customer profile defaults if
-   omitted: married couples aged 30–40, `icp_source=default`,
+1. Insert `ads` (`status=draft`, ideal customer profile always
+   married couples aged 30–40, `icp_source=static`,
    `platform_status=not_connected`, `platform_refs` empty).
 2. Insert `ad_lead_forms` (include flags; `include_marketing_phone`
    default true; `title` empty).
 3. Insert one `ad_variants` row (`format` from the body,
    `status=draft`, `copy_variant_id` null).
 4. `UpdateAd` may change those same rows (including `format` on the
-   stub) before generate.
+   stub and `icp_location_focus`) before generate. It does not change
+   `icp_age_min` / `icp_age_max` / `icp_household` / `icp_notes` /
+   `icp_source`.
 
 ## Reads
 
 `business_profiles` (service picker and service-area location
 suggestions). Existing `ads` when filling `icp_location_focus` from
-the last ad ([ADR 37](../ADR.md)). Ideal customer profile is the
-stored default, not a picker ([ADR 40](../ADR.md)).
+the last ad ([ADR 37](../ADR.md)). Ideal customer profile is always
+`icp_source=static` (married couples 30–40), not a picker
+([ADR 8](../ADR.md), [ADR 40](../ADR.md)).
 
 ## Persist
 
@@ -53,8 +59,8 @@ that `ad_id`. No copy. No placements. No `ads_generate` job.
 
 ## Fail
 
-Validation 400 (missing format, bad enum). No rows. Retry is a new
-`POST /v1/ads`.
+Validation 400 (missing format, bad enum, extra ideal customer profile
+keys). No rows. Retry is a new `POST /v1/ads`.
 
 ## Out
 
