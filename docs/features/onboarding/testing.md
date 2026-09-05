@@ -299,6 +299,30 @@ Activated owner → `403`.
 
 None.
 
+### TestHappyPathV1OnboardingWebsiteEditorPagesCreatesPage — Route
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Clerk unactivated.
+Unpublished website from 05. No `frontend-2`.
+
+#### Exercise
+
+`POST /v1/onboarding/website/editor/pages`
+
+#### Verify
+
+Response `WebsitePageRead`. Create then GET website editor pages lists
+the created website page. Top menu / footer website page node appended.
+
+#### Fail
+
+Onboarding session token POST → `403`. Activated → `403`.
+
+#### Mocked
+
+None.
+
 ### TestHappyPathV1OnboardingWebsiteEditorPage — Route
 
 #### Setup
@@ -555,6 +579,56 @@ Activated → `403`.
 #### Mocked
 
 Voice.
+
+### TestHappyPathV1OnboardingBusinessProfilePatch — Route
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Clerk unactivated. Live
+`business_profile.business_profiles` row from 01. No `frontend-2`.
+
+#### Exercise
+
+`PATCH /v1/onboarding/business-profile`
+
+#### Verify
+
+Response `BusinessProfileRead`. Create then GET that live row shows the
+dirty keys. **calls** `UpdateBusinessProfile`.
+
+#### Fail
+
+Onboarding session token PATCH → `403`. Activated → `403`.
+
+#### Mocked
+
+None.
+
+### TestHappyPathV1OnboardingBusinessProfileEditsUndo — Route
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Clerk unactivated. A
+named `business_profile.business_profile_edits` increment from a prior
+unpaid PATCH (the notification id). No `frontend-2`.
+
+#### Exercise
+
+`POST /v1/onboarding/business-profile/edits/{id}/undo`
+
+#### Verify
+
+Response `BusinessProfileRead`. Compensating increment. Live columns
+restored. **calls** `UndoBusinessProfileEdit`.
+
+#### Fail
+
+Onboarding session token → `403`. Activated → `403`. Already undone, or
+not the named increment → `409`.
+
+#### Mocked
+
+None.
 
 ### TestHappyPathV1OnboardingActivationCheckout — Route
 

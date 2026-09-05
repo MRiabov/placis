@@ -354,7 +354,11 @@ instead of silently replacing it.
     address never calls this agent or PATCH.
     Voice → text STT caveat (decision 22) **does** apply here; “not onboarding”
     there means Find / Review. Recordings use `assistant_voice` on
-    `assistant.runs`. (2026-08-30)
+    `assistant.runs`. (2026-08-30) (2026-09-05): `create_page` apply is
+    `POST /v1/onboarding/website/editor/pages`. `update_details` apply is
+    `PATCH /v1/onboarding/business-profile`; Revert is
+    `POST /v1/onboarding/business-profile/edits/{id}/undo`. Canvas
+    website editor tools stay website page / top menu and footer PATCH.
 
 29. **Wait teaser lands on the website preview** — `/onboarding/preview` then
     `/onboarding/preview-and-edit/`, not `{website_prefix}.preview.placis.com`.
