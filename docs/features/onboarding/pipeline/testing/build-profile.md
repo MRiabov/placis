@@ -10,6 +10,7 @@
   Maps for legal identity; no silent overwrite; `last_edit_id` advances;
   complete sets `accepted_edit_id`; later ETL transform writes do not mutate the
   accepted live business profile in place; no `checklist_rows` table. Optional
+  `photos` key (complete does not require photos; no photos-fill job). Optional
   `projects` key; ranked top 4 by cover then text length for client interview
   (not baked into website 02 gallery slots). `vat_number` required only if
   `vat_registration_status` is set; not-registered leaves `vat_number` null

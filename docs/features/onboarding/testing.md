@@ -226,6 +226,85 @@ token → `403`.
 
 None required for text path.
 
+### TestHappyPathV1OnboardingMediaAssets — Route
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres). Onboarding session
+`client_interviewing`. Token auth. No `frontend-2`. One `ready` item
+and one `uploading` item (`file_id` null).
+
+#### Exercise
+
+`GET /v1/onboarding/media-assets`
+
+#### Verify
+
+Response `MediaAssetRead[]`. The `ready` item is present. The
+`uploading` item is omitted.
+
+#### Fail
+
+Activated owner leftover onboarding session token → `403`.
+`GET /v1/media-assets` while unactivated → `403`.
+
+#### Mocked
+
+None required.
+
+### TestHappyPathV1OnboardingMediaAssetsStartUpload — Route
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Onboarding
+session `client_interviewing`. Token auth. No `frontend-2`. Zero
+`media_assets`.
+
+#### Exercise
+
+`POST /v1/onboarding/media-assets/start-upload`
+
+#### Verify
+
+Response `MediaAssetUploadRead` (`id`, `upload_url`). List omits the
+row until confirm.
+
+#### Fail
+
+Activated owner leftover onboarding session token → `403`.
+`POST /v1/media-assets/start-upload` while unactivated → `403`.
+
+#### Mocked
+
+LLM unused. Not MinIO (Testcontainers).
+
+### TestHappyPathV1OnboardingMediaAssetsIdConfirmUpload — Route
+
+#### Setup
+
+Backend (`humatest`, Testcontainers Postgres + MinIO). Onboarding
+session `client_interviewing`. Token auth. No `frontend-2`.
+Start-upload already wrote the row (`uploading`). Test PUT to
+`upload_url` (MinIO real).
+
+#### Exercise
+
+`POST /v1/onboarding/media-assets/{id}/confirm-upload`
+
+#### Verify
+
+Response `MediaAssetRead` (`processing_status=processing`,
+`delivery_url` and `thumbnail_url` set). **inserts** `describe_image`.
+
+#### Fail
+
+Unknown id → `404`. Activated owner leftover onboarding session token
+→ `403`.
+
+#### Mocked
+
+LLM unused. Not MinIO (Testcontainers).
+
 ### TestHappyPathV1OnboardingProjectsArchive — Route
 
 #### Setup
@@ -894,17 +973,22 @@ still filling.
 #### Exercise
 
 Paste one-per-line or comma-separated service names. Maps territory
-cards for service areas. Upload photos. Find more online / Create a
-stand-in only when photos are not enough (`photos_fill`). Extra notes
-are contractor-only.
+cards for service areas. Upload photos (`POST
+/v1/onboarding/media-assets/start-upload` then confirm-upload). Continue
+with no work photos shows the complete warning; **Add photos** opens the
+multipicker; **Skip** completes. Extra notes are contractor-only.
 
 #### Verify
 
 Paste splits into list rows with no LLM. Territory cards render from
-Maps areas (`locality` + `radius_km`). **Upload photos** is always
-shown. **Find more online** and **Create a stand-in** only when
-`photos_fill` says photos are not enough. Extra notes stay
-contractor-only. MSW SSE / `PUT /v1/onboarding/interview`.
+Maps areas (`locality` + `radius_km`). Photos well is the media library
+gallery (`MediaThumbs`), four columns so tiles stay small. **Upload** is
+always shown. No **Find more online** / **Create a stand-in**. Continue
+with work photos does not open the complete warning. Continue with no work
+photos opens it; **Skip** `POST /v1/onboarding/interview/complete` succeeds
+(photos optional). Dozens of found photos scroll in the well. Extra notes stay
+contractor-only. MSW SSE / `PUT /v1/onboarding/interview`; MSW
+onboarding media library hops.
 
 #### Mocked
 

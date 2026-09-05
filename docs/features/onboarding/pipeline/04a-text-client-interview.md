@@ -50,22 +50,24 @@ is Continue (submit): optional last answers, complete gate, **inserts**
    complete twice.
 2. Click-off writes `business_profile_edits` for the fields this save set, plus
    `client_interview_submissions` `submission_kind=autosave` (interview-only:
-   photo uploads, optional source-from-internet / AI photo when there are not
-   enough photos, extra notes).
+   extra notes). Photo uploads use the onboarding media library wrapper
+   ([api](../api.md)), not this body.
 3. Fields: **Details == `/cms/details`** (identity, contact and presence,
    services, service areas, opening hours, VAT — same controls and writes). Do
    not repeat registry legal identity from 03. VAT uses the Details legal
    controls already on `/cms/details`. Plus interview-only: contact name,
-   `emergency_phone`; found photos in the media library plus upload (source from
-   the internet / AI photo only if there are not enough); certifications
-   (company registry pick locks that business-registry certification) / found
-   reviews; **Projects** if any `active` business research origin rows exist —
+   `emergency_phone`; found photos in the media library plus **Upload photos**
+   (always available; complete does not require photos); certifications (company
+   registry pick locks that business-registry certification) / found reviews;
+   **Projects** if any `active` business research origin rows exist —
    up to four cards, current completeness rank ([build-profile](build-profile.md)), same look as
    `/cms/projects` (cover, title, description), no Project draft badge, not
    editable, **Archive** on the card. Zero `active` → omit the whole block.
    Cards may appear / reorder over SSE while 02 is still running. Extra notes.
    Paste of one-per-line or comma-separated **service names** may split into
-   rows deterministically (no LLM). Do not ask a photos-choice question.
+   rows deterministically (no LLM). Do not ask a photos-choice question. Do not
+   offer Find more online / Create a stand-in. Complete does not inspect photo
+   count (the no-photos warning is frontend-only).
 4. While they stay on this screen, apply [live fill](#do--live-fill-while-02-runs) from the onboarding session
    SSE (Postgres is authoritative).
 5. `POST /v1/onboarding/interview/complete` (optional last dirty answers on

@@ -86,11 +86,27 @@ research does not write them).
   copy: we’ll turn each name into a website page; search a place, then set how
   far you travel. Complete has those list rows before 05
   ([ADR](ADR.md) 18). Crawl may add rows they have not already entered.
-- **Photos** — media library items business research has attached so far
-  (logo plus a few photos). New items appear as extract chunks land. Do not
-  label a photo with the Google Maps listing or Facebook. **Upload photos** is
-  always available. Do not ask a photos-choice question. **Find more online**
-  and **Create a stand-in** only when there are not enough photos yet.
+- **Photos** — media library items business research has attached so far (logo
+  plus work photos). New items appear as extract chunks land. Do not label a
+  photo with the Google Maps listing or Facebook. The work-photo well is the
+  media library gallery (same `MediaThumbs` as `/cms/media`, website Content,
+  and Projects cover pick — not a second grid, not the Ads review strip).
+  **Upload** is always available (file multipicker; drop accepted). Do not ask a
+  photos-choice question. Do not offer **Find more online** or
+  **Create a stand-in**. Complete does not require photos. Maps / Facebook can
+  attach dozens; the well scrolls in the card (`max-height`) and uses four
+  columns so tiles stay small (not `/cms/media`’s 2-then-3/4 count — that card
+  is too narrow for two-column tiles). Continue with no work photos (active
+  media library items whose latest `photo_kind` is not `logo`; unclassified /
+  still-processing owner uploads count) opens a **complete warning**
+  ([design decision](design-decision-record.md) 15): title **Create a website without photos?**; body **The
+  results will be much better if you attach photos. You may attach real photos
+  later; we will use AI-generated images.**; primary **Add photos** (same
+  multipicker as Upload; dismiss; stay on this screen); secondary **Skip**
+  (`POST /v1/onboarding/interview/complete`). Frontend-only — complete HTTP does
+  not inspect photo count. Reuse that complete-warning control for later
+  warnings (title, body, primary, secondary); only photos is wired now. List and
+  upload: [api](api.md) `/v1/onboarding/media-assets/…`.
 - **Certifications** — trade accreditations with the definition badge, plus
   other certifications. Do not say proof. If they picked the company registry
   record on Find, the matching business-registry certification (CRO in Ireland)

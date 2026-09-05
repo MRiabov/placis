@@ -22,15 +22,6 @@ usually a **doc gap**, not a drop.
 
 ## Doc gap
 
-- **3. `photos_fill` — controls exist; job and threshold do not**
-  Comment: frontend, 04a Text client interview, complete-gate
-  `photos`, and testing all depend on it.
-  [../../general-architecture/jobs.md](../../general-architecture/jobs.md)
-  has no consumer. “Enough photos” is undefined.
-  Action: name the River job kind and a number in
-  [pipeline/build-profile.md](pipeline/build-profile.md). Do not drop
-  the field.
-
 - **9. `PUT /v1/onboarding/sources` has no screen**
   Comment: 01 Find business Do 4: wrong company is **not** a new run.
   Dropping the route leaves no recovery (ADR 16: one onboarding per
@@ -49,12 +40,6 @@ usually a **doc gap**, not a drop.
   Comment: ADR 11 / 04a Text client interview / frontend / E2E all
   live-fill them over SSE.
   Action: add nested reads, or name the separate route.
-
-- **15. Client interview photo upload has no route**
-  Comment: `photos` is a **required** complete-gate key; onboarding
-  runs before an active tenant; media library HTTP is active-tenant.
-  Action: onboarding media library wrapper (onboarding token, same
-  three hops). Do not drop upload unless the gate key changes too.
 
 - **16. Stale “08” / “07” sentences after ADR 21**
   Comment: ADR 21 moved share to 08 Preview website address and
