@@ -1865,7 +1865,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | our site / our website | Placis website |
 | public site / public-site runtime | contractor website or Placis website (whose site) |
 | runtime | do not name the application “runtime”; the contractor website lives in `apps/contractor-website` |
-| private app / private Vite app / private client | the part of the application: the CMS, onboarding, or website preview (`frontend-2`) |
+| private app / private Vite app / private client | the part of the application: the CMS, onboarding, or website preview (`frontend-3`) |
 | shell / profile shell / app shell / page shell / Astro shell / CMS shell / editor shell / chrome / wrapper chrome / app chrome | empty business profile; the CMS (sidebar + main area); Astro document vs React islands; no extra wrapper around the page |
 | custom domain | website address |
 | custom website address | website address |

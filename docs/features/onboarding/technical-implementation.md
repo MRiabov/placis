@@ -76,7 +76,7 @@ publication; website rollback of onboarding rows is refused
 
 ## Frontend
 
-- The existing onboarding surface in `frontend-2` (find-the-business, client
+- The existing onboarding surface in `frontend-3` (find-the-business, client
   interview, business research progress, website preview) is refactored against
   the regenerated types; onboarding routes on the Go side use `/onboarding-*`.
   Port instructions: [frontend-debloat.md](frontend-debloat.md).

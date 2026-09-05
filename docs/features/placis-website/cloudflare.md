@@ -22,7 +22,7 @@ Related: [ADR.md](ADR.md), [contractor website Cloudflare](../website/cloudflare
 - Canonical host is **`https://placis.com`**. `www.placis.com` 301s to apex. Do
   not advertise `{website_prefix}.placis.com`.
 - Trailing slash so objects are `index.html` and `about/index.html`.
-- Onboarding, sign-in, and the client interview stay on `frontend-2`
+- Onboarding, sign-in, and the client interview stay on `frontend-3`
   (`https://app.placis.com`).
 
 This origin **replaces** the predecessor Next.js app
@@ -73,7 +73,7 @@ interview runs on the dashboard; from home the prompt box is a sign-up doorway.
 legal. Theme is CSS `prefers-color-scheme`, not `next-themes`.
 
 **Do not port to this origin:** OrbDemo, DustOrb, voice, enrichment, geo
-detection, Clerk sign-in / sign-up, dashboard. Those stay in `frontend-2`.
+detection, Clerk sign-in / sign-up, dashboard. Those stay in `frontend-3`.
 
 ## Live serve path
 
@@ -93,11 +93,11 @@ Unknown path is `404.html` from the same build.
 | --- | --- |
 | `placis.com` | Placis website R2 bucket (canonical) |
 | `www.placis.com` | 301 to `https://placis.com` |
-| `app.placis.com` | `frontend-2` (CMS, onboarding, website preview) |
+| `app.placis.com` | `frontend-3` (CMS, onboarding, website preview) |
 | contractor live hosts | contractor-website Worker — [contractor website Cloudflare](../website/cloudflare.md) |
 | API | Railway `cmd/api` (host unchanged here) |
 
-How `frontend-2` is hosted on `app.placis.com` is not this spec. This file only
+How `frontend-3` is hosted on `app.placis.com` is not this spec. This file only
 names that host as the CTA target.
 
 ## R2
@@ -117,7 +117,7 @@ by itself. That is zone **URL Rewrite Rules**, not a Worker. Same for www → ap
 (**Redirect Rule**) and HTML caching (**Cache Rule** — a hostname on an R2
 bucket does not cache HTML by default).
 
-**Local.** `astro dev` for the Placis website next to `cmd/api` / `frontend-2`.
+**Local.** `astro dev` for the Placis website next to `cmd/api` / `frontend-3`.
 No Miniflare R2 for this origin; the live path is the uploaded tree.
 
 ## CI deploy
@@ -141,6 +141,6 @@ when the first upload is ready. No Cloudflare account work in this PR.
 - The R2 upload workflow and zone rules
 - A Worker, a Cloudflare Pages project, or `@astrojs/cloudflare` adapter
 - The contractor-website Worker, its R2 bucket, or Custom Hostnames
-- How `frontend-2` is hosted on `app.placis.com`
+- How `frontend-3` is hosted on `app.placis.com`
 - Blog, a marketing CMS, or contact fields that POST to Go
 - Registrar automation

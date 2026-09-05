@@ -12,7 +12,7 @@ tests in this docs PR. Leads has no pipeline
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against
+E2E (Playwright, both sides). Playwright drives `frontend-3` against
 the real API + real Postgres. Activated tenant. One website with a
 website form. Fixture website leads and ad leads (ad-lead ingest may
 insert fixture rows until Meta ingest exists).

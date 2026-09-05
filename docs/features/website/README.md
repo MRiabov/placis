@@ -25,7 +25,7 @@ Named identifiers:
   (**TBD**).
 - [manifest.md](manifest.md) — `website.v1` keep / keep-out
 - [editing.md](editing.md) — how edits reach the backend and re-render in the website editor
-- [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
+- [frontend-debloat.md](frontend-debloat.md) — `frontend-3` port: keep / delete / retarget
 - [port-contractor-website.md](port-contractor-website.md) — contractor website API cutover (website form
   POST + `website.v1`; no predecessor OpenAPI)
 - [contractor-website-debloat.md](contractor-website-debloat.md) — keep the website component catalog; write a

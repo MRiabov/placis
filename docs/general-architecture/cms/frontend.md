@@ -4,14 +4,14 @@ The CMS (sidebar + main area): left nav, Profile disclosure, `/cms` two-card
 chooser. Destination screens live with their features. Loading placeholders:
 every screen, per field / row — not a whole-panel swap ([frontend.md](../frontend.md)).
 
-Look: [design decision record](design-decision-record.md). Tokens: [design.md](design.md). Port:
-[frontend-debloat.md](../frontend-debloat.md). [ADR](ADR.md). Assistant:
-[assistant](../../features/assistant/README.md).
+Look: [design decision record](design-decision-record.md). Tokens: [design.md](design.md). Withdrawn port:
+[frontend-debloat.md](../frontend-debloat.md). [ADR](ADR.md). Greenfield SPA: [general-architecture ADR](../ADR.md) 3.
+Assistant: [assistant](../../features/assistant/README.md).
 
 ## Left nav
 
-The CMS left nav lives in `frontend-2/src/features/cms/` (layout module; names
-in [frontend-debloat.md](../frontend-debloat.md)). Profile replaces the current top-level Details item.
+The CMS left nav lives in `frontend-3` (layout module). Profile replaces the
+current top-level Details item.
 Sites (the website editor entry) stays where it is. There is no **AI tools**
 item: image cleanup is `/cms/media`; the assistant is called from the
 bottom-right **Assistant** button on every screen in The CMS. Ads is a

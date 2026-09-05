@@ -105,7 +105,7 @@ inventing it.
    hover zinc-50) — `--secondary` is a token, not a resting chip. Voice on New
    chat opens a full-screen **orb** for the client interview (soft glowing
    circle, Back). Do not port the DustOrb particle renderer bit by bit; the
-   later `frontend-2` port can keep its cheaper orb. Website-editor Voice stays
+   later `frontend-3` port can keep its cheaper orb. Website-editor Voice stays
    the canvas orb ([website design decision 18](../../features/website/design-decision-record.md)). Token table: [design.md](design.md).
    (2026-08-27) (2026-08-27): Product `/cms` is two cards (**Do my website…** /
    **Run my ads**), not this prompt. Keep the prompt-box markup in the look app

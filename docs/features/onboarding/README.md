@@ -16,7 +16,7 @@ Onboarding turns a spoken or typed description of a business into a clear
   interview Details == `/cms/details`)
 - [design.md](design.md) — look (`apps/demo/` `/onboarding/*`)
 - [design decision record](design-decision-record.md) — onboarding look and interaction
-- [frontend-debloat.md](frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
+- [frontend-debloat.md](frontend-debloat.md) — `frontend-3` port: keep / delete / retarget
 - [assistant.md](assistant.md) — Find / Review / interview Assistant
 - [website-editor.md](website-editor.md) — unpaid website preview Assistant
 - [testing.md](testing.md) — the onboarding E2E test

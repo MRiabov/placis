@@ -1,118 +1,57 @@
-# `frontend-2` port — index
+# Owner CMS and onboarding — greenfield (`frontend-3`)
 
-Status: planning. This file is the **index** for the `frontend-2` port: shared
-rules and PR order. It is not the audit source of truth. Screen and field
-authority stays in each feature’s `frontend.md`. Cut lists stay in that
-feature’s `frontend-debloat.md`.
+Status: the `frontend-2` port is **withdrawn**. Decision:
+[general-architecture ADR](../general-architecture/ADR.md) 3.
 
-Debloat, not rewrite. Stack stays Vite + React + TanStack Router/Query +
-`openapi-fetch`. The Go rewrite already changes the API, so the frontend
-switches to that smaller, field-constrained huma contract instead of wrapping
-the predecessor OpenAPI. Predecessor OpenAPI is not a compatibility surface: no
-old paths, operation ids, or unconstrained JSON. Contractor website API cutover:
-[port-contractor-website.md](../features/website/port-contractor-website.md).
+`frontend-2` is deleted before the first owner-UI implementation. Do not open
+it. Do not copy from it. Do not keep-versus-delete against it. Per-feature
+`frontend-debloat.md` files are withdrawn stubs; they are not implementation
+instructions.
 
-## Instruction files
+## Start from
 
-| File | Owns |
+- Screens and fields: each feature’s `frontend.md`, plus
+  [cross-cutting UI](../general-architecture/frontend.md)
+- Look: [`apps/demo/`](../../apps/demo/README.md) (mocks only; not product
+  code)
+- Stack: [frontend-stack.md](../general-architecture/frontend-stack.md)
+- Types: Go `/openapi.json` only. Predecessor OpenAPI is not a typegen
+  source.
+
+## First owner-UI implementation PR
+
+1. Delete the `frontend-2/` tree.
+2. Add `frontend-3/` empty (Vite + React + TanStack Router / Query + Clerk +
+   `openapi-fetch`).
+3. Retarget CI, Don’t-say `--frontend`, and Playwright to `frontend-3/`.
+4. Implement screens from `frontend.md`, not from leftover `frontend-2`
+   modules.
+
+## Do not
+
+- Read `frontend-2/` (git is enough if something must be recovered)
+- Port dumped predecessor CSS, the right-hand editing panel, Save controls,
+  voice-first client interview, or predecessor OpenAPI types
+- Promote `apps/demo` to the product app (no auth, no API, fake canvas)
+- Rebuild website component visuals; the website component catalog stays in
+  `packages/website-components` ([contractor website cuts](../features/website/contractor-website-debloat.md))
+
+## Withdrawn cut lists
+
+These files no longer instruct a port. Implement from that feature’s
+`frontend.md`:
+
+| File | Feature screens |
 | --- | --- |
-| [onboarding](../features/onboarding/frontend-debloat.md) | Find → Review → client interview → progress; website preview + website activation |
-| [website](../features/website/frontend-debloat.md) | Website editor, publication dropdown, Connect website address |
-| [CMS](../general-architecture/frontend-debloat.md) | Left nav, `/cms` two cards, CMS tokens (cross-cutting file also owns generated types) |
-| [details](../features/business-profile/details/frontend-debloat.md) | Business details |
-| [projects](../features/business-profile/projects/frontend-debloat.md) | `/cms/projects` |
-| [certifications and reviews](../features/business-profile/certifications-and-reviews/frontend-debloat.md) | `/cms/certifications-and-reviews` |
-| [ads](../features/ads/ad-generation/frontend-debloat.md) | `/cms/ads` (no UI today; do not port campaign leftovers) |
-| [leads](../features/other/leads/frontend-debloat.md) | `/cms/leads` (no predecessor console; do not port CRM) |
-| [media library](../features/other/media/frontend-debloat.md) | `/cms/media` + Content attach |
-| [auth](../features/other/auth/frontend-debloat.md) | Clerk gate, OAuth, `/me` |
-| [cross-cutting](../general-architecture/frontend-debloat.md) | Generated types, leftover layout names, CSS dump, parity e2e, Don’t-say `--frontend` |
-| [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover: website form POST + `website.v1`; no predecessor OpenAPI |
-| [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker (not a `frontend-2`-style reuse) |
-
-## Shared contract rules
-
-- Go `/openapi.json` is the only typegen source for `frontend-2`. First
-  frontend-from-Go PR switches typegen; the generated file shrinks to routes Go
-  actually serves. Predecessor OpenAPI is human reference, not an input, not a
-  second schema to generate from.
-- Keep as Go DTOs in current glossary names (fields may change): `/me`, health,
-  onboarding session + profile + events stream (SSE outside huma), CMS website
-  editor GET/PATCH (`/v1/websites/{website_prefix}/editor/…`), unpaid website
-  editor GET/PATCH (`/v1/onboarding/website/editor/…`), CMS publication, Connect
-  website address, 08 preview website address (host), website activation
-  checkout / status, media library, ads when that slice exists. Contractor
-  website public routes: website form submit (see [port-contractor-website.md](../features/website/port-contractor-website.md)).
-- Drop (do not alias): CRM / quotes / invoices / jobs / crew / workflows,
-  `/v1/tenants/{website_prefix}/website/…`, blog, careers,
-  website-template-apply leftovers, unconstrained JSON in UI-facing schemas.
-  Don't say setup / public site / shell / blueprint / claim: predecessor names.
-  Don't say preview: predecessor module path
-  (`/v1/preview/{token}/module/website`) and leftover predecessor hand types.
-  “Genuinely good” means the **behavior** is still in the feature spec. Copy
-  Python field lists only when that feature’s `technical-implementation.md`
-  already says so.
-- Unported `api/*.ts` and MSW stubs are deleted or retargeted in the **same
-  slice** that adds the Go routes. No shims, no `as any`, no mapping layer.
-  Screens with no Go route yet stay unwired, not typed against old paths.
-- Regenerate `frontend-2/src/generated/api-types.ts` from Go `/openapi.json`.
-  Every DTO field is constrained (`minLength`/`maxLength`, `minimum`/`maximum`,
-  enums). No unconstrained JSON in UI code. The generated file must not
-  reintroduce predecessor-only paths.
-- CMS calls `/v1/websites/{website_prefix}/editor/…` only. Do not call
-  `/v1/tenants/{website_prefix}/website/…`. Unactivated **403** on that
-  prefix.
-- Onboarding Find / Review / client interview:
-  `POST /v1/onboarding/business-lookup`, `GET /v1/onboarding/profile`,
-  `GET /v1/onboarding/events/stream`.
-- Onboarding unpaid canvas calls `/v1/onboarding/website/editor/…` (not
-  `/v1/websites/{website_prefix}/editor` while unactivated) and
-  `/v1/onboarding/website/assistant/…`. Share is
-  `POST /v1/onboarding/website/publications`. First pay is
-  `POST /v1/onboarding/activation/checkout`.
-- `/onboarding/preview` is the SSE website-section carousel; the shareable host
-  is the preview website address (not `/preview/{token}/…`, not an SSE
-  endpoint). Website activation uses public checkout / status (Host /
-  `website_prefix`; not a browser success URL alone).
-- Website editor: one in-memory projection **per `{website_prefix}`**; changing
-  prefix is leaving; PATCH copies dirty keys; merge only
-  `{ edit_history_head, batch_id }`; no GET-after-PATCH; text copies out on
-  click-off; 500ms coalesce; leave guard. See [editing.md](../features/website/editing.md).
-- Ads (when they exist): explicit mutations + `base_updated_at` / `409` re-GET;
-  `POST …/ad-set` and download. Not the website autosave loop.
-- Voice is a channel now ([voice agent](../general-architecture/voice-agent.md)); first-pass Find / Review / client
-  interview is **text**. Guide Voice (`/v1/onboarding/assistant/…`) is listed +
-  deferred. Unpaid canvas Voice is v1 under
-  `/v1/onboarding/website/assistant/…`.
-- Enable `cmd/ci/check-dont-say --frontend` and drop the `frontend-2/`
-  pre-commit exclude when the first frontend-from-Go PR lands.
-
-## Port order (later code PRs)
-
-Each slice is its own worktree + PR. Drive it from that feature’s instruction
-file. Done = regenerated types for routes this feature calls + Don’t-say clean
-on touched files + one E2E per epic (docs-only PRs excepted).
-
-1. **This docs set** (instruction files + pointers).
-2. **Contract scaffolding** — switch typegen to Go `/health` + `/me`; stop
-   generating unused predecessor paths. Cross-cutting file.
-3. **Onboarding** — rename the predecessor onboarding folder; drop 04b
-   Voice; text client interview + SSE progress + unpaid canvas
-   (`/v1/onboarding/website/…`).
-4. **CMS layout + details** — Profile disclosure; drop `/cms/proof`; leftover
-   layout names; Business details without a Save control.
-5. **Website editor** — PATCH working copy; publication dropdown; Connect
-   website address; drop blog / careers / website-template-apply leftovers in
-   the CMS API module; `/cms/media` + real projects / certifications with the
-   website Go phase.
-6. **Ads** — new module when `/v1/ads` exists.
-7. **Drop parity e2e** when the old `frontend/` app is gone. Product e2e uses a
-   fresh port (do not `reuseExistingServer` against 5173/5174). No Clerk
-   testing-token CI unless asked.
-
-## Out of scope
-
-Voice WebSocket, ad posting, blog, careers, renaming Sites, rebuilding the
-website component visuals. Contractor website API: [port-contractor-website.md](../features/website/port-contractor-website.md).
-Remaining cuts (CSS split, typed website component catalog, Don’t-say):
-[contractor-website-debloat.md](../features/website/contractor-website-debloat.md).
+| [onboarding](../features/onboarding/frontend-debloat.md) | [onboarding frontend](../features/onboarding/frontend.md) |
+| [website](../features/website/frontend-debloat.md) | [website frontend](../features/website/frontend.md) |
+| [CMS](../general-architecture/frontend-debloat.md) | [CMS frontend](../general-architecture/cms/frontend.md) |
+| [details](../features/business-profile/details/frontend-debloat.md) | [details frontend](../features/business-profile/details/frontend.md) |
+| [projects](../features/business-profile/projects/frontend-debloat.md) | [projects frontend](../features/business-profile/projects/frontend.md) |
+| [certifications and reviews](../features/business-profile/certifications-and-reviews/frontend-debloat.md) | [certifications and reviews frontend](../features/business-profile/certifications-and-reviews/frontend.md) |
+| [ads](../features/ads/ad-generation/frontend-debloat.md) | [ads frontend](../features/ads/ad-generation/frontend.md) |
+| [leads](../features/other/leads/frontend-debloat.md) | [leads frontend](../features/other/leads/frontend.md) |
+| [media library](../features/other/media/frontend-debloat.md) | [media library](../features/other/media/README.md) |
+| [auth](../features/other/auth/frontend-debloat.md) | [auth](../features/other/auth/README.md) |
+| [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover (not the owner SPA) |
+| [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker |

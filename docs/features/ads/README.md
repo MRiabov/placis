@@ -19,7 +19,7 @@ Named identifiers:
 - [technical-implementation.md](ad-generation/technical-implementation.md) — named services, format/crop, AI allow/block
 - [frontend.md](ad-generation/frontend.md) — the `/cms/ads` workspace spec
 - [design-decision-record.md](ad-generation/design-decision-record.md) — Archive look (same as projects)
-- [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-2` port: keep / delete / retarget
+- [frontend-debloat.md](ad-generation/frontend-debloat.md) — `frontend-3` port: keep / delete / retarget
 - [testing.md](ad-generation/testing.md) — the ads E2E test
 - [ads look](../../../apps/demo/README.md) — `/cms/ads` in the look app
 - [ad-application/meta](ad-application/meta/) — investigation for future ad posting to Meta (not the

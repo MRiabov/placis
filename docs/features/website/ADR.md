@@ -31,7 +31,7 @@ Status: decided (2026-08-16, product owner + engineering).
    `{{business_name}}`, `{{marketing_phone}}`, `{{trade}}`, `{{reviews.1}}`, …
    stay in unpublished rows and in the dump Go sends. Go does not resolve.
    The Worker fills them for publication HTML and for copy-generation page
-   renders. Wait teaser and CMS canvas resolve in frontend-2 + the website
+   renders. Wait teaser and CMS canvas resolve in frontend-3 + the website
    component package. (2026-08-16; Worker resolve, not Go, 2026-08-31)
 
 6. **The LLM drafts; the owner decides** — the **assistant** is another caller

@@ -34,7 +34,7 @@ compatibility surface: do not alias `/api/v1/…`.
 ## Versioning
 
 Every JSON route is `/v1/…`. Drop `/api`. The Go process *is* the HTTP API;
-`frontend-2` and the contractor website are other origins.
+`frontend-3` and the contractor website are other origins.
 
 There is **one** live contract. Do not build a `/v2` handler tree in the
 rewrite. Additive fields stay on `/v1`. A breaking change that cannot ship
@@ -102,7 +102,7 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 
 ### Persistence `jsonb` → HTTP
 
-| Location | Persistence | HTTP to `frontend-2` / contractor website |
+| Location | Persistence | HTTP to `frontend-3` / contractor website |
 | --- | --- | --- |
 | Website slot `value` | jsonb | Discriminated union on `slot_type`: `text`/`rich_text` → string + `maxLength`; `image` → media library item id + crop/focal; `link` → url + label; `list` → typed array (e.g. project ids). Project galleries and reviews are ids / `website_slot_reviews`, not unconstrained JSON. |
 | Website section `props` | jsonb | `oneOf` by `component_id` from the website component catalog. Extra keys 4xx. Unknown `component_id` → `unsupported_component` flag + no props object. |
@@ -113,9 +113,9 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 | Ads `platform_refs` | jsonb | **Omit** from first-slice DTOs. When ad posting exists: named fields (`meta_ad_id`, …), not a string map. |
 | Company registry / Maps search | registry parquet / Maps autocomplete (not `etl.*_fetches`) | `*Read` (id, name, address, …). **Omit** `raw`. |
 | Business research / ETL fetches | `raw` jsonb | **Omit.** Checklist `*Read` is named keys + status enum. |
-| Stripe event body | jsonb | **Omit** from `frontend-2`. Activation-status is a closed enum + checkout URL. |
+| Stripe event body | jsonb | **Omit** from `frontend-3`. Activation-status is a closed enum + checkout URL. |
 | LLM traces (`ai_generations`) | jsonb | **Omit.** Assistant activity is named event structs. Each tool event has `summary` (`string` + `maxLength`) for owner copy. Never render tool names. |
-| Audit `before`/`after` | jsonb | **Omit** from `frontend-2`. |
+| Audit `before`/`after` | jsonb | **Omit** from `frontend-3`. |
 | Website form website visitor POST | — | Named fields matching that website form’s `fields[]`. Extra keys 4xx. |
 | Upload signed URL | string | URL `maxLength`. |
 | Website assistant plan | text | `string` + `maxLength`. Markdown. Do not `JSON.parse`. |
@@ -129,7 +129,7 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 - String fields documented as JSON
 - SSE `payload` as unconstrained object
 - Returning ETL fetch `raw`, Stripe raw, or `ai_generations`
-  jsonb to `frontend-2`
+  jsonb to `frontend-3`
 
 Website component catalog structs are the only polymorphism: discriminator
 `component_id` / `slot_type`, generated into OpenAPI `oneOf`. A leftover
@@ -201,9 +201,9 @@ Named fields: `code`, `message`, optional `retry_after`.
   `usage_credit_exhausted` (that is extra usage credit). Usage & billing
   Change plan.
 - `409 edit_history_conflict` — unpublished website PATCH when
-  `base_edit_history_head` is stale. `frontend-2` re-GETs with
+  `base_edit_history_head` is stale. `frontend-3` re-GETs with
   `include_edit_history=true`.
-- `409` ads — `base_updated_at` mismatch. `frontend-2` re-GETs.
+- `409` ads — `base_updated_at` mismatch. `frontend-3` re-GETs.
 - `413` — oversize PATCH (website editor body cap 64 KB). Oversize CMS voice
   recording (`byte_size` over the cap on `POST /v1/assistant/voice/recordings`).
 - `429` — onboarding Find lookup cap (`browser_safety_cap`) or
@@ -219,11 +219,11 @@ tenant). Named on each mutating **Routes** row in the feature `api.md`.
 
 `GET /v1/onboarding/events/stream` uses Huma `sse.Register`: event
 name → Go struct, so payloads are in `/openapi.json`. Do not use a raw
-`net/http` handler that bypasses the spec. `frontend-2` exhaustive-matches;
+`net/http` handler that bypasses the spec. `frontend-3` exhaustive-matches;
 unknown events are logged and dropped, never parsed as `any`.
 
 The contractor host is **not** SSE. `/onboarding/preview` and
-`/onboarding/preview-and-edit/` in `frontend-2` are.
+`/onboarding/preview-and-edit/` in `frontend-3` are.
 
 ## Go WebSocket events
 
@@ -273,6 +273,6 @@ path is gone.
 
 - **Auth:** none (or the same gate as other unauthenticated discovery; not a
   tenant resource)
-- **Callers:** `openapi-typescript` typegen for `frontend-2` (CMS
+- **Callers:** `openapi-typescript` typegen for `frontend-3` (CMS
   `/v1`). Not the Worker internal OpenAPI file.
 - **Response:** huma OpenAPI 3.1

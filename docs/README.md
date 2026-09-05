@@ -1,6 +1,6 @@
 # Placis Documentation
 
-Docs for the Placis application — a **Go backend** plus the **`frontend-2`**
+Docs for the Placis application — a **Go backend** plus the **`frontend-3`**
 Vite/React SPA. The product: a
 **done-for-you — delivered into your inbox, so you can DIY too** — marketing and
 advertising service for construction companies. We do business research, build a
@@ -10,14 +10,14 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 ## Reading order
 
 1. [AGENTS.md](../AGENTS.md) — agent entry: documentation-first gate, `apps/`,
-   keep-versus-delete on `frontend-2`
+   `frontend-3` greenfield ([ADR](general-architecture/ADR.md) 3)
 2. [Development principles](development-principles.md) — how work is sliced and reviewed (read before
    writing code)
 3. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
 4. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
 5. [Product](general-prd.md) — the loop, product-level in/out of scope
 6. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes, LLM
-   layer, audit, jobs, files, `frontend-2` UI
+   layer, audit, jobs, files, `frontend-3` UI
 7. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization 1-1
 8. [Onboarding](features/onboarding/README.md) — business research and business-profile building;
    [website activation](features/onboarding/pipeline/09-website-activation.md) is activation Price plus Placis Pro plan / month
@@ -54,7 +54,7 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 | Auth | [features/other/auth/README.md](features/other/auth/README.md) |
 | Persistence conventions + index | [general-architecture/persistence.md](general-architecture/persistence.md) |
 | HTTP conventions + per-feature `api.md` | [general-architecture/api.md](general-architecture/api.md) |
-| AI layer, audit, jobs, files, `frontend-2` UI | [general-architecture/](general-architecture/README.md) |
+| AI layer, audit, jobs, files, `frontend-3` UI | [general-architecture/](general-architecture/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
 | ETL (extract + transform) | [features/etl/README.md](features/etl/README.md) |
 | Business profile | [features/business-profile/README.md](features/business-profile/README.md) |
@@ -68,7 +68,7 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 | Leads | [features/other/leads/README.md](features/other/leads/README.md) |
 | CI and delivery | [general-architecture/ci-cd.md](general-architecture/ci-cd.md) |
 | Testing / per-feature E2E | [general-architecture/testing.md](general-architecture/testing.md) |
-| `frontend-2` port (debloat index) | [planning/frontend-debloat.md](planning/frontend-debloat.md) |
+| `frontend-3` greenfield (withdrawn `frontend-2` port) | [planning/frontend-debloat.md](planning/frontend-debloat.md) |
 
 ## Product boundary
 

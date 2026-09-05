@@ -1,8 +1,9 @@
-# Frontend (`frontend-2`) — cross-cutting UI
+# Frontend (`frontend-3`) — cross-cutting UI
 
-Conventions that apply to every screen in `frontend-2` (the CMS and onboarding).
-Feature screens stay in that feature’s `frontend.md`. Stack and folders:
-[frontend-stack.md](frontend-stack.md). Port instructions:
+Conventions that apply to every screen in `frontend-3` (the CMS and
+onboarding). Feature screens stay in that feature’s `frontend.md`. Stack and
+folders: [frontend-stack.md](frontend-stack.md). Greenfield:
+[ADR](ADR.md) 3. Withdrawn port:
 [frontend-debloat.md](frontend-debloat.md) (index:
 [planning/frontend-debloat.md](../planning/frontend-debloat.md)).
 Tokens for the CMS (sidebar + main area): [design.md](./cms/design.md).

@@ -232,7 +232,7 @@ PATCHes **persist into** `website_slots` / `website_sections` /
 `create_page` is not that PATCH: persist is
 `POST /v1/websites/{website_prefix}/editor/pages` (active tenant) or
 `POST /v1/onboarding/website/editor/pages` (unpaid). Onboarding 06 writes
-unpublished rows in River SQL (no `frontend-2`).
+unpublished rows in River SQL (no `frontend-3`).
 `generate_image` /
 `cleanup_image` write `media_library` immediately (same as today’s media-library
 HTTP); canvas attach still follows Ask first vs instant apply. Every agent edit
@@ -290,7 +290,7 @@ with `follow: false` is **400**. Dispatcher: [assistant](../assistant/architectu
 - **Instant apply** — those buttons are bypassed. In the CMS, the website editor
   applies each validated tool to the in-memory projection and PATCHes as they
   succeed. There is no Reject for that edit. Onboarding 06 writes unpublished
-  rows headless (no `frontend-2`).
+  rows headless (no `frontend-3`).
 
 After a plan is accepted, apply uses the same engine as continuous workflow.
 Only the gate changes whether Apply / Reject appear.

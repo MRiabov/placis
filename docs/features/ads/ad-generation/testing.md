@@ -17,7 +17,7 @@ create** paths are omitted. Go funcs stay on `leftover_tests.go`.
 
 #### Setup
 
-E2E (Playwright, both sides). Playwright drives `frontend-2` against the real
+E2E (Playwright, both sides). Playwright drives `frontend-3` against the real
 API + real Postgres. `tenants` (`status=active`).
 `business_profile.business_profiles` with at least the details Review copy can
 read.
@@ -93,7 +93,7 @@ Backend. Go `TestHappyPathV1AdsReturnsList`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-One draft ad and one `status=archived` ad. No `frontend-2`. No Worker.
+One draft ad and one `status=archived` ad. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -118,7 +118,7 @@ Backend. Go `TestHappyPathV1AdsCreatesAd`. OpenAPI 1:1. **calls**
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 `business_profile.business_profiles` with at least one named service. One draft
-ad and one `status=archived` ad. No `frontend-2`. No Worker.
+ad and one `status=archived` ad. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -142,7 +142,7 @@ Backend. Go `TestHappyPathV1AdsAdIdReturnsAd`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-One draft ad. No `frontend-2`. No Worker.
+One draft ad. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -165,7 +165,7 @@ Backend. Go `TestHappyPathV1AdsAdIdUpdatesAd`. OpenAPI 1:1.
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 One draft ad. `base_updated_at` is that row’s `ads.updated_at`. No
-`frontend-2`. No Worker.
+`frontend-3`. No Worker.
 
 #### Exercise
 
@@ -188,7 +188,7 @@ Backend. Go `TestHappyPathV1AdsAdIdDeletesAd`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-One draft ad. No `frontend-2`. No Worker.
+One draft ad. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -211,7 +211,7 @@ Backend. Go `TestHappyPathV1AdsAdIdVariantsReturnsVariant`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-One ad with a stub variant. No `frontend-2`. No Worker.
+One ad with a stub variant. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -235,7 +235,7 @@ OpenAPI 1:1.
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 01/02 already wrote copy and placements (`ad_needs_review`). No
-`frontend-2`. No Worker.
+`frontend-3`. No Worker.
 
 #### Exercise
 
@@ -260,7 +260,7 @@ Backend. Go `TestHappyPathV1AdsAdIdVariantsVariantIdRewrite`. OpenAPI
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-01/02 already wrote copy. Usage credit available. No `frontend-2`. No
+01/02 already wrote copy. Usage credit available. No `frontend-3`. No
 Worker.
 
 #### Exercise
@@ -293,7 +293,7 @@ Backend. Go `TestHappyPathV1AdsAdIdGenerate`. OpenAPI 1:1.
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 01 stub exists (`ads.status=draft`, stub `ad_variants.format`). Ready
 and approved `media_assets` for that format. Usage credit available.
-Schema `jobs`: no pending `ads_generate`. No `frontend-2`. No Worker.
+Schema `jobs`: no pending `ads_generate`. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -324,7 +324,7 @@ Backend. Go `TestHappyPathV1AdsAdIdApprove`. OpenAPI 1:1. **calls**
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 02 already wrote `ads` (`status=ad_needs_review`), copy, and
-placements on uploaded `media_assets`. No `frontend-2`. No Worker.
+placements on uploaded `media_assets`. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -349,7 +349,7 @@ Backend. Go `TestHappyPathV1AdsAdIdAdSet`. OpenAPI 1:1. **calls**
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-03 already wrote `ads` (`status=ad_ready_to_post`). No `frontend-2`.
+03 already wrote `ads` (`status=ad_ready_to_post`). No `frontend-3`.
 No Worker.
 
 #### Exercise
@@ -375,7 +375,7 @@ Backend. Go `TestHappyPathV1AdsAdIdDownload`. OpenAPI 1:1. **calls**
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 03 already wrote `ads` (`status=ad_ready_to_post`). Source
-`media_assets` files exist. No `frontend-2`. No Worker.
+`media_assets` files exist. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -403,7 +403,7 @@ Backend. Go `TestHappyPathV1AdsAdIdArchive`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-One ad that is not archived. No `frontend-2`. No Worker.
+One ad that is not archived. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -427,7 +427,7 @@ Backend. Go `TestHappyPathV1AdsAdIdUnarchive`. OpenAPI 1:1.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-One archived ad. No `frontend-2`. No Worker.
+One archived ad. No `frontend-3`. No Worker.
 
 #### Exercise
 
@@ -481,7 +481,7 @@ Backend. Go `TestPipelineHappyPathAdsFull`. Per-step names:
 
 #### Setup
 
-Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-2`.
+Backend (`humatest`, Testcontainers Postgres + MinIO). No `frontend-3`.
 No Worker.
 
 #### Exercise
@@ -503,7 +503,7 @@ LLM, ad platforms.
 
 Backend (`humatest`, Testcontainers Postgres + MinIO). Two activated
 tenants A and B. A has one ad. B has zero `ads`. No Playwright. No
-`frontend-2`.
+`frontend-3`.
 
 #### Exercise
 
