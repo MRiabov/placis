@@ -39,7 +39,10 @@ Use this skill to keep Placis work reviewable, branch-isolated, documented, and 
 
 ## Documentation
 
-Before or alongside implementation, decide whether docs need to change.
+Docs first, then owner review, then implementation. Missing or ill-defined
+canonical docs (`persistence.md`, `api.md`, `testing.md` when they apply)
+block code until the owner reviews. See repository `AGENTS.md`. If a change
+would invent a name, stop and write the docs first.
 
 - Update `docs/` when shipped behavior, architecture, APIs, provider boundaries, data models, setup flows, frontend generation, eval gates, or operational procedures change.
 - Update `docs/migrations/implementation-packs/` when adding, completing, or changing scoped delivery packs or user-story implementation details.
