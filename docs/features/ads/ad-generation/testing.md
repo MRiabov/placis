@@ -47,11 +47,12 @@ read.
 #### Verify
 
 1. **Enter details** — **persists into** `ads` (`status=draft`,
-   `ad_goal`, `icp_age_min` / `icp_age_max` / `icp_household` /
-   `icp_location_focus` / `icp_notes` / `icp_source` /
-   `icp_review_status`, `origin`, `platform_status=not_connected`,
-   `platform_refs` empty), `ad_lead_forms` (include flags; `title`
-   empty), stub `ad_variants` (`format`, `status=draft`).
+   `ad_goal`, `icp_household=married_couples`, `icp_age_min=30`,
+   `icp_age_max=40`, `icp_source=static`, `icp_location_focus` /
+   `icp_notes` / `icp_review_status`, `origin`,
+   `platform_status=not_connected`, `platform_refs` empty),
+   `ad_lead_forms` (include flags; `title` empty), stub `ad_variants`
+   (`format`, `status=draft`).
 2. **Generate** — **persists into** `ai_generations` on an
    `ads_generate` thread (reasoning + output + tool calls + usage +
    `prompt_id` / `prompt_version`), `ad_copy_variants`

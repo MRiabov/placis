@@ -35,8 +35,8 @@ format.
 | --- | --- | --- |
 | `AdListGet` | `archived` | Query; list vs Archive |
 | `AdRead` | `id`, `name`, `status`, `offer`, `ad_goal`, `service_focus_id`, `icp_age_min`, `icp_age_max`, `icp_household`, `icp_location_focus`, `icp_notes`, `icp_source`, `icp_review_status`, `origin`, `platform_status`, `updated_at`, `created_at`, `variant: AdVariantRead`, `lead_form: AdLeadFormRead`, `copy: AdCopyVariantRead` | Hydrate; omit `platform_refs` |
-| `AdCreate` | `name`, `offer`, `ad_goal`, `service_focus_id`, `icp_age_min`, `icp_age_max`, `icp_household`, `icp_location_focus`, `icp_notes`, `format`, `include_marketing_phone`, `include_full_name`, `include_postcode`, `include_email` | About the ad; no lead-form `title` |
-| `AdUpdate` | `base_updated_at`, `name`, `offer`, `ad_goal`, `service_focus_id`, `icp_age_min`, `icp_age_max`, `icp_household`, `icp_location_focus`, `icp_notes`, `format`, `include_marketing_phone`, `include_full_name`, `include_postcode`, `include_email`, `title` | Click-off; `title` is Review |
+| `AdCreate` | `name`, `offer`, `ad_goal`, `service_focus_id`, `icp_location_focus`, `format`, `include_marketing_phone`, `include_full_name`, `include_postcode`, `include_email` | About the ad; no lead-form `title`; ideal customer profile is server-set `icp_source=static` (not on the body) |
+| `AdUpdate` | `base_updated_at`, `name`, `offer`, `ad_goal`, `service_focus_id`, `icp_location_focus`, `format`, `include_marketing_phone`, `include_full_name`, `include_postcode`, `include_email`, `title` | Click-off; `title` is Review; no ideal customer profile fields |
 | `AdLeadFormRead` | `title`, `include_marketing_phone`, `include_full_name`, `include_postcode`, `include_email` | Nested on `AdRead.lead_form` |
 | `AdGenerateRequest` | `base_updated_at` | Create ad and generate / Generate again |
 
