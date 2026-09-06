@@ -16,7 +16,6 @@ Does not write ad tables. Same fields on ad-set and download.
   - Download: `AdDownloadRead.url` is a signed URL. `files` has a
     private zip. MinIO object keys
     `{ad_id}/{variant_format}/{position}.{ext}`.
-  - `audit_events` for ad-set / download.
   - **Must not**: `ads` / `ad_variants` / `ad_copy_variants` /
     `ad_image_placements` / `ad_lead_forms` row contents unchanged
     (except `ads.updated_at` must also stay). No `platform_refs`

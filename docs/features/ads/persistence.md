@@ -14,8 +14,9 @@ Referenced, not owned here:
 (`ad_image_placements.media_asset_id`),
 [leads](../other/leads/persistence.md) (attribution). LLM traces:
 [AI layer](../../infrastructure/ai/README.md)
-(`thread_kind=ads_generate` / `ads_inline_assistance`). Sensitive
-mutations also write [audit](../../general-architecture/audit.md).
+(`thread_kind=ads_generate` / `ads_inline_assistance`). Approve,
+archive, and unarchive write `ad_reviews`
+([audit](../../general-architecture/audit.md)).
 
 ## Tables
 
@@ -95,7 +96,8 @@ stay this 30–40 default. No `audiences` table. No `audience_id` on
 holds exactly one 9:16 placement and shorter overlay copy. Multi-frame
 story sequences are out of scope. Changing format after generate
 regenerates this ad on the same row; it does not insert a second
-variant.
+variant. Placements do not store format; crop ratio follows
+`ad_variants.format`.
 
 ### `ad_copy_variants`
 
@@ -114,16 +116,16 @@ variant.
 ### `ad_image_placements`
 
 - **Columns:** `id`, `tenant_id` fk, `variant_id` fk, `media_asset_id`
-  fk, `format`, `crop_mode`, `crop_x`, `crop_y`, `crop_width`,
-  `crop_height` (0–1, null when `full`), `focal_x`, `focal_y` (0–1),
-  `position`, `media_caption`
-- **Enums:** `format` → same as `ad_variants.format`; `crop_mode` →
-  `full` / `rect`
+  fk, `crop_mode`, `crop_x`, `crop_y`, `crop_width`, `crop_height`
+  (0–1, null when `full`), `focal_x`, `focal_y` (0–1), `position`,
+  `media_caption`
+- **Enums:** `crop_mode` → `full` / `rect`
 - **Written by:** `GenerateAdDraft`; `UpdateAdVariant`
   (`PATCH /v1/ads/{ad_id}/variants/{variant_id}`)
 - **Notes:** Crops are non-destructive. The source media asset is never
   modified. Light cleanup inserts a media-library child, then this row
-  points at the copy.
+  points at the copy. Format is `ad_variants.format` only. Omit
+  `media_caption` on owner HTTP (generate/export notes).
 
 ### `ad_lead_forms`
 
@@ -140,9 +142,10 @@ variant.
 ### `ad_reviews`
 
 - **Columns:** `id`, `tenant_id` fk, `ad_id` fk, `actor`, `transition`,
-  `note` nullable, timestamps
+  timestamps
 - **Written by:** `ApproveAd`; `ArchiveAd`; `UnarchiveAd`
-- **Notes:** Review/approval trail. Not `review_status` on `ads`.
+- **Notes:** Review/approval trail. Actor + transition only. Not
+  `review_status` on `ads`.
 
 ## Indexes
 

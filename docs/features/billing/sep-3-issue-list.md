@@ -45,14 +45,6 @@ deferred.
   Comment: “spent this period” needs a floor. Name the query (latest
   included usage credit `period_started_at`) in `api.md`.
 
-## Actually drop (onboarding-owned)
-
-- **3. Activation DTO leftovers with no reader**
-  Comment: `failure_reason`, `activated_at`, `failed`,
-  `WebsiteActivationStatusRead.checkout_url`. Tracked as onboarding
-  item 8. This spec keeps `refunded` (ADR 20, money-only) and
-  `stripe_events.processed`.
-
 ## False alarms (closed)
 
 - **6. Subscription lifecycle vs “activation-only Stripe”** — ADR 5,

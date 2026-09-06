@@ -22,6 +22,7 @@ new entries with the next number, the area, and the date.
 
 3. **Do not commit to Clerk Billing yet** — Already decided in 08. Optimistic
    subscription status in Postgres; refresh when expected. (2026-08-29)
+   - 2026-09-06: “in 08” is website activation, now 09.
 
 4. **Onboarding is not billed** — Including the onboarding guide. Still record
    `ai_generations`. (2026-08-29)
@@ -79,6 +80,8 @@ new entries with the next number, the area, and the date.
       Deadline job **retrieves** Stripe before `UnpublishWebsite`. Unpublish
       walks every website (ADR 16). Nested publication HTTP is
       `/v1/websites/{website_prefix}/publications`.
+    - 2026-09-06: “Not 08” in the 2026-08-29 prose is website activation,
+      now 09. Unpublish still does not un-activate the tenant.
 
 12. **Change plan and cancel are Usage & billing** — Not the placis.com Pricing
     grid and not predecessor dashboard Usage & billing copy. Cancel is

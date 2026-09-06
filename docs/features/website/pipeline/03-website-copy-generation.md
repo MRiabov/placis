@@ -4,22 +4,20 @@ Async River job after 02. Writes headlines, body, CTAs, SEO into
 **existing** website slots. Same website editor tools as the CMS,
 **continuous + instant apply**. Distinct from onboarding
 [07 contractor copy improvement](../../onboarding/pipeline/07-contractor-copy-improvement.md)
-(the contractor’s Assistant prompts). Does not block 09. Wait teaser waits
-until the **home** website page has copy, or the wait cap — not the full 03
-job. Other website pages finish in parallel (including after wait-end).
+(the contractor’s Assistant prompts). Other website pages finish in
+parallel (including after wait-end).
 
-Onboarding [06](../../onboarding/pipeline/06-website-copy-generation.md) is
-the thin trigger (onboarding session / DAG / unpaid thread lock).
+Onboarding [06](../../onboarding/pipeline/06-website-copy-generation.md)
+owns enqueue, the `website_id` lock, wait teaser, unpaid thread, leftover
+after 09, and that this job must not block 09. River unique on
+`website_id`: [jobs.md](../jobs.md#website_copy_generation).
 
 ## Trigger
 
-02 succeeded. One River job kind `website_copy_generation`. Lock key:
-`website_id`. A second start for that website is **409** from River
-unique-insert on that key (do not HTTP-check before insert). While unactivated,
-Website copy generation also holds `assistant.runs` `running` on the
-onboarding-website-editor thread ([website editor](../../onboarding/website-editor.md)). After Website activation
-that lock must not sit on CMS `assistant.runs`; leftover copy generation is
-River-only on `website_id`.
+02 succeeded. CMS `POST /v1/websites` **inserts** this job when create
+ships. Onboarding lock / wait teaser / unpaid `assistant.runs` /
+leftover-after-09 / must-not-block-09:
+[06](../../onboarding/pipeline/06-website-copy-generation.md).
 
 ## Pre
 
@@ -56,9 +54,9 @@ River-only on `website_id`.
 - Write R2, convert WebP, or purge (that is 04).
 - Extra screenshot tool. First view and `update_slot` already return a
   website image render from `websiteRender`.
-- Block 09.
-- Wait past the wait-teaser cap to “finish” before the website preview can
-  exist.
+- Re-specify onboarding lock, wait teaser, unpaid thread, leftover after
+  09, or must-not-block-09 here (that is
+  [06](../../onboarding/pipeline/06-website-copy-generation.md)).
 - Supersede a shared preview website address (03 does not change
   `website_prefix` or replace 08’s row).
 - Set website slot `approved`. Website publication is website-level, not
@@ -70,10 +68,7 @@ River-only on `website_id`.
   heading that is only `VAT {{vat_number}}`). Leave those details on
   exact labeled website slots
   ([variables.md](../variables.md#optional-omit)).
-- Wait for pay / 09. After 09 the same job **continues** on the same
-  `tenant_id` as River-only (no `assistant.runs`, no new thread items). Do
-  not cancel 03 at pay. CMS PATCH / assistant HTTP are **not** 409 because
-  this job is running. Same website-slot overlap after pay is last-write /
+- Same website-slot overlap after pay is last-write /
   `edit_history_conflict`.
 - Run at business lookup. Not on every later 02 event.
 
@@ -214,8 +209,8 @@ as this job continues.
 
 ## Invariants
 
-- Lock = `website_id` before and after 09. While unactivated, also
-  `assistant.runs` unique running. After 09, not on CMS `assistant.runs`.
+- Onboarding lock / leftover after 09:
+  [06](../../onboarding/pipeline/06-website-copy-generation.md).
 - No `create_page`. No `update_reviews`.
 - Detail tokens that should stay reusable stay in the prose.
 - Does not set website slot `approved`.

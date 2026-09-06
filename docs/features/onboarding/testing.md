@@ -735,8 +735,7 @@ Clerk JWT. No `frontend-3`.
 
 #### Verify
 
-Response `WebsiteActivationStatusRead` (`payment_status`,
-`checkout_url` if still needed).
+Response `WebsiteActivationStatusRead` (`payment_status` only).
 
 #### Mocked
 

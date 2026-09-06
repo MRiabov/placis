@@ -90,3 +90,6 @@ decision + date) instead of silently replacing it.
    Trails stay on the owning feature (`business_profile_edits`, website
    `edit_history`, `ad_reviews`, `ai.ai_generations`). Specs that still name
    `audit_events` are a follow-up, not new identifiers. [audit](audit.md). (2026-09-06)
+   - 2026-09-06: Leftover `audit_events` identifiers were retargeted to the
+     owning feature trails (`website_publications`, `website_activations`,
+     `ad_reviews`, `files` on download). Do not reintroduce `audit_events`.

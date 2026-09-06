@@ -99,7 +99,7 @@ Platform admins work across tenants through Clerk's **native
 impersonation** in prod (sign in as a contractor from the Clerk
 Dashboard or Backend API, which records an `actor` on the Clerk
 session). Deferred as a Placis product; Placis does not build its own
-mechanism or write `audit_events` for it.
+mechanism.
 
 - [architecture.md](architecture.md) — named functions, locators, `GetMe`
 - [testing.md](testing.md) — humatest tenancy, two-tenant, Vitest, Playwright

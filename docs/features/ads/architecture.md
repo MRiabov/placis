@@ -19,7 +19,7 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   ([04](ad-generation/pipeline/04-export-ad-set.md))
 
 CMS HTTP: one function per Routes verb+noun (`ListAds`, `GetAd`,
-`UpdateAd`, `DeleteAd`, `ArchiveAd`, `UnarchiveAd`, `ListAdVariants`,
+`UpdateAd`, `DeleteAd`, `ArchiveAd`, `UnarchiveAd`,
 `UpdateAdVariant`, `RewriteAdCopy`, `GetAdSet`, …). Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
 Prompts: `internal/ads/generation/prompts.yaml` (`prompt_id=ads_generate` /
