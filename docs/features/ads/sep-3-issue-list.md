@@ -56,6 +56,28 @@ posting. Bold numbers are original audit ids (not compacted).
   is a New-ad-leads count that links to Leads (ADR 41). Ingest later.
   Closed: 2026-09-04.
 
+- **9. `ad_reviews.note`**
+  Comment: insert is actor + transition only; no DTO. Dropped the
+  column.
+  Closed: 2026-09-06.
+
+- **11. `AdImagePlacementRead.media_caption`**
+  Comment: media library omits media caption on owner HTTP (ADR 13).
+  Kept the **column** (generate/export notes). Dropped the DTO field.
+  Closed: 2026-09-06.
+
+- **12. `ad_image_placements.format`**
+  Comment: ADR 32: one ad, one format. Renderer uses
+  `ad_variants.format`. Dropped the placement column (and
+  `AdImagePlacementRead.format`). One-image ads still store format on
+  the stub variant from create.
+  Closed: 2026-09-06.
+
+- **14. `GET /v1/ads/{ad_id}/variants`**
+  Comment: `GET /v1/ads/{ad_id}` already hydrates `variant`. Dropped
+  the route; tests re-read via the ad GET.
+  Closed: 2026-09-06.
+
 ## Doc gap
 
 - **4. Connect Meta / Connect Google Ads**
@@ -110,25 +132,6 @@ posting. Bold numbers are original audit ids (not compacted).
   Comment: ADR 31 needs `base_updated_at` on mutates. Write type for
   placements; shared conflict-token request (not a DELETE body).
   Action: write DTOs.
-
-## Actually drop
-
-- **9. `ad_reviews.note`**
-  Comment: insert is actor + transition only; no DTO. Drop the
-  column.
-
-- **11. `AdImagePlacementRead.media_caption`**
-  Comment: media library omits media caption on owner HTTP (ADR 13).
-  Keep the **column** (generate/export notes). Drop the DTO field.
-
-- **12. `ad_image_placements.format`**
-  Comment: ADR 32: one ad, one format. Renderer uses variant format.
-  Action: drop the placement column.
-
-- **14. `GET /v1/ads/{ad_id}/variants`**
-  Comment: `GET /v1/ads/{ad_id}` already hydrates `variant`. No
-  screen needs the extra GET.
-  Action: drop the route; tests re-read via the ad GET.
 
 ## False alarms (closed)
 

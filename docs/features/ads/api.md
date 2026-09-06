@@ -49,7 +49,7 @@ Extra keys 4xx. List returns `AdRead[]`.
 | `AdVariantRead` | `id`, `format`, `status`, `placements: []AdImagePlacementRead` | Nested on `AdRead.variant` |
 | `AdVariantUpdate` | `base_updated_at`, `placements: []AdImagePlacementRead` | Crop / swap / order |
 | `AdCopyVariantRead` | `headline`, `primary_text`, `description`, `cta_label`, `source` | Nested on `AdRead.copy` |
-| `AdImagePlacementRead` | `id`, `media_asset_id`, `format`, `crop_mode`, `crop_x`, `crop_y`, `crop_width`, `crop_height`, `focal_x`, `focal_y`, `position`, `media_caption` | One placement |
+| `AdImagePlacementRead` | `id`, `media_asset_id`, `crop_mode`, `crop_x`, `crop_y`, `crop_width`, `crop_height`, `focal_x`, `focal_y`, `position` | One placement; omit `media_caption`; format is `AdVariantRead.format` |
 | `AdRewriteRequest` | `base_updated_at`, `field`, `prompt`, `selection_start`, `selection_end` | `field` is `headline` / `primary_text`; omit selection = whole field |
 
 ### Ad set
@@ -82,7 +82,6 @@ suggested ad lead form title (Review copy, [ADR 38](ad-generation/ADR.md)).
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `GET /v1/ads/{ad_id}/variants` | workspace | | `AdVariantRead` | `ad_variants`, `ad_image_placements` | | One row | `404` | Multi-format list |
 | `PATCH /v1/ads/{ad_id}/variants/{variant_id}` | Review crop / swap | `AdVariantUpdate` | `AdVariantRead` | `ad_variants`, `ad_image_placements` | `ad_image_placements`, `ads.updated_at` | After media library cleanup, retarget `media_asset_id` | `409` | `POST …/cleanup` |
 | `POST /v1/ads/{ad_id}/variants/{variant_id}/rewrite` | Review inline AI assistance | `AdRewriteRequest` | `AdCopyVariantRead` | `ad_copy_variants` | `ad_copy_variants`, `ai_generations`, `ads.updated_at`, `ai_use_ledger_entries` | **calls** `RewriteAdCopy`; `bill_usage=billed` (`usage_category=text`); `thread_kind=ads_inline_assistance`; omit selection = whole field | `400` empty prompt; `409`; `402 usage_credit_exhausted` | Rewrite `cta_label` / short label; `/regenerate` |
 | `POST /v1/ads/{ad_id}/generate` | Create ad and generate; Generate again | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `jobs` (`ads_generate`) | **calls** `GenerateAdDraft`; remaining 0 → **402** before enqueue; `bill_usage=billed` on the job generate; 409 while that job is pending/running | `409`; empty format; `402 usage_credit_exhausted` | Write `ad_ready_to_post` |
@@ -139,3 +138,5 @@ prompted it. See [03](ad-generation/pipeline/03-approve-ad.md).
   deferred; [ADR 40](ad-generation/ADR.md))
 - `GET /v1/offers`
 - `GET /v1/locations`
+- `GET /v1/ads/{ad_id}/variants` (hydrate `AdRead.variant` on
+  `GET /v1/ads/{ad_id}`)

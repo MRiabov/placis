@@ -34,7 +34,7 @@ Download also packs a zip.
    button label, notes for this ad's format.
 3. Suggested ad lead form fields (title and include flags).
 4. Mapping of each output image to its source media asset, crop, and
-   format.
+   `ad_variants.format`.
 5. Download: zip in `files` (`visibility=private`); Response
    `AdDownloadRead.url` is the signed URL
    ([files and S3](../../../../infrastructure/files-and-s3.md)).
