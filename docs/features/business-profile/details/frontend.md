@@ -16,8 +16,8 @@ Related docs:
 
 The Details view at `/cms/details`. The heading is **Business details**. How the
 owner reaches it: [The CMS (sidebar + main area)](../../../general-architecture/cms/frontend.md). Projects:
-[projects frontend](../projects/frontend.md). Certifications and reviews:
-[certifications and reviews frontend](../certifications-and-reviews/frontend.md). Media library:
+[projects frontend](../projects/frontend.md). Certifications and reviews: [reviews frontend](../reviews/frontend.md). Media
+library:
 [media library](../../other/media/README.md).
 
 Loading placeholders: every screen, per field / row — not a whole-panel swap

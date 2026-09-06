@@ -353,7 +353,7 @@ rewriting history.
 | Ads | [frontend.md](features/ads/ad-generation/frontend.md) | CMS record, decision 5–6 | |
 | Business details | [frontend.md](features/business-profile/details/frontend.md) | [design decision record](features/business-profile/details/design-decision-record.md) | |
 | Projects | [frontend.md](features/business-profile/projects/frontend.md) | [design decision record](features/business-profile/projects/design-decision-record.md) | [design.md](features/business-profile/projects/design.md) |
-| Certifications and reviews | [frontend.md](features/business-profile/certifications-and-reviews/frontend.md) | [design decision record](features/business-profile/certifications-and-reviews/design-decision-record.md) | |
+| Certifications and reviews | [frontend.md](features/business-profile/reviews/frontend.md) | [design decision record](features/business-profile/reviews/design-decision-record.md) | |
 | Assistant overlay | | [design decision record](features/assistant/design-decision-record.md) | |
 | Billing / usage (stub) | [frontend.md](features/billing/frontend.md) | [design decision record](features/billing/design-decision-record.md) | |
 

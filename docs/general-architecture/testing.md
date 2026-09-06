@@ -183,7 +183,7 @@ integration tests pair
 - [auth](../infrastructure/tenancy/testing.md)
 - [Details](../features/business-profile/details/testing.md)
 - [Projects](../features/business-profile/projects/testing.md)
-- [Certifications and reviews](../features/business-profile/certifications-and-reviews/testing.md) — screen pin / ranking; HTTP 1:1 is Details
+- [Reviews](../features/business-profile/reviews/testing.md) — screen pin / ranking; HTTP 1:1 is Details
 - [Placis website](../features/placis-website/testing.md) — static origin only (no Go / Postgres)
 
 ## Cross-tenant isolation

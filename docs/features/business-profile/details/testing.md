@@ -11,7 +11,7 @@ no Go). Persist names tables from [persistence.md](persistence.md)
 docs PR.
 
 Certifications and reviews HTTP 1:1 lives here (ADR 7), not in
-[certifications-and-reviews/testing.md](../certifications-and-reviews/testing.md).
+[reviews/testing.md](../reviews/testing.md).
 
 ## E2E
 

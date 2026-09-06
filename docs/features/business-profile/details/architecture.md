@@ -16,9 +16,9 @@ HTTP (same spelling in spec, Go, and tests), `internal/profile/details/`
 - `UndoBusinessProfileEdit` — **calls** `ApplyBusinessProfileIncrement`
 
 Certifications HTTP: `internal/profile/certifications/`
-([certifications HTTP](../certifications-and-reviews/certifications/api.md)).
+([certifications HTTP](../certifications/api.md)).
 Reviews HTTP: `internal/profile/reviews/`
-([reviews HTTP](../certifications-and-reviews/reviews/api.md)).
+([reviews HTTP](../reviews/api.md)).
 
 Tables: [persistence.md](persistence.md). DTOs and Routes:
 [api.md](api.md). River job kind `reviews_ranking_for_display`:

@@ -49,7 +49,8 @@ These files no longer instruct a port. Implement from that feature’s
 | [CMS](../general-architecture/frontend-debloat.md) | [CMS frontend](../general-architecture/cms/frontend.md) |
 | [details](../features/business-profile/details/frontend-debloat.md) | [details frontend](../features/business-profile/details/frontend.md) |
 | [projects](../features/business-profile/projects/frontend-debloat.md) | [projects frontend](../features/business-profile/projects/frontend.md) |
-| [certifications and reviews](../features/business-profile/certifications-and-reviews/frontend-debloat.md) | [certifications and reviews frontend](../features/business-profile/certifications-and-reviews/frontend.md) |
+| [certifications](../features/business-profile/certifications/frontend-debloat.md) | [reviews frontend](../features/business-profile/reviews/frontend.md) |
+| [reviews](../features/business-profile/reviews/frontend-debloat.md) | [reviews frontend](../features/business-profile/reviews/frontend.md) |
 | [ads](../features/ads/ad-generation/frontend-debloat.md) | [ads frontend](../features/ads/ad-generation/frontend.md) |
 | [leads](../features/other/leads/frontend-debloat.md) | [leads frontend](../features/other/leads/frontend.md) |
 | [media library](../features/other/media/frontend-debloat.md) | [media library](../features/other/media/README.md) |

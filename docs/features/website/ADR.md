@@ -176,9 +176,8 @@ Status: decided (2026-08-16, product owner + engineering).
 
 16. **Certifications and reviews picker is a Profile screen** —
     `/cms/certifications-and-reviews`. Picker rules, top reviews, archive, and
-    certification tables: moved to [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md)
-    (2026-08-27). Layout: that directory’s [design decision record](../business-profile/certifications-and-reviews/design-decision-record.md).
-    (2026-08-20)
+    certification tables: moved to [reviews ADR](../business-profile/reviews/ADR.md) (2026-08-27). Layout:
+    [reviews design decision record](../business-profile/reviews/design-decision-record.md). (2026-08-20)
 
     Unpin/reorder of **top reviews** used to rewrite unpublished
     `website_slot_reviews` from the current top set. (2026-08-20)

@@ -155,7 +155,7 @@ pins.
 
 ETL transform inserts review rows only; it does not rank. Profile does
 not enqueue. Website does not enqueue. Persist columns:
-[certifications-and-reviews ADR](../../business-profile/certifications-and-reviews/ADR.md).
+[reviews ADR](../../business-profile/reviews/ADR.md).
 Job, `thread_kind`, `prompt_id`, I/O:
 [jobs](../../../infrastructure/jobs.md),
 [AI layer](../../../infrastructure/ai/README.md).

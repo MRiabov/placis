@@ -5,9 +5,9 @@ Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
 Live business profile the rest of the app reads. Projects:
 [projects HTTP](../projects/api.md). Certifications:
-[certifications HTTP](../certifications-and-reviews/certifications/api.md).
+[certifications HTTP](../certifications/api.md).
 Reviews:
-[reviews HTTP](../certifications-and-reviews/reviews/api.md).
+[reviews HTTP](../reviews/api.md).
 Onboarding resume is
 [onboarding `GET /v1/onboarding/profile`](../../onboarding/api.md),
 not this resource.
@@ -86,8 +86,8 @@ undone or is not the increment the notification named. Unpaid Revert is
 
 - `/v1/websites/{website_prefix}/editor/business-profile`
 - certifications or reviews HTTP (those Registers:
-  [certifications](../certifications-and-reviews/certifications/api.md),
-  [reviews](../certifications-and-reviews/reviews/api.md))
+  [certifications](../certifications/api.md),
+  [reviews](../reviews/api.md))
 - profile-history / replay HTTP (except
   `POST /v1/business-profile/edits/{id}/undo`)
 - a second Details tool or Details-write HTTP for Ads or the Assistant

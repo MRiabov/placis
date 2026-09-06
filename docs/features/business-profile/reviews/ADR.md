@@ -75,5 +75,5 @@ decision + date) instead of silently replacing the old entry.
    `profile/certifications/` (`/v1/business-profile/certifications`) and
    `profile/reviews/` (`/v1/business-profile/reviews`), not `details/api.md`.
    Frontend modules `cms/profile/certifications/` and `cms/profile/reviews/`
-   compose on `/cms/certifications-and-reviews`. [certifications HTTP](certifications/api.md),
-   [reviews HTTP](reviews/api.md).
+   compose on `/cms/certifications-and-reviews`. [certifications HTTP](../certifications/api.md),
+   [reviews HTTP](api.md).
