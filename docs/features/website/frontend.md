@@ -113,7 +113,7 @@ Two surfaces plus global nav, the open website:
     one. Bar CTAs: show/hide marketing phone, marketing email, and **contact**.
     Do not edit those numbers here. Look (logo, density) is Website styles, not
     this panel. No Add below picker and no depth-2 explainer on this panel.
-  - **Website form** — title, typed fields, privacy notice, `submit_action`.
+  - **Website form** — title, typed fields, privacy notice.
   - **Projects** — website component family `gallery`. The project gallery
     for that
     website section. Title / description / cover stay at `/cms/projects`

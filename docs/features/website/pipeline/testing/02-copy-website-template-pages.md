@@ -40,16 +40,19 @@ kind `website_copy_generation` on this `website_id`. Mapping:
     `{{marketing_email}}`. When the template includes site-wide menus,
     those trees (and `website_urls` for `url` nodes) instead of the
     constant.
-  - `website_forms` / `website_form_fields` / `website_form_field_options`:
+  - `website_forms` / `website_form_fields`:
     present iff the website template has form website sections; `form_key`
-    matches the catalog form key; `tenant_id` matches.
+    matches the catalog form key; `tenant_id` matches. First-pass
+    `field_key`s are the four website-lead columns. Extra catalog field
+    types / options and `submit_action` are ignored.
   - `website_urls`: present iff the template menus have `url` nodes.
   - `website_settings` unchanged from 01 (`website_template_id`,
     `preset_id`).
   - **Must not**: zero `website_slot_reviews`. Zero
     `website_publications`. No slot
     `origin=website_copy_generation` yet. No `edit_history` batch from
-    this copy. No `ai.threads` / `ai_generations` for 01/02.
+    this copy. No `ai.threads` / `ai_generations` for 01/02. No
+    `website_form_field_options`. No `submit_action` column.
   - Same pick + same accepted profile, second tenant (or replay on a
     clean tenant): same `website_pages` paths / `page_type` set and the
     same `website.menus` trees.

@@ -36,7 +36,8 @@ later CMS Publish.
     again.
   - `website_manifest` jsonb on that row is still **tokenized** (Go
     dump): website slots still contain `{{…}}`. HTML is not stored in
-    this jsonb as the resolved website page.
+    this jsonb as the resolved website page. Dump has no root SEO;
+    each `pages[]` item carries that page’s six SEO columns.
   - `website_manifest.website_styles` copies `website_settings`
     (`preset_id` + bounded overrides).
   - Onboarding 08/09 rows are not website-rollback targets (list /

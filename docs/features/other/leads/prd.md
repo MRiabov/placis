@@ -33,8 +33,10 @@ leads, and later pick which website.
 
 1. Not a CRM: no quotes, invoices, jobs, pipelines, or a separate
    detail route.
-2. Extra website-form field answers (`address` / `select` / `date` /
-   `checkbox`) stay a later widen of persistence.
+2. First-pass website forms are the four website-lead columns only
+   (`contact_name`, `marketing_phone`, `marketing_email`, `message`).
+   Extra field types (`address` / `select` / `date` / `checkbox` /
+   `file`) stay a later widen.
 3. Meta ingest of ad leads is later; the table and filter are specified
    now.
 4. No search box, pagination, CSV, or notifications in this spec.

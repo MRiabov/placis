@@ -45,6 +45,8 @@ Strip on/off is a caller flag.
 - Put image files or expiring signed URLs on `websitePublication`.
 - Make onboarding-written rows website-rollback targets
   (`published_by=onboarding`).
+- Bake root-level SEO on `website.v1`. Each website page’s six SEO
+  columns travel on that page only.
 
 ## Do
 
@@ -66,7 +68,9 @@ onboarding 08/09 and later CMS Publish.
    `WebsiteBusinessProfileRead`, `media_asset_urls`, `strip`,
    `website_prefix`, `hostname` (destination `Host`), `version_number`.
    Authenticated internal (shared secret / service binding). Not a live GET.
-   Not public OpenAPI. Not `websiteRender`.
+   Not public OpenAPI. Not `websiteRender`. Each website page in that dump
+   carries that page’s six SEO columns only. No website-level SEO
+   fallback.
 4. Worker resolves website placeholders from that profile (exact match →
    typed value, substring → substituted) and writes HTML to R2. Honor
    `omit_if_unresolved` on that website component contract

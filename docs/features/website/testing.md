@@ -260,7 +260,7 @@ Unpublished 02 rows already present. One owner
 - `include_edit_history=true`: undo stacks present.
 Must not: `/pages/{id}/seo`; `/settings` GET; `/menus` GET;
 return `website_manifest`; both query flags; enqueue 04 from Details
-PATCH. Named **reads** may supplement
+PATCH; embed `media_assets[]`. Named **reads** may supplement
 (`business_profile.business_profiles`,
 `business_profile.business_profile_edits`).
 
@@ -289,7 +289,7 @@ Unpublished 02 rows already present. No `frontend-3`. No Worker.
 `GET /v1/websites/{website_prefix}/editor/pages/{page_id}` shows the dirty-key
 edit. Ack `blockers[]` is that website page (page-scoped). **persists into**
 `website_slots`, `website_sections`, `website_pages`, `website_forms`,
-`website_form_fields`, `website_form_field_options`, `website.menus`,
+`website_form_fields`, `website.menus`,
 `edit_history`, `website_settings.edit_history_head` may supplement. Must not:
 predecessor `POST …/sections` (see [api.md](api.md) overflow).
 

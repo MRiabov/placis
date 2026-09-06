@@ -48,7 +48,7 @@ home gallery, projects website page, categories), and certifications.
 | `{{business_name}}` | display name |
 | `{{trade}}` | primary trade |
 | `{{description}}` | business description |
-| `{{marketing_phone}}`, `{{marketing_email}}`, `{{address}}`, `{{existing_site_url}}` | marketing contact. `{{address}}` is `registered_office` |
+| `{{marketing_phone}}`, `{{marketing_email}}`, `{{address}}` | marketing contact. `{{address}}` is `registered_office` |
 | `{{service_area}}`, `{{service_region}}` | where they work |
 | `{{opening_hours}}` | opening hours |
 | `{{legal_name}}`, `{{company_registration_number}}`, `{{vat_number}}`, `{{registered_office}}` | legal. `{{registered_office}}` is the same column as `{{address}}` |
@@ -83,7 +83,6 @@ Closed set (exact labeled website slots only):
   registry row)
 - `{{opening_hours}}` (drop a whole `Opening hours: {{opening_hours}}`
   website slot, including predecessor substring labels)
-- `{{existing_site_url}}`
 - `{{established_year}}`, `{{incorporation_date}}` (if that website slot
   is the labeled date)
 - `{{logo_url}}` / `{{images.logo}}` (hide the img; do not hide the

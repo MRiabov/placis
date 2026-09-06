@@ -110,7 +110,6 @@ var leftoverTests = []string{
 	"POST /v1/projects/{id}/unarchive",
 	"POST /v1/webhooks/stripe",
 	"POST /v1/website-forms/{form_id}/submissions",
-	"POST /v1/website-forms/{form_id}/uploads",
 	"POST /v1/websites",
 	"POST /v1/websites/{website_prefix}/addresses",
 	"POST /v1/websites/{website_prefix}/editor/pages",
