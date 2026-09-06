@@ -157,7 +157,9 @@ create_section(
 )
 ```
 
-Approved website component only.
+Approved website component only. Must not add a second `page_id` null
+look section that is already a top-menu look or already a footer look on
+that website.
 
 ### `create_page`
 

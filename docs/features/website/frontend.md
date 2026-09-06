@@ -96,8 +96,10 @@ Two surfaces plus global nav, the open website:
   the website editor canvas as a compact **Hidden** block so it can still be
   selected; it is not on the live website. Look (logo, density, colors) is
   **Website styles** on the workspace rail. Content is a **closed union** keyed
-  by **website component** (do not say “section type”):
-  - **Reviews** — the ordered reviews **on this website section**. Add from all
+  by **website component** (do not say “section type”), resolved via
+  **website component family**:
+  - **Reviews** — website component family `reviews`. The ordered reviews
+    **on this website section**. Add from all
     reviews, remove, reorder. Cap is that website component’s max (some layouts
     take 3, others 6 or 8). Immediate unpublished `website_slot_reviews` rewrite
     for **this** website section only. A service website page can use a
@@ -112,8 +114,14 @@ Two surfaces plus global nav, the open website:
     Do not edit those numbers here. Look (logo, density) is Website styles, not
     this panel. No Add below picker and no depth-2 explainer on this panel.
   - **Website form** — title, typed fields, privacy notice, `submit_action`.
-  - **Projects** — the project gallery for that website section. Title /
-    description / cover stay at `/cms/projects` ([projects frontend](../business-profile/projects/frontend.md)).
+  - **Projects** — website component family `gallery`. The project gallery
+    for that
+    website section. Title / description / cover stay at `/cms/projects`
+    ([projects frontend](../business-profile/projects/frontend.md)).
+  - **Certifications** — website component family `certifications`. Website
+    slots
+    (`{{certifications}}` items). The picker stays on Certifications and
+    reviews, not this panel.
   - Everything else — website slots.
   Click an image on the website editor canvas: Content focused on that image
   (website editor image gallery: current thumb, pick from the media library,
