@@ -53,6 +53,8 @@ kind `website_copy_generation` on this `website_id`. Mapping:
     `origin=website_copy_generation` yet. No `edit_history` batch from
     this copy. No `ai.threads` / `ai_generations` for 01/02. No
     `website_form_field_options`. No `submit_action` column.
+    No leftover predecessor `component_id`. No `aliases` on website
+    component contracts. Look `family` is `top_menu` / `footer`.
   - Same pick + same accepted profile, second tenant (or replay on a
     clean tenant): same `website_pages` paths / `page_type` set and the
     same `website.menus` trees.

@@ -11,7 +11,11 @@ asserts name the tables from [persistence.md](persistence.md) (and
 Public and Worker 1:1 HappyPath specs live under `## Integration` (one
 `### TestHappyPath*` per [api.md](api.md) Routes row). **Verify** through
 HTTP. They do not replace this E2E or pipeline Full. **Do not create**
-paths are omitted. Go funcs stay on `leftover_tests.go`.
+paths are omitted. Go funcs stay on `leftover_tests.go`. Catalog
+`component_id` Must not: leftover predecessor IDs; `aliases` on website
+component contracts. Look family Must not: leftover names; use `top_menu` /
+`footer` from
+[catalog.md](catalog.md#website-component-family).
 
 ## E2E
 

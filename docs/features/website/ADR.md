@@ -461,6 +461,12 @@ Status: decided (2026-08-16, product owner + engineering).
     [catalog.md](catalog.md#website-component-family). (2026-09-06)
     Don't say proof: the predecessor lumped family is not a catalog
     family.
+    (2026-09-06): Look family is `top_menu` with preferred IDs
+    `public.top_menu.standard`, `public.top_menu.center_logo`,
+    `public.top_menu.mega_menu`, `public.top_menu.fixed_cta`. Video
+    feature is `public.content.video_feature`. Hero image carousel is
+    `public.hero.image_carousel`. Contracts have no `aliases`. One
+    `component_id` per website component.
 
 35. **First-pass website forms are the four website-lead columns** — A
     website form POST creates a website lead. There is no `submit_action`

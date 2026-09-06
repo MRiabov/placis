@@ -258,17 +258,16 @@ the next `##` heading. It must contain a `| Don't say | Say |` title row, a
 separator row, and at least one `| left | right |` data row. Split left cells on
 ` / `. Parentheticals are stripped from the matched phrase. Unmarked tokens are
 always-ban. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` /
-`(billing)` are
-unqualified only in that feature’s technical docs (not `prd.md`, not
-`frontend.md`) and later `internal/<home>/`. `(website)` also covers
-`apps/contractor-website`. `apps/placis-website` is scanned and is not website
-home. Backticked names and `CMS (in a PRD)` are product-docs only. Leftover
-`(bare)` is always-ban. The last API-ops row is skipped. Covering (the Say
-phrase, plus extra-allowed phrases) still applies when rumdl wrap splits a
-phrase across adjacent lines. A Don't-say / do not say / never say instruction
-still covers the next wrapped line when that line is not a new list item or
-heading. Identifier inflections
-of always-ban and home-scoped phrases (snake, kebab, Pascal, camel) are banned
+`(billing)` are unqualified only in that feature’s technical docs (not `prd.md`,
+not `frontend.md`) and later `internal/<home>/`. `(website)` also covers
+`apps/contractor-website` and `packages/website-components`.
+`apps/placis-website` is scanned and is not website home. Backticked names and
+`CMS (in a PRD)` are product-docs only. Leftover `(bare)` is always-ban. The
+last API-ops row is skipped. Covering (the Say phrase, plus extra-allowed
+phrases) still applies when rumdl wrap splits a phrase across adjacent lines. A
+Don't-say / do not say / never say instruction still covers the next wrapped
+line when that line is not a new list item or heading. Identifier inflections of
+always-ban and home-scoped phrases (snake, kebab, Pascal, camel) are banned
 outside the allowed files, including inside backticks (table names, types,
 paths). Backticks are not an escape. Home-scoped tokens in a `/`-delimited route
 or file path are not flagged (the URL still uses the short word). Always-ban
@@ -283,7 +282,7 @@ list). `**/testdata/**` is skipped (checker fixtures). Worked examples:
   apps.
 - Token **with** `(website)` (or another home): that feature’s technical docs
   only. PRDs, UI specs, and other features use the Say. `(website)` includes
-  `apps/contractor-website`.
+  `apps/contractor-website` and `packages/website-components`.
 
 #### Pre-commit vs CI
 
@@ -291,12 +290,16 @@ list). `**/testdata/**` is skipped (checker fixtures). Worked examples:
   `.git/hooks`.
 - Pre-commit: `.pre-commit-config.yaml` runs `go run ./cmd/ci/check-dont-say` on
   staged files under `AGENTS.md`, `docs/`, `internal/`, `cmd/`,
-  `catalog/`, `apps/contractor-website`, `apps/placis-website`, `scripts/`, and
-  `apps/demo/` (Go's build cache keeps this cheap). Markdown, Go, and JavaScript
+  `catalog/`, `apps/contractor-website`, `apps/placis-website`, `scripts/`,
+  `apps/demo/`, and `packages/website-components` (Go's build cache keeps this
+  cheap). Markdown, Go, and JavaScript
   (`.js` / `.mjs`) are scanned in those trees. TypeScript (`.ts` / `.tsx`) is
-  scanned in the look app (`apps/demo/`, exported `src/`) only; `frontend-3`
+  scanned in the look app (`apps/demo/`, exported `src/`) and in
+  `packages/website-components` without `--frontend`; that package also scans
+  `.json` and `.css`. `packages/website-components/src/blueprints/` is skipped
+  (leftover scrap dumps). `frontend-3`
   stays off until `--frontend`. If `docs/glossary.md` is staged, the checker
-  scans those trees in full. Paths outside those trees (including `packages/`)
+  scans those trees in full. Paths outside those trees
   are ignored even when filenames are passed in. A copied look checkout
   (`demo.placis.com`) uses the same checker with `--glossary glossary.md` over
   `src/`.

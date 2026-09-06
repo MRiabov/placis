@@ -1752,10 +1752,10 @@ component).
 #### Website component family
 
 The catalog grouping of a website component (`reviews`, `certifications`,
-`hero`, …). Distinct from Website section.
+`top_menu`, `hero`, …). Distinct from Website section.
 
 In code: `family` on the website component contract. Never say **proof** for
-this grouping.
+this grouping. Look family is `top_menu`, not a leftover predecessor name.
 
 ---
 
@@ -1853,7 +1853,8 @@ next `##` heading. Unmarked =
 nowhere. `(website)` / `(ads)` / `(onboarding)` / `(media)` / `(details)` /
 `(billing)` / `(assistant)` / `(projects)` = unqualified only in that feature’s
 technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
-`(website)` also covers `apps/contractor-website`. Other features use the Say.
+`(website)` also covers `apps/contractor-website` and
+`packages/website-components`. Other features use the Say.
 `(in a PRD)` is only for `CMS`. Leftover `(bare)` is unmarked. Worked examples:
 `cmd/ci/check-dont-say/ref.md`.
 
@@ -1985,7 +1986,9 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 - Domain words in PRDs, UI, **and in code** when they name that concept.
   Internal names only for a different concept (technical docs and code).
 - Unqualified Domain words (`page`, `section`) only in that feature’s technical
-  docs and package. Other features use the Say (`website page`). Internal `slot`
+  docs and package (`docs/features/website`, `internal/website`,
+  `apps/contractor-website`, `packages/website-components`). Other features
+  use the Say (`website page`). Internal `slot`
   / website slot only in website technical docs and code — never owner copy or
   PRDs. Banned synonyms (`slug`, `skeleton`, `blueprint`) appear nowhere,
   including code.

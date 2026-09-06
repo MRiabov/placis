@@ -76,30 +76,43 @@ only.
 
 `family` is catalog metadata on the website component contract, not a
 `website_sections` column. Preferred `component_id` is
-`public.{family}.{variant}`. The catalog dump uses these preferred IDs.
-Don't say proof: leftover predecessor IDs are not preferred IDs.
+`public.{family}.{variant}`. The catalog dump uses these preferred IDs
+only. Contracts have no `aliases`. One `component_id` per website
+component. Don't say proof: leftover predecessor IDs are not preferred
+IDs.
 
 | Family | Preferred IDs | Content |
 | --- | --- | --- |
 | `reviews` | `public.reviews.cards`, `public.reviews.panel` | Reviews (`website_slot_reviews`; cap from that website component) |
 | `certifications` | `public.certifications.row` | Website slots (`{{certifications}}` items). Picker stays on Certifications and reviews |
-| `content` | existing `public.content.*`, plus `public.content.logo_strip`, `public.content.leadership_grid`, `public.content.metric_mosaic`, `public.content.bar` | Website slots |
-| `gallery` | existing `public.gallery.*` | Projects gallery |
-| footer look | existing `public.footer.*` | Top menu / footer trees (look) |
-| top-menu look | existing top-menu look contracts | Top menu / footer trees (look) |
+| `content` | `public.content.intro_metrics`, `public.content.system_cards`, `public.content.image_tiles`, `public.content.metric_mosaic`, `public.content.intro`, `public.content.split`, `public.content.story_split`, `public.content.story_text`, `public.content.feature_grid`, `public.content.bar`, `public.content.logo_strip`, `public.content.leadership_grid`, `public.content.video_feature` | Website slots |
+| `gallery` | `public.gallery.project_showcase`, `public.gallery.edge_grid`, `public.gallery.grid`, `public.gallery.poster_grid` | Projects gallery |
+| `footer` | `public.footer.multi_column`, `public.footer.logo_nav`, `public.footer.standard`, `public.footer.centered_social_nav` | Footer look (`page_id` null) |
+| `top_menu` | `public.top_menu.standard`, `public.top_menu.center_logo`, `public.top_menu.mega_menu`, `public.top_menu.fixed_cta` | Top-menu look (`page_id` null) |
+| `hero` | `public.hero.image`, `public.hero.image_carousel`, `public.hero.scroll_story`, `public.hero.type_first`, `public.hero.type_first_trust`, `public.hero.overlay_title`, `public.hero.form` | Website slots |
+| `services` | `public.services.grid`, `public.services.tabs`, `public.services.cards`, `public.services.simple_list`, `public.services.sector_tabs` | Website slots |
+| `form` | `public.form.lead`, `public.form.callback_bar`, `public.form.project_planner` | Website forms |
+| `contact` | `public.contact.panel`, `public.contact.cta_panel`, `public.contact.form_location` | Website slots |
+| `faq` | `public.faq.accordion`, `public.faq.list` | Website slots |
+| `process` | `public.process.steps` | Website slots |
+| `cta` | `public.cta.band` | Website slots |
+| `privacy` | `public.privacy.notice` | Website slots |
+| `marquee` | `public.marquee.services` | Website slots |
+| `statement` | `public.statement.words` | Website slots |
+| `service_area` | `public.service_area.coverage`, `public.service_area.region_map_stats` | Website slots |
 
-`public.content.bar` keeps aliases `public.trust.v1` and
-`public.service_summary.v1`. Display names: Reviews, Reviews,
-Certifications. Projects stay `gallery`. Do not invent Domain terms for
-logo strip, leadership grid, metric mosaic, or bar.
+Display names: Reviews, Reviews, Certifications. Projects stay
+`gallery`. Do not invent Domain terms for logo strip, leadership grid,
+metric mosaic, bar, or video feature. Must not: persist `aliases` on a
+website component contract; use a leftover predecessor `component_id`.
 
 **Uniqueness** (join `component_id` to the contract; do not persist
 `family`):
 
-- Look sections (`page_id` null): at most one top-menu look and one
-  footer look **per website**. `CopyWebsiteTemplatePages` and
-  `create_section` must not add a second top-menu look or a second
-  footer look.
+- Look sections (`page_id` null): at most one top-menu look (`family`
+  `top_menu`) and one footer look (`family` `footer`) **per website**.
+  `CopyWebsiteTemplatePages` and `create_section` must not add a second
+  top-menu look or a second footer look.
 - `reviews`, `certifications`, and `content` are **not** unique. A
   website page may have a certifications website section **and** a
   reviews website section. Several reviews website sections are allowed;
