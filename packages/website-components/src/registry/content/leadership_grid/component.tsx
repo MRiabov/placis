@@ -2,7 +2,7 @@ import { sectionPadding } from "../../../theme";
 import type { PublicSiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function ProofLeadershipGrid({
+export default function LeadershipGrid({
   props,
   theme,
 }: PublicSiteComponentProps) {

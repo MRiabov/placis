@@ -106,7 +106,7 @@
           ]
         },
         {
-          "component_id": "public.proof.testimonials",
+          "component_id": "public.reviews.cards",
           "props": {
             "anchor_id": "testimonials",
             "title": "WHAT PEOPLE SAY",

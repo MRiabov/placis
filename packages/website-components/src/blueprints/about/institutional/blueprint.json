@@ -161,7 +161,7 @@
           ]
         },
         {
-          "component_id": "public.proof.leadership_grid",
+          "component_id": "public.content.leadership_grid",
           "props": {
             "anchor_id": "leadership",
             "title": "Leadership"
@@ -175,7 +175,7 @@
           ]
         },
         {
-          "component_id": "public.proof.logo_strip",
+          "component_id": "public.content.logo_strip",
           "props": {
             "anchor_id": "clients",
             "layout": "grid",

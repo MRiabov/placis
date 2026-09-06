@@ -1,9 +1,9 @@
 {
-  "id": "public.proof.metric_mosaic",
+  "id": "public.content.metric_mosaic",
   "aliases": [],
   "schema_version": 1,
   "display_name": "Metric Mosaic",
-  "family": "proof",
+  "family": "content",
   "variant": "metric_mosaic",
   "props_schema": {
     "type": "object",

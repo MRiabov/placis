@@ -1,7 +1,7 @@
 import type { PublicSiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function ProofAccreditations({
+export default function CertificationsRow({
   props,
 }: PublicSiteComponentProps) {
   const items = asRecords(props.items);
@@ -13,7 +13,7 @@ export default function ProofAccreditations({
       <div className="public-section-inner">
         <div className="public-section-header">
           <p className="public-section-label public-section-label--light">
-            {text(props.eyebrow, "Accreditations")}
+            {text(props.eyebrow, "Certifications")}
           </p>
           <h2>{text(props.title, "Standards & Certifications")}</h2>
         </div>
@@ -21,20 +21,20 @@ export default function ProofAccreditations({
           {items.map((item) => {
             const src = imageUrl(item.image_url ?? item.url);
             return (
-              <article key={text(item.title ?? item.label, "Accreditation")}>
+              <article key={text(item.title ?? item.label, "Certification")}>
                 <div className="public-accreditations__logo">
                   {src ? (
                     <img
                       alt={text(
                         item.alt_text,
-                        text(item.title ?? item.label, "Accreditation"),
+                        text(item.title ?? item.label, "Certification"),
                       )}
                       src={src}
                     />
                   ) : null}
                 </div>
-                <p>{text(item.title ?? item.label, "Accreditation")}</p>
-                <span>{text(item.description, "Source-backed proof")}</span>
+                <p>{text(item.title ?? item.label, "Certification")}</p>
+                <span>{text(item.description, "Trade certification")}</span>
               </article>
             );
           })}

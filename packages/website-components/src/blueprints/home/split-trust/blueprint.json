@@ -269,7 +269,7 @@
           ]
         },
         {
-          "component_id": "public.proof.accreditations",
+          "component_id": "public.certifications.row",
           "props": {
             "anchor_id": "certifications",
             "eyebrow": "Accreditations",
@@ -336,7 +336,7 @@
           ]
         },
         {
-          "component_id": "public.proof.review_panel",
+          "component_id": "public.reviews.panel",
           "props": {
             "anchor_id": "reviews",
             "eyebrow": "Our Reputation",

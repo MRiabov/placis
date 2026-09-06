@@ -15,8 +15,8 @@ const contactFormComponentIds = new Set([
 ]);
 
 const reviewComponentIds = new Set([
-  "public.proof.review_panel",
-  "public.proof.testimonials",
+  "public.reviews.panel",
+  "public.reviews.cards",
 ]);
 
 function hasWord(value, words) {
