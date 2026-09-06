@@ -95,10 +95,11 @@ is `map[string]any`, `json.RawMessage`, `object` with
 `additionalProperties: true`, or a `string` the UI `JSON.parse`s is a failed
 contract.
 
-Huma will emit unconstrained objects if a DTO uses them. That is not a Huma gap.
-CI already requires minLength/maxLength/enum ([ci-cd.md](ci-cd.md)). That does **not**
-catch those four shapes. When Go exists, the contract check must fail them on
-huma DTOs, including SSE event structs. Persistence `jsonb` columns stay.
+Huma will emit unconstrained objects if a DTO uses them. That is not a
+Huma gap. CI already requires minLength/maxLength/enum
+([ci-cd.md](ci-cd.md)). That does **not** catch those four shapes.
+`cmd/ci/check-api-dirs` fails them on huma DTOs, including SSE event
+structs. Persistence `jsonb` columns stay.
 
 Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 `api.md` files repeat only their own rows.

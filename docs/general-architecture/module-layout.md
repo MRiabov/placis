@@ -165,11 +165,12 @@ feature’s `store/`.
   interview (no Do). `build-profile.md` → `build_profile.go`. Pipeline
   steps: number and architecture name together (`04 Website
   publication`). Go `pipeline/` is Dos / River workers only — no
-  `huma.Register`, no SSE.
+  `huma.Register`, no SSE. CI: [API home check](ci-cd.md).
 - **`httpapi` is mux only.** Features do not import it. Only `cmd/api`
-  imports `infrastructure/httpapi`. Huma DTOs live next to `Register`
-  (`dto.go` until split to `api/dto/` at ~800). Do not add
-  `internal/dto/` or dump DTOs into `httpapi`.
+  imports `infrastructure/httpapi`. Huma DTOs live next to `Register` in
+  `dto.go` until `api/dto/` at ~800, **not in the Register files**. Do
+  not add `internal/dto/` or dump DTOs into `httpapi`. CI:
+  [API home check](ci-cd.md).
 - **Auth mode helpers** live in `infrastructure/tenancy/auth/`. Every
   `Register` **picks** a helper matching [api.md](api.md) **Auth modes**.
   `pipeline/` receives `tenantID` already decided.
@@ -177,6 +178,7 @@ feature’s `store/`.
   feature. Pipeline **calls** sqlc in that feature’s `store/`; no SQL in
   `pipeline/` step files. Callers **call** `profile` `service.go` (and
   `profile/media`); they do not import another feature’s `store/`.
+  CI: [API home check](ci-cd.md) and [import DAG](ci-cd.md).
 - **Jobs:** no `internal/jobs/`. Step workers in that step’s
   `pipeline/` file. Leftovers (`describe_image`, `scheduled_etl`,
   compaction, sweeps) are `jobs.go` in the owning feature. Schema `jobs`

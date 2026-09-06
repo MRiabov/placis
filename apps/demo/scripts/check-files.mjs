@@ -3,8 +3,8 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Look app hard-fails at 800; repo-wide hard error is 1200.
-// Decision: docs/general-architecture/ci-cd.md (Decisions 1).
+// Look-export shim (demo.placis.com has no Go). Parent CI is
+// cmd/ci/check-file-size. Decision: docs/general-architecture/ci-cd.md.
 const maxLines = 800;
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "src");
 

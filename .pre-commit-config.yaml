@@ -54,3 +54,21 @@ repos:
         entry: go run ./cmd/ci/check-docs-code
         pass_filenames: false
         files: '^docs/.*\.md$|^internal/|^cmd/|^openapi\.json$|^apps/contractor-website/openapi\.json$'
+      - id: check-api-dirs
+        name: API home check
+        language: system
+        entry: go run ./cmd/ci/check-api-dirs
+        pass_filenames: true
+        files: '^internal/.*\.(go|sql)$|^cmd/api/|^migrations/.*\.sql$|^frontend-3/.*\.(ts|tsx)$|^apps/demo/.*\.(ts|tsx)$|^cmd/ci/check-api-dirs/'
+      - id: check-import-dag
+        name: Import DAG check
+        language: system
+        entry: go run ./cmd/ci/check-import-dag
+        pass_filenames: true
+        files: '^internal/.*\.go$|^cmd/api/|^frontend-3/.*\.(ts|tsx)$|^cmd/ci/check-import-dag/'
+      - id: check-file-size
+        name: File-size and folder fan-out
+        language: system
+        entry: go run ./cmd/ci/check-file-size --all
+        pass_filenames: false
+        always_run: true

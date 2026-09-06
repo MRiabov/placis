@@ -46,11 +46,13 @@ terms (hyphenated). No `pipeline/`, `service/`, `knowledge/`,
 the huma DTO layer (do not hand-write `dto.ts` or hand-split that dump at
 800). HTTP I/O is `src/shared/api.ts`; nest to `shared/api/` only at
 ~800. Feature folders do not grow a second openapi-fetch client.
+Call sites are `src/features/**` only (`src/routes/` and `shared/ui/`
+must not import that openapi-fetch client). CI: [API home check](ci-cd.md).
 `src/routes/` are thin TanStack file routes that **import** feature
 screens.
 
 **Import DAG:** onboarding **imports** `cms/` (mostly **Profile**).
-`cms/` does not import onboarding.
+`cms/` does not import onboarding. CI: [import DAG check](ci-cd.md).
 
 ## `src/` tree
 

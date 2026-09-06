@@ -35,7 +35,7 @@ jobs:
           cache-dependency-path: go.mod
 
       - name: Test checkers
-        run: go test ./cmd/ci/check-dont-say ./cmd/ci/docnames ./cmd/ci/check-docs-code ./cmd/ci/check-pipeline-tables ./cmd/ci/check-happy-path
+        run: go test ./cmd/ci/check-dont-say ./cmd/ci/docnames ./cmd/ci/check-docs-code ./cmd/ci/check-pipeline-tables ./cmd/ci/check-happy-path ./cmd/ci/check-api-dirs ./cmd/ci/check-import-dag ./cmd/ci/check-file-size
 
       - name: Don't-say glossary check
         run: go run ./cmd/ci/check-dont-say --all
@@ -54,3 +54,12 @@ jobs:
 
       - name: HappyPath OpenAPI 1:1
         run: go run ./cmd/ci/check-happy-path --public
+
+      - name: API home check
+        run: go run ./cmd/ci/check-api-dirs --all
+
+      - name: Import DAG check
+        run: go run ./cmd/ci/check-import-dag --all
+
+      - name: File-size and folder fan-out
+        run: go run ./cmd/ci/check-file-size --all
