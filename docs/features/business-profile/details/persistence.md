@@ -218,7 +218,7 @@ profile, to show Profile history, or to reconstruct the profile as of
 - **Written by:** `UpdateBusinessProfileReviews`;
   `ArchiveBusinessProfileReview`; River job
   `reviews_ranking_for_display`
-  ([jobs](../../../general-architecture/jobs.md))
+  ([jobs](../../../infrastructure/jobs.md))
 - **Notes:** Ranking prediction about a review, not a column on the
   review
   ([classifications and predictions](../../../general-architecture/persistence.md#classifications-and-predictions)).

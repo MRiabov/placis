@@ -19,9 +19,9 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 4. [Docs conventions](docs-conventions.md) — how the docs tree is structured and written
 5. [Glossary](glossary.md) — the naming vocabulary (read before naming anything)
 6. [Product](general-prd.md) — the loop, product-level in/out of scope
-7. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes, LLM
-   layer, audit, jobs, files, `frontend-3` UI
-8. [Auth](features/other/auth/README.md) — Clerk; tenant == Clerk organization 1-1
+7. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes,
+   `frontend-3` UI
+8. [Infrastructure](infrastructure/README.md) — tenancy (Clerk), config, store, AI, files, River jobs
 9. [Onboarding](features/onboarding/README.md) — business research and business-profile building;
    [website activation](features/onboarding/pipeline/09-website-activation.md) is activation Price plus Placis Pro plan / month
    Checkout
@@ -55,10 +55,11 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 | Implementation order (planning) | [planning/implementation-strategy.md](planning/implementation-strategy.md) |
 | How docs are structured and written | [docs-conventions.md](docs-conventions.md) |
 | Naming / vocabulary | [glossary.md](glossary.md) |
-| Auth | [features/other/auth/README.md](features/other/auth/README.md) |
+| Auth / tenancy | [infrastructure/tenancy/README.md](infrastructure/tenancy/README.md) |
 | Persistence conventions + index | [general-architecture/persistence.md](general-architecture/persistence.md) |
+| Store (pool / goose) | [infrastructure/store.md](infrastructure/store.md) |
 | HTTP conventions + per-feature `api.md` | [general-architecture/api.md](general-architecture/api.md) |
-| AI layer, audit, jobs, files, `frontend-3` UI | [general-architecture/](general-architecture/README.md) |
+| AI layer, audit, jobs, files | [infrastructure/](infrastructure/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
 | ETL (extract + transform) | [features/etl/README.md](features/etl/README.md) |
 | Business profile | [features/business-profile/README.md](features/business-profile/README.md) |

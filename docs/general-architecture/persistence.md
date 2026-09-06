@@ -5,11 +5,12 @@ is true from business lookup (the tenant may still be `unactivated`).
 Cross-tenant isolation is proven by integration tests (two tenants, assert
 reads/writes/files are blocked).
 
-Full DDL lives in `migrations/`. `jsonb` is reserved for genuinely polymorphic
+Full DDL lives in `internal/infrastructure/store/` (goose SQL with the
+pool). `jsonb` is reserved for genuinely polymorphic
 dumps: website component `props` / `design`, website slot `value`, ETL fetch
 `raw` (one column per extract-type fetch table), Stripe and website preview
 event payloads, `ai_generations` traces (`input` / `internal_reasoning` /
-`output` / `tool_calls`), audit `before` / `after`, website
+`output` / `tool_calls`), website
 edit history `before` / `after` (one field or website slot), and ads
 `platform_refs`. `website_manifest` is jsonb because it is a published website
 copy (`website.v1`), not because the tree is polymorphic. Structural data is
@@ -44,7 +45,8 @@ SQL use **qualified names** (`website.website_pages`, `ads.ads`). Do not set
 `search_path` to every feature namespace — that would collapse the split.
 Cross-namespace foreign keys are allowed (e.g.
 `ads.ad_image_placements.media_asset_id` → `media_library.media_assets`). One
-pool, one goose migration chain.
+pool, one goose migration chain in `infrastructure/store/`
+([store](../infrastructure/store.md)).
 
 Table definitions live with the feature that owns them. Shared tables live in
 one owning file — never copied into a second `persistence.md`. Defined
@@ -54,7 +56,7 @@ Uniques, Written by, Notes
 
 | Owner | Postgres schema (namespace) | Tables |
 | --- | --- | --- |
-| [auth](../features/other/auth/persistence.md) | `auth` | `tenants`, `tenant_memberships` |
+| [tenancy](../infrastructure/tenancy/persistence.md) | `auth` | `tenants`, `tenant_memberships` |
 | [onboarding](../features/onboarding/persistence.md) | `onboarding` | onboarding sessions, client interview submissions, website activations, `stripe_events` |
 | [ETL](../features/etl/persistence.md) | `etl` | `runs`, `sources`, `llm_source_to_project_classifications`, per-type fetches (including `web_search_fetches`), `google_maps_listings` (hours, reviews, listing photos, review photos), `website_crawl_pages` (+ photos), `imported_media` |
 | [business profile](../features/business-profile/details/persistence.md) | `business_profile` | `business_profiles` and related (services, areas, hours, reviews, `business_profile_review_rankings`, Facebook / Instagram profile and posts, `certification_definitions`, `business_profile_certification_selections`) |
@@ -63,12 +65,11 @@ Uniques, Written by, Notes
 | [media library](../features/other/media/persistence.md) | `media_library` | `media_assets`, `media_asset_classifications` |
 | [ads](../features/ads/persistence.md) | `ads` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
 | [leads](../features/other/leads/persistence.md) | `leads` | `leads` |
-| [files](files-and-s3.md) | `files` | `files` |
-| [audit](audit.md) | `audit` | `audit_events` |
-| [AI layer](ai-layer.md) | `ai` | `threads` (identity for every generate factory), `ai_generations`, `ai_generation_tool_revisions` |
+| [files](../infrastructure/files.md) | `files` | `files` |
+| [AI layer](../infrastructure/ai/README.md) | `ai` | `threads` (identity for every generate factory), `ai_generations`, `ai_generation_tool_revisions` |
 | [Assistant](../features/assistant/persistence.md) | `assistant` | `thread_items`, `runs` (in-flight lock; not hydrate). Thread identity is `ai.threads`. |
 | [Billing](../features/billing/persistence.md) | `billing` | `prices`, `subscriptions`, `ai_use_ledger_entries` |
-| [jobs](jobs.md) | `jobs` | River-managed tables |
+| [jobs](../infrastructure/jobs.md) | `jobs` | River-managed tables |
 
 `tenants` and `media_assets` stay out of `websites` / `ads`. Those are the real
 intersections.
@@ -80,7 +81,7 @@ generated prediction **about** a persisted subject is never a column on
 that subject. It lives on a dedicated table in the **same feature
 Postgres schema**. `ai` is traces only (`threads`, `ai_generations`,
 `ai_generation_tool_revisions`) — not product predictions
-([AI layer](ai-layer.md)).
+([AI layer](../infrastructure/ai/README.md)).
 
 - **Many rows per subject.** Current = latest `created_at` for that
   subject id. No current-id pointer on the subject. HTTP / attach /

@@ -16,10 +16,10 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 | Migrations | `goose` (plain SQL) |
 | Database | PostgreSQL (one database; [Postgres schemas as feature namespaces](persistence.md#postgres-schemas-namespaces)) |
 | Background jobs | `River` (Postgres-backed, typed args, safe retries) |
-| Config | env → typed struct, validated once at startup. Feature flags: [feature flags](feature-flags.md) |
+| Config | env → typed struct, validated once at startup. Feature flags: [feature flags](../infrastructure/config.md) |
 | Logging | `log/slog` (structured) + request ids |
 | Object storage | S3-compatible (R2 in prod, MinIO/local FS in dev) |
-| LLM | `LLMProvider`; Vercel AI SDK for generation; open-web search is Parallel as a Vercel AI Gateway server tool ([AI layer](ai-layer.md)) |
+| LLM | `LLMProvider`; Vercel AI SDK for generation; open-web search is Parallel as a Vercel AI Gateway server tool ([AI layer](../infrastructure/ai/README.md)) |
 | Payments | Stripe via `stripe-go` SDK: 09 Checkout (activation Price plus Placis Pro plan / month), extra usage credit Checkout, pay-again Checkout. Catalogue cache from `product.*` / `price.*`. Not meters / remaining. Not Clerk Billing |
 | Frontend (`frontend-3`) | CMS + onboarding. Stack: [frontend stack](frontend-stack.md) |
 | Contractor website (`apps/contractor-website`) | Astro with React islands — that app renders website HTML; live GET is CDN cache then R2 (Worker is write-thin, never Go). No per-request unpublished render. Serve path: [website Cloudflare](../features/website/cloudflare.md). Website components in `packages/website-components` |
@@ -27,11 +27,11 @@ Go module path: `placis` ([go.mod](../../go.mod)). Do not assume a GitHub module
 | IDs | UUID PKs, `timestamptz` defaults |
 
 `huma` handles JSON request/response endpoints and serves the derived OpenAPI
-spec at `/openapi.json`. The onboarding session **SSE** stream is a raw
-`net/http` handler outside huma. The contractor host is not an SSE endpoint
+spec at `/openapi.json`. The onboarding session **SSE** stream is Huma
+`sse.Register` ([HTTP conventions](api.md)). The contractor host is not an SSE endpoint
 ([pipeline README](../features/onboarding/pipeline/README.md)). Voice audio does not go through a Go WebSocket — the
 browser connects to the voice service with a short-lived secret
-([voice agent](voice-agent.md)).
+([voice agent](../infrastructure/ai/voice-agent.md)).
 
 HTTP conventions (prefix, serve only types on HTTP, auth modes, errors,
 `Idempotency-Key`):
@@ -64,7 +64,10 @@ feature package that owns the routes
 numbers carry `minimum`/`maximum`, fixed sets use `enum` (huma tags). CI checks
 the generated OpenAPI and fails on an unconstrained field, including
 `map[string]any` / `json.RawMessage` / `additionalProperties: true` on DTOs
-([HTTP conventions](api.md)).
+([HTTP conventions](api.md)). sqlc queriers are per feature. The pool and goose
+live in `infrastructure/store/` ([store](../infrastructure/store.md)). Every
+`Register` **picks** an auth helper in `infrastructure/tenancy/auth/`
+([ADR](ADR.md) 5).
 
 Don't say JsonRecord / JsonObjectPayload: opaque freeform-JSON wrappers
 (`map[string]any` / `json.RawMessage` in domain code) are out. `jsonb` only at

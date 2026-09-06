@@ -24,10 +24,11 @@ That surface is the [onboarding website editor](website-editor.md).
 - After website activation those routes **403**. Do not migrate the conversation
   onto the CMS thread.
 - Knowledge:
-  `internal/onboarding/assistant/knowledge/onboarding_knowledge_base_registry.yaml`
-  (includes the shared product glossary). Must not import `internal/assistant`.
-  Seed **instructions**: knowledge + current step + visible fields. `tools=[]`.
-  No unpublished website working copy. No CMS `tools=`.
+  `internal/onboarding/assistant/knowledge/knowledge_base_registry.yaml`
+  (includes `knowledge_product_glossary.md`). Must not import
+  `internal/assistant`. Seed **instructions**: knowledge + current step +
+  visible fields. `tools=[]`. No unpublished website working copy. No CMS
+  `tools=`.
 - No `obtained_information` / `end_interview`. Client-interview writer tools are
   not in this registry.
 - **Not billed.** No 402. Still write `ai_generations` (`thread_id` on the
@@ -56,7 +57,7 @@ That surface is the [onboarding website editor](website-editor.md).
   **not** store the Voice recording (no signed-URL PUT, no `files` row, no
   `recording_file_id`). Do not invent a second text dump route. Frontend posts
   leftover transcripts on close. Live audio is browser ↔ the xAI region for the
-  business country ([voice agent](../../general-architecture/voice-agent.md)) and is not kept by us. Knowledge includes the
+  business country ([voice agent](../../infrastructure/ai/voice-agent.md)) and is not kept by us. Knowledge includes the
   product glossary; Voice create sets keyterms and `replace` (Placis →
   **Play-sis**).
 - Launcher: DustOrb bottom right, **visible**, voice off until they click. Cue

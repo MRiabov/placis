@@ -56,7 +56,7 @@ decision + date) instead of silently replacing the old entry.
    not on each review). Orchestration (onboarding enqueue after ETL fast
    extract, again if more `in_pool` rows when that enqueue’s ETL finishes;
    scheduled ETL after `succeeded` when new `in_pool` rows landed):
-   [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../../../general-architecture/jobs.md). Website consumes the ranked pool (`{{reviews.N}}`);
+   [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../../../infrastructure/jobs.md). Website consumes the ranked pool (`{{reviews.N}}`);
    it does not own ranking.
 
    (2026-09-02): Ranking writes insert-only `business_profile_review_rankings`
@@ -70,3 +70,10 @@ decision + date) instead of silently replacing the old entry.
    **top reviews**. Whether this picker later becomes per website and per ads
    (different certification selections and review sets) is **TBD**.
    [website ADR](../../website/ADR.md) 16 and 26.
+
+   (2026-09-06): One screen, two Registers. HTTP lives in
+   `profile/certifications/` (`/v1/business-profile/certifications`) and
+   `profile/reviews/` (`/v1/business-profile/reviews`), not `details/api.md`.
+   Frontend modules `cms/profile/certifications/` and `cms/profile/reviews/`
+   compose on `/cms/certifications-and-reviews`. [certifications HTTP](certifications/api.md),
+   [reviews HTTP](reviews/api.md).

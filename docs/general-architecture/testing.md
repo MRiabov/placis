@@ -180,7 +180,7 @@ integration tests pair
 - [website](../features/website/testing.md)
 - [ads](../features/ads/ad-generation/testing.md)
 - [media library](../features/other/media/testing.md)
-- [auth](../features/other/auth/testing.md)
+- [auth](../infrastructure/tenancy/testing.md)
 - [Details](../features/business-profile/details/testing.md)
 - [Projects](../features/business-profile/projects/testing.md)
 - [Certifications and reviews](../features/business-profile/certifications-and-reviews/testing.md) — screen pin / ranking; HTTP 1:1 is Details
@@ -193,7 +193,7 @@ integration** test that creates two tenants and verifies reads, writes, and
 **files** are blocked across them (`humatest` → real Postgres). Do not
 specify it as Playwright. This is in addition to the per-feature E2E rule
 above. Auth spells out the two-tenant case in
-[auth testing](../features/other/auth/testing.md) `## Integration`.
+[auth testing](../infrastructure/tenancy/testing.md) `## Integration`.
 
 A feature's E2E must run when **that** feature's UI or API changed. Unrelated
 features may stay skipped. Incremental selection is a feedback optimization — it

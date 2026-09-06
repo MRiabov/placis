@@ -10,13 +10,12 @@ route redirects to `/cms/website`.
 
 HTTP: named Routes in [api.md](api.md) (`/v1/onboarding/website/editor/…`,
 `/v1/onboarding/website/assistant/…`,
-`POST /v1/onboarding/website/publications`,
-`/v1/onboarding/business-profile`).
+`POST /v1/onboarding/website/publications`, `/v1/onboarding/business-profile`).
 Package `internal/onboarding/websiteeditor` is a **policy wrapper**: same
-[website editor tools](../website/assistant.md), same text/Voice transport,
-same unpublished PATCH (`/v1/onboarding/website/editor/…`),
-same `ai.threads` overlay SQL (`thread_kind=cms_assistant`), same 20-turn loop.
-It owns auth, knowledge YAML, allowlist, instant apply, 5-prompt cap, skip 402.
+[website editor tools](../website/assistant.md), same text/Voice transport, same unpublished PATCH
+(`/v1/onboarding/website/editor/…`), same `ai.threads` overlay SQL
+(`thread_kind=cms_assistant`), same 20-turn loop. It owns auth, knowledge YAML
+(`websiteeditor/knowledge/`), allowlist, instant apply, 5-prompt cap, skip 402.
 
 CMS [`/v1/assistant/…`](../assistant/api.md) stays **403** `tenant_unactivated`
 for unactivated. Do not add unactivated branches there. Do not put this in
@@ -187,8 +186,8 @@ end `running`. CMS `GET /v1/assistant/thread` lazy-creates a new empty
 ## Knowledge
 
 `internal/onboarding/websiteeditor/knowledge/` YAML + markdown (`go:embed`).
-Includes the shared product glossary. Must not import `internal/assistant`.
-Voice create still loads `internal/knowledge/voice_pronunciation.yaml`.
+Includes `knowledge_product_glossary.md`. Must not import `internal/assistant`.
+Voice create still loads Voice pronunciation yaml from this folder.
 
 ## Surfaces
 

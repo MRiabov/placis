@@ -11,7 +11,7 @@
   description: Pair pipeline steps with testing files, require persistence tables in testing.md or pipeline/testing, close pipeline step headings, ratchet feature api.md headings, and require TestPipelineHappyPath* (leftover until Go tests exist).
   entry: go run ./cmd/ci/check-pipeline-tables
   language: system
-  files: '^docs/features/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$|^docs/general-architecture/jobs.md$|^internal/.*_test\.go$'
+  files: '^docs/(features|infrastructure)/.*/(persistence|testing|api)\.md$|^docs/features/.*/pipeline/.*\.md$|^docs/infrastructure/jobs.md$|^internal/.*_test\.go$'
   pass_filenames: true
 
 - id: check-happy-path

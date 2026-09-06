@@ -12,6 +12,7 @@ Named identifiers:
 - [api.md](api.md) — HTTP (`/v1/ads`)
 - [architecture.md](architecture.md) — content model; `CreateAd`,
   `GenerateAdDraft`, `ApproveAd`, `ExportAdSet`
+- [file-trees.md](file-trees.md) — Go `generation/` + `assistant/`; Ads screens
 - [pipeline/](ad-generation/pipeline/README.md) — create, generate, approve,
   export
 - [ADR](ad-generation/ADR.md) — architectural decision record (why each choice was made)

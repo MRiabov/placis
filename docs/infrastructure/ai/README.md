@@ -29,15 +29,15 @@ and search share Vercel; there is no OpenRouter hop.
   not keep one global `internal/ai/prompts.yaml`. `ai` is those vendor
   interfaces + traces; it records `prompt_id` / `prompt_version` from that file
   (id + format revision). Assistant **product knowledge** is a separate
-  **knowledge base registry** (YAML + markdown `go:embed` in the assistant
-  packages), not `prompts.yaml` and not RAG. CMS and onboarding both list the
-  shared product glossary (`internal/knowledge/product_glossary.md`: Domain +
-  Enums + Don't say). Voice pronunciation / keyterms are
-  `internal/knowledge/voice_pronunciation.yaml`, not `prompts.yaml`. Interpolate
-  with `{{var}}`. Nested fields (business profile has many) use a dotted path:
-  `{{aaa.bbb}}`. Same spelling as a [website placeholder](../features/website/variables.md) when the value is a
-  profile detail; prompts.yaml is not unpublished website copy. Go fills
-  `{{var}}`; it does not own the prompt text.
+  **knowledge base registry** (YAML + markdown `go:embed` in that assistant’s
+  `knowledge/` folder), not `prompts.yaml` and not RAG. Each assistant lists
+  `knowledge_product_glossary.md` (Domain + Enums + Don't say). Voice
+  pronunciation yaml sits in the same folder when that assistant has Voice.
+  Assistants do not import each other’s knowledge folders. `infrastructure/ai`
+  load/interpolate only. Interpolate with `{{var}}`. Nested fields (business
+  profile has many) use a dotted path: `{{aaa.bbb}}`. Same spelling as a
+  [website placeholder](../../features/website/variables.md) when the value is a profile detail; prompts.yaml is not
+  unpublished website copy. Go fills `{{var}}`; it does not own the prompt text.
 - Output is parsed against a schema before it enters the app. A mismatch is
   **repaired under a bounded contract**: repair only the smallest subtree that
   fails (never regenerate the whole answer), discard or reject unknown fields
@@ -51,7 +51,7 @@ and search share Vercel; there is no OpenRouter hop.
   `replace` on that row). Prompt id / knowledge id are not a substitute for that
   `input`. Voice **cost** is xAI audio minutes plus text-item fees, not token
   counts — leave `input_tokens` / `output_tokens` null on those rows
-  ([billing](../features/billing/README.md)). Voice utterance reconstructability is the forwarded xAI JSON on
+  ([billing](../../features/billing/README.md)). Voice utterance reconstructability is the forwarded xAI JSON on
   `thread_items.provider_event` **plus** that run’s `input` (instructions /
   system prompt). Reconstruct a Voice conversation from `input` + ordered thread
   items (`thread_item_kind` / `body` / `offset_seconds`) + `provider_event` +
@@ -63,7 +63,7 @@ and search share Vercel; there is no OpenRouter hop.
 
 ## BillUsageMode
 
-[`BillUsageMode`](../glossary.md#billusagemode) is the generic spend
+[`BillUsageMode`](../../glossary.md#billusagemode) is the generic spend
 enum, not AI-only. `ai` vendor methods take **`bill_usage`** and
 `thread_id`. ETL `StartRun` takes it too (currently `unbilled`). Do not
 pass `bill_tenant`. Do not pass a `billed` / `unbilled` bool. Omit /
@@ -87,7 +87,7 @@ Two records on an `ai` vendor-hit:
 | `unbilled` | Vendor; **our usage** only | Vendor; **our usage** only |
 | `bill-allow-out-of-balance` | Vendor; **our usage** only; must not fail | Vendor; **our usage** + **their usage** |
 
-No vendor call (skip LLM) → neither record. `internal/ai`
+No vendor call (skip LLM) → neither record. `internal/infrastructure/ai`
 **calls** `AssertUsageCredit` / `RecordAIUseSpend` (`internal/billing`).
 ETL billed later uses the same remaining-0 rules (job fail, not HTTP
 **402**). `billing` must not import feature tool packages.
@@ -103,11 +103,11 @@ billed yet).
 
 Shared by the CMS assistant, the onboarding assistant, and every headless /
 offline generate factory. One table, not copied into feature persistence docs.
-Postgres schema **`ai`**. Go package `internal/ai/`.
+Postgres schema **`ai`**. Go package `internal/infrastructure/ai/`.
 
-Closed set: `text` `NOT NULL` plus a check constraint, not a Postgres enum
-type ([ADR 1](ADR.md)). Go `StrEnum` when code exists. Do **not** dump
-non-assistant work into an internal thread kind.
+Closed set: `text` `NOT NULL` plus a check constraint, not a Postgres enum type
+([ADR 1](../../general-architecture/ADR.md)). Go `StrEnum` when code exists. Do **not** dump non-assistant work
+into an internal thread kind.
 
 ```sql
 thread_kind text NOT NULL CHECK (thread_kind IN (
@@ -160,17 +160,17 @@ above still applies; this is the persistence for a further agentic retry.
 
 **`website_copy_generation`** — automatic website copy generation (onboarding
 06 / website 03). River job kind `website_copy_generation`
-([jobs](jobs.md)). `prompt_id=website_copy_generation` in the onboarding
+([jobs](../jobs.md)). `prompt_id=website_copy_generation` in the onboarding
 package `prompts.yaml`. Writes existing unpublished website slots. Do not
 `create_page` or `update_reviews`. Same insert rule as every other
 `thread_kind`: one thread per website page; parallel website pages =
 parallel threads; `ai_generations.thread_id` required. Not one row per website
-([website ADR](../features/website/ADR.md) 29).
+([website ADR](../../features/website/ADR.md) 29).
 
 **`reviews_ranking_for_display`** — **LLM ranking** of the reviews pool
 (not stars or recency) for display (website tokens, Certifications cards,
 ads top reviews). River job kind `reviews_ranking_for_display`
-([jobs](jobs.md)). `prompt_id=reviews_ranking_for_display` in the profile
+([jobs](../jobs.md)). `prompt_id=reviews_ranking_for_display` in the profile
 package `prompts.yaml`. Input: current `in_pool` rows (id, citation/body,
 rating, origin, `published_at`). Output: ordered `review_ids[]`, length
 1–30, each id in that pool. The job inserts a
@@ -179,14 +179,14 @@ Certifications and reviews PATCH), sets `provisional` (not a skip
 key), and skips latest `algorithm=human`. Prompt prose and ranking
 heuristics are unspecified.
 When onboarding and scheduled ETL enqueue:
-[build-profile](../features/onboarding/pipeline/build-profile.md). Not a
+[build-profile](../../features/onboarding/pipeline/build-profile.md). Not a
 per-website-section pick when copying the website template’s pages. Do
 not use `website_reviews_picker`.
 
 **`media_cleanup`** — captioning pass and image-edits / first-upload
 cleanup when feature flag `media_auto_cleanup` is on (default off).
 River job kind `describe_image`
-([jobs](jobs.md)). Insert a thread before the first generate on that
+([jobs](../jobs.md)). Insert a thread before the first generate on that
 item; reuse it for schema-repair retries and for `CleanupMediaAsset`.
 Do not hydrate on GET thread. `prompt_id` matches `media_cleanup` in
 the media package `prompts.yaml`. Do not add a second generate factory
@@ -197,7 +197,8 @@ or a `thread_kind=media_process`.
 Shared by automatic website copy generation, the CMS assistant, the onboarding
 assistant, ads, media captioning, and ETL post-text extract. One table, not
 copied into feature persistence docs. Postgres schema **`ai`** (not `llm`). Go
-package `internal/ai/`. Image **files** stay in `files` / `media_library`.
+package `internal/infrastructure/ai/`. Image **files** stay in `files` /
+`media_library`.
 
 - `ai_generations` — `id`, `tenant_id` nullable fk, `thread_id` required fk →
   `ai.threads` (hydrate never joins), `trace_type` (`prod`/`eval`),
@@ -216,7 +217,7 @@ call can be reconstructed. Usage and cost are columns. Tool and
 skill format revisions are rows, not a map dump. Product classifications and
 other predictions are **not** these tables — they live in the feature
 Postgres schema
-([persistence conventions](persistence.md#classifications-and-predictions)).
+([persistence conventions](../../general-architecture/persistence.md#classifications-and-predictions)).
 Apply / reject and Ask first are per-feature (`runs.ask_first_status`,
 website `edit_history`, media library `review_status`). Do not put an
 approval queue on `ai_generations`.
@@ -243,13 +244,13 @@ The CMS Assistant (text and Voice) is an **agent loop** (tools → model → too
 not one generation. **20** tool-using turns after one owner send or utterance
 (both channels). **128K / 12K tokens** are text `LLMProvider` assembly only.
 Voice live context is xAI-side after instructions seed
-([assistant architecture](../features/assistant/architecture.md)). That live
+([assistant architecture](../../features/assistant/architecture.md)). That live
 path uses the xAI region for the **business country**, not the auto-routing
 global `api.x.ai` host ([voice agent](voice-agent.md)).
 
 Website-editor tools (Ask first / instant apply) live in `website/assistant`
-([website editor tools](../features/website/assistant.md)). Ads generate / revise stay ads HTTP, not the CMS
-assistant `tools=` list. Dispatcher and thread: [assistant](../features/assistant/README.md). `ai` has no
+([website editor tools](../../features/website/assistant.md)). Ads generate / revise stay ads HTTP, not the CMS
+assistant `tools=` list. Dispatcher and thread: [assistant](../../features/assistant/README.md). `ai` has no
 mutating tool registries.
 
 ## Where the LLM sits in each feature
@@ -259,4 +260,4 @@ mutating tool registries.
   `features/<feature>/pipeline/*.md`; the AI steps live inside those steps, so
   no `ai-layer.md`.
 - Media library captioning is River job kind `describe_image` in
-  [jobs.md](jobs.md). No `pipeline/`, no `ai-layer.md`.
+  [jobs.md](../jobs.md). No `pipeline/`, no `ai-layer.md`.

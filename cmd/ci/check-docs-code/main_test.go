@@ -12,7 +12,7 @@ func TestRunDocsOnlyCurrentTree(t *testing.T) {
 	err := run([]string{
 		"--all",
 		"--docs", filepath.Join(root, "docs"),
-		"--jobs", filepath.Join(root, "docs", "general-architecture", "jobs.md"),
+		"--jobs", filepath.Join(root, "docs", "infrastructure", "jobs.md"),
 		"--openapi", filepath.Join(root, "openapi.json"),
 		"--worker-openapi", filepath.Join(root, "apps", "contractor-website", "openapi.json"),
 		"--migrations", filepath.Join(root, "migrations"),

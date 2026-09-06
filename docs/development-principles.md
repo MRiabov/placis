@@ -1,8 +1,14 @@
 # Development Principles
 
-How the backend is built. Read this before writing any Go code; the docs
-referenced here are the single source of truth. A change that invents a name,
-model, or pattern not in them is wrong.
+How the backend and owner UI are built. Read this before writing Go or
+`frontend-3` code; the docs referenced here are the single source of
+truth. A change that invents a name, model, or pattern not in them is
+wrong.
+
+`frontend-3` is a **thin typed wrapper** over Go. Screens bind generated OpenAPI
+types (`src/generated/` + `openapi-fetch`). Policy, caps, auth modes, 402,
+allowlists, and writes live in Go. Do not add a third TypeScript model layer.
+Look (`apps/demo`) stays mock-only. [frontend stack](general-architecture/frontend-stack.md). [ADR](general-architecture/ADR.md) 3.
 
 ## Why this file exists
 
@@ -18,7 +24,7 @@ glossary catch drift.
 1. **The ubiquitous language + schema + per-feature specs are already written:**
    - [glossary.md](glossary.md) — the only place names come from
    - [persistence.md](general-architecture/persistence.md) — conventions + index; each feature's tables are in
-     `features/<feature>/persistence.md`
+     `features/<feature>/persistence.md`. Pool/goose: [store](infrastructure/store.md)
    - [backend-stack.md](general-architecture/backend-stack.md) — stack, type layers
    - [module-layout.md](general-architecture/module-layout.md) — package tree
    - [api.md](general-architecture/api.md) — HTTP conventions; per-feature `api.md` is the HTTP routes
@@ -43,7 +49,7 @@ Build one feature at a time, bottom-up, in dependency order. The coarse
 loop is:
 
 ```text
-tenancy/auth -> onboarding (source -> client interview -> profile) -> website
+infrastructure/tenancy/auth -> onboarding (source -> client interview -> profile) -> website
   -> website preview/website activation/billing -> ads -> leads
 ```
 
@@ -56,7 +62,9 @@ Each development task is **one PR**, complete and green before the next
 starts. A development task that has owner UI includes matching
 `frontend-3` screens. A development task is:
 
-1. migrations for that feature's tables only
+1. goose SQL for that feature's tables only, under
+   `internal/infrastructure/store/` (one chain; not a repo-root
+   `migrations/` dump)
 2. `sqlc` queries
 3. `huma` DTOs — this *is* that feature's part of the OpenAPI (`huma` derives
    it)
@@ -79,8 +87,9 @@ in-process River), config, `slog`, `huma` + `GET /v1/health`, Postgres +
 `goose` + `sqlc`, and the CI pipeline. A few hundred lines, but it proves the
 whole toolchain (sqlc → huma → OpenAPI → `frontend-3` typegen →
 Testcontainers → deploy) end to end. Next: `frontend-3` scaffold and
-**delete `frontend-2`**, then **tenancy + auth** — everything else FKs
-into `tenants`. Order:
+**delete `frontend-2`**, then **tenancy + auth**
+(`internal/infrastructure/tenancy`) — everything else FKs into
+`tenants`. Order:
 [implementation strategy](planning/implementation-strategy.md).
 
 ## Rules that keep it from collapsing
@@ -122,4 +131,4 @@ After the product development tasks above are green, a later
 development task hardens
 **audit completeness** and **AI-trace completeness** (every LLM call
 reconstructable: reasoning, visible answer, tool calls). Voice is a current
-channel ([voice agent](general-architecture/voice-agent.md)), not a later phase.
+channel ([voice agent](infrastructure/ai/voice-agent.md)), not a later phase.
