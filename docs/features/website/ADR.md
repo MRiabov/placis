@@ -334,7 +334,7 @@ Status: decided (2026-08-16, product owner + engineering).
     - 2026-09-04: tie-break `hash(website_id)` so two websites of one tenant do
       not pick the same website template on a tie. Retry of the same website
       still reuses `website_settings`.
-    - Previous: Previous: `hash(tenant_id)`.
+    - Previous: `hash(tenant_id)`.
     - 2026-09-04, later: tie-break `sorted[website_id % len]` (`website_id` as
       an integer). The uuid is already random; do not hash it. No coords: same
       modulo over the production-ready set. Previous that day:

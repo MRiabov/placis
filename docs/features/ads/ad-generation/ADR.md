@@ -26,7 +26,7 @@ new entries with the next number, the area, and the date.
    rebuild. One ad is one format (decision 32). Never produce an empty format.
    If the chosen format hasn't enough ready photos, generate does not succeed —
    exact UX is an open question in [ads README](../README.md#open-questions).
-   - Previous: Previous: ad formats without suitable approved images were left
+   - Previous: ad formats without suitable approved images were left
      out of a multi-format ad set, never rendered empty.
 
 3. **The LLM drafts; the owner edits** — The LLM drafts copy, proposes image
@@ -69,7 +69,7 @@ new entries with the next number, the area, and the date.
    never auto-published — that job is later; this slice does not enqueue it.
    CreateAd writes `icp_source=static`. Ads are targeted to the confirmed ideal
    customer profile once an ad platform is connected.
-   - Previous: Previous: the create-an-ad flow asked who the ad targets; the LLM
+   - Previous: the create-an-ad flow asked who the ad targets; the LLM
      suggestion had no later date.
 
 9. **No ad questions during onboarding** — Onboarding never collects ad
@@ -110,7 +110,7 @@ new entries with the next number, the area, and the date.
     the media item) so `/cms/media` and the next generate can use it. Approve
     waits on failed uploads and photos that have not finished uploading; it does
     not wait for a media caption on an owner-added photo.
-    - Previous: Previous: newly added files showed **Uploading…** then
+    - Previous: newly added files showed **Uploading…** then
       **Processing…** until the media caption was written, and Approve waited
       until thumbs were `ready`. Before that: the picker only offered approved
       items with a media caption, and approval blocked **ad ready to post** with
@@ -160,10 +160,10 @@ new entries with the next number, the area, and the date.
     flight, and failed uploads still block.
     - 2026-08-27: `update_details` is the shared Details tool, not an Ads-only
       writer.
-    - Previous: Previous: owner-typed or owner-prompted copy warned inline and
+    - Previous: owner-typed or owner-prompted copy warned inline and
       did not write the business profile; the warning pointed the owner to
       Details.
-    - Previous: Previous: unsupported marketing statements blocked **ad ready to
+    - Previous: unsupported marketing statements blocked **ad ready to
       post** until owner or done-for-you review.
 
 19. **Meta first, Google Ads later** — Ad posting (future work) starts with Meta
@@ -289,7 +289,7 @@ new entries with the next number, the area, and the date.
     another format? Create another ad. Square feed, Portrait feed, and Carousel
     remain **posts**; Story remains **stories** — that is Meta grouping, not a
     multi-format ad.
-    - Previous: Previous: one ad was posts or stories (several formats in one
+    - Previous: one ad was posts or stories (several formats in one
       family).
 
 33. **The format is chosen before generate; drafted for how it's used** (updated
@@ -301,7 +301,7 @@ new entries with the next number, the area, and the date.
     an existing draft into a different format. After generate, the format pills
     are locked until the owner hits **Revise** next to **Generate again**. Photo
     crops still follow from the stored focal point.
-    - Previous: Previous: several formats per ad, each drafted on its own;
+    - Previous: several formats per ad, each drafted on its own;
       before that, one LLM contract for the whole set.
 
 34. **First generate is unprompted; Review is promptable** — Create ad and
@@ -319,7 +319,7 @@ new entries with the next number, the area, and the date.
     `POST /v1/media-assets/{id}/reject`. This replaces unprompted Review
     **Regenerate**. Record the owner prompt with reasoning, output, and tool
     calls in `ai_generations`.
-    - Previous: Previous: prompt form was inline in the field, wrapping with the
+    - Previous: prompt form was inline in the field, wrapping with the
       row.
     - 2026-08-28: Short label has no AI orb.
     - 2026-08-28, later: say **inline AI assistance**; **select to edit inline
@@ -360,7 +360,7 @@ new entries with the next number, the area, and the date.
     touch as the include/exclude questions only (phone number, full name,
     postcode, email). Generate still writes a suggested title; the owner edits
     it after generate.
-    - Previous: Previous: the title sat in About the ad under How people get in
+    - Previous: the title sat in About the ad under How people get in
       touch.
 
 39. **Archive is not delete** — `POST /v1/ads/{id}/archive` sets
@@ -377,7 +377,7 @@ new entries with the next number, the area, and the date.
     SearchableCombobox over `business_profile_service_areas`. Product has not
     decided whether a non-technical ads owner should pick an audience at all; do
     not add an audiences collection or HTTP until that is decided.
-    - Previous: Previous: ADR 8 / 37 specified Who-it's-for comboboxes for
+    - Previous: ADR 8 / 37 specified Who-it's-for comboboxes for
       profile and area; stored default remains married couples 30–40 (ADR 8).
 
 41. **Ad leads are read on Leads, not as a duplicate per-ad list** (2026-09-04)

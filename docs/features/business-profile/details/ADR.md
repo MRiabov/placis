@@ -118,10 +118,11 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    `POST /v1/business-profile/edits/{id}/undo` (that `business_profile_edits`
    increment). Leaving the screen without clicking keeps the write. Not website
    undo. Shared [notification](../../../general-architecture/frontend.md).
-   - 2026-08-27: Previous (same day): any governed tool that writes a detail
-     uses the same Details writer. Previous (same day): Ads may write a detail
-     via a tool call. OK keeps it. Revert is that undo route. Leaving the screen
-     keeps the write. Not website undo.
+   - 2026-08-27: any governed tool that writes a detail uses the same Details
+     writer.
+   - 2026-08-27, later: Ads may write a detail via a tool call. OK keeps it.
+     Revert is that undo route. Leaving the screen keeps the write. Not website
+     undo.
    - 2026-09-05: unpaid Revert is `POST
      /v1/onboarding/business-profile/edits/{id}/undo`. `/v1/business-profile`
      stays **403** unactivated.
