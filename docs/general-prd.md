@@ -24,13 +24,13 @@ Done-for-you + DIY: Placis can do business research, build, tweak, and suggest
 ads; the owner can do the website edits and ad creation themselves.
 
 Cross-cutting: Clerk identity (tenant == Clerk organization for **active**
-tenants), Postgres multitenancy, LLM + system auditability, and [voice](general-architecture/voice-agent.md) as a
+tenants), Postgres multitenancy, LLM + system auditability, and [voice](infrastructure/ai/voice-agent.md) as a
 channel into the same tools (not a separate product). How development tasks
 land: [development principles](development-principles.md).
 
 ## Feature PRDs
 
-- [Auth](features/other/auth/README.md) — Clerk, tenant resolution
+- [Auth](infrastructure/tenancy/README.md) — Clerk, tenant resolution
 - [Onboarding](features/onboarding/prd.md) — business research and the business profile; [pipeline](features/onboarding/pipeline/README.md);
   [onboarding assistant](features/onboarding/assistant.md) (guide)
 - [Assistant](features/assistant/prd.md) — CMS chat and voice after website activation
@@ -65,7 +65,7 @@ implementation. Do not use `frontend-2` as a reference.
   omission / declined-module machinery. Do not resurrect.
 - **Deprecated tenant/org management** — org chooser, selected-org cookie,
   `/me/orgs`, `/me/tenants`, `POST /v1/tenants`,
-  `PATCH /v1/tenants/{website_prefix}`, memberships CRUD. See [auth](features/other/auth/README.md).
+  `PATCH /v1/tenants/{website_prefix}`, memberships CRUD. See [auth](infrastructure/tenancy/README.md).
 - **Opaque freeform-JSON islands** — Don't say: `JsonRecord` /
   `JsonObjectPayload` wrappers. Typed structs; `jsonb` is persistence-only. See
   [HTTP conventions](general-architecture/api.md).

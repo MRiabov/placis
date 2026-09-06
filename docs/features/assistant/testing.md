@@ -46,8 +46,9 @@ Postgres + `frontend-3` not mocked.
    Details during speech; speech continues. Next owner send carries one
    switch notification for Details. `switch_assistant_screen` opens Ads;
    `get_context_about_screen` returns Ads context without navigating.
-3. **Ask first canvas** — Instant apply vs Ask first. Apply / Reject
-   pills on the canvas; dirty keys in tenant+thread `localStorage`.
+3. **Ask first website editor canvas** — Instant apply vs Ask first. Apply /
+   Reject pills on the website editor canvas; dirty keys in tenant+thread
+   `localStorage`.
 4. **Voice → text** — After a tool-using Voice turn, Switch to text.
    First typed send; second typed send; Voice then text again.
 5. **Idle and greeting** — First Voice start plays the prerecorded
@@ -69,11 +70,11 @@ Postgres + `frontend-3` not mocked.
    writes while still on the website editor. `create_project` on
    `website_editor` leaves a **project draft**. Those tools on Ads (or
    on Projects) are rejected in the UI.
-3. **Ask first canvas** — Instant apply: no Apply/Reject pills. Ask
-   first: pills over the composer; Apply PATCHes dirty keys then
-   record-apply. Reject does not revert-after-apply. While pending, New
-   thread / second text / second Voice stay locked in the UI. Same Voice
-   connection may continue.
+3. **Ask first website editor canvas** — Instant apply: no Apply/Reject pills.
+   Ask first: pills over the composer; Apply PATCHes dirty keys then
+   record-apply. Reject does not revert-after-apply. While pending, New thread /
+   second text / second Voice stay locked in the UI. Same Voice connection may
+   continue.
 4. **Voice → text** — Expanded thread shows transcripts **and** muted
    tool lines. First text send after Voice includes the Voice
    transcription notice; second text send does not; Voice then text
@@ -156,11 +157,11 @@ running. [website-editor.md](../onboarding/website-editor.md).
 
 #### Exercise
 
-**Wait → website preview → prompt → pay** — Wait teaser
-`/onboarding/preview` then `/onboarding/preview-and-edit/`. Unsigned
-land hydrates the unpaid thread (onboarding session token). Sign up. One
-signed-in owner prompt after 06 idle. Canvas updates via website-editor
-PATCH (instant apply). Pay (09).
+**Wait → website preview → prompt → pay** — Wait teaser `/onboarding/preview`
+then `/onboarding/preview-and-edit/`. Unsigned land hydrates the unpaid thread
+(onboarding session token). Sign up. One signed-in owner prompt after 06 idle.
+Website editor canvas updates via website-editor PATCH (instant apply). Pay
+(09).
 
 #### Verify
 

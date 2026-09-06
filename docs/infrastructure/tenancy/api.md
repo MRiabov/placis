@@ -1,15 +1,15 @@
 # Auth HTTP
 
-Conventions: [HTTP conventions](../../../general-architecture/api.md).
+Conventions: [HTTP conventions](../../general-architecture/api.md).
 Named identifiers:
-[docs conventions](../../../docs-conventions.md#named-identifiers).
+[docs conventions](../../docs-conventions.md#named-identifiers).
 
 **Auth default:** Clerk JWT. Tenant may be missing or unactivated. This
 file is **not** “active tenant only.” Health is
-[cross-cutting](../../../general-architecture/api.md). Auth has one
+[cross-cutting](../../general-architecture/api.md). Auth has one
 public Route: `GET /v1/me`. Clerk organization attach lives on
-[onboarding activation checkout](../../onboarding/api.md) and
-[09](../../onboarding/pipeline/09-website-activation.md), not here.
+[onboarding activation checkout](../../features/onboarding/api.md) and
+[09](../../features/onboarding/pipeline/09-website-activation.md), not here.
 
 ## DTOs
 

@@ -12,6 +12,7 @@ Named identifiers:
   architecture). CMS tokens: [CMS design.md](../../general-architecture/cms/design.md)
 - [architecture.md](architecture.md) — content model, select and copy the website template,
   website editor, website publication, render
+- [file-trees.md](file-trees.md) — Go + website editor files
 - [catalog.md](catalog.md) — website template object 01 picks and 02 copies
 - [cloudflare.md](cloudflare.md) — live R2 serve path (`apps/contractor-website` is in this
   repo). Apex `placis.com` is the [Placis website](../placis-website/cloudflare.md), not this Worker.

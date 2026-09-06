@@ -12,15 +12,24 @@ projects share Postgres schema `business_profile`.
 - [details/](details/README.md) — Business details (`/cms/details`). Owns `business_profiles` and
   list tables (services, areas, hours, reviews, Facebook / Instagram,
   certification ticks). HTTP: [details/api.md](details/api.md). Increment writer:
-  [details/architecture.md](details/architecture.md). Tests: [details/testing.md](details/testing.md).
+  [details/architecture.md](details/architecture.md). Tests: [details/testing.md](details/testing.md). Outward Dos:
+  `internal/profile/service.go`.
 - [projects/](projects/README.md) — Projects (`/cms/projects`). Table: `business_profile.projects`.
   HTTP: [projects/api.md](projects/api.md). Tests: [projects/testing.md](projects/testing.md).
-- [certifications-and-reviews/](certifications-and-reviews/README.md) — Certifications and reviews
-  (`/cms/certifications-and-reviews`). Persistence and HTTP stay on
-  [business profile persistence](details/persistence.md) / [details HTTP](details/api.md). Screen tests:
-  [certifications-and-reviews/testing.md](certifications-and-reviews/testing.md) (HTTP 1:1 is Details).
+- [certifications/](certifications/README.md) — certification ticks on
+  Certifications and reviews (`/cms/certifications-and-reviews`). HTTP:
+  [certifications/api.md](certifications/api.md).
+- [reviews/](reviews/README.md) — **All reviews** / **top reviews** on that
+  same screen. HTTP: [reviews/api.md](reviews/api.md). Screen:
+  [reviews/frontend.md](reviews/frontend.md). Tests:
+  [reviews/testing.md](reviews/testing.md) (HTTP 1:1 stays Details
+  `testing.md`). Persistence stays on
+  [business profile persistence](details/persistence.md).
 
-How the owner reaches them: [CMS frontend](../../general-architecture/cms/frontend.md) (left nav).
+How the owner reaches them:
+[CMS frontend](../../general-architecture/cms/frontend.md) (left nav).
+Go / `frontend-3` files: [file-trees.md](file-trees.md). Media library:
+[media library file trees](../other/media/file-trees.md).
 
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
   doc gap / drop)

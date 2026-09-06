@@ -20,8 +20,10 @@ Start at [docs/README.md](docs/README.md).
 3. [docs/docs-conventions.md](docs/docs-conventions.md)
 4. [docs/glossary.md](docs/glossary.md)
 5. The owning `docs/features/<feature>/README.md`, or
+   [docs/infrastructure/](docs/infrastructure/README.md) when the work is
+   tenancy, store, jobs, AI, files and S3, or config, or
    [docs/general-architecture/](docs/general-architecture/README.md) when the
-   work is cross-cutting
+   work is otherwise cross-cutting
 
 ## Apps
 
@@ -75,7 +77,7 @@ Before Go, goose, sqlc, huma, Worker, owner UI, or test **code**:
   ([testing](docs/general-architecture/testing.md)).
 - New names are already in [docs/glossary.md](docs/glossary.md).
 - River job kinds already live in
-  [jobs.md](docs/general-architecture/jobs.md).
+  [jobs.md](docs/infrastructure/jobs.md).
 
 If any of those are missing or ill-defined:
 
@@ -132,5 +134,5 @@ and this file win.
 - Pipeline stages: number and architecture name together (`04 Website
   publication`, never bare `04`).
 - The LLM drafts; the contractor edits. Record internal reasoning, visible
-  output, and tool calls ([AI layer](docs/general-architecture/ai-layer.md)).
+  output, and tool calls ([AI layer](docs/infrastructure/ai/README.md)).
 - Predecessor OpenAPI is not a compatibility surface.

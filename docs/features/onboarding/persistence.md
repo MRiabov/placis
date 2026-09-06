@@ -10,7 +10,7 @@ Referenced, not owned here:
 [auth](../other/auth/persistence.md) (`tenants`),
 [business profile](../business-profile/details/persistence.md) (live
 business profile and profile history), [ETL](../etl/persistence.md),
-[AI layer](../../general-architecture/ai-layer.md) (`ai.threads`),
+[AI layer](../../infrastructure/ai/README.md) (`ai.threads`),
 [assistant](../assistant/persistence.md) (`thread_items`, `runs`),
 [website](../website/persistence.md).
 

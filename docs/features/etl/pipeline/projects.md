@@ -81,7 +81,7 @@ a Project or not.
    review text. Schema: past completed named job or not; if yes, title +
    description within maxLengths. Prompt in ETL `prompts.yaml`, not Go.
    Record reasoning, owner-visible output, tool calls, model, and cost
-   ([AI layer](../../../general-architecture/ai-layer.md)). Insert an
+   ([AI layer](../../../infrastructure/ai/README.md)). Insert an
    `etl_project_classify` thread before the first generate; retries of that
    source reuse it. Optional
    `ai_generation_id` on the verdict.

@@ -8,13 +8,13 @@ Named identifiers:
 
 Named functions (same spelling in spec, Go, and tests):
 
-- `StartMediaAssetUpload` — `internal/media/`. Route
+- `StartMediaAssetUpload` — `internal/profile/media/`. Route
   `POST /v1/media-assets/start-upload`.
-- `ConfirmMediaAssetUpload` — `internal/media/`; **calls**
+- `ConfirmMediaAssetUpload` — `internal/profile/media/`; **calls**
   `WriteCanonicalWebP` then `WriteImageThumbnail`. Route
   `POST /v1/media-assets/{id}/confirm-upload`.
 - `DescribeImage` — River job kind `describe_image`
-  ([jobs.md](../../../general-architecture/jobs.md#describe_image)).
+  ([jobs.md](../../../infrastructure/jobs.md#describe_image)).
   Owner / `CleanupMediaAsset` insert of this job:
   `bill_usage=bill-allow-out-of-balance`. ETL insert:
   `bill_usage=unbilled`. Cleanup generate itself is
@@ -24,7 +24,7 @@ CMS HTTP: one function per Routes verb+noun (`ListMediaAssets`,
 `GetMediaAsset`, `UpdateMediaAsset`, `StartMediaAssetReplaceUpload`,
 `CleanupMediaAsset`, `RejectMediaAsset`). Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
-Prompts: `internal/media/prompts.yaml` (`prompt_id` matches
+Prompts: `internal/profile/media/prompts.yaml` (`prompt_id` matches
 `thread_kind=media_cleanup`).
 
 **Not Routes, still named:**

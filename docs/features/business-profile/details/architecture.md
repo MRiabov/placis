@@ -8,23 +8,21 @@ Tables: [persistence.md](persistence.md). HTTP: [api.md](api.md). Look:
 
 ## Named identifiers
 
-HTTP (same spelling in spec, Go, and tests), `internal/details/`:
+HTTP (same spelling in spec, Go, and tests), `internal/profile/details/`
+**calls** `profile` `service.go`:
 
 - `GetBusinessProfile`
 - `UpdateBusinessProfile` — **calls** `ApplyBusinessProfileIncrement`
 - `UndoBusinessProfileEdit` — **calls** `ApplyBusinessProfileIncrement`
-- `GetBusinessProfileCertifications`
-- `PutBusinessProfileCertifications`
-- `GetBusinessProfileReviews`
-- `UpdateBusinessProfileReviews`
-- `ArchiveBusinessProfileReview`
-- `UnarchiveBusinessProfileReview`
-- `CreateBusinessProfileReview`
-- `ImportBusinessProfileReviews`
+
+Certifications HTTP: `internal/profile/certifications/`
+([certifications HTTP](../certifications/api.md)).
+Reviews HTTP: `internal/profile/reviews/`
+([reviews HTTP](../reviews/api.md)).
 
 Tables: [persistence.md](persistence.md). DTOs and Routes:
 [api.md](api.md). River job kind `reviews_ranking_for_display`:
-[jobs.md](../../../general-architecture/jobs.md).
+[jobs.md](../../../infrastructure/jobs.md).
 
 **Not Routes, still named:**
 

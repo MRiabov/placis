@@ -20,6 +20,7 @@ Named identifiers:
 - [architecture.md](architecture.md) — logic (context, allowed set, text vs voice, apply, locks).
   HTTP: `GetAssistantThread`, `StreamAssistantThread`, `CompactAssistantThread`,
   …. Contract stays in [api.md](api.md); tables in [persistence.md](persistence.md).
+- [file-trees.md](file-trees.md) — Go + `cms/assistant/` files
 - [persistence.md](persistence.md) — `thread_items`, `runs`; thread identity is
   `ai.threads`
 - [api.md](api.md) — DTOs and Routes (`/v1/assistant/…`; text
@@ -32,5 +33,5 @@ Onboarding guide: [onboarding assistant](../onboarding/assistant.md). Unpaid
 website preview:
 [onboarding website editor](../onboarding/website-editor.md). Usage credit:
 [billing](../billing/README.md). LLM traces:
-[AI layer](../../general-architecture/ai-layer.md) (schema `ai`). Voice
-transport: [voice agent](../../general-architecture/voice-agent.md).
+[AI layer](../../infrastructure/ai/README.md) (schema `ai`). Voice
+transport: [voice agent](../../infrastructure/ai/voice-agent.md).

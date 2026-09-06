@@ -232,6 +232,25 @@ func fileExists(path string) bool {
 	return err == nil
 }
 
+func dirExists(path string) bool {
+	st, err := os.Stat(path)
+	return err == nil && st.IsDir()
+}
+
+func mergeReports(a, b report) report {
+	if a.known == nil {
+		a.known = map[string]bool{}
+	}
+	for k, v := range b.known {
+		a.known[k] = v
+	}
+	a.persistFiles = append(a.persistFiles, b.persistFiles...)
+	a.steps = append(a.steps, b.steps...)
+	a.apiFiles = append(a.apiFiles, b.apiFiles...)
+	a.testingFiles = append(a.testingFiles, b.testingFiles...)
+	return a
+}
+
 func checkPipelinePairing(r report) []string {
 	var errs []string
 	for _, s := range r.steps {

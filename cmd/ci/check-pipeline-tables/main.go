@@ -19,7 +19,7 @@ func run(args []string) error {
 	flags := flag.NewFlagSet("check-pipeline-tables", flag.ContinueOnError)
 	_ = flags.Bool("all", false, "scan docs/features instead of listed files")
 	root := flags.String("root", "docs/features", "features docs root")
-	jobs := flags.String("jobs", "docs/general-architecture/jobs.md", "path to jobs.md")
+	jobs := flags.String("jobs", "docs/infrastructure/jobs.md", "path to jobs.md")
 	docs := flags.String("docs", "docs", "docs root for known River job kind names")
 	internal := flags.String("internal", "internal", "Go internal packages for TestPipelineHappyPath")
 	if err := flags.Parse(args); err != nil {
@@ -30,6 +30,13 @@ func run(args []string) error {
 	rep, err := inspect(*root)
 	if err != nil {
 		return err
+	}
+	if sibling := filepath.Join(filepath.Dir(*root), "infrastructure"); dirExists(sibling) {
+		infra, err := inspect(sibling)
+		if err != nil {
+			return err
+		}
+		rep = mergeReports(rep, infra)
 	}
 
 	var errs []string

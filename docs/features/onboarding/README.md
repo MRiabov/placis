@@ -7,6 +7,7 @@ Onboarding turns a spoken or typed description of a business into a clear
 - [ADR](ADR.md) — architectural decision record
 - [architecture.md](architecture.md) — pipeline, SSE, named identifiers,
   where things stand
+- [file-trees.md](file-trees.md) — Go + `frontend-3` files
 - [pipeline](pipeline/README.md) — one doc per step (DAG: 01 find, 02 research, 03 Review, 04a
   interview; 04b out; build-profile, 05–09)
 - [persistence.md](persistence.md) — onboarding sessions, website activation
@@ -23,8 +24,11 @@ Onboarding turns a spoken or typed description of a business into a clear
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
   doc gap / drop)
 
-Auth is interleaved with onboarding (website activation), but auth and tenancy
-are owned by the [auth feature](../other/auth/README.md). Stripe checkout lives in [website activation](pipeline/09-website-activation.md).
-HTTP: [api.md](api.md). The schema lives in [persistence.md](persistence.md) (onboarding sessions),
+Auth is interleaved with onboarding (website activation), but auth and
+tenancy are owned by
+[tenancy](../../infrastructure/tenancy/README.md). Stripe checkout
+lives in [website activation](pipeline/09-website-activation.md).
+HTTP: [api.md](api.md). The schema lives in
+[persistence.md](persistence.md) (onboarding sessions),
 [ETL](../etl/persistence.md) (extract), and
 [business profile](../business-profile/details/persistence.md).

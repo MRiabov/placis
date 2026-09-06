@@ -53,8 +53,8 @@ inventing it.
    content than it can show (Details / Projects / Certifications and reviews, a
    workspace list, including Content). The retired right-hand editing panel is
    not a scroller. (2026-08-26; moved from website design decision 8,
-   2026-08-27) Website canvas scroll (website page inside the stage, assistant
-   overlay pad): [website design decision 8](../../features/website/design-decision-record.md).
+   2026-08-27) Website editor canvas scroll (website page inside the stage,
+   assistant overlay pad): [website design decision 8](../../features/website/design-decision-record.md).
 
 4. **The CMS is narrow-first** — Owners use it on a small screen. A wide screen
    is extra width, not the default story. Global nav copies placis-web
@@ -101,26 +101,26 @@ inventing it.
    640px), animated AudioLines Voice on the right (desktop only), ArrowRight
    send. Connect is gone when Google Ads and Meta are both connected (same
    status as Ads; do not flash the control). It is not Connect website address.
-   Placeholders cycle. Secondary controls stay outline (canvas fill, `--border`,
-   hover zinc-50) — `--secondary` is a token, not a resting chip. Voice on New
-   chat opens a full-screen **orb** for the client interview (soft glowing
-   circle, Back). Do not port the DustOrb particle renderer bit by bit; the
-   later `frontend-3` port can keep its cheaper orb. Website-editor Voice stays
-   the canvas orb ([website design decision 18](../../features/website/design-decision-record.md)). Token table: [design.md](design.md).
-   (2026-08-27) (2026-08-27): Product `/cms` is two cards (**Do my website…** /
-   **Run my ads**), not this prompt. Keep the prompt-box markup in the look app
-   for later restore. Hide Paperclip, Start client interview, predecessor
-   dashboard Usage & billing copy. Overlay rows drop New chat. Connect stays.
-   (2026-08-28): Voice on `/cms` is gone. Overlay look:
-   [assistant design decision record](../../features/assistant/design-decision-record.md). `/cms` cards clone the prompt-box look
-   (hairline, prompt radius) with a readable lift of the prompt shade, and carry
-   destination logos (Sites globe, Ads megaphone). Google / Meta connect lives
-   on Ads too. The two cards sit in one row on a wide screen and stack on a
-   narrow screen so the titles stay one line. (2026-08-29): Product `/cms` does
-   not paint the leftover Connect bar. Keep that markup in the look app as a
-   restorable node (`is-hidden`). Nav glyphs are the archive strokes (1.6), not
-   Lucide defaults. Wordmark weight matches placis-web (`font-semibold`, 16px /
-   14px from `sm`, same as the placis-web rail).
+   Placeholders cycle. Secondary controls stay outline (website editor canvas
+   fill, `--border`, hover zinc-50) — `--secondary` is a token, not a resting
+   chip. Voice on New chat opens a full-screen **orb** for the client interview
+   (soft glowing circle, Back). Do not port the DustOrb particle renderer bit by
+   bit; the later `frontend-3` port can keep its cheaper orb. Website-editor
+   Voice stays the website editor canvas orb ([website design decision 18](../../features/website/design-decision-record.md)).
+   Token table: [design.md](design.md). (2026-08-27) (2026-08-27): Product `/cms` is two
+   cards (**Do my website…** / **Run my ads**), not this prompt. Keep the
+   prompt-box markup in the look app for later restore. Hide Paperclip, Start
+   client interview, predecessor dashboard Usage & billing copy. Overlay rows
+   drop New chat. Connect stays. (2026-08-28): Voice on `/cms` is gone. Overlay
+   look: [assistant design decision record](../../features/assistant/design-decision-record.md). `/cms` cards clone the prompt-box
+   look (hairline, prompt radius) with a readable lift of the prompt shade, and
+   carry destination logos (Sites globe, Ads megaphone). Google / Meta connect
+   lives on Ads too. The two cards sit in one row on a wide screen and stack on
+   a narrow screen so the titles stay one line. (2026-08-29): Product `/cms`
+   does not paint the leftover Connect bar. Keep that markup in the look app as
+   a restorable node (`is-hidden`). Nav glyphs are the archive strokes (1.6),
+   not Lucide defaults. Wordmark weight matches placis-web (`font-semibold`,
+   16px / 14px from `sm`, same as the placis-web rail).
 
    (2026-08-29): `/cms` **placis** is the placis-web dashboard new-chat
    wordmark: `text-4xl`, `leading-tight`, tracking `-0.03em`. Type weights stay

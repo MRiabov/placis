@@ -5,13 +5,13 @@ CMS assistant overlay tables. Conventions:
 (Postgres schema `assistant`). Named identifiers:
 [docs conventions](../../docs-conventions.md#named-identifiers).
 
-Thread **identity** is [`ai.threads`](../../general-architecture/ai-layer.md) (`thread_kind=cms_assistant` or
+Thread **identity** is [`ai.threads`](../../infrastructure/ai/README.md) (`thread_kind=cms_assistant` or
 `onboarding_assistant`). This feature owns overlay items and the in-flight run.
-Shared AI traces: [AI layer](../../general-architecture/ai-layer.md) (`ai.ai_generations`). Guide isolation:
+Shared AI traces: [AI layer](../../infrastructure/ai/README.md) (`ai.ai_generations`). Guide isolation:
 [onboarding assistant](../onboarding/assistant.md). Usage credit: [billing](../billing/persistence.md). Website last-writer:
 [website edit history](../website/persistence.md)
 (`edit_history.ai_generation_id`). Voice recordings:
-[files](../../general-architecture/files-and-s3.md). Logic:
+[files and S3](../../infrastructure/files-and-s3.md). Logic:
 [architecture.md](architecture.md).
 
 `ai` is shared `LLMProvider` + threads + traces. No `ai_generation_id` on
@@ -84,5 +84,5 @@ on `runs`. Unique current CMS thread lives on `ai.threads`. Lookup:
 (`thread_kind=cms_assistant`; tool events, not a discard timer).
 
 River job `CompactAssistantThread`:
-[jobs](../../general-architecture/jobs.md). Same function on text 128K
+[jobs](../../infrastructure/jobs.md). Same function on text 128K
 overflow and Voice seed-too-large. No 24h discard.

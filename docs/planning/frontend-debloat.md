@@ -32,7 +32,8 @@ instructions.
 - Read `frontend-2/` (git is enough if something must be recovered)
 - Port dumped predecessor CSS, the right-hand editing panel, Save controls,
   voice-first client interview, or predecessor OpenAPI types
-- Promote `apps/demo` to the product app (no auth, no API, fake canvas)
+- Promote `apps/demo` to the product app (no auth, no API, fake website editor
+  canvas)
 - Rebuild website component visuals; the website component catalog stays in
   `packages/website-components` ([contractor website cuts](../features/website/contractor-website-debloat.md))
 
@@ -48,10 +49,11 @@ These files no longer instruct a port. Implement from that feature’s
 | [CMS](../general-architecture/frontend-debloat.md) | [CMS frontend](../general-architecture/cms/frontend.md) |
 | [details](../features/business-profile/details/frontend-debloat.md) | [details frontend](../features/business-profile/details/frontend.md) |
 | [projects](../features/business-profile/projects/frontend-debloat.md) | [projects frontend](../features/business-profile/projects/frontend.md) |
-| [certifications and reviews](../features/business-profile/certifications-and-reviews/frontend-debloat.md) | [certifications and reviews frontend](../features/business-profile/certifications-and-reviews/frontend.md) |
+| [certifications](../features/business-profile/certifications/frontend-debloat.md) | [reviews frontend](../features/business-profile/reviews/frontend.md) |
+| [reviews](../features/business-profile/reviews/frontend-debloat.md) | [reviews frontend](../features/business-profile/reviews/frontend.md) |
 | [ads](../features/ads/ad-generation/frontend-debloat.md) | [ads frontend](../features/ads/ad-generation/frontend.md) |
 | [leads](../features/other/leads/frontend-debloat.md) | [leads frontend](../features/other/leads/frontend.md) |
 | [media library](../features/other/media/frontend-debloat.md) | [media library](../features/other/media/README.md) |
-| [auth](../features/other/auth/frontend-debloat.md) | [auth](../features/other/auth/README.md) |
+| [auth](../infrastructure/tenancy/frontend-debloat.md) | [auth](../infrastructure/tenancy/README.md) |
 | [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover (not the owner SPA) |
 | [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker |

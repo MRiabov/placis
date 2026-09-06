@@ -1,10 +1,10 @@
 # General architecture
 
 Cross-cutting architecture that doesn't belong to one feature. Product loop:
-[general-prd.md](../general-prd.md).
+[general-prd.md](../general-prd.md). Supporting packages:
+[infrastructure](../infrastructure/README.md).
 
 - [backend-stack.md](backend-stack.md) — stack, type layers
-- [feature-flags.md](feature-flags.md) — named config bools (`internal/config`)
 - [frontend-stack.md](frontend-stack.md) — `frontend-3` stack, folders, typegen
 - [module-layout.md](module-layout.md) — Go package tree, file-size guard, folder fan-out
 - [processes.md](processes.md) — `cmd/api`, `frontend-3`, contractor website, Placis website,
@@ -12,13 +12,8 @@ Cross-cutting architecture that doesn't belong to one feature. Product loop:
 - [api.md](api.md) — HTTP conventions (versioning, typing, serve only types on HTTP,
   auth modes, errors) and index of per-feature `api.md` files
 - [package-boundaries.md](package-boundaries.md) — which Go package owns which work
-- [ai-layer.md](ai-layer.md) — AI vendor interfaces, tools, traceability
-- [voice-agent.md](voice-agent.md) — voice architecture (short-lived secret, HTTP finals)
-- [audit.md](audit.md) — `audit_events`
-- [jobs.md](jobs.md) — River background jobs (including ETL)
-- [files-and-s3.md](files-and-s3.md) — object storage and the `files` row
-- [ADR.md](ADR.md) — architectural decision record (closed sets are checks, not
-  Postgres enums; `frontend-3` greenfield)
+- [audit.md](audit.md) — trail conventions (no schema `audit`)
+- [ADR.md](ADR.md) — architectural decision record
 - [persistence.md](persistence.md) — conventions and index of per-feature tables
 - [frontend.md](frontend.md) — `frontend-3` loading placeholders and other UI rules that no
   single feature owns. Tokens: [CMS design.md](cms/design.md).
@@ -37,5 +32,5 @@ with
 [website activation](../features/onboarding/pipeline/09-website-activation.md).
 Stripe Subscription after that Checkout, extra usage credit, and the Price cache
 live with [billing](../features/billing/README.md). Website leads and ad leads live in [features/other/leads](../features/other/leads/README.md).
-Public-source extract: [ETL](../features/other/etl/README.md). Onboarding session progress events:
+Public-source extract: [ETL](../features/etl/README.md). Onboarding session progress events:
 [pipeline README](../features/onboarding/pipeline/README.md).

@@ -1,4 +1,4 @@
-# Files
+# Files and S3
 
 Files live in S3-compatible storage (R2 in production, MinIO/local FS in
 development). A `files` row records the checksum, visibility, and scan status.

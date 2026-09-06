@@ -6,7 +6,7 @@ open with a pointer here and do not restate these rules.
 
 Feature `api.md` files:
 
-- [Auth](../features/other/auth/api.md)
+- [Auth](../infrastructure/tenancy/api.md)
 - [Onboarding](../features/onboarding/api.md) (includes website activation and `/v1/onboarding/assistant/…`;
   SSE reads [ETL](../features/etl/README.md) `etl.runs` and the live business profile — ETL has no public
   `api.md`)
@@ -15,7 +15,9 @@ Feature `api.md` files:
 - [Billing](../features/billing/api.md) (usage credit, Usage & billing,
   public catalogue)
 - [Website](../features/website/api.md) (unpublished website, website publication, Connect website address)
-- [Details](../features/business-profile/details/api.md) (live business profile, certifications, reviews)
+- [Details](../features/business-profile/details/api.md) (live business profile)
+- [Certifications](../features/business-profile/certifications/api.md)
+- [Reviews](../features/business-profile/reviews/api.md)
 - [Projects](../features/business-profile/projects/api.md)
 - [Media library](../features/other/media/api.md)
 - [Ads](../features/ads/api.md)
@@ -49,7 +51,8 @@ together is when `/v2` appears.
 
 Two type layers: sqlc rows and huma DTOs ([backend stack](backend-stack.md)). Reuse one `*Read`
 per entity and one `*Create` / `*Update` per write. Do not say Projection or
-Summary.
+Summary. Go DTO structs live in the feature package that owns the routes, not in
+`httpapi` ([module layout](module-layout.md)).
 
 Every DTO field is constrained: strings `minLength`/`maxLength`, numbers
 `minimum`/`maximum`, fixed sets `enum`. Persistence-on-blur is
@@ -139,6 +142,9 @@ an HTTP excuse.
 ## Auth modes
 
 Named once here. Feature `api.md` files name the mode, they do not redefine it.
+Every huma `Register` **picks** a helper in
+`infrastructure/tenancy/auth/` for one of these modes. It does not
+re-verify Clerk. Do not invent extra mode names. [ADR](ADR.md) 5.
 
 1. **none** — Find search + business lookup + public billing catalogue
    (`GET /v1/billing/catalog`).

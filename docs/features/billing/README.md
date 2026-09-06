@@ -10,14 +10,14 @@ Open Usage & billing from the account menu (user icon). The left-nav
 **Usage** row stays hidden.
 
 Do not put remaining usage credit on
-[auth](../other/auth/persistence.md). Never use predecessor dashboard
-Usage & billing copy. Do not say **ledger**; the Internal name is
-**AI use ledger**.
+[tenancy](../../infrastructure/tenancy/persistence.md). Never use
+predecessor dashboard Usage & billing copy. Do not say **ledger**; the
+Internal name is **AI use ledger**.
 
 Owner markup is **×5** on **our cost**. Onboarding, including the
 onboarding guide, is **not** billed (we still record `ai_generations`).
 Assistant: [assistant](../assistant/README.md). Voice transport:
-[voice agent](../../general-architecture/voice-agent.md). **AI vendor
+[voice agent](../../infrastructure/ai/voice-agent.md). **AI vendor
 cost**, **AI voice vendor cost**, and 402:
 [architecture](architecture.md) (Voice settles on
 `POST /v1/assistant/voice/transcripts`). If they stop paying, unpublish
@@ -31,6 +31,7 @@ Owner-facing money is **EUR**.
 - [prd.md](prd.md)
 - [ADR.md](ADR.md)
 - [architecture.md](architecture.md)
+- [file-trees.md](file-trees.md) — Go + `/cms/billing` files
 - [persistence.md](persistence.md) — AI use ledger + Price cache
   (schema `billing`)
 - [api.md](api.md)

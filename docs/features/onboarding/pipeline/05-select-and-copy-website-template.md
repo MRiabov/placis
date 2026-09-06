@@ -33,7 +33,7 @@ Do not say apply the website template in prose.
 - Run at 01 business lookup.
 - Wait for 06 or 02 business research to finish.
 - Website publication.
-- Resolve `{{…}}` (Worker / canvas / wait teaser do that).
+- Resolve `{{…}}` (Worker / website editor canvas / wait teaser do that).
 - Implement 01/02 here — link those files.
 
 ## Do

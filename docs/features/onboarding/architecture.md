@@ -123,8 +123,10 @@ research progress reads `etl.runs` **and** the live business profile transform
 already wrote (ETL fast extract results appear before ETL slow extract
 finishes). Interview photos are not on the `business_profile` payload —
 `/onboarding/interview` re-GETs `/v1/onboarding/media-assets` on each of
-those events. Ranked `projects` **are** on that nested live profile. The
-contractor host is not an SSE endpoint.
+those events. Ranked `projects` **are** on that nested live profile. One
+stream: `GET /v1/onboarding/events/stream` on onboarding `api/`.
+`websitepreview/` is 08 share HTTP only (not SSE). The contractor host is
+not an SSE endpoint.
 
 ## Where things stand
 
@@ -140,6 +142,6 @@ optional host after 08 (no token, no TTL). The onboarding session has no
 ## Voice
 
 Voice is a **channel** (onboarding assistant, CMS assistant). Transport:
-[voice-agent.md](../../general-architecture/voice-agent.md). Client-interview **data entry** is [04a](pipeline/04a-text-client-interview.md); the agent writer
+[voice agent](../../infrastructure/ai/voice-agent.md). Client-interview **data entry** is [04a](pipeline/04a-text-client-interview.md); the agent writer
 ([04b](pipeline/04b-voice-client-interview.md)) is out. Applying the website template consumes the accepted profile,
 never the raw transcript.

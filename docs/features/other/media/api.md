@@ -4,7 +4,7 @@ Conventions: [HTTP conventions](../../../general-architecture/api.md).
 Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
 This resource **owns upload**. The `files` table stays
-([files-and-s3.md](../../../general-architecture/files-and-s3.md));
+([files and S3](../../../infrastructure/files-and-s3.md));
 there is **no** `/v1/files` HTTP. The file on an item is never replaced
 in place; edits copy (`parent_media_asset_id`).
 
@@ -59,7 +59,7 @@ GET does not embed `media_assets[]`; the website editor lists via
 `GET /v1/media-assets`.
 
 `DescribeImage` is River job kind `describe_image`
-([jobs.md](../../../general-architecture/jobs.md#describe_image)).
+([jobs.md](../../../infrastructure/jobs.md#describe_image)).
 
 ## DTOs
 

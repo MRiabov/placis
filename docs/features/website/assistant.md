@@ -3,7 +3,7 @@
 Hard-typed website editor tools the **assistant** (and onboarding 06) may call.
 Assistant look, thread, and HTTP: [assistant](../assistant/README.md). Plan vs continuous and Ask first
 vs instant apply stay **website editor only** (below). Generation and search go
-through `LLMProvider` in `ai` ([AI layer](../../general-architecture/ai-layer.md)).
+through `LLMProvider` in `ai` ([AI layer](../../infrastructure/ai/README.md)).
 
 Onboarding [automatic website copy generation](../onboarding/pipeline/06-website-copy-generation.md) ([website 03](pipeline/03-website-copy-generation.md)) reuses these tools
 headless (**continuous** + **instant apply**, no chat UI, no `create_page`, no

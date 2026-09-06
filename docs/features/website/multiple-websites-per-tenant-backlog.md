@@ -23,7 +23,7 @@ Language: [glossary](../../glossary.md). Named identifiers:
 | Assistant `open_website`, pointer list, CMS knowledge of N websites | [assistant ADR](../assistant/ADR.md) 30; create-flow file |
 | Logo on a second website | [ADR](ADR.md) 26; [persistence.md](persistence.md) `website_settings` |
 | Near-duplicate copy / SEO across a business’s websites | [ADR](ADR.md) 26; [03](pipeline/03-website-copy-generation.md) |
-| Certifications / reviews / **top reviews** per website vs ads | [ADR](ADR.md) 16, 26; [certifications ADR](../business-profile/certifications-and-reviews/ADR.md) 1 |
+| Certifications / reviews / **top reviews** per website vs ads | [ADR](ADR.md) 16, 26; [reviews ADR](../business-profile/reviews/ADR.md) 1 |
 | Archive / delete website; failed rows count toward the cap | [persistence.md](persistence.md) `websites`; create-flow file |
 | Enterprise plan cap 20 | [plans.md](../billing/plans.md) |
 | Ads privacy website page URL per website vs tenant | [creatives and lead forms](../ads/ad-application/meta/03-creatives-and-lead-forms.md) |

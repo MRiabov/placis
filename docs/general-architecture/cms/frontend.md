@@ -10,12 +10,11 @@ Assistant: [assistant](../../features/assistant/README.md).
 
 ## Left nav
 
-The CMS left nav lives in `frontend-3` (layout module). Profile replaces the
-current top-level Details item.
-Sites (the website editor entry) stays where it is. There is no **AI tools**
-item: image cleanup is `/cms/media`; the assistant is called from the
-bottom-right **Assistant** button on every screen in The CMS. Ads is a
-destination (screens:
+The CMS left nav lives in `frontend-3` (`/cms` layout folder). Profile replaces
+the current top-level Details item. Sites (the website editor entry) stays where
+it is. There is no **AI tools** item: image cleanup is `/cms/media`; the
+assistant is called from the bottom-right **Assistant** button on every screen
+in The CMS. Ads is a destination (screens:
 [ads frontend](../../features/ads/ad-generation/frontend.md)).
 Leads is a destination (screens:
 [leads frontend](../../features/other/leads/frontend.md)).
@@ -81,8 +80,7 @@ Profile is not a route. Clicking it only expands or collapses the group.
 
 - **Children are the destinations.** Business details is the Details view
   ([details frontend](../../features/business-profile/details/frontend.md)). Projects: [projects frontend](../../features/business-profile/projects/frontend.md). Certifications and
-  reviews: [certifications and reviews frontend](../../features/business-profile/certifications-and-reviews/frontend.md). Media library is `/cms/media`
-  ([media library](../../features/other/media/README.md)).
+  reviews: [reviews frontend](../../features/business-profile/reviews/frontend.md). Media library is `/cms/media` ([media library](../../features/other/media/README.md)).
 - **Default expansion:** expanded whenever sidebar labels are visible
   (expanded rail, hover-peek, or narrow overlay). Nested Profile children
   (Business details, Projects, Certifications and reviews, Media library) are
