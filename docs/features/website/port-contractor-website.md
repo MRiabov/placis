@@ -27,10 +27,11 @@ from the **internal** OpenAPI file, not CMS `GET /openapi.json`.
 
 ## Glue
 
-`lib/publicSiteApi.ts` (and leftover env names) retarget onto public forms +
-`website.v1` in the **same slice**. No shim that keeps `PublicSiteManifest` or
-unconstrained JSON. Screens/routes with no Go public route yet stay unwired, not
-typed against predecessor paths.
+Don't say public site: `lib/publicSiteApi.ts` (and leftover env names) retarget
+onto public forms + `website.v1` in the **same slice**. Don't say public site:
+no shim that keeps leftover `PublicSiteManifest` or unconstrained JSON.
+Screens/routes with no Go public route yet stay unwired, not typed against
+predecessor paths.
 
 ## Keep vs drop (API)
 
