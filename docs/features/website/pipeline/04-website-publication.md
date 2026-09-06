@@ -90,7 +90,9 @@ Website component contracts under `catalog/`.
 
 Unpublished `website_pages`, `website_sections`, `website_slots`,
 `website.menus`, `website_settings`, `website_forms`; prior
-`website_publications`; live `business_profiles`; `media_assets`.
+`website_publications`; live `business_profiles`;
+`certification_definitions`;
+`business_profile_certification_selections`; `media_assets`.
 
 ## Sends
 

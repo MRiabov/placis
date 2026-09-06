@@ -57,7 +57,8 @@ Owner SPA is `frontend-3` ([ADR](../../general-architecture/ADR.md) 3);
 - Registry families in first pass: top menu, hero, services, gallery, content,
   contact, website forms (`form.lead` and similar), footer, FAQ, process, CTA,
   privacy, service area. Projects and certifications paint from the slim
-  `website.v1` lists ([manifest.md](manifest.md)).
+  `website.v1` lists ([manifest.md](manifest.md)). Certification
+  image/card is an `<a href>` when `registry_url` is set.
 - Website component contracts as typed structs in `catalog/` (Go + TS consume
   the same JSON). Do not keep a second freeform `props` object as the contract.
 - Typed preset tokens in `src/themes/<preset>/index.ts`. Visual rules:

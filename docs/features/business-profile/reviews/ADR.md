@@ -72,3 +72,6 @@ decision + date) instead of silently replacing the old entry.
      Frontend modules `cms/profile/certifications/` and `cms/profile/reviews/`
      compose on `/cms/certifications-and-reviews`. [certifications
      HTTP](../certifications/api.md), [reviews HTTP](api.md).
+   - 2026-09-06: Optional `registry_url` on the definition. When set, the
+     badge/card is a link to that URL (CMS and the website). Null: not a
+     link. The checkbox still ticks. [details ADR](../details/ADR.md) 7.

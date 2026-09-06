@@ -48,17 +48,20 @@ home gallery, projects website page, categories), and certifications.
 | `{{business_name}}` | display name |
 | `{{trade}}` | primary trade |
 | `{{description}}` | business description |
-| `{{marketing_phone}}`, `{{marketing_email}}`, `{{address}}`, `{{existing_site_url}}` | marketing contact |
+| `{{marketing_phone}}`, `{{marketing_email}}`, `{{address}}`, `{{existing_site_url}}` | marketing contact. `{{address}}` is `registered_office` |
 | `{{service_area}}`, `{{service_region}}` | where they work |
 | `{{opening_hours}}` | opening hours |
-| `{{legal_name}}`, `{{company_registration_number}}`, `{{vat_number}}`, `{{registered_office}}` | legal |
+| `{{legal_name}}`, `{{company_registration_number}}`, `{{vat_number}}`, `{{registered_office}}` | legal. `{{registered_office}}` is the same column as `{{address}}` |
 | `{{established_year}}`, `{{incorporation_date}}` | dates |
 | `{{logo_url}}` | logo URL emitted at website publication **only from** `logo_media_asset_id` (our media library file). Not a hotlink and not a `website_settings` URL |
 | `{{services.featured}}`, `{{services.marquee}}`, `{{services.footer_links}}`, `{{services.project_types}}` | services |
 | `{{projects.featured}}`, `{{projects.recent}}`, `{{projects.home_gallery}}`, `{{projects.categories}}` | projects (**active** rows only; skip `draft`). Resolve from the live profile at publication; do not bake ranked-top-4 ids at copy-template-pages |
 | `{{reviews.1}}` … | reviews from the ranked pool (not a per-section pick at copy-template-pages) |
-| `{{certifications}}` | certifications |
+| `{{certifications}}` | certifications. Each item may carry optional `registry_url`; the Worker wraps the image/card in `<a href>` when that URL is set |
 | `{{images.*}}`, `{{about.intro_paragraphs}}`, `{{about.feature_paragraphs}}` | images / about copy |
+
+`emergency_phone` is unpublished Details Contact (how we reach the
+owner). Not a Common variable. Do not add `{{emergency_phone}}`.
 
 ## Optional-omit
 
@@ -74,10 +77,10 @@ stays the token.
 Closed set (exact labeled website slots only):
 
 - `{{vat_number}}`
-- `{{legal_name}}`, `{{company_registration_number}}`,
-  `{{registered_office}}` (complete-gate required **if registry**; omit
-  the labeled line when there is no registry row)
-- `{{address}}`
+- `{{legal_name}}`, `{{company_registration_number}}`
+- `{{address}}` / `{{registered_office}}` (same column; complete-gate
+  required **if registry**; omit the labeled line when there is no
+  registry row)
 - `{{opening_hours}}` (drop a whole `Opening hours: {{opening_hours}}`
   website slot, including predecessor substring labels)
 - `{{existing_site_url}}`
@@ -92,7 +95,7 @@ Closed set (exact labeled website slots only):
 
 Do **not** put omit lists on: required complete-gate keys
 (`{{business_name}}`, `{{trade}}`, `{{marketing_phone}}`,
-`{{marketing_email}}`, `{{emergency_phone}}`, `{{services.*}}`,
+`{{marketing_email}}`, `{{services.*}}`,
 `{{service_area}}` / `{{service_region}}`); about / copy
 (`{{description}}`, `{{about.intro_paragraphs}}`,
 `{{about.feature_paragraphs}}`); empty reviews / projects website

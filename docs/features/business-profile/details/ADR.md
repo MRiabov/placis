@@ -77,6 +77,17 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    Certifications and reviews. Not Ads Connect Meta, not Facebook Login, no
    autoposting. (2026-08-26)
    - 2026-08-27: linked card.
+   - 2026-09-06: Linked cards hydrate from the live ETL-written rows,
+     not fetch `raw`. Facebook: `transform/facebook.Run` writes
+     `name` / `photo_url` / `rating` / `review_count` on
+     `facebook_profiles`; GET reads that row
+     (`LinkedFacebookProfileRead`). Maps: GET reads
+     `etl.google_maps_listings` (`display_name` / `rating` /
+     `review_count`; `photo_url` from the first
+     `google_maps_listing_photos.source_url`). Instagram: transform
+     writes `name` / `photo_url` on `instagram_profiles`; not a
+     Details card. Null until that row has those fields. Do not send
+     `raw`.
 
 6. **Opening hours are when they pick up the marketing phone** — per day: Opens
    / Closes / Closed. Shown on the contact website page. There is no `note`
@@ -90,11 +101,16 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    `certification_definitions` and tenant
    `business_profile_certification_selections` live in Postgres schema
    `details`. They are not `website` tables and are not named
-   `website_certification_*`. HTTP stays `GET`/`PUT
+   `website_certification_*`.    HTTP stays `GET`/`PUT
    /v1/business-profile/certifications`. The website paints selected rows at
    website publication; ads read the same live business profile. (2026-08-26)
    - 2026-09-04: Schema renamed to `business_profile` ([ETL ADR
      9](../../etl/ADR.md)).
+   - 2026-09-06: `registry_url` stays optional. When set, the website
+     certification image/card is an `<a href>` to that URL. Null: not a
+     link. Slim `certifications[]` in the website manifest includes
+     `registry_url`. CMS Certifications and reviews: the badge is the
+     same link; the checkbox still ticks.
 
 8. **Trade is open text** — `business_profiles.trade` is not a closed enum.
    Certification `available[]` by trade/country must not depend on a closed
@@ -110,6 +126,11 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
      Details field.
    - 2026-08-28: Service areas are an addable list
      (`business_profile_service_areas`), not one field.
+   - 2026-09-06: `registered_office` is the address. Website `{{address}}`
+     and `{{registered_office}}` both resolve from that column. Service
+     areas remain where they work, not the address. Do not add a second
+     location column. Do not write `registered_office` into
+     `business_profile_service_areas`.
 
 9. **Notification Revert undoes that profile-history increment** — One governed
    tool, `update_details` ([architecture.md](architecture.md)). Website assistant, Ads generator,

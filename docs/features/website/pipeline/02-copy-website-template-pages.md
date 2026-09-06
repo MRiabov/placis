@@ -47,6 +47,8 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 - Copy extra website pages (gallery / services index / testimonials /
   careers) as `website_pages`.
 - Call an LLM.
+- Skip writing `business_profile_services.website_page_path` for a
+  named service this copy made a page for.
 
 ## Do
 
@@ -62,7 +64,9 @@ pick. Tokens stay.
    the **about** website page (`page_type=about`). Copy the **privacy
    policy** website page (`page_type=legal`). Copy the service website
    page **once per named service** on the accepted profile (same layout;
-   path and title from that service name). N ≥ 1. Fail if zero named
+   path and title from that service name). Write
+   `business_profile_services.website_page_path` to that service page’s
+   path. N ≥ 1. Fail if zero named
    services at this copy. `{{about.intro_paragraphs}}` is a placeholder
    namespace, not a page type.
 2. **Menus.** If the website template includes site-wide `top_menu` /
@@ -107,7 +111,8 @@ contracts under `catalog/`.
 ## Reads
 
 `website_settings` (`website_template_id`, `preset_id`), live
-`business_profiles` as of `accepted_edit_id`.
+`business_profiles` as of `accepted_edit_id`,
+`business_profile_services`.
 
 ## Inserts
 
@@ -117,11 +122,12 @@ contracts under `catalog/`.
 
 `website_pages`, `website_sections`, `website_slots`, `website.menus`,
 `website_forms`, `website_form_fields`, `website_form_field_options`,
-`website_urls` (iff the template has `url` nodes). Schema `jobs`: one
-River job kind `website_copy_generation` (onboarding 06 / website 03), unique
-key = that `tenant_id`. Args: `tenant_id` only. Second insert while
-pending/running is River unique conflict → HTTP 409.
-[jobs](../jobs.md). Must not write
+`website_urls` (iff the template has `url` nodes),
+`business_profile.business_profile_services.website_page_path`. Schema
+`jobs`: one River job kind `website_copy_generation` (onboarding 06 /
+website 03), unique key = that `tenant_id`. Args: `tenant_id` only.
+Second insert while pending/running is River unique conflict → HTTP
+409. [jobs](../jobs.md). Must not write
 `website_slot_reviews`, `website_publications`, `edit_history`, or
 attach `media_asset_id` on image slots. Onboarding session stays
 `selecting_and_copying_website_template` until wait-end, then

@@ -93,7 +93,8 @@ From-scratch writes: [pipeline/](pipeline/README.md).
 Object and mapping: [catalog.md](catalog.md).
 
 1. take the details from the business profile (services, service areas,
-   certifications, projects, contact);
+   certifications including optional `registry_url`, projects, contact —
+   `{{address}}` is `registered_office`);
 2. **select website template** — occupancy within 250 km among
    production-ready website templates, then `website_id % len`
    tie-break. Website styles = that website template’s associated

@@ -7,7 +7,11 @@ later CMS Publish.
 - **Setup**: unpublished website from 02 (`website_pages` /
   `website_sections` / `website_slots` / `website.menus` /
   `website_forms`; `website_settings` from 01). Live
-  `business_profile.business_profiles`. `media_assets` as needed for
+  `business_profile.business_profiles` (including `registered_office`).
+  `business_profile.certification_definitions` seeded; some
+  `business_profile.business_profile_certification_selections`
+  `selected`, with and without `registry_url`.
+  `media_assets` as needed for
   `media_asset_urls`. Optional 03 copy already in website slots. Record
   `website_slots.value` (still tokenized where required). For 08:
   onboarding session `preview_and_edit`,
@@ -59,6 +63,16 @@ later CMS Publish.
     `required_slot_unresolved`. Later Details fill of `vat_number`
     without 04: canvas GET paints; MinIO `latest/` unchanged. Next 04
     HTML includes the VAT line.
+  - `{{address}}` in HTML equals
+    `business_profile.business_profiles.registered_office` (same value
+    as `{{registered_office}}`). Empty: omit the labeled contact/legal
+    line; unpublished token stays.
+  - Selected
+    `business_profile.business_profile_certification_selections` whose
+    `business_profile.certification_definitions.registry_url` is set:
+    HTML image/card is `<a href>` to that URL. Null `registry_url`: not
+    a link. Dump slim `certifications[]` still includes the field
+    (null).
   - Live GET of the host does not call Go.
   - `media_assets.review_status=approved` for `pending_review` items
     on that dump (`ApproveMediaAsset`).

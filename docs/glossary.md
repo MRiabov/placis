@@ -296,6 +296,17 @@ focus.
 
 A locality the business covers. The owner picks a place on Google Maps.
 
+Distinct from: Registered office (the address).
+
+---
+
+#### Registered office
+
+The address of the business: place of registry, or place of business. Shown
+with contact on the website (`{{address}}` is this same value).
+
+Distinct from: Service area (where they work), Website address (the hostname).
+
 ---
 
 #### Certification
@@ -1858,7 +1869,7 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 | destination context | assistant screen context |
 | Upgrade | usage (billing) |
 | website email | marketing email |
-| phone | marketing phone |
+| phone | marketing phone / emergency phone |
 | fact (details) / structured facts | detail / information |
 | proof | certifications, reviews, or projects as appropriate |
 | history (details, website) | profile history, website versions, or website edit history |

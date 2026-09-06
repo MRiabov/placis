@@ -224,6 +224,10 @@ Status: decided (2026-08-16, product owner + engineering).
       `business_profile_certification_selections`), not
       `website_certification_*`. See [details
       ADR](../business-profile/details/ADR.md) 7.
+    - 2026-09-06: Slim `certifications[]` includes optional
+      `registry_url`. Worker wraps the image/card in `<a href>` when that
+      URL is set. `{{address}}` resolves from
+      `business_profiles.registered_office`.
 
 17. **`generate_image` may attach pending-review on the unpublished canvas** —
     always a warning; owner approval makes it approved; website publication

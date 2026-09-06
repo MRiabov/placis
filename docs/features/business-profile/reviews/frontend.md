@@ -18,9 +18,10 @@ immediately; the live website changes only on the next website publication.
 
 **Left — certifications:** definition rows for this trade/country. Each row:
 badge (already on the definition; it is what the website paints) + name +
-checkbox. The contractor mostly ticks. No upload-your-badge. Unchecking is
-`removed`. HTTP: `GET`/`PUT /v1/business-profile/certifications` with
-`available[]`.
+checkbox. When `registry_url` is set, the badge/card is a link to that URL
+(new tab); the checkbox still ticks. Null: not a link. The contractor mostly
+ticks. No upload-your-badge. Unchecking is `removed`. HTTP:
+`GET`/`PUT /v1/business-profile/certifications` with `available[]`.
 
 **Right — reviews:** Google-style cards in a 3–4 column grid (stars, author,
 review citation, origin with the platform mark). Three headings, same look:

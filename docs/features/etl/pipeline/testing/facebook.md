@@ -8,7 +8,8 @@
 - **Verify** (Postgres):
   - `etl.runs` for this ETL run kind when it starts.
   - Extract **persists into** `etl.facebook_fetches`; `etl.sources`.
-  - Transform **persists into** `business_profile.facebook_profiles` /
+  - Transform **persists into** `business_profile.facebook_profiles`
+    (`name`, `photo_url`, `rating`, `review_count`; not fetch `raw`) /
     `business_profile.facebook_posts` on `external_id` as responses arrive (do
     not wait for the last post); duplicate post id left alone; `algorithm=human`
     is not overwritten.

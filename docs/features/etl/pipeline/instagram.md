@@ -40,7 +40,9 @@ after a `schema_revision` bump extracts again.
 `transform/instagram.Run` sets `status=transforming`. Ensure
 `etl.sources` for the Instagram profile and each Instagram post. Upsert
 `instagram_profiles` on this contractor’s `instagram_user` unless
-`algorithm=human` (`source_id` required). Upsert `instagram_posts` on
+`algorithm=human` (`source_id` required). Write `name` and
+`photo_url` on that row from the fetch (must not dump `raw`). No
+`rating` / `review_count`. Upsert `instagram_posts` on
 `external_id` (insert only ids we do not already have; skip existing
 rows whose `algorithm` matches **and** `schema_revision` matches, or is
 `human`). Attach new photos into the media library
