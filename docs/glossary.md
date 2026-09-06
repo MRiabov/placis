@@ -1749,6 +1749,16 @@ component).
 
 ---
 
+#### Website component family
+
+The catalog grouping of a website component (`reviews`, `certifications`,
+`hero`, …). Distinct from Website section.
+
+In code: `family` on the website component contract. Never say **proof** for
+this grouping.
+
+---
+
 #### Website slot
 
 A named editable value inside a website section (text, image, list, and the

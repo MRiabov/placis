@@ -90,8 +90,8 @@ Closed set (exact labeled website slots only):
   footer / nav)
 - `{{facebook_profile_url}}` (social / contact link website slot if
   present)
-- `{{certifications}}` on an accreditations **items** website slot that
-  is not `required` (not the whole accreditations website section)
+- `{{certifications}}` on a certifications **items** website slot that
+  is not `required` (not the whole certifications website section)
 
 Do **not** put omit lists on: required complete-gate keys
 (`{{business_name}}`, `{{trade}}`, `{{marketing_phone}}`,

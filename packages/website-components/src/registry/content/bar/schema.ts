@@ -1,4 +1,4 @@
-export type ProofBarProps = {
+export type ContentBarProps = {
   tone?: "light" | "dark" | "brand";
   items: {
     value: string;

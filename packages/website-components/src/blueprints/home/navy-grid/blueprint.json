@@ -135,7 +135,7 @@
           ]
         },
         {
-          "component_id": "public.proof.metric_mosaic",
+          "component_id": "public.content.metric_mosaic",
           "props": {
             "anchor_id": "at-a-glance",
             "title": "{{business_name}} at a glance",

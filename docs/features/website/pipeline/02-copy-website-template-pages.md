@@ -49,6 +49,10 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
 - Call an LLM.
 - Skip writing `business_profile_services.website_page_path` for a
   named service this copy made a page for.
+- Add a second `page_id` null look section that is already a top-menu
+  look or already a footer look on that website.
+- Reject a website template that has both a certifications website
+  section and a reviews website section on one website page.
 
 ## Do
 

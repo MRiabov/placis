@@ -205,7 +205,7 @@
           ]
         },
         {
-          "component_id": "public.proof.logo_strip",
+          "component_id": "public.content.logo_strip",
           "props": {
             "anchor_id": "suppliers",
             "title": "Roofing materials and suppliers used on local projects",
@@ -300,7 +300,7 @@
           ]
         },
         {
-          "component_id": "public.proof.testimonials",
+          "component_id": "public.reviews.cards",
           "props": {
             "anchor_id": "testimonials",
             "title": "WHAT PEOPLE SAY",

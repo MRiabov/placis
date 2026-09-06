@@ -1,10 +1,10 @@
 {
-  "id": "public.proof.accreditations",
+  "id": "public.content.logo_strip",
   "aliases": [],
   "schema_version": 1,
-  "display_name": "Accreditations",
-  "family": "proof",
-  "variant": "accreditations",
+  "display_name": "Logo Strip",
+  "family": "content",
+  "variant": "logo_strip",
   "props_schema": {
     "type": "object",
     "properties": {
@@ -17,17 +17,47 @@
       "title": {
         "type": "string"
       },
+      "layout": {
+        "type": "string",
+        "enum": [
+          "marquee",
+          "grid",
+          "static_grid"
+        ]
+      },
       "items": {
         "type": "array",
         "items": {
           "type": "object",
-          "additionalProperties": true
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "alt_text": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "label"
+          ]
         },
         "minItems": 1
       }
     },
     "additionalProperties": true,
-    "required": ["title", "items"]
+    "required": [
+      "items"
+    ]
   },
   "editable_slots": [
     {
@@ -41,13 +71,13 @@
       "key": "title",
       "type": "text",
       "label": "Title",
-      "required": true,
+      "required": false,
       "max_length": null
     },
     {
       "key": "items",
       "type": "list",
-      "label": "Accreditations",
+      "label": "Logos",
       "required": true,
       "max_length": null
     }
