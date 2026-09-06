@@ -82,9 +82,11 @@ accordion. Screenshots pass `?shot=1` so the strip is hidden.
 | `/cms/ads/new` | Starts a new ad (opens the same screen) |
 | `/cms/ads/{id}` | Ad detail (existing ad); "Edit" opens the ad workspace |
 
-There are only two screens: the list and the ad workspace. The ad workspace is
-one accordion wrapper containing two expandable steps, an inline loading state,
-and the approve block at the end.
+There are **three** surfaces: the list (`/cms/ads`), the **ad workspace**
+(`/cms/ads/new` and Edit), and ad detail (`/cms/ads/{id}`). The ad
+workspace is one accordion wrapper containing two expandable steps, an
+inline loading state, and the approve block at the end. Review is step 2
+of the accordion, not a route.
 
 ## Screens
 
@@ -298,7 +300,7 @@ Read-oriented view opened by clicking an ad card; "Edit" opens the ad workspace
 - **One card on a wide screen, two columns — inputs left, outputs right** —
   on a **wide** screen the whole detail is one card (no per-format cards).
   The top bar, then a two-column area. On a **narrow** screen the same
-  blocks sit on the canvas — no wrapping card (that would nest the photo
+  blocks sit on the main area — no wrapping card (that would nest the photo
   and the rest). The photo is the image, not a nested frame. (2026-08-29)
   - **Left (inputs)**: Images — a **one-image ad** shows that photo, not a
     thumbnail gallery (changing the photo is **Edit**, in the workspace strip).

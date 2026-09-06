@@ -9,7 +9,7 @@ Classifier output is a dedicated table in this schema, not columns on
 `media_assets` and not a table in `ai`
 ([classifications and predictions](../../../general-architecture/persistence.md#classifications-and-predictions)).
 Original, canonical WebP, and image-thumbnail files live in
-[files](../../../infrastructure/files.md). ETL import
+[files and S3](../../../infrastructure/files-and-s3.md). ETL import
 identity lives in `etl.imported_media`, not here.
 
 The file on a media library item is never replaced. An edit creates a

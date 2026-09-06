@@ -2,8 +2,8 @@
 
 The photo library and image editing. One library: full screen at `/cms/media`
 under **Profile**. In the website editor, attach and pick from **Content** when
-an image is selected on the canvas (same rows). Crop, focal point, and cleanup
-stay on `/cms/media`. Named identifiers:
+an image is selected on the website editor canvas (same rows). Crop, focal
+point, and cleanup stay on `/cms/media`. Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
 
 - [persistence.md](persistence.md) — `media_assets`,
@@ -146,16 +146,17 @@ inherited at attach).
 ## Website editor
 
 On `/cms/website` there is no media library rail item. Click an image on the
-canvas and **Content** shows the same rows as `/cms/media` for attach, pick, and
-upload. Crop / focal / cleanup stay on `/cms/media`. It is not a second library.
+website editor canvas and **Content** shows the same rows as `/cms/media` for
+attach, pick, and upload. Crop / focal / cleanup stay on `/cms/media`. It is not
+a second library.
 
 - **Upload** is the tile / file picker in Content. Drop onto that tile still
   uploads; the prompt is not drag-and-drop.
-- Drag a media library item onto an image on the canvas to attach it to that
-  website slot (discrete PATCH, not text click-off).
-- Drop an image file onto the canvas: upload into the media library, then attach
-  if the drop is over an image website slot; otherwise the new item stays in the
-  media library.
+- Drag a media library item onto an image on the website editor canvas to attach
+  it to that website slot (discrete PATCH, not text click-off).
+- Drop an image file onto the website editor canvas: upload into the media
+  library, then attach if the drop is over an image website slot; otherwise the
+  new item stays in the media library.
 - An in-flight upload is covered by the website editor leave guard
   ([editing.md](../../website/editing.md)). The circle-and-cross on the thumb ends that in-flight upload.
 
@@ -165,10 +166,10 @@ Screens: [website frontend](../../website/frontend.md). Port:
 ## Used by
 
 - **The website** — images inside website sections. Pending-review AI images may
-  attach on the unpublished canvas; the warning is in Content when that image is
-  selected, not copy on the website. `PublishWebsite` **calls**
-  `ApproveMediaAsset`. Website publication and the live website still require
-  `ready` + approved media.
+  attach on the unpublished website editor canvas; the warning is in Content
+  when that image is selected, not copy on the website. `PublishWebsite`
+  **calls** `ApproveMediaAsset`. Website publication and the live website still
+  require `ready` + approved media.
 - **Ads** — the LLM picks from `ready` + approved media captions. A photo the
   owner **adds to this ad** is usable once `file_id` is set (about 10
   seconds), including captioning-failed; captioning is background, not a
@@ -181,7 +182,7 @@ drafts use that same pool; an owner-added photo in an ad is usable once the
 photo is uploaded. The unpublished website editor may attach pending-review AI
 images; the warning is in Content, not copy on the website.
 
-Files live in [files](../../../infrastructure/files.md)
+Files live in [files and S3](../../../infrastructure/files-and-s3.md)
 (`original_file_id`, canonical `file_id`, `thumbnail_file_id`). HTTP:
 [api.md](api.md) (this resource owns upload; no `/v1/files`). Tables:
 [persistence.md](persistence.md). Public-source imports (Maps photos,

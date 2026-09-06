@@ -22,7 +22,7 @@ func run(args []string) error {
 	jobsPath := flags.String("jobs", "docs/infrastructure/jobs.md", "path to jobs.md")
 	openapiPath := flags.String("openapi", "openapi.json", "public OpenAPI JSON")
 	workerPath := flags.String("worker-openapi", "apps/contractor-website/openapi.json", "Worker internal OpenAPI JSON")
-	migrations := flags.String("migrations", "migrations", "goose SQL directory")
+	migrations := flags.String("migrations", "internal/infrastructure/store/migrations", "goose SQL directory")
 	internalRoot := flags.String("internal", "internal", "Go internal packages")
 	cmdRoot := flags.String("cmd", "cmd", "Go commands (ci is skipped)")
 	if err := flags.Parse(args); err != nil {

@@ -40,7 +40,7 @@ are original audit ids (not compacted).
   attach/crop/focal function after Content pick. Tighten README;
   keep both.
 - **`files.visibility=owner_visible`** — keep until a third
-  visibility is needed (`files.md` already says so).
+  visibility is needed (`files-and-s3.md` already says so).
 
 ## Deferred
 

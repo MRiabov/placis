@@ -199,11 +199,11 @@ Each development task is one PR unless a later pack splits Go then UI. Fields:
 
 - **Depends on:** S01
 - **Owns:** `files` table + MinIO; signed URLs; no `/v1/files` HTTP
-  ([files](../infrastructure/files.md))
+  ([files](../infrastructure/files-and-s3.md))
 - **Must not:** media library HTTP, public delivery without a
   `files` row
 - **Done when:** files Integration named in
-  [files](../infrastructure/files.md) / media library tests
+  [files](../infrastructure/files-and-s3.md) / media library tests
   that this development task can close (row + MinIO object). No owner UI
 - **Blocked by:** none
 

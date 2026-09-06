@@ -221,7 +221,8 @@ second row. Not website activation. Routes:
 Stripe subscription updated / deleted, `invoice.paid`, and
 `invoice.payment_failed` (billing). Webhook **inserts** this River job
 kind. Unique on Stripe subscription id while pending/running
-(serialize). Worker **calls** `SyncSubscriptionFromStripe`.
+(serialize). Worker: `internal/billing/jobs.go`. Worker **calls**
+`SyncSubscriptionFromStripe`.
 
 New paid period: **calls** `AddIncludedUsageCredit` (unique
 `stripe_invoice_id`; do not insert a second `included_usage_credit` from
@@ -246,8 +247,8 @@ River job kind with that `event_id`. Worker **reads**
 `stripe_events.payload` and upserts/deactivates **that** Price /
 Product. Not `Prices.List` per webhook. Empty `billing.prices` / boot
 **inserts** one full-list job (one `Prices.List`; upsert all; deactivate
-missing). Not on Checkout, catalogue GET, or `invoice.paid`. Worker
-**calls** `SyncCatalogFromStripe`.
+missing). Not on Checkout, catalogue GET, or `invoice.paid`. Worker:
+`internal/billing/jobs.go`. Worker **calls** `SyncCatalogFromStripe`.
 
 ### `billing_nonpayment_unpublish`
 
@@ -260,7 +261,8 @@ invoice was not yet applied, do **not** unpublish. If still unpaid: set
 `canceled` / `canceled_at` and **calls** `UnpublishWebsite` (every
 website on that tenant). This Stripe GET is only here, not on Publish.
 `billing_subscription_sync` also evaluates the clock when a webhook
-lands. Website 01 occupancy (6 months after `canceled_at`) is unchanged.
+lands. Worker: `internal/billing/jobs.go`. Website 01 occupancy
+(6 months after `canceled_at`) is unchanged.
 
 ### `scheduled_etl`
 

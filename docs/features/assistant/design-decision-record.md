@@ -15,7 +15,8 @@ owner-written; omit it rather than inventing it.
    composer (chevrons, field, Plan / Send or **Voice** when empty). Expand /
    reduce. Clear context trash while expanded. Same overlay on every CMS
    assistant screen’s main area. Plan / Ask first switches are
-   **website editor only**. Placement: bottom-right of the canvas / overlay
+   **website editor only**. Placement: bottom-right of the website editor
+   workspace / overlay
    (website design decision 18 geometry), not a full-screen takeover.
    (2026-08-28) (2026-08-29): The **call** is the **Assistant** button (design
    decision 11), not hunting for this Assistant. DustOrb / composer look stays
@@ -45,7 +46,8 @@ owner-written; omit it rather than inventing it.
    a first-turn assistant POST. Connect (ad accounts) stays. Hide New chat in
    the left nav. (2026-08-28)
 
-4. **Follow is default on** — Owner cannot turn it off. Website editor: canvas
+4. **Follow is default on** — Owner cannot turn it off. Website editor: website
+   editor canvas
    snaps to the website slot the **agent** is editing. Field-list screens
    (Details and other field lists): distinct agent-edited field notice (example:
    the field reads blue). Ads copy highlight can share that notice.
@@ -81,11 +83,11 @@ owner-written; omit it rather than inventing it.
    (`min(30vw, 24rem)`). (2026-08-28) Same day, later: wider viewports are
    `min(5.5rem, 30vw)` again (same size as the onboarding guide). ≤480px stays
    **50vw**. Voice Apply / Reject / Switch to text mode stay a compact cluster
-   to the left of the orb; they do not stretch across the canvas. Same day,
-   later: desktop / tablet **click** target is a **2.75rem circle** (particle
-   wrap stays `min(5.5rem, 30vw)`); clicks outside that circle pass through to
-   the canvas. Close and Switch to text mode still capture. ≤480px hit is
-   `min(12rem, 42vw)`. (2026-08-28)
+   to the left of the orb; they do not stretch across the website editor canvas.
+   Same day, later: desktop / tablet **click** target is a **2.75rem circle**
+   (particle wrap stays `min(5.5rem, 30vw)`); clicks outside that circle pass
+   through to the website editor canvas. Close and Switch to text mode still
+   capture. ≤480px hit is `min(12rem, 42vw)`. (2026-08-28)
 
 8. **Denied microphone uses the shared notification** — CMS: open the
    composer and the Ads/Details **notification** (**Allow microphone access in
@@ -117,21 +119,22 @@ owner-written; omit it rather than inventing it.
     not top-right. On a narrow website editor it sits above the workspace bar.
     Same day, later: the Voice pill is **Switch to text mode**. (2026-08-29)
 
-12. **Unpaid website preview Assistant is on the canvas** — Same tokens as CMS
-    Assistant (bottom-right **Assistant** call, then DustOrb / composer).
-    Present on `/onboarding/preview-and-edit/`. Top-right is **Share** only. Pay
-    is the sticky website-activation strip. No owner Plan switch. Instant apply.
-    Hidden on wait teaser. (2026-08-30) Same day, later: the composer is **on**
-    as text; **Voice** is a switch in that composer. Website page list and Share
-    float on the canvas. Send and Voice need **Sign up with Google**. The field
-    is a compact docked composer, not the CMS card. (2026-08-30) Same day,
-    later: that composer stacks above the website-activation strip’s lift
-    shadow. (2026-08-30) Same day, later: on a wide pane the composer is
+12. **Unpaid website preview Assistant is in the website editor workspace** —
+    Same tokens as CMS Assistant (bottom-right **Assistant** call, then DustOrb
+    / composer). Present on `/onboarding/preview-and-edit/`. Top-right is
+    **Share** only. Pay is the sticky website-activation strip. No owner Plan
+    switch. Instant apply. Hidden on wait teaser. (2026-08-30) Same day, later:
+    the composer is **on** as text; **Voice** is a switch in that composer.
+    Website page list and Share float on the website editor canvas **corners**
+    (still workspace). Send and Voice need **Sign up with Google**. The field is
+    a compact docked composer, not the CMS card. (2026-08-30) Same day, later:
+    that composer stacks above the website-activation strip’s lift shadow.
+    (2026-08-30) Same day, later: on a wide pane the composer is
     **max-width 32rem**, centered; on a narrow pane it still docks nearly full
     width. (2026-08-30) Same day, later: the composer shows the CMS Assistant
     thread (expand / reduce; no Plan / Ask first / Clear context). Default
     expanded so 06 `tool_summary` is visible on land. (2026-08-30) Same day,
-    later: website page list and Share sit on the canvas corners; this route has
-    no Find / Review / Questions progress and no Find/Review Assistant.
-    (2026-08-30) Same day, later: while copy generation is still writing, a
-    six-dot spinner sits under the Assistant thread. (2026-08-30)
+    later: website page list and Share sit on the website editor canvas corners;
+    this route has no Find / Review / Questions progress and no Find/Review
+    Assistant. (2026-08-30) Same day, later: while copy generation is still
+    writing, a six-dot spinner sits under the Assistant thread. (2026-08-30)

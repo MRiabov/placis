@@ -21,7 +21,8 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 6. [Product](general-prd.md) — the loop, product-level in/out of scope
 7. [General architecture](general-architecture/README.md) — stack, module layout, processes, HTTP routes,
    `frontend-3` UI
-8. [Infrastructure](infrastructure/README.md) — tenancy (Clerk), config, store, AI, files, River jobs
+8. [Infrastructure](infrastructure/README.md) — tenancy (Clerk), config,
+   store, AI, files and S3, River jobs
 9. [Onboarding](features/onboarding/README.md) — business research and business-profile building;
    [website activation](features/onboarding/pipeline/09-website-activation.md) is activation Price plus Placis Pro plan / month
    Checkout
@@ -59,7 +60,7 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 | Persistence conventions + index | [general-architecture/persistence.md](general-architecture/persistence.md) |
 | Store (pool / goose) | [infrastructure/store.md](infrastructure/store.md) |
 | HTTP conventions + per-feature `api.md` | [general-architecture/api.md](general-architecture/api.md) |
-| AI layer, audit, jobs, files | [infrastructure/](infrastructure/README.md) |
+| AI layer, audit, jobs, files and S3 | [infrastructure/](infrastructure/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
 | ETL (extract + transform) | [features/etl/README.md](features/etl/README.md) |
 | Business profile | [features/business-profile/README.md](features/business-profile/README.md) |

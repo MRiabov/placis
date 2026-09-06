@@ -11,7 +11,7 @@ under [features/](../features/). Trees:
 - [store.md](store.md) — pgx pool, goose, `sqlc.yaml`
 - [ai/](ai/README.md) — vendor AI interfaces, traces, knowledge loaders.
   Voice: [voice-agent.md](ai/voice-agent.md)
-- [files.md](files.md) — object storage and the `files` row
+- [files-and-s3.md](files-and-s3.md) — object storage and the `files` row
 - [jobs.md](jobs.md) — River job kind index (workers live in feature
   `pipeline/` or `jobs.go`)
 

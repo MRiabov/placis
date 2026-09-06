@@ -161,7 +161,7 @@ Do not mid-call `session.update` for these (same rule as tools / instructions).
 CMS create **includes** the unpublished website working copy when
 `assistant_screen` is `website_editor`. Other CMS screens omit that working
 copy. Onboarding create: current step + visible fields + product glossary, no
-canvas.
+website editor canvas.
 
 **Two routes** (lifecycle gate is one auth mode per prefix):
 

@@ -10,12 +10,11 @@ Assistant: [assistant](../../features/assistant/README.md).
 
 ## Left nav
 
-The CMS left nav lives in `frontend-3` (layout module). Profile replaces the
-current top-level Details item.
-Sites (the website editor entry) stays where it is. There is no **AI tools**
-item: image cleanup is `/cms/media`; the assistant is called from the
-bottom-right **Assistant** button on every screen in The CMS. Ads is a
-destination (screens:
+The CMS left nav lives in `frontend-3` (`/cms` layout folder). Profile replaces
+the current top-level Details item. Sites (the website editor entry) stays where
+it is. There is no **AI tools** item: image cleanup is `/cms/media`; the
+assistant is called from the bottom-right **Assistant** button on every screen
+in The CMS. Ads is a destination (screens:
 [ads frontend](../../features/ads/ad-generation/frontend.md)).
 Leads is a destination (screens:
 [leads frontend](../../features/other/leads/frontend.md)).

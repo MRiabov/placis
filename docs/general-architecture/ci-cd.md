@@ -40,7 +40,7 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    `TestHappyPath*` 1:1 plus E2E / Full / extras; do not split it). The look
    app (`apps/demo/src`) hard-fails at 800; that is
    [decision 1](#decisions). Repo-wide 1200 for `internal/`, `cmd/`,
-   `migrations/`, `catalog/`, `docs/` is still a later `cmd/ci` check. Prefer
+   `catalog/`, `docs/` is still a later `cmd/ci` check. Prefer
    splitting a feature into its own package over allowing a file to creep past
    800.
 2. **Folder fan-out** — a nested dir under `internal/` or `frontend-3/src/`
@@ -68,7 +68,7 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
 4. **Build + test** — `go build ./...` and `go test ./...` with **no**
    `-count=1` (Testcontainers Postgres; CircleCI uses the machine executor when
    it is live); `frontend-3` typecheck + `vitest run --changed origin/main` +
-   Playwright e2e (`--only-changed=origin/main` unless Go / migrations / OpenAPI
+   Playwright e2e (`--only-changed=origin/main` unless Go / goose SQL / OpenAPI
    / Playwright config / lockfile force the full list). Cache paths and worker
    rules: Runner policy below, and [testing.md](testing.md).
 5. **Generated-code freshness** — `sqlc generate` must produce no diff; `goose`
@@ -118,7 +118,7 @@ decision + date) instead of silently replacing the old entry.
 - Validation runs on **pull-request branches only** and ignores direct `main`
   pushes (merge commits are already validated by the PR checks). Path filtering
   skips jobs irrelevant to the change: `frontend-3` e2e unless `frontend-3/`,
-  `packages/website-components/`, Go, migrations, or `openapi.json` changed;
+  `packages/website-components/`, Go, goose SQL, or `openapi.json` changed;
   `apps/placis-website` e2e unless that app (or its shared packages) changed.
   Start the contractor-website **Worker container** (no `wrangler deploy`)
   when `apps/contractor-website/`, the internal OpenAPI file, or Go
@@ -177,7 +177,7 @@ The `justfile` is the **developer entry point**, and nothing more — only the
 high-frequency dev loop:
 
 - `just servers-up` / `just servers-down` — start/stop the dev environment
-  (Postgres via Docker, migrations, `cmd/api`, `frontend-3`, with env-var + port
+  (Postgres via Docker, goose, `cmd/api`, `frontend-3`, with env-var + port
   resolution).
 - `just test`, `just lint`, `just fmt`, `just sqlc`, `just typegen`,
   `just check-files` — the fix-it-locally feedback loop.
@@ -290,7 +290,7 @@ list). `**/testdata/**` is skipped (checker fixtures). Worked examples:
 - Install once per clone: `pre-commit install`. Git worktrees share
   `.git/hooks`.
 - Pre-commit: `.pre-commit-config.yaml` runs `go run ./cmd/ci/check-dont-say` on
-  staged files under `AGENTS.md`, `docs/`, `internal/`, `cmd/`, `migrations/`,
+  staged files under `AGENTS.md`, `docs/`, `internal/`, `cmd/`,
   `catalog/`, `apps/contractor-website`, `apps/placis-website`, `scripts/`, and
   `apps/demo/` (Go's build cache keeps this cheap). Markdown, Go, and JavaScript
   (`.js` / `.mjs`) are scanned in those trees. TypeScript (`.ts` / `.tsx`) is
@@ -378,7 +378,7 @@ from the public job). CI: `.github/workflows/docs-gates.yml` runs
 
 `cmd/ci/check-docs-code` pairs OpenAPI, Go, and goose SQL with the named
 lists in `docs/`. Unit tests + `go run`. Pre-commit on `docs/**/*.md`,
-`internal/`, `cmd/`, `migrations/`, `openapi.json`, and the Worker
+`internal/`, `cmd/`, `openapi.json`, and the Worker
 internal OpenAPI file when present. CI:
 `.github/workflows/docs-gates.yml` runs
 `go test ./cmd/ci/docnames ./cmd/ci/check-docs-code` then
@@ -387,7 +387,8 @@ scanners.
 
 - **Always:** a path, DTO type name, River job kind, or SQL
   table in public OpenAPI, Worker internal OpenAPI, Go under `internal/`
-  and `cmd/` (not `cmd/ci`), or `CREATE TABLE` in `migrations/` must
+  and `cmd/` (not `cmd/ci`), or `CREATE TABLE` in
+  `internal/infrastructure/store/migrations/` must
   already live in docs. Missing trees are skipped. Empty code does not
   fail. Public OpenAPI must not list `/internal/…`. A **Do not create**
   path in OpenAPI fails even if the string appears in docs.

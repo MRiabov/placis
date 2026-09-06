@@ -157,7 +157,7 @@ Extra frontend HappyPath only for real screen branching. Names include
 At least **one E2E test per feature** that has owner UI — a "feature" is a
 directory under `docs/features/`. ETL has no owner UI (onboarding E2E covers
 02). E2E is **full-stack**: Playwright drives `frontend-3` against the real
-Go API and a real Postgres (Testcontainers), with migrations run. Only
+Go API and a real Postgres (Testcontainers), with goose run. Only
 Google, the LLM, and voice are faked. Website / onboarding E2E that hit 03
 or 04 also run the Worker container. Each E2E verifies both what the UI
 shows and the DB rows. A feature with owner UI does not pass without its
@@ -232,10 +232,10 @@ loops use the same tools. CI still invokes the tools directly, not `just`. See
   transform caches for `webServer`; skip specs with
   `playwright test --only-changed=origin/main` (TypeScript import graph). That
   graph cannot see Go, SQL, or OpenAPI — force the **full** list for that job
-  when `internal/`, `cmd/`, `migrations/`, `openapi.json`, the Worker
+  when `internal/`, `cmd/`, `openapi.json`, the Worker
   internal OpenAPI file, Playwright config, `package.json`, or
   `pnpm-lock.yaml` change. Path-filter `frontend-3` e2e unless
-  `frontend-3/`, `packages/website-components/`, Go, migrations, or
+  `frontend-3/`, `packages/website-components/`, Go, goose SQL, or
   `openapi.json` changed. Path-filter `apps/placis-website` e2e unless that app
   (or its shared packages) changed. Do not `--shard` until one job with workers
   is still too slow (shards multiply hosted minutes and Clerk traffic). Do not

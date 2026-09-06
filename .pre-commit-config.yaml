@@ -35,7 +35,7 @@ repos:
         language: system
         entry: go run ./cmd/ci/check-dont-say
         pass_filenames: true
-        files: '^AGENTS\.md$|^(docs|internal|cmd|migrations|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$|^(apps/demo|src)/.*\.(md|go|mjs|js|ts|tsx)$'
+        files: '^AGENTS\.md$|^(docs|internal|cmd|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$|^(apps/demo|src)/.*\.(md|go|mjs|js|ts|tsx)$'
       - id: check-pipeline-tables
         name: Pipeline table and heading check
         language: system
@@ -53,4 +53,4 @@ repos:
         language: system
         entry: go run ./cmd/ci/check-docs-code
         pass_filenames: false
-        files: '^docs/.*\.md$|^internal/|^cmd/|^migrations/|^openapi\.json$|^apps/contractor-website/openapi\.json$'
+        files: '^docs/.*\.md$|^internal/|^cmd/|^openapi\.json$|^apps/contractor-website/openapi\.json$'

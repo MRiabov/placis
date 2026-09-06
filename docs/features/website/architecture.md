@@ -276,7 +276,7 @@ host. Not the Worker.
 
 ## Voice
 
-The assistant can be driven by the **voice agent** (see [voice-agent.md](../../infrastructure/ai/voice-agent.md)). Audio
+The assistant can be driven by the **voice agent** (see [voice agent](../../infrastructure/ai/voice-agent.md)). Audio
 never hits Go; the browser relays `function_call` as typed HTTP; Go dispatches
 the same governed website editor tools (including `update_details`). Voice
 grants no extra authority. On `/cms/website`, empty composer turns the voice

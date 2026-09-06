@@ -22,7 +22,7 @@ internal/
     tenancy/                # tenants.go, memberships.go
       auth/                 # Clerk SDK + Auth-mode helpers (picked by Register)
       store/                # sqlc for auth.tenants / memberships
-    store/                  # pool, Tx, goose SQL, sqlc.yaml (full migrations)
+    store/                  # pool, Tx, goose SQL under migrations/, sqlc.yaml
     ai/                     # vendor LLM/Voice/image + traces; load/interpolate
       store/                # sqlc for schema ai
     files/                  # object storage, signed URLs
@@ -87,6 +87,8 @@ internal/
     api.go
     dto.go
     service.go              # if activation **calls** more than a couple of Dos
+    jobs.go                 # leftover Stripe / usage jobs
+    fake.go                 # Stripe (Checkout / webhooks)
     store/
   leads/
     api.go
@@ -129,6 +131,22 @@ Host helper.
 Worker `/internal/website-render` and `/internal/website-publication`
 stay on the contractor-website Worker, not `cmd/api`.
 
+## Import DAG
+
+```mermaid
+flowchart LR
+  cmdApi["cmd/api"] --> httpapi["infrastructure/httpapi"]
+  httpapi --> featApi["feature api/"]
+  featApi --> pipeline["feature pipeline/"]
+  featApi --> dos["other Dos"]
+  pipeline --> sqlc["feature store/ sqlc"]
+  dos --> sqlc
+```
+
+Only `cmd/api` imports `httpapi`. `pipeline/` does not import `api/`
+or `httpapi`. Callers **call** public Dos; they do not import another
+feature’s `store/`.
+
 ## Rules
 
 - **Feature-nested, not flat**: one package per feature; a leaf starts as
@@ -168,7 +186,8 @@ stay on the contractor-website Worker, not `cmd/api`.
 - **Knowledge:** per-assistant `assistant/knowledge/`
   (`knowledge_base_registry.yaml` + `knowledge_*.md`). `infrastructure/ai`
   load/interpolate only. [AI layer](../infrastructure/ai/README.md).
-- Shared types live in exactly one package — no forked duplicates.
+- **Fakes** sit beside the collaborator (`fake.go` in that package). No
+  `onboarding/research/` — 02 **calls** `etl.StartRun`.
 - Each feature that calls the LLM owns `prompts.yaml` in that package.
   Variables are `{{var}}` and dotted `{{aaa.bbb}}`.
 - Route handlers validate input (huma) and call service functions;
