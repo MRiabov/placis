@@ -852,7 +852,7 @@ The kept record of how the unpublished website changed, not published
 checkpoints.
 
 Distinct from: Website version (published checkpoints of the whole website),
-Profile history (the business profile), audit events.
+Profile history (the business profile), `ad_reviews`.
 
 Do not say “website history”.
 

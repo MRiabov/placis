@@ -534,7 +534,9 @@ search, trade registry, projects-from-source,
 ### S27 Audit hardening
 
 - **Depends on:** S22
-- **Owns:** completeness of `audit_events` and AI-trace
+- **Owns:** completeness of the named feature trails
+  (`business_profile_edits`, `edit_history`, `website_publications`,
+  `website_activations`, `ad_reviews`) and AI-trace
   reconstructability
   ([audit](../general-architecture/audit.md),
   [AI layer](../infrastructure/ai/README.md))

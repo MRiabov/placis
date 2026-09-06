@@ -46,8 +46,7 @@ select, edit, see it update, then website publication.
    website slots / website sections — not the whole unpublished website.
    Over-chatty PATCH from one `{website_prefix}` is `429` with
    `Retry-After`; the website editor retries with backoff and **keeps the
-   local edit**. Do not write
-   `audit_events` per website slot edit. Last writer is `edit_history` only
+   local edit**. Last writer is `edit_history` only
    ([assistant.md](assistant.md)). There is no `POST /undo` or `POST /redo`.
 
 The backend serves a typed **website editor projection** — website pages,
