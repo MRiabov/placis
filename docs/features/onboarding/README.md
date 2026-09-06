@@ -12,6 +12,7 @@ Onboarding turns a spoken or typed description of a business into a clear
   interview; 04b out; build-profile, 05–09)
 - [persistence.md](persistence.md) — onboarding sessions, website activation
 - [api.md](api.md) — HTTP (business lookup, resume, SSE, website activation)
+- [jobs.md](jobs.md) — `website_activation`
 - [technical-implementation.md](technical-implementation.md) — the technical plan (flow, pipeline)
 - [frontend.md](frontend.md) — the onboarding screens and fields (client
   interview Details == `/cms/details`)

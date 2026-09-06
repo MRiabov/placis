@@ -12,7 +12,6 @@ func TestRunDocsOnlyCurrentTree(t *testing.T) {
 	err := run([]string{
 		"--all",
 		"--docs", filepath.Join(root, "docs"),
-		"--jobs", filepath.Join(root, "docs", "infrastructure", "jobs.md"),
 		"--openapi", filepath.Join(root, "openapi.json"),
 		"--worker-openapi", filepath.Join(root, "apps", "contractor-website", "openapi.json"),
 		"--migrations", filepath.Join(root, "internal", "infrastructure", "store", "migrations"),
@@ -47,7 +46,6 @@ func TestRunInventedOpenAPI(t *testing.T) {
 	}
 	err := run([]string{
 		"--docs", docs,
-		"--jobs", jobsPath,
 		"--openapi", openapi,
 		"--worker-openapi", filepath.Join(root, "missing-worker.json"),
 		"--migrations", filepath.Join(root, "internal", "infrastructure", "store", "migrations"),

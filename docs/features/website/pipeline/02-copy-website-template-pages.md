@@ -121,7 +121,7 @@ contracts under `catalog/`.
 River job kind `website_copy_generation` (onboarding 06 / website 03), unique
 key = that `tenant_id`. Args: `tenant_id` only. Second insert while
 pending/running is River unique conflict → HTTP 409.
-[jobs](../../../infrastructure/jobs.md). Must not write
+[jobs](../jobs.md). Must not write
 `website_slot_reviews`, `website_publications`, `edit_history`, or
 attach `media_asset_id` on image slots. Onboarding session stays
 `selecting_and_copying_website_template` until wait-end, then

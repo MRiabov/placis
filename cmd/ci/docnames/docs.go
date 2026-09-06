@@ -1,6 +1,7 @@
 package docnames
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -44,7 +45,8 @@ type Docs struct {
 }
 
 // ParseDocs walks docsRoot for persistence.md, api.md, and jobs.md.
-func ParseDocs(docsRoot, jobsPath string) (Docs, error) {
+// infrastructure/jobs.md is the River index (no ## Jobs rows).
+func ParseDocs(docsRoot string) (Docs, error) {
 	d := Docs{
 		Tables:   map[string]bool{},
 		DTOs:     map[string]bool{},
@@ -52,6 +54,7 @@ func ParseDocs(docsRoot, jobsPath string) (Docs, error) {
 		JobNames: map[string]bool{},
 		ByFile:   map[string]*FileAPI{},
 	}
+	seenJobs := map[string]string{}
 	err := filepath.WalkDir(docsRoot, func(path string, e fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -78,20 +81,34 @@ func ParseDocs(docsRoot, jobsPath string) (Docs, error) {
 			f := ParseAPIFile(rel, string(src))
 			d.ByFile[rel] = f
 			mergeAPI(&d, f)
+		case strings.HasSuffix(slash, "/jobs.md"):
+			if IsJobsIndex(slash) {
+				return nil
+			}
+			src, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			names, err := JobsTableNames(string(src))
+			if err != nil {
+				return fmt.Errorf("%s: %w", slash, err)
+			}
+			rel := slash
+			if r, err := filepath.Rel(docsRoot, path); err == nil {
+				rel = filepath.ToSlash(r)
+			}
+			for n := range names {
+				if prev, ok := seenJobs[n]; ok {
+					return fmt.Errorf("%s: River job kind `%s` already listed in %s", rel, n, prev)
+				}
+				seenJobs[n] = rel
+				addName(d.JobNames, n)
+			}
 		}
 		return nil
 	})
 	if err != nil {
 		return d, err
-	}
-	if jobsPath != "" {
-		if st, err := os.Stat(jobsPath); err == nil && !st.IsDir() {
-			names, err := JobsFileNames(jobsPath)
-			if err != nil {
-				return d, err
-			}
-			d.JobNames = names
-		}
 	}
 	return d, nil
 }

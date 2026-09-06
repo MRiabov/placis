@@ -1278,14 +1278,15 @@ The `Kind()` string River runs (schema `jobs`). Never bare **kind**. Never in
 PRDs or UI. Distinct from: ETL run kind (the run, not the job);
 thread kind.
 
-In code: River `Kind()`. Catalog: [jobs.md](infrastructure/jobs.md)
-`## Jobs`.
+In code: River `Kind()`. Catalog: owning feature
+[jobs.md](infrastructure/jobs.md) `## Jobs`.
 
 ---
 
 ### River workflow
 
-A named sequence of River job kind rows in [jobs.md](infrastructure/jobs.md) `## Workflows`. Never in
+A named sequence of River job kind rows in the owning feature
+[jobs.md](infrastructure/jobs.md) `## Workflows`. Never in
 PRDs or UI. Not a paid River workflows module. Distinct from: assistant
 continuous workflow; Cloudflare Workflows.
 

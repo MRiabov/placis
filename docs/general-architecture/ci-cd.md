@@ -218,8 +218,8 @@ does). We do **not** hand-roll AST scripts up front:
   is Tables / Indexes); `testing.md` `##` is E2E / Integration and `####`
   is Setup / Exercise / Verify / Fail / Mocked / Teardown; pipeline Go
   `TestPipelineHappyPath*` per paired step plus `{Feature}Full` (shrink-only
-  leftover until funcs exist); `jobs.md` `##` is Workflows / Jobs;
-  backticked River job kind must already live in `jobs.md` `## Jobs`.
+  leftover until funcs exist); feature `jobs.md` `##` is Workflows / Jobs;
+  backticked River job kind must already live in a feature `jobs.md` `## Jobs`.
   A changed `persistence.md` passed on the command line without
   `testing.md` warns. See
   [docs conventions](../docs-conventions.md#named-identifiers).
@@ -317,7 +317,7 @@ parse failure is the failure.
 heading lists in
 [docs conventions](../docs-conventions.md#named-identifiers).
 Unit tests + `go run`. Pre-commit on
-`docs/features/**/{persistence,testing,api}.md`,
+`docs/features/**/{persistence,testing,api,jobs}.md`,
 `docs/features/**/pipeline/**/*.md`, and `docs/infrastructure/jobs.md`.
 CI: `.github/workflows/docs-gates.yml` runs
 `go test ./cmd/ci/check-pipeline-tables` then
@@ -326,11 +326,12 @@ scanners.
 
 This pass: **tables**, **pipeline step headings**,
 **feature `api.md` / `persistence.md` / `testing.md` headings**,
-**`jobs.md` Workflows / Jobs**, and **known River job kind** names. Not Routes
-paths, not gatherers (`pipeline/README.md`,
+**feature `jobs.md` Workflows / Jobs**, and **known River job kind** names. Not
+Routes paths, not gatherers (`pipeline/README.md`,
 `etl/pipeline/etl-run-kind-triggers.md`). Closed `api.md` `##` is DTOs
 (optional), Routes, Do not create. Closed `persistence.md` `##` is Tables
-and Indexes. Closed `jobs.md` `##` is Workflows and Jobs. Closed
+and Indexes. Closed feature `jobs.md` `##` is Workflows and Jobs
+([infrastructure/jobs.md](../infrastructure/jobs.md) is the index). Closed
 `testing.md` `##` is E2E / Integration; closed `####` is Setup / Exercise /
 Verify / Fail / Mocked / Teardown (`###` is one test; ban
 `### METHOD /path`). Paired pipeline steps require

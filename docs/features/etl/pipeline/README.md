@@ -9,7 +9,7 @@ Invariants (closed `##`; `## Do — <phase>` is Do). Matching
 [testing/](testing/) names every persistence table that file backticks.
 Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
-River job kind list: [jobs](../../../infrastructure/jobs.md).
+River job kind list: [jobs](../jobs.md).
 
 ```text
 StartRun(trigger, tenant, force=false, bill_usage=unbilled)
@@ -98,7 +98,7 @@ calls `StartRun`.
   `reviews_ranking_for_display`. Report that N new
   `in_pool` rows landed. Onboarding and scheduled-ETL **succeeded** enqueue
   that River job ([build-profile](../../onboarding/pipeline/build-profile.md),
-  [jobs](../../../infrastructure/jobs.md)). Incremental LLM rerank as
+  [jobs](../jobs.md)). Incremental LLM rerank as
   reviews arrive is later (do not spec).
 
 ## Sources

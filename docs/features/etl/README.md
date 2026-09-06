@@ -22,6 +22,7 @@ slow extract). There is no owner-facing CMS screen in this slice.
 - [pipeline](pipeline/README.md) — ETL run kind triggers + per source (Google Maps, Facebook,
   Instagram, …)
 - [persistence.md](persistence.md) — `etl` tables
+- [jobs.md](jobs.md) — extract / transform River job kinds + `scheduled_etl`
 - [technical-implementation.md](technical-implementation.md)
 - [testing.md](testing.md)
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /

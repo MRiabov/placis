@@ -22,7 +22,7 @@ Reviews HTTP: `internal/profile/reviews/`
 
 Tables: [persistence.md](persistence.md). DTOs and Routes:
 [api.md](api.md). River job kind `reviews_ranking_for_display`:
-[jobs.md](../../../infrastructure/jobs.md).
+[jobs.md](../jobs.md).
 
 **Not Routes, still named:**
 

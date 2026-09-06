@@ -21,6 +21,8 @@ Named identifiers:
   website settings, `edit_history`
 - [api.md](api.md) — HTTP (`/v1/websites`, nested `{website_prefix}` editor /
   publication / address, Worker `websiteRender` / `websitePublication`)
+- [jobs.md](jobs.md) — `website_generation` (`select_and_copy_website_template`,
+  `website_copy_generation`)
 - [frontend.md](frontend.md) — `/cms/website/{website_prefix}` (publication dropdown +
   Connect modal). Post-onboarding create: [new-website-creation-flow.md](new-website-creation-flow.md)
   (**TBD**).

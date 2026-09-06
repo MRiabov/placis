@@ -19,7 +19,6 @@ func run(args []string) error {
 	flags := flag.NewFlagSet("check-docs-code", flag.ContinueOnError)
 	_ = flags.Bool("all", false, "scan docs, OpenAPI, Go, and SQL instead of listed files")
 	docsRoot := flags.String("docs", "docs", "docs root")
-	jobsPath := flags.String("jobs", "docs/infrastructure/jobs.md", "path to jobs.md")
 	openapiPath := flags.String("openapi", "openapi.json", "public OpenAPI JSON")
 	workerPath := flags.String("worker-openapi", "apps/contractor-website/openapi.json", "Worker internal OpenAPI JSON")
 	migrations := flags.String("migrations", "internal/infrastructure/store/migrations", "goose SQL directory")
@@ -29,7 +28,7 @@ func run(args []string) error {
 		return err
 	}
 
-	d, err := docnames.ParseDocs(*docsRoot, *jobsPath)
+	d, err := docnames.ParseDocs(*docsRoot)
 	if err != nil {
 		return err
 	}
