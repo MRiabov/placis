@@ -203,29 +203,6 @@ supplement. Must not: Archive.
 
 `409` if not `draft`.
 
-### TestHappyPathV1AdsAdIdVariantsReturnsVariant — Route
-
-Backend. Go `TestHappyPathV1AdsAdIdVariantsReturnsVariant`. OpenAPI
-1:1.
-
-#### Setup
-
-Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
-One ad with a stub variant. No `frontend-3`. No Worker.
-
-#### Exercise
-
-`GET /v1/ads/{ad_id}/variants`. Response `AdVariantRead`.
-
-#### Verify
-
-Exercise body: `AdVariantRead` is one row. Must not: multi-format
-list. Named **reads** may supplement.
-
-#### Fail
-
-`404`.
-
 ### TestHappyPathV1AdsAdIdVariantsVariantIdUpdatesVariant — Route
 
 Backend. Go `TestHappyPathV1AdsAdIdVariantsVariantIdUpdatesVariant`.
@@ -244,7 +221,7 @@ Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 
 #### Verify
 
-`GET /v1/ads/{ad_id}/variants` shows the retargeted placement.
+`GET /v1/ads/{ad_id}` `variant` shows the retargeted placement.
 **persists into** `ad_image_placements`, `ads.updated_at` may
 supplement. Must not: `POST …/cleanup`.
 
