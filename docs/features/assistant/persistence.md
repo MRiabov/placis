@@ -11,7 +11,7 @@ Shared AI traces: [AI layer](../../infrastructure/ai/README.md) (`ai.ai_generati
 [onboarding assistant](../onboarding/assistant.md). Usage credit: [billing](../billing/persistence.md). Website last-writer:
 [website edit history](../website/persistence.md)
 (`edit_history.ai_generation_id`). Voice recordings:
-[files](../../infrastructure/files.md). Logic:
+[files and S3](../../infrastructure/files-and-s3.md). Logic:
 [architecture.md](architecture.md).
 
 `ai` is shared `LLMProvider` + threads + traces. No `ai_generation_id` on

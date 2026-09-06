@@ -80,7 +80,7 @@ frontend-3/src/
         WebsiteEditor.tsx
         canvas.tsx                    # website editor canvas (stage)
         publish.tsx                   # Publish + Connect website address
-        workspace/                    # CMS website editor workspace (not on the canvas)
+        workspace/                    # CMS website editor workspace (not on the website editor canvas)
                                       # content/ TBD; composes cms/assistant
       profile/                        # Profile (disclosure; no /cms/profile route)
         details/
@@ -133,22 +133,22 @@ Loading placeholders: already in [frontend.md](frontend.md); a class on
 the waiting field/row/slot, not a loading-placeholder folder in `shared/ui/`.
 
 **Website editor canvas** vs **website editor workspace** (Internal;
-[website ADR](../features/website/ADR.md) 33): the canvas is only the
-painted unpublished website page. Workspace is every editing control that is
-not that stage. Both the CMS website editor and the onboarding website
-editor have a workspace. Workspace is never a child of the canvas.
+[website ADR](../features/website/ADR.md) 33): the website editor canvas is only the painted unpublished
+website page. Workspace is every editing control that is not that stage. Both
+the CMS website editor and the onboarding website editor have a workspace.
+Workspace is never a child of the website editor canvas.
 
 - **CMS** (`/cms/website/{website_prefix}`): workspace = rail (website
   pages, SEO, website styles, website versions), **Content**
   (`cms/website/workspace/content/`), click-to-edit, Assistant UI.
-  Content replaces the rail list on a canvas click. Files:
+  Content replaces the rail list on a website editor canvas click. Files:
   [website file trees](../features/website/file-trees.md).
-- **Onboarding** (`/onboarding/preview-and-edit/`): workspace =
-  Assistant UI, website-activation strip, Share, custom website-page
-  switcher. No Content, no website styles rail, no click-to-edit.
-  Website-page switcher and Share may sit on canvas **corners**; they
-  are still workspace. Lives in `onboarding/website-preview/` (composes
-  `cms/website/canvas.tsx` + `cms/assistant/`).
+- **Onboarding** (`/onboarding/preview-and-edit/`): workspace = Assistant UI,
+  website-activation strip, Share, custom website-page switcher. No Content, no
+  website styles rail, no click-to-edit. Website-page switcher and Share may sit
+  on website editor canvas **corners**; they are still workspace. Lives in
+  `onboarding/website-preview/` (composes `cms/website/canvas.tsx` +
+  `cms/assistant/`).
 
 **Ads:** three surfaces — Ad list (`/cms/ads`), **ad workspace**
 (`/cms/ads/new` and Edit; not website editor workspace), Ad detail

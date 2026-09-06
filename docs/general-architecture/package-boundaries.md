@@ -22,7 +22,8 @@ at. Trees: [module layout](module-layout.md). [ADR](ADR.md) 4–6.
    (`thread_kind=cms_assistant`) overlay SQL. CMS `assistant` HTTP must
    not import it. `onboarding/assistant` is Find, Review, and client
    interview only (`tools=[]`). `onboarding/media` wraps
-   `/v1/onboarding/media-assets` and **calls** `profile/media`.
+   `/v1/onboarding/media-assets` (token only; no crop / replace /
+   cleanup) and **calls** `profile/media`.
    `onboarding/details` wraps unactivated PATCH/undo and **calls**
    `profile` `service.go`. Business research (step 02) only **calls**
    `etl.StartRun` and mirrors Postgres on SSE (`etl.runs` and the live
@@ -103,7 +104,9 @@ at. Trees: [module layout](module-layout.md). [ADR](ADR.md) 4–6.
 10. `leads` owns website-form contacts. Website and ads **call**
     `service.go`. [Leads](../features/other/leads/README.md).
 11. Integrations (ETL adapters, LLM, storage, Stripe, email/SMS) are
-    behind interfaces so tests run without network calls.
+    behind interfaces so tests run without network calls. Fakes sit
+    beside the collaborator (`fake.go` in that package). No
+    `onboarding/research/`.
     [CI and delivery](ci-cd.md).
 
 Forbidden compile-time edges: `profile` → onboarding / website / ads;

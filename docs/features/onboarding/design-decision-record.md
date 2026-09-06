@@ -127,7 +127,7 @@ inventing it.
     same controls as Business details. Onboarding keeps the white `.onb-card`
     layout and heading type (`1.25rem` / 600). Details keeps the Details panel.
     **Why:** unify the details in onboarding and details; the white
-    onboarding canvas, the Details field look.
+    onboarding card canvas, the Details field look.
     (2026-08-28) Onboarding Details == Business details: same fields and
     controls; the card look is the look difference. **Why:** onboarding
     should == details.
@@ -137,26 +137,28 @@ inventing it.
     `/onboarding/preview-and-edit/`. Custom top-left nested website page list
     (this website preview only; Services nests website pages). Top-right:
     **Share**. Pay is the sticky website-activation strip (same bar as the
-    preview website address). Assistant is the CMS canvas Assistant
-    (bottom-right of the pane, DustOrb / composer). Canvas top-menu/footer
-    clicks stay on this route. No Content / website styles rail. Static host
-    mock stays `/onboarding/generated`. (2026-08-30) Same day, later: website
-    page list and Share float on the canvas (not a separate bar). Assistant
-    starts as text; **Voice** is in the composer. Send and Voice need **Sign
-    up with Google**. The website-activation strip stacks on a narrow pane: copy
-    and price, then the activate control. Unsigned identity on Assistant and the
-    strip is **Sign up with Google**. After Sign up, Send and Voice snap the
-    canvas to the website page being edited and apply copy (Follow, instant
-    apply). (2026-08-30) Same day, later: unpaid Assistant stacks above the
-    website-activation strip’s lift shadow. (2026-08-30) Same day, later: on a
-    wide pane the composer is max-width 32rem, centered. (2026-08-30) Same day,
-    later: Assistant shows the CMS thread (expand / reduce; no Plan / Ask first
-    / Clear context). Default expanded so 06 `tool_summary` is visible on land.
-    (2026-08-30) Same day, later: this route has no Find / Review / Questions
-    progress, no onboarding Back, and no Find/Review Assistant. Website page
-    list and Share sit on the canvas corners; they do not reserve a top band.
-    (2026-08-31) Same day, later: while copy generation is still writing, a
-    six-dot spinner sits under the Assistant thread. (2026-08-30)
+    preview website address). Assistant is the website editor workspace
+    Assistant (bottom-right of the pane, DustOrb / composer). Website editor
+    canvas top-menu/footer clicks stay on this route. No Content / website
+    styles rail. Static host mock stays `/onboarding/generated`. (2026-08-30)
+    Same day, later: website page list and Share float on the website editor
+    canvas **corners** (still workspace, not a separate bar). Assistant starts
+    as text; **Voice** is in the composer. Send and Voice need
+    **Sign up with Google**. The website-activation strip stacks on a narrow
+    pane: copy and price, then the activate control. Unsigned identity on
+    Assistant and the strip is **Sign up with Google**. After Sign up, Send and
+    Voice snap the website editor canvas to the website page being edited and
+    apply copy (Follow, instant apply). (2026-08-30) Same day, later: unpaid
+    Assistant stacks above the website-activation strip’s lift shadow.
+    (2026-08-30) Same day, later: on a wide pane the composer is max-width
+    32rem, centered. (2026-08-30) Same day, later: Assistant shows the CMS
+    thread (expand / reduce; no Plan / Ask first / Clear context). Default
+    expanded so 06 `tool_summary` is visible on land. (2026-08-30) Same day,
+    later: this route has no Find / Review / Questions progress, no onboarding
+    Back, and no Find/Review Assistant. Website page list and Share sit on the
+    website editor canvas corners; they do not reserve a top band. (2026-08-31)
+    Same day, later: while copy generation is still writing, a six-dot spinner
+    sits under the Assistant thread. (2026-08-30)
 
 14. **Wait teaser shows a website section when placeholders can resolve** —
     `/onboarding/preview` paints a website section only when current profile

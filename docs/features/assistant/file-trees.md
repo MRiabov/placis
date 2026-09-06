@@ -48,5 +48,5 @@ DustOrb is `src/shared/ui/DustOrb.tsx` (second-caller). Do not put
 ```text
 frontend-3/src/features/cms/assistant/
   Assistant.tsx                     # call button, thread, composer, Apply/Reject
-                                    # pills (workspace, not on the canvas)
+                                    # pills (workspace, not on the website editor canvas)
 ```

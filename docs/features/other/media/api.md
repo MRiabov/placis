@@ -4,7 +4,7 @@ Conventions: [HTTP conventions](../../../general-architecture/api.md).
 Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
 This resource **owns upload**. The `files` table stays
-([files](../../../infrastructure/files.md));
+([files and S3](../../../infrastructure/files-and-s3.md));
 there is **no** `/v1/files` HTTP. The file on an item is never replaced
 in place; edits copy (`parent_media_asset_id`).
 

@@ -16,7 +16,7 @@ Related docs:
 1. [Media README](README.md)
 2. [Media persistence](persistence.md)
 3. [HTTP](api.md)
-4. [Files](../../../infrastructure/files.md)
+4. [Files and S3](../../../infrastructure/files-and-s3.md)
 5. [Architecture and JSON standards](../../../general-architecture/backend-stack.md)
 
 ## Technical Thesis

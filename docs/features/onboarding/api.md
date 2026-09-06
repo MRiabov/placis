@@ -76,7 +76,7 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 | --- | --- | --- |
 | `PreviewWebsiteAddressRead` | `url` | Share (08). Website preview link |
 
-Unpaid canvas reuses CMS website editor DTOs (`WebsiteEditorGet`,
+Unpaid website editor canvas reuses CMS website editor DTOs (`WebsiteEditorGet`,
 `WebsitePageSummaryRead`, `WebsitePageRead`, `WebsitePageCreate`,
 `WebsitePageUpdate`, `WebsiteEditApplyRead`, `WebsiteMenusRead`,
 `WebsiteMenusUpdate`). Unpaid Details write reuses
@@ -181,21 +181,21 @@ Auth: onboarding session token. `status=active` → **403**.
 
 ### Website
 
-Unpaid canvas. Same tails as `/v1/websites/{website_prefix}/editor/…`. CMS
-website editor is active tenant only. Policy:
-[website-editor.md](website-editor.md). GET website pages / website page:
-onboarding session token or Clerk unactivated. Top menu and footer hydrate
-is that website page GET. POST website pages, PATCH website pages / top
-menu and footer: Clerk unactivated only (tenant from `clerk_user_id` bind
-until org claim). Share: onboarding session token or Clerk unactivated.
-Send / Voice: Clerk only. `status=active` → **403**.
+Unpaid website editor canvas. Same tails as
+`/v1/websites/{website_prefix}/editor/…`. CMS website editor is active tenant
+only. Policy: [website-editor.md](website-editor.md). GET website pages / website page: onboarding
+session token or Clerk unactivated. Top menu and footer hydrate is that website
+page GET. POST website pages, PATCH website pages / top menu and footer: Clerk
+unactivated only (tenant from `clerk_user_id` bind until org claim). Share:
+onboarding session token or Clerk unactivated. Send / Voice: Clerk only.
+`status=active` → **403**.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GET /v1/onboarding/website/editor/pages` | `/onboarding/preview-and-edit/` | `WebsiteEditorGet` | `WebsitePageSummaryRead` | `website_pages`, `website_sections`, `website_slots`, `media_assets` | | Same as CMS list (per website page `blockers[]`). No `publication_id` | `403` activated | `/v1/websites/{website_prefix}/editor`; contractor host GET |
-| `POST /v1/onboarding/website/editor/pages` | `create_page` apply | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | **calls** `CreateWebsitePage`. Same as CMS POST. Clerk only. Append a top-level website page node on the footer, and on the top menu unless legal or cap. Canvas follows `open_website_page` | `403`; `409` | Onboarding session token POST; CMS `POST /v1/websites/{website_prefix}/editor/pages` while unactivated |
-| `GET /v1/onboarding/website/editor/pages/{page_id}` | canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications`, `media_assets` | | Same as CMS hydrate. No `publication_id` | `403` activated; `404`/`400` | `/v1/websites/{website_prefix}/editor`; `/settings` GET; `/menus` GET; `website_manifest` |
-| `PATCH /v1/onboarding/website/editor/pages/{page_id}` | Assistant apply; canvas | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history`, `website_sections`, `website_slots`, `media_assets` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Same as CMS PATCH. Clerk only. Ack `blockers[]` for that website page | `403`; `409 edit_history_conflict`; `413`; `429` | Onboarding session token PATCH |
+| `POST /v1/onboarding/website/editor/pages` | `create_page` apply | `WebsitePageCreate` | `WebsitePageRead` | | `website_pages`, `website.menus` | **calls** `CreateWebsitePage`. Same as CMS POST. Clerk only. Append a top-level website page node on the footer, and on the top menu unless legal or cap. Website editor canvas follows `open_website_page` | `403`; `409` | Onboarding session token POST; CMS `POST /v1/websites/{website_prefix}/editor/pages` while unactivated |
+| `GET /v1/onboarding/website/editor/pages/{page_id}` | website editor canvas hydrate | `WebsiteEditorGet` | `WebsitePageRead` | `website_pages`, `website_sections`, `website_slots`, `website.menus`, `website_settings`, `website_forms`, `website_slot_reviews`, `website_publications`, `media_assets` | | Same as CMS hydrate. No `publication_id` | `403` activated; `404`/`400` | `/v1/websites/{website_prefix}/editor`; `/settings` GET; `/menus` GET; `website_manifest` |
+| `PATCH /v1/onboarding/website/editor/pages/{page_id}` | Assistant apply; website editor canvas | `WebsitePageUpdate` | `WebsiteEditApplyRead` | `website_pages`, `website_settings`, `edit_history`, `website_sections`, `website_slots`, `media_assets` | `website_slots`, `website_sections`, `website_pages`, `website_forms`, `website_form_fields`, `website_form_field_options`, `website.menus`, `edit_history`, `website_settings.edit_history_head` | Same as CMS PATCH. Clerk only. Ack `blockers[]` for that website page | `403`; `409 edit_history_conflict`; `413`; `429` | Onboarding session token PATCH |
 | `PATCH /v1/onboarding/website/editor/menus` | top menu / footer | `WebsiteMenusUpdate` | `WebsiteEditApplyRead` | | `website.menus`, `edit_history` | Same as CMS menus PATCH. Clerk only. Hydrate is the website page GET `menus`. Omit `blockers` | `403`; `409 edit_history_conflict` | Onboarding session token PATCH; `GET /menus`; top menu / footer on website page PATCH |
 | `POST /v1/onboarding/website/publications` | **Share** on `/onboarding/preview-and-edit/` | | `PreviewWebsiteAddressRead` | `onboarding_sessions`, `website_settings` | `website_addresses`, `website_publications` | **calls** `SharePreviewWebsiteAddress` (08) | | Require website activation; auto-run at wait-end; `/v1/website-previews/{token}/…`; CMS `POST /v1/websites/{website_prefix}/publications` |
 | `GET /v1/onboarding/website/assistant/thread` | unsigned land; hydrate | | `AssistantThreadRead` | `ai.threads`, `assistant.thread_items` | `ai.threads` | Lazy-create empty `current`. Omits `runs` | `403` activated | `/v1/assistant/…`; `/v1/onboarding/assistant/…` |

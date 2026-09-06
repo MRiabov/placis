@@ -69,7 +69,7 @@ not this Route. Response is the live
 `BusinessProfileRead`. Must not write `facebook_posts` or
 `instagram_posts`. Must not insert `business_profile_edit_sources`
 (owner increments have no junction rows). Must not enqueue 04 Website
-publication / **call** `PublishWebsite`. Canvas hydrate uses live
+publication / **call** `PublishWebsite`. Website editor canvas hydrate uses live
 `WebsiteBusinessProfileRead`; live `latest/` waits for the next 04.
 
 ### POST /v1/business-profile/edits/{id}/undo

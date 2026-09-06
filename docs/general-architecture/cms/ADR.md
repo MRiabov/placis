@@ -27,7 +27,7 @@ decision + date) instead of silently replacing the old entry.
 
 2. **New chat is `/cms`** — Connect links Google Ads and Meta ad accounts (hide
    when both are connected). Voice is desktop-only and opens a full-screen orb
-   for the client interview, not the website-editor canvas orb. Placeholders
+   for the client interview, not the website editor canvas orb. Placeholders
    cycle. Look: [design decision record](design-decision-record.md) 5 (moved from website design decision
    17). (2026-08-27)
 

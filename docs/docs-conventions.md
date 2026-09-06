@@ -24,7 +24,7 @@ before adding or editing a doc.
   (`frontend-3` UI rules), `cms/` (The CMS: left nav, `/cms` two cards, look
   tokens), `frontend-debloat.md` (withdrawn `frontend-2` port stub),
   `ci-cd.md`, `testing.md`, `ADR.md`.
-  Supporting packages (tenancy, config, store, AI, files, River index):
+  Supporting packages (tenancy, config, store, AI, files and S3, River index):
   [`docs/infrastructure/`](infrastructure/README.md).
   Feature-owned capabilities (website activation (activation Price plus Placis
   Pro plan / month Checkout), billing (Stripe Subscription, Price cache), leads,
@@ -32,7 +32,7 @@ before adding or editing a doc.
   here.
 - `infrastructure/` — docs for `internal/infrastructure/` packages: tenancy
   (Clerk / tenants), config (feature flags), store (pool / goose), AI layer +
-  voice, files, River jobs index.
+  voice, files and S3, River jobs index.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that
   feature's docs in one place). `features/business-profile/` holds Details,
   Projects, and Certifications and reviews as child view dirs. `features/other/`

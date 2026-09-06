@@ -37,7 +37,7 @@ Auth punch list was applied in #86 (file removed).
 ## Actually drop
 
 - **4a. Duplicate `'website_copy_generation'` in the CHECK** Comment:
-  [ai-layer.md](../infrastructure/ai/README.md) lists the literal twice. One stays.
+  [AI layer](../infrastructure/ai/README.md) lists the literal twice. One stays.
 
 - **9. One-step rows under `## Workflows`**
   Comment: a workflow is a sequence. Drop

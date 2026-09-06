@@ -24,7 +24,7 @@ Named CSS variables in the mock. Hex is the light-theme value.
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--background` | `#ffffff` | Canvas; resting fill on outline controls |
+| `--background` | `#ffffff` | Resting fill on outline controls |
 | `--foreground` | `#27272a` | Body copy (zinc-800) |
 | `--primary` | `#13120a` | Ink: filled send, Publish, Apply |
 | `--primary-foreground` | `#ffffff` | On ink |

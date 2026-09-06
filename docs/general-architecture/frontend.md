@@ -16,7 +16,8 @@ Every screen uses loading placeholders for data that is not on screen yet (first
 paint and refetch). Each loading placeholder sits **inside** the field, list
 row, or website slot that is waiting — the same layout as the loaded UI.
 
-Do **not** swap a whole card, panel, canvas, or screen for one loading block.
+Do **not** swap a whole card, panel, website editor canvas, or screen for one
+loading block.
 The CMS sidebar and main area stay; so do workspace (including Content) and
 accordion. Only the waiting values show a loading placeholder.
 
@@ -24,7 +25,7 @@ accordion. Only the waiting values show a loading placeholder.
   (label stays).
 - **Lists:** loading placeholder rows, not one block where the list was.
 - **Website editor:** workspace rows and Content / SEO fields / website slots;
-  do not blank the whole canvas or the whole workspace list.
+  do not blank the whole website editor canvas or the whole workspace list.
 - **Ads:** same, per offer / copy / image cell. Cache hit (prefetch) → no
   loading placeholders.
 - **In-flight action** (Approve, website publication): busy on the control, not
@@ -39,8 +40,8 @@ two actions. Details `update_details`: **Revert** + **OK**. Denied microphone:
 **Try again** + **Switch to text mode**. Usage credit 20% / empty:
 **Usage & billing** + **Dismiss** ([billing frontend](../features/billing/frontend.md)). Look in [`apps/demo/`](../../apps/demo/README.md)
 `/cms/ads` and [`apps/demo/`](../../apps/demo/README.md) (Saved years in business to Business details). On
-a **narrow** screen (≤1100px), sit **above** the Sites workspace bottom bar (not
-under thumbs or the home indicator).
+a **narrow** screen (≤1100px), sit **above** the website editor workspace bottom
+bar (not under thumbs or the home indicator).
 
 `update_details`
 ([details architecture](../business-profile/details/architecture.md)):

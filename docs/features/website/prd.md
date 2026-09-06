@@ -42,11 +42,12 @@ website forms, top menu, and footer — then website publication.
 
 ## The site is made of
 
-The website editor is one workspace. By default the canvas is the wide column:
-the CMS left nav collapsed to icons, workspace rail-only until a workspace item
-or a canvas selection opens the list. The owner can open Website pages, SEO,
-Website styles, or Website versions from the rail, and Content from a website
-section or image on the canvas. There is no right-hand editing panel.
+The website editor is one workspace. By default the website editor canvas is
+the wide column: the CMS left nav collapsed to icons, workspace rail-only
+until a workspace item or a website editor canvas selection opens the list.
+The owner can open Website pages, SEO, Website styles, or Website versions
+from the rail, and Content from a website section or image on the website
+editor canvas. There is no right-hand editing panel.
 
 - **Website pages** — home, about, service, contact, and legal website pages,
   reorderable.
@@ -63,7 +64,8 @@ section or image on the canvas. There is no right-hand editing panel.
 default; special layouts for reviews (that website section’s ordered list from
 all reviews, add / remove / reorder, cap from the website component), top menu /
 footer (depth-2 tree + show/hide marketing phone, marketing email, and contact),
-website forms, and projects. It is the left list after a canvas click, not a
+website forms, and projects. It is the left list after a website editor canvas
+click, not a
 rail item. No Design tab (look is Website styles). No Website versions tab. No
 Website forms tab. Top menu and footer are not workspace-rail items. Attach from
 the **media library** in Content when an image is selected; the full-screen

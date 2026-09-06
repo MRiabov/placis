@@ -20,8 +20,10 @@ Start at [docs/README.md](docs/README.md).
 3. [docs/docs-conventions.md](docs/docs-conventions.md)
 4. [docs/glossary.md](docs/glossary.md)
 5. The owning `docs/features/<feature>/README.md`, or
+   [docs/infrastructure/](docs/infrastructure/README.md) when the work is
+   tenancy, store, jobs, AI, files and S3, or config, or
    [docs/general-architecture/](docs/general-architecture/README.md) when the
-   work is cross-cutting
+   work is otherwise cross-cutting
 
 ## Apps
 

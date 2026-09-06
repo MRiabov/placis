@@ -142,6 +142,6 @@ optional host after 08 (no token, no TTL). The onboarding session has no
 ## Voice
 
 Voice is a **channel** (onboarding assistant, CMS assistant). Transport:
-[voice-agent.md](../../infrastructure/ai/voice-agent.md). Client-interview **data entry** is [04a](pipeline/04a-text-client-interview.md); the agent writer
+[voice agent](../../infrastructure/ai/voice-agent.md). Client-interview **data entry** is [04a](pipeline/04a-text-client-interview.md); the agent writer
 ([04b](pipeline/04b-voice-client-interview.md)) is out. Applying the website template consumes the accepted profile,
 never the raw transcript.

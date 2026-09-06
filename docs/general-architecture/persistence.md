@@ -65,7 +65,7 @@ Uniques, Written by, Notes
 | [media library](../features/other/media/persistence.md) | `media_library` | `media_assets`, `media_asset_classifications` |
 | [ads](../features/ads/persistence.md) | `ads` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms`, `ad_reviews` |
 | [leads](../features/other/leads/persistence.md) | `leads` | `leads` |
-| [files](../infrastructure/files.md) | `files` | `files` |
+| [files and S3](../infrastructure/files-and-s3.md) | `files` | `files` |
 | [AI layer](../infrastructure/ai/README.md) | `ai` | `threads` (identity for every generate factory), `ai_generations`, `ai_generation_tool_revisions` |
 | [Assistant](../features/assistant/persistence.md) | `assistant` | `thread_items`, `runs` (in-flight lock; not hydrate). Thread identity is `ai.threads`. |
 | [Billing](../features/billing/persistence.md) | `billing` | `prices`, `subscriptions`, `ai_use_ledger_entries` |

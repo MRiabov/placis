@@ -77,5 +77,5 @@ the Details OK / Revert pair.
 | (account menu) | Open Usage & billing. No left-nav path. |
 | `/cms` … other destinations | Unchanged. |
 
-Exact path for Usage & billing can be `/cms/usage-and-billing` when
-`frontend-3` lands; the look export uses `/cms/billing`.
+Exact path is `/cms/billing`. The look export uses
+the same path.

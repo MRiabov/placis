@@ -32,7 +32,8 @@ instructions.
 - Read `frontend-2/` (git is enough if something must be recovered)
 - Port dumped predecessor CSS, the right-hand editing panel, Save controls,
   voice-first client interview, or predecessor OpenAPI types
-- Promote `apps/demo` to the product app (no auth, no API, fake canvas)
+- Promote `apps/demo` to the product app (no auth, no API, fake website editor
+  canvas)
 - Rebuild website component visuals; the website component catalog stays in
   `packages/website-components` ([contractor website cuts](../features/website/contractor-website-debloat.md))
 

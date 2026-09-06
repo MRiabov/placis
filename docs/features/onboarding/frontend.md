@@ -175,24 +175,25 @@ Paid (the Paid tab) opens the website editor look export with **Publish**
 
 ### 5. Website preview + website activation — `/onboarding/preview-and-edit/`
 
-Wait teaser `/onboarding/preview` (SSE carousel, ~15s cap) then **navigates to
-`/onboarding/preview-and-edit/`**. Live unpublished canvas. Custom top-left
-nested control to switch website pages (titles list, Services nested; not the
-CMS Website pages rail). Canvas top-menu/footer website page clicks stay on
-this route. Website page list and **Share** sit on the canvas corners (no
-reserved top row). No Find / Review / Questions progress, no onboarding Back, no
-Find/Review Assistant. Pay is the sticky website-activation strip (same bar as
-the host mock; on a narrow pane the copy and price sit on one row and the
-activate control is full width). Assistant
-starts as text (compact docked composer, max-width 32rem on a wide pane, in
-front of the website-activation strip’s lift shadow) with the CMS Assistant
-thread above it (expand / reduce; no Plan / Ask first / Clear context; default
-expanded). **Voice** is a switch in that composer. 06 `tool_summary` fills the
-thread on land (`GET …/thread` with the onboarding session token). While 06 is
-still writing, a six-dot spinner sits under the thread. No Content,
-no website styles rail, no click-to-edit, no design controls. Signed-out: view
-and switch website pages; hydrate the thread; prompt box visible; send and
-Voice need **Sign in with Google**.
+Wait teaser `/onboarding/preview` (SSE carousel, ~15s cap) then
+**navigates to `/onboarding/preview-and-edit/`**. Live unpublished website
+editor canvas. Custom top-left nested control to switch website pages (titles
+list, Services nested; not the CMS Website pages rail). Website editor canvas
+top-menu/footer website page clicks stay on this route. Website page list and
+**Share** sit on the website editor canvas **corners** (they are still
+workspace; no reserved top row). No Find / Review / Questions progress, no
+onboarding Back, no Find/Review Assistant. Pay is the sticky website-activation
+strip (same bar as the host mock; on a narrow pane the copy and price sit on one
+row and the activate control is full width). Assistant starts as text (compact
+docked composer, max-width 32rem on a wide pane, in front of the
+website-activation strip’s lift shadow) with the CMS Assistant thread above it
+(expand / reduce; no Plan / Ask first / Clear context; default expanded).
+**Voice** is a switch in that composer. 06 `tool_summary` fills the thread on
+land (`GET …/thread` with the onboarding session token). While 06 is still
+writing, a six-dot spinner sits under the thread. No Content, no website styles
+rail, no click-to-edit, no design controls. Signed-out: view and switch website
+pages; hydrate the thread; prompt box visible; send and Voice need
+**Sign in with Google**.
 
 **Share** (optional) runs [08](pipeline/08-preview-website-address.md): preview
 website address with website-activation strip. After Share, that URL lives on
@@ -225,22 +226,26 @@ retries; it does not `POST` a new onboarding session.
 
 ## Components (`frontend-3`)
 
-- `BusinessSourcePanel` — country, registry, optional Maps, online research
-  consent.
-- `FoundInformationReview` — found vs missing; no missing-topics aside.
-- `TextInterviewForm` — Details block == `/cms/details` (same field controls:
-  featured-service list, Maps territory cards, hours picker) plus
-  client-interview extras. SSE live-fills untouched controls and enriches
-  lists (reviews, photos via media library re-GET, Projects on nested
-  `profile.projects`, services) while 02 business research runs. Extra notes
-  owner copy: Anything else we should know? Helper: what would help us
-  generate a better website or run ads.
-- `AccreditationChecklist` — trade certifications plus other certifications.
-- `ApplyWebsiteTemplatePanel` / `PreviewProgressPanels` — SSE carousel of
-  website sections whose placeholders can resolve from current profile data;
-  15s wait progress in the shared footer, painted
-  every animation frame.
-- `PreviewAndEditPanel` — unpaid website preview after the wait teaser.
-  Assistant thread stub shows muted 06 `tool_summary` lines above the field.
+Folders: [onboarding file trees](file-trees.md). Client interview
+**imports** `/cms/profile/details/` (hours / services / areas). The
+shared **notification** is `/cms` `layout/notification.tsx`. Website
+preview lives in `onboarding/website-preview/` and **imports**
+`/cms/website/canvas.tsx` + `/cms/assistant/`. The CMS does not import
+onboarding.
+
+- `find/Find.tsx` — country, registry, optional Maps, online research
+  consent (`/onboarding/find`).
+- `review/Review.tsx` — found vs missing; no missing-topics aside.
+- `client-interview/ClientInterview.tsx` — wraps Details; extras on
+  `extras.tsx`. SSE live-fills untouched controls and enriches lists
+  (reviews, photos via media library re-GET, Projects on nested
+  `profile.projects`, services) while 02 runs.
+- `wait-teaser/WaitTeaser.tsx` — SSE carousel of website sections whose
+  placeholders can resolve from current profile data; 15s wait progress
+  in the shared footer.
+- `website-preview/WebsitePreview.tsx` — unpaid website preview after
+  the wait teaser (`/onboarding/preview-and-edit/`). Workspace:
+  Assistant UI, website-activation strip, Share, website-page switcher
+  (corners = workspace).
 - Leftover `src/features/preview/` is predecessor code to drop (no
   `/preview/{token}/` in this app).
