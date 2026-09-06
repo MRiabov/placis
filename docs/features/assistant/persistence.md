@@ -84,5 +84,5 @@ on `runs`. Unique current CMS thread lives on `ai.threads`. Lookup:
 (`thread_kind=cms_assistant`; tool events, not a discard timer).
 
 River job `CompactAssistantThread`:
-[jobs](../../infrastructure/jobs.md). Same function on text 128K
+[jobs](jobs.md). Same function on text 128K
 overflow and Voice seed-too-large. No 24h discard.

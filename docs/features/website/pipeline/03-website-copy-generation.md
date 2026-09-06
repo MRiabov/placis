@@ -35,7 +35,7 @@ River-only on `website_id`.
   prompts:
   [onboarding website editor](../../onboarding/website-editor.md).
 - `update_reviews`. Ranked pool order is River job kind
-  `reviews_ranking_for_display` ([jobs](../../../infrastructure/jobs.md)), not this River job kind. Do not write
+  `reviews_ranking_for_display` ([jobs](../../business-profile/jobs.md)), not this River job kind. Do not write
   `website_slot_reviews`. Owner Content / `update_reviews` can still override a
   section later (CMS).
 - Emit HTML in Go. Go does not resolve `{{…}}`.

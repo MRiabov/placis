@@ -35,6 +35,9 @@ Owner-facing money is **EUR**.
 - [persistence.md](persistence.md) — AI use ledger + Price cache
   (schema `billing`)
 - [api.md](api.md)
+- [jobs.md](jobs.md) — `billing_extra_usage_credit`,
+  `billing_subscription_sync`, `billing_catalog_sync`,
+  `billing_nonpayment_unpublish`
 - [frontend.md](frontend.md) — Usage & billing
 - [design decision record](design-decision-record.md)
 - [testing.md](testing.md)

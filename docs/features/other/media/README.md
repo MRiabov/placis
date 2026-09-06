@@ -9,6 +9,7 @@ point, and cleanup stay on `/cms/media`. Named identifiers:
 - [persistence.md](persistence.md) — `media_assets`,
   `media_asset_classifications`
 - [api.md](api.md) — HTTP (`/v1/media-assets`)
+- [jobs.md](jobs.md) — `describe_image`, `sweep_stale_media_uploads`
 - [architecture.md](architecture.md) — content model; `StartMediaAssetUpload`,
   `ConfirmMediaAssetUpload`, `WriteCanonicalWebP`, `WriteImageThumbnail`,
   `DescribeImage`, `CreateGeneratedMediaAsset`

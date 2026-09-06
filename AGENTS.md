@@ -76,8 +76,8 @@ Before Go, goose, sqlc, huma, Worker, owner UI, or test **code**:
   Persist / Must not verifies and HappyPath rows
   ([testing](docs/general-architecture/testing.md)).
 - New names are already in [docs/glossary.md](docs/glossary.md).
-- River job kinds already live in
-  [jobs.md](docs/infrastructure/jobs.md).
+- River job kinds already live in the owning feature `jobs.md`
+  ([jobs](docs/infrastructure/jobs.md) is the River index).
 
 If any of those are missing or ill-defined:
 

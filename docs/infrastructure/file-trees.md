@@ -8,7 +8,8 @@ Fakes sit beside the collaborator (`fake.go` in that package). Omit
 
 Mux is `httpapi/` (no dedicated doc). HTTP conventions:
 [api.md](../general-architecture/api.md). River index: [jobs.md](jobs.md)
-(workers live in feature `pipeline/` or `jobs.go`).
+(workers live in feature `pipeline/` or `jobs.go`; each feature that
+owns a River job kind lists it in that feature’s `jobs.md`).
 
 ## Backend
 

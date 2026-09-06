@@ -2,11 +2,17 @@ package docnames
 
 import (
 	"fmt"
-	"os"
+	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 var jobsRowNameRe = regexp.MustCompile(`(?m)^\s*\|\s*` + "`" + `([a-z][a-z0-9_]*)` + "`")
+
+// IsJobsIndex reports the River conventions file (not a named ## Jobs list).
+func IsJobsIndex(path string) bool {
+	return strings.HasSuffix(filepath.ToSlash(path), "/infrastructure/jobs.md")
+}
 
 // JobsTableNames reads ## Jobs first-column backticks from jobs.md text.
 func JobsTableNames(text string) (map[string]bool, error) {
@@ -22,13 +28,4 @@ func JobsTableNames(text string) (map[string]bool, error) {
 		return nil, fmt.Errorf("## Jobs has no River job kind rows")
 	}
 	return out, nil
-}
-
-// JobsFileNames loads River job kind names from a jobs.md path.
-func JobsFileNames(path string) (map[string]bool, error) {
-	src, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	return JobsTableNames(string(src))
 }

@@ -14,7 +14,7 @@ lookup, picking another company, or retrying. Cap it.
 
 02 only calls **`etl.StartRun(trigger=onboarding, force=false)`** with the
 onboarding ETL run kinds. Extract and transform: [ETL](../../etl/README.md). `StartRun` **inserts**
-that ETL run kind’s extract River job kind ([jobs](../../../infrastructure/jobs.md)). When an ETL run kind
+that ETL run kind’s extract River job kind ([jobs](../../etl/jobs.md)). When an ETL run kind
 starts: [ETL run kind triggers](../../etl/pipeline/etl-run-kind-triggers.md). One `StartRun` creates one `enqueue_id`. An ETL
 run is inserted when that ETL run kind **starts**. River retries keep the same
 `etl.runs.id`. Count distinct `enqueue_id`, not jobs — otherwise one business

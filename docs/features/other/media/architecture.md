@@ -14,7 +14,7 @@ Named functions (same spelling in spec, Go, and tests):
   `WriteCanonicalWebP` then `WriteImageThumbnail`. Route
   `POST /v1/media-assets/{id}/confirm-upload`.
 - `DescribeImage` — River job kind `describe_image`
-  ([jobs.md](../../../infrastructure/jobs.md#describe_image)).
+  ([jobs.md](jobs.md#describe_image)).
   Owner / `CleanupMediaAsset` insert of this job:
   `bill_usage=bill-allow-out-of-balance`. ETL insert:
   `bill_usage=unbilled`. Cleanup generate itself is

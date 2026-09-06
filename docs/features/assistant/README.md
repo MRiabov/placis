@@ -25,6 +25,7 @@ Named identifiers:
   `ai.threads`
 - [api.md](api.md) — DTOs and Routes (`/v1/assistant/…`; text
   `GET /v1/assistant/thread/ws`; voice under `/v1/assistant/voice/`)
+- [jobs.md](jobs.md) — `assistant_thread_compaction`
 - [testing.md](testing.md)
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
   doc gap / drop)
