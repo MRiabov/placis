@@ -1,6 +1,5 @@
 {
   "id": "public.content.metric_mosaic",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Metric Mosaic",
   "family": "content",

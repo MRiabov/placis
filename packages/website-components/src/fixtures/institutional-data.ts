@@ -10,6 +10,7 @@ export const assets = {
   homeGallery3: `${cdn}/1506378109408-WUQHS6CF034SEVELFJ0C/_MG_6732_HDR.jpg`,
   homeGallery4: `${cdn}/1508528858113-1P1RVMPLSAMA192TVTU4/A.NYE_San-Joaquin_075-Edit.jpg`,
   aboutHero: `${cdn}/1656352169541-25QYIS8VITHVV0D5SW3B/IMG_6403.JPG`,
+  // Don't say asset: leftover Squarespace filename
   aboutHistory: `${cdn}/1500917901058-49KZKH4QWTK5KYSKIRPS/image-asset.jpeg`,
   leaderJeff: `${cdn}/686260a0-d87f-4495-888b-b7f33bfcb09e/Jeff+Harper.jpg`,
   leaderRon: `${cdn}/918722ac-b2cb-40dd-bd3d-f167f8a7fad8/Mr.+Harper+2.jpg`,
@@ -43,7 +44,7 @@ export const assets = {
 
 export const business = {
   name: "Harper Construction",
-  phone: "(619) 233-7900",
+  marketing_phone: "(619) 233-7900",
   email: "info@harperconstruction.com",
   address: "2241 Kettner Blvd. Suite 300, San Diego, CA 92101",
   license: "CA License # 668612",
@@ -213,14 +214,14 @@ export const leadershipItems = [
     role: "Owner/CEO/President",
     image_url: assets.leaderJeff,
     alt_text: "Jeff Harper",
-    bio: "Since purchasing the company in 2005, current Owner and President Jeff Harper, continues the construction family tradition while maintaining the company's outstanding reputation and uncompromising commitment to quality and safety. Jeff Harper has provided leadership and overall management control as the head of the Harper Team and has been responsible for projects in the both private and public sectors. Jeff is involved in every Harper project and maintains a hands-on involvement and responsibility for all construction operations through project completion. He has 32 years experience with Harper Construction and specializes in design-build projects. The firm's resume of project and industry awards, outstanding performance evaluations, and list of satisfied customers reflects his longstanding commitment to total customer satisfaction.",
+    bio: "Since purchasing the company in 2005, current Owner and President Jeff Harper, continues the construction family tradition while maintaining the company's outstanding reputation and uncompromising commitment to quality and safety. Jeff Harper has provided leadership and overall management control as the head of the Harper Team and has been responsible for projects in the both private and public sectors. Jeff is involved in every Harper project and maintains a hands-on involvement and responsibility for all construction operations through project completion. He has 32 years experience with Harper Construction and specializes in design-build projects. The firm's resume of project and industry awards, outstanding performance evaluations, and list of satisfied homeowners reflects his longstanding commitment to total satisfaction.",
   },
   {
     name: "Ron Harper",
     role: "Founder/Chairman",
     image_url: assets.leaderRon,
     alt_text: "Ron Harper",
-    bio: "Mr. Harper is the Founder and current Chairman of Harper Construction Company. He founded the firm in 1974 with a mission to better serve his clients and the construction industry as a whole through the endorsement and implementation of an integrated design-build construction delivery approach. From the outset, he concentrated the efforts of the organization toward design-build markets, and in the process established Harper Construction as one of the earliest firms to be recognized as a true design-builder and a current respected leader in those markets.",
+    bio: "Mr. Harper is the Founder and current Chairman of Harper Construction Company. He founded the firm in 1974 with a mission to better serve homeowners and the construction industry as a whole through the endorsement and implementation of an integrated design-build construction delivery approach. From the outset, he concentrated the firm's efforts toward design-build markets, and in the process established Harper Construction as one of the earliest firms to be recognized as a true design-builder and a current respected leader in those markets.",
   },
   {
     name: "Stephen Marble",

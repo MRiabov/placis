@@ -1,6 +1,5 @@
 {
   "id": "public.services.cards",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Service Cards",
   "family": "services",
@@ -45,13 +44,17 @@
             }
           },
           "additionalProperties": true,
-          "required": ["name"]
+          "required": [
+            "name"
+          ]
         },
         "minItems": 1
       }
     },
     "additionalProperties": true,
-    "required": ["services"]
+    "required": [
+      "services"
+    ]
   },
   "editable_slots": [
     {
@@ -88,7 +91,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

@@ -1,11 +1,11 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, asStrings, imageUrl, text } from "../../../utils";
 
 export default function ContentStoryText({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const anchor = text(props.anchor_id);
   const image = imageUrl(props.image_url);
   const imageFirst = props.image_position === "left";
@@ -18,7 +18,7 @@ export default function ContentStoryText({
       id={anchor || undefined}
     >
       <div
-        className={`public-site-shell public-story-text__inner ${imageFirst ? "is-image-first" : ""}`}
+        className={`website-frame public-story-text__inner ${imageFirst ? "is-image-first" : ""}`}
       >
         {image ? (
           <figure className="public-story-text__image">

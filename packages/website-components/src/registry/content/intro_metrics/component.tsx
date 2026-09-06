@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
-export default function IntroMetrics({ props }: PublicSiteComponentProps) {
+export default function IntroMetrics({ props }: WebsiteComponentProps) {
   const paragraphs = Array.isArray(props.paragraphs)
     ? props.paragraphs.filter(
         (item): item is string => typeof item === "string",
@@ -16,7 +16,7 @@ export default function IntroMetrics({ props }: PublicSiteComponentProps) {
       className="public-intro-metrics"
       id={text(props.anchor_id, "overview")}
     >
-      <div className="public-site-shell public-intro-metrics__inner">
+      <div className="website-frame public-intro-metrics__inner">
         <div>
           <div className="public-intro-metrics__label">
             <span aria-hidden="true" />

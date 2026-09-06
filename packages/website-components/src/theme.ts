@@ -1,9 +1,9 @@
-import type { PublicSiteTheme, ThemeStyle } from "./types";
+import type { WebsiteTheme, ThemeStyle } from "./types";
 
 const colorPresets: Record<
   string,
   Pick<
-    Required<PublicSiteTheme>,
+    Required<WebsiteTheme>,
     "accent" | "background" | "border" | "muted" | "primary" | "text"
   >
 > = {
@@ -90,8 +90,8 @@ const colorPresets: Record<
 };
 
 export function normalizeTheme(
-  theme: PublicSiteTheme | string | undefined,
-): PublicSiteTheme {
+  theme: WebsiteTheme | string | undefined,
+): WebsiteTheme {
   const presetName = typeof theme === "string" ? theme : theme?.preset;
   const presetKey = String(presetName ?? "emerald").replace(/^theme\./, "");
   const preset = colorPresets[presetKey] ?? colorPresets.emerald;
@@ -125,7 +125,7 @@ export function normalizeTheme(
   };
 }
 
-export function themeStyle(theme: PublicSiteTheme): ThemeStyle {
+export function themeStyle(theme: WebsiteTheme): ThemeStyle {
   return {
     "--public-accent": theme.accent ?? "#047857",
     "--public-background": theme.background ?? "#f8fafc",
@@ -137,12 +137,12 @@ export function themeStyle(theme: PublicSiteTheme): ThemeStyle {
   };
 }
 
-export function themeClassName(theme: PublicSiteTheme): string {
+export function themeClassName(theme: WebsiteTheme): string {
   const preset = theme.preset?.replace(/^theme\./, "").replace(/_/g, "-");
   return preset ? `public-theme-${preset}` : "";
 }
 
-export function sectionPadding(theme: PublicSiteTheme): string {
+export function sectionPadding(theme: WebsiteTheme): string {
   if (theme.density === "compact") {
     return "px-4 py-10 sm:px-6 lg:px-8";
   }

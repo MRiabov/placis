@@ -1,5 +1,5 @@
 import { blue, crimson, slate } from "@radix-ui/colors";
-import type { PublicSiteThemePreset } from "../types";
+import type { WebsiteThemePreset } from "../types";
 
 const navyGridColors = {
   accent: crimson.crimson9,
@@ -17,7 +17,7 @@ export const navyGridThemePreset = {
   label: "Navy Grid",
   source: "https://suffolk.com/ home reference captured 2026-07-02",
   cssClass: "public-theme-navy-grid",
-  runtimeTheme: {
+  websiteTheme: {
     preset: "navy_grid",
     primary: navyGridColors.brand,
     neutral: "blue",
@@ -62,4 +62,4 @@ export const navyGridThemePreset = {
     "Scroll-stop storytelling is approximated through full-viewport snap panels and sticky-style composition in CSS.",
     "Use this as a decomposition fixture for editorial panel-based pages, not as a default style.",
   ],
-} satisfies PublicSiteThemePreset;
+} satisfies WebsiteThemePreset;

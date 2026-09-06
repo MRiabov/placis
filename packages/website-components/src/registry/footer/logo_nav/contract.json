@@ -1,6 +1,5 @@
 {
   "id": "public.footer.logo_nav",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Logo Footer",
   "family": "footer",
@@ -8,36 +7,73 @@
   "props_schema": {
     "type": "object",
     "properties": {
-      "business_name": { "type": "string" },
-      "logo_url": { "type": "string" },
+      "business_name": {
+        "type": "string"
+      },
+      "logo_url": {
+        "type": "string"
+      },
       "logo": {
-        "type": ["object", "string"],
+        "type": [
+          "object",
+          "string"
+        ],
         "properties": {
-          "asset_id": { "type": "string" },
-          "file_id": { "type": "string" },
-          "url": { "type": "string" },
-          "image_url": { "type": "string" },
-          "alt": { "type": "string" },
-          "alt_text": { "type": "string" },
-          "description": { "type": "string" },
-          "canonical_name": { "type": "string" },
-          "review_status": { "type": "string" },
-          "provenance": { "type": "object", "additionalProperties": true }
+          "asset_id": {
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "alt_text": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "canonical_name": {
+            "type": "string"
+          },
+          "review_status": {
+            "type": "string"
+          }
         },
         "additionalProperties": true
       },
       "links": {
         "type": "array",
-        "items": { "type": "object", "additionalProperties": true }
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
       },
-      "copyright": { "type": "string" },
+      "copyright": {
+        "type": "string"
+      },
       "legal_disclosure_lines": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       },
-      "company_registration_number": { "type": "string" },
-      "vat_number": { "type": "string" },
-      "registered_office": { "type": "string" }
+      "company_registration_number": {
+        "type": "string"
+      },
+      "vat_number": {
+        "type": "string"
+      },
+      "registered_office": {
+        "type": "string"
+      }
     },
     "additionalProperties": true
   },
@@ -55,7 +91,9 @@
       "label": "Logo",
       "required": false,
       "max_length": null,
-      "omit_if_unresolved": ["logo_url"]
+      "omit_if_unresolved": [
+        "logo_url"
+      ]
     },
     {
       "key": "links",
@@ -84,7 +122,9 @@
       "label": "Company registration number",
       "required": false,
       "max_length": null,
-      "omit_if_unresolved": ["company_registration_number"]
+      "omit_if_unresolved": [
+        "company_registration_number"
+      ]
     },
     {
       "key": "vat_number",
@@ -92,7 +132,9 @@
       "label": "VAT number",
       "required": false,
       "max_length": null,
-      "omit_if_unresolved": ["vat_number"]
+      "omit_if_unresolved": [
+        "vat_number"
+      ]
     },
     {
       "key": "registered_office",
@@ -100,7 +142,9 @@
       "label": "Registered office",
       "required": false,
       "max_length": null,
-      "omit_if_unresolved": ["registered_office"]
+      "omit_if_unresolved": [
+        "registered_office"
+      ]
     }
   ],
   "default_values": [

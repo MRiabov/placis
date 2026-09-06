@@ -1,6 +1,5 @@
 {
   "id": "public.faq.accordion",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "FAQ Accordion",
   "family": "faq",
@@ -24,13 +23,19 @@
             }
           },
           "additionalProperties": true,
-          "required": ["question", "answer"]
+          "required": [
+            "question",
+            "answer"
+          ]
         },
         "minItems": 1
       }
     },
     "additionalProperties": true,
-    "required": ["title", "items"]
+    "required": [
+      "title",
+      "items"
+    ]
   },
   "editable_slots": [
     {
@@ -53,7 +58,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

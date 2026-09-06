@@ -1,6 +1,5 @@
 {
   "id": "public.footer.standard",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Standard Footer",
   "family": "footer",
@@ -15,7 +14,10 @@
         "type": "string"
       },
       "logo": {
-        "type": ["object", "string"],
+        "type": [
+          "object",
+          "string"
+        ],
         "properties": {
           "asset_id": {
             "type": "string"
@@ -43,10 +45,6 @@
           },
           "review_status": {
             "type": "string"
-          },
-          "provenance": {
-            "type": "object",
-            "additionalProperties": true
           }
         },
         "additionalProperties": true
@@ -67,7 +65,9 @@
             }
           },
           "additionalProperties": true,
-          "required": ["label"]
+          "required": [
+            "label"
+          ]
         }
       },
       "service_links": {
@@ -86,7 +86,9 @@
             }
           },
           "additionalProperties": true,
-          "required": ["label"]
+          "required": [
+            "label"
+          ]
         }
       },
       "legal_links": {
@@ -105,7 +107,9 @@
             }
           },
           "additionalProperties": true,
-          "required": ["label"]
+          "required": [
+            "label"
+          ]
         }
       },
       "contact_summary": {
@@ -120,7 +124,7 @@
       "address": {
         "type": "string"
       },
-      "phone": {
+      "marketing_phone": {
         "type": "string"
       },
       "email": {
@@ -195,7 +199,9 @@
       "label": "Logo",
       "required": false,
       "max_length": null,
-      "omit_if_unresolved": ["logo_url"]
+      "omit_if_unresolved": [
+        "logo_url"
+      ]
     },
     {
       "key": "links",
@@ -224,7 +230,9 @@
       "label": "Company registration number",
       "required": false,
       "max_length": null,
-      "omit_if_unresolved": ["company_registration_number"]
+      "omit_if_unresolved": [
+        "company_registration_number"
+      ]
     },
     {
       "key": "vat_number",
@@ -232,7 +240,9 @@
       "label": "VAT number",
       "required": false,
       "max_length": null,
-      "omit_if_unresolved": ["vat_number"]
+      "omit_if_unresolved": [
+        "vat_number"
+      ]
     },
     {
       "key": "registered_office",
@@ -240,7 +250,9 @@
       "label": "Registered office",
       "required": false,
       "max_length": null,
-      "omit_if_unresolved": ["registered_office"]
+      "omit_if_unresolved": [
+        "registered_office"
+      ]
     }
   ],
   "default_values": [
@@ -253,8 +265,8 @@
       "value": "{{images.logo}}"
     },
     {
-      "path": "phone",
-      "value": "{{phone}}"
+      "path": "marketing_phone",
+      "value": "{{marketing_phone}}"
     },
     {
       "path": "email",
@@ -266,7 +278,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

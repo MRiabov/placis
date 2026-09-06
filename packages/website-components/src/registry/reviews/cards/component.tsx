@@ -1,5 +1,5 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
 function GoogleIcon() {
@@ -52,22 +52,22 @@ function RatingStars({ rating }: { rating: number }) {
 export default function ReviewCards({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const items = asRecords(props.items ?? props.testimonials);
   const anchor = text(props.anchor_id, "");
   return (
     <section
-      className={`${sectionPadding(theme)} public-proof-testimonials bg-(--public-background)`}
+      className={`${sectionPadding(theme)} website-reviews-cards bg-(--public-background)`}
       id={anchor || undefined}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         {props.eyebrow ? (
           <p className="public-section-label">{String(props.eyebrow)}</p>
         ) : null}
         <h2 className="text-3xl font-bold">
-          {text(props.title, "Customer feedback")}
+          {text(props.title, "Reviews")}
         </h2>
-        <div className="public-proof-testimonials__body mt-6 grid gap-4 lg:grid-cols-3">
+        <div className="website-reviews-cards__body mt-6 grid gap-4 lg:grid-cols-3">
           {items.map((item) => {
             const rating = Number(item.rating ?? 5);
             const sourceLabel = text(item.source_label ?? item.source, "");
@@ -99,7 +99,7 @@ export default function ReviewCards({
                 </blockquote>
                 <figcaption className="public-testimonial-meta mt-4 text-sm font-bold">
                   <span className="public-testimonial-author">
-                    {text(item.name ?? item.author, "Customer")}
+                    {text(item.name ?? item.author, "Reviewer")}
                   </span>
                   {sourceMarker ? (
                     sourceUrl ? (

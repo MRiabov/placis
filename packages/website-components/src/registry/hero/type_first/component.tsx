@@ -1,17 +1,17 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asStrings, text } from "../../../utils";
 
 export default function HeroTypeFirst({
   props,
   theme,
-}: PublicSiteComponentProps) {
-  const proof = asStrings(props.trust_badges);
+}: WebsiteComponentProps) {
+  const badges = asStrings(props.trust_badges);
   return (
     <section
       className={`${sectionPadding(theme)} bg-(--public-background)`}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-(--public-muted)">
           {text(props.business_name, "Local contractor")}
         </p>
@@ -28,21 +28,21 @@ export default function HeroTypeFirst({
           )}
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <a className="public-site-button" href={text(props.href, "#quote")}>
+          <a className="website-button" href={text(props.href, "#quote")}>
             {text(props.cta_label, "Request a quote")}
           </a>
           {props.secondary_cta_label ? (
             <a
-              className="public-site-button public-site-button-secondary"
+              className="website-button website-button-secondary"
               href={text(props.secondary_href, "#contact")}
             >
               {String(props.secondary_cta_label)}
             </a>
           ) : null}
         </div>
-        {proof.length ? (
+        {badges.length ? (
           <div className="mt-10 grid gap-3 sm:grid-cols-3">
-            {proof.slice(0, 3).map((item) => (
+            {badges.slice(0, 3).map((item) => (
               <div
                 className="border-t border-(--public-border) pt-3 text-sm font-semibold"
                 key={item}

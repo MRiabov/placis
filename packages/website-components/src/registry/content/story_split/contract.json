@@ -1,6 +1,5 @@
 {
   "id": "public.content.story_split",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Story Split",
   "family": "content",
@@ -28,7 +27,10 @@
       },
       "layout": {
         "type": "string",
-        "enum": ["default", "carousel"]
+        "enum": [
+          "default",
+          "carousel"
+        ]
       },
       "stories": {
         "type": "array",
@@ -79,16 +81,23 @@
       },
       "image_position": {
         "type": "string",
-        "enum": ["left", "right"]
+        "enum": [
+          "left",
+          "right"
+        ]
       }
     },
     "additionalProperties": true,
     "anyOf": [
       {
-        "required": ["title"]
+        "required": [
+          "title"
+        ]
       },
       {
-        "required": ["stories"]
+        "required": [
+          "stories"
+        ]
       }
     ]
   },
@@ -134,14 +143,20 @@
       "key": "layout",
       "type": "enum",
       "label": "Layout",
-      "values": ["default", "carousel"],
+      "values": [
+        "default",
+        "carousel"
+      ],
       "default": "default"
     },
     {
       "key": "image_position",
       "type": "enum",
       "label": "Image position",
-      "values": ["left", "right"],
+      "values": [
+        "left",
+        "right"
+      ],
       "default": "left"
     }
   ]

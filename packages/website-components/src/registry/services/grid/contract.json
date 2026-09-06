@@ -1,6 +1,5 @@
 {
   "id": "public.services.grid",
-  "aliases": ["public.services.v1", "public.services_grid.v1"],
   "schema_version": 1,
   "display_name": "Services Grid",
   "family": "services",
@@ -33,13 +32,19 @@
             }
           },
           "additionalProperties": true,
-          "required": ["name", "description"]
+          "required": [
+            "name",
+            "description"
+          ]
         },
         "minItems": 1
       }
     },
     "additionalProperties": true,
-    "required": ["title", "services"]
+    "required": [
+      "title",
+      "services"
+    ]
   },
   "editable_slots": [
     {
@@ -69,7 +74,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

@@ -1,18 +1,18 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
 export default function ServicesCards({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const services = asRecords(props.services);
   return (
     <section
       className={`${sectionPadding(theme)} public-services-cards bg-(--public-background)`}
       id={text(props.anchor_id, "") || undefined}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         <div className="mx-auto max-w-2xl text-center">
           {props.eyebrow ? (
             <p className="public-eyebrow mb-2 text-xs font-semibold uppercase">
@@ -63,7 +63,7 @@ export default function ServicesCards({
                   ) : null}
                   {href ? (
                     <a
-                      className="public-site-button mt-4 inline-flex w-fit items-center rounded-full border border-(--public-primary) bg-(--public-primary) px-5 py-2 text-sm font-semibold uppercase tracking-[0.045em] text-(--public-background)"
+                      className="website-button mt-4 inline-flex w-fit items-center rounded-full border border-(--public-primary) bg-(--public-primary) px-5 py-2 text-sm font-semibold uppercase tracking-[0.045em] text-(--public-background)"
                       href={href}
                     >
                       {ctaLabel}

@@ -1,6 +1,5 @@
 {
   "id": "public.content.feature_grid",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Feature Grid",
   "family": "content",
@@ -44,7 +43,10 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title", "items"]
+    "required": [
+      "title",
+      "items"
+    ]
   },
   "editable_slots": [
     {
@@ -74,7 +76,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

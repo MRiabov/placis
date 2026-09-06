@@ -6,7 +6,7 @@
 
   .public-theme-green-gold
     .public-sector-tabs
-    > .public-site-shell {
+    > .website-frame {
     max-width: none;
   }
 
@@ -167,7 +167,7 @@
   .public-theme-green-gold
     .public-sector-tabs__panel.is-revealed
     .public-sector-tabs__media::after {
-    animation: public-sector-tabs-media-cover 980ms
+    animation: public-sector-tabs-image-cover 980ms
       var(--public-component-ease) both;
   }
 
@@ -176,7 +176,7 @@
     min-height: 340px;
   }
 
-  @keyframes public-sector-tabs-media-cover {
+  @keyframes public-sector-tabs-image-cover {
     from {
       transform: translateX(0);
     }
@@ -546,7 +546,7 @@
     gap: 18px;
   }
 
-  @keyframes public-media-hero-image-in {
+  @keyframes website-image-hero-image-in {
     from {
       filter: saturate(0.78);
       opacity: 0;
@@ -559,7 +559,7 @@
     }
   }
 
-  @keyframes public-media-hero-shade-in {
+  @keyframes website-image-hero-shade-in {
     from {
       opacity: 0.62;
     }
@@ -568,7 +568,7 @@
     }
   }
 
-  @keyframes public-media-hero-line-in {
+  @keyframes website-image-hero-line-in {
     from {
       opacity: 0;
       transform: scaleX(0);
@@ -579,7 +579,7 @@
     }
   }
 
-  @keyframes public-media-hero-title-in {
+  @keyframes website-image-hero-title-in {
     from {
       clip-path: inset(100% 0 0 0);
       opacity: 0;
@@ -592,7 +592,7 @@
     }
   }
 
-  @keyframes public-media-hero-copy-in {
+  @keyframes website-image-hero-copy-in {
     from {
       clip-path: inset(100% 0 0 0);
       opacity: 0;

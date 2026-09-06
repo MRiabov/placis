@@ -1,16 +1,16 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
 export default function CenteredSocialFooter({
   props,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const links = asRecords(props.links);
   const legalLinks = asRecords(props.legal_links);
   const socialLinks = asRecords(props.social_links);
   const logo = imageUrl(props.logo ?? props.logo_url);
   return (
     <footer className="public-centered-footer">
-      <div className="public-site-shell public-centered-footer__inner">
+      <div className="website-frame public-centered-footer__inner">
         {logo ? (
           <img
             alt={text(props.business_name, "Business logo")}
@@ -31,7 +31,7 @@ export default function CenteredSocialFooter({
           </nav>
         ) : null}
         <nav
-          aria-label="Footer navigation"
+          aria-label="Footer links"
           className="public-centered-footer__nav"
         >
           {[...links, ...legalLinks].map((link) => (

@@ -1,6 +1,5 @@
 {
   "id": "public.footer.centered_social_nav",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Centered Social Footer",
   "family": "footer",
@@ -15,7 +14,10 @@
         "type": "string"
       },
       "logo": {
-        "type": ["object", "string"],
+        "type": [
+          "object",
+          "string"
+        ],
         "additionalProperties": true
       },
       "links": {
@@ -23,7 +25,9 @@
         "items": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["label"]
+          "required": [
+            "label"
+          ]
         }
       },
       "legal_links": {
@@ -31,7 +35,9 @@
         "items": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["label"]
+          "required": [
+            "label"
+          ]
         }
       },
       "social_links": {
@@ -39,7 +45,10 @@
         "items": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["label", "href"]
+          "required": [
+            "label",
+            "href"
+          ]
         }
       },
       "contact_line": {

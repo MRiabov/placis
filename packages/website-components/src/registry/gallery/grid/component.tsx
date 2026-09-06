@@ -1,13 +1,13 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
 export default function GalleryGrid({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const items = asRecords(props.items);
-  const showCaptions = props.show_captions !== false;
+  const showLabels = props.show_labels !== false;
   const anchor = text(props.anchor_id, "");
   const layout = text(props.layout, "grid");
   const isCarousel = layout === "carousel" && items.length > 1;
@@ -18,7 +18,7 @@ export default function GalleryGrid({
         className={`${sectionPadding(theme)} public-gallery-grid public-gallery-grid--placeholder-lines bg-(--public-background)`}
         id={anchor || undefined}
       >
-        <div className="public-site-shell">
+        <div className="website-frame">
           {props.title ? (
             <h2 className="text-3xl font-bold">{text(props.title, "")}</h2>
           ) : null}
@@ -57,7 +57,7 @@ export default function GalleryGrid({
         )}
         id={anchor || undefined}
       >
-        <div className="public-site-shell">
+        <div className="website-frame">
           {props.title ? (
             <h2 className="text-3xl font-bold">{text(props.title, "")}</h2>
           ) : null}
@@ -91,10 +91,10 @@ export default function GalleryGrid({
                     ) : (
                       <div className="public-carousel__placeholder" />
                     )}
-                    {showCaptions ? (
+                    {showLabels ? (
                       <figcaption>
                         <div>{text(item.title, "Project")}</div>
-                        <p>{text(item.caption ?? item.category, "")}</p>
+                        <p>{text(item.label ?? item.category, "")}</p>
                       </figcaption>
                     ) : null}
                   </figure>
@@ -144,7 +144,7 @@ export default function GalleryGrid({
       className={`${sectionPadding(theme)} public-gallery-grid ${isPacked ? "public-gallery-grid--packed" : ""} bg-(--public-background)`}
       id={anchor || undefined}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         {props.title ? (
           <h2 className="text-3xl font-bold">{text(props.title, "")}</h2>
         ) : null}
@@ -169,11 +169,11 @@ export default function GalleryGrid({
                 ) : (
                   <div className="h-52 bg-(--public-surface)" />
                 )}
-                {showCaptions ? (
+                {showLabels ? (
                   <figcaption className="p-4">
                     <div className="font-bold">{title}</div>
                     <p className="mt-1 text-sm text-(--public-muted)">
-                      {text(item.caption ?? item.category, "")}
+                      {text(item.label ?? item.category, "")}
                     </p>
                   </figcaption>
                 ) : null}

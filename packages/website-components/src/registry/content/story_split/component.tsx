@@ -2,13 +2,13 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecord, asRecords, asStrings, imageUrl, text } from "../../../utils";
 
 export default function ContentStorySplit({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const stories = useMemo(() => {
     const items = asRecords(props.stories);
     if (items.length) return items;
@@ -55,7 +55,7 @@ export default function ContentStorySplit({
       id={anchor || undefined}
     >
       <div
-        className={`public-site-shell public-content-split__inner ${imageFirst ? "is-image-first" : ""}`}
+        className={`website-frame public-content-split__inner ${imageFirst ? "is-image-first" : ""}`}
       >
         <div className="public-content-split__copy">
           {props.eyebrow ? (

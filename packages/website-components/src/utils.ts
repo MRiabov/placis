@@ -1,6 +1,6 @@
-import type { JsonObject, PublicSiteSection } from "./types";
+import type { JsonObject, WebsiteSection } from "./types";
 
-export function componentId(section: PublicSiteSection): string {
+export function componentId(section: WebsiteSection): string {
   return section.component_id ?? section.component ?? "";
 }
 

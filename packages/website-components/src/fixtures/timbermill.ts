@@ -1,4 +1,4 @@
-import type { PublicSiteManifest, PublicSiteSection } from "../types";
+import type { WebsiteManifest, WebsiteSection } from "../types";
 
 const assetBase = "https://timbermillconstruction.ie/wp-content/uploads";
 const logo = `${assetBase}/2020/07/logo-timberpng.png`;
@@ -22,7 +22,7 @@ const serviceLinks = [
 
 const callbackFields = [
   { id: "name", label: "Name", placeholder: "Your Name*" },
-  { id: "phone", label: "Phone", placeholder: "Your Phone*", type: "tel" },
+  { id: "marketing_phone", label: "Marketing phone", placeholder: "Your marketing phone*", type: "tel" },
 ];
 
 const testimonials = [
@@ -51,16 +51,16 @@ const quoteCta = {
     href: "/contact-us/",
     label: "Get A Quote",
   },
-} satisfies PublicSiteSection;
+} satisfies WebsiteSection;
 
-function nav(): PublicSiteSection {
+function nav(): WebsiteSection {
   return {
-    component: "public.navigation.standard",
+    component: "public.top_menu.standard",
     props: {
       business_name: "Timbermill Construction",
       logo_url: logo,
       home_href: "/",
-      phone: "+353 83 473 2201",
+      marketing_phone: "+353 83 473 2201",
       email: "info@timbermillconstruction.ie",
       social_label: "f",
       links: navLinks,
@@ -74,7 +74,7 @@ function hero(
   subheadline: string,
   image_url: string,
   cta = true,
-): PublicSiteSection {
+): WebsiteSection {
   return {
     component: "public.hero.image",
     props: {
@@ -88,7 +88,7 @@ function hero(
   };
 }
 
-function callback(): PublicSiteSection {
+function callback(): WebsiteSection {
   return {
     component: "public.form.callback_bar",
     props: {
@@ -104,24 +104,24 @@ function intro(
   eyebrow: string,
   title: string,
   paragraphs: string[],
-): PublicSiteSection {
+): WebsiteSection {
   return {
     component: "public.content.intro",
     props: { eyebrow, title, paragraphs },
   };
 }
 
-function testimonialsSection(): PublicSiteSection {
+function testimonialsSection(): WebsiteSection {
   return {
     component: "public.reviews.cards",
     props: {
-      title: "What our customers are saying about us",
+      title: "What people are saying about us",
       items: testimonials,
     },
   };
 }
 
-function contactForm(): PublicSiteSection {
+function contactForm(): WebsiteSection {
   return {
     component: "public.form.lead",
     props: {
@@ -133,8 +133,8 @@ function contactForm(): PublicSiteSection {
         { id: "name", label: "Your Name", placeholder: "Your Name*" },
         {
           id: "email_phone",
-          label: "Your Email/Phone",
-          placeholder: "Your Email/Phone*",
+          label: "Your email or marketing phone",
+          placeholder: "Your email or marketing phone*",
         },
         {
           id: "message",
@@ -148,7 +148,7 @@ function contactForm(): PublicSiteSection {
   };
 }
 
-function footer(): PublicSiteSection {
+function footer(): WebsiteSection {
   return {
     component: "public.footer.standard",
     props: {
@@ -158,7 +158,7 @@ function footer(): PublicSiteSection {
       service_links: serviceLinks,
       hours: "Mon - Fri: 8.00am 6.00pm",
       address: "Clonfert, Maynooth, Co. Kildare, Ireland",
-      phone: "(+353) 83 473 2201",
+      marketing_phone: "(+353) 83 473 2201",
       email: "info@timbermillconstruction.ie",
       badges: [
         {
@@ -179,12 +179,12 @@ function footer(): PublicSiteSection {
         },
       ],
       copyright:
-        "© 2026 Timbermill Construction. All rights reserved | Dublin Web Design by Aspire Media.",
+        "© 2026 Timbermill Construction. All rights reserved | Dublin web design by Aspire.",
     },
   };
 }
 
-function serviceCards(): PublicSiteSection {
+function serviceCards(): WebsiteSection {
   return {
     component: "public.services.grid",
     props: {
@@ -364,17 +364,17 @@ export const timbermillConstructionManifest = {
               {
                 title: "Renovation project",
                 image_url: `${assetBase}/2020/07/project-1-550x550.jpg`,
-                caption: "Timbermill renovation project",
+                label: "Timbermill renovation project",
               },
               {
                 title: "Indoor construction",
                 image_url: `${assetBase}/2020/07/The-indoor-550x550.jpg`,
-                caption: "Interior project work",
+                label: "Interior project work",
               },
               {
                 title: "Passive standard home",
                 image_url: `${assetBase}/2020/07/project-2.jpg`,
-                caption: "New-build project",
+                label: "New-build project",
               },
             ],
           },
@@ -487,19 +487,19 @@ export const timbermillConstructionManifest = {
               {
                 title: "Extension in Straffan",
                 image_url: `${assetBase}/project.jpg`,
-                caption:
+                label:
                   "A roof light and heightened ceiling created a brighter extension.",
               },
               {
                 title: "Extension and Renovation in Straffan Co. Kildare",
                 image_url: `${assetBase}/project-2.jpg`,
-                caption:
+                label:
                   "New windows, handcrafted kitchen, and garden patio views.",
               },
               {
                 title: "New passive standard home in Co. Meath",
                 image_url: `${assetBase}/repair-work-2.jpg`,
-                caption:
+                label:
                   "Built using a clay block system to exceed passive house standards.",
               },
             ],
@@ -690,7 +690,7 @@ export const timbermillConstructionManifest = {
         { title: "Re-roofing", body: "Replace and improve roof systems." },
         {
           title: "Roof installation",
-          body: "Install new roofing as part of a build or upgrade.",
+          body: "Install new roofing as part of a build or roof replacement.",
         },
         {
           title: "Roof repairs",
@@ -699,4 +699,4 @@ export const timbermillConstructionManifest = {
       ],
     }),
   ],
-} satisfies PublicSiteManifest;
+} satisfies WebsiteManifest;

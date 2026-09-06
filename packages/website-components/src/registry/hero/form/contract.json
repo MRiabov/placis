@@ -1,6 +1,5 @@
 {
   "id": "public.hero.form",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Hero With Form",
   "family": "hero",
@@ -22,7 +21,10 @@
       }
     },
     "additionalProperties": true,
-    "required": ["headline", "form_id"]
+    "required": [
+      "headline",
+      "form_id"
+    ]
   },
   "editable_slots": [
     {
@@ -52,14 +54,23 @@
       "key": "layout",
       "type": "enum",
       "label": "Layout",
-      "values": ["default", "media_left", "media_right", "centered"],
+      "values": [
+        "default",
+        "media_left",
+        "media_right",
+        "centered"
+      ],
       "default": "default"
     },
     {
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

@@ -1,18 +1,18 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
 export default function ServicesSimpleList({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const services = asRecords(props.services);
   return (
     <section
       className={`${sectionPadding(theme)} public-services-simple bg-(--public-background)`}
       id={text(props.anchor_id, "") || undefined}
     >
-      <div className="public-site-shell public-services-simple__inner">
+      <div className="website-frame public-services-simple__inner">
         <div className="public-services-simple__heading">
           {props.eyebrow ? (
             <p className="public-eyebrow">{String(props.eyebrow)}</p>

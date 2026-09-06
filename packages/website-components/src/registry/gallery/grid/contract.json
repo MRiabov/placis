@@ -1,6 +1,5 @@
 {
   "id": "public.gallery.grid",
-  "aliases": ["public.gallery.v1"],
   "schema_version": 1,
   "display_name": "Gallery Grid",
   "family": "gallery",
@@ -13,7 +12,12 @@
       },
       "layout": {
         "type": "string",
-        "enum": ["grid", "carousel", "placeholder_lines", "packed"]
+        "enum": [
+          "grid",
+          "carousel",
+          "placeholder_lines",
+          "packed"
+        ]
       },
       "carousel_label": {
         "type": "string"
@@ -33,7 +37,7 @@
       "show_dots": {
         "type": "boolean"
       },
-      "show_captions": {
+      "show_labels": {
         "type": "boolean"
       },
       "anchor_id": {
@@ -49,7 +53,7 @@
                 "title": {
                   "type": "string"
                 },
-                "caption": {
+                "label": {
                   "type": "string"
                 },
                 "category": {
@@ -85,7 +89,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["items"]
+    "required": [
+      "items"
+    ]
   },
   "editable_slots": [
     {
@@ -115,7 +121,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

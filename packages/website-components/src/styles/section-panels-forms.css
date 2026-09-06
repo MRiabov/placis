@@ -1,10 +1,10 @@
 @layer components {
-  .public-section-header {
+  .website-section-heading {
     margin-bottom: 40px;
     text-align: center;
   }
 
-  .public-section-header h2,
+  .website-section-heading h2,
   .public-project-planner h2 {
     color: var(--public-primary);
     font-size: clamp(2rem, 5vw, 3.8rem);
@@ -42,7 +42,7 @@
     max-width: 560px;
   }
 
-  .public-section-panel--brand .public-section-header h2 {
+  .public-section-panel--brand .website-section-heading h2 {
     color: #fff;
   }
 
@@ -102,7 +102,7 @@
     text-decoration: none;
   }
 
-  .public-site-root .public-video-feature__poster {
+  .website-root .public-video-feature__poster {
     color: var(--public-background);
   }
 
@@ -261,7 +261,7 @@
     padding-top: 76px;
   }
 
-  .public-edge-gallery .public-section-header h2 {
+  .public-edge-gallery .website-section-heading h2 {
     color: #fff;
   }
 

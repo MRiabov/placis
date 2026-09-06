@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asStrings, text } from "../../../utils";
 
-export default function StatementWords({ props }: PublicSiteComponentProps) {
+export default function StatementWords({ props }: WebsiteComponentProps) {
   const words = asStrings(props.words);
   return (
     <section

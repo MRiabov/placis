@@ -204,7 +204,7 @@
   }
 
   .public-theme-red-charcoal .public-content-split__copy,
-  .public-theme-red-charcoal .public-faq-list .public-site-shell {
+  .public-theme-red-charcoal .public-faq-list .website-frame {
     border-radius: 10px;
     padding: 28px 22px;
   }
@@ -254,7 +254,7 @@
   }
 
   .public-theme-red-charcoal .public-cta-band,
-  .public-theme-red-charcoal .public-proof-testimonials {
+  .public-theme-red-charcoal .website-reviews-cards {
     padding-bottom: 54px;
     padding-top: 54px;
   }
@@ -271,23 +271,23 @@
     justify-content: center;
   }
 
-  .public-theme-red-charcoal .public-proof-testimonials .grid {
+  .public-theme-red-charcoal .website-reviews-cards .grid {
     grid-template-columns: 1fr;
   }
 
-  .public-theme-red-charcoal .public-proof-testimonials figure:first-child {
+  .public-theme-red-charcoal .website-reviews-cards figure:first-child {
     grid-row: auto;
     padding: 22px;
   }
 
   .public-theme-red-charcoal
-    .public-proof-testimonials
+    .website-reviews-cards
     figure:first-child
     blockquote {
     font-size: 1rem;
   }
 
-  .public-theme-red-charcoal .public-proof-testimonials figcaption {
+  .public-theme-red-charcoal .website-reviews-cards figcaption {
     align-items: flex-start;
     flex-direction: column;
     gap: 8px;

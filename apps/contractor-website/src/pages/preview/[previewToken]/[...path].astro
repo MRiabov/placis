@@ -1,12 +1,12 @@
 ---
 import {
-  loadPublicSiteComponents,
+  loadWebsiteComponents,
   pageDescription,
   pageSections,
   pageTitle,
-  PublicSiteRenderer,
+  WebsiteRenderer,
   resolveManifestPage,
-  type PublicSiteManifest,
+  type WebsiteManifest,
 } from "@placis/website-components";
 import PublicSiteClientBehaviors from "../../../components/PublicSiteClientBehaviors.astro";
 import "../../../styles/global.css";
@@ -27,10 +27,10 @@ const requestedPath = pathParam ? `/${pathParam.replace(/^\/+/, "")}` : "/";
 const resolved = previewToken
   ? await resolvePreviewWebsite({ apiBaseUrl, previewToken })
   : null;
-const manifest: PublicSiteManifest = resolved?.manifest ?? {};
+const manifest: WebsiteManifest = resolved?.manifest ?? {};
 const page = resolveManifestPage(manifest, requestedPath);
 const sections = pageSections(page);
-const loadedComponents = await loadPublicSiteComponents(sections);
+const loadedComponents = await loadWebsiteComponents(sections);
 const title = page ? `${pageTitle(manifest, page)} Preview` : "Website preview";
 const description = page
   ? pageDescription(manifest, page)
@@ -58,7 +58,7 @@ if (!page) {
   <body>
     {
       page ? (
-        <PublicSiteRenderer
+        <WebsiteRenderer
           context={{
             formSubmitBasePath: `${apiBaseUrl}/api/v1/public/forms`,
             mode: "preview",
@@ -69,7 +69,7 @@ if (!page) {
           page={page}
         />
       ) : (
-        <main class="public-site-root grid min-h-screen place-items-center px-4 text-center">
+        <main class="website-root grid min-h-screen place-items-center px-4 text-center">
           <div>
             <p class="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">
               Website preview unavailable

@@ -1,6 +1,5 @@
 {
   "id": "public.marquee.services",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Marquee Services",
   "family": "marquee",
@@ -17,7 +16,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["items"]
+    "required": [
+      "items"
+    ]
   },
   "editable_slots": [
     {

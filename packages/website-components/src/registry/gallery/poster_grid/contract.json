@@ -1,6 +1,5 @@
 {
   "id": "public.gallery.poster_grid",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Poster Grid",
   "family": "gallery",
@@ -33,7 +32,7 @@
                 "category": {
                   "type": "string"
                 },
-                "caption": {
+                "label": {
                   "type": "string"
                 },
                 "href": {
@@ -60,7 +59,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["items"]
+    "required": [
+      "items"
+    ]
   },
   "editable_slots": [
     {
@@ -89,7 +90,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

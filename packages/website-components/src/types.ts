@@ -2,7 +2,7 @@ import type { ComponentType, CSSProperties, ReactNode } from "react";
 
 export type JsonObject = Record<string, unknown>;
 
-export type PublicSiteTheme = {
+export type WebsiteTheme = {
   preset?: string;
   primary?: string;
   neutral?: string;
@@ -15,7 +15,7 @@ export type PublicSiteTheme = {
   density?: "compact" | "comfortable" | "spacious";
 };
 
-export type PublicSiteSection = {
+export type WebsiteSection = {
   component?: string;
   component_id?: string;
   schema_version?: number;
@@ -23,64 +23,63 @@ export type PublicSiteSection = {
   props?: JsonObject;
 };
 
-export type PublicSitePage = {
+export type WebsitePage = {
   path?: string;
   title?: string;
   seo?: JsonObject;
-  components?: PublicSiteSection[];
-  sections?: PublicSiteSection[];
+  components?: WebsiteSection[];
+  sections?: WebsiteSection[];
 };
 
-export type PublicSiteManifest = {
+export type WebsiteManifest = {
   manifest_version?: string;
   title?: string;
-  theme?: PublicSiteTheme | string;
+  theme?: WebsiteTheme | string;
   seo?: JsonObject;
   collections?: Record<string, JsonObject>;
-  components?: PublicSiteSection[];
-  sections?: PublicSiteSection[];
-  pages?: PublicSitePage[];
+  components?: WebsiteSection[];
+  sections?: WebsiteSection[];
+  pages?: WebsitePage[];
 };
 
-export type PublicSiteRenderContext = {
+export type WebsiteRenderContext = {
   mode?: "published" | "preview";
   path?: string;
-  tenantSlug?: string;
+  websitePrefix?: string;
   formSubmitBasePath?: string;
 };
 
-export type PublicSiteComponentProps<Props extends JsonObject = JsonObject> = {
+export type WebsiteComponentProps<Props extends JsonObject = JsonObject> = {
   props: Props;
-  section: PublicSiteSection;
-  theme: PublicSiteTheme;
-  context: PublicSiteRenderContext;
+  section: WebsiteSection;
+  theme: WebsiteTheme;
+  context: WebsiteRenderContext;
 };
 
-export type PublicSiteComponent = ComponentType<PublicSiteComponentProps>;
+export type WebsiteComponent = ComponentType<WebsiteComponentProps>;
 
-export type PublicSiteComponentDefinition = {
+export type WebsiteComponentDefinition = {
   id: string;
-  aliases?: string[];
   family: string;
   variant: string;
-  load: () => Promise<{ default: PublicSiteComponent }>;
+  load: () => Promise<{ default: WebsiteComponent }>;
 };
 
-export type LoadedPublicSiteComponent = Omit<
-  PublicSiteComponentDefinition,
+export type LoadedWebsiteComponent = Omit<
+  WebsiteComponentDefinition,
   "load"
 > & {
-  Component: PublicSiteComponent;
+  Component: WebsiteComponent;
 };
 
-export type PublicSiteRendererProps = {
+export type WebsiteRendererProps = {
   children?: ReactNode;
   className?: string;
-  context?: PublicSiteRenderContext;
-  loadedComponents?: LoadedPublicSiteComponent[];
-  manifest: PublicSiteManifest;
-  page?: PublicSitePage | null;
-  registry?: PublicSiteComponentDefinition[];
+  context?: WebsiteRenderContext;
+  loadedComponents?: LoadedWebsiteComponent[];
+  manifest: WebsiteManifest;
+  page?: WebsitePage | null;
+  registry?: WebsiteComponentDefinition[];
 };
 
 export type ThemeStyle = CSSProperties & Record<`--${string}`, string>;

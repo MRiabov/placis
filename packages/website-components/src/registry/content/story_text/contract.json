@@ -1,6 +1,5 @@
 {
   "id": "public.content.story_text",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Story Text",
   "family": "content",
@@ -8,21 +7,45 @@
   "props_schema": {
     "type": "object",
     "properties": {
-      "anchor_id": { "type": "string" },
-      "title": { "type": "string" },
-      "layout": { "type": "string", "enum": ["centered", "split"] },
-      "image_url": { "type": "string" },
-      "alt_text": { "type": "string" },
-      "image_position": { "type": "string", "enum": ["left", "right"] },
+      "anchor_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "layout": {
+        "type": "string",
+        "enum": [
+          "centered",
+          "split"
+        ]
+      },
+      "image_url": {
+        "type": "string"
+      },
+      "alt_text": {
+        "type": "string"
+      },
+      "image_position": {
+        "type": "string",
+        "enum": [
+          "left",
+          "right"
+        ]
+      },
       "blocks": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
-            "heading": { "type": "string" },
+            "heading": {
+              "type": "string"
+            },
             "paragraphs": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             }
           },
           "additionalProperties": true
@@ -30,7 +53,9 @@
       },
       "paragraphs": {
         "type": "array",
-        "items": { "type": "string" }
+        "items": {
+          "type": "string"
+        }
       }
     },
     "additionalProperties": true
@@ -73,7 +98,10 @@
       "key": "layout",
       "type": "enum",
       "label": "Layout",
-      "values": ["centered", "split"],
+      "values": [
+        "centered",
+        "split"
+      ],
       "default": "centered"
     }
   ]

@@ -1,9 +1,9 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
 export default function CertificationsRow({
   props,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const items = asRecords(props.items);
   return (
     <section
@@ -11,7 +11,7 @@ export default function CertificationsRow({
       id={text(props.anchor_id, "certifications")}
     >
       <div className="public-section-inner">
-        <div className="public-section-header">
+        <div className="website-section-heading">
           <p className="public-section-label public-section-label--light">
             {text(props.eyebrow, "Certifications")}
           </p>

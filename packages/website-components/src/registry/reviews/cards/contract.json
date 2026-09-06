@@ -1,6 +1,5 @@
 {
   "id": "public.reviews.cards",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Reviews",
   "family": "reviews",

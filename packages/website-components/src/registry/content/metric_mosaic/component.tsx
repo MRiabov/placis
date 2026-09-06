@@ -1,14 +1,14 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function MetricMosaic({ props }: PublicSiteComponentProps) {
+export default function MetricMosaic({ props }: WebsiteComponentProps) {
   const items = asRecords(props.items);
   return (
     <section
       className="public-metric-mosaic"
       id={text(props.anchor_id, "") || undefined}
     >
-      <div className="public-site-shell public-metric-mosaic__grid">
+      <div className="website-frame public-metric-mosaic__grid">
         <div className="public-metric-mosaic__title">
           <h2>{text(props.title, "At a glance")}</h2>
         </div>

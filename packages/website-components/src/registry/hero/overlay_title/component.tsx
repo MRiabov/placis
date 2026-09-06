@@ -1,16 +1,16 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecord, imageUrl, text } from "../../../utils";
 
-export default function OverlayTitleHero({ props }: PublicSiteComponentProps) {
-  const media = asRecord(props.media);
+export default function OverlayTitleHero({ props }: WebsiteComponentProps) {
+  const image = asRecord(props.image);
   const src = imageUrl(
     props.generated_image_url ??
       props.image_url ??
-      media.generated_image_url ??
-      media.image_url ??
-      media.url,
+      image.generated_image_url ??
+      image.image_url ??
+      image.url,
   );
-  const alt = text(media.alt_text ?? media.alt ?? props.alt_text, "");
+  const alt = text(image.alt_text ?? image.alt ?? props.alt_text, "");
   const scrollLabel = text(props.scroll_label, "Scroll");
   return (
     <section

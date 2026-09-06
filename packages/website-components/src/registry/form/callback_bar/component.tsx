@@ -1,16 +1,16 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 import { publicLeadFormAttributes } from "../lead/component";
 
 export default function CallbackBar({
   props,
   context,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const fields = asRecords(props.fields);
   const formId = text(props.form_id, "callback");
   return (
     <section className="public-callback" id="callback">
-      <div className="public-site-shell public-callback__inner">
+      <div className="website-frame public-callback__inner">
         <h2>{text(props.title, "Request A Call Back")}</h2>
         <form {...publicLeadFormAttributes({ context, formId })}>
           {fields.map((field) => {

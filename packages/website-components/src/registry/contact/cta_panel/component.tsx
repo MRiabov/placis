@@ -1,9 +1,9 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { text } from "../../../utils";
 
-export default function ContactCtaPanel({ props }: PublicSiteComponentProps) {
-  const phoneHref = props.phone
-    ? String(props.phone).replace(/[^\d+]/g, "")
+export default function ContactCtaPanel({ props }: WebsiteComponentProps) {
+  const phoneHref = props.marketing_phone
+    ? String(props.marketing_phone).replace(/[^\d+]/g, "")
     : "";
   return (
     <section
@@ -32,12 +32,12 @@ export default function ContactCtaPanel({ props }: PublicSiteComponentProps) {
               {text(props.email_label, "Email the Team")}
             </a>
           ) : null}
-          {props.phone ? (
+          {props.marketing_phone ? (
             <a
               className="public-section-button public-section-button--ghost"
               href={`tel:${phoneHref}`}
             >
-              {text(props.phone_label, "Call Now")}
+              {text(props.marketing_phone_label, "Call Now")}
             </a>
           ) : null}
           {props.whatsapp_url ? (

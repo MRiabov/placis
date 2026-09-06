@@ -1,9 +1,9 @@
 import { useId, useMemo } from "react";
 
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, asStrings, imageUrl, text } from "../../../utils";
 
-export default function ServicesTabs({ props }: PublicSiteComponentProps) {
+export default function ServicesTabs({ props }: WebsiteComponentProps) {
   const services = useMemo(() => asRecords(props.services), [props.services]);
   const renderedServices = services.length > 0 ? services : [{}];
   const rootId = useId().replace(/:/g, "");
@@ -14,7 +14,7 @@ export default function ServicesTabs({ props }: PublicSiteComponentProps) {
       id="services"
     >
       <div className="public-section-inner">
-        <div className="public-section-header">
+        <div className="website-section-heading">
           <p className="public-section-label">
             {text(props.eyebrow, "What We Do")}
           </p>
