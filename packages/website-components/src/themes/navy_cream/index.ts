@@ -1,11 +1,11 @@
-import type { PublicSiteThemePreset } from "../types";
+import type { WebsiteThemePreset } from "../types";
 
 export const navyCreamThemePreset = {
   id: "theme.navy_cream",
   label: "Navy & Cream",
   source: "bongagift/bellfield-site styles.css",
   cssClass: "public-theme-navy-cream",
-  runtimeTheme: {
+  websiteTheme: {
     preset: "navy_cream",
     primary: "#0c2071",
     neutral: "slate",
@@ -45,8 +45,8 @@ export const navyCreamThemePreset = {
     hoverDuration: "200ms",
   },
   notes: [
-    "Navy, muted blue, and cream palette extracted from the source reference site.",
+    "Navy, muted blue, and cream palette extracted from the source website.",
     "Serif display headings and uppercase tracked labels are part of the style, not the component structure.",
     "Use as a reference fixture theme, not as the default for every business website.",
   ],
-} satisfies PublicSiteThemePreset;
+} satisfies WebsiteThemePreset;

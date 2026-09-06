@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
-export default function CtaBand({ props }: PublicSiteComponentProps) {
+export default function CtaBand({ props }: WebsiteComponentProps) {
   const actions = asRecords(props.actions ?? props.buttons);
   const title = text(props.title, "We are here to help you get started.");
   const longTitleClass =
@@ -19,7 +19,7 @@ export default function CtaBand({ props }: PublicSiteComponentProps) {
       className={`public-cta-band${longTitleClass}`}
       id={text(props.anchor_id, "") || undefined}
     >
-      <div className="public-site-shell public-cta-band__inner">
+      <div className="website-frame public-cta-band__inner">
         <h2>{title}</h2>
         {props.body || props.description ? (
           <p>{text(props.body ?? props.description, "")}</p>

@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, asStrings, imageUrl, text } from "../../../utils";
 
-export default function LogoNavFooter({ props }: PublicSiteComponentProps) {
+export default function LogoNavFooter({ props }: WebsiteComponentProps) {
   const links = asRecords(props.links);
   const legalLines = [
     ...asStrings(props.legal_disclosure_lines),
@@ -22,7 +22,7 @@ export default function LogoNavFooter({ props }: PublicSiteComponentProps) {
         ) : (
           <strong>{text(props.business_name, "Contractor business")}</strong>
         )}
-        <nav aria-label="Footer navigation">
+        <nav aria-label="Footer links">
           {links.map((link) => (
             <a href={text(link.href, "#")} key={text(link.label, "Link")}>
               {text(link.label, "Link")}

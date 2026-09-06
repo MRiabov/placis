@@ -1,6 +1,5 @@
 {
   "id": "public.cta.band",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "CTA Band",
   "family": "cta",
@@ -19,7 +18,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title"]
+    "required": [
+      "title"
+    ]
   },
   "editable_slots": [
     {
@@ -55,7 +56,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

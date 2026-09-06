@@ -1,5 +1,5 @@
 import { red, slate } from "@radix-ui/colors";
-import type { PublicSiteThemePreset } from "../types";
+import type { WebsiteThemePreset } from "../types";
 
 const redCharcoalColors = {
   accent: red.red9,
@@ -18,7 +18,7 @@ export const redCharcoalThemePreset = {
   label: "Red & Charcoal",
   source: "https://roofshield.ie/ (Astra + Elementor post-26.css)",
   cssClass: "public-theme-red-charcoal",
-  runtimeTheme: {
+  websiteTheme: {
     preset: "red_charcoal",
     primary: redCharcoalColors.brand,
     neutral: "slate",
@@ -61,7 +61,7 @@ export const redCharcoalThemePreset = {
     "The improved reference uses Radix Colors without introducing a second dominant hue: slate12/slate11 for neutral structure, red9 for solid accents, red11 for red text on white, and slate6 for borders.",
     "The palette keeps a red/black/white identity while reducing the harsh contrast in the original Elementor treatment.",
     "Typography now uses Archivo headings with Source Sans 3 body copy so the improved reference avoids the source site's default Roboto-heavy Elementor feel.",
-    "Pill call-to-action buttons and dark neutral proof/contact bands remain source-adjacent treatments, while supplier proof is rendered as a static material row instead of a hero-adjacent marquee.",
+    "Pill call-to-action buttons and dark neutral reviews/contact bands remain source-adjacent treatments, while supplier logos are rendered as a static material row instead of a hero-adjacent marquee.",
     "Use as a reference fixture theme, not as the default for every business website.",
   ],
-} satisfies PublicSiteThemePreset;
+} satisfies WebsiteThemePreset;

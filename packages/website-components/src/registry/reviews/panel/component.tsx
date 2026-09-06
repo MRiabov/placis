@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
-export default function ReviewPanel({ props }: PublicSiteComponentProps) {
+export default function ReviewPanel({ props }: WebsiteComponentProps) {
   const items = asRecords(props.items);
   const first = items[0] ?? {};
   const anchor = text(props.anchor_id);
@@ -12,7 +12,7 @@ export default function ReviewPanel({ props }: PublicSiteComponentProps) {
           <p className="public-section-label">
             {text(props.eyebrow, "Our Reputation")}
           </p>
-          <h2>{text(props.title, "Client Reviews")}</h2>
+          <h2>{text(props.title, "Reviews")}</h2>
         </div>
         <figure className="public-review-card">
           <svg
@@ -34,7 +34,7 @@ export default function ReviewPanel({ props }: PublicSiteComponentProps) {
             )}
           </blockquote>
           <figcaption>
-            <strong>{text(first.name ?? first.author, "Customer")}</strong>
+            <strong>{text(first.name ?? first.author, "Reviewer")}</strong>
             <span>{text(first.location, "")}</span>
           </figcaption>
           <div className="public-review-card__footer">

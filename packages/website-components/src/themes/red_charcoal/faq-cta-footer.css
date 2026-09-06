@@ -4,7 +4,7 @@
   padding-top: 86px;
 }
 
-.public-theme-red-charcoal .public-faq-list .public-site-shell {
+.public-theme-red-charcoal .public-faq-list .website-frame {
   background: transparent;
   border: 0;
   border-radius: 0;
@@ -121,14 +121,14 @@
   text-transform: none;
 }
 
-.public-theme-red-charcoal .public-proof-testimonials {
+.public-theme-red-charcoal .website-reviews-cards {
   background: #ffffff;
   color: var(--public-text);
   padding-bottom: 92px;
   padding-top: 90px;
 }
 
-.public-theme-red-charcoal .public-proof-testimonials h2 {
+.public-theme-red-charcoal .website-reviews-cards h2 {
   color: var(--public-text);
   font-family: var(--public-font-heading);
   font-size: clamp(2.2rem, 4vw, 3.35rem);
@@ -137,14 +137,14 @@
   text-transform: uppercase;
 }
 
-.public-theme-red-charcoal .public-proof-testimonials .grid {
+.public-theme-red-charcoal .website-reviews-cards .grid {
   align-items: stretch;
   column-gap: 22px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   row-gap: 22px;
 }
 
-.public-theme-red-charcoal .public-proof-testimonials figure {
+.public-theme-red-charcoal .website-reviews-cards figure {
   background: #ffffff;
   border: 1px solid var(--public-border);
   border-radius: 8px;
@@ -156,13 +156,13 @@
   padding: 24px;
 }
 
-.public-theme-red-charcoal .public-proof-testimonials figure:first-child {
+.public-theme-red-charcoal .website-reviews-cards figure:first-child {
   grid-row: auto;
   padding: 24px;
 }
 
 .public-theme-red-charcoal
-  .public-proof-testimonials
+  .website-reviews-cards
   figure:first-child
   blockquote {
   color: var(--public-text);
@@ -171,13 +171,13 @@
   line-height: 1.65;
 }
 
-.public-theme-red-charcoal .public-proof-testimonials blockquote {
+.public-theme-red-charcoal .website-reviews-cards blockquote {
   color: var(--public-muted);
   flex: 1;
   margin-top: 14px;
 }
 
-.public-theme-red-charcoal .public-proof-testimonials figcaption {
+.public-theme-red-charcoal .website-reviews-cards figcaption {
   align-items: center;
   border-top: 1px solid var(--public-border);
   color: var(--public-text);

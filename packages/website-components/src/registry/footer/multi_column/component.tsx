@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function ReferenceFooter({ props }: PublicSiteComponentProps) {
+export default function ReferenceFooter({ props }: WebsiteComponentProps) {
   const columns = asRecords(props.columns);
   const ctas = asRecords(props.ctas);
   const socials = asRecords(props.social_links);
@@ -9,7 +9,7 @@ export default function ReferenceFooter({ props }: PublicSiteComponentProps) {
 
   return (
     <footer className="public-multi-footer">
-      <div className="public-site-shell">
+      <div className="website-frame">
         {ctas.length ? (
           <div className="public-multi-footer__ctas">
             {ctas.map((cta) => (

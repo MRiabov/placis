@@ -1,8 +1,8 @@
 import { sectionPadding } from "../../../theme";
 import type {
   JsonObject,
-  PublicSiteComponentProps,
-  PublicSiteRenderContext,
+  WebsiteComponentProps,
+  WebsiteRenderContext,
 } from "../../../types";
 import { asRecord, asRecords, asStrings, text } from "../../../utils";
 
@@ -11,7 +11,7 @@ export function publicLeadFormAttributes({
   formId,
   className,
 }: {
-  context: PublicSiteRenderContext;
+  context: WebsiteRenderContext;
   formId: string;
   className?: string;
 }) {
@@ -25,13 +25,13 @@ export function publicLeadFormAttributes({
     "data-form-id": formId,
     "data-public-lead-form": "",
     "data-source-page-path": context.path ?? "",
-    "data-tenant-slug": context.tenantSlug ?? "",
+    "data-website-prefix": context.websitePrefix ?? "",
   } as const;
 }
 
 function inputType(field: JsonObject): string {
   const type = text(field.type, "text");
-  return type === "phone"
+  return type === "marketing_phone"
     ? "tel"
     : type === "textarea" || type === "address"
       ? "textarea"
@@ -113,7 +113,7 @@ export function LeadFormFields({
           </label>
         );
       })}
-      <button className="public-site-button border-0" type="submit">
+      <button className="website-button border-0" type="submit">
         {submitLabel}
       </button>
       <p
@@ -129,9 +129,9 @@ function ContactDetails({ details }: { details: JsonObject }) {
   const serviceArea = asStrings(details.service_area);
   const defaultRows = [
     {
-      label: text(details.phone_label, "Phone"),
-      value: text(details.phone, ""),
-      href: text(details.phone_href, ""),
+      label: text(details.marketing_phone_label, "Marketing phone"),
+      value: text(details.marketing_phone, ""),
+      href: text(details.marketing_phone_href, ""),
     },
     {
       label: text(details.email_label, "Email"),
@@ -154,7 +154,7 @@ function ContactDetails({ details }: { details: JsonObject }) {
     },
     {
       label: text(details.email_label, "Contact"),
-      value: [text(details.email, ""), text(details.phone, "")]
+      value: [text(details.email, ""), text(details.marketing_phone, "")]
         .filter(Boolean)
         .join("\n"),
       href: text(details.email_href, ""),
@@ -194,7 +194,7 @@ export default function LeadForm({
   props,
   theme,
   context,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const fields = asRecords(props.fields);
   const contactDetails = asRecord(props.contact_details);
   const formId = text(props.form_id, "lead-form");
@@ -239,7 +239,7 @@ export default function LeadForm({
         className={`${sectionPadding(theme)} public-lead-form public-lead-form--centered bg-(--public-background)`}
         id="quote"
       >
-        <div className="public-site-shell public-lead-form__inner">
+        <div className="website-frame public-lead-form__inner">
           {intro}
           {form}
         </div>
@@ -252,7 +252,7 @@ export default function LeadForm({
         className={`${sectionPadding(theme)} public-lead-form public-lead-form--contact-split bg-(--public-background)`}
         id="quote"
       >
-        <div className="public-site-shell public-lead-form__inner">
+        <div className="website-frame public-lead-form__inner">
           <div className="public-lead-form__form-column">
             {intro}
             {form}
@@ -267,7 +267,7 @@ export default function LeadForm({
       className={`${sectionPadding(theme)} public-lead-form bg-(--public-background)`}
       id="quote"
     >
-      <div className="public-site-shell public-lead-form__inner grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
+      <div className="website-frame public-lead-form__inner grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
         {intro}
         {form}
       </div>

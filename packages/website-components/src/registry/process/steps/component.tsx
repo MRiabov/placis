@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
-export default function ProcessSteps({ props }: PublicSiteComponentProps) {
+export default function ProcessSteps({ props }: WebsiteComponentProps) {
   const steps = asRecords(props.steps);
   return (
     <section
@@ -10,7 +10,7 @@ export default function ProcessSteps({ props }: PublicSiteComponentProps) {
       id={text(props.anchor_id, "process")}
     >
       <div className="public-section-inner">
-        <div className="public-section-header">
+        <div className="website-section-heading">
           <p className="public-section-label">
             {text(props.eyebrow, "How We Work")}
           </p>

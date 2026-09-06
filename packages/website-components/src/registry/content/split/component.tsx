@@ -1,11 +1,11 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecord, asRecords, asStrings, imageUrl, text } from "../../../utils";
 
 export default function ContentSplit({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const paragraphs = asStrings(props.paragraphs ?? props.body);
   const image = imageUrl(props.image_url);
   const sidePanel = asRecord(props.side_panel);
@@ -40,7 +40,7 @@ export default function ContentSplit({
       id={anchor || undefined}
     >
       <div
-        className={`public-site-shell public-content-split__inner ${imageFirst ? "is-image-first" : ""}`}
+        className={`website-frame public-content-split__inner ${imageFirst ? "is-image-first" : ""}`}
       >
         <div className="public-content-split__copy">
           {props.eyebrow ? (

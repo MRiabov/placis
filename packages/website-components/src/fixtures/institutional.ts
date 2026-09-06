@@ -1,4 +1,4 @@
-import type { PublicSiteManifest, PublicSiteSection } from "../types";
+import type { WebsiteManifest, WebsiteSection } from "../types";
 
 import {
   assets,
@@ -13,9 +13,9 @@ import {
   socialLinks,
 } from "./institutional-data";
 
-function nav(activeHref: string, mode = "overlay"): PublicSiteSection {
+function nav(activeHref: string, mode = "overlay"): WebsiteSection {
   return {
-    component: "public.navigation.fixed_cta",
+    component: "public.top_menu.fixed_cta",
     props: {
       business_name: business.name,
       home_href: "/",
@@ -33,12 +33,12 @@ function hero(
   headline: string,
   imageUrl: string,
   altText: string,
-): PublicSiteSection {
+): WebsiteSection {
   return {
     component: "public.hero.overlay_title",
     props: {
       headline,
-      media: {
+      image: {
         url: imageUrl,
         alt_text: altText,
       },
@@ -46,7 +46,7 @@ function hero(
   };
 }
 
-function footer(): PublicSiteSection {
+function footer(): WebsiteSection {
   return {
     component: "public.footer.centered_social_nav",
     props: {
@@ -75,7 +75,7 @@ export const harperConstructionManifest = {
   },
   seo: {
     description:
-      "Source-backed Harper Construction multipage reference fixture for public-site component reconstruction.",
+      "Source-backed Harper Construction multipage reference fixture for website component reconstruction.",
   },
   pages: [
     {
@@ -118,7 +118,7 @@ export const harperConstructionManifest = {
           props: {
             anchor_id: "work",
             layout: "packed",
-            show_captions: false,
+            show_labels: false,
             items: [
               {
                 title: "Aviation project",
@@ -205,7 +205,7 @@ export const harperConstructionManifest = {
               {
                 heading: "A Culture of Stability and Tenure",
                 paragraphs: [
-                  "Harper Construction fosters a work environment that values stability and long-term commitment. This is reflected in the impressive tenure of our team members. This level of experience and continuity is a valuable asset to our company and our clients.",
+                  "Harper Construction fosters a work environment that values stability and long-term commitment. This is reflected in the impressive tenure of our team members. This level of experience and continuity is valuable to our company and the homeowners we work with.",
                 ],
               },
             ],
@@ -282,7 +282,7 @@ export const harperConstructionManifest = {
           props: {
             anchor_id: "capabilities",
             layout: "packed",
-            show_captions: true,
+            show_labels: true,
             items: serviceItems,
           },
         },
@@ -314,7 +314,7 @@ export const harperConstructionManifest = {
           props: {
             anchor_id: "project-categories",
             layout: "packed",
-            show_captions: true,
+            show_labels: true,
             items: projectCategoryItems,
           },
         },
@@ -339,7 +339,7 @@ export const harperConstructionManifest = {
             title: "Contact",
             body: "Please feel free to call us to discuss your upcoming project. For inquiries about employment, subcontracting for us, or information about our current project, please use the form below so we can connect you to the best person to help you.",
             business_name: "Harper Construction Company, Inc.",
-            phone: business.phone,
+            marketing_phone: business.marketing_phone,
             email: business.email,
             address: business.address,
             license_number: business.license,
@@ -356,4 +356,4 @@ export const harperConstructionManifest = {
       ],
     },
   ],
-} satisfies PublicSiteManifest;
+} satisfies WebsiteManifest;

@@ -1,6 +1,5 @@
 {
   "id": "public.content.intro_metrics",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Intro With Metrics",
   "family": "content",
@@ -8,20 +7,42 @@
   "props_schema": {
     "type": "object",
     "properties": {
-      "anchor_id": { "type": "string" },
-      "eyebrow": { "type": "string" },
-      "title": { "type": "string" },
-      "body": { "type": "string" },
-      "cta_href": { "type": "string" },
-      "cta_label": { "type": "string" },
-      "paragraphs": { "type": "array", "items": { "type": "string" } },
+      "anchor_id": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
+      "body": {
+        "type": "string"
+      },
+      "cta_href": {
+        "type": "string"
+      },
+      "cta_label": {
+        "type": "string"
+      },
+      "paragraphs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
       "metrics": {
         "type": "array",
-        "items": { "type": "object", "additionalProperties": true }
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
       }
     },
     "additionalProperties": true,
-    "required": ["title"]
+    "required": [
+      "title"
+    ]
   },
   "editable_slots": [
     {
@@ -53,6 +74,11 @@
       "max_length": 6
     }
   ],
-  "default_values": [{ "path": "title", "value": "{{business_name}}" }],
+  "default_values": [
+    {
+      "path": "title",
+      "value": "{{business_name}}"
+    }
+  ],
   "design_controls": []
 }

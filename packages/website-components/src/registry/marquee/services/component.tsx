@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asStrings } from "../../../utils";
 
-export default function ServicesMarquee({ props }: PublicSiteComponentProps) {
+export default function ServicesMarquee({ props }: WebsiteComponentProps) {
   const items = asStrings(props.items);
   const rendered = [...items, ...items];
   return (

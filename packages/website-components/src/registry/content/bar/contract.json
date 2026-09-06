@@ -1,9 +1,5 @@
 {
   "id": "public.content.bar",
-  "aliases": [
-    "public.trust.v1",
-    "public.service_summary.v1"
-  ],
   "schema_version": 1,
   "display_name": "Bar",
   "family": "content",

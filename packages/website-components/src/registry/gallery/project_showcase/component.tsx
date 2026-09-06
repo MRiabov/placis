@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function ProjectShowcase({ props }: PublicSiteComponentProps) {
+export default function ProjectShowcase({ props }: WebsiteComponentProps) {
   const projects = asRecords(props.projects);
 
   return (
@@ -10,7 +10,7 @@ export default function ProjectShowcase({ props }: PublicSiteComponentProps) {
       data-public-tabs=""
       id={text(props.anchor_id, "work")}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         <div className="public-project-showcase__heading">
           <p className="public-section-label">
             {text(props.eyebrow, "Our Work")}

@@ -60,7 +60,7 @@
   .public-theme-institutional-mono .public-services-cards h2,
   .public-theme-institutional-mono .public-gallery-grid h2,
   .public-theme-institutional-mono .public-poster-grid h2,
-  .public-theme-institutional-mono .public-proof-logo-strip h2,
+  .public-theme-institutional-mono .website-content-logo-strip h2,
   .public-theme-institutional-mono .public-leadership-grid h2,
   .public-theme-institutional-mono .public-contact-panel h2,
   .public-theme-institutional-mono .public-lead-form h2,
@@ -100,14 +100,14 @@
     margin-bottom: 34px;
   }
 
-  .public-theme-institutional-mono .public-proof-logo-strip .public-logo-grid__items {
+  .public-theme-institutional-mono .website-content-logo-strip .public-logo-grid__items {
     gap: 28px 36px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 28px;
   }
 
   .public-theme-institutional-mono
-    #clients.public-proof-logo-strip
+    #clients.website-content-logo-strip
     .public-logo-grid__items,
   .public-theme-institutional-mono #news-index .public-poster-grid__items {
     grid-template-columns: 1fr;
@@ -147,12 +147,12 @@
     max-width: none;
   }
 
-  .public-theme-institutional-mono .public-proof-logo-strip .public-logo-grid__item {
+  .public-theme-institutional-mono .website-content-logo-strip .public-logo-grid__item {
     min-height: 70px;
   }
 
   .public-theme-institutional-mono
-    .public-proof-logo-strip
+    .website-content-logo-strip
     .public-logo-grid__item
     img {
     max-height: 58px;

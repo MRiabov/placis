@@ -1,21 +1,21 @@
 import type {
-  PublicSiteManifest,
-  PublicSitePage,
-  PublicSiteSection,
+  WebsiteManifest,
+  WebsitePage,
+  WebsiteSection,
 } from "./types";
 
-function sectionsFrom(value: unknown): PublicSiteSection[] {
+function sectionsFrom(value: unknown): WebsiteSection[] {
   return Array.isArray(value)
     ? value.filter(
-        (item): item is PublicSiteSection =>
+        (item): item is WebsiteSection =>
           item !== null && typeof item === "object",
       )
     : [];
 }
 
 export function pageSections(
-  page: PublicSitePage | PublicSiteManifest | null | undefined,
-): PublicSiteSection[] {
+  page: WebsitePage | WebsiteManifest | null | undefined,
+): WebsiteSection[] {
   if (!page) {
     return [];
   }
@@ -23,9 +23,9 @@ export function pageSections(
 }
 
 export function resolveManifestPage(
-  manifest: PublicSiteManifest,
+  manifest: WebsiteManifest,
   requestedPath = "/",
-): PublicSitePage | null {
+): WebsitePage | null {
   const normalizePath = (path: string | undefined): string => {
     const stripped = (path || "/").replace(/^\/+|\/+$/g, "");
     return stripped ? `/${stripped}` : "/";
@@ -51,15 +51,15 @@ export function resolveManifestPage(
 }
 
 export function pageTitle(
-  manifest: PublicSiteManifest,
-  page: PublicSitePage | null,
+  manifest: WebsiteManifest,
+  page: WebsitePage | null,
 ): string {
   return page?.title ?? manifest.title ?? "Contractor website";
 }
 
 export function pageDescription(
-  manifest: PublicSiteManifest,
-  page: PublicSitePage | null,
+  manifest: WebsiteManifest,
+  page: WebsitePage | null,
 ): string {
   const pageDescription = page?.seo?.description;
   const manifestDescription = manifest.seo?.description;

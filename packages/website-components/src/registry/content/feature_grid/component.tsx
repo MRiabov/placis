@@ -1,15 +1,15 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
 export default function FeatureGrid({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const items = asRecords(props.items);
   return (
     <section className={`${sectionPadding(theme)} public-feature-grid`}>
-      <div className="public-site-shell">
+      <div className="website-frame">
         <div className="public-feature-grid__heading">
           {props.eyebrow ? (
             <p className="public-eyebrow">{String(props.eyebrow)}</p>

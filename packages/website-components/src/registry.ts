@@ -1,28 +1,28 @@
 import type {
-  LoadedPublicSiteComponent,
-  PublicSiteComponentDefinition,
-  PublicSiteSection,
+  LoadedWebsiteComponent,
+  WebsiteComponentDefinition,
+  WebsiteSection,
 } from "./types";
 import { componentId } from "./utils";
 
-export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
+export const websiteComponentRegistry: WebsiteComponentDefinition[] = [
   {
-    id: "public.navigation.center_logo",
-    family: "navigation",
+    id: "public.top_menu.center_logo",
+    family: "top_menu",
     variant: "center_logo",
-    load: () => import("./registry/navigation/center_logo/component"),
+    load: () => import("./registry/top_menu/center_logo/component"),
   },
   {
-    id: "public.navigation.mega_menu",
-    family: "navigation",
+    id: "public.top_menu.mega_menu",
+    family: "top_menu",
     variant: "mega_menu",
-    load: () => import("./registry/navigation/mega_menu/component"),
+    load: () => import("./registry/top_menu/mega_menu/component"),
   },
   {
-    id: "public.hero.media_carousel",
+    id: "public.hero.image_carousel",
     family: "hero",
-    variant: "media_carousel",
-    load: () => import("./registry/hero/media_carousel/component"),
+    variant: "image_carousel",
+    load: () => import("./registry/hero/image_carousel/component"),
   },
   {
     id: "public.hero.scroll_story",
@@ -61,10 +61,10 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
     load: () => import("./registry/gallery/project_showcase/component"),
   },
   {
-    id: "public.media.video_feature",
-    family: "media",
+    id: "public.content.video_feature",
+    family: "content",
     variant: "video_feature",
-    load: () => import("./registry/media/video_feature/component"),
+    load: () => import("./registry/content/video_feature/component"),
   },
   {
     id: "public.footer.multi_column",
@@ -79,10 +79,10 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
     load: () => import("./registry/content/metric_mosaic/component"),
   },
   {
-    id: "public.navigation.fixed_cta",
-    family: "navigation",
+    id: "public.top_menu.fixed_cta",
+    family: "top_menu",
     variant: "fixed_cta",
-    load: () => import("./registry/navigation/fixed_cta/component"),
+    load: () => import("./registry/top_menu/fixed_cta/component"),
   },
   {
     id: "public.hero.type_first_trust",
@@ -116,7 +116,6 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
   },
   {
     id: "public.hero.image",
-    aliases: ["public.hero.v1"],
     family: "hero",
     variant: "image",
     load: () => import("./registry/hero/image/component"),
@@ -128,10 +127,10 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
     load: () => import("./registry/hero/overlay_title/component"),
   },
   {
-    id: "public.navigation.standard",
-    family: "navigation",
+    id: "public.top_menu.standard",
+    family: "top_menu",
     variant: "standard",
-    load: () => import("./registry/navigation/standard/component"),
+    load: () => import("./registry/top_menu/standard/component"),
   },
   {
     id: "public.marquee.services",
@@ -153,7 +152,6 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
   },
   {
     id: "public.services.grid",
-    aliases: ["public.services.v1", "public.services_grid.v1"],
     family: "services",
     variant: "grid",
     load: () => import("./registry/services/grid/component"),
@@ -232,7 +230,6 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
   },
   {
     id: "public.content.bar",
-    aliases: ["public.trust.v1", "public.service_summary.v1"],
     family: "content",
     variant: "bar",
     load: () => import("./registry/content/bar/component"),
@@ -263,7 +260,6 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
   },
   {
     id: "public.gallery.grid",
-    aliases: ["public.gallery.v1"],
     family: "gallery",
     variant: "grid",
     load: () => import("./registry/gallery/grid/component"),
@@ -288,7 +284,6 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
   },
   {
     id: "public.form.lead",
-    aliases: ["public.lead_form.v1"],
     family: "form",
     variant: "lead",
     load: () => import("./registry/form/lead/component"),
@@ -313,7 +308,6 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
   },
   {
     id: "public.contact.panel",
-    aliases: ["public.contact_panel.v1", "public.contact.v1"],
     family: "contact",
     variant: "panel",
     load: () => import("./registry/contact/panel/component"),
@@ -338,40 +332,38 @@ export const publicSiteRegistry: PublicSiteComponentDefinition[] = [
   },
   {
     id: "public.privacy.notice",
-    aliases: ["public.privacy_notice.v1"],
     family: "privacy",
     variant: "notice",
     load: () => import("./registry/privacy/notice/component"),
   },
 ];
 
-export function findPublicSiteComponent(
+export function findWebsiteComponent(
   id: string,
-  registry: PublicSiteComponentDefinition[] = publicSiteRegistry,
-): PublicSiteComponentDefinition | null {
+  registry: WebsiteComponentDefinition[] = websiteComponentRegistry,
+): WebsiteComponentDefinition | null {
   return (
     registry.find(
-      (definition) => definition.id === id || definition.aliases?.includes(id),
+      (definition) => definition.id === id,
     ) ?? null
   );
 }
 
-export async function loadPublicSiteComponents(
-  sections: PublicSiteSection[],
-  registry: PublicSiteComponentDefinition[] = publicSiteRegistry,
-): Promise<LoadedPublicSiteComponent[]> {
+export async function loadWebsiteComponents(
+  sections: WebsiteSection[],
+  registry: WebsiteComponentDefinition[] = websiteComponentRegistry,
+): Promise<LoadedWebsiteComponent[]> {
   const ids = Array.from(new Set(sections.map(componentId).filter(Boolean)));
   const definitions = ids
-    .map((id) => findPublicSiteComponent(id, registry))
+    .map((id) => findWebsiteComponent(id, registry))
     .filter(
-      (definition): definition is PublicSiteComponentDefinition =>
+      (definition): definition is WebsiteComponentDefinition =>
         definition !== null,
     );
   const loaded = await Promise.all(
     definitions.map(async (definition) => {
       const module = await definition.load();
       return {
-        aliases: definition.aliases,
         Component: module.default,
         family: definition.family,
         id: definition.id,

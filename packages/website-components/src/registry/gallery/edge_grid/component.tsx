@@ -1,12 +1,12 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function EdgeGridGallery({ props }: PublicSiteComponentProps) {
+export default function EdgeGridGallery({ props }: WebsiteComponentProps) {
   const items = asRecords(props.items);
   const anchor = text(props.anchor_id);
   return (
     <section className="public-edge-gallery" id={anchor || undefined}>
-      <div className="public-section-inner public-section-header">
+      <div className="public-section-inner website-section-heading">
         <p className="public-section-label public-section-label--light">
           {text(props.eyebrow, "Selected Works")}
         </p>
@@ -31,7 +31,7 @@ export default function EdgeGridGallery({ props }: PublicSiteComponentProps) {
               </div>
               <div className="public-edge-gallery-card__copy">
                 <h3>{text(item.title, "Project")}</h3>
-                <p>{text(item.caption, "")}</p>
+                <p>{text(item.label, "")}</p>
                 <small>
                   {[item.location, item.date].filter(Boolean).join(" - ")}
                 </small>

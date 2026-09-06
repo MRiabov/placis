@@ -1,4 +1,4 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
 function firstImageUrl(...values: unknown[]): string | null {
@@ -11,7 +11,7 @@ function firstImageUrl(...values: unknown[]): string | null {
   return null;
 }
 
-export default function RegionMapStats({ props }: PublicSiteComponentProps) {
+export default function RegionMapStats({ props }: WebsiteComponentProps) {
   const regions = asRecords(props.regions);
   const panels = regions.length ? regions : [{}];
 
@@ -21,7 +21,7 @@ export default function RegionMapStats({ props }: PublicSiteComponentProps) {
       data-public-tabs=""
       id={text(props.anchor_id, "locations")}
     >
-      <div className="public-site-shell public-region-map-stats__inner">
+      <div className="website-frame public-region-map-stats__inner">
         <div className="public-region-map-stats__heading">
           <p className="public-section-label">
             {text(props.eyebrow, "Where We Work")}

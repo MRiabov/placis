@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function SectorTabs({ props }: PublicSiteComponentProps) {
+export default function SectorTabs({ props }: WebsiteComponentProps) {
   const sectors = asRecords(props.sectors);
 
   return (
@@ -10,7 +10,7 @@ export default function SectorTabs({ props }: PublicSiteComponentProps) {
       data-public-tabs=""
       id={text(props.anchor_id, "capabilities")}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         <div className="public-sector-tabs__header">
           <p className="public-section-label">
             {text(props.eyebrow, "What We Do")}

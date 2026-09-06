@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, asStrings, imageUrl, text } from "../../../utils";
 
-export default function FooterStandard({ props }: PublicSiteComponentProps) {
+export default function FooterStandard({ props }: WebsiteComponentProps) {
   const links = asRecords(props.links);
   const serviceLinks = asRecords(props.service_links);
   const badges = asRecords(props.badges);
@@ -16,12 +16,12 @@ export default function FooterStandard({ props }: PublicSiteComponentProps) {
       : "",
   ].filter(Boolean);
   const logo = imageUrl(props.logo ?? props.logo_url);
-  const phoneHref = props.phone
-    ? String(props.phone).replace(/[^\d+]/g, "")
+  const phoneHref = props.marketing_phone
+    ? String(props.marketing_phone).replace(/[^\d+]/g, "")
     : "";
   return (
     <footer className="public-footer">
-      <div className="public-site-shell public-footer__inner">
+      <div className="website-frame public-footer__inner">
         <div className="public-footer__brand">
           {logo ? (
             <img
@@ -37,7 +37,7 @@ export default function FooterStandard({ props }: PublicSiteComponentProps) {
             {text(props.contact_line, "")}
           </div>
         </div>
-        <nav className="public-footer__links" aria-label="Footer navigation">
+        <nav className="public-footer__links" aria-label="Footer links">
           <h2>Useful Links</h2>
           {links.map((link) => (
             <a href={text(link.href, "#")} key={text(link.label, "Link")}>
@@ -58,8 +58,8 @@ export default function FooterStandard({ props }: PublicSiteComponentProps) {
           <h2>Contact</h2>
           {props.hours ? <p>{String(props.hours)}</p> : null}
           {props.address ? <p>{String(props.address)}</p> : null}
-          {props.phone ? (
-            <a href={`tel:${phoneHref}`}>{String(props.phone)}</a>
+          {props.marketing_phone ? (
+            <a href={`tel:${phoneHref}`}>{String(props.marketing_phone)}</a>
           ) : null}
           {props.email ? (
             <a href={`mailto:${String(props.email)}`}>{String(props.email)}</a>

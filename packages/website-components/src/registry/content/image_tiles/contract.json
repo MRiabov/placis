@@ -1,6 +1,5 @@
 {
   "id": "public.content.image_tiles",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Image Tiles",
   "family": "content",

@@ -1,11 +1,11 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asStrings, text } from "../../../utils";
 
 export default function ContactPanel({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const areas = asStrings(props.service_area);
   const hours = asStrings(props.opening_hours);
   return (
@@ -13,7 +13,7 @@ export default function ContactPanel({
       className={`${sectionPadding(theme)} bg-(--public-background)`}
       id="contact"
     >
-      <div className="public-site-shell grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+      <div className="website-frame grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-(--public-muted)">
             Contact
@@ -28,14 +28,18 @@ export default function ContactPanel({
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          {["phone", "email", "address"].map((field) =>
+          {[
+            ["marketing_phone", "Marketing phone"],
+            ["email", "Email"],
+            ["address", "Address"],
+          ].map(([field, label]) =>
             props[field] ? (
               <div
                 className="rounded-(--public-radius) border border-(--public-border) bg-(--public-background) p-4"
                 key={field}
               >
                 <div className="text-xs font-semibold uppercase text-(--public-muted)">
-                  {field}
+                  {label}
                 </div>
                 <div className="mt-1 font-bold">{String(props[field])}</div>
               </div>

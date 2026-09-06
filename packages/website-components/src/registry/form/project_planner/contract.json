@@ -1,6 +1,5 @@
 {
   "id": "public.form.project_planner",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Project Planner Form",
   "family": "form",
@@ -49,7 +48,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title"]
+    "required": [
+      "title"
+    ]
   },
   "editable_slots": [
     {

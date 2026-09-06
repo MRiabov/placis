@@ -1,4 +1,4 @@
-import type { PublicSiteTheme } from "../types";
+import type { WebsiteTheme } from "../types";
 
 export type PublicThemeColorTokens = {
   brand: string;
@@ -31,12 +31,12 @@ export type PublicThemeMotionTokens = {
   hoverDuration: string;
 };
 
-export type PublicSiteThemePreset = {
+export type WebsiteThemePreset = {
   id: string;
   label: string;
   source?: string;
   cssClass: string;
-  runtimeTheme: PublicSiteTheme;
+  websiteTheme: WebsiteTheme;
   colors: PublicThemeColorTokens;
   typography: PublicThemeTypographyTokens;
   spacing: PublicThemeSpacingTokens;

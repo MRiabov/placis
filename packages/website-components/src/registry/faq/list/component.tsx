@@ -1,15 +1,15 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
-export default function FaqList({ props, theme }: PublicSiteComponentProps) {
+export default function FaqList({ props, theme }: WebsiteComponentProps) {
   const items = asRecords(props.items ?? props.questions);
   return (
     <section
       className={`${sectionPadding(theme)} public-faq-list bg-(--public-background)`}
       id={text(props.anchor_id, "") || undefined}
     >
-      <div className="public-site-shell max-w-[850px]">
+      <div className="website-frame max-w-[850px]">
         {props.eyebrow ? (
           <p className="public-eyebrow mb-2 text-sm font-semibold uppercase">
             {text(props.eyebrow, "")}

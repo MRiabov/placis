@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function LogoStrip({ props }: PublicSiteComponentProps) {
+export default function LogoStrip({ props }: WebsiteComponentProps) {
   const items = asRecords(props.items);
   const hasImages = items.some((item) => imageUrl(item.image_url ?? item.url));
   const layout = text(props.layout, "marquee");
@@ -10,10 +10,10 @@ export default function LogoStrip({ props }: PublicSiteComponentProps) {
 
   return (
     <section
-      className="public-proof-logo-strip border-y border-(--public-border) bg-(--public-background) py-8"
+      className="website-content-logo-strip border-y border-(--public-border) bg-(--public-background) py-8"
       id={text(props.anchor_id, "") || undefined}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         {props.eyebrow ? (
           <p className="public-eyebrow mb-2 text-center text-xs font-semibold uppercase">
             {String(props.eyebrow)}
@@ -32,7 +32,7 @@ export default function LogoStrip({ props }: PublicSiteComponentProps) {
         <div
           className={
             isGrid
-              ? "public-logo-grid public-site-shell"
+              ? "public-logo-grid website-frame"
               : "public-logo-marquee"
           }
           aria-label={text(props.title, "Supplier logos")}
@@ -71,7 +71,7 @@ export default function LogoStrip({ props }: PublicSiteComponentProps) {
           </div>
         </div>
       ) : (
-        <div className="public-site-shell flex flex-wrap items-center justify-center gap-8">
+        <div className="website-frame flex flex-wrap items-center justify-center gap-8">
           {items.map((item, index) => (
             <span
               className="text-sm font-semibold uppercase tracking-[0.12em] text-(--public-muted)"

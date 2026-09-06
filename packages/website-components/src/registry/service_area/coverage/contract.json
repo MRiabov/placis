@@ -1,6 +1,5 @@
 {
   "id": "public.service_area.coverage",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Service Area Coverage",
   "family": "service_area",
@@ -23,7 +22,10 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title", "areas"]
+    "required": [
+      "title",
+      "areas"
+    ]
   },
   "editable_slots": [
     {
@@ -46,7 +48,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

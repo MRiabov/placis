@@ -1,6 +1,5 @@
 {
   "id": "public.process.steps",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Process Steps",
   "family": "process",
@@ -27,7 +26,10 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title", "steps"]
+    "required": [
+      "title",
+      "steps"
+    ]
   },
   "editable_slots": [
     {

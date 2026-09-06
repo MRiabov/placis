@@ -38,10 +38,10 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check": "tsc -p tsconfig.json --noEmit && node scripts/check-style-boundaries.mjs && node scripts/check-reference-boundaries.mjs && node scripts/check-blueprint-intent.mjs",
+    "check": "tsc -p tsconfig.json --noEmit && node scripts/check-style-boundaries.mjs && node scripts/check-reference-boundaries.mjs && node scripts/check-leftover-dump-intent.mjs",
     "check:style-boundaries": "node scripts/check-style-boundaries.mjs",
     "check:reference-boundaries": "node scripts/check-reference-boundaries.mjs",
-    "check:blueprint-intent": "node scripts/check-blueprint-intent.mjs"
+    "check:leftover-dump-intent": "node scripts/check-leftover-dump-intent.mjs"
   },
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",

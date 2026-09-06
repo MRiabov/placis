@@ -1,6 +1,5 @@
 {
   "id": "public.content.split",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Split Content",
   "family": "content",
@@ -37,11 +36,18 @@
       },
       "image_position": {
         "type": "string",
-        "enum": ["left", "right", "inline"]
+        "enum": [
+          "left",
+          "right",
+          "inline"
+        ]
       },
       "surface": {
         "type": "string",
-        "enum": ["default", "muted"]
+        "enum": [
+          "default",
+          "muted"
+        ]
       },
       "side_panel": {
         "type": "object",
@@ -78,7 +84,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title"]
+    "required": [
+      "title"
+    ]
   },
   "editable_slots": [
     {
@@ -130,14 +138,21 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     },
     {
       "key": "surface",
       "type": "enum",
       "label": "Surface",
-      "values": ["default", "muted"],
+      "values": [
+        "default",
+        "muted"
+      ],
       "default": "default"
     }
   ]

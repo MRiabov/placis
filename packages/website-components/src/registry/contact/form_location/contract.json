@@ -1,6 +1,5 @@
 {
   "id": "public.contact.form_location",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Form Location Contact",
   "family": "contact",
@@ -26,7 +25,7 @@
       "address": {
         "type": "string"
       },
-      "phone": {
+      "marketing_phone": {
         "type": "string"
       },
       "license_number": {
@@ -46,12 +45,19 @@
         "items": {
           "type": "object",
           "additionalProperties": true,
-          "required": ["id", "label"]
+          "required": [
+            "id",
+            "label"
+          ]
         }
       }
     },
     "additionalProperties": true,
-    "required": ["form_id", "title", "fields"]
+    "required": [
+      "form_id",
+      "title",
+      "fields"
+    ]
   },
   "editable_slots": [
     {
@@ -82,8 +88,8 @@
       "value": "{{business_name}}"
     },
     {
-      "path": "phone",
-      "value": "{{phone}}"
+      "path": "marketing_phone",
+      "value": "{{marketing_phone}}"
     },
     {
       "path": "address",

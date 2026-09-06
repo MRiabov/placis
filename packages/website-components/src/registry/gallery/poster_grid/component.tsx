@@ -1,8 +1,8 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function PosterGrid({ props, theme }: PublicSiteComponentProps) {
+export default function PosterGrid({ props, theme }: WebsiteComponentProps) {
   const items = asRecords(props.items);
   const anchor = text(props.anchor_id, "");
   const hideMissingImages = props.hide_missing_images === true;
@@ -11,7 +11,7 @@ export default function PosterGrid({ props, theme }: PublicSiteComponentProps) {
       className={`${sectionPadding(theme)} public-poster-grid`}
       id={anchor || undefined}
     >
-      <div className="public-site-shell public-poster-grid__inner">
+      <div className="website-frame public-poster-grid__inner">
         {props.title ? <h2>{text(props.title, "Gallery")}</h2> : null}
         {props.intro ? <p>{text(props.intro, "")}</p> : null}
         <div className="public-poster-grid__items">
@@ -31,8 +31,8 @@ export default function PosterGrid({ props, theme }: PublicSiteComponentProps) {
                 )}
                 <figcaption>
                   <span>{title}</span>
-                  {item.caption ? (
-                    <small>{text(item.caption, "")}</small>
+                  {item.label ? (
+                    <small>{text(item.label, "")}</small>
                   ) : null}
                   {item.excerpt ? <p>{text(item.excerpt, "")}</p> : null}
                 </figcaption>

@@ -1,5 +1,5 @@
 import { amber, sand, slate } from "@radix-ui/colors";
-import type { PublicSiteThemePreset } from "../types";
+import type { WebsiteThemePreset } from "../types";
 
 const darkSerifColors = {
   accent: amber.amber10,
@@ -18,7 +18,7 @@ export const darkSerifThemePreset = {
   label: "Dark Serif",
   source: "https://www.bigoaksconstruction.com/ (Squarespace template 7)",
   cssClass: "public-theme-dark-serif",
-  runtimeTheme: {
+  websiteTheme: {
     preset: "dark_serif",
     primary: darkSerifColors.brand,
     neutral: "sand",
@@ -63,4 +63,4 @@ export const darkSerifThemePreset = {
     "Use square buttons, thin rules, generous whitespace, and restrained typography. Avoid marketing-card density; the reference is intentionally plain and editorial.",
     "The Projects route is gallery-aware even though the current source page contains mostly spacer/rule structure; project imagery should be owner-selected before publication.",
   ],
-} satisfies PublicSiteThemePreset;
+} satisfies WebsiteThemePreset;
