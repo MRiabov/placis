@@ -60,25 +60,8 @@ No Playwright.
 
 Through HTTP: Response `LeadRead` (`source=website`, `status=new`).
 **persists into** `leads` (`source=website_form`). Extra keys 4xx may
-supplement.
-
-### TestHappyPathV1WebsiteFormsFormIdUploads — Route
-
-1:1. Exercise names exactly one Method+path.
-
-#### Setup
-
-Backend (`humatest`, Testcontainers Postgres and Testcontainers
-MinIO). Website form fixture. No Playwright.
-
-#### Exercise
-
-`POST /v1/website-forms/{form_id}/uploads`.
-
-#### Verify
-
-Through HTTP: Response `WebsiteFormUploadRead` (`upload_url`).
-**persists into** `files`.
+supplement. Named fields map onto `contact_name`, `marketing_phone`,
+`marketing_email`, `message`.
 
 ### TestHappyPathV1Leads — Route
 

@@ -28,8 +28,6 @@ Root:
 - `title` (website title / display name)
 - `website_styles` (preset id + bounded overrides: `primary`, `neutral`,
   `accent`, `radius`, `density` — see [styles.md](styles.md))
-- website-level SEO fallback: `seo_title`, `seo_description`, `seo_og_title`,
-  `seo_og_description`, `seo_canonical_url`, `seo_noindex`
 - `pages[]`
 - `top_menu[]` — resolved tree: `id`, `menu_node_kind`, `label`, `path` or
   `href`, `children` (depth 2). Page nodes bake path/title from `website_pages`.
@@ -51,7 +49,8 @@ Per website page:
 
 - `path`, `title`, `page_type` (`home` / `about` / `service` / `contact` /
   `legal`)
-- page SEO columns (same set as root fallback)
+- page SEO columns: `seo_title`, `seo_description`, `seo_og_title`,
+  `seo_og_description`, `seo_canonical_url`, `seo_noindex`
 - `sections[]` only
 
 Per website section:
@@ -67,6 +66,8 @@ Per website section:
 - a tenant website-prefix column or path aliases (the website prefix is the R2
   key)
 - dual `components` and `sections` at root or page — one list: `sections`
+- root-level SEO (`seo_title` and the other five SEO columns belong on
+  each website page, not the dump root)
 - root-level `sections` used as a single-page fallback
 - blog / careers collections (deferred)
 - predecessor project-as-blog collection (body, markdown, status, visibility)
