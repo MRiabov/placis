@@ -9,7 +9,6 @@ var leftoverTests = []string{
 	"GET /openapi.json",
 	"GET /v1/ads",
 	"GET /v1/ads/{ad_id}",
-	"GET /v1/ads/{ad_id}/variants",
 	"GET /v1/assistant/thread",
 	"GET /v1/assistant/thread/ws",
 	"GET /v1/billing/catalog",
