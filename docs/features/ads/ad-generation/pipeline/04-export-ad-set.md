@@ -49,8 +49,7 @@ images for the same source media assets.
 
 ## Persist
 
-`files` (zip object) on download only. `audit_events`. No ad-table
-writes.
+`files` (zip object) on download only. No ad-table writes.
 
 ## Fail
 

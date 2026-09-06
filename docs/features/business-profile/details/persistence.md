@@ -96,12 +96,12 @@ on every call.
   list-item change. Check: the typed value column that matches `field`
   is set; the others are null — not a json `value`. No `source_id`
   column on this table. `schema_revision` bumps when that schema gains
-  fields (next extract runs by default). This table is the audit for
-  profile edits (the increment row, not the junction). Generic
-  `audit_events` stays for website publication / website activation /
-  etc. Profile-history list ops for `reviews` include `update` for top
-  pin/reorder (the increment names the list change; live pins are
-  `business_profile_review_rankings`).
+  fields (next extract runs by default). This table is the trail for
+  profile edits (the increment row, not the junction). Website
+  publication and website activation live on `website_publications`
+  and `website_activations`. Profile-history list ops for `reviews`
+  include `update` for top pin/reorder (the increment names the list
+  change; live pins are `business_profile_review_rankings`).
 
 ### Write
 
