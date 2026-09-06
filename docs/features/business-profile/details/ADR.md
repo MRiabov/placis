@@ -24,7 +24,8 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
 2. **Profile groups Details and Projects** — moved to [CMS
    ADR](../../../general-architecture/cms/ADR.md) 1. The Details screen stays.
    Top menu and footer stay in the website editor, not Details.
-   - 2026-08-19: Profile children 2026-08-20; media library child 2026-08-26
+   - 2026-08-20: Profile children.
+   - 2026-08-26: media library child.
 
 3. **Founder and brand are columns** — `founder_name` / `founder_role` /
    `founder_occupation` / `founder_nationality` / `founder_country_of_residence`
@@ -52,7 +53,7 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    and ads paint citation (fallback `body` if empty). Pin / reorder replaces the
    whole ordered id list in one transaction; it does not assign one
    `top_position` at a time.
-   - 2026-08-26: unique top set 2026-08-26
+   - 2026-08-26: unique top set.
    - 2026-08-26: `is_top` is the **ads** featured list (and the top band on
      Certifications and reviews). It does **not** copy onto every reviews
      website section. Each reviews website section has its own ordered
@@ -75,7 +76,7 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    count) plus **Change**, not the raw URL. Same URLs feed review import on
    Certifications and reviews. Not Ads Connect Meta, not Facebook Login, no
    autoposting.
-   - 2026-08-26: linked card 2026-08-27
+   - 2026-08-27: linked card.
 
 6. **Opening hours are when they pick up the marketing phone** — per day: Opens
    / Closes / Closed. Shown on the contact website page. There is no `note`

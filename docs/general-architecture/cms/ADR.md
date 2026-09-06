@@ -11,7 +11,7 @@ decision + date) instead of silently replacing the old entry.
    **Business details** (`/cms/details`) and **Projects** (`/cms/projects`).
    Profile is a disclosure, not a destination of its own; there is no
    `/cms/profile`. The Details screen stays.
-   - 2026-08-19: moved from details ADR 2, 2026-08-27
+   - 2026-08-27: moved from details ADR 2.
    - 2026-08-20: Projects is a working Projects screen, still under Profile.
      **Certifications and reviews** (`/cms/certifications-and-reviews`) is a
      third Profile child. No `/cms/proof`. Top menu and footer stay in the

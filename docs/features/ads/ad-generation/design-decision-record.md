@@ -36,7 +36,8 @@ inventing it.
 4. **Ad leads is the Inbox panel** — Same dashed empty mark as Leads. The whole
    panel opens `/cms/leads` with `source=ad` and that `ad_id`. On a narrow
    screen Performance and Ad leads follow Images, before Budget.
-   - 2026-09-04: Later the same day: when there are **New** ad leads, the panel
-     is a filled card (name + contact, New mark), not the dashed empty mark.
-     Empty copy stays dashed. Later: marketing phone is a `tel:` link on top of
-     the Open-on-Leads hit so a tap dials instead of opening Leads.
+   - 2026-09-04, later: when there are **New** ad leads, the panel is a filled
+     card (name + contact, New mark), not the dashed empty mark. Empty copy
+     stays dashed.
+   - 2026-09-04, later: marketing phone is a `tel:` link on top of the
+     Open-on-Leads hit so a tap dials instead of opening Leads.

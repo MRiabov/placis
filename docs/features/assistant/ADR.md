@@ -376,16 +376,15 @@ instead of silently replacing it.
 30. **`open_website` twins `open_ad`; website styles are the open website** —
     `get_website_styles` / `update_website_styles` read Assistant screen context
     `website_id`. Off a website editor without that context: **409**
-    `allowed_set_rejected`. One CMS thread per tenant. **Deferred
-    - 2026-09-04: ** `open_website`, the website pointer list, and CMS knowledge
-      that a contractor may have more than one website. This pass there is one
-      owner-facing website; the Assistant does not know about others. Do not add
-      `open_website` to `tools=`.
+    `allowed_set_rejected`. One CMS thread per tenant.
+    - 2026-09-04: **Deferred:** `open_website`, the website pointer list, and
+      CMS knowledge that a contractor may have more than one website. This pass
+      there is one owner-facing website; the Assistant does not know about
+      others. Do not add `open_website` to `tools=`.
     - 2026-09-03: Previous: `open_website(website_id)` always executable; 404
       unknown; navigates to `/cms/website/{website_prefix}`; pointer list in
       screen context; CMS knowledge more than one website; tools apply to the
       open website; `open_website` to change.
-    - 2026-09-03: defer 2026-09-04
 
 31. **Knowledge files live in that assistant’s `knowledge/`** — Each assistant
     owns `knowledge_base_registry.yaml` plus `knowledge_*.md` (Voice
