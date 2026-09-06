@@ -351,6 +351,9 @@ instead of silently replacing it.
     because 06 is running (testing §15). 06 cap is **20** tool-using model turns
     per website page. 06 still must not `create_page`. (2026-08-30)
     - 2026-09-04: cap was 3 / 12 / 4.
+    - 2026-09-06: lock / leftover-after-09 owner is onboarding
+      [06](../onboarding/pipeline/06-website-copy-generation.md). This
+      entry does not re-specify Trigger/lock.
 
 28. **Unpaid instant apply via website PATCH** — Text and Voice on the
     onboarding website editor force instant apply (ignore `ask_first` / `plan`

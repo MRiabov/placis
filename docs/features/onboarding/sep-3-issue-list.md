@@ -20,36 +20,6 @@ usually a **doc gap**, not a drop.
   That is the guide (no writer tools). Keep `step` and
   `visible_fields`.
 
-## Doc gap
-
-- **11. 06 Generate website copy vs website 03 Generate website copy
-  lock paragraph duplicated**
-  Comment: tools/render/SLO are already forbidden in 06 Must not.
-  Trigger/lock sentences still appear in both files plus
-  website-editor.md and assistant ADR 27.
-  Action: one owner (06); website 03 links. Not a deletion of 06.
-
-- **16. Stale “08” / “07” sentences after ADR 21**
-  Comment: ADR 21 moved share to 08 Preview website address and
-  activation to 09 Website activation. ADR 12 already has a dated
-  amendment (keep old text). ADR 16 still says “Website activation
-  (08)” with no note. Billing ADR 2/8 and frontend-debloat “match 07”
-  are downstream errors.
-  Action: dated amendment on onboarding ADR 16; correct
-  frontend-debloat. Billing PRD activation is 09.
-
-## Actually drop
-
-- **8. `website_activations` dead enum values**
-  Comment: webhook is `checkout.session.completed` only. Keep
-  `amount` / `currency` (billing ADR 2: billing does not own this
-  row) and `stripe_events.processed` (09 Website activation test
-  asserts it). This spec keeps `refunded` (billing ADR 20: refunds are
-  money-only).
-  Action: drop `failed`, `failure_reason`, `activated_at`. Name a
-  source for `WebsiteActivationStatusRead.checkout_url` or drop that
-  field.
-
 ## False alarms (closed)
 
 - **10. Two website preview routes** — ADR 21 and design decision 13:
