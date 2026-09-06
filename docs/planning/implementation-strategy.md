@@ -416,11 +416,11 @@ search, trade registry, projects-from-source,
 
 - **Depends on:** S12, S17
 - **Owns:** `/onboarding/preview`, `/onboarding/preview-and-edit/`.
-  Canvas talks to `/v1/onboarding/website/…`
+  The website editor canvas talks to `/v1/onboarding/website/…`
   ([onboarding frontend](../features/onboarding/frontend.md))
 - **Must not:** CMS website editor path while unactivated, 04b
 - **Done when:** frontend Integration for those routes; E2E Find →
-  wait-end → unpaid canvas if S20 is not in yet
+  wait-end → unpaid website editor canvas if S20 is not in yet
 - **Blocked by:** same as S17
 
 ### S19 09 Website activation and Stripe Subscription (Go)
