@@ -158,39 +158,34 @@ Failed parse stays an `ai_generations` row. The next attempt is another row on
 the **same** `thread_id` (prior failure in context). Bounded subtree repair
 above still applies; this is the persistence for a further agentic retry.
 
-**`website_copy_generation`** — automatic website copy generation (onboarding
-06 / website 03). River job kind `website_copy_generation`
-([jobs](../jobs.md)). `prompt_id=website_copy_generation` in the onboarding
-package `prompts.yaml`. Writes existing unpublished website slots. Do not
-`create_page` or `update_reviews`. Same insert rule as every other
-`thread_kind`: one thread per website page; parallel website pages =
-parallel threads; `ai_generations.thread_id` required. Not one row per website
-([website ADR](../../features/website/ADR.md) 29).
+**`website_copy_generation`** — automatic website copy generation (onboarding 06
+/ website 03). River job kind `website_copy_generation` ([jobs](../../features/website/jobs.md)).
+`prompt_id=website_copy_generation` in the onboarding package `prompts.yaml`.
+Writes existing unpublished website slots. Do not `create_page` or
+`update_reviews`. Same insert rule as every other `thread_kind`: one thread per
+website page; parallel website pages = parallel threads;
+`ai_generations.thread_id` required. Not one row per website ([website ADR](../../features/website/ADR.md) 29).
 
-**`reviews_ranking_for_display`** — **LLM ranking** of the reviews pool
-(not stars or recency) for display (website tokens, Certifications cards,
-ads top reviews). River job kind `reviews_ranking_for_display`
-([jobs](../jobs.md)). `prompt_id=reviews_ranking_for_display` in the profile
-package `prompts.yaml`. Input: current `in_pool` rows (id, citation/body,
-rating, origin, `published_at`). Output: ordered `review_ids[]`, length
-1–30, each id in that pool. The job inserts a
-`business_profile_review_rankings` batch (same replace as
-Certifications and reviews PATCH), sets `provisional` (not a skip
-key), and skips latest `algorithm=human`. Prompt prose and ranking
-heuristics are unspecified.
-When onboarding and scheduled ETL enqueue:
-[build-profile](../../features/onboarding/pipeline/build-profile.md). Not a
-per-website-section pick when copying the website template’s pages. Do
-not use `website_reviews_picker`.
+**`reviews_ranking_for_display`** — **LLM ranking** of the reviews pool (not
+stars or recency) for display (website tokens, Certifications cards, ads top
+reviews). River job kind `reviews_ranking_for_display` ([jobs](../../features/business-profile/jobs.md)).
+`prompt_id=reviews_ranking_for_display` in the profile package `prompts.yaml`.
+Input: current `in_pool` rows (id, citation/body, rating, origin,
+`published_at`). Output: ordered `review_ids[]`, length 1–30, each id in that
+pool. The job inserts a `business_profile_review_rankings` batch (same replace
+as Certifications and reviews PATCH), sets `provisional` (not a skip key), and
+skips latest `algorithm=human`. Prompt prose and ranking heuristics are
+unspecified. When onboarding and scheduled ETL enqueue: [build-profile](../../features/onboarding/pipeline/build-profile.md). Not a
+per-website-section pick when copying the website template’s pages. Do not use
+`website_reviews_picker`.
 
-**`media_cleanup`** — captioning pass and image-edits / first-upload
-cleanup when feature flag `media_auto_cleanup` is on (default off).
-River job kind `describe_image`
-([jobs](../jobs.md)). Insert a thread before the first generate on that
-item; reuse it for schema-repair retries and for `CleanupMediaAsset`.
-Do not hydrate on GET thread. `prompt_id` matches `media_cleanup` in
-the media package `prompts.yaml`. Do not add a second generate factory
-or a `thread_kind=media_process`.
+**`media_cleanup`** — captioning pass and image-edits / first-upload cleanup
+when feature flag `media_auto_cleanup` is on (default off). River job kind
+`describe_image` ([jobs](../../features/other/media/jobs.md)). Insert a thread before the first generate on that
+item; reuse it for schema-repair retries and for `CleanupMediaAsset`. Do not
+hydrate on GET thread. `prompt_id` matches `media_cleanup` in the media package
+`prompts.yaml`. Do not add a second generate factory or a
+`thread_kind=media_process`.
 
 ## `ai_generations`
 
@@ -259,5 +254,5 @@ mutating tool registries.
 - A complex pipeline (onboarding, website, ads) is described step by step in
   `features/<feature>/pipeline/*.md`; the AI steps live inside those steps, so
   no `ai-layer.md`.
-- Media library captioning is River job kind `describe_image` in
-  [jobs.md](../jobs.md). No `pipeline/`, no `ai-layer.md`.
+- Media library captioning is River job kind `describe_image` in [jobs.md](../../features/other/media/jobs.md). No
+  `pipeline/`, no `ai-layer.md`.

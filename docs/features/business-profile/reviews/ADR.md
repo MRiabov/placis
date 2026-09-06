@@ -56,7 +56,7 @@ decision + date) instead of silently replacing the old entry.
    not on each review). Orchestration (onboarding enqueue after ETL fast
    extract, again if more `in_pool` rows when that enqueue’s ETL finishes;
    scheduled ETL after `succeeded` when new `in_pool` rows landed):
-   [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../../../infrastructure/jobs.md). Website consumes the ranked pool (`{{reviews.N}}`);
+   [build-profile](../../onboarding/pipeline/build-profile.md), [jobs](../jobs.md). Website consumes the ranked pool (`{{reviews.N}}`);
    it does not own ranking.
 
    (2026-09-02): Ranking writes insert-only `business_profile_review_rankings`

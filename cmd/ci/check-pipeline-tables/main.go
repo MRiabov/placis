@@ -19,7 +19,6 @@ func run(args []string) error {
 	flags := flag.NewFlagSet("check-pipeline-tables", flag.ContinueOnError)
 	_ = flags.Bool("all", false, "scan docs/features instead of listed files")
 	root := flags.String("root", "docs/features", "features docs root")
-	jobs := flags.String("jobs", "docs/infrastructure/jobs.md", "path to jobs.md")
 	docs := flags.String("docs", "docs", "docs root for known River job kind names")
 	internal := flags.String("internal", "internal", "Go internal packages for TestPipelineHappyPath")
 	if err := flags.Parse(args); err != nil {
@@ -51,15 +50,10 @@ func run(args []string) error {
 		return err
 	}
 	errs = append(errs, checkPipelineHappyPath(rep, funcs, pipelineHappyPathLeftover)...)
-	if fileExists(*jobs) {
-		cat, err := parseJobsCatalog(*jobs)
-		if err != nil {
-			return err
-		}
-		errs = append(errs, checkJobsHeadings(cat)...)
-		if fileExists(*docs) {
-			errs = append(errs, checkKnownRiverJobs(*docs, cat.names)...)
-		}
+	jobNames, jobErrs := collectJobNames(rep)
+	errs = append(errs, jobErrs...)
+	if fileExists(*docs) {
+		errs = append(errs, checkKnownRiverJobs(*docs, jobNames)...)
 	}
 	if len(changed) > 0 {
 		emitWarnings(warnMissingTesting(rep, changed))

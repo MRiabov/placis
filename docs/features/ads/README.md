@@ -10,6 +10,7 @@ Named identifiers:
 - [persistence.md](persistence.md) — `ads`, `ad_variants`, `ad_copy_variants`,
   `ad_image_placements`, `ad_lead_forms`, `ad_reviews`
 - [api.md](api.md) — HTTP (`/v1/ads`)
+- [jobs.md](jobs.md) — `ads_generate`
 - [architecture.md](architecture.md) — content model; `CreateAd`,
   `GenerateAdDraft`, `ApproveAd`, `ExportAdSet`
 - [file-trees.md](file-trees.md) — Go `generation/` + `assistant/`; Ads screens

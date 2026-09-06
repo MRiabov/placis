@@ -157,7 +157,7 @@ ETL transform inserts review rows only; it does not rank. Profile does
 not enqueue. Website does not enqueue. Persist columns:
 [reviews ADR](../../business-profile/reviews/ADR.md).
 Job, `thread_kind`, `prompt_id`, I/O:
-[jobs](../../../infrastructure/jobs.md),
+[jobs](../../business-profile/jobs.md),
 [AI layer](../../../infrastructure/ai/README.md).
 `{{reviews.1}}` … resolve from that order. This is not
 `website_reviews_picker` when copying the website template’s pages.

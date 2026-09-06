@@ -32,7 +32,7 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
   [Projects from source](pipeline/projects.md)
 
 River job kinds **call** those functions
-([jobs](../../infrastructure/jobs.md)). Tables:
+([jobs](jobs.md)). Tables:
 [persistence.md](persistence.md). `StartRun` is orchestration only (not a
 pipeline step file). Transform **inserts** `describe_image`
 (media library `DescribeImage`); there is no `transform/photo`.
@@ -58,7 +58,7 @@ packages match [pipeline](pipeline/README.md). There is no one `Extractor`
 interface for every ETL run kind (different keys and tables). Each River job
 kind **calls** that package (`google_maps_listing_extract` **calls**
 `extract/googlemaps.Run`). Named in
-[jobs](../../infrastructure/jobs.md).
+[jobs](jobs.md).
 
 `force` defaults false. Onboarding 02 and Monday / Wednesday / Friday pass
 `force=false`.

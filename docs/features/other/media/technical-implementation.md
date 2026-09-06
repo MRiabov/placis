@@ -9,7 +9,7 @@ Services: `StartMediaAssetUpload`, `ConfirmMediaAssetUpload`,
 `ApproveMediaAsset`, `WriteCanonicalWebP`, `WriteImageThumbnail`.
 Tables: [persistence.md](persistence.md). DTOs and Routes:
 [api.md](api.md). `describe_image`:
-[jobs.md](../../../infrastructure/jobs.md#describe_image).
+[jobs.md](jobs.md#describe_image).
 
 Related docs:
 

@@ -12,8 +12,8 @@ under [features/](../features/). Trees:
 - [ai/](ai/README.md) — vendor AI interfaces, traces, knowledge loaders.
   Voice: [voice-agent.md](ai/voice-agent.md)
 - [files-and-s3.md](files-and-s3.md) — object storage and the `files` row
-- [jobs.md](jobs.md) — River job kind index (workers live in feature
-  `pipeline/` or `jobs.go`)
+- [jobs.md](jobs.md) — River conventions and index of per-feature
+  `jobs.md` (workers live in feature `pipeline/` or `jobs.go`)
 
 No dedicated `httpapi/` doc. Mux rules:
 [module layout](../general-architecture/module-layout.md). HTTP

@@ -57,6 +57,7 @@ type report struct {
 	steps        []stepFile
 	apiFiles     []headingFile
 	testingFiles []headingFile
+	jobsFiles    []jobsCatalog
 }
 
 func inspect(root string) (report, error) {
@@ -87,6 +88,12 @@ func inspect(root string) (report, error) {
 				return err
 			}
 			r.apiFiles = append(r.apiFiles, a)
+		case strings.HasSuffix(slash, "/jobs.md"):
+			c, err := parseJobsCatalog(path)
+			if err != nil {
+				return err
+			}
+			r.jobsFiles = append(r.jobsFiles, c)
 		case isFeatureTesting(slash):
 			t, err := parseHeadingFile(root, path)
 			if err != nil {
@@ -109,6 +116,7 @@ func inspect(root string) (report, error) {
 	sort.Slice(r.steps, func(i, j int) bool { return r.steps[i].path < r.steps[j].path })
 	sort.Slice(r.apiFiles, func(i, j int) bool { return r.apiFiles[i].path < r.apiFiles[j].path })
 	sort.Slice(r.testingFiles, func(i, j int) bool { return r.testingFiles[i].path < r.testingFiles[j].path })
+	sort.Slice(r.jobsFiles, func(i, j int) bool { return r.jobsFiles[i].path < r.jobsFiles[j].path })
 	return r, nil
 }
 
@@ -248,6 +256,7 @@ func mergeReports(a, b report) report {
 	a.steps = append(a.steps, b.steps...)
 	a.apiFiles = append(a.apiFiles, b.apiFiles...)
 	a.testingFiles = append(a.testingFiles, b.testingFiles...)
+	a.jobsFiles = append(a.jobsFiles, b.jobsFiles...)
 	return a
 }
 

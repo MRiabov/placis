@@ -11,7 +11,8 @@ Pipeline **Do** functions (same spelling in spec, Go, and tests):
 - `CreateAd` — `internal/ads/generation/`
   ([01](ad-generation/pipeline/01-create-ad.md))
 - `GenerateAdDraft` — River job `ads_generate`
-  ([02](ad-generation/pipeline/02-generate-ad-draft.md))
+  ([02](ad-generation/pipeline/02-generate-ad-draft.md),
+  [jobs](jobs.md))
 - `ApproveAd` — `internal/ads/generation/`
   ([03](ad-generation/pipeline/03-approve-ad.md))
 - `ExportAdSet` — `internal/ads/generation/`

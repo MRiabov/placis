@@ -56,7 +56,7 @@ Called from other packages:
   HTML)
 
 Tables: [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
-River job kinds: [jobs.md](../../infrastructure/jobs.md).
+River job kinds: [jobs.md](jobs.md).
 
 ## Stripe vs Postgres
 

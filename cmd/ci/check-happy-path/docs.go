@@ -95,7 +95,7 @@ func loadStructuredDocs(docsRoot string) (*docnames.Docs, []string, map[string]b
 	if !st.IsDir() {
 		return nil, nil, nil
 	}
-	d, err := docnames.ParseDocs(docsRoot, "")
+	d, err := docnames.ParseDocs(docsRoot)
 	if err != nil {
 		return nil, []string{err.Error()}, nil
 	}

@@ -28,7 +28,7 @@ HTTP (same spelling in spec, Go, and tests):
 
 Text WebSocket + in-process agent loop: `StreamAssistantThread`
 (`GET /v1/assistant/thread/ws`). Job / in-process compact:
-`CompactAssistantThread` ([jobs](../../infrastructure/jobs.md)). DTOs
+`CompactAssistantThread` ([jobs](jobs.md)). DTOs
 and Routes: [api.md](api.md).
 
 ## Always in context
