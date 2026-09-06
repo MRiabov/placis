@@ -183,7 +183,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
       event while `/onboarding/interview` is open (same ~2s cap). Re-GET, not a
       second image stream. Ranked Project cards **are** nested `projects:
       []ProjectRead` on that live profile DTO, including SSE. Cover is
-      `cover_media_asset_id` into the media library list.
+      `cover_media_asset_id` into the media library.
     - 2026-09-06: One stream, `GET /v1/onboarding/events/stream`, on onboarding
       `api/` (Review, client interview live fill, wait teaser, website preview
       leftover 06). `websitepreview/` is 08 share HTTP only; it does not

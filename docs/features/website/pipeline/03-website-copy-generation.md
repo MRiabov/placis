@@ -88,8 +88,9 @@ unpublished website slots. River job kind `website_copy_generation`.
    website pages. Do not call `websitePublication`.
 2. Per website page, bounded parallel: `update_slot` (prose), `update_seo`,
    then **photo selection**. **Attach first** (`update_slot` +
-   `media_asset_id`) when `media_assets[]` already has a fit;
-   `generate_image` only when nothing fits on a work-photo slot (ADR 6).
+   `media_asset_id`) when an unused `media_assets` row’s media caption
+   already fits; `generate_image` only when nothing fits on a work-photo
+   slot (ADR 6).
    Not filename. Do not invent a numeric
    score.
    - **Logo** image website slots: unused `photo_kind=logo`. Else leave
@@ -160,7 +161,7 @@ Website component contracts under `catalog/`.
 
 Unpublished `website_pages`, `website_sections`, `website_slots`,
 `website.menus`, `website_settings`; live `business_profiles`;
-`media_assets`.
+`media_assets`, `media_asset_classifications`.
 
 ## Sends
 

@@ -38,6 +38,8 @@ Onboarding [05](../../onboarding/pipeline/05-select-and-copy-website-template.md
   the Copy website template pages write. When the template omits menus,
   trees are the [menu constant](../catalog.md#menu-constant).
 - Bake raw profile strings into website slots that should stay tokens.
+- Persist `website_form_field_options` or a `submit_action` column.
+  Ignore contract extra field types / options.
 - Invent a hotlink URL for an image website slot.
 - Attach `media_asset_id` or run photo selection (`generate_image`). That
   is [03](03-website-copy-generation.md).
@@ -91,10 +93,11 @@ pick. Tokens stay.
    `asset_id`). Keep `{{images.*}}` / `{{logo_url}}`. Do not attach
    `media_asset_id`. Photo selection is
    [03](03-website-copy-generation.md). Do not bake ranked-top-4 ids.
-6. Persist `website_forms` / `website_form_fields` /
-   `website_form_field_options` from form website sections’ contracts
-   (`form_key` = the catalog form key on that website section). Persist
-   `website_urls` iff the template menus have `url` nodes.
+6. Persist `website_forms` / `website_form_fields` from form website
+   sections’ contracts (`form_key` = the catalog form key on that website
+   section). Ignore contract `submit_action` and extra field types /
+   options. Persist `website_urls` iff the template menus have `url`
+   nodes.
 7. Validate against website component contracts before the unpublished
    website is kept.
 8. Same pick + same profile → same website pages (and the same menus:
@@ -125,14 +128,15 @@ contracts under `catalog/`.
 ## Persist
 
 `website_pages`, `website_sections`, `website_slots`, `website.menus`,
-`website_forms`, `website_form_fields`, `website_form_field_options`,
+`website_forms`, `website_form_fields`,
 `website_urls` (iff the template has `url` nodes),
 `business_profile.business_profile_services.website_page_path`. Schema
 `jobs`: one River job kind `website_copy_generation` (onboarding 06 /
 website 03), unique key = that `tenant_id`. Args: `tenant_id` only.
 Second insert while pending/running is River unique conflict → HTTP
 409. [jobs](../jobs.md). Must not write
-`website_slot_reviews`, `website_publications`, `edit_history`, or
+`website_slot_reviews`, `website_publications`, `edit_history`,
+`website_form_field_options`, a `submit_action` column, or
 attach `media_asset_id` on image slots. Onboarding session stays
 `selecting_and_copying_website_template` until wait-end, then
 `preview_and_edit`.

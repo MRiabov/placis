@@ -88,28 +88,15 @@ The website editor is one typed **projection** (read) and one **patch** (write).
 
 ### Read — the website editor projection
 
-`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` returns:
-
-- `website` (id, `website_prefix`, website address); `page` (id, path /
-  website page path, title, page_type, status, validation status, unpublished
-  `blockers[]`).
-- `seo_title`, `seo_description`, `seo_og_title`, `seo_og_description`,
-  `seo_canonical_url`, `seo_noindex`; **website styles** (preset +
-  overrides from `website_settings`, shown here, stored once per website).
-- `sections[]` — each: `id`, `page_id`, `component_id` (+ `component_version`,
-  `schema_version`, `family`, `variant`), `position`, `status`, `visible`,
-  `props`, `design`, `slots[]`, `design_controls[]`, `origin`,
-  `unsupported_component`.
-- `media_assets[]`, `forms[]` (website forms), `menus` (`top_menu` and `footer`
-  trees plus `show_phone` / `show_email` / `show_contact` — [persistence.md](persistence.md)).
-- `publication` (active website version), `has_unpublished_changes`
-  (true when live HTML would change on republish, including Details /
-  Projects / certifications writes after `website_publications.published_at`;
-  compare `business_profile_edits.created_at` / `last_edit_id`, not only
-  website-slot PATCH),
-  `validation`.
-- `preview_url`, live website URL. The website editor canvas is not a website
-  preview.
+`GET /v1/websites/{website_prefix}/editor/pages/{page_id}` returns
+`WebsitePageRead` ([api.md](api.md)): that website page (SEO,
+`has_unpublished_changes`, page-scoped `blockers[]`), `sections[]`
+(`WebsiteSectionRead` / `WebsiteSlotRead`), `forms[]`
+(`WebsiteFormRead`), `menus` (`WebsiteMenusRead`), `website_styles`,
+`website_business_profile`, `publication`. The website editor canvas is
+not a website preview. Media library items are
+`GET /v1/media-assets` ([media library HTTP](../other/media/api.md)),
+not this body.
 
 No extra hydrate query besides optional `include_edit_history=true` and optional
 `publication_id` on this same GET.
@@ -136,19 +123,12 @@ the in-memory projection, then the ordinary PATCH immediately (`/menus` /
 `POST /pages` then PATCH. Checkout PATCH may send the substituted projection
 (full dirty set). `include_edit_history` is unpublished hydrate only.
 
-A **website slot** (`sections[].slots[]`): `id`, `key`, `type`, `label`,
-`required`, `max_length`, `value` (typed), `origin`,
-`validation_errors`.
-
-A **design control** (`sections[].design_controls[]`): `key`, `type`, `label`,
-`values[]`, `default`, `value`.
-
 ### Write — the patch
 
 `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}` Request
 `WebsitePageUpdate`, Response `WebsiteEditApplyRead`. It **persists into**
 `website_slots` / `website_sections` / `website_pages` / `website_forms` /
-`website_form_fields` / `website_form_field_options` / `website.menus` /
+`website_form_fields` / `website.menus` /
 `edit_history` and `website_settings.edit_history_head`. Body: dirty keys plus
 required `base_edit_history_head` (the acked head; null only if the stack is
 empty). Dirty keys unchanged — including keys dirtied by in-memory undo/redo.
@@ -173,7 +153,7 @@ website slot you send:
 - **website section order** — `ordered_section_ids[]`.
 - **website page create** — `path`, `title`, `page_type`, SEO columns,
   unpublished content.
-- **website form patch** — `website_form_id`, `title`, `submit_action`,
+- **website form patch** — `website_form_id`, `title`,
   `fields[]` (typed form field rows), `privacy_notice`.
 
 Top menu and footer writes are **not** on this PATCH. They are

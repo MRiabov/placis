@@ -133,9 +133,11 @@ certifications website component and keep slots.
    hotlink URL fields (`url`, `image_url`, `generated_image_url`) on
    dump. Logo is not a 02 attach: publication emits `{{logo_url}}` from
    Details `logo_media_asset_id`.
-5. `website_forms` / fields from form website sections’ contracts, not a
-   parallel root `forms[]`. `form_key` = the catalog form key on that
-   website section.
+5. `website_forms` / `website_form_fields` from form website sections’
+   contracts, not a parallel root `forms[]`. `form_key` = the catalog
+   form key on that website section. Ignore contract `submit_action` and
+   extra field types / options. First-pass fields are the four website-lead
+   columns ([ADR](ADR.md) 35).
 6. Look website sections come from the website template (not empty
    synthesized rows).
 7. If the website template includes site-wide `top_menu` / `footer`,

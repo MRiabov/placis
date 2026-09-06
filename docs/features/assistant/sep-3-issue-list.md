@@ -92,7 +92,7 @@ are original audit ids (not compacted).
 ## False alarms (closed)
 
 - **`AssistantOwnerMessage.type`** — one-member inbound union is the
-  typed contract (same as website `submit_action`).
+  typed contract.
 - **`AssistantThreadRead.status`** — `completed` is real on
   `ai.threads` (ADR 4 / 26). Hydrate returns `current`; note that.
 - **Projects tools on the website editor** — website #87 / Projects

@@ -41,7 +41,7 @@ xAI-side after instructions seed (xAI region from the **business country**).
 | `create_page` | propose a new unpublished website page (also appends a top-level page node on the footer, and on the top menu unless legal or cap) |
 | `update_menus` | add / remove / reorder / update nodes on the top menu or footer tree; optional `show_phone` / `show_email` / `show_contact` |
 | `cleanup_image` | run the media-library AI cleanup on a photo, then point that image website slot at the copy |
-| `generate_image` | generate a new media library item from a prompt; last resort when nothing in `media_assets[]` fits; may attach **that new item** |
+| `generate_image` | generate a new media library item from a prompt; last resort when no unused matching media caption; may attach **that new item** |
 | `update_details` | the shared Details tool — one implementation ([details architecture](../business-profile/details/architecture.md)) |
 | `create_project` | create a **project draft** (same `POST /v1/projects` as first click-off on **New project**; not in the next website publication bake until Approve) |
 | `set_project_title` | PATCH the project title (immediate) |
@@ -91,7 +91,6 @@ Same PATCH as Content website-form dirty keys.
 update_form(
   website_form_id,
   title?,
-  submit_action?,
   fields[]?,
   privacy_notice?
 )
@@ -187,9 +186,11 @@ Onboarding 06 does not call this tool.
 
 ### `generate_image`
 
-Last resort when nothing in GET `media_assets[]` fits (work-photo
-slots). 03 must not call this for a logo slot or a portrait / About /
-leadership slot (leave empty). Writes `media_library`
+Last resort when no unused matching media caption on `media_assets` /
+`media_asset_classifications` (work-photo slots). Owner Content lists
+via `GET /v1/media-assets`; 03 reads those tables, not that GET. Media
+caption is not on owner HTTP. 03 must not call this for a logo slot or a
+portrait / About / leadership slot (leave empty). Writes `media_library`
 immediately (`CreateGeneratedMediaAsset`; `supplied_by=ai`,
 `created_by=ai`, pending review; classification
 `algorithm=copy_requested_media_caption`). Canvas attach still follows Ask
@@ -244,8 +245,8 @@ function, then ads placement PATCH — not a website slot). Ads generate / revis
 
 Planner: a named real photo → **attach first** (`update_slot` +
 `media_asset_id`). Cleanup only when they ask to tidy that photo.
-`generate_image` only when nothing in GET `media_assets[]` fits ([ADR](ADR.md) 6). UUIDs
-are the media library key.
+`generate_image` only when no unused matching media caption ([ADR](ADR.md) 6).
+UUIDs are the media library key.
 
 `generate_image`: the model supplies a prompt + media caption; the backend
 **calls** `CreateGeneratedMediaAsset` with the caller `bill_usage` and

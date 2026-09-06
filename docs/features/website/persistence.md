@@ -123,31 +123,34 @@ on that website is `active`, then that website address. See
 ### `website_forms`
 
 - **Columns:** `id`, `tenant_id` fk, `website_id` fk, `form_key`, `title`,
-  `status`, `submit_action`, `privacy_notice`
-- **Enums:** `status` → `active` / `disabled`; `submit_action` →
-  `create_website_lead`
+  `status`, `privacy_notice`
+- **Enums:** `status` → `active` / `disabled`
 - **Uniques:** `(website_id, form_key)`
 - **Written by:** `CopyWebsiteTemplatePages`;
   `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`;
   `PATCH /v1/onboarding/website/editor/pages/{page_id}`
+- **Notes:** A website visitor POST creates a website lead. No
+  `submit_action`
+  column. The LLM does not create leads. Later free / expanded forms are
+  parked ([ADR](ADR.md) 35).
 
 ### `website_form_fields`
 
 - **Columns:** `id`, `tenant_id` fk, `form_id` fk, `position`,
   `field_key`, `field_type`, `label`, `required`, `placeholder`
 - **Enums:** `field_type` → `text` / `textarea` / `email` /
-  `marketing_phone` / `address` / `select` / `date` / `checkbox`
+  `marketing_phone`
 - **Uniques:** `(form_id, field_key)`
 - **Written by:** `CopyWebsiteTemplatePages`;
   `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`;
   `PATCH /v1/onboarding/website/editor/pages/{page_id}`
-
-### `website_form_field_options`
-
-- **Columns:** `id`, `field_id` fk, `position`, `label`, `value`
-- **Written by:** `CopyWebsiteTemplatePages`;
-  `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`;
-  `PATCH /v1/onboarding/website/editor/pages/{page_id}`
+- **Notes:** First-pass `field_key` is `contact_name` /
+  `marketing_phone` / `marketing_email` / `message` (the four `leads`
+  columns). Matching `field_type`: `text` / `marketing_phone` / `email` /
+  `textarea`. Copy website template pages ignores contract extra field
+  types / options. No `website_form_field_options` table. Later
+  `address` / `select` / `date` / `checkbox` / `file` are parked
+  ([ADR](ADR.md) 35).
 
 ### `website.menus`
 
@@ -262,6 +265,7 @@ may replace a whole tree. Assistant `remove_entries` max 4.
 Unique: `websites.website_prefix`; `website_addresses.hostname`; at most
 one `is_primary=true` per `website_id`; `(website_id,
 website_pages.path)`, `(website_id, website_forms.form_key)`,
+`(form_id, website_form_fields.field_key)`,
 `(website_id, website_publications.version_number)`,
 `website_settings.website_id`, `website.menus.website_id`,
 `(website_id, website_urls.href)`. Lookup: `(tenant_id, created_at)` on
