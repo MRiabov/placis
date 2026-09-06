@@ -170,7 +170,7 @@ value). Not image cleanup or generate (no span). Distinct from Ask first
 #### Follow
 
 The canvas snapping to the website slot the agent is editing (website editor),
-or a distinct agent-edited field notice on field-list screens. Default **on**.
+or a distinct agent-edited field notice on form-like screens. Default **on**.
 The owner cannot turn it off.
 
 Distinct from: Voice agent.
