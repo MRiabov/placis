@@ -72,4 +72,3 @@ decision + date) instead of silently replacing the old entry.
      Frontend modules `cms/profile/certifications/` and `cms/profile/reviews/`
      compose on `/cms/certifications-and-reviews`. [certifications
      HTTP](../certifications/api.md), [reviews HTTP](api.md).
-
