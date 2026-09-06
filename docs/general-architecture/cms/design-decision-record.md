@@ -156,9 +156,9 @@ inventing it.
    sunken fill, radius, type, and focus ring. Leftover `.cms-careers-input` /
    `.cms-careers-textarea` / onboarding `.field-control` are that same control.
    Not the website assistant composer, not the New chat prompt, not the
-   contractor website form, not Ads inplace names. Don't say form. Don't say
-   component. **Why:** we have so many forms, all of them use different styles;
-   no textarea is shared between components.
+   contractor website form, not Ads inplace names.
+   Don't say form. Don't say component. **Why:** we have so many forms, all of
+   them use different styles; no textarea is shared between components.
    - 2026-08-28: Same file now holds owner buttons (`.button-primary` /
      `.button-secondary`), combobox (`.cms-combo`), field labels (13px / 450),
      and the mock-only yellow strip. Ads maps its old `.btn` look to those
