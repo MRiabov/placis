@@ -13,30 +13,31 @@ inventing it.
    labelled button, and it does not add a row. Toast with **Undo** after
    archive. Collapsed **Archive** heading under the cards (chevron down on the
    right; default collapsed). Unarchive is a labelled outline button on that
-   list. Same look as Certifications and reviews Archive. (2026-08-29) Same
-   day, later: ads Archive is the project pattern, not the reviews icon. The
-   whole list card is the hit; no controls on the card. **Archive** is a red
-   outline button on `/cms/ads/{id}` after the two-column body, not in the
-   Publish / Download / Edit row. List toast Undo and collapsed Archive /
-   Unarchive stay. (2026-08-29)
+   list. Same look as Certifications and reviews Archive. (2026-08-29)
+   - 2026-08-29, later: ads Archive is the project pattern, not the reviews
+     icon. The whole list card is the hit; no controls on the card. **Archive**
+     is a red outline button on `/cms/ads/{id}` after the two-column body, not
+     in the Publish / Download / Edit row. List toast Undo and collapsed Archive
+     / Unarchive stay.
 
 2. **Last ad lead has no divider** — Dividers sit between ad leads only. The
    last row has no bottom line: on a narrow screen it sits on the main area, and
-   a trailing line looks like a table edge. (2026-08-29) (2026-09-04) The
-   per-ad list left this screen ([ads ADR 41](ADR.md)). Dividers apply on
-   **Leads** if a stacked ad-lead list is shown there; ads detail is a
-   count + link. (2026-09-04, later) **New** rows in the ads-detail
-   panel: last row has no bottom line. Empty stays the dashed panel.
+   a trailing line looks like a table edge. (2026-08-29)
+   - 2026-09-04: The per-ad list left this screen ([ads ADR 41](ADR.md)).
+     Dividers apply on **Leads** if a stacked ad-lead list is shown there; ads
+     detail is a count + link.
+   - 2026-09-04, later: **New** rows in the ads-detail panel: last row has no
+     bottom line. Empty stays the dashed panel.
 
-3. **Wide ad detail keeps status left of the actions** — **Creative ready**
-   sits left of Publish / Download / Edit on a wide screen. Narrow still
-   puts the badge last, after the buttons. (2026-08-29)
+3. **Wide ad detail keeps status left of the actions** — **Creative ready** sits
+   left of Publish / Download / Edit on a wide screen. Narrow still puts the
+   badge last, after the buttons. (2026-08-29)
 
-4. **Ad leads is the Inbox panel** — Same dashed empty mark as Leads.
-   The whole panel opens `/cms/leads` with `source=ad` and that `ad_id`.
-   On a narrow screen Performance and Ad leads follow Images, before
-   Budget. (2026-09-04) Later the same day: when there are **New** ad
-   leads, the panel is a filled card (name + contact, New mark), not
-   the dashed empty mark. Empty copy stays dashed. Later: marketing
-   phone is a `tel:` link on top of the Open-on-Leads hit so a tap
-   dials instead of opening Leads.
+4. **Ad leads is the Inbox panel** — Same dashed empty mark as Leads. The whole
+   panel opens `/cms/leads` with `source=ad` and that `ad_id`. On a narrow
+   screen Performance and Ad leads follow Images, before Budget. (2026-09-04)
+   - 2026-09-04, later: when there are **New** ad leads, the panel is a filled
+     card (name + contact, New mark), not the dashed empty mark. Empty copy
+     stays dashed.
+   - 2026-09-04, later: marketing phone is a `tel:` link on top of the
+     Open-on-Leads hit so a tap dials instead of opening Leads.
