@@ -59,7 +59,20 @@ Dublin and North County Dublin); the UI shows **one territory card per region**
 with radius. Backend stores `locality` and `radius_km` per row (for Meta when
 ad posting exists). Same control as the onboarding client interview.
 **Add service area** opens the Google Maps territory dropdown (search existing
-places; do not create a free-text area).
+places; do not create a free-text area). Service areas are where they work,
+not the address.
+
+#### Emergency phone
+
+Contact panel, with marketing phone / email. How we reach the owner
+(unpublished; not on the website; not ads). Same field as the complete
+gate and client interview.
+
+#### Registered office
+
+Legal panel. This is the address: place of registry / place of business.
+The contact website page paints it as `{{address}}`. Do not add a second
+location field.
 
 #### Featured services
 

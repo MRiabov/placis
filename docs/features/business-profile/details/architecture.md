@@ -11,7 +11,10 @@ Tables: [persistence.md](persistence.md). HTTP: [api.md](api.md). Look:
 HTTP (same spelling in spec, Go, and tests), `internal/profile/details/`
 **calls** `profile` `service.go`:
 
-- `GetBusinessProfile`
+- `GetBusinessProfile` — hydrates `linked_facebook` from
+  `facebook_profiles` and `linked_google_maps` from
+  `etl.google_maps_listings` (photo from listing photos). Not fetch
+  `raw`.
 - `UpdateBusinessProfile` — **calls** `ApplyBusinessProfileIncrement`
 - `UndoBusinessProfileEdit` — **calls** `ApplyBusinessProfileIncrement`
 

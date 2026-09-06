@@ -161,9 +161,11 @@ lines stay as audit suggestions until resolved.
     Issue: functionality. Action: cut to variables a website component actually
     paints; relax the CI gate.
     Where: [variables.md](variables.md); [catalog.md](catalog.md)
-    production-ready CI. Unbacked: `{{address}}`,
-    `{{services.marquee}}`, `{{services.project_types}}`,
-    `{{projects.categories}}`, `{{about.feature_paragraphs}}`.
+    production-ready CI. Unbacked: `{{services.marquee}}`,
+    `{{services.project_types}}`, `{{projects.categories}}`,
+    `{{about.feature_paragraphs}}`. `{{address}}` resolves from
+    `registered_office` ([details ADR](../business-profile/details/ADR.md)
+    8, 2026-09-06).
 
     Comment: cutting the Common list because templates do not paint
     them yet is a false alarm (ADR 5/6; same as item 13). Relaxing the

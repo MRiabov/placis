@@ -35,17 +35,18 @@ returns `ProjectRead[]`.
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GET /v1/projects` | `/cms/projects`; ads and website publication read the same rows | `ProjectListGet` | `ProjectRead[]` | `projects` | | Default lists non-archived (`draft` + `active`). Archived only when listing Archive | `403` unactivated | Paginate; nest under website editor; call while unactivated |
-| `POST /v1/projects` | `/cms/projects` first click-off on **New project**; `create_project` | `ProjectCreate` | `ProjectRead` | | `projects` | See overflow | | Insert `active`; copy ETL cites |
+| `POST /v1/projects` | `/cms/projects` first click-off on **New project**; `create_project` | `ProjectCreate` | `ProjectRead` | | `projects`, `business_profile_edits` | See overflow | | Insert `active`; copy ETL cites |
 | `GET /v1/projects/{id}` | `/cms/projects/{id}` | | `ProjectRead` | `projects` | | One row | `404` | |
-| `PATCH /v1/projects/{id}` | click-off of title / description / cover; **Apply** of pending hunks; `set_project_title`; `set_project_cover` | `ProjectUpdate` | `ProjectRead` | `projects` | `projects` | See overflow | `404` | Send `status`; description-patches object; Approve |
-| `POST /v1/projects/{id}/approve` | **Approve** on `/cms/projects/{id}` | | `ProjectRead` | `projects` | `projects` | See overflow | `409` if not a project draft; `404` | Assistant tool this pass; Publish on this screen |
-| `POST /v1/projects/{id}/archive` | **Archive** on `/cms/projects/{id}`; `archive_project` | | `ProjectRead` | `projects` | `projects`, `website_slots` | See overflow | `409` if unknown / other-tenant | `DELETE`; `PUT`; `PATCH` with `status` |
-| `POST /v1/projects/{id}/unarchive` | **Unarchive** on the list; toast Undo; `unarchive_project` | | `ProjectRead` | `projects` | `projects` | See overflow | `409` if unknown / other-tenant | Silently set `active`; restore onto website sections |
+| `PATCH /v1/projects/{id}` | click-off of title / description / cover; **Apply** of pending hunks; `set_project_title`; `set_project_cover` | `ProjectUpdate` | `ProjectRead` | `projects` | `projects`, `business_profile_edits` | See overflow | `404` | Send `status`; description-patches object; Approve |
+| `POST /v1/projects/{id}/approve` | **Approve** on `/cms/projects/{id}` | | `ProjectRead` | `projects` | `projects`, `business_profile_edits` | See overflow | `409` if not a project draft; `404` | Assistant tool this pass; Publish on this screen |
+| `POST /v1/projects/{id}/archive` | **Archive** on `/cms/projects/{id}`; `archive_project` | | `ProjectRead` | `projects` | `projects`, `website_slots`, `business_profile_edits` | See overflow | `409` if unknown / other-tenant | `DELETE`; `PUT`; `PATCH` with `status` |
+| `POST /v1/projects/{id}/unarchive` | **Unarchive** on the list; toast Undo; `unarchive_project` | | `ProjectRead` | `projects` | `projects`, `business_profile_edits` | See overflow | `409` if unknown / other-tenant | Silently set `active`; restore onto website sections |
 
 ### POST /v1/projects
 
 `create_project` and first click-off on **New project**. Inserts
 `status=draft`. Owner drafts have **no** `project_sources` rows.
+**calls** `ApplyBusinessProfileIncrement` (`list=projects`, `op=add`).
 Website editor and ads still read the live table (including project
 drafts). Only the **live website** bake filters.
 
@@ -53,30 +54,35 @@ drafts). Only the **live website** bake filters.
 
 Owner click-off of title / description / cover, **Apply** of pending
 description hunks, `set_project_title`, and `set_project_cover`.
-Editing a project draft does **not** Approve it. Request is the full
-resulting `description` string when that key is dirty. Do not send a
-patch object. Do not send `status`.
+**calls** `ApplyBusinessProfileIncrement` (`list=projects`,
+`op=update`). Editing a project draft does **not** Approve it. Request
+is the full resulting `description` string when that key is dirty. Do
+not send a patch object. Do not send `status`.
 
 ### POST /v1/projects/{id}/approve
 
 Same verb as ads (`POST /v1/ads/{ad_id}/approve`). Empty body. Not an
-assistant tool this pass. Sets `status=active`. Then the row is ready
-for the **next** website publication bake. No Publish on the project
-screen. `409` if the row is not a project draft (`active` /
-`archived`). Already `active` on retry: **200** (safe to retry).
+assistant tool this pass. Sets `status=active`. **calls**
+`ApplyBusinessProfileIncrement` (`list=projects`, `op=update`). Then
+the row is ready for the **next** website publication bake. No Publish
+on the project screen. `409` if the row is not a project draft
+(`active` / `archived`). Already `active` on retry: **200** (safe to
+retry).
 
 ### POST /v1/projects/{id}/archive
 
-Empty body. `draft` or `active` → `archived`. Drops that id from every
-unpublished project-gallery website section (then compact). Live
-gallery waits for the next website publication. Already `archived`:
-**200**. `409` if the id is unknown / other-tenant.
+Empty body. `draft` or `active` → `archived`. **calls**
+`ApplyBusinessProfileIncrement` (`list=projects`, `op=update`). Drops
+that id from every unpublished project-gallery website section (then
+compact). Live gallery waits for the next website publication. Already
+`archived`: **200**. `409` if the id is unknown / other-tenant.
 
 ### POST /v1/projects/{id}/unarchive
 
 Empty body. `archived` → **project draft** (`status=draft`), not
-silently `active`. Returns to the list, not onto website sections.
-Owner must **Approve** again before the next bake. Already
+silently `active`. **calls** `ApplyBusinessProfileIncrement`
+(`list=projects`, `op=update`). Returns to the list, not onto website
+sections. Owner must **Approve** again before the next bake. Already
 non-archived: **200**.
 
 ## Do not create

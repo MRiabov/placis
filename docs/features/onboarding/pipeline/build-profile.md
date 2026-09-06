@@ -32,7 +32,8 @@ write.
 - Insert an ETL `business_profile_edits` increment without ≥1
   `business_profile_edit_sources` row.
 - Write `registered_office` into `business_profile_service_areas` or the
-  reverse.
+  reverse. `registered_office` is the address (`{{address}}`); service
+  areas are where they work. Do not add a second location column.
 - Use Maps listing address as a second legal address (it stays on
   `etl.google_maps_listings`).
 - Upsert a fill-status row (there is no such table).
@@ -64,6 +65,7 @@ rows.
 - **Legal identity:** registry wins `legal_name`, `company_number`,
   `registered_office`, `incorporation_date` even if Maps/crawl
   disagree; not a contractor question when a registry source exists.
+  `registered_office` is the address (`{{address}}`).
 - **Accreditations:** trade registry wins the same way.
 - **Anti-fabrication:** unverifiable fields stay empty and become a targeted
   question. Registry “not found” is recorded, not papered over.

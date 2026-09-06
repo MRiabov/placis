@@ -59,6 +59,9 @@ on every call.
   `brand_*` — website look is
   [`website_settings`](../../website/persistence.md). No ranking
   columns — pins live on `business_profile_review_rankings`.
+  `registered_office` is the address (`{{address}}` and
+  `{{registered_office}}` both resolve from it). No second location
+  column.
 
 ### `business_profile_edits`
 
@@ -81,7 +84,7 @@ on every call.
   `founder_media_asset_id` / `logo_media_asset_id`; `list` (when the op
   is a list change) →
   `services` / `service_areas` / `opening_hours` / `reviews` /
-  `certifications` / `facebook_posts` / `instagram_posts` / `projects`;
+  `certifications` / `projects`;
   `created_by` → `business_research` / `voice` / `text` / `human` /
   `llm`; `origin` → `google_maps_listing` / `company_registry_record` /
   `client_interview` / `business_research` / `facebook` / `instagram` /
@@ -90,7 +93,8 @@ on every call.
 - **Uniques:** `id`
 - **Written by:** `ApplyBusinessProfileIncrement`;
   `UndoBusinessProfileEdit` (compensating increment); onboarding client
-  interview; ETL transform
+  interview; ETL transform; `CreateProject`; `UpdateProject`;
+  `ApproveProject`; `ArchiveProject`; `UnarchiveProject`
 - **Notes:** Append-only typed increments. Never `details` jsonb and
   never a full-row dump of the profile. Each row is one field or one
   list-item change. Check: the typed value column that matches `field`
@@ -101,7 +105,11 @@ on every call.
   publication and website activation live on `website_publications`
   and `website_activations`. Profile-history list ops for `reviews`
   include `update` for top pin/reorder (the increment names the list
-  change; live pins are `business_profile_review_rankings`).
+  change; live pins are `business_profile_review_rankings`). No `list`
+  `facebook_posts` / `instagram_posts` — ETL upserts those tables, not
+  via increments (CHECK swap later if leftover enum values exist).
+  Owner Project HTTP appends `list=projects` the same way ETL Projects
+  does.
 
 ### Write
 
@@ -147,9 +155,12 @@ profile, to show Profile history, or to reconstruct the profile as of
 - **Enums:** none
 - **Uniques:** `id`
 - **Written by:** `ApplyBusinessProfileIncrement` (list `services`);
-  onboarding client interview; ETL transform
+  onboarding client interview; ETL transform;
+  `CopyWebsiteTemplatePages` (`website_page_path` only)
 - **Notes:** Featured services on Details is this list (list-item
-  PATCH), not a textarea.
+  PATCH), not a textarea. `website_page_path` is the service website
+  page 02 copied. Owner PATCH / `BusinessProfileServiceOp` must not
+  write it. Null until 02; a service added after 02 stays null.
 
 ### `business_profile_service_areas`
 
@@ -250,7 +261,9 @@ profile, to show Profile history, or to reconstruct the profile as of
 
 - **Columns:** `id` uuid pk, `tenant_id` fk, `business_profile_id` fk,
   `source_id` fk required → `etl.sources`, `facebook_page_id` text,
-  `facebook_profile_url` text, `handle` text, `algorithm` text,
+  `facebook_profile_url` text, `handle` text, `name` text nullable,
+  `photo_url` text nullable, `rating` numeric nullable,
+  `review_count` int nullable, `algorithm` text,
   `schema_revision` int, `latest_fetch_id` uuid nullable fk →
   `etl.facebook_fetches`
 - **Enums:** none closed
@@ -258,8 +271,12 @@ profile, to show Profile history, or to reconstruct the profile as of
 - **Written by:** `transform/facebook.Run`
 - **Notes:** `source_kind=facebook_profile`. `latest_fetch_id` is the
   watermark of the dump that contributed, not newest `fetched_at`.
-  Hydrates `LinkedFacebookProfileRead` on Details GET when
-  `facebook_profile_url` is linked. Raw stays on the fetch tables.
+  Transform writes `name` / `photo_url` / `rating` / `review_count`
+  from that fetch (must not dump `raw` onto this row). Details GET
+  hydrates `LinkedFacebookProfileRead` from this row when
+  `facebook_profile_url` is linked. Null card until transform has
+  upserted those fields. `photo_url` is a text URL; post photos stay
+  media-library attach.
 
 ### `facebook_posts`
 
@@ -271,7 +288,8 @@ profile, to show Profile history, or to reconstruct the profile as of
 - **Uniques:** `(facebook_profile_id, external_id)`
 - **Written by:** `transform/facebook.Run`
 - **Notes:** `source_kind=facebook_post`. Owner
-  `PATCH /v1/business-profile` must not write this table. Skip /
+  `PATCH /v1/business-profile` must not write this table. No
+  `business_profile_edits.list` value. Skip /
   `force` / `human`:
   [ETL pipeline](../../etl/pipeline/README.md).
 
@@ -279,14 +297,17 @@ profile, to show Profile history, or to reconstruct the profile as of
 
 - **Columns:** `id` uuid pk, `tenant_id` fk, `business_profile_id` fk,
   `source_id` fk required → `etl.sources`, `handle` text,
-  `instagram_user` text, `algorithm` text, `schema_revision` int,
+  `instagram_user` text, `name` text nullable, `photo_url` text
+  nullable, `algorithm` text, `schema_revision` int,
   `latest_fetch_id` uuid nullable fk → `etl.instagram_fetches`
 - **Enums:** none closed
 - **Uniques:** `business_profile_id`
 - **Written by:** `transform/instagram.Run`
 - **Notes:** `source_kind=instagram_profile`. `latest_fetch_id` is the
-  watermark of the dump that contributed, not newest `fetched_at`. Raw
-  stays on the fetch tables.
+  watermark of the dump that contributed, not newest `fetched_at`.
+  Transform writes `name` / `photo_url` from that fetch (must not dump
+  `raw` onto this row). No `rating` / `review_count` (not a listing).
+  Not a Details linked card. Post photos stay media-library attach.
 
 ### `instagram_posts`
 
@@ -298,7 +319,8 @@ profile, to show Profile history, or to reconstruct the profile as of
 - **Uniques:** `(instagram_profile_id, external_id)`
 - **Written by:** `transform/instagram.Run`
 - **Notes:** `source_kind=instagram_post`. Owner
-  `PATCH /v1/business-profile` must not write this table. ETL transform
+  `PATCH /v1/business-profile` must not write this table. No
+  `business_profile_edits.list` value. ETL transform
   upserts on source `external_id` unless `algorithm=human`.
 
 Photo kind (`logo` / `photo`) is latest `photo_kind` on
@@ -315,6 +337,8 @@ table.
 - **Written by:** catalogue seed (not tenant HTTP)
 - **Notes:** Global (not tenant). Postgres schema `business_profile`,
   not `website`. `available[]` on certifications HTTP.
+  `registry_url` is optional. When set, the website and CMS paint the
+  badge/card as a link to that URL. Null: not a link.
 
 ### `business_profile_certification_selections`
 
@@ -330,7 +354,8 @@ table.
   plus selected); this table is not an HTTP collection. The website
   and ads read selected certifications from these rows. They do not
   copy the definitions except at website publication (slim
-  `certifications[]` in the website manifest).
+  `certifications[]` in the website manifest, including optional
+  `registry_url`).
 
 ## Indexes
 

@@ -45,7 +45,9 @@ again.
 `transform/facebook.Run` sets `status=transforming`. Ensure `etl.sources`
 for the Facebook profile and each post. Upsert `facebook_profiles` on
 this contractor’s `facebook_page_id` unless `algorithm=human`
-(`source_id` required). Upsert `facebook_posts` on `external_id` (insert
+(`source_id` required). Write `name`, `photo_url`, `rating`,
+`review_count` on that row from the fetch (must not dump `raw`).
+Upsert `facebook_posts` on `external_id` (insert
 only ids we do not already have; skip existing rows whose `algorithm`
 matches **and** `schema_revision` matches, or is `human`). Fill empty
 `facebook_profile_url` (cite the profile `source_id` on that increment).

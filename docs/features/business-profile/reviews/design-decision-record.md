@@ -50,3 +50,8 @@ One number is one decision.
 11. **Origin shows the platform mark** — Google Maps pin next to
     **Google Maps listing**, Facebook mark next to **Facebook**. **Owner** is
     words only. (2026-08-29)
+
+12. **Certification badge is a link when the registry URL is set** — The
+    image/card is an `<a href>` to `registry_url`. The checkbox still
+    ticks. Null URL: not a link. Same paint on the website (SEO).
+    (2026-09-06)

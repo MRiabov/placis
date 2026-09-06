@@ -299,6 +299,9 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     vs the Details panel; legal identity stays on Review (03) and is not
     repeated; interview may add photos, certifications, reviews, extra notes,
     contact name, and `emergency_phone` around that Details block. (2026-08-28)
+    - 2026-09-06: `emergency_phone` moved onto shared Contact (same field
+      on `/cms/details` and the interview Details block; unpublished;
+      not on the website; not ads).
 
 20. **Onboarding Voice stores text, not audio** — After the voice guide ends,
     persist committed owner and assistant utterances (visible text) and

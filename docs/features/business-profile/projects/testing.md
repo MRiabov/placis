@@ -30,10 +30,12 @@ the real API + real Postgres. Activated tenant. Zero owner
 #### Verify
 
 1. First click-off **persists into** `business_profile.projects`
-   `status=draft`. No `project_sources` rows.
-2. Approve: `status=active`. UI drops **Project draft**.
-3. Archive: `status=archived`; omitted from the default list.
-4. Unarchive: `status=draft` again (not silently `active`).
+   `status=draft` and `business_profile.business_profile_edits`
+   (`list=projects`). No `project_sources` rows.
+2. Approve: `status=active`; another `list=projects` increment. UI
+   drops **Project draft**.
+3. Archive: `status=archived`; omitted from the default list; increment.
+4. Unarchive: `status=draft` again (not silently `active`); increment.
 
 #### Mocked
 
@@ -76,7 +78,8 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 #### Verify
 
 200. Then `GET /v1/projects` includes it `status=draft`. **persists
-into** `projects`. No `project_sources`.
+into** `projects` and `business_profile.business_profile_edits`
+(`list=projects`). No `project_sources`.
 
 ### TestHappyPathV1ProjectsGet — Route
 
@@ -112,7 +115,8 @@ description / cover). Response `ProjectRead`.
 #### Verify
 
 200. Then `GET /v1/projects/{id}` shows the dirty keys. Still
-`status=draft` (does not Approve).
+`status=draft` (does not Approve). **persists into**
+`business_profile.business_profile_edits` (`list=projects`).
 
 #### Fail
 
@@ -133,6 +137,8 @@ project draft.
 #### Verify
 
 200. Then `GET /v1/projects/{id}` shows `status=active`.
+**persists into** `business_profile.business_profile_edits`
+(`list=projects`).
 
 #### Fail
 
@@ -156,7 +162,8 @@ project-gallery website section.
 
 200. Then `GET /v1/projects` omits it (archive list has it).
 `status=archived`. Dropped from unpublished project-gallery website
-sections (then compact).
+sections (then compact). **persists into**
+`business_profile.business_profile_edits` (`list=projects`).
 
 #### Fail
 
@@ -177,7 +184,8 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant. An
 #### Verify
 
 200. Then `GET /v1/projects` includes it `status=draft` (not
-`active`). Not restored onto website sections.
+`active`). Not restored onto website sections. **persists into**
+`business_profile.business_profile_edits` (`list=projects`).
 
 #### Fail
 
