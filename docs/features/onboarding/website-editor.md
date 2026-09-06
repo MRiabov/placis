@@ -158,10 +158,10 @@ website activation.
 
 ## 06
 
-06 is the first run on this `current`: River still updates unpublished website
-rows (cap **3 / 12 / 4**). It appends `tool_summary` as tools apply.
-`ai_generations.thread_id` set. While unactivated, 06 holds unique `running` so
-an owner prompt is **409** `in_flight_run` until idle.
+06 is the first run on this `current`
+([06](pipeline/06-website-copy-generation.md) lock). It appends
+`tool_summary` as tools apply. `ai_generations.thread_id` set. While
+unactivated, owner send is **409** `in_flight_run` until 06 is idle.
 
 The website preview follows 06 via **existing onboarding SSE** (same stream as
 the wait teaser) plus unpublished **GET** (`edit_history_head` from that GET).
@@ -170,10 +170,11 @@ items as they land — that is the in-flight copy UI. Do not invent `run_status`
 on hydrate. Do not use the Assistant text socket as the 06 progress bus. Owner
 send is **409** `in_flight_run` until 06 is idle.
 
-After 09, leftover 06 continues as River-only: lock `website_id`, not
-`assistant.runs`. It must not append thread items. CMS assistant / PATCH stay
-**not** 409 because 06 is running ([assistant testing](../assistant/testing.md)
-§15). Same website-slot overlap: last-write / `edit_history_conflict`.
+After 09, leftover 06 is River-only
+([06](pipeline/06-website-copy-generation.md)). It must not append thread
+items. CMS assistant / PATCH stay **not** 409 because 06 is running
+([assistant testing](../assistant/testing.md) §15). Same website-slot
+overlap: last-write / `edit_history_conflict`.
 
 06 still must not `create_page`.
 

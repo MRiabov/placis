@@ -88,10 +88,8 @@ profile columns. Live business profile via
 
 - **Columns:** `id`, `tenant_id` fk, `onboarding_session_id` fk,
   `clerk_subject`, `checkout_session_id`, `payment_status`,
-  `amount_eur`, `failure_reason` nullable, `activated_at` nullable,
-  `created_at`
-- **Enums:** `payment_status` → `pending` / `paid` / `failed` /
-  `refunded`
+  `amount_eur`, `created_at`
+- **Enums:** `payment_status` → `pending` / `paid` / `refunded`
 - **Uniques:** unique webhook key (safe to replay)
 - **Written by:** `POST /v1/onboarding/activation/checkout`;
   `POST /v1/webhooks/stripe`; River job kind `website_activation`
@@ -101,7 +99,8 @@ profile columns. Live business profile via
   [website persistence](../website/persistence.md). `amount_eur` is the
   activation Price amount at POST checkout (not a Go 4900). Currency
   is EUR. `refunded` is money-only: tenant stays `status=active`; first
-  payer stays owner; 09 does not reopen.
+  payer stays owner; 09 does not reopen. No `failed` / `failure_reason` /
+  `activated_at`. Checkout URL is POST response only, not a column.
 
 ### `stripe_events`
 
