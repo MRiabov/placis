@@ -71,6 +71,8 @@ Go is required (Don't-say). Then:
 pnpm check
 ```
 
-That is Biome, TypeScript (strict-plus), Knip, file-size (800-line hard fail;
-[CI decision 1](../../docs/general-architecture/ci-cd.md#decisions)), token
-colors, and Don't-say. CI runs the same command plus `pnpm build`.
+That is Biome, TypeScript (strict-plus), Knip, file-size (800-line hard
+fail via `scripts/check-files.mjs`), token colors, and Don't-say. On
+Placis, parent CI uses `go run ./cmd/ci/check-file-size --all`
+([CI decision 1](../../docs/general-architecture/ci-cd.md#decisions)).
+CI here runs `pnpm check` plus `pnpm build`.

@@ -29,3 +29,27 @@
   language: system
   files: '^docs/.*\.md$|^internal/|^cmd/|^openapi\.json$|^apps/contractor-website/openapi\.json$'
   pass_filenames: false
+
+- id: check-api-dirs
+  name: API home check
+  description: Fail if HTTP is registered outside feature/api/, DTO structs live in Register files, SQL is outside store/goose, or TypeScript calls the API outside src/features/.
+  entry: go run ./cmd/ci/check-api-dirs
+  language: system
+  files: '^internal/.*\.(go|sql)$|^cmd/api/|^migrations/.*\.sql$|^frontend-3/.*\.(ts|tsx)$|^apps/demo/.*\.(ts|tsx)$|^cmd/ci/check-api-dirs/'
+  pass_filenames: true
+
+- id: check-import-dag
+  name: Import DAG check
+  description: Fail if Go or frontend-3 imports a forbidden package edge from package-boundaries.md.
+  entry: go run ./cmd/ci/check-import-dag
+  language: system
+  files: '^internal/.*\.go$|^cmd/api/|^frontend-3/.*\.(ts|tsx)$|^cmd/ci/check-import-dag/'
+  pass_filenames: true
+
+- id: check-file-size
+  name: File-size and folder fan-out
+  description: Warn at 800 lines, hard-fail at 1200 (look app 800). Nested internal/ and frontend-3/src/ dirs at most 9 entries; those roots at most 15.
+  entry: go run ./cmd/ci/check-file-size --all
+  language: system
+  pass_filenames: false
+  always_run: true
