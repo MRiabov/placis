@@ -200,7 +200,7 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     Reload during the `/onboarding/preview` wait → stay there, reconnect SSE,
     finish the **same** wait (copy done or remaining time to the original cap).
     Reload after 07 → the host. `activated` → `/cms/website`. (2026-08-23.
-    2026-08-25: resume during wait vs after 07.     2026-08-28: onboarding assistant
+    2026-08-25: resume during wait vs after 07. 2026-08-28: onboarding assistant
     is a guide; do not seed a writer interview connection.)
     (2026-09-05: after 08 Preview website address, `GET /v1/onboarding/profile`
     re-shows `preview_website_address` on `/onboarding/preview-and-edit/`.
