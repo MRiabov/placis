@@ -56,7 +56,9 @@ manual and reviewed; this cadence is for dependencies, not schema automigration.
 third "domain value" exists only to name a composite of several rows (e.g. the
 business profile, the website manifest) — never to mirror a single table. Reuse
 one `*Read` per entity and one `*Create` / `*Update` per write; don't add a new
-type per endpoint.
+type per endpoint. sqlc rows live in `store/`. Huma DTO structs live in the
+feature package that owns the routes
+([module layout](module-layout.md)).
 
 **Every DTO field is constrained**: strings carry `minLength`/`maxLength`,
 numbers carry `minimum`/`maximum`, fixed sets use `enum` (huma tags). CI checks

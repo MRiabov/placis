@@ -1938,8 +1938,11 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
 - Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned
   row, `*_id` foreign keys, `snake_case` enum values.
 - Go: feature-nested packages (`internal/<domain>/<feature>/`), no package
-  stutter (`website/pages`, not `website/websitepages`); the file-size guard
-  applies (see `general-architecture/ci-cd.md`).
+  stutter (`website/pages`, not `website/websitepages`); the file-size
+  guard and folder fan-out apply (see
+  `general-architecture/ci-cd.md`).
+- `frontend-3`: feature-local under `src/features/`; same file-size guard
+  and folder fan-out (`src/` root ≤ 15, nested dir ≤ 9).
 - API: `/v1/<domain>/...`, domain nouns in paths,
   `Create/Update/Get/List/Delete` verbs, one `*Read` response suffix.
   Conventions: `docs/general-architecture/api.md`.

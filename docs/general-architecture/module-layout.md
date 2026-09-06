@@ -10,7 +10,7 @@ cmd/
 internal/
   # shared / cross-cutting (small, few files each)
   config/         # typed config from env
-  httpapi/        # router, middleware, error mapping, huma API registration
+  httpapi/        # router, middleware, error mapping, huma API registration (not DTO types)
   auth/           # Clerk SDK (clerk-sdk-go): Sessions().Verify -> Principal; Users().Create; Organizations().Create
   store/          # pgx pool + sqlc-generated queries (queries/*.sql split by domain)
   ai/             # vendor AI interfaces + threads + traces (schema `ai`; same bill_usage enum as ETL; no feature tool registries)
@@ -69,15 +69,20 @@ Rules:
   as a single file and splits only when it grows. Enforce the file-size guard (<
   800 lines warning, > 1200 hard error) in CI — never flat file dumps.
   `apps/demo/src` hard-fails at 800 ([CI decision 1](ci-cd.md#decisions)).
-- **Folder fan-out** (predecessor `check_folder_fanout`): a nested package dir
-  may hold at most **9** entries (tracked files + child dirs). `internal/` root
-  may hold at most **15**. Split a fat folder into a nested package. Scope is
-  `internal/` (the old `backend/app`); not `docs/`, `frontend-3/`, or
-  `packages/` in this pass. See [CI and delivery](ci-cd.md).
+- **Folder fan-out** (predecessor `check_folder_fanout`): a nested dir under
+  `internal/` or `frontend-3/src/` may hold at most **9** entries (tracked
+  files + child dirs). `internal/` root and `frontend-3/src/` may each hold
+  at most **15**. Split a fat folder into a nested package or feature
+  folder. Not `docs/`, `packages/`, or `apps/` in this pass. See
+  [CI and delivery](ci-cd.md).
 - Shared types live in exactly one package — no forked duplicates.
 - Each feature that calls the LLM owns `prompts.yaml` in that package, not
   prompt strings in Go. Variables are `{{var}}` and dotted `{{aaa.bbb}}`.
   [AI layer](ai-layer.md).
+- Huma DTOs (request/response structs, including SSE event structs) live
+  in the feature package that owns the routes. `httpapi` registers those
+  types; it does not define them. Do not add `internal/dto/` or dump DTOs
+  into `httpapi`.
 - Route handlers validate input (huma) and call service functions; services own
   business rules and transactions; models are persistence only.
 - Service functions accept `tenantID` explicitly; they never infer it from
@@ -86,4 +91,5 @@ Rules:
   external API isolation, generated-code freshness).
 
 `frontend-3` keeps its own feature-local structure and is not folded into
-`internal/`; the file-size guard applies to it too. Folders: [frontend stack](frontend-stack.md).
+`internal/`; the file-size guard and folder fan-out apply to it too.
+Folders: [frontend stack](frontend-stack.md).

@@ -29,8 +29,10 @@ is `apps/contractor-website`
 same app as live. `/onboarding/preview` is the wait carousel in this app, then
 the browser navigates to `/onboarding/preview-and-edit/`.
 
-The file-size guard applies to `frontend-3` too
-([CI and delivery](ci-cd.md)).
+The file-size guard and folder fan-out apply to `frontend-3` too
+([CI and delivery](ci-cd.md)): a nested dir under `src/` may hold at most
+**9** entries (tracked files + child dirs); `src/` root may hold at most
+**15**.
 
 ## Dependencies
 
