@@ -9,9 +9,9 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    a `business_profile_edits` row: one field or list item,
    `set`/`clear`/`add`/`remove`/`update`, typed value columns, who, where it
    came from, request/job id. The live `business_profiles` row is the current
-   profile. Reads load that row; they do not replay the log. Writers
-   `SELECT … FOR UPDATE`, insert only what they set, and update only those live
-   profile columns. No writer may submit a full profile. (2026-08-19)
+   profile. Reads load that row; they do not replay the log. Writers `SELECT …
+   FOR UPDATE`, insert only what they set, and update only those live profile
+   columns. No writer may submit a full profile.
 
    The predecessor stored profile history as a details dump / full merge. Under
    a race (client interview and business research at the same time) one write
@@ -21,10 +21,10 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    Same field with disagreeing values is a research conflict, not a silent
    last-write.
 
-2. **Profile groups Details and Projects** — moved to [CMS ADR](../../../general-architecture/cms/ADR.md) 1 (2026-08-27).
-   The Details screen stays. Top menu and footer stay in the website editor, not
-   Details. (2026-08-19; Profile children 2026-08-20; media library child
-   2026-08-26)
+2. **Profile groups Details and Projects** — moved to [CMS
+   ADR](../../../general-architecture/cms/ADR.md) 1. The Details screen stays.
+   Top menu and footer stay in the website editor, not Details.
+   - 2026-08-19: Profile children 2026-08-20; media library child 2026-08-26
 
 3. **Founder and brand are columns** — `founder_name` / `founder_role` /
    `founder_occupation` / `founder_nationality` / `founder_country_of_residence`
@@ -34,14 +34,13 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    They are ordinary live profile columns and ordinary
    `business_profile_edits.field` values. Business research extras (confidence,
    evidence) stay on ETL fetch metadata / the Facebook or Instagram profile row,
-   not unstructured founder jsonb. (2026-08-19; 2026-08-27:
-   `business_research_sources` removed.)
-
-   (2026-09-02): The four `brand_*` columns are gone. Founder columns and
-   `logo_media_asset_id` remain. Site colors / type live on
-   [website styles](../../website/styles.md) / `website_settings`. No
-   `trading_name` / `legal_form` / `company_status` on the live profile
-   (Find typeahead may still show registry status).
+   not unstructured founder jsonb.
+   - 2026-08-27: `business_research_sources` removed.
+   - 2026-09-02: The four `brand_*` columns are gone. Founder columns and
+     `logo_media_asset_id` remain. Site colors / type live on [website
+     styles](../../website/styles.md) / `website_settings`. No `trading_name` /
+     `legal_form` / `company_status` on the live profile (Find typeahead may
+     still show registry status).
 
 4. **Reviews have origin, top, archive, and citation** — each
    `business_profile_reviews` row has `origin` (`google_maps_listing` /
@@ -52,74 +51,77 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    after create; imported Google/Facebook reviews are not. Cards, the website,
    and ads paint citation (fallback `body` if empty). Pin / reorder replaces the
    whole ordered id list in one transaction; it does not assign one
-   `top_position` at a time. (2026-08-26; unique top set 2026-08-26) `is_top` is
-   the **ads** featured list (and the top band on Certifications and reviews).
-   It does **not** copy onto every reviews website section. Each reviews website
-   section has its own ordered `website_slot_reviews` from the pool, capped by
-   that website component. (2026-08-26)
-
-   (2026-08-31): `business_profiles.top_reviews_provisional` nullable bool
-   records whether the current top set may still be replaced by ranking
-   (true), is done for this enqueue or owner-locked (false), or was
-   never ranked (null). Not a skip key. Not on each review row.
-
-   (2026-09-02): Ranking is not a column on the review or the profile.
-   `is_top` / `top_position` / `provisional` live on insert-only
-   `business_profile_review_rankings` (current = latest `created_at` per
-   review). HTTP / ads hydrate from that join. The review row stays the
-   imported or owner-written text. No `top_reviews_provisional` on
-   `business_profiles`.
+   `top_position` at a time.
+   - 2026-08-26: unique top set 2026-08-26
+   - 2026-08-26: `is_top` is the **ads** featured list (and the top band on
+     Certifications and reviews). It does **not** copy onto every reviews
+     website section. Each reviews website section has its own ordered
+     `website_slot_reviews` from the pool, capped by that website component.
+   - 2026-08-31: `business_profiles.top_reviews_provisional` nullable bool
+     records whether the current top set may still be replaced by ranking
+     (true), is done for this enqueue or owner-locked (false), or was never
+     ranked (null). Not a skip key. Not on each review row.
+   - 2026-09-02: Ranking is not a column on the review or the profile. `is_top`
+     / `top_position` / `provisional` live on insert-only
+     `business_profile_review_rankings` (current = latest `created_at` per
+     review). HTTP / ads hydrate from that join. The review row stays the
+     imported or owner-written text. No `top_reviews_provisional` on
+     `business_profiles`.
 
 5. **Facebook and Google Maps listing are Details links** — Business details
-   owns `facebook_profile_url` and `google_maps_listing_url`.
-   **Link your Facebook** / Google Maps listing when unlinked (paste a public
-   URL this pass; type-to-search TBD); when linked, a **card** (name, photo,
-   rating, review count) plus **Change**, not the raw URL. Same URLs feed review
-   import on Certifications and reviews. Not Ads Connect Meta, not Facebook
-   Login, no autoposting. (2026-08-26; linked card 2026-08-27)
+   owns `facebook_profile_url` and `google_maps_listing_url`. **Link your
+   Facebook** / Google Maps listing when unlinked (paste a public URL this pass;
+   type-to-search TBD); when linked, a **card** (name, photo, rating, review
+   count) plus **Change**, not the raw URL. Same URLs feed review import on
+   Certifications and reviews. Not Ads Connect Meta, not Facebook Login, no
+   autoposting.
+   - 2026-08-26: linked card 2026-08-27
 
 6. **Opening hours are when they pick up the marketing phone** — per day: Opens
    / Closes / Closed. Shown on the contact website page. There is no `note`
    column and no Appointment note field. Logo is picked from the media library
    (`logo_media_asset_id`). Persist on click-off; no Save details. Picker look
-   is in [design decision record](design-decision-record.md). (2026-08-26) One Opens / Closes / Closed per
-   weekday — do not add several ranges per day. Drop extra time blocks from the
-   mock. (2026-08-27)
+   is in [design decision record](design-decision-record.md).
+   - 2026-08-26: One Opens / Closes / Closed per weekday — do not add several
+     ranges per day. Drop extra time blocks from the mock.
 
 7. **Certification definitions and ticks are Details tables** — Global
    `certification_definitions` and tenant
    `business_profile_certification_selections` live in Postgres schema
    `details`. They are not `website` tables and are not named
-   `website_certification_*`. HTTP stays
-   `GET`/`PUT /v1/business-profile/certifications`. The website paints selected
-   rows at website publication; ads read the same live business profile.
-   (2026-08-26) (2026-09-04): Schema renamed to `business_profile`
-   ([ETL ADR 9](../../etl/ADR.md)).
+   `website_certification_*`. HTTP stays `GET`/`PUT
+   /v1/business-profile/certifications`. The website paints selected rows at
+   website publication; ads read the same live business profile.
+   - 2026-09-04: Schema renamed to `business_profile` ([ETL ADR
+     9](../../etl/ADR.md)).
 
 8. **Trade is open text** — `business_profiles.trade` is not a closed enum.
    Certification `available[]` by trade/country must not depend on a closed
    trade list. There is **no** business-location column; service areas cover
    where they work. Service areas are a Google Maps territory lookup;
    `radius_km` is for Meta when ad posting exists. Featured services are the
-   `business_profile_services` list, not a textarea. (2026-08-27) Onboarding
-   client interview writes the same controls (list rows, Maps territories,
-   hours picker). Paste of service names may split into rows; do not combine
-   them with an LLM in the wait. (2026-08-28) Onboarding Details == Business
-   details: same fields, same controls, same writes; do not keep a parallel
-   onboarding control for a Details field. (2026-08-28)
-   Service areas are an addable list (`business_profile_service_areas`), not one
-   field.
+   `business_profile_services` list, not a textarea.
+   - 2026-08-27: Onboarding client interview writes the same controls (list
+     rows, Maps territories, hours picker). Paste of service names may split
+     into rows; do not combine them with an LLM in the wait.
+   - 2026-08-28: Onboarding Details == Business details: same fields, same
+     controls, same writes; do not keep a parallel onboarding control for a
+     Details field.
+   - 2026-08-28: Service areas are an addable list
+     (`business_profile_service_areas`), not one field.
 
 9. **Notification Revert undoes that profile-history increment** — One governed
-   tool, `update_details` ([architecture.md](architecture.md)). Website assistant, Ads generator,
-   and later LLM callers invoke **that** tool — one implementation (the same
-   increment function as click-off `PATCH /v1/business-profile`). The write is
-   applied. **OK** keeps it. **Revert** is
+   tool, `update_details` ([architecture.md](architecture.md)). Website
+   assistant, Ads generator, and later LLM callers invoke **that** tool — one
+   implementation (the same increment function as click-off `PATCH
+   /v1/business-profile`). The write is applied. **OK** keeps it. **Revert** is
    `POST /v1/business-profile/edits/{id}/undo` (that `business_profile_edits`
    increment). Leaving the screen without clicking keeps the write. Not website
-   undo. Shared [notification](../../../general-architecture/frontend.md). (2026-08-27) Previous (same day): any governed
-   tool that writes a detail uses the same Details writer. Previous (same day):
-   Ads may write a detail via a tool call. OK keeps it. Revert is that undo
-   route. Leaving the screen keeps the write. Not website undo. (2026-09-05):
-   unpaid Revert is `POST /v1/onboarding/business-profile/edits/{id}/undo`.
-   `/v1/business-profile` stays **403** unactivated.
+   undo. Shared [notification](../../../general-architecture/frontend.md).
+   - 2026-08-27: Previous (same day): any governed tool that writes a detail
+     uses the same Details writer. Previous (same day): Ads may write a detail
+     via a tool call. OK keeps it. Revert is that undo route. Leaving the screen
+     keeps the write. Not website undo.
+   - 2026-09-05: unpaid Revert is `POST
+     /v1/onboarding/business-profile/edits/{id}/undo`. `/v1/business-profile`
+     stays **403** unactivated.
