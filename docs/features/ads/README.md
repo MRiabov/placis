@@ -27,7 +27,7 @@ Named identifiers:
 - [ad-application/meta](ad-application/meta/) — investigation for future ad posting to Meta (not the
   spec)
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
-  doc gap / drop)
+  doc gap / closed)
 
 ## Positioning (done-for-you + DIY)
 
