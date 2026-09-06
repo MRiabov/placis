@@ -43,14 +43,16 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    `migrations/`, `catalog/`, `docs/` is still a later `cmd/ci` check. Prefer
    splitting a feature into its own package over allowing a file to creep past
    800.
-2. **Folder fan-out** — a nested dir under `internal/` may hold at most **9**
-   entries (tracked files + child dirs). `internal/` root may hold at most
-   **15**. Split a fat folder into a nested package; that is why `templates` and
-   `assistant` nest under `website/` instead of sitting as siblings at
-   `internal/` root. Scope is `internal/` only this pass (the predecessor
-   `backend/app` analog) — not `docs/`, `frontend-3/`, or `packages/`.
-   Documented as a later `cmd/ci` check; this file does not implement the
-   checker. Layout: [module layout](module-layout.md).
+2. **Folder fan-out** — a nested dir under `internal/` or `frontend-3/src/`
+   may hold at most **9** entries (tracked files + child dirs). `internal/`
+   root and `frontend-3/src/` may each hold at most **15**. Split a fat
+   folder into a nested package (Go) or nested feature folder
+   (`frontend-3`); that is why `templates` and `assistant` nest under
+   `website/` instead of sitting as siblings at `internal/` root. Scope is
+   `internal/` and `frontend-3/src/` — not `docs/`, `packages/`, or
+   `apps/`. Documented as a later `cmd/ci` check; this file does not
+   implement the checker. Layout: [module layout](module-layout.md),
+   [frontend stack](frontend-stack.md).
 3. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`,
    `golangci-lint` (non-mutating); look app (`apps/demo/`) TypeScript check +
    Biome (non-mutating) via biome / `tsc` / knip / file and token checks in

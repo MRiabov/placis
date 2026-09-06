@@ -49,7 +49,8 @@ together is when `/v2` appears.
 
 Two type layers: sqlc rows and huma DTOs ([backend stack](backend-stack.md)). Reuse one `*Read`
 per entity and one `*Create` / `*Update` per write. Do not say Projection or
-Summary.
+Summary. Go DTO structs live in the feature package that owns the routes, not in
+`httpapi` ([module layout](module-layout.md)).
 
 Every DTO field is constrained: strings `minLength`/`maxLength`, numbers
 `minimum`/`maximum`, fixed sets `enum`. Persistence-on-blur is
