@@ -3,7 +3,7 @@
   description: Fail if glossary Don't-say terms appear in docs or Go. A missing or unparseable Don't-say table is a failure.
   entry: go run ./cmd/ci/check-dont-say
   language: system
-  files: '^(docs|internal|cmd|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$'
+  files: '^(docs|internal|cmd|catalog|apps/contractor-website|apps/placis-website|scripts)/.*\.(md|go|mjs|js)$|^packages/website-components/.*\.(md|mjs|js|ts|tsx|json|css)$'
   pass_filenames: true
 
 - id: check-pipeline-tables
