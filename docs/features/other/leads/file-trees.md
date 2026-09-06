@@ -13,7 +13,6 @@ internal/leads/
   api.go                            # Register
                                     # POST /v1/website-forms/{form_id}/submissions
                                     #   (auth none; CORS contractor Host)
-                                    # POST /v1/website-forms/{form_id}/uploads
                                     # GET /v1/leads
                                     # PATCH /v1/leads/{lead_id}
   dto.go
@@ -23,7 +22,8 @@ internal/leads/
     queries.sql
 ```
 
-No `/v1/files`. Form uploads compose `files` under this resource.
+No `/v1/files`. `POST /v1/website-forms/{form_id}/uploads` is parked
+until a `file` `field_type` exists.
 
 ## Frontend
 

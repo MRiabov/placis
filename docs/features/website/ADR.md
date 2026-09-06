@@ -15,6 +15,9 @@ Status: decided (2026-08-16, product owner + engineering).
    - 2026-09-03: public SEO fields are `seo_title`, `seo_description`,
      `seo_og_title`, `seo_og_description`, `seo_canonical_url`, `seo_noindex`.
      No `seo_primary_keyword`.
+   - 2026-09-06: `website.v1` has no root SEO. Each website page’s six SEO
+     columns travel on that page only. Services ≠ home. No `landing`
+     page type.
 
 3. **Website component contracts are one typed struct each, dumped to JSON** —
    under `catalog/`, consumed by both the TypeScript renderer for the contractor
@@ -41,7 +44,8 @@ Status: decided (2026-08-16, product owner + engineering).
    contracts. Default is plan + Ask first (Apply / Reject, one-way). Instant
    apply still uses those tools; it does not write freeform JSON. Named real
    photo → attach first. AI cleanup is the `/cms/media` cleanup.
-   `generate_image` is last resort when nothing in `media_assets[]` fits.
+   `generate_image` is last resort when no unused matching media caption
+   fits that work-photo slot.
    Overlay look (always-on overlay, reduce-height left / trash right, Apply /
    Reject pills): [assistant](../assistant/README.md). Placement: [design
    decision record](design-decision-record.md) 18.
@@ -64,6 +68,16 @@ Status: decided (2026-08-16, product owner + engineering).
      canvas hydrate and both Worker requests.
    - 2026-09-02: 03 does not `generate_image` a logo or a face. Portrait slots
      stay empty when no matching media caption.
+   - 2026-09-06: `generate_image` last resort is no unused matching media
+     caption (`media_assets` / `media_asset_classifications`), not editor
+     GET `media_assets[]`. Owner Content lists via
+     `GET /v1/media-assets` ([media library
+     HTTP](../other/media/api.md)). 03 photo selection reads those
+     tables, not that GET. Media caption is not on owner HTTP. Do not
+     embed `media_assets[]` on website page GET.
+   - 2026-09-06: `WebsiteBusinessProfileRead` is the Common variables
+     struct and does not include Details `existing_site_url`. Details /
+     ETL still persist that column.
 
 7. **Website publication is kept and can be rolled back** — website publication
    creates a `website_publications` row (a published website copy); website
@@ -424,6 +438,8 @@ Status: decided (2026-08-16, product owner + engineering).
     `required_slot_unresolved`. Live `latest/` updates on the next 04 Website
     publication (or unpaid 08 Share). No auto-`PublishWebsite` from Details
     PATCH. [variables.md](variables.md#optional-omit). (2026-09-04)
+    - 2026-09-06: `existing_site_url` is Details / ETL only. Not a Common
+      variable and not optional-omit.
 
 33. **Website editor canvas is not website editor workspace** — The canvas is
     only the painted unpublished page. Workspace is every editing control that
@@ -445,3 +461,14 @@ Status: decided (2026-08-16, product owner + engineering).
     [catalog.md](catalog.md#website-component-family). (2026-09-06)
     Don't say proof: the predecessor lumped family is not a catalog
     family.
+
+35. **First-pass website forms are the four website-lead columns** — A
+    website form POST creates a website lead. There is no `submit_action`
+    column. First-pass `field_type` is `text` / `textarea` / `email` /
+    `marketing_phone`. First-pass `field_key` is `contact_name` /
+    `marketing_phone` / `marketing_email` / `message` (the four `leads`
+    columns). No `website_form_field_options`. Copy website template
+    pages ignores contract `submit_action` and extra field types /
+    options. Later free / expanded forms (including `file` and
+    `POST /v1/website-forms/{form_id}/uploads`) are parked. The LLM does
+    not create leads. `update_form` stays. (2026-09-06)

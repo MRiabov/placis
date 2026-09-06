@@ -120,7 +120,7 @@ Each `jsonb` column is either a typed HTTP union/struct or **omit**. Feature
 | Stripe event body | jsonb | **Omit** from `frontend-3`. Activation-status is a closed enum + checkout URL. |
 | LLM traces (`ai_generations`) | jsonb | **Omit.** Assistant activity is named event structs. Each tool event has `summary` (`string` + `maxLength`) for owner copy. Never render tool names. |
 | Audit `before`/`after` | jsonb | **Omit** from `frontend-3`. |
-| Website form website visitor POST | — | Named fields matching that website form’s `fields[]`. Extra keys 4xx. |
+| Website form website visitor POST | — | Named fields matching that website form’s `field_key`s (`contact_name`, `marketing_phone`, `marketing_email`, `message`). Extra keys 4xx. |
 | Upload signed URL | string | URL `maxLength`. |
 | Website assistant plan | text | `string` + `maxLength`. Markdown. Do not `JSON.parse`. |
 | Client interview extra notes | text | `string` + `maxLength`. |
