@@ -13,15 +13,16 @@ larger than this screen (reviews, certifications, projects):
 
 - **Who they are** — business name, legal name, trade, established year,
   description.
-- **Contact** — marketing phone, marketing email, existing site URL. Emergency
-  phone number is how we reach the owner, not what leads use (unpublished; not
-  on this screen unless asked).
-- **Where they are** — service areas (Google Maps territory lookup, one card
-  per region, plus radius). Not a business-location field. Same control as the
+- **Contact** — marketing phone, marketing email, existing site URL,
+  emergency phone. Emergency phone is how we reach the owner, not what
+  leads use (unpublished; not on the website). The website contact line
+  also paints registered office as the address (`{{address}}`).
+- **Where they work** — service areas (Google Maps territory lookup, one card
+  per region, plus radius). Not the address. Same control as the
   onboarding client interview.
 - **What they do** — featured services as a **list** (not a textarea). Same
   control as the onboarding client interview.
-- **Legal** — company number, VAT number, registered office.
+- **Legal** — company number, VAT number, registered office (the address).
 - **Opening hours** — Google Calendar-style picker, one row per day: Opens, to,
   Closes, Closed. One range per weekday. No extra time blocks. Hours they pick
   up the marketing phone. No Appointment note.

@@ -20,7 +20,7 @@ HTTP functions (same spelling in spec, Go, and tests):
 | DTO | Fields | Description |
 | --- | --- | --- |
 | `BusinessProfileCertificationListRead` | `available: []CertificationDefinitionRead`, `selected: []BusinessProfileCertificationSelectionRead` | Certifications wrap |
-| `CertificationDefinitionRead` | `id`, `name`, `short_label`, `trades`, `country`, `badge`, `registry_url` | Global definition for `available[]` |
+| `CertificationDefinitionRead` | `id`, `name`, `short_label`, `trades`, `country`, `badge`, `registry_url` | Global definition for `available[]`. `registry_url` optional; painters link the badge/card when set |
 | `BusinessProfileCertificationSelectionRead` | `id`, `certification_id`, `status` | Tenant tick. `status` → `selected` / `removed` |
 | `BusinessProfileCertificationsPut` | `certification_ids[]` | PUT selected set |
 

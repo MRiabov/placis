@@ -43,7 +43,9 @@ Root:
   baked at website publication from **active** project rows only (skip
   `draft`). Same staleness as Details. Not a live query of `/cms/projects`.
   Draft ids on unpublished galleries are omitted from this bake (no 409).
-- slim selected `certifications[]` (`id`, `name`, `short_label`, badge URL)
+- slim selected `certifications[]` (`id`, `name`, `short_label`, badge
+  URL, optional `registry_url`). Worker wraps the image/card in
+  `<a href>` when `registry_url` is set; null: not a link
 
 Per website page:
 

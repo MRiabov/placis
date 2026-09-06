@@ -102,9 +102,11 @@ top reviews. Archive one. Import. MSW
 
 #### Verify
 
-UI: ticks, top band, Archive disclosure. MSW saw those Method+path
-strings. Postgres rows are the backend test. This Full does not
-fill leftover 1:1.
+UI: ticks, top band, Archive disclosure. When a fixture definition has
+`registry_url`, the badge is a link to that URL and the checkbox still
+ticks. Null URL: not a link. MSW saw those Method+path strings.
+Postgres rows are the backend test. This Full does not fill leftover
+1:1.
 
 #### Fail
 

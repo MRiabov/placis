@@ -53,7 +53,12 @@ kind `website_copy_generation` on this `website_id`. Mapping:
     clean tenant): same `website_pages` paths / `page_type` set and the
     same `website.menus` trees.
   - Later ETL named service: `website_pages` where `page_type=service`
-    count **unchanged**.
+    count **unchanged**. New service row `website_page_path` stays
+    null.
+  - Each named service on the accepted profile:
+    `business_profile.business_profile_services.website_page_path`
+    equals that service website page’s `website_pages.path`
+    (`business_profile.business_profile_services`).
 - **Handoff to 03**: schema `jobs` has one `website_copy_generation`;
   unique key = that `tenant_id`; job is available / running, not cancelled.
   `onboarding_sessions.status` still `selecting_and_copying_website_template`.

@@ -11,6 +11,8 @@ decision + date) instead of silently replacing the old entry.
    - 2026-08-19: as Profile child in details ADR 2.
    - 2026-08-20: working screen in the website first slice.
    - 2026-08-27: moved here.
+   - 2026-09-06: Owner create / PATCH / approve / archive / unarchive
+     appends `business_profile_edits` (`list=projects`).
 
 2. **The table is `business_profile.projects`** — Ads and the website read it.
    It is not `website.projects`. Schema `details` is not renamed in this pass

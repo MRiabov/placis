@@ -222,7 +222,9 @@ Apify) complete → `fetched`.
   contributed, not newest `fetched_at`. `country` is Places address
   country, not parsed from `listing_address`. `latitude` /
   `longitude` from Places Details `location`; both null when Details
-  never ran.
+  never ran. Details GET hydrates `LinkedGoogleMapsListingRead` from
+  this row (`name` ← `display_name`). Photo from listing photos. Do
+  not dump fetch `raw` onto this row.
 
 ### Listing children
 
@@ -262,6 +264,9 @@ library items are copies transform writes; the listing stays here.
 - **Columns:** `id` uuid, `listing_id` fk → `google_maps_listings`,
   `external_id` text, `source_url` text, `content_hash` text nullable
 - **Written by:** `extract/googlemaps.Run`
+- **Notes:** Listing-level photos. Details GET
+  `linked_google_maps.photo_url` is the first row’s `source_url`. Do
+  not add `photo_url` on `google_maps_listings`.
 
 ### `llm_source_to_project_classifications`
 

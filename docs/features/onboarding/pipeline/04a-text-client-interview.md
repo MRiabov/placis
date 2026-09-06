@@ -55,8 +55,8 @@ is Continue (submit): optional last answers, complete gate, **inserts**
 3. Fields: **Details == `/cms/details`** (identity, contact and presence,
    services, service areas, opening hours, VAT — same controls and writes). Do
    not repeat registry legal identity from 03. VAT uses the Details legal
-   controls already on `/cms/details`. Plus interview-only: contact name,
-   `emergency_phone`; found photos in the media library plus **Upload photos**
+   controls already on `/cms/details`. Plus interview-only: contact name;
+   found photos in the media library plus **Upload photos**
    (always available; complete does not require photos); certifications (company
    registry pick locks that business-registry certification) / found reviews;
    **Projects** if nested `profile.projects` is non-empty (ranked top 4
@@ -101,8 +101,8 @@ closed. Same SSE as Review; this screen is also a consumer.
   Projects on the nested live profile (ranked top 4, Archive stays
   archived). A `source_id` that already has a yes verdict does not add a
   second Project (ETL skip).
-- Extra notes and `emergency_phone` are contractor-only. Business research
-  does not write them.
+- Extra notes are contractor-only. `emergency_phone` is a Details
+  Contact field; business research does not write it.
 - Research conflict on a field they already saved stays a conflict (show
   both); do not silently take the research value.
 

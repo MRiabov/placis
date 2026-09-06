@@ -51,8 +51,10 @@ LLM unused. Prefer fake Google Maps territory lookup.
 #### Setup
 
 Backend (`humatest`, Testcontainers Postgres). Activated tenant. Live
-`business_profile.business_profiles` row with services, areas, hours. Linked
-Facebook URL so `business_profile.facebook_profiles` can hydrate. No
+`business_profile.business_profiles` row with services, areas, hours,
+`emergency_phone`. Linked Facebook URL so
+`business_profile.facebook_profiles` has card columns. Linked Maps URL
+so `etl.google_maps_listings` plus a listing photo can hydrate. No
 `frontend-3`.
 
 #### Exercise
@@ -64,9 +66,15 @@ Facebook URL so `business_profile.facebook_profiles` can hydrate. No
 200. Body is `BusinessProfileRead` (scalars, `services` from
 `business_profile.business_profile_services`, `service_areas` from
 `business_profile.business_profile_service_areas`, `opening_hours` from
-`business_profile.business_profile_opening_hours`). When the Facebook URL is
-linked, `linked_facebook` has name / photo / rating / review count from
-`business_profile.facebook_profiles`. No profile-history timeline. Distinct from
+`business_profile.business_profile_opening_hours`). `registered_office`
+is the address (no second location field). `emergency_phone` is on the
+body. When the Facebook URL is linked and transform has written card
+fields, `linked_facebook` has name / photo / rating / review count from
+`business_profile.facebook_profiles`. When the Maps URL is linked and
+extract has upserted the listing, `linked_google_maps` has name / photo
+/ rating / review count from `etl.google_maps_listings` (photo from
+`google_maps_listing_photos.source_url`). No `raw` on the body. No
+`linked_instagram`. No profile-history timeline. Distinct from
 `WebsiteBusinessProfileRead` and `OnboardingLiveBusinessProfileRead`.
 
 ### TestHappyPathV1BusinessProfilePatch — Route
@@ -94,11 +102,14 @@ keys only, including a service list-item op). Response
 `business_profile.business_profile_opening_hours` when that list op ran). Must
 not write `business_profile.facebook_posts`, `business_profile.instagram_posts`,
 `business_profile.instagram_profiles`, or
-`business_profile.business_profile_edit_sources`.
+`business_profile.business_profile_edit_sources`. Must not persist
+`website_page_path` on a service op. `emergency_phone` dirty key
+persists.
 
 #### Fail
 
 `403` unactivated. Full-row dump / extra keys → 4xx.
+`website_page_path` on a service op → 4xx.
 
 ### TestHappyPathV1BusinessProfileEditsUndo — Route
 
@@ -137,8 +148,9 @@ Backend (`humatest`, Testcontainers Postgres). Activated tenant.
 
 #### Verify
 
-200. Body has `available[]` (`CertificationDefinitionRead`) and
-`selected[]`. Do not key `available[]` off a closed trade enum.
+200. Body has `available[]` (`CertificationDefinitionRead`, including
+optional `registry_url`) and `selected[]`. Do not key `available[]` off
+a closed trade enum.
 
 ### TestHappyPathV1BusinessProfileCertificationsPut — Route
 
@@ -320,7 +332,8 @@ Open `/cms/details`. Click-off a scalar. Revert. OK. MSW
 
 #### Verify
 
-UI: Business details panels, shared notification Revert / OK. MSW
+UI: Business details panels including emergency phone on Contact,
+shared notification Revert / OK. MSW
 saw those Method+path strings. Postgres rows are the backend test.
 
 #### Mocked
