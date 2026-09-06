@@ -268,10 +268,10 @@ new entries with the next number, the area, and the date.
 
 31. **No website-style undo log; `updated_at` is enough** (updated 2026-08-25) —
     Do not copy website edit history onto ads. Ads is a review workspace (few
-    fields, LLM draft then accept / edit / reject, then Approve), not a canvas
-    of many small writes. Native text-field undo covers typing. LLM rewrite and
-    cleanup Accept are Ctrl+Z reversible while they are in Ads (decision 36) —
-    not a website-style undo table. Last writer on copy is
+    fields, LLM draft then accept / edit / reject, then Approve), not a website
+    editor canvas of many small writes. Native text-field undo covers typing.
+    LLM rewrite and cleanup Accept are Ctrl+Z reversible while they are in Ads
+    (decision 36) — not a website-style undo table. Last writer on copy is
     `ad_copy_variants.source`. Approve is the checkpoint (`ad_ready_to_post`).
     Later posting “revision” is a new post to Meta, not undo in Ads.
 

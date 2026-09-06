@@ -29,7 +29,7 @@ payload saved, the work enqueued, and the request returned — see
 [website activation](../features/onboarding/pipeline/09-website-activation.md)
 and [billing HTTP](../features/billing/api.md). Closed event list:
 [onboarding HTTP](../features/onboarding/api.md). Every background job can be
-retried safely (an explicit key) — see [jobs](jobs.md).
+retried safely (an explicit key) — see [jobs](../infrastructure/jobs.md).
 
 Onboarding session progress events stream over SSE — see [pipeline README](../features/onboarding/pipeline/README.md) and
 [onboarding frontend](../features/onboarding/frontend.md). Anyone with the host URL opens the preview website

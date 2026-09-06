@@ -9,6 +9,7 @@ Visual mock: [`apps/demo/`](../../../apps/demo/README.md) (`cd apps/demo && pnpm
 win over the mock.
 
 - [frontend.md](frontend.md) — left nav, Profile disclosure, `/cms` two-card chooser
+- [file-trees.md](file-trees.md) — `cms/layout/` files
 - [design.md](design.md) — tokens (Satoshi, ink, hairline, outline vs `--secondary`)
 - [design decision record](design-decision-record.md) — CMS-wide look (moved from website design decision
   record)

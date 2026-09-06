@@ -2,11 +2,13 @@
 
 Identity, Clerk SDK mapping, tenant locators, and `/me`. Named
 identifiers:
-[docs conventions](../../../docs-conventions.md#named-identifiers).
+[docs conventions](../../docs-conventions.md#named-identifiers).
 Tables: [persistence.md](persistence.md). HTTP: [api.md](api.md).
 
-Packages: `internal/auth` (Clerk SDK → `Principal`) and
-`internal/tenancy` (SQL). `Principal` is the Go request identity after
+Packages: `internal/infrastructure/tenancy` (SQL) and
+`internal/infrastructure/tenancy/auth` (Clerk SDK → `Principal` plus
+Auth-mode helpers every `Register` **picks**). `Principal` is the Go
+request identity after
 `VerifySession` (`userID`, `orgID`, `platformRole`, impersonation
 `actor`). It is not a tenant, not `MeRead`, and not on HTTP.
 
@@ -39,7 +41,7 @@ Packages: `internal/auth` (Clerk SDK → `Principal`) and
 
 HTTP (same spelling in spec, Go, and tests):
 
-**`internal/auth`**
+**`internal/infrastructure/tenancy/auth`**
 
 - `VerifySession` — Clerk SDK `Sessions().Verify` →
   `Principal{userID, orgID, platformRole, actor}`. `actor` is Clerk
@@ -56,11 +58,11 @@ HTTP (same spelling in spec, Go, and tests):
   No logo row yet → name only; do not invent an owner avatar. No SQL.
   Not an HTTP function.
 
-**`internal/tenancy` HTTP**
+**`internal/infrastructure/tenancy` HTTP**
 
 - `GetMe` — `GET /v1/me`
 
-**`internal/tenancy` called from other packages**
+**`internal/infrastructure/tenancy` called from other packages**
 
 - `AttachClerkOrganization` — persist `tenants.clerk_org_id`;
   **calls** `CreateClerkOrganization` when null. Checkout and 09
@@ -110,7 +112,7 @@ Resolved once per request from one of:
 
 Not a sixth HTTP auth mode: still Clerk JWT. Only the tenant
 **lookup** changes. Auth modes:
-[HTTP conventions](../../../general-architecture/api.md).
+[HTTP conventions](../../general-architecture/api.md).
 
 Services take `tenantID` explicitly.
 

@@ -9,14 +9,14 @@ Services: `StartMediaAssetUpload`, `ConfirmMediaAssetUpload`,
 `ApproveMediaAsset`, `WriteCanonicalWebP`, `WriteImageThumbnail`.
 Tables: [persistence.md](persistence.md). DTOs and Routes:
 [api.md](api.md). `describe_image`:
-[jobs.md](../../../general-architecture/jobs.md#describe_image).
+[jobs.md](../../../infrastructure/jobs.md#describe_image).
 
 Related docs:
 
 1. [Media README](README.md)
 2. [Media persistence](persistence.md)
 3. [HTTP](api.md)
-4. [Files](../../../general-architecture/files-and-s3.md)
+4. [Files and S3](../../../infrastructure/files-and-s3.md)
 5. [Architecture and JSON standards](../../../general-architecture/backend-stack.md)
 
 ## Technical Thesis

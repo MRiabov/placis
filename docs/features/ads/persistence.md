@@ -13,7 +13,7 @@ Referenced, not owned here:
 [media library](../other/media/persistence.md)
 (`ad_image_placements.media_asset_id`),
 [leads](../other/leads/persistence.md) (attribution). LLM traces:
-[AI layer](../../general-architecture/ai-layer.md)
+[AI layer](../../infrastructure/ai/README.md)
 (`thread_kind=ads_generate` / `ads_inline_assistance`). Sensitive
 mutations also write [audit](../../general-architecture/audit.md).
 

@@ -1,22 +1,21 @@
 # Auth — persistence
 
 Clerk identity and tenant membership. Conventions:
-[persistence conventions](../../../general-architecture/persistence.md)
+[persistence conventions](../../general-architecture/persistence.md)
 (Postgres schema `auth`). Named identifiers:
-[docs conventions](../../../docs-conventions.md#named-identifiers). Go
-packages `internal/auth/` (Clerk SDK → `Principal`) and
-`internal/tenancy/` (SQL).
+[docs conventions](../../docs-conventions.md#named-identifiers). Go
+packages `internal/infrastructure/tenancy/auth/` (Clerk SDK → `Principal`) and
+`internal/infrastructure/tenancy/` (SQL).
 
 Hostnames for the live contractor website are
-[website persistence](../../website/persistence.md)
+[website persistence](../../features/website/persistence.md)
 (`website_addresses`), not this file.
 
 A tenant row is created at business lookup (`status=unactivated`). Website
-activation **upgrades** that row (`status=active`); it does not insert a
-second tenant. `/me` may return unactivated `TenantRead` after Clerk org
-attach. CMS still opens only when `status=active`. Website prefix lives on
-[website persistence](../../website/persistence.md) (`websites.website_prefix`),
-not this file.
+activation **upgrades** that row (`status=active`); it does not insert a second
+tenant. `/me` may return unactivated `TenantRead` after Clerk org attach. CMS
+still opens only when `status=active`. Website prefix lives on
+[website persistence](../../features/website/persistence.md) (`websites.website_prefix`), not this file.
 
 The only tenant↔org **1-1** is data tenant ↔ Clerk organization
 (`tenants.clerk_org_id` unique). Clerk users on a tenant (and its
@@ -46,7 +45,7 @@ Clerk org) are **1-many** (`tenant_memberships`). A Clerk user is on
   else empty until business research fills it. `country` is
   Find country at business lookup (Voice region fallback). Do **not**
   store remaining usage credit here — billing owns the AI use ledger
-  ([billing](../../billing/persistence.md)). Do **not** put Price ids
+  ([billing](../../features/billing/persistence.md)). Do **not** put Price ids
   on `tenants`. `subscription_status` stays `active` during the
   three-calendar-month non-payment window. Do **not** invent
   `SuspendTenant` or a `suspended` status. Cancelled billing is

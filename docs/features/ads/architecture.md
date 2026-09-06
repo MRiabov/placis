@@ -8,24 +8,24 @@ Named identifiers:
 
 Pipeline **Do** functions (same spelling in spec, Go, and tests):
 
-- `CreateAd` — `internal/ads/`
+- `CreateAd` — `internal/ads/generation/`
   ([01](ad-generation/pipeline/01-create-ad.md))
 - `GenerateAdDraft` — River job `ads_generate`
   ([02](ad-generation/pipeline/02-generate-ad-draft.md))
-- `ApproveAd` — `internal/ads/`
+- `ApproveAd` — `internal/ads/generation/`
   ([03](ad-generation/pipeline/03-approve-ad.md))
-- `ExportAdSet` — `internal/ads/`
+- `ExportAdSet` — `internal/ads/generation/`
   ([04](ad-generation/pipeline/04-export-ad-set.md))
 
 CMS HTTP: one function per Routes verb+noun (`ListAds`, `GetAd`,
 `UpdateAd`, `DeleteAd`, `ArchiveAd`, `UnarchiveAd`, `ListAdVariants`,
 `UpdateAdVariant`, `RewriteAdCopy`, `GetAdSet`, …). Tables:
 [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
-Prompts: `internal/ads/prompts.yaml` (`prompt_id=ads_generate` /
+Prompts: `internal/ads/generation/prompts.yaml` (`prompt_id=ads_generate` /
 `ads_inline_assistance`, same spelling as `thread_kind`).
 
-CMS assistant on Ads is `cleanup_image` only. Generate / Revise /
-rewrite stay Ads UI
+CMS assistant on Ads is `cleanup_image` only (`internal/ads/assistant/`).
+Generate / Revise / rewrite stay Ads UI
 ([assistant architecture](../assistant/architecture.md)).
 
 ## The content model

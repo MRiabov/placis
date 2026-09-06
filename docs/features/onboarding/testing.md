@@ -37,7 +37,7 @@ crawl and the LLM are faked. Worker **container** is up when **website**
 
 #### Verify
 
-UI: Find → Review → interview → wait teaser → unpaid canvas →
+UI: Find → Review → interview → wait teaser → unpaid website editor canvas →
 `/cms/website`. Handoff rows: `tenants` (`status=unactivated` after
 lookup, `status=active` after pay, same `tenant_id`);
 `onboarding_sessions` (`client_interviewing` then `activated`, token);

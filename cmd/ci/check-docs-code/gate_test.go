@@ -95,12 +95,12 @@ func TestGateAKnownRiverAndSQL(t *testing.T) {
 	}
 	c := emptyCode()
 	c.GoNameFiles["website_copy_generation"] = []string{"internal/jobs/copy.go"}
-	c.TableFiles["website_pages"] = []string{"migrations/001.sql"}
+	c.TableFiles["website_pages"] = []string{"internal/infrastructure/store/migrations/001.sql"}
 	if errs := gateA(d, c); len(errs) != 0 {
 		t.Fatalf("known: %v", errs)
 	}
 	c.GoNameFiles["invented_job"] = []string{"internal/jobs/bad.go"}
-	c.TableFiles["invented"] = []string{"migrations/002.sql"}
+	c.TableFiles["invented"] = []string{"internal/infrastructure/store/migrations/002.sql"}
 	errs := gateA(d, c)
 	if len(errs) != 2 {
 		t.Fatalf("want 2, got %v", errs)

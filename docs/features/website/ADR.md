@@ -176,9 +176,8 @@ Status: decided (2026-08-16, product owner + engineering).
 
 16. **Certifications and reviews picker is a Profile screen** —
     `/cms/certifications-and-reviews`. Picker rules, top reviews, archive, and
-    certification tables: moved to [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md)
-    (2026-08-27). Layout: that directory’s [design decision record](../business-profile/certifications-and-reviews/design-decision-record.md).
-    (2026-08-20)
+    certification tables: moved to [reviews ADR](../business-profile/reviews/ADR.md) (2026-08-27). Layout:
+    [reviews design decision record](../business-profile/reviews/design-decision-record.md). (2026-08-20)
 
     Unpin/reorder of **top reviews** used to rewrite unpublished
     `website_slot_reviews` from the current top set. (2026-08-20)
@@ -205,7 +204,7 @@ Status: decided (2026-08-16, product owner + engineering).
     (2026-08-31, later): Website does **not** own ranking. 02 keeps
     `{{reviews.N}}` and does not insert `website_slot_reviews`. 03 must not
     `update_reviews`. Hydrate / 04 read the ranked pool. Ranking is River job
-    `reviews_ranking_for_display` ([build-profile](../onboarding/pipeline/build-profile.md), [jobs](../../general-architecture/jobs.md)). Owner Content /
+    `reviews_ranking_for_display` ([build-profile](../onboarding/pipeline/build-profile.md), [jobs](../../infrastructure/jobs.md)). Owner Content /
     `update_reviews` can still override a section later.
 
     (2026-09-02): Ranking inserts `business_profile_review_rankings`. Website
@@ -409,3 +408,12 @@ Status: decided (2026-08-16, product owner + engineering).
     updates on the next 04 Website publication (or unpaid 08 Share). No
     auto-`PublishWebsite` from Details PATCH.
     [variables.md](variables.md#optional-omit). (2026-09-04)
+
+33. **Website editor canvas is not website editor workspace** — The
+    canvas is only the painted unpublished page. Workspace is every
+    editing control that is not that stage. Both the CMS website editor
+    and the onboarding website editor (Website preview) have a
+    workspace. Workspace is never a child of the canvas. Share and the
+    page switcher may sit on canvas corners; they are still workspace.
+    [frontend stack](../../general-architecture/frontend-stack.md).
+    (2026-09-06)

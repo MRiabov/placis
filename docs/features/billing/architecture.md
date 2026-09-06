@@ -24,11 +24,11 @@ HTTP (same spelling in spec, Go, and tests), `internal/billing/`:
 
 Called from other packages:
 
-- `AssertUsageCredit` — `internal/ai` **calls** this when
+- `AssertUsageCredit` — `internal/infrastructure/ai` **calls** this when
   `bill_usage=billed` (and when `bill-allow-out-of-balance` and
   remaining > 0) before the vendor call; exhausted on `billed` → **402**
   `usage_credit_exhausted`
-- `RecordAIUseSpend` — `internal/ai` **persists into**
+- `RecordAIUseSpend` — `internal/infrastructure/ai` **persists into**
   `ai_use_ledger_entries` (`entry_kind=spend`) after a vendor-hit that
   records **their usage**. Features **must not** **call** this after an
   `ai` call. Debit is `amount_eur` (dated FX from the vendor invoice
@@ -36,7 +36,7 @@ Called from other packages:
 - `BillUsageMode` / `bill_usage` —
   [glossary](../../glossary.md#billusagemode). Generic external spend
   (AI and ETL). How `ai` applies remaining 0:
-  [AI layer](../../general-architecture/ai-layer.md#billusagemode)
+  [AI layer](../../infrastructure/ai/README.md#billusagemode)
 - `ActivateSubscription` — `website_activation` **calls** this after
   `tenants.status=active`. **Persists** `billing.subscriptions` from the 09
   Checkout (`stripe_customer_id`, `stripe_subscription_id`, Pro month). Does
@@ -56,7 +56,7 @@ Called from other packages:
   HTML)
 
 Tables: [persistence.md](persistence.md). DTOs and Routes: [api.md](api.md).
-River job kinds: [jobs.md](../../general-architecture/jobs.md).
+River job kinds: [jobs.md](../../infrastructure/jobs.md).
 
 ## Stripe vs Postgres
 

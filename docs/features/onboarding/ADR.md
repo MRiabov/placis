@@ -165,6 +165,10 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     cap). Re-GET, not a second image stream. Ranked Project cards **are**
     nested `projects: []ProjectRead` on that live profile DTO, including SSE.
     Cover is `cover_media_asset_id` into the media library list.)
+    (2026-09-06): One stream, `GET /v1/onboarding/events/stream`, on
+    onboarding `api/` (Review, client interview live fill, wait teaser,
+    website preview leftover 06). `websitepreview/` is 08 share HTTP
+    only; it does not Register SSE. The contractor host is not SSE.
 
 12. **Website activation writes the strip-off website publication** — 07 already
     wrote `website_publications` **v1** (static HTML on the host,

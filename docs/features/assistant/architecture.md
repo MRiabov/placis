@@ -28,7 +28,7 @@ HTTP (same spelling in spec, Go, and tests):
 
 Text WebSocket + in-process agent loop: `StreamAssistantThread`
 (`GET /v1/assistant/thread/ws`). Job / in-process compact:
-`CompactAssistantThread` ([jobs](../../general-architecture/jobs.md)). DTOs
+`CompactAssistantThread` ([jobs](../../infrastructure/jobs.md)). DTOs
 and Routes: [api.md](api.md).
 
 ## Always in context
@@ -36,25 +36,30 @@ and Routes: [api.md](api.md).
 - Live business profile. Details is not a third registry: `update_details` is
   always allowed.
 - Product knowledge: owner-facing markdown compiled into the Go binary. Not RAG.
-  Not feature `docs/`. Not `internal/ai` (that package is `LLMProvider` +
-  threads + traces). **Exception:** both registries list the product glossary
-  (Domain + Enums + Don't say from [glossary](../../glossary.md); not Internal, not Why) so CMS
-  text, CMS Voice, and the onboarding voice guide use the same words.
+  Not feature `docs/`. Not `internal/infrastructure/ai` (that package is
+  `LLMProvider` + threads + traces). **Exception:** both registries list the
+  product glossary (Domain + Enums + Don't say from [glossary](../../glossary.md); not Internal,
+  not Why) so CMS text, CMS Voice, and the onboarding voice guide use the same
+  words.
 
 Two knowledge bases, two YAML registries (they do not share `prompts.yaml`):
 
-- CMS: `internal/assistant/knowledge/cms_knowledge_base_registry.yaml` plus
-  listed markdown. `go:embed` by `internal/assistant`.
+- CMS: `internal/assistant/knowledge/knowledge_base_registry.yaml` plus
+  listed `knowledge_*.md`. `go:embed` by `internal/assistant`.
 - Onboarding:
-  `internal/onboarding/assistant/knowledge/onboarding_knowledge_base_registry.yaml`.
+  `internal/onboarding/assistant/knowledge/knowledge_base_registry.yaml`.
   Onboarding must not import `internal/assistant`.
+- Onboarding website editor:
+  `internal/onboarding/websiteeditor/knowledge/knowledge_base_registry.yaml`.
+- Ads assistant (day one stub):
+  `internal/ads/assistant/knowledge/knowledge_base_registry.yaml`.
 
-Both list the **same** product-glossary file (Domain + Enums + Don't say). That
-file lives outside `internal/assistant` so onboarding does not import it
-(`internal/knowledge/product_glossary.md`, compiled from those glossary
-sections). Voice also loads `internal/knowledge/voice_pronunciation.yaml`
-(keyterms + `replace`) at connection create — not into text `LLMProvider`
-prompts.
+Both CMS and onboarding list `knowledge_product_glossary.md` in **that**
+folder (Domain + Enums + Don't say from [glossary](../../glossary.md);
+not Internal, not Why). Voice pronunciation yaml sits in the same
+folder when that assistant has Voice. `infrastructure/ai` load/interpolate
+only. Assistants do not import each other’s knowledge folders.
+[ADR](ADR.md) 31.
 
 CMS knowledge: this pass do **not** tell the Assistant a contractor may
 have more than one website. No `open_website`. No website pointer list.
@@ -72,7 +77,7 @@ markdown land with the Go implementation; this feature specifies the contract.
 
 CMS Assistant prompt text (wrap-up notice, reject notice, Voice transcription
 notice, compaction, Voice seed prompt) lives in this feature’s `prompts.yaml`
-with `{{var}}` / `{{aaa.bbb}}` slots, not in Go. [AI layer](../../general-architecture/ai-layer.md).
+with `{{var}}` / `{{aaa.bbb}}` slots, not in Go. [AI layer](../../infrastructure/ai/README.md).
 
 Keep it small enough to inject every turn. `get_context_about_screen` is live
 assistant screen context, not this copy.
@@ -164,8 +169,8 @@ Each **CMS voice-connection seed** concatenates **instructions** in this order
 Do **not** put step 6 (reject) or step 7 (STT) on Voice seed. Reject is not
 compaction and not voice-connection seed. xAI already heard audio.
 
-Onboarding seed is current step + visible fields + product glossary.
-`tools=[]`. No canvas. No step 7 (no text backup). Conversation tail uses the
+Onboarding seed is current step + visible fields + product glossary. `tools=[]`.
+No website editor canvas. No step 7 (no text backup). Conversation tail uses the
 same `[m:ss owner]` / `[m:ss assistant]` format.
 
 **128K overflow (text assembly only).** If the assembled prompt would exceed
@@ -249,11 +254,14 @@ notification + context as left-nav). Do not name the tool
 `open_website_page` navigate; they are not a substitute for ids. Do not
 add `open_website` this pass.
 
-**Follow** is always on. Canvas **navigates to** the website slot or field the
-agent is looking at. Owner cannot turn it off. Not a WS / HTTP request field. A
-request with `follow: false` → plain **400**.
+**Follow** is always on. Website editor canvas **navigates to** the website slot
+or field the agent is looking at. Owner cannot turn it off. Not a WS / HTTP
+request field. A request with `follow: false` → plain **400**.
 
 ## Tool registry vs allowed set
+
+The CMS dispatcher **calls** `website/assistant` and `ads/assistant`. It
+does not import those pipelines.
 
 **Full CMS `tools=` always loaded.** Every text turn and
 `POST /v1/assistant/voice/realtime-connection` gets the entire CMS registry.
@@ -318,14 +326,14 @@ The text WebSocket is **only** the streaming chat pipe. Do not put hydrate,
 Voice HTTP is under `/v1/assistant/voice/` (`realtime-connection`, `tool-calls`,
 `transcripts`). Voice create includes the unpublished website working copy when
 `assistant_screen` is `website_editor`. Other screens omit that working copy.
-`POST …/voice/tool-calls` still sends working copy when those tools run (canvas
-may have changed). Seed **instructions** (knowledge + profile + screen /
-compacted thread tail). Do not replay the thread as billed
+`POST …/voice/tool-calls` still sends working copy when those tools run (website
+editor canvas may have changed). Seed **instructions** (knowledge + profile +
+screen / compacted thread tail). Do not replay the thread as billed
 `conversation.item.create` items. Pin a dated xAI voice model id (not
-`grok-voice-latest`). Live Voice uses the xAI region for the **business
-country** ([voice agent](../../general-architecture/voice-agent.md)):
-`wss://{region}.api.x.ai/v1/realtime`. Set **`grok-transcribe`**, **keyterms**,
-and **`replace`** on create / one opening `session.update` (not mid-call).
+`grok-voice-latest`). Live Voice uses the xAI region for the
+**business country** ([voice agent](../../infrastructure/ai/voice-agent.md)): `wss://{region}.api.x.ai/v1/realtime`. Set
+**`grok-transcribe`**, **keyterms**, and **`replace`** on create / one opening
+`session.update` (not mid-call).
 
 Voice create has **no** `plan` / `ask_first` / `follow`. Voice is always **Ask
 first** in the run row. Instant apply is not a Voice path. No owner Plan switch
@@ -406,13 +414,14 @@ context.
 - **Voice recording (CMS only):** after Voice turns off, the browser asks for a
   signed URL, PUTs **directly to object storage** (R2 in production), then
   `…/complete`. Same `files` table as media library / website-form uploads
-  ([files](../../general-architecture/files-and-s3.md)). `visibility=private`. `owner_type=assistant_voice`, `owner_id` =
-  that voice `runs.id`. One object per voice run (`runs.recording_file_id`).
-  Empty capture (they opened and closed without audio): skip the upload. Failed
-  PUT does not fail transcripts or billing settlement. GET thread never returns
-  the URL and never plays it. Compaction does **not** delete the object or the
-  `files` row. **Onboarding does not store Voice recordings.** Persist committed
-  utterance text on `assistant.thread_items` (`body` + `offset_seconds` from
+  ([files and S3](../../infrastructure/files-and-s3.md)). `visibility=private`. `owner_type=assistant_voice`,
+  `owner_id` = that voice `runs.id`. One object per voice run
+  (`runs.recording_file_id`). Empty capture (they opened and closed without
+  audio): skip the upload. Failed PUT does not fail transcripts or billing
+  settlement. GET thread never returns the URL and never plays it. Compaction
+  does **not** delete the object or the `files` row.
+  **Onboarding does not store Voice recordings.** Persist committed utterance
+  text on `assistant.thread_items` (`body` + `offset_seconds` from
   `audio_start_ms` when present; `provider_event` jsonb). Reconstruct
   `[m:ss owner]` / `[m:ss assistant]` from typed `thread_item_kind` +
   `offset_seconds`. No `files` row, no `recording_file_id`, no onboarding
@@ -477,11 +486,11 @@ offered; that POST is the same 409.
 the LLM, is not 402. It **does** append a muted thread item (owner-facing copy:
 edits did not land) so prompt assembly step 6 has a row with no new column.
 
-Ask-first **canvas dirty keys** live in `localStorage` (tenant + thread scoped)
-so Apply can PATCH. They are not how Go knows a proposal exists. Missing
-`localStorage` is not the server gate. Stale vs live unpublished website: PATCH
-`409` `edit_history_conflict`. Apply in one tab: other tabs drop localStorage
-when they see terminal.
+Ask-first **website editor canvas dirty keys** live in `localStorage` (tenant +
+thread scoped) so Apply can PATCH. They are not how Go knows a proposal exists.
+Missing `localStorage` is not the server gate. Stale vs live unpublished
+website: PATCH `409` `edit_history_conflict`. Apply in one tab: other tabs drop
+localStorage when they see terminal.
 
 Onboarding 06 writes unpublished rows headless (River) and, while unactivated,
 appends `tool_summary` on the unpaid thread. The website preview follows via

@@ -9,7 +9,7 @@ Tables: [persistence.md](persistence.md). HTTP: [api.md](api.md). Look:
 
 ## Named identifiers
 
-HTTP (same spelling in spec, Go, and tests), `internal/projects/`:
+HTTP (same spelling in spec, Go, and tests), `internal/profile/projects/`:
 
 - `ListProjects`
 - `CreateProject`

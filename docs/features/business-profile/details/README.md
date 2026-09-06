@@ -53,7 +53,13 @@ only in the ad. Ads and the Assistant write a detail by calling
 [architecture.md](architecture.md)); the owner sees
 the shared **notification** (OK keeps it; Revert undoes that increment).
 
-How the owner reaches it: [CMS frontend](../../../general-architecture/cms/frontend.md). This screen: [frontend.md](frontend.md). Port:
-[frontend-debloat.md](frontend-debloat.md). [ADR](ADR.md). Look: [design decision record](design-decision-record.md). HTTP: [api.md](api.md).
-Architecture: [architecture.md](architecture.md). Tables: [persistence.md](persistence.md). Tests: [testing.md](testing.md).
-Projects: [projects HTTP](../projects/api.md).
+How the owner reaches it:
+[CMS frontend](../../../general-architecture/cms/frontend.md). This
+screen: [frontend.md](frontend.md). Port:
+[frontend-debloat.md](frontend-debloat.md). [ADR](ADR.md). Look:
+[design decision record](design-decision-record.md). HTTP:
+[api.md](api.md). Architecture: [architecture.md](architecture.md).
+Tables: [persistence.md](persistence.md). Tests:
+[testing.md](testing.md). Files: [business profile file
+trees](../file-trees.md). Projects: [projects
+HTTP](../projects/api.md).

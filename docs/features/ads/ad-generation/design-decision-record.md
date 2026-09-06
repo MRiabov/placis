@@ -21,7 +21,7 @@ inventing it.
    Unarchive stay. (2026-08-29)
 
 2. **Last ad lead has no divider** — Dividers sit between ad leads only. The
-   last row has no bottom line: on a narrow screen it sits on the canvas, and
+   last row has no bottom line: on a narrow screen it sits on the main area, and
    a trailing line looks like a table edge. (2026-08-29) (2026-09-04) The
    per-ad list left this screen ([ads ADR 41](ADR.md)). Dividers apply on
    **Leads** if a stacked ad-lead list is shown there; ads detail is a

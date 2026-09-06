@@ -122,7 +122,7 @@ Object and mapping: [catalog.md](catalog.md).
 5. reviews website sections keep `{{reviews.1}}` … from the ranked pool.
    Website does not rank. River job kind `reviews_ranking_for_display`
    ([build-profile](../onboarding/pipeline/build-profile.md),
-   [jobs](../../general-architecture/jobs.md)). Owner Content /
+   [jobs](../../infrastructure/jobs.md)). Owner Content /
    `update_reviews` can override a section later;
 6. validate against website component contracts, the company registry,
    marketing statements, links, website forms, SEO.
@@ -276,7 +276,7 @@ host. Not the Worker.
 
 ## Voice
 
-The assistant can be driven by the **voice agent** (see [voice-agent.md](../../general-architecture/voice-agent.md)). Audio
+The assistant can be driven by the **voice agent** (see [voice agent](../../infrastructure/ai/voice-agent.md)). Audio
 never hits Go; the browser relays `function_call` as typed HTTP; Go dispatches
 the same governed website editor tools (including `update_details`). Voice
 grants no extra authority. On `/cms/website`, empty composer turns the voice

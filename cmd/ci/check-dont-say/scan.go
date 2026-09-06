@@ -14,7 +14,6 @@ var defaultRoots = []string{
 	"docs",
 	"internal",
 	"cmd",
-	"migrations",
 	"catalog",
 	"apps/contractor-website",
 	"apps/placis-website",
@@ -128,15 +127,20 @@ func isPRDOrFrontend(path string) bool {
 func homePrefixes(home string) []string {
 	switch home {
 	case "media":
-		return []string{"docs/features/other/media", "internal/media"}
+		return []string{"docs/features/other/media", "internal/profile/media"}
 	case "leads":
 		return []string{"docs/features/other/leads", "internal/leads"}
 	case "details":
-		return []string{"docs/features/business-profile/details", "internal/details"}
+		return []string{
+			"docs/features/business-profile/details",
+			"docs/features/business-profile/reviews",
+			"internal/profile/details",
+			"internal/profile/reviews",
+		}
 	case "website":
 		return []string{"docs/features/website", "internal/website", "apps/contractor-website"}
 	case "projects":
-		return []string{"docs/features/business-profile/projects", "internal/projects"}
+		return []string{"docs/features/business-profile/projects", "internal/profile/projects"}
 	case "assistant":
 		return []string{"docs/features/assistant", "internal/assistant"}
 	default:
@@ -400,6 +404,12 @@ var extraAllowed = []string{
 	"customer.subscription",
 	"/v1/billing/catalog",
 	"openapi-fetch client",
+	"editor.go",
+	"canvas.tsx",
+	"white canvas",
+	"card canvas",
+	"wait-teaser canvas",
+	"off-canvas",
 	"google chrome",
 	"**preview**",
 	"desktop chrome",

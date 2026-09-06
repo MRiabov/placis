@@ -16,7 +16,7 @@ runs (01 already counted: scratch 01 over the cap is **429**
 `onboarding_enqueue_cap`; same attach keys do not enqueue). Copy 01 attach
 and live-profile details. For each ETL run kind that can start, persist
 into `etl.runs` and **inserts** that ETL run kind’s extract
-River job kind ([jobs](../../general-architecture/jobs.md)). Do not
+River job kind ([jobs](../../infrastructure/jobs.md)). Do not
 insert pending rows. Re-check when details change (same `enqueue_id`).
 
 Onboarding ETL run kinds: [ETL run kind triggers](pipeline/etl-run-kind-triggers.md). Never `directory`, `review`,
@@ -33,7 +33,7 @@ method on a per-ETL run kind type, and there is no shared `Extractor` /
 `extract/<etl_run_kind>.Run`; the transform worker **calls**
 `transform/<etl_run_kind>.Run`
 ([module layout](../../general-architecture/module-layout.md),
-[jobs](../../general-architecture/jobs.md)). Extract **inserts** transform after
+[jobs](../../infrastructure/jobs.md)). Extract **inserts** transform after
 the chunk’s fetch row; transform **inserts** the next extract when ETL slow
 extract chunks remain. It does not wait for the ETL run kind to finish
 before the first transform. An ETL run kind that cannot start yet is not

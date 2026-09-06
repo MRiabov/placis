@@ -37,7 +37,7 @@ Download also packs a zip.
    format.
 5. Download: zip in `files` (`visibility=private`); Response
    `AdDownloadRead.url` is the signed URL
-   ([files](../../../../general-architecture/files-and-s3.md)).
+   ([files and S3](../../../../infrastructure/files-and-s3.md)).
 
 Same approved ad always yields the same ad set and the same rendered
 images for the same source media assets.

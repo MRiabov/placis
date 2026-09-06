@@ -10,13 +10,12 @@ route redirects to `/cms/website`.
 
 HTTP: named Routes in [api.md](api.md) (`/v1/onboarding/website/editor/…`,
 `/v1/onboarding/website/assistant/…`,
-`POST /v1/onboarding/website/publications`,
-`/v1/onboarding/business-profile`).
+`POST /v1/onboarding/website/publications`, `/v1/onboarding/business-profile`).
 Package `internal/onboarding/websiteeditor` is a **policy wrapper**: same
-[website editor tools](../website/assistant.md), same text/Voice transport,
-same unpublished PATCH (`/v1/onboarding/website/editor/…`),
-same `ai.threads` overlay SQL (`thread_kind=cms_assistant`), same 20-turn loop.
-It owns auth, knowledge YAML, allowlist, instant apply, 5-prompt cap, skip 402.
+[website editor tools](../website/assistant.md), same text/Voice transport, same unpublished PATCH
+(`/v1/onboarding/website/editor/…`), same `ai.threads` overlay SQL
+(`thread_kind=cms_assistant`), same 20-turn loop. It owns auth, knowledge YAML
+(`websiteeditor/knowledge/`), allowlist, instant apply, 5-prompt cap, skip 402.
 
 CMS [`/v1/assistant/…`](../assistant/api.md) stays **403** `tenant_unactivated`
 for unactivated. Do not add unactivated branches there. Do not put this in
@@ -108,12 +107,12 @@ tools, `open_ad`. Peek (`get_website_styles`, `get_context_about_screen`): omit.
 
 `create_page` allowed for owner prompts; 06 still must not. Persist is
 `POST /v1/onboarding/website/editor/pages` (not CMS POST pages). After
-`create_page`, the canvas follows `open_website_page` (or the same path the
-website editor uses). `generate_image` in the five is `bill_usage=unbilled`.
-`update_details` allowed; persist is `PATCH /v1/onboarding/business-profile`
-(**calls** `UpdateBusinessProfile`). Revert is
-`POST /v1/onboarding/business-profile/edits/{id}/undo`. Whoever pays owns
-those profile rows. CMS `/v1/business-profile` stays **403** unactivated.
+`create_page`, the website editor canvas follows `open_website_page` (or the
+same path the website editor uses). `generate_image` in the five is
+`bill_usage=unbilled`. `update_details` allowed; persist is
+`PATCH /v1/onboarding/business-profile` (**calls** `UpdateBusinessProfile`).
+Revert is `POST /v1/onboarding/business-profile/edits/{id}/undo`. Whoever pays
+owns those profile rows. CMS `/v1/business-profile` stays **403** unactivated.
 
 ## Thread
 
@@ -125,14 +124,14 @@ tool is the backend `summary` (`Updated heading on Hero`), pencil for
 **Assistant** call. No Plan, no Ask first, no Clear context, no Apply / Reject
 pills. Default **expanded** on land so 06 `tool_summary` is visible (wait-end
 is ~15s; copy generation is usually still running). While that run is `running`,
-a six-dot spinner sits under the thread (three to four dots lit). Canvas Follow
-still snaps to the website section being edited.
+a six-dot spinner sits under the thread (three to four dots lit). Website editor
+canvas Follow still snaps to the website section being edited.
 
 ## Instant apply
 
 Server **forces instant apply** on text **and** Voice (ignore `ask_first` /
 `plan` on the wire). Exception to CMS Voice always Ask first (assistant ADR 17).
-Tool results → canvas projection →
+Tool results → website editor canvas projection →
 [`PATCH /v1/onboarding/website/editor/…`](api.md)
 (same `WebsitePageUpdate` as CMS). `create_page` persists via
 [`POST /v1/onboarding/website/editor/pages`](api.md) (same
@@ -187,33 +186,33 @@ end `running`. CMS `GET /v1/assistant/thread` lazy-creates a new empty
 ## Knowledge
 
 `internal/onboarding/websiteeditor/knowledge/` YAML + markdown (`go:embed`).
-Includes the shared product glossary. Must not import `internal/assistant`.
-Voice create still loads `internal/knowledge/voice_pronunciation.yaml`.
+Includes `knowledge_product_glossary.md`. Must not import `internal/assistant`.
+Voice create still loads Voice pronunciation yaml from this folder.
 
 ## Surfaces
 
 **`/onboarding/preview-and-edit/`** — wait-teaser landing. Signed-out: view the
-canvas from the onboarding session token; switch website pages (custom top-left
-control); hydrate the Assistant thread (`GET …/thread`); compact text composer
-visible; send and Voice need **Sign in with Google**. Signed-in unpaid: live
-canvas, nested website page list + canvas top-menu/footer website page clicks
-stay on this route, Assistant thread + compact text composer (**Voice** switch),
-sticky website-activation strip, **Share**. After **09**, redirect to
-`/cms/website`.
+website editor canvas from the onboarding session token; switch website pages
+(custom top-left control); hydrate the Assistant thread (`GET …/thread`);
+compact text composer visible; send and Voice need **Sign in with Google**.
+Signed-in unpaid: live website editor canvas, nested website page list + website
+editor canvas top-menu/footer website page clicks stay on this route, Assistant
+thread + compact text composer (**Voice** switch), sticky website-activation
+strip, **Share**. After **09**, redirect to `/cms/website`.
 
 Look: custom top-left nested control (this website preview only, titles list —
 Services nests website pages; not the CMS Website pages rail). Website page list
-and **Share** sit on the canvas corners (no reserved top row). No Find / Review
-/ Questions progress, no onboarding Back, no Find/Review Assistant. Pay is the
-sticky website-activation strip.
-Assistant starts as text (compact docked composer, max-width 32rem on a wide
-pane, in front of the website-activation strip’s lift shadow) with the CMS
-Assistant thread above it (expand / reduce; no Plan / Ask first / Clear
-context). **Voice** is a switch in that composer. Send and Voice need **Sign in
-with Google**. No owner Plan switch. Instant apply. 06 `tool_summary` fills the
-thread on land. After Sign in, Send and Voice on the look demo snap the canvas
-to the website page being edited (Follow) and apply copy. Reuse CMS Assistant
-tokens.
+and **Share** sit on the website editor canvas corners (still workspace; no
+reserved top row). No Find / Review / Questions progress, no onboarding Back, no
+Find/Review Assistant. Pay is the sticky website-activation strip. Assistant
+starts as text (compact docked composer, max-width 32rem on a wide pane, in
+front of the website-activation strip’s lift shadow) with the CMS Assistant
+thread above it (expand / reduce; no Plan / Ask first / Clear context).
+**Voice** is a switch in that composer. Send and Voice need
+**Sign in with Google**. No owner Plan switch. Instant apply. 06 `tool_summary`
+fills the thread on land. After Sign in, Send and Voice on the look demo snap
+the website editor canvas to the website page being edited (Follow) and apply
+copy. Reuse CMS Assistant tokens.
 
 **Preview website address** — after Share (or after 09 if they paid without
 sharing). Cache then R2 + strip. No website preview, no Assistant, no SPA. Pay

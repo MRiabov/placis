@@ -23,11 +23,13 @@ var docsTestingRel = map[string]string{
 	"billing/api.md":                   "features/billing/testing.md",
 	"assistant/api.md":                 "features/assistant/testing.md",
 	"onboarding/api.md":                "features/onboarding/testing.md",
-	"other/auth/api.md":                "features/other/auth/testing.md",
+	"infrastructure/tenancy/api.md":    "infrastructure/tenancy/testing.md",
 	"other/leads/api.md":               "features/other/leads/testing.md",
 	"other/media/api.md":               "features/other/media/testing.md",
 	"business-profile/details/api.md":  "features/business-profile/details/testing.md",
 	"business-profile/projects/api.md": "features/business-profile/projects/testing.md",
+	"business-profile/certifications/api.md": "features/business-profile/details/testing.md",
+	"business-profile/reviews/api.md":        "features/business-profile/details/testing.md",
 	"general-architecture/api.md":      "general-architecture/testing.md",
 }
 
