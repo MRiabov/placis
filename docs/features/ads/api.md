@@ -20,9 +20,9 @@ later; not in the DTO table.
 
 Photo cleanup is media library HTTP
 (`POST /v1/media-assets/{id}/image-edits`), then PATCH the placement.
-Approve / ad-set / download / archive mutations write `audit_events`.
-External API keys are future work and must not change the ad set
-format.
+Approve / archive / unarchive write `ad_reviews`. Download writes
+`files` (zip). External API keys are future work and must not change
+the ad set format.
 
 `CreateAd` / `GenerateAdDraft` / `ApproveAd` / `ExportAdSet`:
 [pipeline](ad-generation/pipeline/README.md).
@@ -99,9 +99,9 @@ the result would duplicate a Published ad, roll `prompt_version`.
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /v1/ads/{ad_id}/approve` | Approve | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `ads`, `ad_variants`, `ad_reviews`, `audit_events` | **calls** `ApproveAd` | `400` blockers; `409` | Ad posting |
-| `POST /v1/ads/{ad_id}/ad-set` | service caller; CMS | `AdGenerateRequest` | `AdSetRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `audit_events` | **calls** `ExportAdSet`; no zip | `409` if not `ad_ready_to_post` | Ad posting; write ad tables |
-| `POST /v1/ads/{ad_id}/download` | Download | `AdGenerateRequest` | `AdDownloadRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `files`, `audit_events` | **calls** `ExportAdSet`; signed URL | `409` if not `ad_ready_to_post` | Public URL; ad posting |
+| `POST /v1/ads/{ad_id}/approve` | Approve | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `ads`, `ad_variants`, `ad_reviews` | **calls** `ApproveAd` | `400` blockers; `409` | Ad posting |
+| `POST /v1/ads/{ad_id}/ad-set` | service caller; CMS | `AdGenerateRequest` | `AdSetRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | | **calls** `ExportAdSet`; no zip | `409` if not `ad_ready_to_post` | Ad posting; write ad tables |
+| `POST /v1/ads/{ad_id}/download` | Download | `AdGenerateRequest` | `AdDownloadRead` | `ads`, `ad_variants`, `ad_copy_variants`, `ad_image_placements`, `ad_lead_forms` | `files` | **calls** `ExportAdSet`; signed URL | `409` if not `ad_ready_to_post` | Public URL; ad posting |
 
 Worker auth does not apply. Not on the contractor website.
 
@@ -116,8 +116,8 @@ prompted it. See [03](ad-generation/pipeline/03-approve-ad.md).
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /v1/ads/{ad_id}/archive` | Archive on detail | `AdGenerateRequest` | `AdRead` | `ads` | `ads`, `ad_reviews`, `audit_events` | `status=archived`; leaves the list | `409` | Hard delete |
-| `POST /v1/ads/{ad_id}/unarchive` | Archive list Undo | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `ads`, `ad_reviews`, `audit_events` | `draft` when no approved variant, else `ad_ready_to_post` | `409` | |
+| `POST /v1/ads/{ad_id}/archive` | Archive on detail | `AdGenerateRequest` | `AdRead` | `ads` | `ads`, `ad_reviews` | `status=archived`; leaves the list | `409` | Hard delete |
+| `POST /v1/ads/{ad_id}/unarchive` | Archive list Undo | `AdGenerateRequest` | `AdRead` | `ads`, `ad_variants` | `ads`, `ad_reviews` | `draft` when no approved variant, else `ad_ready_to_post` | `409` | |
 
 ### POST /v1/ads/{ad_id}/archive
 

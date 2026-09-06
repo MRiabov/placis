@@ -334,8 +334,7 @@ placements on uploaded `media_assets`. No `frontend-3`. No Worker.
 #### Verify
 
 `GET /v1/ads/{ad_id}` shows `status=ad_ready_to_post`. **persists
-into** `ads`, `ad_variants`, `ad_reviews`, `audit_events` may
-supplement. Must not: ad posting.
+into** `ads`, `ad_variants`, `ad_reviews`. Must not: ad posting.
 
 #### Fail
 
@@ -360,7 +359,6 @@ No Worker.
 #### Verify
 
 Exercise body: `AdSetRead`. Must not: ad posting; write ad tables.
-**persists into** `audit_events` may supplement.
 
 #### Fail
 
@@ -385,8 +383,7 @@ Backend (`humatest`, Testcontainers Postgres + MinIO). Active tenant.
 #### Verify
 
 Exercise body: `AdDownloadRead.url` is a signed URL. **persists into**
-`files`, `audit_events` may supplement. Must not: public URL; ad
-posting.
+`files`. Must not: public URL; ad posting.
 
 #### Fail
 
@@ -413,7 +410,7 @@ One ad that is not archived. No `frontend-3`. No Worker.
 #### Verify
 
 `GET /v1/ads/{ad_id}` shows `status=archived`. **persists into**
-`ads`, `ad_reviews`, `audit_events` may supplement. Must not: hard
+`ads`, `ad_reviews`. Must not: hard
 delete.
 
 #### Fail
@@ -437,8 +434,7 @@ Response `AdRead`.
 #### Verify
 
 `GET /v1/ads/{ad_id}` shows `draft` when no approved variant, else
-`ad_ready_to_post`. **persists into** `ads`, `ad_reviews`,
-`audit_events` may supplement.
+`ad_ready_to_post`. **persists into** `ads`, `ad_reviews`.
 
 #### Fail
 

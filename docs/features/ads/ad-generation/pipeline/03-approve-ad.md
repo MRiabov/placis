@@ -38,7 +38,6 @@ on Routes. This step only moves the ad to **ad ready to post**.
 3. Insert `ad_reviews` (actor, transition to `ad_ready_to_post`).
 4. **calls** `ApproveMediaAsset` for `pending_review` items on this
    ad’s placements (large format preview already shown).
-5. Write `audit_events`.
 
 ## Reads
 
@@ -48,7 +47,7 @@ on Routes. This step only moves the ad to **ad ready to post**.
 ## Persist
 
 `ads.status=ad_ready_to_post`, `ad_variants.status=approved`,
-`ad_reviews`, `audit_events`, `media_assets.review_status`. Copy and
+`ad_reviews`, `media_assets.review_status`. Copy and
 placements unchanged except `ads.updated_at`.
 
 ## Fail
