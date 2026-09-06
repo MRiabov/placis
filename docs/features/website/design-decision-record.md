@@ -16,7 +16,7 @@ numbers are HTML comments so later entries keep their numbers.
    closed until a workspace item is opened), editing panel **closed** until a
    website section is selected or the **Edit** handle is used. The three
    surfaces remain canvas, workspace, editing panel; they do not all sit open at
-   once. Two-panel: no right column and no Edit handle; see 12.
+   once. Two-panel: no right column and no Edit handle; see 12. (2026-08-26)
 
 2. **Website assistant is a pinned composer, not a toolbar button** — No toolbar
    **Website assistant** control. The composer is always on, pinned to the
@@ -27,7 +27,7 @@ numbers are HTML comments so later entries keep their numbers.
    Expand / collapse from the composer chevron. Clear context is the trash icon
    on the composer. Overlay is one chat-like thread; tool calls are silent; Ask
    first Apply / Reject is bulk for the pending turn, as pills on the canvas
-   above the composer.
+   above the composer. (2026-08-26)
    - 2026-08-26: Tool names (`update_slot`, …) never appear. Each tool is a
      backend `summary` (`Updated image on Hero`), never “slot”. An LLM
      `user_description` is not required.
@@ -85,6 +85,7 @@ numbers are HTML comments so later entries keep their numbers.
    that cannot resolve **navigates to** that website section’s **Content** on
    the left. Owner copy does not say slot. A media library item on the live path
    that is not approved: Content if on the canvas; else `/cms/media`.
+   (2026-08-26)
    - 2026-08-26: Host rows and New URL stay one group of actions (open a host,
      Connect). Blockers sit after that group, not between website addresses and
      New URL. The dropdown is actions, not a status card of labels.
@@ -104,7 +105,7 @@ numbers are HTML comments so later entries keep their numbers.
    the canvas; edit the depth-2 tree in the editing-panel **Content** tab. Look
    (logo, density) is **Website styles**, not a Design tab. Workspace items stay
    website pages, media library, website styles. HTTP is still `PATCH
-   /v1/websites/{website_prefix}/editor/menus`.
+   /v1/websites/{website_prefix}/editor/menus`. (2026-08-26)
    - 2026-08-26: After 12: the same Content list, on the left, after clicking
      the bar. No media library rail item.
    - 2026-08-26: No Design tab on the editing panel. Density owner copy is
@@ -129,7 +130,7 @@ numbers are HTML comments so later entries keep their numbers.
 
 8. **The website page scrolls inside the canvas stage** — The website editor
    canvas does **not** scroll the website page: the page is clipped to the
-   stage.
+   stage. (2026-08-26)
    - 2026-08-26: The website page **does** scroll inside the canvas stage (the
      browser UI stays). The website assistant thread also scrolls.
    - 2026-08-26: Scroll room at the bottom of the website clears the website
@@ -142,7 +143,7 @@ numbers are HTML comments so later entries keep their numbers.
    **checkout** (GET with `publication_id`, then ordinary PATCH of the
    substituted projection) and a silent **website rollback** icon (live
    `latest/` only; unpublished unchanged). Assistant activity is not a website
-   version.
+   version. (2026-08-26)
    - 2026-08-26: The list is a workspace item at the bottom of the rail, not an
      editing-panel tab.
    - 2026-09-03: checkout is a Website versions control.
@@ -150,7 +151,7 @@ numbers are HTML comments so later entries keep their numbers.
 10. **Content head has no website-section picker** — Click the canvas to select.
     The head is the website section name, hide, and move up/down. No “Website
     section” dropdown and no “1 of 6” line. Up/down have browser tooltips **Move
-    website section up** / **Move website section down**.
+    website section up** / **Move website section down**. (2026-08-26)
     - 2026-08-26: Hide is an **eye**, not a switch: open = on the website,
       closed = hidden. A hidden website section stays on the canvas as a compact
       **Hidden** block so it can still be selected. It is not on the live
@@ -163,7 +164,7 @@ numbers are HTML comments so later entries keep their numbers.
     not a per-website-section tab. Pin it to the bottom of the workspace rail,
     below website pages / media library / website styles. Selecting it opens the
     workspace list like any other workspace item. Editing-panel tabs are
-    **Content** and **SEO**.
+    **Content** and **SEO**. (2026-08-26)
     - 2026-08-26: Superseded as a right-hand column: see 12.
 
 12. **Two-panel website editor** — Surfaces are the global sidebar, the
@@ -183,7 +184,7 @@ numbers are HTML comments so later entries keep their numbers.
     rail item. Attach/pick lives in Content on image select. `/cms/media` stays
     the full-screen route (Ads, Details logo, crop / focal / cleanup). Owner
     copy **website style** / **website styles** is the same singular/plural as
-    website page / website pages.
+    website page / website pages. (2026-08-26)
     - 2026-08-26: Content has no back chevron. Website pages on the rail returns
       to the pages list.
     - 2026-08-26: Pending-review AI image warning is in Content when that image
@@ -205,11 +206,11 @@ numbers are HTML comments so later entries keep their numbers.
 13. **The website editor control is Publish** — Owner copy is the verb
     **Publish** (toolbar dropdown), not the noun **website publication**.
     Blocked heading: **Publishing is blocked:**. Host status uses **Last
-    published**. Specs still say website publication for the act.
+    published**. Specs still say website publication for the act. (2026-08-26)
 
 14. **Website editor toolbar has no Home crumb** — Drop the **Home** back
     control on desktop and mobile. **Desktop / Tablet / Mobile** and **Publish**
-    stay on **one row** (title can sit above on a narrow canvas).
+    stay on **one row** (title can sit above on a narrow canvas). (2026-08-26)
     - 2026-08-26: On narrow, **Open destinations** (`PanelLeft`) sits **inline
       with the heading** (left of **Website editor**), not an extra bar and not
       on the viewport/Publish row.
@@ -221,11 +222,11 @@ numbers are HTML comments so later entries keep their numbers.
     top band. Add from all reviews, remove, reorder. Cap is the website
     component’s max (some layouts take 3, others 6 or 8). Owner copy: reviews
     **on this website section**. Product: [ADR.md](ADR.md) 16 and
-    [reviews ADR](../business-profile/reviews/ADR.md).
+    [reviews ADR](../business-profile/reviews/ADR.md). (2026-08-26)
 
 16. **Website editor canvas is narrow-first** — **Narrow (≤1100px):** Workspace
     bottom bar is **Sites only**. Website assistant default is **closed** (call
-    from bottom-right **Assistant**).
+    from bottom-right **Assistant**). (2026-08-29)
     - 2026-08-27: previously **collapsed**.
     - 2026-08-27: Canvas website-width defaults to **Mobile**. Viewport controls
       stay on `/cms/website` only.
@@ -292,9 +293,9 @@ numbers are HTML comments so later entries keep their numbers.
     certificate → active) sits on the modal, not inside Value. On-screen how-to:
     add these at GoDaddy, Porkbun, or Squarespace (where the domain already
     lives); copy Host into name/host and Value into value/points-to; do not move
-    nameservers to Placis.
+    nameservers to Placis. (2026-08-27)
 
 20. **Content image pick is Upload, not Drop files here** — Owner copy is pick
     from the media library and **Upload**. Drop onto Upload still uploads.
     Thumbs keep landscape / square / portrait ratio; dozens of photos. Same
-    thumbs as `/cms/media` and the project cover overlay.
+    thumbs as `/cms/media` and the project cover overlay. (2026-08-29)

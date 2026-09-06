@@ -12,14 +12,14 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    photo / `cms-account-trigger`). The popover includes **Usage & billing**. Not
    a left-nav peer of Sites / Ads. Hide the stub **Usage** rail item. Do not
    unhide Settings or Log out. Overlay destinations stay Sites / Profile
-   children / Ads / Leads.
+   children / Ads / Leads. (2026-08-29)
    - 2026-09-04: overlay destinations include Leads.
    - 2026-08-28: Previous: left-nav place unset; “Usage is a CMS assistant
      screen”.
 
 2. **Spend is one bar** — Current pool (including carry-over) vs spent this
    period. Filled segments colored Voice / Image / text edits. Unfilled is
-   remaining. No pie. No line items. Not our cost.
+   remaining. No pie. No line items. Not our cost. (2026-08-29)
 
 3. **Pricing clones the placis-web pricing grid** — Three self-serve cards plus
    an Enterprise plan row. Month / year toggle. Blurb + feature list. Included
@@ -27,6 +27,7 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    `app.placis.com` with no plan parameter (does not set `subscription_tier`).
    Contact sales goes to `/support/`. No Stripe on `placis.com`. Do not port
    predecessor dashboard Usage & billing copy. Don't say: build credits.
+   (2026-08-29)
    - 2026-09-03: Choose does not set `subscription_tier`.
    - 2026-08-29: Previous: included usage credit only, as a unitless count, no
      feature list.
@@ -37,18 +38,19 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
 
 4. **20% and empty share the shared notification** — Fixed bottom-right. Not the
    Details OK / Revert pair. 20% warns. Empty: **you are out of usage credit**,
-   with a path to extra usage credit.
+   with a path to extra usage credit. (2026-08-29)
 
 5. **Stopped paying navigates Publish to Usage & billing, not a notification** —
    **Publishing is blocked:** **Pay the subscription price to Publish**
    **navigates to** Usage & billing. Not the 20% / empty notification.
+   (2026-08-29)
 
 6. **Change plan is the Pricing card grid; cancel is quiet** — Under extra usage
    credit: month / year, three self-serve cards, Enterprise plan row. Same card
    layout as placis.com `/pricing/` and the placis-web pricing grid (blurb +
    feature list; included usage credit in USD). Current is marked. Checkout
    stays on this screen. **Cancel subscription** is secondary. While cancel is
-   scheduled: **Keep subscription**.
+   scheduled: **Keep subscription**. (2026-08-29)
    - 2026-08-29: Previous: compact name/price list, then included usage credit
      only with no feature list.
    - 2026-09-03, later: Change plan while `active` is deferred. Pay-again after
@@ -60,7 +62,7 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    extra usage credit. Change plan heading shares a row with month / year.
    Current card is marked; **Choose** is short. When the subscription is not
    active, **Choose** is the primary. Cancel sits after a hairline as quiet
-   text; **Keep subscription** is ink.
+   text; **Keep subscription** is ink. (2026-08-29)
    - 2026-08-29: Previous: remaining and the bar sat loose above the grid;
      Cancel was an outline button under the cards.
    - 2026-09-03, later: remaining is a large EUR figure. No month / year row.

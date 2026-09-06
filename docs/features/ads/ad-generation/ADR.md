@@ -318,7 +318,7 @@ new entries with the next number, the area, and the date.
     (`prompt`). Not the assistant chat. Not `POST /v1/ads/…/cleanup`. Reject is
     `POST /v1/media-assets/{id}/reject`. This replaces unprompted Review
     **Regenerate**. Record the owner prompt with reasoning, output, and tool
-    calls in `ai_generations`.
+    calls in `ai_generations`. (2026-08-27)
     - Previous: prompt form was inline in the field, wrapping with the
       row.
     - 2026-08-28: Short label has no AI orb.
@@ -334,7 +334,7 @@ new entries with the next number, the area, and the date.
     generic CMS card. Desktop shows both; narrow screens toggle. Placement type
     is Meta-like (Helvetica on Facebook, system UI on Instagram), not Satoshi.
     Meta `generatepreviews` iframes stay posting-time (need a Marketing API
-    creative; cannot update as the owner types).
+    creative; cannot update as the owner types). (2026-08-28)
     - 2026-08-28: Narrow Facebook | Instagram toggle uses the platform mark plus
       the name.
 
@@ -368,7 +368,7 @@ new entries with the next number, the area, and the date.
     approved variant, otherwise `ad_ready_to_post` (Creative ready). Archived
     ads leave the list. Unarchive returns the row to the list. Toast Undo is
     unarchive. `DELETE /v1/ads/{id}` stays ad draft only. Look: [design decision
-    1](design-decision-record.md).
+    1](design-decision-record.md). (2026-08-29)
 
 40. **Ideal customer profile picker is hidden** (2026-09-04) — About the ad does
     not let the owner pick or create an ideal customer profile. The look shows

@@ -10,7 +10,7 @@ decision + date) instead of silently replacing the old entry.
    Details is also opened infrequently, so they sit under **Profile**:
    **Business details** (`/cms/details`) and **Projects** (`/cms/projects`).
    Profile is a disclosure, not a destination of its own; there is no
-   `/cms/profile`. The Details screen stays.
+   `/cms/profile`. The Details screen stays. (2026-08-19)
    - 2026-08-27: moved from details ADR 2.
    - 2026-08-20: Projects is a working Projects screen, still under Profile.
      **Certifications and reviews** (`/cms/certifications-and-reviews`) is a
@@ -27,7 +27,7 @@ decision + date) instead of silently replacing the old entry.
    when both are connected). Voice is desktop-only and opens a full-screen orb
    for the client interview, not the website editor canvas orb. Placeholders
    cycle. Look: [design decision record](design-decision-record.md) 5 (moved
-   from website design decision 17).
+   from website design decision 17). (2026-08-27)
    - 2026-08-27: **`/cms` is a two-card chooser**, not a prompt Send and not a
      sidebar destination. Cards: **Do my website…** (`/cms/website`) and **Run
      my ads** (`/cms/ads`). After they pick, the rail is Sites / Profile / Ads.
@@ -45,3 +45,4 @@ decision + date) instead of silently replacing the old entry.
 3. **Usage & billing is on the account menu** — Not a left-nav peer of Sites /
    Ads / Leads. Hide the leftover Usage rail item. Settings / Log out stay
    hidden. Overlay destinations unchanged except Leads (2026-09-04).
+   (2026-08-29)

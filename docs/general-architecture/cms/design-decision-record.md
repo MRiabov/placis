@@ -17,7 +17,7 @@ inventing it.
    expanded). Navigating does not expand the rail. Collapsed, the bottom of the
    rail is the Clerk owner photo (UserButton), not initials. Nav icons: New chat
    is a message bubble; Profile is a person, not a house. Sites stays a globe;
-   Ads a megaphone; AI tools a sparkle.
+   Ads a megaphone; AI tools a sparkle. (2026-08-26)
    - 2026-08-27: moved from website design decision 1.
    - 2026-08-26: **Media library** (`/cms/media`) is a Profile child, not a
      top-level peer of Sites. Collapsed Profile still goes to Business details.
@@ -44,7 +44,7 @@ inventing it.
 2. **The yellow strip is mock-only states** — Per-screen shortcuts for reviewing
    [`apps/demo/`](../../../apps/demo/README.md) (copy-out blocked, Ask first
    pending, pages, publication, and so on). Hide with `?shot=1`. Copy-out is an
-   error, not always-on UI.
+   error, not always-on UI. (2026-08-26)
    - 2026-08-27: moved from website design decision 7.
    - 2026-08-26: Always collapsible to a **circle in the top right**; tap to
      reopen. Default **collapsed** (desktop and mobile). `?dev=1` opens it;
@@ -59,7 +59,7 @@ inventing it.
    is clipped at the CMS. Inner regions scroll only when that surface has more
    content than it can show (Details / Projects / Certifications and reviews, a
    workspace list, including Content). The retired right-hand editing panel is
-   not a scroller.
+   not a scroller. (2026-08-26)
    - 2026-08-27: moved from website design decision 8.
    - 2026-08-26: Website editor canvas scroll (website page inside the stage,
      assistant overlay pad): [website design decision
@@ -67,7 +67,7 @@ inventing it.
 
 4. **The CMS is narrow-first** — Owners use it on a small screen. A wide screen
    is extra width, not the default story. Global nav copies placis-web
-   `DashboardShell`.
+   `DashboardShell`. (2026-08-27)
    - 2026-08-27: moved from website design decision 16.
    - 2026-08-27: **Narrow (≤1100px):** a **full-screen overlay selector** covers
      `main` (labels, active fill, **Placis** + `PanelLeft` to close). No
@@ -105,7 +105,7 @@ inventing it.
    `600`), ink `#13120a`, `--secondary` `#f4f4f5`, zinc-600 idle rows,
    zinc-950/6% active fill, stone `#e7e5e4` hairline on the prompt box. Do not
    invent a second palette. Source: placis-web `globals.css` +
-   `marketingSite.ts`.
+   `marketingSite.ts`. (2026-08-27)
    - 2026-08-27: moved from website design decision 17.
    - 2026-08-27: New chat prompt is full width of the main column, max `42rem`
      (placis-web default `PlacisPromptBox`, `w-full max-w-2xl`). Do not use the
@@ -151,14 +151,14 @@ inventing it.
      1100px CMS breakpoint.
 
 6. **Owner field controls share one look** — Input, textarea, and select in The
-   CMS, onboarding, and Ads use `.cms-field-control` (look app:
-   [`apps/demo/`](../../../apps/demo/README.md) `src/styles/theme.css`). Same
-   sunken fill, radius, type, and focus ring. Leftover `.cms-careers-input` /
-   `.cms-careers-textarea` / onboarding `.field-control` are that same control.
-   Not the website assistant composer, not the New chat prompt, not the
-   contractor website form, not Ads inplace names.
-   Don't say form. Don't say component. **Why:** we have so many forms, all of
-   them use different styles; no textarea is shared between components.
+   CMS, onboarding, and Ads use `.cms-field-control` (look app: [`apps/demo/`](../../../apps/demo/README.md)
+   `src/styles/theme.css`). Same sunken fill, radius, type, and focus ring.
+   Leftover `.cms-careers-input` / `.cms-careers-textarea` / onboarding
+   `.field-control` are that same control. Not the website assistant composer,
+   not the New chat prompt, not the contractor website form, not Ads inplace
+   names. Don't say form. Don't say component. **Why:** we have so many forms,
+   all of them use different styles; no textarea is shared between components.
+   (2026-08-28)
    - 2026-08-28: Same file now holds owner buttons (`.button-primary` /
      `.button-secondary`), combobox (`.cms-combo`), field labels (13px / 450),
      and the mock-only yellow strip. Ads maps its old `.btn` look to those
@@ -170,5 +170,5 @@ inventing it.
 7. **Look work is `apps/demo/` only** — The `docs/design/` HTML archive is
    **removed**. Do not start or continue look work there. The editable look is
    [`apps/demo/`](../../../apps/demo/README.md). Specs still win when they
-   disagree with the look.
+   disagree with the look. (2026-08-29)
    - 2026-08-31: HTML archive deleted.

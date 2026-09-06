@@ -9,7 +9,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    tables live in schema `etl`. `internal/etl/` owns extract **and** transform.
    There is no root `internal/research/` and no `internal/onboarding/research`.
    Onboarding 02 only calls `StartRun` and mirrors Postgres on SSE (`etl.runs`
-   and the live business profile).
+   and the live business profile). (2026-08-27)
    - 2026-08-27, later: SSE includes live business profile writes, not only run
      status.
 
@@ -23,7 +23,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    write fetches, upsert the listing, or transform. Each ETL run kind’s extract
    and transform live in their own packages (`extract/googlemaps`,
    `transform/facebook`, …). A small worker dispatch calls those functions; it
-   does not inline them.
+   does not inline them. (2026-08-27)
    - 2026-08-27, later: StartRun orchestration only.
    - 2026-08-31: insert when the input set is met.
    - 2026-09-02: no `transform/photo`; `DescribeImage` inserts
@@ -35,7 +35,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    metadata (Instagram handle / Instagram user, Facebook page / handle, Maps
    `place_id`) plus `raw` jsonb. No single mixed `etl.fetches` dump. No `raw` on
    listing / profile / post live rows. A unifying `{id, type}` pointer table is
-   not in this slice.
+   not in this slice. (2026-08-27)
    - 2026-08-30: `etl.sources` is live extract **identity** — `source_kind` +
      natural key — not mixed fetches and not `raw`. Fetches stay one table per
      extract type. Live extract rows fk `source_id`. Project skip is
@@ -58,6 +58,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    posts, Instagram profile / posts live on the business profile (today’s
    `details` schema) and that profile’s media library items. `etl` keeps raw
    fetches, runs, and the Google Maps listing (hours / reviews on `place_id`).
+   (2026-08-27)
    - 2026-09-02: photo kind is `logo` / `photo` on `DescribeImage`, not a 5-way
      ETL classifier.
    - 2026-09-04: schema is `business_profile`, not `details`.
@@ -69,7 +70,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    scheduled; Facebook URL; Instagram handle). Company registry / existing-site
    API extracts later. Website crawl, trade registry, and Parallel stay
    first-run (onboarding 02). Website activation implies this refresh; online
-   research consent covers it.
+   research consent covers it. (2026-08-27)
    - 2026-08-31, later: scheduled Maps only if `place_id` exists.
 
 7. **Increment is natural-key upsert** — No watermark table. A scheduled extract
@@ -77,19 +78,19 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
    already have. A run may insert several fetch rows (ETL fast extract, then ETL
    slow extract chunks). Retry of the same run reuses a fetch that already
    landed for that chunk; it does not skip remaining chunks. A scheduled run
-   does not skip extract.
+   does not skip extract. (2026-08-27)
    - 2026-08-27, later: several fetches per run, retry per chunk.
 
 8. **Transform uses the same profile-update rules as onboarding** — New reviews
    / posts / photos land. Empty fields fill. A disagreeing owner-typed value is
    a research conflict on Details, not a silent overwrite. Transform runs on
    each extract chunk as it arrives; do not wait for ETL slow extract or
-   `status=succeeded`.
+   `status=succeeded`. (2026-08-27)
    - 2026-08-27, later: per chunk, not per ETL run kind done.
 
 9. **Later: rename schema `details`** — Details the screen is a subset of the
    business profile. Rename Postgres schema `details` to `business_profile` or
-   `profile` in a later slice. Do not rename it in this docs pass.
+   `profile` in a later slice. Do not rename it in this docs pass. (2026-08-27)
    - 2026-09-04: Renamed to `business_profile`. Details remains the screen.
      Projects already lived in this namespace.
 
@@ -116,7 +117,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     checklist from the ETL fast extract, then more as ETL slow extract runs. Web
     search is not instant; a new empty `place_id` or URL is a detail that starts
     Maps / crawl in the same enqueue. ETL fast extract / ETL slow extract live
-    in the per-source package, not `StartRun`.
+    in the per-source package, not `StartRun`. (2026-08-27)
     - 2026-08-30: website crawl ETL slow extract is a parallel remainder extract
       after the homepage, not a serial tens-of-seconds walk. Maps scrape
       remainder is unchanged.
@@ -131,6 +132,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     (`website_crawl_extract` / `website_crawl_html`). Apify stands in for the
     crawled HTML when GET fails. Project skip lives on
     `etl.llm_source_to_project_classifications`, not on crawl HTML URLs.
+    (2026-08-30)
     - 2026-08-30, later: two crawl sources; Project skip off the HTML URL row.
 
 13. **Written rows cite extracts through typed junctions** — `source_id` is
@@ -138,7 +140,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     cite **at least one** `etl.sources` id (`business_profile_edit_sources`,
     `project_sources`, `imported_media_sources`). Owner / client interview
     writes have no junction rows. Do not use a generic `table.column` field map.
-    `origin` stays the product origin.
+    `origin` stays the product origin. (2026-08-30)
 
 14. **Onboarding business research is ETL run kind triggers; ETL run kinds are
     adapters** — 02 never passes `directory`, `review`, or `photo`. Scrape is
@@ -178,7 +180,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     record and Maps autocomplete Read. It does not upsert
     `etl.google_maps_listings` or insert fetch rows. Those attach values are
     details. 02 does not copy them onto pending sibling runs. Company registry
-    `etl.sources` rows are inserted by 01, not by an ETL run kind.
+    `etl.sources` rows are inserted by 01, not by an ETL run kind. (2026-08-31)
     - 2026-08-31, later: identity keys, not sibling key-passing.
     - 2026-08-31, later: details, not identity keys.
 
@@ -186,3 +188,4 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     classifier (`hero` / `project` / `service` / `founder`). There is no
     `etl.photo_classifications` table and no `etl_photo_classify` thread.
     Transform attaches imported files and **inserts** `describe_image`.
+    (2026-09-02)

@@ -15,23 +15,25 @@ inventing it.
    inset photo, 2-up on a wide screen, one column on narrow (1100px). Copy is
    website title + description, not ads meta or performance. The whole card is
    the hit. No controls on the card. The list uses the same centered 960px
-   column as Ads.
+   column as Ads. (2026-08-29)
 
 2. **Edits live on `/cms/projects/new` and `/cms/projects/{id}`** — Cover pick,
    title, description, Archive. **Add project** in the list heading opens
-   `/cms/projects/new` empty. Persist on click-off.
+   `/cms/projects/new` empty. Persist on click-off. (2026-08-29)
 
 3. **Archive is not delete** — Outline **Archive** on `/cms/projects/{id}`.
    Collapsed **Archive** on the list (chevron, default collapsed) to Unarchive.
+   (2026-08-29)
 
 4. **Empty is empty** — Heading, lede, **Add project**. No demo jobs.
+   (2026-08-29)
 
 5. **No Profile eyebrow or pill** — No compact rows, no extra photos per
-   project, no source of the photo on the card.
+   project, no source of the photo on the card. (2026-08-29)
 
 6. **Writing is Ads AI orbs** — 44px sparkle + required prompt overlay on title
    and description at `/cms/projects/{id}`. Not Voice. Not the website assistant
-   overlay. Cover is Pick from the media library.
+   overlay. Cover is Pick from the media library. (2026-08-29)
    - 2026-08-29, later: say **inline AI assistance** and Sparkles icon; not orb
      / sparkle as product nouns. Cover stays pick.
    - 2026-08-29, later: **select to edit inline AI assistance** on a description
@@ -39,14 +41,14 @@ inventing it.
 
 7. **Description patches are Ask first** — Inline diff of **all** unapproved
    hunks (red deletion, green insertion) until **Apply** / **Reject**. A further
-   orb adds a hunk. Do not paint **Not applied**.
+   orb adds a hunk. Do not paint **Not applied**. (2026-08-29)
    - 2026-08-29, later: a further inline AI assistance run adds a hunk.
 
 8. **Cover overlay thumbs keep their ratio** — Same thumbs as `/cms/media`:
    landscape, square, and portrait; 2 columns on a narrow screen; 3 then 4 on a
    wide screen when there are more than ten. Dozens of photos. **Upload** is the
-   tile, not a drop prompt.
+   tile, not a drop prompt. (2026-08-29)
 
 9. **Project draft until Approve** — List badge **Project draft**. Approve on
    `/cms/projects/{id}` (`POST /v1/projects/{id}/approve`). Unarchive returns a
-   project draft.
+   project draft. (2026-08-29)

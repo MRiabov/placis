@@ -6,9 +6,10 @@ decision + date) instead of silently replacing it.
 ## Decisions
 
 1. **Closed sets are check constraints, not Postgres enums** — Persist a closed
-   string set as `text` plus `CHECK (col IN (…))`. Do not use `CREATE TYPE … AS
-   ENUM`. A new label replaces the check, the docs list, and the Go `StrEnum`.
-   After rows no longer use a label, drop it from those three places.
+   string set as `text` plus `CHECK (col IN (…))`. Do not use
+   `CREATE TYPE … AS ENUM`. A new label replaces the check, the docs list, and
+   the Go `StrEnum`. After rows no longer use a label, drop it from those three
+   places. (2026-08-30)
 
    Why: Postgres has no `DROP VALUE`. Native enums (and sqlc types generated
    from them) keep every retired label forever and bloat the code with old
@@ -18,7 +19,7 @@ decision + date) instead of silently replacing it.
    config struct (`internal/infrastructure/config`). Default lives on the field.
    Flip is a Railway variable or local env, then process restart. Do not use a
    remote flag service, a Postgres table, HTTP, or per-tenant targeting. Not
-   usage credit. Named flags: [feature flags](../infrastructure/config.md).
+   usage credit. Named flags: [feature flags](../infrastructure/config.md). (2026-09-02)
 
    Why: first-upload auto-cleanup is expensive and untrusted; we need a
    process-wide default-off gate. The stack already validates env once at
@@ -34,7 +35,7 @@ decision + date) instead of silently replacing it.
    authority is each feature’s `frontend.md`. Withdrawn: the `frontend-2` port
    and every `frontend-debloat.md` keep list. [frontend
    stack](frontend-stack.md). Index:
-   [planning/frontend-debloat.md](../planning/frontend-debloat.md).
+   [planning/frontend-debloat.md](../planning/frontend-debloat.md). (2026-09-05)
 
    Why: the useful code to technical debt ratio is about 10/90. A port would
    still rewrite predecessor OpenAPI types, dumped predecessor CSS, Don’t-say
@@ -67,7 +68,7 @@ decision + date) instead of silently replacing it.
    `details/`. Outward Dos live in `service.go` until ~800. Website tools:
    `website/assistant/`. Ads tools: `ads/assistant/`. No `internal/jobs/`. Go
    website has no `content/` package; day-one files are `editor.go` and
-   `publications.go`. Trees: [module layout](module-layout.md).
+   `publications.go`. Trees: [module layout](module-layout.md). (2026-09-06)
 
 5. **`httpapi` is mux only** — chi, error mapping, `GET /v1/health`, `GET
    /openapi.json`, and calls to feature `Register` / `RegisterWorkers`. Features
@@ -76,16 +77,16 @@ decision + date) instead of silently replacing it.
    sqlc. Never the reverse. Every huma `Register` **picks** an auth helper in
    `infrastructure/tenancy/auth/` matching [HTTP conventions](api.md) **Auth
    modes**. It does not re-verify Clerk. Do not invent extra mode names. [module
-   layout](module-layout.md).
+   layout](module-layout.md). (2026-09-06)
 
 6. **One pool and goose in `infrastructure/store/`; sqlc per feature** — One pgx
    pool, one goose chain. SQL migrations live with `infrastructure/store/`, not
    a repo-root `migrations/` dump. `sqlc.yaml` schema is all migrations.
    Queriers live in that feature’s `store/` (including `profile/media/store/`).
    Callers **call** `profile` `service.go` (and `profile/media`); they do not
-   import another feature’s `store/`. [store](../infrastructure/store.md).
+   import another feature’s `store/`. [store](../infrastructure/store.md). (2026-09-06)
 
 7. **No schema `audit`, no `internal/audit`** — Do not invent event tables.
    Trails stay on the owning feature (`business_profile_edits`, website
    `edit_history`, `ad_reviews`, `ai.ai_generations`). Specs that still name
-   `audit_events` are a follow-up, not new identifiers. [audit](audit.md).
+   `audit_events` are a follow-up, not new identifiers. [audit](audit.md). (2026-09-06)

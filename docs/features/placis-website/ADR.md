@@ -12,19 +12,20 @@ website is
    `apps/placis-website/`, `output: 'static'`. Authors write `.astro` files. CI
    runs `astro build` and uploads `dist/`. Not hand-authored HTML files. Not
    Next.js. Not the contractor-website `@astrojs/cloudflare` adapter.
+   (2026-08-23)
 
 2. **Serve from R2, not a Worker** — GitHub Actions uploads the build to a
    dedicated R2 bucket. `placis.com` is the hostname attached to that bucket.
    There is no per-request logic on this origin, so there is no Worker, no
-   Cloudflare Pages product, no Railway, and no Vercel.
+   Cloudflare Pages product, no Railway, and no Vercel. (2026-08-23)
 
 3. **Own buckets** — `placis-website` (production) and `placis-website-staging`.
-   Not the contractor-website Worker and not its R2 `latest/` tree.
+   Not the contractor-website Worker and not its R2 `latest/` tree. (2026-08-23)
 
 4. **Canonical host is `https://placis.com`** — `www.placis.com` 301s to apex.
    This origin replaces the predecessor Next.js app on Vercel; do not keep
    Vercel’s www-canonical host or its webhook routes. Stripe and Clerk webhooks
-   move with `frontend-3` / Go.
+   move with `frontend-3` / Go. (2026-08-23)
 
 5. **Islands follow the predecessor marketing source** — The predecessor home
    hydrates in the browser because interactive islands share a file with the
@@ -35,7 +36,7 @@ website is
    build` from `GET /v1/billing/catalog`; Choose on Placis Pro plan / month goes
    to `app.placis.com`; no Stripe JS; no Worker; no year toggle). Markup only:
    news, getting-started, footer, `/support`, legal. Theme follows
-   `prefers-color-scheme` in CSS, not `next-themes`.
+   `prefers-color-scheme` in CSS, not `next-themes`. (2026-08-23)
    - 2026-08-29: Pricing island.
    - 2026-09-03: Choose does not set `subscription_tier`; bake / Placis Pro
      plan / month / no year toggle.
@@ -44,4 +45,4 @@ website is
    `/sign-in` go to `https://app.placis.com` (`/onboarding/find` and sign-in).
    Do not port OrbDemo, DustOrb, voice, enrichment, geo detection, Clerk sign-in
    / sign-up, or the dashboard. Those stay in `frontend-3`. See
-   [cloudflare.md](cloudflare.md).
+   [cloudflare.md](cloudflare.md). (2026-08-23)

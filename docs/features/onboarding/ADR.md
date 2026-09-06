@@ -102,6 +102,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
    where each detail came from and who changed it; the profile points at the
    current `business_profile_history` row. Structured identity lives in real
    columns; only genuinely polymorphic brand/contact payloads use `jsonb`.
+   (2026-08-27)
    - 2026-08-19: writers apply only field/list increments in
      `business_profile_edits` — not a `details` jsonb dump and not a full-row
      copy. The live profile is the current `business_profiles` row. Client
@@ -224,7 +225,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     interview writer tools. Activated owners **403** on onboarding routes.
     Reload during the `/onboarding/preview` wait → stay there, reconnect SSE,
     finish the **same** wait (copy done or remaining time to the original cap).
-    Reload after 07 → the host. `activated` → `/cms/website`.
+    Reload after 07 → the host. `activated` → `/cms/website`. (2026-08-23)
     - 2026-08-25: resume during wait vs after 07.
     - 2026-08-28: onboarding assistant is a guide; do not seed a writer
       interview connection.
@@ -270,7 +271,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
 17. **Whoever pays becomes the owner** — unauthenticated visitors may Clerk
     sign-in/sign-up and pay on the host. First verified Stripe
     `checkout.session.completed` wins. Later completions do not steal the
-    tenant.
+    tenant. (2026-08-25)
     - 2026-08-28: The website-activation strip CTA is **Create account**, not
       Sign in. An existing Clerk session skips to pay.
 
@@ -284,7 +285,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     accepted profile (named services → service pages). 06 must not `create_page`
     and must not invent the service list. Paste of one-per-line or
     comma-separated **service names** may split into rows deterministically. Do
-    not combine those rows with an LLM in the 15s wait.
+    not combine those rows with an LLM in the 15s wait. (2026-08-28)
 
 19. **Onboarding Details == Business details** — `/onboarding/interview` and
     `/cms/details` edit the same Details fields with the same controls and the
@@ -294,13 +295,13 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     area, no second hours picker). Allowed differences only: white `.onb-card`
     vs the Details panel; legal identity stays on Review (03) and is not
     repeated; interview may add photos, certifications, reviews, extra notes,
-    contact name, and `emergency_phone` around that Details block.
+    contact name, and `emergency_phone` around that Details block. (2026-08-28)
 
 20. **Onboarding Voice stores text, not audio** — After the voice guide ends,
     persist committed owner and assistant utterances (visible text) and
     `created_at` on each conversation item. Do not PUT a recording to object
     storage. Live audio is processed by xAI and is not kept by us. Online
-    research consent is not Voice-recording consent.
+    research consent is not Voice-recording consent. (2026-08-30)
     - 2026-08-30, later: xAI region follows the **business country** — assistant
       ADR 23. Persist Voice **`offset_seconds`** — assistant ADR 13. Glossary in
       knowledge + Voice keyterms / `replace`: assistant ADR 24.
@@ -320,7 +321,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     improvement** (Assistant on that website preview). 08 is on-demand **share**
     from that website preview (strip on). 09 may run with no prior 08: reserve
     prefix if needed, first live R2 without strip. If they already shared, 09
-    archives strip HTML and writes live v2.
+    archives strip HTML and writes live v2. (2026-08-30)
     - 2026-08-30, later: 07 is contractor copy improvement; former 07 share is
       08; former 08 activation is 09.
     - 2026-08-31: wait-end status is `preview_and_edit` — they edit on
@@ -328,14 +329,15 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
       is the **home** website page finished; other website pages generate in
       parallel. The wait cap still applies if home is not done.
 
-22. **`/me` returns unactivated `TenantRead` after Clerk org attach** — `POST
-    /v1/me/clerk-organization` may attach `tenants.clerk_org_id` without
+22. **`/me` returns unactivated `TenantRead` after Clerk org attach** —
+    `POST /v1/me/clerk-organization` may attach `tenants.clerk_org_id` without
     `status=active`. `/me.tenant` is then `TenantRead` with
     `status=unactivated`. CMS still requires `status=active`. Auth mode 3
     (active tenant) keys off `tenants.status`, not `/me.tenant` non-null. Unpaid
     website-preview PATCH and onboarding website-editor Assistant send/Voice are
     Clerk JWT + unactivated tenant on the app origin (not a sixth auth mode).
     Onboarding session token may GET unpublished website; it must not PATCH.
+    (2026-08-30)
     - 2026-09-03: attach is checkout / `AttachClerkOrganization`, not `POST
       /v1/me/clerk-organization`. See ADR 25.
 
@@ -343,6 +345,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     `tenants.status=active`, complete `ai.threads` `thread_kind=cms_assistant`
     `current` and end `running`. CMS GET lazy-creates a new empty `current`. Do
     not migrate unpaid items onto CMS. Leftover 06 continues as River-only.
+    (2026-08-30)
     - 2026-08-30, later: numbered 09 after 07 contractor copy improvement.
 
 24. **Contractor copy improvement is pipeline 07** — Wait-end on
@@ -350,7 +353,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     generated copy with Assistant (five unpaid prompts, instant apply). Distinct
     from 06 automatic website copy generation (the River job) and from 08 share
     (R2). 09 does not wait for more prompts. HTTP:
-    [website-editor.md](website-editor.md).
+    [website-editor.md](website-editor.md). (2026-08-30)
     - 2026-09-05: unpaid `create_page` persists via `POST
       /v1/onboarding/website/editor/pages` (**calls** `CreateWebsitePage`).
       Unpaid `update_details` persists via `PATCH
@@ -371,6 +374,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     There is no `POST /v1/me/clerk-organization`. ADR 22 still holds: `/me` may
     return unactivated `TenantRead` after attach — attach is checkout, not that
     POST. Tenant ↔ Clerk org is 1-1; Clerk users on that tenant are 1-many.
+    (2026-09-02)
     - 2026-09-02, later: `MeRead` and checkout return `clerk_org_id` (not
       `pending_clerk_org_id`). Frontend `setActive` from that id when the Clerk
       session has no org yet.
@@ -380,17 +384,17 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     `clerk_org_id` null. Do **not** store `website_prefix` on `tenants`.
     **Select and copy website template** inserts `websites` and reserves
     `websites.website_prefix` in that transaction. Preview website address and
-    Website activation skip reserve if already set.
+    Website activation skip reserve if already set. (2026-09-03)
 
 27. **`onboarding_sessions.website_id`** — The onboarding session points at the
     website Select and copy website template inserted. Unpaid website editor
     HTTP stays `/v1/onboarding/website/editor/…` (no id in the path) and uses
-    that fk.
+    that fk. (2026-09-03)
 
 28. **Website activation publishes the onboarding website only** — 09
     **PublishWebsite** is the onboarding website (earliest `websites.created_at`
     on that tenant; strip off). Must not walk every website. Two websites at
-    activation should not happen; the rule still holds.
+    activation should not happen; the rule still holds. (2026-09-03)
 
 29. **`browser_safety_session_id` caps Find lookup** —
     `BusinessLookupCreate.browser_safety_session_id` is a UUID the browser
@@ -398,7 +402,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     the 6th is **429** `browser_safety_cap` (no tenant). Easily bypassable
     (clear site data). Not IP. Not the onboarding session token. Per-tenant
     5-enqueue `StartRun` stays a silent skip on `PUT /v1/onboarding/sources`. No
-    `research_wait_until` on DTOs, SSE, or Review.
+    `research_wait_until` on DTOs, SSE, or Review. (2026-09-04)
     - 2026-09-05: drop the second `localStorage` id. Throttle is the 02
       `enqueue_id` cap on this token: scratch 01 with different attach keys over
       the cap is **429** `onboarding_enqueue_cap`; same attach keys are safe to
