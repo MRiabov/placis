@@ -113,7 +113,7 @@ function intro(
 
 function testimonialsSection(): PublicSiteSection {
   return {
-    component: "public.proof.testimonials",
+    component: "public.reviews.cards",
     props: {
       title: "What our customers are saying about us",
       items: testimonials,

@@ -1,32 +1,48 @@
 {
-  "id": "public.proof.leadership_grid",
+  "id": "public.content.leadership_grid",
   "aliases": [],
   "schema_version": 1,
   "display_name": "Leadership Grid",
-  "family": "proof",
+  "family": "content",
   "variant": "leadership_grid",
   "props_schema": {
     "type": "object",
     "properties": {
-      "anchor_id": { "type": "string" },
-      "title": { "type": "string" },
+      "anchor_id": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
       "items": {
         "type": "array",
         "items": {
           "type": "object",
           "properties": {
-            "name": { "type": "string" },
-            "role": { "type": "string" },
-            "bio": { "type": "string" },
-            "image_url": { "type": "string" },
-            "alt_text": { "type": "string" }
+            "name": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            },
+            "bio": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "alt_text": {
+              "type": "string"
+            }
           },
           "additionalProperties": true
         }
       }
     },
     "additionalProperties": true,
-    "required": ["items"]
+    "required": [
+      "items"
+    ]
   },
   "editable_slots": [
     {
@@ -62,7 +78,11 @@
       "key": "columns",
       "type": "enum",
       "label": "Columns",
-      "values": ["2", "3", "4"],
+      "values": [
+        "2",
+        "3",
+        "4"
+      ],
       "default": "3"
     }
   ]

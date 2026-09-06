@@ -1,24 +1,36 @@
 {
-  "id": "public.proof.review_panel",
+  "id": "public.reviews.panel",
   "aliases": [],
   "schema_version": 1,
-  "display_name": "Review Panel",
-  "family": "proof",
-  "variant": "review_panel",
+  "display_name": "Reviews",
+  "family": "reviews",
+  "variant": "panel",
   "props_schema": {
     "type": "object",
     "properties": {
-      "anchor_id": { "type": "string" },
-      "eyebrow": { "type": "string" },
-      "title": { "type": "string" },
+      "anchor_id": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
       "items": {
         "type": "array",
-        "items": { "type": "object", "additionalProperties": true },
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        },
         "maxItems": 6
       }
     },
     "additionalProperties": true,
-    "required": ["title", "items"]
+    "required": [
+      "title",
+      "items"
+    ]
   },
   "editable_slots": [
     {

@@ -59,7 +59,7 @@
       "value": "{{images.logo}}"
     },
     {
-      "component_id": "public.proof.leadership_grid",
+      "component_id": "public.content.leadership_grid",
       "path": "items",
       "value": "{{people.leadership}}",
       "metadata": {
@@ -94,7 +94,7 @@
       }
     },
     {
-      "component_id": "public.proof.logo_strip",
+      "component_id": "public.content.logo_strip",
       "path": "items",
       "value": "{{proof.clients}}",
       "metadata": {

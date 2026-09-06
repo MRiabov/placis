@@ -1,9 +1,12 @@
 {
-  "id": "public.proof.bar",
-  "aliases": ["public.trust.v1", "public.service_summary.v1"],
+  "id": "public.content.bar",
+  "aliases": [
+    "public.trust.v1",
+    "public.service_summary.v1"
+  ],
   "schema_version": 1,
-  "display_name": "Proof Bar",
-  "family": "proof",
+  "display_name": "Bar",
+  "family": "content",
   "variant": "bar",
   "props_schema": {
     "type": "object",
@@ -24,19 +27,23 @@
             }
           },
           "additionalProperties": true,
-          "required": ["label"]
+          "required": [
+            "label"
+          ]
         },
         "minItems": 1
       }
     },
     "additionalProperties": true,
-    "required": ["items"]
+    "required": [
+      "items"
+    ]
   },
   "editable_slots": [
     {
       "key": "items",
       "type": "list",
-      "label": "Proof points",
+      "label": "Items",
       "required": false,
       "max_length": null
     }
@@ -46,7 +53,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

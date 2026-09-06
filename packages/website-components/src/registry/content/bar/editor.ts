@@ -1,3 +1,3 @@
-export const proofBarEditor = {
+export const contentBarEditor = {
   sections: ["items", "sources", "design"],
 };
