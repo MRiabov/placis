@@ -23,8 +23,8 @@ in this file (or be added here first).
 **Domain** terms are the business's own words. Use them in PRDs, user stories,
 UI, and in code when they name that concept.
 
-**Enums** are closed sets of user-facing labels. They live together under Enums,
-not as their own terms.
+**Enums** are closed sets of product-facing labels. They live together under
+Enums, not as their own terms.
 
 **Internal** terms are technical names for a *different* concept — not an alias,
 synonym, or “In code” stand-in for a Domain term. Use them in technical docs and
@@ -34,7 +34,9 @@ with Distinct from.
 
 The glossary defines what terms mean. It never prescribes — no scope, pipeline,
 validation rules, or how something is implemented. Those belong in PRDs and
-technical docs.
+technical docs. Domain, Enums, and Internal entries use Say terms. Don't-say
+words appear only in the Don't say table and in never-say / do not say listings
+— not as the surrounding vocabulary.
 
 In PRDs, user stories, and UI, a website term includes **website**. Never say
 page, section, styles, form, editor, template, draft, preview, or publish as if
@@ -62,13 +64,13 @@ name the control (crop overlay, Details field, or island).
 
 ## Domain
 
-Product and user-facing language. Use these words in PRDs, UI, and in code when
-they name that concept.
+Product-facing language. Use these words in PRDs, UI, and in code when they
+name that concept.
 
 ### Contractor
 
-The customer: a construction business that Placis researches, builds a website
-for, and makes ads for.
+A construction business that Placis researches, builds a website for, and
+makes ads for.
 
 Use this exact term in user stories (“As a contractor”) and product prose. Do
 not say “user”, “client”, or “customer”.
@@ -92,11 +94,11 @@ Distinct from: Contractor (the business).
 ### Assistant
 
 The chat and voice agent. Contractor copy is **Assistant** on every surface
-(CMS, Find / Review / interview, onboarding website editor). Specs still name
-three implementations. Product guide and doer where that implementation allows
-tools.
+(CMS, Find / Review / client interview, onboarding website editor). Specs still
+name three implementations. Product guide and doer where that implementation
+allows tools.
 
-Do not say **Website assistant**. Do not say **overlay** for this chrome. Do
+Do not say **Website assistant**. Do not say **overlay** for the Assistant. Do
 not say **guide** in contractor UI.
 
 Distinct from: Website copy generation, Inline AI assistance.
@@ -106,7 +108,7 @@ Distinct from: Website copy generation, Inline AI assistance.
 #### CMS Assistant
 
 The Assistant after website activation. HTTP `/v1/assistant/…`. Distinct from
-Onboarding assistant (Find / Review / interview) and Onboarding website
+Onboarding assistant (Find / Review / client interview) and Onboarding website
 editor.
 
 ---
@@ -122,8 +124,8 @@ own `onboarding_assistant` thread; do not call that this thread. Never say
 
 #### Assistant screen context
 
-The complete loaded state of one assistant screen (a CMS screen or an onboarding
-step’s screen). Never say **destination context**.
+What is loaded on one assistant screen (a CMS screen or an onboarding step’s
+screen). Never say **destination context**.
 
 ---
 
@@ -168,7 +170,7 @@ value). Not image cleanup or generate (no span). Distinct from Ask first
 #### Follow
 
 The canvas snapping to the website slot the agent is editing (website editor),
-or a distinct agent-edited field notice on form-like screens. Default **on**.
+or a distinct agent-edited field notice on field-list screens. Default **on**.
 The owner cannot turn it off.
 
 Distinct from: Voice agent.
@@ -259,7 +261,7 @@ Distinct from: Marketing phone.
 ### Profile
 
 The left-nav group in The CMS that holds Details, Projects, Certifications and
-reviews, and the media library. It is not a page and not a record.
+reviews, and the media library. It is not a website page and not a record.
 
 Distinct from: Business profile (the data), Details (the Business details
 screen), Profile history (how the business profile changed).
@@ -413,7 +415,7 @@ listing.
 
 ### Instagram profile
 
-The contractor’s Instagram account (handle / user). Distinct from: Google Maps
+The contractor’s Instagram account (handle). Distinct from: Google Maps
 listing, Business profile.
 
 ---
@@ -481,10 +483,10 @@ Distinct from: Onboarding session (the persisted run).
 
 #### Onboarding assistant
 
-Find / Review / interview Voice only (`/v1/onboarding/assistant/…`). Distinct
-from CMS Assistant, from Onboarding website editor, and from client interview
-(the field-filling step, not an agent writer). Contractor copy is **Assistant**.
-Architecture files may still say guide.
+Find / Review / client interview Voice only (`/v1/onboarding/assistant/…`).
+Distinct from CMS Assistant, from Onboarding website editor, and from client
+interview (the field-filling step, not an agent writer). Contractor copy is
+**Assistant**. Architecture files may still say guide.
 
 ---
 
@@ -1130,7 +1132,7 @@ Distinct from: Usage & billing (the screen in the application), Placis website
 
 ## Enums
 
-Closed sets of user-facing labels. Name the set; the values live only here —
+Closed sets of product-facing labels. Name the set; the values live only here —
 never as their own terms.
 
 ### Ad
@@ -1385,7 +1387,7 @@ A named slice of CMS Assistant text prompt assembly for the model this turn:
 **wrap-up notice**, **reject notice**, **Voice transcription notice**. Never in
 PRDs or UI. Never say **caveat**.
 
-Distinct from: Follow (owner-facing field notice), CMS **notification** chrome,
+Distinct from: Follow (owner-facing field notice), the shared **notification**,
 Voice connection **instructions**, the assembled prompt.
 
 ---
@@ -1799,7 +1801,7 @@ Ad set (the owner-facing deliverable), Ad posting (running a paid ad). Never say
 
 ## Don't say
 
-Never in product/user-facing text, PRD prose, technical docs, or code, unless a
+Never in product-facing text, PRD prose, technical docs, or code, unless a
 home marker says the unqualified word is self-understood there.
 `cmd/ci/check-dont-say` reads this `## Don't say` table: keep the
 `Don't say | Say` header, separator, data rows, and end the section at the
