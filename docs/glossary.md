@@ -23,8 +23,8 @@ in this file (or be added here first).
 **Domain** terms are the business's own words. Use them in PRDs, user stories,
 UI, and in code when they name that concept.
 
-**Enums** are closed sets of product-facing labels. They live together under
-Enums, not as their own terms.
+**Enums** are closed sets of user-facing labels. They live together under Enums,
+not as their own terms.
 
 **Internal** terms are technical names for a *different* concept — not an alias,
 synonym, or “In code” stand-in for a Domain term. Use them in technical docs and
@@ -64,8 +64,8 @@ name the control (crop overlay, Details field, or island).
 
 ## Domain
 
-Product-facing language. Use these words in PRDs, UI, and in code when they
-name that concept.
+Product and user-facing language. Use these words in PRDs, UI, and in code when
+they name that concept.
 
 ### Contractor
 
@@ -1132,7 +1132,7 @@ Distinct from: Usage & billing (the screen in the application), Placis website
 
 ## Enums
 
-Closed sets of product-facing labels. Name the set; the values live only here —
+Closed sets of user-facing labels. Name the set; the values live only here —
 never as their own terms.
 
 ### Ad
@@ -1801,7 +1801,7 @@ Ad set (the owner-facing deliverable), Ad posting (running a paid ad). Never say
 
 ## Don't say
 
-Never in product-facing text, PRD prose, technical docs, or code, unless a
+Never in product/user-facing text, PRD prose, technical docs, or code, unless a
 home marker says the unqualified word is self-understood there.
 `cmd/ci/check-dont-say` reads this `## Don't say` table: keep the
 `Don't say | Say` header, separator, data rows, and end the section at the
