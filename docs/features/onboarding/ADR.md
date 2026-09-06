@@ -148,10 +148,10 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     - 2026-08-31: 05 is select then copy the website template’s pages — website
       01 then 02. Do not say apply the website template in prose. Session status
       string stays `applying_website_template`.
-    - 2026-08-31: , later: status is `selecting_and_copying_website_template`;
+    - 2026-08-31, later: status is `selecting_and_copying_website_template`;
       fail is `select_and_copy_website_template_failed`. Wait-end is
       `preview_and_edit`, not `previewing`.
-    - 2026-08-31: , later: **superseded the LLM pick.** Website 01 does not call
+    - 2026-08-31, later: **superseded the LLM pick.** Website 01 does not call
       an LLM and does not write `thread_kind=website_template_picker`. Occupancy
       among production-ready website templates within 250 km, then hash
       tie-break; website styles are that website template’s associated website
@@ -198,7 +198,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     - 2026-08-16: activation does not do website publication; unpublished until
       CMS website publication.
     - 2026-08-25: 07 is the first website publication; 08 is v2 strip off.
-    - 2026-08-30: later: 08 is the optional first website publication; 09 is
+    - 2026-08-30, later: 08 is the optional first website publication; 09 is
       strip off; 07 is contractor copy improvement.
 
 13. **Website copy generation is async and does not block website activation** —
@@ -209,7 +209,7 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     no `create_page`.
     - 2026-08-25: 07 wait is a cap, not “issue the website preview immediately
       and live-render unpublished rows.”
-    - 2026-08-30: later: wait-end is 07 contractor copy improvement; 08 share
+    - 2026-08-30, later: wait-end is 07 contractor copy improvement; 08 share
       writes R2; 09 does not wait for 06. 06 is automatic website copy
       generation.
     - 2026-08-31: 06 is website 03. Turn 1 Worker website page render; no
@@ -225,7 +225,6 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     Reload during the `/onboarding/preview` wait → stay there, reconnect SSE,
     finish the **same** wait (copy done or remaining time to the original cap).
     Reload after 07 → the host. `activated` → `/cms/website`.
-    - 2026-08-23: 2026-08-23.
     - 2026-08-25: resume during wait vs after 07.
     - 2026-08-28: onboarding assistant is a guide; do not seed a writer
       interview connection.
@@ -322,7 +321,6 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     from that website preview (strip on). 09 may run with no prior 08: reserve
     prefix if needed, first live R2 without strip. If they already shared, 09
     archives strip HTML and writes live v2.
-    - 2026-08-30: 2026-08-30.
     - 2026-08-30, later: 07 is contractor copy improvement; former 07 share is
       08; former 08 activation is 09.
     - 2026-08-31: wait-end status is `preview_and_edit` — they edit on
@@ -338,7 +336,6 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     website-preview PATCH and onboarding website-editor Assistant send/Voice are
     Clerk JWT + unactivated tenant on the app origin (not a sixth auth mode).
     Onboarding session token may GET unpublished website; it must not PATCH.
-    - 2026-08-30: 2026-08-30.
     - 2026-09-03: attach is checkout / `AttachClerkOrganization`, not `POST
       /v1/me/clerk-organization`. See ADR 25.
 
@@ -346,7 +343,6 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     `tenants.status=active`, complete `ai.threads` `thread_kind=cms_assistant`
     `current` and end `running`. CMS GET lazy-creates a new empty `current`. Do
     not migrate unpaid items onto CMS. Leftover 06 continues as River-only.
-    - 2026-08-30: 2026-08-30.
     - 2026-08-30, later: numbered 09 after 07 contractor copy improvement.
 
 24. **Contractor copy improvement is pipeline 07** — Wait-end on

@@ -13,7 +13,7 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    a left-nav peer of Sites / Ads. Hide the stub **Usage** rail item. Do not
    unhide Settings or Log out. Overlay destinations stay Sites / Profile
    children / Ads / Leads.
-   - 2026-08-29: Leads 2026-09-04
+   - 2026-09-04: overlay destinations include Leads.
    - 2026-08-28: Previous: left-nav place unset; “Usage is a CMS assistant
      screen”.
 
@@ -27,7 +27,7 @@ Status: decided (2026-08-29). **Why** omitted unless the owner writes it.
    `app.placis.com` with no plan parameter (does not set `subscription_tier`).
    Contact sales goes to `/support/`. No Stripe on `placis.com`. Do not port
    predecessor dashboard Usage & billing copy. Don't say: build credits.
-   - 2026-08-29: Choose does not set `subscription_tier` 2026-09-03
+   - 2026-09-03: Choose does not set `subscription_tier`.
    - 2026-08-29: Previous: included usage credit only, as a unitless count, no
      feature list.
    - 2026-09-03, later: bake EUR amounts at `astro build` from `GET

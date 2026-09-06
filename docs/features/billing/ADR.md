@@ -32,7 +32,7 @@ new entries with the next number, the area, and the date.
    rolling 5-hour / weekly caps. Self-serve: Placis Pro plan / Placis Pro Plus
    plan / Placis Pro Max plan. Enterprise plan is sales-led, not a self-serve
    plan id. Usage credit is Postgres only (not Stripe).
-   - 2026-08-29: `included_usage_credit` enum 2026-09-01
+   - 2026-09-01: `included_usage_credit` enum.
 
 6. **Nested tool work during Voice is not the Voice minute** — Cleanup,
    generate_image, and ads generate during Voice spend the same usage credit and
@@ -45,8 +45,8 @@ new entries with the next number, the area, and the date.
 8. **`internal/billing` is the AI use ledger plus Usage & billing HTTP** — Extra
    usage credit checkout, Change plan / cancel / keep live here. Activation
    Stripe stays on 08. 20% / empty is frontend from `BillingUsageRead`.
-   - 2026-08-29: subscription-tier checkout on this package 2026-08-29; named
-     HTTP 2026-09-01
+   - 2026-08-29: subscription-tier checkout on this package.
+   - 2026-09-01: named HTTP.
    - 2026-09-03, later: Change plan while `active` is deferred; pay-again /
      cancel / keep stay. Activation Checkout is 09, not 08.
 

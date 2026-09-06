@@ -226,8 +226,8 @@ numbers are HTML comments so later entries keep their numbers.
 16. **Website editor canvas is narrow-first** — **Narrow (≤1100px):** Workspace
     bottom bar is **Sites only**. Website assistant default is **closed** (call
     from bottom-right **Assistant**).
-    - 2026-08-29: previously **collapsed** 2026-08-27
-    - 2026-08-29: Canvas website-width defaults to **Mobile**. Viewport controls
+    - 2026-08-27: previously **collapsed**.
+    - 2026-08-27: Canvas website-width defaults to **Mobile**. Viewport controls
       stay on `/cms/website` only.
     - 2026-08-27: Canvas widths are native: Desktop **1080**, Tablet **760**,
       Mobile **390**. If the stage is wider, Mobile and Tablet stay those widths

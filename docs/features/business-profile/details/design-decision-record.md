@@ -14,7 +14,7 @@ One number is one decision.
    contrast). Hours they pick up the marketing phone; no Appointment note.
    Persistence is still one Opens / Closes / Closed per day ([ADR.md](ADR.md)
    6). Extra time blocks were the look; drop them from the mock.
-   - 2026-08-26: extra blocks out 2026-08-27
+   - 2026-08-27: extra blocks out.
 
 2. **Opening hours is not the first Details panel** — Identity (name, story,
    logo) is first; hours sit after contact, services, and legal.

@@ -18,7 +18,7 @@ inventing it.
    rail is the Clerk owner photo (UserButton), not initials. Nav icons: New chat
    is a message bubble; Profile is a person, not a house. Sites stays a globe;
    Ads a megaphone; AI tools a sparkle.
-   - 2026-08-26: moved from website design decision 1, 2026-08-27
+   - 2026-08-27: moved from website design decision 1.
    - 2026-08-26: **Media library** (`/cms/media`) is a Profile child, not a
      top-level peer of Sites. Collapsed Profile still goes to Business details.
    - 2026-08-26: No **AI tools** left-nav item. Image cleanup is `/cms/media`
@@ -45,11 +45,11 @@ inventing it.
    [`apps/demo/`](../../../apps/demo/README.md) (copy-out blocked, Ask first
    pending, pages, publication, and so on). Hide with `?shot=1`. Copy-out is an
    error, not always-on UI.
-   - 2026-08-26: moved from website design decision 7, 2026-08-27
+   - 2026-08-27: moved from website design decision 7.
    - 2026-08-26: Always collapsible to a **circle in the top right**; tap to
      reopen. Default **collapsed** (desktop and mobile). `?dev=1` opens it;
      `?shot=1` hides it.
-   - 2026-08-26: default collapsed everywhere 2026-08-27
+   - 2026-08-27: default collapsed everywhere.
    - 2026-08-28: Ads destination states: **My ads** / **New ad** / **Review**.
      That destination is [`apps/demo/`](../../../apps/demo/README.md)
      `/cms/ads`; the same collapsible strip as onboarding.
@@ -60,7 +60,7 @@ inventing it.
    content than it can show (Details / Projects / Certifications and reviews, a
    workspace list, including Content). The retired right-hand editing panel is
    not a scroller.
-   - 2026-08-26: moved from website design decision 8, 2026-08-27
+   - 2026-08-27: moved from website design decision 8.
    - 2026-08-26: Website editor canvas scroll (website page inside the stage,
      assistant overlay pad): [website design decision
      8](../../features/website/design-decision-record.md).
@@ -68,7 +68,7 @@ inventing it.
 4. **The CMS is narrow-first** — Owners use it on a small screen. A wide screen
    is extra width, not the default story. Global nav copies placis-web
    `DashboardShell`.
-   - 2026-08-27: moved from website design decision 16, 2026-08-27
+   - 2026-08-27: moved from website design decision 16.
    - 2026-08-27: **Narrow (≤1100px):** a **full-screen overlay selector** covers
      `main` (labels, active fill, **Placis** + `PanelLeft` to close). No
      leftover `3rem` rail. Open destinations is inline with the screen heading.
@@ -106,13 +106,13 @@ inventing it.
    zinc-950/6% active fill, stone `#e7e5e4` hairline on the prompt box. Do not
    invent a second palette. Source: placis-web `globals.css` +
    `marketingSite.ts`.
-   - 2026-08-27: moved from website design decision 17, 2026-08-27
+   - 2026-08-27: moved from website design decision 17.
    - 2026-08-27: New chat prompt is full width of the main column, max `42rem`
      (placis-web default `PlacisPromptBox`, `w-full max-w-2xl`). Do not use the
      compact `19.5rem` mobile cap. Wordmark + prompt are vertically centered in
      the main column (Open destinations stays top-left on narrow). Usage copy is
      not predecessor dashboard Usage & billing copy.
-   - 2026-08-27: two-card `/cms` 2026-08-28 — [assistant design decision
+   - 2026-08-28: two-card `/cms` — [assistant design decision
      3](../../features/assistant/design-decision-record.md).
    - 2026-08-27: New chat clones dashboard `PlacisPromptBox` controls:
      **Connect** (flat hairline, white at rest, zinc-50 only while the Google /
@@ -171,4 +171,4 @@ inventing it.
    **removed**. Do not start or continue look work there. The editable look is
    [`apps/demo/`](../../../apps/demo/README.md). Specs still win when they
    disagree with the look.
-   - 2026-08-29: HTML archive deleted 2026-08-31
+   - 2026-08-31: HTML archive deleted.

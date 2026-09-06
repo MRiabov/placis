@@ -14,7 +14,7 @@ decision + date) instead of silently replacing the old entry.
    Website editor reviews Content used to show that **same set**. No
    `/cms/proof`. Layout is in [design decision
    record](design-decision-record.md).
-   - 2026-08-20: moved from website ADR 16, 2026-08-27
+   - 2026-08-27: moved from website ADR 16.
    - 2026-08-20: Unpin/reorder of **top reviews** used to rewrite unpublished
      `website_slot_reviews` from the current top set.
    - 2026-08-26: Pinning **top reviews** on this screen does **not** rewrite

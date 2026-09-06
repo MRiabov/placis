@@ -159,7 +159,7 @@ Status: decided (2026-08-27, product owner + engineering). Update an entry
     fast extract then ETL slow extract is why ETL run kinds fire in parallel
     from 01 seeds, not a job deadline. Skip remaining expensive extract when the
     only leftovers are `human` scalars.
-    - 2026-08-31: 2026-08-31 closed ETL run kind list + sibling unblock
+    - 2026-08-31: closed ETL run kind list + sibling unblock.
     - 2026-08-31, later: trade registry not gated on company registry attach;
       web search not gated on missing `place_id`
     - 2026-08-31, later: Starts-when registry replaces the Always-ETL-run-kinds

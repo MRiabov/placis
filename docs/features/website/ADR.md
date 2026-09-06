@@ -33,7 +33,7 @@ Status: decided (2026-08-16, product owner + engineering).
    Worker fills them for publication HTML and for copy-generation page renders.
    Wait teaser and CMS canvas resolve in frontend-3 + the website component
    package.
-   - 2026-08-16: Worker resolve, not Go, 2026-08-31
+   - 2026-08-31: Worker resolve, not Go.
 
 6. **The LLM drafts; the owner decides** — the **assistant** is another caller
    of the same website-editor / media-library execution the owner already uses
@@ -50,9 +50,10 @@ Status: decided (2026-08-16, product owner + engineering).
      Ads generator invoke that same tool (one implementation). Applied
      immediately; the shared notification Revert undoes that increment — not
      website Reject / `edit_history`.
-   - 2026-08-20: assistant configs + Apply/Reject terminal 2026-08-23; Ask first
-     2026-08-23; attach-before-generate + shared media-library functions
-     2026-08-24; collapse + no dim 2026-08-26; CMS assistant HTTP 2026-08-28
+   - 2026-08-23: assistant configs + Apply/Reject terminal; Ask first.
+   - 2026-08-24: attach-before-generate + shared media-library functions.
+   - 2026-08-26: collapse + no dim.
+   - 2026-08-28: CMS assistant HTTP.
    - 2026-08-31: automatic website copy generation (03) uses the same tools
      headless; no `update_reviews`; turn 1 and after each `update_slot` Go
      `POST`s `websiteRender` (website image render on the inference, not HTML).
@@ -70,7 +71,7 @@ Status: decided (2026-08-16, product owner + engineering).
    deleting profile history. Onboarding-written rows (`published_by=onboarding`,
    including 07 v1, 08 v2, and 05-retry writes) are never website-rollback
    targets.
-   - 2026-08-16: onboarding drafts excluded 2026-08-25
+   - 2026-08-25: onboarding drafts excluded.
    - 2026-09-03: no `website_publication_issues` table. The Worker publication
      response is empty. Pre-publish blockers are computed `blockers[]` on the
      editor GET.
@@ -107,7 +108,7 @@ Status: decided (2026-08-16, product owner + engineering).
     About is on the top menu and the footer (menu constant). `legal` is the page
     type for legal-document website pages such as privacy policy; Legal is a
     footer heading, not a top-menu node.
-    - 2026-08-20: about added 2026-08-31
+    - 2026-08-31: about added.
 
 11. **Website page status is `unpublished` / `archived`** — publication is
     website-level (`website_publications`). There is no page-level `approved` or
@@ -136,10 +137,9 @@ Status: decided (2026-08-16, product owner + engineering).
     in flight or has failed uses a discard confirm (`beforeunload` + in-app).
     Explicit actions remain website publication, Connect website address, and
     apply website styles.
-    - 2026-08-20: write budget 2026-08-23; no Save 2026-08-23; local-first PATCH
-      2026-08-23; click-off 2026-08-23; send timer + leave guard 2026-08-23;
-      PATCH delta 64 KB 2026-08-23; no Saving indicator + 10s copy-out error
-      2026-08-23; website edit history 2026-08-23
+    - 2026-08-23: write budget; no Save; local-first PATCH; click-off; send
+      timer + leave guard; PATCH delta 64 KB; no Saving indicator + 10s
+      copy-out error; website edit history.
     - 2026-09-03: checkout of an owner publication is `GET` with
       `publication_id` (page list and page hydrate), then ordinary PATCH of the
       substituted projection. No restore-unpublished POST. That copy-out may
@@ -177,8 +177,9 @@ Status: decided (2026-08-16, product owner + engineering).
     Hostnames, not Pages. See [cloudflare.md](cloudflare.md),
     [contractor-website-debloat.md](contractor-website-debloat.md),
     [port-contractor-website.md](port-contractor-website.md), and ADR 18–20.
-    - 2026-08-20: edge locked 2026-08-21; imported 2026-08-23; Worker write-thin
-      2026-08-23; token preview dropped 2026-08-25
+    - 2026-08-21: edge locked.
+    - 2026-08-23: imported; Worker write-thin.
+    - 2026-08-25: token preview dropped.
 
 16. **Certifications and reviews picker is a Profile screen** —
     `/cms/certifications-and-reviews`. Picker rules, top reviews, archive, and
@@ -229,8 +230,8 @@ Status: decided (2026-08-16, product owner + engineering).
     always a warning; owner approval makes it approved; website publication
     still requires approved media library items. Attach of an existing library
     photo is `update_slot`, not `generate_image`.
-    - 2026-08-20: attach vs generate 2026-08-24
-    - 2026-08-20: The warning is in Content when that image is selected, not
+    - 2026-08-24: attach vs generate.
+    - 2026-08-26: The warning is in Content when that image is selected, not
       copy on the website.
 
 18. **Live GET is Cache then R2 only** — website publication prebuilds HTML into
@@ -238,7 +239,7 @@ Status: decided (2026-08-16, product owner + engineering).
     object is 404, not a render from Postgres. Drop leftover `GET
     /v1/public/site/resolve` (it was the token website preview). Tests assert R2
     keys, not resolve.
-    - 2026-08-21: token preview dropped 2026-08-25
+    - 2026-08-25: token preview dropped.
     - 2026-09-03: live GET is that host’s tree
       (`sites/hosts/{hostname}/latest/`). The prefix tree is unpaid Preview
       website address / Website activation until the first owner publication on
@@ -253,8 +254,8 @@ Status: decided (2026-08-16, product owner + engineering).
     the strip; the site stays up (not empty). Empty host = no `latest/` yet. Do
     not advertise `{website_prefix}.placis.com`. One `latest/` tree; publication
     destinations share it (no Placis-host version vs custom-host version).
-    - 2026-08-21: `.preview.placis.com` 2026-08-23; reserved at 07 + sales host
-      2026-08-25
+    - 2026-08-23: `.preview.placis.com`.
+    - 2026-08-25: reserved at 07 + sales host.
     - 2026-08-27: **Per-host trees.** Each website address has its own R2 tree
       (`sites/hosts/{hostname}/latest/` and `…/{version_number}/`). Hosts can
       diverge. The **host row** is the Publish click (`website_address_id` on
@@ -274,13 +275,14 @@ Status: decided (2026-08-16, product owner + engineering).
     **Publish**. Shows Host and Value as separate copyable fields, with
     on-screen how-to. Do not take over the contractor’s nameservers. Apex `A`
     records need Apex Proxying (later, Enterprise).
-    - 2026-08-21: Connect modal 2026-08-23; Host/Value copy 2026-08-27
+    - 2026-08-23: Connect modal.
+    - 2026-08-27: Host/Value copy.
 
 21. **Website publication destination is selectable** —
     `{website_prefix}.preview.placis.com`, each connected website address, or
     New URL (Connect website address). Not a Worker deploy. Owner copy is
     **Publish**. See [frontend.md](frontend.md).
-    - 2026-08-23: owner copy Publish 2026-08-26
+    - 2026-08-26: owner copy Publish.
     - 2026-08-27: Publish is the **host row**, not a destination-less POST.
       `POST /publications` sends `website_address_id`. One tree per host.
 
