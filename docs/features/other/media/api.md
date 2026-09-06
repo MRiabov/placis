@@ -59,7 +59,7 @@ GET does not embed `media_assets[]`; the website editor lists via
 `GET /v1/media-assets`.
 
 `DescribeImage` is River job kind `describe_image`
-([jobs.md](../../../infrastructure/jobs.md#describe_image)).
+([jobs.md](jobs.md#describe_image)).
 
 ## DTOs
 

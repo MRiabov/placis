@@ -122,7 +122,7 @@ Object and mapping: [catalog.md](catalog.md).
 5. reviews website sections keep `{{reviews.1}}` … from the ranked pool.
    Website does not rank. River job kind `reviews_ranking_for_display`
    ([build-profile](../onboarding/pipeline/build-profile.md),
-   [jobs](../../infrastructure/jobs.md)). Owner Content /
+   [jobs](../business-profile/jobs.md)). Owner Content /
    `update_reviews` can override a section later;
 6. validate against website component contracts, the company registry,
    marketing statements, links, website forms, SEO.

@@ -61,6 +61,7 @@ A feature directory holds, as applicable:
 | `architecture.md` | the logic: content/component model, flows, states. Named services index when the feature is defined. Not Go struct bodies. |
 | `persistence.md` | that feature's tables. Defined features: `## Tables` / `## Indexes` with Columns, Enums, Uniques, Written by, Notes. Shared tables are linked, never copied. |
 | `api.md` | Canonical HTTP for this feature. Defined features: `## DTOs`, `## Routes`, `## Do not create`. Optional `###` groups under DTOs/Routes (glossary terms). Not Go struct bodies. Conventions: [general-architecture/api.md](general-architecture/api.md). |
+| `jobs.md` | River job kinds and River workflows this feature owns. Defined features: `## Workflows` (when the feature has a River workflow) and `## Jobs`. Conventions + index: [infrastructure/jobs.md](infrastructure/jobs.md). |
 | `technical-implementation.md` | pipeline, validation, testing — references `persistence.md` and `api.md`; does not re-define tables or routes |
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | **Withdrawn.** The `frontend-2` port is cancelled ([ADR](general-architecture/ADR.md) 3). Implement from `frontend.md` in `frontend-3`. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
@@ -138,9 +139,9 @@ A feature is **ill-defined** until tables, columns, routes, DTO type names and
 fields, major service functions, and **River job kind** names (and River
 workflows when the sequence is more than one River job kind) are named in
 technical docs (`persistence.md`, `api.md`, `architecture.md`, `pipeline/`,
-`testing.md`, [jobs.md](infrastructure/jobs.md)). Not in PRDs or `frontend.md`. Do not dump Go struct
-bodies or OpenAPI YAML. Every identifier is backticked, glossary-derived, and
-the same spelling in spec, code, and tests (`website.menus`, not “the menus
+`testing.md`, owning [jobs.md](infrastructure/jobs.md)). Not in PRDs or `frontend.md`. Do not dump Go
+struct bodies or OpenAPI YAML. Every identifier is backticked, glossary-derived,
+and the same spelling in spec, code, and tests (`website.menus`, not “the menus
 table”; `WebsitePageRead`, not “the page payload”). Do not say **uses** or
 **accepts**.
 
@@ -181,14 +182,16 @@ Pipeline example: `GenerateWebsiteCopy` **calls** `websiteRender`,
 
 ### Pairing rules
 
-`persistence.md` and `api.md` are the named lists. `jobs.md` is the River
-job kind list. `pipeline/` is the ordered write. Tests prove the names.
+`persistence.md` and `api.md` are the named lists. The owning feature
+`jobs.md` is the River job kind list
+([jobs](infrastructure/jobs.md) is the River index). `pipeline/` is the
+ordered write. Tests prove the names.
 Influence is one-way; do not stuff website editor GET into pipeline 01–04.
 
 1. **Pipeline only names existing lists.** A backticked table or HTTP
    path in `pipeline/` must already live in some `persistence.md` or a
    Routes **Method + path** cell. A backticked River job kind in
-   `pipeline/` must already live in [jobs.md](infrastructure/jobs.md)
+   `pipeline/` must already live in a feature [jobs.md](infrastructure/jobs.md)
    `## Jobs`. Match the path as written (`GET /v1/…`, later `/v2/…`,
    `POST /internal/…`). Do not match a raw `v1` token.
 2. **Test docs name every persistence table.** Every table in that
@@ -262,7 +265,7 @@ ETL, Details, and Projects have none. Optional `###` groups under `## DTOs` and
 [glossary.md](glossary.md)). Not mandatory — split when the
 table is hard to review. `### METHOD /path` overflow still sits under
 that group when a cell would be a paragraph. `## Do not create` stays
-one list. Persistence and `jobs.md` already overflow as
+one list. Persistence and feature `jobs.md` already overflow as
 `### \`name\``; do not add a second grouping layer there.
 
 **`persistence.md`** — intro, then only `## Tables` and `## Indexes`. Overflow
@@ -312,9 +315,12 @@ Backend flow **Exercise** lists Method+path literals. Frontend
 **Exercise** lists clicks and MSW paths. Setup states backend or
 frontend.
 
-**`jobs.md`** — intro, then only `## Workflows` and `## Jobs`. Overflow is `###`
+**`jobs.md`** — intro, then only `## Workflows` and `## Jobs`. Omit
+`## Workflows` when the feature has no River workflow. Overflow is `###`
 with a backticked River job kind under Jobs (retry, leftover, skip). No leftover
-extra `##`.
+extra `##`. [infrastructure/jobs.md](infrastructure/jobs.md) is the River
+index (conventions + pointers); it has neither `## Workflows` nor
+`## Jobs`.
 
 **`pipeline/` step files** — intro, then only:
 

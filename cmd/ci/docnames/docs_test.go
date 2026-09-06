@@ -3,6 +3,7 @@ package docnames
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -93,7 +94,7 @@ func TestParseAPIFileHealth(t *testing.T) {
 }
 
 func TestJobsTableNames(t *testing.T) {
-	src, err := os.ReadFile(filepath.Join("..", "..", "..", "docs", "infrastructure", "jobs.md"))
+	src, err := os.ReadFile(filepath.Join("..", "..", "..", "docs", "features", "website", "jobs.md"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -101,10 +102,24 @@ func TestJobsTableNames(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !names["website_copy_generation"] || !names["scheduled_etl"] {
+	if !names["website_copy_generation"] || !names["select_and_copy_website_template"] {
 		t.Fatalf("names: %v", names)
 	}
 	if names["website_generation"] {
+		t.Fatal("workflow name is not a River job kind")
+	}
+}
+
+func TestParseDocsJobNames(t *testing.T) {
+	root := filepath.Join("..", "..", "..", "docs")
+	d, err := ParseDocs(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !d.JobNames["website_copy_generation"] || !d.JobNames["scheduled_etl"] {
+		t.Fatalf("names: %v", d.JobNames)
+	}
+	if d.JobNames["website_generation"] {
 		t.Fatal("workflow name is not a River job kind")
 	}
 }
@@ -124,11 +139,10 @@ func TestParseDocsTemp(t *testing.T) {
 		t.Fatal(err)
 	}
 	jobs := "# Jobs\n\n## Workflows\n\n## Jobs\n\n| River job kind | Args |\n| --- | --- |\n| `website_copy_generation` | `tenant_id` |\n"
-	jobsPath := filepath.Join(root, "jobs.md")
-	if err := os.WriteFile(jobsPath, []byte(jobs), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(feat, "jobs.md"), []byte(jobs), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	d, err := ParseDocs(root, jobsPath)
+	d, err := ParseDocs(root)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -143,5 +157,28 @@ func TestParseDocsTemp(t *testing.T) {
 	}
 	if !d.ByFile["website/api.md"].Paths["GET /v1/website/editor/pages"] {
 		t.Fatal("rel")
+	}
+}
+
+func TestParseDocsDuplicateJob(t *testing.T) {
+	root := t.TempDir()
+	a := filepath.Join(root, "features", "a")
+	b := filepath.Join(root, "features", "b")
+	if err := os.MkdirAll(a, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(b, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	jobs := "# Jobs\n\n## Jobs\n\n| River job kind | Args |\n| --- | --- |\n| `website_copy_generation` | `tenant_id` |\n"
+	if err := os.WriteFile(filepath.Join(a, "jobs.md"), []byte(jobs), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(b, "jobs.md"), []byte(jobs), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	_, err := ParseDocs(root)
+	if err == nil || !strings.Contains(err.Error(), "already listed") {
+		t.Fatalf("want duplicate, got %v", err)
 	}
 }

@@ -7,6 +7,43 @@ import (
 	"testing"
 )
 
+func TestParseJobsCatalogIndex(t *testing.T) {
+	path := filepath.Join("..", "..", "..", "docs", "infrastructure", "jobs.md")
+	c, err := parseJobsCatalog(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(c.names) != 0 {
+		t.Fatalf("index must not list River job kinds: %v", c.names)
+	}
+	if errs := checkJobsHeadings(c); len(errs) != 0 {
+		t.Fatalf("index headings: %v", errs)
+	}
+}
+
+func TestCollectJobNames(t *testing.T) {
+	dir := t.TempDir()
+	website := filepath.Join(dir, "website", "jobs.md")
+	if err := os.MkdirAll(filepath.Dir(website), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	src := "# Jobs\n\n## Jobs\n\n| River job kind | Args |\n| --- | --- |\n| `website_copy_generation` | `tenant_id` |\n"
+	if err := os.WriteFile(website, []byte(src), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	c, err := parseJobsCatalog(website)
+	if err != nil {
+		t.Fatal(err)
+	}
+	names, errs := collectJobNames(report{jobsFiles: []jobsCatalog{c}})
+	if len(errs) != 0 {
+		t.Fatalf("errs: %v", errs)
+	}
+	if !names["website_copy_generation"] {
+		t.Fatalf("names: %v", names)
+	}
+}
+
 func TestParseJobsCatalog(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "jobs.md")

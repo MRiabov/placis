@@ -204,7 +204,7 @@ Status: decided (2026-08-16, product owner + engineering).
     (2026-08-31, later): Website does **not** own ranking. 02 keeps
     `{{reviews.N}}` and does not insert `website_slot_reviews`. 03 must not
     `update_reviews`. Hydrate / 04 read the ranked pool. Ranking is River job
-    `reviews_ranking_for_display` ([build-profile](../onboarding/pipeline/build-profile.md), [jobs](../../infrastructure/jobs.md)). Owner Content /
+    `reviews_ranking_for_display` ([build-profile](../onboarding/pipeline/build-profile.md), [jobs](../business-profile/jobs.md)). Owner Content /
     `update_reviews` can still override a section later.
 
     (2026-09-02): Ranking inserts `business_profile_review_rankings`. Website

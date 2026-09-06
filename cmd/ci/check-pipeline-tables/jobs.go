@@ -40,6 +40,9 @@ func parseJobsCatalog(path string) (jobsCatalog, error) {
 		heads: headingTitles(text),
 		names: map[string]bool{},
 	}
+	if docnames.IsJobsIndex(path) {
+		return c, nil
+	}
 	names, err := docnames.JobsTableNames(text)
 	if err != nil {
 		return c, fmt.Errorf("%s: %w", c.path, err)
@@ -49,7 +52,28 @@ func parseJobsCatalog(path string) (jobsCatalog, error) {
 }
 
 func checkJobsHeadings(c jobsCatalog) []string {
+	if docnames.IsJobsIndex(c.path) {
+		return nil
+	}
 	return leftoverHeadingErrs(c.path, filepath.Base(c.path), c.heads, jobsClosedHeads, nil)
+}
+
+func collectJobNames(r report) (map[string]bool, []string) {
+	names := map[string]bool{}
+	seen := map[string]string{}
+	var errs []string
+	for _, c := range r.jobsFiles {
+		errs = append(errs, checkJobsHeadings(c)...)
+		for n := range c.names {
+			if prev, ok := seen[n]; ok {
+				errs = append(errs, fmt.Sprintf("%s: River job kind `%s` already listed in %s", c.path, n, prev))
+				continue
+			}
+			seen[n] = c.path
+			names[n] = true
+		}
+	}
+	return names, errs
 }
 
 func checkKnownRiverJobs(docsRoot string, names map[string]bool) []string {

@@ -29,7 +29,8 @@ projects share Postgres schema `business_profile`.
 How the owner reaches them:
 [CMS frontend](../../general-architecture/cms/frontend.md) (left nav).
 Go / `frontend-3` files: [file-trees.md](file-trees.md). Media library:
-[media library file trees](../other/media/file-trees.md).
+[media library file trees](../other/media/file-trees.md). River job kind
+`reviews_ranking_for_display`: [jobs.md](jobs.md).
 
 - [sep-3-issue-list.md](sep-3-issue-list.md) — Sep 3 issue list (keep /
   doc gap / drop)
