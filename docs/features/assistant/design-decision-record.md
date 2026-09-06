@@ -16,30 +16,33 @@ owner-written; omit it rather than inventing it.
    reduce. Clear context trash while expanded. Same overlay on every CMS
    assistant screen’s main area. Plan / Ask first switches are
    **website editor only**. Placement: bottom-right of the website editor
-   workspace / overlay
-   (website design decision 18 geometry), not a full-screen takeover.
-   (2026-08-28) (2026-08-29): The **call** is the **Assistant** button (design
-   decision 11), not hunting for this Assistant. DustOrb / composer look stays
-   this Assistant once they have called. Closed until they call. Same day,
-   later: that button is bottom-right of the main pane, not top-right. Same day,
-   later (2026-08-29): do not say **overlay** for this Assistant; the product
-   term is **Assistant**. Plan / Ask first stay website editor **text**. Voice
-   is always Ask first; no owner Plan switch. Follow is always on (not an owner
-   switch).
+   workspace / overlay (website design decision 18 geometry), not a full-screen
+   takeover. (2026-08-28)
+   - 2026-08-29: The **call** is the **Assistant** button (design decision 11),
+     not hunting for this Assistant. DustOrb / composer look stays this
+     Assistant once they have called. Closed until they call.
+   - 2026-08-29, later: that button is bottom-right of the main pane, not
+     top-right.
+   - 2026-08-29, later: do not say **overlay** for this Assistant; the product
+     term is **Assistant**. Plan / Ask first stay website editor **text**. Voice
+     is always Ask first; no owner Plan switch. Follow is always on (not an
+     owner switch).
 
 2. **Look is DustOrb** — Empty field fades to the particle orb. Not website
    design decision 18’s “soft glowing circle” HTML stand-in. Not the 44px Ads
    Review rewrite orb. Canonical file: `frontend-3/src/shared/ui/DustOrb.tsx`
-   (bring across in the frontend pass). (2026-08-28) Same day, later: the look
-   app runs the particle orb from [`DustOrb.tsx`](../../../apps/demo/src/ui/DustOrb.tsx). The orb **bounces** when they
-   hover or tap it, and while they speak with it. Reduced motion: no bounce.
-   Same day, later: scale matches placis-web OrbDemo (`hover:scale-[1.03]`,
-   speaking `scale-110`, 500ms round transform). Dust recycles from the centre;
-   the cursor pulls it. Not a bounce squash. Same day, later: Voice asks for the
-   microphone and bounces the orb from owner noise level (skip `?shot=1`).
-   (2026-08-28) Same day, later: owner speech grows more particles from the
-   centre. The control does not scale up. Hover / tap still `scale-[1.03]`.
-   (2026-08-29)
+   (bring across in the frontend pass). (2026-08-28)
+   - 2026-08-28, later: the look app runs the particle orb from
+     [`DustOrb.tsx`](../../../apps/demo/src/ui/DustOrb.tsx). The orb **bounces**
+     when they hover or tap it, and while they speak with it. Reduced motion: no
+     bounce.
+   - 2026-08-28, later: scale matches placis-web OrbDemo (`hover:scale-[1.03]`,
+     speaking `scale-110`, 500ms round transform). Dust recycles from the
+     centre; the cursor pulls it. Not a bounce squash.
+   - 2026-08-28, later: Voice asks for the microphone and bounces the orb from
+     owner noise level (skip `?shot=1`).
+   - 2026-08-28, later: owner speech grows more particles from the centre. The
+     control does not scale up. Hover / tap still `scale-[1.03]`.
 
 3. **`/cms` is two cards** — **Do my website…** → `/cms/website`, **Run my ads**
    → `/cms/ads`. New chat / prompt home is gone. Not a composer, not Voice, not
@@ -47,66 +50,67 @@ owner-written; omit it rather than inventing it.
    the left nav. (2026-08-28)
 
 4. **Follow is default on** — Owner cannot turn it off. Website editor: website
-   editor canvas
-   snaps to the website slot the **agent** is editing. Field-list screens
-   (Details and other field lists): distinct agent-edited field notice (example:
-   the field reads blue). Ads copy highlight can share that notice.
+   editor canvas snaps to the website slot the **agent** is editing. Field-list
+   screens (Details and other field lists): distinct agent-edited field notice
+   (example: the field reads blue). Ads copy highlight can share that notice.
    `update_details` off Details: notification (OK / Revert), not Follow.
-   Headless 06: Follow does not apply. (2026-08-28) Same day, later
-   (2026-08-29): Follow is always on; not a request field. `follow: false` →
-   400.
+   Headless 06: Follow does not apply. (2026-08-28)
+   - 2026-08-29, later: Follow is always on; not a request field. `follow:
+     false` → 400.
 
 5. **Assistant screen switch does not reset the thread** — Overlay stays. Speech
    is not interrupted. Clicks during an in-flight answer coalesce to the screen
    they ended on; that notice rides with the **next** owner turn. (2026-08-28)
-   Same day, later (2026-08-29): say **Assistant**, not overlay.
+   - 2026-08-29, later: say **Assistant**, not overlay.
 
 6. **Onboarding launcher is bottom right, always turnable on** — Grow
    [`apps/demo/`](../../../apps/demo/README.md) `/onboarding/*`. Every onboarding screen in that look (Find,
    Review, client interview, wait teaser). Not the CMS overlay cloned onto
    onboarding. Not empty-composer-only. Not “Start voice client interview” as
    data entry. DustOrb when on. Preview website address / website-activation
-   strip stays out of this file. (2026-08-28) Same day, later: DustOrb is
-   **visible by default**, voice **off**. Cue: squiggly arrow +
-   **Click to turn on voice**. Click the orb: cue gone, play a
-   **prerecorded intro** (not the live model) while the realtime connection
-   starts; they talk after that. Close (×) hides the orb; a quieter
-   **Enable voice guide** stays. Owner-facing onboarding copy is **guide** /
-   **voice guide**, never **Assistant**. Not on the wait teaser. Mock:
-   `?guide=1` listening, no autoplay. Same day, later:
-   **The agent is on the right.** Onboarding DustOrb is bottom-right, same side
-   as the CMS voice orb. Native button paint is stripped so a click does not
-   flash a browser control. Cue sits to the left of the orb. (2026-08-28)
+   strip stays out of this file. (2026-08-28)
+   - 2026-08-28, later: DustOrb is **visible by default**, voice **off**. Cue:
+     squiggly arrow + **Click to turn on voice**. Click the orb: cue gone, play
+     a **prerecorded intro** (not the live model) while the realtime connection
+     starts; they talk after that. Close (×) hides the orb; a quieter **Enable
+     voice guide** stays. Owner-facing onboarding copy is **guide** / **voice
+     guide**, never **Assistant**. Not on the wait teaser. Mock: `?guide=1`
+     listening, no autoplay.
+   - 2026-08-28, later: **The agent is on the right.** Onboarding DustOrb is
+     bottom-right, same side as the CMS voice orb. Native button paint is
+     stripped so a click does not flash a browser control. Cue sits to the left
+     of the orb.
 
 7. **Website-editor orb size and click target** — Website-editor orb is **50vw**
-   at ≤480px (`min(50vw, 50dvh)`), **30vw** on wider viewports
-   (`min(30vw, 24rem)`). (2026-08-28) Same day, later: wider viewports are
-   `min(5.5rem, 30vw)` again (same size as the onboarding guide). ≤480px stays
-   **50vw**. Voice Apply / Reject / Switch to text mode stay a compact cluster
-   to the left of the orb; they do not stretch across the website editor canvas.
-   Same day, later: desktop / tablet **click** target is a **2.75rem circle**
-   (particle wrap stays `min(5.5rem, 30vw)`); clicks outside that circle pass
-   through to the website editor canvas. Close and Switch to text mode still
-   capture. ≤480px hit is `min(12rem, 42vw)`. (2026-08-28)
+   at ≤480px (`min(50vw, 50dvh)`), **30vw** on wider viewports (`min(30vw,
+   24rem)`). (2026-08-28)
+   - 2026-08-28, later: wider viewports are `min(5.5rem, 30vw)` again (same size
+     as the onboarding guide). ≤480px stays **50vw**. Voice Apply / Reject /
+     Switch to text mode stay a compact cluster to the left of the orb; they do
+     not stretch across the website editor canvas.
+   - 2026-08-28, later: desktop / tablet **click** target is a **2.75rem
+     circle** (particle wrap stays `min(5.5rem, 30vw)`); clicks outside that
+     circle pass through to the website editor canvas. Close and Switch to text
+     mode still capture. ≤480px hit is `min(12rem, 42vw)`.
 
-8. **Denied microphone uses the shared notification** — CMS: open the
-   composer and the Ads/Details **notification** (**Allow microphone access in
-   your browser to talk. You can keep typing.**). Revert is hidden (nothing to
-   undo). Onboarding: return to the cue (**Allow microphone access in your
-   browser**); click the orb retries. (2026-08-28) Same day, later: CMS stays
-   on Voice until they pick. Buttons are **Try again** (retry the microphone)
-   and **Switch to text mode**. Not Revert / OK. Onboarding
-   cue is unchanged. (2026-08-28)
+8. **Denied microphone uses the shared notification** — CMS: open the composer
+   and the Ads/Details **notification** (**Allow microphone access in your
+   browser to talk. You can keep typing.**). Revert is hidden (nothing to undo).
+   Onboarding: return to the cue (**Allow microphone access in your browser**);
+   click the orb retries. (2026-08-28)
+   - 2026-08-28, later: CMS stays on Voice until they pick. Buttons are **Try
+     again** (retry the microphone) and **Switch to text mode**. Not Revert /
+     OK. Onboarding cue is unchanged.
 
 9. **Prerecorded greeting / intro plays once** — Look app:
    `cms-voice-greeting.mp3` when the website-editor orb comes on;
    `onboarding-guide-intro.mp3` on guide turn-on. Silent when `?shot=1`. The
-   file plays on the first start. Starting Voice / the guide again more than
-   **5 seconds** after that play began does not replay it. (2026-08-28)
+   file plays on the first start. Starting Voice / the guide again more than **5
+   seconds** after that play began does not replay it. (2026-08-28)
 
-10. **Realtime connection waits for the microphone** — Create
-    `POST …/voice/realtime-connection` only after the microphone is granted.
-    Denied microphone never POSTs it. (2026-08-28)
+10. **Realtime connection waits for the microphone** — Create `POST
+    …/voice/realtime-connection` only after the microphone is granted. Denied
+    microphone never POSTs it. (2026-08-28)
 
 11. **CMS assistant is called from the top-right of the main pane** — Every
     screen in The CMS, including `/cms`, has a pinned top-right **Assistant**
@@ -115,26 +119,29 @@ owner-written; omit it rather than inventing it.
     in the composer. Close returns to the button. Not the onboarding
     bottom-right voice guide. Website-editor Plan / Ask first stay on
     `/cms/website` only, and only while the composer is showing. Architecture:
-    [ADR](ADR.md) 10. (2026-08-29) Same day, later: **bottom-right** of the main pane,
-    not top-right. On a narrow website editor it sits above the workspace bar.
-    Same day, later: the Voice pill is **Switch to text mode**. (2026-08-29)
+    [ADR](ADR.md) 10. (2026-08-29)
+    - 2026-08-29, later: **bottom-right** of the main pane, not top-right. On a
+      narrow website editor it sits above the workspace bar.
+    - 2026-08-29, later: the Voice pill is **Switch to text mode**.
 
 12. **Unpaid website preview Assistant is in the website editor workspace** —
     Same tokens as CMS Assistant (bottom-right **Assistant** call, then DustOrb
     / composer). Present on `/onboarding/preview-and-edit/`. Top-right is
     **Share** only. Pay is the sticky website-activation strip. No owner Plan
-    switch. Instant apply. Hidden on wait teaser. (2026-08-30) Same day, later:
-    the composer is **on** as text; **Voice** is a switch in that composer.
-    Website page list and Share float on the website editor canvas **corners**
-    (still workspace). Send and Voice need **Sign up with Google**. The field is
-    a compact docked composer, not the CMS card. (2026-08-30) Same day, later:
-    that composer stacks above the website-activation strip’s lift shadow.
-    (2026-08-30) Same day, later: on a wide pane the composer is
-    **max-width 32rem**, centered; on a narrow pane it still docks nearly full
-    width. (2026-08-30) Same day, later: the composer shows the CMS Assistant
-    thread (expand / reduce; no Plan / Ask first / Clear context). Default
-    expanded so 06 `tool_summary` is visible on land. (2026-08-30) Same day,
-    later: website page list and Share sit on the website editor canvas corners;
-    this route has no Find / Review / Questions progress and no Find/Review
-    Assistant. (2026-08-30) Same day, later: while copy generation is still
-    writing, a six-dot spinner sits under the Assistant thread. (2026-08-30)
+    switch. Instant apply. Hidden on wait teaser. (2026-08-30)
+    - 2026-08-30, later: the composer is **on** as text; **Voice** is a switch
+      in that composer. Website page list and Share float on the website editor
+      canvas **corners** (still workspace). Send and Voice need **Sign up with
+      Google**. The field is a compact docked composer, not the CMS card.
+    - 2026-08-30, later: that composer stacks above the website-activation
+      strip’s lift shadow.
+    - 2026-08-30, later: on a wide pane the composer is **max-width 32rem**,
+      centered; on a narrow pane it still docks nearly full width.
+    - 2026-08-30, later: the composer shows the CMS Assistant thread (expand /
+      reduce; no Plan / Ask first / Clear context). Default expanded so 06
+      `tool_summary` is visible on land.
+    - 2026-08-30, later: website page list and Share sit on the website editor
+      canvas corners; this route has no Find / Review / Questions progress and
+      no Find/Review Assistant.
+    - 2026-08-30, later: while copy generation is still writing, a six-dot
+      spinner sits under the Assistant thread.

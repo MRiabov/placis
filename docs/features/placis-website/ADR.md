@@ -32,18 +32,17 @@ website is
    markup. Keep as islands: TopBar (mobile nav + scroll glass), RotatingWord
    (hero trade timer), PlacisPromptBox (hero; drop Clerk `useAuth` / paywall;
    submit and Try now / Login go to `app.placis.com`), `/contact` mailto
-   (validate, then `mailto:`), `/pricing/` (PricingGrid; bake amounts at
-   `astro build` from `GET /v1/billing/catalog`; Choose on Placis Pro
-   plan / month goes to `app.placis.com`; no Stripe JS; no Worker; no
-   year toggle). Markup only: news,
-   getting-started, footer, `/support`, legal. Theme follows
-   `prefers-color-scheme` in CSS, not `next-themes`. (2026-08-23; Pricing island
-   2026-08-29; Choose does not set `subscription_tier` 2026-09-03;
-   bake / Placis Pro plan / month / no year toggle 2026-09-03)
+   (validate, then `mailto:`), `/pricing/` (PricingGrid; bake amounts at `astro
+   build` from `GET /v1/billing/catalog`; Choose on Placis Pro plan / month goes
+   to `app.placis.com`; no Stripe JS; no Worker; no year toggle). Markup only:
+   news, getting-started, footer, `/support`, legal. Theme follows
+   `prefers-color-scheme` in CSS, not `next-themes`. (2026-08-23)
+   - 2026-08-29: Pricing island.
+   - 2026-09-03: Choose does not set `subscription_tier`; bake / Placis Pro
+     plan / month / no year toggle.
 
 6. **Onboarding and Clerk are not on this origin** — CTAs that were `/sign-up` /
    `/sign-in` go to `https://app.placis.com` (`/onboarding/find` and sign-in).
    Do not port OrbDemo, DustOrb, voice, enrichment, geo detection, Clerk sign-in
-   / sign-up, or the dashboard. Those stay in `frontend-3`. (2026-08-23)
-
-See [cloudflare.md](cloudflare.md).
+   / sign-up, or the dashboard. Those stay in `frontend-3`. See
+   [cloudflare.md](cloudflare.md). (2026-08-23)

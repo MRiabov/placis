@@ -14,100 +14,94 @@ inventing it.
 1. **One screen layout** — Find, Review, client interview, and the wait teaser
    share one layout: heading and lede, then `.onb-card` cards, then a sticky
    footer in the same place. The primary action (Business lookup / Continue)
-   always sits in that footer. Inner blocks are not a second card type; they
-   sit inside the card. **Why:** buttons were placed differently on all four
-   screens, and some sections had cards while others did not.
-   (2026-08-28)
+   always sits in that footer. Inner blocks are not a second card type; they sit
+   inside the card. **Why:** buttons were placed differently on all four
+   screens, and some sections had cards while others did not. (2026-08-28)
 
 2. **No missing-topics queue on Review** — Review does not paint a “Next /
    Client interview” aside listing remaining topics. Continue is in the shared
    footer. Missing rows stay in the found-vs-missing list. **Why:** that queue
-   appeared unnecessary.
-   (2026-08-28)
+   appeared unnecessary. (2026-08-28)
 
 3. **Wordmark uses the Placis orb** — The onboarding wordmark is the orb lockup
    (`placis-mark.png`: black squircle, white globe, lowercase placis), not a
    reconstructed line-art globe. Favicon is the orb. **Why:** the orb was not
-   used.
-   (2026-08-28)
+   used. (2026-08-28)
 
 4. **Found reviews look like Google reviews** — Avatar initial, name, source
    mark (Google or Facebook), yellow stars, relative date, then the review
    citation. Not a generic quote card. **Why:** reviews should look more like
-   Google reviews.
-   (2026-08-28) Profile photo when we have one; letter initial only as
-   fallback. The look export always has photos. **Why:** expect actually
-   profile images here.
-   (2026-08-28)
+   Google reviews. (2026-08-28)
+   - 2026-08-28: Profile photo when we have one; letter initial only as
+     fallback. The look export always has photos. **Why:** expect actually
+     profile images here.
 
 5. **Extra notes owner copy is a question** — The field is still extra notes
    (`additional_notes`). Owner heading is **Anything else we should know?**
    Helper: optional; parking, languages spoken, or anything that did not fit
-   above; stays off the website unless they ask. Not the label Additional
-   notes. **Why:** Additional notes was unclear.
-   (2026-08-28) Helper is what would help us generate a better website or run
-   ads. Not parking or languages. Not “stays off the website unless you ask.”
-   **Why:** this should be relevant to what we as a company are doing.
+   above; stays off the website unless they ask. Not the label Additional notes.
    (2026-08-28)
+
+   **Why:** Additional notes was unclear. (2026-08-28)
+   - 2026-08-28: Helper is what would help us generate a better website or run
+     ads. Not parking or languages. Not “stays off the website unless you ask.”
+     **Why:** this should be relevant to what we as a company are doing.
 
 6. **Visible copy is owner language** — Onboarding screens do not show PRD or
-   pipeline phrasing (no “text is the default, voice is listed and deferred”,
-   no “unpublished website can be trusted”, no “wait cap”). Specs keep those
-   words; the mock and product UI do not. (2026-08-28)
+   pipeline phrasing (no “text is the default, voice is listed and deferred”, no
+   “unpublished website can be trusted”, no “wait cap”). Specs keep those words;
+   the mock and product UI do not. (2026-08-28)
 
-7. **Wait teaser shows a 15-second progress bar** — `/onboarding/preview`
-   paints elapsed wait toward the ~15s cap in the shared footer. Copy names
-   the remaining seconds. When the cap hits (or copy finishes), the browser
-   goes to the preview website address. `?shot=1` does not auto-advance.
-   **Why:** the wait is capped at 15 seconds and that was invisible.
-   (2026-08-28) The fill paints every animation frame (~10ms-class), not a
-   200ms timeout. Copy still names whole seconds. **Why:** the progress bar
-   is way too coarse; the design should be 10ms responsive.
-   (2026-08-28)
+7. **Wait teaser shows a 15-second progress bar** — `/onboarding/preview` paints
+   elapsed wait toward the ~15s cap in the shared footer. Copy names the
+   remaining seconds. When the cap hits (or copy finishes), the browser goes to
+   the preview website address. `?shot=1` does not auto-advance. **Why:** the
+   wait is capped at 15 seconds and that was invisible. (2026-08-28)
+   - 2026-08-28: The fill paints every animation frame (~10ms-class), not a
+     200ms timeout. Copy still names whole seconds. **Why:** the progress bar is
+     way too coarse; the design should be 10ms responsive.
 
 8. **Dev skip generation** — Mock-only. The yellow strip has **Skip
    generation**; `?scene=generated` opens a mock of the generated website
    (website-activation strip sticky at the bottom of the host). Not product UI.
    **Why:** skip generation and route directly to a generated website or a mock
-   of it.
-   (2026-08-28)
+   of it. (2026-08-28)
 
-9. **Headings are the card focal, labels recede** — Screen title is `2rem`.
-   Each card opens with a heading block (title `1.25rem` / 600 plus a short
-   lede), separated from fields by a hairline. Field labels are `13px` / 450
-   and secondary ink, not the same size or weight as the heading. Find source
-   titles and the Review company name use the same heading size. **Why:**
-   headings and labels were indistinguishable, so “Your business” did not read
-   as a focal point next to “Display name”.
-   (2026-08-28) The hairline is close to the fields, not a second padded band.
-   (2026-08-28) No hairline under card headings. Size and weight separate the
-   heading from labels. Don't say form. **Why:** every heading having a
-   horizontal line in forms is unusual.
-   (2026-08-28)
+9. **Headings are the card focal, labels recede** — Screen title is `2rem`. Each
+   card opens with a heading block (title `1.25rem` / 600 plus a short lede),
+   separated from fields by a hairline. Field labels are `13px` / 450 and
+   secondary ink, not the same size or weight as the heading. Find source titles
+   and the Review company name use the same heading size. **Why:** headings and
+   labels were indistinguishable, so “Your business” did not read as a focal
+   point next to “Display name”. (2026-08-28)
+   - 2026-08-28: The hairline is close to the fields, not a second padded band.
+   - 2026-08-28: No hairline under card headings. Size and weight separate the
+     heading from labels. Don't say form. **Why:** every heading having a
+     horizontal line in forms is unusual.
 
 10. **Website-activation strip is sticky to the bottom** — On the preview
     website address the strip stays at the bottom of the viewport while the
-    website scrolls. Create an account, then pay EUR 4,900
-    (one-time; then about €50 / month). Copy is website activation. After pay
-    the strip is gone. Don't say page. **Why:** it was specified to be sticky
-    to the bottom of the page.
-    (2026-08-28) The strip is a white sales bar with the Placis orb lockup
-    (`placis-mark.png`), a headline, the price, and the activate CTA. Not a
-    reconstructed globe, not a thin dark toolbar. The onboarding wordmark is
-    hidden on this host, so the lockup lives on the strip. Don't say claim.
-    **Why:** the pay to claim strip is very basic; where is our brand orb?
-    (2026-08-28) Unsigned strip has **Create account**, not Sign in. An
-    existing Clerk session skips to pay. **Why:** sign in obviously shouldn't
-    be here.
-    (2026-08-28) Later (2026-08-30): unsigned **Sign up with Google** on this
-    strip and on unpaid Assistant.
-    (2026-08-28) After pay the browser goes to `/cms/website` with **Publish**
-    (website publication). The strip is gone on the host. **Why:** one has
-    paid, so it should transfer us to the website editor with the option
-    to actually deploy.
-    (2026-08-28) Later (2026-09-03): strip amount is the cached activation
-    Price (EUR, not a Go 4900). 09 Checkout is that Price plus Placis Pro
-    plan / month on the same pay, not a second ~€50 month.
+    website scrolls. Create an account, then pay EUR 4,900 (one-time; then about
+    €50 / month). Copy is website activation. After pay the strip is gone.
+    Don't say page. **Why:** it was specified to be sticky to the bottom of the
+    viewport. (2026-08-28)
+    - 2026-08-28: The strip is a white sales bar with the Placis orb lockup
+      (`placis-mark.png`), a headline, the price, and the activate CTA. Not a
+      reconstructed globe, not a thin dark toolbar. The onboarding wordmark is
+      hidden on this host, so the lockup lives on the strip. Don't say claim.
+      **Why:** the pay to claim strip is very basic; where is our brand orb?
+    - 2026-08-28: Unsigned strip has **Create account**, not Sign in. An
+      existing Clerk session skips to pay. **Why:** sign in obviously shouldn't
+      be here.
+    - 2026-08-30, later: unsigned **Sign up with Google** on this strip and on
+      unpaid Assistant.
+    - 2026-08-28: After pay the browser goes to `/cms/website` with **Publish**
+      (website publication). The strip is gone on the host. **Why:** one has
+      paid, so it should transfer us to the website editor with the option to
+      actually deploy.
+    - 2026-09-03, later: strip amount is the cached activation Price (EUR, not a
+      Go 4900). 09 Checkout is that Price plus Placis Pro plan / month on the
+      same pay, not a second ~€50 month.
 
 11. **Delight is “this is already my business, and something is happening”** —
     Not extra wrapper. Wait fill is frame-smooth (design decision 7). Reviews
@@ -122,16 +116,15 @@ inventing it.
     day. Voice stays listed as coming later. **Why:** make it more delightful to
     use. (2026-08-28)
 
-12. **Client interview uses Details field controls on the white card canvas**
-    — Featured services, Maps territory cards, and the hours picker are the
-    same controls as Business details. Onboarding keeps the white `.onb-card`
-    layout and heading type (`1.25rem` / 600). Details keeps the Details panel.
-    **Why:** unify the details in onboarding and details; the white
-    onboarding card canvas, the Details field look.
-    (2026-08-28) Onboarding Details == Business details: same fields and
-    controls; the card look is the look difference. **Why:** onboarding
-    should == details.
-    (2026-08-28)
+12. **Client interview uses Details field controls on the white card canvas** —
+    Featured services, Maps territory cards, and the hours picker are the same
+    controls as Business details. Onboarding keeps the white `.onb-card` layout
+    and heading type (`1.25rem` / 600). Details keeps the Details panel.
+    **Why:** unify the details in onboarding and details; the white onboarding
+    card canvas, the Details field look. (2026-08-28)
+    - 2026-08-28: Onboarding Details == Business details: same fields and
+      controls; the card look is the look difference. **Why:** onboarding should
+      == details.
 
 13. **Wait teaser lands on the website preview** — `/onboarding/preview` then
     `/onboarding/preview-and-edit/`. Custom top-left nested website page list
@@ -141,39 +134,42 @@ inventing it.
     Assistant (bottom-right of the pane, DustOrb / composer). Website editor
     canvas top-menu/footer clicks stay on this route. No Content / website
     styles rail. Static host mock stays `/onboarding/generated`. (2026-08-30)
-    Same day, later: website page list and Share float on the website editor
-    canvas **corners** (still workspace, not a separate bar). Assistant starts
-    as text; **Voice** is in the composer. Send and Voice need
-    **Sign up with Google**. The website-activation strip stacks on a narrow
-    pane: copy and price, then the activate control. Unsigned identity on
-    Assistant and the strip is **Sign up with Google**. After Sign up, Send and
-    Voice snap the website editor canvas to the website page being edited and
-    apply copy (Follow, instant apply). (2026-08-30) Same day, later: unpaid
-    Assistant stacks above the website-activation strip’s lift shadow.
-    (2026-08-30) Same day, later: on a wide pane the composer is max-width
-    32rem, centered. (2026-08-30) Same day, later: Assistant shows the CMS
-    thread (expand / reduce; no Plan / Ask first / Clear context). Default
-    expanded so 06 `tool_summary` is visible on land. (2026-08-30) Same day,
-    later: this route has no Find / Review / Questions progress, no onboarding
-    Back, and no Find/Review Assistant. Website page list and Share sit on the
-    website editor canvas corners; they do not reserve a top band. (2026-08-31)
-    Same day, later: while copy generation is still writing, a six-dot spinner
-    sits under the Assistant thread. (2026-08-30)
+    - 2026-08-30, later: website page list and Share float on the website editor
+      canvas **corners** (still workspace, not a separate bar). Assistant starts
+      as text; **Voice** is in the composer. Send and Voice need **Sign up with
+      Google**. The website-activation strip stacks on a narrow pane: copy and
+      price, then the activate control. Unsigned identity on Assistant and the
+      strip is **Sign up with Google**. After Sign up, Send and Voice snap the
+      website editor canvas to the website page being edited and apply copy
+      (Follow, instant apply).
+    - 2026-08-30, later: unpaid Assistant stacks above the website-activation
+      strip’s lift shadow.
+    - 2026-08-30, later: on a wide pane the composer is max-width 32rem,
+      centered.
+    - 2026-08-30, later: Assistant shows the CMS thread (expand / reduce; no
+      Plan / Ask first / Clear context). Default expanded so 06 `tool_summary`
+      is visible on land.
+    - 2026-08-30, later: this route has no Find / Review / Questions progress,
+      no onboarding Back, and no Find/Review Assistant. Website page list and
+      Share sit on the website editor canvas corners; they do not reserve a top
+      band.
+    - 2026-08-30, later: while copy generation is still writing, a six-dot
+      spinner sits under the Assistant thread.
 
 14. **Wait teaser shows a website section when placeholders can resolve** —
     `/onboarding/preview` paints a website section only when current profile
     data can resolve its website placeholders. Do not wait for website copy
-    generation to overwrite prose. Reuse website components in `frontend-3`,
-    not the Worker. (2026-08-31)
+    generation to overwrite prose. Reuse website components in `frontend-3`, not
+    the Worker. (2026-08-31)
 
-15. **Complete warning on Continue with no work photos** — Continue with no
-    work photos (logo-only counts as none) opens a complete warning before
-    `POST /v1/onboarding/interview/complete`. Title **Create a website without
+15. **Complete warning on Continue with no work photos** — Continue with no work
+    photos (logo-only counts as none) opens a complete warning before `POST
+    /v1/onboarding/interview/complete`. Title **Create a website without
     photos?** Body **The results will be much better if you attach photos. You
     may attach real photos later; we will use AI-generated images.** Primary
-    **Add photos** (file multipicker). Secondary **Skip** (complete). Reuse
-    that dialog (title, body, primary, secondary) for later complete warnings;
-    only photos is wired. Frontend-only. (2026-09-04)
+    **Add photos** (file multipicker). Secondary **Skip** (complete). Reuse that
+    dialog (title, body, primary, secondary) for later complete warnings; only
+    photos is wired. Frontend-only. (2026-09-04)
 
 16. **Interview work photos reuse the media library gallery** — The client
     interview onboarding image gallery is the same gallery as `/cms/media`,
