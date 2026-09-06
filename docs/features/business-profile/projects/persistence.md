@@ -39,7 +39,10 @@ identity and Project skip:
   `published_*` columns. No `project_drafts` table. Website
   publication bakes **active** only. Pending Ask-first description
   hunks are not a table; they live on `/cms/projects/{id}` until
-  **Apply** PATCHes `description`.
+  **Apply** PATCHes `description`. Owner CMS create / PATCH / approve /
+  archive / unarchive also **persists into**
+  `business_profile_edits` (`list=projects`) via
+  `ApplyBusinessProfileIncrement`.
 
 ### `project_sources`
 

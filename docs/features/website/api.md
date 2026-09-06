@@ -84,7 +84,7 @@ Create wait-end / retry **TBD**:
 | `WebsiteMenusUpdate` | `base_edit_history_head`, `top_menu`, `footer`, `show_phone`, `show_email`, `show_contact` | Menus PATCH |
 | `WebsiteUrlRead` | `id`, `href`, `label` | Combobox row |
 | `WebsiteUrlCreate` | `href`, `label` | Type-to-create URL |
-| `WebsiteBusinessProfileRead` | Common variable fields ([variables.md](variables.md)) | Resolve struct; CMS + Worker `$ref` |
+| `WebsiteBusinessProfileRead` | Common variable fields ([variables.md](variables.md)) | Resolve struct; CMS + Worker `$ref`. `address` is `registered_office` |
 
 `website_business_profile` is required. Nested profile objects match
 dotted Common variable paths. Extra keys 4xx. Not the Details

@@ -13,46 +13,41 @@ original audit ids (not compacted).
   `BusinessProfileRead` lists them. `details/frontend.md` “do not add
   unless asked” is the **screen**, not the contract.
 
-## Doc gap
+## Closed (2026-09-06)
 
 - **5. `certification_definitions.registry_url`**
-  Comment: on HTTP (`CertificationDefinitionRead`); nothing paints
-  it.
-  Action: badge links the registry, or drop column + DTO together.
+  Keep the optional column. When set, the website and CMS paint the
+  certification image/card as an `<a href>` to that URL. Null: not a
+  link. Slim `certifications[]` includes `registry_url`.
 
-- **6. Website variables with no backing column**
-  Comment: `{{address}}` vs details ADR 8 (no business-location
-  column). `{{projects.categories}}` has no source.
-  Action: name the resolver or remove the token. Separate from
-  website template catalog CI (website item 21).
+- **6. Website variables with no backing column (`{{address}}`)**
+  `{{address}}` resolves from `registered_office` (the address).
+  Service areas remain where they work. No second location column.
+  `{{projects.categories}}` is still a separate website item 21
+  question.
 
 - **9. `business_profile_services.website_page_path`**
-  Comment: `BusinessProfileServiceOp` can carry it. 02 Copy website
-  template pages does not say whether it backfills the column.
-  Action: that pipeline step writes it, or drop.
+  02 Copy website template pages writes the path. Owner PATCH /
+  `BusinessProfileServiceOp` must not.
 
 - **10. `emergency_phone` vs Details screen**
-  Comment: on Read/Update, client interview, and the complete gate.
-  CMS Details field list omits a field its PATCH accepts.
-  Action: add the field on Details, or say client-interview-only.
+  Contact panel on Details (unpublished; not on the website). Onboarding
+  Details == this field.
 
 - **11. `list=projects` increments**
-  Comment: ETL projects pipeline writes the increment. CMS
-  `POST`/`PATCH /v1/projects` may not.
-  Action: owner edits append an increment, or say ETL-only.
-
-- **12. Linked-Facebook card vs `facebook_profiles` columns**
-  Comment: details ADR 5 wants name / photo / rating / review count.
-  Table has id/URL/handle/algorithm.
-  Action: add columns or hydrate from the fetch row.
-
-## Actually drop
+  Owner Project HTTP appends `business_profile_edits` (`list=projects`),
+  same log ETL already writes.
 
 - **11b. `business_profile_edits.list` = `facebook_posts` /
   `instagram_posts`**
-  Comment: ETL upserts those tables; owner PATCH must not. No
-  increment writer.
-  Action: drop those list values (CHECK swap later if needed).
+  Dropped from the `list` enum. ETL still upserts those tables. CHECK
+  swap later if leftover enum values exist.
+
+- **12. Linked-Facebook card vs `facebook_profiles` columns**
+  Transform writes card fields on `facebook_profiles`. GET reads that
+  row. Maps GET reads `google_maps_listings`. Instagram transform
+  writes `name` / `photo_url` on `instagram_profiles` (not a Details
+  card). Never GET-from-fetch `raw`.
 
 ## False alarms (closed)
 

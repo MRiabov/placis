@@ -8,7 +8,9 @@
 - **Verify** (Postgres):
   - `etl.runs` for this ETL run kind when it starts.
   - Extract **persists into** `etl.instagram_fetches`; `etl.sources`.
-  - Transform **persists into** `business_profile.instagram_profiles` /
+  - Transform **persists into** `business_profile.instagram_profiles`
+    (`name`, `photo_url`; not fetch `raw`; no `rating` /
+    `review_count`) /
     `business_profile.instagram_posts` on `external_id` as responses arrive (do
     not wait for the last Instagram post); duplicate post id left alone;
     `algorithm=human` is not overwritten.

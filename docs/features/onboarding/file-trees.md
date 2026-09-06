@@ -101,7 +101,7 @@ frontend-3/src/features/onboarding/
   client-interview/
     ClientInterview.tsx             # /onboarding/interview; wraps Details
     extras.tsx                      # photos, certs, reviews, Projects,
-                                    # extra notes, contact name, emergency_phone
+                                    # extra notes, contact name
   wait-teaser/
     WaitTeaser.tsx                  # /onboarding/preview (SSE carousel)
                                     # no website-activation strip
