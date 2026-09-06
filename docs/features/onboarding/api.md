@@ -87,7 +87,7 @@ Unpaid website editor canvas reuses CMS website editor DTOs (`WebsiteEditorGet`,
 | DTO | Fields | Description |
 | --- | --- | --- |
 | `WebsiteActivationCheckoutRead` | `checkout_url`, `clerk_org_id` | Checkout URL + Clerk org id for `setActive`. **Omit** Stripe bodies |
-| `WebsiteActivationStatusRead` | `payment_status`, `checkout_url` | Poll after checkout |
+| `WebsiteActivationStatusRead` | `payment_status` | Poll after checkout. No `checkout_url` |
 
 ### Onboarding assistant (guide)
 
@@ -232,7 +232,7 @@ Checkout. **Omit** Stripe bodies.
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `POST /v1/onboarding/activation/checkout` | strip island; pay CTA on `/onboarding/preview-and-edit/` | | `WebsiteActivationCheckoutRead` | `tenants`, `billing.prices` | `website_activations`, `tenants.clerk_org_id` | **calls** `AttachClerkOrganization`; frontend `setActive` then hosted Checkout; line items: active activation Price + Placis Pro plan / month Price; metadata / `client_reference_id` = `tenant_id`; does not set `status=active` | missing Price | Website publication; browser Stripe success URL as truth; `/v1/website-activations/…`; `/v1/billing/subscription/checkout`; `POST /v1/me/clerk-organization`; ad-hoc `price_data` |
-| `GET /v1/onboarding/activation/status` | poll after checkout | | `WebsiteActivationStatusRead` | `website_activations` | | Closed `payment_status` + checkout URL if still needed | | |
+| `GET /v1/onboarding/activation/status` | poll after checkout | | `WebsiteActivationStatusRead` | `website_activations` | | Closed `payment_status` (`pending` / `paid` / `refunded`). Need a URL again → POST checkout | | `checkout_url` |
 | `POST /v1/webhooks/stripe` | Stripe | | | | `stripe_events`, `website_activations` | See overflow | | Trust browser success URL |
 
 Checkout / status auth: Clerk JWT, Host / `website_prefix`
@@ -250,7 +250,9 @@ type needs no job). Closed event list:
   `website_activation`; extra usage credit **inserts**
   `billing_extra_usage_credit`; pay-again **inserts**
   `billing_subscription_sync`
-- `checkout.session.expired`
+- `checkout.session.expired` — `stripe_events` only (`processed`; no
+  River job; no `website_activations` write). Need a URL again → POST
+  checkout
 - `customer.subscription.updated` / `deleted` — **inserts**
   `billing_subscription_sync`
 - `invoice.paid` / `invoice.payment_failed` — **inserts**
