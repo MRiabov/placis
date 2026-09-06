@@ -31,5 +31,5 @@ jobs:
           cache-dependency-path: apps/demo/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec biome check . && pnpm exec tsc --noEmit && pnpm exec knip && node scripts/check-files.mjs && node scripts/check-tokens.mjs
+      - run: pnpm exec biome check . && pnpm exec tsc --noEmit && pnpm exec knip && node scripts/check-tokens.mjs
       - run: pnpm build

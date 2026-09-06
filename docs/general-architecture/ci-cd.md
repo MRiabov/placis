@@ -34,37 +34,36 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
 
 ## Gates
 
-1. **File-size guard** — files must stay < 800 lines (warning) and < 1200 (hard
-   error), except `docs/glossary.md` (one ubiquitous-language file; do not
-   split it) and `docs/features/onboarding/testing.md` (owning
-   `TestHappyPath*` 1:1 plus E2E / Full / extras; do not split it). The look
-   app (`apps/demo/src`) hard-fails at 800; that is
-   [decision 1](#decisions). Repo-wide 1200 for `internal/`, `cmd/`,
-   `catalog/`, `docs/` is still a later `cmd/ci` check. Prefer
-   splitting a feature into its own package over allowing a file to creep past
-   800.
-2. **Folder fan-out** — a nested dir under `internal/` or `frontend-3/src/`
-   may hold at most **9** entries (tracked files + child dirs). `internal/`
-   root and `frontend-3/src/` may each hold at most **15**. **Exclude
-   `*_test.go` and `*.test.*`**. Split a fat
-   folder into a nested package (Go) or nested feature folder
+1. **File-size guard** — `cmd/ci/check-file-size`. Files must stay < 800
+   lines (warning) and < 1200 (hard error), except `docs/glossary.md`
+   (one ubiquitous-language file; do not split it) and
+   `docs/features/onboarding/testing.md` (owning `TestHappyPath*` 1:1 plus
+   E2E / Full / extras; do not split it). Trees: `docs/`, `internal/`,
+   `cmd/`, `catalog/`, `frontend-3/`. The look app (`apps/demo/src`)
+   hard-fails at 800; that is [decision 1](#decisions). Prefer splitting
+   a feature into its own package over allowing a file to creep past 800.
+2. **Folder fan-out** — `cmd/ci/check-file-size`. A nested dir under
+   `internal/` or `frontend-3/src/` may hold at most **9** entries
+   (tracked files + child dirs). `internal/` root and `frontend-3/src/`
+   may each hold at most **15**. **Exclude `*_test.go` and `*.test.*`**.
+   Split a fat folder into a nested package (Go) or nested feature folder
    (`frontend-3`); that is why `templates` and `assistant` nest under
    `website/` instead of sitting as siblings at `internal/` root. Scope is
    `internal/` and `frontend-3/src/` — not `docs/`, `packages/`, or
-   `apps/`. Documented as a later `cmd/ci` check; this file does not
-   implement the checker. Layout: [module layout](module-layout.md),
+   `apps/`. Layout: [module layout](module-layout.md),
    [frontend stack](frontend-stack.md).
 3. **Format / vet / lint** — `gofmt`/`goimports` check, `go vet`,
    `golangci-lint` (non-mutating); look app (`apps/demo/`) TypeScript check +
-   Biome (non-mutating) via biome / `tsc` / knip / file and token checks in
+   Biome (non-mutating) via biome / `tsc` / knip / token checks in
    parent CI (`pnpm check` locally and on the copied `demo.placis.com`
-   checkout, which also runs Don't-say); **rumdl** `fmt --check` then `check`
+   checkout, which also runs Don't-say and the look-export file-size
+   script); **rumdl** `fmt --check` then `check`
    on first-party Markdown (non-mutating). See Pre-commit below. Look CI:
    `.github/workflows/frontend-quality.yml` (path filter: `apps/demo/**` and
-   that workflow file; Don't-say is the docs-gates job, not this one) and the
-   copied `apps/demo/.github/workflows/check.yml` on `demo.placis.com`.
-   `frontend-3` TypeScript + Biome is the same contract once that app is
-   enabled.
+   that workflow file; Don't-say and file-size are the docs-gates job)
+   and the copied `apps/demo/.github/workflows/check.yml` on
+   `demo.placis.com`. `frontend-3` TypeScript + Biome is the same contract
+   once that app is enabled.
 4. **Build + test** — `go build ./...` and `go test ./...` with **no**
    `-count=1` (Testcontainers Postgres; CircleCI uses the machine executor when
    it is live); `frontend-3` typecheck + `vitest run --changed origin/main` +
@@ -106,12 +105,15 @@ Status: decided (dates on each entry). Update an entry (keeping the old
 decision + date) instead of silently replacing the old entry.
 
 1. **Look app hard-fails at 800 lines** — Repo-wide files warn under 800 and
-   hard-fail at 1200. `apps/demo/src` hard-fails above 800 via
-   `apps/demo/scripts/check-files.mjs` (the checker copies with the look
-   export). Why: the look app only grows in complexity when it is integrated
-   into `frontend-2`. (2026-08-29)
-   (2026-09-05): owner SPA is `frontend-3`; [ADR](ADR.md) 3. Do not integrate
-   look into `frontend-2`.
+   hard-fail at 1200. `apps/demo/src` hard-fails above 800. Why: the look
+   app only grows in complexity when it is integrated into `frontend-2`.
+   (2026-08-29)
+   (2026-09-05): owner SPA is `frontend-3`; [ADR](ADR.md) 3. Do not
+   integrate look into `frontend-2`.
+   (2026-09-06): parent CI is `cmd/ci/check-file-size` (one walk with
+   docs / Go / `frontend-3` / `catalog/`).
+   `apps/demo/scripts/check-files.mjs` stays for the look export
+   (`demo.placis.com` has no Go).
 
 ## Runner policy
 
@@ -180,7 +182,8 @@ high-frequency dev loop:
   (Postgres via Docker, goose, `cmd/api`, `frontend-3`, with env-var + port
   resolution).
 - `just test`, `just lint`, `just fmt`, `just sqlc`, `just typegen`,
-  `just check-files` — the fix-it-locally feedback loop.
+  `go run ./cmd/ci/check-file-size --all` — the fix-it-locally feedback
+  loop.
 
 **Not** in the `justfile`: dependency installs / one-off install, and anything
 CI runs. CI invokes the underlying tools directly (`go test ./...`,
@@ -237,15 +240,12 @@ does). We do **not** hand-roll AST scripts up front:
   `docs/features/business-profile/projects/testing.md`. Missing
   spec file: that walk no-ops. See
   [testing.md](testing.md).
+- **API home check** (`cmd/ci/check-api-dirs`) — see below.
+- **Import DAG check** (`cmd/ci/check-import-dag`) — see below.
+- **File-size and folder fan-out** (`cmd/ci/check-file-size`) — see
+  below.
 - Generated-code freshness (`sqlc` diff, `huma` OpenAPI + frontend typegen,
   Worker internal OpenAPI export + contractor-website typegen).
-- Later: file-size guard and folder fan-out (`cmd/ci`), documented above, not
-  implemented in this pass.
-
-A custom `go/analysis` analyzer is added only when a concrete mistake keeps
-recurring — the one candidate is the Go analog of the old "freeform-JSON"
-ratchet ("no `map[string]any` / `json.RawMessage` on huma DTOs; `jsonb` is
-persistence-only"). Required for DTOs when Go exists; see [HTTP conventions](api.md).
 
 ### Don't-say checker
 
@@ -301,8 +301,9 @@ list). `**/testdata/**` is skipped (checker fixtures). Worked examples:
   (`demo.placis.com`) uses the same checker with `--glossary glossary.md` over
   `src/`.
 - CI: `.github/workflows/docs-gates.yml` runs rumdl `fmt --check` then
-  `check`, then `go test` for Don't-say, docs-code, pipeline-tables, and
-  check-happy-path, then `go run ./cmd/ci/check-dont-say --all` (and the
+  `check`, then `go test` for Don't-say, docs-code, pipeline-tables,
+  check-happy-path, check-api-dirs, check-import-dag, and
+  check-file-size, then `go run ./cmd/ci/check-dont-say --all` (and the
   other scanners) in one job so `actions/setup-go` and the stdlib compile
   are paid once. `--frontend` stays off
   until frontend work
@@ -403,5 +404,70 @@ scanners.
   OpenAPI exists. Feature `api.md` files with no matching OpenAPI prefix
   stay out of this ratchet.
 
-Shared parsers live in `cmd/ci/docnames`. This pass does not check DTO
-field constraints or `frontend-3` routes.
+Shared parsers live in `cmd/ci/docnames`. This pass does not check
+`frontend-3` routes. DTO field constraints are `cmd/ci/check-api-dirs`.
+
+### API home check
+
+`cmd/ci/check-api-dirs` keeps HTTP create/call sites in the layout
+homes. Unit tests + `go run`. Pre-commit on `internal/**/*.go`,
+`**/*.sql`, `frontend-3/**/*.ts(x)`, `apps/demo/**/*.ts(x)`. CI:
+`.github/workflows/docs-gates.yml` runs
+`go test ./cmd/ci/check-api-dirs` then
+`go run ./cmd/ci/check-api-dirs --all`. Empty trees pass.
+
+- **Go Register:** `huma.Register` / `sse.Register` only in `feature/api/`
+  route files (`internal/<home>/api/**`, unsplit `api.go` not under
+  `pipeline/` or `store/`). `cmd/api` only **calls** feature `Register`
+  helpers. Chi routes only in `infrastructure/httpapi/`. `pipeline/`
+  and `store/` never Register. `internal/dto/` fails if it appears.
+- **DTO files:** Huma structs live in `dto.go` until `api/dto/` at
+  ~800, not in Register files. `Register` in `dto.go` / `dto/` fails.
+  Health types may stay in `httpapi` `mux.go`.
+- **Constrained DTOs:** `map[string]any`, `json.RawMessage`,
+  `additionalProperties` tags, and string fields documented as JSON fail
+  on those DTO structs. Persistence `jsonb` in `store/` is not this
+  check. [HTTP conventions](api.md).
+- **SQL homes:** sqlc `queries.sql` only under `store/`. `CREATE TABLE`
+  only in `internal/infrastructure/store/migrations/`. `pipeline/` Go
+  files must not contain SQL string literals.
+- **TypeScript:** `openapi-fetch` / `createClient` only in
+  `frontend-3/src/shared/api.ts` (or `shared/api/`). Call sites only in
+  `frontend-3/src/features/**`. `apps/demo` must not call `/v1/`. Skip
+  tests, `generated/`, `e2e/`. Not `frontend-2/`, contractor website, or
+  Placis website.
+
+### Import DAG check
+
+`cmd/ci/check-import-dag` encodes the forbidden compile-time edges in
+[package boundaries](package-boundaries.md). Unit tests + `go run`.
+Pre-commit on `internal/**/*.go`, `cmd/api/`, `frontend-3/**/*.ts(x)`.
+CI: `go test ./cmd/ci/check-import-dag` then
+`go run ./cmd/ci/check-import-dag --all`. Missing trees no-op. Tests and
+`cmd/ci` testdata are skipped.
+
+Forbidden: `pipeline/` → `api/` or `httpapi`; features → `httpapi`
+(only `cmd/api` imports it); another feature’s `store/`; `profile` →
+onboarding / website / ads; `etl` → onboarding; `billing` → `ai`;
+website editor Dos → `website/assistant`; `onboarding/assistant` →
+`internal/assistant`; Contractor copy improvement ↔ `websiteeditor`;
+`frontend-3` `cms/` → onboarding; `frontend-3` → `frontend-2`.
+
+### File-size and folder fan-out
+
+`cmd/ci/check-file-size` is the one walk. Unit tests + `go run`.
+Pre-commit always-runs (whole tree). CI:
+`go test ./cmd/ci/check-file-size` then
+`go run ./cmd/ci/check-file-size --all`.
+
+- **Size:** `docs/`, `internal/`, `cmd/`, `catalog/`, `frontend-3/` warn
+  at 800 and hard-fail at 1200. Skip `docs/glossary.md` and
+  `docs/features/onboarding/testing.md`. `apps/demo/src` hard-fails at
+  800. Skip `**/testdata/**`.
+- **Fan-out:** nested dir under `internal/` or `frontend-3/src/` ≤ 9;
+  those two roots ≤ 15. Exclude `*_test.go` and `*.test.*`.
+
+This repo’s look CI (`frontend-quality.yml`) does not run
+`scripts/check-files.mjs`; docs-gates runs `check-file-size` including
+`apps/demo/src`. The script stays in `apps/demo` `pnpm check` for the
+look export (`demo.placis.com` has no Go).

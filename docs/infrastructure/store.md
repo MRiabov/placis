@@ -21,5 +21,5 @@ their own generated querier (`onboarding/store/`, `website/store/`,
 feature’s public Dos (`profile` `service.go`, `profile/media`); they do
 not import another feature’s `store/` (sqlc types do not leak).
 
-Pipeline step files **call** sqlc in that feature’s `store/`. Do not put
-SQL in `pipeline/` files.
+Pipeline step files **call** sqlc in that feature’s `store/`. Do not put SQL in
+`pipeline/` files. CI: [API home check](../general-architecture/ci-cd.md).

@@ -114,4 +114,5 @@ Forbidden compile-time edges: `profile` → onboarding / website / ads;
 `website/assistant`; `onboarding/assistant` → `internal/assistant`;
 `pipeline/` → `api/` or `httpapi`; both Contractor copy improvement →
 `websiteeditor` and reverse (wrapper HTTP **calls** that pipeline step
-only). Features do not import `httpapi`.
+only). Features do not import `httpapi`. CI:
+[import DAG check](ci-cd.md).
