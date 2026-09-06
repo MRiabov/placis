@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function SystemCards({ props }: PublicSiteComponentProps) {
+export default function SystemCards({ props }: WebsiteComponentProps) {
   const items = asRecords(props.items);
   const ctaLabel = text(props.cta_label, "");
   const ctaHref = text(props.cta_href, "#");
@@ -11,7 +11,7 @@ export default function SystemCards({ props }: PublicSiteComponentProps) {
       data-public-system-cards
       id={text(props.anchor_id, "") || undefined}
     >
-      <div className="public-site-shell public-system-cards__inner">
+      <div className="website-frame public-system-cards__inner">
         <div className="public-system-cards__header">
           {props.eyebrow ? (
             <p className="public-eyebrow">

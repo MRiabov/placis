@@ -1,4 +1,4 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecord, asRecords, imageUrl, text } from "../../../utils";
 
 function Motif({ image }: { image: string | null }) {
@@ -12,7 +12,7 @@ function LinkArrow() {
   return <span aria-hidden="true">→</span>;
 }
 
-export default function ScrollStoryHero({ props }: PublicSiteComponentProps) {
+export default function ScrollStoryHero({ props }: WebsiteComponentProps) {
   const hero = asRecord(props.hero);
   const panels = asRecords(props.panels);
   const motif = imageUrl(props.motif_image_url);

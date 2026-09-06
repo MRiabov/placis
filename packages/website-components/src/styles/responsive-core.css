@@ -171,7 +171,7 @@
   }
 
   @media (max-width: 760px) {
-    .public-theme-timbermill-classic .public-site-shell {
+    .public-theme-timbermill-classic .website-frame {
       padding-left: 22px;
       padding-right: 22px;
     }

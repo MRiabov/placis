@@ -1,11 +1,11 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecord, asRecords, asStrings, imageUrl, text } from "../../../utils";
 
-export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
+export default function HeroImage({ props, theme }: WebsiteComponentProps) {
   const serviceArea = asStrings(props.service_area);
   const trustBadges = asStrings(props.trust_badges);
-  const media = asRecord(props.media);
+  const image = asRecord(props.image);
   const primaryCta = asRecord(props.primary_cta);
   const secondaryCta = asRecord(props.secondary_cta);
   const configuredActions = asRecords(props.actions ?? props.buttons);
@@ -14,9 +14,9 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
   const heroImage = imageUrl(
     props.generated_image_url ??
       props.image_url ??
-      media.generated_image_url ??
-      media.image_url ??
-      media.url,
+      image.generated_image_url ??
+      image.image_url ??
+      image.url,
   );
   const primaryHref = text(primaryCta.href ?? props.href, "#quote");
   const primaryLabel = text(
@@ -25,7 +25,7 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
   );
   const secondaryHref = text(
     secondaryCta.href ?? props.secondary_href,
-    props.phone ? `tel:${String(props.phone)}` : "",
+    props.marketing_phone ? `tel:${String(props.marketing_phone)}` : "",
   );
   const secondaryLabel = text(
     secondaryCta.label ?? props.secondary_cta_label,
@@ -40,7 +40,7 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
   if (props.layout === "text_only") {
     return (
       <section className="public-page-hero public-page-hero--text-only">
-        <div className="public-site-shell public-page-hero__content">
+        <div className="website-frame public-page-hero__content">
           {props.eyebrow ? (
             <p className="public-page-hero__eyebrow">{text(props.eyebrow)}</p>
           ) : null}
@@ -63,7 +63,7 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
           />
         ) : null}
         <div className="public-page-hero__overlay" />
-        <div className="public-site-shell public-page-hero__content">
+        <div className="website-frame public-page-hero__content">
           {props.eyebrow ? (
             <p className="public-page-hero__eyebrow">{text(props.eyebrow)}</p>
           ) : null}
@@ -102,7 +102,7 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
     <section
       className={`${sectionPadding(theme)} bg-(--public-primary) text-(--public-background)`}
     >
-      <div className="public-site-shell grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <div className="website-frame grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-(--public-background) opacity-70">
             {text(props.business_name, "Local contractor")}
@@ -117,12 +117,12 @@ export default function HeroImage({ props, theme }: PublicSiteComponentProps) {
             )}
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a className="public-site-button" href={primaryHref}>
+            <a className="website-button" href={primaryHref}>
               {primaryLabel}
             </a>
             {secondaryHref ? (
               <a
-                className="public-site-button public-site-button-secondary border-(--public-background) text-(--public-background)"
+                className="website-button website-button-secondary border-(--public-background) text-(--public-background)"
                 href={secondaryHref}
               >
                 {secondaryLabel}

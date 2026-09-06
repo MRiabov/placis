@@ -21,7 +21,7 @@
   font-weight: 350;
 }
 
-.public-theme-navy-grid .public-site-shell {
+.public-theme-navy-grid .website-frame {
   max-width: 1266px;
   padding-left: 16px;
   padding-right: 16px;
@@ -476,7 +476,7 @@
   padding: 96px 16px;
 }
 
-.public-theme-navy-grid .public-image-tiles .public-site-shell {
+.public-theme-navy-grid .public-image-tiles .website-frame {
   max-width: 1120px;
   padding-left: 0;
   padding-right: 0;

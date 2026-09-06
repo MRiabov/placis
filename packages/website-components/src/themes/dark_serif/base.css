@@ -20,7 +20,7 @@
   font-family: var(--public-font-body);
 }
 
-.public-site-root.public-theme-dark-serif {
+.website-root.public-theme-dark-serif {
   background: var(--public-background);
   font-family: var(--public-font-body);
 }
@@ -33,14 +33,14 @@
   letter-spacing: 0;
 }
 
-.public-theme-dark-serif .public-site-shell {
+.public-theme-dark-serif .website-frame {
   max-width: 1060px;
   padding-left: 28px;
   padding-right: 28px;
 }
 
-.public-theme-dark-serif .public-site-button,
-.public-theme-dark-serif button.public-site-button {
+.public-theme-dark-serif .website-button,
+.public-theme-dark-serif button.website-button {
   background: transparent;
   border: 1px solid var(--public-text);
   border-radius: 0;
@@ -58,8 +58,8 @@
     border-color 180ms var(--public-ease);
 }
 
-.public-theme-dark-serif .public-site-button:hover,
-.public-theme-dark-serif button.public-site-button:hover {
+.public-theme-dark-serif .website-button:hover,
+.public-theme-dark-serif button.website-button:hover {
   background: var(--public-text);
   color: var(--public-background);
 }

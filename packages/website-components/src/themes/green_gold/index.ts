@@ -1,5 +1,5 @@
 import { amber, green, slate } from "@radix-ui/colors";
-import type { PublicSiteThemePreset } from "../types";
+import type { WebsiteThemePreset } from "../types";
 
 const greenGoldColors = {
   accent: amber.amber9,
@@ -17,7 +17,7 @@ export const greenGoldThemePreset = {
   label: "Green & Gold",
   source: "https://www.pcl.com/us/en multi-page reference decomposition",
   cssClass: "public-theme-green-gold",
-  runtimeTheme: {
+  websiteTheme: {
     preset: "green_gold",
     primary: greenGoldColors.brand,
     neutral: "slate",
@@ -58,9 +58,9 @@ export const greenGoldThemePreset = {
   },
   notes: [
     "Reference preset inspired by a green, high-visibility yellow, white, black, and light-gray visual system.",
-    "Production tokens normalize source colors into Radix-backed semantic roles instead of copying arbitrary source hex values.",
-    "Square edges, condensed Barlow headings, uppercase labels, full-bleed imagery, and hard accent rules belong to this style preset rather than individual component logic.",
-    "Use when the page structure has enough proof, project imagery, and content volume to support a dense layout.",
-    "Do not select solely from organization size or service category.",
+    "Production tokens combine source colors into Radix-backed semantic roles instead of copying arbitrary source hex values.",
+    "Square edges, condensed Barlow headings, uppercase labels, full-bleed imagery, and hard accent rules belong to this style preset rather than individual website component logic.",
+    "Use when the page structure has enough reviews, projects, and content volume to support a dense layout.",
+    "Do not pick solely from contractor size or service category.",
   ],
-} satisfies PublicSiteThemePreset;
+} satisfies WebsiteThemePreset;

@@ -40,15 +40,15 @@ Owner SPA is `frontend-3` ([ADR](../../general-architecture/ADR.md) 3);
 
 **Website component package (`packages/website-components`):**
 
-- Renderer: `PublicSiteRenderer.tsx`, `registry.ts` (in-scope families).
+- Renderer: leftover `PublicSiteRenderer.tsx` → `WebsiteRenderer.tsx`,
+  `registry.ts` (in-scope families). Don't say public site: that filename
+  is gone after Don't-say enablement.
 - `types.ts` — still `JsonObject` for `props`, `seo`, `collections`.
-- Don't say proof: leftover `registry/proof/*` — catalog families are
-  `reviews` / `certifications` / `content` (Projects stay `gallery`).
-  Preferred IDs: `public.reviews.cards`, `public.reviews.panel`,
-  `public.certifications.row`, `public.content.logo_strip`,
-  `public.content.leadership_grid`, `public.content.metric_mosaic`,
-  `public.content.bar`. Mapping:
-  [catalog.md](catalog.md#website-component-family).
+- Don't say proof: leftover `registry/proof/*` is gone. Catalog families
+  are `reviews` / `certifications` / `content` / `top_menu` (Projects stay
+  `gallery`). Preferred IDs:
+  [catalog.md](catalog.md#website-component-family). Contracts have no
+  `aliases`.
 - Don't say blueprint: `src/blueprints/**` — website templates (JSON). No
   DESIGN.md or per-folder markdown sidecars.
 - `src/styles.css` concatenates every website style catalog preset plus shared
@@ -115,14 +115,19 @@ Owner SPA is `frontend-3` ([ADR](../../general-architecture/ADR.md) 3);
 
 - Don't say public site / public-site: contractor website
   (`apps/contractor-website`).
-- Don't say shell: `PublicSiteRenderer`, `public-site-shell`,
-  Don't say public site: `PublicSiteClientBehaviors`.
-- Don't say blueprint: `src/blueprints/` → website template catalog.
+- Don't say shell: leftover `PublicSiteRenderer` → `WebsiteRenderer`;
+  leftover `public-site-shell` → `website-frame`;
+  Don't say public site: leftover `PublicSiteClientBehaviors` (Worker
+  follow-up).
+- Don't say blueprint: `src/blueprints/` → website template catalog
+  (Don't-say skips that scrap folder).
 - Don't say proof: leftover `public.proof.*` → `public.reviews.cards`,
   `public.reviews.panel`, `public.certifications.row`, and
   `public.content.*` as
   [catalog.md](catalog.md#website-component-family) names them. Projects
-  stay `gallery`.
+  stay `gallery`. Don't say navigation: leftover top-menu IDs →
+  `public.top_menu.*`. Video feature is `public.content.video_feature`.
+  No `aliases`.
 - Don't say runtime: meta / env names that call this app a runtime.
 - Don't say setup: `setupPublicNavigation` / `setupPublicCarousels` in the
   Don't say setup: island script (rename to ordinary `bind*` helpers).
@@ -145,5 +150,6 @@ Owner SPA is `frontend-3` ([ADR](../../general-architecture/ADR.md) 3);
 - No DESIGN.md or per-folder markdown sidecars (done).
 - Each website style catalog preset owns its CSS; live HTML loads one preset.
 - Manifest and website-slot props are catalog-typed, not `JsonObject`.
-- Don't say public site, shell, blueprint, proof, claim, or runtime in this app
-  Don't say public site: and the package.
+- Don't say public site, shell, blueprint, proof, claim, or runtime in the
+  website component package (Don't-say root, website home). Worker `.ts` /
+  `.astro` Don't-say remains a follow-up.

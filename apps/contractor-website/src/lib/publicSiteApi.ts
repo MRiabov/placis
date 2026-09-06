@@ -1,4 +1,4 @@
-import type { PublicSiteManifest } from "@placis/website-components";
+import type { WebsiteManifest } from "@placis/website-components";
 
 export type PublicSiteRuntimeEnv = Partial<{
   PLACIS_API_BASE_URL: string;
@@ -10,7 +10,7 @@ export type PublicSiteRuntimeEnv = Partial<{
 export type PublicSitePreviewModuleResponse = {
   preview_package_id?: string;
   module?: string;
-  manifest?: PublicSiteManifest;
+  manifest?: WebsiteManifest;
 };
 
 export function publicSiteApiBaseUrl(

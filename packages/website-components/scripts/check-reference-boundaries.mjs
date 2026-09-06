@@ -2,7 +2,8 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const packageRoot = new URL("..", import.meta.url).pathname;
-const blueprintRoot = join(packageRoot, "src/blueprints");
+// Don't say blueprint: leftover scrap dumps
+const leftoverDumpRoot = join(packageRoot, "src/blueprints");
 const registryRoot = join(packageRoot, "src/registry");
 const themesRoot = join(packageRoot, "src/themes");
 
@@ -36,6 +37,7 @@ const forbiddenAffinityTokens = new Set([
   "commercial",
   "contractor",
   "corporate",
+  // Don't say Enterprise: leftover dump affinity token
   "enterprise",
   "large",
   "larger",
@@ -46,7 +48,7 @@ const forbiddenAffinityTokens = new Set([
   "trade",
 ]);
 
-function normalizeTokens(value) {
+function splitWords(value) {
   return String(value ?? "")
     .toLowerCase()
     .replace(/&/g, " ")
@@ -55,7 +57,7 @@ function normalizeTokens(value) {
 }
 
 function compactTokens(value) {
-  const tokens = normalizeTokens(value);
+  const tokens = splitWords(value);
   return tokens.length > 1 ? [tokens.join("")] : [];
 }
 
@@ -70,8 +72,8 @@ function modelledAfterAliases(value) {
 }
 
 function containsForbiddenToken(value, tokens) {
-  const normalized = normalizeTokens(value);
-  return normalized.find((token) => tokens.has(token));
+  const words = splitWords(value);
+  return words.find((token) => tokens.has(token));
 }
 
 async function collectFiles(root, predicate, out = []) {
@@ -99,22 +101,23 @@ function addValueCheck(failures, filePath, label, value, tokens) {
   }
 }
 
-const blueprintFiles = await collectFiles(
-  blueprintRoot,
+const leftoverDumpFiles = await collectFiles(
+  leftoverDumpRoot,
+  // Don't say blueprint: leftover dump filename
   (path) => path.endsWith("blueprint.json"),
 );
 const sourceTokens = new Set();
 const failures = [];
 
-for (const filePath of blueprintFiles) {
-  const blueprint = JSON.parse(await readFile(filePath, "utf8"));
-  if (!Object.hasOwn(blueprint, "modelled_after")) {
+for (const filePath of leftoverDumpFiles) {
+  const leftoverDump = JSON.parse(await readFile(filePath, "utf8"));
+  if (!Object.hasOwn(leftoverDump, "modelled_after")) {
     failures.push(
       `${relative(packageRoot, filePath)} missing nullable modelled_after alias array`,
     );
     continue;
   }
-  const aliases = modelledAfterAliases(blueprint.modelled_after);
+  const aliases = modelledAfterAliases(leftoverDump.modelled_after);
   if (aliases === null) {
     failures.push(
       `${relative(packageRoot, filePath)} modelled_after must be null or an array of source aliases`,
@@ -128,7 +131,7 @@ for (const filePath of blueprintFiles) {
       );
       continue;
     }
-    for (const token of normalizeTokens(alias)) {
+    for (const token of splitWords(alias)) {
       sourceTokens.add(token);
     }
     for (const token of compactTokens(alias)) {
@@ -139,35 +142,36 @@ for (const filePath of blueprintFiles) {
 
 const forbiddenTokens = new Set([...forbiddenAffinityTokens, ...sourceTokens]);
 
-for (const filePath of blueprintFiles) {
-  const blueprint = JSON.parse(await readFile(filePath, "utf8"));
-  addValueCheck(failures, filePath, "blueprint id", blueprint.id, forbiddenTokens);
-  addValueCheck(failures, filePath, "blueprint name", blueprint.name, forbiddenTokens);
+for (const filePath of leftoverDumpFiles) {
+  const leftoverDump = JSON.parse(await readFile(filePath, "utf8"));
+  addValueCheck(failures, filePath, "dump id", leftoverDump.id, forbiddenTokens);
+  addValueCheck(failures, filePath, "dump name", leftoverDump.name, forbiddenTokens);
   addValueCheck(
     failures,
     filePath,
-    "blueprint description",
-    blueprint.description,
+    "dump description",
+    leftoverDump.description,
     forbiddenTokens,
   );
-  addValueCheck(failures, filePath, "theme", blueprint.theme, forbiddenTokens);
+  addValueCheck(failures, filePath, "theme", leftoverDump.theme, forbiddenTokens);
   addValueCheck(
     failures,
     filePath,
     "affinity_group",
-    blueprint.affinity_group,
+    leftoverDump.affinity_group,
     forbiddenTokens,
   );
-  for (const companion of blueprint.companion_blueprints ?? []) {
+  // Don't say blueprint: leftover dump companion list
+  for (const companion of leftoverDump.companion_blueprints ?? []) {
     addValueCheck(
       failures,
       filePath,
-      "companion_blueprints[]",
+      "companion dumps",
       companion,
       forbiddenTokens,
     );
   }
-  for (const form of blueprint.forms ?? []) {
+  for (const form of leftoverDump.forms ?? []) {
     addValueCheck(failures, filePath, "form_id", form.form_id, forbiddenTokens);
   }
 }
@@ -182,8 +186,7 @@ const registryFiles = await collectFiles(
   registryRoot,
   (path) =>
     path.endsWith("contract.json") ||
-    path.endsWith("component.tsx") ||
-    path.endsWith("docs.md"),
+    path.endsWith("component.tsx"),
 );
 for (const filePath of registryFiles) {
   const relPath = relative(packageRoot, filePath);
@@ -242,8 +245,8 @@ if (failures.length > 0) {
   console.error(
     [
       "Public reference boundary check failed.",
-      "Keep source brands and company-size/business-type affinity out of reusable blueprint, component, and theme identifiers.",
-      "Put source provenance in the nullable blueprint modelled_after alias array and source metadata instead.",
+      "Keep source brands and company-size/business-type affinity out of reusable leftover dump, website component, and theme identifiers.",
+      "Put source origin in the nullable leftover dump modelled_after alias array and source metadata instead.",
       "",
       ...failures,
     ].join("\n"),

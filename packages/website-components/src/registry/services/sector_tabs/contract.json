@@ -1,6 +1,5 @@
 {
   "id": "public.services.sector_tabs",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Capability Tabs",
   "family": "services",
@@ -8,16 +7,27 @@
   "props_schema": {
     "type": "object",
     "properties": {
-      "anchor_id": { "type": "string" },
-      "eyebrow": { "type": "string" },
-      "title": { "type": "string" },
+      "anchor_id": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
       "sectors": {
         "type": "array",
-        "items": { "type": "object", "additionalProperties": true }
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
       }
     },
     "additionalProperties": true,
-    "required": ["sectors"]
+    "required": [
+      "sectors"
+    ]
   },
   "editable_slots": [
     {

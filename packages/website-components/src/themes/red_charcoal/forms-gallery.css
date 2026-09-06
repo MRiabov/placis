@@ -4,7 +4,7 @@
   padding-top: 82px;
 }
 
-.public-theme-red-charcoal #contact .public-site-shell {
+.public-theme-red-charcoal #contact .website-frame {
   align-items: start;
 }
 
@@ -120,7 +120,7 @@
   padding-top: 0;
 }
 
-.public-theme-red-charcoal .public-gallery-grid--carousel .public-site-shell {
+.public-theme-red-charcoal .public-gallery-grid--carousel .website-frame {
   max-width: none;
   padding-left: 0;
   padding-right: 0;

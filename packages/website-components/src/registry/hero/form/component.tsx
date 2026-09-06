@@ -1,4 +1,4 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 import {
   LeadFormFields,
@@ -6,7 +6,7 @@ import {
 } from "../../form/lead/component";
 import HeroImage from "../image/component";
 
-export default function HeroForm(props: PublicSiteComponentProps) {
+export default function HeroForm(props: WebsiteComponentProps) {
   const fields = asRecords(props.props.fields);
   if (fields.length === 0) {
     return <HeroImage {...props} />;

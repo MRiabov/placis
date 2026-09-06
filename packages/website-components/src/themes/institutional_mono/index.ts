@@ -1,5 +1,5 @@
 import { gray, slate } from "@radix-ui/colors";
-import type { PublicSiteThemePreset } from "../types";
+import type { WebsiteThemePreset } from "../types";
 
 const harperColors = {
   accent: gray.gray12,
@@ -18,7 +18,7 @@ export const institutionalMonoThemePreset = {
   source:
     "https://www.harperconstruction.com/ (Squarespace 7 image-index pages, custom DINOT/Novecento CSS)",
   cssClass: "public-theme-institutional-mono",
-  runtimeTheme: {
+  websiteTheme: {
     preset: "institutional_mono",
     primary: harperColors.brand,
     neutral: "gray",
@@ -58,8 +58,8 @@ export const institutionalMonoThemePreset = {
     revealDuration: "700ms",
   },
   notes: [
-    "Source-backed preset for Harper Construction's Squarespace 7 image-index pages: white overlay navigation, dark translucent centered hero title bands, thin uppercase nav labels, broad white content sections, and quiet monochrome controls.",
+    "Source-backed preset for Harper Construction's Squarespace 7 image-index pages: white overlay top menu, dark translucent centered hero title bands, thin uppercase top menu labels, broad white content sections, and quiet monochrome controls.",
     "The source uses custom DINOT and Novecento font files. The reusable preset approximates that pairing with Josefin Sans display text and light Inter body text because the source font files are not redistributed in this package.",
-    "Use with full-bleed image hero sections and portfolio/category galleries. It is intentionally internal until components support the source scroll indicator and mobile overlay navigation behavior more fully.",
+    "Use with full-bleed image hero sections and project galleries. It is intentionally internal until website components support the source scroll indicator and mobile overlay top menu behavior more fully.",
   ],
-} satisfies PublicSiteThemePreset;
+} satisfies WebsiteThemePreset;

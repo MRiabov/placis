@@ -387,8 +387,32 @@ func TestEnabledTrees(t *testing.T) {
 	if !scanExt("scripts/deploy_contractor_website_cloudflare.mjs", false) {
 		t.Fatal("scripts .mjs should be scanned")
 	}
-	if inEnabledTree("packages/website-components/src/registry/hero/type_first/docs.md", false) {
-		t.Fatal("packages markdown is outside enabled trees")
+	if !inEnabledTree("packages/website-components/src/registry.ts", false) {
+		t.Fatal("website component package should be enabled")
+	}
+	if !inHome("packages/website-components/src/registry.ts", []string{"website"}) {
+		t.Fatal("website component package is website home")
+	}
+	if inHome("packages/website-components/src/registry.ts", []string{"media"}) {
+		t.Fatal("website component package is not media home")
+	}
+	if !scanExt("packages/website-components/src/registry.ts", false) {
+		t.Fatal("website component package .ts should be scanned")
+	}
+	if !scanExt("packages/website-components/src/registry/hero/image/component.tsx", false) {
+		t.Fatal("website component package .tsx should be scanned")
+	}
+	if !scanExt("packages/website-components/src/registry/hero/image/contract.json", false) {
+		t.Fatal("website component package .json should be scanned")
+	}
+	if !scanExt("packages/website-components/src/styles.css", false) {
+		t.Fatal("website component package .css should be scanned")
+	}
+	if shouldSkipPath("packages/website-components/src/registry.ts", false) {
+		t.Fatal("website component package should not be skipped")
+	}
+	if !shouldSkipPath("packages/website-components/src/blueprints/home/basic/blueprint.json", false) {
+		t.Fatal("website component leftover dumps should be skipped")
 	}
 	if inEnabledTree("demo/src/layout/CmsLayout.tsx", false) {
 		t.Fatal("root demo/ is no longer the look app")
@@ -423,9 +447,6 @@ func TestEnabledTrees(t *testing.T) {
 	if !inEnabledTree("frontend-2/src/x.md", true) {
 		t.Fatal("frontend-2 should be enabled with --frontend")
 	}
-	if !shouldSkipPath("packages/website-components/src/registry/hero/type_first/docs.md", false) {
-		t.Fatal("packages markdown should be skipped")
-	}
 	if !shouldSkipPath("cmd/ci/check-pipeline-tables/testdata/ok/sample/testing.md", false) {
 		t.Fatal("checker testdata should be skipped")
 	}
@@ -434,7 +455,7 @@ func TestEnabledTrees(t *testing.T) {
 		"apps/contractor-website/README.md",
 		"frontend-2/src/x.md",
 	}, false)
-	if len(got) != 1 || got[0] != "apps/contractor-website/README.md" {
+	if len(got) != 2 || got[0] != "packages/website-components/src/x.md" || got[1] != "apps/contractor-website/README.md" {
 		t.Fatalf("explicit filenames must stay in enabled trees, got %v", got)
 	}
 }

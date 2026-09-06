@@ -1,6 +1,5 @@
 {
   "id": "public.services.tabs",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Services Tabs",
   "family": "services",
@@ -30,7 +29,10 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title", "services"]
+    "required": [
+      "title",
+      "services"
+    ]
   },
   "editable_slots": [
     {

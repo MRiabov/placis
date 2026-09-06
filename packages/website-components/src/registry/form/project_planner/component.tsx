@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
-export default function ProjectPlanner({ props }: PublicSiteComponentProps) {
+export default function ProjectPlanner({ props }: WebsiteComponentProps) {
   const projectTypes = asRecords(props.project_types);
   const priorities = asRecords(props.priorities);
   const timeline = asRecords(props.timeline);

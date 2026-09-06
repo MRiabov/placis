@@ -1,6 +1,5 @@
 {
   "id": "public.hero.image",
-  "aliases": ["public.hero.v1"],
   "schema_version": 1,
   "display_name": "Image Hero",
   "family": "hero",
@@ -25,11 +24,17 @@
           },
           "target": {
             "type": "string",
-            "enum": ["same_tab", "new_tab"]
+            "enum": [
+              "same_tab",
+              "new_tab"
+            ]
           }
         },
         "additionalProperties": true,
-        "required": ["label", "href"]
+        "required": [
+          "label",
+          "href"
+        ]
       },
       "secondary_cta": {
         "type": "object",
@@ -42,11 +47,17 @@
           },
           "target": {
             "type": "string",
-            "enum": ["same_tab", "new_tab"]
+            "enum": [
+              "same_tab",
+              "new_tab"
+            ]
           }
         },
         "additionalProperties": true,
-        "required": ["label", "href"]
+        "required": [
+          "label",
+          "href"
+        ]
       },
       "actions": {
         "type": "array",
@@ -61,14 +72,20 @@
             },
             "target": {
               "type": "string",
-              "enum": ["same_tab", "new_tab"]
+              "enum": [
+                "same_tab",
+                "new_tab"
+              ]
             }
           },
           "additionalProperties": true,
-          "required": ["label", "href"]
+          "required": [
+            "label",
+            "href"
+          ]
         }
       },
-      "media": {
+      "image": {
         "type": "object",
         "properties": {
           "asset_id": {
@@ -110,14 +127,20 @@
       },
       "layout": {
         "type": "string",
-        "enum": ["default", "center_overlay", "text_only"]
+        "enum": [
+          "default",
+          "center_overlay",
+          "text_only"
+        ]
       },
       "eyebrow": {
         "type": "string"
       }
     },
     "additionalProperties": true,
-    "required": ["headline"]
+    "required": [
+      "headline"
+    ]
   },
   "editable_slots": [
     {
@@ -142,7 +165,7 @@
       "max_length": null
     },
     {
-      "key": "media.asset_id",
+      "key": "image.asset_id",
       "type": "image",
       "label": "Hero image",
       "required": false,
@@ -181,7 +204,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

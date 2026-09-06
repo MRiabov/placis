@@ -1,17 +1,17 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
 export default function ServicesGrid({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const services = asRecords(props.services);
   return (
     <section
       className={`${sectionPadding(theme)} bg-(--public-background)`}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-(--public-muted)">
             Services

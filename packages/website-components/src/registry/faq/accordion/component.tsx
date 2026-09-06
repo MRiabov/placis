@@ -1,17 +1,17 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, text } from "../../../utils";
 
 export default function FaqAccordion({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const items = asRecords(props.items ?? props.questions);
   return (
     <section
       className={`${sectionPadding(theme)} bg-(--public-background)`}
     >
-      <div className="public-site-shell max-w-3xl">
+      <div className="website-frame max-w-3xl">
         <h2 className="text-3xl font-bold">{text(props.title, "Questions")}</h2>
         <div className="mt-6 divide-y divide-(--public-border) rounded-(--public-radius) border border-(--public-border)">
           {items.map((item) => (

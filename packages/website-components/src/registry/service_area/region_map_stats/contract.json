@@ -1,6 +1,5 @@
 {
   "id": "public.service_area.region_map_stats",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Region Map Stats",
   "family": "service_area",
@@ -65,7 +64,10 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title", "regions"]
+    "required": [
+      "title",
+      "regions"
+    ]
   },
   "editable_slots": [
     {
@@ -102,7 +104,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

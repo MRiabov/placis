@@ -1,6 +1,5 @@
 {
   "id": "public.hero.type_first_trust",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Trust Hero",
   "family": "hero",
@@ -8,21 +7,45 @@
   "props_schema": {
     "type": "object",
     "properties": {
-      "anchor_id": { "type": "string" },
-      "eyebrow": { "type": "string" },
-      "headline": { "type": "string" },
-      "emphasized_headline": { "type": "string" },
-      "subheadline": { "type": "string" },
-      "media": { "type": "object", "additionalProperties": true },
-      "primary_cta": { "type": "object", "additionalProperties": true },
-      "secondary_cta": { "type": "object", "additionalProperties": true },
+      "anchor_id": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "headline": {
+        "type": "string"
+      },
+      "emphasized_headline": {
+        "type": "string"
+      },
+      "subheadline": {
+        "type": "string"
+      },
+      "image": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "primary_cta": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "secondary_cta": {
+        "type": "object",
+        "additionalProperties": true
+      },
       "proof_items": {
         "type": "array",
-        "items": { "type": "object", "additionalProperties": true }
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
       }
     },
     "additionalProperties": true,
-    "required": ["headline"]
+    "required": [
+      "headline"
+    ]
   },
   "editable_slots": [
     {
@@ -54,7 +77,7 @@
       "max_length": null
     },
     {
-      "key": "media.url",
+      "key": "image.url",
       "type": "image",
       "label": "Hero image",
       "required": false,

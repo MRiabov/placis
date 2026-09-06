@@ -4,15 +4,15 @@ export {
   pageTitle,
   resolveManifestPage,
 } from "./manifest";
-export { PublicSiteRenderer } from "./PublicSiteRenderer";
+export { WebsiteRenderer } from "./WebsiteRenderer";
 export {
-  findPublicSiteComponent,
-  loadPublicSiteComponents,
-  publicSiteRegistry,
+  findWebsiteComponent,
+  loadWebsiteComponents,
+  websiteComponentRegistry,
 } from "./registry";
 export { normalizeTheme, themeClassName, themeStyle } from "./theme";
 export type {
-  PublicSiteThemePreset,
+  WebsiteThemePreset,
   PublicThemeColorTokens,
   PublicThemeMotionTokens,
   PublicThemeSpacingTokens,
@@ -29,14 +29,14 @@ export {
 } from "./themes";
 export type {
   JsonObject,
-  LoadedPublicSiteComponent,
-  PublicSiteComponent,
-  PublicSiteComponentDefinition,
-  PublicSiteComponentProps,
-  PublicSiteManifest,
-  PublicSitePage,
-  PublicSiteRenderContext,
-  PublicSiteRendererProps,
-  PublicSiteSection,
-  PublicSiteTheme,
+  LoadedWebsiteComponent,
+  WebsiteComponent,
+  WebsiteComponentDefinition,
+  WebsiteComponentProps,
+  WebsiteManifest,
+  WebsitePage,
+  WebsiteRenderContext,
+  WebsiteRendererProps,
+  WebsiteSection,
+  WebsiteTheme,
 } from "./types";

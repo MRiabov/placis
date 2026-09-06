@@ -1,6 +1,5 @@
 {
   "id": "public.content.intro",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Intro Content",
   "family": "content",
@@ -25,7 +24,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["title"]
+    "required": [
+      "title"
+    ]
   },
   "editable_slots": [
     {
@@ -55,7 +56,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

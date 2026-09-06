@@ -1,11 +1,11 @@
-import type { PublicSiteThemePreset } from "../types";
+import type { WebsiteThemePreset } from "../types";
 
 export const timbermillClassicThemePreset = {
   id: "theme.timbermill_classic",
   label: "Timbermill Classic",
   source: "https://timbermillconstruction.ie/",
   cssClass: "public-theme-timbermill-classic",
-  runtimeTheme: {
+  websiteTheme: {
     preset: "timbermill_classic",
     primary: "#b9ad7b",
     neutral: "warm",
@@ -49,4 +49,4 @@ export const timbermillClassicThemePreset = {
     "The live reference uses Salient/WPBakery delayed reveal animation; CMS fixtures should render content visibly by default.",
     "Use public WordPress image URLs as fixture references until source assets are provided.",
   ],
-} satisfies PublicSiteThemePreset;
+} satisfies WebsiteThemePreset;

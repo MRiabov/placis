@@ -1,0 +1,75 @@
+{
+  "id": "public.top_menu.center_logo",
+  "schema_version": 1,
+  "display_name": "Centered logo top menu",
+  "family": "top_menu",
+  "variant": "center_logo",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "business_name": {
+        "type": "string"
+      },
+      "home_href": {
+        "type": "string"
+      },
+      "left_links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "right_links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "show_search": {
+        "type": "boolean"
+      },
+      "search_href": {
+        "type": "string"
+      },
+      "search_label": {
+        "type": "string"
+      },
+      "menu_id": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "business_name",
+      "type": "text",
+      "label": "Business name",
+      "required": true,
+      "max_length": 80
+    },
+    {
+      "key": "left_links",
+      "type": "list",
+      "label": "Left top menu links",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "right_links",
+      "type": "list",
+      "label": "Right top menu links",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    }
+  ],
+  "design_controls": []
+}

@@ -10,7 +10,7 @@
     font-weight: 500;
   }
 
-  .public-theme-green-gold .public-site-shell {
+  .public-theme-green-gold .website-frame {
     max-width: 1220px;
   }
 
@@ -24,7 +24,7 @@
   .public-theme-green-gold .public-mega-nav__links,
   .public-theme-green-gold .public-mega-nav__tools,
   .public-theme-green-gold .public-section-label,
-  .public-theme-green-gold .public-media-hero__eyebrow {
+  .public-theme-green-gold .website-image-hero__eyebrow {
     letter-spacing: 0;
   }
 
@@ -36,7 +36,7 @@
 
   .public-theme-green-gold .public-content-split h2,
   .public-theme-green-gold .public-gallery-grid h2,
-  .public-theme-green-gold .public-proof-testimonials h2,
+  .public-theme-green-gold .website-reviews-cards h2,
   .public-theme-green-gold .public-region-map-stats h2,
   .public-theme-green-gold .public-cta-band h2 {
     font-family: "Barlow", "Arial Narrow", system-ui, sans-serif;
@@ -46,7 +46,7 @@
     text-transform: none;
   }
 
-  .public-theme-green-gold .public-media-hero__actions a {
+  .public-theme-green-gold .website-image-hero__actions a {
     background: transparent;
     color: #fff;
     min-height: auto;
@@ -54,7 +54,7 @@
     position: relative;
   }
 
-  .public-theme-green-gold .public-media-hero__actions a::after {
+  .public-theme-green-gold .website-image-hero__actions a::after {
     background: #fff;
     content: "";
     height: 2px;
@@ -65,7 +65,7 @@
     width: 88px;
   }
 
-  .public-theme-green-gold .public-media-hero__controls > button {
+  .public-theme-green-gold .website-image-hero__controls > button {
     align-items: center;
     border: 2px solid var(--public-accent);
     border-radius: 999px;
@@ -81,7 +81,7 @@
     width: 34px;
   }
 
-  .public-theme-green-gold .public-media-hero__pause-icon {
+  .public-theme-green-gold .website-image-hero__pause-icon {
     color: #fff;
   }
 

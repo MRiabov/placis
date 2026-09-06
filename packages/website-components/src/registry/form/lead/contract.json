@@ -1,6 +1,5 @@
 {
   "id": "public.form.lead",
-  "aliases": ["public.lead_form.v1"],
   "schema_version": 1,
   "display_name": "Lead Form",
   "family": "form",
@@ -19,7 +18,9 @@
       },
       "submit_action": {
         "type": "string",
-        "enum": ["create_lead"]
+        "enum": [
+          "create_lead"
+        ]
       },
       "fields": {
         "type": "array",
@@ -28,7 +29,7 @@
           "properties": {
             "id": {
               "type": "string",
-              "pattern": "slug"
+              "pattern": "^[a-z0-9_]+$"
             },
             "label": {
               "type": "string"
@@ -39,7 +40,7 @@
                 "text",
                 "textarea",
                 "email",
-                "phone",
+                "marketing_phone",
                 "tel",
                 "address",
                 "select",
@@ -55,7 +56,10 @@
               "type": "boolean"
             },
             "placeholder": {
-              "type": ["string", "null"]
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "options": {
               "type": "array",
@@ -70,19 +74,28 @@
                   }
                 },
                 "additionalProperties": true,
-                "required": ["label", "value"]
+                "required": [
+                  "label",
+                  "value"
+                ]
               }
             },
             "width": {
               "type": "string",
-              "enum": ["full", "half"]
+              "enum": [
+                "full",
+                "half"
+              ]
             },
             "description": {
               "type": "string"
             }
           },
           "additionalProperties": true,
-          "required": ["id", "label"]
+          "required": [
+            "id",
+            "label"
+          ]
         },
         "minItems": 1
       },
@@ -98,7 +111,7 @@
               "type": "string"
             }
           },
-          "phone": {
+          "marketing_phone": {
             "type": "string"
           },
           "phone_href": {
@@ -118,7 +131,10 @@
           },
           "layout": {
             "type": "string",
-            "enum": ["default", "location_contact"]
+            "enum": [
+              "default",
+              "location_contact"
+            ]
           },
           "address_label": {
             "type": "string"
@@ -137,14 +153,22 @@
       },
       "layout": {
         "type": "string",
-        "enum": ["default", "centered", "contact_split"]
+        "enum": [
+          "default",
+          "centered",
+          "contact_split"
+        ]
       },
       "eyebrow": {
         "type": "string"
       }
     },
     "additionalProperties": true,
-    "required": ["form_id", "title", "fields"]
+    "required": [
+      "form_id",
+      "title",
+      "fields"
+    ]
   },
   "editable_slots": [
     {
@@ -180,7 +204,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

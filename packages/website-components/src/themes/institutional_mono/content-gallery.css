@@ -2,8 +2,8 @@
 .public-theme-institutional-mono .public-content-split,
 .public-theme-institutional-mono .public-story-text,
 .public-theme-institutional-mono .public-services-cards,
-.public-theme-institutional-mono .public-proof-logo-strip,
-.public-theme-institutional-mono .public-proof-bar,
+.public-theme-institutional-mono .website-content-logo-strip,
+.public-theme-institutional-mono .website-content-bar,
 .public-theme-institutional-mono .public-leadership-grid,
 .public-theme-institutional-mono .public-gallery-grid,
 .public-theme-institutional-mono .public-poster-grid,
@@ -15,7 +15,7 @@
   padding-top: var(--public-section-block);
 }
 
-.public-theme-institutional-mono .public-content-intro .public-site-shell,
+.public-theme-institutional-mono .public-content-intro .website-frame,
 .public-theme-institutional-mono .public-content-split__inner {
   max-width: 760px;
 }
@@ -40,7 +40,7 @@
 .public-theme-institutional-mono .public-services-cards h2,
 .public-theme-institutional-mono .public-gallery-grid h2,
 .public-theme-institutional-mono .public-poster-grid h2,
-.public-theme-institutional-mono .public-proof-logo-strip h2,
+.public-theme-institutional-mono .website-content-logo-strip h2,
 .public-theme-institutional-mono .public-leadership-grid h2,
 .public-theme-institutional-mono .public-contact-panel h2,
 .public-theme-institutional-mono .public-lead-form h2,
@@ -455,7 +455,7 @@
   padding: 0;
 }
 
-.public-theme-institutional-mono .public-gallery-grid--packed .public-site-shell {
+.public-theme-institutional-mono .public-gallery-grid--packed .website-frame {
   max-width: none;
   padding-left: 0;
   padding-right: 0;

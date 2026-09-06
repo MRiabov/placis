@@ -1,6 +1,5 @@
 {
   "id": "public.privacy.notice",
-  "aliases": ["public.privacy_notice.v1"],
   "schema_version": 1,
   "display_name": "Privacy Notice",
   "family": "privacy",
@@ -22,7 +21,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["contact_email"]
+    "required": [
+      "contact_email"
+    ]
   },
   "editable_slots": [
     {

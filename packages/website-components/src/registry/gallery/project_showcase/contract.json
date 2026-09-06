@@ -1,6 +1,5 @@
 {
   "id": "public.gallery.project_showcase",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Project Showcase",
   "family": "gallery",
@@ -8,14 +7,23 @@
   "props_schema": {
     "type": "object",
     "properties": {
-      "anchor_id": { "type": "string" },
-      "eyebrow": { "type": "string" },
-      "title": { "type": "string" },
+      "anchor_id": {
+        "type": "string"
+      },
+      "eyebrow": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string"
+      },
       "projects": {
         "oneOf": [
           {
             "type": "array",
-            "items": { "type": "object", "additionalProperties": true }
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
           },
           {
             "type": "string",
@@ -25,7 +33,9 @@
       }
     },
     "additionalProperties": true,
-    "required": ["projects"]
+    "required": [
+      "projects"
+    ]
   },
   "editable_slots": [
     {

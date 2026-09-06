@@ -1,6 +1,5 @@
 {
   "id": "public.hero.type_first",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Type-first Hero",
   "family": "hero",
@@ -25,18 +24,26 @@
           },
           "target": {
             "type": "string",
-            "enum": ["same_tab", "new_tab"]
+            "enum": [
+              "same_tab",
+              "new_tab"
+            ]
           }
         },
         "additionalProperties": true,
-        "required": ["label", "href"]
+        "required": [
+          "label",
+          "href"
+        ]
       },
       "proof_line": {
         "type": "string"
       }
     },
     "additionalProperties": true,
-    "required": ["headline"]
+    "required": [
+      "headline"
+    ]
   },
   "editable_slots": [
     {
@@ -73,7 +80,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

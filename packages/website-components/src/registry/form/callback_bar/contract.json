@@ -1,6 +1,5 @@
 {
   "id": "public.form.callback_bar",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Callback Bar Form",
   "family": "form",
@@ -24,7 +23,7 @@
           "properties": {
             "id": {
               "type": "string",
-              "pattern": "slug"
+              "pattern": "^[a-z0-9_]+$"
             },
             "label": {
               "type": "string"
@@ -35,7 +34,7 @@
                 "text",
                 "textarea",
                 "email",
-                "phone",
+                "marketing_phone",
                 "tel",
                 "address",
                 "select",
@@ -66,18 +65,28 @@
                   }
                 },
                 "additionalProperties": true,
-                "required": ["label", "value"]
+                "required": [
+                  "label",
+                  "value"
+                ]
               }
             }
           },
           "additionalProperties": true,
-          "required": ["id", "label"]
+          "required": [
+            "id",
+            "label"
+          ]
         },
         "minItems": 1
       }
     },
     "additionalProperties": true,
-    "required": ["form_id", "title", "fields"]
+    "required": [
+      "form_id",
+      "title",
+      "fields"
+    ]
   },
   "editable_slots": [
     {
@@ -107,7 +116,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

@@ -6,7 +6,7 @@ export { redCharcoalThemePreset } from "./red_charcoal";
 export { navyGridThemePreset } from "./navy_grid";
 export { timbermillClassicThemePreset } from "./timbermill_classic";
 export type {
-  PublicSiteThemePreset,
+  WebsiteThemePreset,
   PublicThemeColorTokens,
   PublicThemeMotionTokens,
   PublicThemeSpacingTokens,

@@ -1,6 +1,5 @@
 {
   "id": "public.reviews.panel",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "Reviews",
   "family": "reviews",

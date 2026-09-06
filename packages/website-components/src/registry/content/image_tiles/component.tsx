@@ -1,7 +1,7 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function ImageTiles({ props }: PublicSiteComponentProps) {
+export default function ImageTiles({ props }: WebsiteComponentProps) {
   const items = asRecords(props.items);
   return (
     <section
@@ -9,7 +9,7 @@ export default function ImageTiles({ props }: PublicSiteComponentProps) {
       data-public-image-tiles
       id={text(props.anchor_id, "") || undefined}
     >
-      <div className="public-site-shell">
+      <div className="website-frame">
         <div className="public-image-tiles__frame">
           <div className="public-image-tiles__content">
             <div className="public-image-tiles__heading">

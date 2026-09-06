@@ -1,0 +1,116 @@
+{
+  "id": "public.top_menu.fixed_cta",
+  "schema_version": 1,
+  "display_name": "Fixed CTA top menu",
+  "family": "top_menu",
+  "variant": "fixed_cta",
+  "props_schema": {
+    "type": "object",
+    "properties": {
+      "business_name": {
+        "type": "string"
+      },
+      "logo_url": {
+        "type": "string"
+      },
+      "logo": {
+        "type": [
+          "object",
+          "string"
+        ],
+        "properties": {
+          "asset_id": {
+            "type": "string"
+          },
+          "file_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "alt": {
+            "type": "string"
+          },
+          "alt_text": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "canonical_name": {
+            "type": "string"
+          },
+          "review_status": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "home_href": {
+        "type": "string"
+      },
+      "links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "cta": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true,
+          "required": [
+            "label"
+          ]
+        }
+      }
+    },
+    "additionalProperties": true
+  },
+  "editable_slots": [
+    {
+      "key": "business_name",
+      "type": "text",
+      "label": "Business name",
+      "required": false,
+      "max_length": null
+    },
+    {
+      "key": "logo",
+      "type": "image",
+      "label": "Logo",
+      "required": false,
+      "max_length": null,
+      "omit_if_unresolved": [
+        "logo_url"
+      ]
+    },
+    {
+      "key": "links",
+      "type": "list",
+      "label": "Top menu links",
+      "required": false,
+      "max_length": null
+    }
+  ],
+  "default_values": [
+    {
+      "path": "business_name",
+      "value": "{{business_name}}"
+    },
+    {
+      "path": "logo",
+      "value": "{{images.logo}}"
+    }
+  ],
+  "design_controls": []
+}

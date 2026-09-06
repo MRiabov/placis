@@ -35,7 +35,7 @@
   line-height: 1;
 }
 
-.public-theme-navy-cream .public-site-button {
+.public-theme-navy-cream .website-button {
   border-radius: var(--public-radius);
   transition:
     background 200ms var(--public-ease),
@@ -44,7 +44,7 @@
     border-color 200ms var(--public-ease);
 }
 
-.public-theme-navy-cream .public-site-button:hover {
+.public-theme-navy-cream .website-button:hover {
   transform: translateY(-2px);
 }
 
@@ -113,7 +113,7 @@
 }
 
 .public-theme-navy-cream .public-gallery-grid,
-.public-theme-navy-cream .public-proof-testimonials {
+.public-theme-navy-cream .website-reviews-cards {
   background: #fff;
 }
 

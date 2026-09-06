@@ -1,6 +1,5 @@
 {
   "id": "public.faq.list",
-  "aliases": [],
   "schema_version": 1,
   "display_name": "FAQ List",
   "family": "faq",
@@ -33,7 +32,10 @@
             }
           },
           "additionalProperties": true,
-          "required": ["question", "answer"]
+          "required": [
+            "question",
+            "answer"
+          ]
         },
         "minItems": 1
       },
@@ -50,13 +52,18 @@
             }
           },
           "additionalProperties": true,
-          "required": ["question", "answer"]
+          "required": [
+            "question",
+            "answer"
+          ]
         },
         "minItems": 1
       }
     },
     "additionalProperties": true,
-    "required": ["items"]
+    "required": [
+      "items"
+    ]
   },
   "editable_slots": [
     {

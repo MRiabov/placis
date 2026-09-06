@@ -1,11 +1,11 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asStrings, imageUrl, text } from "../../../utils";
 
 export default function ServiceAreaCoverage({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const areas = asStrings(props.areas ?? props.service_area);
   const image = imageUrl(props.image_url ?? props.source_image_url);
   const href = text(props.href, "");
@@ -14,7 +14,7 @@ export default function ServiceAreaCoverage({
     <section
       className={`${sectionPadding(theme)} public-service-area-coverage bg-(--public-background)`}
     >
-      <div className="public-site-shell public-service-area-coverage__inner">
+      <div className="website-frame public-service-area-coverage__inner">
         <div className="public-service-area-coverage__copy">
           <p className="public-section-label">
             {text(props.eyebrow, "Service area")}

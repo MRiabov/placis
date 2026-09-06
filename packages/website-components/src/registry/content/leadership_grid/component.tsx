@@ -1,11 +1,11 @@
 import { sectionPadding } from "../../../theme";
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
 export default function LeadershipGrid({
   props,
   theme,
-}: PublicSiteComponentProps) {
+}: WebsiteComponentProps) {
   const anchor = text(props.anchor_id);
   const items = asRecords(props.items);
 
@@ -14,7 +14,7 @@ export default function LeadershipGrid({
       className={`${sectionPadding(theme)} public-leadership-grid`}
       id={anchor || undefined}
     >
-      <div className="public-site-shell public-leadership-grid__inner">
+      <div className="website-frame public-leadership-grid__inner">
         {props.title ? <h2>{text(props.title, "Leadership")}</h2> : null}
         <div className="public-leadership-grid__items">
           {items.map((item, index) => {

@@ -1,19 +1,19 @@
-import type { PublicSiteComponentProps } from "../../../types";
+import type { WebsiteComponentProps } from "../../../types";
 import { asRecord, asRecords, imageUrl, text } from "../../../utils";
 
 export default function TypeFirstTrustHero({
   props,
-}: PublicSiteComponentProps) {
-  const media = asRecord(props.media);
+}: WebsiteComponentProps) {
+  const image = asRecord(props.image);
   const proofItems = asRecords(props.proof_items ?? props.proofItems);
   const primaryCta = asRecord(props.primary_cta ?? props.primaryCta);
   const secondaryCta = asRecord(props.secondary_cta ?? props.secondaryCta);
   const heroImage = imageUrl(
     props.generated_image_url ??
       props.image_url ??
-      media.generated_image_url ??
-      media.image_url ??
-      media.url,
+      image.generated_image_url ??
+      image.image_url ??
+      image.url,
   );
 
   return (
@@ -69,9 +69,9 @@ export default function TypeFirstTrustHero({
       {proofItems.length ? (
         <div className="public-trust-hero__stats">
           {proofItems.slice(0, 4).map((item) => (
-            <div className="public-trust-stat" key={text(item.label, "Proof")}>
+            <div className="public-trust-stat" key={text(item.label, "Highlight")}>
               <strong>{text(item.value, "Trusted")}</strong>
-              <span>{text(item.label, "Proof point")}</span>
+              <span>{text(item.label, "Highlight")}</span>
             </div>
           ))}
         </div>
