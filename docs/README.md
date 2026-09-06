@@ -60,7 +60,7 @@ ads; the owner can do the same edits and ads themselves in the CMS.
 | Persistence conventions + index | [general-architecture/persistence.md](general-architecture/persistence.md) |
 | Store (pool / goose) | [infrastructure/store.md](infrastructure/store.md) |
 | HTTP conventions + per-feature `api.md` | [general-architecture/api.md](general-architecture/api.md) |
-| AI layer, audit, jobs, files and S3 | [infrastructure/](infrastructure/README.md) |
+| AI layer, jobs, files and S3 | [infrastructure/](infrastructure/README.md) |
 | Onboarding loop (business research → profile) | [features/onboarding/README.md](features/onboarding/README.md) |
 | ETL (extract + transform) | [features/etl/README.md](features/etl/README.md) |
 | Business profile | [features/business-profile/README.md](features/business-profile/README.md) |

@@ -267,6 +267,9 @@ Status: decided (2026-08-16, product owner + engineering). Update an entry
     - 2026-09-03, later: prefix is `websites.website_prefix`, reserved at 05
       Select and copy website template. 01 does not write a prefix column on
       `tenants`.
+    - 2026-09-06: 08 is optional share (preview website address). Website
+      activation is 09, not 08. `/me` still returns unactivated
+      `TenantRead` after Clerk org attach (ADR 22).
 
 17. **Whoever pays becomes the owner** — unauthenticated visitors may Clerk
     sign-in/sign-up and pay on the host. First verified Stripe

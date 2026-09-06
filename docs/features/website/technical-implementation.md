@@ -82,12 +82,11 @@ enqueues. This feature owns the tables 02 writes.
    not this serve path.
 4. Website rollback reactivates an earlier website publication; earlier
    published website copies are never overwritten.
-5. Website publication emits an audit event.
-6. Website publication is not a Cloudflare deploy. River `POST`s
+5. Website publication is not a Cloudflare deploy. River `POST`s
    `websitePublication`; the Worker writes HTML into R2 and purge; live GET
    is Cache then R2.
    Details: [cloudflare.md](cloudflare.md).
-7. Website publication and live website rollback require an active
+6. Website publication and live website rollback require an active
    subscription. Otherwise **402** `subscription_canceled`
    ([billing](../billing/architecture.md)).
 

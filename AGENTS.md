@@ -96,9 +96,10 @@ named in defined files.
   ([ETL](docs/features/etl/README.md)).
 - Placis website: no Go HTTP
   ([Placis website](docs/features/placis-website/README.md)).
-- Cross-cutting storage (files, audit, AI traces, River):
+- Cross-cutting storage (files, AI traces, River):
   [general architecture](docs/general-architecture/README.md), not a feature
-  `persistence.md`.
+  `persistence.md`. Trail conventions:
+  [audit](docs/general-architecture/audit.md).
 
 "Tests" here means the **test spec** (`testing.md` / `pipeline/testing/`), not
 Go / Playwright / Vitest files. Test code is implementation and waits for the
