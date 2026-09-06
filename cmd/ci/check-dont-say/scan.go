@@ -133,7 +133,7 @@ func homePrefixes(home string) []string {
 	case "details":
 		return []string{
 			"docs/features/business-profile/details",
-			"docs/features/business-profile/certifications-and-reviews/reviews",
+			"docs/features/business-profile/reviews",
 			"internal/profile/details",
 			"internal/profile/reviews",
 		}

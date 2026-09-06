@@ -16,11 +16,15 @@ projects share Postgres schema `business_profile`.
   `internal/profile/service.go`.
 - [projects/](projects/README.md) — Projects (`/cms/projects`). Table: `business_profile.projects`.
   HTTP: [projects/api.md](projects/api.md). Tests: [projects/testing.md](projects/testing.md).
-- [certifications-and-reviews/](certifications-and-reviews/README.md) — Certifications and reviews
-  (`/cms/certifications-and-reviews`). Persistence stays on
-  [business profile persistence](details/persistence.md). HTTP: [certifications](certifications-and-reviews/certifications/api.md) and [reviews](certifications-and-reviews/reviews/api.md). Screen
-  tests: [certifications-and-reviews/testing.md](certifications-and-reviews/testing.md) (HTTP 1:1 stays Details
-  `testing.md`).
+- [certifications/](certifications/README.md) — certification ticks on
+  Certifications and reviews (`/cms/certifications-and-reviews`). HTTP:
+  [certifications/api.md](certifications/api.md).
+- [reviews/](reviews/README.md) — **All reviews** / **top reviews** on that
+  same screen. HTTP: [reviews/api.md](reviews/api.md). Screen:
+  [reviews/frontend.md](reviews/frontend.md). Tests:
+  [reviews/testing.md](reviews/testing.md) (HTTP 1:1 stays Details
+  `testing.md`). Persistence stays on
+  [business profile persistence](details/persistence.md).
 
 How the owner reaches them:
 [CMS frontend](../../general-architecture/cms/frontend.md) (left nav).

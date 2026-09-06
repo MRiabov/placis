@@ -1,12 +1,13 @@
 # Certifications HTTP
 
-Conventions: [HTTP conventions](../../../../general-architecture/api.md).
+Conventions: [HTTP conventions](../../../general-architecture/api.md).
 Named identifiers:
-[docs conventions](../../../../docs-conventions.md#named-identifiers).
+[docs conventions](../../../docs-conventions.md#named-identifiers).
 One Profile **screen** with reviews:
-[certifications and reviews](../README.md). [ADR](../ADR.md) 1.
-Rows: [business profile persistence](../../details/persistence.md).
-Go: `internal/profile/certifications/`. Dos **call** `profile` `service.go`.
+[reviews](../reviews/README.md). [ADR](../reviews/ADR.md) 1.
+Rows: [business profile persistence](../details/persistence.md).
+Go: `internal/profile/certifications/`. Dos **call** `profile`
+`service.go`.
 
 **Auth default:** Clerk JWT, active tenant. Mutating Routes send
 `Idempotency-Key`. Unactivated **403** on this tree.

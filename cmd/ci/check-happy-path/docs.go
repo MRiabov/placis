@@ -28,8 +28,8 @@ var docsTestingRel = map[string]string{
 	"other/media/api.md":               "features/other/media/testing.md",
 	"business-profile/details/api.md":  "features/business-profile/details/testing.md",
 	"business-profile/projects/api.md": "features/business-profile/projects/testing.md",
-	"business-profile/certifications-and-reviews/certifications/api.md": "features/business-profile/details/testing.md",
-	"business-profile/certifications-and-reviews/reviews/api.md":        "features/business-profile/details/testing.md",
+	"business-profile/certifications/api.md": "features/business-profile/details/testing.md",
+	"business-profile/reviews/api.md":        "features/business-profile/details/testing.md",
 	"general-architecture/api.md":      "general-architecture/testing.md",
 }
 

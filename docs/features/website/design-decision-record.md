@@ -207,7 +207,7 @@ numbers are HTML comments so later entries keep their numbers.
     top band. Add from all reviews, remove, reorder. Cap is the website
     component’s max (some layouts take 3, others 6 or 8). Owner copy: reviews
     **on this website section**. Product: [ADR.md](ADR.md) 16 and
-    [certifications-and-reviews ADR](../business-profile/certifications-and-reviews/ADR.md). (2026-08-26)
+    [reviews ADR](../business-profile/reviews/ADR.md). (2026-08-26)
 
 16. **Website editor canvas is narrow-first** — **Narrow (≤1100px):** Workspace
     bottom bar is **Sites only**. Website assistant default is **closed** (call

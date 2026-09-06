@@ -1,11 +1,11 @@
 # Reviews HTTP
 
-Conventions: [HTTP conventions](../../../../general-architecture/api.md).
+Conventions: [HTTP conventions](../../../general-architecture/api.md).
 Named identifiers:
-[docs conventions](../../../../docs-conventions.md#named-identifiers).
+[docs conventions](../../../docs-conventions.md#named-identifiers).
 One Profile **screen** with certifications:
-[certifications and reviews](../README.md). [ADR](../ADR.md) 1.
-Rows: [business profile persistence](../../details/persistence.md).
+[certifications](../certifications/README.md). [ADR](ADR.md) 1.
+Rows: [business profile persistence](../details/persistence.md).
 Go: `internal/profile/reviews/`. Dos **call** `profile` `service.go`.
 
 **Auth default:** Clerk JWT, active tenant. Mutating Routes send

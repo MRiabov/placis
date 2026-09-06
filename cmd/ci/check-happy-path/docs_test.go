@@ -285,7 +285,7 @@ func TestDocsLeadsOwnsTesting(t *testing.T) {
 func TestDetailsOwnsTesting(t *testing.T) {
 	wrong := writeTree(t, map[string]string{
 		"docs/features/business-profile/details/api.md": detailsAPI,
-		"docs/features/business-profile/certifications-and-reviews/testing.md": `## Integration
+		"docs/features/business-profile/reviews/testing.md": `## Integration
 
 ### TestHappyPathV1BusinessProfile — Route
 
