@@ -9,13 +9,13 @@ instead of silently replacing it.
    (guide and doer). Onboarding assistant is a sibling **guide** only. They do
    not share thread, tool registry, or assistant screen context. Onboarding 06
    remains a headless River job that calls website editor tool **functions**,
-   not this HTTP.
+   not this HTTP. (2026-08-28)
 
 2. **Go is the only tool dispatcher** — Text runs the model in Go
    (`LLMProvider`). Voice audio never hits Go; the browser relays
    `function_call` as typed `POST /v1/assistant/tool-calls`. Same validate /
    events / apply path. No frontend-run loop with ephemeral generation tokens.
-   No untyped JSON bucket.
+   No untyped JSON bucket. (2026-08-28)
    - 2026-08-28, later: text chat is `GET /v1/assistant/thread/ws` (in-process
      tools). Voice tool ingress is `POST /v1/assistant/voice/tool-calls` (HTTP
      request and HTTP response). Go does **not** upsert unpublished website rows
@@ -30,7 +30,7 @@ instead of silently replacing it.
    plus ads tools on Ads. After `switch_assistant_screen` succeeds, the allowed
    set follows the new screen. Owner clicks during a run do not retarget the
    allowed set. Expanding tool schemas after boot is not v1 and is not for
-   voice.
+   voice. (2026-08-28)
    - 2026-08-28, later: Ads write tool is `cleanup_image` (media library), not
      ads generate / revise / rewrite. `get_ad` and `get_website_styles` are
      always executable. Allowed-set reject is **409** `allowed_set_rejected`.
@@ -42,7 +42,7 @@ instead of silently replacing it.
    when an overlay assistant screen mounts — not on `/cms`. Clear context starts
    a new thread and drops the voice realtime connection. Compaction after 12
    hours of inactivity summarizes older turns **in place** (thread id stays).
-   Distinct from discarding the thread at 24h.
+   Distinct from discarding the thread at 24h. (2026-08-28)
    - 2026-08-28, later: new thread is `POST /v1/assistant/thread/new`; previous
      `status=completed` (not `cleared`). Unique `(tenant_id) WHERE status =
      'current'`.
@@ -58,7 +58,7 @@ instead of silently replacing it.
    `ai.ai_generations` is audit only (no FK from thread). Website
    `edit_history.ai_generation_id` stays last-writer on website edits.
    Onboarding conversation tables stay under schema `onboarding`. Shared `ai` is
-   `LLMProvider` + traces; features own product rows.
+   `LLMProvider` + traces; features own product rows. (2026-08-28)
    - 2026-08-30, later: Thread **identity** moves to `ai.threads`. Every
      `ai_generations` row has a required `thread_id` FK (CMS
      `thread_kind=cms_assistant`, onboarding `thread_kind=onboarding_assistant`,
@@ -77,9 +77,10 @@ instead of silently replacing it.
 6. **Voice is typed HTTP of finals** — No Go WebSocket for audio, VAD, playback,
    or transcript deltas. `POST …/tool-calls` and `POST …/transcripts` append the
    thread as they happen. Voice-service request logs and connection resumption
-   are ops, not hydrate. Two realtime-connection routes: CMS `POST
-   /v1/voice/realtime-connection` (Clerk JWT); onboarding `POST
-   /v1/onboarding/assistant/realtime-connection` (onboarding session token).
+   are ops, not hydrate. Two realtime-connection routes: CMS
+   `POST /v1/voice/realtime-connection` (Clerk JWT); onboarding
+   `POST /v1/onboarding/assistant/realtime-connection` (onboarding session
+   token). (2026-08-28)
    - 2026-08-28, later: CMS voice HTTP is under `/v1/assistant/voice/`
      (`realtime-connection`, `tool-calls`, `transcripts`). Onboarding voice HTTP
      is under `/v1/onboarding/assistant/voice/`. Text is a Go WebSocket; audio
@@ -93,13 +94,13 @@ instead of silently replacing it.
 
 7. **Lifecycle gate** — Activated owner (`tenants.status=active` / `/me.tenant`
    non-null) **403** on all onboarding routes, including a leftover onboarding
-   session token. Unactivated cannot call `/v1/assistant/…`.
+   session token. Unactivated cannot call `/v1/assistant/…`. (2026-08-28)
 
 8. **One in-flight run per assistant** — Voice and text share that lock (`409`).
    While onboarding 06 is in flight, CMS assistant POSTs stay `409`. Failed /
    usage credit / allowed-set: frontend still writes a failed `tool_result` on
    the voice socket. The in-flight run holds the `ai_generations` id for
-   appending audit `tool_calls`; that id is not on thread rows.
+   appending audit `tool_calls`; that id is not on thread rows. (2026-08-28)
    - 2026-08-28, later: drop “06 in flight → CMS 409”. CMS lock is
      `assistant.runs` (voice + text) only. 06 is River `tenant_id`, not this
      table. CMS is not 409-blocked for leftover 06. Same website-slot overlap is
@@ -112,7 +113,7 @@ instead of silently replacing it.
 9. **Billing is not auth** — CMS assistant debits billing usage credit (hop ×5).
    Onboarding (including the onboarding assistant) is not billed; still write
    `ai_generations`. Check before a text turn, CMS realtime-connection create,
-   and each billed CMS POST mid-call. [Billing](../billing/README.md).
+   and each billed CMS POST mid-call. [Billing](../billing/README.md). (2026-08-28)
    - 2026-08-28, later: **Voice is not billed as a text LLM call.** xAI Speech
      to Speech invoices **per minute of audio sent or received**, plus a flat
      fee per text `conversation.item.create` (not per token). Same **×5** on
@@ -138,7 +139,7 @@ instead of silently replacing it.
     accounts) is still not an assistant screen. Plan / Ask first stay website
     editor only. Do not clone this button onto onboarding (onboarding stays the
     bottom-right voice guide). Not an **AI tools** left-nav item. Look: [design
-    decision 11](design-decision-record.md).
+    decision 11](design-decision-record.md). (2026-08-29)
     - 2026-08-29, later: the call is bottom-right of the main pane.
 
 11. **Compaction** — River job after 12 hours on `threads.last_activity_at`
@@ -150,6 +151,7 @@ instead of silently replacing it.
     to send (do not wait 12h). Not a live-xAI context trim. Compaction prompt
     includes the Voice STT caveat when the thread has a `channel=voice` run. It
     does **not** treat a pending Ask-first reject notice as a special case.
+    (2026-08-29)
     - 2026-08-30, later: `last_activity_at` is on `ai.threads`
       (`thread_kind=cms_assistant`).
     - 2026-08-31, later: compaction includes the **Voice transcription notice**,
@@ -158,13 +160,14 @@ instead of silently replacing it.
 12. **No 24h discard** — Aging is compaction only. Do not discard the thread at
     24h on `last_assistant_edit_at`. That column is written when tool events
     persist, not as a discard timer. Compaction does not delete `ai_generations`
-    or the voice recording object.
+    or the voice recording object. (2026-08-29)
 
 13. **Voice recordings** — After Voice ends, the browser PUTs the recording to
     object storage via a signed URL (`files` row, `runs.recording_file_id`). CMS
     `owner_type=assistant_voice`, `owner_id` = that voice `runs.id`. Onboarding
     `owner_type=onboarding_assistant_voice`, `owner_id` =
     `onboarding.assistant_runs.id`. GET thread never returns the URL.
+    (2026-08-29)
     - 2026-08-30, later: **Onboarding does not store Voice recordings.** Persist
       committed utterance **text** on `assistant_conversation_items`. No `files`
       row, no `recording_file_id`, no `POST
@@ -215,7 +218,7 @@ instead of silently replacing it.
     **AI voice vendor cost** (xAI audio minutes + text
     `conversation.item.create` fees). **Our cost** is that invoice; **their
     cost** is ×5. Settle on `POST /v1/assistant/voice/transcripts` (usage-only
-    POST on close). Do not say meter.
+    POST on close). Do not say meter. (2026-08-29)
 
 15. **Projects write tools on website editor** — `create_project`,
     `set_project_title`, `set_project_cover`, `patch_project_description`,
@@ -224,29 +227,30 @@ instead of silently replacing it.
     stays guide. Writing on `/cms/projects/{id}` is **inline AI assistance**.
     `create_project` creates a **project draft**. Ads generate may use projects
     as **context** (TBD when). Not “ads never sees projects.” Do not add those
-    write tools to the Ads allowed set.
+    write tools to the Ads allowed set. (2026-08-29)
 
 16. **`/thread/new` does not drop Voice** — `POST /v1/assistant/thread/new` does
     not preempt a run. **409** `in_flight_run` while a CMS run is `running`
-    (text or Voice).
+    (text or Voice). (2026-08-29)
 
 17. **Voice is always Ask first** — No `plan` / `ask_first` / `follow` on Voice
     create. No owner Plan switch. Instant apply is not a Voice path. Text Ask
-    first vs Instant apply stays the website-editor switch.
+    first vs Instant apply stays the website-editor switch. (2026-08-29)
 
-18. **Onboarding guide is Voice only** — No text backup. No `GET
-    /v1/onboarding/assistant/thread/ws`. Denied microphone stays retry cue. `GET
-    /v1/onboarding/assistant/thread` may hydrate for a later Voice turn.
+18. **Onboarding guide is Voice only** — No text backup. No
+    `GET /v1/onboarding/assistant/thread/ws`. Denied microphone stays retry cue.
+    `GET /v1/onboarding/assistant/thread` may hydrate for a later Voice turn.
+    (2026-08-29)
 
 19. **Ask first keeps the run busy** — While `ask_first_status=pending` the run
     stays `running`. New thread, second text send, second Voice create → 409.
-    Same Voice connection may continue. GET thread omits `runs`.
+    Same Voice connection may continue. GET thread omits `runs`. (2026-08-29)
 
 20. **Reject is prompt assembly step 6** — Clock is the next **model** turn, not
     last owner request. `record-reject` does not upsert unpublished website
     rows, does not call the LLM, is not 402. It appends a muted thread item
     (edits did not land). Consume once that model turn starts. Not compaction.
-    Apply has no parallel notice.
+    Apply has no parallel notice. (2026-08-29)
 
 21. **CMS Assistant is an agent** — After one owner send or utterance, up to
     **20** tool-using model turns. **Text:** 128K **tokens** assembled context /
@@ -255,7 +259,7 @@ instead of silently replacing it.
     owns the live Voice connection after instructions seed; Go counts the 20 on
     `…/voice/tool-calls` and then stops executing tools; no Go 128K/12K on that
     connection. Distinct from onboarding 06’s River cap (3 steps / 12 calls / 4
-    website pages). Not 409.
+    website pages). Not 409. (2026-08-29)
     - 2026-08-30, later: owner input is **characters** (text 4000, owner
       utterance 5000). Text agent back and forth is **tokens** (128K context /
       12K generation). Do not use 5000 characters as the agent output cap. Voice
@@ -267,7 +271,7 @@ instead of silently replacing it.
     `channel=voice` run injects a typed notice: those owner lines were
     speech-to-text and may contain transcription issues; do not always take them
     literally. Model-only. Not a column. Not onboarding. Compaction of a thread
-    that has a voice run uses the same caveat.
+    that has a voice run uses the same caveat. (2026-08-29)
     - 2026-08-31, later: this is the **Voice transcription notice**. Same inject
       rules. Do not say caveat.
 
@@ -277,7 +281,7 @@ instead of silently replacing it.
     if attached; else Google Maps listing address country; else Find country on
     `tenants.country` (`ie` / `gb` / `us`). Map `ie`/`gb` → **eu-west-1**, `us`
     → **us-east-1**. Not the contractor’s IP. Hosts: [voice
-    agent](../../infrastructure/ai/voice-agent.md).
+    agent](../../infrastructure/ai/voice-agent.md). (2026-08-30)
     - 2026-08-30, later: **public Speech to Speech is documented as cluster
       us-east-1** (`wss://api.x.ai/v1/realtime`,
       `https://api.x.ai/v1/realtime/client_secrets`). Do not invent
@@ -300,7 +304,7 @@ instead of silently replacing it.
     Voice connection create also sets xAI `audio.input.transcription.keyterms`
     (STT bias) and `replace` (spoken wording; transcript text unchanged).
     **Placis** is a keyterm; `replace` speaks it **Play-sis**. Do not
-    `session.update` those mid-call.
+    `session.update` those mid-call. (2026-08-30)
     - 2026-08-30, later: set `audio.input.transcription.model` to
       **`grok-transcribe`**. xAI documents `instructions`, `keyterms`, and
       `replace` on `session.update`. Bind them on `POST
@@ -318,7 +322,7 @@ instead of silently replacing it.
     all three. Do not relax unactivated **403** `tenant_unactivated` on
     `/v1/assistant/…`. Do not add
     `/v1/websites/{website_prefix}/editor/assistant`. CMS HTTP must not import
-    `onboarding/websiteeditor`.
+    `onboarding/websiteeditor`. (2026-08-30)
     - 2026-09-04: guide and unpaid website editor reuse CMS voice DTO names and
       fields (`AssistantVoiceTranscriptsCreate`, `secret`,
       `internal_reasoning`). Server derives `offset_seconds`. No `client_secret`
@@ -331,11 +335,12 @@ instead of silently replacing it.
     that `current` (12h, 128K overflow, or Voice compact-before-seed would drop
     `thread_item_kind=owner` items and refill the five unpaid prompts). If text
     assembly would exceed 128K or Voice instructions would not fit, that turn /
-    Voice create fails. 09 completes `current` and ends `running` in the **same
-    transaction** as `status=active`. CMS GET lazy-creates a new empty
+    Voice create fails. 09 completes `current` and ends `running` in the
+    **same transaction** as `status=active`. CMS GET lazy-creates a new empty
     `current`. Five unpaid prompts = count `thread_item_kind=owner` items on
     that unpaid `current` (06 does not write owner items). Over cap is pay CTA,
     not 402. 06 LLM traces stay on a `website_copy_generation` thread.
+    (2026-08-30)
 
 27. **06 is the first unpaid website-preview run** — While unactivated, 06 holds
     `assistant.runs` `running` (`channel=text`) and appends `tool_summary`. The
@@ -344,7 +349,7 @@ instead of silently replacing it.
     idle. After 09, leftover 06 is River-only (`website_id` lock, no
     `assistant.runs`, no new thread items). CMS Assistant / PATCH stay not 409
     because 06 is running (testing §15). 06 cap is **20** tool-using model turns
-    per website page. 06 still must not `create_page`.
+    per website page. 06 still must not `create_page`. (2026-08-30)
     - 2026-09-04: cap was 3 / 12 / 4.
 
 28. **Unpaid instant apply via website PATCH** — Text and Voice on the
@@ -357,7 +362,7 @@ instead of silently replacing it.
     It must not PATCH and must not send. The preview website address never calls
     this agent or PATCH. Voice → text STT caveat (decision 22) **does** apply
     here; “not onboarding” there means Find / Review. Recordings use
-    `assistant_voice` on `assistant.runs`.
+    `assistant_voice` on `assistant.runs`. (2026-08-30)
     - 2026-09-05: `create_page` apply is `POST
       /v1/onboarding/website/editor/pages`. `update_details` apply is `PATCH
       /v1/onboarding/business-profile`; Revert is `POST
@@ -369,7 +374,7 @@ instead of silently replacing it.
     Share is optional on-demand 08 (R2 + strip). 09 does **not** require a prior
     share: if they never shared, 09 reserves the prefix if needed and writes the
     first live R2 without strip. Apex `preview.placis.com` is not a tenant site
-    (404).
+    (404). (2026-08-30)
     - 2026-09-03, later: 05 reserved the prefix; 09 skip-if-set and writes the
       first live R2 without strip when they never shared.
 
@@ -394,4 +399,4 @@ instead of silently replacing it.
     `onboarding/websiteeditor/knowledge/`. Ads assistant: stub
     `ads/assistant/knowledge/knowledge_base_registry.yaml` on day one (empty
     list is OK). `infrastructure/ai` load/interpolate only. Assistants do not
-    import each other’s knowledge folders.
+    import each other’s knowledge folders. (2026-09-06)

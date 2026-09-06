@@ -19,11 +19,11 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    with no explicit edit. Last snapshot wins. Increments keep both writes; a
    dropped field is a `clear` or an overwrite of that field, visible in the log.
    Same field with disagreeing values is a research conflict, not a silent
-   last-write.
+   last-write. (2026-08-19)
 
 2. **Profile groups Details and Projects** — moved to [CMS
    ADR](../../../general-architecture/cms/ADR.md) 1. The Details screen stays.
-   Top menu and footer stay in the website editor, not Details.
+   Top menu and footer stay in the website editor, not Details. (2026-08-19)
    - 2026-08-20: Profile children.
    - 2026-08-26: media library child.
 
@@ -35,7 +35,7 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    They are ordinary live profile columns and ordinary
    `business_profile_edits.field` values. Business research extras (confidence,
    evidence) stay on ETL fetch metadata / the Facebook or Instagram profile row,
-   not unstructured founder jsonb.
+   not unstructured founder jsonb. (2026-08-19)
    - 2026-08-27: `business_research_sources` removed.
    - 2026-09-02: The four `brand_*` columns are gone. Founder columns and
      `logo_media_asset_id` remain. Site colors / type live on [website
@@ -52,7 +52,7 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    after create; imported Google/Facebook reviews are not. Cards, the website,
    and ads paint citation (fallback `body` if empty). Pin / reorder replaces the
    whole ordered id list in one transaction; it does not assign one
-   `top_position` at a time.
+   `top_position` at a time. (2026-08-26)
    - 2026-08-26: unique top set.
    - 2026-08-26: `is_top` is the **ads** featured list (and the top band on
      Certifications and reviews). It does **not** copy onto every reviews
@@ -75,14 +75,14 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    type-to-search TBD); when linked, a **card** (name, photo, rating, review
    count) plus **Change**, not the raw URL. Same URLs feed review import on
    Certifications and reviews. Not Ads Connect Meta, not Facebook Login, no
-   autoposting.
+   autoposting. (2026-08-26)
    - 2026-08-27: linked card.
 
 6. **Opening hours are when they pick up the marketing phone** — per day: Opens
    / Closes / Closed. Shown on the contact website page. There is no `note`
    column and no Appointment note field. Logo is picked from the media library
    (`logo_media_asset_id`). Persist on click-off; no Save details. Picker look
-   is in [design decision record](design-decision-record.md).
+   is in [design decision record](design-decision-record.md). (2026-08-26)
    - 2026-08-26: One Opens / Closes / Closed per weekday — do not add several
      ranges per day. Drop extra time blocks from the mock.
 
@@ -92,7 +92,7 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    `details`. They are not `website` tables and are not named
    `website_certification_*`. HTTP stays `GET`/`PUT
    /v1/business-profile/certifications`. The website paints selected rows at
-   website publication; ads read the same live business profile.
+   website publication; ads read the same live business profile. (2026-08-26)
    - 2026-09-04: Schema renamed to `business_profile` ([ETL ADR
      9](../../etl/ADR.md)).
 
@@ -101,7 +101,7 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
    trade list. There is **no** business-location column; service areas cover
    where they work. Service areas are a Google Maps territory lookup;
    `radius_km` is for Meta when ad posting exists. Featured services are the
-   `business_profile_services` list, not a textarea.
+   `business_profile_services` list, not a textarea. (2026-08-27)
    - 2026-08-27: Onboarding client interview writes the same controls (list
      rows, Maps territories, hours picker). Paste of service names may split
      into rows; do not combine them with an LLM in the wait.
@@ -112,13 +112,13 @@ Status: decided (2026-08-19, product owner + engineering). Update an entry
      (`business_profile_service_areas`), not one field.
 
 9. **Notification Revert undoes that profile-history increment** — One governed
-   tool, `update_details` ([architecture.md](architecture.md)). Website
-   assistant, Ads generator, and later LLM callers invoke **that** tool — one
-   implementation (the same increment function as click-off `PATCH
-   /v1/business-profile`). The write is applied. **OK** keeps it. **Revert** is
+   tool, `update_details` ([architecture.md](architecture.md)). Website assistant, Ads generator,
+   and later LLM callers invoke **that** tool — one implementation (the same
+   increment function as click-off `PATCH /v1/business-profile`). The write is
+   applied. **OK** keeps it. **Revert** is
    `POST /v1/business-profile/edits/{id}/undo` (that `business_profile_edits`
    increment). Leaving the screen without clicking keeps the write. Not website
-   undo. Shared [notification](../../../general-architecture/frontend.md).
+   undo. Shared [notification](../../../general-architecture/frontend.md). (2026-08-27)
    - 2026-08-27: any governed tool that writes a detail uses the same Details
      writer.
    - 2026-08-27, later: Ads may write a detail via a tool call. OK keeps it.

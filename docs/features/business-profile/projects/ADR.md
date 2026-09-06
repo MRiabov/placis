@@ -15,14 +15,14 @@ decision + date) instead of silently replacing the old entry.
 2. **The table is `business_profile.projects`** — Ads and the website read it.
    It is not `website.projects`. Schema `details` is not renamed in this pass
    ([ETL ADR 9](../../etl/ADR.md)); this is the first table in the intended
-   `business_profile` namespace.
+   `business_profile` namespace. (2026-08-27)
    - 2026-09-04: Schema `details` renamed to `business_profile`. Live-profile
      tables share this namespace; `projects` is no longer the only table in it.
 
 3. **Archive is not delete** — `status` is `active` / `archived`. Archive /
    Unarchive HTTP, not `DELETE`. Archive drops that id from every
    project-gallery website section (then compact). Unarchive returns the row to
-   the list, not onto website sections.
+   the list, not onto website sections. (2026-08-29)
    - 2026-08-29, later: `status` is `draft` / `active` / `archived`. Unarchive
      returns a **project draft**. See decision 5.
 
@@ -36,7 +36,7 @@ decision + date) instead of silently replacing the old entry.
    the resulting `description`. Title and cover PATCH immediately. The LLM never
    sends a full `description` once copy exists (`span` / `quote` / `append` /
    `fill`). Writing on `/cms/projects/{id}` is Ads AI orbs, not Voice and not
-   the website assistant overlay.
+   the website assistant overlay. (2026-08-29)
    - 2026-08-29, later: writing on `/cms/projects/{id}` is **inline AI
      assistance**. Cover is pick. Projects **write** tools are allowed only on
      the website editor; the Assistant on Projects stays guide.
@@ -51,7 +51,7 @@ decision + date) instead of silently replacing the old entry.
    (no 409). `POST …/unarchive` returns **project draft**, not silently
    `active`. Archive still `POST …/archive` (`draft` or `active` → `archived`).
    Onboarding / already-`active` rows stay `active`. GET list default is
-   non-archived (`draft` + `active`).
+   non-archived (`draft` + `active`). (2026-08-29)
 
 6. **ETL insert is `active` from a source usable as a Project** — Facebook /
    Instagram posts, crawled URLs that are a past named job, and reviews usable
@@ -60,7 +60,7 @@ decision + date) instead of silently replacing the old entry.
    client interview. Client interview Archive (`POST
    /v1/onboarding/projects/{projectId}/archive`) is the same persist as CMS
    Archive (`active` → `archived`, `algorithm=human`). CMS `POST /v1/projects`
-   still inserts a project draft.
+   still inserts a project draft. (2026-08-30)
 
 7. **The Project cites sources; sources do not own Projects** — Drop
    `facebook_post_id` / `instagram_post_id` / crawl URL /
@@ -69,4 +69,4 @@ decision + date) instead of silently replacing the old entry.
    Classify skip / yes/no lives on `etl.llm_source_to_project_classifications`
    (required `source_id`; `project_id` only when yes). Same crawl URL, Extract +
    HTML both usable as a Project → one Project, two cites. Text under 200
-   characters is verdict no, no LLM.
+   characters is verdict no, no LLM. (2026-08-30)

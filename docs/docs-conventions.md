@@ -56,7 +56,7 @@ A feature directory holds, as applicable:
 | --- | --- |
 | `README.md` | overview + pointers |
 | `prd.md` | business requirements, user stories, acceptance criteria (domain language) |
-| `ADR.md` | architectural decision record (numbered, dated; keep old entries). Current decision after the em dash; later changes as nested `- YYYY-MM-DD:` bullets under that number. |
+| `ADR.md` | architectural decision record (numbered, dated; keep old entries). Current decision after the em dash, with `(YYYY-MM-DD)` at the end of that prose; later changes as nested `- YYYY-MM-DD:` bullets under that number. |
 | `design-decision-record.md` | design decision record (look and interaction, not architecture). Same numbered, dated, keep-old-entry structure as ADR.md (current decision plus dated amendment bullets). One number is one decision. **Why** is owner-written; omit it rather than inventing it. |
 | `architecture.md` | the logic: content/component model, flows, states. Named services index when the feature is defined. Not Go struct bodies. |
 | `persistence.md` | that feature's tables. Defined features: `## Tables` / `## Indexes` with Columns, Enums, Uniques, Written by, Notes. Shared tables are linked, never copied. |
@@ -129,7 +129,8 @@ Config: [`.rumdl.toml`](../.rumdl.toml).
   counterpart of ADR.md. Link the file as `[CMS design decision record](...)` 3,
   not `[CMS design-decision-record]` and not bare **decisions**. One numbered
   entry is one decision (do not pack a screen’s look into a single entry).
-  The numbered item is the current decision. Amendments are nested bullets
+  The numbered item is the current decision and keeps `(YYYY-MM-DD)` at the
+  end of that prose so the entry stays dated. Amendments are nested bullets
   `- YYYY-MM-DD:` (keep the old decision and date; do not silently replace).
   **Why** is owner-written; omit it when it is not known. Keep the hyphen in the
   path and in backticks. `ADR.md` is the **architectural decision record**; do

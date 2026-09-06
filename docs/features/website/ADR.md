@@ -32,7 +32,7 @@ Status: decided (2026-08-16, product owner + engineering).
    stay in unpublished rows and in the dump Go sends. Go does not resolve. The
    Worker fills them for publication HTML and for copy-generation page renders.
    Wait teaser and CMS canvas resolve in frontend-3 + the website component
-   package.
+   package. (2026-08-16)
    - 2026-08-31: Worker resolve, not Go.
 
 6. **The LLM drafts; the owner decides** — the **assistant** is another caller
@@ -70,7 +70,7 @@ Status: decided (2026-08-16, product owner + engineering).
    rollback reactivates an earlier **owner** website publication without
    deleting profile history. Onboarding-written rows (`published_by=onboarding`,
    including 07 v1, 08 v2, and 05-retry writes) are never website-rollback
-   targets.
+   targets. (2026-08-16)
    - 2026-08-25: onboarding drafts excluded.
    - 2026-09-03: no `website_publication_issues` table. The Worker publication
      response is empty. Pre-publish blockers are computed `blockers[]` on the
@@ -107,12 +107,12 @@ Status: decided (2026-08-16, product owner + engineering).
     `{{about.intro_paragraphs}}` is a placeholder namespace, not a page type.
     About is on the top menu and the footer (menu constant). `legal` is the page
     type for legal-document website pages such as privacy policy; Legal is a
-    footer heading, not a top-menu node.
+    footer heading, not a top-menu node. (2026-08-20)
     - 2026-08-31: about added.
 
 11. **Website page status is `unpublished` / `archived`** — publication is
     website-level (`website_publications`). There is no page-level `approved` or
-    `published`.
+    `published`. (2026-08-20)
     - 2026-09-03: website slots have no `status` column. `slot_type` is `text` /
       `rich_text` / `image` / `link` / `list` (no `json`).
 
@@ -136,7 +136,7 @@ Status: decided (2026-08-16, product owner + engineering).
     whole unpublished website or the file. Leaving while a copy-out or upload is
     in flight or has failed uses a discard confirm (`beforeunload` + in-app).
     Explicit actions remain website publication, Connect website address, and
-    apply website styles.
+    apply website styles. (2026-08-20)
     - 2026-08-23: write budget; no Save; local-first PATCH; click-off; send
       timer + leave guard; PATCH delta 64 KB; no Saving indicator + 10s
       copy-out error; website edit history.
@@ -148,6 +148,7 @@ Status: decided (2026-08-16, product owner + engineering).
 
 13. **Website styles live on `website_settings`** — one row per tenant, copied
     into the website manifest at website publication. Not per website page.
+    (2026-08-20)
     - 2026-09-03: **superseded by ADR 26** — one `website_settings` row per
       website, not per tenant. Hydrate is the website page GET `website_styles`;
       apply is `PATCH /v1/websites/{website_prefix}/editor/settings`. There is
@@ -157,7 +158,7 @@ Status: decided (2026-08-16, product owner + engineering).
 14. **Live website is the published website copy** — Details, Projects,
     certifications and reviews, and website styles update the website editor
     immediately and need website publication to change what website visitors
-    see.
+    see. (2026-08-20)
     - 2026-09-04: `has_unpublished_changes` is true when live HTML would change
       on republish, including those Details / Projects / certifications writes
       after `website_publications.published_at` (compare
@@ -174,18 +175,16 @@ Status: decided (2026-08-16, product owner + engineering).
     Cloudflare deploy. There is no per-request unpublished render for website
     visitors. Copy generation (03) uses `websiteRender` (no R2). Website
     publication uses `websitePublication`. Website address uses Custom
-    Hostnames, not Pages. See [cloudflare.md](cloudflare.md),
-    [contractor-website-debloat.md](contractor-website-debloat.md),
-    [port-contractor-website.md](port-contractor-website.md), and ADR 18–20.
+    Hostnames, not Pages. See [cloudflare.md](cloudflare.md), [contractor-website-debloat.md](contractor-website-debloat.md),
+    [port-contractor-website.md](port-contractor-website.md), and ADR 18–20. (2026-08-20)
     - 2026-08-21: edge locked.
     - 2026-08-23: imported; Worker write-thin.
     - 2026-08-25: token preview dropped.
 
 16. **Certifications and reviews picker is a Profile screen** —
     `/cms/certifications-and-reviews`. Picker rules, top reviews, archive, and
-    certification tables: moved to [reviews
-    ADR](../business-profile/reviews/ADR.md). Layout: [reviews design decision
-    record](../business-profile/reviews/design-decision-record.md).
+    certification tables: moved to [reviews ADR](../business-profile/reviews/ADR.md) (2026-08-27). Layout:
+    [reviews design decision record](../business-profile/reviews/design-decision-record.md). (2026-08-20)
     - 2026-08-20: Unpin/reorder of **top reviews** used to rewrite unpublished
       `website_slot_reviews` from the current top set.
     - 2026-08-26: Each **reviews website section** has its own ordered
@@ -229,7 +228,7 @@ Status: decided (2026-08-16, product owner + engineering).
 17. **`generate_image` may attach pending-review on the unpublished canvas** —
     always a warning; owner approval makes it approved; website publication
     still requires approved media library items. Attach of an existing library
-    photo is `update_slot`, not `generate_image`.
+    photo is `update_slot`, not `generate_image`. (2026-08-20)
     - 2026-08-24: attach vs generate.
     - 2026-08-26: The warning is in Content when that image is selected, not
       copy on the website.
@@ -238,7 +237,7 @@ Status: decided (2026-08-16, product owner + engineering).
     `sites/{website_prefix}/latest/`. A cache miss still reads R2. Missing
     object is 404, not a render from Postgres. Drop leftover `GET
     /v1/public/site/resolve` (it was the token website preview). Tests assert R2
-    keys, not resolve.
+    keys, not resolve. (2026-08-21)
     - 2026-08-25: token preview dropped.
     - 2026-09-03: live GET is that host’s tree
       (`sites/hosts/{hostname}/latest/`). The prefix tree is unpaid Preview
@@ -254,6 +253,7 @@ Status: decided (2026-08-16, product owner + engineering).
     the strip; the site stays up (not empty). Empty host = no `latest/` yet. Do
     not advertise `{website_prefix}.placis.com`. One `latest/` tree; publication
     destinations share it (no Placis-host version vs custom-host version).
+    (2026-08-21)
     - 2026-08-23: `.preview.placis.com`.
     - 2026-08-25: reserved at 07 + sales host.
     - 2026-08-27: **Per-host trees.** Each website address has its own R2 tree
@@ -274,14 +274,14 @@ Status: decided (2026-08-16, product owner + engineering).
     URL** in the website publication dropdown. Owner copy on that control is
     **Publish**. Shows Host and Value as separate copyable fields, with
     on-screen how-to. Do not take over the contractor’s nameservers. Apex `A`
-    records need Apex Proxying (later, Enterprise).
+    records need Apex Proxying (later, Enterprise). (2026-08-21)
     - 2026-08-23: Connect modal.
     - 2026-08-27: Host/Value copy.
 
 21. **Website publication destination is selectable** —
     `{website_prefix}.preview.placis.com`, each connected website address, or
     New URL (Connect website address). Not a Worker deploy. Owner copy is
-    **Publish**. See [frontend.md](frontend.md).
+    **Publish**. See [frontend.md](frontend.md). (2026-08-23)
     - 2026-08-26: owner copy Publish.
     - 2026-08-27: Publish is the **host row**, not a destination-less POST.
       `POST /publications` sends `website_address_id`. One tree per host.
@@ -291,7 +291,7 @@ Status: decided (2026-08-16, product owner + engineering).
     `show_phone` / `show_email`. Look stays on site-wide website sections
     (`page_id` null). No `top_menu_items` / `footer_items` tables. The assistant
     uses `update_menus`, not `update_nav`. Where the owner edits the trees is in
-    [design decision record](design-decision-record.md).
+    [design decision record](design-decision-record.md). (2026-08-23)
     - 2026-08-23: Also `show_contact` (bar CTA to the Contact website page).
     - 2026-09-03: **superseded by ADR 26** for uniqueness — one `website.menus`
       row per website, not per tenant. Tree shape is unchanged. Copy website
@@ -306,7 +306,7 @@ Status: decided (2026-08-16, product owner + engineering).
     paying the subscription price, unpublish. `POST /publications` and live
     website rollback are **402** `subscription_canceled` until
     `subscription_status=active`. Not `usage_credit_exhausted`. CMS edit stays
-    open.
+    open. (2026-08-29)
     - 2026-09-03, later: unpublish and that **402** start after three calendar
       months of non-payment, or when an owner-scheduled cancel reaches period
       end — not on the first failed invoice. `UnpublishWebsite` walks **every**
@@ -318,7 +318,7 @@ Status: decided (2026-08-16, product owner + engineering).
     (Assistant apply). Onboarding session token must not PATCH. Preview website
     address `{website_prefix}.preview.placis.com` is Cache then R2 only: no
     website editor, no Assistant, no PATCH. Apex `preview.placis.com` is 404. 07
-    HTML write is on-demand share, not wait-teaser landing.
+    HTML write is on-demand share, not wait-teaser landing. (2026-08-30)
 
 25. **Website template select is occupancy + hash; styles ship with the website
     template** — 01 lists production-ready website templates only
@@ -330,7 +330,7 @@ Status: decided (2026-08-16, product owner + engineering).
     associated website style catalog preset — not a second pick. New looks
     graduate another validated website template; do not hash the 7 presets. 02
     copies the catalog object ([catalog.md](catalog.md)). Predecessor LLM picker
-    collapsed; this algorithm does not.
+    collapsed; this algorithm does not. (2026-08-31)
     - 2026-08-31: Occupancy **counts** every website’s `website_template_id`
       (ADR 30).
     - 2026-09-04: tie-break `hash(website_id)` so two websites of one tenant do
@@ -349,7 +349,7 @@ Status: decided (2026-08-16, product owner + engineering).
     Business profile, Projects, reviews, media library, Ads, billing, Clerk
     organization, and the CMS Assistant thread stay tenant-scoped. Equal
     websites: no distinguished-website flag. `is_primary` hostname is per
-    website.
+    website. (2026-09-03)
     - 2026-09-04: Logo is Details `logo_media_asset_id` (tenant-shared). Whether
       a second website can have its own logo is **TBD**. Websites copy from the
       same business profile. SEO / copy duplication across a business’s websites
@@ -366,7 +366,7 @@ Status: decided (2026-08-16, product owner + engineering).
     `/cms/website/{website_prefix}`; nested CMS HTTP
     `/v1/websites/{website_prefix}/…`. Uuid stays internal (FKs, River,
     Assistant screen context). Preview website address / Website activation skip
-    reserve if already set.
+    reserve if already set. (2026-09-03)
     - 2026-09-04: the same transaction inserts `website_addresses`
       `type=subdomain` for `{website_prefix}.preview.placis.com`. 08 / 09
       skip-if-set. HTML is written only to **this** prefix host and this
@@ -376,13 +376,13 @@ Status: decided (2026-08-16, product owner + engineering).
 28. **Onboarding website (Internal)** — The website with the earliest
     `websites.created_at` on that tenant. Bare `/cms/website` redirects there.
     That is not a picker. Website activation **PublishWebsite** uses this
-    website only. Not a glossary term.
+    website only. Not a glossary term. (2026-09-03)
 
 29. **River unique keys for copy jobs are `website_id`** — Pending/running
     `select_and_copy_website_template` and `website_copy_generation` unique on
     `website_id`. Copy-generation `ai.threads` is one thread per website
     (storage unique **TBD**). `cms_assistant` stays unique current per tenant.
-    `website_activation` stays unique on `tenant_id`.
+    `website_activation` stays unique on `tenant_id`. (2026-09-03)
     - 2026-09-04: Copy-generation `ai.threads` follow the generate-factory rule:
       insert a uuid before the first generate for that website page’s agent;
       reuse that uuid only for schema-repair on that agent. Parallel website
@@ -406,7 +406,7 @@ Status: decided (2026-08-16, product owner + engineering).
 
 31. **Host resolves to a website** — Host → `website_addresses.hostname` or
     `{website_prefix}.preview.placis.com` → `websites` → `tenant_id`. Do not
-    keep `tenants.website_prefix`.
+    keep `tenants.website_prefix`. (2026-09-03)
 
 32. **Optional-omit Common variables omit paint, not website sections** — Tokens
     stay on unpublished `website_slots`. Worker / canvas omit that website
@@ -419,7 +419,7 @@ Status: decided (2026-08-16, product owner + engineering).
     infer omit from every `{{…}}` in `value`. Empty VAT is not
     `required_slot_unresolved`. Live `latest/` updates on the next 04 Website
     publication (or unpaid 08 Share). No auto-`PublishWebsite` from Details
-    PATCH. [variables.md](variables.md#optional-omit).
+    PATCH. [variables.md](variables.md#optional-omit). (2026-09-04)
 
 33. **Website editor canvas is not website editor workspace** — The canvas is
     only the painted unpublished page. Workspace is every editing control that
@@ -427,4 +427,4 @@ Status: decided (2026-08-16, product owner + engineering).
     editor (Website preview) have a workspace. Workspace is never a child of the
     canvas. Share and the page switcher may sit on canvas corners; they are
     still workspace. [frontend
-    stack](../../general-architecture/frontend-stack.md).
+    stack](../../general-architecture/frontend-stack.md). (2026-09-06)
