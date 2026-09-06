@@ -22,12 +22,6 @@ usually a **doc gap**, not a drop.
 
 ## Doc gap
 
-- **9. `PUT /v1/onboarding/sources` has no screen**
-  Comment: 01 Find business Do 4: wrong company is **not** a new run.
-  Dropping the route leaves no recovery (ADR 16: one onboarding per
-  browser token).
-  Action: add “change the business” on Review. Do not drop the route.
-
 - **11. 06 Generate website copy vs website 03 Generate website copy
   lock paragraph duplicated**
   Comment: tools/render/SLO are already forbidden in 06 Must not.
@@ -46,12 +40,6 @@ usually a **doc gap**, not a drop.
 
 ## Actually drop
 
-- **5. `onboarding_sessions.started_from`**
-  Comment: ADR 2 is “either or both”; the enum cannot say both;
-  attach keys already hold it; `PUT /v1/onboarding/sources` would
-  stale it.
-  Action: drop column; derive from `place_id` / `company_number`.
-
 - **8. `website_activations` dead enum values**
   Comment: webhook is `checkout.session.completed` only. Keep
   `amount` / `currency` (billing ADR 2: billing does not own this
@@ -61,9 +49,6 @@ usually a **doc gap**, not a drop.
   Action: drop `failed`, `failure_reason`, `activated_at`. Name a
   source for `WebsiteActivationStatusRead.checkout_url` or drop that
   field.
-
-- **18a. `BusinessLookupRead.id` (“for logs”)**
-  Comment: token-auth Routes have no `{id}` in the path. Drop.
 
 ## False alarms (closed)
 

@@ -116,7 +116,8 @@ uses the Europe cluster (latency and UK GDPR); it is not sent to the US.
 Return `wss://{region}.api.x.ai/v1/realtime` and create the secret on
 `https://{region}.api.x.ai/v1/realtime/client_secrets`. Same host for token
 create and the WS. Do not switch host mid-call. Next Voice create re-resolves
-country (PATCH sources can change the winner).
+country (`POST /v1/onboarding/business-lookup` scratch 01 can change the
+winner).
 
 Find country is persisted on `tenants.country` so CMS Voice still resolves after
 onboarding routes 403. Typeahead still uses country as a search parameter.

@@ -205,7 +205,11 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     (2026-09-05: after 08 Preview website address, `GET /v1/onboarding/profile`
     re-shows `preview_website_address` on `/onboarding/preview-and-edit/`.
     Omit before Share. The contractor host still opens without
-    `localStorage`.)
+    `localStorage`. POST without a token when `localStorage` already has one
+    is still forbidden. POST with a **valid** onboarding session token is
+    `LookupBusiness` on that row: same attach keys are safe to retry;
+    different keys are scratch 01, not a second onboarding session, not a
+    merge. Unknown onboarding session token → 401, not create.)
 
 15. **The website preview is the preview website address** — `{website_prefix}`
     plus the suffix in [cloudflare.md](../website/cloudflare.md) with static R2 HTML and a
@@ -368,3 +372,7 @@ Extract is known-URL crawl text, not a Projects-only hop.)
     data). Not IP. Not the onboarding session token. Per-tenant 5-enqueue
     `StartRun` stays a silent skip on `PUT /v1/onboarding/sources`. No
     `research_wait_until` on DTOs, SSE, or Review. (2026-09-04)
+    (2026-09-05: drop the second `localStorage` id. Throttle is the 02
+    `enqueue_id` cap on this token: scratch 01 with different attach keys
+    over the cap is **429** `onboarding_enqueue_cap`; same attach keys are
+    safe to retry 200 and do not enqueue. No `PUT /v1/onboarding/sources`.)

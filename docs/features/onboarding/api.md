@@ -12,8 +12,9 @@ copying the website template is owned by [website](../website/api.md);
 this feature only **inserts** it.
 
 **Auth default:** onboarding session token (request header; token uniquely
-identifies the `onboarding_sessions` row). **None:** business lookup and Find
-typeahead. **Clerk JWT** Host / `website_prefix` or Clerk unactivated on the app
+identifies the `onboarding_sessions` row). **None:** Find typeahead.
+**Business lookup:** none (create) or that onboarding session token (must name a
+row). **Clerk JWT** Host / `website_prefix` or Clerk unactivated on the app
 origin: activation checkout / status. **Clerk JWT** unactivated on the app
 origin: unpaid POST website pages, Details PATCH / undo. **Stripe signature:**
 `POST /v1/webhooks/stripe`. Activated owner: **403** on
@@ -40,19 +41,17 @@ name → struct, not an unconstrained `payload`. Fill status lives on
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `BusinessLookupCreate` | `country`, `online_research_consent`, `company_number`, `place_id`, `website_url`, `browser_safety_session_id` | Create unactivated tenant + onboarding session. `country` default `ie`. Consent required. Registry and/or Maps. `browser_safety_session_id` required UUID (Find lookup cap). Extra keys 4xx |
-| `BusinessLookupRead` | `id`, `token`, `status` | Lookup response. `id` for logs. Token → `localStorage` |
+| `BusinessLookupCreate` | `country`, `online_research_consent`, `company_number`, `place_id`, `website_url` | Create or scratch 01. `country` default `ie`. Consent required. Registry and/or Maps. Extra keys 4xx |
 | `CompanyRegistrySearchGet` | `country`, `q` | Find typeahead query |
 | `CompanyRegistryRecordRead` | `company_number`, `legal_name`, `registered_office`, `company_status` | Typeahead row. **Omit** `raw` |
 | `GoogleMapsSearchGet` | `country`, `q` | Find typeahead query |
 | `GoogleMapsListingRead` | `place_id`, `display_name`, `formatted_address` | Typeahead row. **Omit** Maps `raw` |
-| `OnboardingSourcesUpdate` | `place_id`, `company_number`, `website_url` | Replace attach keys on the existing onboarding session |
 
 ### Profile
 
 | DTO | Fields | Description |
 | --- | --- | --- |
-| `OnboardingProfileRead` | `id`, `status`, `preview_website_address`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead`, `profile: OnboardingLiveBusinessProfileRead` | Resume / Review hydrate. `preview_website_address` after 08 Preview website address; omit before Share. Not Details GET |
+| `OnboardingProfileRead` | `id`, `token`, `status`, `preview_website_address`, `fill: []OnboardingFillStatusRead`, `conflicts: []OnboardingResearchConflictRead`, `profile: OnboardingLiveBusinessProfileRead` | Lookup / resume / Review hydrate. `token` → `localStorage` on create; echoed on GET. `preview_website_address` after 08 Preview website address; omit before Share. Not Details GET |
 | `OnboardingFillStatusRead` | `key`, `status` | Derived fill. `status` → `empty` / `in_progress` / `conflict` / `filled_by_user` / `filled_by_research` / `skipped` / `not_applicable` |
 | `OnboardingResearchConflictRead` | `key`, `live_value`, `research_value` | Research conflict (both values). Not a write |
 | `OnboardingLiveBusinessProfileRead` | `display_name`, `trade`, `description`, `founder_name`, `legal_name`, `company_number`, `registered_office`, `vat_registration_status`, `vat_number`, `contact_name`, `marketing_phone`, `marketing_email`, `existing_site_url`, `emergency_phone`, `opening_hours`, `services`, `service_areas`, `accreditations`, `reviews`, `projects: []ProjectRead`, `facebook_profile_url` | Live columns plus reviews and ranked Project cards. Same row as Details plus `projects` (top 4 `active` business-research origin; [build-profile](pipeline/build-profile.md) rank). Not media library items (`GET /v1/onboarding/media-assets`). Same [`ProjectRead`](../business-profile/projects/api.md) as `/cms/projects`. Cover is `cover_media_asset_id` into that media library list. Empty `projects` → omit the Projects block. Onboarding session token. No `company_status` |
@@ -111,25 +110,29 @@ and fields as-is (no `OnboardingWebsiteEditor*` aliases; no
 
 | Method + path | Callers | Request | Response | Reads | Persists into | Behavior | Errors | Must not |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `POST /v1/onboarding/business-lookup` | `/onboarding/find` once | `BusinessLookupCreate` | `BusinessLookupRead` | | `tenants`, `onboarding_sessions`, `business_profiles` | **calls** `LookupBusiness`; **inserts** 02 if under per-tenant cap | `429` `browser_safety_cap`; 400 missing `browser_safety_session_id` | Select or copy the website template; wait for 02; mount/keystroke POST; second tenant for same token; IP cap |
+| `POST /v1/onboarding/business-lookup` | `/onboarding/find` (no token); `/onboarding/review` (valid token) | `BusinessLookupCreate` | `OnboardingProfileRead` | `onboarding_sessions` | `tenants`, `onboarding_sessions`, `business_profiles` | **calls** `LookupBusiness`: no onboarding session token creates; valid token + same attach keys is safe to retry 200; different keys scratch 01 and **inserts** 02 | `401` unknown token; `429` `onboarding_enqueue_cap`; `403` activated; 4xx after 05 | Select or copy the website template; wait for 02; mount/keystroke POST; second tenant for same token; create on unknown token; IP cap |
 | `GET /v1/onboarding/find/search/company-registry` | Find typeahead | `CompanyRegistrySearchGet` | `CompanyRegistryRecordRead` | | | Debounced. **Omit** `raw` | | Persist; upsert listings |
 | `GET /v1/onboarding/find/search/google-maps` | Find typeahead | `GoogleMapsSearchGet` | `GoogleMapsListingRead` | | | Debounced. **Omit** Maps `raw` | | Upsert `etl.google_maps_listings`; insert fetches |
-| `PUT /v1/onboarding/sources` | attach/change Maps or registry | `OnboardingSourcesUpdate` | `OnboardingProfileRead` | `onboarding_sessions` | `onboarding_sessions` | Safe-to-retry replace of attach keys; may **call** `StartBusinessResearch`; over per-tenant cap skip `StartRun`, still 200 | | Create a new onboarding session; business lookup |
 
-Auth on lookup and Find search: none. `PUT /v1/onboarding/sources`:
-onboarding session token.
+Auth on Find search: none. `POST /v1/onboarding/business-lookup`: none
+(create) or onboarding session token that names a row.
 
 ### POST /v1/onboarding/business-lookup
 
-**Create** the unactivated tenant + onboarding session (once per
-browser token). Consent is this body field, not a `/research-consent`
-resource. Country persists on `tenants.country`. Required
-`browser_safety_session_id` (UUID the browser creates once into
-`localStorage`). Five lookups in 30 minutes with that id create tenants;
-the 6th is **429** `browser_safety_cap` (no tenant, optional
-`Retry-After`). Per-tenant `StartRun` cap on this first lookup does
-not fire; a later source change over that cap stays **200** and skips
-enqueue.
+**Create** the unactivated tenant + onboarding session when there is no
+onboarding session token (once per browser token). Consent is this body
+field, not a `/research-consent` resource. Country persists on
+`tenants.country`. An onboarding session token that does not name a row
+is **401** (do not create). A valid token
+with `status=client_interviewing` and the same attach keys
+(`place_id`, `company_number`, `website_url`; omitted = null) is
+safe to retry **200**: no wipe, no `StartRun`, in-flight 02 keeps running.
+Different attach keys are scratch 01 (re-init live profile, this pick’s
+increments, new 02). Five distinct `enqueue_id`s (`trigger=onboarding`)
+in 30 minutes on that tenant: scratch is **429** `onboarding_enqueue_cap`
+(optional `Retry-After`); no wipe; current 02 keeps running. First lookup
+never hits that cap. Status not `client_interviewing` → 4xx. Activated
+leftover token → **403**.
 
 ### Profile
 
@@ -312,6 +315,7 @@ Policy: [onboarding assistant](assistant.md).
 - `/v1/onboarding/business-profile` after website activation (403)
 - leftover `/v1/onboarding-sessions/…` with an onboarding session
   token after website activation (403)
+- `PUT /v1/onboarding/sources`
 - `POST /v1/onboarding/assistant/thread/new` (CMS only)
 - `POST /v1/onboarding/assistant/tool-calls`
 - `POST /v1/onboarding/assistant/voice/tool-calls` this pass

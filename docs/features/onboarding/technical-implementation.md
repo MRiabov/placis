@@ -43,10 +43,9 @@ publication; website rollback of onboarding rows is refused
 
 1. Before enqueue: count distinct `etl.runs.enqueue_id` for this `tenant_id`
    with `trigger=onboarding` in the last 30 minutes. Five already → do not call
-   `StartRun` (silent; source-change stays 200). Find lookup cap is
-   `browser_safety_session_id` on 01 (`429` `browser_safety_cap`), not this
-   count. River retries of an existing ETL run do not create a new
-   `enqueue_id`. See [02](pipeline/02-business-research.md).
+   `StartRun`. Scratch 01 over that cap is 01 Fail (`429`
+   `onboarding_enqueue_cap`). Same attach keys do not enqueue. River retries of
+   an existing ETL run do not create a new `enqueue_id`. See [02](pipeline/02-business-research.md).
 2. 02 calls `etl.StartRun(trigger=onboarding, force=false)` with the onboarding
    ETL run kinds ([ETL run kind triggers](../etl/pipeline/etl-run-kind-triggers.md)). Extract, listing upsert, and
    transform are [ETL](../etl/technical-implementation.md). `StartRun` counts the cap again and inserts nothing if

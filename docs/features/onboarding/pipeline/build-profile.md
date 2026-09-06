@@ -36,6 +36,10 @@ write.
 - Use Maps listing address as a second legal address (it stays on
   `etl.google_maps_listings`).
 - Upsert a fill-status row (there is no such table).
+- Treat a second company pick as a conflict-merge. Scratch 01 re-inits
+  the live profile then this pick’s increments only
+  ([01](01-find-business.md)). An abandoned onboarding `enqueue_id` must
+  not write the live business profile.
 
 ## Do — merge
 

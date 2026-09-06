@@ -11,10 +11,11 @@ Related: [ADR](ADR.md), [persistence](persistence.md),
 `StartRun(trigger, tenant, force=false, bill_usage=unbilled)`
 (onboarding 02 also passes `onboarding_session_id`). Create
 `enqueue_id`. For `trigger=onboarding`, count
-distinct `enqueue_id` in the last 30 minutes; 5 or more → do not insert runs (02
-already counted so business lookup stays 200 and a later source-change stays
-`429`). Copy 01 attach and live-profile details. For each ETL run kind that can
-start, persist into `etl.runs` and **inserts** that ETL run kind’s extract
+distinct `enqueue_id` in the last 30 minutes; 5 or more → do not insert
+runs (01 already counted: scratch 01 over the cap is **429**
+`onboarding_enqueue_cap`; same attach keys do not enqueue). Copy 01 attach
+and live-profile details. For each ETL run kind that can start, persist
+into `etl.runs` and **inserts** that ETL run kind’s extract
 River job kind ([jobs](../../general-architecture/jobs.md)). Do not
 insert pending rows. Re-check when details change (same `enqueue_id`).
 
