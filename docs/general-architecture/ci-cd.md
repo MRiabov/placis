@@ -45,7 +45,8 @@ is not diagnosable from GitHub Checks, the connection mode is wrong.
    800.
 2. **Folder fan-out** — a nested dir under `internal/` or `frontend-3/src/`
    may hold at most **9** entries (tracked files + child dirs). `internal/`
-   root and `frontend-3/src/` may each hold at most **15**. Split a fat
+   root and `frontend-3/src/` may each hold at most **15**. **Exclude
+   `*_test.go` and `*.test.*`**. Split a fat
    folder into a nested package (Go) or nested feature folder
    (`frontend-3`); that is why `templates` and `assistant` nest under
    `website/` instead of sitting as siblings at `internal/` root. Scope is
@@ -317,7 +318,7 @@ heading lists in
 [docs conventions](../docs-conventions.md#named-identifiers).
 Unit tests + `go run`. Pre-commit on
 `docs/features/**/{persistence,testing,api}.md`,
-`docs/features/**/pipeline/**/*.md`, and `docs/general-architecture/jobs.md`.
+`docs/features/**/pipeline/**/*.md`, and `docs/infrastructure/jobs.md`.
 CI: `.github/workflows/docs-gates.yml` runs
 `go test ./cmd/ci/check-pipeline-tables` then
 `go run ./cmd/ci/check-pipeline-tables --all` in the same job as the other docs

@@ -15,6 +15,7 @@ Leads with the same list query ([ads](../../ads/README.md)).
 - [frontend.md](frontend.md) — `/cms/leads`
 - [design-decision-record.md](design-decision-record.md)
 - [ADR.md](ADR.md)
+- [file-trees.md](file-trees.md) — Go + `/cms/leads` files
 - [persistence.md](persistence.md)
 - [api.md](api.md)
 - [testing.md](testing.md)

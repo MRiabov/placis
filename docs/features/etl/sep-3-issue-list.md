@@ -13,7 +13,7 @@ original audit ids (not compacted).
   Same as general-architecture item 1.
 
 - **3. `module-layout.md` omits `transform/traderegistry` (and `websearch`)**
-  Comment: [../../general-architecture/jobs.md](../../general-architecture/jobs.md) requires both
+  Comment: [../../infrastructure/jobs.md](../../infrastructure/jobs.md) requires both
   `transform/traderegistry.Run` and `transform/websearch.Run`. Action: add both
   packages to the `transform/` list.
 

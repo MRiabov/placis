@@ -7,6 +7,8 @@ folders: [frontend-stack.md](frontend-stack.md). Greenfield:
 [frontend-debloat.md](frontend-debloat.md) (index:
 [planning/frontend-debloat.md](../planning/frontend-debloat.md)).
 Tokens for the CMS (sidebar + main area): [design.md](./cms/design.md).
+`shared/ui/` admission (second-caller controls, not a dump):
+[frontend stack](frontend-stack.md).
 
 ## Loading placeholders
 

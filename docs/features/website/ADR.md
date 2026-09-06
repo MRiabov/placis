@@ -205,7 +205,7 @@ Status: decided (2026-08-16, product owner + engineering).
     (2026-08-31, later): Website does **not** own ranking. 02 keeps
     `{{reviews.N}}` and does not insert `website_slot_reviews`. 03 must not
     `update_reviews`. Hydrate / 04 read the ranked pool. Ranking is River job
-    `reviews_ranking_for_display` ([build-profile](../onboarding/pipeline/build-profile.md), [jobs](../../general-architecture/jobs.md)). Owner Content /
+    `reviews_ranking_for_display` ([build-profile](../onboarding/pipeline/build-profile.md), [jobs](../../infrastructure/jobs.md)). Owner Content /
     `update_reviews` can still override a section later.
 
     (2026-09-02): Ranking inserts `business_profile_review_rankings`. Website
@@ -409,3 +409,12 @@ Status: decided (2026-08-16, product owner + engineering).
     updates on the next 04 Website publication (or unpaid 08 Share). No
     auto-`PublishWebsite` from Details PATCH.
     [variables.md](variables.md#optional-omit). (2026-09-04)
+
+33. **Website editor canvas is not website editor workspace** — The
+    canvas is only the painted unpublished page. Workspace is every
+    editing control that is not that stage. Both the CMS website editor
+    and the onboarding website editor (Website preview) have a
+    workspace. Workspace is never a child of the canvas. Share and the
+    page switcher may sit on canvas corners; they are still workspace.
+    [frontend stack](../../general-architecture/frontend-stack.md).
+    (2026-09-06)

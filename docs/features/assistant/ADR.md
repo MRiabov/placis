@@ -273,7 +273,7 @@ instead of silently replacing it.
     country if attached; else Google Maps listing address country; else Find
     country on `tenants.country` (`ie` / `gb` / `us`). Map `ie`/`gb` →
     **eu-west-1**, `us` → **us-east-1**. Not the contractor’s IP. Hosts:
-    [voice agent](../../general-architecture/voice-agent.md). (2026-08-30)
+    [voice agent](../../infrastructure/ai/voice-agent.md). (2026-08-30)
     Same day, later: **public Speech to Speech is documented as cluster
     us-east-1** (`wss://api.x.ai/v1/realtime`,
     `https://api.x.ai/v1/realtime/client_secrets`). Do not invent
@@ -382,3 +382,13 @@ instead of silently replacing it.
     in screen context; CMS knowledge more than one website; tools apply
     to the open website; `open_website` to change. (2026-09-03;
     defer 2026-09-04)
+
+31. **Knowledge files live in that assistant’s `knowledge/`** — Each
+    assistant owns `knowledge_base_registry.yaml` plus `knowledge_*.md`
+    (Voice pronunciation yaml in the same folder when that assistant has
+    Voice). CMS: `assistant/knowledge/`. Onboarding assistant:
+    `onboarding/assistant/knowledge/`. Onboarding website editor:
+    `onboarding/websiteeditor/knowledge/`. Ads assistant: stub
+    `ads/assistant/knowledge/knowledge_base_registry.yaml` on day one
+    (empty list is OK). `infrastructure/ai` load/interpolate only.
+    Assistants do not import each other’s knowledge folders. (2026-09-06)

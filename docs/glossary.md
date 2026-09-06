@@ -682,14 +682,44 @@ not this screen.
 
 ---
 
+#### Website editor canvas
+
+The painted unpublished page on a website editor (CMS or onboarding).
+Never say bare “canvas”. Not Domain. Distinct from: Website editor
+workspace (every editing control that is not that stage).
+
+In code: `frontend-3/src/features/cms/website/canvas.tsx`.
+
+---
+
+#### Website editor workspace
+
+Every editing control on a website editor that is not the website editor
+canvas. Both the CMS website editor and the onboarding website editor
+(Website preview) have a workspace. Workspace is never a child of the
+canvas. Share and the page switcher may sit on canvas corners; they are
+still workspace.
+
+CMS workspace includes the rail, **Content**, click-to-edit, and
+Assistant UI. Onboarding workspace includes Assistant UI, the
+website-activation strip, Share, and the page switcher (no Content, no
+website styles rail, no click-to-edit).
+
+Distinct from: Website editor canvas; ad workspace (Ads).
+
+In code: CMS `frontend-3/src/features/cms/website/workspace/`;
+onboarding `frontend-3/src/features/onboarding/website-preview/`.
+
+---
+
 #### Editing panel
 
-Retired. Do not use for the current website editor. **Content** is the workspace
-list that opens when the owner clicks a website section or image on the canvas.
+Retired. Do not use for the current website editor. **Content** is the
+website editor workspace list that opens when the owner clicks a website
+section or image on the website editor canvas.
 Never say inspector.
 
-Distinct from: Canvas (the website page), Workspace (website pages / SEO /
-website styles / website versions).
+Distinct from: Website editor canvas; Website editor workspace.
 
 ---
 
@@ -1248,14 +1278,14 @@ The `Kind()` string River runs (schema `jobs`). Never bare **kind**. Never in
 PRDs or UI. Distinct from: ETL run kind (the run, not the job);
 thread kind.
 
-In code: River `Kind()`. Catalog: [jobs.md](general-architecture/jobs.md)
+In code: River `Kind()`. Catalog: [jobs.md](infrastructure/jobs.md)
 `## Jobs`.
 
 ---
 
 ### River workflow
 
-A named sequence of River job kind rows in [jobs.md](general-architecture/jobs.md) `## Workflows`. Never in
+A named sequence of River job kind rows in [jobs.md](infrastructure/jobs.md) `## Workflows`. Never in
 PRDs or UI. Not a paid River workflows module. Distinct from: assistant
 continuous workflow; Cloudflare Workflows.
 
@@ -1313,17 +1343,18 @@ A named bool that turns a shipped behavior on or off for the whole
 `cmd/api` process. Distinct from secrets and from usage credit. Never
 in PRDs or UI.
 
-In code: field on `internal/config`. Named flags:
-[feature-flags.md](general-architecture/feature-flags.md).
+In code: field on `internal/infrastructure/config`. Named flags:
+[feature flags](infrastructure/config.md).
 
 ---
 
 ### Knowledge base registry
 
 The YAML that names which owner-facing markdown files belong to one assistant’s
-knowledge base (`cms_knowledge_base_registry.yaml` /
-`onboarding_knowledge_base_registry.yaml`). Both list the shared product
-glossary (`internal/knowledge/product_glossary.md`). Never in PRDs or UI. Never
+knowledge base (`knowledge_base_registry.yaml` in that assistant’s
+`knowledge/` folder). Each assistant lists `knowledge_product_glossary.md`
+(Domain + Enums + Don't say compiled from this glossary). Assistants do
+not import each other’s knowledge folders. Never in PRDs or UI. Never
 say **catalog** for this YAML.
 
 Distinct from: Assistant screen context; website style catalog.
@@ -1937,12 +1968,20 @@ technical docs (not `prd.md`, not `frontend.md`) and later `internal/<home>/`;
   including code.
 - Database: `snake_case`, plural table names, `tenant_id` on every tenant-owned
   row, `*_id` foreign keys, `snake_case` enum values.
-- Go: feature-nested packages (`internal/<domain>/<feature>/`), no package
-  stutter (`website/pages`, not `website/websitepages`); the file-size
-  guard and folder fan-out apply (see
-  `general-architecture/ci-cd.md`).
+- Go: feature-nested packages (`internal/<domain>/…`), no package
+  stutter (`website/pages`, not `website/websitepages`); supporting
+  packages under `internal/infrastructure/` (not `infra/`, not
+  `platform/`). Outward Dos: `internal/profile/service.go`.
+  Certifications / reviews HTTP: `internal/profile/certifications/`,
+  `internal/profile/reviews/`. Ads: `internal/ads/generation/` plus
+  `internal/ads/assistant/`. Knowledge:
+  `…/assistant/knowledge/`. The file-size guard and folder fan-out
+  apply (see `general-architecture/ci-cd.md`).
 - `frontend-3`: feature-local under `src/features/`; same file-size guard
-  and folder fan-out (`src/` root ≤ 15, nested dir ≤ 9).
+  and folder fan-out (`src/` root ≤ 15, nested dir ≤ 9). Profile:
+  `src/features/cms/profile/{details,projects,certifications,reviews,media}/`.
+  Website editor Content: `cms/website/workspace/content/`. Ads:
+  `cms/ads/`. Usage & billing: `cms/billing/`.
 - API: `/v1/<domain>/...`, domain nouns in paths,
   `Create/Update/Get/List/Delete` verbs, one `*Read` response suffix.
   Conventions: `docs/general-architecture/api.md`.

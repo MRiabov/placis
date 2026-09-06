@@ -52,6 +52,6 @@ These files no longer instruct a port. Implement from that feature’s
 | [ads](../features/ads/ad-generation/frontend-debloat.md) | [ads frontend](../features/ads/ad-generation/frontend.md) |
 | [leads](../features/other/leads/frontend-debloat.md) | [leads frontend](../features/other/leads/frontend.md) |
 | [media library](../features/other/media/frontend-debloat.md) | [media library](../features/other/media/README.md) |
-| [auth](../features/other/auth/frontend-debloat.md) | [auth](../features/other/auth/README.md) |
+| [auth](../infrastructure/tenancy/frontend-debloat.md) | [auth](../infrastructure/tenancy/README.md) |
 | [contractor website port](../features/website/port-contractor-website.md) | Worker API cutover (not the owner SPA) |
 | [contractor website cuts](../features/website/contractor-website-debloat.md) | Keep the website component catalog; write a thin Worker |

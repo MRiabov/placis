@@ -2,10 +2,10 @@
 
 Voice is a **channel into the same governed tools as text**, not a later
 milestone and not a separate product. Everything sits behind a
-voice-service-neutral interface in `internal/ai`; the concrete voice service is
-swappable. Text
-and voice both write through the same tools. Never say “activate” for the voice
-agent — that word is website activation. The owner turns it on.
+voice-service-neutral interface in `internal/infrastructure/ai`; the concrete
+voice service is swappable. Text and voice both write through the same tools.
+Never say “activate” for the voice agent — that word is website activation. The
+owner turns it on.
 
 Dictation / manual ASR / TTS is **not kept**: it's legacy, dropped for latency.
 
@@ -46,7 +46,7 @@ A small set of owner-facing markdown docs loaded **into memory**. Not a large
 retrieved knowledge base. Cannot unvalidated-write or skip website publication
 validation.
 
-CMS and onboarding assistants: [assistant](../features/assistant/README.md). Audio **never** hits Go. The chatty
+CMS and onboarding assistants: [assistant](../../features/assistant/README.md). Audio **never** hits Go. The chatty
 socket is only browser ↔ voice service. Go gets typed HTTP **finals** under
 `/v1/assistant/voice/` (`tool-calls`, `transcripts`) and onboarding
 `/v1/onboarding/assistant/voice/`. Do not add a Go WebSocket for audio, VAD,
@@ -71,8 +71,9 @@ The adapter (not the browser) is responsible for:
    compact the thread first with the 12h compaction rules, then seed.
 4. Pass the full CMS `tools=` list (onboarding: `tools=[]`).
 5. On connection create, set `audio.input.transcription.model` to
-   **`grok-transcribe`**, plus `keyterms` and `replace` from
-   `internal/knowledge/voice_pronunciation.yaml` (same payload as instructions).
+   **`grok-transcribe`**, plus `keyterms` and `replace` from that
+   assistant’s `knowledge/` Voice pronunciation yaml (same payload as
+   instructions).
    Bind on `POST /v1/realtime/client_secrets` when that request accepts an
    initial-configuration object; else one
    `session.update` after the Voice connection opens. Do not `session.update`
@@ -125,9 +126,9 @@ onboarding routes 403. Typeahead still uses country as a search parameter.
 ## Glossary, keyterms, pronunciation
 
 CMS text, CMS Voice, and the onboarding voice guide all include the product
-glossary in knowledge (Domain + Enums + Don't say; not Internal, not Why). Same
-file both registries list:
-`internal/knowledge/product_glossary.md`.
+glossary in knowledge (Domain + Enums + Don't say; not Internal, not Why). Each
+registry lists `knowledge_product_glossary.md` in **that** assistant’s
+`knowledge/` folder.
 
 Voice (not text `LLMProvider`) also sends, at connection create:
 
@@ -137,7 +138,7 @@ Voice (not text `LLMProvider`) also sends, at connection create:
   would bias toward banned words).
 - **`replace`** — spoken wording only; transcript `body` keeps the written term.
   **Placis** → **Play-sis**. **DustOrb** → **Dust Orb**. Further entries live
-  in `internal/knowledge/voice_pronunciation.yaml`. Matching is
+  in that assistant’s `knowledge/` Voice pronunciation yaml. Matching is
   case-insensitive (xAI).
 
 Do not mid-call `session.update` for these (same rule as tools / instructions).
@@ -177,7 +178,7 @@ Go does **not** upsert unpublished website rows on tool-calls.
 
 There is no structured-instruction handoff.
 
-Record reasoning, owner-visible output, and tool calls ([AI layer](ai-layer.md)). Assistant
+Record reasoning, owner-visible output, and tool calls ([AI layer](README.md)). Assistant
 thinking is `thread_items.thread_item_kind=thinking` at turn time.
 `ai_generations.internal_reasoning` is audit only (empty if the voice service
 did not emit it). Hydrate never reads audit.
@@ -185,7 +186,7 @@ did not emit it). Hydrate never reads audit.
 ## Idle stop
 
 Frontend-owned. If the owner does not speak for **30 seconds** (named constant,
-asserted in [assistant testing](../features/assistant/testing.md)), stop the
+asserted in [assistant testing](../../features/assistant/testing.md)), stop the
 conversation. CMS: leftover transcripts + usage, recording upload via signed
 URL, drop realtime connection. Onboarding: leftover transcripts + usage, drop
 realtime connection — **no** recording upload. A warning at
@@ -206,15 +207,15 @@ phone numbers. Live Voice uses the xAI region for the **business country**
 (`wss://{region}.api.x.ai/v1/realtime`; not a blanket eu-west-1, not the
 auto-routing global `api.x.ai` host).
 
-Owner debit and ×5: [billing](../features/billing/README.md) (**AI voice vendor cost**). CMS only. Onboarding
+Owner debit and ×5: [billing](../../features/billing/README.md) (**AI voice vendor cost**). CMS only. Onboarding
 guide is not billed to the contractor. Go never sees PCM (live audio or the
 debug recording PUT). Debit is `AssistantVoiceUsage` on
 `POST /v1/assistant/voice/transcripts` (onboarding twin under
 `/v1/onboarding/assistant/voice/transcripts`), including a usage-only POST when
 Voice turns off: `audio_seconds_sent`, `audio_seconds_received`,
-`billed_text_item_count` ([assistant HTTP](../features/assistant/api.md)). After CMS Voice ends, the browser
+`billed_text_item_count` ([assistant HTTP](../../features/assistant/api.md)). After CMS Voice ends, the browser
 PUTs the recording to object storage via a signed URL
-([assistant architecture](../features/assistant/architecture.md)). Onboarding does **not** PUT a recording; leftover
+([assistant architecture](../../features/assistant/architecture.md)). Onboarding does **not** PUT a recording; leftover
 transcripts (committed xAI events → `offset_seconds`; `provider_event` jsonb)
 only. Reconstruct `[m:ss owner]` / `[m:ss assistant]` from typed
 `thread_item_kind` + `offset_seconds` + `body`.
@@ -234,7 +235,7 @@ mid-utterance to “fix” Voice context.
 When the owner leaves Voice for text (**Switch to text
 mode**), the first CMS text `LLMProvider` assembly injects a Voice
 transcription notice
-([assistant architecture](../features/assistant/architecture.md) step 7).
+([assistant architecture](../../features/assistant/architecture.md) step 7).
 
 ## Authority
 

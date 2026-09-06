@@ -24,7 +24,7 @@ spec or worker (Backend testing-token create is rate-limited: **2
 requests per second**). Signed-in Playwright: `storageState` **once per
 job**, then `test.use({ storageState })`. Do **not** restore
 `storageState` / cookies across jobs
-([ci-cd.md](../../../general-architecture/ci-cd.md)). Clerk-hitting
+([ci-cd.md](../../general-architecture/ci-cd.md)). Clerk-hitting
 specs: serial project `workers: 1`. Official: `clerkSetup()` once when
 the suite starts, then `setupClerkTestingToken` on each Playwright page
 that hits Clerk UI. Parity / look renders may pin empty

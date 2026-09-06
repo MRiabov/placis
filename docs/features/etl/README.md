@@ -18,6 +18,7 @@ slow extract). There is no owner-facing CMS screen in this slice.
 - [architecture.md](architecture.md) — extract vs transform, ETL run kind
   triggers, packages (`StartRun` orchestrates; per-source extract/transform
   files do the work)
+- [file-trees.md](file-trees.md) — Go files (no owner UI)
 - [pipeline](pipeline/README.md) — ETL run kind triggers + per source (Google Maps, Facebook,
   Instagram, …)
 - [persistence.md](persistence.md) — `etl` tables

@@ -3,7 +3,8 @@
 Identity, sign-in, Clerk organizations, and tenant resolution — a
 mostly-internal feature with a small owner-facing surface (`GET /v1/me`).
 The schema lives in [persistence.md](persistence.md). Named functions:
-[architecture.md](architecture.md). HTTP: [api.md](api.md).
+[architecture.md](architecture.md). HTTP: [api.md](api.md). Files:
+[infrastructure file trees](../file-trees.md).
 
 Clerk owns identity. Placis never builds password auth.
 
@@ -74,7 +75,7 @@ a Clerk organization at sign-in (banned).
 ## HTTP
 
 Routes: [api.md](api.md). One public Route: `GET /v1/me`. Health:
-[HTTP conventions](../../../general-architecture/api.md).
+[HTTP conventions](../../general-architecture/api.md).
 
 Signed-out `/cms` uses `AuthGate` → `/login` (OAuth, no name fields).
 The 09 **modal island** is the same Sign in with Google on the preview
@@ -84,7 +85,7 @@ Do not resurrect: `POST /v1/tenants`,
 `PATCH /v1/tenants/{website_prefix}`, `.../memberships/*` CRUD,
 `/me/orgs`, `/me/tenants`, `/me/selected-org`,
 `POST /v1/me/clerk-organization`. CMS website routes are
-[website HTTP](../../website/api.md).
+[website HTTP](../../features/website/api.md).
 
 ## Roles
 

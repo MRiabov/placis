@@ -12,6 +12,7 @@ stay on `/cms/media`. Named identifiers:
 - [architecture.md](architecture.md) — content model; `StartMediaAssetUpload`,
   `ConfirmMediaAssetUpload`, `WriteCanonicalWebP`, `WriteImageThumbnail`,
   `DescribeImage`, `CreateGeneratedMediaAsset`
+- [file-trees.md](file-trees.md) — Go `profile/media/` + `/cms/media` files
 - [technical-implementation.md](technical-implementation.md) — named services,
   image thumbnail encode
 - [frontend-debloat.md](frontend-debloat.md) — `frontend-3` port: keep / delete / retarget
@@ -180,7 +181,7 @@ drafts use that same pool; an owner-added photo in an ad is usable once the
 photo is uploaded. The unpublished website editor may attach pending-review AI
 images; the warning is in Content, not copy on the website.
 
-Files live in [files](../../../general-architecture/files-and-s3.md)
+Files live in [files](../../../infrastructure/files.md)
 (`original_file_id`, canonical `file_id`, `thumbnail_file_id`). HTTP:
 [api.md](api.md) (this resource owns upload; no `/v1/files`). Tables:
 [persistence.md](persistence.md). Public-source imports (Maps photos,

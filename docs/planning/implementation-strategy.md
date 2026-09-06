@@ -11,7 +11,8 @@ is the missing piece: ETL, business profile, media library, files, AI,
 River, the contractor website Worker, **frontend-3**, and voice sit
 *inside* that loop as hard dependencies.
 
-Product Go does not exist yet (`internal/` empty, no `migrations/`).
+Product Go does not exist yet (`internal/` empty; no goose SQL under
+`internal/infrastructure/store/`).
 Only `cmd/ci` checkers and docs. `frontend-2/` may still sit on disk
 until S02. The walking skeleton is the first work. It implements
 [CI and delivery](../general-architecture/ci-cd.md) — there is no
@@ -25,7 +26,7 @@ task. A development task that has owner UI includes matching
 `frontend-3` screens. Do not
 invent tables, routes, DTOs, River job kinds, or tests. Those already
 live in per-feature `persistence.md` / `api.md` / `testing.md` /
-`pipeline/` and [jobs](../general-architecture/jobs.md).
+`pipeline/` and [jobs](../infrastructure/jobs.md).
 
 Do not add `epics.md` or `tasks.md` that restate those lists. A fat
 development task may later get a thin pack under `docs/planning/` that
@@ -198,11 +199,11 @@ Each development task is one PR unless a later pack splits Go then UI. Fields:
 
 - **Depends on:** S01
 - **Owns:** `files` table + MinIO; signed URLs; no `/v1/files` HTTP
-  ([files](../general-architecture/files-and-s3.md))
+  ([files](../infrastructure/files.md))
 - **Must not:** media library HTTP, public delivery without a
   `files` row
 - **Done when:** files Integration named in
-  [files](../general-architecture/files-and-s3.md) / media library tests
+  [files](../infrastructure/files.md) / media library tests
   that this development task can close (row + MinIO object). No owner UI
 - **Blocked by:** none
 
@@ -211,18 +212,18 @@ Each development task is one PR unless a later pack splits Go then UI. Fields:
 - **Depends on:** S01
 - **Owns:** `auth.tenants`, `auth.tenant_memberships`, `GET /v1/me`,
   Clerk SDK behind fakes (`Sessions().Verify` → `Principal`)
-  ([auth](../features/other/auth/README.md))
+  ([auth](../infrastructure/tenancy/README.md))
 - **Must not:** `POST /v1/tenants`, org chooser, memberships CRUD,
   `frontend-3` login (S05)
 - **Done when:** `TestHappyPathV1Me` and two-tenant isolation
-  ([auth testing](../features/other/auth/testing.md))
+  ([auth testing](../infrastructure/tenancy/testing.md))
 - **Blocked by:** none
 
 ### S05 `frontend-3` login and `/me`
 
 - **Depends on:** S02, S04
 - **Owns:** `AuthGate`, Sign in with Google, `GET /v1/me`
-  ([auth](../features/other/auth/README.md)). CMS stays closed until
+  ([auth](../infrastructure/tenancy/README.md)). CMS stays closed until
   `status=active` (S20)
 - **Must not:** org chooser, opening `frontend-2`
 - **Done when:** frontend Integration for login / `/me`; no
@@ -233,9 +234,9 @@ Each development task is one PR unless a later pack splits Go then UI. Fields:
 
 - **Depends on:** S04
 - **Owns:** `ai.threads`, `ai_generations`, `LLMProvider` + Voice
-  adapter interfaces, `internal/knowledge/`
-  ([AI layer](../general-architecture/ai-layer.md),
-  [voice agent](../general-architecture/voice-agent.md))
+  adapter interfaces, per-assistant `assistant/knowledge/`
+  ([AI layer](../infrastructure/ai/README.md),
+  [voice agent](../infrastructure/ai/voice-agent.md))
 - **Must not:** feature `prompts.yaml`, CMS assistant HTTP, billed
   spend without S07
 - **Done when:** Integration that a generate records reasoning,
@@ -306,7 +307,7 @@ long as Maps can start: Facebook, Instagram, website crawl, web
 search, trade registry, projects-from-source,
 `reviews_ranking_for_display`
 ([ETL pipeline](../features/etl/pipeline/README.md),
-[jobs](../general-architecture/jobs.md)).
+[jobs](../infrastructure/jobs.md)).
 
 ### S11 Onboarding 01 Find the business through 04a Text client interview (Go)
 
@@ -442,7 +443,7 @@ search, trade registry, projects-from-source,
 - **Owns:** 09 Checkout on the preview website address / pay strip;
   post-pay `status=active` then `/cms/website`
   ([onboarding frontend](../features/onboarding/frontend.md),
-  [auth](../features/other/auth/README.md))
+  [auth](../infrastructure/tenancy/README.md))
 - **Must not:** Usage & billing screen (S22)
 - **Done when:** E2E onboarding through activation (Worker up)
 - **Blocked by:** none
@@ -536,7 +537,7 @@ search, trade registry, projects-from-source,
 - **Owns:** completeness of `audit_events` and AI-trace
   reconstructability
   ([audit](../general-architecture/audit.md),
-  [AI layer](../general-architecture/ai-layer.md))
+  [AI layer](../infrastructure/ai/README.md))
 - **Must not:** new product features
 - **Done when:** every LLM call in the shipped development tasks is
   reconstructable (reasoning, visible output, tool calls)

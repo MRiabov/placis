@@ -3,7 +3,8 @@
 Slow work runs off-request in `River` (Postgres-backed). `cmd/api` runs the
 jobs in-process. The queue is the isolation, not a second container. Every
 job can be retried safely (an explicit unique key). River-managed tables:
-Postgres schema `jobs`.
+Postgres schema `jobs`. Workers live in the owning pipeline step file or
+feature `jobs.go`. There is no `internal/jobs/` package.
 
 There is no paid River workflows module and no workflow util. A **River
 workflow** is the named sequence in `## Workflows`. The worker persists the
@@ -17,8 +18,8 @@ Named identifiers:
 job kind under Jobs (retry, after-09 leftover, skip unactivated). Meta
 reconcile stays unnamed until ad posting is defined.
 
-Crawl / Maps scrape stay in-process inside that River job kind’s extract
-worker; API p90-delta during scrape: [processes.md](processes.md).
+Crawl / Maps scrape stay in-process inside that River job kind’s extract worker;
+API p90-delta during scrape: [processes.md](../general-architecture/processes.md).
 
 ## Workflows
 
@@ -120,7 +121,7 @@ insert while pending/running is a River unique conflict → HTTP **409**.
 Do not HTTP-check uniqueness before insert (it races).
 
 `thread_kind=ads_generate`, `prompt_id=ads_generate` in
-`internal/ads/prompts.yaml`. Worker:
+`internal/ads/generation/prompts.yaml`. Worker:
 [ads 02](../features/ads/ad-generation/pipeline/02-generate-ad-draft.md).
 Routes: [ads HTTP](../features/ads/api.md).
 
@@ -138,7 +139,7 @@ enqueue is still running, else **false**. Scheduled ranking always
 writes **false** (the run already `succeeded`). No pass field. No
 `onboarding_session_id`.
 
-`internal/jobs` worker **calls** the profile function. LLM:
+The `profile` `jobs.go` worker **calls** the profile function. LLM:
 `thread_kind=reviews_ranking_for_display`,
 `prompt_id=reviews_ranking_for_display` in the profile package
 `prompts.yaml`. `bill_usage=unbilled` until ETL is billed. Input:
@@ -146,7 +147,7 @@ current `in_pool` rows (id, citation/body, rating, origin,
 `published_at`). Output: ordered `review_ids[]`, length 1–30,
 each id in that pool. Prompt prose, ranking heuristics, and dated model
 id are unspecified. Not stars or recency.
-[AI layer](ai-layer.md).
+[AI layer](ai/README.md).
 
 **Onboarding** insert: [build-profile](../features/onboarding/pipeline/build-profile.md) (after ETL fast extract has `in_pool`
 reviews; again when that enqueue’s overlapping ETL runs finish if additional
@@ -162,7 +163,8 @@ latest batch with `provisional=false`, no second generate.
 
 ### `assistant_thread_compaction`
 
-The same in-process function as today. Triggers:
+Worker: `internal/assistant/jobs.go`. The same in-process function as
+today. Triggers:
 
 - `ai.threads.last_activity_at` older than **12 hours**
   (`thread_kind=cms_assistant`)
@@ -207,7 +209,8 @@ key).
 ### `billing_extra_usage_credit`
 
 Paid extra usage credit Checkout. `POST /v1/webhooks/stripe` **inserts** this
-River job kind after `stripe_events`. Worker **calls** `ApplyExtraUsageCredit`
+River job kind after `stripe_events`. Worker: `internal/billing/jobs.go`.
+Worker **calls** `ApplyExtraUsageCredit`
 (**persists into** `ai_use_ledger_entries` `entry_kind=extra_usage_credit`).
 Replay of the same checkout session id is a unique conflict; do not insert a
 second row. Not website activation. Routes:
@@ -261,7 +264,8 @@ lands. Website 01 occupancy (6 months after `canceled_at`) is unchanged.
 
 ### `scheduled_etl`
 
-Monday / Wednesday / Friday. Stagger activated tenants. **Calls**
+Worker: `internal/etl/jobs.go`. Monday / Wednesday / Friday. Stagger
+activated tenants. **Calls**
 `StartRun(trigger=scheduled)` ([ETL](../features/etl/README.md)). Does not
 inline extract.
 
@@ -278,6 +282,8 @@ alone. Dedicated queue, max workers **48**. Fail → retry that id only;
 row stays `processing` until success or retries exhaust →
 captioning-failed (`processing_status=failed`; `file_id` set). Sibling
 photos are other job ids.
+
+Worker: `internal/profile/media/jobs.go`.
 
 `DescribeImage` **sends** media caption + `submit_image_visual_issues`
 (`parallel_tool_calls=true`) and **writes**
@@ -314,11 +320,12 @@ When the flag is off: classify, set `ready`, **do not** **call**
 `WriteCanonicalWebP` then `WriteImageThumbnail` on the child and
 **inserts** `describe_image` on the child.
 Routes: [media library HTTP](../features/other/media/api.md).
-Named flags: [feature flags](feature-flags.md).
+Named flags: [feature flags](config.md).
 
 ### `sweep_stale_media_uploads`
 
-Periodic insert from the same `cmd/api` in-process River workers as
+Worker: `internal/profile/media/jobs.go`. Periodic insert from the same
+`cmd/api` in-process River workers as
 `scheduled_etl`. Not crontab. Not list/GET handler deletes. Args none;
 unique one global row while pending/running. **Do:** delete
 `media_assets` older than the website-editor leave-guard window

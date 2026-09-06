@@ -29,7 +29,7 @@ line when that line is not a new list item or heading.
 
 ## Banned synonym (unmarked) — mint
 
-- `docs/general-architecture/voice-agent.md`: “the backend mints a secret” →
+- `docs/infrastructure/ai/voice-agent.md`: “the backend mints a secret” →
   **fail**. Say **create**.
 - `docs/features/etl/ADR.md`: “mints one `enqueue_id`” → **fail**. Say
   **create**.
@@ -70,7 +70,7 @@ line when that line is not a new list item or heading.
   **fail**. Say **what Persist / Must not names**.
 - `docs/general-architecture/testing.md`: “Grain is the package” → **fail**.
   Say **the cache unit is the package**.
-- `docs/general-architecture/jobs.md`: “persist grain, not this unique key”
+- `docs/infrastructure/jobs.md`: “persist grain, not this unique key”
   → **fail**. Say **`website_activations`**.
 
 ## Banned synonym (unmarked) — widget

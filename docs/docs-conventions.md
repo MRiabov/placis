@@ -16,22 +16,27 @@ before adding or editing a doc.
 - `general-prd.md` — product-level loop and in/out of scope (pointers to feature
   PRDs).
 - `general-architecture/` — cross-cutting architecture no single feature owns:
-  `backend-stack.md`, `feature-flags.md`, `frontend-stack.md`,
+  `backend-stack.md`, `frontend-stack.md`,
   `module-layout.md`, `processes.md`, `package-boundaries.md`, `api.md` (HTTP
-  conventions + index of per-feature `api.md` files), `ai-layer.md`,
-  `voice-agent.md`, `audit.md`, `jobs.md`, `persistence.md` (conventions,
-  classification/prediction tables, index of per-feature tables), `frontend.md`
+  conventions + index of per-feature `api.md` files), `audit.md`,
+  `persistence.md` (conventions, classification/prediction tables, index of
+  per-feature tables), `frontend.md`
   (`frontend-3` UI rules), `cms/` (The CMS: left nav, `/cms` two cards, look
   tokens), `frontend-debloat.md` (withdrawn `frontend-2` port stub),
-  `ci-cd.md`, `testing.md`.
+  `ci-cd.md`, `testing.md`, `ADR.md`.
+  Supporting packages (tenancy, config, store, AI, files, River index):
+  [`docs/infrastructure/`](infrastructure/README.md).
   Feature-owned capabilities (website activation (activation Price plus Placis
   Pro plan / month Checkout), billing (Stripe Subscription, Price cache), leads,
   media library, ETL, business profile, assistant) live under `features/`, not
   here.
+- `infrastructure/` — docs for `internal/infrastructure/` packages: tenancy
+  (Clerk / tenants), config (feature flags), store (pool / goose), AI layer +
+  voice, files, River jobs index.
 - `features/<feature>/` — one directory per feature, **vertical** (all of that
   feature's docs in one place). `features/business-profile/` holds Details,
   Projects, and Certifications and reviews as child view dirs. `features/other/`
-  is auth, media library, leads.
+  is media library and leads.
 - Look lives in [`apps/demo/`](../apps/demo/README.md), not under `docs/`. Do
   not start look work outside that app. The designer checkout
   (`demo.placis.com`) gets the Vite app via `scripts/sync-look-demo.sh` and
@@ -60,12 +65,14 @@ A feature directory holds, as applicable:
 | `frontend.md` | screens and fields, when the UI is well-defined (the **target**) |
 | `frontend-debloat.md` | **Withdrawn.** The `frontend-2` port is cancelled ([ADR](general-architecture/ADR.md) 3). Implement from `frontend.md` in `frontend-3`. Index: [planning/frontend-debloat.md](planning/frontend-debloat.md). Contractor website API: [website/port-contractor-website.md](features/website/port-contractor-website.md). Cut list: [website/contractor-website-debloat.md](features/website/contractor-website-debloat.md) |
 | `testing.md` | E2E and/or integration tests of what Persist / Must not names. Unit tests are not specified here. Every persistence table is named here and/or in `pipeline/testing/`. Integration is one side (backend and/or frontend). |
+| `file-trees.md` | Deeper Go / `frontend-3` file lists for this feature (`## Backend`, `## Frontend` when there is owner UI). High-level trees stay in [module layout](general-architecture/module-layout.md) and [frontend stack](general-architecture/frontend-stack.md). Name identities and spec-named day-one files (pipeline step files, `Register` / `dto.go`, `prompts.yaml`, `jobs.go`, listed `knowledge/` files). Split a file at ~800. Do not pre-list empty folders. Omit `*_test.go` / `*.test.*`. Nest-when-necessary still applies. Not a substitute for `architecture.md`. Each feature `README.md` points here. Supporting Go: [infrastructure/file-trees.md](infrastructure/file-trees.md). |
 | `pipeline/` | one doc per step (`01-…`, `02-…`, `04a-…`, …) + a `README.md` that gathers them, and `pipeline/testing/` with one integration-test doc per step (complex pipeline). Closed `##` on step files (see Named identifiers). |
-| `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features) |
+| `ai-layer.md` | the LLM's tools/pipeline (only for one-shot, non-pipelined features). Cross-cutting vendor AI lives in [infrastructure/ai](infrastructure/ai/README.md), not a feature `ai-layer.md`. |
 
 Not every file is needed — a feature uses only the ones it has content for. A
 complex pipeline uses `pipeline/` and **not** `ai-layer.md`; a one-shot AI use
-has `ai-layer.md` and **not** `pipeline/`.
+has `ai-layer.md` and **not** `pipeline/`. Cross-cutting vendor interfaces
+are [infrastructure/ai](infrastructure/ai/README.md).
 
 ## Markdown formatting
 
@@ -131,7 +138,7 @@ A feature is **ill-defined** until tables, columns, routes, DTO type names and
 fields, major service functions, and **River job kind** names (and River
 workflows when the sequence is more than one River job kind) are named in
 technical docs (`persistence.md`, `api.md`, `architecture.md`, `pipeline/`,
-`testing.md`, [jobs.md](general-architecture/jobs.md)). Not in PRDs or `frontend.md`. Do not dump Go struct
+`testing.md`, [jobs.md](infrastructure/jobs.md)). Not in PRDs or `frontend.md`. Do not dump Go struct
 bodies or OpenAPI YAML. Every identifier is backticked, glossary-derived, and
 the same spelling in spec, code, and tests (`website.menus`, not “the menus
 table”; `WebsitePageRead`, not “the page payload”). Do not say **uses** or
@@ -181,7 +188,7 @@ Influence is one-way; do not stuff website editor GET into pipeline 01–04.
 1. **Pipeline only names existing lists.** A backticked table or HTTP
    path in `pipeline/` must already live in some `persistence.md` or a
    Routes **Method + path** cell. A backticked River job kind in
-   `pipeline/` must already live in [jobs.md](general-architecture/jobs.md)
+   `pipeline/` must already live in [jobs.md](infrastructure/jobs.md)
    `## Jobs`. Match the path as written (`GET /v1/…`, later `/v2/…`,
    `POST /internal/…`). Do not match a raw `v1` token.
 2. **Test docs name every persistence table.** Every table in that

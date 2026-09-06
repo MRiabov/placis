@@ -93,7 +93,7 @@ func TestParseAPIFileHealth(t *testing.T) {
 }
 
 func TestJobsTableNames(t *testing.T) {
-	src, err := os.ReadFile(filepath.Join("..", "..", "..", "docs", "general-architecture", "jobs.md"))
+	src, err := os.ReadFile(filepath.Join("..", "..", "..", "docs", "infrastructure", "jobs.md"))
 	if err != nil {
 		t.Fatal(err)
 	}
