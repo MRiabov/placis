@@ -47,7 +47,9 @@ component contract
 - **website section** — an instance of a website component (`component_id`),
   with its props and design, at a position on the website page. Two site-wide
   look sections (`page_id` null) paint the top menu and footer (logo, density);
-  link trees live on `website.menus`.
+  at most one top-menu look and one footer look per website
+  ([catalog](catalog.md#website-component-family)). Link trees live on
+  `website.menus`.
 - **website slot** — a named editable value inside a website section: text, rich
   text, image, link, list, or json. Reviews website sections resolve
   `{{reviews.1}}` … from the **ranked pool** (not a per-section list at copy
@@ -69,14 +71,16 @@ Owner create of another website is deferred
 ## The website component model
 
 A website component is a named building block (`public.hero.image`,
-`public.services.grid`, …). Each has a **contract**: props, the website
-slots it exposes, and its **design controls** — small enum/bool fields
+`public.services.grid`, `public.reviews.cards`, …). Each has a
+**contract**: **website component family**, props, the website slots it
+exposes, and its **design controls** — small enum/bool fields
 (e.g. `density`: `compact`/`comfortable`/`spacious`) with allowed values. The
 contract is one typed struct dumped to JSON under `catalog/` — the website
 editor and the renderer read the same structs. Only registered website
 components render. A reviews website component’s contract includes the max
 number of reviews that layout paints (examples 3 / 6 / 8 — not a closed product
-list).
+list). Family, preferred IDs, and uniqueness:
+[catalog.md](catalog.md#website-component-family).
 
 The website template catalog object and 02 mapping are
 [catalog.md](catalog.md). Website component renderers live in
@@ -157,8 +161,10 @@ The website editor is one workspace with two surfaces plus global nav
   ([media library](../other/media/README.md)). Top menu and footer are not workspace items.
 - **Content** — not a rail item. Opens from a canvas website section or image
   and **replaces** the workspace list. **Closed union** keyed by website
-  component (website slots by default; special layouts for reviews / top menu /
-  footer / website forms / projects). No right-hand editing panel. No Edit
+  component, resolved via **website component family** (website slots by
+  default; Reviews when family is `reviews`; top menu / footer look;
+  website forms; Projects when family is `gallery`; certifications
+  website sections stay website slots). No right-hand editing panel. No Edit
   handle. No Design tab (look is Website styles). No Website versions tab. No
   Website forms tab.
 

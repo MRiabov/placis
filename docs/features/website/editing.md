@@ -165,7 +165,8 @@ website slot you send:
 ```
 
 - **website slot patch** — `key`, `type`, `value` (`label` optional).
-- **website section patch** — `id`, `component_id` (optional swap),
+- **website section patch** — `id`, `component_id` (optional swap; same
+  website component family only),
   `component_version`, `visible`, `design`, `slots[]`.
 - **website section create** — `component_id`, `component_version`, `position`,
   `props`, `design`, `origin`.
@@ -314,7 +315,7 @@ publication writes a website version.
 | add / remove / reorder reviews on one reviews website section (Content or `update_reviews`) | rewrite that section’s unpublished `website_slot_reviews` (ordered pool ids, ≤ website component max) |
 | pin / unpin / reorder **top reviews** (Certifications and reviews) | insert `business_profile_review_rankings` — does not rewrite website sections |
 | archive a review | leave the pool and top reviews; drop that id from every `website_slot_reviews` array, then compact |
-| swap a website component | `website_sections.component_id` (preserving compatible website slots) |
+| swap a website component | `website_sections.component_id` (preserving compatible website slots **within the same website component family**; do not swap reviews ↔ certifications) |
 | change the website style catalog preset | `website_settings` (applied only on explicit apply) |
 
 Website publication writes `website_publications` + `website_manifest` (a

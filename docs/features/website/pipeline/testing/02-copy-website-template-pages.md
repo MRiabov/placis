@@ -22,7 +22,8 @@ kind `website_copy_generation` on this `website_id`. Mapping:
   - `website_sections`: every page has sections;
     `origin=website_template`; exactly two `page_id` null look sections
     (top-menu look, footer look) from the website template. No extra look
-    rows.
+    rows. One top-menu look and one footer look. A page may include both a
+    certifications website section and a reviews website section.
   - `website_slots`: `origin=website_template`. `value` jsonb still
     contains website placeholders
     (`{{business_name}}`, `{{marketing_phone}}`, `{{reviews.1}}`,

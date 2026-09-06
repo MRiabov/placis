@@ -100,7 +100,11 @@ on that website is `active`, then that website address. See
   `PATCH /v1/websites/{website_prefix}/editor/pages/{page_id}`;
   `PATCH /v1/onboarding/website/editor/pages/{page_id}`
 - **Notes:** `page_id` null is the site-wide top-menu or footer look
-  section. Include `website_id` so two websites’ look rows do not collide.
+  section. At most one top-menu look and one footer look per
+  `website_id` (website component family of that `component_id`; do not
+  persist a `family` column). Reviews and certifications families are not
+  unique.
+  Include `website_id` so two websites’ look rows do not collide.
   Structure of the bars is `website.menus`.
 
 ### `website_slots`

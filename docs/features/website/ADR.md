@@ -432,3 +432,16 @@ Status: decided (2026-08-16, product owner + engineering).
     canvas. Share and the page switcher may sit on canvas corners; they are
     still workspace. [frontend
     stack](../../general-architecture/frontend-stack.md). (2026-09-06)
+
+34. **Website component family is the catalog grouping** — Preferred
+    `component_id` is `public.{family}.{variant}`. `reviews` and
+    `certifications` are distinct families. `content` holds leftover
+    generic blocks (logo strip, leadership grid, metric mosaic, bar).
+    Projects stay `gallery`. Look uniqueness is at most one top-menu look
+    and one footer look per website (`page_id` null). Reviews and
+    certifications website sections are **not** unique; a page may have
+    both. Swap website components only within the same family. `family` is
+    not a `website_sections` column.
+    [catalog.md](catalog.md#website-component-family). (2026-09-06)
+    Don't say proof: the predecessor lumped family is not a catalog
+    family.

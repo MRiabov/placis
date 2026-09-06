@@ -49,7 +49,7 @@ function RatingStars({ rating }: { rating: number }) {
   );
 }
 
-export default function ProofTestimonials({
+export default function ReviewCards({
   props,
   theme,
 }: PublicSiteComponentProps) {

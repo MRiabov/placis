@@ -42,8 +42,13 @@ Owner SPA is `frontend-3` ([ADR](../../general-architecture/ADR.md) 3);
 
 - Renderer: `PublicSiteRenderer.tsx`, `registry.ts` (in-scope families).
 - `types.ts` — still `JsonObject` for `props`, `seo`, `collections`.
-- Don't say proof: `registry/proof/*` — product language is certifications /
-  reviews / projects.
+- Don't say proof: leftover `registry/proof/*` — catalog families are
+  `reviews` / `certifications` / `content` (Projects stay `gallery`).
+  Preferred IDs: `public.reviews.cards`, `public.reviews.panel`,
+  `public.certifications.row`, `public.content.logo_strip`,
+  `public.content.leadership_grid`, `public.content.metric_mosaic`,
+  `public.content.bar`. Mapping:
+  [catalog.md](catalog.md#website-component-family).
 - Don't say blueprint: `src/blueprints/**` — website templates (JSON). No
   DESIGN.md or per-folder markdown sidecars.
 - `src/styles.css` concatenates every website style catalog preset plus shared
@@ -113,8 +118,11 @@ Owner SPA is `frontend-3` ([ADR](../../general-architecture/ADR.md) 3);
 - Don't say shell: `PublicSiteRenderer`, `public-site-shell`,
   Don't say public site: `PublicSiteClientBehaviors`.
 - Don't say blueprint: `src/blueprints/` → website template catalog.
-- Don't say proof: `public.proof.*` family → certifications / reviews / projects
-  website components as the catalog names them.
+- Don't say proof: leftover `public.proof.*` → `public.reviews.cards`,
+  `public.reviews.panel`, `public.certifications.row`, and
+  `public.content.*` as
+  [catalog.md](catalog.md#website-component-family) names them. Projects
+  stay `gallery`.
 - Don't say runtime: meta / env names that call this app a runtime.
 - Don't say setup: `setupPublicNavigation` / `setupPublicCarousels` in the
   Don't say setup: island script (rename to ordinary `bind*` helpers).

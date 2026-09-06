@@ -72,6 +72,43 @@ from every `{{…}}` in `value`; drop a whole website section because one
 child website slot omitted. Owner eye is `website_sections.status`
 only.
 
+## Website component family
+
+`family` is catalog metadata on the website component contract, not a
+`website_sections` column. Preferred `component_id` is
+`public.{family}.{variant}`. The catalog dump uses these preferred IDs.
+Don't say proof: leftover predecessor IDs are not preferred IDs.
+
+| Family | Preferred IDs | Content |
+| --- | --- | --- |
+| `reviews` | `public.reviews.cards`, `public.reviews.panel` | Reviews (`website_slot_reviews`; cap from that website component) |
+| `certifications` | `public.certifications.row` | Website slots (`{{certifications}}` items). Picker stays on Certifications and reviews |
+| `content` | existing `public.content.*`, plus `public.content.logo_strip`, `public.content.leadership_grid`, `public.content.metric_mosaic`, `public.content.bar` | Website slots |
+| `gallery` | existing `public.gallery.*` | Projects gallery |
+| footer look | existing `public.footer.*` | Top menu / footer trees (look) |
+| top-menu look | existing top-menu look contracts | Top menu / footer trees (look) |
+
+`public.content.bar` keeps aliases `public.trust.v1` and
+`public.service_summary.v1`. Display names: Reviews, Reviews,
+Certifications. Projects stay `gallery`. Do not invent Domain terms for
+logo strip, leadership grid, metric mosaic, or bar.
+
+**Uniqueness** (join `component_id` to the contract; do not persist
+`family`):
+
+- Look sections (`page_id` null): at most one top-menu look and one
+  footer look **per website**. `CopyWebsiteTemplatePages` and
+  `create_section` must not add a second top-menu look or a second
+  footer look.
+- `reviews`, `certifications`, and `content` are **not** unique. A
+  website page may have a certifications website section **and** a
+  reviews website section. Several reviews website sections are allowed;
+  each has its own `website_slot_reviews`.
+
+Swap a website component only **within the same family** (compatible
+website slots). Do not swap a reviews website component for a
+certifications website component and keep slots.
+
 ## Copy onto the unpublished website (02)
 
 1. Load the website template by `website_settings.website_template_id`.

@@ -1,7 +1,7 @@
 import type { PublicSiteComponentProps } from "../../../types";
 import { asRecords, imageUrl, text } from "../../../utils";
 
-export default function ProofLogoStrip({ props }: PublicSiteComponentProps) {
+export default function LogoStrip({ props }: PublicSiteComponentProps) {
   const items = asRecords(props.items);
   const hasImages = items.some((item) => imageUrl(item.image_url ?? item.url));
   const layout = text(props.layout, "marquee");

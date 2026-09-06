@@ -66,11 +66,11 @@ older `public.*.v1` manifests renderable.
 | `public.statement.words` | None | Editorial statement block with large emphasized words. |
 | `public.service_area.coverage` | None | Areas served and local coverage messaging. |
 | `public.process.steps` | None | Step-by-step project journey with detail copy. |
-| `public.proof.bar` | `public.trust.v1`, `public.service_summary.v1` | Compact proof points. |
-| `public.proof.accreditations` | None | Certification/logo proof row. |
-| `public.proof.logo_strip` | None | Supplier, brand, and certification logos. |
-| `public.proof.testimonials` | None | Review cards with optional ratings. |
-| `public.proof.review_panel` | None | Featured review panel with source, controls, and supporting label. |
+| `public.content.bar` | `public.trust.v1`, `public.service_summary.v1` | Compact metrics. |
+| `public.certifications.row` | None | Certification logos. |
+| `public.content.logo_strip` | None | Supplier, brand, and certification logos. |
+| `public.reviews.cards` | None | Review cards with optional ratings. |
+| `public.reviews.panel` | None | Featured review panel with source, controls, and supporting label. |
 | `public.gallery.edge_grid` | None | Edge-to-edge project gallery grid. |
 | `public.gallery.grid` | `public.gallery.v1` | Project gallery with captions, grid, or scroll-snap carousel. |
 | `public.gallery.poster_grid` | None | Image poster grid with overlay captions. |

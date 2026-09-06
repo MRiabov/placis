@@ -236,7 +236,7 @@ export const harperConstructionManifest = {
           },
         },
         {
-          component: "public.proof.leadership_grid",
+          component: "public.content.leadership_grid",
           props: {
             anchor_id: "leadership",
             title: "Leadership",
@@ -244,7 +244,7 @@ export const harperConstructionManifest = {
           },
         },
         {
-          component: "public.proof.logo_strip",
+          component: "public.content.logo_strip",
           props: {
             anchor_id: "clients",
             layout: "grid",

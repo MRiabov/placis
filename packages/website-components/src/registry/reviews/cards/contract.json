@@ -1,10 +1,10 @@
 {
-  "id": "public.proof.testimonials",
+  "id": "public.reviews.cards",
   "aliases": [],
   "schema_version": 1,
-  "display_name": "Testimonials",
-  "family": "proof",
-  "variant": "testimonials",
+  "display_name": "Reviews",
+  "family": "reviews",
+  "variant": "cards",
   "props_schema": {
     "type": "object",
     "properties": {
@@ -101,7 +101,7 @@
     {
       "key": "items",
       "type": "list",
-      "label": "Testimonials",
+      "label": "Reviews",
       "required": false,
       "max_length": null
     }
@@ -111,7 +111,11 @@
       "key": "density",
       "type": "enum",
       "label": "Density",
-      "values": ["compact", "comfortable", "spacious"],
+      "values": [
+        "compact",
+        "comfortable",
+        "spacious"
+      ],
       "default": "comfortable"
     }
   ]

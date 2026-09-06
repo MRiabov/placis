@@ -404,7 +404,7 @@
       }
     },
     {
-      "component_id": "public.proof.accreditations",
+      "component_id": "public.certifications.row",
       "path": "items",
       "value": "{{proof.accreditations}}",
       "metadata": {
