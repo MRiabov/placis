@@ -14,8 +14,9 @@ Referenced, not owned here:
 (`ad_image_placements.media_asset_id`),
 [leads](../other/leads/persistence.md) (attribution). LLM traces:
 [AI layer](../../infrastructure/ai/README.md)
-(`thread_kind=ads_generate` / `ads_inline_assistance`). Sensitive
-mutations also write [audit](../../general-architecture/audit.md).
+(`thread_kind=ads_generate` / `ads_inline_assistance`). Approve,
+archive, and unarchive write `ad_reviews`
+([audit](../../general-architecture/audit.md)).
 
 ## Tables
 
