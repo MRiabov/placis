@@ -20,6 +20,7 @@ var defaultRoots = []string{
 	"scripts",
 	"apps/demo",
 	"src",
+	"packages/website-components",
 }
 
 type compiledToken struct {
@@ -138,7 +139,12 @@ func homePrefixes(home string) []string {
 			"internal/profile/reviews",
 		}
 	case "website":
-		return []string{"docs/features/website", "internal/website", "apps/contractor-website"}
+		return []string{
+			"docs/features/website",
+			"internal/website",
+			"apps/contractor-website",
+			"packages/website-components",
+		}
 	case "projects":
 		return []string{"docs/features/business-profile/projects", "internal/profile/projects"}
 	case "assistant":
@@ -152,6 +158,12 @@ func isLookApp(slash string) bool {
 	slash = strings.TrimPrefix(slash, "./")
 	return slash == "apps/demo" || strings.HasPrefix(slash, "apps/demo/") ||
 		slash == "src" || strings.HasPrefix(slash, "src/")
+}
+
+func isWebsiteComponents(slash string) bool {
+	slash = strings.TrimPrefix(slash, "./")
+	return slash == "packages/website-components" ||
+		strings.HasPrefix(slash, "packages/website-components/")
 }
 
 func pathUnder(slash, folder string) bool {
@@ -244,11 +256,14 @@ func inEnabledTree(path string, frontend bool) bool {
 
 func scanExt(path string, frontend bool) bool {
 	ext := strings.ToLower(filepath.Ext(path))
+	slash := filepath.ToSlash(path)
 	switch ext {
 	case ".md", ".go", ".mjs", ".js":
 		return true
 	case ".ts", ".tsx":
-		return frontend || isLookApp(filepath.ToSlash(path))
+		return frontend || isLookApp(slash) || isWebsiteComponents(slash)
+	case ".json", ".css":
+		return isWebsiteComponents(slash)
 	default:
 		return false
 	}
@@ -276,6 +291,9 @@ func shouldSkipPath(path string, frontend bool) bool {
 	case strings.Contains(slash, "cmd/ci/check-dont-say/") || strings.Contains(slash, "ci/check-dont-say/"):
 		return true
 	case strings.Contains(slash, "/testdata/") || strings.HasPrefix(slash, "testdata/"):
+		return true
+	case strings.Contains(slash, "packages/website-components/src/blueprints/") ||
+		strings.HasPrefix(slash, "packages/website-components/src/blueprints/"):
 		return true
 	case strings.HasSuffix(slash, "generated/api-types.ts"):
 		return true
@@ -422,6 +440,7 @@ var extraAllowed = []string{
 	"onboarding image gallery",
 	"ads image gallery",
 	"website editor image gallery",
+	"@media",
 }
 
 func inheritsDontSayContext(line string) bool {
