@@ -25,8 +25,8 @@ repeat those writes and does not upsert `etl.google_maps_listings` itself.
 
 ## Trigger
 
-01 business lookup returns with `online_research_consent_at` set, or sources
-change on an existing onboarding session, **and** the tenant is under the
+01 business lookup returns with `online_research_consent_at` set, or
+scratch 01 with different attach keys, **and** the tenant is under the
 enqueue cap.
 
 ## Pre
@@ -53,6 +53,8 @@ enqueue cap.
   inside 30 minutes (paid or cache-hit).
 - Treat a River retry of an existing ETL run as a new enqueue.
 - Block business lookup, 03 Continue, or the client interview on this wait.
+- Cancel in-flight extract because the contractor navigated Back or POSTed
+  the same attach keys.
 - Wait for an ETL run kind’s `status=succeeded` before showing the ETL fast
   extract live business profile on Review found vs missing.
 - Pass `directory`, `review`, or `photo` as ETL run kinds. Scrape is ETL slow
@@ -72,13 +74,12 @@ kind.
 **Enqueue cap (before StartRun):** count distinct `enqueue_id` on `etl.runs` for
 this `tenant_id` with `trigger=onboarding` and
 `started_at > now() - 30 minutes`. If **5 or more**, do not call `StartRun`.
-Source changes still persist; the mutating request stays **200**. Find lookup
-over the `browser_safety_session_id` cap is 01 Fail (`429`
-`browser_safety_cap`), not this cap.
+Scratch 01 over that cap is 01 Fail (`429` `onboarding_enqueue_cap`), not a
+silent 200. Same attach keys never reach this count (01 safe to retry).
 
 `StartRun` counts the same cap and inserts nothing if called over it
-([ETL architecture](../../etl/architecture.md)). 02 checks first so a later
-source change can skip enqueue without 429.
+([ETL architecture](../../etl/architecture.md)). 01 checks first so a 6th
+scratch 429s without calling 02.
 
 If the count is **0–4**, call `StartRun` with the onboarding ETL run kinds. Pass
 `onboarding_session_id` and `force=false`. Copy Find attach and live-profile
@@ -89,6 +90,10 @@ has what it needs (Maps from `place_id` **or** `display_name` + locality **or**
 crawl / Facebook / Instagram when their URL/handle exists). Further ETL run
 kinds start when details change — including 04a URL / handle writes. That is not
 a new `StartRun`.
+
+Only the **latest** onboarding `enqueue_id` for this tenant may write the live
+business profile. Abandoned enqueues after scratch 01 must not
+`MergeProfileIncrement`.
 
 Profile deltas go through ETL transform using [build-profile](build-profile.md).
 Empty fields fill. On a research conflict the live business profile column is
@@ -107,9 +112,9 @@ Retryable River jobs inside ETL. Fail leaves prior live business profile +
 `etl.runs.status=error`. In-progress fill-status keys clear when the job ends.
 Do not change onboarding session status. Job retry keeps the same `etl.runs.id`.
 
-Enqueue cap: not a pipeline Fail. A later source change that would start a 6th
-enqueue in 30 minutes does not call `StartRun`; the mutating request returns
-**200**. Prior live business profile and in-flight jobs stay.
+Enqueue cap: not a pipeline Fail. Scratch 01 that would start a 6th
+enqueue in 30 minutes is 01 Fail (`429`). Prior live business profile and
+in-flight jobs for the **current** company stay.
 
 ## Out
 
@@ -127,8 +132,9 @@ enqueue’s ETL finishes**
 
 - 02 starts on 01 return, before 03, when the tenant is under the enqueue cap.
 - At most **5 onboarding `enqueue_id`s per `tenant_id` per rolling 30 minutes**.
-  A 6th `StartRun` in that window is skipped until the oldest of those five is
-  30 minutes old.
+  A 6th scratch 01 in that window is 01 Fail (`429`) until the oldest of those
+  five is 30 minutes old.
+- Only the latest onboarding `enqueue_id` writes the live business profile.
 - An enqueue is one `StartRun`, not one ETL run. River retries are not a new
   enqueue.
 - Photo classification is ETL transform, not 04a/04b.

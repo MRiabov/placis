@@ -69,18 +69,22 @@ Clerk. Consent true. Registry and/or Maps attach keys.
 
 #### Verify
 
-Response `BusinessLookupRead` (`token`, `status=client_interviewing`).
+Response `OnboardingProfileRead` (`token`, `status=client_interviewing`).
 Create then GET profile returns that onboarding session on the same
 token. Named persist may supplement: `tenants` (`status=unactivated`),
-`onboarding_sessions` (`browser_safety_session_id`), empty
-`business_profile.business_profiles`.
+`onboarding_sessions` (`token`, attach keys), empty
+`business_profile.business_profiles`. Second POST with that token and
+**same** attach keys while 02 is in flight: one `enqueue_id`, profile
+not wiped, runs still in progress. Second POST **different** keys:
+scratch; live profile is this pick; no second `onboarding_sessions`
+row.
 
 #### Fail
 
-Missing consent, missing both sources, or missing
-`browser_safety_session_id` → 4xx; no tenant. Sixth lookup in 30
-minutes with the same `browser_safety_session_id` → `429`
-`browser_safety_cap`; no sixth tenant.
+Missing consent or missing both sources → 4xx; no tenant. Unknown onboarding
+session token → **401**; no tenant. Sixth **different**-keys POST in 30 minutes
+→ `429` `onboarding_enqueue_cap`; current company unchanged. Activated leftover
+token → `403`.
 
 #### Mocked
 
@@ -124,31 +128,6 @@ Response `GoogleMapsListingRead` rows. **Omit** Maps `raw`. No
 #### Mocked
 
 Google Maps autocomplete.
-
-### TestHappyPathV1OnboardingSources — Route
-
-#### Setup
-
-Backend (`humatest`, Testcontainers Postgres). Onboarding session token
-from business lookup. No `frontend-3`.
-
-#### Exercise
-
-`PUT /v1/onboarding/sources`
-
-#### Verify
-
-Response `OnboardingProfileRead`. Attach keys replaced on the same
-onboarding session. No second onboarding session.
-
-#### Fail
-
-Sixth `StartRun` in 30 minutes on this tenant is skipped; response
-**200**. Activated owner leftover onboarding session token → `403`.
-
-#### Mocked
-
-Registry. Maps. ETL adapters.
 
 ### TestHappyPathV1OnboardingProfile — Route
 
@@ -901,8 +880,7 @@ Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/find`.
 Registry and/or Maps. Consent required before business lookup. Opening
 Find with no stored token does not POST. Stored token restores instead
 of a second lookup. Typeahead debounce: registry and Maps search do
-not fire per keystroke. Lookup body includes `browser_safety_session_id`
-from `localStorage`. Sixth lookup in 30 minutes stays on Find.
+not fire per keystroke. Later POST sends the onboarding session token.
 
 #### Verify
 
@@ -911,7 +889,7 @@ Lookup disabled without consent. With consent, MSW
 uses `GET /v1/onboarding/profile`. Debounced typeahead uses MSW
 `GET /v1/onboarding/find/search/company-registry` and
 `GET /v1/onboarding/find/search/google-maps`; those GETs are not
-per keystroke. `429` `browser_safety_cap` does not navigate.
+per keystroke. `429` `onboarding_enqueue_cap` does not navigate.
 
 #### Mocked
 
@@ -932,8 +910,33 @@ Continue immediately (skip). Linger then Continue.
 
 #### Verify
 
-Continue enabled in all cases. No Review POST. Skip does not stop 02.
-No research-wait UI. MSW `GET /v1/onboarding/profile` / SSE.
+Continue enabled in all cases. Continue does not POST lookup. Skip does
+not stop 02. No research-wait UI. MSW `GET /v1/onboarding/profile` /
+SSE.
+
+#### Mocked
+
+All HTTP via MSW.
+
+### Review change the business
+
+Frontend branching. Not `Full`. Persist is 01.
+
+#### Setup
+
+Frontend (jsdom / Vitest, MSW, no Go). `/onboarding/review`. Stored
+token. SSE may still fill.
+
+#### Exercise
+
+Change-the-business pickers. Same attach keys POST. Different keys POST.
+`429` `onboarding_enqueue_cap`.
+
+#### Verify
+
+Stay on Review. MSW `POST /v1/onboarding/business-lookup` with the
+onboarding session token. Same keys do not navigate. Different keys hydrate from
+the 200 body. `429` does not navigate; current company stays.
 
 #### Mocked
 

@@ -120,5 +120,4 @@ var leftoverTests = []string{
 	"POST /v1/websites/{website_prefix}/publications/{id}/rollback",
 	"PUT /v1/business-profile/certifications",
 	"PUT /v1/onboarding/interview",
-	"PUT /v1/onboarding/sources",
 }

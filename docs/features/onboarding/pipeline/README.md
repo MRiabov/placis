@@ -4,8 +4,8 @@ Executable spec. Each step file uses Trigger / Pre / Must not / Do /
 Persist / Fail / Out / Invariants (closed `##`; optional Reads / Loads /
 Sends / Calls). **Do** names the function. Named identifiers:
 [docs conventions](../../../docs-conventions.md#named-identifiers).
-This README is the index: status machine, screens, Resume, business-lookup-once,
-DAG. It does not retell the steps.
+This README is the index: status machine, screens, Resume, business-lookup
+create-once, DAG. It does not retell the steps.
 
 The contractor never waits on business research. Business lookup returns
 immediately; business research fills the live business profile in the
@@ -28,7 +28,7 @@ contractor sees Review.
 01.  find the business + online research consent
      → unactivated tenant + onboarding session; 02 starts; UI → 03
 02.  business research (async) — overlaps 03 and 04a
-03.  Review (frontend noop, skip expected) — extra seconds for 02 before 04
+03.  Review (skip expected; change-the-business is 01) — extra seconds for 02 before 04
 04a. text client interview (v1 writer)
 04b. voice client interview — **out**; do not implement
      build the profile — concurrent persist, not a wait
@@ -87,8 +87,11 @@ second token and no server-side resume token.
 | `preview_and_edit` | `/onboarding/preview-and-edit/` |
 | `activated` | clear storage; `/cms/website` |
 
-Business lookup creates the onboarding session **once** (01), when this browser
-has no token. Opening Find with nothing stored must not `POST` an onboarding
+Business lookup **creates** the onboarding session **once** (01), when this
+browser has no token. A later POST with a **valid** token is scratch 01
+(different attach keys) or safe to retry (same keys) — not a second
+onboarding session.
+Opening Find with nothing stored must not `POST` an onboarding
 session. Opening `/onboarding/find` with a stored token restores (same table as
 reload); it does not submit business lookup again. Restore failure keeps the
 token and retries `GET /v1/onboarding/profile` on a loading placeholder — do not
@@ -117,7 +120,8 @@ Canonical detail: [frontend.md](../frontend.md), [onboarding assistant](../assis
 
 Each step has a matching integration test in
 [testing/](testing/README.md). Those tests are backend integration
-(real Go + real Postgres), except 03 (Persist none; frontend extra) and
+(real Go + real Postgres), except 03 (Persist none except 01
+change-the-business; frontend extra) and
 04b (**Do not run**). Prior-step rows are already in Postgres. Assert
 is every table that step writes, plus the next-step handoff in
 Postgres. Paid / external collaborators are faked. They do not defer to
