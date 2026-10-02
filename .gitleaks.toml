@@ -1,0 +1,13 @@
+# Keep the default ruleset, but ignore vendored third-party reference docs and
+# one test constant that gitleaks mistakes for a credential.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Vendored docs and test constants that are not credentials"
+paths = [
+  '''(^|/)\.agents/skills/''',
+]
+regexes = [
+  '''DEFAULT_CRO_PARQUET_S3_KEY''',
+]
